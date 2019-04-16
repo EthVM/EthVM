@@ -76,10 +76,12 @@ up_default() {
 up_simple() {
 
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils migrator
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
+  ${SCRIPT_DIR}/docker-build.sh build migrator
 
   echo "Starting up containers: traefik, timescale, explorer, api and pgweb \n"
-  docker-compose up -d --build traefik timescale explorer api pgweb
+  docker-compose build explorer api
+  docker-compose up -d traefik timescale explorer api pgweb
 
   # Give time to breathe
   sleep 10

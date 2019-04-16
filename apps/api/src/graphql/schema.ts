@@ -127,6 +127,7 @@ export class Contract {
     traceDestroyedAt?: string;
 }
 
+<<<<<<< HEAD
 export class EthplorerAddressInfo {
     address?: string;
     ETH?: EthplorerEthInfo;
@@ -155,6 +156,8 @@ export class EthplorerEthInfo {
     totalOut?: Decimal;
 }
 
+=======
+>>>>>>> feature/api-postgres-integration
 export class EthplorerPriceInfo {
     rate?: Decimal;
     currency?: string;
@@ -165,12 +168,15 @@ export class EthplorerPriceInfo {
     availableSupply?: Decimal;
     volume24h?: Decimal;
     ts?: Long;
+<<<<<<< HEAD
 }
 
 export class EthplorerTokenHolder {
     address?: string;
     balance?: Decimal;
     share?: Decimal;
+=======
+>>>>>>> feature/api-postgres-integration
 }
 
 export class EthplorerTokenInfo {
@@ -243,9 +249,15 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+<<<<<<< HEAD
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
+=======
+
+    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+>>>>>>> feature/api-postgres-integration
     abstract search(query: string): Search | Promise<Search>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
@@ -278,9 +290,9 @@ export abstract class IQuery {
 
     abstract tokenHistory(address: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
-    abstract topTokenHolders(address: string): EthplorerTokenHolder[] | Promise<EthplorerTokenHolder[]>;
+    abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
-    abstract holderDetails(address: string, holderAddress: string): EthplorerAddressInfo | Promise<EthplorerAddressInfo>;
+    abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
 
     abstract holderTransfers(address: string, holderAddress: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
@@ -383,6 +395,14 @@ export class TokenExchangeRate {
     totalVolume?: Decimal;
     owner?: string;
     holdersCount?: number;
+<<<<<<< HEAD
+=======
+}
+
+export class TokenHolder {
+    address?: string;
+    balance?: Decimal;
+>>>>>>> feature/api-postgres-integration
 }
 
 export class TokenTransfer {

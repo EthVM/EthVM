@@ -2,11 +2,11 @@ import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
 import { ExchangeService } from './exchange.service'
 import { TokenExchangeRateResolvers } from './token-exchange-rate.resolvers'
-import { TokenTransferService } from '../token-transfers/token-transfer.service'
+import { TokenService } from '../tokens/token-transfer.service'
 import { QuoteDto } from './quote.dto'
 import { TokenExchangeRateEntity } from '../../orm/entities/token-exchange-rate.entity'
 import { TokenExchangeRateDto } from './token-exchange-rate.dto'
-import { EthplorerAddressInfoDto } from '../token-transfers/dto/ethplorer-address-info.dto'
+import { EthplorerAddressInfoDto } from '../tokens/dto/ethplorer-address-info.dto'
 
 const usd = 'USD'
 const eur = 'EUR'
@@ -142,7 +142,7 @@ const mockTokenTransferService = {
 
 describe('TokenExchangeRateResolvers', () => {
   let exchangeService: ExchangeService
-  let tokenTransferService: TokenTransferService
+  let tokenTransferService: TokenService
   let tokenExchangeRateResolvers: TokenExchangeRateResolvers
 
   beforeEach(async () => {
@@ -156,7 +156,7 @@ describe('TokenExchangeRateResolvers', () => {
           useValue: mockExchangeService
         },
         {
-          provide: TokenTransferService,
+          provide: TokenService,
           useValue: mockTokenTransferService
         }
       ]
@@ -164,7 +164,7 @@ describe('TokenExchangeRateResolvers', () => {
 
     // fetch dependencies
     exchangeService = module.get<ExchangeService>(ExchangeService)
-    tokenTransferService = module.get<TokenTransferService>(TokenTransferService)
+    tokenTransferService = module.get<TokenService>(TokenService)
     tokenExchangeRateResolvers = module.get<TokenExchangeRateResolvers>(TokenExchangeRateResolvers)
   })
 

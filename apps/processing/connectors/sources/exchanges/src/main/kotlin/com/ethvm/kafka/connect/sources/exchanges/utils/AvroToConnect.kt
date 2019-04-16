@@ -4,6 +4,7 @@ import com.ethvm.avro.exchange.TokenExchangeRateKeyRecord
 import com.ethvm.avro.exchange.TokenExchangeRateRecord
 import io.confluent.connect.avro.AvroData
 import org.apache.avro.specific.SpecificRecordBase
+import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.data.SchemaAndValue
 
 object AvroToConnect {
@@ -16,4 +17,8 @@ object AvroToConnect {
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)
+
+  fun toConnectSchema(record: SpecificRecordBase): Schema = avroData.toConnectData(mappings[record::class], record).schema()
+
+  fun toAvroData(schema: Schema, o: Any) = avroData.fromConnectData(schema, o)
 }

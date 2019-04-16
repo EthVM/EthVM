@@ -3,22 +3,22 @@ package com.ethvm.kafka.connect.sources.exchanges
 import arrow.core.Some
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.EXCHANGE_PROVIDER_CONFIG
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.EXCHANGE_PROVIDER_DEFAULT
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.EXCHANGE_PROVIDER_DOC
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.EXCHANGE_PROVIDER_OPTIONS_CONFIG
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.EXCHANGE_PROVIDER_OPTIONS_DEFAULT
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.EXCHANGE_PROVIDER_OPTIONS_DOC
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.SYNC_INTERVAL_CONFIG
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.SYNC_INTERVAL_DEFAULT
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.SYNC_INTERVAL_DOC
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.TOPIC_CONFIG
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.TOPIC_CONFIG_DEFAULT
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector.Config.TOPIC_CONFIG_DOC
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_CONFIG
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_DEFAULT
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_DOC
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_OPTIONS_CONFIG
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_OPTIONS_DEFAULT
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_OPTIONS_DOC
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.SYNC_INTERVAL_CONFIG
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.SYNC_INTERVAL_DEFAULT
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.SYNC_INTERVAL_DOC
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DOC
 import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProviders
-import com.ethvm.kafka.connect.sources.exchanges.provider.TokenEntry
+import com.ethvm.kafka.connect.sources.exchanges.provider.TokenIdEntry
 import com.ethvm.kafka.connect.sources.exchanges.utils.Versions
 import org.apache.kafka.common.config.ConfigDef
 import org.apache.kafka.common.config.ConfigDef.Importance
@@ -27,7 +27,7 @@ import org.apache.kafka.connect.connector.Task
 import org.apache.kafka.connect.source.SourceConnector
 import java.util.concurrent.TimeUnit
 
-class ExchangeRateSourceConnector : SourceConnector() {
+class ExchangeRatesSourceConnector : SourceConnector() {
 
   private lateinit var config: Map<String, String>
 

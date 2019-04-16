@@ -4,33 +4,36 @@ import com.beust.klaxon.Klaxon
 import com.beust.klaxon.PropertyStrategy
 import com.ethvm.avro.exchange.TokenExchangeRateKeyRecord
 import com.ethvm.avro.exchange.TokenExchangeRateRecord
-import com.ethvm.kafka.connect.sources.exchanges.ExchangeRateSourceConnector
+import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector
 import com.ethvm.kafka.connect.sources.exchanges.utils.AvroToConnect
 import mu.KotlinLogging
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import java.io.BufferedReader
+import java.io.IOException
 import kotlin.reflect.KProperty
 
 class CoinGeckoExchangeProvider(
-  options: Map<String, Any>,
+  options: Map<String, Any> = emptyMap(),
   private val okHttpClient: OkHttpClient = CoinGeckoExchangeProvider.okHttpClient,
   private val klaxon: Klaxon = CoinGeckoExchangeProvider.klaxon
 ) : ExchangeProvider {
 
-  private val topic: String = options.getOrDefault("topic", ExchangeRateSourceConnector.Config.TOPIC_CONFIG_DEFAULT) as String
-  private val tokenIds: List<TokenEntry> = options.getOrDefault("tokens_ids", emptyList<TokenEntry>()) as List<TokenEntry>
+  private val topic: String = options.getOrDefault("topic", ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT) as String
+  private val tokenIds: List<TokenIdEntry> = options.getOrDefault("tokens_ids", emptyList<TokenIdEntry>()) as List<TokenIdEntry>
   private val currency: String = options.getOrDefault("currency", "usd") as String
   private val perPage: Int = options.getOrDefault("per_page", 250) as Int
 
   private val logger = KotlinLogging.logger {}
 
-  override fun fetch(): List<SourceRecord> {
+  private val sourcePartition = mapOf("id" to "coingecko")
+  private val sourceOffset = emptyMap<String, Any>()
 
-    val sourcePartition = mapOf("id" to "coingecko")
-    val sourceOffset = emptyMap<String, Any>()
+  @Throws(Exception::class)
+  override fun fetch(): List<SourceRecord> {
 
     return tokenIds
       .chunked(perPage)
@@ -50,8 +53,14 @@ class CoinGeckoExchangeProvider(
           .execute()
 
         if (!response.isSuccessful) {
-          logger.error { "Unsuccessful response - Error Code: ${response.code()}" }
-          // TODO: Check exception type an analyze properly if we should retry or not
+          val code = response.code()
+
+          logger.error { "Unsuccessful response - Error Code: $code" }
+
+          when (code) {
+            429 -> throw RetriableException("Status code: 429. Current response: $response")
+            else -> throw IOException(response.toString())
+          }
         }
 
         val body = response.body()
@@ -102,7 +111,7 @@ class CoinGeckoExchangeProvider(
         .addPathSegment("v3")
         .addPathSegment("coins")
         .addPathSegment("markets")
-        .addQueryParameter("tokenIds", ids.joinToString(separator = ","))
+        .addQueryParameter("ids", ids.joinToString(separator = ","))
         .addQueryParameter("vs_currency", currency)
         .addQueryParameter("order", "market_cap_desc")
         .addQueryParameter("sparkline", "false")
@@ -127,7 +136,7 @@ class CoinGeckoExchangeProvider(
   }
 }
 
-data class TokenEntry(
+data class TokenIdEntry(
   val id: String,
   val address: String
 )

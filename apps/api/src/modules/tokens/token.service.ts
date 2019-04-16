@@ -1,35 +1,37 @@
-import { EthplorerAddressInfoDto } from '@app/modules/token-transfers/dto/ethplorer-address-info.dto'
-import { EthplorerTokenHolderDto } from '@app/modules/token-transfers/dto/ethplorer-token-holder.dto'
-import { EthplorerTokenOperationDto } from '@app/modules/token-transfers/dto/ethplorer-token-operation.dto'
+import { EthplorerTokenOperationDto } from '@app/modules/tokens/dto/ethplorer-token-operation.dto'
 import { TokenTransferEntity } from '@app/orm/entities-mongo/token-transfer.entity'
 import { ConfigService } from '@app/shared/config.service'
 import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import axios from 'axios'
-import { MongoRepository } from 'typeorm'
+import { FindManyOptions, Repository } from 'typeorm'
 import { VmEngineService } from '@app/shared/vm-engine.service'
-import { ExchangeService } from '@app/modules/exchanges/exchange.service'
-import { TokenDto } from '@app/modules/token-transfers/dto/token.dto'
-import { EthplorerTokenInfoDto } from '@app/modules/token-transfers/dto/ethplorer-token-info.dto'
+import { TokenDto } from '@app/modules/tokens/dto/token.dto'
+import { EthplorerTokenInfoDto } from '@app/modules/tokens/dto/ethplorer-token-info.dto'
+import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
+import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 
 @Injectable()
-export class TokenTransferService {
+export class TokenService {
   constructor(
-    @InjectRepository(TokenTransferEntity)
-    private readonly tokenTransferRepository: MongoRepository<TokenTransferEntity>,
+    @InjectRepository(Erc20BalanceEntity)
+    private readonly erc20BalanceRepository: Repository<Erc20BalanceEntity>,
+    @InjectRepository(Erc721BalanceEntity)
+    private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
     private readonly configService: ConfigService,
     private readonly vmEngine: VmEngineService,
-    private readonly exchangeService: ExchangeService,
   ) {}
 
   async findAddressTokenTransfers(address: string, take: number = 10, page: number = 0): Promise<TokenTransferEntity[]> {
     const skip = take * page
-    return this.tokenTransferRepository.find({
-      where: { contract: address, transferType: { $not: { $eq: 'ETHER' } } },
-      take,
-      skip,
-      order: { timestamp: -1 },
-    })
+    // TODO re-enable
+    // return this.tokenTransferRepository.find({
+    //   where: { contract: address, transferType: { $not: { $eq: 'ETHER' } } },
+    //   take,
+    //   skip,
+    //   order: { timestamp: -1 },
+    // })
+    return []
   }
 
   async findAddressTokenTransfersByHolder(
@@ -52,7 +54,9 @@ export class TokenTransferService {
         where = { contract: address, transferType: { $not: { $eq: 'ETHER' } }, $or: [{ from: holder }, { to: holder }] }
         break
     }
-    return this.tokenTransferRepository.find({ where, take, skip, order: { timestamp: -1 } })
+    // TODO re-enable
+    // return this.tokenTransferRepository.find({ where, take, skip, order: { timestamp: -1 } })
+    return []
   }
 
   async fetchTokenHistory(address: string): Promise<EthplorerTokenOperationDto[]> {
@@ -90,53 +94,25 @@ export class TokenTransferService {
       : []
   }
 
-  async fetchTokenHolders(address: string): Promise<EthplorerTokenHolderDto[]> {
-    address = `0x${address}`
-
-    const baseUrl = this.configService.ethplorer.url
-    const apiKey = this.configService.ethplorer.apiKey
-    const url = `${baseUrl}getTopTokenHolders/${address}?apiKey=${apiKey}`
-
-    let res
-
-    try {
-      res = await axios.get(url)
-    } catch (err) {
-      this.handleEthplorerError(err)
+  async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<Erc20BalanceEntity[] | Erc721BalanceEntity[]> {
+    const skip = page * limit
+    const findOptions: FindManyOptions = {
+      where: { contract: address },
+      take: limit,
+      skip,
     }
-
-    if (res.status !== 200) {
-      throw new HttpException(res.statusText, res.status)
+    const ercBalances = await this.erc20BalanceRepository.find(findOptions)
+    if (ercBalances.length) {
+      return ercBalances
     }
-
-    const { holders } = res.data
-
-    return holders ? holders.map(h => new EthplorerTokenHolderDto(h)) : []
+    return await this.erc721BalanceRepository.find(findOptions)
   }
 
-  async fetchAddressInfo(tokenAddress: string, holderAddress: string): Promise<EthplorerAddressInfoDto | null> {
-    tokenAddress = `0x${tokenAddress}`
-    holderAddress = `0x${holderAddress}`
-
-    const baseUrl = this.configService.ethplorer.url
-    const apiKey = this.configService.ethplorer.apiKey
-    const url = `${baseUrl}getAddressInfo/${holderAddress}?apiKey=${apiKey}&token=${tokenAddress}`
-
-    let res
-
-    try {
-      res = await axios.get(url)
-    } catch (err) {
-      this.handleEthplorerError(err)
-    }
-
-    if (res.status !== 200) {
-      throw new HttpException(res.statusText, res.status)
-    }
-
-    const { data } = res
-
-    return data ? new EthplorerAddressInfoDto(data) : null
+  async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<Erc20BalanceEntity | Erc721BalanceEntity | undefined> {
+    const where = { contract: tokenAddress, address: holderAddress }
+    const erc20Balance = await this.erc20BalanceRepository.findOne({ where })
+    if (erc20Balance) return erc20Balance
+    return this.erc721BalanceRepository.findOne({ where })
   }
 
   async fetchAddressHistory(tokenAddress: string, holderAddress: string): Promise<EthplorerTokenOperationDto[]> {
@@ -209,7 +185,8 @@ export class TokenTransferService {
     const tokens = await this.vmEngine.fetchAddressAllTokensOwned(address)
 
     for await (const token of tokens) {
-      const rate = await this.exchangeService.findTokenExchangeRateByAddress(token.addr!!.replace('0x', ''))
+      // TODO re-enable
+      const rate = {currentPrice: 0} // await this.exchangeService.findTokenExchangeRateByAddress(token.addr!!.replace('0x', ''))
       token.currentPrice = rate ? rate.currentPrice : 0
     }
 
