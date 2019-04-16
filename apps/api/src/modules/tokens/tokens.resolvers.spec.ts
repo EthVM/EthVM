@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing'
-import { TokenTransferService } from './token-transfer.service'
-import { TokenTransferResolvers } from './token-transfer.resolvers'
+import { TokenService } from './token-transfer.service'
+import { TokenResolvers } from './token-transfer.resolvers'
 import { EthService } from '../../shared/eth.service'
 import { TokenTransferEntity } from '../../orm/entities/token-transfer.entity'
 import { TokenTransferDto } from './dto/token-transfer.dto'
@@ -112,17 +112,17 @@ const mockVmEngine = {
 }
 
 describe('TokenTransferResolvers', () => {
-  let tokenTransferService: TokenTransferService
-  let tokenTransferResolvers: TokenTransferResolvers
+  let tokenTransferService: TokenService
+  let tokenTransferResolvers: TokenResolvers
   let vmEngine: VmEngineService
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        TokenTransferResolvers,
+        TokenResolvers,
         EthService,
         {
-          provide: TokenTransferService,
+          provide: TokenService,
           useValue: mockService
         },
         {
@@ -131,8 +131,8 @@ describe('TokenTransferResolvers', () => {
         }
       ]
     }).compile()
-    tokenTransferService = module.get<TokenTransferService>(TokenTransferService)
-    tokenTransferResolvers = module.get<TokenTransferResolvers>(TokenTransferResolvers)
+    tokenTransferService = module.get<TokenService>(TokenService)
+    tokenTransferResolvers = module.get<TokenResolvers>(TokenResolvers)
     vmEngine = module.get<VmEngineService>(VmEngineService)
   })
 

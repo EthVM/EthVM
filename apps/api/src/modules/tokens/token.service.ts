@@ -1,6 +1,6 @@
-import { EthplorerAddressInfoDto } from '@app/modules/token-transfers/dto/ethplorer-address-info.dto'
-import { EthplorerTokenHolderDto } from '@app/modules/token-transfers/dto/ethplorer-token-holder.dto'
-import { EthplorerTokenOperationDto } from '@app/modules/token-transfers/dto/ethplorer-token-operation.dto'
+import { EthplorerAddressInfoDto } from '@app/modules/tokens/dto/ethplorer-address-info.dto'
+import { EthplorerTokenHolderDto } from '@app/modules/tokens/dto/ethplorer-token-holder.dto'
+import { EthplorerTokenOperationDto } from '@app/modules/tokens/dto/ethplorer-token-operation.dto'
 import { TokenTransferEntity } from '@app/orm/entities-mongo/token-transfer.entity'
 import { ConfigService } from '@app/shared/config.service'
 import { HttpException, Injectable } from '@nestjs/common'
@@ -9,11 +9,11 @@ import axios from 'axios'
 import { MongoRepository } from 'typeorm'
 import { VmEngineService } from '@app/shared/vm-engine.service'
 import { ExchangeService } from '@app/modules/exchanges/exchange.service'
-import { TokenDto } from '@app/modules/token-transfers/dto/token.dto'
-import { EthplorerTokenInfoDto } from '@app/modules/token-transfers/dto/ethplorer-token-info.dto'
+import { TokenDto } from '@app/modules/tokens/dto/token.dto'
+import { EthplorerTokenInfoDto } from '@app/modules/tokens/dto/ethplorer-token-info.dto'
 
 @Injectable()
-export class TokenTransferService {
+export class TokenService {
   constructor(
     @InjectRepository(TokenTransferEntity)
     private readonly tokenTransferRepository: MongoRepository<TokenTransferEntity>,

@@ -21,7 +21,7 @@ import { UncleModule } from '@app/modules/uncles/uncle.module'
     ContractModule,
     // ExchangeModule,
     // ProcessingMetadataModule,
-    // TokenTransferModule,
+    // TokenModule,
     TxModule,
     UncleModule,
     // StatisticModule,

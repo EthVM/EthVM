@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@app/shared/config.service'
 import * as abi from 'ethereumjs-abi'
-import { TokenDto } from '@app/modules/token-transfers/dto/token.dto'
+import { TokenDto } from '@app/modules/tokens/dto/token.dto'
 import * as utils from 'web3-utils'
 import BigNumber from 'bignumber.js'
 import axios from 'axios'

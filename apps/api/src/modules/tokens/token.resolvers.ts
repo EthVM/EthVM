@@ -1,14 +1,14 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
-import { TokenTransferService } from '@app/modules/token-transfers/token-transfer.service'
+import { TokenService } from '@app/modules/tokens/token.service'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { VmEngineService } from '@app/shared/vm-engine.service'
-import { TokenTransferDto } from '@app/modules/token-transfers/dto/token-transfer.dto'
+import { TokenTransferDto } from '@app/modules/tokens/dto/token-transfer.dto'
 
 @Resolver('TokenTransfer')
-export class TokenTransferResolvers {
-  constructor(private readonly tokenTransferService: TokenTransferService, private readonly vmEngine: VmEngineService) {}
+export class TokenResolvers {
+  constructor(private readonly tokenTransferService: TokenService, private readonly vmEngine: VmEngineService) {}
 
   @Query()
   async addressTokenTransfers(
