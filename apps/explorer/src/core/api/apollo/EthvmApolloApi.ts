@@ -36,8 +36,8 @@ import {
   holderDetails,
   holderTransfers,
   tokenHistory,
-  topTokenHolders
-} from '@app/core/api/apollo/queries/token-transfers.graphql'
+  tokenHolders
+} from '@app/core/api/apollo/queries/tokens.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import {
@@ -338,17 +338,6 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenHistory)
   }
 
-  public getTopTokenHolders(address: string): Promise<any> {
-    return this.apollo
-      .query({
-        query: topTokenHolders,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.topTokenHolders)
-  }
-
   public getHolderDetails(address: string, holderAddress: string): Promise<any> {
     return this.apollo
       .query({
@@ -391,6 +380,21 @@ export class EthvmApolloApi implements EthvmApi {
 
   public getTotalNumberOfPendingTxs(): Promise<number> {
     throw new Error('Method not implemented.')
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Tokens
+  // ------------------------------------------------------------------------------------
+
+  public getTokenHolders(address: string, limit?: number, page?: number): Promise<any> {
+    return this.apollo
+      .query({
+        query: tokenHolders,
+        variables: {
+          address, limit, page
+        }
+      })
+      .then(res => res.data.tokenHolders)
   }
 
   // ------------------------------------------------------------------------------------

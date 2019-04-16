@@ -33,11 +33,10 @@ query tokenHistory($address: String!) {
   }
 }
 
-query topTokenHolders($address: String!) {
-  topTokenHolders(address: $address) {
+query tokenHolders($address: String!, $limit: Int, $page: Int) {
+  tokenHolders(address: $address, limit: $limit, page: $page) {
     address
     balance
-    share
   }
 }
 

@@ -374,7 +374,7 @@ export default class PageDetailsToken extends Vue {
       this.isTokenHoldersLoading = true
 
       this.$api
-        .getTopTokenHolders(this.addressRef)
+        .getTokenHolders(this.addressRef)
         .then(response => {
           this.isTokenHoldersLoading = false
           if (response === null) {

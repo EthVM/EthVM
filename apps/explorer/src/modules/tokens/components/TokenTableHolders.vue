@@ -42,7 +42,9 @@
 
         <!-- Column 3 -->
         <v-flex hidden-sm-and-down md2>
-          <p class="mb-0 ml-2">{{ holder.share }}%</p>
+          <!-- TODO calculate share using totalSupply and holder.balance -->
+          <!--<p class="mb-0 ml-2">{{ holder.share }}%</p>-->
+          <p class="mb-0 ml-2">Pending</p>
         </v-flex>
         <!-- End Column 3 -->
       </v-layout>

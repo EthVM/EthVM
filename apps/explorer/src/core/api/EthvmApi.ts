@@ -51,7 +51,6 @@ export interface EthvmApi {
   getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
   getTokenHistory(address: string): Promise<any>
-  getTopTokenHolders(address: string): Promise<any>
   getHolderDetails(address: string, holderAddress: string): Promise<any>
   getHolderTransfers(address: string, holderAddress: string): Promise<any>
 
@@ -60,6 +59,9 @@ export interface EthvmApi {
   getPendingTxsOfAddress(address: string, filter: string, limit: number, page: number): Promise<PendingTx[]>
   getNumberOfPendingTxsOfAddress(address: string): Promise<number>
   getTotalNumberOfPendingTxs(): Promise<number>
+
+  // Tokens
+  getTokenHolders(address: string, limit?: number, page?: number): Promise<any>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>
