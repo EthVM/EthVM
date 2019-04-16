@@ -12,6 +12,7 @@ import com.ethvm.kafka.streams.Serdes.Contract
 import com.ethvm.kafka.streams.Serdes.ContractKey
 import com.ethvm.kafka.streams.Serdes.ContractLifecycle
 import com.ethvm.kafka.streams.Serdes.ContractLifecycleList
+import com.ethvm.kafka.streams.Serdes.Erc20Metadata
 import com.ethvm.kafka.streams.Serdes.FungibleBalance
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceDelta
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceDeltaList
@@ -103,6 +104,8 @@ object Topics {
   val CanonicalContractLifecycle = KafkaTopic("canonical_contract_lifecycle", CanonicalKey(), ContractLifecycleList())
   val ContractLifecycleEvents = KafkaTopic("contract_lifecycle_events", ContractKey(), ContractLifecycle())
   val Contract = KafkaTopic("contract", ContractKey(), Contract())
+
+  val Erc20Metadata = KafkaTopic("erc20_metadata", ContractKey(), Erc20Metadata())
 
   const val ContractMetadata = "contract_metadata"
 

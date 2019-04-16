@@ -26,6 +26,9 @@ dependencies {
   // Ethereumj
   implementation("org.ethereum:ethereumj-core:${ext.get("ethereumj-version") as String}")
 
+  // Web3
+  implementation("org.web3j:parity:4.2.0")
+
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.1.1")
   implementation("io.confluent:kafka-streams-avro-serde:5.1.0")

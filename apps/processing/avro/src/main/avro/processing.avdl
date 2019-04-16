@@ -48,14 +48,14 @@ protocol Processing {
     FungibleTokenType tokenType;
     FungibleBalanceDeltaType deltaType;
     com.ethvm.avro.common.TraceLocationRecord traceLocation;
-    decimal(40,0) amount;
+    decimal(80, 0) amount;
 
     string address;
     string contractAddress = "";
   }
 
   record FungibleBalanceRecord {
-    decimal(40,0) amount;
+    decimal(80, 0) amount;
   }
 
   record FungibleBalanceDeltaListRecord {
@@ -69,7 +69,7 @@ protocol Processing {
 
   record NonFungibleBalanceKeyRecord {
     string contract;
-    decimal(40,0) tokenId;
+    decimal(80, 0) tokenId;
   }
 
   enum NonFungibleTokenType {
@@ -85,7 +85,7 @@ protocol Processing {
     string to;
 
     union { null, string } contract = null;
-    union { null, decimal(40,0) } tokenId;
+    union { null, decimal(80, 0) } tokenId;
 
   }
 
@@ -105,17 +105,17 @@ protocol Processing {
 
   record BlockAuthorRecord {
     string author;
-    decimal(40,0) blockNumber;
+    decimal(80, 0) blockNumber;
     string blockHash;
   }
 
   record TransactionGasPriceRecord {
-    decimal(40,0) blockNumber;
+    decimal(80, 0) blockNumber;
     string blockHash;
     string transactionHash;
     int transactionPosition;
     string address;
-    decimal(40,0) gasPrice;
+    decimal(80, 0) gasPrice;
   }
 
   record TransactionGasPriceListRecord {
@@ -124,7 +124,7 @@ protocol Processing {
   }
 
   record TransactionGasUsedRecord {
-    decimal(40,0) gasUsed;
+    decimal(80, 0) gasUsed;
   }
 
   record TransactionGasUsedListRecord {
@@ -133,12 +133,12 @@ protocol Processing {
   }
 
   record TransactionFeeRecord {
-    decimal(40,0) blockNumber;
+    decimal(80, 0) blockNumber;
     string blockHash;
     string transactionHash;
     int transactionPosition;
     string address;
-    decimal(40,0) transactionFee;
+    decimal(80, 0) transactionFee;
   }
 
   record TransactionFeeListRecord {
@@ -153,17 +153,17 @@ protocol Processing {
   }
 
   record BlockMetricsHeaderRecord {
-    decimal(40,0) blockNumber;
+    decimal(80, 0) blockNumber;
     string blockHash;
     union { null, long } blockTime = null;
     long timestamp;
     int numUncles;
-    decimal(40,0) difficulty;
-    decimal(40,0) totalDifficulty;
+    decimal(80, 0) difficulty;
+    decimal(80, 0) totalDifficulty;
   }
 
   record BlockMetricsTransactionTraceRecord {
-    decimal(40,0) blockNumber;
+    decimal(80, 0) blockNumber;
     string blockHash;
     int totalTxs;
     int numSuccessfulTxs;
@@ -173,19 +173,19 @@ protocol Processing {
   }
 
   record BlockMetricsTransactionRecord {
-    decimal(40,0) blockNumber;
+    decimal(80, 0) blockNumber;
     string blockHash;
-    decimal(40,0) totalGasPrice;
-    decimal(40,0) avgGasLimit;
-    decimal(40,0) avgGasPrice;
+    decimal(80, 0) totalGasPrice;
+    decimal(80, 0) avgGasLimit;
+    decimal(80, 0) avgGasPrice;
     union { null, long } timestamp = null;
   }
 
   record BlockMetricsTransactionFeeRecord {
-    decimal(40,0) blockNumber;
+    decimal(80, 0) blockNumber;
     string blockHash;
-    decimal(40,0) totalTxFees;
-    decimal(40,0) avgTxFees;
+    decimal(80, 0) totalTxFees;
+    decimal(80, 0) avgTxFees;
     union { null, long } timestamp = null;
   }
 
@@ -234,6 +234,14 @@ protocol Processing {
   record AddressMetadataRecord {
     union { null, long } count = null;
     union { null, boolean } flag = null;
+  }
+
+
+  record Erc20MetadataRecord {
+    union { null, string } name = null;
+    union { null, string } symbol = null;
+    union { null, int } decimals = null;
+    union { null, decimal(80, 0) } totalSupply = null;
   }
 
 }

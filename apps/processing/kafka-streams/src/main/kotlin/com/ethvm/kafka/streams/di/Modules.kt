@@ -3,14 +3,28 @@ package com.ethvm.kafka.streams.di
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import com.ethvm.kafka.streams.config.AppConfig
+import com.ethvm.kafka.streams.config.Web3Config
 import org.apache.avro.Schema
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.dsl.module.module
+import org.web3j.protocol.Web3j
+import org.web3j.protocol.websocket.WebSocketService
 import java.util.Properties
 
 object Modules {
+
+  val web3 = module {
+    val config = get<Web3Config>()
+
+    single<Web3j> {
+      val wsService = WebSocketService(config.wsUrl, false)
+      wsService.connect()
+      Web3j.build(wsService)
+    }
+
+  }
 
   val kafkaStreams = module {
 
