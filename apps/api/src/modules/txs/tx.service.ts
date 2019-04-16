@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, In, LessThanOrEqual, Repository } from 'typeorm'
 import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 
 @Injectable()
 export class TxService {
   constructor(
     @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
+    @InjectRepository(TransactionReceiptEntity) private readonly transactionReceiptRepository: Repository<TransactionReceiptEntity>,
   ) {}
 
   async findTx(hash: string): Promise<TransactionEntity | undefined> {
@@ -22,11 +24,12 @@ export class TxService {
       where,
       order: { blockNumber: 'DESC', transactionIndex: 'DESC', timestamp: 'DESC' },
       take,
-      skip,
+      skip
     }
-    const txs = await this.transactionRepository.find(findOptions)
+    let txs = await this.transactionRepository.find(findOptions)
     if (!txs.length) return []
 
+    txs = await this.findAndMapReceipts(txs)
     return this.findAndMapTraces(txs)
   }
 
@@ -63,7 +66,25 @@ export class TxService {
       txsByHash[trace.transactionHash].traces.push(trace)
     })
 
-    return txs
+    return Object.values(txsByHash)
+
+  }
+
+  private async findAndMapReceipts(txs: TransactionEntity[]): Promise<TransactionEntity[]> {
+
+    const receipts = await this.transactionReceiptRepository.find({ where: { transactionHash: In(txs.map(tx => tx.hash)) }})
+
+    const txsByHash = txs.reduce((memo, next) => {
+      next.traces = []
+      memo[next.hash] = next
+      return memo
+    }, {})
+
+    receipts.forEach(receipt => {
+      txsByHash[receipt.transactionHash].receipt = receipt
+    })
+
+    return Object.values(txsByHash)
 
   }
 

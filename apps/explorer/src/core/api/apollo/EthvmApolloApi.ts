@@ -424,7 +424,7 @@ export class EthvmApolloApi implements EthvmApi {
           fromBlock
         }
       })
-      .then(res => res.data.txs.map(raw => new Tx(raw)))
+      .then(res => res.data.txs.map(raw => new SimpleTx(raw)))
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]> {
