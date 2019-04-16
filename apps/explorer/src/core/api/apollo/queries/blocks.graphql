@@ -9,14 +9,14 @@ query blocks($limit: Int, $page: Int, $fromBlock: Long) {
       hash
       receipt {
         status
-        traces {
-          error
-        }
+      }
+      traces {
+        error
       }
     }
-    rewards {
-      value
-    }
+#    rewards {
+#      value
+#    }
     uncles {
       hash
     }
@@ -61,11 +61,11 @@ query blockByHash($hash: String) {
         error
       }
     }
-    rewards {
-      author
-      rewardType
-      value
-    }
+#    rewards {
+#      author
+#      rewardType
+#      value
+#    }
     uncles {
       hash
     }
@@ -109,11 +109,11 @@ query blockByNumber($number: Int) {
         error
       }
     }
-    rewards {
-      author
-      rewardType
-      value
-    }
+#    rewards {
+#      author
+#      rewardType
+#      value
+#    }
     uncles {
       hash
     }
@@ -130,10 +130,10 @@ query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
     uncles {
       hash
     }
-    rewards {
-      rewardType
-      value
-    }
+#    rewards {
+#      rewardType
+#      value
+#    }
   }
 }
 

@@ -25,7 +25,7 @@ export class BlockService {
   async findBlocks(limit: number = 10, page: number = 0, fromBlock: number = -1): Promise<BlockHeaderEntity[]> {
     const where = fromBlock !== -1 ? {  number: LessThanOrEqual(fromBlock)  } : {}
     const skip = page * limit
-    return this.blockHeaderRepository.find({ where, take: limit, skip, order: {number: 'DESC'}, relations: ['txs', 'uncles'] })
+    return this.blockHeaderRepository.find({ where, take: limit, skip, order: {number: 'DESC'}, relations: ['txs', 'txs.receipt', 'uncles'] })
   }
 
   async findBlockByNumber(number: number): Promise<BlockHeaderEntity | undefined> {
