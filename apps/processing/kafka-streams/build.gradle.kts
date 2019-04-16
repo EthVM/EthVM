@@ -16,6 +16,7 @@ project.java.sourceSets["main"].java {
 }
 
 dependencies {
+
   // Kotlin
   implementation(kotlin("stdlib"))
 
@@ -24,7 +25,10 @@ dependencies {
   implementation(project(":avro"))
 
   // Ethereumj
-  implementation("org.ethereum:ethereumj-core:${ext.get("ethereumj-version") as String}")
+  implementation("org.ethereum:ethereumj-core:${ext.get("ethereumj-version") as String}") {
+    exclude("org.ethereum", "rocksdbjni")
+    exclude("org.ethereum", "leveldbjni-all")
+  }
 
   // Web3
   implementation("org.web3j:parity:4.2.0")
@@ -36,9 +40,18 @@ dependencies {
   // Utils
   implementation("com.github.ajalt:clikt:1.7.0")
   implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
-  implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
-  implementation("org.koin:koin-core:1.0.2")
-  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
+
+  implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-common")
+  }
+
+  implementation("org.koin:koin-core:2.0.0-rc-2")
+
+  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-common")
+  }
 
   // Testing
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")

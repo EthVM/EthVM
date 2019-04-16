@@ -49,8 +49,8 @@ import com.ethvm.avro.tokens.EthTokenListsKeyRecord
 import com.ethvm.kafka.streams.config.KafkaConfig
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 @Suppress("FunctionName")
 object Serdes : KoinComponent {

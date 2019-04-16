@@ -8,7 +8,10 @@ import org.apache.avro.Schema
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
-import org.koin.dsl.module.module
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+
+
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.websocket.WebSocketService
 import java.util.Properties
@@ -16,9 +19,11 @@ import java.util.Properties
 object Modules {
 
   val web3 = module {
-    val config = get<Web3Config>()
 
     single<Web3j> {
+
+      val config = get<Web3Config>()
+
       val wsService = WebSocketService(config.wsUrl, false)
       wsService.connect()
       Web3j.build(wsService)
@@ -28,9 +33,10 @@ object Modules {
 
   val kafkaStreams = module {
 
-    val config = get<AppConfig>()
-
     single {
+
+      val config = get<AppConfig>()
+
       when (config.unitTesting) {
         false -> CachedSchemaRegistryClient(config.kafka.schemaRegistryUrl, 100)
         true -> MockSchemaRegistryClient().apply {
@@ -43,7 +49,10 @@ object Modules {
       }
     }
 
-    factory(name = "baseKafkaStreamsConfig") {
+    factory(named("baseKafkaStreamsConfig")) {
+
+      val config = get<AppConfig>()
+
       Properties().apply {
         // App
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka.bootstrapServers)

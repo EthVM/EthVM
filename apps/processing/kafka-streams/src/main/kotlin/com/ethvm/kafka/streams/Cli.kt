@@ -19,8 +19,8 @@ import com.ethvm.kafka.streams.processors.FungibleBalanceProcessor
 import com.ethvm.kafka.streams.processors.KafkaProcessor
 import com.ethvm.kafka.streams.processors.NonFungibleBalanceProcessor
 import com.ethvm.kafka.streams.processors.TransactionFeesProcessor
-import org.koin.dsl.module.module
-import org.koin.standalone.StandAloneContext.startKoin
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class Cli : CliktCommand() {
 
@@ -93,7 +93,9 @@ class Cli : CliktCommand() {
 
   override fun run() {
 
-    startKoin(listOf(configModule, kafkaStreams, web3))
+    startKoin {
+      modules(configModule, kafkaStreams, web3)
+    }
 
     listOf<KafkaProcessor>(
       TransactionFeesProcessor(),

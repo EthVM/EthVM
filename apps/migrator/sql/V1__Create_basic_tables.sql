@@ -173,15 +173,26 @@ ORDER BY cb.number DESC,
 
 CREATE TABLE contract
 (
-  address            CHAR(42) PRIMARY KEY,
-  creator            CHAR(42)    NULL,
-  init               TEXT        NULL,
-  code               TEXT        NULL,
-  contract_type      VARCHAR(32) NULL,
-  refund_address     CHAR(66)    NULL,
-  refund_balance     NUMERIC     NULL,
-  trace_created_at   TEXT        NULL,
-  trace_destroyed_at TEXT        NULL
+  address                              CHAR(42) PRIMARY KEY,
+  creator                              CHAR(42)    NULL,
+  init                                 TEXT        NULL,
+  code                                 TEXT        NULL,
+  contract_type                        VARCHAR(32) NULL,
+  refund_address                       CHAR(66)    NULL,
+  refund_balance                       NUMERIC     NULL,
+  trace_created_at_block_hash          CHAR(66)    NULL,
+  trace_created_at_block_number        NUMERIC     NULL,
+  trace_created_at_transaction_hash    CHAR(66)    NULL,
+  trace_created_at_transaction_index   INT         NULL,
+  trace_created_at_log_index           INT         NULL,
+  trace_created_at_trace_address       VARCHAR(64) NULL,
+  trace_destroyed_at_block_hash        CHAR(66)    NULL,
+  trace_destroyed_at_block_number      NUMERIC     NULL,
+  trace_destroyed_at_transaction_hash  CHAR(66)    NULL,
+  trace_destroyed_at_transaction_index INT         NULL,
+  trace_destroyed_at_log_index         INT         NULL,
+  trace_destroyed_at_trace_address     VARCHAR(64) NULL,
+  trace_destroyed_at                   TEXT        NULL
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
@@ -302,6 +313,18 @@ CREATE TABLE non_fungible_balance_deltas
   "from"         CHAR(42)    NOT NULL,
   "to"           CHAR(42)    NOT NULL
 );
+
+CREATE TABLE erc20_metadata
+(
+  "address"      CHAR(42) PRIMARY KEY,
+  "name"         VARCHAR(64) NULL,
+  "symbol"       VARCHAR(64) NULL,
+  "decimals"     INT         NULL,
+  "total_supply" NUMERIC     NULL
+);
+
+CREATE INDEX idx_erc20_metadata_name ON erc20_metadata (name);
+CREATE INDEX idx_erc20_metadata_symbol ON erc20_metadata (symbol);
 
 /* metrics hyper tables */
 CREATE TABLE block_metrics_header

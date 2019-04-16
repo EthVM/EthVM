@@ -11,20 +11,20 @@ import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.koin.standalone.inject
+import org.koin.core.inject
 import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.FunctionReturnDecoder
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Utf8String
 import org.web3j.abi.datatypes.generated.Uint256
 import org.web3j.abi.datatypes.generated.Uint8
-import org.web3j.abi.datatypes.Function as AbiFunction
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.Transaction
 import java.math.BigInteger
 import java.util.Properties
 import java.util.concurrent.CompletableFuture
+import org.web3j.abi.datatypes.Function as AbiFunction
 
 class Erc20MetadataProcessor : AbstractKafkaProcessor() {
 

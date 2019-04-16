@@ -55,7 +55,6 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
 
   private static final String PURPOSE = "flattening";
 
-  private SimpleJsonConverter jsonConverter;
   private ObjectMapper objectMapper;
 
   private String delimiter;
@@ -66,7 +65,6 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
   public void configure(Map<String, ?> props) {
 
     objectMapper = new ObjectMapper();
-    jsonConverter = new SimpleJsonConverter();
 
     final SimpleConfig config = new SimpleConfig(CONFIG_DEF, props);
     delimiter = config.getString(DELIMITER_CONFIG);
@@ -109,7 +107,7 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
   }
 
   private static Map<String, Object> requireMap(Object operatingValue, String purpose) {
-    if (!(operatingValue == null || (operatingValue instanceof Map))) {
+    if (!(operatingValue instanceof Struct)) {
       throw new IllegalArgumentException("Must be a map");
     }
     return (Map<String, Object>) operatingValue;
@@ -163,30 +161,26 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
   }
 
   private R applyWithSchema(R record) {
-    try {
 
-      final Struct value = requireStruct(operatingValue(record), PURPOSE);
+    final Struct value = requireStruct(operatingValue(record), PURPOSE);
 
-      Schema updatedSchema = schemaUpdateCache.get(value.schema());
-      if (updatedSchema == null) {
-        final SchemaBuilder builder = copySchemaBasics(value.schema(), SchemaBuilder.struct());
-        Struct defaultValue = (Struct) value.schema().defaultValue();
-        buildUpdatedSchema(value.schema(), "", builder, value.schema().isOptional(), defaultValue);
-        updatedSchema = builder.build();
-        schemaUpdateCache.put(value.schema(), updatedSchema);
-      }
-
-      final Struct updatedValue = new Struct(updatedSchema);
-      buildWithSchema(value, "", updatedValue);
-      return newRecord(record, updatedSchema, updatedValue);
-
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
+    Schema updatedSchema = schemaUpdateCache.get(value.schema());
+    if (updatedSchema == null) {
+      final SchemaBuilder builder = copySchemaBasics(value.schema(), SchemaBuilder.struct());
+      Struct defaultValue = (Struct) value.schema().defaultValue();
+      buildUpdatedSchema(value.schema(), "", builder, value.schema().isOptional(), defaultValue);
+      updatedSchema = builder.build();
+      schemaUpdateCache.put(value.schema(), updatedSchema);
     }
+
+    final Struct updatedValue = new Struct(updatedSchema);
+    buildWithSchema(value, "", updatedValue);
+    return newRecord(record, updatedSchema, updatedValue);
+
   }
 
   private static Struct requireStruct(Object operatingValue, String purpose) {
-    if (!(operatingValue == null || operatingValue instanceof Struct)) {
+    if (!(operatingValue instanceof Struct)) {
       throw new IllegalArgumentException("Must be a struct");
     }
     return (Struct) operatingValue;
@@ -204,7 +198,7 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
    * @param optional          true if any ancestor schema is optional
    * @param defaultFromParent the default value, if any, included via the parent/ancestor schemas
    */
-  private void buildUpdatedSchema(Schema schema, String fieldNamePrefix, SchemaBuilder newSchema, boolean optional, Struct defaultFromParent) throws JsonProcessingException {
+  private void buildUpdatedSchema(Schema schema, String fieldNamePrefix, SchemaBuilder newSchema, boolean optional, Struct defaultFromParent) {
     for (Field field : schema.fields()) {
       final String fieldName = fieldName(fieldNamePrefix, CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.name()));
       final boolean fieldIsOptional = optional || field.schema().isOptional();
@@ -225,7 +219,11 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
         case STRING:
         case ARRAY:
         case BYTES:
-          newSchema.field(fieldName, convertFieldSchema(field.schema(), fieldIsOptional, fieldDefaultValue));
+          try {
+            newSchema.field(fieldName, convertFieldSchema(field.schema(), fieldIsOptional, fieldDefaultValue));
+          } catch (Exception ex) {
+            throw new RuntimeException(ex);
+          }
           break;
         case STRUCT:
           buildUpdatedSchema(field.schema(), fieldName, newSchema, fieldIsOptional, (Struct) fieldDefaultValue);
@@ -273,7 +271,10 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
     return builder.build();
   }
 
-  private void buildWithSchema(Struct record, String fieldNamePrefix, Struct newRecord) throws JsonProcessingException {
+  private void buildWithSchema(Struct record, String fieldNamePrefix, Struct newRecord) {
+
+    if(record == null) return;
+
     for (Field field : record.schema().fields()) {
       final String fieldName = fieldName(fieldNamePrefix, CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.name()));
       switch (field.schema().type()) {
@@ -289,7 +290,16 @@ public abstract class Flatten<R extends ConnectRecord<R>> implements Transformat
           newRecord.put(fieldName, record.get(field));
           break;
         case ARRAY:
-          newRecord.put(fieldName, record.get(field) != null ? objectMapper.writeValueAsString(record.get(field)) : null);
+          try {
+            newRecord.put(
+              fieldName,
+              record.get(field) != null ?
+                objectMapper.writeValueAsString(record.get(field)) :
+                null
+            );
+          } catch (Exception ex) {
+            throw new RuntimeException(ex);
+          }
           break;
         case STRUCT:
           buildWithSchema(record.getStruct(field.name()), fieldName, newRecord);
