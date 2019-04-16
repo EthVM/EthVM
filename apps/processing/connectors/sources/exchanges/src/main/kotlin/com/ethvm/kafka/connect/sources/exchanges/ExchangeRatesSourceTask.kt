@@ -21,8 +21,8 @@ class ExchangeRatesSourceTask : SourceTask() {
 
   override fun start(props: MutableMap<String, String>) {
 
-    val provider = ExchangeRateSourceConnector.Config.provider(props)
-    syncInterval = ExchangeRateSourceConnector.Config.syncInterval(props)
+    val provider = ExchangeRatesSourceConnector.Config.provider(props)
+    syncInterval = ExchangeRatesSourceConnector.Config.syncInterval(props)
 
     logger.info { "Starting ExchangeRatesSourceTask - Provider: $provider / Sync Interval (secs): $syncInterval" }
   }

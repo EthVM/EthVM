@@ -1,0 +1,52 @@
+[
+  {
+    "id": "adbank",
+    "symbol": "adb",
+    "name": "adbank",
+    "image": "https://assets.coingecko.com/coins/images/2806/large/adbank.png?1547036978",
+    "current_price": 0.00200439005483286,
+    "market_cap": 1310701.63851146,
+    "market_cap_rank": 766,
+    "total_volume": 41227.6937672045,
+    "high_24h": 0.0020412965051228,
+    "low_24h": 0.00191983731659638,
+    "price_change_24h": -0.0000100091005887188,
+    "price_change_percentage_24h": -0.496877719680343,
+    "market_cap_change_24h": -18677.5849386114,
+    "market_cap_change_percentage_24h": -1.4049854705972,
+    "circulating_supply": "653915456.8998077267",
+    "total_supply": 1000000000,
+    "ath": 0.0288138465936725,
+    "ath_change_percentage": -93.043366206333,
+    "ath_date": "2018-04-24T07:25:22.818Z",
+    "roi": {
+      "times": -0.6324973937503764,
+      "currency": "eth",
+      "percentage": -63.24973937503764
+    },
+    "last_updated": "2019-04-16T10:07:31.684Z"
+  },
+  {
+    "id": "adelphoi",
+    "symbol": "adl",
+    "name": "Adelphoi",
+    "image": "https://assets.coingecko.com/coins/images/1246/large/adelphoi-logo.png?1547035271",
+    "current_price": 0.00784044414411829,
+    "market_cap": 0,
+    "market_cap_rank": 3383,
+    "total_volume": 131.26333080215,
+    "high_24h": 0.0084502400313661,
+    "low_24h": 0.00644364310670744,
+    "price_change_24h": 0.000310097839948584,
+    "price_change_percentage_24h": 4.11797581974253,
+    "market_cap_change_24h": 0,
+    "market_cap_change_percentage_24h": 0,
+    "circulating_supply": "0.0",
+    "total_supply": 100000000,
+    "ath": 100.449603455468,
+    "ath_change_percentage": -99.9921946489838,
+    "ath_date": "2018-02-22T00:00:00.000Z",
+    "roi": null,
+    "last_updated": "2019-04-16T10:00:24.362Z"
+  }
+]
