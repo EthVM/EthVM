@@ -7,7 +7,7 @@ import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Erc20BalanceEntity, Erc721BalanceEntity])
+    TypeOrmModule.forFeature([Erc20BalanceEntity, Erc721BalanceEntity]),
   ],
   providers: [TokenService, TokenResolvers],
   exports: [TokenService],

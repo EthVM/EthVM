@@ -40,13 +40,20 @@ export class TokenResolvers {
   }
 
   @Query()
-  async tokenHolders(@Args('address', ParseAddressPipe) address: string, @Args('limit', ParseLimitPipe) limit: number, @Args('page', ParsePagePipe) page: number): Promise<TokenHolderDto[]> {
+  async tokenHolders(
+    @Args('address', ParseAddressPipe) address: string,
+    @Args('limit', ParseLimitPipe) limit: number,
+    @Args('page', ParsePagePipe) page: number,
+  ): Promise<TokenHolderDto[]> {
     const entities = await this.tokenService.findTokenHolders(address, limit, page)
     return (entities as any[]).map(e => new TokenHolderDto(e))
   }
 
   @Query()
-  async tokenHolder(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string): Promise<TokenHolderDto | null> {
+  async tokenHolder(
+    @Args('address', ParseAddressPipe) address: string,
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+  ): Promise<TokenHolderDto | null> {
     const entity = await this.tokenService.findTokenHolder(address, holderAddress)
     return entity ? new TokenHolderDto(entity) : null
   }

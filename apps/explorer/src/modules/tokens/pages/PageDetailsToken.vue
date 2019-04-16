@@ -197,7 +197,6 @@ export default class PageDetailsToken extends Vue {
           resolve()
         })
         .catch(e => {
-          console.log('Err', e)
           this.errorTokenDetailsList = this.$i18n.t('message.invalid.token').toString()
           resolve()
         })

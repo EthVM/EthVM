@@ -131,9 +131,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
   }
 
   get balanceUsd(): string {
-    const n = new BN(this.holderDetails.balance)
-      .div(new BN(10).pow(this.contractDetails.metadata.decimals))
-      .multipliedBy(this.tokenDetails.currentPrice)
+    const n = new BN(this.holderDetails.balance).div(new BN(10).pow(this.contractDetails.metadata.decimals)).multipliedBy(this.tokenDetails.currentPrice)
     return this.holderDetails.balance ? `$${this.getRoundNumber(n)}` : 'N/A'
   }
 

@@ -391,7 +391,9 @@ export class EthvmApolloApi implements EthvmApi {
       .query({
         query: tokenHolders,
         variables: {
-          address, limit, page
+          address,
+          limit,
+          page
         }
       })
       .then(res => res.data.tokenHolders)

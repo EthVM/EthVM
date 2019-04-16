@@ -99,7 +99,7 @@ export class TokenService {
     const findOptions: FindManyOptions = {
       where: { contract: address },
       take: limit,
-      skip
+      skip,
     }
     const ercBalances = await this.erc20BalanceRepository.find(findOptions)
     if (ercBalances.length) {
