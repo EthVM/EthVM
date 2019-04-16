@@ -218,6 +218,8 @@ export class ProcessingMetadata {
 }
 
 export abstract class IQuery {
+    abstract accountByAddress(address: string): Account | Promise<Account>;
+
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -227,8 +229,6 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
-
-    abstract accountByAddress(address: string): Account | Promise<Account>;
 
     abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
@@ -244,9 +244,9 @@ export abstract class IQuery {
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
-    abstract search(query: string): Search | Promise<Search>;
-
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+    abstract search(query: string): Search | Promise<Search>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
