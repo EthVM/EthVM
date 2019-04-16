@@ -24,7 +24,7 @@ export class TxService {
       where,
       order: { blockNumber: 'DESC', transactionIndex: 'DESC', timestamp: 'DESC' },
       take,
-      skip
+      skip,
     }
     let txs = await this.transactionRepository.find(findOptions)
     if (!txs.length) return []
