@@ -1,6 +1,5 @@
 package com.ethvm.common.extensions
 
-import com.google.common.base.CaseFormat
 import org.apache.commons.codec.binary.Hex
 import java.math.BigInteger
 
