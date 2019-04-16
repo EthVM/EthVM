@@ -1,10 +1,10 @@
 import { Config } from '@app/config'
 import { ConnectionFactory } from '@app/db'
 import { EtherBalanceView } from '@app/db/entities/ether-balance.view'
+import ora = require('ora')
 import { Connection } from 'typeorm'
 import Web3 from 'web3'
 import { WebsocketProvider } from 'web3-providers'
-import ora = require('ora')
 
 export async function EtherBalances(config: Config, blockNumber: number = undefined) {
 
@@ -20,7 +20,7 @@ export async function EtherBalances(config: Config, blockNumber: number = undefi
   let [balances, count] = [[], 0]
 
   let matched = 0
-  let failures = []
+  const failures = []
 
 
   do {

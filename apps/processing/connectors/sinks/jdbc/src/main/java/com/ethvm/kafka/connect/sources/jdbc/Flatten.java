@@ -17,7 +17,6 @@
 
 package com.ethvm.kafka.connect.sources.jdbc;
 
-import com.datamountaineer.streamreactor.connect.json.SimpleJsonConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.CaseFormat;

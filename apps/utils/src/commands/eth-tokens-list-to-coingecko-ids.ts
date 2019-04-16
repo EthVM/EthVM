@@ -1,8 +1,8 @@
 import { Config } from '@app/config'
 import axios from 'axios'
-import * as rax from 'retry-axios'
 import fs from 'fs'
 import ora from 'ora'
+import * as rax from 'retry-axios'
 
 const spinner = ora()
 

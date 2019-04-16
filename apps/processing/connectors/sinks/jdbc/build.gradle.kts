@@ -16,10 +16,7 @@ dependencies {
 
   // Kotlin
   implementation(kotlin("stdlib"))
-
-  // Modules deps
-  implementation(project(":common"))
-
+  
   // Kafka
   compileOnly("org.apache.kafka:connect-api:2.1.0")
   implementation("io.confluent:kafka-schema-registry-client:5.1.0")
