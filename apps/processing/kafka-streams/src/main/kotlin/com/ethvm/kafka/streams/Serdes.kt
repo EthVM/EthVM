@@ -5,7 +5,6 @@ import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.ContractKeyRecord
 import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractMetadataRecord
 import com.ethvm.avro.capture.ContractRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TraceRecord
@@ -15,8 +14,6 @@ import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
-import com.ethvm.avro.exchange.ExchangeRateRecord
-import com.ethvm.avro.exchange.SymbolKeyRecord
 import com.ethvm.avro.processing.AddressMetadataKeyRecord
 import com.ethvm.avro.processing.AddressMetadataRecord
 import com.ethvm.avro.processing.BlockAuthorRecord
@@ -170,18 +167,6 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun ContractList() = SpecificAvroSerde<ContractRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun TransactionGasPrice() = SpecificAvroSerde<TransactionGasPriceRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun TransactionGasUsed() = SpecificAvroSerde<TransactionGasUsedRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
   fun BlockTimestamp() = SpecificAvroSerde<BlockTimestampRecord>(registryClient).apply {
     configure(config, false)
   }
@@ -202,40 +187,8 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun MetricKey() = SpecificAvroSerde<MetricKeyRecord>(registryClient).apply {
-    configure(config, true)
-  }
-
-  fun Metric() = SpecificAvroSerde<MetricRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
   fun BlockHeader() = SpecificAvroSerde<BlockHeaderRecord>(registryClient).apply {
     configure(config, false)
-  }
-
-  fun ContractMetadata() = SpecificAvroSerde<ContractMetadataRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun AddressMetadataKey() = SpecificAvroSerde<AddressMetadataKeyRecord>(registryClient).apply {
-    configure(config, true)
-  }
-
-  fun AddressMetadata() = SpecificAvroSerde<AddressMetadataRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun SymbolKey() = SpecificAvroSerde<SymbolKeyRecord>(registryClient).apply {
-    configure(config, true)
-  }
-
-  fun ExchangeRate() = SpecificAvroSerde<ExchangeRateRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun EthTokenListsKey() = SpecificAvroSerde<EthTokenListsKeyRecord>(registryClient).apply {
-    configure(config, true)
   }
 
   fun UncleList() = SpecificAvroSerde<UncleListRecord>(registryClient).apply {

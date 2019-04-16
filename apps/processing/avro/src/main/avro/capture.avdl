@@ -199,46 +199,46 @@ protocol Capture {
 // contracts
 
   record ContractLogoRecord {
-    union { null, string } src;
-    union { null, string } width;
-    union { null, string } height;
-    union { null, string } ipfs_hash;
+    union { null, string } src = null;
+    union { null, string } width = null;
+    union { null, string } height = null;
+    union { null, string } ipfs_hash = null;
   }
 
   record ContractSupportRecord {
-    union { null, string } email;
-    union { null, string } url;
+    union { null, string } email = null;
+    union { null, string } url = null;
   }
 
   record ContractSocialRecord {
-    union { null, string } blog;
-    union { null, string } chat;
-    union { null, string } facebook;
-    union { null, string } forum;
-    union { null, string } github;
-    union { null, string } gitter;
-    union { null, string } instagram;
-    union { null, string } linkedin;
-    union { null, string } reddit;
-    union { null, string } slack;
-    union { null, string } telegram;
-    union { null, string } twitter;
-    union { null, string } youtube;
+    union { null, string } blog = null;
+    union { null, string } chat = null;
+    union { null, string } facebook = null;
+    union { null, string } forum = null;
+    union { null, string } github = null;
+    union { null, string } gitter = null;
+    union { null, string } instagram = null;
+    union { null, string } linkedin = null;
+    union { null, string } reddit = null;
+    union { null, string } slack = null;
+    union { null, string } telegram = null;
+    union { null, string } twitter = null;
+    union { null, string } youtube = null;
   }
 
-  record ContractMetadataRecord {
+  record EthListRecord {
 
-    string name;
-    string symbol;
-    string address;
-    int decimals;
+    union { null, string } name = null;
+    union { null, string } symbol = null;
+    union { null, string } address = null;
+    union { null, int } decimals = null;
 
-    union { null, string } ens_address;
-    union { null, string, com.ethvm.avro.common.ContractType } type;
-    union { null, ContractLogoRecord } logo;
-    union { null, ContractSupportRecord } support;
-    union { null, ContractSocialRecord } social;
-    union { null, string } website;
+    union { null, string } ensAddress = null;
+    union { null, com.ethvm.avro.common.ContractType } type = null;
+    union { null, ContractLogoRecord } logo = null;
+    union { null, ContractSupportRecord } support = null;
+    union { null, ContractSocialRecord } social = null;
+    union { null, string } website = null;
 
   }
 

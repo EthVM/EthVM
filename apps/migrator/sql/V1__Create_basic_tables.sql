@@ -216,6 +216,20 @@ FROM contract AS c
 GROUP BY c.creator
 ORDER BY count DESC;
 
+CREATE TABLE eth_list_contract_metadata
+(
+    address CHAR(42) PRIMARY KEY,
+    name VARCHAR(64) NULL,
+    symbol VARCHAR(64) NULL,
+    decimals INT NULL,
+    ens_address VARCHAR(256) NULL,
+    type VARCHAR(32) NULL,
+    logo TEXT NULL,
+    support TEXT NULL,
+    social TEXT NULL,
+    website VARCHAR(256) NULL
+);
+
 CREATE TABLE fungible_balance
 (
   address  CHAR(42) NOT NULL,

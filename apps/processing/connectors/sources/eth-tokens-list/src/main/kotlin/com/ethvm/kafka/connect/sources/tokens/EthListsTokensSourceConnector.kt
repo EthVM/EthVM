@@ -33,15 +33,15 @@ class EthListsTokensSourceConnector : SourceConnector() {
   override fun config(): ConfigDef = ConfigDef().apply {
 
     define(
-      com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.TOPIC_CONFIG,
+      Config.TOPIC_CONFIG,
       STRING,
       TOPIC_CONFIG_DEFAULT,
       HIGH,
-      com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.TOPIC_CONFIG_DOC
+      Config.TOPIC_CONFIG_DOC
     )
 
     define(
-      com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.TOKENS_URL_CONFIG,
+      Config.TOKENS_URL_CONFIG,
       STRING,
       TOKENS_DEFAULT_URL,
       HIGH,
@@ -49,11 +49,11 @@ class EthListsTokensSourceConnector : SourceConnector() {
     )
 
     define(
-      com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.SYNC_INTERVAL_CONFIG,
+      Config.SYNC_INTERVAL_CONFIG,
       ConfigDef.Type.INT,
       SYNC_INTERVAL_DEFAULT,
       HIGH,
-      com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.SYNC_INTERVAL_DOC
+      Config.SYNC_INTERVAL_DOC
     )
   }
 
@@ -61,7 +61,7 @@ class EthListsTokensSourceConnector : SourceConnector() {
 
     const val TOPIC_CONFIG = "topic"
     const val TOPIC_CONFIG_DOC = "Topic into which to publish"
-    const val TOPIC_CONFIG_DEFAULT = "contract-metadata"
+    const val TOPIC_CONFIG_DEFAULT = "eth_list_contract_metadata"
 
     const val TOKENS_URL_CONFIG = "tokens.url"
     const val TOKENS_URL_DOC = "Url of json file from which to download info"
@@ -71,10 +71,10 @@ class EthListsTokensSourceConnector : SourceConnector() {
     const val SYNC_INTERVAL_DOC = "How often to check for updates in seconds"
     val SYNC_INTERVAL_DEFAULT = TimeUnit.HOURS.toSeconds(24L).toInt() // every 24 hours by default
 
-    fun topic(props: MutableMap<String, String>) = props[com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.TOPIC_CONFIG] ?: TOPIC_CONFIG_DEFAULT
+    fun topic(props: MutableMap<String, String>) = props[TOPIC_CONFIG] ?: TOPIC_CONFIG_DEFAULT
 
-    fun tokensUrl(props: MutableMap<String, String>) = props[com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.TOKENS_URL_CONFIG] ?: TOKENS_DEFAULT_URL
+    fun tokensUrl(props: MutableMap<String, String>) = props[TOKENS_URL_CONFIG] ?: TOKENS_DEFAULT_URL
 
-    fun syncInterval(props: MutableMap<String, String>) = props[com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.SYNC_INTERVAL_CONFIG]?.toInt() ?: SYNC_INTERVAL_DEFAULT
+    fun syncInterval(props: MutableMap<String, String>) = props[SYNC_INTERVAL_CONFIG]?.toInt() ?: SYNC_INTERVAL_DEFAULT
   }
 }
