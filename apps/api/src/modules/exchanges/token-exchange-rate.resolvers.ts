@@ -4,11 +4,11 @@ import { TokenExchangeRateDto } from '@app/modules/exchanges/token-exchange-rate
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { TokenTransferService } from '@app/modules/token-transfers/token-transfer.service'
+import { TokenService } from '@app/modules/tokens/token.service'
 
 @Resolver('TokenExchangeRate')
 export class TokenExchangeRateResolvers {
-  constructor(private readonly exchangeService: ExchangeService, private readonly tokenTransferService: TokenTransferService) {}
+  constructor(private readonly exchangeService: ExchangeService, private readonly tokenTransferService: TokenService) {}
 
   @Query()
   async quote(@Args('symbol') symbol: string, @Args('to') to: string) {

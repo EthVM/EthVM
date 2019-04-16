@@ -5,10 +5,12 @@ import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { VmEngineService } from '@app/shared/vm-engine.service'
 import { TokenTransferDto } from '@app/modules/tokens/dto/token-transfer.dto'
+import { TokenHolderDto } from '@app/modules/tokens/dto/token-holder.dto'
 
-@Resolver('TokenTransfer')
+@Resolver('Token')
 export class TokenResolvers {
-  constructor(private readonly tokenTransferService: TokenService, private readonly vmEngine: VmEngineService) {}
+  constructor(private readonly tokenService: TokenService, private readonly vmEngine: VmEngineService) {
+  }
 
   @Query()
   async addressTokenTransfers(
@@ -16,7 +18,7 @@ export class TokenResolvers {
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
   ) {
-    const entities = await this.tokenTransferService.findAddressTokenTransfers(address, limit, page)
+    const entities = await this.tokenService.findAddressTokenTransfers(address, limit, page)
     return entities.map(e => new TokenTransferDto(e))
   }
 
@@ -28,33 +30,34 @@ export class TokenResolvers {
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
   ) {
-    const entities = await this.tokenTransferService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
+    const entities = await this.tokenService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
     return entities.map(e => new TokenTransferDto(e))
   }
 
   @Query()
   async tokenHistory(@Args('address', ParseAddressPipe) address: string) {
-    return this.tokenTransferService.fetchTokenHistory(address)
+    return this.tokenService.fetchTokenHistory(address)
   }
 
   @Query()
-  async topTokenHolders(@Args('address', ParseAddressPipe) address: string) {
-    return this.tokenTransferService.fetchTokenHolders(address)
+  async tokenHolders(@Args('address', ParseAddressPipe) address: string, @Args('limit', ParseLimitPipe) limit: number, @Args('page', ParsePagePipe) page: number): Promise<TokenHolderDto[]> {
+    const entities = await this.tokenService.findTokenHolders(address, limit, page)
+    return (entities as any[]).map(e => new TokenHolderDto(e))
   }
 
   @Query()
   async holderDetails(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string) {
-    return this.tokenTransferService.fetchAddressInfo(address, holderAddress)
+    return this.tokenService.fetchAddressInfo(address, holderAddress)
   }
 
   @Query()
   async holderTransfers(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string) {
-    return this.tokenTransferService.fetchAddressHistory(address, holderAddress)
+    return this.tokenService.fetchAddressHistory(address, holderAddress)
   }
 
   @Query()
   async addressAllTokensOwned(@Args('address', ParseAddressPipe) address: string) {
-    return this.tokenTransferService.findAddressAllTokensOwned(address)
+    return this.tokenService.findAddressAllTokensOwned(address)
   }
 
   @Query()

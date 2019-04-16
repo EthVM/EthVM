@@ -2,7 +2,7 @@ type Query {
   addressTokenTransfers(address: String!, limit: Int, page: Int): [TokenTransfer]
   addressTokenTransfersByHolder(address: String!, holder: String!, filter: FilterEnum, limit: Int, page: Int): [TokenTransfer]
   tokenHistory(address: String!): [EthplorerTokenOperation]
-  topTokenHolders(address: String!): [EthplorerTokenHolder]
+  tokenHolders(address: String!, limit: Int, page: Int): [TokenHolder]
   holderDetails(address: String!, holderAddress: String!): EthplorerAddressInfo
   holderTransfers(address: String!, holderAddress: String!): [EthplorerTokenOperation]
   addressAllTokensOwned(address: String!): [Token]!
@@ -31,6 +31,11 @@ type TokenTransfer {
   transferType: BalanceType
 }
 
+type TokenHolder {
+  address: String
+  balance: Decimal
+}
+
 enum BalanceType {
   TX_FEE, REWARD, ETHER, ERC20, ERC721
 }
@@ -48,12 +53,6 @@ type EthplorerTokenOperation {
   from: String
   to: String
   value: Float
-}
-
-type EthplorerTokenHolder {
-  address: String
-  balance: Decimal
-  share: Decimal
 }
 
 type EthplorerAddressInfo {

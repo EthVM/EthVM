@@ -167,12 +167,6 @@ export class EthplorerPriceInfo {
     ts?: Long;
 }
 
-export class EthplorerTokenHolder {
-    address?: string;
-    balance?: Decimal;
-    share?: Decimal;
-}
-
 export class EthplorerTokenInfo {
     address?: string;
     totalSupply?: string;
@@ -278,7 +272,7 @@ export abstract class IQuery {
 
     abstract tokenHistory(address: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
-    abstract topTokenHolders(address: string): EthplorerTokenHolder[] | Promise<EthplorerTokenHolder[]>;
+    abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
     abstract holderDetails(address: string, holderAddress: string): EthplorerAddressInfo | Promise<EthplorerAddressInfo>;
 
@@ -383,6 +377,11 @@ export class TokenExchangeRate {
     totalVolume?: Decimal;
     owner?: string;
     holdersCount?: number;
+}
+
+export class TokenHolder {
+    address?: string;
+    balance?: Decimal;
 }
 
 export class TokenTransfer {

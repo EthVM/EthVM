@@ -17,7 +17,22 @@ export class Erc721BalanceEntity {
   @PrimaryColumn({type: 'character', length: 42, readonly: true})
   address!: string
 
-  @Column({type: 'text', readonly: true})
-  traceLocation?: string
+  @Column({type: 'character', length: 66, readonly: true})
+  traceLocationBlockHash?: string
+
+  @Column({type: 'numeric', readonly: true})
+  traceLocationBlockNumber?: number
+
+  @Column({type: 'character', length: 66, readonly: true})
+  traceLocationTransactionHash?: string
+
+  @Column({type: 'integer', readonly: true})
+  traceLocationTransactionIndex?: string
+
+  @Column({type: 'integer', readonly: true})
+  traceLocationLogIndex?: string
+
+  @Column({type: 'character', length: 64, readonly: true})
+  traceLocationTraceAddress?: string
 
 }
