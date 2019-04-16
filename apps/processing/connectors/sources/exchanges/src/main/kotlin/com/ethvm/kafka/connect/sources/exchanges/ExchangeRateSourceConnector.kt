@@ -71,7 +71,7 @@ class ExchangeRateSourceConnector : SourceConnector() {
 
     const val EXCHANGE_PROVIDER_OPTIONS_CONFIG = "exchange.provider.options"
     const val EXCHANGE_PROVIDER_OPTIONS_DOC = "Options that will be passed to the Exchange rates provider"
-    const val EXCHANGE_PROVIDER_OPTIONS_DEFAULT = ""
+    const val EXCHANGE_PROVIDER_OPTIONS_DEFAULT = "{}"
 
     private fun topic(props: MutableMap<String, String>): String {
       val value = props[TOPIC_CONFIG] ?: TOPIC_CONFIG_DEFAULT
@@ -95,11 +95,14 @@ class ExchangeRateSourceConnector : SourceConnector() {
             ExchangeProviders.COIN_GECKO -> {
               val options = mutableMapOf<String, Any>("topic" to topic(props))
 
-              val jsonOpts = javaClass.getResourceAsStream(opts)?.let { stream -> Parser.default().parse(stream) } as JsonObject
-              jsonOpts.map.forEach { (k, v) -> options[k] = v!! }
+              javaClass.getResourceAsStream(opts)?.let { stream ->
+                val jsonObject = Parser.default().parse(stream) as JsonObject
+                jsonObject.map.forEach { (k, v) -> options[k] = v!! }
+              }
 
-              val tokenIds = CoinGeckoExchangeProvider.klaxon.parse<List<TokenEntry>>(javaClass.getResourceAsStream("/coingecko-eth.json"))
-              options["tokens_ids"] = tokenIds!!
+              javaClass.getResourceAsStream("coingecko-eth.json")?.let { stream ->
+                CoinGeckoExchangeProvider.klaxon.parse<List<TokenEntry>>(stream)?.let { options["tokens_ids"] = it }
+              }
 
               CoinGeckoExchangeProvider(options)
             }
