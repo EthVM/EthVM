@@ -1,19 +1,11 @@
 package com.ethvm.common.extensions
 
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.PushbackInputStream
-import java.math.BigInteger
 import java.nio.ByteBuffer
-import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import org.apache.commons.codec.binary.Hex as ApacheHex
 
 fun ByteArray?.hex(): String? = if (this != null) ApacheHex.encodeHexString(this) else this
-
-fun ByteArray?.bigInteger(): BigInteger? = BigInteger(this)
-
-fun ByteArray?.unsignedBigInteger(): BigInteger = if (this == null || this.isEmpty()) BigInteger.ZERO else BigInteger(1, this)
 
 fun ByteArray?.byteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else this
 
@@ -73,26 +65,4 @@ fun ByteArray?.compress(threshold: Int): ByteArray? {
   gzipOut.close()
 
   return bytesOut.toByteArray()
-}
-
-fun ByteArray?.decompress(): ByteArray? {
-
-  if (this == null || this.size < 2) {
-    return this
-  }
-
-  val input = ByteArrayInputStream(this)
-
-  val pb = PushbackInputStream(input, 2) // we need a pushbackstream to look ahead
-  val signature = ByteArray(2)
-
-  val len = pb.read(signature) // read the signature
-  pb.unread(signature, 0, len) // push back the signature to the stream
-
-  // check if matches standard gzip magic number
-  return if (signature[0] == 0x1f.toByte() && signature[1] == 0x8b.toByte()) {
-    GZIPInputStream(pb).readBytes()
-  } else {
-    this
-  }
 }

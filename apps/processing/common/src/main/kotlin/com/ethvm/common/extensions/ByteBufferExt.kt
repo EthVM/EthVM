@@ -22,11 +22,3 @@ fun ByteBuffer?.compress(threshold: Int): ByteBuffer? {
     ByteBuffer.wrap(this.byteArray().compress(threshold))
   }
 }
-
-fun ByteBuffer?.decompress(): ByteBuffer? {
-  return if (this == null) {
-    this
-  } else {
-    ByteBuffer.wrap(this.byteArray().decompress())
-  }
-}

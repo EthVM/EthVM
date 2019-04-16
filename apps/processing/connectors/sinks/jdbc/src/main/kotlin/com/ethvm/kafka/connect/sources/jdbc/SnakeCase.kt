@@ -1,7 +1,5 @@
 package com.ethvm.kafka.connect.sources.jdbc
 
-import com.ethvm.common.extensions.camelToSnakeCase
-import com.ethvm.common.extensions.snakeToCamelCase
 import mu.KotlinLogging
 import org.apache.kafka.common.cache.Cache
 import org.apache.kafka.common.cache.LRUCache
