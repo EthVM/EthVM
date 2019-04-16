@@ -123,8 +123,19 @@ export class Contract {
     code?: string;
     refundAddress?: string;
     refundBalance?: number;
-    traceCreatedAt?: string;
-    traceDestroyedAt?: string;
+    traceCreatedAtBlockHash?: string;
+    traceCreatedAtBlockNumber?: Long;
+    traceCreatedAtTransactionHash?: string;
+    traceCreatedAtTransactionIndex?: number;
+    traceCreatedAtLogIndex?: number;
+    traceCreatedAtTraceAddress?: string;
+    traceDestroyedAtBlockHash?: string;
+    traceDestroyedAtBlockNumber?: Long;
+    traceDestroyedAtTransactionHash?: string;
+    traceDestroyedAtTransactionIndex?: Long;
+    traceDestroyedAtLogIndex?: Long;
+    traceDestroyedAtTraceAddress?: string;
+    traceDestroyedAt?: Buffer;
 }
 
 export class EthplorerPriceInfo {
@@ -196,6 +207,10 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
+    abstract contractByAddress(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+
     abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
 
     abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
@@ -205,10 +220,6 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
-    abstract contractByAddress(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 

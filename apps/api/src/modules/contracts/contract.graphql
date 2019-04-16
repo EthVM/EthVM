@@ -10,6 +10,17 @@ type Contract {
   code: String
   refundAddress: String
   refundBalance: Float
-  traceCreatedAt: String
-  traceDestroyedAt: String
+  traceCreatedAtBlockHash: String
+  traceCreatedAtBlockNumber: Long
+  traceCreatedAtTransactionHash: String
+  traceCreatedAtTransactionIndex: Int
+  traceCreatedAtLogIndex: Int
+  traceCreatedAtTraceAddress: String
+  traceDestroyedAtBlockHash: String
+  traceDestroyedAtBlockNumber: Long
+  traceDestroyedAtTransactionHash: String
+  traceDestroyedAtTransactionIndex: Long
+  traceDestroyedAtLogIndex: Long
+  traceDestroyedAtTraceAddress: String
+  traceDestroyedAt: Buffer
 }
