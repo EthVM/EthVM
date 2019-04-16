@@ -15,7 +15,7 @@ import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Co
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DOC
-import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeProvider
+import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoTokenExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProviders
 import com.ethvm.kafka.connect.sources.exchanges.provider.TokenIdEntry
@@ -101,10 +101,10 @@ class ExchangeRatesSourceConnector : SourceConnector() {
               }
 
               javaClass.getResourceAsStream("coingecko-eth.json")?.let { stream ->
-                CoinGeckoExchangeProvider.klaxon.parse<List<TokenIdEntry>>(stream)?.let { options["tokens_ids"] = it }
+                CoinGeckoTokenExchangeProvider.klaxon.parse<List<TokenIdEntry>>(stream)?.let { options["tokens_ids"] = it }
               }
 
-              CoinGeckoExchangeProvider(options)
+              CoinGeckoTokenExchangeProvider(options)
             }
           }
         }

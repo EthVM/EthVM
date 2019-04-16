@@ -16,10 +16,10 @@ import java.io.BufferedReader
 import java.io.IOException
 import kotlin.reflect.KProperty
 
-class CoinGeckoExchangeProvider(
+class CoinGeckoTokenExchangeProvider(
   options: Map<String, Any> = emptyMap(),
-  private val okHttpClient: OkHttpClient = CoinGeckoExchangeProvider.okHttpClient,
-  private val klaxon: Klaxon = CoinGeckoExchangeProvider.klaxon
+  private val okHttpClient: OkHttpClient = CoinGeckoTokenExchangeProvider.okHttpClient,
+  private val klaxon: Klaxon = CoinGeckoTokenExchangeProvider.klaxon
 ) : ExchangeProvider {
 
   private val topic: String = options.getOrDefault("topic", ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT) as String
@@ -58,7 +58,7 @@ class CoinGeckoExchangeProvider(
           logger.error { "Unsuccessful response - Error Code: $code" }
 
           when (code) {
-            429 -> throw RetriableException("Status code: 429. Current response: $response")
+            in 100..199, in 429..429, in 500..599 -> throw RetriableException("Status code: $code. Current response: $response")
             else -> throw IOException(response.toString())
           }
         }

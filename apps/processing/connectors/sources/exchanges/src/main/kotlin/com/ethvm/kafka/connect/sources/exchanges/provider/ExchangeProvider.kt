@@ -13,11 +13,10 @@ enum class ExchangeProviders {
   COIN_GECKO;
 
   companion object {
-    fun of(name: String): Option<ExchangeProviders> {
-      if (name == "CoinGecko") {
-        return Option.just(COIN_GECKO)
+    fun of(name: String): Option<ExchangeProviders> =
+      when (name) {
+        "CoinGecko" -> Option.just(COIN_GECKO)
+        else -> Option.empty()
       }
-      return Option.empty()
-    }
   }
 }

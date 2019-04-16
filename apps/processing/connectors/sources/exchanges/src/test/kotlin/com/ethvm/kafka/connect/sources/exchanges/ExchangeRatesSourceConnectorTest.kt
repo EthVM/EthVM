@@ -1,8 +1,9 @@
 package com.ethvm.kafka.connect.sources.exchanges
 
-import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeProvider
+import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoTokenExchangeProvider
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.BehaviorSpec
 
 class ExchangeRatesSourceConnectorTest : BehaviorSpec() {
@@ -10,18 +11,18 @@ class ExchangeRatesSourceConnectorTest : BehaviorSpec() {
   init {
     Given("a ExchangeRateSourceConnector") {
 
-      val connector = ExchangeRateSourceConnector()
+      val connector = ExchangeRatesSourceConnector()
 
       When("start with an empty map of properties") {
 
         val empty = mutableMapOf<String, String>()
 
-        val syncInterval = ExchangeRateSourceConnector.Config.syncInterval(empty)
-        val provider = ExchangeRateSourceConnector.Config.provider(empty)
+        val syncInterval = ExchangeRatesSourceConnector.Config.syncInterval(empty)
+        val provider = ExchangeRatesSourceConnector.Config.provider(empty)
 
         Then("we should obtain default values") {
-          syncInterval shouldBe ExchangeRateSourceConnector.Config.SYNC_INTERVAL_DEFAULT
-          provider::class shouldBe CoinGeckoExchangeProvider::class
+          syncInterval shouldBe ExchangeRatesSourceConnector.Config.SYNC_INTERVAL_DEFAULT
+          provider::class shouldBe CoinGeckoTokenExchangeProvider::class
         }
       }
 
@@ -39,7 +40,7 @@ class ExchangeRatesSourceConnectorTest : BehaviorSpec() {
         val taskClass = connector.taskClass()
 
         Then("we should obtain corresponding task class") {
-          taskClass shouldBe ExchangeRatesSourceTask::class
+          taskClass shouldBe ExchangeRatesSourceTask::class.java
         }
       }
 
@@ -55,15 +56,17 @@ class ExchangeRatesSourceConnectorTest : BehaviorSpec() {
         }
       }
 
-//      When("we request more than one task config") {
-//
-//        val empty = mutableMapOf<String, String>()
-//        connector.start(empty)
-//
-//        Then("we should obtain an exception (only one allowed)") {
-//
-//        }
-//      }
+      When("we request more than one task config") {
+
+        val empty = mutableMapOf<String, String>()
+        connector.start(empty)
+
+        val exception = shouldThrow<AssertionError> { connector.taskConfigs(2) }
+
+        Then("we should obtain an exception (only one allowed)") {
+          exception::class shouldBe AssertionError::class
+        }
+      }
     }
   }
 }

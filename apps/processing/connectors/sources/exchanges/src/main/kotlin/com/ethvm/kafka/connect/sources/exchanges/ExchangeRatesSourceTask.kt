@@ -10,7 +10,9 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 
-class ExchangeRatesSourceTask : SourceTask() {
+class ExchangeRatesSourceTask(
+  private val sleep: Long = SLEEP
+) : SourceTask() {
 
   private lateinit var exchangeProvider: ExchangeProvider
   private var syncInterval: Int = 0
@@ -21,10 +23,10 @@ class ExchangeRatesSourceTask : SourceTask() {
 
   override fun start(props: MutableMap<String, String>) {
 
-    val provider = ExchangeRatesSourceConnector.Config.provider(props)
+    exchangeProvider = ExchangeRatesSourceConnector.Config.provider(props)
     syncInterval = ExchangeRatesSourceConnector.Config.syncInterval(props)
 
-    logger.info { "Starting ExchangeRatesSourceTask - Provider: $provider / Sync Interval (secs): $syncInterval" }
+    logger.info { "Starting ExchangeRatesSourceTask - Provider: $exchangeProvider / Sync Interval (secs): $syncInterval" }
   }
 
   override fun stop() {
@@ -38,7 +40,7 @@ class ExchangeRatesSourceTask : SourceTask() {
     try {
 
       if (!shouldSync()) {
-        Thread.sleep(SLEEP)
+        Thread.sleep(sleep)
         return emptyList()
       }
 
