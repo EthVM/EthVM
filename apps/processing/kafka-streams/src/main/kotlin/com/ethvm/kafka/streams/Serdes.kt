@@ -23,6 +23,7 @@ import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
 import com.ethvm.avro.processing.BlockTimestampRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
+import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
@@ -164,6 +165,10 @@ object Serdes : KoinComponent {
   }
 
   fun Erc20Metadata() = SpecificAvroSerde<Erc20MetadataRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun Erc721Metadata() = SpecificAvroSerde<Erc721MetadataRecord>(registryClient).apply {
     configure(config, false)
   }
 
