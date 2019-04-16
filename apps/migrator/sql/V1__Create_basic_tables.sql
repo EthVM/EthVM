@@ -197,6 +197,17 @@ CREATE TABLE contract
 
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
+CREATE INDEX idx_contract_trace_created_at_block_hash ON contract(trace_created_at_block_hash);
+
+CREATE VIEW canonical_contract AS
+    SELECT
+      c.*
+    FROM contract AS c
+    RIGHT JOIN canonical_block_header AS cb ON c.trace_created_at_block_hash = cb.hash
+    WHERE cb.number IS NOT NULL
+      AND c.address IS NOT NULL
+    ORDER BY cb.number DESC,
+        c.trace_created_at_transaction_index DESC;
 
 CREATE VIEW contract_creator AS
 SELECT c.creator AS address,
