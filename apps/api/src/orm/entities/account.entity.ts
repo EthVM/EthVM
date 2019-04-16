@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 
-@Entity('account')
+@Entity('canonical_account')
 export class AccountEntity {
 
   constructor(data: any) {
