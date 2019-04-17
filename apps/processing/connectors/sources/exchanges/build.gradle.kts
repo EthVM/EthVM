@@ -31,7 +31,11 @@ dependencies {
   implementation("com.beust:klaxon:5.0.1")
 
   // Utils
-  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
+  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-common")
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
+  }
   implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
   implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
 

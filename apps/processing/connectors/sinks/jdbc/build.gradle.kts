@@ -16,22 +16,26 @@ dependencies {
 
   // Kotlin
   implementation(kotlin("stdlib"))
-  
+
   // Kafka
-  compileOnly("org.apache.kafka:connect-api:2.1.0")
-  implementation("io.confluent:kafka-schema-registry-client:5.1.0")
-  implementation("io.confluent:kafka-connect-avro-converter:5.1.0")
+  compileOnly("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
+  implementation("io.confluent:kafka-schema-registry-client:${ext.get("kafka-schema-registry-client-version") as String}")
+  implementation("io.confluent:kafka-connect-avro-converter:${ext.get("kafka-connect-avro-converter-version") as String}")
 
   // Utils
   implementation("com.datamountaineer:kafka-connect-common:1.1.5")
-  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
+  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-common")
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
+  }
   implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
   implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
 
   // Tests
   testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
   testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
-  testImplementation("org.apache.kafka:connect-api:2.1.0")
+  testImplementation("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
 }
 
 project.tasks.getting(Test::class) { useJUnitPlatform {} }

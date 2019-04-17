@@ -23,6 +23,7 @@ class CoinGeckoTokenExchangeProvider(
 ) : ExchangeProvider {
 
   private val topic: String = options.getOrDefault("topic", ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT) as String
+  @Suppress("UNCHECKED_CAST")
   private val tokenIds: List<TokenIdEntry> = options.getOrDefault("tokens_ids", emptyList<TokenIdEntry>()) as List<TokenIdEntry>
   private val currency: String = options.getOrDefault("currency", "usd") as String
   private val perPage: Int = options.getOrDefault("per_page", 250) as Int
