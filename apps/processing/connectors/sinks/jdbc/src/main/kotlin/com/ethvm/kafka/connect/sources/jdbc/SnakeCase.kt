@@ -30,10 +30,9 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
   }
 
   override fun apply(record: R): R {
-    return if (operatingSchema(record) == null) {
-      applySchemaless(record)
-    } else {
-      applyWithSchema(record)
+    return when {
+      operatingSchema(record) != null -> applyWithSchema(record)
+      else -> applySchemaless(record)
     }
   }
 
