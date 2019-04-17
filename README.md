@@ -55,7 +55,7 @@ As the [official website](https://kafka.apache.org/) states:
 > Kafka is used for building real-time data pipelines and streaming apps. It is horizontally scalable, fault-tolerant, wicked fast, and runs in production in thousands of companies.
 
 <div align="center">
-  <img src="https://kafka.apache.org/images/kafka_diagram.png" alt="Apache Kafka" width="500" />
+  <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/ethvm-diagram.jpg" alt="EthVM with Apache Kafka" width="500" />
 </div>
 
 We believe that it fits quite nicely within the needs that a Block Explorer typically may have. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
