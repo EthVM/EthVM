@@ -4,7 +4,7 @@ type Query {
 
 type Account {
   address: String
-  balance: Float
+  balance: String
   totalTxCount: String
   inTxCount: String
   outTxCount: String

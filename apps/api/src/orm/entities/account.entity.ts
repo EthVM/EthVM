@@ -12,7 +12,7 @@ export class AccountEntity {
   address!: string
 
   @Column({type: 'numeric', readonly: true})
-  balance!: number
+  balance!: string
 
   @Column({type: 'bigint', readonly: true})
   totalTxCount?: string

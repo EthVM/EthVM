@@ -215,7 +215,7 @@ export default class PageDetailsAddress extends Vue {
               this.account.totalTxs = account.totalTxCount || 0
               this.account.fromTxCount = account.outTxCount || 0
               this.account.toTxCount = account.inTxCount || 0
-              this.account.balance = new EthValue(account.amount || 0)
+              this.account.balance = new EthValue(account.balance || 0)
 
               this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
               this.account.exchangeRate.USD = res[2] ? res[2].price : 0 // TODO reset when exchange module re-enabled to: res[2].price
