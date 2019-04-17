@@ -221,9 +221,9 @@ export abstract class IQuery {
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
-    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
-
     abstract search(query: string): Search | Promise<Search>;
+
+    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
