@@ -1,23 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import PageHome from '@app/modules/home/pages/PageHome.vue'
-import PageBlocks from '@app/modules/blocks/pages/PageBlocks.vue'
-import PageTxs from '@app/modules/txs/pages/PageTxs.vue'
-import PagePendingTxs from '@app/modules/pending-txs/pages/PagePendingTxs.vue'
-import PageAbout from '@app/modules/other/pages/PageAbout.vue'
-import PageUncles from '@app/modules/uncles/pages/PageUncles.vue'
-import PageDetailsBlock from '@app/modules/blocks/pages/PageDetailsBlock.vue'
-import PageDetailsTxs from '@app/modules/txs/pages/PageDetailsTxs.vue'
-import PageDetailsAddress from '@app/modules/addresses/pages/PageDetailsAddress.vue'
-import PageCharts from '@app/modules/charts/pages/PageCharts.vue'
-import PageDetailsChart from '@app/modules/charts/pages/PageDetailsChart.vue'
-import PageDetailsUncle from '@app/modules/uncles/pages/PageDetailsUncle.vue'
-import PageTokens from '@app/modules/tokens/pages/PageTokens.vue'
-import PageDetailsToken from '@app/modules/tokens/pages/PageDetailsToken.vue'
-import PageKnowledgeBase from '@app/modules/other/pages/PageKnowledgeBase.vue'
-import PagePrivacyPolicy from '@app/modules/other/pages/PagePrivacyPolicy.vue'
-import PageNotFound from '@app/modules/other/pages/PageNotFound.vue'
+const PageHome = () => import(/* webpackChunkName: "page-home" */ '@app/modules/home/pages/PageHome.vue')
+const PageBlocks = () => import(/* webpackChunkName: "page-blocks" */ '@app/modules/blocks/pages/PageBlocks.vue')
+const PageTxs = () => import(/* webpackChunkName: "page-txs" */ '@app/modules/txs/pages/PageTxs.vue')
+const PagePendingTxs = () => import(/* webpackChunkName: "page-pending-txs" */'@app/modules/pending-txs/pages/PagePendingTxs.vue')
+const PageAbout = () => import(/* webpackChunkName: "page-about" */ '@app/modules/other/pages/PageAbout.vue')
+const PageUncles = () => import(/* webpackChunkName: "page-uncles" */ '@app/modules/uncles/pages/PageUncles.vue')
+const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" */ '@app/modules/blocks/pages/PageDetailsBlock.vue')
+const PageDetailsTxs = () => import(/* webpackChunkName: "page-details-txs" */ '@app/modules/txs/pages/PageDetailsTxs.vue')
+const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr" */ '@app/modules/addresses/pages/PageDetailsAddress.vue')
+const PageCharts = () => import(/* webpackChunkName: "page-charts" */ '@app/modules/charts/pages/PageCharts.vue')
+const PageDetailsChart = () => import(/* webpackChunkName: "page-details-chart" */ '@app/modules/charts/pages/PageDetailsChart.vue')
+const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" */ '@app/modules/uncles/pages/PageDetailsUncle.vue')
+const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modules/tokens/pages/PageTokens.vue')
+const PageDetailsToken = () => import(/* webpackChunkName: "page-details-token" */ '@app/modules/tokens/pages/PageDetailsToken.vue')
+const PageKnowledgeBase = () => import(/* webpackChunkName: "page-kb" */ '@app/modules/other/pages/PageKnowledgeBase.vue')
+const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp */ '@app/modules/other/pages/PagePrivacyPolicy.vue')
+const PageNotFound = () => import(/* webpackChunkName: "page-not-found" */  '@app/modules/other/pages/PageNotFound.vue')
+
 
 Vue.use(Router)
 
