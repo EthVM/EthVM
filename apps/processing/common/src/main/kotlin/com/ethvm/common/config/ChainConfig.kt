@@ -7,7 +7,6 @@ import com.ethvm.avro.processing.FungibleTokenType
 import com.ethvm.common.extensions.ether
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.common.extensions.setBlockNumberBI
-import jdk.internal.util.xml.impl.Pair
 import java.math.BigInteger
 import java.util.Collections.emptyList
 
