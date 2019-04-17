@@ -70,6 +70,10 @@ export interface Web3Config {
   wsUrl: string
 }
 
+export interface TokensConfig {
+  url: string
+}
+
 export class Config {
   private config: convict.Config<any>
 
@@ -101,7 +105,7 @@ export class Config {
     return this.config.get('web3')
   }
 
-  get ethTokensUrl(): string {
-    return this.config.get('tokens.url')
+  get tokens(): TokensConfig {
+    return this.config.get('tokens')
   }
 }

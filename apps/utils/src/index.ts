@@ -1,6 +1,4 @@
-import { Erc20Balances } from '@app/commands/erc20-balances'
-import { EthTokensToCoingecko } from '@app/commands/eth-tokens-list-to-coingecko-ids'
-import { EtherBalances } from '@app/commands/ether-balances'
+import { Erc20Balances, EtherBalances, EthTokensToCoingecko } from '@app/commands'
 import { Config } from '@app/config'
 import program from 'commander'
 
@@ -20,6 +18,6 @@ program
 
 program
   .command('eth-tokens-to-coingecko-ids')
-  .action(async () => EthTokensToCoingecko(config))
+  .action(async () => EthTokensToCoingecko(config.tokens))
 
 program.parse(process.argv)
