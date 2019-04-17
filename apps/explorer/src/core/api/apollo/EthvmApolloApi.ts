@@ -1,9 +1,5 @@
 import { EthvmApi } from '@app/core/api'
-import {
-  addressAllTokensOwned,
-  addressAmountTokensOwned,
-  accountByAddress
-} from '@app/core/api/apollo/queries/addresses.graphql'
+import { addressAllTokensOwned, addressAmountTokensOwned, accountByAddress } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'

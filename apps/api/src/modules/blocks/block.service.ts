@@ -12,7 +12,7 @@ export class BlockService {
     @InjectRepository(BlockHeaderEntity) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
-    @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>
+    @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
   ) {}
 
   async findBlockByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
