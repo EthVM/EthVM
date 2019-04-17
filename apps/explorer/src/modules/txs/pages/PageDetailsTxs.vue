@@ -16,7 +16,6 @@ import { eth } from '@app/core/helper'
 import { Tx } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Detail, Crumb } from '@app/core/components/props'
-import Signatures from '@app/modules/txs/helpers/signatures.json'
 
 @Component({
   components: {
@@ -43,6 +42,7 @@ export default class PageDetailsTxs extends Vue {
   listType = 'tx'
   transaction = {} as Tx
   timestamp = new Date()
+  txInput = ['0x']
 
   /*
   ===================================================================================
@@ -101,7 +101,19 @@ export default class PageDetailsTxs extends Vue {
    */
   setTxInfo(tx: Tx) {
     this.transaction = tx
-    this.timestamp = this.tx.getTimestamp()
+    this.timestamp = tx.getTimestamp()
+    this.getTxDataInput()
+  }
+
+  fetchSignatures(): Promise<any> {
+    return fetch('https://raw.githubusercontent.com/EthVM/eth4ByteDirectory/master/data.json')
+      .then(result => result.json())
+      .then(newJSON => {
+        return newJSON.results
+      })
+      .catch(err => {
+        throw err
+      })
   }
 
   /*
@@ -255,7 +267,7 @@ export default class PageDetailsTxs extends Vue {
         {
           title: this.$i18n.t('tx.input'),
           detail: '',
-          txInput: this.txDataInput
+          txInput: this.txInput
         }
       ]
     }
@@ -297,17 +309,21 @@ export default class PageDetailsTxs extends Vue {
     return Object.keys(this.tx).length === 0
   }
 
-  get txDataInput(): string[] {
-    let input = ['0x']
+  async getTxDataInput(): Promise<string[] | undefined> {
     if (this.tx.getInput()) {
-      const sig = `0x ${this.tx.getInput().substr(0, 8)}`
-      const index = Signatures.results.findIndex(i => i.hex_signature === sig)
-      input = [`${this.$i18n.t('tx.method')}: ${sig}`]
-      if (index != -1) {
-        input.unshift(`${this.$i18n.t('tx.func')}: ${Signatures.results[index].text_signature}`)
+      const sig = `0x${this.tx.getInput().substr(0, 8)}`
+      const signatures = await this.fetchSignatures()
+      if (signatures && signatures.length > 0) {
+        const index = signatures.findIndex(i => i.hex_signature === sig)
+        this.txInput = [`${this.$i18n.t('tx.method')}: ${sig}`]
+        if (index != -1) {
+          this.txInput.unshift(`${this.$i18n.t('tx.func')}: ${signatures[index].text_signature}`)
+        }
+        return this.txInput
       }
+    } else {
+      return this.txInput
     }
-    return input
   }
 }
 </script>
