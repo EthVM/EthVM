@@ -31,9 +31,9 @@ export class UncleService {
     return this.uncleRepository.count()
   }
 
-  async findLatestUncleBlockNumber(): Promise<number> {
+  async findLatestUncleBlockNumber(): Promise<string> {
     const findOptions: FindManyOptions = { order: { nephewNumber: 'DESC', number: 'DESC' }, take: 1 }
     const latest = await this.uncleRepository.find(findOptions)
-    return latest && latest.length ? latest[0].height : 0
+    return latest && latest.length ? latest[0].height : '0'
   }
 }

@@ -6,13 +6,17 @@ import { EthService } from '@app/shared/eth.service'
 import { Injectable } from '@nestjs/common'
 import { TxDto } from '@app/modules/txs/dto/tx.dto'
 import { BlockDto } from '@app/modules/blocks/dto/block.dto'
+import { UncleService } from '@app/modules/uncles/uncle.service'
+import { AccountService } from '@app/modules/accounts/account.service'
+import { UncleDto } from '@app/modules/uncles/uncle.dto'
+import { AccountDto } from '@app/modules/accounts/account.dto'
 
 @Injectable()
 export class SearchService {
   constructor(
     private readonly blockService: BlockService,
-    // private readonly balanceService: BalanceService,
-    // private readonly uncleService: UncleService,
+    private readonly accountService: AccountService,
+    private readonly uncleService: UncleService,
     private readonly txService: TxService,
     private readonly ethService: EthService,
   ) {}
@@ -23,16 +27,15 @@ export class SearchService {
       query = `0x${query}`
     }
 
-    // TODO reactivate address search
-    // Check Address
-    // if (this.ethService.isValidAddress(hash)) {
-    //   const address = await this.balanceService.findBalanceByHash(hash)
-    //   if (address != null) {
-    //     s.address = address
-    //     s.type = SearchType.Address
-    //     return s
-    //   }
-    // }
+    // Check Accounts
+    if (this.ethService.isValidAddress(query)) {
+      const address = await this.accountService.findAccountByAddress(query)
+      if (address != null) {
+        s.address = new AccountDto(address)
+        s.type = SearchType.Address
+        return s
+      }
+    }
 
     // Check Block, Uncle or Tx
     if (this.ethService.isValidHash(query)) {
@@ -43,13 +46,12 @@ export class SearchService {
         return s
       }
 
-      // TODO reactivate uncle search
-      // const uncle = await this.uncleService.findUncleByHash(query)
-      // if (uncle != null) {
-      //   s.uncle = uncle
-      //   s.type = SearchType.Uncle
-      //   return s
-      // }
+      const uncle = await this.uncleService.findUncleByHash(query)
+      if (uncle != null) {
+        s.uncle = new UncleDto(uncle)
+        s.type = SearchType.Uncle
+        return s
+      }
 
       const tx = await this.txService.findTx(query)
       if (tx != null) {
