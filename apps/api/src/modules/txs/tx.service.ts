@@ -47,7 +47,7 @@ export class TxService {
         where = [{ from: hash }, { to: hash }]
         break
     }
-    const txs = await this.transactionRepository.find({ where, take, skip })
+    const txs = await this.transactionRepository.find({ where, take, skip, relations: ['receipt'] })
     if (!txs.length) return []
     return this.findAndMapTraces(txs)
   }

@@ -1,21 +1,3 @@
-query addressBalanceByHash($address: String!) {
-  balanceByHash(hash: $address) {
-    address
-    amount
-  }
-}
-
-query accountMetadataByHash($address: String!) {
-  accountMetadataByHash(hash: $address) {
-    id
-    inTxCount
-    isContractCreator
-    isMiner
-    outTxCount
-    totalTxCount
-  }
-}
-
 query addressAllTokensOwned($address: String!) {
   addressAllTokensOwned(address: $address) {
     name
