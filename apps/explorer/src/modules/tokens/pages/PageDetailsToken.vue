@@ -21,6 +21,7 @@
         :address-ref="addressRef"
         :token-transfers="tokenTransfers"
         :token-holders="tokenHolders"
+        :total-supply="contractDetails.totalSupply"
         :is-token-transfers-loading="isTokenTransfersLoading"
         :is-token-holders-loading="isTokenHoldersLoading"
         :error-token-transfers="errorTokenTransfersTab"

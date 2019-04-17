@@ -200,26 +200,25 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-basic-info',
         enter: () => {
-          const addressMetadata = this.$api.getAddressMetadata(this.addressRef)
-          const addressBalance = this.$api.getAddressBalance(this.addressRef)
+          const account = this.$api.getAccount(this.addressRef)
           const contract = this.$api.getContract(this.addressRef)
           const exchangeRate = this.$api.getExchangeRateQuote('ETH', 'USD')
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-          const promises = [addressMetadata, addressBalance, contract, exchangeRate].map(p => p.catch(() => undefined))
+          const promises = [account, contract, exchangeRate].map(p => p.catch(() => undefined))
 
           Promise.all(promises)
             .then((res: any[]) => {
-              const metadata = res[0] || {}
-              this.account.isCreator = metadata.isContractCreator || false
-              this.account.isMiner = metadata.isMiner || false
-              this.account.totalTxs = metadata.totalTxCount || 0
-              this.account.fromTxCount = metadata.outTxCount || 0
-              this.account.toTxCount = metadata.inTxCount || 0
+              const account = res[0] || {}
+              this.account.isCreator = account.isContractCreator || false
+              this.account.isMiner = account.isMiner || false
+              this.account.totalTxs = account.totalTxCount || 0
+              this.account.fromTxCount = account.outTxCount || 0
+              this.account.toTxCount = account.inTxCount || 0
+              this.account.balance = new EthValue(account.balance || 0)
 
-              this.account.balance = new EthValue(res[1] ? res[1].amount : 0)
-              this.account.type = res[2] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
-              this.account.exchangeRate.USD = res[3].price
+              this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
+              this.account.exchangeRate.USD = res[2] ? res[2].price : 0 // TODO reset when exchange module re-enabled to: res[2].price
 
               this.error = ''
               this.loading = false

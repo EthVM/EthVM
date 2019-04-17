@@ -1,7 +1,7 @@
 query uncleByHash($hash: String!) {
   uncleByHash(hash: $hash) {
     author
-    blockNumber
+    number
     gasLimit
     gasUsed
     hash
@@ -9,19 +9,21 @@ query uncleByHash($hash: String!) {
     parentHash
     sha3Uncles
     timestamp
-    uncleIndex
-    uncleReward
+    nephewNumber
+    # uncleIndex
+    # uncleReward
   }
 }
 
 query uncles($limit: Int, $page: Int, $fromUncle: Int) {
   uncles(limit: $limit, page: $page, fromUncle: $fromUncle) {
     author
-    blockNumber
+    number
     hash
     number
-    uncleIndex
-    uncleReward
+    nephewNumber
+    # uncleIndex
+    # uncleReward
   }
 }
 

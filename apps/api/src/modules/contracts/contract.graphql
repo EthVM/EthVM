@@ -10,6 +10,57 @@ type Contract {
   code: String
   refundAddress: String
   refundBalance: Float
-  traceCreatedAt: String
-  traceDestroyedAt: String
+  traceCreatedAtBlockHash: String
+  traceCreatedAtBlockNumber: Long
+  traceCreatedAtTransactionHash: String
+  traceCreatedAtTransactionIndex: Int
+  traceCreatedAtLogIndex: Int
+  traceCreatedAtTraceAddress: String
+  traceDestroyedAtBlockHash: String
+  traceDestroyedAtBlockNumber: Long
+  traceDestroyedAtTransactionHash: String
+  traceDestroyedAtTransactionIndex: Long
+  traceDestroyedAtLogIndex: Long
+  traceDestroyedAtTraceAddress: String
+  traceDestroyedAt: Buffer
+  metadata: ContractMetadata
+  totalSupply: String
+}
+
+type ContractMetadata {
+  address: String
+  name: String
+  symbol: String
+  decimals: Int
+  ensAddress: String
+  type: String
+  logo: ContractLogo
+  support: ContractSupport
+  social: ContractSocial
+  website: String
+}
+
+type ContractLogo {
+  src: String
+}
+
+type ContractSupport {
+  email: String
+  url: String
+}
+
+type ContractSocial {
+  blog: String
+  chat: String
+  facebook: String
+  forum: String
+  github: String
+  gitter: String
+  instagram: String
+  linkedin: String
+  reddit: String
+  slack: String
+  telegram: String
+  twitter: String
+  youtube: String
 }

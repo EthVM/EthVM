@@ -60,7 +60,7 @@ export enum TokenExchangeRateFilter {
 
 export class Account {
     address?: string;
-    balance?: number;
+    balance?: string;
     totalTxCount?: string;
     inTxCount?: string;
     outTxCount?: string;
@@ -99,18 +99,18 @@ export class BlockHeader {
     number?: Long;
     hash?: string;
     parentHash?: string;
-    nonce?: Long;
+    nonce?: string;
     sha3Uncles?: string;
     logsBloom?: string;
     transactionsRoot?: string;
     stateRoot?: string;
     receiptsRoot?: string;
     author?: string;
-    difficulty?: Long;
-    totalDifficulty?: number;
+    difficulty?: string;
+    totalDifficulty?: string;
     extraData?: string;
-    gasLimit?: Long;
-    gasUsed?: Long;
+    gasLimit?: string;
+    gasUsed?: string;
     timestamp?: string;
     size?: string;
     blockTime?: string;
@@ -123,41 +123,61 @@ export class Contract {
     code?: string;
     refundAddress?: string;
     refundBalance?: number;
-    traceCreatedAt?: string;
-    traceDestroyedAt?: string;
+    traceCreatedAtBlockHash?: string;
+    traceCreatedAtBlockNumber?: Long;
+    traceCreatedAtTransactionHash?: string;
+    traceCreatedAtTransactionIndex?: number;
+    traceCreatedAtLogIndex?: number;
+    traceCreatedAtTraceAddress?: string;
+    traceDestroyedAtBlockHash?: string;
+    traceDestroyedAtBlockNumber?: Long;
+    traceDestroyedAtTransactionHash?: string;
+    traceDestroyedAtTransactionIndex?: Long;
+    traceDestroyedAtLogIndex?: Long;
+    traceDestroyedAtTraceAddress?: string;
+    traceDestroyedAt?: Buffer;
+    metadata?: ContractMetadata;
+    totalSupply?: string;
 }
 
-<<<<<<< HEAD
-export class EthplorerAddressInfo {
+export class ContractLogo {
+    src?: string;
+}
+
+export class ContractMetadata {
     address?: string;
-    ETH?: EthplorerEthInfo;
-    contractInfo?: EthplorerContractInfo;
-    tokenInfo?: EthplorerTokenInfo;
-    tokens?: EthplorerAddressToken[];
-    countTxs?: number;
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+    ensAddress?: string;
+    type?: string;
+    logo?: ContractLogo;
+    support?: ContractSupport;
+    social?: ContractSocial;
+    website?: string;
 }
 
-export class EthplorerAddressToken {
-    tokenInfo?: EthplorerTokenInfo;
-    balance?: Decimal;
-    totalIn?: Decimal;
-    totalOut?: Decimal;
+export class ContractSocial {
+    blog?: string;
+    chat?: string;
+    facebook?: string;
+    forum?: string;
+    github?: string;
+    gitter?: string;
+    instagram?: string;
+    linkedin?: string;
+    reddit?: string;
+    slack?: string;
+    telegram?: string;
+    twitter?: string;
+    youtube?: string;
 }
 
-export class EthplorerContractInfo {
-    creatorAddress?: string;
-    transactionHash?: string;
-    timestamp?: Long;
+export class ContractSupport {
+    email?: string;
+    url?: string;
 }
 
-export class EthplorerEthInfo {
-    balance?: Decimal;
-    totalIn?: Decimal;
-    totalOut?: Decimal;
-}
-
-=======
->>>>>>> feature/api-postgres-integration
 export class EthplorerPriceInfo {
     rate?: Decimal;
     currency?: string;
@@ -168,15 +188,6 @@ export class EthplorerPriceInfo {
     availableSupply?: Decimal;
     volume24h?: Decimal;
     ts?: Long;
-<<<<<<< HEAD
-}
-
-export class EthplorerTokenHolder {
-    address?: string;
-    balance?: Decimal;
-    share?: Decimal;
-=======
->>>>>>> feature/api-postgres-integration
 }
 
 export class EthplorerTokenInfo {
@@ -249,15 +260,9 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-<<<<<<< HEAD
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
-=======
-
-    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
-
->>>>>>> feature/api-postgres-integration
     abstract search(query: string): Search | Promise<Search>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
@@ -395,14 +400,11 @@ export class TokenExchangeRate {
     totalVolume?: Decimal;
     owner?: string;
     holdersCount?: number;
-<<<<<<< HEAD
-=======
 }
 
 export class TokenHolder {
     address?: string;
     balance?: Decimal;
->>>>>>> feature/api-postgres-integration
 }
 
 export class TokenTransfer {
@@ -435,7 +437,7 @@ export class Trace {
 
 export class Transaction {
     hash?: string;
-    nonce?: Long;
+    nonce?: string;
     blockHash?: string;
     blockNumber?: number;
     transactionIndex?: number;
@@ -457,10 +459,10 @@ export class Transaction {
 
 export class Uncle {
     hash?: string;
-    nephewNumber?: Long;
+    nephewNumber?: string;
     nephewHash?: string;
-    number?: Long;
-    height?: Long;
+    number?: string;
+    height?: string;
     parentHash?: string;
     nonce?: string;
     sha3Uncles?: string;
@@ -469,11 +471,11 @@ export class Uncle {
     stateRoot?: string;
     receiptsRoot?: string;
     author?: string;
-    difficulty?: Long;
-    totalDifficulty?: Long;
+    difficulty?: string;
+    totalDifficulty?: string;
     extraData?: string;
-    gasLimit?: Long;
-    gasUsed?: Long;
+    gasLimit?: string;
+    gasUsed?: string;
     timestamp?: string;
     size?: string;
 }

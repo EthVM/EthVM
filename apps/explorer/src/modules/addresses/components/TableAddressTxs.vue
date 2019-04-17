@@ -136,7 +136,7 @@ export default class TableAddressTxs extends Vue {
 
   @Prop(String) address!: string
   @Prop({ type: Array, default: [] }) txs!: Tx[]
-  @Prop({ type: Number, default: 0 }) totalTxs!: number
+  @Prop({ type: String, default: '0' }) totalTxs!: string
   @Prop({ type: Boolean, default: false }) isPending!: boolean
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop({ type: Number, default: 0 }) page!: number
@@ -233,7 +233,7 @@ export default class TableAddressTxs extends Vue {
   }
 
   get pages(): number {
-    return Math.ceil(this.totalTxs / MAX_TXS)
+    return Math.ceil(+this.totalTxs / MAX_TXS)
   }
 }
 </script>

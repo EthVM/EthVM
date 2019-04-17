@@ -7,6 +7,6 @@ import { AccountResolvers } from '@app/modules/accounts/account.resolvers'
 @Module({
   imports: [TypeOrmModule.forFeature([AccountEntity])],
   providers: [AccountService, AccountResolvers],
-  exports: [],
+  exports: [AccountService],
 })
 export class AccountModule {}

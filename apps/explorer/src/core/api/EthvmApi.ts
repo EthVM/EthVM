@@ -22,8 +22,6 @@ import { Observable } from 'apollo-client/util/Observable'
 export interface EthvmApi {
   // Address
   getAccount(address: string): Promise<Account | null>
-  getAddressBalance(address: string): Promise<AddressBalance | null>
-  getAddressMetadata(address: string): Promise<AddressMetadata | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
   getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]>

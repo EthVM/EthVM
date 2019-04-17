@@ -14,22 +14,22 @@ export class UncleEntity {
   hash!: string
 
   @Column({type: 'numeric', readonly: true})
-  nephewNumber!: number
+  nephewNumber!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   nephewHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  number!: number
+  number!: string
 
   @Column({type: 'numeric', readonly: true})
-  height!: number
+  height!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   parentHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  nonce?: number
+  nonce?: string
 
   @Column({type: 'character', length: 66, readonly: true})
   sha3Uncles!: string
@@ -50,19 +50,19 @@ export class UncleEntity {
   author!: string
 
   @Column({type: 'numeric', readonly: true})
-  difficulty!: number
+  difficulty!: string
 
   @Column({type: 'numeric', readonly: true})
-  totalDifficulty!: number
+  totalDifficulty!: string
 
   @Column({type: 'text', readonly: true})
   extraData?: string
 
   @Column({type: 'numeric', readonly: true})
-  gasLimit!: number
+  gasLimit!: string
 
   @Column({type: 'numeric', readonly: true})
-  gasUsed!: number
+  gasUsed!: string
 
   @Column({type: 'bigint', readonly: true})
   timestamp!: string

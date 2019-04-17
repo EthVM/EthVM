@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 
-@Entity('account')
+@Entity('canonical_account')
 export class AccountEntity {
 
   constructor(data: any) {
@@ -12,7 +12,7 @@ export class AccountEntity {
   address!: string
 
   @Column({type: 'numeric', readonly: true})
-  balance!: number
+  balance!: string
 
   @Column({type: 'bigint', readonly: true})
   totalTxCount?: string

@@ -1,11 +1,5 @@
 import { EthvmApi } from '@app/core/api'
-import {
-  accountMetadataByHash,
-  addressAllTokensOwned,
-  addressAmountTokensOwned,
-  addressBalanceByHash,
-  accountByAddress
-} from '@app/core/api/apollo/queries/addresses.graphql'
+import { addressAllTokensOwned, addressAmountTokensOwned, accountByAddress } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -78,28 +72,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.accountByAddress)
-  }
-
-  public getAddressBalance(address: string): Promise<AddressBalance> {
-    return this.apollo
-      .query({
-        query: addressBalanceByHash,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.balanceByHash)
-  }
-
-  public getAddressMetadata(address: string): Promise<AddressMetadata> {
-    return this.apollo
-      .query({
-        query: accountMetadataByHash,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.accountMetadataByHash)
   }
 
   public getAddressAllTokensOwned(address: string): Promise<Token[]> {
@@ -424,7 +396,7 @@ export class EthvmApolloApi implements EthvmApi {
           fromBlock
         }
       })
-      .then(res => res.data.txs.map(raw => new Tx(raw)))
+      .then(res => res.data.txs.map(raw => new SimpleTx(raw)))
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]> {

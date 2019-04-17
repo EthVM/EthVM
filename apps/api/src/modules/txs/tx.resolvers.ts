@@ -13,13 +13,13 @@ export class TxResolvers {
   ) {}
 
   @Query()
-  async tx(@Args('hash', ParseHashPipe) hash: string) {
+  async tx(@Args('hash', ParseHashPipe) hash: string): Promise<TxDto | null> {
     const entity = await this.txService.findTx(hash)
     return entity ? new TxDto(entity) : null
   }
 
   @Query()
-  async txs(@Args('limit', ParseLimitPipe) limit?: number, @Args('page') page?: number, @Args('fromBlock') fromBlock?: number) {
+  async txs(@Args('limit', ParseLimitPipe) limit?: number, @Args('page') page?: number, @Args('fromBlock') fromBlock?: number): Promise<TxDto[]> {
     const entities = await this.txService.findTxs(limit, page, fromBlock)
     return entities.map(e => new TxDto(e))
   }
@@ -30,13 +30,13 @@ export class TxResolvers {
     @Args('filter') filter?: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
-  ) {
+  ): Promise<TxDto[]> {
     const entities = await this.txService.findTxsForAddress(hash, filter, limit, page)
     return entities.map(e => new TxDto(e))
   }
 
   @Query()
-  async totalNumberOfTransactions() {
+  async totalNumberOfTransactions(): Promise<number> {
     return await this.txService.countTransactions()
   }
 

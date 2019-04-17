@@ -5,9 +5,10 @@ import { BlockResolvers } from '@app/modules/blocks/block.resolvers'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
+import { UncleEntity } from '@app/orm/entities/uncle.entity'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlockHeaderEntity, TransactionEntity, TransactionTraceEntity])],
+  imports: [TypeOrmModule.forFeature([BlockHeaderEntity, TransactionEntity, TransactionTraceEntity, UncleEntity])],
   providers: [BlockService, BlockResolvers],
   exports: [BlockService],
 })
