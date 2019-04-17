@@ -305,14 +305,6 @@ export abstract class IQuery {
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
 
-    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
-
-    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
-
-    abstract totalNumberOfUncles(): number | Promise<number>;
-
-    abstract latestUncleBlockNumber(): number | Promise<number>;
-
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
     abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
@@ -320,6 +312,14 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
+
+    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
+
+    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
+
+    abstract totalNumberOfUncles(): number | Promise<number>;
+
+    abstract latestUncleBlockNumber(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }

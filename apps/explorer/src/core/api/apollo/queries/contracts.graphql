@@ -1,37 +1,37 @@
 query contractByAddress($address: String!) {
   contractByAddress(address: $address) {
     address
-#    metadata {
-#      decimals
-#      website
-#      support {
-#        email
-#      }
-#      social {
-#        blog
-#        chat
-#        facebook
-#        forum
-#        github
-#        gitter
-#        instagram
-#        linkedin
-#        reddit
-#        slack
-#        telegram
-#        twitter
-#        youtube
-#      }
-#    }
-#    type {
-#      string
-#    }
+    totalSupply
+    metadata {
+      decimals
+      website
+      type
+      support {
+        email
+      }
+      social {
+        blog
+        chat
+        facebook
+        forum
+        github
+        gitter
+        instagram
+        linkedin
+        reddit
+        slack
+        telegram
+        twitter
+        youtube
+      }
+    }
   }
 }
 
 query contractsCreatedBy($hash: String!, $limit: Int, $page: Int) {
   contractsCreatedBy(creator: $hash, limit: $limit, page: $page) {
     address
+    totalSupply
     metadata {
       name
       symbol
