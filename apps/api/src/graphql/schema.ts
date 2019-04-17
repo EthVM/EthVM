@@ -136,6 +136,46 @@ export class Contract {
     traceDestroyedAtLogIndex?: Long;
     traceDestroyedAtTraceAddress?: string;
     traceDestroyedAt?: Buffer;
+    metadata?: ContractMetadata;
+    totalSupply?: string;
+}
+
+export class ContractLogo {
+    src?: string;
+}
+
+export class ContractMetadata {
+    address?: string;
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+    ensAddress?: string;
+    type?: string;
+    logo?: ContractLogo;
+    support?: ContractSupport;
+    social?: ContractSocial;
+    website?: string;
+}
+
+export class ContractSocial {
+    blog?: string;
+    chat?: string;
+    facebook?: string;
+    forum?: string;
+    github?: string;
+    gitter?: string;
+    instagram?: string;
+    linkedin?: string;
+    reddit?: string;
+    slack?: string;
+    telegram?: string;
+    twitter?: string;
+    youtube?: string;
+}
+
+export class ContractSupport {
+    email?: string;
+    url?: string;
 }
 
 export class EthplorerPriceInfo {
@@ -221,9 +261,9 @@ export abstract class IQuery {
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
-    abstract search(query: string): Search | Promise<Search>;
-
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+    abstract search(query: string): Search | Promise<Search>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
@@ -265,14 +305,6 @@ export abstract class IQuery {
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
 
-    abstract tx(hash: string): Transaction | Promise<Transaction>;
-
-    abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
-
-    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
-
-    abstract totalNumberOfTransactions(): number | Promise<number>;
-
     abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
 
     abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
@@ -280,6 +312,14 @@ export abstract class IQuery {
     abstract totalNumberOfUncles(): number | Promise<number>;
 
     abstract latestUncleBlockNumber(): number | Promise<number>;
+
+    abstract tx(hash: string): Transaction | Promise<Transaction>;
+
+    abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
+
+    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
+
+    abstract totalNumberOfTransactions(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }

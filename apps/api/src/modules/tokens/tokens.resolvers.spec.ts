@@ -11,7 +11,7 @@ import { EthplorerAddressInfoDto } from './dto/ethplorer-address-info.dto'
 import { TokenDto } from './dto/token.dto'
 import { add } from 'winston'
 import { BlockDto } from '../blocks/block.dto'
-import { ContractDto } from '../contracts/contract.dto'
+import { ContractDto } from '../contracts/dto/contract.dto'
 import { take } from 'rxjs/operators'
 
 const addressOne = '0000000000000000000000000000000000000001'

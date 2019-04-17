@@ -23,4 +23,44 @@ type Contract {
   traceDestroyedAtLogIndex: Long
   traceDestroyedAtTraceAddress: String
   traceDestroyedAt: Buffer
+  metadata: ContractMetadata
+  totalSupply: String
+}
+
+type ContractMetadata {
+  address: String
+  name: String
+  symbol: String
+  decimals: Int
+  ensAddress: String
+  type: String
+  logo: ContractLogo
+  support: ContractSupport
+  social: ContractSocial
+  website: String
+}
+
+type ContractLogo {
+  src: String
+}
+
+type ContractSupport {
+  email: String
+  url: String
+}
+
+type ContractSocial {
+  blog: String
+  chat: String
+  facebook: String
+  forum: String
+  github: String
+  gitter: String
+  instagram: String
+  linkedin: String
+  reddit: String
+  slack: String
+  telegram: String
+  twitter: String
+  youtube: String
 }

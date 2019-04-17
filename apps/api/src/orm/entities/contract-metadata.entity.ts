@@ -28,7 +28,7 @@ export class ContractMetadataEntity {
   type?: string
 
   @Column({type: 'text', readonly: true})
-  text?: string
+  logo?: string
 
   @Column({type: 'text', readonly: true})
   support?: string
