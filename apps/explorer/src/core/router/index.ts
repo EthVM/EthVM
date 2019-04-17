@@ -16,7 +16,7 @@ const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" 
 const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modules/tokens/pages/PageTokens.vue')
 const PageDetailsToken = () => import(/* webpackChunkName: "page-details-token" */ '@app/modules/tokens/pages/PageDetailsToken.vue')
 const PageKnowledgeBase = () => import(/* webpackChunkName: "page-kb" */ '@app/modules/other/pages/PageKnowledgeBase.vue')
-const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp */ '@app/modules/other/pages/PagePrivacyPolicy.vue')
+const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp" */ '@app/modules/other/pages/PagePrivacyPolicy.vue')
 const PageNotFound = () => import(/* webpackChunkName: "page-not-found" */ '@app/modules/other/pages/PageNotFound.vue')
 
 Vue.use(Router)
