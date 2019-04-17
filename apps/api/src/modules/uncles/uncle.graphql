@@ -7,10 +7,10 @@ type Query {
 
 type Uncle {
   hash: String
-  nephewNumber: Long
+  nephewNumber: String
   nephewHash: String
-  number: Long
-  height: Long
+  number: String
+  height: String
   parentHash: String
   nonce: String
   sha3Uncles: String
@@ -19,11 +19,11 @@ type Uncle {
   stateRoot: String
   receiptsRoot: String
   author: String
-  difficulty: Long
-  totalDifficulty: Long
+  difficulty: String
+  totalDifficulty: String
   extraData: String
-  gasLimit: Long
-  gasUsed: Long
+  gasLimit: String
+  gasUsed: String
   timestamp: String
   size: String
 }

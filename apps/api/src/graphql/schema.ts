@@ -419,10 +419,10 @@ export class Transaction {
 
 export class Uncle {
     hash?: string;
-    nephewNumber?: Long;
+    nephewNumber?: string;
     nephewHash?: string;
-    number?: Long;
-    height?: Long;
+    number?: string;
+    height?: string;
     parentHash?: string;
     nonce?: string;
     sha3Uncles?: string;
@@ -431,11 +431,11 @@ export class Uncle {
     stateRoot?: string;
     receiptsRoot?: string;
     author?: string;
-    difficulty?: Long;
-    totalDifficulty?: Long;
+    difficulty?: string;
+    totalDifficulty?: string;
     extraData?: string;
-    gasLimit?: Long;
-    gasUsed?: Long;
+    gasLimit?: string;
+    gasUsed?: string;
     timestamp?: string;
     size?: string;
 }

@@ -9,8 +9,9 @@ query uncleByHash($hash: String!) {
     parentHash
     sha3Uncles
     timestamp
-    uncleIndex
-    uncleReward
+    nephewNumber
+    # uncleIndex
+    # uncleReward
   }
 }
 
@@ -20,8 +21,9 @@ query uncles($limit: Int, $page: Int, $fromUncle: Int) {
     number
     hash
     number
-    uncleIndex
-    uncleReward
+    nephewNumber
+    # uncleIndex
+    # uncleReward
   }
 }
 
