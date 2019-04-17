@@ -11,7 +11,6 @@ import { split } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
-import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import VueTimeago from 'vue-timeago'
@@ -24,11 +23,6 @@ import 'vuetify/dist/vuetify.min.css'
   ===================================================================================
 */
 
-// -------------------------------------------------------
-//    VTooltip
-// -------------------------------------------------------
-
-Vue.use(VTooltip)
 
 // -------------------------------------------------------
 //    EventHub
