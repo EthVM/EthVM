@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 
-@Entity('erc20_balance')
+@Entity('canonical_erc20_balance')
 export class Erc20BalanceEntity {
 
   constructor(data: any) {

@@ -42,9 +42,7 @@
 
         <!-- Column 3 -->
         <v-flex hidden-sm-and-down md2>
-          <!-- TODO calculate share using totalSupply and holder.balance -->
-          <!--<p class="mb-0 ml-2">{{ holder.share }}%</p>-->
-          <p class="mb-0 ml-2">Pending</p>
+          <p class="mb-0 ml-2">{{ holderShare(holder) }}</p>
         </v-flex>
         <!-- End Column 3 -->
       </v-layout>
@@ -56,6 +54,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import BN from 'bignumber.js'
 
 const MAX_ITEMS = 5
 
@@ -69,6 +68,7 @@ export default class TokenTableHolders extends Vue {
 
   @Prop(Array) holders!: Array<any>
   @Prop(String) addressRef!: string
+  @Prop(String) totalSupply?: string
 
   /*
   ===================================================================================
@@ -92,6 +92,18 @@ export default class TokenTableHolders extends Vue {
    */
   holderAddress(holder) {
     return `/token/${this.addressRef}?holder=${holder.address}`
+  }
+
+  /**
+   * Calculate percentage share of totalSupply held by this holder
+   * @param  {Object} holder - Holder object
+   * @return {String} - Share
+   */
+  holderShare(holder) {
+    if (!(this.totalSupply && holder.balance)) return 'N/A'
+    const balance = new BN(holder.balance)
+    const totalSupply = new BN(this.totalSupply)
+    return `${balance.div(totalSupply).times(100)}%`
   }
 
   /*
@@ -128,5 +140,6 @@ export default class TokenTableHolders extends Vue {
     const end = this.holders.length > 0 ? start + this.holdersPage.length - 1 : 0
     return `Showing results ${start} - ${end} of ${this.holders.length}`
   }
+
 }
 </script>

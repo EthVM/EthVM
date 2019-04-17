@@ -404,7 +404,7 @@ export class TokenExchangeRate {
 
 export class TokenHolder {
     address?: string;
-    balance?: Decimal;
+    balance?: string;
 }
 
 export class TokenTransfer {

@@ -17,7 +17,7 @@
     -->
     <v-tab-item slot="tabs-item" value="tab-1">
       <v-progress-linear color="blue" indeterminate v-if="isTokenHoldersLoading" class="mt-0" />
-      <token-table-holders v-if="!isTokenHoldersLoading" :holders="tokenHolders" :address-ref="addressRef" />
+      <token-table-holders v-if="!isTokenHoldersLoading" :holders="tokenHolders" :address-ref="addressRef" :total-supply="totalSupply" />
     </v-tab-item>
   </app-tabs>
 </template>
@@ -49,6 +49,7 @@ export default class TokenDetailsTabs extends Vue {
   @Prop(String) addressRef!: string
   @Prop(Array) tokenTransfers!: any
   @Prop(Array) tokenHolders!: any
+  @Prop(String) totalSupply?: string
   @Prop(Boolean) isTokenTransfersLoading!: boolean
   @Prop(Boolean) isTokenHoldersLoading!: boolean
   @Prop(String) errorTokenTransfers!: string
