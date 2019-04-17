@@ -118,7 +118,7 @@ export class Block {
 
   public getTotalDifficulty(): HexNumber {
     if (!this.cache.totalDifficulty) {
-      this.cache.totalDifficulty = new HexNumber(this.block.totalDifficulty)
+      this.cache.totalDifficulty = new HexNumber(this.block.header.totalDifficulty)
     }
     return this.cache.totalDifficulty
   }

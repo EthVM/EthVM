@@ -99,18 +99,18 @@ export class BlockHeader {
     number?: Long;
     hash?: string;
     parentHash?: string;
-    nonce?: Long;
+    nonce?: string;
     sha3Uncles?: string;
     logsBloom?: string;
     transactionsRoot?: string;
     stateRoot?: string;
     receiptsRoot?: string;
     author?: string;
-    difficulty?: Long;
-    totalDifficulty?: number;
+    difficulty?: string;
+    totalDifficulty?: string;
     extraData?: string;
-    gasLimit?: Long;
-    gasUsed?: Long;
+    gasLimit?: string;
+    gasUsed?: string;
     timestamp?: string;
     size?: string;
     blockTime?: string;
@@ -397,7 +397,7 @@ export class Trace {
 
 export class Transaction {
     hash?: string;
-    nonce?: Long;
+    nonce?: string;
     blockHash?: string;
     blockNumber?: number;
     transactionIndex?: number;
