@@ -15,16 +15,22 @@ import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Co
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DOC
+import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeRate
 import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoTokenExchangeProvider
+import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoTokenExchangeProvider.Companion.okHttpClient
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProviders
 import com.ethvm.kafka.connect.sources.exchanges.provider.TokenIdEntry
 import com.ethvm.kafka.connect.sources.exchanges.utils.Versions
+import okhttp3.Request
 import org.apache.kafka.common.config.ConfigDef
 import org.apache.kafka.common.config.ConfigDef.Importance
 import org.apache.kafka.common.config.ConfigDef.Type
 import org.apache.kafka.connect.connector.Task
+import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceConnector
+import java.io.BufferedReader
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class ExchangeRatesSourceConnector : SourceConnector() {
@@ -101,7 +107,7 @@ class ExchangeRatesSourceConnector : SourceConnector() {
               }
 
               javaClass.getResourceAsStream("/coingecko/coingecko-eth.json")?.let { stream ->
-                CoinGeckoTokenExchangeProvider.klaxon.parse<List<TokenIdEntry>>(stream)?.let { options["tokens_ids"] = it }
+                CoinGeckoTokenExchangeProvider.klaxon.parseArray<TokenIdEntry>(stream)?.let { options["tokens_ids"] = it }
               }
 
               CoinGeckoTokenExchangeProvider(options)

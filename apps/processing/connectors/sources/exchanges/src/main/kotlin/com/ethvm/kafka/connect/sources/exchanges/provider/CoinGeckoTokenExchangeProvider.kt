@@ -26,7 +26,7 @@ class CoinGeckoTokenExchangeProvider(
   @Suppress("UNCHECKED_CAST")
   private val tokenIds: List<TokenIdEntry> = options.getOrDefault("tokens_ids", emptyList<TokenIdEntry>()) as List<TokenIdEntry>
   private val currency: String = options.getOrDefault("currency", "usd") as String
-  private val perPage: Int = options.getOrDefault("per_page", 250) as Int
+  private val perPage: Int = options.getOrDefault("per_page", 50) as Int
 
   private val logger = KotlinLogging.logger {}
 
@@ -104,7 +104,7 @@ class CoinGeckoTokenExchangeProvider(
   companion object {
 
     @Suppress("FunctionName")
-    fun COINGECKO_API_URL(ids: List<String> = emptyList(), currency: String = "usd", per_page: Int = 250, page: Int = 1): HttpUrl =
+    fun COINGECKO_API_URL(ids: List<String> = emptyList(), currency: String = "usd", per_page: Int = 50, page: Int = 1): HttpUrl =
       HttpUrl.Builder()
         .scheme("https")
         .host("api.coingecko.com")
@@ -162,13 +162,7 @@ data class CoinGeckoExchangeRate(
   val last_updated: String? = ""
 ) {
 
-  fun isValid() =
-    symbol != "" &&
-      total_supply != -1L &&
-      market_cap != -1.0 &&
-      price_change_percentage_24h != -1.0 &&
-      total_volume != -1.0 &&
-      current_price != -1.0
+  fun isValid() = symbol != "" && market_cap != -1.0
 
   fun toExchangeRateRecord(builder: TokenExchangeRateRecord.Builder, address: String): TokenExchangeRateRecord.Builder =
     builder

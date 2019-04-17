@@ -372,6 +372,27 @@ WHERE
     amount > 0
 ORDER BY trace_location_block_number DESC;
 
+/* Token exchange rates table */
+CREATE TABLE token_exchange_rates
+(
+  address                          CHAR(42)    PRIMARY KEY,
+  symbol                           VARCHAR(64) NULL,
+  name                             VARCHAR(64) NULL,
+  image                            TEXT        NULL,
+  current_price                    NUMERIC     NULL,
+  market_cap                       NUMERIC     NULL,
+  market_cap_rank                  INT         NULL,
+  total_volume                     NUMERIC     NULL,
+  high24h                          NUMERIC     NULL,
+  low24h                           NUMERIC     NULL,
+  price_change24h                  NUMERIC     NULL,
+  price_change_percentage24h       NUMERIC     NULL,
+  market_cap_change24h             NUMERIC     NULL,
+  market_cap_change_percentage24h  NUMERIC     NULL,
+  circulating_supply               VARCHAR(64) NULL,
+  total_supply                     NUMERIC     NULL,
+  last_updated                     TEXT        NULL
+);
 
 /* metrics hyper tables */
 CREATE TABLE block_metrics_header
