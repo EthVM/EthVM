@@ -130,6 +130,12 @@ query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
     uncles {
       hash
     }
+    transactions {
+      hash
+      receipt {
+        status
+      }
+    }
 #    rewards {
 #      rewardType
 #      value

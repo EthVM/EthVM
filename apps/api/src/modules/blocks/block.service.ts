@@ -80,7 +80,8 @@ export class BlockService {
 
   async findMinedBlocksByAddress(address: string, limit: number = 10, page: number = 0): Promise<BlockHeaderEntity[]> {
     const skip = page * limit
-    return this.blockHeaderRepository.find({ where: { author: address }, take: limit, skip, order: { number: 'DESC' }, relations: ['uncles'] })
+    const blocks = await this.blockHeaderRepository.find({ where: { author: address }, take: limit, skip, order: { number: 'DESC' } })
+    return this.findAndMapTxsAndUncles(blocks)
   }
 
   async findTotalNumberOfBlocks(): Promise<number> {
