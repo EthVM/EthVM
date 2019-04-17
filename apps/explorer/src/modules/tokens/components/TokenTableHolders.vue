@@ -100,7 +100,9 @@ export default class TokenTableHolders extends Vue {
    * @return {String} - Share
    */
   holderShare(holder) {
-    if (!(this.totalSupply && holder.balance)) return 'N/A'
+    if (!(this.totalSupply && holder.balance)) {
+      return 'N/A'
+    }
     const balance = new BN(holder.balance)
     const totalSupply = new BN(this.totalSupply)
     return `${balance.div(totalSupply).times(100)}%`
@@ -140,6 +142,5 @@ export default class TokenTableHolders extends Vue {
     const end = this.holders.length > 0 ? start + this.holdersPage.length - 1 : 0
     return `Showing results ${start} - ${end} of ${this.holders.length}`
   }
-
 }
 </script>
