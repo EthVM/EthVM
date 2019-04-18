@@ -266,6 +266,8 @@ export abstract class IQuery {
 
     abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
 
+    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
     abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;

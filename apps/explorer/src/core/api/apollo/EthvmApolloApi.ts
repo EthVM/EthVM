@@ -1,5 +1,5 @@
 import { EthvmApi } from '@app/core/api'
-import { addressAllTokensOwned, addressAmountTokensOwned, accountByAddress } from '@app/core/api/apollo/queries/addresses.graphql'
+import { accountByAddress, addressAllTokensOwned, addressAmountTokensOwned, internalTransactionsByAddress } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -25,18 +25,15 @@ import {
 } from '@app/core/api/apollo/queries/statistics.graphql'
 import { newBlockMetrics, newSimpleBlocks, newSimpleTxs } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
-  tokenTransfersByContractAddress,
-  tokenTransfersByContractAddressForHolder,
   holderDetails,
-  holderTransfers,
-  tokenHolders
+  tokenHolders,
+  tokenTransfersByContractAddress,
+  tokenTransfersByContractAddressForHolder
 } from '@app/core/api/apollo/queries/tokens.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import {
   Account,
-  AddressBalance,
-  AddressMetadata,
   Block,
   BlockMetrics,
   Contract,
@@ -93,6 +90,15 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.addressAmountTokensOwned)
+  }
+
+  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<any[]> {
+    return this.apollo
+      .query({
+        query: internalTransactionsByAddress,
+        variables: { address, limit, page }
+      })
+      .then(res => res.data.internalTransactionsByAddress)
   }
 
   // ------------------------------------------------------------------------------------

@@ -62,4 +62,23 @@ export class TransferService {
 
   }
 
+  async findInternalTransactionsByAddress(address: string, take: number = 10, page: number = 0): Promise<FungibleBalanceTransferEntity[]> {
+    const skip = take * page
+    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DELETION']
+
+    return this.transferRepository.createQueryBuilder('t')
+      .where('t.delta_type IN (:...deltaTypes)')
+      .andWhere(new Brackets(sqb => {
+        sqb.where('t.from = :address')
+        sqb.orWhere('t.to = :address')
+      }))
+      .setParameters({ deltaTypes, address })
+      .orderBy('t.traceLocationBlockNumber', 'DESC')
+      .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
+      .offset(skip)
+      .take(take)
+      .getMany()
+
+  }
+
 }
