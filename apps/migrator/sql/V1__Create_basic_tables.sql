@@ -277,6 +277,7 @@ CREATE INDEX idx_fungible_balance_deltas_counterpart_address ON fungible_balance
 CREATE INDEX idx_fungible_balance_deltas_token_type ON fungible_balance_deltas (token_type);
 CREATE INDEX idx_fungible_balance_deltas_delta_type ON fungible_balance_deltas (token_type);
 CREATE INDEX idx_fungible_balance_deltas_trace_location_block_hash ON fungible_balance_deltas (trace_location_block_hash);
+CREATE INDEX idx_fungible_balance_deltas_amount ON fungible_balance_deltas (amount);
 
 CREATE VIEW canonical_fungible_balance_deltas AS
 SELECT fbd.*
@@ -360,13 +361,34 @@ WHERE nfb.contract IS NOT NULL
 
 CREATE TABLE non_fungible_balance_deltas
 (
-  contract       CHAR(42)    NOT NULL,
-  token_id       NUMERIC     NOT NULL,
-  token_type     VARCHAR(32) NOT NULL,
-  trace_location TEXT        NOT NULL,
-  "from"         CHAR(42)    NOT NULL,
-  "to"           CHAR(42)    NOT NULL
+  contract                         CHAR(42)    NOT NULL,
+  token_id                         NUMERIC     NOT NULL,
+  token_type                       VARCHAR(32) NOT NULL,
+  trace_location_block_hash        CHAR(66)    NULL,
+  trace_location_block_number      NUMERIC     NULL,
+  trace_location_transaction_hash  CHAR(66)    NULL,
+  trace_location_transaction_index INT         NULL,
+  trace_location_log_index         INT         NULL,
+  trace_location_trace_address     VARCHAR(64) NULL,
+  "from"                           CHAR(42)    NOT NULL,
+  "to"                             CHAR(42)    NOT NULL
 );
+
+CREATE INDEX idx_non_fungible_balance_deltas_contract ON non_fungible_balance_deltas(contract);
+CREATE INDEX idx_non_fungible_balance_deltas_contract_token_id ON non_fungible_balance_deltas(contract, token_id);
+CREATE INDEX idx_non_fungible_balance_deltas_from ON non_fungible_balance_deltas("from");
+CREATE INDEX idx_non_fungible_balance_deltas_to ON non_fungible_balance_deltas("to");
+CREATE INDEX idx_non_fungible_balance_deltas_from_to ON non_fungible_balance_deltas("from", "to");
+CREATE INDEX idx_non_fungible_balance_deltas_trace_location_block_hash ON non_fungible_balance_deltas(trace_location_block_hash);
+
+CREATE VIEW canonical_non_fungible_balance_deltas AS
+    SELECT
+      nfbd.*
+    FROM non_fungible_balance_deltas AS nfbd
+    RIGHT JOIN canonical_block_header AS cb ON nfbd.trace_location_block_hash = cb.hash
+    WHERE cb.number IS NOT NULL
+      AND nfbd.contract IS NOT NULL;
+
 
 CREATE TABLE erc20_metadata
 (
@@ -391,33 +413,41 @@ CREATE INDEX idx_erc721_metadata_name ON erc721_metadata (name);
 CREATE INDEX idx_erc721_metadata_symbol ON erc721_metadata (symbol);
 
 CREATE VIEW block_reward AS
-SELECT fbd.trace_location_block_hash as hash,
-       fbd.delta_type                as delta_type,
-       fbd.amount                    as amount
-FROM fungible_balance_deltas AS fbd
+SELECT address,
+       trace_location_block_hash as block_hash,
+       delta_type,
+       amount
+FROM fungible_balance_deltas
 WHERE delta_type IN ('BLOCK_REWARD', 'UNCLE_REWARD')
   AND amount > 0;
+
+CREATE VIEW canonical_block_reward AS
+SELECT br.*
+FROM block_reward AS br
+       RIGHT JOIN canonical_block_header AS cb ON br.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND br.amount IS NOT NULL;
 
 /* Token exchange rates table */
 CREATE TABLE token_exchange_rates
 (
-  address                          CHAR(42)    PRIMARY KEY,
-  symbol                           VARCHAR(64) NULL,
-  name                             VARCHAR(64) NULL,
-  image                            TEXT        NULL,
-  current_price                    NUMERIC     NULL,
-  market_cap                       NUMERIC     NULL,
-  market_cap_rank                  INT         NULL,
-  total_volume                     NUMERIC     NULL,
-  high24h                          NUMERIC     NULL,
-  low24h                           NUMERIC     NULL,
-  price_change24h                  NUMERIC     NULL,
-  price_change_percentage24h       NUMERIC     NULL,
-  market_cap_change24h             NUMERIC     NULL,
-  market_cap_change_percentage24h  NUMERIC     NULL,
-  circulating_supply               VARCHAR(64) NULL,
-  total_supply                     NUMERIC     NULL,
-  last_updated                     TEXT        NULL
+  address                         CHAR(42) PRIMARY KEY,
+  symbol                          VARCHAR(64) NULL,
+  name                            VARCHAR(64) NULL,
+  image                           TEXT        NULL,
+  current_price                   NUMERIC     NULL,
+  market_cap                      NUMERIC     NULL,
+  market_cap_rank                 INT         NULL,
+  total_volume                    NUMERIC     NULL,
+  high24h                         NUMERIC     NULL,
+  low24h                          NUMERIC     NULL,
+  price_change24h                 NUMERIC     NULL,
+  price_change_percentage24h      NUMERIC     NULL,
+  market_cap_change24h            NUMERIC     NULL,
+  market_cap_change_percentage24h NUMERIC     NULL,
+  circulating_supply              VARCHAR(64) NULL,
+  total_supply                    NUMERIC     NULL,
+  last_updated                    TEXT        NULL
 );
 
 /* metrics hyper tables */
