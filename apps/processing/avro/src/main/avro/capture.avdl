@@ -165,6 +165,7 @@ protocol Capture {
 
   record UncleRecord {
 
+    int index;                                            // ordinal position within the block
     decimal(80, 0) number;                                // the uncle number
     decimal(80, 0) height;                                // the block height number where it appeared
     string nephewHash;

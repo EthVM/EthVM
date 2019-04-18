@@ -37,6 +37,7 @@ ORDER BY count DESC;
 CREATE TABLE uncle
 (
   hash              CHAR(66) PRIMARY KEY,
+  index             INT NOT NULL,
   nephew_hash       CHAR(66)  NOT NULL,
   number            NUMERIC   NOT NULL,
   height            NUMERIC   NOT NULL,
@@ -298,8 +299,10 @@ SELECT fbd.counterpart_address AS "from",
        fbd.trace_location_transaction_hash,
        fbd.trace_location_transaction_index,
        fbd.trace_location_log_index,
-       fbd.trace_location_trace_address
+       fbd.trace_location_trace_address,
+       bh.timestamp
 FROM canonical_fungible_balance_deltas AS fbd
+LEFT JOIN canonical_block_header AS bh ON fbd.trace_location_block_hash = bh.hash
 WHERE fbd.amount > 0;
 
 CREATE VIEW canonical_account AS
