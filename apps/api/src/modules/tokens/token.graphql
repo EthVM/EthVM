@@ -1,6 +1,4 @@
 type Query {
-  addressTokenTransfers(address: String!, limit: Int, page: Int): [TokenTransfer]
-  addressTokenTransfersByHolder(address: String!, holder: String!, filter: FilterEnum, limit: Int, page: Int): [TokenTransfer]
   tokenHistory(address: String!): [EthplorerTokenOperation]
   tokenHolders(address: String!, limit: Int, page: Int): [TokenHolder]
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
@@ -20,17 +18,6 @@ type Token {
   currentPrice: Float
 }
 
-type TokenTransfer {
-  id: TokenTransferKey
-  amount: String
-  contract: String
-  from: String
-  timestamp: Int
-  to: String
-  tokenId: String
-  transferType: BalanceType
-}
-
 type TokenHolder {
   address: String
   balance: String
@@ -38,10 +25,6 @@ type TokenHolder {
 
 enum BalanceType {
   TX_FEE, REWARD, ETHER, ERC20, ERC721
-}
-
-type TokenTransferKey {
-  hash: String
 }
 
 type EthplorerTokenOperation {

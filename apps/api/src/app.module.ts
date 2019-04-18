@@ -10,6 +10,7 @@ import { AccountModule } from '@app/modules/accounts/account.module'
 import { ContractModule } from '@app/modules/contracts/contract.module'
 import { UncleModule } from '@app/modules/uncles/uncle.module'
 import { TokenModule } from '@app/modules/tokens/token.module'
+import { TransferModule } from '@app/modules/transfers/transfer.module'
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { TokenModule } from '@app/modules/tokens/token.module'
     // StatisticModule,
     SearchModule,
     LoggerModule,
+    TransferModule
   ],
 })
 export class AppModule {}

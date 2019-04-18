@@ -13,6 +13,17 @@ export enum BalanceType {
     ERC721 = "ERC721"
 }
 
+export enum DeltaType {
+    UNCLE_REWARD = "UNCLE_REWARD",
+    BLOCK_REWARD = "BLOCK_REWARD",
+    CONTRACT_CREATION = "CONTRACT_CREATION",
+    TOKEN_TRANSFER = "TOKEN_TRANSFER",
+    CONTRACT_DESTRUCTION = "CONTRACT_DESTRUCTION",
+    TX = "TX",
+    MINER_FEE = "MINER_FEE",
+    INTERNAL_TX = "INTERNAL_TX"
+}
+
 export enum Duration {
     ALL = "ALL",
     YEAR = "YEAR",
@@ -289,10 +300,6 @@ export abstract class IQuery {
 
     abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
-    abstract addressTokenTransfers(address: string, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
-
-    abstract addressTokenTransfersByHolder(address: string, holder: string, filter?: FilterEnum, limit?: number, page?: number): TokenTransfer[] | Promise<TokenTransfer[]>;
-
     abstract tokenHistory(address: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
@@ -304,6 +311,10 @@ export abstract class IQuery {
     abstract addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
+
+    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+
+    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
@@ -407,21 +418,6 @@ export class TokenHolder {
     balance?: string;
 }
 
-export class TokenTransfer {
-    id?: TokenTransferKey;
-    amount?: string;
-    contract?: string;
-    from?: string;
-    timestamp?: number;
-    to?: string;
-    tokenId?: string;
-    transferType?: BalanceType;
-}
-
-export class TokenTransferKey {
-    hash?: string;
-}
-
 export class Trace {
     blockHash?: string;
     transactionHash?: string;
@@ -455,6 +451,22 @@ export class Transaction {
     chainId?: string;
     receipt?: Receipt;
     traces?: Trace[];
+}
+
+export class Transfer {
+    to?: string;
+    deltaType?: DeltaType;
+    from?: string;
+    contractAddress?: string;
+    tokenType?: string;
+    amount?: string;
+    traceLocationBlockHash?: string;
+    traceLocationBlockNumber?: string;
+    traceLocationTransactionHash?: string;
+    traceLocationTransactionIndex?: number;
+    traceLocationLogIndex?: number;
+    traceLocationTraceAddress?: string;
+    timestamp?: string;
 }
 
 export class Uncle {

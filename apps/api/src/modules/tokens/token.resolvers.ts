@@ -11,28 +11,28 @@ import { TokenHolderDto } from '@app/modules/tokens/dto/token-holder.dto'
 export class TokenResolvers {
   constructor(private readonly tokenService: TokenService, private readonly vmEngine: VmEngineService) {
   }
+  //
+  // @Query()
+  // async addressTokenTransfers(
+  //   @Args('address', ParseAddressPipe) address: string,
+  //   @Args('limit', ParseLimitPipe) limit?: number,
+  //   @Args('page', ParsePagePipe) page?: number,
+  // ) {
+  //   const entities = await this.tokenService.findAddressTokenTransfers(address, limit, page)
+  //   return entities.map(e => new TokenTransferDto(e))
+  // }
 
-  @Query()
-  async addressTokenTransfers(
-    @Args('address', ParseAddressPipe) address: string,
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
-  ) {
-    const entities = await this.tokenService.findAddressTokenTransfers(address, limit, page)
-    return entities.map(e => new TokenTransferDto(e))
-  }
-
-  @Query()
-  async addressTokenTransfersByHolder(
-    @Args('address', ParseAddressPipe) address: string,
-    @Args('holder') holder: string,
-    @Args('filter') filter?: string,
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
-  ) {
-    const entities = await this.tokenService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
-    return entities.map(e => new TokenTransferDto(e))
-  }
+  // @Query()
+  // async addressTokenTransfersByHolder(
+  //   @Args('address', ParseAddressPipe) address: string,
+  //   @Args('holder') holder: string,
+  //   @Args('filter') filter?: string,
+  //   @Args('limit', ParseLimitPipe) limit?: number,
+  //   @Args('page', ParsePagePipe) page?: number,
+  // ) {
+  //   const entities = await this.tokenService.findAddressTokenTransfersByHolder(address, holder, filter, limit, page)
+  //   return entities.map(e => new TokenTransferDto(e))
+  // }
 
   @Query()
   async tokenHistory(@Args('address', ParseAddressPipe) address: string) {
