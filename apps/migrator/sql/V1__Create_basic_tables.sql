@@ -286,7 +286,7 @@ FROM fungible_balance_deltas AS fbd
 WHERE cb.number IS NOT NULL
   AND fbd.address IS NOT NULL;
 
-CREATE VIEW canonical_fungible_balance_transfers AS
+CREATE VIEW canonical_fungible_balance_transfer AS
 SELECT fbd.counterpart_address AS "from",
        fbd.address             AS "to",
        fbd.contract_address,
@@ -359,7 +359,7 @@ WHERE nfb.contract IS NOT NULL
   AND nfb.contract != ''
   AND c.contract_type = 'ERC20';
 
-CREATE TABLE non_fungible_balance_deltas
+CREATE TABLE non_fungible_balance_delta
 (
   contract                         CHAR(42)    NOT NULL,
   token_id                         NUMERIC     NOT NULL,
@@ -374,17 +374,17 @@ CREATE TABLE non_fungible_balance_deltas
   "to"                             CHAR(42)    NOT NULL
 );
 
-CREATE INDEX idx_non_fungible_balance_deltas_contract ON non_fungible_balance_deltas(contract);
-CREATE INDEX idx_non_fungible_balance_deltas_contract_token_id ON non_fungible_balance_deltas(contract, token_id);
-CREATE INDEX idx_non_fungible_balance_deltas_from ON non_fungible_balance_deltas("from");
-CREATE INDEX idx_non_fungible_balance_deltas_to ON non_fungible_balance_deltas("to");
-CREATE INDEX idx_non_fungible_balance_deltas_from_to ON non_fungible_balance_deltas("from", "to");
-CREATE INDEX idx_non_fungible_balance_deltas_trace_location_block_hash ON non_fungible_balance_deltas(trace_location_block_hash);
+CREATE INDEX idx_non_fungible_balance_deltas_contract ON non_fungible_balance_delta(contract);
+CREATE INDEX idx_non_fungible_balance_deltas_contract_token_id ON non_fungible_balance_delta (contract, token_id);
+CREATE INDEX idx_non_fungible_balance_deltas_from ON non_fungible_balance_delta ("from");
+CREATE INDEX idx_non_fungible_balance_deltas_to ON non_fungible_balance_delta ("to");
+CREATE INDEX idx_non_fungible_balance_deltas_from_to ON non_fungible_balance_delta ("from", "to");
+CREATE INDEX idx_non_fungible_balance_deltas_trace_location_block_hash ON non_fungible_balance_delta (trace_location_block_hash);
 
 CREATE VIEW canonical_non_fungible_balance_deltas AS
     SELECT
       nfbd.*
-    FROM non_fungible_balance_deltas AS nfbd
+    FROM non_fungible_balance_delta AS nfbd
     RIGHT JOIN canonical_block_header AS cb ON nfbd.trace_location_block_hash = cb.hash
     WHERE cb.number IS NOT NULL
       AND nfbd.contract IS NOT NULL;
