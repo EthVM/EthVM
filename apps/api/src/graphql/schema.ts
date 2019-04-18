@@ -300,8 +300,6 @@ export abstract class IQuery {
 
     abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
-    abstract tokenHistory(address: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
-
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
@@ -454,6 +452,7 @@ export class Transaction {
 }
 
 export class Transfer {
+    id?: string;
     to?: string;
     deltaType?: DeltaType;
     from?: string;

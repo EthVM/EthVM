@@ -1,5 +1,4 @@
 type Query {
-  tokenHistory(address: String!): [EthplorerTokenOperation]
   tokenHolders(address: String!, limit: Int, page: Int): [TokenHolder]
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
   holderTransfers(address: String!, holderAddress: String!): [EthplorerTokenOperation]

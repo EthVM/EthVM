@@ -9,6 +9,6 @@ import { TransferResolvers } from '@app/modules/transfers/transfer.resolvers'
     TypeOrmModule.forFeature([FungibleBalanceTransferEntity]),
   ],
   providers: [TransferService, TransferResolvers],
-  exports: [],
+  exports: []
 })
 export class TransferModule {}

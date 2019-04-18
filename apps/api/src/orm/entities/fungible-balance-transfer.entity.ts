@@ -8,16 +8,19 @@ export class FungibleBalanceTransferEntity {
     assignClean(this, data);
   }
 
-  @PrimaryColumn({type: 'character', length: 42, readonly: true})
+  @PrimaryColumn({type: 'bigint', readonly: true})
+  id!: string
+
+  @Column({type: 'character', length: 42, readonly: true})
   to!: string
 
-  @PrimaryColumn({type: 'character varying', length: 32, readonly: true})
+  @Column({type: 'character varying', length: 32, readonly: true})
   deltaType!: string
 
-  @PrimaryColumn({type: 'character', length: 42, readonly: true})
+  @Column({type: 'character', length: 42, readonly: true})
   from?: string
 
-  @PrimaryColumn({type: 'character', length: 42, readonly: true})
+  @Column({type: 'character', length: 42, readonly: true})
   contractAddress?: string
 
   @Column({type: 'character varying', length: 32, readonly: true})
@@ -26,22 +29,22 @@ export class FungibleBalanceTransferEntity {
   @Column({type: 'numeric', readonly: true})
   amount!: string
 
-  @PrimaryColumn({type: 'character', length: 66, readonly: true})
+  @Column({type: 'character', length: 66, readonly: true})
   traceLocationBlockHash!: string
 
   @Column({type: 'numeric', readonly: true})
   traceLocationBlockNumber!: string
 
-  @PrimaryColumn({type: 'character', length: 66, readonly: true})
+  @Column({type: 'character', length: 66, readonly: true})
   traceLocationTransactionHash?: string
 
   @Column({type: 'integer', readonly: true})
   traceLocationTransactionIndex?: number
 
-  @PrimaryColumn({type: 'integer', readonly: true})
+  @Column({type: 'integer', readonly: true})
   traceLocationLogIndex?: number
 
-  @PrimaryColumn({type: 'character varying', length: 64, readonly: true})
+  @Column({type: 'character varying', length: 64, readonly: true})
   traceLocationTraceAddress!: string
 
   @Column({type: 'bigint', readonly: true})

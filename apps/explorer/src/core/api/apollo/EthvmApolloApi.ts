@@ -25,7 +25,7 @@ import {
 } from '@app/core/api/apollo/queries/statistics.graphql'
 import { newBlockMetrics, newSimpleBlocks, newSimpleTxs } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
-  addressTokenTransfers,
+  tokenTransfersByContractAddress,
   addressTokenTransfersByHolder,
   holderDetails,
   holderTransfers,
@@ -94,19 +94,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.addressAmountTokensOwned)
-  }
-
-  public getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]> {
-    return this.apollo
-      .query({
-        query: addressTokenTransfers,
-        variables: {
-          address,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.addressTokenTransfers)
   }
 
   public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
@@ -299,17 +286,6 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenExchangeRateByAddress)
   }
 
-  public getTokenHistory(address: string): Promise<any> {
-    return this.apollo
-      .query({
-        query: tokenHistory,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.tokenHistory)
-  }
-
   public getHolderDetails(address: string, holderAddress: string): Promise<any> {
     return this.apollo
       .query({
@@ -369,6 +345,19 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.tokenHolders)
+  }
+
+  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<TokenTransfer[]> {
+    return this.apollo
+      .query({
+        query: tokenTransfersByContractAddress,
+        variables: {
+          address,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.tokenTransfersByContractAddress)
   }
 
   // ------------------------------------------------------------------------------------

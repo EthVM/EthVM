@@ -350,7 +350,7 @@ export default class PageDetailsToken extends Vue {
       this.isTokenTransfersLoading = true
 
       this.$api
-        .getTokenHistory(this.addressRef)
+        .getTokenTransfersByContractAddress(this.addressRef)
         .then(response => {
           this.isTokenTransfersLoading = false
           if (response === null) {

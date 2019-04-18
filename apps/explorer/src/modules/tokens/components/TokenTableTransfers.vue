@@ -59,7 +59,7 @@
 
         <!-- Column 2 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ $d(tx.timestamp, 'short', $i18n.locale.replace('_', '-')) }}</p>
+          <app-time-ago :timestamp="formatTimestamp(tx.timestamp)" />
         </v-flex>
         <!-- End Column 2 -->
 
@@ -78,10 +78,14 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Tx } from '@app/core/models'
+import BN from 'bignumber.js'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
 const MAX_ITEMS = 5
 
-@Component
+@Component({
+  components: {AppTimeAgo}
+})
 export default class TokenTableTransfers extends Vue {
   /*
   ===================================================================================
@@ -98,6 +102,17 @@ export default class TokenTableTransfers extends Vue {
   */
 
   page = 1 // Current pagination page number
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  formatTimestamp(timestamp: string) {
+    const bn = new BN(timestamp)
+    return new Date(bn.times(1000).toNumber())
+  }
 
   /*
   ===================================================================================
