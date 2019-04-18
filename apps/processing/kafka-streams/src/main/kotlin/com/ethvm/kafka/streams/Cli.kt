@@ -106,8 +106,6 @@ class Cli : CliktCommand() {
       ContractLifecycleProcessor(),
       FlatMapProcessor(),
       ContractMetadataProcessor()
-//      EthTokensProcessor(),
-//      ExchangeRatesProcessor()
     ).forEach {
       it.buildTopology()
       it.start(resetStreamsState == 1)
