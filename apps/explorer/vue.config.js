@@ -1,4 +1,5 @@
 const path = require('path')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   chainWebpack: config => {
@@ -16,6 +17,7 @@ module.exports = {
       .end()
   },
   configureWebpack: {
+    plugins: [new BundleAnalyzerPlugin()],
     resolve: {
       extensions: ['.ts', '.vue', '.json'],
       alias: {
@@ -24,8 +26,24 @@ module.exports = {
         vue$: 'vue/dist/vue.esm.js',
         vuex$: 'vuex/dist/vuex.esm.js'
       }
+    },
+    optimization: {
+      namedModules: true,
+      moduleIds: 'size',
+      mangleWasmImports: true,
+      splitChunks: {
+        maxSize: 244000,
+        minChunks: 1,
+        maxInitialRequests: 3,
+        cacheGroups: {
+          vendors: {
+            reuseExistingChunk: true
+          }
+        }
+      }
     }
   },
+
   productionSourceMap: false,
   devServer: {
     disableHostCheck: true,

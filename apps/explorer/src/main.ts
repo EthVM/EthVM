@@ -14,8 +14,8 @@ import { getMainDefinition } from 'apollo-utilities'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import VueTimeago from 'vue-timeago'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import Vuetify from 'vuetify/lib'
+import 'vuetify/src/stylus/app.styl'
 
 /*
   ===================================================================================

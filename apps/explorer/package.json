@@ -59,10 +59,12 @@
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "prettier": "1.16.4",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.3.1",
     "vue-template-compiler": "^2.6.7"
-},
+  },
   "engines": {
     "node": ">= 8.0.0",
     "npm": ">= 5.0.0"
