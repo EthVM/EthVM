@@ -261,6 +261,8 @@ export abstract class IQuery {
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
+    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
+
     abstract search(query: string): Search | Promise<Search>;
 
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
@@ -319,8 +321,6 @@ export abstract class IQuery {
 
     abstract latestUncleBlockNumber(): number | Promise<number>;
 
-    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
-
     abstract temp__(): boolean | Promise<boolean>;
 }
 
@@ -363,9 +363,9 @@ export class Statistic {
 export abstract class ISubscription {
     abstract newBlock(): Block | Promise<Block>;
 
-    abstract newTxs(): Transaction[] | Promise<Transaction[]>;
-
     abstract newProcessingMetadata(): ProcessingMetadata | Promise<ProcessingMetadata>;
+
+    abstract newTxs(): Transaction[] | Promise<Transaction[]>;
 }
 
 export class Token {
