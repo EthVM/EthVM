@@ -258,6 +258,7 @@ WHERE fb.contract IS NOT NULL
 
 CREATE TABLE fungible_balance_deltas
 (
+  id                               BIGSERIAL,
   address                          CHAR(42)    NOT NULL,
   contract_address                 CHAR(42)    NULL,
   counterpart_address              CHAR(42)    NULL,
@@ -364,6 +365,7 @@ WHERE nfb.contract IS NOT NULL
 
 CREATE TABLE non_fungible_balance_delta
 (
+  id                               BIGSERIAL,
   contract                         CHAR(42)    NOT NULL,
   token_id                         NUMERIC     NOT NULL,
   token_type                       VARCHAR(32) NOT NULL,
