@@ -421,7 +421,7 @@ export default class PageDetailsToken extends Vue {
       this.isHolderTransfersLoading = true
 
       this.$api
-        .getHolderTransfers(this.addressRef, this.holderAddress)
+        .getTokenTransfersByContractAddressForHolder(this.addressRef, this.holderAddress)
         .then(response => {
           this.isHolderTransfersLoading = false
           if (response === null) {

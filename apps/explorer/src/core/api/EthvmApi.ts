@@ -25,7 +25,7 @@ export interface EthvmApi {
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
   getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<TokenTransfer[]>
-  getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
+  getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): Promise<TokenTransfer[]>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
@@ -49,7 +49,6 @@ export interface EthvmApi {
   getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
   getHolderDetails(address: string, holderAddress: string): Promise<any>
-  getHolderTransfers(address: string, holderAddress: string): Promise<any>
 
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>

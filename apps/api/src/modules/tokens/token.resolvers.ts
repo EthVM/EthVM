@@ -31,11 +31,6 @@ export class TokenResolvers {
   }
 
   @Query()
-  async holderTransfers(@Args('address', ParseAddressPipe) address: string, @Args('holderAddress', ParseAddressPipe) holderAddress: string) {
-    return this.tokenService.fetchAddressHistory(address, holderAddress)
-  }
-
-  @Query()
   async addressAllTokensOwned(@Args('address', ParseAddressPipe) address: string) {
     return this.tokenService.findAddressAllTokensOwned(address)
   }

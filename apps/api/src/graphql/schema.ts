@@ -5,14 +5,6 @@
  */
 
 /* tslint:disable */
-export enum BalanceType {
-    TX_FEE = "TX_FEE",
-    REWARD = "REWARD",
-    ETHER = "ETHER",
-    ERC20 = "ERC20",
-    ERC721 = "ERC721"
-}
-
 export enum DeltaType {
     UNCLE_REWARD = "UNCLE_REWARD",
     BLOCK_REWARD = "BLOCK_REWARD",
@@ -189,48 +181,10 @@ export class ContractSupport {
     url?: string;
 }
 
-export class EthplorerPriceInfo {
-    rate?: Decimal;
-    currency?: string;
-    diff?: Decimal;
-    diff7d?: Decimal;
-    diff30d?: Decimal;
-    marketCapUsd?: Decimal;
-    availableSupply?: Decimal;
-    volume24h?: Decimal;
-    ts?: Long;
-}
-
 export class EthplorerTokenInfo {
     address?: string;
-    totalSupply?: string;
-    name?: string;
-    symbol?: string;
-    decimals?: number;
-    price?: EthplorerPriceInfo;
     owner?: string;
-    countOps?: number;
-    totalIn?: number;
-    totalOut?: number;
-    transfersCount?: number;
-    ethTransfersCount?: number;
     holdersCount?: number;
-    issuancesCount?: number;
-    image?: string;
-    description?: string;
-    website?: string;
-    lastUpdated?: Long;
-}
-
-export class EthplorerTokenOperation {
-    timestamp?: Long;
-    transactionHash?: string;
-    tokenInfo?: EthplorerTokenInfo;
-    type?: string;
-    address?: string;
-    from?: string;
-    to?: string;
-    value?: number;
 }
 
 export class ProcessingMetadata {
@@ -303,8 +257,6 @@ export abstract class IQuery {
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
-
-    abstract holderTransfers(address: string, holderAddress: string): EthplorerTokenOperation[] | Promise<EthplorerTokenOperation[]>;
 
     abstract addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
 

@@ -1,5 +1,3 @@
-import { EthplorerTokenOperationDto } from '@app/modules/tokens/dto/ethplorer-token-operation.dto'
-import { TokenTransferEntity } from '@app/orm/entities-mongo/token-transfer.entity'
 import { ConfigService } from '@app/shared/config.service'
 import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -7,9 +5,9 @@ import axios from 'axios'
 import { FindManyOptions, Repository } from 'typeorm'
 import { VmEngineService } from '@app/shared/vm-engine.service'
 import { TokenDto } from '@app/modules/tokens/dto/token.dto'
-import { EthplorerTokenInfoDto } from '@app/modules/tokens/dto/ethplorer-token-info.dto'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
+import { EthplorerTokenInfoDto } from '@app/modules/tokens/dto/ethplorer-token-info.dto'
 
 @Injectable()
 export class TokenService {
@@ -41,42 +39,7 @@ export class TokenService {
     const erc20Balance = await this.erc20BalanceRepository.findOne({ where })
     if (erc20Balance) return erc20Balance
     return this.erc721BalanceRepository.findOne({ where })
-  }
 
-  async fetchAddressHistory(tokenAddress: string, holderAddress: string): Promise<EthplorerTokenOperationDto[]> {
-    tokenAddress = `0x${tokenAddress}`
-    holderAddress = `0x${holderAddress}`
-
-    const baseUrl = this.configService.ethplorer.url
-    const apiKey = this.configService.ethplorer.apiKey
-    const url = `${baseUrl}getAddressHistory/${holderAddress}?apiKey=${apiKey}&token=${tokenAddress}&type=transfer`
-
-    let res
-
-    try {
-      res = await axios.get(url)
-    } catch (err) {
-      this.handleEthplorerError(err)
-    }
-
-    if (res.status !== 200) {
-      throw new HttpException(res.statusText, res.status)
-    }
-
-    const { operations } = res.data
-
-    return operations
-      ? operations
-          .map(o => new EthplorerTokenOperationDto(o))
-          .map(o => {
-            // Convert timestamp from Ethplorer API
-            const { timestamp } = o
-            if (timestamp) {
-              o.timestamp = timestamp * 1000
-            }
-            return o
-          })
-      : []
   }
 
   async fetchTokenInfo(address: string): Promise<EthplorerTokenInfoDto | null> {

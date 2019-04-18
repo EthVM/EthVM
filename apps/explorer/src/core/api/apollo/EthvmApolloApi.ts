@@ -26,10 +26,9 @@ import {
 import { newBlockMetrics, newSimpleBlocks, newSimpleTxs } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
   tokenTransfersByContractAddress,
-  addressTokenTransfersByHolder,
+  tokenTransfersByContractAddressForHolder,
   holderDetails,
   holderTransfers,
-  tokenHistory,
   tokenHolders
 } from '@app/core/api/apollo/queries/tokens.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
@@ -94,21 +93,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.addressAmountTokensOwned)
-  }
-
-  public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
-    return this.apollo
-      .query({
-        query: addressTokenTransfersByHolder,
-        variables: {
-          address,
-          holder,
-          filter,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.addressTokenTransfersByHolder)
   }
 
   // ------------------------------------------------------------------------------------
@@ -298,18 +282,6 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.holderDetails)
   }
 
-  public getHolderTransfers(address: string, holderAddress: string): Promise<any> {
-    return this.apollo
-      .query({
-        query: holderTransfers,
-        variables: {
-          address,
-          holderAddress
-        }
-      })
-      .then(res => res.data.holderTransfers)
-  }
-
   // ------------------------------------------------------------------------------------
   // Pending Txs
   // ------------------------------------------------------------------------------------
@@ -358,6 +330,21 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.tokenTransfersByContractAddress)
+  }
+
+  public getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
+    return this.apollo
+      .query({
+        query: tokenTransfersByContractAddressForHolder,
+        variables: {
+          address,
+          holder,
+          filter,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.tokenTransfersByContractAddressForHolder)
   }
 
   // ------------------------------------------------------------------------------------
