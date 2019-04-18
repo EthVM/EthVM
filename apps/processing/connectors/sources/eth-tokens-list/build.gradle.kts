@@ -16,6 +16,7 @@ dependencies {
 
   // Kotlin
   implementation(kotlin("stdlib"))
+  implementation(kotlin("reflect"))
 
   // Modules deps
   implementation(project(":common"))
@@ -27,7 +28,10 @@ dependencies {
   implementation("io.confluent:kafka-connect-avro-converter:${ext.get("kafka-connect-avro-converter-version") as String}")
 
   // JSON
-  implementation("com.beust:klaxon:5.0.1")
+  implementation("com.beust:klaxon:5.0.1") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-reflect")
+  }
 
   // Utils
   implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}") {

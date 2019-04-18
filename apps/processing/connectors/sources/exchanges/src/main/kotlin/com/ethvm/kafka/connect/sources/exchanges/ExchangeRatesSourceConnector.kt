@@ -1,8 +1,6 @@
 package com.ethvm.kafka.connect.sources.exchanges
 
 import arrow.core.Some
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_CONFIG
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_DEFAULT
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_DOC
@@ -20,6 +18,7 @@ import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProviders
 import com.ethvm.kafka.connect.sources.exchanges.provider.TokenIdEntry
 import com.ethvm.kafka.connect.sources.exchanges.utils.Versions
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.apache.kafka.common.config.ConfigDef
 import org.apache.kafka.common.config.ConfigDef.Importance
 import org.apache.kafka.common.config.ConfigDef.Type
@@ -95,14 +94,16 @@ class ExchangeRatesSourceConnector : SourceConnector() {
             ExchangeProviders.COIN_GECKO -> {
               val options = mutableMapOf<String, Any>("topic" to topic(props))
 
-              javaClass.getResourceAsStream(opts)?.let { stream ->
-                val jsonObject = Parser.default().parse(stream) as JsonObject
-                jsonObject.map.forEach { (k, v) -> options[k] = v!! }
-              }
+              javaClass.getResourceAsStream(opts)
+                ?.let { stream ->
+                  CoinGeckoTokenExchangeProvider.jackson.readValue<Map<String, Any>>(stream)
+                }
+                ?.forEach { (k, v) -> options[k] = v }
 
-              javaClass.getResourceAsStream("/coingecko/coingecko-eth.json")?.let { stream ->
-                CoinGeckoTokenExchangeProvider.klaxon.parseArray<TokenIdEntry>(stream)?.let { options["tokens_ids"] = it }
-              }
+              javaClass.getResourceAsStream("/coingecko/coingecko-eth.json")
+                ?.let { stream ->
+                  CoinGeckoTokenExchangeProvider.jackson.readValue<List<TokenIdEntry>>(stream).let { options["tokens_ids"] = it }
+                }
 
               CoinGeckoTokenExchangeProvider(options)
             }

@@ -16,13 +16,13 @@ protocol Exchange {
     union { null, double } totalVolume;
     union { null, double } high24h;
     union { null, double } low24h;
-    union { null, double} priceChange24h;
+    union { null, double } priceChange24h;
     union { null, double } priceChangePercentage24h;
     union { null, double } marketCapChange24h;
     union { null, double } marketCapChangePercentage24h;
-    union { null, string } circulatingSupply;
-    union { null, long } totalSupply;
-    union { null, string } lastUpdated;
+    union { null, decimal(80, 0) } circulatingSupply;
+    union { null, decimal(80, 0) } totalSupply;
+    union { null, long } lastUpdated;
   }
 
 }

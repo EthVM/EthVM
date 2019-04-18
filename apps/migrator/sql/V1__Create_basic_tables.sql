@@ -450,9 +450,9 @@ CREATE TABLE token_exchange_rates
   price_change_percentage24h      NUMERIC     NULL,
   market_cap_change24h            NUMERIC     NULL,
   market_cap_change_percentage24h NUMERIC     NULL,
-  circulating_supply              VARCHAR(64) NULL,
+  circulating_supply              NUMERIC     NULL,
   total_supply                    NUMERIC     NULL,
-  last_updated                    TEXT        NULL
+  last_updated                    BIGINT      NULL
 );
 
 /* metrics hyper tables */

@@ -16,6 +16,7 @@ dependencies {
 
   // Kotlin
   implementation(kotlin("stdlib"))
+  implementation(kotlin("reflect"))
 
   // Modules deps
   implementation(project(":common"))
@@ -28,7 +29,7 @@ dependencies {
 
   // Networking
   implementation("com.squareup.okhttp3:okhttp:3.14.1")
-  implementation("com.beust:klaxon:5.0.1")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
 
   // Utils
   implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}") {

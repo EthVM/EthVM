@@ -2,6 +2,7 @@ package com.ethvm.common.extensions
 
 import org.apache.commons.codec.binary.Hex
 import java.math.BigInteger
+import java.nio.ByteBuffer
 
 fun String.hexBytes(): ByteArray =
   run {
@@ -26,3 +27,5 @@ fun String.hexToBI() =
     BigInteger(this.substring(2), 16)
   } else
     BigInteger(this)
+
+fun String.byteBuffer(): ByteBuffer = ByteBuffer.wrap(this.toByteArray())

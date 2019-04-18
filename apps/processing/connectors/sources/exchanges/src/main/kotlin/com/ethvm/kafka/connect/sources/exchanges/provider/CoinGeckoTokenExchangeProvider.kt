@@ -1,11 +1,14 @@
 package com.ethvm.kafka.connect.sources.exchanges.provider
 
-import com.beust.klaxon.Klaxon
-import com.beust.klaxon.PropertyStrategy
 import com.ethvm.avro.exchange.TokenExchangeRateKeyRecord
 import com.ethvm.avro.exchange.TokenExchangeRateRecord
+import com.ethvm.common.extensions.byteBuffer
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector
 import com.ethvm.kafka.connect.sources.exchanges.utils.AvroToConnect
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import mu.KotlinLogging
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -14,12 +17,12 @@ import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import java.io.BufferedReader
 import java.io.IOException
-import kotlin.reflect.KProperty
+import java.time.Instant
 
 class CoinGeckoTokenExchangeProvider(
   options: Map<String, Any> = emptyMap(),
   private val okHttpClient: OkHttpClient = CoinGeckoTokenExchangeProvider.okHttpClient,
-  private val klaxon: Klaxon = CoinGeckoTokenExchangeProvider.klaxon
+  private val jackson: ObjectMapper = CoinGeckoTokenExchangeProvider.jackson
 ) : ExchangeProvider {
 
   private val topic: String = options.getOrDefault("topic", ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT) as String
@@ -69,7 +72,7 @@ class CoinGeckoTokenExchangeProvider(
 
         logger.debug { "Parsing into rates" }
 
-        val rates = klaxon.parseArray<CoinGeckoExchangeRate>(reader) ?: emptyList()
+        val rates = jackson.readValue<List<CoinGeckoExchangeRate>>(reader)
         rates
           .filter { it.isValid() }
           .map { rate ->
@@ -122,18 +125,7 @@ class CoinGeckoTokenExchangeProvider(
 
     val okHttpClient = OkHttpClient()
 
-    val klaxon = Klaxon()
-      .propertyStrategy(object : PropertyStrategy {
-
-        private val ignored = arrayListOf(
-          "roi",
-          "ath",
-          "ath_change_percentage",
-          "ath_date"
-        )
-
-        override fun accept(property: KProperty<*>): Boolean = property.name !in ignored
-      })
+    val jackson = jacksonObjectMapper().apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
   }
 }
 
@@ -157,9 +149,9 @@ data class CoinGeckoExchangeRate(
   val price_change_percentage_24h: Double? = -1.0,
   val market_cap_change_24h: Double? = -1.0,
   val market_cap_change_percentage_24h: Double? = -1.0,
-  val circulating_supply: String? = "",
-  val total_supply: Long? = -1,
-  val last_updated: String? = ""
+  val circulating_supply: String? = "0",
+  val total_supply: String? = "0",
+  val last_updated: String? = "0"
 ) {
 
   fun isValid() = symbol != "" && market_cap != -1.0
@@ -180,7 +172,74 @@ data class CoinGeckoExchangeRate(
       .setPriceChangePercentage24h(price_change_percentage_24h)
       .setMarketCapChange24h(market_cap_change_24h)
       .setMarketCapChangePercentage24h(market_cap_change_percentage_24h)
-      .setCirculatingSupply(circulating_supply)
-      .setTotalSupply(total_supply)
-      .setLastUpdated(last_updated)
+      .setCirculatingSupply(circulating_supply?.byteBuffer())
+      .setTotalSupply(total_supply?.byteBuffer())
+      .setLastUpdated(Instant.parse(last_updated).toEpochMilli())
+}
+
+fun main() {
+
+  System.out.println("4.6984928".byteBuffer())
+
+  val bat = """
+    [
+    {
+      "id": "aeternity",
+      "symbol": "ae",
+      "name": "Aeternity",
+      "image": "https://assets.coingecko.com/coins/images/1091/large/aeternity.png?1547035060",
+      "current_price": 0.551062,
+      "market_cap": 146674154,
+      "market_cap_rank": 53,
+      "total_volume": 55717439,
+      "high_24h": 0.559853,
+      "low_24h": 0.544336,
+      "price_change_24h": 0.00439826,
+      "price_change_percentage_24h": 0.80456,
+      "market_cap_change_24h": 1236263,
+      "market_cap_change_percentage_24h": 0.85003,
+      "circulating_supply": 266071425.9601,
+      "total_supply": 273685830.0,
+      "ath": 5.69,
+      "ath_change_percentage": -90.3007,
+      "ath_date": "2018-04-29T03:50:39.593Z",
+      "roi": {
+        "times": 0.9680788374384243,
+        "currency": "usd",
+        "percentage": 96.80788374384242
+      },
+      "last_updated": "2019-04-16T10:06:36.662Z"
+    },
+    {
+    "id": "arcblock",
+    "symbol": "abt",
+    "name": "Arcblock",
+    "image": "https://assets.coingecko.com/coins/images/2341/large/arcblock.png?1547036543",
+    "current_price": 0.253459011376833,
+    "market_cap": 24985989.3415282,
+    "market_cap_rank": 148,
+    "total_volume": 12436347.1120452,
+    "high_24h": 0.289096278899177,
+    "low_24h": 0.24427203977284,
+    "price_change_24h": -0.0218976264987244,
+    "price_change_percentage_24h": -7.95246000520266,
+    "market_cap_change_24h": -2158668.02024425,
+    "market_cap_change_percentage_24h": -7.95246000520266,
+    "circulating_supply": "98580000.0",
+    "total_supply": 186000000,
+    "ath": 1.65301512540725,
+    "ath_change_percentage": -85.0826522022429,
+    "ath_date": "2018-05-06T00:08:52.717Z",
+    "roi": {
+      "times": 1.9427570131267298,
+      "currency": "eth",
+      "percentage": 194.27570131267296
+    },
+    "last_updated": "2019-04-16T10:06:36.662Z"
+  }
+  ]
+  """.trimIndent()
+
+  val elems = CoinGeckoTokenExchangeProvider.jackson.readValue<List<CoinGeckoExchangeRate>>(bat)
+  elems.forEach { System.out.println(it) }
 }

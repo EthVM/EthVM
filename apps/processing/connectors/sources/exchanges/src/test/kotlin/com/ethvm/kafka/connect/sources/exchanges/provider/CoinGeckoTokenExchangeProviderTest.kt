@@ -53,7 +53,7 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
           "per_page" to 10
         ),
         okHttpClient,
-        CoinGeckoTokenExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates") {
@@ -98,7 +98,7 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
           "tokens_ids" to tokensIds
         ),
         okHttpClient,
-        CoinGeckoTokenExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates") {
@@ -153,7 +153,7 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
           "tokens_ids" to tokensIds
         ),
         okHttpClient,
-        CoinGeckoTokenExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates and we receive 429 (Too many requests)") {
@@ -195,7 +195,7 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
           "tokens_ids" to tokensIds
         ),
         okHttpClient,
-        CoinGeckoTokenExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates and we receive 404 (Too many requests)") {
