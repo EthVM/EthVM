@@ -1,7 +1,5 @@
 package com.ethvm.kafka.connect.sources.jdbc
 
-import com.ethvm.common.extensions.camelToSnakeCase
-import com.ethvm.common.extensions.snakeToCamelCase
 import mu.KotlinLogging
 import org.apache.kafka.common.cache.Cache
 import org.apache.kafka.common.cache.LRUCache
@@ -32,10 +30,9 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
   }
 
   override fun apply(record: R): R {
-    return if (operatingSchema(record) == null) {
-      applySchemaless(record)
-    } else {
-      applyWithSchema(record)
+    return when {
+      operatingSchema(record) != null -> applyWithSchema(record)
+      else -> applySchemaless(record)
     }
   }
 

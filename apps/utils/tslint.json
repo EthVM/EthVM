@@ -23,6 +23,7 @@
     "no-unused-expression": false,
     "max-classes-per-file": false,
     "no-this-assignment": [true, {"allow-destructuring": true}],
-    "no-empty-interface": false
+    "no-empty-interface": false,
+    "no-object-literal-type-assertion": false
   }
 }

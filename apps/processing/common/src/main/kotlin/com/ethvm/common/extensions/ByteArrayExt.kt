@@ -1,19 +1,10 @@
 package com.ethvm.common.extensions
 
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.PushbackInputStream
-import java.math.BigInteger
 import java.nio.ByteBuffer
-import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
-import org.apache.commons.codec.binary.Hex as ApacheHex
 
-fun ByteArray?.hex(): String? = if (this != null) ApacheHex.encodeHexString(this) else this
-
-fun ByteArray?.bigInteger(): BigInteger? = BigInteger(this)
-
-fun ByteArray?.unsignedBigInteger(): BigInteger = if (this == null || this.isEmpty()) BigInteger.ZERO else BigInteger(1, this)
+fun ByteArray?.hex(): String? = if (this != null) encodeHexString(this) else this
 
 fun ByteArray?.byteBuffer(): ByteBuffer? = if (this != null) ByteBuffer.wrap(this) else this
 
@@ -75,24 +66,25 @@ fun ByteArray?.compress(threshold: Int): ByteArray? {
   return bytesOut.toByteArray()
 }
 
-fun ByteArray?.decompress(): ByteArray? {
+private val DIGITS_UPPER = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
+private val DIGITS_LOWER = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
 
-  if (this == null || this.size < 2) {
-    return this
+private fun encodeHexString(data: ByteArray): String = String(encodeHex(data))
+
+private fun encodeHex(data: ByteArray): CharArray = encodeHex(data, true)
+
+private fun encodeHex(data: ByteArray, toLowerCase: Boolean): CharArray = encodeHex(data, if (toLowerCase) DIGITS_LOWER else DIGITS_UPPER)
+
+private fun encodeHex(data: ByteArray, toDigits: CharArray): CharArray {
+  val l = data.size
+  val out = CharArray(l shl 1)
+  // two characters form the hex value.
+  var i = 0
+  var j = 0
+  while (i < l) {
+    out[j++] = toDigits[(0xF0 and data[i].toInt()).ushr(4)]
+    out[j++] = toDigits[0x0F and data[i].toInt()]
+    i++
   }
-
-  val input = ByteArrayInputStream(this)
-
-  val pb = PushbackInputStream(input, 2) // we need a pushbackstream to look ahead
-  val signature = ByteArray(2)
-
-  val len = pb.read(signature) // read the signature
-  pb.unread(signature, 0, len) // push back the signature to the stream
-
-  // check if matches standard gzip magic number
-  return if (signature[0] == 0x1f.toByte() && signature[1] == 0x8b.toByte()) {
-    GZIPInputStream(pb).readBytes()
-  } else {
-    this
-  }
+  return out
 }

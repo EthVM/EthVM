@@ -37,6 +37,7 @@ ORDER BY count DESC;
 CREATE TABLE uncle
 (
   hash              CHAR(66) PRIMARY KEY,
+  index             INT NOT NULL,
   nephew_hash       CHAR(66)  NOT NULL,
   number            NUMERIC   NOT NULL,
   height            NUMERIC   NOT NULL,
@@ -173,26 +174,61 @@ ORDER BY cb.number DESC,
 
 CREATE TABLE contract
 (
-  address            CHAR(42) PRIMARY KEY,
-  creator            CHAR(42)    NULL,
-  init               TEXT        NULL,
-  code               TEXT        NULL,
-  contract_type      VARCHAR(32) NULL,
-  refund_address     CHAR(66)    NULL,
-  refund_balance     NUMERIC     NULL,
-  trace_created_at   TEXT        NULL,
-  trace_destroyed_at TEXT        NULL
+  address                              CHAR(42) PRIMARY KEY,
+  creator                              CHAR(42)    NULL,
+  init                                 TEXT        NULL,
+  code                                 TEXT        NULL,
+  contract_type                        VARCHAR(32) NULL,
+  refund_address                       CHAR(66)    NULL,
+  refund_balance                       NUMERIC     NULL,
+  trace_created_at_block_hash          CHAR(66)    NULL,
+  trace_created_at_block_number        NUMERIC     NULL,
+  trace_created_at_transaction_hash    CHAR(66)    NULL,
+  trace_created_at_transaction_index   INT         NULL,
+  trace_created_at_log_index           INT         NULL,
+  trace_created_at_trace_address       VARCHAR(64) NULL,
+  trace_destroyed_at_block_hash        CHAR(66)    NULL,
+  trace_destroyed_at_block_number      NUMERIC     NULL,
+  trace_destroyed_at_transaction_hash  CHAR(66)    NULL,
+  trace_destroyed_at_transaction_index INT         NULL,
+  trace_destroyed_at_log_index         INT         NULL,
+  trace_destroyed_at_trace_address     VARCHAR(64) NULL,
+  trace_destroyed_at                   TEXT        NULL
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
+CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
 
-CREATE VIEW contract_creator AS
+CREATE VIEW canonical_contract AS
+SELECT c.*
+FROM contract AS c
+       RIGHT JOIN canonical_block_header AS cb ON c.trace_created_at_block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND c.address IS NOT NULL
+ORDER BY cb.number DESC,
+         c.trace_created_at_transaction_index DESC;
+
+CREATE VIEW canonical_contract_creator AS
 SELECT c.creator AS address,
        COUNT(*)  AS count
-FROM contract AS c
+FROM canonical_contract AS c
 GROUP BY c.creator
 ORDER BY count DESC;
+
+CREATE TABLE eth_list_contract_metadata
+(
+  address     CHAR(42) PRIMARY KEY,
+  name        VARCHAR(64)  NULL,
+  symbol      VARCHAR(64)  NULL,
+  decimals    INT          NULL,
+  ens_address VARCHAR(256) NULL,
+  type        VARCHAR(32)  NULL,
+  logo        TEXT         NULL,
+  support     TEXT         NULL,
+  social      TEXT         NULL,
+  website     VARCHAR(256) NULL
+);
 
 CREATE TABLE fungible_balance
 (
@@ -204,26 +240,28 @@ CREATE TABLE fungible_balance
 
 CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
 
-CREATE VIEW ether_balance AS
+CREATE VIEW canonical_ether_balance AS
 SELECT fb.address,
        fb.amount
 FROM fungible_balance AS fb
 WHERE contract = '';
 
-CREATE VIEW erc20_balance AS
+CREATE VIEW canonical_erc20_balance AS
 SELECT fb.contract,
        fb.address,
        fb.amount
 FROM fungible_balance AS fb
-       LEFT JOIN contract as c on fb.contract = c.address
+       LEFT JOIN canonical_contract as c on fb.contract = c.address
 WHERE fb.contract IS NOT NULL
   AND fb.contract != ''
   AND c.contract_type = 'ERC20';
 
 CREATE TABLE fungible_balance_deltas
 (
-  address                          CHAR(42)    NULL,
+  id                               BIGSERIAL,
+  address                          CHAR(42)    NOT NULL,
   contract_address                 CHAR(42)    NULL,
+  counterpart_address              CHAR(42)    NULL,
   token_type                       VARCHAR(32) NOT NULL,
   delta_type                       VARCHAR(32) NOT NULL,
   trace_location_block_hash        CHAR(66)    NULL,
@@ -235,7 +273,40 @@ CREATE TABLE fungible_balance_deltas
   amount                           NUMERIC     NOT NULL
 );
 
-CREATE VIEW account AS
+CREATE INDEX idx_fungible_balance_deltas_address ON fungible_balance_deltas (address);
+CREATE INDEX idx_fungible_balance_deltas_contract_address ON fungible_balance_deltas (contract_address);
+CREATE INDEX idx_fungible_balance_deltas_counterpart_address ON fungible_balance_deltas (counterpart_address);
+CREATE INDEX idx_fungible_balance_deltas_token_type ON fungible_balance_deltas (token_type);
+CREATE INDEX idx_fungible_balance_deltas_delta_type ON fungible_balance_deltas (token_type);
+CREATE INDEX idx_fungible_balance_deltas_trace_location_block_hash ON fungible_balance_deltas (trace_location_block_hash);
+CREATE INDEX idx_fungible_balance_deltas_amount ON fungible_balance_deltas (amount);
+
+CREATE VIEW canonical_fungible_balance_deltas AS
+SELECT fbd.*
+FROM fungible_balance_deltas AS fbd
+       RIGHT JOIN canonical_block_header AS cb ON fbd.trace_location_block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND fbd.address IS NOT NULL;
+
+CREATE VIEW canonical_fungible_balance_transfer AS
+SELECT fbd.counterpart_address AS "from",
+       fbd.address             AS "to",
+       fbd.contract_address,
+       fbd.delta_type,
+       fbd.token_type,
+       fbd.amount,
+       fbd.trace_location_block_hash,
+       fbd.trace_location_block_number,
+       fbd.trace_location_transaction_hash,
+       fbd.trace_location_transaction_index,
+       fbd.trace_location_log_index,
+       fbd.trace_location_trace_address,
+       bh.timestamp
+FROM canonical_fungible_balance_deltas AS fbd
+LEFT JOIN canonical_block_header AS bh ON fbd.trace_location_block_hash = bh.hash
+WHERE fbd.amount > 0;
+
+CREATE VIEW canonical_account AS
 SELECT fb.address,
        fb.amount                    AS balance,
        (SELECT COUNT(*)
@@ -262,14 +333,9 @@ SELECT fb.address,
          END                        AS is_contract_creator
 FROM fungible_balance AS fb
        LEFT JOIN canonical_block_author AS a ON fb.address = a.address
-       LEFT JOIN contract_creator AS cc ON fb.address = cc.address
+       LEFT JOIN canonical_contract_creator AS cc ON fb.address = cc.address
 WHERE fb.contract = ''
 ORDER BY balance DESC;
-
-CREATE INDEX idx_fungible_balance_deltas_address ON fungible_balance_deltas (address) WHERE address IS NOT NULL;
-CREATE INDEX idx_fungible_balance_deltas_contract_address ON fungible_balance_deltas (contract_address);
-CREATE INDEX idx_fungible_balance_deltas_token_type ON fungible_balance_deltas (token_type);
-CREATE INDEX idx_fungible_balance_deltas_delta_type ON fungible_balance_deltas (delta_type);
 
 CREATE TABLE non_fungible_balance
 (
@@ -289,18 +355,104 @@ CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);
 CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
 
-CREATE VIEW erc721_balance AS
-SELECT *
-FROM non_fungible_balance;
+CREATE VIEW canonical_erc721_balance AS
+SELECT nfb.*
+FROM non_fungible_balance AS nfb
+       LEFT JOIN canonical_contract as c on nfb.contract = c.address
+WHERE nfb.contract IS NOT NULL
+  AND nfb.contract != ''
+  AND c.contract_type = 'ERC20';
 
-CREATE TABLE non_fungible_balance_deltas
+CREATE TABLE non_fungible_balance_delta
 (
-  contract       CHAR(42)    NOT NULL,
-  token_id       NUMERIC     NOT NULL,
-  token_type     VARCHAR(32) NOT NULL,
-  trace_location TEXT        NOT NULL,
-  "from"         CHAR(42)    NOT NULL,
-  "to"           CHAR(42)    NOT NULL
+  id                               BIGSERIAL,
+  contract                         CHAR(42)    NOT NULL,
+  token_id                         NUMERIC     NOT NULL,
+  token_type                       VARCHAR(32) NOT NULL,
+  trace_location_block_hash        CHAR(66)    NULL,
+  trace_location_block_number      NUMERIC     NULL,
+  trace_location_transaction_hash  CHAR(66)    NULL,
+  trace_location_transaction_index INT         NULL,
+  trace_location_log_index         INT         NULL,
+  trace_location_trace_address     VARCHAR(64) NULL,
+  "from"                           CHAR(42)    NOT NULL,
+  "to"                             CHAR(42)    NOT NULL
+);
+
+CREATE INDEX idx_non_fungible_balance_deltas_contract ON non_fungible_balance_delta(contract);
+CREATE INDEX idx_non_fungible_balance_deltas_contract_token_id ON non_fungible_balance_delta (contract, token_id);
+CREATE INDEX idx_non_fungible_balance_deltas_from ON non_fungible_balance_delta ("from");
+CREATE INDEX idx_non_fungible_balance_deltas_to ON non_fungible_balance_delta ("to");
+CREATE INDEX idx_non_fungible_balance_deltas_from_to ON non_fungible_balance_delta ("from", "to");
+CREATE INDEX idx_non_fungible_balance_deltas_trace_location_block_hash ON non_fungible_balance_delta (trace_location_block_hash);
+
+CREATE VIEW canonical_non_fungible_balance_deltas AS
+    SELECT
+      nfbd.*
+    FROM non_fungible_balance_delta AS nfbd
+    RIGHT JOIN canonical_block_header AS cb ON nfbd.trace_location_block_hash = cb.hash
+    WHERE cb.number IS NOT NULL
+      AND nfbd.contract IS NOT NULL;
+
+
+CREATE TABLE erc20_metadata
+(
+  "address"      CHAR(42) PRIMARY KEY,
+  "name"         VARCHAR(64) NULL,
+  "symbol"       VARCHAR(64) NULL,
+  "decimals"     INT         NULL,
+  "total_supply" NUMERIC     NULL
+);
+
+CREATE INDEX idx_erc20_metadata_name ON erc20_metadata (name);
+CREATE INDEX idx_erc20_metadata_symbol ON erc20_metadata (symbol);
+
+CREATE TABLE erc721_metadata
+(
+  "address" CHAR(42) PRIMARY KEY,
+  "name"    VARCHAR(64) NULL,
+  "symbol"  VARCHAR(64) NULL
+);
+
+CREATE INDEX idx_erc721_metadata_name ON erc721_metadata (name);
+CREATE INDEX idx_erc721_metadata_symbol ON erc721_metadata (symbol);
+
+CREATE VIEW block_reward AS
+SELECT address,
+       trace_location_block_hash as block_hash,
+       delta_type,
+       amount
+FROM fungible_balance_deltas
+WHERE delta_type IN ('BLOCK_REWARD', 'UNCLE_REWARD')
+  AND amount > 0;
+
+CREATE VIEW canonical_block_reward AS
+SELECT br.*
+FROM block_reward AS br
+       RIGHT JOIN canonical_block_header AS cb ON br.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND br.amount IS NOT NULL;
+
+/* Token exchange rates table */
+CREATE TABLE token_exchange_rates
+(
+  address                         CHAR(42) PRIMARY KEY,
+  symbol                          VARCHAR(64) NULL,
+  name                            VARCHAR(64) NULL,
+  image                           TEXT        NULL,
+  current_price                   NUMERIC     NULL,
+  market_cap                      NUMERIC     NULL,
+  market_cap_rank                 INT         NULL,
+  total_volume                    NUMERIC     NULL,
+  high24h                         NUMERIC     NULL,
+  low24h                          NUMERIC     NULL,
+  price_change24h                 NUMERIC     NULL,
+  price_change_percentage24h      NUMERIC     NULL,
+  market_cap_change24h            NUMERIC     NULL,
+  market_cap_change_percentage24h NUMERIC     NULL,
+  circulating_supply              NUMERIC     NULL,
+  total_supply                    NUMERIC     NULL,
+  last_updated                    BIGINT      NULL
 );
 
 /* metrics hyper tables */

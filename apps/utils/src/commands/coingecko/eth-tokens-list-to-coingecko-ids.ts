@@ -1,8 +1,8 @@
-import { Config } from '@app/config'
+import { Config, TokensConfig } from '@app/config'
 import axios from 'axios'
-import * as rax from 'retry-axios'
 import fs from 'fs'
 import ora from 'ora'
+import * as rax from 'retry-axios'
 
 const spinner = ora()
 
@@ -19,10 +19,10 @@ interface Entry {
   id: string
 }
 
-export async function EthTokensToCoingecko(config: Config) {
-  spinner.info(`Fetching ETH Tokens from: ${config.ethTokensUrl}`)
+export async function EthTokensToCoingecko(config: TokensConfig) {
+  spinner.info(`Fetching ETH Tokens from: ${config.url}`)
 
-  const tokens: Token[] = (await fetch<any[]>(config.ethTokensUrl)).map(t => {
+  const tokens: Token[] = (await fetch<any[]>(config.url)).map(t => {
     const { symbol, name, address } = t
     return { symbol, name, address }
   })

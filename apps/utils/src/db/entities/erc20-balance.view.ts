@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 
-@Entity('erc20_balance')
+@Entity('canonical_erc20_balance')
 export class Erc20BalanceView {
   @PrimaryColumn()
   public address: string

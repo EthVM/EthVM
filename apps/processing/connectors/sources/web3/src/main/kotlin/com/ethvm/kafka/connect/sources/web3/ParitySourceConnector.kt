@@ -33,12 +33,12 @@ class ParitySourceConnector : SourceConnector() {
 
   override fun taskConfigs(maxTasks: Int): MutableList<MutableMap<String, String>> {
 
-    val entities = ParitySourceConnector.Config.entitiesList(config)
+    val entities = Config.entitiesList(config)
     val chunkSize = Math.ceil(entities.size / maxTasks * 1.0).toInt()
 
     return entities
       .chunked(chunkSize)
-      .map { entitiesChunk -> ParitySourceConnector.Config.setEntitiesList(HashMap(config), entitiesChunk) }
+      .map { entitiesChunk -> Config.setEntitiesList(HashMap(config), entitiesChunk) }
       .toMutableList()
   }
 

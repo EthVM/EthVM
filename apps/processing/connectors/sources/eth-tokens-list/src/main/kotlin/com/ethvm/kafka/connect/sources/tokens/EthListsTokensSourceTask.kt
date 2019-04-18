@@ -3,9 +3,10 @@ package com.ethvm.kafka.connect.sources.tokens
 import com.beust.klaxon.Klaxon
 import com.ethvm.avro.capture.ContractKeyRecord
 import com.ethvm.avro.capture.ContractLogoRecord
-import com.ethvm.avro.capture.ContractMetadataRecord
 import com.ethvm.avro.capture.ContractSocialRecord
 import com.ethvm.avro.capture.ContractSupportRecord
+import com.ethvm.avro.capture.EthListRecord
+import com.ethvm.avro.common.ContractType
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
 import java.net.URL
@@ -20,14 +21,14 @@ class EthListsTokensSourceTask : SourceTask() {
   private lateinit var url: String
   private var syncIntervalSeconds: Int = -1
 
-  private var lastSyncAt: Instant? = Instant.EPOCH
+  private var lastSyncAt: Instant? = null
 
   override fun version() = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>?) {
-    topic = com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.topic(props!!)
-    url = com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.tokensUrl(props)
-    syncIntervalSeconds = com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceConnector.Config.syncInterval(props)
+    topic = EthListsTokensSourceConnector.Config.topic(props!!)
+    url = EthListsTokensSourceConnector.Config.tokensUrl(props)
+    syncIntervalSeconds = EthListsTokensSourceConnector.Config.syncInterval(props)
   }
 
   override fun stop() {
@@ -45,10 +46,10 @@ class EthListsTokensSourceTask : SourceTask() {
     val sourceOffset = emptyMap<String, Any>()
 
     val inputStream = URL(url).openStream()
-    val entries = klaxon.parseArray<com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceTask.ContractMetadata>(inputStream) ?: emptyList()
+    val entries = klaxon.parseArray<ContractMetadata>(inputStream) ?: emptyList()
 
     val records = entries
-      .dropWhile { it.address.isEmpty() }
+      .dropWhile { it.address == null || it.address.isEmpty() }
       .map { entry ->
 
         val keySchemaAndValue = AvroToConnect.toConnectData(
@@ -75,7 +76,11 @@ class EthListsTokensSourceTask : SourceTask() {
     return records
   }
 
-  private fun shouldSync(): Boolean = ChronoUnit.SECONDS.between(lastSyncAt, Instant.now()) > syncIntervalSeconds
+  private fun shouldSync(): Boolean =
+    when (lastSyncAt) {
+      null -> true
+      else -> ChronoUnit.SECONDS.between(lastSyncAt, Instant.now()) > syncIntervalSeconds
+    }
 
   data class ContractLogo(
     val src: String? = "",
@@ -133,26 +138,26 @@ class EthListsTokensSourceTask : SourceTask() {
   }
 
   data class ContractMetadata(
-    val name: String,
-    val symbol: String,
-    val address: String,
-    val decimals: Int,
+    val name: String?,
+    val symbol: String?,
+    val address: String?,
+    val decimals: Int?,
     val ens_address: String?,
     val type: String?,
     val website: String?,
-    val logo: com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceTask.ContractLogo?,
-    val support: com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceTask.ContractSupport?,
-    val social: com.ethvm.kafka.connect.sources.tokens.EthListsTokensSourceTask.ContractSocial?
+    val logo: ContractLogo?,
+    val support: ContractSupport?,
+    val social: ContractSocial?
   ) {
 
-    fun toRecord(): ContractMetadataRecord =
-      ContractMetadataRecord.newBuilder()
+    fun toRecord(): EthListRecord =
+      EthListRecord.newBuilder()
         .setName(name)
         .setSymbol(symbol)
         .setAddress(address)
         .setDecimals(decimals)
         .setEnsAddress(ens_address)
-        .setType(type)
+        .setType(if (type != null) ContractType.valueOf(type) else null)
         .setLogo(logo?.toRecord())
         .setSupport(support?.toRecord())
         .setSocial(social?.toRecord())

@@ -3,7 +3,7 @@ package com.ethvm.kafka.connect.sources.web3.utils
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.CanonicalRecord
-import com.ethvm.avro.capture.ContractMetadataRecord
+import com.ethvm.avro.capture.EthListRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
@@ -24,7 +24,7 @@ object AvroToConnect {
     BlockHeaderRecord::class to BlockHeaderRecord.`SCHEMA$`,
     CanonicalKeyRecord::class to CanonicalKeyRecord.`SCHEMA$`,
     CanonicalRecord::class to CanonicalRecord.`SCHEMA$`,
-    ContractMetadataRecord::class to ContractMetadataRecord.`SCHEMA$`,
+    EthListRecord::class to EthListRecord.`SCHEMA$`,
     TraceListRecord::class to TraceListRecord.`SCHEMA$`,
     TransactionListRecord::class to TransactionListRecord.`SCHEMA$`,
     TransactionReceiptListRecord::class to TransactionReceiptListRecord.`SCHEMA$`,

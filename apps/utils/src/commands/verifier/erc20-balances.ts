@@ -1,12 +1,12 @@
 import { Config } from '@app/config'
 import { ConnectionFactory } from '@app/db'
+import { Erc20BalanceView } from '@app/db/entities/erc20-balance.view'
+import BN from 'bn.js'
+import ora from 'ora'
 import { Connection } from 'typeorm'
 import Web3 from 'web3'
 import { WebsocketProvider } from 'web3-providers'
-import { Erc20BalanceView } from '@app/db/entities/erc20-balance.view'
 import { AbiItem } from 'web3-utils'
-import ora = require('ora')
-import BN = require('bn.js')
 
 const erc20Abi: AbiItem[] = [
   // balanceOf
@@ -35,7 +35,7 @@ const erc20Abi: AbiItem[] = [
   }
 ]
 
-export async function Erc20Balances(config: Config, blockNumber: number = undefined) {
+export async function Erc20Balances(config: Config) {
 
   const spinner = ora('Checking erc20 balances').start()
 

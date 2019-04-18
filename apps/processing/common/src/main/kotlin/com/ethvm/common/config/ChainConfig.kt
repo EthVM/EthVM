@@ -8,6 +8,7 @@ import com.ethvm.common.extensions.ether
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.common.extensions.setBlockNumberBI
 import java.math.BigInteger
+import java.util.Collections.emptyList
 
 interface ChainConfig {
 
@@ -81,8 +82,7 @@ interface ChainConfig {
   fun eip1014(): Boolean = false
 }
 
-open class OlympicConfig(override val constants: ChainConstants = ChainConstants.olympic) :
-  ChainConfig
+open class OlympicConfig(override val constants: ChainConstants = ChainConstants.olympic) : ChainConfig
 
 open class FrontierConfig(override val constants: ChainConstants = ChainConstants.frontier) : OlympicConfig(constants)
 
@@ -211,7 +211,6 @@ interface NetConfig {
         4_939_394L to RopstenConfig(PetersburgConfig(DaoHardForkConfig()))
       )
     }
-    // TODO add support for other networks
   }
 }
 
@@ -222,10 +221,6 @@ class BaseNetConfig(genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) :
 
   private val blockNumbers = configs.map { it.first.toBigInteger() }
   private val chainConfigs = configs.map { it.second }
-
-  init {
-    // TODO enforce that block numbers are increasing
-  }
 
   override fun chainConfigForBlock(number: BigInteger): ChainConfig {
     var idx = 0
