@@ -14,7 +14,7 @@ export class TransferResolvers {
   async tokenTransfersByContractAddress(
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number
+    @Args('page', ParsePagePipe) page?: number,
   ): Promise<TransferDto[]> {
     const entities = await this.transferService.findTokenTransfersByContractAddress(contractAddress, limit, page)
     return entities.map(e => new TransferDto(e))
@@ -26,7 +26,7 @@ export class TransferResolvers {
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
     @Args('filter') filter: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number
+    @Args('page', ParsePagePipe) page?: number,
   ): Promise<TransferDto[]> {
     const entities = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, page)
     return entities.map(e => new TransferDto(e))
@@ -36,7 +36,7 @@ export class TransferResolvers {
   async internalTransactionsByAddress(
     @Args('address', ParseAddressPipe) address: string,
     @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number
+    @Args('page', ParsePagePipe) page?: number,
   ): Promise<TransferDto[]> {
     const entities = await this.transferService.findInternalTransactionsByAddress(address, limit, page)
     return entities.map(e => new TransferDto(e))

@@ -29,7 +29,7 @@ import { TransferModule } from '@app/modules/transfers/transfer.module'
     // StatisticModule,
     SearchModule,
     LoggerModule,
-    TransferModule
+    TransferModule,
   ],
 })
 export class AppModule {}

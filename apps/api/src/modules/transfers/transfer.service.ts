@@ -8,7 +8,7 @@ export class TransferService {
 
   constructor(
     @InjectRepository(FungibleBalanceTransferEntity)
-    private readonly transferRepository: Repository<FungibleBalanceTransferEntity>
+    private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
   ) {
   }
 
@@ -19,7 +19,7 @@ export class TransferService {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
       skip,
       take,
-      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'}
+      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
     }
     return this.transferRepository.find(findOptions)
   }
