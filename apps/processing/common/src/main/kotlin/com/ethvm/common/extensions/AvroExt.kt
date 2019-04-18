@@ -180,21 +180,29 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
       if (action.callType == "delegatecall") {
         emptyList()
       } else {
-        listOf(
 
+        val deltaType =
+          if (traceAddress.isEmpty())
+            FungibleBalanceDeltaType.TX
+          else
+            FungibleBalanceDeltaType.INTERNAL_TX
+
+        listOf(
           FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
-            .setDeltaType(FungibleBalanceDeltaType.TX)
+            .setDeltaType(deltaType)
             .setTraceLocation(traceLocation)
             .setAddress(action.getFrom())
+            .setCounterpartAddress(action.getTo())
             .setAmountBI(action.getValueBI().negate())
             .build(),
 
           FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
-            .setDeltaType(FungibleBalanceDeltaType.TX)
+            .setDeltaType(deltaType)
             .setTraceLocation(traceLocation)
             .setAddress(action.getTo())
+            .setCounterpartAddress(action.getFrom())
             .setAmount(action.getValue())
             .build()
 
@@ -206,17 +214,19 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
 
       FungibleBalanceDeltaRecord.newBuilder()
         .setTokenType(FungibleTokenType.ETHER)
-        .setDeltaType(FungibleBalanceDeltaType.TX)
+        .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
         .setTraceLocation(traceLocation)
         .setAddress(action.getFrom())
+        .setCounterpartAddress(result.getAddress())
         .setAmountBI(action.getValueBI().negate())
         .build(),
 
       FungibleBalanceDeltaRecord.newBuilder()
         .setTokenType(FungibleTokenType.ETHER)
-        .setDeltaType(FungibleBalanceDeltaType.TX)
+        .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
         .setTraceLocation(traceLocation)
         .setAddress(getResult().getAddress())
+        .setCounterpartAddress(result.getAddress())
         .setAmount(action.getValue())
         .build()
     )
@@ -236,6 +246,7 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
         .setTraceLocation(traceLocation)
         .setAddress(action.getRefundAddress())
+        .setCounterpartAddress(action.getAddress())
         .setAmount(action.getBalance())
         .build()
     )

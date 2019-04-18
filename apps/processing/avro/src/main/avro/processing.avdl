@@ -39,6 +39,8 @@ protocol Processing {
     MINER_FEE,
     TX_FEE,
     TX,
+    INTERNAL_TX,
+    CONTRACT_CREATION,
     CONTRACT_DESTRUCTION,
     TOKEN_TRANSFER
   }
@@ -52,6 +54,8 @@ protocol Processing {
 
     string address;
     string contractAddress = "";
+
+    union { null, string } counterpartAddress = null;
   }
 
   record FungibleBalanceRecord {
