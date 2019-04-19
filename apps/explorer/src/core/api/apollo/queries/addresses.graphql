@@ -29,7 +29,7 @@ query internalTransactionsByAddress($address: String!, $limit: Int, $page: Int) 
   internalTransactionsByAddress(address: $address, limit: $limit, page: $page) {
     id
     transactionHash: traceLocationTransactionHash
-    amount
+    value: amount
     from
     to
     timestamp

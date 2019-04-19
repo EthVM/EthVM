@@ -45,7 +45,7 @@ import {
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer,
+  TokenTransfer, Transfer,
   Tx,
   Uncle
 } from '@app/core/models'
@@ -92,7 +92,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.addressAmountTokensOwned)
   }
 
-  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<any[]> {
+  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<Transfer[]> {
     return this.apollo
       .query({
         query: internalTransactionsByAddress,

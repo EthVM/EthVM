@@ -13,7 +13,7 @@ import {
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer,
+  TokenTransfer, Transfer,
   Tx,
   Uncle
 } from '@app/core/models'
@@ -24,7 +24,7 @@ export interface EthvmApi {
   getAccount(address: string): Promise<Account | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<any[]>
+  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<Transfer[]>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
