@@ -27,11 +27,14 @@ query accountByAddress($address: String!) {
 
 query internalTransactionsByAddress($address: String!, $limit: Int, $page: Int) {
   internalTransactionsByAddress(address: $address, limit: $limit, page: $page) {
-    id
-    transactionHash: traceLocationTransactionHash
-    value: amount
-    from
-    to
-    timestamp
+    items {
+      id
+      transactionHash: traceLocationTransactionHash
+      value: amount
+      from
+      to
+      timestamp
+    }
+    totalCount
   }
 }

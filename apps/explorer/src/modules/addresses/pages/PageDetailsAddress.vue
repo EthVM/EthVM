@@ -60,7 +60,12 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-5">
-        <token-table-transfers v-if="!transfersLoading && !hasTransfersError" :transfers="account.internalTransfers" />
+        <token-table-transfers :transfers="account.internalTransfers"
+                               :total-transfers="account.totalInternalTransfers"
+                               :loading="transfersLoading"
+                               :error="hasTransfersError"
+                               :page="transfersPage"
+                               @page="setPageTransfers" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -279,7 +284,9 @@ export default class PageDetailsAddress extends Vue {
               this.account.contracts = res[2] || [] // res[3] || []
 
               // Internal transfers
-              this.account.internalTransfers = res[3] || []
+              const transfersPage = res[3]
+              this.account.internalTransfers = transfersPage ? transfersPage.items : []
+              this.account.totalInternalTransfers = transfersPage ? transfersPage.totalCount : 0
               this.transfersLoading = false
 
               this.sm.transition('load-token-complementary-info')
@@ -343,7 +350,8 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
-  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<Transfer[]> {
+  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{items: Transfer[], totalCount: number}> {
+    console.log('Fetching transfers', page, limit)
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 
@@ -364,6 +372,11 @@ export default class PageDetailsAddress extends Vue {
   setMinedPage(page: number): void {
     this.minedPage = page
     this.minerBlocksLoading = true
+  }
+
+  setPageTransfers(page: number): void {
+    this.transfersPage = page
+    this.transfersLoading = true
   }
 
   updateTxs(): void {
@@ -393,7 +406,9 @@ export default class PageDetailsAddress extends Vue {
   updateTransfers(): void {
     this.fetchTransfers().then(
       res => {
-        this.account.internalTransfers = res
+        console.log('Transfers updated', res)
+        this.account.internalTransfers = res.items
+        this.account.totalInternalTransfers = res.totalCount
         this.transfersLoading = false
       },
       err => {
@@ -427,7 +442,9 @@ export default class PageDetailsAddress extends Vue {
 
   @Watch('transfersPage')
   onTransfersPageChanges(newVal: number, oldVal: number): void {
-    this.updateTransfers()
+    if (newVal) {
+      this.updateTransfers()
+    }
   }
 
   /*

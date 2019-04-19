@@ -62,7 +62,7 @@ export class TransferService {
 
   }
 
-  async findInternalTransactionsByAddress(address: string, take: number = 10, page: number = 0): Promise<FungibleBalanceTransferEntity[]> {
+  async findInternalTransactionsByAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
     const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DELETION']
 
@@ -76,8 +76,8 @@ export class TransferService {
       .orderBy('t.traceLocationBlockNumber', 'DESC')
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(skip)
-      .take(take)
-      .getMany()
+      .limit(take)
+      .getManyAndCount()
 
   }
 

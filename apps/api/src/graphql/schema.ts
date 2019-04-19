@@ -266,7 +266,7 @@ export abstract class IQuery {
 
     abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
 
-    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
@@ -420,6 +420,11 @@ export class Transfer {
     traceLocationLogIndex?: number;
     traceLocationTraceAddress?: string;
     timestamp?: string;
+}
+
+export class TransfersPage {
+    items?: Transfer[];
+    totalCount?: number;
 }
 
 export class Uncle {
