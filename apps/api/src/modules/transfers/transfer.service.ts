@@ -64,7 +64,7 @@ export class TransferService {
 
   async findInternalTransactionsByAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
-    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DELETION']
+    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']
 
     return this.transferRepository.createQueryBuilder('t')
       .where('t.delta_type IN (:...deltaTypes)')

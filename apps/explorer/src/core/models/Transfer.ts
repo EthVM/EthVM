@@ -4,4 +4,5 @@ export interface Transfer {
   amount: string
   timestamp: number
   contract: string
+  deltaType: string
 }

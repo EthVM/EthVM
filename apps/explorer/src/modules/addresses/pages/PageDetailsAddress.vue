@@ -65,6 +65,7 @@
                                :loading="transfersLoading"
                                :error="hasTransfersError"
                                :page="transfersPage"
+                               :show-type="true"
                                @page="setPageTransfers" />
       </v-tab-item>
       <!--

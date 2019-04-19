@@ -18,6 +18,9 @@
         <v-flex hidden-sm-and-down md2>
           <h5>{{ $t('common.quantity') }}</h5>
         </v-flex>
+        <v-flex v-if="showType" hidden-sm-and-down md2>
+          <h5>{{ $t('token.type') }}</h5>
+        </v-flex>
       </v-layout>
     </v-card>
     <!-- End Table Header -->
@@ -67,6 +70,12 @@
           <p>{{ tx.value }}</p>
         </v-flex>
         <!-- End Column 3 -->
+
+        <!-- Column 4 -->
+        <v-flex v-if="showType" hidden-sm-and-down md2>
+          <p>{{ $t('transfer.' + tx.deltaType) }}</p>
+        </v-flex>
+        <!-- End Column 4 -->
       </v-layout>
       <v-divider class="mb-2 mt-2" />
     </v-card>
@@ -103,6 +112,7 @@ export default class TokenTableTransfers extends Vue {
   @Prop(Number) totalTransfers
   @Prop(Number) page
   @Prop(Boolean) loading
+  @Prop(Boolean) showType
 
   /*
   ===================================================================================

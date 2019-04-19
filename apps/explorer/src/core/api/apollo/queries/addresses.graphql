@@ -34,6 +34,7 @@ query internalTransactionsByAddress($address: String!, $limit: Int, $page: Int) 
       from
       to
       timestamp
+      deltaType
     }
     totalCount
   }
