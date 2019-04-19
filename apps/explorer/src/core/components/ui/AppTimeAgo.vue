@@ -4,6 +4,17 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import VueTimeago from 'vue-timeago'
+
+Vue.use(VueTimeago, {
+  name: 'timeago',
+  locale: 'en-US',
+  locales: {
+    'en-US': require('date-fns/locale/en'),
+    ru: require('date-fns/locale/ru')
+  }
+})
+
 
 @Component
 export default class AppTimeAgo extends Vue {

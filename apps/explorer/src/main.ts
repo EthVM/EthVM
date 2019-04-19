@@ -13,8 +13,7 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import VueTimeago from 'vue-timeago'
-import Vuetify from 'vuetify/lib'
+import Vuetify from 'vuetify'
 import 'vuetify/src/stylus/app.styl'
 
 /*
@@ -70,18 +69,7 @@ const api = new EthvmApolloApi(apolloClient)
 Vue.use(VueApollo)
 Vue.use(VueEthvmApi, api)
 
-// -------------------------------------------------------
-//    TimeAgo
-// -------------------------------------------------------
 
-Vue.use(VueTimeago, {
-  name: 'timeago',
-  locale: 'en-US',
-  locales: {
-    'en-US': require('date-fns/locale/en'),
-    ru: require('date-fns/locale/ru')
-  }
-})
 
 // -------------------------------------------------------
 //    Vuetify
