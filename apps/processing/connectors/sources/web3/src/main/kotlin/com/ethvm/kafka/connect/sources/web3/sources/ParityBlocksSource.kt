@@ -129,7 +129,7 @@ class ParityBlocksSource(
             val thenApply = unclesFuture.thenApply { uncles ->
 
               val uncleListRecord = UncleListRecord.newBuilder()
-                .setUncles(uncles.map { u -> u.block.toUncleRecord(block.hash, blockNumberBI, UncleRecord.newBuilder()).build() })
+                .setUncles(uncles.mapIndexed { index, u -> u.block.toUncleRecord(index, block.hash, blockNumberBI, UncleRecord.newBuilder()).build() })
                 .build()
 
               val uncleKeySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)

@@ -7,7 +7,7 @@ import com.ethvm.kafka.streams.utils.TokenContract.Companion.DECIMALS
 import com.ethvm.kafka.streams.utils.TokenContract.Companion.NAME
 import com.ethvm.kafka.streams.utils.TokenContract.Companion.SYMBOL
 import com.ethvm.kafka.streams.utils.TokenContract.Companion.TOTAL_SUPPLY
-import org.ethereum.crypto.HashUtil
+import org.web3j.crypto.Hash
 import java.nio.ByteBuffer
 
 /**
@@ -173,5 +173,5 @@ class FnSignature(val fn: String) {
     assert(fn.isNotEmpty()) { "Not valid fn name. Must not be null or empty." }
   }
 
-  val signature by lazy { HashUtil.sha3(fn.toByteArray()).slice(0..3).toByteArray() }
+  val signature by lazy { Hash.sha3(fn.toByteArray()).slice(0..3).toByteArray() }
 }

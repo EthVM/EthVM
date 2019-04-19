@@ -5,8 +5,9 @@ import com.ethvm.kafka.streams.config.AppConfig
 import mu.KLogger
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.Topology
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import java.util.Properties
 
 interface KafkaProcessor {
@@ -17,7 +18,7 @@ interface KafkaProcessor {
 abstract class AbstractKafkaProcessor : KafkaProcessor, KoinComponent {
 
   protected val appConfig: AppConfig by inject()
-  protected val baseKafkaProps: Properties by inject(name = "baseKafkaStreamsConfig")
+  protected val baseKafkaProps: Properties by inject(named("baseKafkaStreamsConfig"))
 
   protected val netConfig: NetConfig by inject()
 

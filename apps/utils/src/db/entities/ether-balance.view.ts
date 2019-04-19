@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 
-@Entity('ether_balance')
+@Entity('canonical_ether_balance')
 export class EtherBalanceView {
   @PrimaryColumn()
   public address: string

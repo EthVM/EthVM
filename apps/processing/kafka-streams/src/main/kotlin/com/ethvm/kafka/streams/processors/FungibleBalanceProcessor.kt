@@ -378,6 +378,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                         .setTraceLocation(traceLocation)
                         .setAddress(transfer.from)
                         .setContractAddress(contractAddress)
+                        .setCounterpartAddress(transfer.to)
                         .setAmountBI(transfer.amount.negate())
                         .build(),
                       FungibleBalanceDeltaRecord.newBuilder()
@@ -385,6 +386,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                         .setDeltaType(FungibleBalanceDeltaType.TOKEN_TRANSFER)
                         .setTraceLocation(traceLocation)
                         .setAddress(transfer.to)
+                        .setCounterpartAddress(transfer.from)
                         .setContractAddress(contractAddress)
                         .setAmountBI(transfer.amount)
                         .build()

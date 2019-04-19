@@ -1,8 +1,6 @@
 package com.ethvm.kafka.connect.sources.exchanges
 
 import arrow.core.Some
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_CONFIG
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_DEFAULT
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.EXCHANGE_PROVIDER_DOC
@@ -15,11 +13,12 @@ import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Co
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DOC
-import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeProvider
+import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoTokenExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProviders
 import com.ethvm.kafka.connect.sources.exchanges.provider.TokenIdEntry
 import com.ethvm.kafka.connect.sources.exchanges.utils.Versions
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.apache.kafka.common.config.ConfigDef
 import org.apache.kafka.common.config.ConfigDef.Importance
 import org.apache.kafka.common.config.ConfigDef.Type
@@ -71,7 +70,7 @@ class ExchangeRatesSourceConnector : SourceConnector() {
 
     const val EXCHANGE_PROVIDER_OPTIONS_CONFIG = "exchange.provider.options"
     const val EXCHANGE_PROVIDER_OPTIONS_DOC = "Options that will be passed to the Exchange rates provider"
-    const val EXCHANGE_PROVIDER_OPTIONS_DEFAULT = ""
+    const val EXCHANGE_PROVIDER_OPTIONS_DEFAULT = "{}"
 
     private fun topic(props: MutableMap<String, String>): String {
       val value = props[TOPIC_CONFIG] ?: TOPIC_CONFIG_DEFAULT
@@ -95,13 +94,18 @@ class ExchangeRatesSourceConnector : SourceConnector() {
             ExchangeProviders.COIN_GECKO -> {
               val options = mutableMapOf<String, Any>("topic" to topic(props))
 
-              val jsonOpts = javaClass.getResourceAsStream(opts)?.let { stream -> Parser.default().parse(stream) } as JsonObject
-              jsonOpts.map.forEach { (k, v) -> options[k] = v!! }
+              javaClass.getResourceAsStream(opts)
+                ?.let { stream ->
+                  CoinGeckoTokenExchangeProvider.jackson.readValue<Map<String, Any>>(stream)
+                }
+                ?.forEach { (k, v) -> options[k] = v }
 
-              val tokenIds = CoinGeckoExchangeProvider.klaxon.parse<List<TokenIdEntry>>(javaClass.getResourceAsStream("/coingecko-eth.json"))
-              options["tokens_ids"] = tokenIds!!
+              javaClass.getResourceAsStream("/coingecko/coingecko-eth.json")
+                ?.let { stream ->
+                  CoinGeckoTokenExchangeProvider.jackson.readValue<List<TokenIdEntry>>(stream).let { options["tokens_ids"] = it }
+                }
 
-              CoinGeckoExchangeProvider(options)
+              CoinGeckoTokenExchangeProvider(options)
             }
           }
         }

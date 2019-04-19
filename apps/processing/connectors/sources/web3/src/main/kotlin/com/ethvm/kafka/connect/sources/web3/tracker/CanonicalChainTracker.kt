@@ -22,7 +22,7 @@ class CanonicalChainTracker(
 
   // single write multiple readers so we can use volatile
   @Volatile
-  private var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact()
+  private var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact() + 1L
 
   private var exception: Throwable? = null
 
@@ -46,11 +46,7 @@ class CanonicalChainTracker(
         .subscribe(
           { heads ->
 
-            val newHead = heads.max()!!
-            if (newHead > head) {
-              head = newHead
-            }
-
+            val newHead = heads.max()!! + 1L
             val tail = heads.min()!!
 
             logger.debug { "New head notification! - Tail: $tail - Head: $head" }

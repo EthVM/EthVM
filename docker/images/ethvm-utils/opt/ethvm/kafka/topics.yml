@@ -186,7 +186,19 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: contract_metadata
+  - name: eth_list_contract_metadata
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: erc20_metadata
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
+  - name: erc721_metadata
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:

@@ -12,10 +12,8 @@ dependencies {
 
   implementation(project(":avro"))
 
-  implementation("com.beust:klaxon:5.0.1")
-  implementation("commons-codec:commons-codec:1.11")
+  implementation("com.beust:klaxon:5.0.5")
 
-  implementation("com.google.guava:guava:27.1-jre")
   implementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
   implementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
 }

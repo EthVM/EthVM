@@ -19,13 +19,13 @@ import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import java.io.IOException
 
-class CoinGeckoExchangeProviderTest : BehaviorSpec() {
+class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
 
   init {
 
-    Given("an empty CoinGeckoExchangeProvider") {
+    Given("an empty CoinGeckoTokenExchangeProvider") {
 
-      val provider = CoinGeckoExchangeProvider()
+      val provider = CoinGeckoTokenExchangeProvider()
 
       When("we fetch for token exchange rates") {
 
@@ -38,7 +38,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
       }
     }
 
-    Given("a configured CoinGeckoExchangeProvider but without tokens ids") {
+    Given("a configured CoinGeckoTokenExchangeProvider but without tokens ids") {
 
       val inputStreamProvider = InputStreamProvider { path -> javaClass.getResourceAsStream("/$path") }
 
@@ -46,14 +46,14 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
         .addInterceptor(OkHttpMockInterceptor(inputStreamProvider, 0))
         .build()
 
-      val provider = CoinGeckoExchangeProvider(
+      val provider = CoinGeckoTokenExchangeProvider(
         mapOf(
           "topic" to "token-exchange-rates",
           "currency" to "usd",
           "per_page" to 10
         ),
         okHttpClient,
-        CoinGeckoExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates") {
@@ -67,7 +67,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
       }
     }
 
-    Given("a properly configured CoinGeckoExchangeProvider with tokens ids") {
+    Given("a properly configured CoinGeckoTokenExchangeProvider with tokens ids") {
 
       val inputStreamProvider = InputStreamProvider { path -> javaClass.getResourceAsStream("/$path") }
 
@@ -90,7 +90,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
         TokenIdEntry("adbank", "0x2baac9330cf9ac479d819195794d79ad0c7616e3")
       )
 
-      val provider = CoinGeckoExchangeProvider(
+      val provider = CoinGeckoTokenExchangeProvider(
         mapOf(
           "topic" to "token-exchange-rates",
           "currency" to "usd",
@@ -98,7 +98,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
           "tokens_ids" to tokensIds
         ),
         okHttpClient,
-        CoinGeckoExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates") {
@@ -124,12 +124,12 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
       }
     }
 
-    Given("a properly second configured CoinGeckoExchangeProvider with tokens ids") {
+    Given("a properly second configured CoinGeckoTokenExchangeProvider with tokens ids") {
 
       val okHttpClient = mockk<OkHttpClient>()
 
       val mockRequest = Request.Builder()
-        .url(CoinGeckoExchangeProvider.COINGECKO_API_URL(listOf("hurify"), "usd", 10, 1))
+        .url(CoinGeckoTokenExchangeProvider.COINGECKO_API_URL(listOf("hurify"), "usd", 10, 1))
         .build()
 
       val mockResponse = Response.Builder()
@@ -145,7 +145,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
         TokenIdEntry("hurify", "0xcdb7ecfd3403eef3882c65b761ef9b5054890a47")
       )
 
-      val provider = CoinGeckoExchangeProvider(
+      val provider = CoinGeckoTokenExchangeProvider(
         mapOf(
           "topic" to "token-exchange-rates",
           "currency" to "usd",
@@ -153,7 +153,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
           "tokens_ids" to tokensIds
         ),
         okHttpClient,
-        CoinGeckoExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates and we receive 429 (Too many requests)") {
@@ -166,12 +166,12 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
       }
     }
 
-    Given("a properly third configured CoinGeckoExchangeProvider with tokens ids") {
+    Given("a properly third configured CoinGeckoTokenExchangeProvider with tokens ids") {
 
       val okHttpClient = mockk<OkHttpClient>()
 
       val mockRequest = Request.Builder()
-        .url(CoinGeckoExchangeProvider.COINGECKO_API_URL(listOf("hurify"), "usd", 10, 1))
+        .url(CoinGeckoTokenExchangeProvider.COINGECKO_API_URL(listOf("hurify"), "usd", 10, 1))
         .build()
 
       val mockResponse = Response.Builder()
@@ -187,7 +187,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
         TokenIdEntry("hurify", "0xcdb7ecfd3403eef3882c65b761ef9b5054890a47")
       )
 
-      val provider = CoinGeckoExchangeProvider(
+      val provider = CoinGeckoTokenExchangeProvider(
         mapOf(
           "topic" to "token-exchange-rates",
           "currency" to "usd",
@@ -195,7 +195,7 @@ class CoinGeckoExchangeProviderTest : BehaviorSpec() {
           "tokens_ids" to tokensIds
         ),
         okHttpClient,
-        CoinGeckoExchangeProvider.klaxon
+        CoinGeckoTokenExchangeProvider.jackson
       )
 
       When("we fetch for token exchange rates and we receive 404 (Too many requests)") {

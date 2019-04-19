@@ -1,11 +1,14 @@
 package com.ethvm.kafka.connect.sources.exchanges.provider
 
-import com.beust.klaxon.Klaxon
-import com.beust.klaxon.PropertyStrategy
 import com.ethvm.avro.exchange.TokenExchangeRateKeyRecord
 import com.ethvm.avro.exchange.TokenExchangeRateRecord
+import com.ethvm.common.extensions.byteBuffer
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector
 import com.ethvm.kafka.connect.sources.exchanges.utils.AvroToConnect
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import mu.KotlinLogging
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -14,18 +17,19 @@ import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import java.io.BufferedReader
 import java.io.IOException
-import kotlin.reflect.KProperty
+import java.time.Instant
 
-class CoinGeckoExchangeProvider(
+class CoinGeckoTokenExchangeProvider(
   options: Map<String, Any> = emptyMap(),
-  private val okHttpClient: OkHttpClient = CoinGeckoExchangeProvider.okHttpClient,
-  private val klaxon: Klaxon = CoinGeckoExchangeProvider.klaxon
+  private val okHttpClient: OkHttpClient = CoinGeckoTokenExchangeProvider.okHttpClient,
+  private val jackson: ObjectMapper = CoinGeckoTokenExchangeProvider.jackson
 ) : ExchangeProvider {
 
   private val topic: String = options.getOrDefault("topic", ExchangeRatesSourceConnector.Config.TOPIC_CONFIG_DEFAULT) as String
+  @Suppress("UNCHECKED_CAST")
   private val tokenIds: List<TokenIdEntry> = options.getOrDefault("tokens_ids", emptyList<TokenIdEntry>()) as List<TokenIdEntry>
   private val currency: String = options.getOrDefault("currency", "usd") as String
-  private val perPage: Int = options.getOrDefault("per_page", 250) as Int
+  private val perPage: Int = options.getOrDefault("per_page", 50) as Int
 
   private val logger = KotlinLogging.logger {}
 
@@ -58,7 +62,7 @@ class CoinGeckoExchangeProvider(
           logger.error { "Unsuccessful response - Error Code: $code" }
 
           when (code) {
-            429 -> throw RetriableException("Status code: 429. Current response: $response")
+            in 100..199, in 429..429, in 500..599 -> throw RetriableException("Status code: $code. Current response: $response")
             else -> throw IOException(response.toString())
           }
         }
@@ -68,7 +72,7 @@ class CoinGeckoExchangeProvider(
 
         logger.debug { "Parsing into rates" }
 
-        val rates = klaxon.parseArray<CoinGeckoExchangeRate>(reader) ?: emptyList()
+        val rates = jackson.readValue<List<CoinGeckoExchangeRate>>(reader)
         rates
           .filter { it.isValid() }
           .map { rate ->
@@ -103,7 +107,7 @@ class CoinGeckoExchangeProvider(
   companion object {
 
     @Suppress("FunctionName")
-    fun COINGECKO_API_URL(ids: List<String> = emptyList(), currency: String = "usd", per_page: Int = 250, page: Int = 1): HttpUrl =
+    fun COINGECKO_API_URL(ids: List<String> = emptyList(), currency: String = "usd", per_page: Int = 50, page: Int = 1): HttpUrl =
       HttpUrl.Builder()
         .scheme("https")
         .host("api.coingecko.com")
@@ -121,18 +125,7 @@ class CoinGeckoExchangeProvider(
 
     val okHttpClient = OkHttpClient()
 
-    val klaxon = Klaxon()
-      .propertyStrategy(object : PropertyStrategy {
-
-        private val ignored = arrayListOf(
-          "roi",
-          "ath",
-          "ath_change_percentage",
-          "ath_date"
-        )
-
-        override fun accept(property: KProperty<*>): Boolean = property.name !in ignored
-      })
+    val jackson = jacksonObjectMapper().apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
   }
 }
 
@@ -156,18 +149,12 @@ data class CoinGeckoExchangeRate(
   val price_change_percentage_24h: Double? = -1.0,
   val market_cap_change_24h: Double? = -1.0,
   val market_cap_change_percentage_24h: Double? = -1.0,
-  val circulating_supply: String? = "",
-  val total_supply: Long? = -1,
-  val last_updated: String? = ""
+  val circulating_supply: String? = "0",
+  val total_supply: String? = "0",
+  val last_updated: String? = "0"
 ) {
 
-  fun isValid() =
-    symbol != "" &&
-      total_supply != -1L &&
-      market_cap != -1.0 &&
-      price_change_percentage_24h != -1.0 &&
-      total_volume != -1.0 &&
-      current_price != -1.0
+  fun isValid() = symbol != "" && market_cap != -1.0
 
   fun toExchangeRateRecord(builder: TokenExchangeRateRecord.Builder, address: String): TokenExchangeRateRecord.Builder =
     builder
@@ -185,7 +172,7 @@ data class CoinGeckoExchangeRate(
       .setPriceChangePercentage24h(price_change_percentage_24h)
       .setMarketCapChange24h(market_cap_change_24h)
       .setMarketCapChangePercentage24h(market_cap_change_percentage_24h)
-      .setCirculatingSupply(circulating_supply)
-      .setTotalSupply(total_supply)
-      .setLastUpdated(last_updated)
+      .setCirculatingSupply(circulating_supply?.byteBuffer())
+      .setTotalSupply(total_supply?.byteBuffer())
+      .setLastUpdated(Instant.parse(last_updated).toEpochMilli())
 }

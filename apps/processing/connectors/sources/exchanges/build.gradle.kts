@@ -16,6 +16,7 @@ dependencies {
 
   // Kotlin
   implementation(kotlin("stdlib"))
+  implementation(kotlin("reflect"))
 
   // Modules deps
   implementation(project(":common"))
@@ -28,10 +29,14 @@ dependencies {
 
   // Networking
   implementation("com.squareup.okhttp3:okhttp:3.14.1")
-  implementation("com.beust:klaxon:5.0.1")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
 
   // Utils
-  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}")
+  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-common")
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
+  }
   implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
   implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
 

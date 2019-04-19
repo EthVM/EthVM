@@ -1,7 +1,7 @@
 package com.ethvm.common.config
 
 import com.ethvm.common.extensions.ether
-import com.ethvm.common.extensions.finney
+import com.ethvm.common.extensions.milliEther
 import java.math.BigInteger
 
 data class ChainConstants(
@@ -14,7 +14,7 @@ data class ChainConstants(
   val uncleGenerationLimit: Int = 7,
   val uncleListLimit: Int = 2,
   val bestNumberDiffLimit: Int = 100,
-  val blockReward: BigInteger = 1500.finney(),
+  val blockReward: BigInteger = 1500.milliEther(),
   // transaction signatures whose s-value is greater than secp256k1n/2 are considered invalid, introduced in Homestead release
   val secp256k1n: BigInteger = BigInteger("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", 16),
   val longestChain: Int = 192,

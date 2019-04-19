@@ -15,14 +15,14 @@ import org.apache.kafka.connect.transforms.Transformation
 
 abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
 
-  private val logger = KotlinLogging.logger {}
-
   companion object {
-    val WHITELIST = "whitelist"
+    const val WHITELIST = "whitelist"
   }
 
-  val jsonConverter = SimpleJsonConverter()
-  val objectMapper = ObjectMapper()
+  private val logger = KotlinLogging.logger {}
+
+  private val jsonConverter = SimpleJsonConverter()
+  private val objectMapper = ObjectMapper()
 
   lateinit var schemaUpdateCache: Cache<Schema, Schema>
 
@@ -42,10 +42,9 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
   }
 
   override fun apply(record: R): R {
-    return if (operatingSchema(record) == null) {
-      applySchemaless(record)
-    } else {
-      applyWithSchema(record)
+    return when {
+      operatingSchema(record) != null -> applyWithSchema(record)
+      else -> applySchemaless(record)
     }
   }
 

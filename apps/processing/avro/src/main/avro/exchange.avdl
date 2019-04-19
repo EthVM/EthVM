@@ -10,19 +10,19 @@ protocol Exchange {
     union { null, string } name;
     union { null, string } image;
     union { null, string } address;
-    union { null, double } current_price;
-    union { null, double } market_cap;
-    union { null, int } market_cap_rank;
-    union { null, double } total_volume;
-    union { null, double } high_24h;
-    union { null, double } low_24h;
-    union { null, double} price_change_24h;
-    union { null, double } price_change_percentage_24h;
-    union { null, double } market_cap_change_24h;
-    union { null, double } market_cap_change_percentage_24h;
-    union { null, string } circulating_supply;
-    union { null, long } total_supply;
-    union { null, string } last_updated;
+    union { null, double } currentPrice;
+    union { null, double } marketCap;
+    union { null, int } marketCapRank;
+    union { null, double } totalVolume;
+    union { null, double } high24h;
+    union { null, double } low24h;
+    union { null, double } priceChange24h;
+    union { null, double } priceChangePercentage24h;
+    union { null, double } marketCapChange24h;
+    union { null, double } marketCapChangePercentage24h;
+    union { null, decimal(80, 0) } circulatingSupply;
+    union { null, decimal(80, 0) } totalSupply;
+    union { null, long } lastUpdated;
   }
 
 }
