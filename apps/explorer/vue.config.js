@@ -1,5 +1,7 @@
 const path = require('path')
+const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
   chainWebpack: config => {
@@ -17,7 +19,7 @@ module.exports = {
       .end()
   },
   configureWebpack: {
-    plugins: [new BundleAnalyzerPlugin()],
+    plugins: [ new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new BundleAnalyzerPlugin()],
     resolve: {
       extensions: ['.ts', '.vue', '.json'],
       alias: {
@@ -43,7 +45,6 @@ module.exports = {
       }
     }
   },
-
   productionSourceMap: false,
   devServer: {
     disableHostCheck: true,
