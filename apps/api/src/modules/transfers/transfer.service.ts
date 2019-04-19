@@ -12,7 +12,7 @@ export class TransferService {
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, take: number = 10, page: number = 0): Promise<FungibleBalanceTransferEntity[]> {
+  async findTokenTransfersByContractAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
 
     const findOptions: FindManyOptions = {
@@ -21,7 +21,7 @@ export class TransferService {
       take,
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'}
     }
-    return this.transferRepository.find(findOptions)
+    return this.transferRepository.findAndCount(findOptions)
   }
 
   async findTokenTransfersByContractAddressForHolder(

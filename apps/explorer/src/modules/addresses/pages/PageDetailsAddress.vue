@@ -351,7 +351,6 @@ export default class PageDetailsAddress extends Vue {
   }
 
   fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{items: Transfer[], totalCount: number}> {
-    console.log('Fetching transfers', page, limit)
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 
@@ -406,7 +405,6 @@ export default class PageDetailsAddress extends Vue {
   updateTransfers(): void {
     this.fetchTransfers().then(
       res => {
-        console.log('Transfers updated', res)
         this.account.internalTransfers = res.items
         this.account.totalInternalTransfers = res.totalCount
         this.transfersLoading = false

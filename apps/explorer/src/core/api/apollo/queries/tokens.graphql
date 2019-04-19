@@ -1,12 +1,15 @@
 query tokenTransfersByContractAddress($address: String!, $limit: Int, $page: Int) {
   tokenTransfersByContractAddress(contractAddress: $address, limit: $limit, page: $page) {
-    id
-    transactionHash: traceLocationTransactionHash
-    value: amount
-    from
-    to
-    address: contractAddress
-    timestamp
+    items {
+      id
+      transactionHash: traceLocationTransactionHash
+      value: amount
+      from
+      to
+      address: contractAddress
+      timestamp
+    }
+    totalCount
   }
 }
 

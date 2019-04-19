@@ -8,7 +8,12 @@
     <v-tab-item slot="tabs-item" value="tab-0">
       <v-progress-linear color="blue" indeterminate v-if="isTokenTransfersLoading" class="mt-0" />
       <app-error :has-error="hasErrorTokenTransfers" :message="errorTokenTransfers" />
-      <token-table-transfers v-if="!isTokenTransfersLoading && !hasErrorTokenTransfers" :transfers="tokenTransfers" />
+      <token-table-transfers :transfers="tokenTransfers"
+                             :total-transfers="totalTransfers"
+                             :loading="isTokenTransfersLoading"
+                             :error="errorTokenTransfers"
+                             :page="transfersPage"
+                             @page="setPageTransfers" />
     </v-tab-item>
     <!--
     =====================================================================================
@@ -27,7 +32,7 @@ import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
-import { Tx } from '@app/core/models'
+import { Transfer, Tx } from '@app/core/models'
 import { Tab } from '@app/core/components/props'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
@@ -47,13 +52,25 @@ export default class TokenDetailsTabs extends Vue {
   */
 
   @Prop(String) addressRef!: string
-  @Prop(Array) tokenTransfers!: any
+  @Prop(Array) tokenTransfers!: Transfer[]
+  @Prop(Number) totalTransfers!: number
+  @Prop(Number) transfersPage!: number
   @Prop(Array) tokenHolders!: any
   @Prop(String) totalSupply?: string
   @Prop(Boolean) isTokenTransfersLoading!: boolean
   @Prop(Boolean) isTokenHoldersLoading!: boolean
   @Prop(String) errorTokenTransfers!: string
   @Prop(String) errorTokenHolders!: string
+
+  /*
+ ===================================================================================
+   Methods
+ ===================================================================================
+ */
+
+  setPageTransfers(page: number): void {
+    this.$emit('transfersPage', page)
+  }
 
   /*
   ===================================================================================

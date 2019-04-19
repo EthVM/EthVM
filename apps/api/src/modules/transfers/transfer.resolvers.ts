@@ -16,9 +16,13 @@ export class TransferResolvers {
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number
-  ): Promise<TransferDto[]> {
-    const entities = await this.transferService.findTokenTransfersByContractAddress(contractAddress, limit, page)
-    return entities.map(e => new TransferDto(e))
+  ): Promise<TransfersPageDto> {
+    const result = await this.transferService.findTokenTransfersByContractAddress(contractAddress, limit, page)
+    const transfersPage = {
+      items: result[0],
+      totalCount: result[1]
+    }
+    return new TransfersPageDto(transfersPage)
   }
 
   @Query()

@@ -325,7 +325,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenHolders)
   }
 
-  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<TokenTransfer[]> {
+  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{items: Transfer[], totalCount: number}> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddress,
