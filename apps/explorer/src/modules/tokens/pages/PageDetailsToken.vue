@@ -59,16 +59,16 @@
 </template>
 
 <script lang="ts">
-  import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-  import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
-  import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
-  import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
-  import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
-  import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-  import { Crumb } from '@app/core/components/props'
-  import { Transfer } from "@app/core/models";
+import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
+import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
+import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
+import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Crumb } from '@app/core/components/props'
+import { Transfer } from '@app/core/models'
 
-  const MAX_ITEMS = 10
+const MAX_ITEMS = 10
 
 @Component({
   components: {
@@ -351,8 +351,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of token transfers/info
    */
-  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{items: Transfer[], totalCount: number}>  {
-
+  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: number }> {
     return new Promise((resolve, reject) => {
       this.isTokenTransfersLoading = true
 

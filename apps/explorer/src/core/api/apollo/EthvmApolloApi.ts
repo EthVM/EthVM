@@ -1,5 +1,10 @@
 import { EthvmApi } from '@app/core/api'
-import { accountByAddress, addressAllTokensOwned, addressAmountTokensOwned, internalTransactionsByAddress } from '@app/core/api/apollo/queries/addresses.graphql'
+import {
+  accountByAddress,
+  addressAllTokensOwned,
+  addressAmountTokensOwned,
+  internalTransactionsByAddress
+} from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -45,7 +50,8 @@ import {
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer, Transfer,
+  TokenTransfer,
+  Transfer,
   Tx,
   Uncle
 } from '@app/core/models'
@@ -92,7 +98,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.addressAmountTokensOwned)
   }
 
-  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{items: Transfer[], totalCount: number}> {
+  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
     return this.apollo
       .query({
         query: internalTransactionsByAddress,
@@ -325,7 +331,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenHolders)
   }
 
-  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{items: Transfer[], totalCount: number}> {
+  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddress,

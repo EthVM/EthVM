@@ -8,12 +8,14 @@
     <v-tab-item slot="tabs-item" value="tab-0">
       <v-progress-linear color="blue" indeterminate v-if="isTokenTransfersLoading" class="mt-0" />
       <app-error :has-error="hasErrorTokenTransfers" :message="errorTokenTransfers" />
-      <token-table-transfers :transfers="tokenTransfers"
-                             :total-transfers="totalTransfers"
-                             :loading="isTokenTransfersLoading"
-                             :error="errorTokenTransfers"
-                             :page="transfersPage"
-                             @page="setPageTransfers" />
+      <token-table-transfers
+        :transfers="tokenTransfers"
+        :total-transfers="totalTransfers"
+        :loading="isTokenTransfersLoading"
+        :error="errorTokenTransfers"
+        :page="transfersPage"
+        @page="setPageTransfers"
+      />
     </v-tab-item>
     <!--
     =====================================================================================

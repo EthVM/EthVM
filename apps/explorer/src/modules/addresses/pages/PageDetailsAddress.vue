@@ -51,22 +51,24 @@
         PENDING TXS TAB
       =====================================================================================
       -->
-<!--      <v-tab-item slot="tabs-item" value="tab-2">-->
-<!--        <table-address-txs :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" :error="pendingTxsError" />-->
-<!--      </v-tab-item>-->
+      <!--      <v-tab-item slot="tabs-item" value="tab-2">-->
+      <!--        <table-address-txs :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" :error="pendingTxsError" />-->
+      <!--      </v-tab-item>-->
       <!--
       =====================================================================================
         INTERNAL TRANSFERS TAB
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-5">
-        <token-table-transfers :transfers="account.internalTransfers"
-                               :total-transfers="account.totalInternalTransfers"
-                               :loading="transfersLoading"
-                               :error="hasTransfersError"
-                               :page="transfersPage"
-                               :show-type="true"
-                               @page="setPageTransfers" />
+        <token-table-transfers
+          :transfers="account.internalTransfers"
+          :total-transfers="account.totalInternalTransfers"
+          :loading="transfersLoading"
+          :error="hasTransfersError"
+          :page="transfersPage"
+          :show-type="true"
+          @page="setPageTransfers"
+        />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -110,7 +112,7 @@
 </template>
 
 <script lang="ts">
-  import { Block, Contract, EthValue, SimpleTx, PendingTx, SimpleBlock, Transfer } from '@app/core/models'
+import { Block, Contract, EthValue, SimpleTx, PendingTx, SimpleBlock, Transfer } from '@app/core/models'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
@@ -123,7 +125,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Crumb, Tab } from '@app/core/components/props'
-import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue';
+import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 
 const MAX_ITEMS = 10
 
@@ -351,7 +353,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
-  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{items: Transfer[], totalCount: number}> {
+  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: number }> {
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 

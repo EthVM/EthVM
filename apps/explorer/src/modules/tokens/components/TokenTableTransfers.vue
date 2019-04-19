@@ -91,7 +91,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Tx } from '@app/core/models'
 import BN from 'bignumber.js'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
 
@@ -135,13 +135,11 @@ export default class TokenTableTransfers extends Vue {
   ===================================================================================
   */
 
-
   /**
    * @return {Number} - Total number of pagination pages
    */
   get numPages(): number {
     return this.totalTransfers > 0 ? Math.ceil(this.totalTransfers / MAX_ITEMS) : 0
   }
-
 }
 </script>
