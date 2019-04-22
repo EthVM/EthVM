@@ -62,20 +62,6 @@ CREATE INDEX idx_uncle_nephew_hash ON uncle (nephew_hash);
 CREATE INDEX idx_uncle_number ON uncle (number);
 CREATE INDEX idx_uncle_height ON uncle (height);
 
-CREATE VIEW canonical_uncle AS
-SELECT cb.number as nephew_number,
-       u.*,
-       br.amount AS reward_amount
-FROM uncle AS u
-  RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
-  LEFT JOIN block_reward AS br ON u.nephew_hash = br.block_hash
-WHERE
-  cb.number IS NOT NULL AND
-  u.hash IS NOT NULL AND
-  br.delta_type = 'UNCLE_REWARD' AND
-  u.author = br.address
-ORDER BY cb.number DESC;
-
 /* All transactions including possible transactions from old forks */
 CREATE TABLE "transaction"
 (
@@ -438,6 +424,21 @@ FROM block_reward AS br
        RIGHT JOIN canonical_block_header AS cb ON br.block_hash = cb.hash
 WHERE cb.number IS NOT NULL
   AND br.amount IS NOT NULL;
+
+CREATE VIEW canonical_uncle AS
+SELECT cb.number as nephew_number,
+       u.*,
+       br.amount AS reward_amount
+FROM uncle AS u
+       RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
+       LEFT JOIN block_reward AS br ON u.nephew_hash = br.block_hash
+WHERE
+  cb.number IS NOT NULL AND
+  u.hash IS NOT NULL AND
+    br.delta_type = 'UNCLE_REWARD' AND
+    u.author = br.address
+ORDER BY cb.number DESC;
+
 
 /* Token exchange rates table */
 CREATE TABLE token_exchange_rates
