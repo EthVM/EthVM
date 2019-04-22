@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
@@ -86,15 +88,18 @@ up_simple() {
   # Give time to breathe
   sleep 10
 
-  echo "Checking current dataset...\n"
+  echo -e "Checking current dataset...\n"
   mkdir -p ${ROOT_DIR}/datasets
   set +o errexit
   [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${ROOT_DIR}/datasets/${DATASET}.md5 &>/dev/null)
-  [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo "You're using latest dataset version! \n"
+  [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo -e "You're using latest dataset version! \n"
   set -o errexit
 
-  echo "Importing dataset to TimeScale \n"
-  gunzip < ${ROOT_DIR}/datasets/${DATASET} | docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}"
+  echo -e "Importing dataset to TimeScale \n"
+
+  docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}" --quiet -c "ALTER DATABASE "${POSTGRES_DB}" SET timescaledb.restoring='on';"
+  gunzip < ${ROOT_DIR}/datasets/${DATASET} | docker-compose exec -T timescale psql --quiet --username "${POSTGRES_USER}" "${POSTGRES_DB}"
+  docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}" --quiet -c "ALTER DATABASE "${POSTGRES_DB}" SET timescaledb.restoring='off';"
 }
 
 # down - stops all running docker containers, volumes, images and related stuff
