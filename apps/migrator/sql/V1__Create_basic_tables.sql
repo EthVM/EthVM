@@ -293,7 +293,9 @@ WHERE cb.number IS NOT NULL
   AND fbd.address IS NOT NULL;
 
 CREATE VIEW canonical_fungible_balance_transfer AS
-SELECT fbd.counterpart_address AS "from",
+SELECT
+       fbd.id,
+       fbd.counterpart_address AS "from",
        fbd.address             AS "to",
        fbd.contract_address,
        fbd.delta_type,
