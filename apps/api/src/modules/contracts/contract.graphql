@@ -11,13 +11,13 @@ type Contract {
   refundAddress: String
   refundBalance: Float
   traceCreatedAtBlockHash: String
-  traceCreatedAtBlockNumber: Long
+  traceCreatedAtBlockNumber: String
   traceCreatedAtTransactionHash: String
   traceCreatedAtTransactionIndex: Int
   traceCreatedAtLogIndex: Int
   traceCreatedAtTraceAddress: String
   traceDestroyedAtBlockHash: String
-  traceDestroyedAtBlockNumber: Long
+  traceDestroyedAtBlockNumber: String
   traceDestroyedAtTransactionHash: String
   traceDestroyedAtTransactionIndex: Long
   traceDestroyedAtLogIndex: Long

@@ -100,7 +100,7 @@ export class Block {
 }
 
 export class BlockHeader {
-    number?: Long;
+    number?: string;
     hash?: string;
     parentHash?: string;
     nonce?: string;
@@ -128,13 +128,13 @@ export class Contract {
     refundAddress?: string;
     refundBalance?: number;
     traceCreatedAtBlockHash?: string;
-    traceCreatedAtBlockNumber?: Long;
+    traceCreatedAtBlockNumber?: string;
     traceCreatedAtTransactionHash?: string;
     traceCreatedAtTransactionIndex?: number;
     traceCreatedAtLogIndex?: number;
     traceCreatedAtTraceAddress?: string;
     traceDestroyedAtBlockHash?: string;
-    traceDestroyedAtBlockNumber?: Long;
+    traceDestroyedAtBlockNumber?: string;
     traceDestroyedAtTransactionHash?: string;
     traceDestroyedAtTransactionIndex?: Long;
     traceDestroyedAtLogIndex?: Long;
@@ -299,7 +299,7 @@ export class Receipt {
     transactionHash?: string;
     transactionIndex?: string;
     blockHash?: string;
-    blockNumber?: number;
+    blockNumber?: string;
     from?: string;
     to?: string;
     contractAddress?: string;
@@ -383,7 +383,7 @@ export class Trace {
     transactionHash?: string;
     traceAddress?: string;
     transactionPosition?: number;
-    blockNumber?: number;
+    blockNumber?: string;
     subtraces?: number;
     error?: string;
     type?: string;
@@ -395,7 +395,7 @@ export class Transaction {
     hash?: string;
     nonce?: string;
     blockHash?: string;
-    blockNumber?: number;
+    blockNumber?: string;
     transactionIndex?: number;
     from?: string;
     to?: string;

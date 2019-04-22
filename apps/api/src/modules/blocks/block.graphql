@@ -18,7 +18,7 @@ type Block {
 }
 
 type BlockHeader {
-  number: Long
+  number: String
   hash: String
   parentHash: String
   nonce: String

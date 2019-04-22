@@ -19,7 +19,7 @@ export class TransactionReceiptEntity {
   blockHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  blockNumber!: number
+  blockNumber!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   from!: string
@@ -31,10 +31,10 @@ export class TransactionReceiptEntity {
   contractAddress?: string
 
   @Column({type: 'numeric', readonly: true})
-  cumulativeGasUsed!: number
+  cumulativeGasUsed!: string
 
   @Column({type: 'numeric', readonly: true})
-  gasUsed!: number
+  gasUsed!: string
 
   @Column({type: 'text', readonly: true})
   logs!: string
@@ -46,7 +46,7 @@ export class TransactionReceiptEntity {
   root?: string
 
   @Column({type: 'numeric', readonly: true})
-  status?: number
+  status?: string
 
   @OneToOne(type => TransactionEntity, tx => tx.receipt)
   @JoinColumn({

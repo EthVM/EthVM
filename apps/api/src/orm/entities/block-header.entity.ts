@@ -12,7 +12,7 @@ export class BlockHeaderEntity {
   }
 
   @PrimaryColumn({type: 'numeric', readonly: true})
-  number!: number
+  number!: string
 
   @Column({type: 'character', length: 66, unique: true, readonly: true})
   hash!: string
@@ -21,7 +21,7 @@ export class BlockHeaderEntity {
   parentHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  nonce?: number
+  nonce?: string
 
   @Column({type: 'character', length: 66, readonly: true})
   sha3Uncles!: string
@@ -42,19 +42,19 @@ export class BlockHeaderEntity {
   author!: string
 
   @Column({type: 'numeric', readonly: true})
-  difficulty!: number
+  difficulty!: string
 
   @Column({type: 'numeric', readonly: true})
-  totalDifficulty!: number
+  totalDifficulty!: string
 
   @Column({type: 'text', readonly: true})
   extraData?: string
 
   @Column({type: 'numeric', readonly: true})
-  gasLimit!: number
+  gasLimit!: string
 
   @Column({type: 'numeric', readonly: true})
-  gasUsed!: number
+  gasUsed!: string
 
   @Column({type: 'bigint', readonly: true})
   timestamp!: string

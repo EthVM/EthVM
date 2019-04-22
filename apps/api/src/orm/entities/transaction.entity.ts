@@ -15,13 +15,13 @@ export class TransactionEntity {
   hash!: string
 
   @Column({type: 'numeric', readonly: true})
-  nonce!: number
+  nonce!: string
 
   @Column({type: 'character', length: 66, readonly: true})
   blockHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  blockNumber!: number
+  blockNumber!: String
 
   @Column({type: 'integer', readonly: true})
   transactionIndex!: number
@@ -33,13 +33,13 @@ export class TransactionEntity {
   to?: string
 
   @Column({type: 'numeric', readonly: true})
-  value!: number
+  value!: string
 
   @Column({type: 'numeric', readonly: true})
-  gasPrice!: number
+  gasPrice!: string
 
   @Column({type: 'numeric', readonly: true})
-  gas!: number
+  gas!: string
 
   @Column({type: 'bytea', readonly: true})
   input?: Buffer

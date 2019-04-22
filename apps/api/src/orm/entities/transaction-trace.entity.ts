@@ -23,7 +23,7 @@ export class TransactionTraceEntity {
   transactionPosition?: number
 
   @Column({type: 'numeric', readonly: true})
-  blockNumber!: number
+  blockNumber!: string
 
   @Column({type: 'integer', readonly: true})
   subtraces!: number
