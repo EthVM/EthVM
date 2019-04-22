@@ -64,11 +64,16 @@ CREATE INDEX idx_uncle_height ON uncle (height);
 
 CREATE VIEW canonical_uncle AS
 SELECT cb.number as nephew_number,
-       u.*
+       u.*,
+       br.amount AS reward_amount
 FROM uncle AS u
-       RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
-WHERE cb.number IS NOT NULL
-  AND u.hash IS NOT NULL
+  RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
+  LEFT JOIN block_reward AS br ON u.nephew_hash = br.block_hash
+WHERE
+  cb.number IS NOT NULL AND
+  u.hash IS NOT NULL AND
+  br.delta_type = 'UNCLE_REWARD' AND
+  u.author = br.address
 ORDER BY cb.number DESC;
 
 /* All transactions including possible transactions from old forks */
@@ -161,6 +166,7 @@ CREATE TABLE transaction_trace
 
 CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
 CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
+CREATE INDEX idx_transaction_trace_transaction_position ON transaction_trace (transaction_position);
 
 /* This view helps to filter out non canonical traces based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_trace AS
@@ -168,9 +174,7 @@ SELECT tr.*
 FROM transaction_trace AS tr
        RIGHT JOIN canonical_block_header AS cb ON tr.block_hash = cb.hash
 WHERE cb.number IS NOT NULL
-  AND tr.transaction_hash IS NOT NULL
-ORDER BY cb.number DESC,
-         tr.transaction_position DESC;
+  AND tr.transaction_hash IS NOT NULL;
 
 CREATE TABLE contract
 (
