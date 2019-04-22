@@ -1,4 +1,4 @@
-package com.ethvm.kafka.connect.sources.jdbc
+package com.ethvm.kafka.connect.transforms
 
 import com.google.common.base.CaseFormat
 

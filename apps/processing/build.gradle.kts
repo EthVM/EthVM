@@ -4,7 +4,7 @@ plugins {
   val ktlintVersion = "7.3.0"
 
   base
-  kotlin("jvm") version "1.3.21" apply false
+  kotlin("jvm") version "1.3.30" apply false
   id("org.jlleitschuh.gradle.ktlint") version ktlintVersion apply false
   id("org.jlleitschuh.gradle.ktlint-idea") version ktlintVersion apply true
 }

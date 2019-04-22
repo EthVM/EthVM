@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.ethvm.kafka.connect.sources.jdbc;
+package com.ethvm.kafka.connect.transforms;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

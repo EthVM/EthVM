@@ -1,5 +1,7 @@
-package com.ethvm.kafka.connect.sources.jdbc
+package com.ethvm.kafka.connect.transforms
 
+import com.datamountaineer.streamreactor.connect.json.SimpleJsonConverter
+import com.fasterxml.jackson.databind.ObjectMapper
 import mu.KotlinLogging
 import org.apache.kafka.common.cache.Cache
 import org.apache.kafka.common.cache.LRUCache
@@ -11,18 +13,28 @@ import org.apache.kafka.connect.data.SchemaBuilder
 import org.apache.kafka.connect.data.Struct
 import org.apache.kafka.connect.transforms.Transformation
 
-abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
+abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
+
+  companion object {
+    const val WHITELIST = "whitelist"
+  }
 
   private val logger = KotlinLogging.logger {}
+
+  private val jsonConverter = SimpleJsonConverter()
+  private val objectMapper = ObjectMapper()
 
   lateinit var schemaUpdateCache: Cache<Schema, Schema>
 
   var whitelist = emptyList<String>()
 
-  override fun config() = ConfigDef()
+  override fun config() = ConfigDef().apply {
+    define(WHITELIST, ConfigDef.Type.LIST, emptyList<String>(), ConfigDef.Importance.HIGH, "Fields to convert")
+  }
 
   @Suppress("UNCHECKED_CAST")
   override fun configure(config: MutableMap<String, *>) {
+    whitelist = (config[WHITELIST] as String).split(",")
     schemaUpdateCache = SynchronizedCache(LRUCache(32))
   }
 
@@ -50,7 +62,24 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
 
     updatedSchema.fields()
       .forEach { field ->
-        updatedValue.put(field, value.get(field.name().snakeToCamelCase()))
+
+        when (whitelist.contains(field.name())) {
+
+          false -> updatedValue.put(field, value.get(field))
+
+          true -> {
+            val fieldValue = value.get(field)
+            if (fieldValue != null) {
+
+              val json = jsonConverter.fromConnectData(
+                // need to use original field schema for extracting
+                value.schema().field(field.name()).schema(),
+                value.get(field)
+              )
+              updatedValue.put(field, objectMapper.writeValueAsString(json))
+            }
+          }
+        }
       }
 
     return newRecord(record, updatedSchema, updatedValue)
@@ -61,10 +90,13 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
     val value = operatingValue(record)
     require(value is Map<*, *>) { "Only map objects are supported when there is no schema" }
 
-    val valueMap = (value as Map<String, *>)
-      .mapKeys { (k, _) -> k.camelToSnakeCase() }
+    val valueMap = value as Map<String, *>
 
-    return newRecord(record, null, valueMap)
+    val updatedMap = valueMap + valueMap
+      .filterKeys { key -> whitelist.contains(key) }
+      .mapValues { fieldValue -> objectMapper.writeValueAsString(fieldValue) }
+
+    return newRecord(record, null, updatedMap)
   }
 
   private fun makeUpdatedSchema(source: Schema): Schema {
@@ -80,7 +112,23 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
     }
 
     source.fields()
-      .forEach { field -> builder.field(field.name().camelToSnakeCase(), field.schema()) }
+      .forEach { field ->
+        when (whitelist.contains(field.name())) {
+          false -> builder.field(field.name(), field.schema())
+          true -> {
+
+            logger.info { "Converting field: $field " }
+
+            builder.field(
+              field.name(),
+              if (field.schema().isOptional)
+                Schema.OPTIONAL_STRING_SCHEMA
+              else
+                Schema.STRING_SCHEMA
+            )
+          }
+        }
+      }
 
     return builder.build()
   }
@@ -91,7 +139,7 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
 
   protected abstract fun newRecord(record: R, updatedSchema: Schema?, updatedValue: Any): R
 
-  class Key<R : ConnectRecord<R>> : SnakeCase<R>() {
+  class Key<R : ConnectRecord<R>> : JsonField<R>() {
 
     override fun operatingSchema(record: R) = record.keySchema()
 
@@ -101,7 +149,7 @@ abstract class SnakeCase<R : ConnectRecord<R>> : Transformation<R> {
       record.newRecord(record.topic(), record.kafkaPartition(), updatedSchema, updatedValue, record.valueSchema(), record.value(), record.timestamp())
   }
 
-  class Value<R : ConnectRecord<R>> : SnakeCase<R>() {
+  class Value<R : ConnectRecord<R>> : JsonField<R>() {
 
     override fun operatingSchema(record: R) = record.valueSchema()
 

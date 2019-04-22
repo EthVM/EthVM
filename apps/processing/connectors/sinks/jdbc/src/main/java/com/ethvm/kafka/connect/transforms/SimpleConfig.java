@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.ethvm.kafka.connect.sources.jdbc;
+package com.ethvm.kafka.connect.transforms;
 
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;

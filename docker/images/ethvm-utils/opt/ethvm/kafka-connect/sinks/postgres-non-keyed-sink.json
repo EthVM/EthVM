@@ -11,9 +11,9 @@
     "connection.user": "postgres",
     "connection.password": "1234",
     "transforms": "snakeCaseKey,snakeCaseValue,flattenValue",
-    "transforms.flattenValue.type": "com.ethvm.kafka.connect.sources.jdbc.Flatten$Value",
+    "transforms.flattenValue.type": "com.ethvm.kafka.connect.transforms.Flatten$Value",
     "transforms.flattenValue.delimiter": "_",
-    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.sources.jdbc.SnakeCase$Key",
-    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.sources.jdbc.SnakeCase$Value"
+    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value"
   }
 }

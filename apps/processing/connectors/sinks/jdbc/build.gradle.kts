@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 plugins {
   `java-library`
@@ -6,10 +7,6 @@ plugins {
   kotlin("jvm")
   id("com.github.johnrengelman.shadow") version "4.0.3"
   id("org.jlleitschuh.gradle.ktlint")
-}
-
-project.java.sourceSets["main"].java {
-  srcDir("src/main/kotlin")
 }
 
 dependencies {
