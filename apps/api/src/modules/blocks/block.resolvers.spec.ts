@@ -7,7 +7,7 @@ import { BlockEntity } from '../../orm/entities/block.entity'
 import { BlockDto } from './block.dto'
 import { BlockMetricEntity } from '../../orm/entities/block-metric.entity'
 import { BalanceDto } from '../balances/balance.dto'
-import { BlockMetricDto } from '../block-metrics/block-metric.dto'
+import { BlockMetricsDto } from '../block-metrics/block-metrics.dto'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hashTwo = '0x0000000000000000000000000000000000000000000000000000000000000002'

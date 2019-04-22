@@ -7,65 +7,65 @@ enum Duration {
 }
 
 query totalTxs($duration: Duration!) {
-  totalTxs(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: sumTotalTxs
   }
 }
 
 query totalSuccessfulTxs($duration: Duration!) {
-  totalSuccessfulTxs(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: sumNumSuccessfulTxs
   }
 }
 
 query averageDifficulty($duration: Duration!) {
-  averageDifficulty(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: avgDifficulty
   }
 }
 
 query totalFailedTxs($duration: Duration!) {
-  totalFailedTxs(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: sumNumFailedTxs
   }
 }
 
 query totalGasPrice($duration: Duration!) {
-  totalGasPrice(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: sumTotalGasPrice
   }
 }
 
 query averageGasLimit($duration: Duration!) {
-  averageGasLimit(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: avgAvgGasLimit
   }
 }
 
 query averageGasPrice($duration: Duration!) {
-  averageGasPrice(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: avgAvgGasPrice
   }
 }
 
 query totalTxsFees($duration: Duration!) {
-  totalTxsFees(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: sumTotalTxFees
   }
 }
 
 query averageTxFee($duration: Duration!) {
-  averageTxFee(duration: $duration) {
-    date
-    value
+  blockMetricsByDay(duration: $duration) {
+    date: timestamp,
+    value: avgAvgTxFees
   }
 }
 

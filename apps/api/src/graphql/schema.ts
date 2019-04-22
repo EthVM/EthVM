@@ -120,6 +120,53 @@ export class BlockHeader {
     blockTime?: string;
 }
 
+export class BlockMetrics {
+    timestamp?: string;
+    blockCount?: string;
+    maxDifficulty?: string;
+    avgDifficulty?: string;
+    minDifficulty?: string;
+    sumDifficulty?: string;
+    txCount?: string;
+    maxTotalGasPrice?: string;
+    minTotalGasPrice?: string;
+    avgTotalGasPrice?: string;
+    sumTotalGasPrice?: string;
+    maxAvgGasLimit?: string;
+    minAvgGasLimit?: string;
+    avgAvgGasLimit?: string;
+    sumAvgGasLimit?: string;
+    maxAvgGasPrice?: string;
+    minAvgGasPrice?: string;
+    avgAvgGasPrice?: string;
+    sumAvgGasPrice?: string;
+    maxTotalTxFees?: string;
+    minTotalTxFees?: string;
+    avgTotalTxFees?: string;
+    sumTotalTxFees?: string;
+    maxAvgTxFees?: string;
+    minAvgTxFees?: string;
+    avgAvgTxFees?: string;
+    sumAvgTxFees?: string;
+    traceCount?: string;
+    maxTotalTxs?: number;
+    minTotalTxs?: number;
+    avgTotalTxs?: string;
+    sumTotalTxs?: string;
+    maxNumSuccessfulTxs?: number;
+    minNumSuccessfulTxs?: number;
+    avgNumSuccessfulTxs?: string;
+    sumNumSuccessfulTxs?: string;
+    maxNumFailedTxs?: number;
+    minNumFailedTxs?: number;
+    avgNumFailedTxs?: string;
+    sumNumFailedTxs?: string;
+    maxNumInternalTxs?: number;
+    minNumInternalTxs?: number;
+    avgNumInternalTxs?: string;
+    sumNumInternalTxs?: string;
+}
+
 export class Contract {
     address?: string;
     creator?: string;
@@ -203,6 +250,8 @@ export class ProcessingMetadata {
 export abstract class IQuery {
     abstract accountByAddress(address: string): Account | Promise<Account>;
 
+    abstract blockMetricsByDay(duration: Duration): BlockMetrics[] | Promise<BlockMetrics[]>;
+
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -229,6 +278,8 @@ export abstract class IQuery {
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
+    abstract search(query: string): Search | Promise<Search>;
+
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
     abstract totalSuccessfulTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
@@ -253,8 +304,6 @@ export abstract class IQuery {
 
     abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
-    abstract search(query: string): Search | Promise<Search>;
-
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
@@ -269,14 +318,6 @@ export abstract class IQuery {
 
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
-    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
-
-    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
-
-    abstract totalNumberOfUncles(): number | Promise<number>;
-
-    abstract latestUncleBlockNumber(): number | Promise<number>;
-
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
     abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
@@ -284,6 +325,14 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
+
+    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
+
+    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
+
+    abstract totalNumberOfUncles(): number | Promise<number>;
+
+    abstract latestUncleBlockNumber(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }

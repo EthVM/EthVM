@@ -11,6 +11,7 @@ import { ContractModule } from '@app/modules/contracts/contract.module'
 import { UncleModule } from '@app/modules/uncles/uncle.module'
 import { TokenModule } from '@app/modules/tokens/token.module'
 import { TransferModule } from '@app/modules/transfers/transfer.module'
+import {BlockMetricsModule} from "@app/modules/block-metrics/block-metrics.module";
 
 @Module({
   imports: [
@@ -26,10 +27,10 @@ import { TransferModule } from '@app/modules/transfers/transfer.module'
     TokenModule,
     TxModule,
     UncleModule,
-    // StatisticModule,
     SearchModule,
     LoggerModule,
     TransferModule,
+    BlockMetricsModule
   ],
 })
 export class AppModule {}

@@ -457,7 +457,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageBlockTime)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
@@ -468,7 +468,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageDifficulty)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
@@ -479,7 +479,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageGasLimit)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
@@ -490,7 +490,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageGasPrice)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageHashRateStats(duration: string): Promise<Statistic[]> {
@@ -501,7 +501,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageHashRate)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
@@ -512,7 +512,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageMinerReward)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
@@ -523,7 +523,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageTxFee)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getFailedTxStats(duration: string): Promise<Statistic[]> {
@@ -534,7 +534,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.totalFailedTxs)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
@@ -545,7 +545,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.totalSuccessfulTxs)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   // ------------------------------------------------------------------------------------
