@@ -96,6 +96,7 @@ export class Block {
     header?: BlockHeader;
     transactions?: Transaction[];
     uncles?: Uncle[];
+    rewards?: Reward[];
 }
 
 export class BlockHeader {
@@ -308,6 +309,13 @@ export class Receipt {
     logsBloom?: string;
     root?: string;
     status?: string;
+}
+
+export class Reward {
+    address?: string;
+    blockHash?: string;
+    deltaType?: DeltaType;
+    amount?: string;
 }
 
 export class Search {

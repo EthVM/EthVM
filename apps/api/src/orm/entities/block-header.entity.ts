@@ -2,6 +2,7 @@ import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { UncleEntity } from '@app/orm/entities/uncle.entity'
+import { BlockRewardEntity } from '@app/orm/entities/block-reward.entity'
 
 @Entity('canonical_block_header')
 export class BlockHeaderEntity {
@@ -77,5 +78,12 @@ export class BlockHeaderEntity {
     referencedColumnName: 'nephewHash',
   })
   uncles?: UncleEntity[]
+
+  @OneToMany(type => BlockRewardEntity, reward => reward.blockHeader)
+  @JoinColumn({
+    name: 'hash',
+    referencedColumnName: 'blockHash',
+  })
+  rewards?: BlockRewardEntity[]
 
 }
