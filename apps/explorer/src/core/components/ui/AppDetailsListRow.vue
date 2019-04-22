@@ -54,12 +54,12 @@
 import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 
 @Component({
   components: {
     AppCopyToClip,
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class AppDetailsListRow extends Vue {

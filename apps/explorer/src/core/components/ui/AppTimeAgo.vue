@@ -15,7 +15,6 @@ Vue.use(VueTimeago, {
   }
 })
 
-
 @Component
 export default class AppTimeAgo extends Vue {
   /*

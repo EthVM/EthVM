@@ -123,10 +123,9 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
-import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
 import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
+import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
 import { TokenExchange } from '@app/modules/tokens/props'
-
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 

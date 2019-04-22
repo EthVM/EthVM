@@ -253,14 +253,14 @@
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { TranslateResult } from 'vue-i18n'
 
 @Component({
   components: {
-    AppTimeAgo,
-    AppHashConcat
+    AppHashConcat,
+    AppTimeAgo
   }
 })
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {

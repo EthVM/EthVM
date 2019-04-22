@@ -97,7 +97,6 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import AppPaginateTwo from '@app/core/components/ui/AppPaginate.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import { Uncle } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
@@ -107,7 +106,6 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
     AppError,
     AppInfoLoad,
     AppPaginate,
-    AppPaginateTwo,
     TableUnclesRow
   }
 })

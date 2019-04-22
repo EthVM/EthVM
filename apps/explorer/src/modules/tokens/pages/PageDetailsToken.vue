@@ -56,10 +56,10 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
-import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
 import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
+import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
+import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Contract, Token, Tx } from '@app/core/models'
@@ -69,10 +69,10 @@ const MAX_ITEMS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    TokenDetailsList,
-    TokenDetailsTabs,
     HolderDetailsList,
-    HolderDetailsTabs
+    HolderDetailsTabs,
+    TokenDetailsList,
+    TokenDetailsTabs
   }
 })
 export default class PageDetailsToken extends Vue {

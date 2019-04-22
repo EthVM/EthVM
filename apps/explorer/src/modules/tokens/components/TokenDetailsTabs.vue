@@ -23,20 +23,20 @@
 </template>
 
 <script lang="ts">
-import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
-import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
+import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
+import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import { Tx } from '@app/core/models'
 import { Tab } from '@app/core/components/props'
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppTabs,
     AppError,
-    TokenTableTransfers,
-    TokenTableHolders
+    AppTabs,
+    TokenTableHolders,
+    TokenTableTransfers
   }
 })
 export default class TokenDetailsTabs extends Vue {

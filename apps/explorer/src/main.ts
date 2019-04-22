@@ -69,8 +69,6 @@ const api = new EthvmApolloApi(apolloClient)
 Vue.use(VueApollo)
 Vue.use(VueEthvmApi, api)
 
-
-
 // -------------------------------------------------------
 //    Vuetify
 // -------------------------------------------------------

@@ -182,15 +182,15 @@
 
 <script lang="ts">
 import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Tx, SimpleTx, EthValue } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
 @Component({
   components: {
-    AppTimeAgo,
-    AppHashConcat
+    AppHashConcat,
+    AppTimeAgo
   }
 })
 export default class TableTxsRow extends Mixins(StringConcatMixin) {

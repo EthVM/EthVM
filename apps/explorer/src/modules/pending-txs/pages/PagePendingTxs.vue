@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Tx, PendingTx } from '@app/core/models'
 import { Crumb } from '@app/core/components/props'

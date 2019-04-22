@@ -97,14 +97,14 @@
 
 <script lang="ts">
 import { Block, Contract, EthValue, SimpleTx, PendingTx, SimpleBlock } from '@app/core/models'
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
-import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
+import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
@@ -117,14 +117,14 @@ const CONTRACT_DETAIL_TYPE = 'contract'
 
 @Component({
   components: {
-    AppInfoLoad,
+    AddressDetail,
     AppBreadCrumbs,
     AppError,
+    AppInfoLoad,
     AppTabs,
-    AddressDetail,
+    TableAddressTokens,
     TableAddressTxs,
-    TableBlocks,
-    TableAddressTokens
+    TableBlocks
   }
 })
 export default class PageDetailsAddress extends Vue {

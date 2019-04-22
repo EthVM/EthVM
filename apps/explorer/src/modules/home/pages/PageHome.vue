@@ -43,8 +43,8 @@
 import { Events } from '@app/core/hub'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
-import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
+import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { SimpleBlock, SimpleTx, Tx } from '@app/core/models'
@@ -75,10 +75,10 @@ export type NewTxsQuery = {
   components: {
     AppBreadCrumbs,
     AppCardStatsGroup,
-    TableBlocks,
-    TableTxs,
+    ChartLiveTxFees,
     ChartLiveTxs,
-    ChartLiveTxFees
+    TableBlocks,
+    TableTxs
   }
 })
 export default class PageHome extends Vue {
