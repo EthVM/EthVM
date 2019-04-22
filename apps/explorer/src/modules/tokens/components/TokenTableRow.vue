@@ -124,7 +124,7 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   }
 
   get tokenLink(): string {
-    return `/token/0x${this.token.address}`
+    return `/token/${this.token.address}`
   }
 }
 </script>

@@ -8,6 +8,8 @@ import { TokenDto } from '@app/modules/tokens/dto/token.dto'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 import { EthplorerTokenInfoDto } from '@app/modules/tokens/dto/ethplorer-token-info.dto'
+import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
+import { QuoteDto } from '@app/modules/tokens/dto/quote.dto'
 
 @Injectable()
 export class TokenService {
@@ -16,6 +18,8 @@ export class TokenService {
     private readonly erc20BalanceRepository: Repository<Erc20BalanceEntity>,
     @InjectRepository(Erc721BalanceEntity)
     private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
+    @InjectRepository(TokenExchangeRateEntity)
+    private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
     private readonly configService: ConfigService,
     private readonly vmEngine: VmEngineService,
   ) {}
@@ -82,5 +86,66 @@ export class TokenService {
     }
 
     return tokens
+  }
+
+  async findQuote(token: string, to: string): Promise<QuoteDto> {
+    const url = this.configService.coinGecko.url
+
+    const res = await axios.get(url)
+
+    if (res.status !== 200) {
+      throw new HttpException(res.statusText, res.status)
+    }
+
+    const { ethereum } = res.data
+
+    return new QuoteDto({
+      to,
+      price: ethereum.usd,
+      vol_24h: ethereum.usd_24h_vol,
+      last_update: ethereum.last_updated_at,
+    })
+  }
+
+  async findTokenExchangeRates(sort: string, take: number = 10, page: number = 0): Promise<TokenExchangeRateEntity[]> {
+    const skip = take * page
+    let order
+    switch (sort) {
+      case 'price_high':
+        order = { currentPrice: -1 }
+        break
+      case 'price_low':
+        order = { currentPrice: 1 }
+        break
+      case 'volume_high':
+        order = { totalVolume: -1 }
+        break
+      case 'volume_low':
+        order = { totalVolume: 1 }
+        break
+      case 'market_cap_high':
+        order = { marketCap: -1 }
+        break
+      case 'market_cap_low':
+        order = { marketCap: 1 }
+        break
+      case 'market_cap_rank':
+      default:
+        order = { marketCapRank: 1 }
+        break
+    }
+    return this.tokenExchangeRateRepository.find({ order, skip, take })
+  }
+
+  async countTokenExchangeRates(): Promise<number> {
+    return this.tokenExchangeRateRepository.count()
+  }
+
+  async findTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRateEntity | undefined> {
+    return this.tokenExchangeRateRepository.findOne({ where: { symbol } })
+  }
+
+  async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | undefined> {
+    return this.tokenExchangeRateRepository.findOne({ where: { address } })
   }
 }

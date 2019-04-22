@@ -8,13 +8,6 @@ import {
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
-import {
-  quote,
-  tokenExchangeRateByAddress,
-  tokenExchangeRateBySymbol,
-  tokenExchangeRates,
-  totalNumTokenExchangeRates
-} from '@app/core/api/apollo/queries/exchanges.graphql'
 import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
@@ -33,7 +26,12 @@ import {
   holderDetails,
   tokenHolders,
   tokenTransfersByContractAddress,
-  tokenTransfersByContractAddressForHolder
+  tokenTransfersByContractAddressForHolder,
+  quote,
+  tokenExchangeRateByAddress,
+  tokenExchangeRateBySymbol,
+  tokenExchangeRates,
+  totalNumTokenExchangeRates
 } from '@app/core/api/apollo/queries/tokens.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'

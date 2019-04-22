@@ -266,16 +266,6 @@ export abstract class IQuery {
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
-    abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
-
-    abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
-
-    abstract totalNumTokenExchangeRates(): number | Promise<number>;
-
-    abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
-    abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
     abstract search(query: string): Search | Promise<Search>;
@@ -311,6 +301,16 @@ export abstract class IQuery {
     abstract addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
+
+    abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
+
+    abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+
+    abstract totalNumTokenExchangeRates(): number | Promise<number>;
+
+    abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
+    abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
@@ -400,24 +400,23 @@ export class Token {
 }
 
 export class TokenExchangeRate {
-    id?: string;
     address?: string;
-    circulatingSupply?: string;
-    currentPrice?: Decimal;
-    high24h?: Decimal;
-    image?: string;
-    lastUpdated?: string;
-    low24h?: Decimal;
-    marketCap?: Decimal;
-    marketCapChange24h?: Decimal;
-    marketCapChangePercentage24h?: Decimal;
-    marketCapRank?: number;
+    symbol?: string;
     name?: string;
+    image?: string;
+    currentPrice?: Decimal;
+    marketCap?: Decimal;
+    marketCapRank?: number;
+    totalVolume?: Decimal;
+    high24h?: Decimal;
+    low24h?: Decimal;
     priceChange24h?: Decimal;
     priceChangePercentage24h?: Decimal;
-    symbol?: string;
+    marketCapChange24h?: Decimal;
+    marketCapChangePercentage24h?: Decimal;
+    circulatingSupply?: string;
     totalSupply?: string;
-    totalVolume?: Decimal;
+    lastUpdated?: string;
     owner?: string;
     holdersCount?: number;
 }

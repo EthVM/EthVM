@@ -5,6 +5,7 @@ import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { VmEngineService } from '@app/shared/vm-engine.service'
 import { TokenHolderDto } from '@app/modules/tokens/dto/token-holder.dto'
+import { TokenExchangeRateDto } from '@app/modules/tokens/dto/token-exchange-rate.dto'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -38,5 +39,38 @@ export class TokenResolvers {
   @Query()
   async addressAmountTokensOwned(@Args('address', ParseAddressPipe) address: string) {
     return this.vmEngine.fetchAddressAmountTokensOwned(address)
+  }
+
+  @Query()
+  async quote(@Args('symbol') symbol: string, @Args('to') to: string) {
+    return await this.tokenService.findQuote(symbol, to)
+  }
+
+  @Query()
+  async tokenExchangeRates(@Args('filter') filter: string, @Args('limit', ParseLimitPipe) limit?: number, @Args('page', ParsePagePipe) page?: number) {
+    const entities = await this.tokenService.findTokenExchangeRates(filter, limit, page)
+    return entities.map(e => new TokenExchangeRateDto(e))
+  }
+
+  @Query()
+  async totalNumTokenExchangeRates() {
+    return await this.tokenService.countTokenExchangeRates()
+  }
+
+  @Query()
+  async tokenExchangeRateBySymbol(@Args('symbol') symbol: string) {
+    const entity = await this.tokenService.findTokenExchangeRateBySymbol(symbol)
+    return entity ? new TokenExchangeRateDto(entity) : null
+  }
+
+  @Query()
+  async tokenExchangeRateByAddress(@Args('address', ParseAddressPipe) address: string) {
+    const entity = await this.tokenService.findTokenExchangeRateByAddress(address)
+    if (!entity) return null
+    // TODO Get missing info (owner, holdersCount) from Ethplorer API ??
+    // const tokenInfo = await this.tokenTransferService.fetchTokenInfo(address)
+    // const combined = { ...entity, ...tokenInfo }
+    // return tokenInfo ? new TokenExchangeRateDto(combined) : null
+    return new TokenExchangeRateDto(entity)
   }
 }
