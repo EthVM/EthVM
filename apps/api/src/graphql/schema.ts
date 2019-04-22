@@ -429,6 +429,7 @@ export class TransfersPage {
 
 export class Uncle {
     hash?: string;
+    index?: number;
     nephewNumber?: string;
     nephewHash?: string;
     number?: string;
