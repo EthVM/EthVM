@@ -229,8 +229,6 @@ export abstract class IQuery {
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
-    abstract search(query: string): Search | Promise<Search>;
-
     abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
     abstract totalSuccessfulTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
@@ -255,6 +253,8 @@ export abstract class IQuery {
 
     abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
+    abstract search(query: string): Search | Promise<Search>;
+
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
@@ -269,14 +269,6 @@ export abstract class IQuery {
 
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
-    abstract tx(hash: string): Transaction | Promise<Transaction>;
-
-    abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
-
-    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
-
-    abstract totalNumberOfTransactions(): number | Promise<number>;
-
     abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
 
     abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
@@ -284,6 +276,14 @@ export abstract class IQuery {
     abstract totalNumberOfUncles(): number | Promise<number>;
 
     abstract latestUncleBlockNumber(): number | Promise<number>;
+
+    abstract tx(hash: string): Transaction | Promise<Transaction>;
+
+    abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
+
+    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
+
+    abstract totalNumberOfTransactions(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
