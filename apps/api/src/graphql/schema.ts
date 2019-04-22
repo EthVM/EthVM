@@ -229,12 +229,6 @@ export class ContractSupport {
     url?: string;
 }
 
-export class EthplorerTokenInfo {
-    address?: string;
-    owner?: string;
-    holdersCount?: number;
-}
-
 export class ProcessingMetadata {
     id?: string;
     boolean?: boolean;
@@ -248,9 +242,9 @@ export class ProcessingMetadata {
 }
 
 export abstract class IQuery {
-    abstract accountByAddress(address: string): Account | Promise<Account>;
-
     abstract blockMetricsByDay(duration: Duration): BlockMetrics[] | Promise<BlockMetrics[]>;
+
+    abstract accountByAddress(address: string): Account | Promise<Account>;
 
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 

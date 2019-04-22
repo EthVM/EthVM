@@ -26,12 +26,6 @@ type TokenHolder {
   balance: String
 }
 
-type EthplorerTokenInfo {
-  address: String
-  owner: String
-  holdersCount: Int
-}
-
 type TokenExchangeRate {
   address: String
   symbol: String

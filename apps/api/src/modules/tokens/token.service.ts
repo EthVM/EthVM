@@ -7,7 +7,6 @@ import { VmEngineService } from '@app/shared/vm-engine.service'
 import { TokenDto } from '@app/modules/tokens/dto/token.dto'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
-import { EthplorerTokenInfoDto } from '@app/modules/tokens/dto/ethplorer-token-info.dto'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { QuoteDto } from '@app/modules/tokens/dto/quote.dto'
 
@@ -46,43 +45,12 @@ export class TokenService {
 
   }
 
-  async fetchTokenInfo(address: string): Promise<EthplorerTokenInfoDto | null> {
-    address = `0x${address}`
-
-    const baseUrl = this.configService.ethplorer.url
-    const apiKey = this.configService.ethplorer.apiKey
-    const url = `${baseUrl}getTokenInfo/${address}?apiKey=${apiKey}`
-
-    let res
-
-    try {
-      res = await axios.get(url)
-    } catch (err) {
-      this.handleEthplorerError(err)
-    }
-
-    if (res.status !== 200) {
-      throw new HttpException(res.statusText, res.status)
-    }
-
-    const { data } = res
-    return data ? new EthplorerTokenInfoDto(data) : null
-  }
-
-  private handleEthplorerError(err) {
-    if (err.response.data && err.response.data.error) {
-      throw new HttpException(err.response.data.error.message, err.response.status)
-    }
-    throw err
-  }
-
   async findAddressAllTokensOwned(address: string): Promise<TokenDto[]> {
     const tokens = await this.vmEngine.fetchAddressAllTokensOwned(address)
 
     for await (const token of tokens) {
-      // TODO re-enable
-      const rate = {currentPrice: 0} // await this.exchangeService.findTokenExchangeRateByAddress(token.addr!!.replace('0x', ''))
-      token.currentPrice = rate ? rate.currentPrice : 0
+      const rate = await this.findTokenExchangeRateByAddress(token.addr!!.replace('0x', ''))
+      token.currentPrice = rate && rate.currentPrice ? +rate.currentPrice : 0
     }
 
     return tokens
