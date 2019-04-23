@@ -76,22 +76,6 @@ export class AddressBalance {
     balance?: Decimal;
 }
 
-export class AggregateBlockMetric {
-    id?: AggregateBlockMetricKey;
-    bigInteger?: string;
-    date?: Long;
-    double?: number;
-    float?: number;
-    int?: number;
-    long?: number;
-    name?: string;
-}
-
-export class AggregateBlockMetricKey {
-    date?: Long;
-    name?: string;
-}
-
 export class Block {
     header?: BlockHeader;
     transactions?: Transaction[];
@@ -229,18 +213,6 @@ export class ContractSupport {
     url?: string;
 }
 
-export class ProcessingMetadata {
-    id?: string;
-    boolean?: boolean;
-    bigInteger?: string;
-    double?: Decimal;
-    float?: Decimal;
-    int?: number;
-    long?: number;
-    name?: string;
-    string?: string;
-}
-
 export abstract class IQuery {
     abstract accountByAddress(address: string): Account | Promise<Account>;
 
@@ -260,33 +232,7 @@ export abstract class IQuery {
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
-    abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
-
     abstract search(query: string): Search | Promise<Search>;
-
-    abstract totalTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract totalSuccessfulTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract averageDifficulty(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract totalFailedTxs(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract totalGasPrice(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract averageGasLimit(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract averageGasPrice(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract totalTxsFees(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract averageTxFee(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract averageMinerReward(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract averageBlockTime(duration: Duration): Statistic[] | Promise<Statistic[]>;
-
-    abstract averageHashRate(duration: Duration): Statistic[] | Promise<Statistic[]>;
 
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
@@ -369,15 +315,8 @@ export class Search {
     tx?: Transaction;
 }
 
-export class Statistic {
-    date?: Long;
-    value?: StatisticValue;
-}
-
 export abstract class ISubscription {
     abstract newBlock(): Block | Promise<Block>;
-
-    abstract newProcessingMetadata(): ProcessingMetadata | Promise<ProcessingMetadata>;
 
     abstract newTxs(): Transaction[] | Promise<Transaction[]>;
 }
