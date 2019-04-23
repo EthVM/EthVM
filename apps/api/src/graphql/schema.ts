@@ -214,9 +214,9 @@ export class ContractSupport {
 }
 
 export abstract class IQuery {
-    abstract blockMetricsByDay(duration: Duration): BlockMetrics[] | Promise<BlockMetrics[]>;
-
     abstract accountByAddress(address: string): Account | Promise<Account>;
+
+    abstract blockMetricsByDay(duration: Duration, fields?: string[]): BlockMetrics[] | Promise<BlockMetrics[]>;
 
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 
@@ -228,11 +228,11 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
+    abstract search(query: string): Search | Promise<Search>;
+
     abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
-
-    abstract search(query: string): Search | Promise<Search>;
 
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 

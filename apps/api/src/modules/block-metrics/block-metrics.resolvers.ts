@@ -9,9 +9,9 @@ export class BlockMetricsResolvers {
               private readonly durationService: DurationService) {}
 
   @Query()
-  async blockMetricsByDay(@Args('duration') duration: Duration): Promise<BlockMetricsDto[]> {
+  async blockMetricsByDay(@Args('duration') duration: Duration, @Args('fields') fields: string[]): Promise<BlockMetricsDto[]> {
     const { from, to } = this.durationService.durationToDates(duration)
-    const entities = await this.blockMetricsService.findBlockMetricsDaily(from, to)
+    const entities = await this.blockMetricsService.findBlockMetricsDaily(from, to, fields)
     return entities.map(e => new BlockMetricsDto(e))
   }
 

@@ -10,7 +10,7 @@ export class BlockMetricsService {
               private readonly blockMetricsDailyRepository: Repository<BlockMetricsDailyEntity>,) {
   }
 
-  async findBlockMetricsDaily(start: Date, end: Date): Promise<BlockMetricsDailyEntity[]> {
+  async findBlockMetricsDaily(start: Date, end: Date, fields?: string[]): Promise<BlockMetricsDailyEntity[]> {
 
     const startSeconds = Math.ceil(start.getTime() / 1000)
     const endSeconds = Math.floor(end.getTime() / 1000)
@@ -21,6 +21,11 @@ export class BlockMetricsService {
         timestamp: Between(startSeconds, endSeconds)
       },
       order: { timestamp: -1 }
+    }
+
+    if (fields) {
+      if (fields.indexOf('timestamp') < 0) { fields.push('timestamp')  } // Ensure timestamp is always retrieved
+      findOptions.select = fields as any
     }
 
     const result = await this.blockMetricsDailyRepository.find(findOptions)
