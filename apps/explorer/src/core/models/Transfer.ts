@@ -1,7 +1,7 @@
 export interface Transfer {
   from: string
   to: string
-  amount: string
+  value: string
   timestamp: number
   contract: string
   deltaType: string

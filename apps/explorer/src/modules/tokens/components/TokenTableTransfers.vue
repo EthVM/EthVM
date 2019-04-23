@@ -67,7 +67,7 @@
 
         <!-- Column 3 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ tx.value }}</p>
+          <p>{{ calculateTransferValue(tx) }}</p>
         </v-flex>
         <!-- End Column 3 -->
 
@@ -87,13 +87,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import { Tx } from '@app/core/models'
-import BN from 'bignumber.js'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+  import { Component, Vue, Prop } from 'vue-property-decorator'
+  import BN from 'bignumber.js'
+  import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+  import { Transfer } from "@app/core/models"
 
-const MAX_ITEMS = 10
+  const MAX_ITEMS = 10
 
 @Component({
   components: {
@@ -113,6 +113,7 @@ export default class TokenTableTransfers extends Vue {
   @Prop(Number) page
   @Prop(Boolean) loading
   @Prop(Boolean) showType
+  @Prop(String) decimals
 
   /*
   ===================================================================================
@@ -127,6 +128,17 @@ export default class TokenTableTransfers extends Vue {
 
   setPage(page: number): void {
     this.$emit('page', page)
+  }
+
+  calculateTransferValue(transfer: Transfer) {
+    if (this.decimals) {
+      const n = new BN(transfer.value)
+      return n
+        .div(new BN(10).pow(this.decimals))
+        .toFixed()
+        .toString()
+    }
+    return transfer.value
   }
 
   /*

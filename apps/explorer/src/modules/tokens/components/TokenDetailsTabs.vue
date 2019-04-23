@@ -14,6 +14,7 @@
         :loading="isTokenTransfersLoading"
         :error="errorTokenTransfers"
         :page="transfersPage"
+        :decimals="decimals"
         @page="setPageTransfers"
       />
     </v-tab-item>
@@ -24,7 +25,7 @@
     -->
     <v-tab-item slot="tabs-item" value="tab-1">
       <v-progress-linear color="blue" indeterminate v-if="isTokenHoldersLoading" class="mt-0" />
-      <token-table-holders v-if="!isTokenHoldersLoading" :holders="tokenHolders" :address-ref="addressRef" :total-supply="totalSupply" />
+      <token-table-holders v-if="!isTokenHoldersLoading" :holders="tokenHolders" :address-ref="addressRef" :total-supply="totalSupply" :decimals="decimals" />
     </v-tab-item>
   </app-tabs>
 </template>
@@ -63,6 +64,7 @@ export default class TokenDetailsTabs extends Vue {
   @Prop(Boolean) isTokenHoldersLoading!: boolean
   @Prop(String) errorTokenTransfers!: string
   @Prop(String) errorTokenHolders!: string
+  @Prop(String) decimals?: string
 
   /*
  ===================================================================================
