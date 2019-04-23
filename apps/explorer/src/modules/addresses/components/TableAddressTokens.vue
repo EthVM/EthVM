@@ -82,10 +82,10 @@
       <v-card v-if="totalTokens === 0" flat>
         <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
       </v-card>
-      <div v-if="totalTokens > 0" v-for="(token, index) in tokensPage" :key="index">
+      <div v-else-if="totalTokens > 0" v-for="(token, index) in tokensPage" :key="index">
         <table-address-tokens-row :token="token" :holder="holder" />
       </div>
-      <v-layout v-if="totalTokens > 0" justify-end row class="pb-1 pr-2 pl-2">
+      <v-layout v-else-if="totalTokens > 0" justify-end row class="pb-1 pr-2 pl-2">
         <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
       </v-layout>
     </div>

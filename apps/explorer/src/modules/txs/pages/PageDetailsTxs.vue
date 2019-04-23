@@ -1,9 +1,15 @@
 <template>
   <v-container grid-list-lg class="mb-0">
-    <app-bread-crumbs :new-items="crumbs" />
+    <app-bread-crumbs :new-items="crumbs"/>
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :error="error" :max-items="7" />
+        <app-details-list
+          :title="title"
+          :details="txDetails"
+          :is-loading="isLoading"
+          :error="error"
+          :max-items="7"
+        />
       </v-flex>
     </v-layout>
   </v-container>
@@ -321,7 +327,9 @@ export default class PageDetailsTxs extends Vue {
         }
         return this.txInput
       }
-    } else {
+    }
+
+    else {
       return this.txInput
     }
   }

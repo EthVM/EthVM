@@ -10,7 +10,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export default class AppHashConcat extends Vue {
+export default class AppTransformHash extends Vue {
   /*
   ===================================================================================
     Props

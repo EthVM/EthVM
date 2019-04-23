@@ -24,13 +24,13 @@
               <p class="info--text psmall">{{ $t('common.hash') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-hash-concat :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
+              <app-transform-hash :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall pr-1">{{ $t('miner.name') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
+              <app-transform-hash :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
@@ -62,11 +62,11 @@
           <v-flex sm6>
             <v-layout row pb-2>
               <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-              <app-hash-concat :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
+              <app-transform-hash :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
             </v-layout>
             <v-layout row>
               <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
-              <app-hash-concat :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
+              <app-transform-hash :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
             </v-layout>
           </v-flex>
           <v-spacer hidden-xl-only />
@@ -94,7 +94,7 @@
                   <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
                   <v-layout row pl-4 pr-4 pb-2 v-for="(uncle, index) in block.getUncles()" :key="index">
                     <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-                    <app-hash-concat :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
+                    <app-transform-hash :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
                   </v-layout>
                 </v-card>
               </div>
@@ -109,14 +109,14 @@
 </template>
 
 <script lang="ts">
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTransformHash  from '@app/core/components/ui/AppTransformHash.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Block, SimpleBlock, Tx, SimpleTx } from '@app/core/models'
 
 @Component({
   components: {
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class TableBlocksRow extends Mixins(StringConcatMixin) {

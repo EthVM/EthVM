@@ -25,7 +25,7 @@
                 <v-list-tile v-for="(uncle, index) in uncles" :key="index">
                   <v-layout row justify-start align-center fill-height>
                     <v-card-title class="info--text p-0">{{ $t('common.hash') }}:</v-card-title>
-                    <app-hash-concat :hash="uncle" :link="`/uncle/${uncle}`" />
+                    <app-transform-hash :hash="uncle" :link="`/uncle/${uncle}`" />
                   </v-layout>
                 </v-list-tile>
               </v-list>
@@ -44,12 +44,12 @@
 </template>
 
 <script lang="ts">
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTransformHash  from '@app/core/components/ui/AppTransformHash.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class BlockDetailsTitle extends Vue {

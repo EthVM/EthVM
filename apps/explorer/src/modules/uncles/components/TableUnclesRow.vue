@@ -23,7 +23,7 @@
                   <p class="info--text psmall">{{ $t('common.hash') }}:</p>
                 </v-flex>
                 <v-flex xs10>
-                  <app-hash-concat :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
+                  <app-transform-hash :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -33,7 +33,7 @@
                   <p class="info--text psmall">{{ $t('miner.name') }}:</p>
                 </v-flex>
                 <v-flex xs10>
-                  <app-hash-concat :hash="uncle.getMiner().toString()" :link="`/address/${uncle.getMiner().toString()}`" />
+                  <app-transform-hash :hash="uncle.getMiner().toString()" :link="`/address/${uncle.getMiner().toString()}`" />
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -64,11 +64,11 @@
           <v-flex xs12 sm5 md5 order-xs3 order-sm2>
             <v-layout row pl-2 pt-2 pr-3 pb-0>
               <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-              <app-hash-concat :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
+              <app-transform-hash :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
             </v-layout>
             <v-layout row pl-2 pt-2 pr-3 pb-2>
               <p class="info--text psmall pr-2">{{ $tc('miner.name', 1) }}:</p>
-              <app-hash-concat :hash="uncle.getMiner().toString()" :link="`/address/${uncle.getMiner().toString()}`" />
+              <app-transform-hash :hash="uncle.getMiner().toString()" :link="`/address/${uncle.getMiner().toString()}`" />
             </v-layout>
           </v-flex>
           <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
@@ -96,11 +96,11 @@
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Uncle } from '@app/core/models'
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 
 @Component({
   components: {
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class TableUnclesRow extends Mixins(StringConcatMixin) {
