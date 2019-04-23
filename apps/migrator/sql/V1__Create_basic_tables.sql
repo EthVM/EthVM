@@ -21,7 +21,7 @@ BEGIN
       table_name = TG_TABLE_NAME;
   END IF;
 
-  payload = json_build_object('table', table_name, 'action', TG_OP, 'id', TG_RELID);
+  payload = json_build_object('table', table_name, 'action', TG_OP, 'data', row_to_json(record));
 
   PERFORM pg_notify('events', payload::text);
 
@@ -233,10 +233,6 @@ CREATE TABLE contract
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
-
-CREATE TRIGGER notify_contract
-  AFTER INSERT OR UPDATE OR DELETE ON contract
-  FOR EACH ROW EXECUTE PROCEDURE notify_event();
 
 CREATE VIEW canonical_contract AS
 SELECT c.*
