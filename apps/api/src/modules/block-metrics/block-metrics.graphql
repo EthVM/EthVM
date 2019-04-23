@@ -1,5 +1,5 @@
 type Query {
-  blockMetricsByDay(duration: Duration!): [BlockMetrics]
+  blockMetricsByDay(duration: Duration!, fields: [String]): [BlockMetrics]
 }
 
 type BlockMetrics {

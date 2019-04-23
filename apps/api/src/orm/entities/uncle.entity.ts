@@ -73,6 +73,9 @@ export class UncleEntity {
   @Column({type: 'bigint', readonly: true})
   size!: string
 
+  @Column({type: 'numeric', readonly: true})
+  rewardAmount?: string
+
   @ManyToOne(type => BlockHeaderEntity, block => block.uncles)
   @JoinColumn({
     name: 'nephewHash',

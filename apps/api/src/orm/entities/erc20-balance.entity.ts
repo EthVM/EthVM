@@ -1,5 +1,7 @@
-import {Column, Entity, PrimaryColumn} from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
+import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
 
 @Entity('canonical_erc20_balance')
 export class Erc20BalanceEntity {
@@ -16,5 +18,19 @@ export class Erc20BalanceEntity {
 
   @Column({type: 'numeric', readonly: true})
   amount!: string
+
+  @ManyToOne(type => TokenExchangeRateEntity, ter => ter.erc20Balances)
+  @JoinColumn({
+    name: 'contract',
+    referencedColumnName: 'address',
+  })
+  tokenExchangeRate?: TokenExchangeRateEntity
+
+  @ManyToOne(type => Erc20MetadataEntity, metadata => metadata.balances)
+  @JoinColumn({
+    name: 'contract',
+    referencedColumnName: 'address',
+  })
+  metadata?: Erc20MetadataEntity
 
 }

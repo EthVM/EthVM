@@ -1,5 +1,5 @@
 import {assignClean} from '@app/shared/utils'
-import {BlockMetrics} from "@app/graphql/schema";
+import {BlockMetrics} from '@app/graphql/schema';
 
 export class BlockMetricsDto extends BlockMetrics {
 

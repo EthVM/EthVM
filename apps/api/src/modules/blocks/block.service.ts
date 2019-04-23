@@ -85,7 +85,7 @@ export class BlockService {
       take: limit,
       skip,
       order: { number: 'DESC' },
-      relations: ['rewards']
+      relations: ['rewards'],
     })
     return this.findAndMapTxsAndUncles(blocks)
   }

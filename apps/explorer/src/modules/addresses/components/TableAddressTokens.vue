@@ -198,11 +198,17 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get getTotalMonetaryValue(): string {
-    if (!this.tokens || this.tokens.length === 0) {
+    if (!(this.tokens && this.tokens.length)) {
       return '0'
     }
 
-    const amount = this.tokens
+    const tokensWithPriceInfo = this.tokens.filter(token => token.balance && token.currentPrice)
+    if (!tokensWithPriceInfo.length) {
+      return '0'
+    }
+
+    const amount = tokensWithPriceInfo
+      .filter(token => !!token.balance)
       .map(token => this.getBalance(token.balance, token.decimals).multipliedBy(new BN(token.currentPrice)))
       .reduceRight((acc, val) => acc.plus(val))
       .toFixed()

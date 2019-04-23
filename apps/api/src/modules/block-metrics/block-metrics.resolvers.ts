@@ -1,7 +1,7 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
-import {BlockMetricsService} from "@app/modules/block-metrics/block-metrics.service";
-import {Duration, DurationService} from "@app/shared/duration.service";
-import {BlockMetricsDto} from "@app/modules/block-metrics/block-metrics.dto";
+import {BlockMetricsService} from '@app/modules/block-metrics/block-metrics.service';
+import {Duration, DurationService} from '@app/shared/duration.service';
+import {BlockMetricsDto} from '@app/modules/block-metrics/block-metrics.dto';
 
 @Resolver('BlockMetric')
 export class BlockMetricsResolvers {
@@ -9,9 +9,9 @@ export class BlockMetricsResolvers {
               private readonly durationService: DurationService) {}
 
   @Query()
-  async blockMetricsByDay(@Args('duration') duration: Duration): Promise<BlockMetricsDto[]> {
+  async blockMetricsByDay(@Args('duration') duration: Duration, @Args('fields') fields: string[]): Promise<BlockMetricsDto[]> {
     const { from, to } = this.durationService.durationToDates(duration)
-    const entities = await this.blockMetricsService.findBlockMetricsDaily(from, to)
+    const entities = await this.blockMetricsService.findBlockMetricsDaily(from, to, fields)
     return entities.map(e => new BlockMetricsDto(e))
   }
 

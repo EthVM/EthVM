@@ -24,6 +24,7 @@
         :transfers-page="transfersPage"
         :token-holders="tokenHolders"
         :total-supply="contractDetails.totalSupply"
+        :decimals="decimals"
         :is-token-transfers-loading="isTokenTransfersLoading"
         :is-token-holders-loading="isTokenHoldersLoading"
         :error-token-transfers="errorTokenTransfersTab"
@@ -53,6 +54,7 @@
         :holder-transfers="holderTransfers"
         :is-holder-transfers-loading="isHolderTransfersLoading"
         :error-holder-transfers="errorHolderTransfers"
+        :decimals="decimals"
       />
     </div>
   </v-container>
@@ -108,6 +110,7 @@ export default class PageDetailsToken extends Vue {
   errorTokenDetailsList = '' // Error string pertaining to the TokenDetailsList component
   errorTokenTransfersTab = '' // Error string pertaining to the TokenDetailsTabs -> Transfers component
   errorTokenHoldersTab = '' // Error string pertaining to the TokenDetailsTabs -> Holders component
+  decimals: string = '' // Decimals field from token metadata
 
   // Holder //
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
@@ -200,6 +203,9 @@ export default class PageDetailsToken extends Vue {
         .then(([contractDetails, tokenDetails]) => {
           this.contractDetails = contractDetails as any
           this.tokenDetails = tokenDetails as any
+          if (this.contractDetails && this.contractDetails.erc20Metadata) {
+            this.decimals = this.contractDetails.erc20Metadata.decimals
+          }
           resolve()
         })
         .catch(e => {
@@ -321,7 +327,20 @@ export default class PageDetailsToken extends Vue {
    * @return {Object} - Contract details and metadata
    */
   fetchContractDetails(): Promise<any> {
-    return this.$api.getContract(this.addressRef)
+    return new Promise((resolve, reject) => {
+      this.$api
+        .getContract(this.addressRef)
+        .then(response => {
+          if (response === null) {
+            reject(this.$i18n.t('message.invalid.addr').toString())
+          } else {
+            resolve(response)
+          }
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
   }
 
   /**

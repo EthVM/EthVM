@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
+import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 
 @Entity('token_exchange_rates')
 export class TokenExchangeRateEntity {
@@ -58,4 +60,18 @@ export class TokenExchangeRateEntity {
 
   @Column({type: 'bigint', readonly: true})
   lastUpdated?: string
+
+  @OneToMany(type => Erc20BalanceEntity, erc20 => erc20.tokenExchangeRate)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'contract',
+  })
+  erc20Balances?: Erc20BalanceEntity[]
+
+  @OneToMany(type => Erc721BalanceEntity, erc721 => erc721.tokenExchangeRate)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'contract',
+  })
+  erc721Balances?: Erc721BalanceEntity[]
 }

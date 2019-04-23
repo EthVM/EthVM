@@ -11,7 +11,6 @@ query uncleByHash($hash: String!) {
     timestamp
     nephewNumber
     uncleIndex: index
-    # uncleReward
   }
 }
 
@@ -23,7 +22,7 @@ query uncles($limit: Int, $page: Int, $fromUncle: Int) {
     number
     nephewNumber
     uncleIndex: index
-    # uncleReward
+    uncleReward: rewardAmount
   }
 }
 
