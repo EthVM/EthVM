@@ -1,35 +1,7 @@
 
-/* General notification trigger */
-
-CREATE FUNCTION notify_event() RETURNS TRIGGER AS
-$body$
-DECLARE
-  record  RECORD;
-  payload JSON;
-  table_name TEXT;
-BEGIN
-
-  IF (TG_OP = 'DELETE') THEN
-    record = OLD;
-  ELSE
-    record = NEW;
-  END IF;
-
-  if (TG_NARGS = 1) THEN
-      table_name = TG_ARGV[0];
-  ELSE
-      table_name = TG_TABLE_NAME;
-  END IF;
-
-  payload = json_build_object('table', table_name, 'action', TG_OP, 'data', row_to_json(record));
-
-  PERFORM pg_notify('events', payload::text);
-
-  RETURN NULL;
-END;
-$body$ LANGUAGE plpgsql;
 
 /* Canonical blocks table which is updated on fork */
+
 CREATE TABLE canonical_block_header
 (
   number            NUMERIC PRIMARY KEY,
@@ -66,9 +38,34 @@ FROM canonical_block_header AS cb
 GROUP BY cb.author
 ORDER BY count DESC;
 
+CREATE OR REPLACE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload := json_build_object(
+      'table', 'canonical_block_header',
+      'action', TG_OP,
+      'payload', json_build_object('hash', record.hash, 'number', record.number)
+    );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
 CREATE TRIGGER notify_canonical_block_header
 AFTER INSERT OR UPDATE OR DELETE ON canonical_block_header
-FOR EACH ROW EXECUTE PROCEDURE notify_event();
+FOR EACH ROW EXECUTE PROCEDURE notify_canonical_block_header();
 
 CREATE TABLE uncle
 (
@@ -126,9 +123,34 @@ CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
+CREATE FUNCTION notify_transaction() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload = json_build_object(
+    'table', 'transaction',
+    'action', TG_OP,
+    'id', json_build_object('hash', record.hash)
+  );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
 CREATE TRIGGER notify_transaction
 AFTER INSERT OR UPDATE OR DELETE ON "transaction"
-FOR EACH ROW EXECUTE PROCEDURE notify_event();
+FOR EACH ROW EXECUTE PROCEDURE notify_transaction();
 
 /* This view helps to filter out non-canonical transactions based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction AS
@@ -163,10 +185,6 @@ CREATE INDEX idx_transaction_receipt_from ON transaction_receipt ("from");
 CREATE INDEX idx_transaction_receipt_to ON transaction_receipt ("to");
 CREATE INDEX idx_transaction_receipt_from_to ON transaction_receipt ("from", "to");
 CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("contract_address");
-
-CREATE TRIGGER notify_transaction_receipt
-  AFTER INSERT OR UPDATE OR DELETE ON transaction_receipt
-  FOR EACH ROW EXECUTE PROCEDURE notify_event();
 
 /* This view helps to filter out non canonical receipts based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_receipt AS
@@ -233,6 +251,35 @@ CREATE TABLE contract
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
+
+CREATE FUNCTION notify_contract() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record = OLD;
+  ELSE
+    record = NEW;
+  END IF;
+
+  payload = json_build_object(
+    'table', 'contract',
+    'action', TG_OP,
+    'id', json_build_object('address', record.address)
+  );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_contract
+  AFTER INSERT OR UPDATE OR DELETE ON "contract"
+  FOR EACH ROW EXECUTE PROCEDURE notify_contract();
 
 CREATE VIEW canonical_contract AS
 SELECT c.*
@@ -503,10 +550,6 @@ CREATE TABLE token_exchange_rates
   last_updated                    BIGINT      NULL
 );
 
-CREATE TRIGGER notify_token_exchange_rates
-  AFTER INSERT OR UPDATE OR DELETE ON token_exchange_rates
-  FOR EACH ROW EXECUTE PROCEDURE notify_event();
-
 /* metrics hyper tables */
 CREATE TABLE block_metrics_header
 (
@@ -520,10 +563,6 @@ CREATE TABLE block_metrics_header
   UNIQUE (block_hash, timestamp)
 );
 
-CREATE TRIGGER notify_block_metrics_header
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_header
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_header');
-
 CREATE TABLE block_metrics_transaction
 (
   block_number    NUMERIC  NOT NULL,
@@ -534,10 +573,6 @@ CREATE TABLE block_metrics_transaction
   avg_gas_price   NUMERIC  NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
-
-CREATE TRIGGER notify_block_metrics_transaction
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction');
 
 CREATE TABLE block_metrics_transaction_trace
 (
@@ -551,10 +586,6 @@ CREATE TABLE block_metrics_transaction_trace
   UNIQUE (block_hash, timestamp)
 );
 
-CREATE TRIGGER notify_block_metrics_transaction_trace
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction_trace
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction_trace');
-
 CREATE TABLE block_metrics_transaction_fee
 (
   block_number  NUMERIC  NOT NULL,
@@ -565,10 +596,6 @@ CREATE TABLE block_metrics_transaction_fee
   UNIQUE (block_hash, timestamp)
 );
 
-
-CREATE TRIGGER notify_block_metrics_transaction_fee
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction_fee
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction_fee');
 
 /* 1 day chunks */
 SELECT create_hypertable('block_metrics_header',
