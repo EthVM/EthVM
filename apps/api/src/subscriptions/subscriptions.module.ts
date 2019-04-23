@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common'
-import { PubSub } from 'graphql-subscriptions'
-import { MongoSubscriptionService } from '@app/subscriptions/mongo-subscription.service'
+import { Module } from '@nestjs/common';
+import { PubSub } from 'graphql-subscriptions';
+import { PgSubscriptionService } from './pg-subscription.service';
 
 const pubSubProvider = {
   provide: 'PUB_SUB',
@@ -9,7 +9,7 @@ const pubSubProvider = {
 
 @Module({
   imports: [],
-  providers: [pubSubProvider, MongoSubscriptionService],
+  providers: [pubSubProvider, PgSubscriptionService],
   exports: [pubSubProvider],
 })
-export class SubscriptionsModule {}
+export class SubscriptionsModule { }

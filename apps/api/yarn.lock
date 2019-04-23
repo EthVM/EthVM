@@ -5951,10 +5951,24 @@ pg-connection-string@0.1.3:
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-0.1.3.tgz#da1847b20940e42ee1492beaf65d49d91b245df7"
   integrity sha1-2hhHsglA5C7hSSvq9l1J2RskXfc=
 
+pg-format@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/pg-format/-/pg-format-1.0.4.tgz#27734236c2ad3f4e5064915a59334e20040a828e"
+  integrity sha1-J3NCNsKtP05QZJFaWTNOIAQKgo4=
+
 pg-int8@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pg-int8/-/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
   integrity sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==
+
+pg-listen@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/pg-listen/-/pg-listen-1.2.0.tgz#8219c3974ad70aa73c703c36ee5ed3df58ad8cdd"
+  integrity sha512-9NwwGEvFeEzhGopn8SCtw28NQl5rxNGB3Y7tjbYuMURFg6bVwykhF7tEZ6PVrxuFUbnTTadfm1jslsrlk2fGLA==
+  dependencies:
+    debug "^4.1.1"
+    pg-format "^1.0.4"
+    typed-emitter "^0.1.0"
 
 pg-pool@^2.0.4:
   version "2.0.6"
@@ -7531,6 +7545,11 @@ type-is@^1.6.16, type-is@^1.6.4, type-is@~1.6.16:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.18"
+
+typed-emitter@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/typed-emitter/-/typed-emitter-0.1.0.tgz#ca532f100ccbf850e3a73b8ebf43d43e4f1f3849"
+  integrity sha512-Tfay0l6gJMP5rkil8CzGbLthukn+9BN/VXWcABVFPjOoelJ+koW8BuPZYk+h/L+lEeIp1fSzVRiWRPIjKVjPdg==
 
 typedarray@^0.0.6:
   version "0.0.6"
