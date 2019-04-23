@@ -65,12 +65,10 @@ export class TokenResolvers {
 
   @Query()
   async tokenExchangeRateByAddress(@Args('address', ParseAddressPipe) address: string) {
-    const entity = await this.tokenService.findTokenExchangeRateByAddress(address)
-    if (!entity) return null
-    // TODO Get missing info (owner, holdersCount) from Ethplorer API ??
-    // const tokenInfo = await this.tokenTransferService.fetchTokenInfo(address)
-    // const combined = { ...entity, ...tokenInfo }
-    // return tokenInfo ? new TokenExchangeRateDto(combined) : null
-    return new TokenExchangeRateDto(entity)
+    const tokenExchangeRate = await this.tokenService.findTokenExchangeRateByAddress(address)
+    if (!tokenExchangeRate) return null
+    const contract = await this.tokenService.findContractInfoForToken(address)
+    const holdersCount = await this.tokenService.countTokenHolders(address)
+    return new TokenExchangeRateDto({ ...tokenExchangeRate, owner: contract? contract.creator : null, holdersCount })
   }
 }

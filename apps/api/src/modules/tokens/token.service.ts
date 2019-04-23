@@ -9,6 +9,7 @@ import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { QuoteDto } from '@app/modules/tokens/dto/quote.dto'
+import { ContractEntity } from '@app/orm/entities/contract.entity'
 
 @Injectable()
 export class TokenService {
@@ -19,6 +20,8 @@ export class TokenService {
     private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
     @InjectRepository(TokenExchangeRateEntity)
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
+    @InjectRepository(ContractEntity)
+    private readonly contractRepository: Repository<ContractEntity>,
     private readonly configService: ConfigService,
     private readonly vmEngine: VmEngineService,
   ) {}
@@ -115,5 +118,17 @@ export class TokenService {
 
   async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | undefined> {
     return this.tokenExchangeRateRepository.findOne({ where: { address } })
+  }
+
+  async findContractInfoForToken(address: string): Promise<ContractEntity | undefined> {
+    return this.contractRepository.findOne({ where: { address }, select: ['address', 'creator'] })
+  }
+
+  async countTokenHolders(address: string): Promise<number> {
+    let numHolders = await this.erc20BalanceRepository.count({ where: { contract: address }})
+    if (!numHolders || numHolders === 0) {
+      numHolders = await this.erc721BalanceRepository.count({ where: { contract: address }})
+    }
+    return numHolders
   }
 }
