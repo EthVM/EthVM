@@ -3,13 +3,12 @@ import { TokenService } from '@app/modules/tokens/token.service'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { VmEngineService } from '@app/shared/vm-engine.service'
 import { TokenHolderDto } from '@app/modules/tokens/dto/token-holder.dto'
 import { TokenExchangeRateDto } from '@app/modules/tokens/dto/token-exchange-rate.dto'
 
 @Resolver('Token')
 export class TokenResolvers {
-  constructor(private readonly tokenService: TokenService, private readonly vmEngine: VmEngineService) {
+  constructor(private readonly tokenService: TokenService) {
   }
 
   @Query()
@@ -38,7 +37,7 @@ export class TokenResolvers {
 
   @Query()
   async addressAmountTokensOwned(@Args('address', ParseAddressPipe) address: string) {
-    return this.vmEngine.fetchAddressAmountTokensOwned(address)
+    return this.tokenService.countTokensByHolderAddress(address)
   }
 
   @Query()

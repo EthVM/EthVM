@@ -1,6 +1,8 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
+import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
+import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 
 @Entity('erc721_metadata')
 export class Erc721MetadataEntity {
@@ -24,5 +26,12 @@ export class Erc721MetadataEntity {
     referencedColumnName: 'address',
   })
   contract?: ContractEntity
+
+  @OneToMany(type => Erc721BalanceEntity, erc721 => erc721.metadata)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'contract',
+  })
+  balances?: Erc721BalanceEntity[]
 
 }

@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
+import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 
 @Entity('erc20_metadata')
 export class Erc20MetadataEntity {
@@ -19,7 +20,7 @@ export class Erc20MetadataEntity {
   symbol?: string
 
   @Column({type: 'integer', readonly: true})
-  decimals?: string
+  decimals?: number
 
   @Column({type: 'numeric', readonly: true})
   totalSupply?: string
@@ -30,5 +31,12 @@ export class Erc20MetadataEntity {
     referencedColumnName: 'address',
   })
   contract?: ContractEntity
+
+  @OneToMany(type => Erc20BalanceEntity, erc20 => erc20.metadata)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'contract',
+  })
+  balances?: Erc20BalanceEntity[]
 
 }

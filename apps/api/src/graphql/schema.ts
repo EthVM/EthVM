@@ -326,10 +326,10 @@ export class Token {
     website?: string;
     email?: string;
     symbol?: string;
-    addr?: string;
+    address?: string;
     decimals?: number;
     balance?: string;
-    currentPrice?: number;
+    currentPrice?: string;
 }
 
 export class TokenExchangeRate {

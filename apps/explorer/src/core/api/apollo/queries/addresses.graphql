@@ -2,7 +2,7 @@ query addressAllTokensOwned($address: String!) {
   addressAllTokensOwned(address: $address) {
     name
     symbol
-    addr
+    address
     decimals
     balance
     currentPrice

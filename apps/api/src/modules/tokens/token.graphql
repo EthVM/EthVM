@@ -15,10 +15,10 @@ type Token {
   website: String
   email: String
   symbol: String
-  addr: String
+  address: String
   decimals: Int
   balance: String
-  currentPrice: Float
+  currentPrice: String
 }
 
 type TokenHolder {

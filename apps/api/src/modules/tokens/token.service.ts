@@ -3,7 +3,6 @@ import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import axios from 'axios'
 import { FindManyOptions, Repository } from 'typeorm'
-import { VmEngineService } from '@app/shared/vm-engine.service'
 import { TokenDto } from '@app/modules/tokens/dto/token.dto'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
@@ -22,8 +21,7 @@ export class TokenService {
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
     @InjectRepository(ContractEntity)
     private readonly contractRepository: Repository<ContractEntity>,
-    private readonly configService: ConfigService,
-    private readonly vmEngine: VmEngineService,
+    private readonly configService: ConfigService
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<Erc20BalanceEntity[] | Erc721BalanceEntity[]> {
@@ -49,14 +47,28 @@ export class TokenService {
   }
 
   async findAddressAllTokensOwned(address: string): Promise<TokenDto[]> {
-    const tokens = await this.vmEngine.fetchAddressAllTokensOwned(address)
+    const findOptions: FindManyOptions = { where: { address }, relations: ['tokenExchangeRate', 'metadata'] }
+    const erc20Tokens = await this.erc20BalanceRepository.find(findOptions)
+    const erc721Tokens = await this.erc721BalanceRepository.find(findOptions)
 
-    for await (const token of tokens) {
-      const rate = await this.findTokenExchangeRateByAddress(token.addr!!.replace('0x', ''))
-      token.currentPrice = rate && rate.currentPrice ? +rate.currentPrice : 0
-    }
+    let tokenDtos: TokenDto[] = []
 
-    return tokens
+    erc20Tokens.forEach(entity => {
+      tokenDtos.push(this.constructTokenDto(entity))
+    })
+    erc721Tokens.forEach(entity => {
+      tokenDtos.push(this.constructTokenDto(entity))
+    })
+
+    return tokenDtos
+  }
+
+  private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
+    let { tokenExchangeRate, metadata } = entity
+    const tokenData = metadata || {} as any
+    if (entity instanceof Erc20BalanceEntity) { tokenData.balance = entity.amount }
+    if (tokenExchangeRate) { tokenData.currentPrice = tokenExchangeRate.currentPrice }
+    return new TokenDto(tokenData)
   }
 
   async findQuote(token: string, to: string): Promise<QuoteDto> {
@@ -130,5 +142,11 @@ export class TokenService {
       numHolders = await this.erc721BalanceRepository.count({ where: { contract: address }})
     }
     return numHolders
+  }
+
+  async countTokensByHolderAddress(address: string): Promise<number> {
+    const numErc20Tokens = await this.erc20BalanceRepository.count({ where: { address } })
+    const numErc721Tokens = await this.erc721BalanceRepository.count({ where: { address }})
+    return numErc20Tokens + numErc721Tokens
   }
 }
