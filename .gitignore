@@ -32,3 +32,8 @@ out/
 # Gradle
 .gradle
 env_*.sh
+
+# VS Code
+.vscode
+*.code-workspace
+

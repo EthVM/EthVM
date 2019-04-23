@@ -1,0 +1,147 @@
+# -------------------------------------------------------------
+#   Types & Enums
+# -------------------------------------------------------------
+
+type Quote {
+  to: String
+  price: String
+  last_update: Decimal
+  vol_24h: String
+}
+
+enum ExchangeFrom {
+  ETH
+}
+
+enum ExchangeTo {
+  USD
+}
+
+enum TokenExchangeRateFilter {
+  price_high
+  price_low
+  volume_high
+  volume_low
+  market_cap_high
+  market_cap_low
+  market_cap_rank
+}
+
+# -------------------------------------------------------------
+#   Queries
+# -------------------------------------------------------------
+
+query tokenTransfersByContractAddress($address: String!, $limit: Int, $page: Int) {
+  tokenTransfersByContractAddress(contractAddress: $address, limit: $limit, page: $page) {
+    items {
+      id
+      transactionHash: traceLocationTransactionHash
+      value: amount
+      from
+      to
+      address: contractAddress
+      timestamp
+    }
+    totalCount
+  }
+}
+
+query tokenTransfersByContractAddressForHolder($address: String!, $holder: String!, $filter: FilterEnum, $limit: Int, $page: Int) {
+  tokenTransfersByContractAddressForHolder(contractAddress: $address, holderAddress: $holder, filter: $filter, limit: $limit, page: $page) {
+    id
+    value: amount
+    contract: contractAddress
+    from
+    timestamp
+    to
+  }
+}
+
+query tokenHolders($address: String!, $limit: Int, $page: Int) {
+  tokenHolders(address: $address, limit: $limit, page: $page) {
+    address
+    balance
+  }
+}
+
+query holderDetails($address: String! $holderAddress: String!) {
+  tokenHolder(address: $address, holderAddress: $holderAddress) {
+    address
+    balance
+  }
+}
+
+query holderTransfers($address: String!, $holderAddress: String!) {
+  holderTransfers(address: $address, holderAddress: $holderAddress) {
+    transactionHash
+    from
+    to
+    timestamp
+    value
+  }
+}
+
+query quote($symbol: ExchangeFrom!, $to: ExchangeTo!) {
+  quote(symbol: $symbol, to: $to) {
+    to
+    price
+    last_update
+    vol_24h
+  }
+}
+
+query tokenExchangeRates($filter: TokenExchangeRateFilter!, $limit: Int, $page: Int) {
+  tokenExchangeRates(filter: $filter, limit: $limit, page: $page) {
+    address
+    currentPrice
+    image
+    marketCap
+    name
+    priceChangePercentage24h
+    symbol
+    totalVolume
+  }
+}
+
+query totalNumTokenExchangeRates {
+  totalNumTokenExchangeRates
+}
+
+query tokenExchangeRateBySymbol($symbol: String!) {
+  tokenExchangeRateBySymbol(symbol: $symbol) {
+    address
+    circulatingSupply
+    currentPrice
+    high24h
+    image
+    lastUpdated
+    low24h
+    marketCap
+    marketCapChange24h
+    marketCapChangePercentage24h
+    marketCapRank
+    name
+    priceChange24h
+    priceChangePercentage24h
+    symbol
+    totalSupply
+    totalVolume
+  }
+}
+
+query tokenExchangeRateByAddress($address: String!) {
+  tokenExchangeRateByAddress(address: $address) {
+    address
+    circulatingSupply
+    currentPrice
+    image
+    marketCap
+    name
+    priceChangePercentage24h
+    symbol
+    totalSupply
+    totalVolume
+    owner
+    holdersCount
+  }
+}

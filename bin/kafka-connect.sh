@@ -27,13 +27,16 @@ kafka_connect_usage() {
 # build_connector - builds the Kafka connector
 build_connector() {
   local processing_dir=$(cd ${ROOT_DIR}/apps/processing; pwd)
-  local kafka_connect_dir=$(cd ${processing_dir}/kafka-connect; pwd)
+  local kafka_connect_dir=$(cd ${processing_dir}/connectors; pwd)
+  local connectors=('sinks/jdbc' 'sources/eth-tokens-list' 'sources/exchanges' 'sources/web3')
 
-  echo "Building connector..."
-  (cd ${processing_dir}; ./gradlew kafka-connect:shadowJar)
+  echo "Building connectors..."
+  (cd ${processing_dir}; ./gradlew shadowJar)
 
   echo "Copying connector jar to out/ dir..."
-  (cd ${kafka_connect_dir}/build/libs/; mkdir -p ${ROOT_DIR}/out/kafka-connect/; cp kafka-connect-*.jar ${ROOT_DIR}/out/kafka-connect/)
+  for i in "${connectors[@]}"; do
+    (cp ${kafka_connect_dir}/${i}/build/libs/*.jar ${ROOT_DIR}/out/kafka-connect/)
+  done
 
   echo "Restarting kafka connect (if running)..."
   (cd ${ROOT_DIR}; docker-compose restart kafka-connect)

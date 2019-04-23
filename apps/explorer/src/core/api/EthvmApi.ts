@@ -1,4 +1,5 @@
 import {
+  Account,
   AddressBalance,
   AddressMetadata,
   Block,
@@ -13,6 +14,7 @@ import {
   Token,
   TokenExchangeRate,
   TokenTransfer,
+  Transfer,
   Tx,
   Uncle
 } from '@app/core/models'
@@ -20,12 +22,10 @@ import { Observable } from 'apollo-client/util/Observable'
 
 export interface EthvmApi {
   // Address
-  getAddressBalance(address: string): Promise<AddressBalance | null>
-  getAddressMetadata(address: string): Promise<AddressMetadata | null>
+  getAccount(address: string): Promise<Account | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]>
-  getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]>
+  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
@@ -48,16 +48,18 @@ export interface EthvmApi {
   getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
   getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate | null>
-  getTokenHistory(address: string): Promise<any>
-  getTopTokenHolders(address: string): Promise<any>
   getHolderDetails(address: string, holderAddress: string): Promise<any>
-  getHolderTransfers(address: string, holderAddress: string): Promise<any>
 
   // Pending Txs
   getPendingTxs(limit: number, page: number): Promise<PendingTx[]>
   getPendingTxsOfAddress(address: string, filter: string, limit: number, page: number): Promise<PendingTx[]>
   getNumberOfPendingTxsOfAddress(address: string): Promise<number>
   getTotalNumberOfPendingTxs(): Promise<number>
+
+  // Tokens
+  getTokenHolders(address: string, limit?: number, page?: number): Promise<any>
+  getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
+  getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): Promise<TokenTransfer[]>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>

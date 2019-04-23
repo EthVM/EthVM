@@ -1,5 +1,5 @@
 type Query {
-  blocks(limit: Int, page: Int): [Block]
+  blocks(limit: Int, page: Int, fromBlock: Long): [Block]
   blockByHash(hash: String): Block
   blockByNumber(number: Int): Block
   minedBlocksByAddress(address: String, limit: Int, page: Int): [Block]
@@ -11,35 +11,36 @@ type Subscription {
 }
 
 type Block {
-  id: Long
-  header: Header
-  totalDifficulty: String
+  header: BlockHeader
   transactions: [Transaction]
   uncles: [Uncle]
   rewards: [Reward]
 }
 
-type Header {
+type BlockHeader {
+  number: String
+  hash: String
+  parentHash: String
+  nonce: String
+  sha3Uncles: String
+  logsBloom: String
+  transactionsRoot: String
+  stateRoot: String
+  receiptsRoot: String
   author: String
   difficulty: String
+  totalDifficulty: String
   extraData: String
   gasLimit: String
   gasUsed: String
-  hash: String
-  logsBloom: String
-  nonce: String
-  number: Int
-  parentHash: String
-  receiptsRoot: String
-  sha3Uncles: String
-  size: Int
-  stateRoot: String
-  timestamp: Int
-  transactionsRoot: String
+  timestamp: String
+  size: String
+  blockTime: String
 }
 
 type Reward {
-  author: String
-  rewardType: String
-  value: String
+  address: String
+  blockHash: String
+  deltaType: DeltaType
+  amount: String
 }

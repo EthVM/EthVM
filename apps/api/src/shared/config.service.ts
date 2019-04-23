@@ -32,10 +32,9 @@ const schema = {
   },
   db: {
     url: {
-      doc: 'Mongo url',
-      env: 'MONGO_URL',
-      default: 'mongodb',
-      sensitive: true,
+      doc: 'Timescale connection URL',
+      env: 'TIMESCALE_URL',
+      default: 'postgres://postgres:1234@timescale/ethvm_dev',
     },
   },
   graphql: {
@@ -45,41 +44,12 @@ const schema = {
       default: true,
     },
   },
-  mongodb: {
-    url: {
-      doc: 'MongoDB connection URL',
-      env: 'MONGO_URL',
-      default: 'mongodb://mongodb:27017/ethvm_local',
-    },
-  },
   coinGecko: {
     url: {
       doc: 'CoinGecko API URL',
       env: 'COIN_GECKO_API_URL',
       default:
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true',
-    },
-  },
-  ethplorer: {
-    url: {
-      doc: 'Ethplorer API URL',
-      env: 'ETHPLORER_API_URL',
-      default: 'http://api.ethplorer.io/',
-    },
-    apiKey: {
-      doc: 'Ethplorer API key',
-      env: 'ETHPLORER_API_KEY',
-      default: 'freekey',
-    },
-  },
-  vmEngine: {
-    rpcUrl: {
-      env: 'VM_ENGINE_RPC_URL',
-      default: 'https://api.myetherwallet.com/eth',
-    },
-    tokensSmartContract: {
-      env: 'VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS',
-      default: '0x2783c0A4Bfd3721961653a9e9939Fc63687bf07f',
     },
   },
   expressRateLimit: {
@@ -100,10 +70,6 @@ export interface GraphqlConfig {
   playground: boolean
 }
 
-export interface MongoDbConfig {
-  url: string
-}
-
 export interface CoinGeckoConfig {
   url: string
 }
@@ -121,6 +87,10 @@ export interface VmEngineConfig {
 export interface ExpressRateLimitConfig {
   windowMs: number
   max: number
+}
+
+export interface DbConfig {
+  url: string
 }
 
 @Injectable()
@@ -156,8 +126,8 @@ export class ConfigService {
     return this.config.get('graphql')
   }
 
-  get mongoDb(): MongoDbConfig {
-    return this.config.get('mongodb')
+  get db(): DbConfig {
+    return this.config.get('db')
   }
 
   get coinGecko(): CoinGeckoConfig {

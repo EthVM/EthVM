@@ -10,13 +10,12 @@ ENV KAFKA_BOOTSTRAP_SERVERS kafka:9092
 ENV KAFKA_REPLICATION_FACTOR 1
 ENV KAFKA_SCHEMA_REGISTRY http://kafka-schema-registry:8081
 ENV KAFKA_CONNECT_URL http://kafka-connect:8083
-ENV MONGO_URL mongodb://mongo/ethvm_local
 ENV PARITY_WS_URL ws://parity:8546
+ENV TIMESCALE_URL jdbc:postgresql://timescale:5432/ethvm_dev?user=postgres&password=1234&ssl=false
 
 LABEL name="kafka" version=${KAFKA_VERSION}
-LABEL name="mongodb" version="4.0.5-r0"
 
-RUN apk add --no-cache openjdk8-jre bash coreutils su-exec mongodb openssl jq curl
+RUN apk add --no-cache openjdk8-jre bash coreutils su-exec openssl jq curl
 
 # Install dockerize
 

@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { BlockService } from '@app/modules/blocks/block.service'
 import { BlockResolvers } from '@app/modules/blocks/block.resolvers'
-import { BlockEntity } from '@app/orm/entities/block.entity'
-import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
+import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
+import { UncleEntity } from '@app/orm/entities/uncle.entity'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlockEntity]), SubscriptionsModule],
+  imports: [TypeOrmModule.forFeature([BlockHeaderEntity, TransactionEntity, TransactionTraceEntity, UncleEntity])],
   providers: [BlockService, BlockResolvers],
   exports: [BlockService],
 })

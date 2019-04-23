@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
-import { MongoSubscriptionService } from '@app/subscriptions/mongo-subscription.service'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ProcessingMetadataEntity } from '@app/orm/entities/processing-metadata.entity'
+import { PgSubscriptionService } from '@app/subscriptions/pg-subscription.service'
 
 const pubSubProvider = {
   provide: 'PUB_SUB',
@@ -10,8 +8,8 @@ const pubSubProvider = {
 }
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProcessingMetadataEntity])],
-  providers: [pubSubProvider, MongoSubscriptionService],
+  imports: [],
+  providers: [pubSubProvider, PgSubscriptionService],
   exports: [pubSubProvider],
 })
 export class SubscriptionsModule {}

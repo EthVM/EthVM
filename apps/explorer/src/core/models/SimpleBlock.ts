@@ -63,7 +63,7 @@ export class SimpleBlock {
   public getTotalReward(): EthValue {
     if (!this.cache.minerReward) {
       const rawReward = this.getRewards()
-        .filter(r => r.rewardType === 'block')
+        .filter(r => r.rewardType === 'BLOCK_REWARD')
         .map(r => r.value)
         .reduce((acc, value: any) => value, 0)
       this.cache.minerReward = new EthValue(rawReward)

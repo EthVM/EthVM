@@ -1,190 +1,196 @@
-@namespace("io.enkrypt.avro.processing")
+@namespace("com.ethvm.avro.processing")
 protocol Processing {
 
   import idl "common.avdl";
   import idl "capture.avdl";
 
-  record ReorgKeyRecord {
-
-    union { null, bytes } blockHash = null;
-    union { null, bytes } txHash = null;
-    union { null, bytes } address = null;
-
-    union { null, bytes } blockNumber = null;
-    union { null, bytes } nonce = null;
-    union { null, string } name = null;
-
+  record UncleKeyRecord {
+    string hash;
   }
 
-  record TokenTransferKeyRecord {
-    bytes hash;
+  record TransactionKeyRecord {
+    string hash;
   }
 
-  enum BalanceType {
-    TX_FEE, REWARD, ETHER, ERC20, ERC721
+  record TransactionReceiptKeyRecord {
+    string transactionHash;
   }
 
-  record TokenTransferRecord {
-
-    BalanceType transferType = "ETHER";
-
-    bytes from;
-    bytes to;
-
-    union { null, bytes } contract = null;
-
-    union { null, bytes } amount = null;
-    union { null, bytes } tokenId = null;
-    union { null, long } timestamp = null;                        // block timestamp in seconds since epoch
+  record TraceKeyRecord {
+    string blockHash;
+    union { null, string } transactionHash = null;
+    array<int> traceAddress;
   }
 
-  record TokenBalanceKeyRecord {
-
-    BalanceType balanceType = "ETHER";
-    union { null, bytes } contract = null;
-    union { null, bytes } address = null;
-    union { null, bytes } tokenId = null;
-
+  record FungibleBalanceKeyRecord {
+    string address;
+    string contract = "";
   }
 
-  record TokenBalanceRecord {
-
-    union { null, bytes } amount = null;
-    union { null, bytes } address = null;
-
+  enum FungibleTokenType {
+    ETHER, ERC20
   }
 
-  // contracts
-
-  record ContractKeyRecord {
-    bytes address;
-  }
-
-  record ContractCreateRecord {
-    io.enkrypt.avro.common.ContractType type;
-    bytes creator;
-    bytes address;
-    bytes data;
-  }
-
-  record ContractDestroyRecord {
-    bytes address;
-    bytes refundAddress;
-    bytes balance;
-  }
-
-  record DaoHfBalanceTransferRecord {
-    bytes from;
-    bytes to;
-    bytes amount;
-  }
-
-  record PremineBalanceRecord {
-    bytes address;
-    bytes balance;
-  }
-
-  record TxFeeRecord {
-    bytes from;
-    bytes amount;
-    bytes miner;
-  }
-
-  enum ChainEventType {
+  enum FungibleBalanceDeltaType {
     PREMINE_BALANCE,
-    REWARD,
-    DAO_HF_BALANCE_TRANSFER,
-    TOKEN_TRANSFER,
-    CONTRACT_CREATE,
-    CONTRACT_DESTROY,
-    TX_FEE
+    HARD_FORK,
+    BLOCK_REWARD,
+    UNCLE_REWARD,
+    MINER_FEE,
+    TX_FEE,
+    TX,
+    INTERNAL_TX,
+    CONTRACT_CREATION,
+    CONTRACT_DESTRUCTION,
+    TOKEN_TRANSFER
   }
 
-  record ChainEventRecord {
+  record FungibleBalanceDeltaRecord {
 
-    boolean reverse = false;
+    FungibleTokenType tokenType;
+    FungibleBalanceDeltaType deltaType;
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
+    decimal(80, 0) amount;
+
+    string address;
+    string contractAddress = "";
+
+    union { null, string } counterpartAddress = null;
+  }
+
+  record FungibleBalanceRecord {
+    decimal(80, 0) amount;
+  }
+
+  record FungibleBalanceDeltaListRecord {
+    boolean apply = true;
+    array<FungibleBalanceDeltaRecord> deltas = [];
+    array<FungibleBalanceDeltaRecord> reversals = [];
+    union { null, string } blockHash = null;
+  }
+
+//
+
+  record NonFungibleBalanceKeyRecord {
+    string contract;
+    decimal(80, 0) tokenId;
+  }
+
+  enum NonFungibleTokenType {
+    ERC721
+  }
+
+  record NonFungibleBalanceDeltaRecord {
+
+    NonFungibleTokenType tokenType = null;
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
+
+    string from;
+    string to;
+
+    union { null, string } contract = null;
+    union { null, decimal(80, 0) } tokenId;
+
+  }
+
+  record NonFungibleBalanceRecord {
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
+    string address;
+  }
+
+  record NonFungibleBalanceDeltaListRecord {
+    boolean apply = true;
+    array<NonFungibleBalanceDeltaRecord> deltas = [];
+    array<NonFungibleBalanceDeltaRecord> reversals = [];
+    union { null, string } blockHash = null;
+  }
+
+//
+
+  record BlockAuthorRecord {
+    string author;
+    decimal(80, 0) blockNumber;
+    string blockHash;
+  }
+
+  record TransactionGasPriceRecord {
+    decimal(80, 0) blockNumber;
+    string blockHash;
+    string transactionHash;
+    int transactionPosition;
+    string address;
+    decimal(80, 0) gasPrice;
+  }
+
+  record TransactionGasPriceListRecord {
+    array<TransactionGasPriceRecord> gasPrices;
+    union { null, string } blockHash = null;
+  }
+
+  record TransactionGasUsedRecord {
+    decimal(80, 0) gasUsed;
+  }
+
+  record TransactionGasUsedListRecord {
+    array<TransactionGasUsedRecord> gasUsed;
+    union { null, string } blockHash = null;
+  }
+
+  record TransactionFeeRecord {
+    decimal(80, 0) blockNumber;
+    string blockHash;
+    string transactionHash;
+    int transactionPosition;
+    string address;
+    decimal(80, 0) transactionFee;
+  }
+
+  record TransactionFeeListRecord {
+    array<TransactionFeeRecord> transactionFees;
+    union { null, string } blockHash = null;
+  }
+
+// metrics
+
+  record BlockTimestampRecord {
     long timestamp;
-
-    ChainEventType `type`;
-
-    union { io.enkrypt.avro.capture.BlockRewardRecord, TxFeeRecord, PremineBalanceRecord, TokenTransferRecord, ContractCreateRecord, ContractDestroyRecord, DaoHfBalanceTransferRecord } value;
-
-    union { null, bytes } blockHash = null;
-    union { null, bytes } txHash = null;
-    union { null, int } txIndex = null;
-    union { null, array<int> } traceAddress = null;
-
   }
 
-  record ContractLogoRecord {
-    union { null, string } src;
-    union { null, string } width;
-    union { null, string } height;
-    union { null, string } ipfs_hash;
-  }
-
-  record ContractSupportRecord {
-    union { null, string } email;
-    union { null, string } url;
-  }
-
-  record ContractSocialRecord {
-    union { null, string } blog;
-    union { null, string } chat;
-    union { null, string } facebook;
-    union { null, string } forum;
-    union { null, string } github;
-    union { null, string } gitter;
-    union { null, string } instagram;
-    union { null, string } linkedin;
-    union { null, string } reddit;
-    union { null, string } slack;
-    union { null, string } telegram;
-    union { null, string } twitter;
-    union { null, string } youtube;
-  }
-
-  record ContractMetadataRecord {
-
-    string name;
-    string symbol;
-    bytes address;
-    int decimals;
-
-    union { null, string } ens_address;
-    union { null, string, io.enkrypt.avro.common.ContractType } type;
-    union { null, ContractLogoRecord } logo;
-    union { null, ContractSupportRecord } support;
-    union { null, ContractSocialRecord } social;
-    union { null, string } website;
-
-  }
-
-  // block events
-
-  record BlockChainEventsRecord {
-    array<ChainEventRecord> events;
-  }
-
-  // metrics
-
-  record BlockMetricsRecord {
-    bytes hash;
-    bytes number;
+  record BlockMetricsHeaderRecord {
+    decimal(80, 0) blockNumber;
+    string blockHash;
     union { null, long } blockTime = null;
     long timestamp;
-    int totalTxs = 0;
-    int numSuccessfulTxs = 0;
-    int numFailedTxs = 0;
-    int numPendingTxs = 0;
-    int numUncles = 0;
-    bytes difficulty;
-    bytes totalDifficulty;
-    bytes totalGasPrice;
-    bytes avgGasLimit;
-    bytes avgGasPrice;
-    bytes totalTxFees;
-    bytes avgTxFees;
+    int numUncles;
+    decimal(80, 0) difficulty;
+    decimal(80, 0) totalDifficulty;
+  }
+
+  record BlockMetricsTransactionTraceRecord {
+    decimal(80, 0) blockNumber;
+    string blockHash;
+    int totalTxs;
+    int numSuccessfulTxs;
+    int numFailedTxs;
+    int numInternalTxs;
+    union { null, long } timestamp = null;
+  }
+
+  record BlockMetricsTransactionRecord {
+    decimal(80, 0) blockNumber;
+    string blockHash;
+    decimal(80, 0) totalGasPrice;
+    decimal(80, 0) avgGasLimit;
+    decimal(80, 0) avgGasPrice;
+    union { null, long } timestamp = null;
+  }
+
+  record BlockMetricsTransactionFeeRecord {
+    decimal(80, 0) blockNumber;
+    string blockHash;
+    decimal(80, 0) totalTxFees;
+    decimal(80, 0) avgTxFees;
+    union { null, long } timestamp = null;
   }
 
   record MetricKeyRecord {
@@ -202,7 +208,7 @@ protocol Processing {
 
   }
 
-  // Processing Metadata
+// Processing Metadata
 
   record ProcessingMetadataKeyRecord {
     string name;
@@ -218,7 +224,7 @@ protocol Processing {
     union { null, bytes } `bigInteger` = null;
   }
 
-  // address metadata
+// address metadata
 
   enum AddressMetadataType {
     OUT_TX_COUNT, IN_TX_COUNT, TOTAL_TX_COUNT, MINER, CONTRACT_CREATOR
@@ -232,6 +238,19 @@ protocol Processing {
   record AddressMetadataRecord {
     union { null, long } count = null;
     union { null, boolean } flag = null;
+  }
+
+
+  record Erc20MetadataRecord {
+    union { null, string } name = null;
+    union { null, string } symbol = null;
+    union { null, int } decimals = null;
+    union { null, decimal(80, 0) } totalSupply = null;
+  }
+
+  record Erc721MetadataRecord {
+    union { null, string } name = null;
+    union { null, string } symbol = null;
   }
 
 }

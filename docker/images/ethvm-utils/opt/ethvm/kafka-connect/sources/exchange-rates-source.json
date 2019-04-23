@@ -1,7 +1,12 @@
 {
-  "name": "enkryptio-exchange-rates-source",
+  "name": "ethvm-exchange-rates-source",
   "config": {
-    "connector.class": "io.enkrypt.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector",
-    "tasks.max": 1
+    "connector.class": "com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector",
+    "topic": "token_exchange_rates",
+    "tasks.max": 1,
+    "sync.interval": 300,
+    "exchange.provider": "CoinGecko",
+    "currency.symbol": "usd",
+    "tokens.url": "https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/eth/tokens-eth.min.json"
   }
 }

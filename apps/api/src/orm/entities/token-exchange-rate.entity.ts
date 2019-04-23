@@ -1,63 +1,77 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
+import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 
 @Entity('token_exchange_rates')
 export class TokenExchangeRateEntity {
+
   constructor(data: any) {
-    assignClean(this, data)
+    assignClean(this, data);
   }
 
-  @ObjectIdColumn({ name: '_id', type: 'string', readonly: true })
-  id!: ObjectID
-
-  @Column({ type: 'string', readonly: true })
+  @PrimaryColumn({type: 'character', length: 42, readonly: true})
   address!: string
 
-  @Column({ type: 'string', name: 'circulating_supply', readonly: true })
-  circulatingSupply!: string
+  @Column({type: 'character varying', length: 64, readonly: true})
+  symbol?: string
 
-  @Column({ type: 'double', name: 'current_price', readonly: true })
-  currentPrice!: number
+  @Column({type: 'character varying', length: 64, readonly: true})
+  name?: string
 
-  @Column({ type: 'double', name: 'high_24h', readonly: true })
-  high24h!: number
+  @Column({type: 'text', readonly: true})
+  image?: string
 
-  @Column({ type: 'string', readonly: true })
-  image!: string
+  @Column({type: 'numeric', readonly: true})
+  currentPrice?: string
 
-  @Column({ type: 'string', name: 'last_updated', readonly: true })
-  lastUpdated!: string
+  @Column({type: 'numeric', readonly: true})
+  marketCap?: string
 
-  @Column({ type: 'double', name: 'low_24h', readonly: true })
-  low24h!: number
+  @Column({type: 'integer', readonly: true})
+  marketCapRank?: number
 
-  @Column({ type: 'double', name: 'market_cap', readonly: true })
-  marketCap!: number
+  @Column({type: 'numeric', readonly: true})
+  totalVolume?: string
 
-  @Column({ type: 'double', name: 'market_cap_change_24h', readonly: true })
-  marketCapChange24h!: number
+  @Column({type: 'numeric', readonly: true})
+  high24h?: string
 
-  @Column({ type: 'double', name: 'market_cap_change_percentage_24h', readonly: true })
-  marketCapChangePercentage24h!: number
+  @Column({type: 'numeric', readonly: true})
+  low24h?: string
 
-  @Column({ type: 'int', name: 'market_cap_rank', readonly: true })
-  marketCapRank!: number
+  @Column({type: 'numeric', readonly: true})
+  priceChange24h?: string
 
-  @Column({ type: 'string', readonly: true })
-  name!: string
+  @Column({type: 'numeric', readonly: true})
+  priceChangePercentage24h?: string
 
-  @Column({ type: 'double', name: 'price_change_24h', readonly: true })
-  priceChange24h!: number
+  @Column({type: 'numeric', readonly: true})
+  marketCapChange24h?: string
 
-  @Column({ type: 'double', name: 'price_change_percentage_24h', readonly: true })
-  priceChangePercentage24h!: number
+  @Column({type: 'numeric', readonly: true})
+  marketCapChangePercentage24h?: string
 
-  @Column({ type: 'string', readonly: true })
-  symbol!: string
+  @Column({type: 'numeric', readonly: true})
+  circulatingSupply?: string
 
-  @Column({ type: 'long', name: 'total_supply', readonly: true })
-  totalSupply!: number
+  @Column({type: 'numeric', readonly: true})
+  totalSupply?: string
 
-  @Column({ type: 'double', name: 'total_volume', readonly: true })
-  totalVolume!: number
+  @Column({type: 'bigint', readonly: true})
+  lastUpdated?: string
+
+  @OneToMany(type => Erc20BalanceEntity, erc20 => erc20.tokenExchangeRate)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'contract',
+  })
+  erc20Balances?: Erc20BalanceEntity[]
+
+  @OneToMany(type => Erc721BalanceEntity, erc721 => erc721.tokenExchangeRate)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'contract',
+  })
+  erc721Balances?: Erc721BalanceEntity[]
 }

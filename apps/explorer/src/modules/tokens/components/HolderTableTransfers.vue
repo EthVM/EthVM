@@ -53,7 +53,7 @@
 
         <!-- Column 2 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ $d(tx.timestamp, 'short', $i18n.locale.replace('_', '-')) }}</p>
+          <app-time-ago :timestamp="formatTimestamp(tx.timestamp)" />
         </v-flex>
         <!-- End Column 2 -->
 
@@ -71,11 +71,15 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { Tx } from '@app/core/models'
+import { Transfer, Tx } from '@app/core/models'
+import BN from 'bignumber.js'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
 const MAX_ITEMS = 10
 
-@Component
+@Component({
+  components: { AppTimeAgo }
+})
 export default class HolderTableTransfers extends Vue {
   /*
   ===================================================================================
@@ -84,6 +88,7 @@ export default class HolderTableTransfers extends Vue {
   */
 
   @Prop(Array) transfers!: Array<any>
+  @Prop(String) decimals?: string
 
   /*
   ===================================================================================
@@ -92,6 +97,28 @@ export default class HolderTableTransfers extends Vue {
   */
 
   page = 1 // Current pagination page number
+
+  /*
+ ===================================================================================
+   Methods
+ ===================================================================================
+ */
+
+  formatTimestamp(timestamp: string) {
+    const bn = new BN(timestamp)
+    return new Date(bn.times(1000).toNumber())
+  }
+
+  calculateTransferValue(transfer: Transfer) {
+    if (this.decimals) {
+      const n = new BN(transfer.value)
+      return n
+        .div(new BN(10).pow(this.decimals))
+        .toFixed()
+        .toString()
+    }
+    return transfer.value
+  }
 
   /*
   ===================================================================================
