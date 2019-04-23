@@ -27,4 +27,5 @@ type Uncle {
   gasUsed: String
   timestamp: String
   size: String
+  rewardAmount: String
 }

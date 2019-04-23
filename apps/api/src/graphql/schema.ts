@@ -499,6 +499,7 @@ export class Uncle {
     gasUsed?: string;
     timestamp?: string;
     size?: string;
+    rewardAmount?: string;
 }
 
 export type Buffer = any;
