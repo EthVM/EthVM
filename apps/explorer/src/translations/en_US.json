@@ -541,5 +541,11 @@
       "title": "Changes to Privacy Policy",
       "p1": "We may modify this Policy from time to time. If we make any changes, we will change the Last Updated date above. We also may provide additional notice, as applicable, depending on the type of change. If you object to any changes, you may stop using the Services. Your continued use of the Services after we publish or otherwise provide notice about our changes to the Policy means that you are consenting to the updated Policy."
     }
+  },
+  "transfer": {
+    "internal": "Internal Transfers",
+    "INTERNAL_TX": "call",
+    "CONTRACT_CREATION": "create",
+    "CONTRACT_DESTRUCTION": "destroy"
   }
 }

@@ -14,10 +14,11 @@ type Block {
   header: BlockHeader
   transactions: [Transaction]
   uncles: [Uncle]
+  rewards: [Reward]
 }
 
 type BlockHeader {
-  number: Long
+  number: String
   hash: String
   parentHash: String
   nonce: String
@@ -35,4 +36,11 @@ type BlockHeader {
   timestamp: String
   size: String
   blockTime: String
+}
+
+type Reward {
+  address: String
+  blockHash: String
+  deltaType: DeltaType
+  amount: String
 }

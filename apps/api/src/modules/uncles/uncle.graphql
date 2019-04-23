@@ -7,6 +7,7 @@ type Query {
 
 type Uncle {
   hash: String
+  index: Int
   nephewNumber: String
   nephewHash: String
   number: String
@@ -26,4 +27,5 @@ type Uncle {
   gasUsed: String
   timestamp: String
   size: String
+  rewardAmount: String
 }

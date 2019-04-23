@@ -71,14 +71,14 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { Tx } from '@app/core/models'
+import { Transfer, Tx } from '@app/core/models'
 import BN from 'bignumber.js'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue';
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
 const MAX_ITEMS = 10
 
 @Component({
-  components: {AppTimeAgo}
+  components: { AppTimeAgo }
 })
 export default class HolderTableTransfers extends Vue {
   /*
@@ -88,6 +88,7 @@ export default class HolderTableTransfers extends Vue {
   */
 
   @Prop(Array) transfers!: Array<any>
+  @Prop(String) decimals?: string
 
   /*
   ===================================================================================
@@ -106,6 +107,17 @@ export default class HolderTableTransfers extends Vue {
   formatTimestamp(timestamp: string) {
     const bn = new BN(timestamp)
     return new Date(bn.times(1000).toNumber())
+  }
+
+  calculateTransferValue(transfer: Transfer) {
+    if (this.decimals) {
+      const n = new BN(transfer.value)
+      return n
+        .div(new BN(10).pow(this.decimals))
+        .toFixed()
+        .toString()
+    }
+    return transfer.value
   }
 
   /*

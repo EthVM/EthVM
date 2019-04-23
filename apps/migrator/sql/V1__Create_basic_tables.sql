@@ -1,35 +1,7 @@
 
-/* General notification trigger */
-
-CREATE FUNCTION notify_event() RETURNS TRIGGER AS
-$body$
-DECLARE
-  record  RECORD;
-  payload JSON;
-  table_name TEXT;
-BEGIN
-
-  IF (TG_OP = 'DELETE') THEN
-    record = OLD;
-  ELSE
-    record = NEW;
-  END IF;
-
-  if (TG_NARGS = 1) THEN
-      table_name = TG_ARGV[0];
-  ELSE
-      table_name = TG_TABLE_NAME;
-  END IF;
-
-  payload = json_build_object('table', table_name, 'action', TG_OP, 'id', TG_RELID);
-
-  PERFORM pg_notify('events', payload::text);
-
-  RETURN NULL;
-END;
-$body$ LANGUAGE plpgsql;
 
 /* Canonical blocks table which is updated on fork */
+
 CREATE TABLE canonical_block_header
 (
   number            NUMERIC PRIMARY KEY,
@@ -66,9 +38,34 @@ FROM canonical_block_header AS cb
 GROUP BY cb.author
 ORDER BY count DESC;
 
+CREATE OR REPLACE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload := json_build_object(
+      'table', 'canonical_block_header',
+      'action', TG_OP,
+      'payload', json_build_object('hash', record.hash, 'number', record.number)
+    );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
 CREATE TRIGGER notify_canonical_block_header
 AFTER INSERT OR UPDATE OR DELETE ON canonical_block_header
-FOR EACH ROW EXECUTE PROCEDURE notify_event();
+FOR EACH ROW EXECUTE PROCEDURE notify_canonical_block_header();
 
 CREATE TABLE uncle
 (
@@ -126,9 +123,34 @@ CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
+CREATE FUNCTION notify_transaction() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload = json_build_object(
+    'table', 'transaction',
+    'action', TG_OP,
+    'id', json_build_object('hash', record.hash)
+  );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
 CREATE TRIGGER notify_transaction
 AFTER INSERT OR UPDATE OR DELETE ON "transaction"
-FOR EACH ROW EXECUTE PROCEDURE notify_event();
+FOR EACH ROW EXECUTE PROCEDURE notify_transaction();
 
 /* This view helps to filter out non-canonical transactions based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction AS
@@ -163,10 +185,6 @@ CREATE INDEX idx_transaction_receipt_from ON transaction_receipt ("from");
 CREATE INDEX idx_transaction_receipt_to ON transaction_receipt ("to");
 CREATE INDEX idx_transaction_receipt_from_to ON transaction_receipt ("from", "to");
 CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("contract_address");
-
-CREATE TRIGGER notify_transaction_receipt
-  AFTER INSERT OR UPDATE OR DELETE ON transaction_receipt
-  FOR EACH ROW EXECUTE PROCEDURE notify_event();
 
 /* This view helps to filter out non canonical receipts based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_receipt AS
@@ -234,9 +252,34 @@ CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
 
+CREATE FUNCTION notify_contract() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record = OLD;
+  ELSE
+    record = NEW;
+  END IF;
+
+  payload = json_build_object(
+    'table', 'contract',
+    'action', TG_OP,
+    'id', json_build_object('address', record.address)
+  );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
 CREATE TRIGGER notify_contract
-  AFTER INSERT OR UPDATE OR DELETE ON contract
-  FOR EACH ROW EXECUTE PROCEDURE notify_event();
+  AFTER INSERT OR UPDATE OR DELETE ON "contract"
+  FOR EACH ROW EXECUTE PROCEDURE notify_contract();
 
 CREATE VIEW canonical_contract AS
 SELECT c.*
@@ -536,10 +579,6 @@ CREATE TABLE block_metrics_header
   UNIQUE (block_hash, timestamp)
 );
 
-CREATE TRIGGER notify_block_metrics_header
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_header
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_header');
-
 CREATE TABLE block_metrics_transaction
 (
   block_number    NUMERIC  NOT NULL,
@@ -550,10 +589,6 @@ CREATE TABLE block_metrics_transaction
   avg_gas_price   NUMERIC  NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
-
-CREATE TRIGGER notify_block_metrics_transaction
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction');
 
 CREATE TABLE block_metrics_transaction_trace
 (
@@ -567,10 +602,6 @@ CREATE TABLE block_metrics_transaction_trace
   UNIQUE (block_hash, timestamp)
 );
 
-CREATE TRIGGER notify_block_metrics_transaction_trace
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction_trace
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction_trace');
-
 CREATE TABLE block_metrics_transaction_fee
 (
   block_number  NUMERIC  NOT NULL,
@@ -581,10 +612,6 @@ CREATE TABLE block_metrics_transaction_fee
   UNIQUE (block_hash, timestamp)
 );
 
-
-CREATE TRIGGER notify_block_metrics_transaction_fee
-  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction_fee
-  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction_fee');
 
 /* 1 day chunks */
 SELECT create_hypertable('block_metrics_header',
@@ -621,7 +648,7 @@ ORDER BY daily DESC;
 CREATE VIEW canonical_block_metrics_header_hourly AS
 SELECT time_bucket(
          3600,
-         bmh.timestamp)  AS hour,
+         bmh.timestamp)  AS hourly,
        COUNT(
          *)              AS count,
        MAX(
@@ -636,8 +663,8 @@ FROM block_metrics_header AS bmh
        RIGHT JOIN canonical_block_header cbh ON bmh.block_hash = cbh.hash
 WHERE cbh.number IS NOT NULL
   AND bmh.timestamp IS NOT NULL
-GROUP BY hour
-ORDER BY hour DESC;
+GROUP BY hourly
+ORDER BY hourly DESC;
 
 CREATE VIEW canonical_block_metrics_transaction_fee_daily AS
 SELECT time_bucket(
@@ -860,3 +887,106 @@ WHERE cbh.number IS NOT NULL
 GROUP BY hourly
 ORDER BY hourly DESC;
 
+CREATE VIEW canonical_block_metrics_daily AS
+    SELECT
+      h.daily AS timestamp,
+      h.count AS block_count,
+      h.max_difficulty,
+      h.avg_difficulty,
+      h.min_difficulty,
+      h.sum_difficulty,
+      t.count AS tx_count,
+      t.max_total_gas_price,
+      t.min_total_gas_price,
+      t.avg_total_gas_price,
+      t.sum_total_gas_price,
+      t.max_avg_gas_limit,
+      t.min_avg_gas_limit,
+      t.avg_avg_gas_limit,
+      t.sum_avg_gas_limit,
+      t.max_avg_gas_price,
+      t.min_avg_gas_price,
+      t.avg_avg_gas_price,
+      t.sum_avg_gas_price,
+      tf.max_total_tx_fees,
+      tf.min_total_tx_fees,
+      tf.avg_total_tx_fees,
+      tf.sum_total_tx_fees,
+      tf.max_avg_tx_fees,
+      tf.min_avg_tx_fees,
+      tf.avg_avg_tx_fees,
+      tf.sum_avg_tx_fees,
+      tt.count as trace_count,
+      tt.max_total_txs,
+      tt.min_total_txs,
+      tt.avg_total_txs,
+      tt.sum_total_txs,
+      tt.max_num_successful_txs,
+      tt.min_num_successful_txs,
+      tt.avg_num_successful_txs,
+      tt.sum_num_successful_txs,
+      tt.max_num_failed_txs,
+      tt.min_num_failed_txs,
+      tt.avg_num_failed_txs,
+      tt.sum_num_failed_txs,
+      tt.max_num_internal_txs,
+      tt.min_num_internal_txs,
+      tt.avg_num_internal_txs,
+      tt.sum_num_internal_txs
+    FROM canonical_block_metrics_header_daily AS h
+    LEFT JOIN canonical_block_metrics_transaction_daily as t ON h.daily = t.daily
+    LEFT JOIN canonical_block_metrics_transaction_fee_daily as tf ON h.daily = tf.daily
+    LEFT JOIN canonical_block_metrics_transaction_trace_daily as tt ON h.daily = tt.daily
+    ORDER BY h.daily DESC;
+
+CREATE VIEW canonical_block_metrics_hourly AS
+SELECT
+  h.hourly AS timestamp,
+  h.count AS block_count,
+  h.max_difficulty,
+  h.avg_difficulty,
+  h.min_difficulty,
+  h.sum_difficulty,
+  t.count AS tx_count,
+  t.max_total_gas_price,
+  t.min_total_gas_price,
+  t.avg_total_gas_price,
+  t.sum_total_gas_price,
+  t.max_avg_gas_limit,
+  t.min_avg_gas_limit,
+  t.avg_avg_gas_limit,
+  t.sum_avg_gas_limit,
+  t.max_avg_gas_price,
+  t.min_avg_gas_price,
+  t.avg_avg_gas_price,
+  t.sum_avg_gas_price,
+  tf.max_total_tx_fees,
+  tf.min_total_tx_fees,
+  tf.avg_total_tx_fees,
+  tf.sum_total_tx_fees,
+  tf.max_avg_tx_fees,
+  tf.min_avg_tx_fees,
+  tf.avg_avg_tx_fees,
+  tf.sum_avg_tx_fees,
+  tt.count as trace_count,
+  tt.max_total_txs,
+  tt.min_total_txs,
+  tt.avg_total_txs,
+  tt.sum_total_txs,
+  tt.max_num_successful_txs,
+  tt.min_num_successful_txs,
+  tt.avg_num_successful_txs,
+  tt.sum_num_successful_txs,
+  tt.max_num_failed_txs,
+  tt.min_num_failed_txs,
+  tt.avg_num_failed_txs,
+  tt.sum_num_failed_txs,
+  tt.max_num_internal_txs,
+  tt.min_num_internal_txs,
+  tt.avg_num_internal_txs,
+  tt.sum_num_internal_txs
+FROM canonical_block_metrics_header_hourly AS h
+       LEFT JOIN canonical_block_metrics_transaction_hourly as t ON h.hourly = t.hourly
+       LEFT JOIN canonical_block_metrics_transaction_fee_hourly as tf ON h.hourly = tf.hourly
+       LEFT JOIN canonical_block_metrics_transaction_trace_hourly as tt ON h.hourly = tt.hourly
+ORDER BY h.hourly DESC;

@@ -14,6 +14,7 @@ import {
   Token,
   TokenExchangeRate,
   TokenTransfer,
+  Transfer,
   Tx,
   Uncle
 } from '@app/core/models'
@@ -24,7 +25,7 @@ export interface EthvmApi {
   getAccount(address: string): Promise<Account | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<any[]>
+  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
@@ -57,7 +58,7 @@ export interface EthvmApi {
 
   // Tokens
   getTokenHolders(address: string, limit?: number, page?: number): Promise<any>
-  getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<TokenTransfer[]>
+  getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
   getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): Promise<TokenTransfer[]>
 
   // Txs

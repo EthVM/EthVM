@@ -92,6 +92,11 @@ export class ChartMixin extends Vue {
   setData(state: number): void {
     const duration = this.data[state].state.toUpperCase()
     this.fetchData(duration).then(res => {
+      res = res.map(r => {
+        r.date = new Date(+r.date)
+        return r
+      })
+
       if (res) {
         if (this.chartTitle === this.$i18n.t('charts.gas-price.title ').toString()) {
           res.forEach(point => {

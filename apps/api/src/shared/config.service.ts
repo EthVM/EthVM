@@ -52,28 +52,6 @@ const schema = {
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true',
     },
   },
-  ethplorer: {
-    url: {
-      doc: 'Ethplorer API URL',
-      env: 'ETHPLORER_API_URL',
-      default: 'http://api.ethplorer.io/',
-    },
-    apiKey: {
-      doc: 'Ethplorer API key',
-      env: 'ETHPLORER_API_KEY',
-      default: 'freekey',
-    },
-  },
-  vmEngine: {
-    rpcUrl: {
-      env: 'VM_ENGINE_RPC_URL',
-      default: 'https://api.myetherwallet.com/eth',
-    },
-    tokensSmartContract: {
-      env: 'VM_ENGINE_TOKENS_SMART_CONTRACT_ADDRESS',
-      default: '0x2783c0A4Bfd3721961653a9e9939Fc63687bf07f',
-    },
-  },
   expressRateLimit: {
     windowMs: {
       doc: 'Express Rate Limit window(ms)',

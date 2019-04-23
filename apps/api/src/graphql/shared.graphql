@@ -9,3 +9,12 @@ scalar Long
 enum FilterEnum {
   in, out, all
 }
+
+
+enum Duration {
+  ALL,
+  YEAR,
+  MONTH,
+  WEEK,
+  DAY
+}

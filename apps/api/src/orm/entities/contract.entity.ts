@@ -33,7 +33,7 @@ export class ContractEntity {
   traceCreatedAtBlockHash?: string
 
   @Column({type: 'numeric', readonly: true})
-  traceCreatedAtBlockNumber?: number
+  traceCreatedAtBlockNumber?: string
 
   @Column({type: 'character', length: 66, readonly: true})
   traceCreatedAtTransactionHash?: string
@@ -51,7 +51,7 @@ export class ContractEntity {
   traceDestroyedAtBlockHash?: string
 
   @Column({type: 'numeric', readonly: true})
-  traceDestroyedAtBlockNumber?: number
+  traceDestroyedAtBlockNumber?: string
 
   @Column({type: 'character', length: 66, readonly: true})
   traceDestroyedAtTransactionHash?: string

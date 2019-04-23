@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/EthVM/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap: EthVM: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap:</p>
-  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="http://nestjs.com/">NestJS</a> / <a href="https://kafka.apache.org/">Apache Kafka</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://github.com/mongodb/mongo">MongoDB</a> 
+  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="http://nestjs.com/">NestJS</a> / <a href="https://kafka.apache.org/">Apache Kafka</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://www.postgresql.org">Postgres</a> 
   <p><a href="https://travis-ci.org/EthVM/EthVM.svg?branch=develop""><img src="https://travis-ci.org/EthVM/EthVM.svg?branch=develop"/></a></p>
 </div>
 
@@ -55,7 +55,7 @@ As the [official website](https://kafka.apache.org/) states:
 > Kafka is used for building real-time data pipelines and streaming apps. It is horizontally scalable, fault-tolerant, wicked fast, and runs in production in thousands of companies.
 
 <div align="center">
-  <img src="https://kafka.apache.org/images/kafka_diagram.png" alt="Apache Kafka" width="500" />
+  <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/ethvm-diagram.jpg" alt="EthVM with Apache Kafka" width="500" />
 </div>
 
 We believe that it fits quite nicely within the needs that a Block Explorer typically may have. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
@@ -65,8 +65,8 @@ We believe that it fits quite nicely within the needs that a Block Explorer typi
 For now, we are focused on bringing a Beta environment. It will have the following:
 
 - [x] Migration to NestJS API to replace current SocketIO API
-- [ ] Migration from MongoDB to Postgres
-- [ ] Improvements over processing on Kafka. We want to process the chain as fast as possible and alongside with that, squash some known bugs
+- [x] Migration from MongoDB to Postgres
+- [x] Improvements over processing on Kafka. We want to process the chain as fast as possible and alongside with that, squash some known bugs
 - [ ] Bring a Terraform provider to deploy properly the code on AWS
 
 ## Getting Started
