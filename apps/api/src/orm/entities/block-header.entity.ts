@@ -2,6 +2,7 @@ import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { UncleEntity } from '@app/orm/entities/uncle.entity'
+import { BlockRewardEntity } from '@app/orm/entities/block-reward.entity'
 
 @Entity('canonical_block_header')
 export class BlockHeaderEntity {
@@ -11,7 +12,7 @@ export class BlockHeaderEntity {
   }
 
   @PrimaryColumn({type: 'numeric', readonly: true})
-  number!: number
+  number!: string
 
   @Column({type: 'character', length: 66, unique: true, readonly: true})
   hash!: string
@@ -20,7 +21,7 @@ export class BlockHeaderEntity {
   parentHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  nonce?: number
+  nonce?: string
 
   @Column({type: 'character', length: 66, readonly: true})
   sha3Uncles!: string
@@ -41,19 +42,19 @@ export class BlockHeaderEntity {
   author!: string
 
   @Column({type: 'numeric', readonly: true})
-  difficulty!: number
+  difficulty!: string
 
   @Column({type: 'numeric', readonly: true})
-  totalDifficulty!: number
+  totalDifficulty!: string
 
   @Column({type: 'text', readonly: true})
   extraData?: string
 
   @Column({type: 'numeric', readonly: true})
-  gasLimit!: number
+  gasLimit!: string
 
   @Column({type: 'numeric', readonly: true})
-  gasUsed!: number
+  gasUsed!: string
 
   @Column({type: 'bigint', readonly: true})
   timestamp!: string
@@ -77,5 +78,12 @@ export class BlockHeaderEntity {
     referencedColumnName: 'nephewHash',
   })
   uncles?: UncleEntity[]
+
+  @OneToMany(type => BlockRewardEntity, reward => reward.blockHeader)
+  @JoinColumn({
+    name: 'hash',
+    referencedColumnName: 'blockHash',
+  })
+  rewards?: BlockRewardEntity[]
 
 }

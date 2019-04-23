@@ -96,10 +96,11 @@ export class Block {
     header?: BlockHeader;
     transactions?: Transaction[];
     uncles?: Uncle[];
+    rewards?: Reward[];
 }
 
 export class BlockHeader {
-    number?: Long;
+    number?: string;
     hash?: string;
     parentHash?: string;
     nonce?: string;
@@ -119,6 +120,53 @@ export class BlockHeader {
     blockTime?: string;
 }
 
+export class BlockMetrics {
+    timestamp?: string;
+    blockCount?: string;
+    maxDifficulty?: string;
+    avgDifficulty?: string;
+    minDifficulty?: string;
+    sumDifficulty?: string;
+    txCount?: string;
+    maxTotalGasPrice?: string;
+    minTotalGasPrice?: string;
+    avgTotalGasPrice?: string;
+    sumTotalGasPrice?: string;
+    maxAvgGasLimit?: string;
+    minAvgGasLimit?: string;
+    avgAvgGasLimit?: string;
+    sumAvgGasLimit?: string;
+    maxAvgGasPrice?: string;
+    minAvgGasPrice?: string;
+    avgAvgGasPrice?: string;
+    sumAvgGasPrice?: string;
+    maxTotalTxFees?: string;
+    minTotalTxFees?: string;
+    avgTotalTxFees?: string;
+    sumTotalTxFees?: string;
+    maxAvgTxFees?: string;
+    minAvgTxFees?: string;
+    avgAvgTxFees?: string;
+    sumAvgTxFees?: string;
+    traceCount?: string;
+    maxTotalTxs?: number;
+    minTotalTxs?: number;
+    avgTotalTxs?: string;
+    sumTotalTxs?: string;
+    maxNumSuccessfulTxs?: number;
+    minNumSuccessfulTxs?: number;
+    avgNumSuccessfulTxs?: string;
+    sumNumSuccessfulTxs?: string;
+    maxNumFailedTxs?: number;
+    minNumFailedTxs?: number;
+    avgNumFailedTxs?: string;
+    sumNumFailedTxs?: string;
+    maxNumInternalTxs?: number;
+    minNumInternalTxs?: number;
+    avgNumInternalTxs?: string;
+    sumNumInternalTxs?: string;
+}
+
 export class Contract {
     address?: string;
     creator?: string;
@@ -127,13 +175,13 @@ export class Contract {
     refundAddress?: string;
     refundBalance?: number;
     traceCreatedAtBlockHash?: string;
-    traceCreatedAtBlockNumber?: Long;
+    traceCreatedAtBlockNumber?: string;
     traceCreatedAtTransactionHash?: string;
     traceCreatedAtTransactionIndex?: number;
     traceCreatedAtLogIndex?: number;
     traceCreatedAtTraceAddress?: string;
     traceDestroyedAtBlockHash?: string;
-    traceDestroyedAtBlockNumber?: Long;
+    traceDestroyedAtBlockNumber?: string;
     traceDestroyedAtTransactionHash?: string;
     traceDestroyedAtTransactionIndex?: Long;
     traceDestroyedAtLogIndex?: Long;
@@ -181,12 +229,6 @@ export class ContractSupport {
     url?: string;
 }
 
-export class EthplorerTokenInfo {
-    address?: string;
-    owner?: string;
-    holdersCount?: number;
-}
-
 export class ProcessingMetadata {
     id?: string;
     boolean?: boolean;
@@ -200,6 +242,8 @@ export class ProcessingMetadata {
 }
 
 export abstract class IQuery {
+    abstract blockMetricsByDay(duration: Duration): BlockMetrics[] | Promise<BlockMetrics[]>;
+
     abstract accountByAddress(address: string): Account | Promise<Account>;
 
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
@@ -215,16 +259,6 @@ export abstract class IQuery {
     abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
-
-    abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
-
-    abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
-
-    abstract totalNumTokenExchangeRates(): number | Promise<number>;
-
-    abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
-    abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract processingMetadataById(id: string): ProcessingMetadata | Promise<ProcessingMetadata>;
 
@@ -262,11 +296,21 @@ export abstract class IQuery {
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
 
-    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+    abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
+
+    abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+
+    abstract totalNumTokenExchangeRates(): number | Promise<number>;
+
+    abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
+    abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
+    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
 
-    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
@@ -298,7 +342,7 @@ export class Receipt {
     transactionHash?: string;
     transactionIndex?: string;
     blockHash?: string;
-    blockNumber?: number;
+    blockNumber?: string;
     from?: string;
     to?: string;
     contractAddress?: string;
@@ -308,6 +352,13 @@ export class Receipt {
     logsBloom?: string;
     root?: string;
     status?: string;
+}
+
+export class Reward {
+    address?: string;
+    blockHash?: string;
+    deltaType?: DeltaType;
+    amount?: string;
 }
 
 export class Search {
@@ -343,24 +394,23 @@ export class Token {
 }
 
 export class TokenExchangeRate {
-    id?: string;
     address?: string;
-    circulatingSupply?: string;
-    currentPrice?: Decimal;
-    high24h?: Decimal;
-    image?: string;
-    lastUpdated?: string;
-    low24h?: Decimal;
-    marketCap?: Decimal;
-    marketCapChange24h?: Decimal;
-    marketCapChangePercentage24h?: Decimal;
-    marketCapRank?: number;
+    symbol?: string;
     name?: string;
+    image?: string;
+    currentPrice?: Decimal;
+    marketCap?: Decimal;
+    marketCapRank?: number;
+    totalVolume?: Decimal;
+    high24h?: Decimal;
+    low24h?: Decimal;
     priceChange24h?: Decimal;
     priceChangePercentage24h?: Decimal;
-    symbol?: string;
+    marketCapChange24h?: Decimal;
+    marketCapChangePercentage24h?: Decimal;
+    circulatingSupply?: string;
     totalSupply?: string;
-    totalVolume?: Decimal;
+    lastUpdated?: string;
     owner?: string;
     holdersCount?: number;
 }
@@ -375,7 +425,7 @@ export class Trace {
     transactionHash?: string;
     traceAddress?: string;
     transactionPosition?: number;
-    blockNumber?: number;
+    blockNumber?: string;
     subtraces?: number;
     error?: string;
     type?: string;
@@ -387,7 +437,7 @@ export class Transaction {
     hash?: string;
     nonce?: string;
     blockHash?: string;
-    blockNumber?: number;
+    blockNumber?: string;
     transactionIndex?: number;
     from?: string;
     to?: string;
@@ -422,8 +472,14 @@ export class Transfer {
     timestamp?: string;
 }
 
+export class TransfersPage {
+    items?: Transfer[];
+    totalCount?: number;
+}
+
 export class Uncle {
     hash?: string;
+    index?: number;
     nephewNumber?: string;
     nephewHash?: string;
     number?: string;

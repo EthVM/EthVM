@@ -16,7 +16,7 @@ export class BlockService {
   ) {}
 
   async findBlockByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
-    const blockHeader = await this.blockHeaderRepository.findOne({ where: { hash }, relations: ['uncles'] })
+    const blockHeader = await this.blockHeaderRepository.findOne({ where: { hash }, relations: ['uncles', 'rewards'] })
     if (!blockHeader) return undefined
 
     blockHeader.txs = await this.findTxsByBlockHash(hash)
@@ -26,7 +26,7 @@ export class BlockService {
   async findBlocks(limit: number = 10, page: number = 0, fromBlock: number = -1): Promise<BlockHeaderEntity[]> {
     const where = fromBlock !== -1 ? {  number: LessThanOrEqual(fromBlock)  } : {}
     const skip = page * limit
-    const blocks = await this.blockHeaderRepository.find({ where, take: limit, skip, order: {number: 'DESC'}})
+    const blocks = await this.blockHeaderRepository.find({ where, take: limit, skip, order: {number: 'DESC'}, relations: ['rewards']})
     return this.findAndMapTxsAndUncles(blocks)
   }
 
@@ -52,7 +52,7 @@ export class BlockService {
 
   async findBlockByNumber(number: number): Promise<BlockHeaderEntity | undefined> {
 
-    const header = await this.blockHeaderRepository.findOne({ where: { number }, relations: ['uncles'] })
+    const header = await this.blockHeaderRepository.findOne({ where: { number }, relations: ['uncles', 'rewards'] })
     if (!header) return undefined
 
     header.txs = await this.findTxsByBlockHash(header.hash)
@@ -80,7 +80,13 @@ export class BlockService {
 
   async findMinedBlocksByAddress(address: string, limit: number = 10, page: number = 0): Promise<BlockHeaderEntity[]> {
     const skip = page * limit
-    const blocks = await this.blockHeaderRepository.find({ where: { author: address }, take: limit, skip, order: { number: 'DESC' } })
+    const blocks = await this.blockHeaderRepository.find({
+      where: { author: address },
+      take: limit,
+      skip,
+      order: { number: 'DESC' },
+      relations: ['rewards']
+    })
     return this.findAndMapTxsAndUncles(blocks)
   }
 

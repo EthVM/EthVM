@@ -14,9 +14,9 @@ query blocks($limit: Int, $page: Int, $fromBlock: Long) {
         error
       }
     }
-#    rewards {
-#      value
-#    }
+    rewards {
+      value: amount
+    }
     uncles {
       hash
     }
@@ -61,11 +61,11 @@ query blockByHash($hash: String) {
         error
       }
     }
-#    rewards {
-#      author
-#      rewardType
-#      value
-#    }
+    rewards {
+      author: address
+      rewardType: deltaType
+      value: amount
+    }
     uncles {
       hash
     }
@@ -109,11 +109,11 @@ query blockByNumber($number: Int) {
         error
       }
     }
-#    rewards {
-#      author
-#      rewardType
-#      value
-#    }
+    rewards {
+      author: address
+      rewardType: deltaType
+      value: amount
+    }
     uncles {
       hash
     }
@@ -136,10 +136,10 @@ query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
         status
       }
     }
-#    rewards {
-#      rewardType
-#      value
-#    }
+    rewards {
+      rewardType: deltaType
+      value: amount
+    }
   }
 }
 

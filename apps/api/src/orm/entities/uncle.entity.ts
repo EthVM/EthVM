@@ -13,6 +13,9 @@ export class UncleEntity {
   @PrimaryColumn({type: 'character', length: 66, readonly: true})
   hash!: string
 
+  @Column({type: 'integer', readonly: true})
+  index!: number
+
   @Column({type: 'numeric', readonly: true})
   nephewNumber!: string
 

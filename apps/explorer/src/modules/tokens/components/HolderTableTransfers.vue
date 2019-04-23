@@ -73,12 +73,12 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Tx } from '@app/core/models'
 import BN from 'bignumber.js'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue';
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
 const MAX_ITEMS = 10
 
 @Component({
-  components: {AppTimeAgo}
+  components: { AppTimeAgo }
 })
 export default class HolderTableTransfers extends Vue {
   /*

@@ -1,7 +1,7 @@
 import { assignClean } from '@app/shared/utils'
-import { EthplorerTokenInfo } from '@app/graphql/schema'
+import { Reward } from '@app/graphql/schema'
 
-export class EthplorerTokenInfoDto extends EthplorerTokenInfo {
+export class BlockRewardDto extends Reward {
   constructor(data: any) {
     super()
     assignClean(this, data)

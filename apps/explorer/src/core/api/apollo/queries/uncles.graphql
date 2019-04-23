@@ -10,7 +10,7 @@ query uncleByHash($hash: String!) {
     sha3Uncles
     timestamp
     nephewNumber
-    # uncleIndex
+    uncleIndex: index
     # uncleReward
   }
 }
@@ -22,7 +22,7 @@ query uncles($limit: Int, $page: Int, $fromUncle: Int) {
     hash
     number
     nephewNumber
-    # uncleIndex
+    uncleIndex: index
     # uncleReward
   }
 }

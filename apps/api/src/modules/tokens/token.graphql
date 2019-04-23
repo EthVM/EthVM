@@ -3,6 +3,11 @@ type Query {
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
   addressAllTokensOwned(address: String!): [Token]!
   addressAmountTokensOwned(address: String!): Int!
+  quote(symbol: ExchangeFrom!, to: ExchangeTo!): Quote
+  tokenExchangeRates(filter: TokenExchangeRateFilter!, limit: Int, page: Int): [TokenExchangeRate]!
+  totalNumTokenExchangeRates: Int!
+  tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
+  tokenExchangeRateByAddress(address: String!): TokenExchangeRate
 }
 
 type Token {
@@ -21,8 +26,43 @@ type TokenHolder {
   balance: String
 }
 
-type EthplorerTokenInfo {
+type TokenExchangeRate {
   address: String
+  symbol: String
+  name: String
+  image: String
+  currentPrice: Decimal
+  marketCap: Decimal
+  marketCapRank: Int
+  totalVolume: Decimal
+  high24h: Decimal
+  low24h: Decimal
+  priceChange24h: Decimal
+  priceChangePercentage24h: Decimal
+  marketCapChange24h: Decimal
+  marketCapChangePercentage24h: Decimal
+  circulatingSupply: String
+  totalSupply: String
+  lastUpdated: String
   owner: String
   holdersCount: Int
+}
+
+type Quote {
+  to: String
+  price: String
+  last_update: Decimal
+  vol_24h: String
+}
+
+enum ExchangeTo {
+  USD
+}
+
+enum ExchangeFrom {
+  ETH
+}
+
+enum TokenExchangeRateFilter {
+  price_high, price_low, volume_high, volume_low, market_cap_high, market_cap_low, market_cap_rank
 }

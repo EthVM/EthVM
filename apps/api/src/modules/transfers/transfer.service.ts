@@ -8,20 +8,20 @@ export class TransferService {
 
   constructor(
     @InjectRepository(FungibleBalanceTransferEntity)
-    private readonly transferRepository: Repository<FungibleBalanceTransferEntity>
+    private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, take: number = 10, page: number = 0): Promise<FungibleBalanceTransferEntity[]> {
+  async findTokenTransfersByContractAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
 
     const findOptions: FindManyOptions = {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
       skip,
       take,
-      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'}
+      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
     }
-    return this.transferRepository.find(findOptions)
+    return this.transferRepository.findAndCount(findOptions)
   }
 
   async findTokenTransfersByContractAddressForHolder(
@@ -62,9 +62,9 @@ export class TransferService {
 
   }
 
-  async findInternalTransactionsByAddress(address: string, take: number = 10, page: number = 0): Promise<FungibleBalanceTransferEntity[]> {
+  async findInternalTransactionsByAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
-    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DELETION']
+    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']
 
     return this.transferRepository.createQueryBuilder('t')
       .where('t.delta_type IN (:...deltaTypes)')
@@ -76,8 +76,8 @@ export class TransferService {
       .orderBy('t.traceLocationBlockNumber', 'DESC')
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(skip)
-      .take(take)
-      .getMany()
+      .limit(take)
+      .getManyAndCount()
 
   }
 

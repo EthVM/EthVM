@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
 import { BlockMetricService } from './block-metric.service'
-import { BlockMetricResolvers } from './block-metric.resolvers'
+import { BlockMetricsResolvers } from './block-metrics.resolvers'
 import { BlockMetricEntity } from '../../orm/entities/block-metric.entity'
-import { BlockMetricDto } from './block-metric.dto'
+import { BlockMetricsDto } from './block-metrics.dto'
 import { PubSub } from 'graphql-subscriptions'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
@@ -76,13 +76,13 @@ const mockService = {
 
 describe('BlockMetricResolvers', () => {
   let blockMetricService: BlockMetricService
-  let blockMetricResolvers: BlockMetricResolvers
+  let blockMetricResolvers: BlockMetricsResolvers
 
   beforeEach(async () => {
     // test module
     const module = await Test.createTestingModule({
       providers: [
-        BlockMetricResolvers,
+        BlockMetricsResolvers,
         EthService,
         {
           provide: 'PUB_SUB',
@@ -97,7 +97,7 @@ describe('BlockMetricResolvers', () => {
 
     // fetch dependencies
     blockMetricService = module.get<BlockMetricService>(BlockMetricService)
-    blockMetricResolvers = module.get<BlockMetricResolvers>(BlockMetricResolvers)
+    blockMetricResolvers = module.get<BlockMetricsResolvers>(BlockMetricsResolvers)
   })
 
   describe('blockMetricByHash', () => {
@@ -105,28 +105,28 @@ describe('BlockMetricResolvers', () => {
       expect(await blockMetricResolvers.blockMetricByHash(hashEleven)).toEqual(null)
     })
 
-    it('should return an instance of BlockMetricDto matching the hash provided', async () => {
+    it('should return an instance of BlockMetricsDto matching the hash provided', async () => {
       const blockMetricOne = await blockMetricResolvers.blockMetricByHash(hashOne)
       const blockMetricTwo = await blockMetricResolvers.blockMetricByHash(hashTwo)
 
       // check that distinct objects are returned based on hash and that they do not equal each other
 
       expect(blockMetricOne).not.toBeNull()
-      expect(blockMetricOne).toBeInstanceOf(BlockMetricDto)
+      expect(blockMetricOne).toBeInstanceOf(BlockMetricsDto)
       expect(blockMetricOne).toHaveProperty('hash', hashOne)
 
       expect(blockMetricTwo).not.toBeNull()
-      expect(blockMetricTwo).toBeInstanceOf(BlockMetricDto)
+      expect(blockMetricTwo).toBeInstanceOf(BlockMetricsDto)
       expect(blockMetricTwo).toHaveProperty('hash', hashTwo)
 
       expect(blockMetricOne).not.toEqual(blockMetricTwo)
     })
 
-    it('should convert a BlockMetricEntity to a BlockMetricDto', async () => {
+    it('should convert a BlockMetricEntity to a BlockMetricsDto', async () => {
       const blockMetricOne = await blockMetricResolvers.blockMetricByHash(hashOne)
 
       expect(blockMetricOne).toEqual(
-        new BlockMetricDto({
+        new BlockMetricsDto({
           id: 1,
           hash: hashOne
         })
@@ -135,7 +135,7 @@ describe('BlockMetricResolvers', () => {
   })
 
   describe('blockMetrics', () => {
-    it('should return an array of BlockMetricDto instances, respecting given limit and page parameters', async () => {
+    it('should return an array of BlockMetricsDto instances, respecting given limit and page parameters', async () => {
       const blockMetricsOne = await blockMetricResolvers.blockMetrics(5, 0)
       expect(blockMetricsOne).toHaveLength(5)
       expect(blockMetricsOne[0]).toHaveProperty('id', 1)
@@ -151,19 +151,19 @@ describe('BlockMetricResolvers', () => {
       expect(blockMetricsThree).toHaveLength(0)
     })
 
-    it('should convert an array of BlockMetricEntity instances to an array of BlockMetricDto instances', async () => {
+    it('should convert an array of BlockMetricEntity instances to an array of BlockMetricsDto instances', async () => {
       const blockMetrics = await blockMetricResolvers.blockMetrics()
       const expected = [
-        new BlockMetricDto({ id: 1, hash: hashOne }),
-        new BlockMetricDto({ id: 2, hash: hashTwo }),
-        new BlockMetricDto({ id: 3, hash: hashThree }),
-        new BlockMetricDto({ id: 4, hash: hashFour }),
-        new BlockMetricDto({ id: 5, hash: hashFive }),
-        new BlockMetricDto({ id: 6, hash: hashSix }),
-        new BlockMetricDto({ id: 7, hash: hashSeven }),
-        new BlockMetricDto({ id: 8, hash: hashEight }),
-        new BlockMetricDto({ id: 9, hash: hashNine }),
-        new BlockMetricDto({ id: 10, hash: hashTen })
+        new BlockMetricsDto({ id: 1, hash: hashOne }),
+        new BlockMetricsDto({ id: 2, hash: hashTwo }),
+        new BlockMetricsDto({ id: 3, hash: hashThree }),
+        new BlockMetricsDto({ id: 4, hash: hashFour }),
+        new BlockMetricsDto({ id: 5, hash: hashFive }),
+        new BlockMetricsDto({ id: 6, hash: hashSix }),
+        new BlockMetricsDto({ id: 7, hash: hashSeven }),
+        new BlockMetricsDto({ id: 8, hash: hashEight }),
+        new BlockMetricsDto({ id: 9, hash: hashNine }),
+        new BlockMetricsDto({ id: 10, hash: hashTen })
       ]
       expect(blockMetrics).toEqual(expect.arrayContaining(expected))
     })

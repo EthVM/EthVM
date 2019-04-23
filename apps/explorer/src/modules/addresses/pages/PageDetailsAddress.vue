@@ -51,8 +51,24 @@
         PENDING TXS TAB
       =====================================================================================
       -->
-      <v-tab-item slot="tabs-item" value="tab-2">
-        <table-address-txs :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" :error="pendingTxsError" />
+      <!--      <v-tab-item slot="tabs-item" value="tab-2">-->
+      <!--        <table-address-txs :loading="pendingTxsLoading" :address="account.address" :txs="account.pendingTxs" :is-pending="true" :error="pendingTxsError" />-->
+      <!--      </v-tab-item>-->
+      <!--
+      =====================================================================================
+        INTERNAL TRANSFERS TAB
+      =====================================================================================
+      -->
+      <v-tab-item slot="tabs-item" value="tab-5">
+        <token-table-transfers
+          :transfers="account.internalTransfers"
+          :total-transfers="account.totalInternalTransfers"
+          :loading="transfersLoading"
+          :error="hasTransfersError"
+          :page="transfersPage"
+          :show-type="true"
+          @page="setPageTransfers"
+        />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -96,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import { Block, Contract, EthValue, SimpleTx, PendingTx, SimpleBlock } from '@app/core/models'
+import { Block, Contract, EthValue, SimpleTx, PendingTx, SimpleBlock, Transfer } from '@app/core/models'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
@@ -109,6 +125,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Crumb, Tab } from '@app/core/components/props'
+import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 
 const MAX_ITEMS = 10
 
@@ -117,6 +134,7 @@ const CONTRACT_DETAIL_TYPE = 'contract'
 
 @Component({
   components: {
+    TokenTableTransfers,
     AppInfoLoad,
     AppBreadCrumbs,
     AppError,
@@ -157,6 +175,11 @@ export default class PageDetailsAddress extends Vue {
   /* Pending Txs: */
   pendingTxsLoading = true
   pendingTxsError = ''
+
+  /* Internal Transfers */
+  transfersLoading = true
+  transfersError = ''
+  transfersPage = 0
 
   /* Tokens: */
   tokensLoading = true
@@ -238,9 +261,11 @@ export default class PageDetailsAddress extends Vue {
           // TODO: Re-enable whenever contract creator functionality is finished
           const contractsCreated = Promise.resolve([]) // this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
 
+          const internalTransfers = this.fetchTransfers()
+
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
           // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
-          const promises = [addressTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
+          const promises = [addressTxs, minedBlocks, contractsCreated, internalTransfers].map(p => p.catch(() => undefined))
 
           Promise.all(promises)
             .then((res: any[]) => {
@@ -260,6 +285,12 @@ export default class PageDetailsAddress extends Vue {
 
               // Contract Creator
               this.account.contracts = res[2] || [] // res[3] || []
+
+              // Internal transfers
+              const transfersPage = res[3]
+              this.account.internalTransfers = transfersPage ? transfersPage.items : []
+              this.account.totalInternalTransfers = transfersPage ? transfersPage.totalCount : 0
+              this.transfersLoading = false
 
               this.sm.transition('load-token-complementary-info')
             })
@@ -322,6 +353,10 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
+  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: number }> {
+    return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
+  }
+
   fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<SimpleBlock[]> {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
@@ -339,6 +374,11 @@ export default class PageDetailsAddress extends Vue {
   setMinedPage(page: number): void {
     this.minedPage = page
     this.minerBlocksLoading = true
+  }
+
+  setPageTransfers(page: number): void {
+    this.transfersPage = page
+    this.transfersLoading = true
   }
 
   updateTxs(): void {
@@ -361,6 +401,19 @@ export default class PageDetailsAddress extends Vue {
       },
       err => {
         this.minerBlocksError = this.$i18n.t('message.no-data').toString()
+      }
+    )
+  }
+
+  updateTransfers(): void {
+    this.fetchTransfers().then(
+      res => {
+        this.account.internalTransfers = res.items
+        this.account.totalInternalTransfers = res.totalCount
+        this.transfersLoading = false
+      },
+      err => {
+        this.transfersError = this.$i18n.t('message.no-data').toString()
       }
     )
   }
@@ -388,6 +441,13 @@ export default class PageDetailsAddress extends Vue {
     this.updateMined()
   }
 
+  @Watch('transfersPage')
+  onTransfersPageChanges(newVal: number, oldVal: number): void {
+    if (newVal) {
+      this.updateTransfers()
+    }
+  }
+
   /*
   ===================================================================================
     Computed Values
@@ -404,6 +464,10 @@ export default class PageDetailsAddress extends Vue {
 
   get hasPendingTxsError(): boolean {
     return this.pendingTxsError !== ''
+  }
+
+  get hasTransfersError(): boolean {
+    return this.transfersError !== ''
   }
 
   get hasTokensError(): boolean {
@@ -461,9 +525,14 @@ export default class PageDetailsAddress extends Vue {
         title: this.$i18n.tc('token.name', 2),
         isActive: false
       },
+      // {
+      //   id: 2,
+      //   title: this.$i18n.tc('tx.pending', 2),
+      //   isActive: false
+      // },
       {
-        id: 2,
-        title: this.$i18n.tc('tx.pending', 2),
+        id: 5,
+        title: this.$i18n.tc('transfer.internal', 2),
         isActive: false
       }
     ]

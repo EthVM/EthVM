@@ -11,25 +11,23 @@ import { ContractModule } from '@app/modules/contracts/contract.module'
 import { UncleModule } from '@app/modules/uncles/uncle.module'
 import { TokenModule } from '@app/modules/tokens/token.module'
 import { TransferModule } from '@app/modules/transfers/transfer.module'
+import {BlockMetricsModule} from "@app/modules/block-metrics/block-metrics.module";
 
 @Module({
   imports: [
     SharedModule,
     GraphQLModule,
     OrmModule,
-    // SubscriptionsModule,
     BlockModule,
     AccountModule,
     ContractModule,
-    // ExchangeModule,
-    // ProcessingMetadataModule,
     TokenModule,
     TxModule,
     UncleModule,
-    // StatisticModule,
     SearchModule,
     LoggerModule,
-    TransferModule
+    TransferModule,
+    BlockMetricsModule
   ],
 })
 export class AppModule {}

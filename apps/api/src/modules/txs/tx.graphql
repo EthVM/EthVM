@@ -13,7 +13,7 @@ type Transaction {
   hash: String
   nonce: String
   blockHash: String
-  blockNumber: Int
+  blockNumber: String
   transactionIndex: Int
   from: String
   to: String
@@ -35,7 +35,7 @@ type Receipt {
   transactionHash: String
   transactionIndex: String
   blockHash: String
-  blockNumber: Int
+  blockNumber: String
   from: String
   to: String
   contractAddress: String
@@ -52,7 +52,7 @@ type Trace {
   transactionHash: String
   traceAddress: String
   transactionPosition: Int
-  blockNumber: Int
+  blockNumber: String
   subtraces: Int
   error: String
   type: String

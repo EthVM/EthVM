@@ -13,14 +13,6 @@ type Query {
   averageHashRate(duration: Duration!): [Statistic]
 }
 
-enum Duration {
-  ALL,
-  YEAR,
-  MONTH,
-  WEEK,
-  DAY
-}
-
 type Statistic {
   date: Long
   value: StatisticValue

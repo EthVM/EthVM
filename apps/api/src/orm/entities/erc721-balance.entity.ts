@@ -12,7 +12,7 @@ export class Erc721BalanceEntity {
   contract!: string
 
   @PrimaryColumn({type: 'numeric', readonly: true})
-  tokenId!: number
+  tokenId!: string
 
   @PrimaryColumn({type: 'character', length: 42, readonly: true})
   address!: string
@@ -21,7 +21,7 @@ export class Erc721BalanceEntity {
   traceLocationBlockHash?: string
 
   @Column({type: 'numeric', readonly: true})
-  traceLocationBlockNumber?: number
+  traceLocationBlockNumber?: string
 
   @Column({type: 'character', length: 66, readonly: true})
   traceLocationTransactionHash?: string
