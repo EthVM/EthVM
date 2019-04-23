@@ -53,10 +53,10 @@
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Vue } from 'vue-property-decorator'
-  import BN from 'bignumber.js'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import BN from 'bignumber.js'
 
-  const MAX_ITEMS = 5
+const MAX_ITEMS = 5
 
 @Component
 export default class TokenTableHolders extends Vue {

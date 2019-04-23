@@ -1,4 +1,4 @@
-import {Column, PrimaryColumn} from "typeorm";
+import {Column, PrimaryColumn} from 'typeorm';
 
 export abstract class BlockMetric {
 

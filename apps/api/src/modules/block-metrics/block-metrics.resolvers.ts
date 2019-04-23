@@ -1,7 +1,7 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
-import {BlockMetricsService} from "@app/modules/block-metrics/block-metrics.service";
-import {Duration, DurationService} from "@app/shared/duration.service";
-import {BlockMetricsDto} from "@app/modules/block-metrics/block-metrics.dto";
+import {BlockMetricsService} from '@app/modules/block-metrics/block-metrics.service';
+import {Duration, DurationService} from '@app/shared/duration.service';
+import {BlockMetricsDto} from '@app/modules/block-metrics/block-metrics.dto';
 
 @Resolver('BlockMetric')
 export class BlockMetricsResolvers {

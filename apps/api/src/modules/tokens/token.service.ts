@@ -21,7 +21,7 @@ export class TokenService {
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
     @InjectRepository(ContractEntity)
     private readonly contractRepository: Repository<ContractEntity>,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<Erc20BalanceEntity[] | Erc721BalanceEntity[]> {
@@ -51,7 +51,7 @@ export class TokenService {
     const erc20Tokens = await this.erc20BalanceRepository.find(findOptions)
     const erc721Tokens = await this.erc721BalanceRepository.find(findOptions)
 
-    let tokenDtos: TokenDto[] = []
+    const tokenDtos: TokenDto[] = []
 
     erc20Tokens.forEach(entity => {
       tokenDtos.push(this.constructTokenDto(entity))
@@ -64,7 +64,7 @@ export class TokenService {
   }
 
   private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
-    let { tokenExchangeRate, metadata } = entity
+    const { tokenExchangeRate, metadata } = entity
     const tokenData = metadata || {} as any
     if (entity instanceof Erc20BalanceEntity) { tokenData.balance = entity.amount }
     if (tokenExchangeRate) { tokenData.currentPrice = tokenExchangeRate.currentPrice }

@@ -48,7 +48,7 @@ export class Erc721BalanceEntity {
   @ManyToOne(type => Erc721MetadataEntity, metadata => metadata.balances)
   @JoinColumn({
     name: 'contract',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   metadata?: Erc721MetadataEntity
 

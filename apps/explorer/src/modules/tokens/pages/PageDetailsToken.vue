@@ -328,7 +328,8 @@ export default class PageDetailsToken extends Vue {
    */
   fetchContractDetails(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.$api.getContract(this.addressRef)
+      this.$api
+        .getContract(this.addressRef)
         .then(response => {
           if (response === null) {
             reject(this.$i18n.t('message.invalid.addr').toString())

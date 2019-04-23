@@ -87,13 +87,13 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Prop } from 'vue-property-decorator'
-  import BN from 'bignumber.js'
-  import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-  import { Transfer } from "@app/core/models"
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import BN from 'bignumber.js'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import { Transfer } from '@app/core/models'
 
-  const MAX_ITEMS = 10
+const MAX_ITEMS = 10
 
 @Component({
   components: {

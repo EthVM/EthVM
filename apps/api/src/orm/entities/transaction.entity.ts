@@ -21,7 +21,7 @@ export class TransactionEntity {
   blockHash!: string
 
   @Column({type: 'numeric', readonly: true})
-  blockNumber!: String
+  blockNumber!: string
 
   @Column({type: 'integer', readonly: true})
   transactionIndex!: number

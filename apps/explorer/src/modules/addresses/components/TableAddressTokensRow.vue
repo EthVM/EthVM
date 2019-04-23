@@ -21,14 +21,14 @@
                 <v-icon v-on="data.on" small class="info--text text-xs-center">fa fa-question-circle</v-icon>
               </template>
               <span
-              >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true), 5) }} (@ ${{
-                getRoundNumber(token.currentPrice)
-              }}
-              per {{ token.symbol }})</span
+                >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true), 5) }} (@ ${{
+                  getRoundNumber(token.currentPrice)
+                }}
+                per {{ token.symbol }})</span
               >
             </v-tooltip>
             {{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true)) }} (@ ${{
-            getRoundNumber(token.currentPrice)
+              getRoundNumber(token.currentPrice)
             }}
             per {{ token.symbol }})
           </template>

@@ -1,13 +1,13 @@
-import {Injectable} from "@nestjs/common";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Between, FindManyOptions, Repository} from "typeorm";
-import {BlockMetricsDailyEntity} from "@app/orm/entities/block-metrics-daily.entity";
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Between, FindManyOptions, Repository} from 'typeorm';
+import {BlockMetricsDailyEntity} from '@app/orm/entities/block-metrics-daily.entity';
 
 @Injectable()
 export class BlockMetricsService {
 
   constructor(@InjectRepository(BlockMetricsDailyEntity)
-              private readonly blockMetricsDailyRepository: Repository<BlockMetricsDailyEntity>,) {
+              private readonly blockMetricsDailyRepository: Repository<BlockMetricsDailyEntity>) {
   }
 
   async findBlockMetricsDaily(start: Date, end: Date, fields?: string[]): Promise<BlockMetricsDailyEntity[]> {
@@ -18,9 +18,9 @@ export class BlockMetricsService {
     const findOptions: FindManyOptions<BlockMetricsDailyEntity> = {
       where: {
         // Timestamps are seconds since epoch
-        timestamp: Between(startSeconds, endSeconds)
+        timestamp: Between(startSeconds, endSeconds),
       },
-      order: { timestamp: -1 }
+      order: { timestamp: -1 },
     }
 
     if (fields) {

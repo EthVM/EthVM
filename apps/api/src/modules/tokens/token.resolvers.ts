@@ -68,6 +68,6 @@ export class TokenResolvers {
     if (!tokenExchangeRate) return null
     const contract = await this.tokenService.findContractInfoForToken(address)
     const holdersCount = await this.tokenService.countTokenHolders(address)
-    return new TokenExchangeRateDto({ ...tokenExchangeRate, owner: contract? contract.creator : null, holdersCount })
+    return new TokenExchangeRateDto({ ...tokenExchangeRate, owner: contract ? contract.creator : null, holdersCount })
   }
 }
