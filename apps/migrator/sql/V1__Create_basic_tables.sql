@@ -1,3 +1,34 @@
+
+/* General notification trigger */
+
+CREATE FUNCTION notify_event() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+  table_name TEXT;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record = OLD;
+  ELSE
+    record = NEW;
+  END IF;
+
+  if (TG_NARGS = 1) THEN
+      table_name = TG_ARGV[0];
+  ELSE
+      table_name = TG_TABLE_NAME;
+  END IF;
+
+  payload = json_build_object('table', table_name, 'action', TG_OP, 'id', TG_RELID);
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
 /* Canonical blocks table which is updated on fork */
 CREATE TABLE canonical_block_header
 (
@@ -27,6 +58,7 @@ CREATE INDEX idx_block_header_parent_hash ON canonical_block_header (parent_hash
 CREATE INDEX idx_block_header_author ON canonical_block_header (author);
 
 /* A view to help with address metadata */
+
 CREATE VIEW canonical_block_author AS
 SELECT cb.author AS address,
        COUNT(*)  AS count
@@ -34,10 +66,14 @@ FROM canonical_block_header AS cb
 GROUP BY cb.author
 ORDER BY count DESC;
 
+CREATE TRIGGER notify_canonical_block_header
+AFTER INSERT OR UPDATE OR DELETE ON canonical_block_header
+FOR EACH ROW EXECUTE PROCEDURE notify_event();
+
 CREATE TABLE uncle
 (
   hash              CHAR(66) PRIMARY KEY,
-  index             INT NOT NULL,
+  index             INT       NOT NULL,
   nephew_hash       CHAR(66)  NOT NULL,
   number            NUMERIC   NOT NULL,
   height            NUMERIC   NOT NULL,
@@ -90,6 +126,10 @@ CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
+CREATE TRIGGER notify_transaction
+AFTER INSERT OR UPDATE OR DELETE ON "transaction"
+FOR EACH ROW EXECUTE PROCEDURE notify_event();
+
 /* This view helps to filter out non-canonical transactions based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction AS
 SELECT t.*
@@ -123,6 +163,10 @@ CREATE INDEX idx_transaction_receipt_from ON transaction_receipt ("from");
 CREATE INDEX idx_transaction_receipt_to ON transaction_receipt ("to");
 CREATE INDEX idx_transaction_receipt_from_to ON transaction_receipt ("from", "to");
 CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("contract_address");
+
+CREATE TRIGGER notify_transaction_receipt
+  AFTER INSERT OR UPDATE OR DELETE ON transaction_receipt
+  FOR EACH ROW EXECUTE PROCEDURE notify_event();
 
 /* This view helps to filter out non canonical receipts based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_receipt AS
@@ -189,6 +233,10 @@ CREATE TABLE contract
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
+
+CREATE TRIGGER notify_contract
+  AFTER INSERT OR UPDATE OR DELETE ON contract
+  FOR EACH ROW EXECUTE PROCEDURE notify_event();
 
 CREATE VIEW canonical_contract AS
 SELECT c.*
@@ -279,8 +327,7 @@ WHERE cb.number IS NOT NULL
   AND fbd.address IS NOT NULL;
 
 CREATE VIEW canonical_fungible_balance_transfer AS
-SELECT
-       fbd.id,
+SELECT fbd.id,
        fbd.counterpart_address AS "from",
        fbd.address             AS "to",
        fbd.contract_address,
@@ -295,7 +342,7 @@ SELECT
        fbd.trace_location_trace_address,
        bh.timestamp
 FROM canonical_fungible_balance_deltas AS fbd
-LEFT JOIN canonical_block_header AS bh ON fbd.trace_location_block_hash = bh.hash
+       LEFT JOIN canonical_block_header AS bh ON fbd.trace_location_block_hash = bh.hash
 WHERE fbd.amount > 0;
 
 CREATE VIEW canonical_account AS
@@ -371,7 +418,7 @@ CREATE TABLE non_fungible_balance_delta
   "to"                             CHAR(42)    NOT NULL
 );
 
-CREATE INDEX idx_non_fungible_balance_deltas_contract ON non_fungible_balance_delta(contract);
+CREATE INDEX idx_non_fungible_balance_deltas_contract ON non_fungible_balance_delta (contract);
 CREATE INDEX idx_non_fungible_balance_deltas_contract_token_id ON non_fungible_balance_delta (contract, token_id);
 CREATE INDEX idx_non_fungible_balance_deltas_from ON non_fungible_balance_delta ("from");
 CREATE INDEX idx_non_fungible_balance_deltas_to ON non_fungible_balance_delta ("to");
@@ -379,12 +426,11 @@ CREATE INDEX idx_non_fungible_balance_deltas_from_to ON non_fungible_balance_del
 CREATE INDEX idx_non_fungible_balance_deltas_trace_location_block_hash ON non_fungible_balance_delta (trace_location_block_hash);
 
 CREATE VIEW canonical_non_fungible_balance_deltas AS
-    SELECT
-      nfbd.*
-    FROM non_fungible_balance_delta AS nfbd
-    RIGHT JOIN canonical_block_header AS cb ON nfbd.trace_location_block_hash = cb.hash
-    WHERE cb.number IS NOT NULL
-      AND nfbd.contract IS NOT NULL;
+SELECT nfbd.*
+FROM non_fungible_balance_delta AS nfbd
+       RIGHT JOIN canonical_block_header AS cb ON nfbd.trace_location_block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND nfbd.contract IS NOT NULL;
 
 
 CREATE TABLE erc20_metadata
@@ -432,11 +478,10 @@ SELECT cb.number as nephew_number,
 FROM uncle AS u
        RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
        LEFT JOIN block_reward AS br ON u.nephew_hash = br.block_hash
-WHERE
-  cb.number IS NOT NULL AND
-  u.hash IS NOT NULL AND
-    br.delta_type = 'UNCLE_REWARD' AND
-    u.author = br.address
+WHERE cb.number IS NOT NULL
+  AND u.hash IS NOT NULL
+  AND br.delta_type = 'UNCLE_REWARD'
+  AND u.author = br.address
 ORDER BY cb.number DESC;
 
 
@@ -462,6 +507,10 @@ CREATE TABLE token_exchange_rates
   last_updated                    BIGINT      NULL
 );
 
+CREATE TRIGGER notify_token_exchange_rates
+  AFTER INSERT OR UPDATE OR DELETE ON token_exchange_rates
+  FOR EACH ROW EXECUTE PROCEDURE notify_event();
+
 /* metrics hyper tables */
 CREATE TABLE block_metrics_header
 (
@@ -475,6 +524,10 @@ CREATE TABLE block_metrics_header
   UNIQUE (block_hash, timestamp)
 );
 
+CREATE TRIGGER notify_block_metrics_header
+  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_header
+  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_header');
+
 CREATE TABLE block_metrics_transaction
 (
   block_number    NUMERIC  NOT NULL,
@@ -485,6 +538,10 @@ CREATE TABLE block_metrics_transaction
   avg_gas_price   NUMERIC  NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
+
+CREATE TRIGGER notify_block_metrics_transaction
+  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction
+  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction');
 
 CREATE TABLE block_metrics_transaction_trace
 (
@@ -498,6 +555,10 @@ CREATE TABLE block_metrics_transaction_trace
   UNIQUE (block_hash, timestamp)
 );
 
+CREATE TRIGGER notify_block_metrics_transaction_trace
+  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction_trace
+  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction_trace');
+
 CREATE TABLE block_metrics_transaction_fee
 (
   block_number  NUMERIC  NOT NULL,
@@ -507,6 +568,11 @@ CREATE TABLE block_metrics_transaction_fee
   avg_tx_fees   NUMERIC  NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
+
+
+CREATE TRIGGER notify_block_metrics_transaction_fee
+  AFTER INSERT OR UPDATE OR DELETE ON block_metrics_transaction_fee
+  FOR EACH ROW EXECUTE PROCEDURE notify_event('block_metrics_transaction_fee');
 
 /* 1 day chunks */
 SELECT create_hypertable('block_metrics_header',
