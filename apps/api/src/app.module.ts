@@ -29,7 +29,7 @@ import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
     LoggerModule,
     TransferModule,
     BlockMetricsModule,
-    SubscriptionsModule
+    SubscriptionsModule,
   ],
 })
 export class AppModule { }

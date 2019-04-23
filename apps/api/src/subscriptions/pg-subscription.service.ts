@@ -1,12 +1,12 @@
-import { ConfigService } from '@app/shared/config.service';
-import { Inject, Injectable } from '@nestjs/common';
-import { PubSub } from 'graphql-subscriptions';
-import createSubscriber from 'pg-listen';
-import { Observable } from 'rxjs';
-import { Logger } from 'winston';
+import { ConfigService } from '@app/shared/config.service'
+import { Inject, Injectable } from '@nestjs/common'
+import { PubSub } from 'graphql-subscriptions'
+import createSubscriber from 'pg-listen'
+import { Observable } from 'rxjs'
+import { Logger } from 'winston'
 
 interface CanonicalBlockHeaderPayload {
-  hash: string,
+  hash: string
   number: string
 }
 
@@ -21,13 +21,12 @@ interface ContractPayload {
 type EventPayload = CanonicalBlockHeaderPayload | TransactionPayload | ContractPayload
 
 interface Event {
-  table: string,
-  action: string,
+  table: string
+  action: string
   payload: EventPayload
 }
 
 class RateCalculator {
-
   private countsBySecond: number[]
 
   constructor(private readonly windowSeconds: number) {
@@ -35,8 +34,7 @@ class RateCalculator {
   }
 
   update(timestamp: number) {
-
-    const { countsBySecond, windowSeconds } = this;
+    const { countsBySecond, windowSeconds } = this
 
     // add new entry
 
@@ -51,19 +49,15 @@ class RateCalculator {
 
     // iterate over the sparse array
     for (const key in countsBySecond) {
-
-      const keyNumber = +key;
+      const keyNumber = +key
 
       // record any entries which are outside the time window and need removed
       if (keyNumber < minTimestampSecond) {
         toRemove.push(keyNumber)
       } else {
-
         total += countsBySecond[key]
         n += 1
-
       }
-
     }
 
     // remove older entries
@@ -73,34 +67,23 @@ class RateCalculator {
 
     return total / n
   }
-
 }
 
 @Injectable()
 export class PgSubscriptionService {
+  private readonly url: string
 
-  private readonly url: String;
-
-  constructor(
-    @Inject('PUB_SUB') private readonly pubSub: PubSub,
-    @Inject('winston') private readonly logger: Logger,
-    private readonly config: ConfigService
-  ) {
-
+  constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub, @Inject('winston') private readonly logger: Logger, private readonly config: ConfigService) {
     this.url = config.db.url
 
-    this.init();
-
+    this.init()
   }
 
   private async init() {
-
     const { url, logger } = this
 
     const events$ = Observable.create(async observer => {
-
       try {
-
         const subscriber = createSubscriber({ connectionString: url })
 
         subscriber.notifications.on('events', e => observer.next(e))
@@ -112,34 +95,24 @@ export class PgSubscriptionService {
         return () => {
           subscriber.close()
         }
-
       } catch (err) {
         observer.error(err)
       }
-
     })
 
     const rateCalculator = new RateCalculator(30)
 
     events$.subscribe(event => {
-
       const eventRate = rateCalculator.update(new Date().getTime())
 
       if (eventRate < 200) {
         this.logger.info(`Event rate: ${eventRate}`)
         this.onEvent(event)
       }
-
     })
-
   }
 
   private async onEvent(event: Event) {
-
-
-
     this.logger.info('Event received', event)
   }
-
 }
-
