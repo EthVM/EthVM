@@ -4,12 +4,12 @@ import { PgSubscriptionService } from '@app/subscriptions/pg-subscription.servic
 
 const pubSubProvider = {
   provide: 'PUB_SUB',
-  useValue: new PubSub()
+  useValue: new PubSub(),
 }
 
 @Module({
   imports: [],
   providers: [pubSubProvider, PgSubscriptionService],
-  exports: [pubSubProvider]
+  exports: [pubSubProvider],
 })
 export class SubscriptionsModule {}

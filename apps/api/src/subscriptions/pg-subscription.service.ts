@@ -48,7 +48,7 @@ class RateCalculator {
     let n = 0
 
     // iterate over the sparse array
-    for (const key in countsBySecond) {
+    for (const key of countsBySecond) {
       const keyNumber = +key
 
       // record any entries which are outside the time window and need removed
@@ -61,7 +61,7 @@ class RateCalculator {
     }
 
     // remove older entries
-    for (const key in toRemove) {
+    for (const key of toRemove) {
       delete countsBySecond[key]
     }
 
