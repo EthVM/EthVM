@@ -35,7 +35,7 @@ class ExchangeRatesSourceConnectorTest : BehaviorSpec() {
         }
       }
 
-      When("we ask for curren task class") {
+      When("we ask for current task class") {
 
         val taskClass = connector.taskClass()
 

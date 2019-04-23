@@ -5,6 +5,8 @@ import org.apache.kafka.connect.source.SourceRecord
 
 interface ExchangeProvider {
 
+  val id: String
+
   @Throws(Exception::class)
   fun fetch(): List<SourceRecord>
 }

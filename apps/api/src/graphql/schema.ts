@@ -262,12 +262,6 @@ export abstract class IQuery {
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
 
-    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
-
-    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
-
-    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
-
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
     abstract txs(limit?: number, page?: number, fromBlock?: number): Transaction[] | Promise<Transaction[]>;
@@ -275,6 +269,12 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
+
+    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+
+    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+
+    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
 
     abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
 

@@ -1,0 +1,23 @@
+{
+  "bitcoin": {
+    "usd": 5533.48,
+    "usd_market_cap": 97751804938.9725,
+    "usd_24h_vol": 18786140482.468513,
+    "usd_24h_change": 4.121102578709593,
+    "last_updated_at": 1556016581
+  },
+  "ethereum": {
+    "usd": 174.59,
+    "usd_market_cap": 18461192331.9233,
+    "usd_24h_vol": 6704277048.93306,
+    "usd_24h_change": 1.561196610490883,
+    "last_updated_at": 1556016580
+  },
+  "monero": {
+    "usd": 70.31,
+    "usd_market_cap": 1189503453.232309,
+    "usd_24h_vol": 360839987.32438004,
+    "usd_24h_change": 2.0422867734903782,
+    "last_updated_at": 1556016582
+  }
+}

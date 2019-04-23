@@ -25,4 +25,17 @@ protocol Exchange {
     union { null, long } lastUpdated;
   }
 
+  record CoinExchangeRateKeyRecord {
+    string id;
+  }
+
+  record CoinExchangeRateRecord {
+    string id;
+    double price;
+    double marketCap;
+    double vol24h;
+    double change24h;
+    long lastUpdated;
+  }
+
 }
