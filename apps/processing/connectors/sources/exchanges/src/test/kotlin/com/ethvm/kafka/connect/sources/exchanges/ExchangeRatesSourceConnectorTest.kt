@@ -1,5 +1,6 @@
 package com.ethvm.kafka.connect.sources.exchanges
 
+import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoTokenExchangeProvider
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -65,6 +66,16 @@ class ExchangeRatesSourceConnectorTest : BehaviorSpec() {
 
         Then("we should obtain an exception (only one allowed)") {
           exception::class shouldBe AssertionError::class
+        }
+      }
+
+      When("we request for a provider") {
+
+        val empty = mutableMapOf<String, String>()
+        val provider = ExchangeRatesSourceConnector.Config.provider(empty)
+
+        Then("we should obtain a default CoinGeckoExchangeProvider provider") {
+          provider::class shouldBe CoinGeckoExchangeProvider::class
         }
       }
     }

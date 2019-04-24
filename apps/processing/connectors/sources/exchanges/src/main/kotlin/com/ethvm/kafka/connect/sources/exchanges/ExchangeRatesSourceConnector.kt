@@ -11,7 +11,6 @@ import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Co
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.SYNC_INTERVAL_DEFAULT
 import com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector.Config.SYNC_INTERVAL_DOC
 import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoExchangeProvider
-import com.ethvm.kafka.connect.sources.exchanges.provider.CoinGeckoTokenExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProvider
 import com.ethvm.kafka.connect.sources.exchanges.provider.ExchangeProviders
 import com.ethvm.kafka.connect.sources.exchanges.utils.Versions
@@ -22,7 +21,6 @@ import org.apache.kafka.common.config.ConfigDef.Type
 import org.apache.kafka.connect.connector.Task
 import org.apache.kafka.connect.source.SourceConnector
 import java.util.concurrent.TimeUnit
-import kotlin.jvm.java
 import kotlin.jvm.javaClass as jc
 
 class ExchangeRatesSourceConnector : SourceConnector() {
@@ -82,14 +80,8 @@ class ExchangeRatesSourceConnector : SourceConnector() {
           return when (provider.t) {
 
             ExchangeProviders.COIN_GECKO -> {
-              val options = mutableMapOf<String, Any>()
-                .also {
-                  jc.getResourceAsStream(rawOpts)
-                    ?.let { stream -> CoinGeckoExchangeProvider.jackson.readValue<Map<String, Any>>(stream) }
-                    ?.forEach { (k, v) -> it[k] = v }
-                }
-
-              CoinGeckoTokenExchangeProvider(if (options.isNotEmpty()) options else CoinGeckoTokenExchangeProvider.DEFAULT_OPTS)
+              val options = CoinGeckoExchangeProvider.jackson.readValue<Map<String, Map<String, Any>>>(rawOpts)
+              CoinGeckoExchangeProvider(if (options.isNotEmpty()) options else CoinGeckoExchangeProvider.DEFAULT_OPTS)
             }
           }
         }

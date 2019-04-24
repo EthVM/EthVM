@@ -29,32 +29,29 @@ class CoinGeckoExchangeProvider(
 
   override val id: String = CoinGeckoExchangeProvider::class.simpleName!!
 
-  private val providers: List<ExchangeProvider>
-
-  init {
+  private val providers: List<ExchangeProvider> by lazy {
     val providers: MutableList<ExchangeProvider> = mutableListOf()
 
-    if (options.containsKey("CoinGeckoCurrencyExchangeProvider")) {
-      @Suppress("UNCHECKED_CAST")
-      val currencyOpts: Map<String, Any> = when (val raw = options["CoinGeckoCurrencyExchangeProvider"]) {
-        is Map<*, *> -> raw as Map<String, Any>
-        is String -> jackson.readValue(raw)
-        else -> CoinGeckoCurrencyExchangeProvider.DEFAULT_OPTS
+    when {
+      options.containsKey("CoinGeckoCurrencyExchangeProvider") -> {
+        @Suppress("UNCHECKED_CAST")
+        val currencyOpts: Map<String, Any> = when (val raw = options["CoinGeckoCurrencyExchangeProvider"]) {
+          is Map<*, *> -> raw as Map<String, Any>
+          else -> CoinGeckoCurrencyExchangeProvider.DEFAULT_OPTS
+        }
+        providers.add(CoinGeckoCurrencyExchangeProvider(currencyOpts, okHttpClient, jackson))
       }
-      providers.add(CoinGeckoCurrencyExchangeProvider(currencyOpts, okHttpClient, jackson))
+      options.containsKey("CoinGeckoTokenExchangeProvider") -> {
+        @Suppress("UNCHECKED_CAST")
+        val tokensOpts: Map<String, Any> = when (val raw = options["CoinGeckoTokenExchangeProvider"]) {
+          is Map<*, *> -> raw as Map<String, Any>
+          else -> CoinGeckoTokenExchangeProvider.DEFAULT_OPTS
+        }
+        providers.add(CoinGeckoTokenExchangeProvider(tokensOpts, okHttpClient, jackson))
+      }
     }
 
-    if (options.containsKey("CoinGeckoTokenExchangeProvider")) {
-      @Suppress("UNCHECKED_CAST")
-      val tokensOpts: Map<String, Any> = when (val raw = options["CoinGeckoTokenExchangeProvider"]) {
-        is Map<*, *> -> raw as Map<String, Any>
-        is String -> jackson.readValue(raw)
-        else -> CoinGeckoTokenExchangeProvider.DEFAULT_OPTS
-      }
-      providers.add(CoinGeckoTokenExchangeProvider(tokensOpts, okHttpClient, jackson))
-    }
-
-    this.providers = providers
+    providers
   }
 
   override fun fetch(): List<SourceRecord> =
@@ -67,7 +64,7 @@ class CoinGeckoExchangeProvider(
 
     val jackson = jacksonObjectMapper().apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
 
-    val DEFAULT_OPTS: Map<String, Any> = mapOf(
+    val DEFAULT_OPTS: Map<String, Map<String, Any>> = mapOf(
       "CoinGeckoCurrencyExchangeProvider" to CoinGeckoCurrencyExchangeProvider.DEFAULT_OPTS,
       "CoinGeckoTokenExchangeProvider" to CoinGeckoTokenExchangeProvider.DEFAULT_OPTS
     )
@@ -185,7 +182,7 @@ class CoinGeckoCurrencyExchangeProvider(
         .build()
 
     val DEFAULT_OPTS: Map<String, Any> = mapOf(
-      "topic" to "coin-exchange-rates",
+      "topic" to "coin_exchange_rates",
       "currency" to "usd",
       "coinIds" to listOf("ethereum,bitcoin,monero")
     )
@@ -298,13 +295,10 @@ class CoinGeckoTokenExchangeProvider(
         .build()
 
     val DEFAULT_OPTS: Map<String, Any> = mapOf(
-      "topic" to "token-exchange-rates",
+      "topic" to "token_exchange_rates",
       "currency" to "usd",
-      "tokenIds" to (
-        CoinGeckoTokenExchangeProvider::class.java
-          .getResourceAsStream("/coingecko/coingecko-eth.json")
-          ?.let { stream -> jackson.readValue<List<TokenIdEntry>>(stream) } ?: emptyList()
-        ),
+      "tokenIds" to CoinGeckoTokenExchangeProvider::class.java
+        .getResourceAsStream("/coingecko/coingecko-eth.json")!!.let { stream -> jackson.readValue<List<TokenIdEntry>>(stream) },
       "perPage" to 50
     )
   }
