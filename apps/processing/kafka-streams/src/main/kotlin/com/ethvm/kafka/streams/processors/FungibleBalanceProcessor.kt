@@ -28,7 +28,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalTracesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.FungibleBalance
-import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDeltas
+import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
 import com.ethvm.kafka.streams.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
@@ -83,7 +83,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
   private fun aggregateBalances(builder: StreamsBuilder) {
 
-    FungibleBalanceDeltas.stream(builder)
+    FungibleBalanceDelta.stream(builder)
       .groupByKey(Grouped.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalanceDelta()))
       .aggregate(
         {
@@ -161,7 +161,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         }
       }
       .filter { _, v -> v.getAmount() != null && v.getAmountBI() != BigInteger.ZERO }
-      .toTopic(FungibleBalanceDeltas)
+      .toTopic(FungibleBalanceDelta)
 
     //
 
@@ -185,7 +185,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
           }
       }
       .filter { _, v -> v.getAmount() != null && v.getAmountBI() != BigInteger.ZERO }
-      .toTopic(FungibleBalanceDeltas)
+      .toTopic(FungibleBalanceDelta)
   }
 
   /**
@@ -321,7 +321,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         } else {
           emptyList()
         }
-      }.toTopic(FungibleBalanceDeltas)
+      }.toTopic(FungibleBalanceDelta)
   }
 
   private fun erc20DeltasForReceipts(builder: StreamsBuilder) {
@@ -453,7 +453,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         } else {
           emptyList()
         }
-      }.toTopic(FungibleBalanceDeltas)
+      }.toTopic(FungibleBalanceDelta)
   }
 
   override fun start(cleanUp: Boolean) {

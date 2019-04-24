@@ -114,7 +114,7 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: fungible_balance_deltas
+  - name: fungible_balance_delta
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
@@ -126,7 +126,7 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: non_fungible_balance_deltas
+  - name: non_fungible_balance_delta
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:

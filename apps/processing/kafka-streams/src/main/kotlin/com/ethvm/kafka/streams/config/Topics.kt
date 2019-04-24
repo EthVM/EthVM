@@ -83,10 +83,10 @@ object Topics {
   val CanonicalReceiptErc20Deltas = KafkaTopic("canonical_receipt_erc20_deltas", CanonicalKey(), FungibleBalanceDeltaList())
   val CanonicalReceiptErc721Deltas = KafkaTopic("canonical_receipt_erc721_deltas", CanonicalKey(), NonFungibleBalanceDeltaList())
 
-  val FungibleBalanceDeltas = KafkaTopic("fungible_balance_deltas", FungibleBalanceKey(), FungibleBalanceDelta())
+  val FungibleBalanceDelta = KafkaTopic("fungible_balance_delta", FungibleBalanceKey(), FungibleBalanceDelta())
   val FungibleBalance = KafkaTopic("fungible_balance", FungibleBalanceKey(), FungibleBalance())
 
-  val NonFungibleBalanceDeltas = KafkaTopic("non_fungible_balance_deltas", NonFungibleBalanceKey(), NonFungibleBalanceDelta())
+  val NonFungibleBalanceDelta = KafkaTopic("non_fungible_balance_delta", NonFungibleBalanceKey(), NonFungibleBalanceDelta())
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKey(), NonFungibleBalance())
 
   val BlockTimestamp = KafkaTopic("block_timestamp", CanonicalKey(), BlockTimestamp())
