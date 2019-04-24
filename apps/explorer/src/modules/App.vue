@@ -39,7 +39,6 @@ export default class App extends Vue {
 
   created() {
     // TODO Load initial processing status
-
     // Preload some previous block metrics
     // TODO re-enable metrics
     // this.$api.getBlockHeaderMetrics(MAX_ITEMS, 0).then(bms => {
