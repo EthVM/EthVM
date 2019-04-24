@@ -127,11 +127,11 @@ class CoinGeckoCurrencyExchangeProvider(
         val currency = v.filterKeys { it.length == 3 }.keys.first()
 
         val keyRecord = CoinExchangeRateKeyRecord.newBuilder()
-          .setId("$k-$currency")
+          .setId("${k}_$currency")
           .build()
 
         val valueRecord = CoinExchangeRateRecord.newBuilder()
-          .setId("$k-$currency")
+          .setId("${k}_$currency")
           .setCurrency(currency)
           .also {
             // Store rest of the elements
