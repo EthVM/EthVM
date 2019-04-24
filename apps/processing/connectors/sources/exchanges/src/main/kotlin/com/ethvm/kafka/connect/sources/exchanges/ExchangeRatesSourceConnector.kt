@@ -21,7 +21,6 @@ import org.apache.kafka.common.config.ConfigDef.Type
 import org.apache.kafka.connect.connector.Task
 import org.apache.kafka.connect.source.SourceConnector
 import java.util.concurrent.TimeUnit
-import kotlin.jvm.javaClass as jc
 
 class ExchangeRatesSourceConnector : SourceConnector() {
 
