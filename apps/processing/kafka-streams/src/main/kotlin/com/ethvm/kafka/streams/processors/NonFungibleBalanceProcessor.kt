@@ -13,7 +13,7 @@ import com.ethvm.common.extensions.setTokenIdBI
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceiptErc721Deltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
-import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDeltas
+import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalance
 import com.ethvm.kafka.streams.utils.ERC721Abi
 import com.ethvm.kafka.streams.utils.toTopic
@@ -57,7 +57,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
 
   private fun aggregateBalances(builder: StreamsBuilder) {
 
-    NonFungibleBalanceDeltas.stream(builder)
+    NonFungibleBalanceDelta.stream(builder)
       .groupByKey(Grouped.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalanceDelta()))
       .aggregate(
         {
@@ -220,7 +220,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
         } else {
           emptyList()
         }
-      }.toTopic(NonFungibleBalanceDeltas)
+      }.toTopic(NonFungibleBalanceDelta)
   }
 
   override fun start(cleanUp: Boolean) {
