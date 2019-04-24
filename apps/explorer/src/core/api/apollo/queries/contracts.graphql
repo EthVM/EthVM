@@ -31,14 +31,11 @@ query contractByAddress($address: String!) {
 query contractsCreatedBy($hash: String!, $limit: Int, $page: Int) {
   contractsCreatedBy(creator: $hash, limit: $limit, page: $page) {
     address
-    totalSupply
-    metadata {
-      name
-      symbol
-      website
-    }
-    type {
-      string
-    }
+    blockNumber: traceCreatedAtBlockNumber
+#    transaction {
+#      hash
+#      timestamp
+#      fee??
+#    }
   }
 }

@@ -90,23 +90,16 @@
       </v-tab-item>
       <!--
       =====================================================================================
-        CONTRACT CREATOR TAB (not implemented yet)
+        CONTRACT CREATOR TAB
       =====================================================================================
       -->
-      <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
-      <v-card>
-        <ul>
-          <li>Name:</li>
-          <li>TWN</li>
-          <li>Balance:</li>
-          <li>20,930 TWN</li>
-          <li>Value:</li>
-          <li>$0.00</li>
-          <li>ERC 20 Contract:</li>
-          <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-        </ul>
-      </v-card>
-      </v-tab-item>-->
+      <v-tab-item slot="tabs-item" v-if="account.isCreator" value="tab-4">
+        <table-address-contracts
+         :contracts="account.contracts"
+         :loading="contractsLoading"
+         :error="contractsError"
+        />
+      </v-tab-item>
     </app-tabs>
   </v-container>
 </template>
@@ -126,6 +119,7 @@ import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Crumb, Tab } from '@app/core/components/props'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
+import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue';
 
 const MAX_ITEMS = 10
 
@@ -142,7 +136,8 @@ const CONTRACT_DETAIL_TYPE = 'contract'
     AddressDetail,
     TableAddressTxs,
     TableBlocks,
-    TableAddressTokens
+    TableAddressTokens,
+    TableAddressContracts
   }
 })
 export default class PageDetailsAddress extends Vue {
@@ -258,9 +253,7 @@ export default class PageDetailsAddress extends Vue {
           // TODO: Re-enable whenever pending tx calls available
           // const addressPendingTxs = this.fetchPendingTxs()
           const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
-          // TODO: Re-enable whenever contract creator functionality is finished
-          const contractsCreated = Promise.resolve([]) // this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
-
+          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
           const internalTransfers = this.fetchTransfers()
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
@@ -284,7 +277,8 @@ export default class PageDetailsAddress extends Vue {
               this.minerBlocksLoading = false
 
               // Contract Creator
-              this.account.contracts = res[2] || [] // res[3] || []
+              this.account.contracts = res[2] || []
+              this.contractsLoading = false
 
               // Internal transfers
               const transfersPage = res[3]
@@ -379,6 +373,10 @@ export default class PageDetailsAddress extends Vue {
   setPageTransfers(page: number): void {
     this.transfersPage = page
     this.transfersLoading = true
+  }
+
+  setContractsPage(page: number): void {
+    // TODO update paging
   }
 
   updateTxs(): void {

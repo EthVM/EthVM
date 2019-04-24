@@ -86,7 +86,8 @@
 
   "contract": {
     "name": "Contract | Contracts",
-    "creator": "Contract Creator"
+    "creator": "Contract Creator",
+    "hash": "Contract #"
   },
 
   "gas": {
