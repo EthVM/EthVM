@@ -139,7 +139,7 @@ BEGIN
   payload = json_build_object(
     'table', 'transaction',
     'action', TG_OP,
-    'id', json_build_object('hash', record.hash)
+    'payload', json_build_object('hash', record.hash)
     );
 
   PERFORM pg_notify('events', payload::text);
@@ -270,7 +270,7 @@ BEGIN
   payload = json_build_object(
     'table', 'contract',
     'action', TG_OP,
-    'id', json_build_object('address', record.address)
+    'payload', json_build_object('address', record.address)
     );
 
   PERFORM pg_notify('events', payload::text);
