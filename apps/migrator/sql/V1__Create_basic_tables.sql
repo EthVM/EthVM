@@ -531,7 +531,6 @@ WHERE cb.number IS NOT NULL
   AND u.author = br.address
 ORDER BY cb.number DESC;
 
-
 /* Token exchange rates table */
 CREATE TABLE token_exchange_rates
 (
@@ -554,16 +553,12 @@ CREATE TABLE token_exchange_rates
   last_updated                    BIGINT      NULL
 );
 
-CREATE TRIGGER notify_token_exchange_rates
-  AFTER INSERT OR UPDATE OR DELETE ON token_exchange_rates
-  FOR EACH ROW EXECUTE PROCEDURE notify_event();
-
-
 /* Coin exchange rates table */
 CREATE TABLE coin_exchange_rates
 (
-  id           CHAR(6) PRIMARY KEY,
-  rate         NUMERIC NOT NULL,
+  id           VARCHAR(24) PRIMARY KEY,
+  currency     CHAR(3) NOT NULL,
+  price        NUMERIC NOT NULL,
   market_cap   NUMERIC NOT NULL,
   vol24h       NUMERIC NOT NULL,
   change24h    NUMERIC NOT NULL,
