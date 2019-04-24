@@ -1,14 +1,12 @@
-import { ConfigService } from '@app/shared/config.service'
-import { HttpException, Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import axios from 'axios'
-import { FindManyOptions, Repository } from 'typeorm'
 import { TokenDto } from '@app/modules/tokens/dto/token.dto'
+import { CoinExchangeRateEntity } from '@app/orm/entities/coin-exchange-rate.entity'
+import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
-import { QuoteDto } from '@app/modules/tokens/dto/quote.dto'
-import { ContractEntity } from '@app/orm/entities/contract.entity'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { FindManyOptions, Repository, FindOneOptions } from 'typeorm'
 
 @Injectable()
 export class TokenService {
@@ -21,7 +19,8 @@ export class TokenService {
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
     @InjectRepository(ContractEntity)
     private readonly contractRepository: Repository<ContractEntity>,
-    private readonly configService: ConfigService,
+    @InjectRepository(CoinExchangeRateEntity)
+    private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<Erc20BalanceEntity[] | Erc721BalanceEntity[]> {
@@ -29,7 +28,7 @@ export class TokenService {
     const findOptions: FindManyOptions = {
       where: { contract: address },
       take: limit,
-      skip,
+      skip
     }
     const ercBalances = await this.erc20BalanceRepository.find(findOptions)
     if (ercBalances.length) {
@@ -43,7 +42,6 @@ export class TokenService {
     const erc20Balance = await this.erc20BalanceRepository.findOne({ where })
     if (erc20Balance) return erc20Balance
     return this.erc721BalanceRepository.findOne({ where })
-
   }
 
   async findAddressAllTokensOwned(address: string): Promise<TokenDto[]> {
@@ -65,29 +63,21 @@ export class TokenService {
 
   private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
     const { tokenExchangeRate, metadata } = entity
-    const tokenData = metadata || {} as any
-    if (entity instanceof Erc20BalanceEntity) { tokenData.balance = entity.amount }
-    if (tokenExchangeRate) { tokenData.currentPrice = tokenExchangeRate.currentPrice }
+    const tokenData = metadata || ({} as any)
+    if (entity instanceof Erc20BalanceEntity) {
+      tokenData.balance = entity.amount
+    }
+    if (tokenExchangeRate) {
+      tokenData.currentPrice = tokenExchangeRate.currentPrice
+    }
     return new TokenDto(tokenData)
   }
 
-  async findQuote(token: string, to: string): Promise<QuoteDto> {
-    const url = this.configService.coinGecko.url
-
-    const res = await axios.get(url)
-
-    if (res.status !== 200) {
-      throw new HttpException(res.statusText, res.status)
+  async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
+    const findOptions : FindOneOptions = {
+      where: { id: pair }
     }
-
-    const { ethereum } = res.data
-
-    return new QuoteDto({
-      to,
-      price: ethereum.usd,
-      vol_24h: ethereum.usd_24h_vol,
-      last_update: ethereum.last_updated_at,
-    })
+    return this.coinExchangeRateRepository.findOne(findOptions)
   }
 
   async findTokenExchangeRates(sort: string, take: number = 10, page: number = 0): Promise<TokenExchangeRateEntity[]> {
@@ -137,16 +127,16 @@ export class TokenService {
   }
 
   async countTokenHolders(address: string): Promise<number> {
-    let numHolders = await this.erc20BalanceRepository.count({ where: { contract: address }})
+    let numHolders = await this.erc20BalanceRepository.count({ where: { contract: address } })
     if (!numHolders || numHolders === 0) {
-      numHolders = await this.erc721BalanceRepository.count({ where: { contract: address }})
+      numHolders = await this.erc721BalanceRepository.count({ where: { contract: address } })
     }
     return numHolders
   }
 
   async countTokensByHolderAddress(address: string): Promise<number> {
     const numErc20Tokens = await this.erc20BalanceRepository.count({ where: { address } })
-    const numErc721Tokens = await this.erc721BalanceRepository.count({ where: { address }})
+    const numErc721Tokens = await this.erc721BalanceRepository.count({ where: { address } })
     return numErc20Tokens + numErc721Tokens
   }
 }

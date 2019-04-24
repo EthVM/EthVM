@@ -24,12 +24,8 @@ export enum Duration {
     DAY = "DAY"
 }
 
-export enum ExchangeFrom {
-    ETH = "ETH"
-}
-
-export enum ExchangeTo {
-    USD = "USD"
+export enum ExchangeRatePair {
+    ethereum_usd = "ethereum_usd"
 }
 
 export enum FilterEnum {
@@ -151,6 +147,15 @@ export class BlockMetrics {
     sumNumInternalTxs?: string;
 }
 
+export class CoinExchangeRate {
+    currency?: string;
+    price?: Decimal;
+    marketCap?: Decimal;
+    vol24h?: Decimal;
+    change24h?: Decimal;
+    lastUpdated?: Decimal;
+}
+
 export class Contract {
     address?: string;
     creator?: string;
@@ -242,7 +247,7 @@ export abstract class IQuery {
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
 
-    abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
+    abstract coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
 
     abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
 
@@ -266,12 +271,6 @@ export abstract class IQuery {
 
     abstract totalNumberOfTransactions(): number | Promise<number>;
 
-    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
-
-    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
-
-    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
-
     abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
 
     abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
@@ -281,13 +280,6 @@ export abstract class IQuery {
     abstract latestUncleBlockNumber(): number | Promise<number>;
 
     abstract temp__(): boolean | Promise<boolean>;
-}
-
-export class Quote {
-    to?: string;
-    price?: string;
-    last_update?: Decimal;
-    vol_24h?: string;
 }
 
 export class Receipt {

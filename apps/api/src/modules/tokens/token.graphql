@@ -3,7 +3,7 @@ type Query {
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
   addressAllTokensOwned(address: String!): [Token]!
   addressAmountTokensOwned(address: String!): Int!
-  quote(symbol: ExchangeFrom!, to: ExchangeTo!): Quote
+  coinExchangeRate(pair: ExchangeRatePair!): CoinExchangeRate
   tokenExchangeRates(filter: TokenExchangeRateFilter!, limit: Int, page: Int): [TokenExchangeRate]!
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
@@ -48,19 +48,17 @@ type TokenExchangeRate {
   holdersCount: Int
 }
 
-type Quote {
-  to: String
-  price: String
-  last_update: Decimal
-  vol_24h: String
+type CoinExchangeRate {
+  currency: String
+  price: Decimal
+  marketCap: Decimal
+  vol24h: Decimal
+  change24h: Decimal
+  lastUpdated: Decimal
 }
 
-enum ExchangeTo {
-  USD
-}
-
-enum ExchangeFrom {
-  ETH
+enum ExchangeRatePair {
+  ethereum_usd
 }
 
 enum TokenExchangeRateFilter {
