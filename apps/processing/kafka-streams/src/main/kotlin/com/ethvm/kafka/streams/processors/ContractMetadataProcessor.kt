@@ -107,7 +107,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
         when (ex) {
           null -> result
           else -> {
-            logger.warn { "Failed to fetch string. Contract address = $contractAddress, method = $method, error = ${ex.message}"}
+            logger.warn { "Failed to fetch string. Contract address = $contractAddress, method = $method, error = ${ex.message}" }
             null
           }
         }
@@ -129,7 +129,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
         when (ex) {
           null -> result
           else -> {
-            logger.warn { "Failed to fetch decimals. Contract address = $contractAddress, error = ${ex.message}"}
+            logger.warn { "Failed to fetch decimals. Contract address = $contractAddress, error = ${ex.message}" }
             null
           }
         }
@@ -151,7 +151,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
         when (ex) {
           null -> result
           else -> {
-            logger.warn { "Failed to fetch total supply. Contract address = $contractAddress, error = ${ex.message}"}
+            logger.warn { "Failed to fetch total supply. Contract address = $contractAddress, error = ${ex.message}" }
             null
           }
         }
