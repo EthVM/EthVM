@@ -19,7 +19,7 @@
     "transforms.toJsonKey.type": "com.ethvm.kafka.connect.transforms.JsonField$Key",
     "transforms.toJsonKey.whitelist": "logs,action,result,trace_address",
     "transforms.toJsonValue.type": "com.ethvm.kafka.connect.transforms.JsonField$Value",
-    "transforms.toJsonValue.whitelist": "logs,action,result,trace_address,trace_location,init,code,logo,support,social",
+    "transforms.toJsonValue.whitelist": "logs,action,result,trace_address,init,code,logo,support,social",
     "pk.mode": "record_key"
   }
 }
