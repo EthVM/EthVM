@@ -11,6 +11,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 @Module({
   imports: [TypeOrmModule.forFeature([Erc20BalanceEntity, Erc721BalanceEntity, TokenExchangeRateEntity, CoinExchangeRateEntity, ContractEntity])],
   providers: [TokenService, TokenResolvers],
-  exports: [TokenService]
+  exports: [TokenService],
 })
 export class TokenModule {}

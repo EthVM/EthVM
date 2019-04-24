@@ -20,7 +20,7 @@ export class TokenService {
     @InjectRepository(ContractEntity)
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity)
-    private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>
+    private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<Erc20BalanceEntity[] | Erc721BalanceEntity[]> {
@@ -28,7 +28,7 @@ export class TokenService {
     const findOptions: FindManyOptions = {
       where: { contract: address },
       take: limit,
-      skip
+      skip,
     }
     const ercBalances = await this.erc20BalanceRepository.find(findOptions)
     if (ercBalances.length) {
@@ -74,8 +74,8 @@ export class TokenService {
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
-    const findOptions : FindOneOptions = {
-      where: { id: pair }
+    const findOptions: FindOneOptions = {
+      where: { id: pair },
     }
     return this.coinExchangeRateRepository.findOne(findOptions)
   }
