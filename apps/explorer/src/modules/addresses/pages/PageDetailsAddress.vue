@@ -225,7 +225,7 @@ export default class PageDetailsAddress extends Vue {
         enter: () => {
           const account = this.$api.getAccount(this.addressRef)
           const contract = this.$api.getContract(this.addressRef)
-          const exchangeRate = this.$api.getExchangeRateQuote('ETH', 'USD')
+          const exchangeRate = this.$api.getExchangeRateQuote('ethereum_usd')
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
           const promises = [account, contract, exchangeRate].map(p => p.catch(() => undefined))
@@ -241,7 +241,7 @@ export default class PageDetailsAddress extends Vue {
               this.account.balance = new EthValue(account.balance || 0)
 
               this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
-              this.account.exchangeRate.USD = res[2] ? res[2].price : 0 // TODO reset when exchange module re-enabled to: res[2].price
+              this.account.exchangeRate.USD = res[2] ? res[2].price : 0
 
               this.error = ''
               this.loading = false

@@ -2,19 +2,17 @@
 #   Types & Enums
 # -------------------------------------------------------------
 
-type Quote {
-  to: String
-  price: String
-  last_update: Decimal
-  vol_24h: String
+type CoinExchangeRate {
+  currency: String
+  price: Decimal
+  marketCap: Decimal
+  vol24h: Decimal
+  change24h: Decimal
+  lastUpdated: Decimal
 }
 
-enum ExchangeFrom {
-  ETH
-}
-
-enum ExchangeTo {
-  USD
+enum ExchangeRatePair {
+  ethereum_usd
 }
 
 enum TokenExchangeRateFilter {
@@ -81,8 +79,8 @@ query holderTransfers($address: String!, $holderAddress: String!) {
   }
 }
 
-query quote($symbol: ExchangeFrom!, $to: ExchangeTo!) {
-  quote(symbol: $symbol, to: $to) {
+query coinExchangeRate($pair: ExchangeRatePair!) {
+  quote(pair: $pair) {
     to
     price
     last_update
