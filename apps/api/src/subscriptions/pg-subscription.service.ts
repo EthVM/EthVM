@@ -1,9 +1,11 @@
-import { ConfigService } from '@app/shared/config.service'
-import { Inject, Injectable } from '@nestjs/common'
-import { PubSub } from 'graphql-subscriptions'
-import createSubscriber from 'pg-listen'
-import { Observable } from 'rxjs'
-import { Logger } from 'winston'
+import { ConfigService } from '@app/shared/config.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { PubSub } from 'graphql-subscriptions';
+import createSubscriber from 'pg-listen';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { Logger } from 'winston';
+import { CircuitBreaker, CircuitBreakerState } from './circuit-breaker';
 
 interface CanonicalBlockHeaderPayload {
   hash: string
@@ -26,52 +28,18 @@ interface Event {
   payload: EventPayload
 }
 
-class RateCalculator {
-  private countsBySecond: number[]
-
-  constructor(private readonly windowSeconds: number) {
-    this.countsBySecond = []
-  }
-
-  update(timestamp: number) {
-    const { countsBySecond, windowSeconds } = this
-
-    // add new entry
-
-    const timestampSecond = Math.floor(timestamp / 1000)
-    countsBySecond[timestampSecond] = (countsBySecond[timestampSecond] || 0) + 1
-
-    const minTimestampSecond = timestampSecond - windowSeconds
-    const toRemove: number[] = []
-
-    let total = 0
-    let n = 0
-
-    // iterate over the sparse array
-    for (const key of countsBySecond) {
-      const keyNumber = +key
-
-      // record any entries which are outside the time window and need removed
-      if (keyNumber < minTimestampSecond) {
-        toRemove.push(keyNumber)
-      } else {
-        total += countsBySecond[key]
-        n += 1
-      }
-    }
-
-    // remove older entries
-    for (const key of toRemove) {
-      delete countsBySecond[key]
-    }
-
-    return total / n
-  }
+function isCircuitBreakerState<CircuitBreakerState>() {
+  return (source$: Observable<any>) => source$.pipe(
+    filter(event => event instanceof CircuitBreakerState),
+    map(event => event as CircuitBreakerState)
+  )
 }
 
 @Injectable()
 export class PgSubscriptionService {
+
   private readonly url: string
+  private readonly maxRate = 1000
 
   constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub, @Inject('winston') private readonly logger: Logger, private readonly config: ConfigService) {
     this.url = config.db.url
@@ -80,6 +48,7 @@ export class PgSubscriptionService {
   }
 
   private async init() {
+
     const { url, logger } = this
 
     const events$ = Observable.create(async observer => {
@@ -100,19 +69,14 @@ export class PgSubscriptionService {
       }
     })
 
-    const rateCalculator = new RateCalculator(30)
+    const circuitBreaker = new CircuitBreaker<Event>(10, this.maxRate)
 
-    events$.subscribe(event => {
-      const eventRate = rateCalculator.update(new Date().getTime())
+    events$.subscribe(circuitBreaker.next, circuitBreaker.error)
 
-      if (eventRate < 200) {
-        this.logger.info(`Event rate: ${eventRate}`)
-        this.onEvent(event)
-      }
-    })
+    circuitBreaker.subject
+      .pipe(isCircuitBreakerState())
+      .subscribe(event => this.logger.info('Circuit breaker state change', event))
+
   }
 
-  private async onEvent(event: Event) {
-    this.logger.info('Event received', event)
-  }
 }
