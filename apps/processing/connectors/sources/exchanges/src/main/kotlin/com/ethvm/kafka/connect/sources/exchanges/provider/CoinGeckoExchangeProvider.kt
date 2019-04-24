@@ -76,7 +76,7 @@ class CoinGeckoExchangeProvider(
 }
 
 class CoinGeckoCurrencyExchangeProvider(
-  options: Map<String, Any> = emptyMap(),
+  options: Map<String, Any> = DEFAULT_OPTS,
   private val okHttpClient: OkHttpClient = CoinGeckoExchangeProvider.okHttpClient,
   private val jackson: ObjectMapper = CoinGeckoExchangeProvider.jackson
 ) : ExchangeProvider {
@@ -123,16 +123,32 @@ class CoinGeckoCurrencyExchangeProvider(
 
     logger.debug { "Parsing into rates" }
 
-    val rates = jackson.readValue<List<CoinGeckoCoinExchangeRate>>(reader)
+    val rates = jackson.readValue<Map<String, Map<String, String>>>(reader)
 
     return rates
-      .map { rate ->
+      .map { (k, v) ->
+
+        val currency = v.filterKeys { it.length == 3 }.keys.first()
 
         val keyRecord = CoinExchangeRateKeyRecord.newBuilder()
+          .setId("$k-$currency")
           .build()
 
-        val valueRecord = rate
-          .toCoinExchangeRateRecord(CoinExchangeRateRecord.newBuilder())
+        val valueRecord = CoinExchangeRateRecord.newBuilder()
+          .setId("$k-$currency")
+          .setCurrency(currency)
+          .also {
+            // Store rest of the elements
+            v.forEach { (key, value) ->
+              when {
+                key.contains("market_cap") -> it.setMarketCap(value.toDouble())
+                key.contains("24h_vol") -> it.setVol24h(value.toDouble())
+                key.contains("24h_change") -> it.setChange24h(value.toDouble())
+                key.contains("last_updated_at") -> it.setLastUpdated(value.toLong())
+                else -> it.setPrice(value.toDouble())
+              }
+            }
+          }
           .build()
 
         val key = AvroToConnect.toConnectData(keyRecord)
@@ -162,7 +178,7 @@ class CoinGeckoCurrencyExchangeProvider(
         .addPathSegment("simple")
         .addPathSegment("price")
         .addQueryParameter("ids", ids.joinToString(separator = ","))
-        .addQueryParameter("vs_currency", currency)
+        .addQueryParameter("vs_currencies", currency)
         .addQueryParameter("include_market_cap", "true")
         .addQueryParameter("include_24hr_vol", "true")
         .addQueryParameter("include_24hr_change", "true")
@@ -286,7 +302,7 @@ class CoinGeckoTokenExchangeProvider(
       "topic" to "token-exchange-rates",
       "currency" to "usd",
       "tokenIds" to (
-        jc
+        CoinGeckoTokenExchangeProvider::class.java
           .getResourceAsStream("/coingecko/coingecko-eth.json")
           ?.let { stream -> jackson.readValue<List<TokenIdEntry>>(stream) } ?: emptyList()
         ),
@@ -341,23 +357,4 @@ data class CoinGeckoTokenExchangeRate(
       .setCirculatingSupply(circulating_supply?.byteBuffer())
       .setTotalSupply(total_supply?.byteBuffer())
       .setLastUpdated(Instant.parse(last_updated).toEpochMilli())
-}
-
-data class CoinGeckoCoinExchangeRate(
-  val id: String,
-  val price: Double,
-  val marketCap: Double,
-  val vol24h: Double,
-  val change24h: Double,
-  val lastUpdated: Long
-) {
-
-  fun toCoinExchangeRateRecord(builder: CoinExchangeRateRecord.Builder): CoinExchangeRateRecord.Builder =
-    builder
-      .setId(id)
-      .setPrice(price)
-      .setMarketCap(marketCap)
-      .setVol24h(vol24h)
-      .setChange24h(change24h)
-      .setLastUpdated(lastUpdated)
 }

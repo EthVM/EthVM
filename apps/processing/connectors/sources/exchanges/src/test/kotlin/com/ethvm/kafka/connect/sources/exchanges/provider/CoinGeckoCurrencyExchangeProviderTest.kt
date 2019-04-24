@@ -1,6 +1,6 @@
 package com.ethvm.kafka.connect.sources.exchanges.provider
 
-import com.ethvm.avro.exchange.TokenExchangeRateRecord
+import com.ethvm.avro.exchange.CoinExchangeRateRecord
 import com.ethvm.kafka.connect.sources.exchanges.utils.AvroToConnect
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -25,7 +25,15 @@ class CoinGeckoCurrencyExchangeProviderTest : BehaviorSpec() {
 
     Given("an empty CoinGeckoCurrencyExchangeProvider") {
 
-      val provider = CoinGeckoCurrencyExchangeProvider()
+      val inputStreamProvider = InputStreamProvider { path -> javaClass.getResourceAsStream("/$path") }
+
+      val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(OkHttpMockInterceptor(inputStreamProvider, 0))
+        .build()
+
+      val provider = CoinGeckoCurrencyExchangeProvider(
+        okHttpClient = okHttpClient
+      )
 
       When("we fetch for coin exchange rates") {
 
@@ -34,79 +42,22 @@ class CoinGeckoCurrencyExchangeProviderTest : BehaviorSpec() {
         Then("we should parse default coin exchanges") {
           records shouldNotBe null
           records.size shouldBe 3
-        }
-      }
-    }
-
-    Given("a configured CoinGeckoCurrencyExchangeProvider but without coins ids") {
-
-      val inputStreamProvider = InputStreamProvider { path -> javaClass.getResourceAsStream("/$path") }
-
-      val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(OkHttpMockInterceptor(inputStreamProvider, 0))
-        .build()
-
-      val provider = CoinGeckoCurrencyExchangeProvider(
-        mapOf(
-          "topic" to "coin-exchange-rates",
-          "currency" to "usd",
-          "coinIds" to emptyList<TokenIdEntry>()
-        ),
-        okHttpClient,
-        CoinGeckoExchangeProvider.jackson
-      )
-
-      When("we fetch for coin exchange rates") {
-
-        val records: List<SourceRecord> = provider.fetch()
-
-        Then("we should parse empty coin exchanges") {
-          records shouldNotBe null
-          records.size shouldBe 0
-        }
-      }
-    }
-
-    Given("a properly configured CoinGeckoCurrencyExchangeProvider with coins ids") {
-
-      val inputStreamProvider = InputStreamProvider { path -> javaClass.getResourceAsStream("/$path") }
-
-      val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(OkHttpMockInterceptor(inputStreamProvider, 0))
-        .build()
-
-      val tokensIds = listOf(
-        TokenIdEntry("hurify", "0xcdb7ecfd3403eef3882c65b761ef9b5054890a47")
-      )
-
-      val provider = CoinGeckoCurrencyExchangeProvider(
-        mapOf(
-          "topic" to "coin-exchange-rates",
-          "currency" to "usd",
-          "coinIds" to tokensIds
-        ),
-        okHttpClient,
-        CoinGeckoExchangeProvider.jackson
-      )
-
-      When("we fetch for coin exchange rates") {
-
-        val records: List<SourceRecord> = provider.fetch()
-
-        Then("we should parse correctly coin exchanges rates") {
-          records shouldNotBe null
-          records.size shouldBe 12
 
           val record = records[0]
-          val tokenExchangeRateRecord =
+          val coinExchangeRateRecord =
             AvroToConnect.toAvroData(
-              AvroToConnect.toConnectSchema(TokenExchangeRateRecord()),
+              AvroToConnect.toConnectSchema(CoinExchangeRateRecord("", "", 0.0, 0.0, 0.0, 0.0, 0)),
               record.value()
             ) as GenericData.Record
 
-          with(tokenExchangeRateRecord) {
-            get("name") shouldBe "Arcblock"
-            get("address") shouldBe "0xb98d4c97425d9908e66e53a6fdf673acca0be986"
+          with(coinExchangeRateRecord) {
+            get("id") shouldBe "bitcoin-usd"
+            get("currency") shouldBe "usd"
+            get("price") shouldBe 5533.48
+            get("marketCap") shouldBe 97751804938.9725
+            get("vol24h") shouldBe 18786140482.468513
+            get("change24h") shouldBe 4.121102578709593
+            get("lastUpdated") shouldBe 1556016581
           }
         }
       }
@@ -117,7 +68,7 @@ class CoinGeckoCurrencyExchangeProviderTest : BehaviorSpec() {
       val okHttpClient = mockk<OkHttpClient>()
 
       val mockRequest = Request.Builder()
-        .url(CoinGeckoTokenExchangeProvider.COINGECKO_API_URL(listOf("hurify"), "usd", 10, 1))
+        .url(CoinGeckoCurrencyExchangeProvider.COINGECKO_API_URL(listOf("ethereum,bitcoin,monero"), "usd"))
         .build()
 
       val mockResponse = Response.Builder()
@@ -129,25 +80,16 @@ class CoinGeckoCurrencyExchangeProviderTest : BehaviorSpec() {
 
       every { okHttpClient.newCall(any()).execute() } returns mockResponse
 
-      val tokensIds = listOf(
-        TokenIdEntry("hurify", "0xcdb7ecfd3403eef3882c65b761ef9b5054890a47")
-      )
-
       val provider = CoinGeckoCurrencyExchangeProvider(
-        mapOf(
-          "topic" to "token-exchange-rates",
-          "currency" to "usd",
-          "tokenIds" to tokensIds
-        ),
-        okHttpClient,
-        CoinGeckoExchangeProvider.jackson
+        okHttpClient = okHttpClient,
+        jackson = CoinGeckoExchangeProvider.jackson
       )
 
-      When("we fetch for token exchange rates and we receive 429 (Too many requests)") {
+      When("we fetch for coin exchange rates and we receive 429 (Too many requests)") {
 
         val exception = shouldThrow<RetriableException> { provider.fetch() }
 
-        Then("we should receive a RetriableException") {
+        Then("we should throw a RetriableException") {
           exception::class shouldBe RetriableException::class
         }
       }
@@ -158,37 +100,28 @@ class CoinGeckoCurrencyExchangeProviderTest : BehaviorSpec() {
       val okHttpClient = mockk<OkHttpClient>()
 
       val mockRequest = Request.Builder()
-        .url(CoinGeckoTokenExchangeProvider.COINGECKO_API_URL(listOf("hurify"), "usd", 10, 1))
+        .url(CoinGeckoCurrencyExchangeProvider.COINGECKO_API_URL(listOf("ethereum,bitcoin,monero"), "usd"))
         .build()
 
       val mockResponse = Response.Builder()
         .protocol(Protocol.HTTP_2)
         .request(mockRequest)
-        .code(429)
+        .code(404)
         .message("")
         .build()
 
       every { okHttpClient.newCall(any()).execute() } returns mockResponse
 
-      val tokensIds = listOf(
-        TokenIdEntry("hurify", "0xcdb7ecfd3403eef3882c65b761ef9b5054890a47")
-      )
-
       val provider = CoinGeckoCurrencyExchangeProvider(
-        mapOf(
-          "topic" to "coin-exchange-rates",
-          "currency" to "usd",
-          "coinIds" to tokensIds
-        ),
-        okHttpClient,
-        CoinGeckoExchangeProvider.jackson
+        okHttpClient = okHttpClient,
+        jackson = CoinGeckoExchangeProvider.jackson
       )
 
-      When("we fetch for token exchange rates and we receive 429 (Too many requests)") {
+      When("we fetch for token exchange rates and we receive 404 (Not found)") {
 
         val exception = shouldThrow<IOException> { provider.fetch() }
 
-        Then("we should receive a IOException") {
+        Then("we should throw an IOException") {
           exception::class shouldBe IOException::class
         }
       }

@@ -31,6 +31,7 @@ protocol Exchange {
 
   record CoinExchangeRateRecord {
     string id;
+    string currency;
     double price;
     double marketCap;
     double vol24h;
