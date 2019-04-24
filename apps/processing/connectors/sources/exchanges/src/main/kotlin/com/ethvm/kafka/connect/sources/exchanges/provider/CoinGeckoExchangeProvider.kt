@@ -34,7 +34,7 @@ class CoinGeckoExchangeProvider(
   init {
     val providers: MutableList<ExchangeProvider> = mutableListOf()
 
-    if (options.containsKey("CoinGeckoTokenExchangeProvider")) {
+    if (options.containsKey("CoinGeckoCurrencyExchangeProvider")) {
       @Suppress("UNCHECKED_CAST")
       val currencyOpts: Map<String, Any> = when (val raw = options["CoinGeckoCurrencyExchangeProvider"]) {
         is Map<*, *> -> raw as Map<String, Any>
@@ -120,7 +120,7 @@ class CoinGeckoCurrencyExchangeProvider(
     val body = response.body()
     val reader = BufferedReader(body?.charStream())
 
-    logger.debug { "Parsing into rates" }
+    logger.debug { "Parsing into coin rates" }
 
     val rates = jackson.readValue<Map<String, Map<String, String>>>(reader)
 
