@@ -23,21 +23,6 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
 
   init {
 
-    Given("an empty CoinGeckoTokenExchangeProvider") {
-
-      val provider = CoinGeckoTokenExchangeProvider()
-
-      When("we fetch for token exchange rates") {
-
-        val records: List<SourceRecord> = provider.fetch()
-
-        Then("we should parse default token exchanges size") {
-          records shouldNotBe null
-          records.size shouldBe 732
-        }
-      }
-    }
-
     Given("a configured CoinGeckoTokenExchangeProvider but without tokens ids") {
 
       val inputStreamProvider = InputStreamProvider { path -> javaClass.getResourceAsStream("/$path") }
@@ -161,7 +146,7 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
 
         val exception = shouldThrow<RetriableException> { provider.fetch() }
 
-        Then("we should receive a RetriableException") {
+        Then("we should throw a RetriableException") {
           exception::class shouldBe RetriableException::class
         }
       }
@@ -178,7 +163,7 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
       val mockResponse = Response.Builder()
         .protocol(Protocol.HTTP_2)
         .request(mockRequest)
-        .code(429)
+        .code(404)
         .message("")
         .build()
 
@@ -199,11 +184,11 @@ class CoinGeckoTokenExchangeProviderTest : BehaviorSpec() {
         CoinGeckoExchangeProvider.jackson
       )
 
-      When("we fetch for token exchange rates and we receive 429 (Too many requests)") {
+      When("we fetch for token exchange rates and we receive 404 (Not found)") {
 
         val exception = shouldThrow<IOException> { provider.fetch() }
 
-        Then("we should receive a IOException") {
+        Then("we should throw an IOException") {
           exception::class shouldBe IOException::class
         }
       }
