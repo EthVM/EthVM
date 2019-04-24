@@ -103,6 +103,14 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
       .thenApply { call ->
         val output = FunctionReturnDecoder.decode(call.value, function.outputParameters)
         output.firstOrNull()?.value as String?
+      }.handle { result, ex ->
+        when (ex) {
+          null -> result
+          else -> {
+            logger.warn { "Failed to fetch string. Contract address = $contractAddress, method = $method, error = ${ex.message}" }
+            null
+          }
+        }
       }
   }
 
@@ -117,6 +125,15 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
         val output = FunctionReturnDecoder.decode(call.value, function.outputParameters)
         output.firstOrNull()?.value as BigInteger?
       }
+      .handle { result, ex ->
+        when (ex) {
+          null -> result
+          else -> {
+            logger.warn { "Failed to fetch decimals. Contract address = $contractAddress, error = ${ex.message}" }
+            null
+          }
+        }
+      }
   }
 
   private fun fetchTotalSupply(contractAddress: String): CompletableFuture<BigInteger?> {
@@ -129,6 +146,15 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
       .thenApply { call ->
         val output = FunctionReturnDecoder.decode(call.value, function.outputParameters)
         output.firstOrNull()?.value as BigInteger?
+      }
+      .handle { result, ex ->
+        when (ex) {
+          null -> result
+          else -> {
+            logger.warn { "Failed to fetch total supply. Contract address = $contractAddress, error = ${ex.message}" }
+            null
+          }
+        }
       }
   }
 }
