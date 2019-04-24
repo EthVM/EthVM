@@ -20,7 +20,6 @@ import org.apache.kafka.connect.source.SourceRecord
 import java.io.BufferedReader
 import java.io.IOException
 import java.time.Instant
-import kotlin.jvm.javaClass as jc
 
 class CoinGeckoExchangeProvider(
   options: Map<String, Any> = DEFAULT_OPTS,
