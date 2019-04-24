@@ -8,7 +8,6 @@ import {
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
-import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
   averageBlockTime,
@@ -41,7 +40,6 @@ import {
   BlockMetrics,
   Contract,
   PendingTx,
-  ProcessingMetadata,
   Quote,
   SimpleBlock,
   SimpleTx,
@@ -559,21 +557,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.search)
-  }
-
-  // ------------------------------------------------------------------------------------
-  // Processing Metadata
-  // ------------------------------------------------------------------------------------
-
-  public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
-    return this.apollo
-      .query({
-        query: processingMetadataById,
-        variables: {
-          id
-        }
-      })
-      .then(res => res.data.processingMetadataById)
   }
 
   // ------------------------------------------------------------------------------------

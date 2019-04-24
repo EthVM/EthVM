@@ -38,8 +38,7 @@ export default class App extends Vue {
   */
 
   created() {
-    // Load initial processing status
-    this.$api.getProcessingMetadata('syncing').then(ev => this.$store.commit('NEW_SYNC', ev ? ev.value : true))
+    // TODO Load initial processing status
 
     // Preload some previous block metrics
     // TODO re-enable metrics

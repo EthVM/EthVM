@@ -1,12 +1,9 @@
 import {
   Account,
-  AddressBalance,
-  AddressMetadata,
   Block,
   BlockMetrics,
   Contract,
   PendingTx,
-  ProcessingMetadata,
   Quote,
   SimpleBlock,
   SimpleTx,
@@ -85,9 +82,6 @@ export interface EthvmApi {
 
   // Search
   search(hash: string): Promise<any>
-
-  // Processing Metadata
-  getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
 
   // Subscriptions
   observable<T>(query): Observable<T>
