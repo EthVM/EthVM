@@ -218,7 +218,12 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.contractsCreatedBy)
+      .then(res => res.data.contractsCreatedBy.map(contract => {
+        if (contract.tx) {
+          contract.tx = new SimpleTx(contract.tx)
+        }
+        return contract
+      }))
   }
 
   // ------------------------------------------------------------------------------------

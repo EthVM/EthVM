@@ -2,19 +2,21 @@
   <div>
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2>
       <v-flex sm3>
-        <p class="primary--text text-truncate font-italic psmall mb-0 pb-0">{{ contract.address }}</p>
+        <p class="info--text font-italic psmall mb-0 pb-0">{{ contract.address }}</p>
       </v-flex>
       <v-flex sm3>
-        <p class="info--text font-weight-thin mb-0">TODO!</p>
+        <p class="info--text font-weight-thin mb-0">{{ contract.tx.getHash() }}</p>
       </v-flex>
       <v-flex sm2>
         <p class="info--text font-weight-thin mb-0">{{ contract.blockNumber }}</p>
       </v-flex>
       <v-flex sm2>
-        <p class="info--text font-weight-thin mb-0">TODO!</p>
+        <p class="info--text font-weight-thin mb-0">{{ getTxFee(contract.tx) }}</p>
       </v-flex>
       <v-flex sm2>
-        <p class="info--text font-weight-thin mb-0">TODO!</p>
+        <p class="info--text font-weight-thin mb-0">
+          <app-time-ago :timestamp="contract.tx.getTimestamp()" />
+        </p>
       </v-flex>
     </v-layout>
     <v-divider />
@@ -25,9 +27,14 @@
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { Contract } from "@app/core/models";
+import { Contract, EthValue } from "@app/core/models"
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue';
 
-@Component
+@Component({
+  components: {
+    AppTimeAgo
+  }
+})
 export default class TableAddressContractsRow extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
@@ -43,12 +50,8 @@ export default class TableAddressContractsRow extends Mixins(StringConcatMixin) 
   ===================================================================================
   */
 
-  balance(value, decimals) {
-    const n = new BN(value)
-    return n
-      .div(new BN(10).pow(decimals))
-      .toFixed()
-      .toString()
+  getTxFee(tx): string {
+    return this.getRoundNumber(new EthValue(tx.getGasPrice() * tx.getGasUsed()).toEth())
   }
 
   /*

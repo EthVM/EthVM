@@ -32,10 +32,13 @@ query contractsCreatedBy($hash: String!, $limit: Int, $page: Int) {
   contractsCreatedBy(creator: $hash, limit: $limit, page: $page) {
     address
     blockNumber: traceCreatedAtBlockNumber
-#    transaction {
-#      hash
-#      timestamp
-#      fee??
-#    }
+    tx: createdAtTx {
+      hash
+      timestamp
+      gasPrice
+      receipt {
+        gasUsed
+      }
+    }
   }
 }

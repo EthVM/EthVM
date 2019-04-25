@@ -173,6 +173,7 @@ export class Contract {
     traceDestroyedAt?: Buffer;
     metadata?: ContractMetadata;
     totalSupply?: string;
+    createdAtTx?: Transaction;
 }
 
 export class ContractLogo {

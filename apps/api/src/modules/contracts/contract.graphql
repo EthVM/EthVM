@@ -25,6 +25,7 @@ type Contract {
   traceDestroyedAt: Buffer
   metadata: ContractMetadata
   totalSupply: String
+  createdAtTx: Transaction
 }
 
 type ContractMetadata {
