@@ -62,14 +62,5 @@
       return this.getRoundNumber(new EthValue(tx.getGasPrice() * tx.getGasUsed()).toEth())
     }
 
-    /*
-    ===================================================================================
-      Computed Values
-    ===================================================================================
-    */
-
-    get tokenLink(): string {
-      return `/token/${this.token.addr}?holder=${this.holder}`
-    }
   }
 </script>

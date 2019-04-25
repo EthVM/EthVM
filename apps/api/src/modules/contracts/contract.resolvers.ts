@@ -4,6 +4,7 @@ import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { ContractDto } from '@app/modules/contracts/dto/contract.dto'
+import { ContractsPageDto } from '@app/modules/contracts/dto/contracts-page.dto'
 
 @Resolver('Contract')
 export class ContractResolvers {
@@ -20,8 +21,11 @@ export class ContractResolvers {
     @Args('creator', ParseAddressPipe) creator: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
-  ) {
-    const entities = await this.contractService.findContractsCreatedBy(creator, limit, page)
-    return entities.map(e => new ContractDto(e))
+  ): Promise<ContractsPageDto> {
+    const results = await this.contractService.findContractsCreatedBy(creator, limit, page)
+    return {
+      items: results[0].map(e => new ContractDto(e)),
+      totalCount: results[1]
+    }
   }
 }

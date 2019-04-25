@@ -57,7 +57,8 @@ import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) {}
+  constructor(private readonly apollo: ApolloClient<{}>) {
+  }
 
   // ------------------------------------------------------------------------------------
   // Address
@@ -100,7 +101,7 @@ export class EthvmApolloApi implements EthvmApi {
     return this.apollo
       .query({
         query: internalTransactionsByAddress,
-        variables: { address, limit, page }
+        variables: {address, limit, page}
       })
       .then(res => res.data.internalTransactionsByAddress)
   }
@@ -208,7 +209,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.contractByAddress)
   }
 
-  public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<Contract[]> {
+  public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<{ items: Contract[]; totalCount: number }> {
     return this.apollo
       .query({
         query: contractsCreatedBy,
@@ -218,12 +219,17 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.contractsCreatedBy.map(contract => {
-        if (contract.tx) {
-          contract.tx = new SimpleTx(contract.tx)
-        }
-        return contract
-      }))
+      .then(res => {
+        const { contractsCreatedBy } = res.data as any
+        contractsCreatedBy.items = contractsCreatedBy.items.map(contract => {
+          // TODO work out why this check is necessary and remove it if possible
+          if (contract.tx && !(contract.tx instanceof SimpleTx)) {
+            contract.tx = new SimpleTx(contract.tx)
+          }
+          return contract
+        })
+        return contractsCreatedBy
+      })
   }
 
   // ------------------------------------------------------------------------------------

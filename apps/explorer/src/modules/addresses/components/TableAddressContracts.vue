@@ -12,6 +12,9 @@
       TABLE HEADER
     =====================================================================================
     -->
+    <v-layout v-if="totalContracts > 0" justify-end row class="pb-1 pr-2 pl-2">
+      <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+    </v-layout>
     <v-card color="primary" flat class="white--text pl-3 pr-1 mb-1" height="40px">
       <v-layout align-center justify-start row fill-height pr-3>
         <v-flex sm3>
@@ -57,14 +60,14 @@
         </div>
       </v-flex>
     </div>
-    <div v-if="!loading">
-      <v-card v-if="totalItems === 0" flat>
+    <div v-else>
+      <v-card v-if="totalContracts === 0" flat>
         <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
       </v-card>
-      <div v-if="totalItems > 0" v-for="(contract, index) in contracts" :key="index">
+      <div v-if="contracts.length > 0" v-for="(contract, index) in contracts" :key="index">
         <table-address-contracts-row :contract="contract" />
       </div>
-      <v-layout v-if="totalItems > 0" justify-end row class="pb-1 pr-2 pl-2">
+      <v-layout v-if="totalContracts > 0" justify-end row class="pb-1 pr-2 pl-2">
         <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
       </v-layout>
     </div>
@@ -99,14 +102,8 @@ export default class TableAddressContracts extends Vue {
   @Prop(Array) contracts!: Contract[];
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop(String) error!: string
-
-  /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  page = 0 // Current pagintion page
+  @Prop(Number) totalContracts: number = 0
+  @Prop(Number) page: number = 0
 
   /*
   ===================================================================================
@@ -118,7 +115,7 @@ export default class TableAddressContracts extends Vue {
    * Upon page update from AppPagination, set page equal to pagination page.
    */
   setPage(page: number): void {
-    this.page = page
+    this.$emit('page', page)
   }
 
   /*
@@ -138,7 +135,7 @@ export default class TableAddressContracts extends Vue {
    * @return {Number} - Total number of pagination pages
    */
   get totalPages(): number {
-    return this.totalItems > 0 ? Math.ceil(this.totalItems / this.maxItems) : 0
+    return this.totalContracts > 0 ? Math.ceil(this.totalContracts / this.maxItems) : 0
   }
 
   /**
@@ -150,11 +147,5 @@ export default class TableAddressContracts extends Vue {
     return this.error !== ''
   }
 
-  /**
-   * @return - Total number of items
-   */
-  get totalItems(): number {
-    return this.contracts.length
-  }
 }
 </script>

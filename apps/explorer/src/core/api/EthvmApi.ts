@@ -40,7 +40,7 @@ export interface EthvmApi {
 
   // Contracts
   getContract(address: string): Promise<Contract | null>
-  getContractsCreatedBy(address: string, limit: number, page: number): Promise<Contract[]>
+  getContractsCreatedBy(address: string, limit: number, page: number): Promise<{ items: Contract[]; totalCount: number }>
 
   // Exchanges
   getExchangeRateQuote(symbol: string, to: string): Promise<Quote>

@@ -96,8 +96,11 @@
       <v-tab-item slot="tabs-item" v-if="account.isCreator" value="tab-4">
         <table-address-contracts
          :contracts="account.contracts"
+         :total-contracts="account.totalContracts"
+         :page="contractsPage"
          :loading="contractsLoading"
          :error="contractsError"
+         @page="setContractsPage"
         />
       </v-tab-item>
     </app-tabs>
@@ -188,6 +191,7 @@ export default class PageDetailsAddress extends Vue {
   /* Contracts: */
   contractsLoading = true
   contractsError = ''
+  contractsPage = 0
 
   // State Machine
   sm!: TinySM
@@ -277,7 +281,9 @@ export default class PageDetailsAddress extends Vue {
               this.minerBlocksLoading = false
 
               // Contract Creator
-              this.account.contracts = res[2] || []
+              const contractsPage = res[2]
+              this.account.contracts = contractsPage ? contractsPage.items : []
+              this.account.totalContracts = contractsPage ? contractsPage.totalCount : 0
               this.contractsLoading = false
 
               // Internal transfers
@@ -355,8 +361,8 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 
-  fetchContractsCreated(page = 0, limit = MAX_ITEMS): Promise<Contract[]> {
-    return this.$api.getContractsCreatedBy(this.addressRef, limit, page)
+  fetchContractsCreated(limit = MAX_ITEMS): Promise<{ items: Contract[]; totalCount: number}> {
+    return this.$api.getContractsCreatedBy(this.addressRef, limit, this.contractsPage)
   }
 
   setFilterTxs(filter: string, page: number): void {
@@ -376,7 +382,8 @@ export default class PageDetailsAddress extends Vue {
   }
 
   setContractsPage(page: number): void {
-    // TODO update paging
+    this.contractsLoading = true
+    this.contractsPage = page
   }
 
   updateTxs(): void {
@@ -416,6 +423,18 @@ export default class PageDetailsAddress extends Vue {
     )
   }
 
+  updateContracts(): void {
+    this.fetchContractsCreated().then(
+      (res: { items: Contract[]; totalCount: number}) => {
+        this.account.contracts = res.items
+        this.account.totalContracts = res.totalCount
+        this.contractsLoading = false
+      }, err => {
+        this.contractsError = this.$i18n.t('message.no-data').toString()
+      }
+    )
+  }
+
   /*
   ===================================================================================
     Watch
@@ -444,6 +463,11 @@ export default class PageDetailsAddress extends Vue {
     if (newVal) {
       this.updateTransfers()
     }
+  }
+
+  @Watch('contractsPage')
+  onContractsPageChanges(newVal: number, oldVal: number): void {
+    this.updateContracts()
   }
 
   /*

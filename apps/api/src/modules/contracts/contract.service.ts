@@ -15,10 +15,11 @@ export class ContractService {
     return this.contractRepository.findOne({ where: { address }, relations: ['metadata', 'erc20Metadata'] })
   }
 
-  async findContractsCreatedBy(creator: string, take: number = 10, page: number = 0): Promise<ContractEntity[]> {
+  async findContractsCreatedBy(creator: string, take: number = 10, page: number = 0): Promise<[ContractEntity[], number]> {
     const skip = take * page
-    const contracts = await this.contractRepository.find({ where: { creator }, take, skip, relations: ['metadata', 'erc20Metadata'] })
-    return this.findTxsForContracts(contracts)
+    const contractsPage = await this.contractRepository.findAndCount({ where: { creator }, take, skip, relations: ['metadata', 'erc20Metadata'] })
+    contractsPage[0] = await this.findTxsForContracts(contractsPage[0])
+    return contractsPage
   }
 
   private async findTxsForContracts(contracts: ContractEntity[]): Promise<ContractEntity[]> {
