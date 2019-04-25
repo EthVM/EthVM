@@ -10,7 +10,6 @@ import { TxDto } from '@app/graphql/txs/dto/tx.dto'
 export class TxResolvers {
   constructor(
     private readonly txService: TxService,
-    private readonly traceService: TraceService,
               // @Inject('PUB_SUB') private pubSub: PubSub
   ) {}
 
@@ -44,7 +43,7 @@ export class TxResolvers {
 
   @ResolveProperty()
   async successful(): Promise<boolean> {
-
+    return true
   }
 
   // @Subscription()
