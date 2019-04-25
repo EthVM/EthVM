@@ -47,6 +47,7 @@ services:
 
   ethstats-server:
     image: myetherwallet/docker-geth-lb:ethstats-instance
+    restart: unless-stopped
     networks:
       - back
     expose:
@@ -58,6 +59,7 @@ services:
     build:
       context: ./ethstats-client/
       dockerfile: Dockerfile
+    restart: unless-stopped
     networks:
       - back
     expose:
