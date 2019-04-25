@@ -80,11 +80,13 @@ query holderTransfers($address: String!, $holderAddress: String!) {
 }
 
 query coinExchangeRate($pair: ExchangeRatePair!) {
-  quote(pair: $pair) {
-    to
+  coinExchangeRate(pair: $pair) {
+    currency
     price
-    last_update
-    vol_24h
+    marketCap
+    vol24h
+    change24h
+    lastUpdated
   }
 }
 

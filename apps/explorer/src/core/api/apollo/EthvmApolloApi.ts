@@ -232,7 +232,7 @@ export class EthvmApolloApi implements EthvmApi {
           pair
         }
       })
-      .then(res => res.data.quote)
+      .then(res => res.data.coinExchangeRate)
   }
 
   public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
