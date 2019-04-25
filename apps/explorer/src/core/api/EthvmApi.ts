@@ -4,12 +4,7 @@ import {
   BlockMetrics,
   Contract,
   PendingTx,
-<<<<<<< HEAD
-  ProcessingMetadata,
   CoinExchangeRate,
-=======
-  Quote,
->>>>>>> develop
   SimpleBlock,
   SimpleTx,
   Statistic,
