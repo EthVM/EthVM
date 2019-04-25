@@ -44,14 +44,6 @@ const schema = {
       default: true,
     },
   },
-  coinGecko: {
-    url: {
-      doc: 'CoinGecko API URL',
-      env: 'COIN_GECKO_API_URL',
-      default:
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true',
-    },
-  },
   expressRateLimit: {
     windowMs: {
       doc: 'Express Rate Limit window(ms)',

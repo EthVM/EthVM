@@ -1,5 +1,7 @@
 package com.ethvm.kafka.connect.sources.exchanges.utils
 
+import com.ethvm.avro.exchange.CoinExchangeRateKeyRecord
+import com.ethvm.avro.exchange.CoinExchangeRateRecord
 import com.ethvm.avro.exchange.TokenExchangeRateKeyRecord
 import com.ethvm.avro.exchange.TokenExchangeRateRecord
 import io.confluent.connect.avro.AvroData
@@ -13,7 +15,9 @@ object AvroToConnect {
 
   private val mappings = mapOf(
     TokenExchangeRateKeyRecord::class to TokenExchangeRateKeyRecord.`SCHEMA$`,
-    TokenExchangeRateRecord::class to TokenExchangeRateRecord.`SCHEMA$`
+    TokenExchangeRateRecord::class to TokenExchangeRateRecord.`SCHEMA$`,
+    CoinExchangeRateKeyRecord::class to CoinExchangeRateKeyRecord.`SCHEMA$`,
+    CoinExchangeRateRecord::class to CoinExchangeRateRecord.`SCHEMA$`
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)

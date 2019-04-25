@@ -26,7 +26,7 @@ import {
   tokenHolders,
   tokenTransfersByContractAddress,
   tokenTransfersByContractAddressForHolder,
-  quote,
+  coinExchangeRate,
   tokenExchangeRateByAddress,
   tokenExchangeRateBySymbol,
   tokenExchangeRates,
@@ -49,7 +49,8 @@ import {
   TokenTransfer,
   Transfer,
   Tx,
-  Uncle
+  Uncle,
+  CoinExchangeRate
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
@@ -223,16 +224,15 @@ export class EthvmApolloApi implements EthvmApi {
   // Exchanges
   // ------------------------------------------------------------------------------------
 
-  public getExchangeRateQuote(symbol: string, to: string): Promise<Quote> {
+  public getExchangeRateQuote(pair: string): Promise<CoinExchangeRate> {
     return this.apollo
       .query({
-        query: quote,
+        query: coinExchangeRate,
         variables: {
-          symbol,
-          to
+          pair
         }
       })
-      .then(res => res.data.quote)
+      .then(res => res.data.coinExchangeRate)
   }
 
   public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {

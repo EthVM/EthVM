@@ -41,8 +41,8 @@ export class TokenResolvers {
   }
 
   @Query()
-  async quote(@Args('symbol') symbol: string, @Args('to') to: string) {
-    return await this.tokenService.findQuote(symbol, to)
+  async coinExchangeRate(@Args('pair') pair: string) {
+    return await this.tokenService.findCoinExchangeRate(pair)
   }
 
   @Query()

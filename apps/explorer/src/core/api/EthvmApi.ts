@@ -4,7 +4,7 @@ import {
   BlockMetrics,
   Contract,
   PendingTx,
-  Quote,
+  CoinExchangeRate,
   SimpleBlock,
   SimpleTx,
   Statistic,
@@ -40,7 +40,7 @@ export interface EthvmApi {
   getContractsCreatedBy(address: string, limit: number, page: number): Promise<Contract[]>
 
   // Exchanges
-  getExchangeRateQuote(symbol: string, to: string): Promise<Quote>
+  getExchangeRateQuote(pair: string): Promise<CoinExchangeRate>
   getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]>
   getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
