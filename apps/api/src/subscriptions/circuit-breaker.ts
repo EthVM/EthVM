@@ -23,7 +23,9 @@ class RateCalculator {
         let n = 0
 
         // iterate over the sparse array
-        for (const key of countsBySecond) {
+
+        for (const key in countsBySecond) {
+
             const keyNumber = +key
 
             // record any entries which are outside the time window and need removed
@@ -96,13 +98,14 @@ export class CircuitBreaker<T> {
         const timestamp = new Date().getTime()
         const isOpen = this.determineState(timestamp)
 
-        if (isOpen) {
+        if (this.isOpen) {
             this.subject.next(event)
         }
 
     }
 
     error(err: Error) {
+        console.error('Circuit breaker received error', err)
         this.subject.error(err)
     }
 

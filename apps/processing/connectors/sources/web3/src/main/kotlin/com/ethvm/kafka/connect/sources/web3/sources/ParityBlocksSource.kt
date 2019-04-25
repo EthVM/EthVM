@@ -45,6 +45,8 @@ class ParityBlocksSource(
 
             val block = resp.block
 
+
+
             val blockKeyRecord = CanonicalKeyRecord.newBuilder()
               .setNumberBI(blockNumberBI)
               .build()

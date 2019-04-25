@@ -158,7 +158,12 @@ protocol Capture {
     long timestamp;                                     // the unix timestamp for when the block was collated
     long size;
 
-    array<string> uncles = [];
+    int transactionCount;
+    array<string> transactionHashes = [];
+
+    int uncleCount;
+    array<string> uncleHashes = [];
+
     union { null, long } blockTime = null;
 
   }

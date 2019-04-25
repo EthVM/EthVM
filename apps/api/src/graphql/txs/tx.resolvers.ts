@@ -1,14 +1,16 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
+import { Args, Query, Resolver, ResolveProperty } from '@nestjs/graphql'
 import { TxService } from '@app/dao/tx.service'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
-import { ParseAddressPipe } from '../../graphql/accounts/node_modules/@app/shared/validation/parse-address.pipe'
-import { ParseLimitPipe } from '../../graphql/contracts/node_modules/@app/shared/validation/parse-limit.pipe'
-import { ParsePagePipe } from '../../graphql/contracts/node_modules/@app/shared/validation/parse-page.pipe'
-import { TxDto } from '@app/modules/txs/dto/tx.dto'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
+import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
+import { TxDto } from '@app/graphql/txs/dto/tx.dto'
 
 @Resolver('Transaction')
 export class TxResolvers {
-  constructor(private readonly txService: TxService,
+  constructor(
+    private readonly txService: TxService,
+    private readonly traceService: TraceService,
               // @Inject('PUB_SUB') private pubSub: PubSub
   ) {}
 
@@ -38,6 +40,11 @@ export class TxResolvers {
   @Query()
   async totalNumberOfTransactions(): Promise<number> {
     return await this.txService.countTransactions()
+  }
+
+  @ResolveProperty()
+  async successful(): Promise<boolean> {
+
   }
 
   // @Subscription()

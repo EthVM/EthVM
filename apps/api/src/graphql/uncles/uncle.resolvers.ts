@@ -1,9 +1,9 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { UncleService } from '@app/dao/uncle.service'
-import { UncleDto } from '@app/modules/uncles/uncle.dto'
-import { ParseHashPipe } from '../../graphql/txs/node_modules/@app/shared/validation/parse-hash.pipe'
-import { ParseLimitPipe } from '../../graphql/contracts/node_modules/@app/shared/validation/parse-limit.pipe'
-import { ParsePagePipe } from '../../graphql/contracts/node_modules/@app/shared/validation/parse-page.pipe'
+import { UncleDto } from '@app/graphql/uncles/uncle.dto'
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
+import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 
 @Resolver('Uncle')
 export class UncleResolvers {

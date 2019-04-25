@@ -2,24 +2,28 @@
 
 CREATE TABLE canonical_block_header
 (
-  number            NUMERIC PRIMARY KEY,
-  hash              CHAR(66)  NOT NULL UNIQUE,
-  parent_hash       CHAR(66)  NOT NULL UNIQUE,
-  nonce             NUMERIC   NULL,
-  sha3_uncles       CHAR(66)  NOT NULL,
-  logs_bloom        CHAR(514) NOT NULL,
-  transactions_root CHAR(66)  NOT NULL,
-  state_root        CHAR(66)  NOT NULL,
-  receipts_root     CHAR(66)  NOT NULL,
-  author            CHAR(42)  NOT NULL,
-  difficulty        NUMERIC   NOT NULL,
-  total_difficulty  NUMERIC   NOT NULL,
-  extra_data        TEXT      NULL,
-  gas_limit         NUMERIC   NOT NULL,
-  gas_used          NUMERIC   NOT NULL,
-  timestamp         BIGINT    NOT NULL,
-  size              BIGINT    NOT NULL,
-  block_time        BIGINT    NULL
+  number             NUMERIC PRIMARY KEY,
+  hash               CHAR(66)  NOT NULL UNIQUE,
+  parent_hash        CHAR(66)  NOT NULL UNIQUE,
+  nonce              NUMERIC   NULL,
+  sha3_uncles        CHAR(66)  NOT NULL,
+  logs_bloom         CHAR(514) NOT NULL,
+  transactions_root  CHAR(66)  NOT NULL,
+  state_root         CHAR(66)  NOT NULL,
+  receipts_root      CHAR(66)  NOT NULL,
+  author             CHAR(42)  NOT NULL,
+  difficulty         NUMERIC   NOT NULL,
+  total_difficulty   NUMERIC   NOT NULL,
+  extra_data         TEXT      NULL,
+  gas_limit          NUMERIC   NOT NULL,
+  gas_used           NUMERIC   NOT NULL,
+  timestamp          BIGINT    NOT NULL,
+  size               BIGINT    NOT NULL,
+  uncle_count        INT       NOT NULL,
+  uncle_hashes       TEXT      NULL,
+  transaction_count  INT       NULL,
+  transaction_hashes TEXT      NULL,
+  block_time         BIGINT    NULL
 );
 
 CREATE INDEX idx_block_header_number ON canonical_block_header (number DESC);
@@ -36,7 +40,7 @@ FROM canonical_block_header AS cb
 GROUP BY cb.author
 ORDER BY count DESC;
 
-CREATE OR REPLACE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
+CREATE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
 $body$
 DECLARE
   record  RECORD;
@@ -52,7 +56,13 @@ BEGIN
   payload := json_build_object(
     'table', 'canonical_block_header',
     'action', TG_OP,
-    'payload', json_build_object('hash', record.hash, 'number', record.number)
+    'payload', json_build_object(
+      'block_hash', record.hash, 
+      'number', record.number,
+      'transaction_count', record.transaction_count,
+      'uncle_count', record.uncle_count,
+      'author', record.author
+      )
     );
 
   PERFORM pg_notify('events', payload::text);
@@ -139,8 +149,8 @@ BEGIN
   payload = json_build_object(
     'table', 'transaction',
     'action', TG_OP,
-    'payload', json_build_object('hash', record.hash)
-    );
+    'payload', json_build_object('transaction_hash', record.hash, 'block_hash', record.block_hash)
+  );
 
   PERFORM pg_notify('events', payload::text);
 
@@ -188,6 +198,37 @@ CREATE INDEX idx_transaction_receipt_to ON transaction_receipt ("to");
 CREATE INDEX idx_transaction_receipt_from_to ON transaction_receipt ("from", "to");
 CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("contract_address");
 
+CREATE FUNCTION notify_transaction_receipt() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload := json_build_object(
+    'table', 'transaction_receipt',
+    'action', TG_OP,
+    'payload', json_build_object('block_hash', record.block_hash, 'transaction_hash', record.transaction_hash)
+    );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_transaction_receipt
+  AFTER INSERT OR UPDATE OR DELETE
+  ON "transaction_receipt"
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_transaction_receipt();
+
 /* This view helps to filter out non canonical receipts based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_receipt AS
 SELECT tr.*
@@ -207,7 +248,7 @@ CREATE TABLE transaction_trace
   transaction_position INT          NULL,
   block_number         NUMERIC      NOT NULL,
   subtraces            INT          NOT NULL,
-  TYPE                 VARCHAR(66)  NOT NULL,
+  type                 VARCHAR(66)  NOT NULL,
   error                VARCHAR(514) NULL,
   action               TEXT         NOT NULL,
   result               TEXT         NULL,
@@ -217,6 +258,67 @@ CREATE TABLE transaction_trace
 CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
 CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
 CREATE INDEX idx_transaction_trace_transaction_position ON transaction_trace (transaction_position);
+
+CREATE FUNCTION notify_transaction_trace() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  /* we only want notified about top level calls and rewards */
+
+  IF (record.transaction_hash IS NULL) THEN
+    /* block or uncle reward trace */
+
+    payload := json_build_object(
+      'table', 'transaction_trace',
+      'action', TG_OP,
+      'payload', json_build_object(
+        'block_hash', record.block_hash,                         
+        'trace_address', record.trace_address,
+        'type', record.type,
+        'action', record.action        
+      )
+    );
+
+    PERFORM pg_notify('events', payload::text);
+
+  ELSIF (record.trace_address = '[]' AND record.type = 'call') THEN
+    /* root call trace */
+
+    payload := json_build_object(
+      'table', 'transaction_trace',
+      'action', TG_OP,
+      'payload', json_build_object(
+        'block_hash', record.block_hash,                         
+        'transaction_hash', record.transaction_hash,
+        'trace_address', record.trace_address,
+        'type', record.type,
+        'error', record.error
+      )
+    );
+
+    PERFORM pg_notify('events', payload::text);
+
+  END IF;
+
+  RETURN NULL;
+  
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_transaction_trace
+  AFTER INSERT OR UPDATE OR DELETE
+  ON "transaction_trace"
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_transaction_trace();
 
 /* This view helps to filter out non canonical traces based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_trace AS
@@ -229,61 +331,30 @@ WHERE cb.number IS NOT NULL
 CREATE TABLE contract
 (
   address                              CHAR(42) PRIMARY KEY,
-  creator                              CHAR(42)     NULL,
-  init                                 TEXT         NULL,
-  code                                 TEXT         NULL,
-  contract_type                        VARCHAR(32)  NULL,
-  refund_address                       CHAR(66)     NULL,
-  refund_balance                       NUMERIC      NULL,
-  trace_created_at_block_hash          CHAR(66)     NULL,
-  trace_created_at_block_number        NUMERIC      NULL,
-  trace_created_at_transaction_hash    CHAR(66)     NULL,
-  trace_created_at_transaction_index   INT          NULL,
-  trace_created_at_log_index           INT          NULL,
-  trace_created_at_trace_address       TEXT NULL,
-  trace_destroyed_at_block_hash        CHAR(66)     NULL,
-  trace_destroyed_at_block_number      NUMERIC      NULL,
-  trace_destroyed_at_transaction_hash  CHAR(66)     NULL,
-  trace_destroyed_at_transaction_index INT          NULL,
-  trace_destroyed_at_log_index         INT          NULL,
-  trace_destroyed_at_trace_address     TEXT NULL,
-  trace_destroyed_at                   TEXT         NULL
+  creator                              CHAR(42)    NULL,
+  init                                 TEXT        NULL,
+  code                                 TEXT        NULL,
+  contract_type                        VARCHAR(32) NULL,
+  refund_address                       CHAR(66)    NULL,
+  refund_balance                       NUMERIC     NULL,
+  trace_created_at_block_hash          CHAR(66)    NULL,
+  trace_created_at_block_number        NUMERIC     NULL,
+  trace_created_at_transaction_hash    CHAR(66)    NULL,
+  trace_created_at_transaction_index   INT         NULL,
+  trace_created_at_log_index           INT         NULL,
+  trace_created_at_trace_address       TEXT        NULL,
+  trace_destroyed_at_block_hash        CHAR(66)    NULL,
+  trace_destroyed_at_block_number      NUMERIC     NULL,
+  trace_destroyed_at_transaction_hash  CHAR(66)    NULL,
+  trace_destroyed_at_transaction_index INT         NULL,
+  trace_destroyed_at_log_index         INT         NULL,
+  trace_destroyed_at_trace_address     TEXT        NULL,
+  trace_destroyed_at                   TEXT        NULL
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
-
-CREATE FUNCTION notify_contract() RETURNS TRIGGER AS
-$body$
-DECLARE
-  record  RECORD;
-  payload JSON;
-BEGIN
-
-  IF (TG_OP = 'DELETE') THEN
-    record = OLD;
-  ELSE
-    record = NEW;
-  END IF;
-
-  payload = json_build_object(
-    'table', 'contract',
-    'action', TG_OP,
-    'payload', json_build_object('address', record.address)
-    );
-
-  PERFORM pg_notify('events', payload::text);
-
-  RETURN NULL;
-END;
-$body$ LANGUAGE plpgsql;
-
-CREATE TRIGGER notify_contract
-  AFTER INSERT OR UPDATE OR DELETE
-  ON "contract"
-  FOR EACH ROW
-EXECUTE PROCEDURE notify_contract();
 
 CREATE VIEW canonical_contract AS
 SELECT c.*
@@ -344,18 +415,18 @@ WHERE fb.contract IS NOT NULL
 CREATE TABLE fungible_balance_delta
 (
   id                               BIGSERIAL,
-  address                          CHAR(42)     NOT NULL,
-  contract_address                 CHAR(42)     NULL,
-  counterpart_address              CHAR(42)     NULL,
-  token_type                       VARCHAR(32)  NOT NULL,
-  delta_type                       VARCHAR(32)  NOT NULL,
-  trace_location_block_hash        CHAR(66)     NULL,
-  trace_location_block_number      NUMERIC      NULL,
-  trace_location_transaction_hash  CHAR(66)     NULL,
-  trace_location_transaction_index INT          NULL,
-  trace_location_log_index         INT          NULL,
-  trace_location_trace_address     TEXT NULL,
-  amount                           NUMERIC      NOT NULL
+  address                          CHAR(42)    NOT NULL,
+  contract_address                 CHAR(42)    NULL,
+  counterpart_address              CHAR(42)    NULL,
+  token_type                       VARCHAR(32) NOT NULL,
+  delta_type                       VARCHAR(32) NOT NULL,
+  trace_location_block_hash        CHAR(66)    NULL,
+  trace_location_block_number      NUMERIC     NULL,
+  trace_location_transaction_hash  CHAR(66)    NULL,
+  trace_location_transaction_index INT         NULL,
+  trace_location_log_index         INT         NULL,
+  trace_location_trace_address     TEXT        NULL,
+  amount                           NUMERIC     NOT NULL
 );
 
 CREATE INDEX idx_fungible_balance_delta_address ON fungible_balance_delta (address);
@@ -425,15 +496,15 @@ ORDER BY balance DESC;
 
 CREATE TABLE non_fungible_balance
 (
-  contract                         CHAR(42)     NOT NULL,
-  token_id                         NUMERIC      NOT NULL,
-  address                          CHAR(42)     NOT NULL,
-  trace_location_block_hash        CHAR(66)     NULL,
-  trace_location_block_number      NUMERIC      NULL,
-  trace_location_transaction_hash  CHAR(66)     NULL,
-  trace_location_transaction_index INT          NULL,
-  trace_location_log_index         INT          NULL,
-  trace_location_trace_address     TEXT NULL,
+  contract                         CHAR(42) NOT NULL,
+  token_id                         NUMERIC  NOT NULL,
+  address                          CHAR(42) NOT NULL,
+  trace_location_block_hash        CHAR(66) NULL,
+  trace_location_block_number      NUMERIC  NULL,
+  trace_location_transaction_hash  CHAR(66) NULL,
+  trace_location_transaction_index INT      NULL,
+  trace_location_log_index         INT      NULL,
+  trace_location_trace_address     TEXT     NULL,
   PRIMARY KEY (contract, token_id)
 );
 
@@ -452,17 +523,17 @@ WHERE nfb.contract IS NOT NULL
 CREATE TABLE non_fungible_balance_delta
 (
   id                               BIGSERIAL,
-  contract                         CHAR(42)     NOT NULL,
-  token_id                         NUMERIC      NOT NULL,
-  token_type                       VARCHAR(32)  NOT NULL,
-  trace_location_block_hash        CHAR(66)     NULL,
-  trace_location_block_number      NUMERIC      NULL,
-  trace_location_transaction_hash  CHAR(66)     NULL,
-  trace_location_transaction_index INT          NULL,
-  trace_location_log_index         INT          NULL,
-  trace_location_trace_address     TEXT NULL,
-  "from"                           CHAR(42)     NOT NULL,
-  "to"                             CHAR(42)     NOT NULL
+  contract                         CHAR(42)    NOT NULL,
+  token_id                         NUMERIC     NOT NULL,
+  token_type                       VARCHAR(32) NOT NULL,
+  trace_location_block_hash        CHAR(66)    NULL,
+  trace_location_block_number      NUMERIC     NULL,
+  trace_location_transaction_hash  CHAR(66)    NULL,
+  trace_location_transaction_index INT         NULL,
+  trace_location_log_index         INT         NULL,
+  trace_location_trace_address     TEXT        NULL,
+  "from"                           CHAR(42)    NOT NULL,
+  "to"                             CHAR(42)    NOT NULL
 );
 
 CREATE INDEX idx_non_fungible_balance_delta_contract ON non_fungible_balance_delta (contract);

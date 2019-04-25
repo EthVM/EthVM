@@ -98,6 +98,8 @@ export class BlockHeader {
     timestamp?: string;
     size?: string;
     blockTime?: string;
+    uncleHashes?: string[];
+    transactionHashes?: string[];
 }
 
 export class BlockMetrics {
@@ -328,6 +330,8 @@ export class Search {
 
 export abstract class ISubscription {
     abstract newBlock(): Block | Promise<Block>;
+
+    abstract isSyncing(): boolean | Promise<boolean>;
 
     abstract newTxs(): Transaction[] | Promise<Transaction[]>;
 }

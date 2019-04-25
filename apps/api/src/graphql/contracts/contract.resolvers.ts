@@ -1,10 +1,9 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { ContractService } from '@app/dao/contract.service'
-import { ParseAddressPipe } from '../../graphql/accounts/node_modules/@app/shared/validation/parse-address.pipe'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { ContractDto } from '@app/modules/contracts/dto/contract.dto'
-import { ContractsPageDto } from '@app/modules/contracts/dto/contracts-page.dto'
+import { ContractDto } from '@app/graphql/contracts/dto/contract.dto'
 
 @Resolver('Contract')
 export class ContractResolvers {
@@ -21,11 +20,8 @@ export class ContractResolvers {
     @Args('creator', ParseAddressPipe) creator: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
-  ): Promise<ContractsPageDto> {
-    const results = await this.contractService.findContractsCreatedBy(creator, limit, page)
-    return {
-      items: results[0].map(e => new ContractDto(e)),
-      totalCount: results[1],
-    }
+  ) {
+    const entities = await this.contractService.findContractsCreatedBy(creator, limit, page)
+    return entities.map(e => new ContractDto(e))
   }
 }

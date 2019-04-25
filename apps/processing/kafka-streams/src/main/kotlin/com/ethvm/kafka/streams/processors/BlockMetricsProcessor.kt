@@ -82,7 +82,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setBlockNumber(header.getNumber())
           .setBlockHash(header.getHash())
           .setBlockTime(header.getBlockTime())
-          .setNumUncles(header.getUncles().size)
+          .setNumUncles(header.getUncleHashes().size)
           .setDifficulty(header.getDifficulty())
           .setTotalDifficulty(header.getTotalDifficulty())
           .setTimestamp(header.getTimestamp())

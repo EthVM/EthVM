@@ -6,16 +6,13 @@ subscription newSimpleBlocks {
       author
     }
     transactions {
-      hash
-      receipt {
-        status
-        traces {
-          error
-        }
-      }
-    }
+      hash      
+      successful
+    }    
     rewards {
-      value
+      address
+      deltaType
+      amount
     }
     uncles {
       hash
