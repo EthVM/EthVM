@@ -1,22 +1,56 @@
 version: '3.6'
-    
+
+networks:
+  web:
+    external: true
+  back:
+    external: false
+
 services:
+
+  traefik:
+    image: ethvm/traefik:0.1.4
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - web
+      - back
+    ports:
+      - 80:80
+      - 443:433
+      - 8080:8080
+    environment:
+      DEBUG: 'true'
+      LETS_ENCRYPT_ENABLED:
+      SWARM_MODE: 'false'
+
   parity:
     image: parity/parity:stable
     volumes:
       - ./parity:/home/parity/
       - ./files:/home/configs/
-    ports:
-      - 30303:30303
-      - 8545:8545
-      - 8546:8546
-    command: --config /home/configs/config.toml
+    networks:
+      - back
+    expose:
+      - 30303
+      - 8545
+      - 8546
+    command: --config /home/configs/config.toml --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546
     user: root
-  
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:${PARITY_DOMAIN}'
+      - 'traefik.backend=parity'
+      - 'traefik.port=8546'
+
   ethstats-server:
     image: myetherwallet/docker-geth-lb:ethstats-instance
-    ports:
-      - 3000:3000
+    networks:
+      - back
+    expose:
+      - 3000
     environment:
       - WS_SECRET=${WS_SECRET}
 
@@ -24,10 +58,18 @@ services:
     build:
       context: ./ethstats-client/
       dockerfile: Dockerfile
-    ports:
-      - 40303:40303
-      - 40303:40303/udp
+    networks:
+      - back
+    expose:
+      - 40303
+      - 40303/udp
     environment:
       - WS_SECRET=${WS_SECRET}
       - WS_SERVER=ws://ethstats-server:3000
       - RPC_HOST=parity
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:${ETHSTATS_DOMAIN}'
+      - 'traefik.backend=ethstats-client'
+      - 'traefik.port=40303'
