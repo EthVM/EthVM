@@ -237,8 +237,6 @@ export abstract class IQuery {
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
-    abstract search(query: string): Search | Promise<Search>;
-
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
@@ -262,6 +260,8 @@ export abstract class IQuery {
     abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
 
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+
+    abstract search(query: string): Search | Promise<Search>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
