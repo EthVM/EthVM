@@ -17,10 +17,10 @@
         <v-flex sm3>
           <h5>{{ $t('contract.hash') }}</h5>
         </v-flex>
-        <v-flex sm3>
+        <v-flex sm4>
           <h5>{{ $tc('tx.hash', 1) }}</h5>
         </v-flex>
-        <v-flex sm2>
+        <v-flex sm1>
           <h5>{{ $t('block.number') }}</h5>
         </v-flex>
         <v-flex sm2>
