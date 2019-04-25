@@ -4,8 +4,12 @@ import {
   BlockMetrics,
   Contract,
   PendingTx,
+<<<<<<< HEAD
   ProcessingMetadata,
   CoinExchangeRate,
+=======
+  Quote,
+>>>>>>> develop
   SimpleBlock,
   SimpleTx,
   Statistic,
@@ -83,9 +87,6 @@ export interface EthvmApi {
 
   // Search
   search(hash: string): Promise<any>
-
-  // Processing Metadata
-  getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
 
   // Subscriptions
   observable<T>(query): Observable<T>
