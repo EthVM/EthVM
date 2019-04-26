@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class AppFootnotes extends Vue {

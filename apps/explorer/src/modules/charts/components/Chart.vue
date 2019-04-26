@@ -28,9 +28,9 @@
 import ChartJs from 'chart.js'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { ChartData } from '@app/modules/charts/props'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 ChartJs.defaults.global = Object.assign(ChartJs.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",

@@ -22,9 +22,10 @@ import ChartHashRate from '@app/modules/charts/components/history/ChartHashRate.
 import ChartTxFail from '@app/modules/charts/components/history/ChartTxFail.vue'
 import ChartTxSuccess from '@app/modules/charts/components/history/ChartTxSuccess.vue'
 import ChartTxFees from '@app/modules/charts/components/history/ChartTxFees.vue'
-import { Vue, Component } from 'vue-property-decorator'
 import { ChartTypes } from '@app/modules/charts/helpers'
 import { Crumb } from '@app/core/components/props'
+import { Vue, Component } from 'vue-property-decorator'
+
 
 @Component({
   components: {

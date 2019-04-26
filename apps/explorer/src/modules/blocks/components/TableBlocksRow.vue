@@ -109,9 +109,9 @@
 </template>
 
 <script lang="ts">
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTransformHash  from '@app/core/components/ui/AppTransformHash.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Block, SimpleBlock, Tx, SimpleTx } from '@app/core/models'
 
 @Component({

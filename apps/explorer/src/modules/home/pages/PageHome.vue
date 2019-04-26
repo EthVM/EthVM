@@ -48,8 +48,8 @@ import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { SimpleBlock, SimpleTx, Tx } from '@app/core/models'
-import { Component, Vue } from 'vue-property-decorator'
 import { Subscription } from 'apollo-client/util/Observable'
+import { Component, Vue } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 

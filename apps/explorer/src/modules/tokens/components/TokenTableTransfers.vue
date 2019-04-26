@@ -76,8 +76,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Tx } from '@app/core/models'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 const MAX_ITEMS = 5
 

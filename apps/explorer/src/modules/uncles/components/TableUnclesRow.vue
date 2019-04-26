@@ -93,8 +93,8 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Uncle } from '@app/core/models'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 

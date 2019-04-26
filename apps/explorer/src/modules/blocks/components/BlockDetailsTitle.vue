@@ -44,8 +44,8 @@
 </template>
 
 <script lang="ts">
-import AppTransformHash  from '@app/core/components/ui/AppTransformHash.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import AppTransformHash  from '@app/core/components/ui/AppTransformHash.vue'
 
 @Component({
   components: {

@@ -51,8 +51,8 @@
 </template>
 
 <script lang="ts">
-import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Detail } from '@app/core/components/props'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppTransformHash  from '@app/core/components/ui/AppTransformHash.vue'
 

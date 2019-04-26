@@ -15,10 +15,9 @@ import AppSyncMessage from '@app/core/components/ui/AppSyncMessage.vue'
 import AppGreeting from '@app/core/components/ui/AppGreeting.vue'
 import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
-import { Vue, Component } from 'vue-property-decorator'
 import { Events } from '@app/core/hub'
 import storePack from 'store'
-import 'vuetify/dist/vuetify.min.css'
+import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 10
 

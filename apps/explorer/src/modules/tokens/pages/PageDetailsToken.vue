@@ -60,9 +60,9 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
 import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Contract, Token, Tx } from '@app/core/models'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 
 const MAX_ITEMS = 10
 
