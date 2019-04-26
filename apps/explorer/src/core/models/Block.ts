@@ -118,7 +118,7 @@ export class Block {
 
   public getTotalDifficulty(): HexNumber {
     if (!this.cache.totalDifficulty) {
-      this.cache.totalDifficulty = new HexNumber(this.block.totalDifficulty)
+      this.cache.totalDifficulty = new HexNumber(this.block.header.totalDifficulty)
     }
     return this.cache.totalDifficulty
   }
@@ -160,7 +160,7 @@ export class Block {
   public getMinerReward(): EthValue {
     if (!this.cache.minerReward) {
       const rawReward = this.getRewards()
-        .filter(r => r.rewardType === 'block')
+        .filter(r => r.rewardType === 'BLOCK_REWARD')
         .map(r => r.value)
         .reduce((acc, value: any) => value, 0)
       this.cache.minerReward = new EthValue(rawReward)
@@ -171,7 +171,7 @@ export class Block {
   public getUncleReward(): EthValue {
     if (!this.cache.uncleReward) {
       const rawReward = this.getRewards()
-        .filter(r => r.rewardType !== 'block')
+        .filter(r => r.rewardType !== 'BLOCK_REWARD')
         .map(r => r.value)
         .reduceRight((acc, value: any) => value, 0)
       this.cache.uncleReward = new EthValue(rawReward)

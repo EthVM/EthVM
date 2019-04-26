@@ -1,4 +1,4 @@
-import { PendingTx, SimpleTx, EthValue, SimpleBlock } from '@app/core/models'
+import { PendingTx, SimpleTx, EthValue, SimpleBlock, Transfer } from '@app/core/models'
 
 export class AccountInfo {
   public balance: EthValue = new EthValue(0)
@@ -25,6 +25,9 @@ export class AccountInfo {
   public isCreator: boolean = false
 
   public type: string = ''
+
+  public internalTransfers: Transfer[] = []
+  public totalInternalTransfers: number = 0
 
   constructor(public readonly address: string) {}
 }

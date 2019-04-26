@@ -1,16 +1,13 @@
 import { EthvmApi } from '@app/core/api'
-import { accountMetadataByHash, addressAllTokensOwned, addressAmountTokensOwned, addressBalanceByHash } from '@app/core/api/apollo/queries/addresses.graphql'
+import {
+  accountByAddress,
+  addressAllTokensOwned,
+  addressAmountTokensOwned,
+  internalTransactionsByAddress
+} from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
-import { contractByHash, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
-import {
-  quote,
-  tokenExchangeRateByAddress,
-  tokenExchangeRateBySymbol,
-  tokenExchangeRates,
-  totalNumTokenExchangeRates
-} from '@app/core/api/apollo/queries/exchanges.graphql'
-import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
+import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
   averageBlockTime,
@@ -25,23 +22,24 @@ import {
 } from '@app/core/api/apollo/queries/statistics.graphql'
 import { newBlockMetrics, newSimpleBlocks, newSimpleTxs } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
-  addressTokenTransfers,
-  addressTokenTransfersByHolder,
   holderDetails,
-  holderTransfers,
-  tokenHistory,
-  topTokenHolders
-} from '@app/core/api/apollo/queries/token-transfers.graphql'
+  tokenHolders,
+  tokenTransfersByContractAddress,
+  tokenTransfersByContractAddressForHolder,
+  coinExchangeRate,
+  tokenExchangeRateByAddress,
+  tokenExchangeRateBySymbol,
+  tokenExchangeRates,
+  totalNumTokenExchangeRates
+} from '@app/core/api/apollo/queries/tokens.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import {
-  AddressBalance,
-  AddressMetadata,
+  Account,
   Block,
   BlockMetrics,
   Contract,
   PendingTx,
-  ProcessingMetadata,
   Quote,
   SimpleBlock,
   SimpleTx,
@@ -49,8 +47,10 @@ import {
   Token,
   TokenExchangeRate,
   TokenTransfer,
+  Transfer,
   Tx,
-  Uncle
+  Uncle,
+  CoinExchangeRate
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
@@ -62,26 +62,15 @@ export class EthvmApolloApi implements EthvmApi {
   // Address
   // ------------------------------------------------------------------------------------
 
-  public getAddressBalance(address: string): Promise<AddressBalance> {
+  public getAccount(address: string): Promise<Account | null> {
     return this.apollo
       .query({
-        query: addressBalanceByHash,
+        query: accountByAddress,
         variables: {
           address
         }
       })
-      .then(res => res.data.balanceByHash)
-  }
-
-  public getAddressMetadata(address: string): Promise<AddressMetadata> {
-    return this.apollo
-      .query({
-        query: accountMetadataByHash,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.accountMetadataByHash)
+      .then(res => res.data.accountByAddress)
   }
 
   public getAddressAllTokensOwned(address: string): Promise<Token[]> {
@@ -106,32 +95,13 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.addressAmountTokensOwned)
   }
 
-  public getAddressTokenTransfers(address: string, limit: number, page: number): Promise<TokenTransfer[]> {
+  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
     return this.apollo
       .query({
-        query: addressTokenTransfers,
-        variables: {
-          address,
-          limit,
-          page
-        }
+        query: internalTransactionsByAddress,
+        variables: { address, limit, page }
       })
-      .then(res => res.data.addressTokenTransfers)
-  }
-
-  public getAddressTokenTransfersByHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
-    return this.apollo
-      .query({
-        query: addressTokenTransfersByHolder,
-        variables: {
-          address,
-          holder,
-          filter,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.addressTokenTransfersByHolder)
+      .then(res => res.data.internalTransactionsByAddress)
   }
 
   // ------------------------------------------------------------------------------------
@@ -155,7 +125,8 @@ export class EthvmApolloApi implements EthvmApi {
         query: blocks,
         variables: {
           limit,
-          page
+          page,
+          fromBlock
         }
       })
       .then(res => res.data.blocks.map(raw => new Block(raw)))
@@ -227,13 +198,13 @@ export class EthvmApolloApi implements EthvmApi {
   public getContract(address: string): Promise<Contract> {
     return this.apollo
       .query({
-        query: contractByHash,
+        query: contractByAddress,
         variables: {
           address
         },
         fetchPolicy: 'network-only'
       })
-      .then(res => res.data.contractByHash)
+      .then(res => res.data.contractByAddress)
   }
 
   public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<Contract[]> {
@@ -253,16 +224,15 @@ export class EthvmApolloApi implements EthvmApi {
   // Exchanges
   // ------------------------------------------------------------------------------------
 
-  public getExchangeRateQuote(symbol: string, to: string): Promise<Quote> {
+  public getExchangeRateQuote(pair: string): Promise<CoinExchangeRate> {
     return this.apollo
       .query({
-        query: quote,
+        query: coinExchangeRate,
         variables: {
-          symbol,
-          to
+          pair
         }
       })
-      .then(res => res.data.quote)
+      .then(res => res.data.coinExchangeRate)
   }
 
   public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
@@ -308,28 +278,6 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenExchangeRateByAddress)
   }
 
-  public getTokenHistory(address: string): Promise<any> {
-    return this.apollo
-      .query({
-        query: tokenHistory,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.tokenHistory)
-  }
-
-  public getTopTokenHolders(address: string): Promise<any> {
-    return this.apollo
-      .query({
-        query: topTokenHolders,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.topTokenHolders)
-  }
-
   public getHolderDetails(address: string, holderAddress: string): Promise<any> {
     return this.apollo
       .query({
@@ -340,18 +288,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.holderDetails)
-  }
-
-  public getHolderTransfers(address: string, holderAddress: string): Promise<any> {
-    return this.apollo
-      .query({
-        query: holderTransfers,
-        variables: {
-          address,
-          holderAddress
-        }
-      })
-      .then(res => res.data.holderTransfers)
   }
 
   // ------------------------------------------------------------------------------------
@@ -372,6 +308,51 @@ export class EthvmApolloApi implements EthvmApi {
 
   public getTotalNumberOfPendingTxs(): Promise<number> {
     throw new Error('Method not implemented.')
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Tokens
+  // ------------------------------------------------------------------------------------
+
+  public getTokenHolders(address: string, limit?: number, page?: number): Promise<any> {
+    return this.apollo
+      .query({
+        query: tokenHolders,
+        variables: {
+          address,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.tokenHolders)
+  }
+
+  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
+    return this.apollo
+      .query({
+        query: tokenTransfersByContractAddress,
+        variables: {
+          address,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.tokenTransfersByContractAddress)
+  }
+
+  public getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
+    return this.apollo
+      .query({
+        query: tokenTransfersByContractAddressForHolder,
+        variables: {
+          address,
+          holder,
+          filter,
+          limit,
+          page
+        }
+      })
+      .then(res => res.data.tokenTransfersByContractAddressForHolder)
   }
 
   // ------------------------------------------------------------------------------------
@@ -399,7 +380,7 @@ export class EthvmApolloApi implements EthvmApi {
           fromBlock
         }
       })
-      .then(res => res.data.txs.map(raw => new Tx(raw)))
+      .then(res => res.data.txs.map(raw => new SimpleTx(raw)))
   }
 
   public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]> {
@@ -472,7 +453,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageBlockTime)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
@@ -483,7 +464,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageDifficulty)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
@@ -494,7 +475,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageGasLimit)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
@@ -505,7 +486,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageGasPrice)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageHashRateStats(duration: string): Promise<Statistic[]> {
@@ -516,7 +497,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageHashRate)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
@@ -527,7 +508,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageMinerReward)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
@@ -538,7 +519,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.averageTxFee)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getFailedTxStats(duration: string): Promise<Statistic[]> {
@@ -549,7 +530,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.totalFailedTxs)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   public getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
@@ -560,7 +541,7 @@ export class EthvmApolloApi implements EthvmApi {
           duration
         }
       })
-      .then(res => res.data.totalSuccessfulTxs)
+      .then(res => res.data.blockMetricsByDay)
   }
 
   // ------------------------------------------------------------------------------------
@@ -576,21 +557,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.search)
-  }
-
-  // ------------------------------------------------------------------------------------
-  // Processing Metadata
-  // ------------------------------------------------------------------------------------
-
-  public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
-    return this.apollo
-      .query({
-        query: processingMetadataById,
-        variables: {
-          id
-        }
-      })
-      .then(res => res.data.processingMetadataById)
   }
 
   // ------------------------------------------------------------------------------------

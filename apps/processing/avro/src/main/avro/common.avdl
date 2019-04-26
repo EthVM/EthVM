@@ -1,8 +1,17 @@
-@namespace("io.enkrypt.avro.common")
+@namespace("com.ethvm.avro.common")
 protocol Common {
 
   enum ContractType {
     GENERIC, ERC20, ERC721
+  }
+
+  record TraceLocationRecord {
+    union { null, string } blockHash = null;
+    union { null, decimal(80,0) } blockNumber = null;
+    union { null, string } transactionHash = null;
+    union { null, int } transactionIndex = null;
+    union { null, int } logIndex = null;
+    union { null, array<int> } traceAddress = null;
   }
 
 }

@@ -12,21 +12,26 @@
       </v-flex>
       <v-flex hidden-xs-only sm3>
         <p class="info--text font-weight-thin mb-0">
-          <v-tooltip v-if="!isShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true), 5)" bottom>
-            <template #activator="data">
-              <v-icon v-on="data.on" small class="info--text text-xs-center">fa fa-question-circle</v-icon>
-            </template>
-            <span
-              >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true), 5) }} (@ ${{
-                getRoundNumber(token.currentPrice)
-              }}
-              per {{ token.symbol }})</span
-            >
-          </v-tooltip>
-          {{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true)) }} (@ ${{
-            getRoundNumber(token.currentPrice)
-          }}
-          per {{ token.symbol }})
+          <template v-if="!(token.balance && token.currentPrice)">
+            N/A
+          </template>
+          <template v-else>
+            <v-tooltip v-if="!isShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true), 5)" bottom>
+              <template #activator="data">
+                <v-icon v-on="data.on" small class="info--text text-xs-center">fa fa-question-circle</v-icon>
+              </template>
+              <span
+                >${{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true), 5) }} (@ ${{
+                  getRoundNumber(token.currentPrice)
+                }}
+                per {{ token.symbol }})</span
+              >
+            </v-tooltip>
+            {{ getShortValue(getRoundNumber(balance(token.balance, token.decimals) * token.currentPrice, true)) }} (@ ${{
+              getRoundNumber(token.currentPrice)
+            }}
+            per {{ token.symbol }})
+          </template>
         </p>
       </v-flex>
     </v-layout>

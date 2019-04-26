@@ -1,9 +1,11 @@
-query contractByHash($address: String!) {
-  contractByHash(address: $address) {
+query contractByAddress($address: String!) {
+  contractByAddress(address: $address) {
     address
+    totalSupply
     metadata {
       decimals
       website
+      type
       support {
         email
       }
@@ -23,15 +25,13 @@ query contractByHash($address: String!) {
         youtube
       }
     }
-    type {
-      string
-    }
   }
 }
 
 query contractsCreatedBy($hash: String!, $limit: Int, $page: Int) {
   contractsCreatedBy(creator: $hash, limit: $limit, page: $page) {
     address
+    totalSupply
     metadata {
       name
       symbol

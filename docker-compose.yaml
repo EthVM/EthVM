@@ -1,4 +1,4 @@
-version: '2.4'
+version: '3.7'
 
 networks:
 
@@ -13,25 +13,25 @@ networks:
 
 volumes:
 
-  mongodb-volume:
+  timescale-volume:
 
   kafka-volume-1:
 
   zookeeper-volume:
 
-  control-center-volume:
-  control-center-config-volume:
-
   parity-volume:
     # Note:
+    #
     # If you're on Linux, use local-persist instead of a regular docker volume
     # This allows to persist downloaded blockchain data.
     # More info: https://github.com/CWSpear/local-persist
     #
-    # driver: local-persist
-    # driver_opts:
-    #   name: "paritydb"
-    #   mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
+    # If you're on Mac, make sure you comment the following lines
+    # and leave it as a regular docker volume
+    driver: local-persist
+    driver_opts:
+      name: "paritydb"
+      mountpoint: ${PARITY_VOLUME_MOUNTPOINT}
 
 services:
 
@@ -54,7 +54,6 @@ services:
       DEBUG: 'true'
       LETS_ENCRYPT_ENABLED:
       SWARM_MODE: 'false'
-    cpu_shares: 256
 
   explorer:
     build:
@@ -68,10 +67,9 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:ethvm.${DOMAIN}'
+      - 'traefik.frontend.rule=Host:${DOMAIN}'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
-    cpu_shares: 256
 
   api:
     build:
@@ -81,38 +79,55 @@ services:
     volumes:
       - ./apps/api:/var/www/api
     depends_on:
-      - mongodb
+      - timescale
     networks:
       - back
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:api.ethvm.${DOMAIN}'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://ethvm.${DOMAIN}||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.rule=Host:api.${DOMAIN}'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://${DOMAIN}||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=api'
       - 'traefik.port=3000'
       - 'traefik.frontend.entryPoints=http,https,ws,wss'
-    cpu_shares: 512
     environment:
       GRAPHQL_PLAYGROUND: 'true'
     command: bash -c "yarn && yarn start:dev"
 
   # ///////////////////////////////////////////////////////
+  # Etherum Client
+  # ///////////////////////////////////////////////////////
+
+  parity:
+    image: parity/parity:v2.3.3
+    networks:
+      - back
+    volumes:
+      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
+    ports:
+      - 8545:8545
+      - 8546:8546
+      - 30303:30303
+    command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+
+  # ///////////////////////////////////////////////////////
   # Storage
   # ///////////////////////////////////////////////////////
 
-  mongodb:
-    image: ethvm/mongodb:4.0.5.2
+  timescale:
+    image: timescale/timescaledb:${TIMESCALE_VERSION}
     restart: unless-stopped
     volumes:
-      - mongodb-volume:/data/db
-      - ./datasets:/datasets
+      - timescale-volume:/var/lib/postgresql/data
     networks:
       - back
     ports:
-      - 27017:27017
-    cpu_shares: 4000
+      - 5432:5432
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
 
   # ///////////////////////////////////////////////////////
   # Processing
@@ -132,8 +147,7 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
       ZOOKEEPER_CLIENT_PORT: 2181
-      KAFKA_JMX_PORT: 9585
-    mem_limit: 512m
+      ZOOKEEPER_JMX_PORT: 9585
 
   kafka-1:
     image: confluentinc/cp-kafka:${CP_VERSION}
@@ -151,16 +165,20 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: "kafka-1"
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-1:9091"
-      KAFKA_ZOOKEEPER_CONNECT:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+#      KAFKA_COMPRESSION_TYPE: zstd
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       KAFKA_JMX_PORT: 9586
-    mem_limit: 4g
 
   kafka-schema-registry:
     image: confluentinc/cp-schema-registry:${CP_VERSION}
@@ -177,7 +195,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:kafka-schema-registry.ethvm.${DOMAIN}"
+      - "traefik.frontend.rule=Host:kafka-schema-registry.${DOMAIN}"
       - "traefik.port=8081"
       - "traefik.backend=kafka-schema-registry"
     environment:
@@ -186,17 +204,16 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
-      KAFKA_JMX_PORT: 9587
-    mem_limit: 512m
-    cpu_shares: 512
+      SCHEMA_REGISTRY_JMX_PORT: 9587
 
   kafka-connect:
-    image: confluentinc/cp-kafka-connect:${CP_VERSION}
+    build:
+      context: apps/processing/connectors
+      dockerfile: ./Dockerfile.dev
     restart: unless-stopped
     depends_on:
       - zookeeper
       - kafka-1
-      - mongodb
       - kafka-schema-registry
     networks:
       - back
@@ -223,15 +240,13 @@ services:
       CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.enkrypt.kafka.connect=TRACE,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
       KAFKA_JMX_PORT: 9588
-    cpu_shares: 3000
-    mem_limit: 4g
 
   # ///////////////////////////////////////////////////////
-  # Extra Tools (Useful for debugging and helping on Kafka)
+  # Extra Tools (Useful for debugging and helping in dev)
   # ///////////////////////////////////////////////////////
 
   lenses:
@@ -270,45 +285,14 @@ services:
           { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] },
           { "username": "read", "password": "read", "displayname": "Read Only", "groups": ["readGroup"] }
         ]
-    labels:
-      - "traefik.enable=true"
-      - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:lenses.ethvm.${DOMAIN}"
-      - "traefik.frontend.passHostHeader=true"
-      - "traefik.backend=lenses"
-      - "traefik.port=9991"
-    cpu_shares: 512
 
-  kafka-control-center:
-    image: confluentinc/cp-enterprise-control-center:5.1.2
+  pgweb:
+    image: sosedoff/pgweb:0.11.2
+    restart: unless-stopped
+    depends_on:
+      - timescale
     networks:
       - back
     ports:
-      - 9021:9021
-    volumes:
-      - control-center-volume:/var/lib/control-center/data
-      - control-center-config-volume:/var/lib/control-center/config
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka-1:9091
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-1:2181
-      CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083
-      CONTROL_CENTER_DATA_DIR: /var/lib/control-center/data
-      CONTROL_CENTER_CONFIG_DIR: /var/lib/control-center/config
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-
-  # ///////////////////////////////////////////////////////
-  # Etherum Client
-  # ///////////////////////////////////////////////////////
-
-  parity:
-    image: parity/parity:v2.3.3
-    networks:
-      - back
-    volumes:
-      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
-    ports:
-      - 8545:8545
-      - 8546:8546
-      - 30303:30303
-    command: --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    cpu_shares: 2048
+      - 8082:8082
+    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082 --url postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@timescale:5432/${POSTGRES_DB}?sslmode=disable"

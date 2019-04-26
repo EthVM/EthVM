@@ -1,0 +1,13 @@
+type Query {
+  accountByAddress(address: String!): Account
+}
+
+type Account {
+  address: String
+  balance: String
+  totalTxCount: String
+  inTxCount: String
+  outTxCount: String
+  isMiner: Boolean
+  isContractCreator: Boolean
+}

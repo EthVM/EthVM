@@ -1,17 +1,17 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { ContractService } from '@app/modules/contracts/contract.service'
-import { ContractDto } from '@app/modules/contracts/contract.dto'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
+import { ContractDto } from '@app/modules/contracts/dto/contract.dto'
 
 @Resolver('Contract')
 export class ContractResolvers {
   constructor(private readonly contractService: ContractService) {}
 
   @Query()
-  async contractByHash(@Args('address', ParseAddressPipe) address: string) {
-    const entity = await this.contractService.findContractByHash(address)
+  async contractByAddress(@Args('address', ParseAddressPipe) address: string) {
+    const entity = await this.contractService.findContractByAddress(address)
     return entity ? new ContractDto(entity) : null
   }
 

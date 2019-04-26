@@ -1,48 +1,55 @@
 type Query {
-  contractByHash(address: String!): Contract
+  contractByAddress(address: String!): Contract
   contractsCreatedBy(creator: String!, limit: Int, page: Int): [Contract]
 }
 
 type Contract {
-  id: String
   address: String
   creator: String
-  data: Buffer
-  destructed: ContractDestructed
+  init: String
+  code: String
+  refundAddress: String
+  refundBalance: Float
+  traceCreatedAtBlockHash: String
+  traceCreatedAtBlockNumber: String
+  traceCreatedAtTransactionHash: String
+  traceCreatedAtTransactionIndex: Int
+  traceCreatedAtLogIndex: Int
+  traceCreatedAtTraceAddress: String
+  traceDestroyedAtBlockHash: String
+  traceDestroyedAtBlockNumber: String
+  traceDestroyedAtTransactionHash: String
+  traceDestroyedAtTransactionIndex: Long
+  traceDestroyedAtLogIndex: Long
+  traceDestroyedAtTraceAddress: String
+  traceDestroyedAt: Buffer
   metadata: ContractMetadata
-  type: ContractType
-}
-
-type ContractDestructed {
-  address: String
-  balance: Buffer
-  refundAddress: Buffer
+  totalSupply: String
 }
 
 type ContractMetadata {
-  decimals: Int
-  ens_address: String
+  address: String
   name: String
   symbol: String
+  decimals: Int
+  ensAddress: String
+  type: String
+  logo: ContractLogo
+  support: ContractSupport
+  social: ContractSocial
   website: String
-  logo: Logo
-  social: Social
-  support: Support
 }
 
-type ContractType {
-  string: ContractTypeEnum
-}
-
-enum ContractTypeEnum {
-  GENERIC, ERC20, ERC721
-}
-
-type Logo {
+type ContractLogo {
   src: String
 }
 
-type Social {
+type ContractSupport {
+  email: String
+  url: String
+}
+
+type ContractSocial {
   blog: String
   chat: String
   facebook: String
@@ -56,9 +63,4 @@ type Social {
   telegram: String
   twitter: String
   youtube: String
-}
-
-type Support {
-  email: String
-  url: String
 }

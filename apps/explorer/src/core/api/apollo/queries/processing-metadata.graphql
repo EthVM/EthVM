@@ -1,5 +1,0 @@
-query processingMetadataById($id: String!) {
-  processingMetadataById(id: $id) {
-    id
-  }
-}

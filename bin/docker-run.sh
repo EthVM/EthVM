@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+set -e
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # import utils
 source ${SCRIPT_DIR}/env.sh
+
+# Define variables
+DATASET="ethvm_dev.sql.gz"
 
 # docker_usage - prints docker subcommand usage
 docker_usage() {
@@ -11,7 +16,7 @@ docker_usage() {
   echo "Utility that wraps docker / docker-compose commands to spin up a EthVM development environment."
   echo ""
   echo "Usage:"
-  echo "  ethvm docker [COMMAND] [ARGS...]"
+  echo "  docker-run [COMMAND] [ARGS...]"
   echo ""
   echo "Commands:"
   echo "  up           [simple|default]   Create and start docker containers."
@@ -44,19 +49,20 @@ up() {
 # up - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
 up_default() {
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
+  ${SCRIPT_DIR}/docker-build.sh build migrator
 
   echo -e "Building containers..."
   docker-compose build
 
-  echo -e "Starting up containers: traefik, api, explorer, mongodb, zookeeper kafka-1 kafka-schema-registry kafka-connect \n"
-  docker-compose up -d traefik api explorer mongodb zookeeper kafka-1 kafka-schema-registry kafka-connect
+  echo -e "Starting up containers: traefik, api, explorer, timescale, zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb \n"
+  docker-compose up -d traefik api explorer timescale zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb
 
   echo -e "Initialising kafka...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
 
-  echo -e "Initialising mongo...\n"
-  ${SCRIPT_DIR}/ethvm-utils.sh mongo init
+  echo -e "Initialising timescale..\n"
+  ${SCRIPT_DIR}/migrator.sh migrate
 
   echo -e "Re-building avro models...\n"
   ${SCRIPT_DIR}/avro.sh build
@@ -64,27 +70,36 @@ up_default() {
   echo -e "Re-building kafka connect connector...\n"
   ${SCRIPT_DIR}/kafka-connect.sh build-connector
 
-  echo "Registering sinks and sources into kafka connect..."
+  echo "Registering sinks and sources into kafka connect...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
 }
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend
 up_simple() {
-  echo -e "Checking if there's a new available dataset to download..."
-  ${SCRIPT_DIR}/mongo.sh fetch
 
   echo -e "Building utility docker images...\n"
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils mongodb
+  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
+  ${SCRIPT_DIR}/docker-build.sh build migrator
 
-  echo "Starting up containers: traefik, mongo, explorer and api"
-  docker-compose up -d --build traefik mongodb explorer api
+  echo "Starting up containers: traefik, timescale, explorer, api and pgweb \n"
+  docker-compose build explorer api
+  docker-compose up -d traefik timescale explorer api pgweb
 
   # Give time to breathe
   sleep 10
 
-  echo "Importing bootstraped db to mongo..."
-  ${SCRIPT_DIR}/mongo.sh init
-  ${SCRIPT_DIR}/mongo.sh bootstrap
+  echo -e "Checking current dataset...\n"
+  mkdir -p ${ROOT_DIR}/datasets
+  set +o errexit
+  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${ROOT_DIR}/datasets/${DATASET}.md5 &>/dev/null)
+  [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo -e "You're using latest dataset version! \n"
+  set -o errexit
+
+  echo -e "Importing dataset to TimeScale \n"
+
+  docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}" --quiet -c "ALTER DATABASE "${POSTGRES_DB}" SET timescaledb.restoring='on';"
+  gunzip < ${ROOT_DIR}/datasets/${DATASET} | docker-compose exec -T timescale psql --quiet --username "${POSTGRES_USER}" "${POSTGRES_DB}"
+  docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}" --quiet -c "ALTER DATABASE "${POSTGRES_DB}" SET timescaledb.restoring='off';"
 }
 
 # down - stops all running docker containers, volumes, images and related stuff
@@ -94,7 +109,7 @@ down() {
 
 # logs - outputs logs for containers
 logs() {
-  docker-compose logs -f "$1"
+  docker-compose logs -f -t "$1"
 }
 
 run() {

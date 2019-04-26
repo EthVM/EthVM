@@ -112,6 +112,6 @@ export class Tx {
   }
 
   public getInput(): string {
-    return this.tx.input
+    return this.tx.input.toString()
   }
 }

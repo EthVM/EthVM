@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing'
 import { ContractService } from './contract.service'
 import { ContractResolvers } from './contract.resolvers'
 import { ContractEntity } from '../../orm/entities/contract.entity'
-import { ContractDto } from './contract.dto'
+import { ContractDto } from './dto/contract.dto'
 import { EthService } from '../../shared/eth.service'
 
 const hashOne = '0000000000000000000000000000000000000001'

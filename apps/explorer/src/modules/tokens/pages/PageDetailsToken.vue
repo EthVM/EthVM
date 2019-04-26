@@ -20,11 +20,16 @@
       <token-details-tabs
         :address-ref="addressRef"
         :token-transfers="tokenTransfers"
+        :total-transfers="totalTransfers"
+        :transfers-page="transfersPage"
         :token-holders="tokenHolders"
+        :total-supply="contractDetails.totalSupply"
+        :decimals="decimals"
         :is-token-transfers-loading="isTokenTransfersLoading"
         :is-token-holders-loading="isTokenHoldersLoading"
         :error-token-transfers="errorTokenTransfersTab"
         :error-token-holders="errorTokenHoldersTab"
+        @transfersPage="setPageTransfers"
       />
     </div>
     <!--
@@ -49,6 +54,7 @@
         :holder-transfers="holderTransfers"
         :is-holder-transfers-loading="isHolderTransfersLoading"
         :error-holder-transfers="errorHolderTransfers"
+        :decimals="decimals"
       />
     </div>
   </v-container>
@@ -60,9 +66,10 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
 import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
-import { Detail, Crumb } from '@app/core/components/props'
+import { Crumb } from '@app/core/components/props'
 import { Contract, Token, Tx } from '@app/core/models'
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import { Transfer } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
@@ -95,13 +102,16 @@ export default class PageDetailsToken extends Vue {
   // Basic //
   contractDetails: any = {} // Contract details object
   tokenDetails: any = {} // Token details object
-  tokenTransfers: any[] = [] // Array of token transfers
+  tokenTransfers: Transfer[] = [] // Array of token transfers
+  totalTransfers: number = 0 // Total number of transfers
+  transfersPage: number = 0 // Current page of transfers
   tokenHolders: any[] = [] // Array of token holders
   isTokenTransfersLoading = true // Can technically be empty array, so must be manually set
   isTokenHoldersLoading = true // Can technically be empty array, so must be manually set
   errorTokenDetailsList = '' // Error string pertaining to the TokenDetailsList component
   errorTokenTransfersTab = '' // Error string pertaining to the TokenDetailsTabs -> Transfers component
   errorTokenHoldersTab = '' // Error string pertaining to the TokenDetailsTabs -> Holders component
+  decimals: string = '' // Decimals field from token metadata
 
   // Holder //
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
@@ -194,6 +204,9 @@ export default class PageDetailsToken extends Vue {
         .then(([contractDetails, tokenDetails]) => {
           this.contractDetails = contractDetails as any
           this.tokenDetails = tokenDetails as any
+          if (this.contractDetails && this.contractDetails.erc20Metadata) {
+            this.decimals = this.contractDetails.erc20Metadata.decimals
+          }
           resolve()
         })
         .catch(e => {
@@ -212,8 +225,9 @@ export default class PageDetailsToken extends Vue {
       const promises = [tokenTransfersPromise]
 
       Promise.all(promises)
-        .then(([tokenTransfers]) => {
-          this.tokenTransfers = tokenTransfers as any[]
+        .then(([transfersPage]) => {
+          this.tokenTransfers = transfersPage.items
+          this.totalTransfers = transfersPage.totalCount
           resolve()
         })
         .catch(e => {
@@ -314,7 +328,20 @@ export default class PageDetailsToken extends Vue {
    * @return {Object} - Contract details and metadata
    */
   fetchContractDetails(): Promise<any> {
-    return this.$api.getContract(this.addressRef)
+    return new Promise((resolve, reject) => {
+      this.$api
+        .getContract(this.addressRef)
+        .then(response => {
+          if (response === null) {
+            reject(this.$i18n.t('message.invalid.addr').toString())
+          } else {
+            resolve(response)
+          }
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
   }
 
   /**
@@ -340,16 +367,16 @@ export default class PageDetailsToken extends Vue {
   }
 
   /**
-   * Fetch latest [10] token transfers for a particular token contract
+   * Fetch token transfers for a particular token contract
    *
    * @return {Array} - Array of token transfers/info
    */
-  fetchTokenTransfers() {
+  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: number }> {
     return new Promise((resolve, reject) => {
       this.isTokenTransfersLoading = true
 
       this.$api
-        .getTokenHistory(this.addressRef)
+        .getTokenTransfersByContractAddress(this.addressRef, limit, page)
         .then(response => {
           this.isTokenTransfersLoading = false
           if (response === null) {
@@ -374,7 +401,7 @@ export default class PageDetailsToken extends Vue {
       this.isTokenHoldersLoading = true
 
       this.$api
-        .getTopTokenHolders(this.addressRef)
+        .getTokenHolders(this.addressRef)
         .then(response => {
           this.isTokenHoldersLoading = false
           if (response === null) {
@@ -420,7 +447,7 @@ export default class PageDetailsToken extends Vue {
       this.isHolderTransfersLoading = true
 
       this.$api
-        .getHolderTransfers(this.addressRef, this.holderAddress)
+        .getTokenTransfersByContractAddressForHolder(this.addressRef, this.holderAddress)
         .then(response => {
           this.isHolderTransfersLoading = false
           if (response === null) {
@@ -433,6 +460,35 @@ export default class PageDetailsToken extends Vue {
           reject(e)
         })
     })
+  }
+
+  setPageTransfers(page: number): void {
+    this.transfersPage = page
+    this.isTokenTransfersLoading = true
+  }
+
+  updateTransfers(): void {
+    this.fetchTokenTransfers().then(
+      res => {
+        this.tokenTransfers = res.items
+        this.totalTransfers = res.totalCount
+        this.isTokenTransfersLoading = false
+      },
+      err => {
+        this.errorTokenTransfersTab = this.$i18n.t('message.no-data').toString()
+      }
+    )
+  }
+
+  /*
+ ===================================================================================
+   Watch
+ ===================================================================================
+ */
+
+  @Watch('transfersPage')
+  onTransfersPageChanges(newVal: number, oldVal: number): void {
+    this.updateTransfers()
   }
 
   /*

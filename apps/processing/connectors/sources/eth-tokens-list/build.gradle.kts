@@ -1,0 +1,59 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+plugins {
+  `java-library`
+  `maven-publish`
+  kotlin("jvm")
+  id("com.github.johnrengelman.shadow") version "4.0.3"
+  id("org.jlleitschuh.gradle.ktlint")
+}
+
+project.java.sourceSets["main"].java {
+  srcDir("src/main/kotlin")
+}
+
+dependencies {
+
+  // Kotlin
+  implementation(kotlin("stdlib"))
+  implementation(kotlin("reflect"))
+
+  // Modules deps
+  implementation(project(":common"))
+  implementation(project(":avro"))
+
+  // Kafka
+  compileOnly("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
+  implementation("io.confluent:kafka-schema-registry-client:${ext.get("kafka-schema-registry-client-version") as String}")
+  implementation("io.confluent:kafka-connect-avro-converter:${ext.get("kafka-connect-avro-converter-version") as String}")
+
+  // JSON
+  implementation("com.beust:klaxon:5.0.1") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-reflect")
+  }
+
+  // Utils
+  implementation("io.arrow-kt:arrow-core:${ext.get("arrow-core-version") as String}") {
+    // version conflict
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-common")
+    exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
+  }
+  implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
+  implementation("io.github.microutils:kotlin-logging:${ext.get("kotlin-logging-version") as String}")
+
+  // Tests
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:${ext.get("kotlintest-version") as String}")
+  testImplementation("io.mockk:mockk:${ext.get("mockk-version") as String}")
+  testImplementation("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
+}
+
+project.tasks.getting(Test::class) { useJUnitPlatform {} }
+
+val build: DefaultTask by tasks
+build.dependsOn(project.tasks["shadowJar"] as ShadowJar)
+
+tasks.withType<ShadowJar> {
+  baseName = project.name
+  classifier = ""
+}

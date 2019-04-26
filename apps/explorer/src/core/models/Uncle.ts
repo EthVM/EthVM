@@ -26,7 +26,7 @@ export class Uncle {
 
   public getBlockHeight(): number {
     if (!this.cache.blockHeight) {
-      this.cache.blockHeight = new BN(this.uncle.blockNumber).toNumber()
+      this.cache.blockHeight = new BN(this.uncle.nephewNumber).toNumber()
     }
     return this.cache.blockHeight
   }

@@ -1,0 +1,46 @@
+{
+  "name": "ethvm-utils",
+  "version": "0.1.0",
+  "scripts": {
+    "tsc": "tsc",
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "lint:fix": "tslint -c tslint.json --project . --fix"
+  },
+  "dependencies": {
+    "avro-schema-registry": "~1.2.0",
+    "avsc": "~5.4.7",
+    "axios": "^0.18.0",
+    "bignumber.js": "~8.0.2",
+    "commander": "^2.20.0",
+    "convict": "~4.4.1",
+    "long": "^4.0.0",
+    "node-biginteger": "^0.0.10",
+    "node-rdkafka": "~2.5.1",
+    "ora": "^3.4.0",
+    "pg": "^7.9.0",
+    "reflect-metadata": "^0.1.13",
+    "retry-axios": "^0.5.0",
+    "rxjs": "~6.4.0",
+    "rxjs-stream": "~3.0.1",
+    "typeorm": "^0.2.16",
+    "web3": "~1.0.0-beta.52",
+    "web3-utils": "~1.0.0-beta.52"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/convict": "~4.2.1",
+    "@types/kafka-node": "~2.0.7",
+    "@types/node": "~10.12.26",
+    "@types/ora": "^3.2.0",
+    "@types/web3": "^1.0.18",
+    "nodemon": "~1.18.11",
+    "prettier": "~1.17.0",
+    "ts-node": "~8.1.0",
+    "tsconfig-paths": "~3.8.0",
+    "tslint": "~5.15.0",
+    "tslint-config-prettier": "~1.18.0",
+    "tslint-consistent-codestyle": "~1.15.1",
+    "typescript": "~3.4.3"
+  }
+}

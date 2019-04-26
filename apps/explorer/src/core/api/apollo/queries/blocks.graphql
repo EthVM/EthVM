@@ -1,5 +1,5 @@
-query blocks($limit: Int, $page: Int) {
-  blocks(limit: $limit, page: $page) {
+query blocks($limit: Int, $page: Int, $fromBlock: Long) {
+  blocks(limit: $limit, page: $page, fromBlock: $fromBlock) {
     header {
       hash
       number
@@ -9,13 +9,13 @@ query blocks($limit: Int, $page: Int) {
       hash
       receipt {
         status
-        traces {
-          error
-        }
+      }
+      traces {
+        error
       }
     }
     rewards {
-      value
+      value: amount
     }
     uncles {
       hash
@@ -42,8 +42,8 @@ query blockByHash($hash: String) {
       sha3Uncles
       transactionsRoot
       receiptsRoot
+      totalDifficulty
     }
-    totalDifficulty
     transactions {
       hash
       blockNumber
@@ -56,15 +56,15 @@ query blockByHash($hash: String) {
         contractAddress
         gasUsed
         status
-        traces {
-          error
-        }
+      }
+      traces {
+        error
       }
     }
     rewards {
-      author
-      rewardType
-      value
+      author: address
+      rewardType: deltaType
+      value: amount
     }
     uncles {
       hash
@@ -90,8 +90,8 @@ query blockByNumber($number: Int) {
       sha3Uncles
       transactionsRoot
       receiptsRoot
+      totalDifficulty
     }
-    totalDifficulty
     transactions {
       hash
       blockNumber
@@ -104,15 +104,15 @@ query blockByNumber($number: Int) {
         contractAddress
         gasUsed
         status
-        traces {
-          error
-        }
+      }
+      traces {
+        error
       }
     }
     rewards {
-      author
-      rewardType
-      value
+      author: address
+      rewardType: deltaType
+      value: amount
     }
     uncles {
       hash
@@ -130,9 +130,15 @@ query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
     uncles {
       hash
     }
+    transactions {
+      hash
+      receipt {
+        status
+      }
+    }
     rewards {
-      rewardType
-      value
+      rewardType: deltaType
+      value: amount
     }
   }
 }

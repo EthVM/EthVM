@@ -1,9 +1,8 @@
 <template>
-  <div>
+  <v-card color="white" flat class="pr-2 pl-2 pt-3">
     <!-- Pagination -->
-    <v-layout row fill-height align-center justify-space-between>
-      <div v-html="paginationText" class="ml-2"></div>
-      <v-pagination v-model="page" :length="numPages" class="mt-2 mb-2"> </v-pagination>
+    <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="numPages > 1">
+      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
     </v-layout>
     <!-- End Pagination -->
 
@@ -19,12 +18,15 @@
         <v-flex hidden-sm-and-down md2>
           <h5>{{ $t('common.quantity') }}</h5>
         </v-flex>
+        <v-flex v-if="showType" hidden-sm-and-down md2>
+          <h5>{{ $t('token.type') }}</h5>
+        </v-flex>
       </v-layout>
     </v-card>
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="(tx, index) in transfersPage" class="transparent" flat :key="index">
+    <v-card color="white" v-for="(tx, index) in transfers" class="transparent" flat :key="index">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
@@ -59,29 +61,46 @@
 
         <!-- Column 2 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ $d(tx.timestamp, 'short', $i18n.locale.replace('_', '-')) }}</p>
+          <app-time-ago :timestamp="formatTimestamp(tx.timestamp)" />
         </v-flex>
         <!-- End Column 2 -->
 
         <!-- Column 3 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ tx.value }}</p>
+          <p>{{ calculateTransferValue(tx) }}</p>
         </v-flex>
         <!-- End Column 3 -->
+
+        <!-- Column 4 -->
+        <v-flex v-if="showType" hidden-sm-and-down md2>
+          <p>{{ $t('transfer.' + tx.deltaType) }}</p>
+        </v-flex>
+        <!-- End Column 4 -->
       </v-layout>
       <v-divider class="mb-2 mt-2" />
     </v-card>
     <!-- End Rows -->
-  </div>
+    <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="numPages > 1">
+      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
+    </v-layout>
+  </v-card>
 </template>
 
 <script lang="ts">
-import { Tx } from '@app/core/models'
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import BN from 'bignumber.js'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import { Transfer } from '@app/core/models'
 
-const MAX_ITEMS = 5
+const MAX_ITEMS = 10
 
-@Component
+@Component({
+  components: {
+    AppTimeAgo,
+    AppPaginate
+  }
+})
 export default class TokenTableTransfers extends Vue {
   /*
   ===================================================================================
@@ -90,14 +109,37 @@ export default class TokenTableTransfers extends Vue {
   */
 
   @Prop(Array) transfers
+  @Prop(Number) totalTransfers
+  @Prop(Number) page
+  @Prop(Boolean) loading
+  @Prop(Boolean) showType
+  @Prop(String) decimals
 
   /*
   ===================================================================================
-    Initial Data
+    Methods
   ===================================================================================
   */
 
-  page = 1 // Current pagination page number
+  formatTimestamp(timestamp: string) {
+    const bn = new BN(timestamp)
+    return new Date(bn.times(1000).toNumber())
+  }
+
+  setPage(page: number): void {
+    this.$emit('page', page)
+  }
+
+  calculateTransferValue(transfer: Transfer) {
+    if (this.decimals) {
+      const n = new BN(transfer.value)
+      return n
+        .div(new BN(10).pow(this.decimals))
+        .toFixed()
+        .toString()
+    }
+    return transfer.value
+  }
 
   /*
   ===================================================================================
@@ -106,32 +148,10 @@ export default class TokenTableTransfers extends Vue {
   */
 
   /**
-   * Given a MAX_ITEMS per page, calculate the number of pages for pagination.
-   * @return {Integer} - Number of pages of results
+   * @return {Number} - Total number of pagination pages
    */
-  get numPages() {
-    return Math.ceil(this.transfers.length / MAX_ITEMS)
-  }
-
-  /**
-   *  Calculate which portion of the transfers array results to display
-   *  based on the current pagination page.
-   *  @return {Tx[]} - Array of transfers
-   */
-  get transfersPage(): Tx[] {
-    const startIndex = (this.page - 1) * MAX_ITEMS
-    const endIndex = startIndex + MAX_ITEMS
-    return this.transfers.slice(startIndex, endIndex)
-  }
-
-  /**
-   * Correctly generate/format text for pagination display.
-   * @return {String} - Pagination text
-   */
-  get paginationText() {
-    const start = this.transfers.length > 0 ? (this.page - 1) * MAX_ITEMS + 1 : 0
-    const end = this.transfers.length > 0 ? start + this.transfersPage.length - 1 : 0
-    return `Showing results ${start} - ${end} of ${this.transfers.length}`
+  get numPages(): number {
+    return this.totalTransfers > 0 ? Math.ceil(this.totalTransfers / MAX_ITEMS) : 0
   }
 }
 </script>

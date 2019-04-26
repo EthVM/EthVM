@@ -38,16 +38,15 @@ query txs($limit: Int, $page: Int, $fromBlock: Int) {
       contractAddress
       gasUsed
       status
-      traces {
-        error
-      }
+    }
+    traces {
+      error
     }
   }
 }
 
 query txsForAddress($hash: String!, $filter: FilterEnum!, $limit: Int, $page: Int) {
   txsForAddress(hash: $hash, filter: $filter, limit: $limit, page: $page) {
-    id
     hash
     blockHash
     blockNumber
@@ -60,9 +59,9 @@ query txsForAddress($hash: String!, $filter: FilterEnum!, $limit: Int, $page: In
       contractAddress
       gasUsed
       status
-      traces {
-        error
-      }
+    }
+    traces {
+      error
     }
   }
 }
