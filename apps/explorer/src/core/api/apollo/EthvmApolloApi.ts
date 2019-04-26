@@ -56,8 +56,7 @@ import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) {
-  }
+  constructor(private readonly apollo: ApolloClient<{}>) {}
 
   // ------------------------------------------------------------------------------------
   // Address
@@ -100,7 +99,7 @@ export class EthvmApolloApi implements EthvmApi {
     return this.apollo
       .query({
         query: internalTransactionsByAddress,
-        variables: {address, limit, page}
+        variables: { address, limit, page }
       })
       .then(res => res.data.internalTransactionsByAddress)
   }

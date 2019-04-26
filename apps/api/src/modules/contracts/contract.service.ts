@@ -26,7 +26,10 @@ export class ContractService {
 
     const txHashes = contracts.map(c => c.traceCreatedAtTransactionHash)
     const txs = await this.txRepository.find({ where: { hash: In(txHashes) }, select: ['hash', 'timestamp', 'gasPrice'] } as FindManyOptions)
-    const txReceipts = await this.txReceiptRepository.find({ where: { transactionHash: In(txHashes) }, select: ['gasUsed', 'transactionHash'] } as FindManyOptions)
+    const txReceipts = await this.txReceiptRepository.find({
+      where: { transactionHash: In(txHashes) },
+      select: ['gasUsed', 'transactionHash'],
+    } as FindManyOptions)
 
     const contractsByTxHash = contracts.reduce((memo, next) => {
       memo[next.traceCreatedAtTransactionHash] = next

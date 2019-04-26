@@ -239,10 +239,6 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
-    abstract contractByAddress(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
-
     abstract search(query: string): Search | Promise<Search>;
 
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
@@ -262,6 +258,10 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
+    abstract contractByAddress(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
 
     abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 

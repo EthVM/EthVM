@@ -95,12 +95,12 @@
       -->
       <v-tab-item slot="tabs-item" v-if="account.isCreator" value="tab-4">
         <table-address-contracts
-         :contracts="account.contracts"
-         :total-contracts="account.totalContracts"
-         :page="contractsPage"
-         :loading="contractsLoading"
-         :error="contractsError"
-         @page="setContractsPage"
+          :contracts="account.contracts"
+          :total-contracts="account.totalContracts"
+          :page="contractsPage"
+          :loading="contractsLoading"
+          :error="contractsError"
+          @page="setContractsPage"
         />
       </v-tab-item>
     </app-tabs>
@@ -122,7 +122,7 @@ import { eth, TinySM, State } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Crumb, Tab } from '@app/core/components/props'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
-import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue';
+import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
 
 const MAX_ITEMS = 10
 
@@ -361,7 +361,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 
-  fetchContractsCreated(limit = MAX_ITEMS): Promise<{ items: Contract[]; totalCount: number}> {
+  fetchContractsCreated(limit = MAX_ITEMS): Promise<{ items: Contract[]; totalCount: number }> {
     return this.$api.getContractsCreatedBy(this.addressRef, limit, this.contractsPage)
   }
 
@@ -425,11 +425,12 @@ export default class PageDetailsAddress extends Vue {
 
   updateContracts(): void {
     this.fetchContractsCreated().then(
-      (res: { items: Contract[]; totalCount: number}) => {
+      (res: { items: Contract[]; totalCount: number }) => {
         this.account.contracts = res.items
         this.account.totalContracts = res.totalCount
         this.contractsLoading = false
-      }, err => {
+      },
+      err => {
         this.contractsError = this.$i18n.t('message.no-data').toString()
       }
     )

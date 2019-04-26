@@ -25,7 +25,7 @@ export class ContractResolvers {
     const results = await this.contractService.findContractsCreatedBy(creator, limit, page)
     return {
       items: results[0].map(e => new ContractDto(e)),
-      totalCount: results[1]
+      totalCount: results[1],
     }
   }
 }

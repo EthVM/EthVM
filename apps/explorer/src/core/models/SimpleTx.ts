@@ -1,7 +1,6 @@
 import { EthValue, Hex, HexNumber, TxReceipt } from '@app/core/models'
 
 export class SimpleTx {
-
   public readonly id: string
   private cache: any = {}
 

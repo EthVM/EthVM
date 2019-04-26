@@ -76,14 +76,14 @@
 </template>
 
 <script lang="ts">
-  import AppError from '@app/core/components/ui/AppError.vue'
-  import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-  import { Component, Prop, Vue } from 'vue-property-decorator'
-  import { Contract } from "@app/core/models"
-  import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Contract } from '@app/core/models'
+import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
 
-  const MAX_ITEMS = 10
+const MAX_ITEMS = 10
 
 @Component({
   components: {
@@ -100,7 +100,7 @@ export default class TableAddressContracts extends Vue {
   ===================================================================================
   */
 
-  @Prop(Array) contracts!: Contract[];
+  @Prop(Array) contracts!: Contract[]
   @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop(String) error!: string
   @Prop(Number) totalContracts: number = 0
@@ -147,6 +147,5 @@ export default class TableAddressContracts extends Vue {
   get hasError(): boolean {
     return this.error !== ''
   }
-
 }
 </script>
