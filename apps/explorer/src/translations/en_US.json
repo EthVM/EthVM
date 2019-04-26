@@ -547,6 +547,7 @@
     "internal": "Internal Transfers",
     "INTERNAL_TX": "call",
     "CONTRACT_CREATION": "create",
-    "CONTRACT_DESTRUCTION": "destroy"
+    "CONTRACT_DESTRUCTION": "destroy",
+    "empty": "No transfers"
   }
 }
