@@ -57,6 +57,8 @@ import {Erc20MetadataEntity} from '@app/orm/entities/erc20-metadata.entity'
     TransferService,
     TxService,
     UncleService,
+    TraceService,
+    ReceiptService,
   ],
   exports: [
     AccountService,
@@ -68,6 +70,8 @@ import {Erc20MetadataEntity} from '@app/orm/entities/erc20-metadata.entity'
     TransferService,
     TxService,
     UncleService,
+    TraceService,
+    ReceiptService,
   ],
 })
 export class DaoModule {

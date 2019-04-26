@@ -1,14 +1,27 @@
+
 type Query {
+
+  latestBlocks(limit: Int): [BlockSummary]
+
   blocks(limit: Int, page: Int, fromBlock: Long): [Block]
   blockByHash(hash: String): Block
   blockByNumber(number: Int): Block
   minedBlocksByAddress(address: String, limit: Int, page: Int): BlocksPage
-  totalNumberOfBlocks: Int!
+  totalNumberOfBlocks: BigNumber!
 }
 
 type Subscription {
-  newBlock: Block
+  newBlock: BlockSummary
   isSyncing: Boolean
+}
+
+type BlockSummary {
+  number: BigNumber
+  hash: String
+  author: String
+  numSuccessfulTxs: BigNumber
+  numFailedTxs: BigNumber
+  reward: BigNumber
 }
 
 type Block {
@@ -19,21 +32,21 @@ type Block {
 }
 
 type BlockHeader {
-  number: String
+  number: BigNumber
   hash: String
   parentHash: String
-  nonce: String
+  nonce: BigNumber
   sha3Uncles: String
   logsBloom: String
   transactionsRoot: String
   stateRoot: String
   receiptsRoot: String
   author: String
-  difficulty: String
-  totalDifficulty: String
+  difficulty: BigNumber
+  totalDifficulty: BigNumber
   extraData: String
-  gasLimit: String
-  gasUsed: String
+  gasLimit: BigNumber
+  gasUsed: BigNumber
   timestamp: String
   size: String
   blockTime: String
@@ -45,7 +58,7 @@ type Reward {
   address: String
   blockHash: String
   deltaType: DeltaType
-  amount: String
+  amount: BigNumber
 }
 
 type BlocksPage {

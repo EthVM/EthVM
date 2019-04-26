@@ -6,7 +6,7 @@ type Query {
 
 type TransfersPage {
   items: [Transfer]
-  totalCount: Int
+  totalCount: BigNumber
 }
 
 type Transfer {
@@ -16,9 +16,9 @@ type Transfer {
   from: String
   contractAddress: String
   tokenType: String
-  amount: String
+  amount: BigNumber
   traceLocationBlockHash: String
-  traceLocationBlockNumber: String
+  traceLocationBlockNumber: BigNumber
   traceLocationTransactionHash: String
   traceLocationTransactionIndex: Int
   traceLocationLogIndex: Int

@@ -1,10 +1,13 @@
+import { BlockSummary } from '@app/graphql/schema';
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity';
 import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity';
 import { TransactionEntity } from '@app/orm/entities/transaction.entity';
 import { UncleEntity } from '@app/orm/entities/uncle.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import BigNumber from 'bignumber.js';
 import { In, LessThanOrEqual, Repository } from 'typeorm';
+import { TraceService } from './trace.service';
 
 @Injectable()
 export class BlockService {
@@ -13,9 +16,76 @@ export class BlockService {
     @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
     @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
+    private readonly traceService: TraceService
   ) { }
 
-  async findBlockByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
+  async findLatestBlocks(limit: number): Promise<BlockSummary[]> {
+
+    const headersWithRewards = await this.blockHeaderRepository.find({
+      select: ['number', 'hash', 'author'],
+      relations: ['rewards'],
+      order: { number: 'DESC' },
+      take: limit
+    })
+
+    return this.summarise(headersWithRewards)
+  }
+
+  async findSummariesByBlockHash(blockHashes: string[]): Promise<BlockSummary[]> {
+
+    const headersWithRewards = await this.blockHeaderRepository.find({
+      select: ['number', 'hash', 'author'],
+      where: { hash: In(blockHashes) },
+      relations: ['rewards'],
+      order: { number: 'DESC' }
+    })
+
+    return this.summarise(headersWithRewards)
+
+  }
+
+  private async summarise(headersWithRewards: BlockHeaderEntity[]): Promise<BlockSummary[]> {
+
+    const blockHashes = headersWithRewards.map(h => h.hash)
+    const txStatuses = await this.traceService.findTxStatusByBlockHash(blockHashes)
+
+    const successfulCountByBlock = new Map<string, number>()
+    const failedCountByBlock = new Map<string, number>()
+
+    txStatuses.forEach(status => {
+      const { blockHash, successful } = status
+      if (successful) {
+        const current = successfulCountByBlock.get(blockHash) || 0
+        successfulCountByBlock.set(blockHash, current + 1)
+      } else {
+        const current = failedCountByBlock.get(blockHash) || 0
+        failedCountByBlock.set(blockHash, current + 1)
+      }
+    })
+
+    return headersWithRewards.map(header => {
+
+      const { number, hash, author } = header
+
+      const rewardsByBlock = new Map<string, BigNumber>()
+
+      header.rewards!
+        .filter(r => r.deltaType === 'BLOCK_REWARD')
+        .map(r => rewardsByBlock.set(r.blockHash, r.amount))
+
+
+      return {
+        number, hash, author,
+        numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
+        numFailedTxs: failedCountByBlock.get(hash) || 0,
+        reward: rewardsByBlock.get(hash)
+      } as BlockSummary
+
+    })
+
+  }
+
+  async findOneByBlockHash(hash: string): Promise<BlockHeaderEntity | undefined> {
     const blockHeader = await this.blockHeaderRepository.findOne({ where: { hash }, relations: ['uncles', 'rewards'] })
     if (!blockHeader) return undefined
 
@@ -23,7 +93,7 @@ export class BlockService {
     return blockHeader
   }
 
-  async findBlocksByHashes(hashes: string[]): Promise<BlockHeaderEntity[]> {
+  async findByBlockHash(hashes: string[]): Promise<BlockHeaderEntity[]> {
     const blocks = await this.blockHeaderRepository.find({ hash: In(hashes) })
     return this.findAndMapTxsAndUncles(blocks)
   }
@@ -96,7 +166,7 @@ export class BlockService {
     return result
   }
 
-  async findTotalNumberOfBlocks(): Promise<number> {
-    return this.blockHeaderRepository.count()
+  async findTotalNumberOfBlocks(): Promise<BigNumber> {
+    return new BigNumber(await this.blockHeaderRepository.count())
   }
 }

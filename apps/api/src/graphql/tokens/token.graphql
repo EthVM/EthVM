@@ -18,13 +18,13 @@ type Token {
   symbol: String
   address: String
   decimals: Int
-  balance: String
-  currentPrice: String
+  balance: BigNumber
+  currentPrice: BigNumber
 }
 
 type TokenHolder {
   address: String
-  balance: String
+  balance: BigNumber
 }
 
 type TokenExchangeRate {
@@ -32,18 +32,18 @@ type TokenExchangeRate {
   symbol: String
   name: String
   image: String
-  currentPrice: Decimal
-  marketCap: Decimal
+  currentPrice: BigNumber
+  marketCap: BigNumber
   marketCapRank: Int
-  totalVolume: Decimal
-  high24h: Decimal
-  low24h: Decimal
-  priceChange24h: Decimal
-  priceChangePercentage24h: Decimal
-  marketCapChange24h: Decimal
-  marketCapChangePercentage24h: Decimal
-  circulatingSupply: String
-  totalSupply: String
+  totalVolume: BigNumber
+  high24h: BigNumber
+  low24h: BigNumber
+  priceChange24h: BigNumber
+  priceChangePercentage24h: BigNumber
+  marketCapChange24h: BigNumber
+  marketCapChangePercentage24h: BigNumber
+  circulatingSupply: BigNumber
+  totalSupply: BigNumber
   lastUpdated: String
   owner: String
   holdersCount: Int

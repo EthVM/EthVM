@@ -1,91 +1,84 @@
-import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { FindManyOptions, In, LessThanOrEqual, Repository } from 'typeorm'
-import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
-import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import BigNumber from 'bignumber.js';
+import { FindManyOptions, In, LessThanOrEqual, Repository } from 'typeorm';
+import { ReceiptService } from './receipt.service';
+import { TraceService } from './trace.service';
 
 @Injectable()
 export class TxService {
-  constructor(
-    @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
-    @InjectRepository(TransactionReceiptEntity) private readonly transactionReceiptRepository: Repository<TransactionReceiptEntity>,
-  ) {}
 
-  async findTx(hash: string): Promise<TransactionEntity | undefined> {
-    return this.transactionRepository.findOne({ where: { hash }, relations: ['receipt'] })
+  constructor(
+    private readonly receiptService: ReceiptService,
+    private readonly traceService: TraceService,
+    @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
+  ) { }
+
+  async findOneByHash(hash: string): Promise<TransactionEntity | undefined> {
+    const txs = await this.findByHash(hash)
+    return txs.length === 1 ? txs[0] : undefined
   }
 
-  async findTxs(take: number = 10, page: number = 0, fromBlock: number = -1): Promise<TransactionEntity[]> {
+  async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
+    const txs = await this.transactionRepository.find({ where: { hash: In(hashes) }, relations: ['receipt'] })
+    return this.findAndMapTraces(txs)
+  }
+
+  async find(take: number = 10, page: number = 0, fromBlock: BigNumber = new BigNumber(-1)): Promise<TransactionEntity[]> {
+
     const skip = page * take
-    const where = fromBlock !== -1 ? { blockNumber: LessThanOrEqual(fromBlock) } : {}
+    const where = fromBlock.toNumber() !== -1 ? { blockNumber: LessThanOrEqual(fromBlock.toNumber()) } : {}
+
     const findOptions: FindManyOptions = {
       where,
       order: { blockNumber: 'DESC', transactionIndex: 'DESC', timestamp: 'DESC' },
       take,
       skip,
+      relations: ['receipt']
     }
+
     let txs = await this.transactionRepository.find(findOptions)
     if (!txs.length) return []
 
-    txs = await this.findAndMapReceipts(txs)
     return this.findAndMapTraces(txs)
   }
 
-  async findTxsForAddress(hash: string, filter?: string, take: number = 10, page: number = 0): Promise<TransactionEntity[]> {
+  async findByAddress(address: string, filter?: string, take: number = 10, page: number = 0): Promise<TransactionEntity[]> {
     const skip = page * take
     let where
     switch (filter) {
       case 'in':
-        where = { to: hash }
+        where = { to: address }
         break
       case 'out':
-        where = { from: hash }
+        where = { from: address }
         break
       default:
-        where = [{ from: hash }, { to: hash }]
+        where = [{ from: address }, { to: address }]
         break
     }
     const txs = await this.transactionRepository.find({ where, take, skip, relations: ['receipt'] })
-    if (!txs.length) return []
-    return this.findAndMapTraces(txs)
+
+    return txs.length === 0 ? [] : this.findAndMapTraces(txs)
   }
 
   private async findAndMapTraces(txs: TransactionEntity[]): Promise<TransactionEntity[]> {
 
-    const traces = await this.transactionTraceRepository.find({ where: { transactionHash: In(txs.map(tx => tx.hash)) }})
+    const traces = await this.traceService.findByTxHash.apply(txs.map(tx => tx.hash))
 
     const txsByHash = txs.reduce((memo, next) => {
       next.traces = []
-      memo[next.hash] = next
+      memo.set(next.hash, next)
       return memo
-    }, {})
+    }, new Map<string, TransactionEntity>())
 
     traces.forEach(trace => {
-      txsByHash[trace.transactionHash].traces.push(trace)
+      const tx = txsByHash.get(trace.transactionHash)!
+      tx.traces!.push(trace)
     })
 
-    return Object.values(txsByHash)
-
-  }
-
-  private async findAndMapReceipts(txs: TransactionEntity[]): Promise<TransactionEntity[]> {
-
-    const receipts = await this.transactionReceiptRepository.find({ where: { transactionHash: In(txs.map(tx => tx.hash)) }})
-
-    const txsByHash = txs.reduce((memo, next) => {
-      next.traces = []
-      memo[next.hash] = next
-      return memo
-    }, {})
-
-    receipts.forEach(receipt => {
-      txsByHash[receipt.transactionHash].receipt = receipt
-    })
-
-    return Object.values(txsByHash)
-
+    return Array.from(txsByHash.values())
   }
 
   async countTransactions(): Promise<number> {

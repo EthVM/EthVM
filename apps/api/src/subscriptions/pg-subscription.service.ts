@@ -90,23 +90,23 @@ class BlockEvents {
 
     const { header, transactions, receipts, blockRewardAuthor, uncleRewards, rootCallTrace } = this
 
-    if (header == undefined || rootCallTrace == undefined) return false
+    if (header === undefined || rootCallTrace === undefined) return false
 
     const { transaction_count, uncle_count } = header
 
     // check transactions
 
-    if (transactions.size != transaction_count) return false
+    if (transactions.size !== transaction_count) return false
 
     // check receipts
 
-    if (receipts.size != transaction_count) return false
+    if (receipts.size !== transaction_count) return false
 
     // check rewards
 
-    if (blockRewardAuthor != header.author) return false
+    if (blockRewardAuthor !== header.author) return false
 
-    if (uncleRewards.size != uncle_count) return false
+    if (uncleRewards.size !== uncle_count) return false
 
     // otherwise we have seen all the components that we need before we can send a notification
     return true
@@ -118,7 +118,7 @@ class BlockEvents {
 export class PgSubscriptionService {
 
   private readonly url: string
-  private readonly maxRate = 2000
+  private readonly maxRate = 500
 
   private blockEvents: Map<string, BlockEvents> = new Map()
 
@@ -138,27 +138,28 @@ export class PgSubscriptionService {
 
     const { url, logger, blockService, pubSub } = this
 
-    const events$ = Observable.create(async observer => {
-      try {
-        const subscriber = createSubscriber({ connectionString: url })
+    const events$ = Observable.create(
+      async observer => {
+        try {
+          const subscriber = createSubscriber({ connectionString: url })
 
-        subscriber.notifications.on('events', e => observer.next(e))
-        subscriber.events.on('error', err => {
-          console.error('pg sub error', err)
+          subscriber.notifications.on('events', e => observer.next(e))
+          subscriber.events.on('error', err => {
+            console.error('pg sub error', err)
+            observer.error(err)
+          })
+
+          await subscriber.connect()
+          await subscriber.listenTo('events')
+
+          return () => {
+            subscriber.close()
+          }
+        } catch (err) {
+          console.error('Pg sub error', err)
           observer.error(err)
-        })
-
-        await subscriber.connect()
-        await subscriber.listenTo('events')
-
-        return () => {
-          subscriber.close()
         }
-      } catch (err) {
-        console.error('Pg sub error', err)
-        observer.error(err)
-      }
-    })
+      })
 
     const circuitBreaker = new CircuitBreaker<PgEvent>(5, this.maxRate)
 
@@ -189,21 +190,11 @@ export class PgSubscriptionService {
         filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
-        
-        const blocks = await blockService.findBlocksByHashes(blockHashes)
 
-        blocks.forEach(block => {
+        const blockSummary = await blockService.findSummariesByBlockHash(blockHashes)
 
-          pubSub.publish('block', block)
-
-          if (block.txs) {
-            block.txs!.forEach(tx => pubSub.publish('transaction', tx))
-          }
-
-          if (block.uncles) {
-            block.uncles!.forEach(uncle => pubSub.publish('uncle', uncle))
-          }
-
+        blockSummary.forEach(summary => {
+          pubSub.publish('blockSummary', summary)
         })
 
       })

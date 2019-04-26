@@ -20,5 +20,5 @@ enum SearchType {
 
 type AddressBalance {
   address: String
-  balance: Decimal
+  balance: BigNumber
 }

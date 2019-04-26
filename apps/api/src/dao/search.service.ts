@@ -39,7 +39,7 @@ export class SearchService {
 
     // Check Block, Uncle or Tx
     if (this.ethService.isValidHash(query)) {
-      const block = await this.blockService.findBlockByHash(query)
+      const block = await this.blockService.findOneByBlockHash(query)
       if (block != null) {
         s.block = new BlockDto(block)
         s.type = SearchType.Block
@@ -53,7 +53,7 @@ export class SearchService {
         return s
       }
 
-      const tx = await this.txService.findTx(query)
+      const tx = await this.txService.findOneByHash(query)
       if (tx != null) {
         s.tx = new TxDto(tx)
         s.type = SearchType.Tx

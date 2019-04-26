@@ -4,47 +4,47 @@ type Query {
 
 type BlockMetrics {
   timestamp: String
-  blockCount: String
-  maxDifficulty: String
-  avgDifficulty: String
-  minDifficulty: String
-  sumDifficulty: String
-  txCount: String
-  maxTotalGasPrice: String
-  minTotalGasPrice: String
-  avgTotalGasPrice: String
-  sumTotalGasPrice: String
-  maxAvgGasLimit: String
-  minAvgGasLimit: String
-  avgAvgGasLimit: String
-  sumAvgGasLimit: String
-  maxAvgGasPrice: String
-  minAvgGasPrice: String
-  avgAvgGasPrice: String
-  sumAvgGasPrice: String
-  maxTotalTxFees: String
-  minTotalTxFees: String
-  avgTotalTxFees: String
-  sumTotalTxFees: String
-  maxAvgTxFees: String
-  minAvgTxFees: String
-  avgAvgTxFees: String
-  sumAvgTxFees: String
-  traceCount: String
+  blockCount: Int
+  maxDifficulty: BigNumber
+  avgDifficulty: BigNumber
+  minDifficulty: BigNumber
+  sumDifficulty: BigNumber
+  txCount: Int
+  maxTotalGasPrice: BigNumber
+  minTotalGasPrice: BigNumber
+  avgTotalGasPrice: BigNumber
+  sumTotalGasPrice: BigNumber
+  maxAvgGasLimit: BigNumber
+  minAvgGasLimit: BigNumber
+  avgAvgGasLimit: BigNumber
+  sumAvgGasLimit: BigNumber
+  maxAvgGasPrice: BigNumber
+  minAvgGasPrice: BigNumber
+  avgAvgGasPrice: BigNumber
+  sumAvgGasPrice: BigNumber
+  maxTotalTxFees: BigNumber
+  minTotalTxFees: BigNumber
+  avgTotalTxFees: BigNumber
+  sumTotalTxFees: BigNumber
+  maxAvgTxFees: BigNumber
+  minAvgTxFees: BigNumber
+  avgAvgTxFees: BigNumber
+  sumAvgTxFees: BigNumber
+  traceCount: Int
   maxTotalTxs: Int
   minTotalTxs: Int
-  avgTotalTxs: String
-  sumTotalTxs: String
+  avgTotalTxs: Float
+  sumTotalTxs: Int
   maxNumSuccessfulTxs: Int
   minNumSuccessfulTxs: Int
-  avgNumSuccessfulTxs: String
-  sumNumSuccessfulTxs: String
+  avgNumSuccessfulTxs: Float
+  sumNumSuccessfulTxs: Int
   maxNumFailedTxs: Int
   minNumFailedTxs: Int
-  avgNumFailedTxs: String
-  sumNumFailedTxs: String
+  avgNumFailedTxs: Float
+  sumNumFailedTxs: Int
   maxNumInternalTxs: Int
   minNumInternalTxs: Int
-  avgNumInternalTxs: String
-  sumNumInternalTxs: String
+  avgNumInternalTxs: Float
+  sumNumInternalTxs: Int
 }

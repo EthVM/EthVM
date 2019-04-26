@@ -4,10 +4,10 @@ type Query {
 
 type Account {
   address: String
-  balance: String
-  totalTxCount: String
-  inTxCount: String
-  outTxCount: String
+  balance: BigNumber
+  totalTxCount: BigNumber
+  inTxCount: BigNumber
+  outTxCount: BigNumber
   isMiner: Boolean
   isContractCreator: Boolean
 }

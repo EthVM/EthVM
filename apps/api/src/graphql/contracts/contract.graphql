@@ -14,22 +14,22 @@ type Contract {
   init: String
   code: String
   refundAddress: String
-  refundBalance: Float
+  refundBalance: BigNumber
   traceCreatedAtBlockHash: String
-  traceCreatedAtBlockNumber: String
+  traceCreatedAtBlockNumber: BigNumber
   traceCreatedAtTransactionHash: String
   traceCreatedAtTransactionIndex: Int
   traceCreatedAtLogIndex: Int
   traceCreatedAtTraceAddress: String
   traceDestroyedAtBlockHash: String
-  traceDestroyedAtBlockNumber: String
+  traceDestroyedAtBlockNumber: BigNumber
   traceDestroyedAtTransactionHash: String
   traceDestroyedAtTransactionIndex: Long
   traceDestroyedAtLogIndex: Long
   traceDestroyedAtTraceAddress: String
   traceDestroyedAt: Buffer
   metadata: ContractMetadata
-  totalSupply: String
+  totalSupply: BigNumber
   createdAtTx: Transaction
 }
 

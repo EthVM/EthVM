@@ -1,25 +1,40 @@
 type Query {
+
+  latestTxs(limit: Int): [TransactionSummary]
+
   tx(hash: String!): Transaction
-  txs(limit: Int, page: Int, fromBlock: Int): [Transaction]
+  txs(limit: Int, page: Int, fromBlock: BigNumber): [Transaction]
   txsForAddress(hash: String!, filter: FilterEnum!, limit: Int, page: Int): [Transaction]
-  totalNumberOfTransactions: Int
+  totalNumberOfTransactions: BigNumber
 }
 
 type Subscription {
   newTxs: [Transaction]
 }
 
+type TransactionSummary {
+  hash: String
+  blockNumber: BigNumber
+  from: String
+  to: String
+  created: String
+  value: BigNumber
+  fee: BigNumber
+  successful: Boolean
+  timestamp: String
+}
+
 type Transaction {
   hash: String
-  nonce: String
+  nonce: BigNumber
   blockHash: String
-  blockNumber: String
+  blockNumber: BigNumber
   transactionIndex: Int
   from: String
   to: String
-  value: String
-  gas: String
-  gasPrice: String
+  value: BigNumber
+  gas: BigNumber
+  gasPrice: BigNumber
   input: Buffer
   v: String
   r: String
@@ -28,6 +43,7 @@ type Transaction {
   creates: String
   chainId: String
   receipt: Receipt
+  traces: [Trace]
   successful: Boolean
 }
 
@@ -35,12 +51,12 @@ type Receipt {
   transactionHash: String
   transactionIndex: String
   blockHash: String
-  blockNumber: String
+  blockNumber: BigNumber
   from: String
   to: String
   contractAddress: String
-  cumulativeGasUsed: String
-  gasUsed: String
+  cumulativeGasUsed: BigNumber
+  gasUsed: BigNumber
   logs: String
   logsBloom: String
   root: String
@@ -52,7 +68,7 @@ type Trace {
   transactionHash: String
   traceAddress: String
   transactionPosition: Int
-  blockNumber: String
+  blockNumber: BigNumber
   subtraces: Int
   error: String
   type: String

@@ -3,6 +3,8 @@ import { TransactionEntity } from '@app/orm/entities/transaction.entity';
 import { UncleEntity } from '@app/orm/entities/uncle.entity';
 import { assignClean } from '@app/shared/utils';
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { BigNumber } from 'bignumber.js';
+import { BigNumberTransformer } from '../transformers/big-number.transformer';
 
 @Entity('canonical_block_header')
 export class BlockHeaderEntity {
@@ -11,8 +13,8 @@ export class BlockHeaderEntity {
     assignClean(this, data);
   }
 
-  @PrimaryColumn({ type: 'numeric', readonly: true })
-  number!: string
+  @PrimaryColumn({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  number!: BigNumber
 
   @Column({ type: 'character', length: 66, unique: true, readonly: true })
   hash!: string
@@ -20,8 +22,8 @@ export class BlockHeaderEntity {
   @Column({ type: 'character', length: 66, unique: true })
   parentHash!: string
 
-  @Column({ type: 'numeric', readonly: true })
-  nonce?: string
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  nonce?: BigNumber
 
   @Column({ type: 'character', length: 66, readonly: true })
   sha3Uncles!: string
@@ -41,20 +43,20 @@ export class BlockHeaderEntity {
   @Column({ type: 'character', length: 66, readonly: true })
   author!: string
 
-  @Column({ type: 'numeric', readonly: true })
-  difficulty!: string
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  difficulty!: BigNumber
 
-  @Column({ type: 'numeric', readonly: true })
-  totalDifficulty!: string
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  totalDifficulty!: BigNumber
 
   @Column({ type: 'text', readonly: true })
   extraData?: string
 
-  @Column({ type: 'numeric', readonly: true })
-  gasLimit!: string
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  gasLimit!: BigNumber
 
-  @Column({ type: 'numeric', readonly: true })
-  gasUsed!: string
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  gasUsed!: BigNumber
 
   @Column({ type: 'bigint', readonly: true })
   timestamp!: string
