@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
 import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { ContractMetadataEntity } from '@app/orm/entities/contract-metadata.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 
 @Entity('canonical_contract')
 export class ContractEntity {
@@ -36,7 +37,7 @@ export class ContractEntity {
   traceCreatedAtBlockNumber?: string
 
   @Column({type: 'character', length: 66, readonly: true})
-  traceCreatedAtTransactionHash?: string
+  traceCreatedAtTransactionHash!: string
 
   @Column({type: 'integer', readonly: true})
   traceCreatedAtTransactionIndex?: number
@@ -88,5 +89,12 @@ export class ContractEntity {
     referencedColumnName: 'address',
   })
   metadata?: ContractMetadataEntity
+
+  @ManyToOne(type => TransactionEntity, tx => tx.contracts)
+  @JoinColumn({
+    name: 'traceCreatedAtTransactionHash',
+    referencedColumnName: 'hash',
+  })
+  createdAtTx?: TransactionEntity;
 
 }
