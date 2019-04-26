@@ -5,7 +5,8 @@
       LOADING / ERROR
     =====================================================================================
     -->
-    <v-progress-linear color="blue" indeterminate v-if="loading" class="mt-0" />
+    <v-progress-linear color="blue" v-if="loading" indeterminate class="mt-0" />
+    <div v-else style="height: 7px; margin-bottom: 1em"></div>
     <app-error :has-error="hasError" :message="error" />
     <!--
     =====================================================================================
