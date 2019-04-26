@@ -17,5 +17,4 @@ if [ $UFW_INSTALLED -eq 0 ]; then
 fi
 
 # Join cluster
-${docker_cmd} swarm join --token $1 \
---availability ${availability} ${manager_private_ip}:2377
+${docker_cmd} swarm join --token $1 --availability ${availability} ${manager_private_ip}:2377

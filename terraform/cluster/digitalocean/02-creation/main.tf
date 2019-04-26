@@ -29,12 +29,12 @@ resource "digitalocean_tag" "worker" {
 module "managers" {
   source = "./modules/managers"
 
-  image  = "docker-18-04"
+  image  = "${var.image}"
   size   = "s-1vcpu-1gb"
   name   = "${var.manager_name}"
   region = "${var.region}"
 
-  total_instances = "1"
+  total_instances = "${var.total_manager_instances}"
   user_data       = "${var.user_data}"
   tags            = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.manager.id}"]
 
@@ -52,12 +52,12 @@ module "managers" {
 module "workers" {
   source = "./modules/workers"
 
-  image  = "docker-18-04"
+  image  = "${var.image}"
   size   = "s-6vcpu-16gb"
-  name   = "${var.generic_worker_name}"
+  name   = "${var.worker_name}"
   region = "${var.region}"
 
-  total_instances = "2"
+  total_instances = "${var.total_worker_instances}"
   user_data       = "${var.user_data}"
   tags            = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.worker.id}"]
 
@@ -68,42 +68,4 @@ module "workers" {
   provision_ssh_key  = "${var.provision_ssh_key}"
   provision_user     = "${var.provision_user}"
   connection_timeout = "${var.connection_timeout}"
-}
-
-module "processing_workers" {
-  source = "./modules/workers"
-
-  image  = "docker-18-04"
-  size   = "c-16"
-  name   = "${var.processing_worker_name}"
-  region = "${var.region}"
-
-  total_instances = "3"
-  user_data       = "${var.user_data}"
-  tags            = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.worker.id}"]
-
-  manager_private_ip = "${element(module.managers.ipv4_addresses_private, 0)}"
-  join_token         = "${module.managers.worker_token}"
-
-  ssh_keys           = "${var.ssh_keys}"
-  provision_ssh_key  = "${var.provision_ssh_key}"
-  provision_user     = "${var.provision_user}"
-  connection_timeout = "${var.connection_timeout}"
-}
-
-module "swarm-firewall" {
-  source              = "thojkooi/docker-swarm-firewall/digitalocean"
-  version             = "1.0.0"
-  prefix              = "ethvm"
-  cluster_tags        = ["${digitalocean_tag.cluster.id}", "${digitalocean_tag.manager.id}", "${digitalocean_tag.worker.id}"]
-  cluster_droplet_ids = []
-}
-
-module "default-firewall" {
-    source  = "thojkooi/firewall-rules/digitalocean"
-    version = "1.0.0"
-    prefix  = "ethvm"
-    tags    = ["${digitalocean_tag.cluster.id}"]
-
-    allowed_inbound_ssh_adresses = ["${var.allowed_inbound_ssh_adresses}"]
 }

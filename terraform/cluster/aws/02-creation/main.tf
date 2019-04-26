@@ -47,8 +47,8 @@ module "workers" {
   efs_mount_target_dns = "${module.efs.mount_target_dns}"
 }
 
-module "ethclient" {
-  source            = "./modules/clients/parity"
+module "ethereum-client" {
+  source            = "./modules/ethereum-clients/parity"
   name              = "mainnet"
   ami               = "${var.ec2_ami_ethereum_client}"
   availability_zone = "${var.region}${var.worker_zone}"

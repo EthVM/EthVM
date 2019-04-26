@@ -18,10 +18,6 @@ output "ethstats_instance" {
   value = "http://${var.swarm_manager_ip}:3030"
 }
 
-output "kafka_control_center" {
-  value = "http://${var.swarm_manager_ip}:9021"
-}
-
 output "kafka_lenses" {
   value = "http://${var.swarm_manager_ip}:9991"
 }

@@ -13,11 +13,6 @@ output "worker_ips" {
   description = "The worker nodes public ipv4 adresses"
 }
 
-output "processing_worker_ips" {
-  value       = ["${module.processing_workers.ipv4_addresses}"]
-  description = "The processing worker nodes public ipv4 adresses"
-}
-
 output "worker_ips_private" {
   value       = ["${module.workers.ipv4_addresses_private}"]
   description = "The worker nodes private ipv4 adresses"

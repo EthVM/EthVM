@@ -1,7 +1,7 @@
 version: '3.6'
 
 networks:
-  
+
   backend:
     driver: overlay
     external: false
@@ -46,28 +46,6 @@ volumes:
       o: 'bind'
       device: '/mnt/efs/kafka-3-volume'
 
-  kafka-connect-volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/mnt/efs/kafka-connect-volume'
-
-  control-center-volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/mnt/efs/control-center-volume'
-
-  control-center-config-volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/mnt/efs/control-center-config-volume'
-
-
 services:
 
   # ///////////////////////////////////////////////////////
@@ -95,7 +73,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.com.ethvm.nodeType == processing-worker-1
       restart_policy:
         condition: on-failure
 
@@ -120,7 +97,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.com.ethvm.nodeType == processing-worker-2
       restart_policy:
         condition: on-failure
 
@@ -145,7 +121,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.com.ethvm.nodeType == processing-worker-3
       restart_policy:
         condition: on-failure
 
@@ -171,7 +146,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.com.ethvm.nodeType == processing-worker-1
       restart_policy:
         condition: on-failure
 
@@ -197,7 +171,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.com.ethvm.nodeType == processing-worker-2
       restart_policy:
         condition: on-failure
 
@@ -223,7 +196,6 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.com.ethvm.nodeType == processing-worker-3
       restart_policy:
         condition: on-failure
 
@@ -290,28 +262,6 @@ services:
   # ///////////////////////////////////////////////////////
   # Cluster Monitoring
   # ///////////////////////////////////////////////////////
-
-  kafka-control-center:
-    image: confluentinc/cp-enterprise-control-center:5.1.2
-    networks:
-      - backend
-    ports:
-      - 9021:9021
-    depends_on:
-      - kafka-connect
-    volumes:
-      - control-center-volume:/var/lib/control-center/data
-      - control-center-config-volume:/var/lib/control-center/config
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka-1:19092,kafka-2:29092,kafka-3:39092
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
-      CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083
-      CONTROL_CENTER_DATA_DIR: /var/lib/control-center/data
-      CONTROL_CENTER_CONFIG_DIR: /var/lib/control-center/config
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-    deploy:
-      restart_policy:
-        condition: on-failure
 
   lenses:
     image: landoop/lenses:2.1

@@ -2,19 +2,29 @@ variable "do_token" {
   description = "Digital Token with write access"
 }
 
+variable "image" {
+  description = "Image to be used by Docker nodes"
+  default = "docker-18-04"
+}
+
 variable "manager_name" {
   description = "Name of the Docker manager node(s)"
   default     = "manager"
 }
 
-variable "generic_worker_name" {
-  description = "Name of the Docker generic worker(s)"
-  default     = "generic-worker"
+variable "worker_name" {
+  description = "Name of the Docker worker node(s)"
+  default     = "worker"
 }
 
-variable "processing_worker_name" {
-  description = "Name of the Docker processing worker(s)"
-  default     = "processing-worker"
+variable "total_manager_instances" {
+  description = "Number of Managers"
+  default     = "3"
+}
+
+variable "total_worker_instances" {
+  description = "Number of Managers"
+  default     = "3"
 }
 
 variable "connection_timeout" {
