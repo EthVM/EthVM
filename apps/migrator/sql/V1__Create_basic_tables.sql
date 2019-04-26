@@ -531,7 +531,6 @@ WHERE cb.number IS NOT NULL
   AND u.author = br.address
 ORDER BY cb.number DESC;
 
-
 /* Token exchange rates table */
 CREATE TABLE token_exchange_rates
 (
@@ -552,6 +551,18 @@ CREATE TABLE token_exchange_rates
   circulating_supply              NUMERIC     NULL,
   total_supply                    NUMERIC     NULL,
   last_updated                    BIGINT      NULL
+);
+
+/* Coin exchange rates table */
+CREATE TABLE coin_exchange_rates
+(
+  id           VARCHAR(24) PRIMARY KEY,
+  currency     CHAR(3) NOT NULL,
+  price        NUMERIC NOT NULL,
+  market_cap   NUMERIC NOT NULL,
+  vol24h       NUMERIC NOT NULL,
+  change24h    NUMERIC NOT NULL,
+  last_updated BIGINT  NOT NULL
 );
 
 /* metrics hyper tables */

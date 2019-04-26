@@ -8,7 +8,6 @@ import {
 import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
-import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
   averageBlockTime,
@@ -27,7 +26,7 @@ import {
   tokenHolders,
   tokenTransfersByContractAddress,
   tokenTransfersByContractAddressForHolder,
-  quote,
+  coinExchangeRate,
   tokenExchangeRateByAddress,
   tokenExchangeRateBySymbol,
   tokenExchangeRates,
@@ -41,7 +40,6 @@ import {
   BlockMetrics,
   Contract,
   PendingTx,
-  ProcessingMetadata,
   Quote,
   SimpleBlock,
   SimpleTx,
@@ -51,7 +49,8 @@ import {
   TokenTransfer,
   Transfer,
   Tx,
-  Uncle
+  Uncle,
+  CoinExchangeRate
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
@@ -236,16 +235,15 @@ export class EthvmApolloApi implements EthvmApi {
   // Exchanges
   // ------------------------------------------------------------------------------------
 
-  public getExchangeRateQuote(symbol: string, to: string): Promise<Quote> {
+  public getExchangeRateQuote(pair: string): Promise<CoinExchangeRate> {
     return this.apollo
       .query({
-        query: quote,
+        query: coinExchangeRate,
         variables: {
-          symbol,
-          to
+          pair
         }
       })
-      .then(res => res.data.quote)
+      .then(res => res.data.coinExchangeRate)
   }
 
   public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
@@ -570,21 +568,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.search)
-  }
-
-  // ------------------------------------------------------------------------------------
-  // Processing Metadata
-  // ------------------------------------------------------------------------------------
-
-  public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
-    return this.apollo
-      .query({
-        query: processingMetadataById,
-        variables: {
-          id
-        }
-      })
-      .then(res => res.data.processingMetadataById)
   }
 
   // ------------------------------------------------------------------------------------

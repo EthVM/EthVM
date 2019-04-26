@@ -1,13 +1,10 @@
 import {
   Account,
-  AddressBalance,
-  AddressMetadata,
   Block,
   BlockMetrics,
   Contract,
   PendingTx,
-  ProcessingMetadata,
-  Quote,
+  CoinExchangeRate,
   SimpleBlock,
   SimpleTx,
   Statistic,
@@ -43,7 +40,7 @@ export interface EthvmApi {
   getContractsCreatedBy(address: string, limit: number, page: number): Promise<{ items: Contract[]; totalCount: number }>
 
   // Exchanges
-  getExchangeRateQuote(symbol: string, to: string): Promise<Quote>
+  getExchangeRateQuote(pair: string): Promise<CoinExchangeRate>
   getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]>
   getTotalNumberOfTokenExchangeRates(): Promise<number>
   getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate | null>
@@ -85,9 +82,6 @@ export interface EthvmApi {
 
   // Search
   search(hash: string): Promise<any>
-
-  // Processing Metadata
-  getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
 
   // Subscriptions
   observable<T>(query): Observable<T>
