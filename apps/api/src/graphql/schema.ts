@@ -241,6 +241,13 @@ export abstract class IQuery {
 
     abstract search(query: string): Search | Promise<Search>;
 
+<<<<<<< HEAD
+    abstract contractByAddress(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+
+=======
+>>>>>>> develop
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
