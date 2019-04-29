@@ -38,7 +38,7 @@ export class Erc721MetadataEntity {
   @OneToOne(type => ContractMetadataEntity, metadata => metadata.erc721Metadata)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   contractMetadata?: ContractMetadataEntity
 

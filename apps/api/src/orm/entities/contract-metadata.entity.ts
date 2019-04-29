@@ -51,14 +51,14 @@ export class ContractMetadataEntity {
   @OneToOne(type => Erc20MetadataEntity, erc20 => erc20.contractMetadata)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   erc20Metadata?: Erc20MetadataEntity
 
   @OneToOne(type => Erc721MetadataEntity, erc721 => erc721.contractMetadata)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   erc721Metadata?: Erc721MetadataEntity
 

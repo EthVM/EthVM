@@ -11,7 +11,17 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Erc20BalanceEntity, Erc721BalanceEntity, Erc20MetadataEntity, Erc721MetadataEntity, TokenExchangeRateEntity, CoinExchangeRateEntity, ContractEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Erc20BalanceEntity,
+      Erc721BalanceEntity,
+      Erc20MetadataEntity,
+      Erc721MetadataEntity,
+      TokenExchangeRateEntity,
+      CoinExchangeRateEntity,
+      ContractEntity,
+    ]),
+  ],
   providers: [TokenService, TokenResolvers],
   exports: [TokenService],
 })

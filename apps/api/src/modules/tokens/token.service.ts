@@ -94,7 +94,7 @@ export class TokenService {
       decimals,
       website: contractMetadata ? contractMetadata.website : null,
       email: support ? JSON.parse(support).email : null,
-      logo: logo ? JSON.parse(logo).src : null
+      logo: logo ? JSON.parse(logo).src : null,
     }
 
     return new TokenMetadataDto(data)
@@ -170,7 +170,7 @@ export class TokenService {
   async findTokensMetadata(symbols: string[]): Promise<TokenMetadataDto[]> {
     const findOptions = {
       where: { symbol: Any(symbols) },
-      relations: ['contractMetadata']
+      relations: ['contractMetadata'],
     }
     const erc20Tokens = await this.erc20MetadataRepository.find(findOptions)
     const erc721Tokens = await this.erc721MetadataRepository.find(findOptions)
