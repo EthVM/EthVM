@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from '
 import { assignClean } from '@app/shared/utils'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
+import { ContractMetadataEntity } from '@app/orm/entities/contract-metadata.entity'
 
 @Entity('erc20_metadata')
 export class Erc20MetadataEntity {
@@ -38,5 +39,12 @@ export class Erc20MetadataEntity {
     referencedColumnName: 'contract',
   })
   balances?: Erc20BalanceEntity[]
+
+  @OneToOne(type => ContractMetadataEntity, metadata => metadata.erc20Metadata)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'address',
+  })
+  contractMetadata?: ContractMetadataEntity
 
 }
