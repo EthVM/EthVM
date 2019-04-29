@@ -8,7 +8,7 @@ type Query {
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
-  tokensMetadata(symbols: [String]!): [Token]
+  tokensMetadata(symbols: [String]!): [TokenMetadata]
 }
 
 type Token {
@@ -56,6 +56,16 @@ type CoinExchangeRate {
   vol24h: Decimal
   change24h: Decimal
   lastUpdated: Decimal
+}
+
+type TokenMetadata {
+  name: String
+  website: String
+  email: String
+  symbol: String
+  address: String
+  decimals: Int
+  logo: String
 }
 
 enum ExchangeRatePair {

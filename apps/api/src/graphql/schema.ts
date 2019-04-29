@@ -263,7 +263,7 @@ export abstract class IQuery {
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
-    abstract tokensMetadata(symbols?: string[]): Token[] | Promise<Token[]>;
+    abstract tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
 
     abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
@@ -363,6 +363,16 @@ export class TokenExchangeRate {
 export class TokenHolder {
     address?: string;
     balance?: string;
+}
+
+export class TokenMetadata {
+    name?: string;
+    website?: string;
+    email?: string;
+    symbol?: string;
+    address?: string;
+    decimals?: number;
+    logo?: string;
 }
 
 export class Trace {

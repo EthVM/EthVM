@@ -9,6 +9,7 @@ import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.e
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Repository, FindOneOptions, Any } from 'typeorm'
+import { TokenMetadataDto } from '@app/modules/tokens/dto/token-metadata.dto'
 
 @Injectable()
 export class TokenService {
@@ -79,8 +80,24 @@ export class TokenService {
     return new TokenDto(tokenData)
   }
 
-  private constructTokenMetaDto(entity: Erc20MetadataEntity | Erc721MetadataEntity): TokenDto {
-    return new TokenDto(entity)
+  private constructTokenMetadataDto(entity: Erc20MetadataEntity | Erc721MetadataEntity): TokenMetadataDto {
+
+    const decimals = entity instanceof Erc20MetadataEntity ? entity.decimals : null
+    const { contractMetadata } = entity
+    const support = contractMetadata ? contractMetadata.support : null
+    const logo = contractMetadata ? contractMetadata.logo : null
+
+    const data = {
+      name: entity.name,
+      address: entity.address,
+      symbol: entity.symbol,
+      decimals,
+      website: contractMetadata ? contractMetadata.website : null,
+      email: support ? JSON.parse(support).email : null,
+      logo: logo ? JSON.parse(logo).src : null
+    }
+
+    return new TokenMetadataDto(data)
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
@@ -150,23 +167,24 @@ export class TokenService {
     return numErc20Tokens + numErc721Tokens
   }
 
-  async findTokensMetadata(symbols: string[]): Promise<TokenDto[]> {
+  async findTokensMetadata(symbols: string[]): Promise<TokenMetadataDto[]> {
     const findOptions = {
-      symbol: Any(symbols)
+      where: { symbol: Any(symbols) },
+      relations: ['contractMetadata']
     }
     const erc20Tokens = await this.erc20MetadataRepository.find(findOptions)
     const erc721Tokens = await this.erc721MetadataRepository.find(findOptions)
 
-    const tokenDtos: TokenDto[] = []
+    const tokenMetadataDtos: TokenMetadataDto[] = []
 
     erc20Tokens.forEach(entity => {
-      tokenDtos.push(this.constructTokenMetaDto(entity))
+      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
     })
 
     erc721Tokens.forEach(entity => {
-      tokenDtos.push(this.constructTokenMetaDto(entity))
+      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
     })
 
-    return tokenDtos
+    return tokenMetadataDtos
   }
 }
