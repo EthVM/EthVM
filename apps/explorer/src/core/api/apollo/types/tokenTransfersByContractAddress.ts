@@ -10,7 +10,7 @@ export interface tokenTransfersByContractAddress_tokenTransfersByContractAddress
   __typename: "Transfer";
   id: string | null;
   transactionHash: string | null;
-  value: string | null;
+  value: any | null;
   from: string | null;
   to: string | null;
   address: string | null;
@@ -20,7 +20,7 @@ export interface tokenTransfersByContractAddress_tokenTransfersByContractAddress
 export interface tokenTransfersByContractAddress_tokenTransfersByContractAddress {
   __typename: "TransfersPage";
   items: (tokenTransfersByContractAddress_tokenTransfersByContractAddress_items | null)[] | null;
-  totalCount: number | null;
+  totalCount: any | null;
 }
 
 export interface tokenTransfersByContractAddress {

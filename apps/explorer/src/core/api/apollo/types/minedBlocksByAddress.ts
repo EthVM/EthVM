@@ -11,7 +11,7 @@ import { DeltaType } from "./globalTypes";
 export interface minedBlocksByAddress_minedBlocksByAddress_header {
   __typename: "BlockHeader";
   hash: string | null;
-  number: string | null;
+  number: any | null;
   author: string | null;
 }
 
@@ -34,7 +34,7 @@ export interface minedBlocksByAddress_minedBlocksByAddress_transactions {
 export interface minedBlocksByAddress_minedBlocksByAddress_rewards {
   __typename: "Reward";
   rewardType: DeltaType | null;
-  value: string | null;
+  value: any | null;
 }
 
 export interface minedBlocksByAddress_minedBlocksByAddress {

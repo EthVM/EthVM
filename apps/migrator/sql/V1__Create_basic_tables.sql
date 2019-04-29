@@ -189,7 +189,7 @@ CREATE TABLE transaction_receipt
   logs                TEXT      NOT NULL,
   logs_bloom          CHAR(514) NOT NULL,
   root                CHAR(66)  NULL,
-  status              NUMERIC   NULL
+  status              VARCHAR(128)   NULL
 );
 
 CREATE INDEX idx_transaction_receipt_block_hash ON transaction_receipt (block_hash);

@@ -9,7 +9,7 @@
 export interface tokenHolders_tokenHolders {
   __typename: "TokenHolder";
   address: string | null;
-  balance: string | null;
+  balance: any | null;
 }
 
 export interface tokenHolders {

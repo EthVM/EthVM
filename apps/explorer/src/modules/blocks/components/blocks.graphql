@@ -1,0 +1,31 @@
+query latestBlocks($offset: Int, $limit: Int) {
+
+  blockSummaries(offset: $offset, limit: $limit) {
+    ...BlockSummaryPage
+  }
+
+}
+fragment BlockSummary on BlockSummary {
+  number
+  hash
+  author
+  numSuccessfulTxs
+  numFailedTxs
+  reward
+  uncleHashes
+}
+
+fragment BlockSummaryPage on BlockSummaryPage {
+  summaries {
+    ...BlockSummary
+  }
+  totalCount
+}
+
+subscription newBlock {
+
+  newBlock {
+    ...BlockSummary
+  }
+
+}

@@ -11,7 +11,7 @@ import { ExchangeFrom, ExchangeTo } from "./globalTypes";
 export interface quote_quote {
   __typename: "Quote";
   to: string | null;
-  price: string | null;
+  price: any | null;
   last_update: any | null;
   vol_24h: string | null;
 }

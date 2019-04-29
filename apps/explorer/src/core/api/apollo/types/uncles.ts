@@ -9,11 +9,11 @@
 export interface uncles_uncles {
   __typename: "Uncle";
   author: string | null;
-  number: string | null;
+  number: any | null;
   hash: string | null;
-  nephewNumber: string | null;
+  nephewNumber: any | null;
   uncleIndex: number | null;
-  uncleReward: string | null;
+  uncleReward: any | null;
 }
 
 export interface uncles {

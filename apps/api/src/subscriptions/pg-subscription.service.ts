@@ -86,9 +86,11 @@ class BlockEvents {
 
   createdAt: Date = new Date()
 
+  constructor(private readonly instaMining: boolean) {}
+
   isComplete(): boolean {
 
-    const { header, transactions, receipts, blockRewardAuthor, uncleRewards, rootCallTrace } = this
+    const { header, transactions, receipts, blockRewardAuthor, uncleRewards, rootCallTrace, instaMining } = this
 
     if (header === undefined || rootCallTrace === undefined) return false
 
@@ -104,7 +106,7 @@ class BlockEvents {
 
     // check rewards
 
-    if (blockRewardAuthor !== header.author) return false
+    if (!(instaMining || blockRewardAuthor === header.author)) return false
 
     if (uncleRewards.size !== uncle_count) return false
 
@@ -118,7 +120,7 @@ class BlockEvents {
 export class PgSubscriptionService {
 
   private readonly url: string
-  private readonly maxRate = 500
+  private readonly maxRate = 2000
 
   private blockEvents: Map<string, BlockEvents> = new Map()
 
@@ -190,11 +192,10 @@ export class PgSubscriptionService {
         filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
-
         const blockSummary = await blockService.findSummariesByBlockHash(blockHashes)
 
         blockSummary.forEach(summary => {
-          pubSub.publish('blockSummary', summary)
+          pubSub.publish('newBlock', summary)
         })
 
       })
@@ -203,7 +204,7 @@ export class PgSubscriptionService {
 
   private onEvent(event: PgEvent, blockHashes$: Subject<string>) {
 
-    const { blockEvents, pubSub, logger } = this;
+    const { blockEvents, pubSub, logger, config } = this;
 
     const { table, payload } = event
     const { block_hash } = payload
@@ -211,7 +212,7 @@ export class PgSubscriptionService {
     let entry = blockEvents.get(block_hash)
 
     if (!entry) {
-      entry = new BlockEvents()
+      entry = new BlockEvents(config.instaMining)
       blockEvents.set(block_hash, entry)
     }
 
@@ -275,7 +276,6 @@ export class PgSubscriptionService {
 
     if (entry.isComplete()) {
       // remove from the map and emit an event
-      console.log('Entry is complete', block_hash)
       blockHashes$.next(block_hash)
       blockEvents.delete(block_hash)
     }

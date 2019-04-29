@@ -23,7 +23,7 @@
     -->
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :max-blocks="true" :blocks="blocks" :loading="blocksLoading" :show-style="tableStyle" :error="errorTableBlocks" page-type="home" />
+        <table-blocks :max-blocks="true" :show-style="tableStyle" :error="errorTableBlocks" page-type="home" />
       </v-flex>
     </v-layout>
     <!--
@@ -146,49 +146,49 @@ export default class PageHome extends Vue {
   }
 
   createSubscriptions() {
-    const { $store, $eventHub } = this
+    // const { $store, $eventHub } = this
 
     // Create blocks subscription
-    this.newSimpleBlockSubscription = this.$api.observable<NewBlockQuery>('simpleBlocks').subscribe({
-      next(data) {
-        const newSimpleBlock = new SimpleBlock(data.data.newBlock)
-        $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
-        $eventHub.$emit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
-      },
-      error(error): void {
-        // console.error(error)
-      }
-    })
+    // this.newSimpleBlockSubscription = this.$api.observable<NewBlockQuery>('simpleBlocks').subscribe({
+    //   next(data) {
+    //     const newSimpleBlock = new SimpleBlock(data.data.newBlock)
+    //     $store.commit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
+    //     $eventHub.$emit(Events.NEW_SIMPLE_BLOCK, newSimpleBlock)
+    //   },
+    //   error(error): void {
+    //     // console.error(error)
+    //   }
+    // })
 
     // Create block metrics subscription
-    this.newBlockMetricSubscription = this.$api.observable<NewBlockMetricQuery>('blockMetrics').subscribe({
-      next(data) {
-        const { newBlockMetric } = data.data
-        $store.commit(Events.NEW_BLOCK_METRIC, newBlockMetric)
-        $eventHub.$emit(Events.NEW_BLOCK_METRIC, newBlockMetric)
-      },
-      error(error): void {
-        // console.error(error)
-      }
-    })
+    // this.newBlockMetricSubscription = this.$api.observable<NewBlockMetricQuery>('blockMetrics').subscribe({
+    //   next(data) {
+    //     const { newBlockMetric } = data.data
+    //     $store.commit(Events.NEW_BLOCK_METRIC, newBlockMetric)
+    //     $eventHub.$emit(Events.NEW_BLOCK_METRIC, newBlockMetric)
+    //   },
+    //   error(error): void {
+    //     // console.error(error)
+    //   }
+    // })
 
     // Create txs subscription
-    this.newSimpleTxsSubscription = this.$api.observable<NewTxsQuery>('simpleTxs').subscribe({
-      next(data) {
-        const { newTxs } = data.data
-        $store.commit(Events.NEW_TX, newTxs)
-        $eventHub.$emit(Events.NEW_TX, newTxs)
-      },
-      error(error): void {
-        // console.error(error)
-      }
-    })
+    // this.newSimpleTxsSubscription = this.$api.observable<NewTxsQuery>('simpleTxs').subscribe({
+    //   next(data) {
+    //     const { newTxs } = data.data
+    //     $store.commit(Events.NEW_TX, newTxs)
+    //     $eventHub.$emit(Events.NEW_TX, newTxs)
+    //   },
+    //   error(error): void {
+    //     // console.error(error)
+    //   }
+    // })
   }
 
   destroySubscriptions() {
-    this.newSimpleBlockSubscription.unsubscribe()
-    this.newBlockMetricSubscription.unsubscribe()
-    this.newSimpleTxsSubscription.unsubscribe()
+    // this.newSimpleBlockSubscription.unsubscribe()
+    // this.newBlockMetricSubscription.unsubscribe()
+    // this.newSimpleTxsSubscription.unsubscribe()
   }
 
   fetchTxs(): Promise<SimpleTx[]> {

@@ -9,12 +9,12 @@
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
-          <v-flex d-flex v-if="pageType == 'blocks' && !loading">
-            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
+          <v-flex d-flex v-if="pageType == 'blocks' && !$apollo.queries.blockPage.loading">
+            <app-live-update @refreshTable="updateTable" :page-type="pageType"/>
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-spacer />
+      <v-spacer/>
       <v-flex xs12 sm7 md5 v-if="pages > 1 && !hasError">
         <v-layout justify-end row class="pb-2 pr-2 pl-2">
           <app-paginate
@@ -32,7 +32,7 @@
       <v-flex xs8 md7>
         <v-card-title class="title font-weight-bold pl-0">{{ $t('block.last') }}</v-card-title>
       </v-flex>
-      <v-spacer />
+      <v-spacer/>
       <v-flex xs4 md1>
         <v-layout justify-end>
           <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('btn.view-all') }}</v-btn>
@@ -44,8 +44,8 @@
       LOADING / ERROR
     =====================================================================================
     -->
-    <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
-    <app-error :has-error="hasError" :message="error" class="mb-4" />
+    <v-progress-linear color="blue" indeterminate v-if="$apollo.queries.blockPage.loading && !hasError" class="mt-0"/>
+    <app-error :has-error="hasError" :message="error" class="mb-4"/>
     <!--
     =====================================================================================
       TABLE HEADER
@@ -53,12 +53,13 @@
     -->
     <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
-        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px" style="margin-right: 1px">
+        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px"
+                style="margin-right: 1px">
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex sm2>
               <h5>{{ $t('block.number') }}</h5>
             </v-flex>
-            <v-spacer />
+            <v-spacer/>
             <v-flex sm2>
               <h5>{{ $tc('tx.name', 2) }}</h5>
             </v-flex>
@@ -75,32 +76,14 @@
     =====================================================================================
     -->
     <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <v-layout column class="mb-1">
-        <v-flex v-if="!loading">
-          <div v-for="block in blocks" :key="block.getHash()">
-            <table-blocks-row :block="block" :page-type="pageType" />
+      <v-layout column v-scroll:#scroll-target class="mb-1">
+        <v-flex v-if="!$apollo.queries.blockPage.loading">
+          <div v-for="block in blocks" :key="block.hash">
+            <table-blocks-row :block="block" :page-type="pageType"/>
           </div>
         </v-flex>
 
-        <div xs12 v-if="loading">
-          <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm2 order-xs1>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex xs12 sm7 md6>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-              <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
-                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
-              </v-flex>
-            </v-layout>
-            <v-divider class="mb-2 mt-2" />
-          </div>
-        </div>
+
       </v-layout>
     </v-container>
     <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
@@ -117,92 +100,173 @@
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError.vue'
-import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import { Block, SimpleBlock } from '@app/core/models'
-import { Footnote } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+  import AppError from '@app/core/components/ui/AppError.vue'
+  import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+  import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+  import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
+  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+  import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
+  import {latestBlocks, newBlock} from '@app/modules/blocks/components/blocks.graphql'
+  import {Block, SimpleBlock} from '@app/core/models'
+  import {Footnote} from '@app/core/components/props'
+  import {Vue, Component, Prop} from 'vue-property-decorator'
+  import {BlockSummary} from "@app/core/api/apollo/types/BlockSummary";
+  import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext";
+  import {BlockSummaryPageExt} from "@app/core/api/apollo/extensions/block-summary-page.ext";
+  import {BlockSummaryPage, BlockSummaryPage_summaries} from "@app/core/api/apollo/types/BlockSummaryPage";
+  import BigNumber from "bignumber.js";
 
-@Component({
-  components: {
-    AppError,
-    AppFootnotes,
-    AppInfoLoad,
-    AppLiveUpdate,
-    AppPaginate,
-    TableBlocksRow
-  }
-})
-export default class TableBlocks extends Vue {
-  /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+  @Component({
+    components: {
+      AppError,
+      AppFootnotes,
+      AppInfoLoad,
+      AppLiveUpdate,
+      AppPaginate,
+      TableBlocksRow
+    },
+    apollo: {
+      blockPage: {
 
-  @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop({ type: String, default: 'blocks' }) pageType!: string
-  @Prop({ type: String, default: '' }) showStyle!: string
-  @Prop(Array) blocks!: Block[] | SimpleBlock[]
-  @Prop({ type: Number, default: 0 }) totalBlocks!: number
-  @Prop({ type: Number, default: 20 }) maxItems!: number
-  @Prop({ type: Boolean, default: false }) simplePagination!: boolean
-  @Prop({ type: Number, default: 0 }) page!: number
-  @Prop(String) error!: string
+        query() {
+          // if(this.pageType === 'home') {
+          //   return latestBlocks
+          // } else {
+          //
+          // }
+          return latestBlocks
+        },
 
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+        variables: {
+          offset: 0,
+          limit: 50
+        },
 
-  setPage(page: number): void {
-    this.$emit('getBlockPage', page)
-  }
+        update(data) {
+          return data.blockSummaries
+        },
 
-  updateTable(): void {
-    this.$emit('updateTable')
-  }
-  /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+        subscribeToMore: {
 
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
-  get hasError(): boolean {
-    return this.error !== ''
-  }
+          document: newBlock,
 
-  get getStyle(): string {
-    return this.showStyle
-  }
+          updateQuery: (previousResult, {subscriptionData}) => {
 
-  get getTitle(): string {
-    const titles = {
-      blocks: this.$i18n.t('block.last'),
-      address: this.$i18n.t('block.mined')
+            const {blockSummaries} = previousResult
+            const {newBlock} = subscriptionData.data
+
+            const summaries = Object.assign([], blockSummaries.summaries)
+            // add one at the beginning, remove one at the end
+            summaries.pop()
+            summaries.unshift(newBlock)
+
+            return {
+              ...previousResult,
+              blockSummaries: {
+                ...blockSummaries,
+                summaries,
+              }
+            }
+          },
+
+          skip() {
+            return this.pageType !== 'home'
+          }
+        }
+      }
     }
-    return titles[this.pageType]
-  }
+  })
+  export default class TableBlocks extends Vue {
+    /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
-  get pages(): number {
-    return this.totalBlocks ? Math.ceil(this.totalBlocks / this.maxItems) : 0
+    @Prop({type: Boolean, default: true}) loading!: boolean
+    @Prop({type: String, default: 'blocks'}) pageType!: string
+    @Prop({type: String, default: ''}) showStyle!: string
+    // @Prop(Array) blocks!: Block[] | SimpleBlock[]
+
+    @Prop({type: Number, default: 20}) maxItems!: number
+    @Prop({type: Boolean, default: false}) simplePagination!: boolean
+    @Prop({type: Number, default: 0}) page!: number
+    @Prop(String) error!: string
+
+    blockPage?: BlockSummaryPage
+
+    get blockPageExt(): BlockSummaryPageExt | null {
+      return this.blockPage ? new BlockSummaryPageExt(this.blockPage) : null
+    }
+
+    get blocks(): ((BlockSummaryPage_summaries | null)[]) {
+      return this.blockPageExt ? this.blockPageExt.summaries || [] : []
+    }
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+    setPage(page: number): void {
+
+      console.log('Set page')
+      const { blockPage } = this.$apollo.queries
+
+      blockPage.fetchMore({
+        variables: {
+          offset: page * 50,
+          limit: this.maxItems
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+         return fetchMoreResult
+        }
+      })
+
+    }
+
+    updateTable(): void {
+      this.$emit('updateTable')
+    }
+
+    /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
+
+    /**
+     * Determines whether or not component has an error.
+     * If error property is empty string, there is no error.
+     *
+     * @return {Boolean} - Whether or not error exists
+     */
+    get hasError(): boolean {
+      return this.error !== ''
+    }
+
+    get getStyle(): string {
+      return this.showStyle
+    }
+
+    get getTitle(): string {
+      const titles = {
+        blocks: this.$i18n.t('block.last'),
+        address: this.$i18n.t('block.mined')
+      }
+      return titles[this.pageType]
+    }
+
+    get pages(): number {
+      const {blockPageExt, maxItems} = this;
+      return blockPageExt ? Math.ceil(blockPageExt.totalCountBN.div(maxItems).toNumber()) : 0
+    }
   }
-}
 </script>
 
 <style scoped lang="css">
-.title-live{
-  min-height:60px;
-}
+  .title-live {
+    min-height: 60px;
+  }
 </style>

@@ -11,7 +11,7 @@ import { FilterEnum } from "./globalTypes";
 export interface tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder {
   __typename: "Transfer";
   id: string | null;
-  value: string | null;
+  value: any | null;
   contract: string | null;
   from: string | null;
   timestamp: string | null;

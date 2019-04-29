@@ -9,10 +9,10 @@
 export interface accountByAddress_accountByAddress {
   __typename: "Account";
   address: string | null;
-  balance: string | null;
-  totalTxCount: string | null;
-  inTxCount: string | null;
-  outTxCount: string | null;
+  balance: any | null;
+  totalTxCount: any | null;
+  inTxCount: any | null;
+  outTxCount: any | null;
   isMiner: boolean | null;
   isContractCreator: boolean | null;
 }

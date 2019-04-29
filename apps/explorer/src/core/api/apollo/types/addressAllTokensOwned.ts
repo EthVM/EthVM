@@ -12,8 +12,8 @@ export interface addressAllTokensOwned_addressAllTokensOwned {
   symbol: string | null;
   address: string | null;
   decimals: number | null;
-  balance: string | null;
-  currentPrice: string | null;
+  balance: any | null;
+  currentPrice: any | null;
 }
 
 export interface addressAllTokensOwned {

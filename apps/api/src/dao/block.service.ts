@@ -6,7 +6,7 @@ import { UncleEntity } from '@app/orm/entities/uncle.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import BigNumber from 'bignumber.js';
-import { In, LessThanOrEqual, Repository } from 'typeorm';
+import {In, LessThan, LessThanOrEqual, Repository} from 'typeorm';
 import { TraceService } from './trace.service';
 
 @Injectable()
@@ -19,13 +19,30 @@ export class BlockService {
     private readonly traceService: TraceService
   ) { }
 
+  async findBlockSummaries(offset: number, limit: number): Promise<[BlockSummary[], number]> {
+
+    const [headersWithRewards, count] = await this.blockHeaderRepository
+      .findAndCount({
+        select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes'],
+        relations: ['rewards'],
+        order: { number: 'DESC' },
+        skip: offset,
+        take: limit
+      })
+
+    return [
+      await this.summarise(headersWithRewards),
+      count
+    ]
+  }
+
   async findLatestBlocks(limit: number): Promise<BlockSummary[]> {
 
     const headersWithRewards = await this.blockHeaderRepository.find({
-      select: ['number', 'hash', 'author'],
+      select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes'],
       relations: ['rewards'],
       order: { number: 'DESC' },
-      take: limit
+      take: limit,
     })
 
     return this.summarise(headersWithRewards)
@@ -34,10 +51,10 @@ export class BlockService {
   async findSummariesByBlockHash(blockHashes: string[]): Promise<BlockSummary[]> {
 
     const headersWithRewards = await this.blockHeaderRepository.find({
-      select: ['number', 'hash', 'author'],
+      select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes'],
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
-      order: { number: 'DESC' }
+      order: { number: 'DESC' },
     })
 
     return this.summarise(headersWithRewards)
@@ -65,7 +82,7 @@ export class BlockService {
 
     return headersWithRewards.map(header => {
 
-      const { number, hash, author } = header
+      const { number, hash, author, uncleHashes, transactionHashes } = header
 
       const rewardsByBlock = new Map<string, BigNumber>()
 
@@ -76,6 +93,8 @@ export class BlockService {
 
       return {
         number, hash, author,
+        uncleHashes: JSON.parse(uncleHashes),
+        transactionHashes: JSON.parse(transactionHashes),
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
         reward: rewardsByBlock.get(hash)

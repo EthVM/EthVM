@@ -66,7 +66,7 @@ export class TraceService {
 
         return entities.map(e => {
             const { blockHash, transactionHash, error } = e
-            return { blockHash, transactionHash, successful: error === undefined } as TransactionStatus
+            return { blockHash, transactionHash, successful: error === null } as TransactionStatus
         })
 
     }

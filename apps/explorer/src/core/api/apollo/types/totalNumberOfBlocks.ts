@@ -7,5 +7,5 @@
 // ====================================================
 
 export interface totalNumberOfBlocks {
-  totalNumberOfBlocks: number;
+  totalNumberOfBlocks: any;
 }

@@ -16,15 +16,18 @@ export class StringConcatMixin extends Vue {
   ===================================================================================
   */
 
-  getRoundNumber(newNumber, unformatted: boolean = false): string {
+  getRoundNumber(newNumber: number | BN, unformatted: boolean = false): string {
+
+    const value = newNumber instanceof BN ? newNumber : new BN(newNumber)
+
     let round = 7
-    if (newNumber > 1) {
+    if (value.toNumber() > 1) {
       round = 2
     }
     if (unformatted) {
-      return new BN(newNumber).dp(round).toString()
+      return value.dp(round).toString()
     }
-    return new BN(newNumber)
+    return value
       .dp(round)
       .toFormat()
       .toString()

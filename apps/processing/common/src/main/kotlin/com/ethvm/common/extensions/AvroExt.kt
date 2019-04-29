@@ -289,7 +289,7 @@ fun TransactionRecord.getGasBI() = getGas().bigInteger()
 
 fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
-fun BlockHeaderRecord.Builder.setNonceBI(nonce: BigInteger) = setNonce(nonce.byteBuffer())
+fun BlockHeaderRecord.Builder.setNonceBI(nonce: BigInteger?) = setNonce(nonce?.byteBuffer())
 
 fun BlockHeaderRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.byteBuffer())
 

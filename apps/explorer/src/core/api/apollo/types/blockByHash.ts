@@ -10,29 +10,29 @@ import { DeltaType } from "./globalTypes";
 
 export interface blockByHash_blockByHash_header {
   __typename: "BlockHeader";
-  number: string | null;
+  number: any | null;
   hash: string | null;
   timestamp: string | null;
   author: string | null;
   parentHash: string | null;
-  difficulty: string | null;
+  difficulty: any | null;
   size: string | null;
-  nonce: string | null;
+  nonce: any | null;
   stateRoot: string | null;
   extraData: string | null;
-  gasLimit: string | null;
-  gasUsed: string | null;
+  gasLimit: any | null;
+  gasUsed: any | null;
   logsBloom: string | null;
   sha3Uncles: string | null;
   transactionsRoot: string | null;
   receiptsRoot: string | null;
-  totalDifficulty: string | null;
+  totalDifficulty: any | null;
 }
 
 export interface blockByHash_blockByHash_transactions_receipt {
   __typename: "Receipt";
   contractAddress: string | null;
-  gasUsed: string | null;
+  gasUsed: any | null;
   status: string | null;
 }
 
@@ -44,12 +44,12 @@ export interface blockByHash_blockByHash_transactions_traces {
 export interface blockByHash_blockByHash_transactions {
   __typename: "Transaction";
   hash: string | null;
-  blockNumber: string | null;
+  blockNumber: any | null;
   from: string | null;
-  gasPrice: string | null;
+  gasPrice: any | null;
   timestamp: string | null;
   to: string | null;
-  value: string | null;
+  value: any | null;
   receipt: blockByHash_blockByHash_transactions_receipt | null;
   traces: (blockByHash_blockByHash_transactions_traces | null)[] | null;
 }
@@ -58,7 +58,7 @@ export interface blockByHash_blockByHash_rewards {
   __typename: "Reward";
   author: string | null;
   rewardType: DeltaType | null;
-  value: string | null;
+  value: any | null;
 }
 
 export interface blockByHash_blockByHash_uncles {

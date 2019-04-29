@@ -1,11 +1,11 @@
 <template>
   <v-app style="background: #f3f4f8;">
-    <the-navigation-drawer />
+    <the-navigation-drawer/>
     <v-content>
-      <app-greeting v-if="appGreet" :greet="appGreet" />
-      <app-sync-message v-if="isSyncing" />
-      <router-view :key="$route.path" />
-      <the-footer />
+      <app-greeting v-if="appGreet" :greet="appGreet"/>
+      <app-sync-message v-if="isSyncing"/>
+      <router-view :key="$route.path"/>
+      <the-footer/>
     </v-content>
   </v-app>
 </template>
@@ -37,7 +37,8 @@ export default class App extends Vue {
   */
 
   created() {
-    // TODO Load initial processing status
+    // Load initial processing status
+    // this.$api.getProcessingMetadata('syncing').then(ev => this.$store.commit('NEW_SYNC', ev ? ev.value : true))
     // Preload some previous block metrics
     // TODO re-enable metrics
     // this.$api.getBlockHeaderMetrics(MAX_ITEMS, 0).then(bms => {

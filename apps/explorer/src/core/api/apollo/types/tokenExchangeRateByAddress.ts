@@ -9,14 +9,14 @@
 export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress {
   __typename: "TokenExchangeRate";
   address: string | null;
-  circulatingSupply: string | null;
+  circulatingSupply: any | null;
   currentPrice: any | null;
   image: string | null;
   marketCap: any | null;
   name: string | null;
   priceChangePercentage24h: any | null;
   symbol: string | null;
-  totalSupply: string | null;
+  totalSupply: any | null;
   totalVolume: any | null;
   owner: string | null;
   holdersCount: number | null;

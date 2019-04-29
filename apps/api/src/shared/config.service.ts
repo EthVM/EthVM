@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common'
+import {Inject, Injectable} from '@nestjs/common'
 import convict from 'convict'
-import { join } from 'path'
-import { Logger } from 'winston'
+import {join} from 'path'
+import {Logger} from 'winston'
 
 /* tslint:disable:max-line-length */
 const schema = {
@@ -29,6 +29,12 @@ const schema = {
       env: 'LOG_LEVEL',
       default: 'info',
     },
+  },
+  instaMining: {
+    doc: 'Indicates if we are running a private development chain which can impact subscriptions',
+    env: 'INSTA_MINING',
+    format: 'Boolean',
+    default: false,
   },
   db: {
     url: {
@@ -93,9 +99,9 @@ export class ConfigService {
     const config = (this.config = convict(schema))
 
     config.loadFile(join(process.cwd(), `src/config/${this.env}.json`))
-    config.validate({ allowed: 'strict' })
+    config.validate({allowed: 'strict'})
 
-    const { env } = this
+    const {env} = this
 
     if (env === 'development') {
       this.logger.info('Configuration: ' + config.toString())
@@ -116,6 +122,10 @@ export class ConfigService {
 
   get graphql(): GraphqlConfig {
     return this.config.get('graphql')
+  }
+
+  get instaMining(): boolean {
+    return this.config.get('instaMining')
   }
 
   get db(): DbConfig {

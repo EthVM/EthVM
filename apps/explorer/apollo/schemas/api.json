@@ -86,6 +86,39 @@
             "deprecationReason": null
           },
           {
+            "name": "blockSummaries",
+            "description": null,
+            "args": [
+              {
+                "name": "offset",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0"
+              },
+              {
+                "name": "limit",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "50"
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "BlockSummaryPage",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "latestBlocks",
             "description": null,
             "args": [
@@ -261,7 +294,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "BigNumber",
                 "ofType": null
               }
             },
@@ -867,6 +900,116 @@
             "deprecationReason": null
           },
           {
+            "name": "uncleByHash",
+            "description": null,
+            "args": [
+              {
+                "name": "hash",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Uncle",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "uncles",
+            "description": null,
+            "args": [
+              {
+                "name": "limit",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "page",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "fromUncle",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Uncle",
+                  "ofType": null
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "totalNumberOfUncles",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "BigNumber",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "latestUncleBlockNumber",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "BigNumber",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "latestTxs",
             "description": null,
             "args": [
@@ -949,7 +1092,7 @@
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
+                  "name": "BigNumber",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -1038,118 +1181,8 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "BigNumber",
               "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "uncleByHash",
-            "description": null,
-            "args": [
-              {
-                "name": "hash",
-                "description": null,
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Uncle",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "uncles",
-            "description": null,
-            "args": [
-              {
-                "name": "limit",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "page",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "fromUncle",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Uncle",
-                  "ofType": null
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "totalNumberOfUncles",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "latestUncleBlockNumber",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1205,7 +1238,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1217,7 +1250,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1229,7 +1262,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1241,7 +1274,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1274,6 +1307,16 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "BigNumber",
+        "description": "bignumber.js scalar type",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -1351,7 +1394,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1363,7 +1406,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1375,7 +1418,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1387,7 +1430,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1399,7 +1442,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1411,7 +1454,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1423,7 +1466,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1435,7 +1478,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1447,7 +1490,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1459,7 +1502,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1471,7 +1514,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1483,7 +1526,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1495,7 +1538,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1507,7 +1550,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1519,7 +1562,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1531,7 +1574,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1543,7 +1586,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1555,7 +1598,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1567,7 +1610,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1579,7 +1622,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1591,7 +1634,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1603,7 +1646,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1615,7 +1658,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1627,7 +1670,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1639,7 +1682,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1651,7 +1694,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1663,7 +1706,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1699,7 +1742,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1711,7 +1754,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1747,7 +1790,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1759,7 +1802,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1795,7 +1838,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1807,7 +1850,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1843,7 +1886,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Float",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1855,7 +1898,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1878,6 +1921,55 @@
         "possibleTypes": null
       },
       {
+        "kind": "SCALAR",
+        "name": "Float",
+        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). ",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "BlockSummaryPage",
+        "description": null,
+        "fields": [
+          {
+            "name": "summaries",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "BlockSummary",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "totalCount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigNumber",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "BlockSummary",
         "description": null,
@@ -1888,7 +1980,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1924,7 +2016,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1936,7 +2028,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1948,8 +2040,40 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "uncleHashes",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionHashes",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2052,7 +2176,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2088,7 +2212,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2172,7 +2296,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2184,7 +2308,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2208,7 +2332,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2220,7 +2344,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2323,7 +2447,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2347,7 +2471,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2395,7 +2519,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2407,7 +2531,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2419,7 +2543,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2612,7 +2736,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2660,7 +2784,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2672,7 +2796,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2791,7 +2915,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2898,7 +3022,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2922,7 +3046,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -2958,7 +3082,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3042,7 +3166,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3054,7 +3178,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3078,7 +3202,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3090,7 +3214,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3126,7 +3250,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3185,7 +3309,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3327,7 +3451,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Float",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3351,7 +3475,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3423,7 +3547,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3507,7 +3631,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3516,16 +3640,6 @@
         ],
         "inputFields": null,
         "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Float",
-        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). ",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -4020,7 +4134,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4029,16 +4143,6 @@
         ],
         "inputFields": null,
         "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Decimal",
-        "description": "Floats that will have a value of 0 or more.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -4065,7 +4169,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4160,7 +4264,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4172,7 +4276,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4241,7 +4345,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4253,7 +4357,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4389,7 +4493,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4401,7 +4505,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4425,7 +4529,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4437,7 +4541,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4449,7 +4553,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4461,7 +4565,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4473,7 +4577,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4485,7 +4589,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4497,7 +4601,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Decimal",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4509,7 +4613,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4521,7 +4625,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4596,7 +4700,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4691,7 +4795,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4715,7 +4819,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4839,7 +4943,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4887,7 +4991,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4899,7 +5003,7 @@
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -5786,6 +5890,16 @@
         "kind": "SCALAR",
         "name": "Date",
         "description": "Date custom scalar type",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Decimal",
+        "description": "Floats that will have a value of 0 or more.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,

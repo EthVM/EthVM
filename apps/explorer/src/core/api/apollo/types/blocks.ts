@@ -9,7 +9,7 @@
 export interface blocks_blocks_header {
   __typename: "BlockHeader";
   hash: string | null;
-  number: string | null;
+  number: any | null;
   author: string | null;
 }
 
@@ -32,7 +32,7 @@ export interface blocks_blocks_transactions {
 
 export interface blocks_blocks_rewards {
   __typename: "Reward";
-  value: string | null;
+  value: any | null;
 }
 
 export interface blocks_blocks_uncles {

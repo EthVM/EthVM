@@ -11,7 +11,7 @@ import { Duration } from "./globalTypes";
 export interface averageTxFee_blockMetricsByDay {
   __typename: "BlockMetrics";
   date: string | null;
-  value: string | null;
+  value: any | null;
 }
 
 export interface averageTxFee {

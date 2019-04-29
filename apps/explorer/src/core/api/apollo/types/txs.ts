@@ -9,7 +9,7 @@
 export interface txs_txs_receipt {
   __typename: "Receipt";
   contractAddress: string | null;
-  gasUsed: string | null;
+  gasUsed: any | null;
   status: string | null;
 }
 
@@ -21,15 +21,15 @@ export interface txs_txs_traces {
 export interface txs_txs {
   __typename: "Transaction";
   blockHash: string | null;
-  blockNumber: string | null;
+  blockNumber: any | null;
   from: string | null;
-  gas: string | null;
-  gasPrice: string | null;
+  gas: any | null;
+  gasPrice: any | null;
   hash: string | null;
   input: any | null;
   timestamp: string | null;
   to: string | null;
-  value: string | null;
+  value: any | null;
   receipt: txs_txs_receipt | null;
   traces: (txs_txs_traces | null)[] | null;
 }
@@ -41,5 +41,5 @@ export interface txs {
 export interface txsVariables {
   limit?: number | null;
   page?: number | null;
-  fromBlock?: number | null;
+  fromBlock?: any | null;
 }

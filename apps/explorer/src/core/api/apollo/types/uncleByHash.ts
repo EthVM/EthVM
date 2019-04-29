@@ -9,14 +9,14 @@
 export interface uncleByHash_uncleByHash {
   __typename: "Uncle";
   author: string | null;
-  number: string | null;
-  gasLimit: string | null;
-  gasUsed: string | null;
+  number: any | null;
+  gasLimit: any | null;
+  gasUsed: any | null;
   hash: string | null;
   parentHash: string | null;
   sha3Uncles: string | null;
   timestamp: string | null;
-  nephewNumber: string | null;
+  nephewNumber: any | null;
   uncleIndex: number | null;
 }
 

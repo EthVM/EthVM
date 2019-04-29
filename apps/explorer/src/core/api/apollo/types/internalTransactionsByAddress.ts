@@ -12,7 +12,7 @@ export interface internalTransactionsByAddress_internalTransactionsByAddress_ite
   __typename: "Transfer";
   id: string | null;
   transactionHash: string | null;
-  value: string | null;
+  value: any | null;
   from: string | null;
   to: string | null;
   timestamp: string | null;
@@ -22,7 +22,7 @@ export interface internalTransactionsByAddress_internalTransactionsByAddress_ite
 export interface internalTransactionsByAddress_internalTransactionsByAddress {
   __typename: "TransfersPage";
   items: (internalTransactionsByAddress_internalTransactionsByAddress_items | null)[] | null;
-  totalCount: number | null;
+  totalCount: any | null;
 }
 
 export interface internalTransactionsByAddress {

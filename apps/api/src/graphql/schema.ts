@@ -160,6 +160,13 @@ export class BlockSummary {
     numSuccessfulTxs?: BigNumber;
     numFailedTxs?: BigNumber;
     reward?: BigNumber;
+    uncleHashes?: string[];
+    transactionHashes?: string[];
+}
+
+export class BlockSummaryPage {
+    summaries?: BlockSummary[];
+    totalCount?: BigNumber;
 }
 
 export class Contract {
@@ -229,9 +236,7 @@ export abstract class IQuery {
 
     abstract blockMetricsByDay(duration: Duration, fields?: string[]): BlockMetrics[] | Promise<BlockMetrics[]>;
 
-    abstract contractByAddress(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+    abstract blockSummaries(offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
 
     abstract latestBlocks(limit?: number): BlockSummary[] | Promise<BlockSummary[]>;
 
@@ -244,6 +249,10 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
 
     abstract totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
+
+    abstract contractByAddress(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
 
     abstract search(query: string): Search | Promise<Search>;
 
@@ -265,6 +274,12 @@ export abstract class IQuery {
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
+    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+
+    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+
+    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+
     abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
 
     abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
@@ -272,12 +287,6 @@ export abstract class IQuery {
     abstract totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
 
     abstract latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
-
-    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
-
-    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
-
-    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract latestTxs(limit?: number): TransactionSummary[] | Promise<TransactionSummary[]>;
 

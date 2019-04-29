@@ -11,7 +11,7 @@ import { Duration } from "./globalTypes";
 export interface totalFailedTxs_blockMetricsByDay {
   __typename: "BlockMetrics";
   date: string | null;
-  value: string | null;
+  value: number | null;
 }
 
 export interface totalFailedTxs {

@@ -9,7 +9,7 @@
 export interface tokenExchangeRateBySymbol_tokenExchangeRateBySymbol {
   __typename: "TokenExchangeRate";
   address: string | null;
-  circulatingSupply: string | null;
+  circulatingSupply: any | null;
   currentPrice: any | null;
   high24h: any | null;
   image: string | null;
@@ -23,7 +23,7 @@ export interface tokenExchangeRateBySymbol_tokenExchangeRateBySymbol {
   priceChange24h: any | null;
   priceChangePercentage24h: any | null;
   symbol: string | null;
-  totalSupply: string | null;
+  totalSupply: any | null;
   totalVolume: any | null;
 }
 

@@ -9,22 +9,22 @@
 export interface tx_tx_receipt {
   __typename: "Receipt";
   contractAddress: string | null;
-  gasUsed: string | null;
+  gasUsed: any | null;
 }
 
 export interface tx_tx {
   __typename: "Transaction";
   blockHash: string | null;
-  blockNumber: string | null;
+  blockNumber: any | null;
   from: string | null;
-  gas: string | null;
-  gasPrice: string | null;
+  gas: any | null;
+  gasPrice: any | null;
   hash: string | null;
   input: any | null;
-  nonce: string | null;
+  nonce: any | null;
   timestamp: string | null;
   to: string | null;
-  value: string | null;
+  value: any | null;
   receipt: tx_tx_receipt | null;
 }
 

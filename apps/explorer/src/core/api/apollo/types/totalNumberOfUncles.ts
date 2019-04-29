@@ -7,5 +7,5 @@
 // ====================================================
 
 export interface totalNumberOfUncles {
-  totalNumberOfUncles: number;
+  totalNumberOfUncles: any;
 }

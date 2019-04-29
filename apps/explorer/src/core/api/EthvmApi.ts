@@ -1,19 +1,22 @@
 import {
   Account,
+  AddressBalance,
+  AddressMetadata,
   Block,
-  BlockMetrics,
+  BlockMetrics, CoinExchangeRate,
   Contract,
   PendingTx,
-  CoinExchangeRate,
+  ProcessingMetadata,
+  Quote,
   SimpleBlock,
   SimpleTx,
   Statistic,
   Token,
   TokenExchangeRate,
+  TokenTransfer,
   Transfer,
   Tx,
   Uncle,
-  TokenHolder
 } from '@app/core/models'
 import { Observable } from 'apollo-client/util/Observable'
 
@@ -32,8 +35,8 @@ export interface EthvmApi {
   getTotalNumberOfBlocks(): Promise<number>
 
   // Block Metrics
-  getBlockMetric(hash: string): Promise<BlockMetrics | null>
-  getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]>
+  // getBlockMetric(hash: string): Promise<BlockMetrics | null>
+  // getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]>
 
   // Contracts
   getContract(address: string): Promise<Contract | null>
@@ -88,6 +91,9 @@ export interface EthvmApi {
 
   // Search
   search(hash: string): Promise<any>
+
+  // Processing Metadata
+  // getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
 
   // Subscriptions
   observable<T>(query): Observable<T>
