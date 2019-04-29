@@ -233,11 +233,11 @@ export abstract class IQuery {
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
+    abstract search(query: string): Search | Promise<Search>;
+
     abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
     abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
-
-    abstract search(query: string): Search | Promise<Search>;
 
     abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
 
