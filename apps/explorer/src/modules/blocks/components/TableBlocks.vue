@@ -211,7 +211,6 @@
 
     setPage(page: number): void {
 
-      console.log('Set page')
       const { blockPage } = this.$apollo.queries
 
       blockPage.fetchMore({
