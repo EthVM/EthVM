@@ -40,7 +40,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   traefik:
-    image: ethvm/traefik:0.1.4
+    image: ethvm/traefik:0.1.5
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -52,8 +52,9 @@ services:
       - 8080:8080
     environment:
       DEBUG: 'true'
-      LETS_ENCRYPT_ENABLED:
+      LETS_ENCRYPT_ENABLED: 'false'
       SWARM_MODE: 'false'
+      TRAEFIK_DASHBOARD_ENABLED: 'true'
 
   explorer:
     build:
