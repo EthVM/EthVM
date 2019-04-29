@@ -19,7 +19,7 @@ export class BlockService {
     private readonly traceService: TraceService
   ) { }
 
-  async findBlockSummaries(offset: number, limit: number): Promise<[BlockSummary[], number]> {
+  async findSummaries(offset: number, limit: number): Promise<[BlockSummary[], number]> {
 
     const [headersWithRewards, count] = await this.blockHeaderRepository
       .findAndCount({
@@ -34,18 +34,6 @@ export class BlockService {
       await this.summarise(headersWithRewards),
       count
     ]
-  }
-
-  async findLatestBlocks(limit: number): Promise<BlockSummary[]> {
-
-    const headersWithRewards = await this.blockHeaderRepository.find({
-      select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes'],
-      relations: ['rewards'],
-      order: { number: 'DESC' },
-      take: limit,
-    })
-
-    return this.summarise(headersWithRewards)
   }
 
   async findSummariesByBlockHash(blockHashes: string[]): Promise<BlockSummary[]> {

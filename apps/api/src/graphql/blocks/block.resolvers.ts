@@ -27,16 +27,8 @@ export class BlockResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ) {
-    const [summaries, count] = await this.blockService.findBlockSummaries(offset, limit)
+    const [summaries, count] = await this.blockService.findSummaries(offset, limit)
     return new BlockSummaryPageDto(summaries, count)
-  }
-
-  @Query()
-  async latestBlocks(
-    @Args('limit', ParseLimitPipe) limit: number,
-  ) {
-    const summaries = await this.blockService.findLatestBlocks(limit)
-    return summaries.map(e => new BlockSummaryDto(e))
   }
 
   @Query()

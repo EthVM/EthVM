@@ -3,8 +3,6 @@ type Query {
 
   blockSummaries(offset: Int = 0, limit: Int = 50): BlockSummaryPage
 
-  latestBlocks(limit: Int): [BlockSummary]
-
   blocks(limit: Int, page: Int, fromBlock: Long): [Block]
   blockByHash(hash: String): Block
   blockByNumber(number: Int): Block
