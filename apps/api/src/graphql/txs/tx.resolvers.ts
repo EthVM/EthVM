@@ -1,19 +1,33 @@
-import { TxService } from '@app/dao/tx.service';
-import { TxDto } from '@app/graphql/txs/dto/tx.dto';
-import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe';
-import { ParseBigNumberPipe } from '@app/shared/validation/parse-big-number.pipe';
-import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe';
-import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe.1';
-import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe';
-import { Args, Query, ResolveProperty, Resolver } from '@nestjs/graphql';
+import {TxService} from '@app/dao/tx.service';
+import {TxDto} from '@app/graphql/txs/dto/tx.dto';
+import {ParseAddressPipe} from '@app/shared/validation/parse-address.pipe';
+import {ParseBigNumberPipe} from '@app/shared/validation/parse-big-number.pipe';
+import {ParseHashPipe} from '@app/shared/validation/parse-hash.pipe';
+import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1';
+import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe';
+import {Args, Query, Resolver, Subscription, SubscriptionOptions} from '@nestjs/graphql';
 import BigNumber from 'bignumber.js';
+import {TransactionSummaryPageDto} from "@app/graphql/txs/dto/transaction-summary-page.dto";
+import {PubSub} from "graphql-subscriptions";
+import {Inject} from "@nestjs/common";
+import {TransactionSummaryDto} from "@app/graphql/txs/dto/transaction-summary.dto";
+import {TransactionSummary} from "@app/graphql/schema";
 
 @Resolver('Transaction')
 export class TxResolvers {
   constructor(
     private readonly txService: TxService,
-    // @Inject('PUB_SUB') private pubSub: PubSub
+    @Inject('PUB_SUB') private pubSub: PubSub
   ) { }
+
+  @Query()
+  async transactionSummaries(
+    @Args('offset') offset: number,
+    @Args('limit') limit: number
+  ) {
+    const [summaries, count] = await this.txService.findSummaries(offset, limit)
+    return new TransactionSummaryPageDto(summaries, count)
+  }
 
   @Query()
   async tx(@Args('hash', ParseHashPipe) hash: string): Promise<TxDto | null> {
@@ -46,19 +60,11 @@ export class TxResolvers {
   async totalNumberOfTransactions(): Promise<number> {
     return await this.txService.countTransactions()
   }
-
-  @ResolveProperty()
-  async successful(): Promise<boolean> {
-    return true
+  @Subscription(
+    'newTransaction', {
+      resolve: (summary: TransactionSummary) => new TransactionSummaryDto(summary),
+    } as SubscriptionOptions)
+  newTransaction() {
+    return this.pubSub.asyncIterator('newTransaction')
   }
-
-  // @Subscription()
-  // newTxs() {
-  //   return {
-  //     resolve: payload => {
-  //       return new TxDto(payload.value)
-  //     },
-  //     subscribe: () => this.pubSub.asyncIterator('txs'),
-  //   }
-  // }
 }

@@ -15,9 +15,7 @@ export class TraceService {
     constructor(
         @InjectRepository(TransactionTraceEntity)
         private readonly traceRepository: Repository<TransactionTraceEntity>
-    ) {
-        console.log('Trace repo', traceRepository)
-    }
+    ) {}
 
     async findByBlockNumber(...blockNumbers: string[]): Promise<TransactionTraceEntity[]> {
         return this.traceRepository.find({ where: { blockNumber: In(blockNumbers) } })
@@ -46,7 +44,7 @@ export class TraceService {
 
         return entities.map(e => {
             const { blockHash, transactionHash, error } = e
-            return { blockHash, transactionHash, successful: error === undefined } as TransactionStatus
+            return { blockHash, transactionHash, successful: error === null } as TransactionStatus
         })
 
     }

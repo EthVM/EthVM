@@ -7,6 +7,7 @@ import { Observable, Subject } from 'rxjs';
 import { bufferTime, filter } from 'rxjs/operators';
 import { Logger } from 'winston';
 import { CircuitBreaker, CircuitBreakerState } from './circuit-breaker';
+import {TxService} from "@app/dao/tx.service";
 
 export interface CanonicalBlockHeaderPayload {
   block_hash: string
@@ -129,6 +130,7 @@ export class PgSubscriptionService {
     @Inject('winston') private readonly logger: Logger,
     private readonly config: ConfigService,
     private readonly blockService: BlockService,
+    private readonly transactionService: TxService,
   ) {
 
     this.url = config.db.url
@@ -138,7 +140,7 @@ export class PgSubscriptionService {
 
   private init() {
 
-    const { url, logger, blockService, pubSub } = this
+    const { url, logger, blockService, transactionService, pubSub } = this
 
     const events$ = Observable.create(
       async observer => {
@@ -192,10 +194,20 @@ export class PgSubscriptionService {
         filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
+
         const blockSummary = await blockService.findSummariesByBlockHash(blockHashes)
 
-        blockSummary.forEach(summary => {
-          pubSub.publish('newBlock', summary)
+        blockSummary.forEach(async blockSummary => {
+
+          pubSub.publish('newBlock', blockSummary)
+
+          const [txSummaries, count] = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
+
+          txSummaries.forEach(txSummary => {
+            console.log('Tx summary', txSummary)
+            pubSub.publish('newTransaction', txSummary)
+          })
+
         })
 
       })

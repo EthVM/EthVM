@@ -35,8 +35,8 @@ export class TransactionReceiptEntity {
   @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
   cumulativeGasUsed!: BigNumber
 
-  @Column({type: 'numeric', readonly: true})
-  gasUsed!: string
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  gasUsed!: BigNumber
 
   @Column({type: 'text', readonly: true})
   logs!: string

@@ -165,7 +165,7 @@ export class BlockSummary {
 }
 
 export class BlockSummaryPage {
-    summaries?: BlockSummary[];
+    items?: BlockSummary[];
     totalCount?: BigNumber;
 }
 
@@ -238,8 +238,6 @@ export abstract class IQuery {
 
     abstract blockSummaries(offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
 
-    abstract latestBlocks(limit?: number): BlockSummary[] | Promise<BlockSummary[]>;
-
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -280,15 +278,7 @@ export abstract class IQuery {
 
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
-    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
-
-    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
-
-    abstract totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
-
-    abstract latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
-
-    abstract latestTxs(limit?: number): TransactionSummary[] | Promise<TransactionSummary[]>;
+    abstract transactionSummaries(offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
@@ -297,6 +287,14 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): BigNumber | Promise<BigNumber>;
+
+    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
+
+    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
+
+    abstract totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
+
+    abstract latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
@@ -344,7 +342,7 @@ export abstract class ISubscription {
 
     abstract isSyncing(): boolean | Promise<boolean>;
 
-    abstract newTxs(): Transaction[] | Promise<Transaction[]>;
+    abstract newTransaction(): TransactionSummary | Promise<TransactionSummary>;
 }
 
 export class Token {
@@ -424,13 +422,21 @@ export class Transaction {
 export class TransactionSummary {
     hash?: string;
     blockNumber?: BigNumber;
+    transactionIndex?: number;
     from?: string;
     to?: string;
-    created?: string;
+    creates?: string;
+    contractName?: string;
+    contractSymbol?: string;
     value?: BigNumber;
     fee?: BigNumber;
     successful?: boolean;
     timestamp?: string;
+}
+
+export class TransactionSummaryPage {
+    items?: TransactionSummary[];
+    totalCount?: BigNumber;
 }
 
 export class Transfer {

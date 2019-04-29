@@ -1,0 +1,37 @@
+query latestTransactions($offset: Int, $limit: Int) {
+
+  transactionSummaries(offset: $offset, limit: $limit) {
+    ...TransactionSummaryPage
+  }
+
+}
+
+fragment TransactionSummary on TransactionSummary {
+  hash
+  blockNumber
+  transactionIndex
+  from
+  to
+  creates
+  contractName
+  contractSymbol
+  value
+  fee
+  successful
+  timestamp
+}
+
+fragment TransactionSummaryPage on TransactionSummaryPage {
+  items {
+    ...TransactionSummary
+  }
+  totalCount
+}
+
+subscription newTransaction {
+
+  newTransaction {
+    ...TransactionSummary
+  }
+
+}

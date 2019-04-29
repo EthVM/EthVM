@@ -5,9 +5,9 @@ import BigNumber from "bignumber.js";
 
 export class BlockSummaryPageDto extends BlockSummaryPage {
 
-  constructor(summaries: BlockSummary[], totalCount: number) {
+  constructor(items: BlockSummary[], totalCount: number) {
     super()
-    this.summaries = summaries.map(s => new BlockSummaryDto(s))
+    this.items = items.map(s => new BlockSummaryDto(s))
     this.totalCount = new BigNumber(totalCount)
   }
 

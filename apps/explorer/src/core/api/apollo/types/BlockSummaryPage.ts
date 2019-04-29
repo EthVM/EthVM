@@ -6,7 +6,7 @@
 // GraphQL fragment: BlockSummaryPage
 // ====================================================
 
-export interface BlockSummaryPage_summaries {
+export interface BlockSummaryPage_items {
   __typename: "BlockSummary";
   number: any | null;
   hash: string | null;
@@ -19,6 +19,6 @@ export interface BlockSummaryPage_summaries {
 
 export interface BlockSummaryPage {
   __typename: "BlockSummaryPage";
-  summaries: (BlockSummaryPage_summaries | null)[] | null;
+  items: (BlockSummaryPage_items | null)[] | null;
   totalCount: any | null;
 }

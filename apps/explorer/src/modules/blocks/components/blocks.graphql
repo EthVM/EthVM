@@ -16,7 +16,7 @@ fragment BlockSummary on BlockSummary {
 }
 
 fragment BlockSummaryPage on BlockSummaryPage {
-  summaries {
+  items {
     ...BlockSummary
   }
   totalCount

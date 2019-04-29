@@ -6,7 +6,7 @@
 // GraphQL query operation: latestBlocks
 // ====================================================
 
-export interface latestBlocks_blockSummaries_summaries {
+export interface latestBlocks_blockSummaries_items {
   __typename: "BlockSummary";
   number: any | null;
   hash: string | null;
@@ -19,7 +19,7 @@ export interface latestBlocks_blockSummaries_summaries {
 
 export interface latestBlocks_blockSummaries {
   __typename: "BlockSummaryPage";
-  summaries: (latestBlocks_blockSummaries_summaries | null)[] | null;
+  items: (latestBlocks_blockSummaries_items | null)[] | null;
   totalCount: any | null;
 }
 
@@ -28,5 +28,6 @@ export interface latestBlocks {
 }
 
 export interface latestBlocksVariables {
+  offset?: number | null;
   limit?: number | null;
 }

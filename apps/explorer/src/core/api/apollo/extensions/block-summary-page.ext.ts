@@ -1,4 +1,4 @@
-import {BlockSummaryPage, BlockSummaryPage_summaries} from "@app/core/api/apollo/types/BlockSummaryPage";
+import {BlockSummaryPage, BlockSummaryPage_items} from "@app/core/api/apollo/types/BlockSummaryPage";
 import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext";
 import {BlockSummary} from "@app/core/api/apollo/types/BlockSummary";
 import BN from "bignumber.js";
@@ -7,11 +7,11 @@ import BN from "bignumber.js";
 export class BlockSummaryPageExt implements BlockSummaryPage {
 
   __typename!: "BlockSummaryPage";
-  summaries!: (BlockSummaryPage_summaries | null)[] | null;
+  items!: (BlockSummaryPage_items | null)[] | null;
   totalCount!: any | null;
 
   constructor(proto: BlockSummaryPage) {
-    this.summaries = proto.summaries!.map(s => new BlockSummaryExt(s as BlockSummary))
+    this.items = proto.items!.map(s => new BlockSummaryExt(s as BlockSummary))
     this.totalCount = proto.totalCount
   }
 

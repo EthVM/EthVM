@@ -29,7 +29,7 @@ type BlockSummary {
 }
 
 type BlockSummaryPage {
-  summaries: [BlockSummary]
+  items: [BlockSummary]
   totalCount: BigNumber
 }
 

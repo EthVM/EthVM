@@ -1,6 +1,6 @@
 type Query {
 
-  latestTxs(limit: Int): [TransactionSummary]
+  transactionSummaries(offset: Int = 0, limit: Int = 50): TransactionSummaryPage
 
   tx(hash: String!): Transaction
   txs(limit: Int, page: Int, fromBlock: BigNumber): [Transaction]
@@ -9,19 +9,27 @@ type Query {
 }
 
 type Subscription {
-  newTxs: [Transaction]
+  newTransaction: TransactionSummary
 }
 
 type TransactionSummary {
   hash: String
   blockNumber: BigNumber
+  transactionIndex: Int
   from: String
   to: String
-  created: String
+  creates: String
+  contractName: String
+  contractSymbol: String
   value: BigNumber
   fee: BigNumber
   successful: Boolean
   timestamp: String
+}
+
+type TransactionSummaryPage {
+  items: [TransactionSummary]
+  totalCount: BigNumber
 }
 
 type Transaction {

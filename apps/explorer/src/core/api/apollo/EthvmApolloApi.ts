@@ -130,7 +130,7 @@ export class EthvmApolloApi implements EthvmApi {
           fromBlock
         }
       })
-      .then(res => res.data.blocks.map(raw => new Block(raw)))
+      .then(res => res.data.transactions.map(raw => new Block(raw)))
   }
 
   public getBlockByNumber(number: number): Promise<Block> {
