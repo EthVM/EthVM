@@ -9,7 +9,7 @@
       <v-flex xs12 sm4 md6>
         <v-layout row align-end justify-start>
           <v-card-title class="title font-weight-bold">{{ $tc('token.name', 2) }}</v-card-title>
-          <v-card-title class="info--text">(Total: {{ totalTokens }} {{ $tc('token.name', 2) }})</v-card-title>
+          <v-card-title class="info--text">(Total: {{ totalItems }} {{ $tc('token.name', 2) }})</v-card-title>
         </v-layout>
       </v-flex>
       <v-spacer />

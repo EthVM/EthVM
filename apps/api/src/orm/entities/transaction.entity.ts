@@ -3,6 +3,7 @@ import { assignClean } from '@app/shared/utils'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
+import { ContractEntity } from '@app/orm/entities/contract.entity'
 
 @Entity('canonical_transaction')
 export class TransactionEntity {
@@ -82,5 +83,12 @@ export class TransactionEntity {
     referencedColumnName: 'transactionHash',
   })
   traces?: TransactionTraceEntity[]
+
+  @OneToMany(type => ContractEntity, contract => contract.createdAtTx)
+  @JoinColumn({
+    name: 'hash',
+    referencedColumnName: 'traceCreatedAtTransactionHash',
+  })
+  contracts?: ContractEntity[]
 
 }

@@ -22,6 +22,7 @@ export class AccountInfo {
   public tokensOwned: number = 0
 
   public contracts: any[] = []
+  public totalContracts: number = 0
   public isCreator: boolean = false
 
   public type: string = ''

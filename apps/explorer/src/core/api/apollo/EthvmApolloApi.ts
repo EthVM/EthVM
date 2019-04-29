@@ -207,7 +207,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.contractByAddress)
   }
 
-  public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<Contract[]> {
+  public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<{ items: Contract[]; totalCount: number }> {
     return this.apollo
       .query({
         query: contractsCreatedBy,
@@ -217,7 +217,17 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.contractsCreatedBy)
+      .then(res => {
+        const { contractsCreatedBy } = res.data as any
+        contractsCreatedBy.items = contractsCreatedBy.items.map(contract => {
+          // TODO work out why this check is necessary and remove it if possible
+          if (contract.tx && !(contract.tx instanceof SimpleTx)) {
+            contract.tx = new SimpleTx(contract.tx)
+          }
+          return contract
+        })
+        return contractsCreatedBy
+      })
   }
 
   // ------------------------------------------------------------------------------------
