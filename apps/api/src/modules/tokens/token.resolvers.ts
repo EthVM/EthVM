@@ -70,4 +70,9 @@ export class TokenResolvers {
     const holdersCount = await this.tokenService.countTokenHolders(address)
     return new TokenExchangeRateDto({ ...tokenExchangeRate, owner: contract ? contract.creator : null, holdersCount })
   }
+
+  @Query()
+  async tokensMetadata(@Args('symbols') symbols: string[]) {
+    return await this.tokenService.findTokensMetadata(symbols)
+  }
 }

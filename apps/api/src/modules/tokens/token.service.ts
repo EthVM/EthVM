@@ -3,10 +3,12 @@ import { CoinExchangeRateEntity } from '@app/orm/entities/coin-exchange-rate.ent
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
+import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
+import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FindManyOptions, Repository, FindOneOptions } from 'typeorm'
+import { FindManyOptions, Repository, FindOneOptions, Any } from 'typeorm'
 
 @Injectable()
 export class TokenService {
@@ -15,6 +17,10 @@ export class TokenService {
     private readonly erc20BalanceRepository: Repository<Erc20BalanceEntity>,
     @InjectRepository(Erc721BalanceEntity)
     private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
+    @InjectRepository(Erc20MetadataEntity)
+    private readonly erc20MetadataRepository: Repository<Erc20MetadataEntity>,
+    @InjectRepository(Erc721MetadataEntity)
+    private readonly erc721MetadataRepository: Repository<Erc721MetadataEntity>,
     @InjectRepository(TokenExchangeRateEntity)
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
     @InjectRepository(ContractEntity)
@@ -71,6 +77,10 @@ export class TokenService {
       tokenData.currentPrice = tokenExchangeRate.currentPrice
     }
     return new TokenDto(tokenData)
+  }
+
+  private constructTokenMetaDto(entity: Erc20MetadataEntity | Erc721MetadataEntity): TokenDto {
+    return new TokenDto(entity)
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
@@ -138,5 +148,25 @@ export class TokenService {
     const numErc20Tokens = await this.erc20BalanceRepository.count({ where: { address } })
     const numErc721Tokens = await this.erc721BalanceRepository.count({ where: { address } })
     return numErc20Tokens + numErc721Tokens
+  }
+
+  async findTokensMetadata(symbols: string[]): Promise<TokenDto[]> {
+    const findOptions = {
+      symbol: Any(symbols)
+    }
+    const erc20Tokens = await this.erc20MetadataRepository.find(findOptions)
+    const erc721Tokens = await this.erc721MetadataRepository.find(findOptions)
+
+    const tokenDtos: TokenDto[] = []
+
+    erc20Tokens.forEach(entity => {
+      tokenDtos.push(this.constructTokenMetaDto(entity))
+    })
+
+    erc721Tokens.forEach(entity => {
+      tokenDtos.push(this.constructTokenMetaDto(entity))
+    })
+
+    return tokenDtos
   }
 }
