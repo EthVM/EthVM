@@ -46,7 +46,7 @@ class CanonicalChainTracker(
         .subscribe(
           { heads ->
 
-            val newHead = heads.max()!! + 1L
+            head = heads.max()!! + 1L
             val tail = heads.min()!!
 
             logger.debug { "New head notification! - Tail: $tail - Head: $head" }
