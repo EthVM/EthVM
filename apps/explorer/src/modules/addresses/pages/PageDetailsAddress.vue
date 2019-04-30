@@ -83,7 +83,6 @@
           :total-blocks="account.totalMinedBlocks"
           :max-items="max"
           :page="minedPage"
-          :simple-pagination="true"
           :error="minerBlocksError"
           @getBlockPage="setMinedPage"
         />
@@ -275,9 +274,9 @@ export default class PageDetailsAddress extends Vue {
               // this.pendingTxsLoading = false
 
               // Mined Blocks
-              this.account.minedBlocks = res[1] || [] // res[2] || []
-              //Get Total mined Blocks by address
-              //this.account.totalMinedBlocks =
+              const minedBlocksPage = res[1]
+              this.account.minedBlocks = minedBlocksPage ? minedBlocksPage.items : []
+              this.account.totalMinedBlocks = minedBlocksPage ? minedBlocksPage.totalCount : 0
               this.minerBlocksLoading = false
 
               // Contract Creator
@@ -357,7 +356,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 
-  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<SimpleBlock[]> {
+  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<{items: SimpleBlock[], totalCount: number}> {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 
@@ -401,7 +400,8 @@ export default class PageDetailsAddress extends Vue {
   updateMined(): void {
     this.fetchMinedBlocks().then(
       res => {
-        this.account.minedBlocks = res
+        this.account.minedBlocks = res.items
+        this.account.totalMinedBlocks = res.totalCount
         this.minerBlocksLoading = false
       },
       err => {

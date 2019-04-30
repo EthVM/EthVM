@@ -40,7 +40,6 @@ import {
   BlockMetrics,
   Contract,
   PendingTx,
-  Quote,
   SimpleBlock,
   SimpleTx,
   Statistic,
@@ -143,7 +142,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => new Block(res.data.blockByNumber))
   }
 
-  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]> {
+  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{items: SimpleBlock[], totalCount: number}> {
     return this.apollo
       .query({
         query: minedBlocksByAddress,
@@ -153,7 +152,13 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.minedBlocksByAddress.map(raw => new SimpleBlock(raw)))
+      .then(res => {
+        const { minedBlocksByAddress } = res.data
+        return {
+          items: minedBlocksByAddress.items.map(raw => new SimpleBlock(raw)),
+          totalCount: minedBlocksByAddress.totalCount
+        }
+      })
   }
 
   public getTotalNumberOfBlocks(): Promise<number> {

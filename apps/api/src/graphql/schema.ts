@@ -147,6 +147,11 @@ export class BlockMetrics {
     sumNumInternalTxs?: string;
 }
 
+export class BlocksPage {
+    items?: Block[];
+    totalCount?: number;
+}
+
 export class CoinExchangeRate {
     currency?: string;
     price?: Decimal;
@@ -235,7 +240,7 @@ export abstract class IQuery {
 
     abstract blockByNumber(number?: number): Block | Promise<Block>;
 
-    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
+    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
 
