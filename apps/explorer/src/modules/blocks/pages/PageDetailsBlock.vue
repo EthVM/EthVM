@@ -47,8 +47,8 @@
 import { Block, Uncle, SimpleTx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
+import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { BlockInfo } from '@app/modules/blocks/props'
 import { Detail, Crumb } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
@@ -59,9 +59,9 @@ const MAX_TXS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    TableTxs,
     AppDetailsList,
-    BlockDetailsTitle
+    BlockDetailsTitle,
+    TableTxs
   }
 })
 export default class PageDetailsBlock extends Vue {

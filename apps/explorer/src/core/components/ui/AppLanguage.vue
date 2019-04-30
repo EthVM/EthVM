@@ -21,6 +21,7 @@ export default class AppLanguage extends Vue {
 
   items = [{ _id: 'en_US', name: 'English' }, { _id: 'ru_RU', name: 'Russian' }]
   language = 'en_US'
+  loaded = ['en_US']
 
   /*
   ===================================================================================
@@ -30,8 +31,8 @@ export default class AppLanguage extends Vue {
 
   mounted() {
     if (this.appLang && this.isLang(this.appLang)) {
-      this.$i18n.locale = this.appLang
       this.language = this.appLang
+      this.changeLocale()
     }
   }
   /*
@@ -51,6 +52,24 @@ export default class AppLanguage extends Vue {
   */
 
   changeLocale(): void {
+    if (this.$i18n.locale !== this.language) {
+      if (!this.loaded.includes(this.language)) {
+        import(/* webpackChunkName: "lang-[request]" */ `@app/translations/${this.language}.json`)
+          .then(msgs => {
+            this.$i18n.setLocaleMessage(this.language, msgs.default)
+            this.loaded.push(this.language)
+            this.setLang()
+          })
+          .catch(err => {
+            throw err
+          })
+      } else {
+        this.setLang()
+      }
+    }
+  }
+
+  setLang(): void {
     this.$i18n.locale = this.language
     storePack.set('language', this.language)
     window.scrollTo(0, 0)

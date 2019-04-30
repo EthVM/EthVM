@@ -6,10 +6,10 @@
 
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
-import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import BN from 'bignumber.js'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component({
   components: {

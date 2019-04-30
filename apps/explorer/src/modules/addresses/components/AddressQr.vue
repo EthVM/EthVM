@@ -18,8 +18,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
 import VueQr from 'vue-qr'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {

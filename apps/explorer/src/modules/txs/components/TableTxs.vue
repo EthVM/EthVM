@@ -130,8 +130,8 @@ import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'
-import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {

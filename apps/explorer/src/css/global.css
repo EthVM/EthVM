@@ -27,6 +27,13 @@ a:link {
   font-family: 'Roboto Mono', sans-serif;
 }
 
+
+
+p {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
 /* SEARCH COMPONENT: */
 
 .search-button {

@@ -98,8 +98,8 @@ import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import { ChartTypes } from '@app/modules/charts/helpers'
-import { Vue, Component } from 'vue-property-decorator'
 import { Tab, Crumb } from '@app/core/components/props'
+import { Vue, Component } from 'vue-property-decorator'
 
 @Component({
   components: {

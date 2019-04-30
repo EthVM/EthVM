@@ -25,7 +25,7 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import { Crumb } from '@app/core/components/props'
 import { Component, Vue } from 'vue-property-decorator'
-import KnowledgeBase from '@app/translations'
+
 @Component({
   components: {
     AppBreadCrumbs

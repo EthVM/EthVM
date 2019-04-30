@@ -15,8 +15,8 @@
 import { Events } from '@app/core/hub'
 import { BlockMetrics } from '@app/core/models'
 import Chart from '@app/modules/charts/components/Chart.vue'
-import { Vue, Component } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
+import { Vue, Component } from 'vue-property-decorator'
 
 const MAX_ITEMS = 10
 

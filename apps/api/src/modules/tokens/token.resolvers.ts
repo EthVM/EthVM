@@ -6,6 +6,7 @@ import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { TokenHolderDto } from '@app/modules/tokens/dto/token-holder.dto'
 import { TokenExchangeRateDto } from '@app/modules/tokens/dto/token-exchange-rate.dto'
 import { TokenMetadataDto } from '@app/modules/tokens/dto/token-metadata.dto'
+import { TokensMetadataArgs } from '@app/modules/tokens/args/tokens-metadata.args'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -73,7 +74,7 @@ export class TokenResolvers {
   }
 
   @Query()
-  async tokensMetadata(@Args('symbols') symbols: string[]): Promise<TokenMetadataDto[]> {
+  async tokensMetadata(@Args() {symbols}: TokensMetadataArgs): Promise<TokenMetadataDto[]> {
     return await this.tokenService.findTokensMetadata(symbols)
   }
 }
