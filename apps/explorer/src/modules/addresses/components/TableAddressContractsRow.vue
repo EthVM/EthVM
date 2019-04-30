@@ -8,28 +8,29 @@
       -->
       <v-flex xs12 hidden-sm-and-up>
         <div class="table-row-mobile">
-        <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
-          <v-flex xs12 pb-1>
-             <app-time-ago :timestamp="contract.tx.getTimestamp()" />
-          </v-flex>
-          <v-flex xs12>
-            <v-layout grid-list-xs row align-center justify-start fill-height class="pl-2 pr-2 pt-1 pb-1">
-              <p class="info--text tx-hash "> {{$tc('contract.name', 1)}}: </p>
-              <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" :italic="true"/>
-            </v-layout>
-          </v-flex>
-          <v-flex xs12>
-            <v-layout grid-list-xs row align-center justify-start fill-height class="pl-2 pr-2 pt-1 pb-1">
-              <p class="info--text tx-hash"> {{ $t('contract.created') }} {{ $tc('tx.hash', 1)}}: </p>
-              <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true"/>
-            </v-layout>
-          </v-flex>
-          <v-flex xs12 pt-1>
-            <p class="info--text tx-hash"> {{ $t('tx.cost') }}:
-              <span class="black--text">{{ getTxFee(contract.tx) }}</span>
-            </p>
-          </v-flex>
-        </v-layout>
+          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
+            <v-flex xs12 pb-1>
+              <app-time-ago :timestamp="contract.tx.getTimestamp()" />
+            </v-flex>
+            <v-flex xs12>
+              <v-layout grid-list-xs row align-center justify-start fill-height class="pl-2 pr-2 pt-1 pb-1">
+                <p class="info--text tx-hash ">{{ $tc('contract.name', 1) }}:</p>
+                <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" :italic="true" />
+              </v-layout>
+            </v-flex>
+            <v-flex xs12>
+              <v-layout grid-list-xs row align-center justify-start fill-height class="pl-2 pr-2 pt-1 pb-1">
+                <p class="info--text tx-hash">{{ $t('contract.created') }} {{ $tc('tx.hash', 1) }}:</p>
+                <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true" />
+              </v-layout>
+            </v-flex>
+            <v-flex xs12 pt-1>
+              <p class="info--text tx-hash">
+                {{ $t('tx.cost') }}:
+                <span class="black--text">{{ getTxFee(contract.tx) }}</span>
+              </p>
+            </v-flex>
+          </v-layout>
         </div>
       </v-flex>
       <!--
@@ -38,24 +39,24 @@
       =====================================================================================
       -->
       <v-flex hidden-xs-only>
-      <v-layout grid-list-lg row wrap align-center justify-start fill-height pa-3>
-        <v-flex sm4 class="pr-5">
-          <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" :italic="true"/>
-        </v-flex>
-        <v-flex sm4>
-          <v-layout row  class="pl-1 pr-5">
-            <p class="info--text tx-hash pl-2">{{ $tc('tx.hash', 1)}}: </p>
-            <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true"/>
-          </v-layout>
-        </v-flex>
-        <v-flex sm2>
-          <app-time-ago :timestamp="contract.tx.getTimestamp()" />
-        </v-flex>
-        <v-flex sm2>
-         {{ getTxFee(contract.tx) }}
-        </v-flex>
-    </v-layout>
-    <v-divider />
+        <v-layout grid-list-lg row wrap align-center justify-start fill-height pa-3>
+          <v-flex sm4 class="pr-5">
+            <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" :italic="true" />
+          </v-flex>
+          <v-flex sm4>
+            <v-layout row class="pl-1 pr-5">
+              <p class="info--text tx-hash pl-2">{{ $tc('tx.hash', 1) }}:</p>
+              <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true" />
+            </v-layout>
+          </v-flex>
+          <v-flex sm2>
+            <app-time-ago :timestamp="contract.tx.getTimestamp()" />
+          </v-flex>
+          <v-flex sm2>
+            {{ getTxFee(contract.tx) }}
+          </v-flex>
+        </v-layout>
+        <v-divider />
       </v-flex>
     </v-layout>
   </v-container>

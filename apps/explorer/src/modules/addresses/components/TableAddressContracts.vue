@@ -8,28 +8,18 @@
     <div v-if="!hasError">
       <v-layout justify-space-between align-center row wrap class="pr-2 pl-2">
         <v-flex v-if="loading" xs12>
-          <v-progress-linear color="blue" indeterminate/>
+          <v-progress-linear color="blue" indeterminate />
         </v-flex>
         <v-flex xs12 sm6>
           <p class="info--text mb-0 pl-2">
             {{ $t('contract.total') }}:
-            <span
-              v-if="!loading"
-              class="black--text"
-            >{{ totalContracts }}</span>
-            <span
-              v-else
-              class="table-row-loading"
-            />
+            <span v-if="!loading" class="black--text">{{ totalContracts }}</span>
+            <span v-else class="table-row-loading" />
             {{ contractString }}
           </p>
         </v-flex>
         <v-flex v-if="!loading && totalPages > 1" xs12 sm6>
-          <app-paginate
-            :total="totalPages"
-            :current-page="page"
-            @newPage="setPage"
-          />
+          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
         </v-flex>
         <!--
         =====================================================================================
@@ -63,15 +53,7 @@
       <div v-if="loading">
         <v-flex sm12 hidden-xs-only>
           <div v-for="i in maxItems" :key="i">
-            <v-layout
-              grid-list-xs
-              row
-              wrap
-              align-center
-              justify-start
-              fill-height
-              class="pl-2 pr-2 pt-2"
-            >
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
               <v-flex sm4>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
@@ -85,33 +67,25 @@
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
             </v-layout>
-            <v-divider class="mb-2 mt-2"/>
+            <v-divider class="mb-2 mt-2" />
           </div>
         </v-flex>
         <v-flex xs12 hidden-sm-and-up>
           <div class="table-row-mobile ma-1" v-for="i in maxItems" :key="i">
-            <v-layout
-              grid-list-xs
-              row
-              wrap
-              align-center
-              justify-start
-              fill-height
-              class="pa-2 "
-            >
-            <v-flex xs4>
-              <div class="table-row-loading"></div>
-            </v-flex>
-            <v-flex xs12>
-              <div class="table-row-loading"></div>
-            </v-flex>
-            <v-flex xs12>
-              <div class="table-row-loading"></div>
-            </v-flex>
-            <v-flex xs4>
-              <div class="table-row-loading"></div>
-            </v-flex>
-          </v-layout>
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pa-2 ">
+              <v-flex xs4>
+                <div class="table-row-loading"></div>
+              </v-flex>
+              <v-flex xs12>
+                <div class="table-row-loading"></div>
+              </v-flex>
+              <v-flex xs12>
+                <div class="table-row-loading"></div>
+              </v-flex>
+              <v-flex xs4>
+                <div class="table-row-loading"></div>
+              </v-flex>
+            </v-layout>
           </div>
         </v-flex>
       </div>
@@ -126,10 +100,10 @@
           <v-card-text class="text-xs-center secondary--text">No Contracts</v-card-text>
         </v-card>
         <div v-if="contracts.length > 0">
-          <table-address-contracts-row v-for="(contract, index) in contracts" :key="index" :contract="contract"/>
+          <table-address-contracts-row v-for="(contract, index) in contracts" :key="index" :contract="contract" />
         </div>
         <v-layout v-if="totalPages > 1" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage"/>
+          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
         </v-layout>
       </div>
     </div>
@@ -138,7 +112,7 @@
       hasError
     =====================================================================================
     -->
-    <app-error v-else :has-error="hasError" :message="error"/>
+    <app-error v-else :has-error="hasError" :message="error" />
   </v-card>
 </template>
 
@@ -231,5 +205,4 @@ export default class TableAddressContracts extends Vue {
   height: 12px;
   border-radius: 2px;
 }
-
 </style>
