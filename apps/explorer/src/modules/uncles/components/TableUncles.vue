@@ -11,7 +11,7 @@
       </v-flex>
       <v-flex xs6 v-if="pages > 1">
         <v-layout justify-end class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
