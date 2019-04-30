@@ -10,7 +10,6 @@ import {
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer,
   Transfer,
   Tx,
   Uncle, TokenHolder
@@ -56,7 +55,13 @@ export interface EthvmApi {
   // Tokens
   getTokenHolders(address: string, limit?: number, page?: number): Promise<{items: TokenHolder[], totalCount: number}>
   getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
-  getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter?: string, limit?: number, page?: number): Promise<TokenTransfer[]>
+  getTokenTransfersByContractAddressForHolder(
+    address: string,
+    holder: string,
+    filter?: string,
+    limit?: number,
+    page?: number
+  ): Promise<{ items: Transfer[], totalCount: number }>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>

@@ -1,6 +1,6 @@
 type Query {
   tokenTransfersByContractAddress(contractAddress: String!, limit: Int, page: Int): TransfersPage
-  tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum, limit: Int, page: Int): [Transfer]
+  tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum, limit: Int, page: Int): TransfersPage
   internalTransactionsByAddress(address: String!, limit: Int, page: Int): TransfersPage
 }
 

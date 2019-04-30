@@ -45,7 +45,6 @@ import {
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer,
   Transfer,
   Tx,
   Uncle,
@@ -55,7 +54,8 @@ import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) {}
+  constructor(private readonly apollo: ApolloClient<{}>) {
+  }
 
   // ------------------------------------------------------------------------------------
   // Address
@@ -98,7 +98,7 @@ export class EthvmApolloApi implements EthvmApi {
     return this.apollo
       .query({
         query: internalTransactionsByAddress,
-        variables: { address, limit, page }
+        variables: {address, limit, page}
       })
       .then(res => res.data.internalTransactionsByAddress)
   }
@@ -142,7 +142,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => new Block(res.data.blockByNumber))
   }
 
-  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{items: SimpleBlock[], totalCount: number}> {
+  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[], totalCount: number }> {
     return this.apollo
       .query({
         query: minedBlocksByAddress,
@@ -153,7 +153,7 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => {
-        const { minedBlocksByAddress } = res.data
+        const {minedBlocksByAddress} = res.data
         return {
           items: minedBlocksByAddress.items.map(raw => new SimpleBlock(raw)),
           totalCount: minedBlocksByAddress.totalCount
@@ -223,7 +223,7 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => {
-        const { contractsCreatedBy } = res.data as any
+        const {contractsCreatedBy} = res.data as any
         contractsCreatedBy.items = contractsCreatedBy.items.map(contract => {
           // TODO work out why this check is necessary and remove it if possible
           if (contract.tx && !(contract.tx instanceof SimpleTx)) {
@@ -329,7 +329,7 @@ export class EthvmApolloApi implements EthvmApi {
   // Tokens
   // ------------------------------------------------------------------------------------
 
-  public getTokenHolders(address: string, limit?: number, page?: number): Promise<{items: TokenHolder[], totalCount: number}> {
+  public getTokenHolders(address: string, limit?: number, page?: number): Promise<{ items: TokenHolder[], totalCount: number }> {
     return this.apollo
       .query({
         query: tokenHolders,
@@ -355,7 +355,13 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenTransfersByContractAddress)
   }
 
-  public getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
+  public getTokenTransfersByContractAddressForHolder(
+    address: string,
+    holder: string,
+    filter: string,
+    limit: number,
+    page: number
+  ): Promise<{ items: Transfer[], totalCount: number }> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddressForHolder,
@@ -367,7 +373,7 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.tokenTransfersByContractAddressForHolder)
+      .then(res => res.data.tokenTransfersByContractAddress)
   }
 
   // ------------------------------------------------------------------------------------

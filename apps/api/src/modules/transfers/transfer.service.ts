@@ -30,7 +30,7 @@ export class TransferService {
     filter: string = 'all',
     take: number = 10,
     page: number = 0,
-  ): Promise<FungibleBalanceTransferEntity[]> {
+  ): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
 
     const builder = this.transferRepository.createQueryBuilder('t')
@@ -58,7 +58,7 @@ export class TransferService {
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(skip)
       .take(take)
-      .getMany()
+      .getManyAndCount()
 
   }
 
