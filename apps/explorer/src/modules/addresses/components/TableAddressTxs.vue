@@ -36,7 +36,7 @@
           <v-spacer />
           <v-flex xs12 sm7 md6>
             <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-              <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
+              <app-paginate :total="pages" @newPage="setPage" :current-page="page"/>
             </v-layout>
           </v-flex>
         </v-layout>
