@@ -86,7 +86,8 @@
 
   "contract": {
     "name": "Contract | Contracts",
-    "creator": "Contract Creator"
+    "creator": "Contract Creator",
+    "hash": "Contract #"
   },
 
   "gas": {
@@ -546,6 +547,7 @@
     "internal": "Internal Transfers",
     "INTERNAL_TX": "call",
     "CONTRACT_CREATION": "create",
-    "CONTRACT_DESTRUCTION": "destroy"
+    "CONTRACT_DESTRUCTION": "destroy",
+    "empty": "No transfers"
   }
 }

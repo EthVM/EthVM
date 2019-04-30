@@ -40,7 +40,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   traefik:
-    image: ethvm/traefik:0.1.4
+    image: ethvm/traefik:0.1.5
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -52,8 +52,9 @@ services:
       - 8080:8080
     environment:
       DEBUG: 'true'
-      LETS_ENCRYPT_ENABLED:
+      LETS_ENCRYPT_ENABLED: 'false'
       SWARM_MODE: 'false'
+      TRAEFIK_DASHBOARD_ENABLED: 'true'
 
   explorer:
     build:
@@ -100,7 +101,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: parity/parity:v2.3.3
+    image: ethvm/parity:v2.3.3
     networks:
       - back
     volumes:
@@ -109,7 +110,11 @@ services:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    # By default we have enabled a private ethereum network (amarok) to be used in development
+    # If you want, also there's the option to use ropsten or even mainnet to test with real networks.
+    # Just uncomment below line:
+    # command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    command: --config /home/parity/chains/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
 
   # ///////////////////////////////////////////////////////
   # Storage

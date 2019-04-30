@@ -90,42 +90,40 @@
       </v-tab-item>
       <!--
       =====================================================================================
-        CONTRACT CREATOR TAB (not implemented yet)
+        CONTRACT CREATOR TAB
       =====================================================================================
       -->
-      <!-- <v-tab-item v-if="account.conCreator" value="tab-4">
-      <v-card>
-        <ul>
-          <li>Name:</li>
-          <li>TWN</li>
-          <li>Balance:</li>
-          <li>20,930 TWN</li>
-          <li>Value:</li>
-          <li>$0.00</li>
-          <li>ERC 20 Contract:</li>
-          <li>0x045619099665fc6f661b1745e5350290ceb933f</li>
-        </ul>
-      </v-card>
-      </v-tab-item>-->
+      <v-tab-item slot="tabs-item" v-if="account.isCreator" value="tab-4">
+        <table-address-contracts
+          :contracts="account.contracts"
+          :total-contracts="account.totalContracts"
+          :page="contractsPage"
+          :loading="contractsLoading"
+          :error="contractsError"
+          @page="setContractsPage"
+        />
+      </v-tab-item>
     </app-tabs>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Block, Contract, EthValue, SimpleTx, PendingTx, SimpleBlock, Transfer } from '@app/core/models'
-import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
+import { Contract, EthValue, PendingTx, SimpleBlock, SimpleTx, Transfer } from '@app/core/models'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
 import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import { eth, TinySM, State } from '@app/core/helper'
+import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { eth, TinySM } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Crumb, Tab } from '@app/core/components/props'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
+import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 
 const MAX_ITEMS = 10
 
@@ -134,14 +132,16 @@ const CONTRACT_DETAIL_TYPE = 'contract'
 
 @Component({
   components: {
-    AddressDetail,
+    TokenTableTransfers,
+    AppInfoLoad,
     AppBreadCrumbs,
     AppError,
-    AppInfoLoad,
     AppTabs,
-    TableAddressTokens,
+    AddressDetail,
     TableAddressTxs,
-    TableBlocks
+    TableBlocks,
+    TableAddressTokens,
+    TableAddressContracts
   }
 })
 export default class PageDetailsAddress extends Vue {
@@ -192,6 +192,7 @@ export default class PageDetailsAddress extends Vue {
   /* Contracts: */
   contractsLoading = true
   contractsError = ''
+  contractsPage = 0
 
   // State Machine
   sm!: TinySM
@@ -257,9 +258,7 @@ export default class PageDetailsAddress extends Vue {
           // TODO: Re-enable whenever pending tx calls available
           // const addressPendingTxs = this.fetchPendingTxs()
           const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
-          // TODO: Re-enable whenever contract creator functionality is finished
-          const contractsCreated = Promise.resolve([]) // this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
-
+          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
           const internalTransfers = this.fetchTransfers()
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
@@ -283,7 +282,10 @@ export default class PageDetailsAddress extends Vue {
               this.minerBlocksLoading = false
 
               // Contract Creator
-              this.account.contracts = res[2] || [] // res[3] || []
+              const contractsPage = res[2]
+              this.account.contracts = contractsPage ? contractsPage.items : []
+              this.account.totalContracts = contractsPage ? contractsPage.totalCount : 0
+              this.contractsLoading = false
 
               // Internal transfers
               const transfersPage = res[3]
@@ -360,8 +362,8 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 
-  fetchContractsCreated(page = 0, limit = MAX_ITEMS): Promise<Contract[]> {
-    return this.$api.getContractsCreatedBy(this.addressRef, limit, page)
+  fetchContractsCreated(limit = MAX_ITEMS): Promise<{ items: Contract[]; totalCount: number }> {
+    return this.$api.getContractsCreatedBy(this.addressRef, limit, this.contractsPage)
   }
 
   setFilterTxs(filter: string, page: number): void {
@@ -378,6 +380,11 @@ export default class PageDetailsAddress extends Vue {
   setPageTransfers(page: number): void {
     this.transfersPage = page
     this.transfersLoading = true
+  }
+
+  setContractsPage(page: number): void {
+    this.contractsLoading = true
+    this.contractsPage = page
   }
 
   updateTxs(): void {
@@ -417,6 +424,19 @@ export default class PageDetailsAddress extends Vue {
     )
   }
 
+  updateContracts(): void {
+    this.fetchContractsCreated().then(
+      (res: { items: Contract[]; totalCount: number }) => {
+        this.account.contracts = res.items
+        this.account.totalContracts = res.totalCount
+        this.contractsLoading = false
+      },
+      err => {
+        this.contractsError = this.$i18n.t('message.no-data').toString()
+      }
+    )
+  }
+
   /*
   ===================================================================================
     Watch
@@ -442,9 +462,12 @@ export default class PageDetailsAddress extends Vue {
 
   @Watch('transfersPage')
   onTransfersPageChanges(newVal: number, oldVal: number): void {
-    if (newVal) {
-      this.updateTransfers()
-    }
+    this.updateTransfers()
+  }
+
+  @Watch('contractsPage')
+  onContractsPageChanges(newVal: number, oldVal: number): void {
+    this.updateContracts()
   }
 
   /*

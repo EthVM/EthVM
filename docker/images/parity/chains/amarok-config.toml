@@ -1,5 +1,5 @@
 [parity]
-chain = "/home/configs/chain-specs.json"
+chain = "/home/parity/chains/amarok-chain-specs.json"
 base_path = "/home/parity"
 
 [network]

@@ -15,7 +15,7 @@ ENV TIMESCALE_URL jdbc:postgresql://timescale:5432/ethvm_dev?user=postgres&passw
 
 LABEL name="kafka" version=${KAFKA_VERSION}
 
-RUN apk add --no-cache openjdk8-jre bash coreutils su-exec openssl jq curl
+RUN apk add --no-cache openjdk8-jre bash coreutils su-exec openssl jq curl git
 
 # Install dockerize
 
@@ -36,7 +36,7 @@ RUN apk add --no-cache -t .build-deps curl ca-certificates jq \
 
 COPY opt/ethvm /opt/ethvm
 
-# seutup path
+# setup path
 
 ENV PATH /sbin:/opt/kafka/bin/:/opt/ethvm/bin/:$PATH
 

@@ -26,7 +26,10 @@
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="(tx, index) in transfers" class="transparent" flat :key="index">
+    <v-card v-if="totalTransfers === 0" flat>
+      <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
+    </v-card>
+    <v-card v-else color="white" v-for="(tx, index) in transfers" class="transparent" flat :key="index">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>

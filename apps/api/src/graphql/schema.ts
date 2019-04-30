@@ -178,6 +178,7 @@ export class Contract {
     traceDestroyedAt?: Buffer;
     metadata?: ContractMetadata;
     totalSupply?: string;
+    createdAtTx?: Transaction;
 }
 
 export class ContractLogo {
@@ -213,6 +214,11 @@ export class ContractSocial {
     youtube?: string;
 }
 
+export class ContractsPage {
+    items?: Contract[];
+    totalCount?: number;
+}
+
 export class ContractSupport {
     email?: string;
     url?: string;
@@ -235,7 +241,7 @@ export abstract class IQuery {
 
     abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
 
     abstract search(query: string): Search | Promise<Search>;
 
@@ -256,6 +262,8 @@ export abstract class IQuery {
     abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+
+    abstract tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
 
     abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
@@ -355,6 +363,16 @@ export class TokenExchangeRate {
 export class TokenHolder {
     address?: string;
     balance?: string;
+}
+
+export class TokenMetadata {
+    name?: string;
+    website?: string;
+    email?: string;
+    symbol?: string;
+    address?: string;
+    decimals?: number;
+    logo?: string;
 }
 
 export class Trace {

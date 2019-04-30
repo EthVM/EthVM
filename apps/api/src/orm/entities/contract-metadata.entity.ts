@@ -1,6 +1,8 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
+import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
+import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 
 @Entity('eth_list_contract_metadata')
 export class ContractMetadataEntity {
@@ -45,5 +47,19 @@ export class ContractMetadataEntity {
     referencedColumnName: 'address',
   })
   contract?: ContractEntity
+
+  @OneToOne(type => Erc20MetadataEntity, erc20 => erc20.contractMetadata)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'address',
+  })
+  erc20Metadata?: Erc20MetadataEntity
+
+  @OneToOne(type => Erc721MetadataEntity, erc721 => erc721.contractMetadata)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'address',
+  })
+  erc721Metadata?: Erc721MetadataEntity
 
 }

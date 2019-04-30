@@ -1,6 +1,11 @@
 type Query {
   contractByAddress(address: String!): Contract
-  contractsCreatedBy(creator: String!, limit: Int, page: Int): [Contract]
+  contractsCreatedBy(creator: String!, limit: Int, page: Int): ContractsPage
+}
+
+type ContractsPage {
+  items: [Contract]
+  totalCount: Int
 }
 
 type Contract {
@@ -25,6 +30,7 @@ type Contract {
   traceDestroyedAt: Buffer
   metadata: ContractMetadata
   totalSupply: String
+  createdAtTx: Transaction
 }
 
 type ContractMetadata {
