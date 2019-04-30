@@ -3,7 +3,7 @@
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": 3,
-    "max.poll.records": 1000,
+    "max.poll.records": 3000,
     "topics": "fungible_balance_delta,non_fungible_balance_delta,block_metrics_header,block_metrics_transaction,block_metrics_transaction_trace,block_metrics_transaction_fee",
     "insert.mode": "insert",
     "pk.mode": "none",

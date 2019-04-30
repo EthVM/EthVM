@@ -78,7 +78,7 @@
       <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
         <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
           <v-flex xs12 v-if="!loading">
-            <v-card v-for="tx in transactions" class="transparent" flat :key="tx.hash">
+            <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
             <v-layout v-if="pageType !=='home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
@@ -170,7 +170,7 @@ import BigNumber from "bignumber.js";
 
           const items = Object.assign([], transactionSummaries.items)
           // add one at the beginning, remove one at the end
-          items.pop()
+
           items.unshift(new TransactionSummaryExt(newTransaction))
 
           // ensure order by block number desc and transaction index desc

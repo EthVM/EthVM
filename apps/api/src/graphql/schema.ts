@@ -157,11 +157,14 @@ export class BlockSummary {
     number?: BigNumber;
     hash?: string;
     author?: string;
+    numTxs?: BigNumber;
     numSuccessfulTxs?: BigNumber;
     numFailedTxs?: BigNumber;
     reward?: BigNumber;
     uncleHashes?: string[];
     transactionHashes?: string[];
+    difficulty?: BigNumber;
+    timestamp?: string;
 }
 
 export class BlockSummaryPage {
@@ -237,6 +240,8 @@ export abstract class IQuery {
     abstract blockMetricsByDay(duration: Duration, fields?: string[]): BlockMetrics[] | Promise<BlockMetrics[]>;
 
     abstract blockSummaries(offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
+
+    abstract hashRate(): BigNumber | Promise<BigNumber>;
 
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 
@@ -339,6 +344,8 @@ export class Search {
 
 export abstract class ISubscription {
     abstract newBlock(): BlockSummary | Promise<BlockSummary>;
+
+    abstract hashRate(): BigNumber | Promise<BigNumber>;
 
     abstract isSyncing(): boolean | Promise<boolean>;
 

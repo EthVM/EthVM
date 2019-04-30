@@ -119,6 +119,18 @@
             "deprecationReason": null
           },
           {
+            "name": "hashRate",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigNumber",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "blocks",
             "description": null,
             "args": [
@@ -1984,6 +1996,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "numTxs",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,
@@ -5105,6 +5129,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "BlockSummary",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "hashRate",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigNumber",
               "ofType": null
             },
             "isDeprecated": false,

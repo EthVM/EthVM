@@ -75,11 +75,30 @@
     <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
       <v-layout column v-scroll:#scroll-target class="mb-1">
         <v-flex v-if="!loading">
-          <div v-for="block in blocks" :key="block.hash">
+          <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType"/>
           </div>
         </v-flex>
 
+        <div xs12 v-if="loading">
+          <div v-for="i in maxItems" :key="i">
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
+              <v-flex xs6 sm2 order-xs1>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex xs12 sm7 md6>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+              <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
+                <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              </v-flex>
+            </v-layout>
+            <v-divider class="mb-2 mt-2" />
+          </div>
+        </div>
 
       </v-layout>
     </v-container>
@@ -157,8 +176,6 @@
             const {newBlock} = subscriptionData.data
 
             const items = Object.assign([], blockSummaries.items)
-            // add one at the beginning, remove one at the end
-            items.pop()
             items.unshift(new BlockSummaryExt(newBlock))
 
             // ensure order by block number desc

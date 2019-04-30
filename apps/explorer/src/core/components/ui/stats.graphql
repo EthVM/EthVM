@@ -1,0 +1,16 @@
+query latestBlockStats {
+
+  blockSummaries(limit: 1) {
+    items {
+      number
+      timestamp
+      difficulty
+      numSuccessfulTxs
+      numFailedTxs
+    }
+  }
+
+  hashRate
+
+}
+

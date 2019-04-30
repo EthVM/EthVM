@@ -1,26 +1,35 @@
-import { TransactionReceiptEntity } from "@app/orm/entities/transaction-receipt.entity";
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { In, Repository } from "typeorm";
-
+import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity'
+import {Injectable} from '@nestjs/common'
+import {InjectRepository} from '@nestjs/typeorm'
+import {FindManyOptions, In, Repository} from 'typeorm'
 
 
 @Injectable()
 export class ReceiptService {
 
-    constructor(
-        @InjectRepository(TransactionReceiptEntity) private readonly receiptRepository: Repository<TransactionReceiptEntity>,
-    ) { }
+  constructor(
+    @InjectRepository(TransactionReceiptEntity) private readonly receiptRepository: Repository<TransactionReceiptEntity>,
+  ) {
+  }
 
-    async findByBlockNumber(...blockNumbers: string[]): Promise<TransactionReceiptEntity[]> {
-        return this.receiptRepository.find({ where: { blockNumber: In(blockNumbers) } })
+  async findByBlockNumber(...blockNumbers: string[]): Promise<TransactionReceiptEntity[]> {
+    return this.receiptRepository.find({where: {blockNumber: In(blockNumbers)}})
+  }
+
+  async findByBlockHash(...blockHashes: string[]): Promise<TransactionReceiptEntity[]> {
+    return this.receiptRepository.find({where: {blockHash: In(blockHashes)}})
+  }
+
+  async findByTxHash(txHashes: string[], select: string[] = []): Promise<TransactionReceiptEntity[]> {
+
+    const options: FindManyOptions = {
+      where: {transactionHash: In(txHashes)},
     }
 
-    async findByBlockHash(...blockHashes: string[]): Promise<TransactionReceiptEntity[]> {
-        return this.receiptRepository.find({ where: { blockHash: In(blockHashes) } })
+    if(select.length > 0) {
+      options.select = select
     }
 
-    async findByTxHash(...txHashes: string[]): Promise<TransactionReceiptEntity[]> {
-        return this.receiptRepository.find({ where: { transactionHash: In(txHashes) } })
-    }
+    return this.receiptRepository.find(options)
+  }
 }

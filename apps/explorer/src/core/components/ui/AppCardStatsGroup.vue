@@ -34,12 +34,89 @@
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import { Events } from '@app/core/hub'
 import { Block, BlockMetrics } from '@app/core/models'
+import { latestBlockStats } from '@app/core/components/ui/stats.graphql'
 import BN from 'bignumber.js'
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import BigNumber from 'bignumber.js';
+
+class Stats {
+
+  lastNumber?: BigNumber
+  lastTimestamp?: number
+  lastDifficulty?: BigNumber
+  hashRate?: BigNumber
+  lastNumSuccessfulTxs?: BigNumber
+  lastNumFailedTxs?: BigNumber
+
+  constructor(
+    lastNumber?: string,
+    lastTimestamp?: string,
+    lastDifficulty?: string,
+    hashRate?: string,
+    lastNumSuccessfulTxs?: string,
+    lastNumFailedTxs?: string
+  ) {
+    if(lastNumber) this.lastNumber = new BigNumber(lastNumber, 16)
+    if(lastTimestamp) this.lastTimestamp = +lastTimestamp
+    if(lastDifficulty) this.lastDifficulty = new BigNumber(lastDifficulty, 16)
+    if(hashRate) this.hashRate = new BigNumber(hashRate, 16)
+    if(lastNumSuccessfulTxs) this.lastNumSuccessfulTxs = new BigNumber(lastNumSuccessfulTxs, 16)
+    if(lastNumFailedTxs) this.lastNumFailedTxs = new BigNumber(lastNumFailedTxs, 16)
+  }
+
+}
+
 
 @Component({
   components: {
     AppInfoCard
+  },
+  apollo: {
+
+    stats: {
+
+      query() {
+        return latestBlockStats
+      },
+
+      update({ blockSummaries, hashRate }) {
+        const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = blockSummaries.items[0]
+        return new Stats(number, timestamp, difficulty, hashRate, numSuccessfulTxs, numFailedTxs)
+      },
+
+      // subscribeToMore: {
+      //
+      //   document: newBlock,
+      //
+      //   updateQuery: (previousResult, {subscriptionData}) => {
+      //
+      //     const {blockSummaries} = previousResult
+      //     const {newBlock} = subscriptionData.data
+      //
+      //     const items = Object.assign([], blockSummaries.items)
+      //     items.unshift(new BlockSummaryExt(newBlock))
+      //
+      //     // ensure order by block number desc
+      //     items.sort((a, b) => {
+      //       const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
+      //       const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
+      //       return numberB.minus(numberA).toNumber()
+      //     })
+      //
+      //     return {
+      //       ...previousResult,
+      //       blockSummaries: {
+      //         ...blockSummaries,
+      //         items,
+      //       }
+      //     }
+      //   },
+      //
+      //   skip() {
+      //     return this.pageType !== 'home'
+      //   }
+      // }
+    }
   }
 })
 export default class AppInfoCardGroup extends Vue {
@@ -57,7 +134,7 @@ export default class AppInfoCardGroup extends Vue {
   ===================================================================================
   */
 
-  loading: boolean = true
+  stats: Stats = new Stats()
   blockMetric: BlockMetrics | null = null
   seconds: number = 0
   secondsInterval: number | null = null
@@ -69,11 +146,7 @@ export default class AppInfoCardGroup extends Vue {
   */
 
   created() {
-    const lastBlockMetric = this.$store.getters.blockMetrics.top()
-    if (lastBlockMetric) {
-      this.setBlockMetric(lastBlockMetric)
-      this.startCount()
-    }
+    this.startCount()
   }
 
   mounted() {
@@ -99,38 +172,10 @@ export default class AppInfoCardGroup extends Vue {
   ===================================================================================
   */
 
-  setBlockMetric(bm: BlockMetrics): void {
-    this.blockMetric = bm
-    this.loading = false
-  }
-
-  getAvgHashRate(bms: BlockMetrics[] = []): string {
-    if (!bms || bms.length === 0) {
-      return new BN(0).toString()
-    }
-
-    const avg = bms
-      .map(bm => new BN(bm.blockTime))
-      .reduceRight((acc, v) => acc.plus(v), new BN(0))
-      .dividedBy(bms.length)
-      .dividedBy(1000)
-
-    if (avg.isZero) {
-      return avg.toString()
-    }
-
-    const { difficulty } = bms[0]
-    return new BN(difficulty)
-      .dividedBy('1e12')
-      .dividedBy(avg)
-      .decimalPlaces(4)
-      .toString()
-  }
-
   startCount(): void {
     this.secondsInterval = window.setInterval(() => {
-      if (this.blockMetric) {
-        this.seconds = Math.ceil((new Date().getTime() - this.blockMetric.timestamp * 1000) / 1000)
+      if (this.stats) {
+        this.seconds = Math.ceil((new Date().getTime() - this.stats.lastTimestamp! * 1000) / 1000)
       }
     }, 1000)
   }
@@ -141,6 +186,10 @@ export default class AppInfoCardGroup extends Vue {
   ===================================================================================
   */
 
+  get loading(): boolean {
+    return this.$apollo.queries.stats.loading
+  }
+
   get currentType(): string {
     return this.type
   }
@@ -150,30 +199,23 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockNumber(): string {
-    return !this.loading && this.blockMetric ? this.blockMetric.number.toString() : this.loadingMessage
+    return !this.loading ? this.stats.lastNumber!.toString() : this.loadingMessage
   }
 
   get latestHashRate(): string {
-    return !this.loading ? this.getAvgHashRate(this.$store.getters.blockMetrics.items()) : this.loadingMessage
+    return !this.loading ? this.stats.hashRate!.div('1e12').decimalPlaces(4).toString() : this.loadingMessage
   }
 
   get latestDifficulty(): string {
-    if (!this.loading && this.blockMetric) {
-      const { difficulty } = this.blockMetric
-      return new BN(difficulty)
-        .dividedBy('1e12')
-        .decimalPlaces(4)
-        .toString()
-    }
-    return this.loadingMessage
+    return !this.loading ? this.stats.lastDifficulty!.div('1e12').decimalPlaces(4).toString() : this.loadingMessage
   }
 
   get latestBlockSuccessTxs(): string {
-    return !this.loading && this.blockMetric ? this.blockMetric.numSuccessfulTxs.toString() : this.loadingMessage
+    return !this.loading ? this.stats.lastNumSuccessfulTxs!.toString() : this.loadingMessage
   }
 
   get latestBlockFailedTxs(): string {
-    return !this.loading && this.blockMetric ? this.blockMetric.numFailedTxs.toString() : this.loadingMessage
+    return !this.loading ? this.stats.lastNumFailedTxs!.toString() : this.loadingMessage
   }
 
   get latestBlockPendingTxs(): string {

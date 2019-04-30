@@ -26,6 +26,7 @@ import com.ethvm.kafka.streams.Serdes.ReceiptList
 import com.ethvm.kafka.streams.Serdes.Trace
 import com.ethvm.kafka.streams.Serdes.TraceKey
 import com.ethvm.kafka.streams.Serdes.TraceList
+import com.ethvm.kafka.streams.Serdes.BlockTime
 import com.ethvm.kafka.streams.Serdes.Transaction
 import com.ethvm.kafka.streams.Serdes.TransactionFeeList
 import com.ethvm.kafka.streams.Serdes.TransactionGasPriceList
@@ -90,6 +91,7 @@ object Topics {
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKey(), NonFungibleBalance())
 
   val BlockTimestamp = KafkaTopic("block_timestamp", CanonicalKey(), BlockTimestamp())
+  val BlockTime = KafkaTopic("canonical_block_time", CanonicalKey(), BlockTime())
 
   val BlockMetricsHeader = KafkaTopic("block_metrics_header", CanonicalKey(), BlockMetricsHeader())
   val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", CanonicalKey(), BlockMetricsTransaction())

@@ -3,21 +3,8 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
 import com.ethvm.avro.capture.TraceDestroyActionRecord
-import com.ethvm.avro.processing.BlockMetricsHeaderRecord
-import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
-import com.ethvm.avro.processing.BlockMetricsTransactionRecord
-import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
-import com.ethvm.avro.processing.BlockTimestampRecord
-import com.ethvm.common.extensions.getBalanceBI
-import com.ethvm.common.extensions.getGasBI
-import com.ethvm.common.extensions.getGasPriceBI
-import com.ethvm.common.extensions.getTransactionFeeBI
-import com.ethvm.common.extensions.getValueBI
-import com.ethvm.common.extensions.setAvgGasLimitBI
-import com.ethvm.common.extensions.setAvgGasPriceBI
-import com.ethvm.common.extensions.setAvgTxFeesBI
-import com.ethvm.common.extensions.setTotalGasPriceBI
-import com.ethvm.common.extensions.setTotalTxFeesBI
+import com.ethvm.avro.processing.*
+import com.ethvm.common.extensions.*
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsHeader
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransaction
@@ -28,7 +15,6 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
-import com.ethvm.kafka.streams.transformers.BlockTimeTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -37,10 +23,9 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
-import org.apache.kafka.streams.kstream.TransformerSupplier
 import java.math.BigInteger
 import java.time.Duration
-import java.util.Properties
+import java.util.*
 
 class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
@@ -58,9 +43,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
   override fun buildTopology(): Topology {
 
     // Create stream builder
-    val builder = StreamsBuilder().apply {
-      addStateStore(BlockTimeTransformer.blockTimesStore(appConfig.unitTesting))
-    }
+    val builder = StreamsBuilder().apply {}
 
     val canonicalBlock = CanonicalBlockHeader.stream(builder)
 
@@ -73,10 +56,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
     //
 
-    canonicalBlock.transform(
-      TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting) },
-      *BlockTimeTransformer.STORE_NAMES
-    )
+    canonicalBlock
       .mapValues { header ->
         BlockMetricsHeaderRecord.newBuilder()
           .setBlockNumber(header.getNumber())
@@ -258,6 +238,14 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         Joined.with(Serdes.CanonicalKey(), Serdes.BlockMetricsTransactionFee(), Serdes.BlockTimestamp())
       )
       .toTopic(BlockMetricsTransactionFee)
+
+
+    //
+
+
+
+
+
 
     return builder.build()
   }

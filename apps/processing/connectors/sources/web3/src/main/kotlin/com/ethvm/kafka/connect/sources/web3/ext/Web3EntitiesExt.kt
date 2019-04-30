@@ -34,7 +34,7 @@ import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
-fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): BlockHeaderRecord.Builder =
+fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Long?): BlockHeaderRecord.Builder =
   builder
     .setNumberBI(number)
     .setHash(hash)
@@ -56,6 +56,7 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): Bloc
     .setGasLimitBI(gasLimit)
     .setGasUsedBI(gasUsed)
     .setTimestamp(timestamp.longValueExact())
+    .setBlockTime(blockTime)
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
 fun EthBlock.Block.toUncleRecord(index: Int, nephewHash: String, blockNumber: BigInteger, builder: UncleRecord.Builder): UncleRecord.Builder =

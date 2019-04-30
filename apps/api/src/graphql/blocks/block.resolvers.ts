@@ -1,17 +1,17 @@
-import {BlockService} from '@app/dao/block.service'
-import {BlockDto} from '@app/graphql/blocks/dto/block.dto'
-import {ParseAddressPipe} from '@app/shared/validation/parse-address.pipe'
-import {ParseHashPipe} from '@app/shared/validation/parse-hash.pipe'
-import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe'
-import {Inject} from '@nestjs/common'
-import {Args, Query, Resolver, Subscription, SubscriptionOptions} from '@nestjs/graphql'
-import {PubSub} from 'graphql-subscriptions'
-
-import {BlockSummaryDto} from './dto/block-summary.dto'
+import { BlockService } from '@app/dao/block.service';
+import { BlockDto } from '@app/graphql/blocks/dto/block.dto';
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe';
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe';
+import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe.1';
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe';
+import {Inject, ParseIntPipe} from '@nestjs/common';
+import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
+import {BlockSummary} from '../schema';
+import { BlockSummaryDto } from './dto/block-summary.dto';
+import BigNumber from "bignumber.js";
 import {BlocksPageDto} from '@app/graphql/blocks/dto/blocks-page.dto'
-import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
 import {BlockSummaryPageDto} from './dto/block-summary-page.dto'
-import {BlockSummary} from '@app/graphql/schema'
 
 @Resolver('Block')
 export class BlockResolvers {
@@ -68,7 +68,12 @@ export class BlockResolvers {
 
   @Query()
   async totalNumberOfBlocks() {
-    return await this.blockService.findTotalNumberOfBlocks()
+    return this.blockService.findTotalNumberOfBlocks()
+  }
+
+  @Query('hashRate')
+  async queryHashRate(): Promise<BigNumber | null> {
+    return this.blockService.calculateHashRate()
   }
 
   @Subscription(
@@ -77,6 +82,11 @@ export class BlockResolvers {
     } as SubscriptionOptions)
   newBlock() {
     return this.pubSub.asyncIterator('newBlock')
+  }
+
+  @Subscription()
+  hashRate() {
+    return this.pubSub.asyncIterator('hashRate')
   }
 
   @Subscription()

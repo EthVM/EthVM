@@ -11,6 +11,7 @@ export interface latestBlocks_blockSummaries_items {
   number: any | null;
   hash: string | null;
   author: string | null;
+  numTxs: any | null;
   numSuccessfulTxs: any | null;
   numFailedTxs: any | null;
   reward: any | null;

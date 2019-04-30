@@ -6,6 +6,7 @@ export class BlockSummaryExt implements BlockSummary {
   __typename!: "BlockSummary";
   author!: string | null;
   hash!: string | null;
+  numTxs!: any | null
   numFailedTxs!: any | null;
   numSuccessfulTxs!: any | null;
   number!: any | null;
@@ -19,6 +20,10 @@ export class BlockSummaryExt implements BlockSummary {
 
   get numberBN(): BN {
     return new BN(this.number, 16)
+  }
+
+  get numTxsBN(): BN {
+    return new BN(this.numTxs, 16)
   }
 
   get numFailedTxsBN(): BN {

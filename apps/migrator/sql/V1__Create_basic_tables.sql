@@ -18,12 +18,12 @@ CREATE TABLE canonical_block_header
   gas_limit          NUMERIC   NOT NULL,
   gas_used           NUMERIC   NOT NULL,
   timestamp          BIGINT    NOT NULL,
+  block_time         BIGINT    NULL,
   size               BIGINT    NOT NULL,
   uncle_count        INT       NOT NULL,
   uncle_hashes       TEXT      NULL,
   transaction_count  INT       NULL,
-  transaction_hashes TEXT      NULL,
-  block_time         BIGINT    NULL
+  transaction_hashes TEXT      NULL
 );
 
 CREATE INDEX idx_block_header_number ON canonical_block_header (number DESC);
@@ -57,7 +57,7 @@ BEGIN
     'table', 'canonical_block_header',
     'action', TG_OP,
     'payload', json_build_object(
-      'block_hash', record.hash, 
+      'block_hash', record.hash,
       'number', record.number,
       'transaction_count', record.transaction_count,
       'uncle_count', record.uncle_count,
@@ -133,6 +133,8 @@ CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
+CREATE INDEX idx_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
+
 CREATE FUNCTION notify_transaction() RETURNS TRIGGER AS
 $body$
 DECLARE
@@ -150,7 +152,7 @@ BEGIN
     'table', 'transaction',
     'action', TG_OP,
     'payload', json_build_object('transaction_hash', record.hash, 'block_hash', record.block_hash)
-  );
+    );
 
   PERFORM pg_notify('events', payload::text);
 
@@ -178,18 +180,18 @@ ORDER BY cb.number DESC,
 CREATE TABLE transaction_receipt
 (
   transaction_hash    CHAR(66) PRIMARY KEY,
-  transaction_index   INT       NOT NULL,
-  block_hash          CHAR(66)  NOT NULL,
-  block_number        NUMERIC   NOT NULL,
-  "from"              CHAR(42)  NOT NULL,
-  "to"                CHAR(42)  NULL,
-  contract_address    CHAR(42)  NULL,
-  cumulative_gas_used NUMERIC   NOT NULL,
-  gas_used            NUMERIC   NOT NULL,
-  logs                TEXT      NOT NULL,
-  logs_bloom          CHAR(514) NOT NULL,
-  root                CHAR(66)  NULL,
-  status              VARCHAR(128)   NULL
+  transaction_index   INT          NOT NULL,
+  block_hash          CHAR(66)     NOT NULL,
+  block_number        NUMERIC      NOT NULL,
+  "from"              CHAR(42)     NOT NULL,
+  "to"                CHAR(42)     NULL,
+  contract_address    CHAR(42)     NULL,
+  cumulative_gas_used NUMERIC      NOT NULL,
+  gas_used            NUMERIC      NOT NULL,
+  logs                TEXT         NOT NULL,
+  logs_bloom          CHAR(514)    NOT NULL,
+  root                CHAR(66)     NULL,
+  status              VARCHAR(128) NULL
 );
 
 CREATE INDEX idx_transaction_receipt_block_hash ON transaction_receipt (block_hash);
@@ -258,6 +260,7 @@ CREATE TABLE transaction_trace
 CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
 CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
 CREATE INDEX idx_transaction_trace_transaction_position ON transaction_trace (transaction_position);
+CREATE INDEX idx_transaction_trace_block_hash__trace_address ON transaction_trace (block_hash, trace_address);
 
 CREATE FUNCTION notify_transaction_trace() RETURNS TRIGGER AS
 $body$
@@ -272,7 +275,7 @@ BEGIN
     record := NEW;
   END IF;
 
-  /* we only want notified about top level calls and rewards */
+/* we only want notified about top level calls and rewards */
 
   IF (record.transaction_hash IS NULL) THEN
     /* block or uncle reward trace */
@@ -281,12 +284,12 @@ BEGIN
       'table', 'transaction_trace',
       'action', TG_OP,
       'payload', json_build_object(
-        'block_hash', record.block_hash,                         
+        'block_hash', record.block_hash,
         'trace_address', record.trace_address,
         'type', record.type,
-        'action', record.action        
-      )
-    );
+        'action', record.action
+        )
+      );
 
     PERFORM pg_notify('events', payload::text);
 
@@ -297,20 +300,20 @@ BEGIN
       'table', 'transaction_trace',
       'action', TG_OP,
       'payload', json_build_object(
-        'block_hash', record.block_hash,                         
+        'block_hash', record.block_hash,
         'transaction_hash', record.transaction_hash,
         'trace_address', record.trace_address,
         'type', record.type,
         'error', record.error
-      )
-    );
+        )
+      );
 
     PERFORM pg_notify('events', payload::text);
 
   END IF;
 
   RETURN NULL;
-  
+
 END;
 $body$ LANGUAGE plpgsql;
 
