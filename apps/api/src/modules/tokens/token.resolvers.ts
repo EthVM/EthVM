@@ -6,6 +6,7 @@ import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { TokenHolderDto } from '@app/modules/tokens/dto/token-holder.dto'
 import { TokenExchangeRateDto } from '@app/modules/tokens/dto/token-exchange-rate.dto'
 import { TokenMetadataDto } from '@app/modules/tokens/dto/token-metadata.dto'
+import { TokenHoldersPageDto } from '@app/modules/tokens/dto/token-holders-page.dto'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -17,9 +18,12 @@ export class TokenResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('limit', ParseLimitPipe) limit: number,
     @Args('page', ParsePagePipe) page: number,
-  ): Promise<TokenHolderDto[]> {
-    const entities = await this.tokenService.findTokenHolders(address, limit, page)
-    return (entities as any[]).map(e => new TokenHolderDto(e))
+  ): Promise<TokenHoldersPageDto> {
+    const result = await this.tokenService.findTokenHolders(address, limit, page)
+    return new TokenHoldersPageDto({
+      items: result[0],
+      totalCount: result[1]
+    })
   }
 
   @Query()

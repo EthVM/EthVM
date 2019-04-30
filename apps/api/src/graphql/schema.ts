@@ -250,7 +250,7 @@ export abstract class IQuery {
 
     abstract search(query: string): Search | Promise<Search>;
 
-    abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
+    abstract tokenHolders(address: string, limit?: number, page?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
 
@@ -368,6 +368,11 @@ export class TokenExchangeRate {
 export class TokenHolder {
     address?: string;
     balance?: string;
+}
+
+export class TokenHoldersPage {
+    items?: TokenHolder[];
+    totalCount?: number;
 }
 
 export class TokenMetadata {

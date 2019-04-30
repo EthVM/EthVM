@@ -49,7 +49,7 @@ import {
   Transfer,
   Tx,
   Uncle,
-  CoinExchangeRate
+  CoinExchangeRate, TokenHolder
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
@@ -329,7 +329,7 @@ export class EthvmApolloApi implements EthvmApi {
   // Tokens
   // ------------------------------------------------------------------------------------
 
-  public getTokenHolders(address: string, limit?: number, page?: number): Promise<any> {
+  public getTokenHolders(address: string, limit?: number, page?: number): Promise<{items: TokenHolder[], totalCount: number}> {
     return this.apollo
       .query({
         query: tokenHolders,

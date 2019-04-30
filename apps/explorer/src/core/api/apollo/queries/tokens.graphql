@@ -57,8 +57,11 @@ query tokenTransfersByContractAddressForHolder($address: String!, $holder: Strin
 
 query tokenHolders($address: String!, $limit: Int, $page: Int) {
   tokenHolders(address: $address, limit: $limit, page: $page) {
-    address
-    balance
+    items {
+      address
+      balance
+    }
+    totalCount
   }
 }
 
