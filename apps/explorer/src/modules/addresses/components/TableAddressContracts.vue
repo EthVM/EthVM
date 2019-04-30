@@ -2,73 +2,143 @@
   <v-card color="white" flat v-if="contracts" class="pt-3 pr-2 pl-2 pb-0">
     <!--
     =====================================================================================
-      LOADING / ERROR
+      !hasError
     =====================================================================================
     -->
-    <v-progress-linear v-if="loading && !hasError" color="blue"  indeterminate class="mt-0" />
-    <app-error v-else-if="!loading && hasError"  :has-error="hasError" :message="error" />
-    <!--
-    =====================================================================================
-      TABLE HEADER
-    =====================================================================================
-    -->
-    <v-layout v-if="!loading && !hasError" justify-space-between align-center row class="pb-3 pr-2 pl-2">
-      <p class="info--text mb-0 pl-2">{{ $t('contract.total') }}: <span class="black--text">{{ totalContracts }}</span> {{ contractString }} </p>
-      <app-paginate  v-if="totalPages > 1" :total="totalPages" :current-page="page" @newPage="setPage" />
-    </v-layout>
-    <v-card color="info" flat class="white--text pl-3 pr-1 mb-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex sm4>
-          <h5>{{ $t('contract.hash') }}</h5>
+    <div v-if="!hasError">
+      <v-layout justify-space-between align-center row wrap class="pr-2 pl-2">
+        <v-flex v-if="loading" xs12>
+          <v-progress-linear color="blue" indeterminate/>
         </v-flex>
-        <v-flex sm4>
-          <h5>{{ $t('contract.created') }}</h5>
+        <v-flex xs12 sm6>
+          <p class="info--text mb-0 pl-2">
+            {{ $t('contract.total') }}:
+            <span
+              v-if="!loading"
+              class="black--text"
+            >{{ totalContracts }}</span>
+            <span
+              v-else
+              class="table-row-loading"
+            />
+            {{ contractString }}
+          </p>
         </v-flex>
-        <v-flex sm2>
-          <h5>{{ $t('common.age') }}</h5>
+        <v-flex v-if="!loading && totalPages > 1" xs12 sm6>
+          <app-paginate
+            :total="totalPages"
+            :current-page="page"
+            @newPage="setPage"
+          />
         </v-flex>
-        <v-flex sm2>
-          <h5>{{ $t('tx.cost') }}</h5>
+        <!--
+        =====================================================================================
+          TABLE HEADER
+        =====================================================================================
+        -->
+        <v-flex xs12 hidden-xs-only>
+          <v-card color="info" flat class="white--text pl-3 pr-1 mb-1" height="40px">
+            <v-layout align-center justify-start row fill-height pr-3>
+              <v-flex sm4>
+                <h5>{{ $t('contract.hash') }}</h5>
+              </v-flex>
+              <v-flex sm4>
+                <h5>{{ $t('contract.created') }}</h5>
+              </v-flex>
+              <v-flex sm2>
+                <h5>{{ $t('common.age') }}</h5>
+              </v-flex>
+              <v-flex sm2>
+                <h5>{{ $t('tx.cost') }}</h5>
+              </v-flex>
+            </v-layout>
+          </v-card>
         </v-flex>
       </v-layout>
-    </v-card>
-    <!--
-    =====================================================================================
-      TABLE BODY
-    =====================================================================================
-    -->
-    <div v-if="loading">
-      <v-flex xs12>
-        <div v-for="i in maxItems" :key="i">
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-            <v-flex sm4>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+      <!--
+      =====================================================================================
+        TABLE BODY
+      =====================================================================================
+      -->
+      <div v-if="loading">
+        <v-flex sm12 hidden-xs-only>
+          <div v-for="i in maxItems" :key="i">
+            <v-layout
+              grid-list-xs
+              row
+              wrap
+              align-center
+              justify-start
+              fill-height
+              class="pl-2 pr-2 pt-2"
+            >
+              <v-flex sm4>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex sm4>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex sm2>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex sm2>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+            </v-layout>
+            <v-divider class="mb-2 mt-2"/>
+          </div>
+        </v-flex>
+        <v-flex xs12 hidden-sm-and-up>
+          <div class="table-row-mobile ma-1" v-for="i in maxItems" :key="i">
+            <v-layout
+              grid-list-xs
+              row
+              wrap
+              align-center
+              justify-start
+              fill-height
+              class="pa-2 "
+            >
+            <v-flex xs4>
+              <div class="table-row-loading"></div>
             </v-flex>
-            <v-flex sm4 >
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+            <v-flex xs12>
+              <div class="table-row-loading"></div>
             </v-flex>
-            <v-flex sm2>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+            <v-flex xs12>
+              <div class="table-row-loading"></div>
             </v-flex>
-            <v-flex sm2>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+            <v-flex xs4>
+              <div class="table-row-loading"></div>
             </v-flex>
           </v-layout>
-          <v-divider class="mb-2 mt-2" />
-        </div>
-      </v-flex>
-    </div>
-    <div v-else>
-      <v-card v-if="totalContracts === 0" flat>
-        <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
-      </v-card>
-      <div v-if="contracts.length > 0" v-for="(contract, index) in contracts" :key="index">
-        <table-address-contracts-row :contract="contract" />
+          </div>
+        </v-flex>
       </div>
-      <v-layout v-if="totalContracts > 0" justify-end row class="pb-1 pr-2 pl-2">
-        <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
-      </v-layout>
+      <div v-else>
+        <v-card v-if="contracts.length === 0" flat>
+          <!--
+          =====================================================================================
+            Note: Once modularized, This case will not exhists,
+                  since module won't load if address did not create any contract
+          =====================================================================================
+           -->
+          <v-card-text class="text-xs-center secondary--text">No Contracts</v-card-text>
+        </v-card>
+        <div v-if="contracts.length > 0">
+          <table-address-contracts-row v-for="(contract, index) in contracts" :key="index" :contract="contract"/>
+        </div>
+        <v-layout v-if="totalPages > 1" justify-end row class="pb-1 pr-2 pl-2">
+          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage"/>
+        </v-layout>
+      </div>
     </div>
+    <!--
+    =====================================================================================
+      hasError
+    =====================================================================================
+    -->
+    <app-error v-else :has-error="hasError" :message="error"/>
   </v-card>
 </template>
 
@@ -150,3 +220,16 @@ export default class TableAddressContracts extends Vue {
   }
 }
 </script>
+
+<style scoped lang="css">
+
+.table-row-mobile {
+  border: 1px solid #b4bfd2;
+}
+.table-row-loading {
+  background: #e6e6e6;
+  height: 12px;
+  border-radius: 2px;
+}
+
+</style>
