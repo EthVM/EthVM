@@ -326,6 +326,7 @@ export default class PageDetailsToken extends Vue {
           this.totalHolderTransfers = totalCount
         })
         .catch(e => {
+          console.log('Err', e)
           this.errorHolderTransfers = this.$i18n.t('message.no-history').toString()
         })
 

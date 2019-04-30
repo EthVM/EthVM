@@ -373,7 +373,7 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.tokenTransfersByContractAddress)
+      .then(res => res.data.tokenTransfersByContractAddressForHolder)
   }
 
   // ------------------------------------------------------------------------------------
