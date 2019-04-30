@@ -32,8 +32,8 @@ const MAX_ITEMS = 50
 @Component({
   components: {
     AppBreadCrumbs,
-    TableBlocks,
-    AppCardStatsGroup
+    AppCardStatsGroup,
+    TableBlocks
   }
 })
 export default class PageBlocks extends Vue {
@@ -70,7 +70,6 @@ export default class PageBlocks extends Vue {
   initialLoad(): void {
     this.fetchTotalBlocks().then(res => (this.total = res), err => (this.total = 0))
     this.getPage(0)
-    window.scrollTo(0, 0)
   }
 
   fetchBlocks(page: number): Promise<SimpleBlock[]> {

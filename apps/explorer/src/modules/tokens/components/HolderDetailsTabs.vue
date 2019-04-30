@@ -12,8 +12,8 @@
 <script lang="ts">
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import HolderTableTransfers from '@app/modules/tokens/components/HolderTableTransfers.vue'
-import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Tab } from '@app/core/components/props'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {

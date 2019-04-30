@@ -120,16 +120,16 @@
 <script lang="ts">
 import { StringConcatMixin } from '@app/core/components/mixins'
 import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
-import Blockies from '@app/modules/addresses/components/Blockies.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import Blockies from '@app/modules/addresses/components/Blockies.vue'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component({
   components: {
     AddressQr,
-    Blockies,
-    AppCopyToClip
+    AppCopyToClip,
+    Blockies
   }
 })
 export default class AddressDetail extends Mixins(StringConcatMixin) {

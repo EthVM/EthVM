@@ -1,5 +1,5 @@
 <template>
-  <v-btn v-if="update" block flat class="update-btn" @click="refresh">
+  <v-btn v-if="update" block flat class="live-update-btn" @click="refresh">
     <v-layout align-center justify-center row wrap fill-height>
       <p class="text-lowercase font-weight-regular pr-2 mb-0">{{ text }}</p>
       <v-icon class="secondary--text" small> fas fa-sync-alt</v-icon>
@@ -108,14 +108,10 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
 </script>
 
 <style scoped lang="css">
-.update-btn{
+.live-update-btn{
   border: solid 1px #ffb647;
   background: #ffe7d6;
   padding: 2px 2px 2px 2px;
   margin: 0px;
-}
-
-.wrap-text{
-  word-wrap: break-word;
 }
 </style>

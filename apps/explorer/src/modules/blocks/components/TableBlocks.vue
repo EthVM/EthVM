@@ -75,7 +75,7 @@
     =====================================================================================
     -->
     <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <v-layout column v-scroll:#scroll-target class="mb-1">
+      <v-layout column class="mb-1">
         <v-flex v-if="!loading">
           <div v-for="block in blocks" :key="block.getHash()">
             <table-blocks-row :block="block" :page-type="pageType" />
@@ -118,8 +118,8 @@
 
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'

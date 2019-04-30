@@ -23,20 +23,20 @@
               <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
+              <app-transform-hash :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
             </v-flex>
             <v-flex xs12 pa-1>
               <v-layout row pa-2>
                 <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
-                <app-hash-concat :hash="tx.getFrom().toString()" :italic="true" :link="`/address/${tx.getFrom().toString()}`" />
+                <app-transform-hash :hash="tx.getFrom().toString()" :italic="true" :link="`/address/${tx.getFrom().toString()}`" />
                 <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                <app-hash-concat
+                <app-transform-hash
                   v-if="!tx.getContractAddress().isEmpty()"
                   :hash="tx.getContractAddress().toString()"
                   :italic="true"
                   :link="`/address/${tx.getContractAddress().toString()}`"
                 />
-                <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
+                <app-transform-hash v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
               </v-layout>
             </v-flex>
             <v-flex shrink pa-1>
@@ -84,24 +84,24 @@
                     <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                   </v-flex>
                   <v-flex sm10 lg11 pa-1>
-                    <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
+                    <app-transform-hash :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
                   </v-flex>
                 </v-layout>
               </v-flex>
               <v-flex sm12 pa-2>
                 <v-layout row align-center justify-space-around fill-height pa-2>
                   <p class="info--text mb-0 mr-1">{{ $t('tx.from') }}:</p>
-                  <app-hash-concat :hash="tx.getFrom().toString()" :link="`/address/${tx.getFrom().toString()}`" :italic="true" />
+                  <app-transform-hash :hash="tx.getFrom().toString()" :link="`/address/${tx.getFrom().toString()}`" :italic="true" />
                   <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                   <p class="info--text mb-0 mr-1" v-if="!tx.getContractAddress().isEmpty()">{{ $tc('contract.name', 1) }}:</p>
                   <p class="info--text mb-0 mr-1" v-else>{{ $t('tx.to') }}:</p>
-                  <app-hash-concat
+                  <app-transform-hash
                     v-if="!tx.getContractAddress().isEmpty()"
                     :hash="tx.getContractAddress().toString()"
                     :link="`/address/${tx.getContractAddress().toString()}`"
                     :italic="true"
                   />
-                  <app-hash-concat v-else :hash="tx.getTo().toString()" :link="`/address/${tx.getTo().toString()}`" :italic="true" />
+                  <app-transform-hash v-else :hash="tx.getTo().toString()" :link="`/address/${tx.getTo().toString()}`" :italic="true" />
                 </v-layout>
               </v-flex>
             </v-layout>
@@ -181,16 +181,16 @@
 </template>
 
 <script lang="ts">
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Tx, SimpleTx, EthValue } from '@app/core/models'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 
 @Component({
   components: {
     AppTimeAgo,
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class TableTxsRow extends Mixins(StringConcatMixin) {

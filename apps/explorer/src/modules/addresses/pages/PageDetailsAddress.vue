@@ -109,7 +109,6 @@
 
 <script lang="ts">
 import { Contract, EthValue, PendingTx, SimpleBlock, SimpleTx, Transfer } from '@app/core/models'
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
@@ -123,6 +122,7 @@ import { AccountInfo } from '@app/modules/addresses/props'
 import { Crumb, Tab } from '@app/core/components/props'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 
 const MAX_ITEMS = 10
 
@@ -145,18 +145,18 @@ const CONTRACT_DETAIL_TYPE = 'contract'
 })
 export default class PageDetailsAddress extends Vue {
   /*
-    ===================================================================================
-      Props
-    ===================================================================================
-    */
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
 
   @Prop({ type: String, default: '' }) addressRef!: string
 
   /*
-    ===================================================================================
-      Initial Data
-    ===================================================================================
-    */
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   detailsType = 'address'
   error = ''
@@ -197,10 +197,10 @@ export default class PageDetailsAddress extends Vue {
   sm!: TinySM
 
   /*
-    ===================================================================================
-      Lifecycle
-    ===================================================================================
-    */
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
 
   mounted(): void {
     const ref = this.addressRef
@@ -340,10 +340,10 @@ export default class PageDetailsAddress extends Vue {
   }
 
   /*
-    ===================================================================================
-      Methods
-    ===================================================================================
-    */
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
 
   fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<SimpleTx[]> {
     return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
@@ -437,10 +437,10 @@ export default class PageDetailsAddress extends Vue {
   }
 
   /*
-    ===================================================================================
-      Watch
-    ===================================================================================
-    */
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
 
   @Watch('txsFilter')
   onTxsFilterChanged(newVal: number, oldVal: number): void {
@@ -470,10 +470,10 @@ export default class PageDetailsAddress extends Vue {
   }
 
   /*
-    ===================================================================================
-      Computed Values
-    ===================================================================================
-    */
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
 
   get hasError(): boolean {
     return this.error !== ''

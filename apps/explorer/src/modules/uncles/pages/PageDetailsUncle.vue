@@ -14,8 +14,8 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { eth } from '@app/core/helper'
 import { Uncle } from '@app/core/models'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Detail, Crumb } from '@app/core/components/props'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
