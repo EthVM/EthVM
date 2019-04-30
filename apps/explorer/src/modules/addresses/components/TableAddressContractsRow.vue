@@ -1,29 +1,21 @@
 <template>
   <div>
-    <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2>
-      <v-flex sm3>
-        <p class="info--text font-italic psmall mb-0 pb-0">
-          <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" />
-        </p>
-      </v-flex>
-      <v-flex sm4>
-        <p class="info--text font-italic psmall mb-0 pb-0">
-          <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" />
-        </p>
-      </v-flex>
-      <v-flex sm1>
-        <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${contract.blockNumber}`">
-          {{ contract.blockNumber }}
-        </router-link>
-      </v-flex>
-      <v-flex sm2>
-        <p class="info--text font-weight-thin mb-0">{{ getTxFee(contract.tx) }}</p>
-      </v-flex>
-      <v-flex sm2>
-        <p class="info--text font-weight-thin mb-0">
+    <v-layout grid-list-lg row wrap align-center justify-start fill-height pa-3>
+        <v-flex sm4 class="pr-5">
+          <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" :italic="true"/>
+        </v-flex>
+        <v-flex sm4>
+          <v-layout row  class="pl-1 pr-5">
+            <p class="info--text tx-hash pl-2">{{ $tc('tx.hash', 1)}}: </p>
+            <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true"/>
+          </v-layout>
+        </v-flex>
+        <v-flex sm2>
           <app-time-ago :timestamp="contract.tx.getTimestamp()" />
-        </p>
-      </v-flex>
+        </v-flex>
+        <v-flex sm2>
+         {{ getTxFee(contract.tx) }}
+        </v-flex>
     </v-layout>
     <v-divider />
   </div>
@@ -63,3 +55,13 @@ export default class TableAddressContractsRow extends Mixins(StringConcatMixin) 
   }
 }
 </script>
+
+<style scoped lang="css">
+  .tx-hash{
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    min-width: fit-content;
+    padding-right: 5px;
+  }
+</style>
+
