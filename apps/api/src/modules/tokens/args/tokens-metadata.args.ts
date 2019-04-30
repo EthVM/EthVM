@@ -4,5 +4,5 @@ import { ArgsType, Field } from 'type-graphql'
 export class TokensMetadataArgs {
   @Field(type => [String])
   symbols!: string[]
-  
+
 }

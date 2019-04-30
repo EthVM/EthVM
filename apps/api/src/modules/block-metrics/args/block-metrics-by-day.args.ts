@@ -2,7 +2,7 @@ import { ArgsType, Field, registerEnumType } from 'type-graphql'
 import { Duration } from '@app/graphql/schema'
 
 registerEnumType(Duration, {
-  name: 'Duration'
+  name: 'Duration',
 });
 
 @ArgsType()
@@ -12,5 +12,5 @@ export class BlockMetricsByDayArgs {
 
   @Field(type => [String])
   fields?: string[]
-  
+
 }
