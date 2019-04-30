@@ -182,7 +182,7 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import AppTransformHash  from '@app/core/components/ui/AppTransformHash.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Tx, SimpleTx, EthValue } from '@app/core/models'

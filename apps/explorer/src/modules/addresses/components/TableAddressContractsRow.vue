@@ -30,13 +30,13 @@
 </template>
 
 <script lang="ts">
-  import { StringConcatMixin } from '@app/core/components/mixins'
-  import { Component, Mixins, Prop } from 'vue-property-decorator'
-  import { Contract, EthValue } from '@app/core/models'
-  import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-  import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue';
+import { StringConcatMixin } from '@app/core/components/mixins'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Contract, EthValue } from '@app/core/models'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 
-  @Component({
+@Component({
   components: {
     AppTimeAgo,
     AppTransformHash

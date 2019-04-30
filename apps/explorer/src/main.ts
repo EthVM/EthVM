@@ -16,7 +16,6 @@ import { getMainDefinition } from 'apollo-utilities'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 
-
 /*
   ===================================================================================
     Vue: Plugins Configuration

@@ -114,5 +114,4 @@ export default class AppLiveUpdate extends Mixins(StringConcatMixin) {
   padding: 2px 2px 2px 2px;
   margin: 0px;
 }
-
 </style>

@@ -5,7 +5,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 const webpackCommon = {
-  plugins: [ new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
+  plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
   resolve: {
     extensions: ['.ts', '.vue', '.json'],
     alias: {
@@ -17,8 +17,7 @@ const webpackCommon = {
   }
 }
 
-const webpackDevelopment = {
-}
+const webpackDevelopment = {}
 
 const webpackProduction = {
   plugins: [new BundleAnalyzerPlugin()],
@@ -35,7 +34,7 @@ const webpackProduction = {
         }
       }
     }
-  },
+  }
   // stats: {
   //   warningsFilter: /mini-css-extract-plugin[^]*Conflicting order between:/
   // }
@@ -63,7 +62,7 @@ module.exports = {
       .loader('graphql-tag/loader')
       .end()
   },
-  configureWebpack: process.env.NODE_ENV === 'production' ? merge( webpackCommon, webpackProduction) : webpackCommon,
+  configureWebpack: process.env.NODE_ENV === 'production' ? merge(webpackCommon, webpackProduction) : webpackCommon,
   productionSourceMap: false,
   devServer: {
     disableHostCheck: true,

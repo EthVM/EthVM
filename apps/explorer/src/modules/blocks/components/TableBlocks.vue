@@ -75,7 +75,7 @@
     =====================================================================================
     -->
     <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <v-layout column  class="mb-1">
+      <v-layout column class="mb-1">
         <v-flex v-if="!loading">
           <div v-for="block in blocks" :key="block.getHash()">
             <table-blocks-row :block="block" :page-type="pageType" />

@@ -25,7 +25,6 @@ import { Tx, PendingTx } from '@app/core/models'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
 
-
 const MAX_ITEMS = 50
 
 @Component({

@@ -26,7 +26,6 @@ import { ChartTypes } from '@app/modules/charts/helpers'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
 
-
 @Component({
   components: {
     AppBreadCrumbs,
