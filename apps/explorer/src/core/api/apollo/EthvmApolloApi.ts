@@ -40,7 +40,6 @@ import {
   BlockMetrics,
   Contract,
   PendingTx,
-  Quote,
   SimpleBlock,
   SimpleTx,
   Statistic,
