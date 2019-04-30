@@ -3,7 +3,7 @@
     <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2>
       <v-flex sm3>
         <p class="info--text font-italic psmall mb-0 pb-0">
-          <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" />
+          <app-transform-hash :hash="contract.address" :link="`/tx/${contract.address}`" />
         </p>
       </v-flex>
       <v-flex sm4>
