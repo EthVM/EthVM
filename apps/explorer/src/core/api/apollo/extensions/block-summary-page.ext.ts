@@ -7,11 +7,11 @@ import BN from "bignumber.js";
 export class BlockSummaryPageExt implements BlockSummaryPage {
 
   __typename!: "BlockSummaryPage";
-  items!: (BlockSummaryPage_items | null)[] | null;
+  items!: (BlockSummaryExt | null)[] | null;
   totalCount!: any | null;
 
   constructor(proto: BlockSummaryPage) {
-    this.items = proto.items!.map(s => new BlockSummaryExt(s as BlockSummary))
+    this.items = proto.items!.map(s => new BlockSummaryExt(s))
     this.totalCount = proto.totalCount
   }
 
