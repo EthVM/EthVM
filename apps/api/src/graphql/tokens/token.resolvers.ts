@@ -1,13 +1,13 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
-import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
-import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
-import { TokenHoldersPageDto } from '@app/modules/tokens/dto/token-holders-page.dto'
-import { TokensMetadataArgs } from '@app/modules/tokens/args/tokens-metadata.args'
+import {Args, Query, Resolver} from '@nestjs/graphql'
+import {ParseAddressPipe} from '@app/shared/validation/parse-address.pipe'
+import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe'
 import {TokenService} from '@app/dao/token.service'
 import {TokenHolderDto} from '@app/graphql/tokens/dto/token-holder.dto'
 import {TokenExchangeRateDto} from '@app/graphql/tokens/dto/token-exchange-rate.dto'
 import {TokenMetadataDto} from '@app/graphql/tokens/dto/token-metadata.dto'
 import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
+import {TokenHoldersPageDto} from '@app/graphql/tokens/dto/token-holders-page.dto'
+import {TokensMetadataArgs} from '@app/graphql/tokens/args/tokens-metadata.args'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -74,7 +74,7 @@ export class TokenResolvers {
     if (!tokenExchangeRate) return null
     const contract = await this.tokenService.findContractInfoForToken(address)
     const holdersCount = await this.tokenService.countTokenHolders(address)
-    return new TokenExchangeRateDto({ ...tokenExchangeRate, owner: contract ? contract.creator : null, holdersCount })
+    return new TokenExchangeRateDto({...tokenExchangeRate, owner: contract ? contract.creator : null, holdersCount})
   }
 
   @Query()

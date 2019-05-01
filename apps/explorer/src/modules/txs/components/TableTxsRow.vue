@@ -30,12 +30,7 @@
                 <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
                 <app-transform-hash :hash="tx.from" :italic="true" :link="`/address/${tx.from}`" />
                 <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                <app-transform-hash
-                  v-if="tx.isContractCreation"
-                  :hash="tx.creates"
-                  :italic="true"
-                  :link="`/address/${tx.creates}`"
-                />
+                <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :italic="true" :link="`/address/${tx.creates}`" />
                 <app-transform-hash v-else :hash="tx.to" :italic="true" :link="`/address/${tx.to}`" />
               </v-layout>
             </v-flex>
@@ -95,12 +90,7 @@
                   <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                   <p class="info--text mb-0 mr-1" v-if="tx.isContractCreation">{{ $tc('contract.name', 1) }}:</p>
                   <p class="info--text mb-0 mr-1" v-else>{{ $t('tx.to') }}:</p>
-                  <app-transform-hash
-                    v-if="tx.isContractCreation"
-                    :hash="tx.creates"
-                    :link="`/address/${tx.creates}`"
-                    :italic="true"
-                  />
+                  <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" />
                   <app-transform-hash v-else :hash="tx.to" :link="`/address/${tx.to}`" :italic="true" />
                 </v-layout>
               </v-flex>
@@ -122,7 +112,9 @@
             <p v-else :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
               {{
                 getShortValue(
-                  ethValue(tx.valueBN).toEth().toString()
+                  ethValue(tx.valueBN)
+                    .toEth()
+                    .toString()
                 )
               }}
               <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
@@ -178,13 +170,13 @@
 </template>
 
 <script lang="ts">
-  import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Tx, SimpleTx, EthValue } from '@app/core/models'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import {TransactionSummaryExt} from "@app/core/api/apollo/extensions/transaction-summary.ext";
-import BigNumber from "bignumber.js";
+import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {

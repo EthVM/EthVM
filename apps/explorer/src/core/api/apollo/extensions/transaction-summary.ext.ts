@@ -1,22 +1,21 @@
 import BN from 'bignumber.js'
-import {TransactionSummary} from "@app/core/api/apollo/types/TransactionSummary";
-import {Hex} from "@app/core/models";
+import { TransactionSummary } from '@app/core/api/apollo/types/TransactionSummary'
+import { Hex } from '@app/core/models'
 
 export class TransactionSummaryExt implements TransactionSummary {
-
-  __typename!: "TransactionSummary";
-  blockNumber!: any | null;
-  transactionIndex!: number | null;
-  creates!: string | null;
-  contractName!: string | null;
-  contractSymbol!: string | null;
-  fee!: any | null;
-  from!: string | null;
-  hash!: string | null;
-  successful!: boolean | null;
-  timestamp!: string | null;
-  to!: string | null;
-  value!: any | null;
+  __typename!: 'TransactionSummary'
+  blockNumber!: any | null
+  transactionIndex!: number | null
+  creates!: string | null
+  contractName!: string | null
+  contractSymbol!: string | null
+  fee!: any | null
+  from!: string | null
+  hash!: string | null
+  successful!: boolean | null
+  timestamp!: string | null
+  to!: string | null
+  value!: any | null
 
   constructor(proto: TransactionSummary) {
     Object.assign(this, proto)

@@ -1,4 +1,4 @@
-import { TokenDto } from '@app/modules/tokens/dto/token.dto'
+
 import { CoinExchangeRateEntity } from '@app/orm/entities/coin-exchange-rate.entity'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
@@ -9,7 +9,8 @@ import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.e
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Repository, FindOneOptions, Any } from 'typeorm'
-import { TokenMetadataDto } from '@app/modules/tokens/dto/token-metadata.dto'
+import {TokenDto} from '@app/graphql/tokens/dto/token.dto'
+import {TokenMetadataDto} from '@app/graphql/tokens/dto/token-metadata.dto'
 
 @Injectable()
 export class TokenService {

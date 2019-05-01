@@ -11,11 +11,11 @@ export class BlockMetricsService {
               private readonly blockMetricsDailyRepository: Repository<BlockMetricsDailyEntity>) {
   }
 
-  async blockMetrics(offset: number, limit: number): Promise<BlockMetric[]> {
-
-
-
-  }
+  // async blockMetrics(offset: number, limit: number): Promise<BlockMetric[]> {
+  //
+  //
+  //
+  // }
 
   async findBlockMetricsDaily(start: Date, end: Date, fields?: string[]): Promise<BlockMetricsDailyEntity[]> {
 

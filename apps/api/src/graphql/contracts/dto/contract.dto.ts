@@ -1,7 +1,7 @@
-import { Contract } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
-import { ContractMetadataDto } from '@app/graphql/contracts/dto/contract-metadata.dto'
-import { TxDto } from '@app/modules/txs/dto/tx.dto'
+import {Contract} from '@app/graphql/schema'
+import {assignClean} from '@app/shared/utils'
+import {ContractMetadataDto} from '@app/graphql/contracts/dto/contract-metadata.dto'
+import {TxDto} from '@app/graphql/txs/dto/tx.dto'
 
 export class ContractDto extends Contract {
   constructor(data) {

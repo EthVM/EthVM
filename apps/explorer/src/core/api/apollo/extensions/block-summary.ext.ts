@@ -1,17 +1,16 @@
-import {BlockSummary} from "@app/core/api/apollo/types/BlockSummary";
+import { BlockSummary } from '@app/core/api/apollo/types/BlockSummary'
 import BN from 'bignumber.js'
 
 export class BlockSummaryExt implements BlockSummary {
-
-  __typename!: "BlockSummary";
-  author!: string | null;
-  hash!: string | null;
+  __typename!: 'BlockSummary'
+  author!: string | null
+  hash!: string | null
   numTxs!: any | null
-  numFailedTxs!: any | null;
-  numSuccessfulTxs!: any | null;
-  number!: any | null;
-  reward!: any | null;
-  uncleHashes!: (string | null)[] | null;
+  numFailedTxs!: any | null
+  numSuccessfulTxs!: any | null
+  number!: any | null
+  reward!: any | null
+  uncleHashes!: (string | null)[] | null
   difficulty!: any | null
   timestamp!: string | null
   transactionHashes!: (string | null)[] | null
@@ -24,7 +23,7 @@ export class BlockSummaryExt implements BlockSummary {
     return this.number ? new BN(this.number, 16) : null
   }
 
-  get numTxsBN(): BN | null{
+  get numTxsBN(): BN | null {
     return this.numTxs ? new BN(this.numTxs, 16) : null
   }
 
@@ -47,5 +46,4 @@ export class BlockSummaryExt implements BlockSummary {
   get timestampDate(): Date | null {
     return this.timestamp ? new Date(+this.timestamp * 1000) : null
   }
-
 }

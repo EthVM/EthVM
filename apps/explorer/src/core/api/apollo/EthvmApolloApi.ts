@@ -1,15 +1,19 @@
-import { EthvmApi } from '@app/core/api'
+import {EthvmApi} from '@app/core/api'
 import {
   accountByAddress,
   addressAllTokensOwned,
   addressAmountTokensOwned,
-  internalTransactionsByAddress
+  internalTransactionsByAddress,
 } from '@app/core/api/apollo/queries/addresses.graphql'
-import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
-import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
-import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
-import { processingMetadataById } from '@app/core/api/apollo/queries/processing-metadata.graphql'
-import { search } from '@app/core/api/apollo/queries/search.graphql'
+import {
+  blockByHash,
+  blockByNumber,
+  blocks,
+  minedBlocksByAddress,
+  totalNumberOfBlocks,
+} from '@app/core/api/apollo/queries/blocks.graphql'
+import {contractByAddress, contractsCreatedBy} from '@app/core/api/apollo/queries/contracts.graphql'
+import {search} from '@app/core/api/apollo/queries/search.graphql'
 import {
   averageBlockTime,
   averageDifficulty,
@@ -19,45 +23,40 @@ import {
   averageMinerReward,
   averageTxFee,
   totalFailedTxs,
-  totalSuccessfulTxs
+  totalSuccessfulTxs,
 } from '@app/core/api/apollo/queries/statistics.graphql'
-import { newBlockMetrics, newSimpleBlocks, newSimpleTxs } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
   holderDetails,
-  tokenHolders,
-  tokenTransfersByContractAddress,
-  tokenTransfersByContractAddressForHolder,
-  quote,
   tokenExchangeRateByAddress,
   tokenExchangeRateBySymbol,
   tokenExchangeRates,
-  totalNumTokenExchangeRates
+  tokenHolders,
+  tokenTransfersByContractAddress,
+  tokenTransfersByContractAddressForHolder,
+  totalNumTokenExchangeRates,
+  coinExchangeRate
 } from '@app/core/api/apollo/queries/tokens.graphql'
-import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
-import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
+import {totalNumberOfTransactions, tx, txs, txsForAddress} from '@app/core/api/apollo/queries/txs.graphql'
+import {totalNumberOfUncles, uncleByHash, uncles} from '@app/core/api/apollo/queries/uncles.graphql'
 import {
   Account,
   Block,
-  BlockMetrics, CoinExchangeRate,
+  CoinExchangeRate,
   Contract,
   PendingTx,
-  ProcessingMetadata,
-  Quote,
   SimpleBlock,
   SimpleTx,
   Statistic,
   Token,
-  TokenExchangeRate,
-  TokenTransfer,
+  TokenExchangeRate, TokenHolder,
   Transfer,
   Tx,
   Uncle,
 } from '@app/core/models'
-import { ApolloClient } from 'apollo-client'
-import { Observable } from 'apollo-client/util/Observable'
+import {ApolloClient} from 'apollo-client'
 
 export class EthvmApolloApi implements EthvmApi {
-  constructor(private readonly apollo: ApolloClient<{}>) { }
+  constructor(private readonly apollo: ApolloClient<{}>) {}
 
   // ------------------------------------------------------------------------------------
   // Address

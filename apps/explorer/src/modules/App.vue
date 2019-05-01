@@ -1,11 +1,11 @@
 <template>
   <v-app style="background: #f3f4f8;">
-    <the-navigation-drawer/>
+    <the-navigation-drawer />
     <v-content>
-      <app-greeting v-if="appGreet" :greet="appGreet"/>
-      <app-sync-message v-if="isSyncing"/>
-      <router-view :key="$route.path"/>
-      <the-footer/>
+      <app-greeting v-if="appGreet" :greet="appGreet" />
+      <app-sync-message v-if="isSyncing" />
+      <router-view :key="$route.path" />
+      <the-footer />
     </v-content>
   </v-app>
 </template>

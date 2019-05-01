@@ -1,6 +1,6 @@
 import { TokenHoldersPage } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
-import { TokenHolderDto } from '@app/modules/tokens/dto/token-holder.dto'
+import {TokenHolderDto} from '@app/graphql/tokens/dto/token-holder.dto'
 
 export class TokenHoldersPageDto extends TokenHoldersPage {
   constructor(data: any) {

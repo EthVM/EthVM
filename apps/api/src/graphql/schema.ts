@@ -24,12 +24,8 @@ export enum Duration {
     DAY = "DAY"
 }
 
-export enum ExchangeFrom {
-    ETH = "ETH"
-}
-
-export enum ExchangeTo {
-    USD = "USD"
+export enum ExchangeRatePair {
+    ethereum_usd = "ethereum_usd"
 }
 
 export enum FilterEnum {
@@ -112,6 +108,11 @@ export class BlockMetric {
     avgGasPrice?: BigNumber;
 }
 
+export class BlocksPage {
+    items?: Block[];
+    totalCount?: number;
+}
+
 export class BlockSummary {
     number?: BigNumber;
     hash?: string;
@@ -129,6 +130,15 @@ export class BlockSummary {
 export class BlockSummaryPage {
     items?: BlockSummary[];
     totalCount?: BigNumber;
+}
+
+export class CoinExchangeRate {
+    currency?: string;
+    price?: Decimal;
+    marketCap?: Decimal;
+    vol24h?: Decimal;
+    change24h?: Decimal;
+    lastUpdated?: Decimal;
 }
 
 export class Contract {
@@ -153,6 +163,7 @@ export class Contract {
     traceDestroyedAt?: Buffer;
     metadata?: ContractMetadata;
     totalSupply?: BigNumber;
+    createdAtTx?: Transaction;
 }
 
 export class ContractLogo {
@@ -188,6 +199,11 @@ export class ContractSocial {
     youtube?: string;
 }
 
+export class ContractsPage {
+    items?: Contract[];
+    totalCount?: number;
+}
+
 export class ContractSupport {
     email?: string;
     url?: string;
@@ -208,17 +224,17 @@ export abstract class IQuery {
 
     abstract blockByNumber(number?: number): Block | Promise<Block>;
 
-    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): Block[] | Promise<Block[]>;
+    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
 
     abstract totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
 
     abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): Contract[] | Promise<Contract[]>;
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
 
     abstract search(query: string): Search | Promise<Search>;
 
-    abstract tokenHolders(address: string, limit?: number, page?: number): TokenHolder[] | Promise<TokenHolder[]>;
+    abstract tokenHolders(address: string, limit?: number, page?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
 
     abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
 
@@ -226,7 +242,7 @@ export abstract class IQuery {
 
     abstract addressAmountTokensOwned(address: string): number | Promise<number>;
 
-    abstract quote(symbol: ExchangeFrom, to: ExchangeTo): Quote | Promise<Quote>;
+    abstract coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
 
     abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
 
@@ -236,9 +252,11 @@ export abstract class IQuery {
 
     abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
 
+    abstract tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
+
     abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
-    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): Transfer[] | Promise<Transfer[]>;
+    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
@@ -261,13 +279,6 @@ export abstract class IQuery {
     abstract latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
 
     abstract temp__(): boolean | Promise<boolean>;
-}
-
-export class Quote {
-    to?: string;
-    price?: BigNumber;
-    last_update?: BigNumber;
-    vol_24h?: string;
 }
 
 export class Receipt {
@@ -347,6 +358,21 @@ export class TokenExchangeRate {
 export class TokenHolder {
     address?: string;
     balance?: BigNumber;
+}
+
+export class TokenHoldersPage {
+    items?: TokenHolder[];
+    totalCount?: number;
+}
+
+export class TokenMetadata {
+    name?: string;
+    website?: string;
+    email?: string;
+    symbol?: string;
+    address?: string;
+    decimals?: number;
+    logo?: string;
 }
 
 export class Trace {

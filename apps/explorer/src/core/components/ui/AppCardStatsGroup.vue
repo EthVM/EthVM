@@ -34,17 +34,15 @@
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@app/core/components/ui/stats.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import BigNumber from 'bignumber.js';
-import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext";
+import BigNumber from 'bignumber.js'
+import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 
 @Component({
   components: {
     AppInfoCard
   },
   apollo: {
-
     blockSummary: {
-
       query: latestBlockStats,
 
       update({ blockSummaries }) {
@@ -53,10 +51,9 @@ import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext
       },
 
       subscribeToMore: {
-
         document: newBlockStats,
 
-        updateQuery: (previousResult, {subscriptionData}) => {
+        updateQuery: (previousResult, { subscriptionData }) => {
           const { newBlock } = subscriptionData.data
           return {
             ...previousResult,
@@ -70,7 +67,6 @@ import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext
     },
 
     hashRate: {
-
       query: latestHashRate,
 
       update({ hashRate }) {
@@ -78,10 +74,9 @@ import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext
       },
 
       subscribeToMore: {
-
         document: newHashRate,
 
-        updateQuery: (previousResult, {subscriptionData}) => {
+        updateQuery: (previousResult, { subscriptionData }) => {
           const { hashRate } = subscriptionData.data
           return {
             ...previousResult,
@@ -90,7 +85,6 @@ import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext
         }
       }
     }
-
   }
 })
 export default class AppInfoCardGroup extends Vue {
@@ -170,12 +164,22 @@ export default class AppInfoCardGroup extends Vue {
 
   get latestHashRate(): string {
     const { loading, loadingMessage, hashRate } = this
-    return !loading && hashRate ? hashRate.div('1e12').decimalPlaces(4).toString() : loadingMessage
+    return !loading && hashRate
+      ? hashRate
+          .div('1e12')
+          .decimalPlaces(4)
+          .toString()
+      : loadingMessage
   }
 
   get latestDifficulty(): string {
     const { loading, loadingMessage, blockSummary } = this
-    return !loading && blockSummary ? blockSummary.difficultyBN!.div('1e12').decimalPlaces(4).toString() : loadingMessage
+    return !loading && blockSummary
+      ? blockSummary
+          .difficultyBN!.div('1e12')
+          .decimalPlaces(4)
+          .toString()
+      : loadingMessage
   }
 
   get latestBlockSuccessTxs(): string {

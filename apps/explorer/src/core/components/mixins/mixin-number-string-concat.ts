@@ -17,7 +17,6 @@ export class StringConcatMixin extends Vue {
   */
 
   getRoundNumber(newNumber: number | BN, unformatted: boolean = false): string {
-
     const value = newNumber instanceof BN ? newNumber : new BN(newNumber)
 
     let round = 7

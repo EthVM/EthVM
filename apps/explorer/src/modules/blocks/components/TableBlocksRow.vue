@@ -10,9 +10,7 @@
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`"
-                >{{ $t('block.number') }} {{ block.numberBN }}</router-link
-              >
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`">{{ $t('block.number') }} {{ block.numberBN }}</router-link>
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
@@ -110,12 +108,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Block, SimpleBlock, Tx, SimpleTx } from '@app/core/models'
-import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext";
-import {EthValue} from '@app/core/models'
+import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
+import { EthValue } from '@app/core/models'
 import BN from 'bignumber.js'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue';
 
 @Component({
   components: {
@@ -148,11 +145,11 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   }
 
   sucessTransalate(): number {
-    return this.block.numSuccessfulTxsBN.toNumber() > 1 ? 2 : 1
+    return this.block && this.block.numSuccessfulTxsBN!.toNumber() > 1 ? 2 : 1
   }
 
   failedTranslate(): number {
-    return this.block.numFailedTxsBN.toNumber() > 1 ? 2 : 1
+    return this.block && this.block.numFailedTxsBN!.toNumber() > 1 ? 2 : 1
   }
 }
 </script>

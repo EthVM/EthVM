@@ -3,7 +3,6 @@ import ethUnits from 'ethereumjs-units'
 import NumberFormatter from 'number-formatter'
 
 export class EthValue {
-
   private value: string | number | BN
 
   constructor(raw: Buffer | BN | string | number) {

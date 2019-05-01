@@ -1,24 +1,18 @@
 import {
   Account,
-  AddressBalance,
-  AddressMetadata,
   Block,
-  BlockMetrics, CoinExchangeRate,
+  CoinExchangeRate,
   Contract,
   PendingTx,
-  ProcessingMetadata,
-  Quote,
   SimpleBlock,
   SimpleTx,
   Statistic,
   Token,
-  TokenExchangeRate,
-  TokenTransfer,
+  TokenExchangeRate, TokenHolder,
   Transfer,
   Tx,
   Uncle,
 } from '@app/core/models'
-import { Observable } from 'apollo-client/util/Observable'
 
 export interface EthvmApi {
   // Address
@@ -96,5 +90,5 @@ export interface EthvmApi {
   // getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
 
   // Subscriptions
-  observable<T>(query): Observable<T>
+  // observable<T>(query): Observable<T>
 }

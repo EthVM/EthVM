@@ -81,7 +81,7 @@
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
-            <v-layout v-if="pageType !=='home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
               <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
               <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
             </v-layout>
@@ -125,11 +125,11 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
-import {TransactionSummaryPageExt} from "@app/core/api/apollo/extensions/transaction-summary-page.ext";
-import {TransactionSummaryPage, TransactionSummaryPage_items} from "@app/core/api/apollo/types/TransactionSummaryPage";
-import {latestTransactions, newTransaction } from "@app/modules/txs/components/txs.graphql";
-import {TransactionSummaryExt} from "@app/core/api/apollo/extensions/transaction-summary.ext";
-import BigNumber from "bignumber.js";
+import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
+import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
+import { latestTransactions, newTransaction } from '@app/modules/txs/components/txs.graphql'
+import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {
@@ -147,7 +147,6 @@ import BigNumber from "bignumber.js";
   },
   apollo: {
     txPage: {
-
       query: latestTransactions,
 
       variables: {
@@ -163,13 +162,11 @@ import BigNumber from "bignumber.js";
       },
 
       subscribeToMore: {
-
         document: newTransaction,
 
-        updateQuery: (previousResult, {subscriptionData}) => {
-
-          const {transactionSummaries} = previousResult
-          const {newTransaction} = subscriptionData.data
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const { transactionSummaries } = previousResult
+          const { newTransaction } = subscriptionData.data
 
           const items = Object.assign([], transactionSummaries.items)
           items.unshift(newTransaction)
@@ -180,17 +177,18 @@ import BigNumber from "bignumber.js";
             const numberB = b.blockNumber ? new BigNumber(b.blockNumber, 16) : new BigNumber(0)
             const numberDiff = numberB.minus(numberA).toNumber()
 
-            if(numberDiff !== 0) return numberDiff
+            if (numberDiff !== 0) {
+              return numberDiff
+            }
 
             return b.transactionIndex - a.transactionIndex
           })
-
 
           return {
             ...previousResult,
             transactionSummaries: {
               ...transactionSummaries,
-              items,
+              items
             }
           }
         },
@@ -222,7 +220,7 @@ export default class TableTxs extends Vue {
     return this.txPage ? new TransactionSummaryPageExt(this.txPage) : null
   }
 
-  get transactions(): ((TransactionSummaryPage_items | null)[]) {
+  get transactions(): (TransactionSummaryPage_items | null)[] {
     return this.txPageExt ? this.txPageExt.items || [] : []
   }
 
@@ -233,7 +231,6 @@ export default class TableTxs extends Vue {
   */
 
   setPage(page: number): void {
-
     const { txPage } = this.$apollo.queries
 
     const self = this
@@ -266,7 +263,7 @@ export default class TableTxs extends Vue {
   }
 
   get hasError(): boolean {
-    return (!!this.error && this.error !== '')
+    return !!this.error && this.error !== ''
   }
 
   get getStyle(): string {
