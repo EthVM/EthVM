@@ -15,13 +15,13 @@
             <v-flex xs12>
               <v-layout grid-list-xs row align-center justify-start fill-height class="pl-2 pr-2 pt-1 pb-1">
                 <p class="info--text tx-hash ">{{ $tc('contract.name', 1) }}:</p>
-                <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" :italic="true" />
+                <app-transform-hash :hash="contract.address" :link="`/address/${contract.address}`" :italic="true" />
               </v-layout>
             </v-flex>
             <v-flex xs12>
               <v-layout grid-list-xs row align-center justify-start fill-height class="pl-2 pr-2 pt-1 pb-1">
                 <p class="info--text tx-hash">{{ $t('contract.created') }} {{ $tc('tx.hash', 1) }}:</p>
-                <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true" />
+                <app-transform-hash :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true" />
               </v-layout>
             </v-flex>
             <v-flex xs12 pt-1>
@@ -41,12 +41,12 @@
       <v-flex hidden-xs-only>
         <v-layout grid-list-lg row wrap align-center justify-start fill-height pa-3>
           <v-flex sm4 class="pr-5">
-            <app-hash-concat :hash="contract.address" :link="`/address/${contract.address}`" :italic="true" />
+            <app-transform-hash :hash="contract.address" :link="`/address/${contract.address}`" :italic="true" />
           </v-flex>
           <v-flex sm4>
             <v-layout row class="pl-1 pr-5">
               <p class="info--text tx-hash pl-2">{{ $tc('tx.hash', 1) }}:</p>
-              <app-hash-concat :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true" />
+              <app-transform-hash :hash="contract.tx.getHash()" :link="`/tx/${contract.tx.getHash()}`" :italic="true" />
             </v-layout>
           </v-flex>
           <v-flex sm2>
