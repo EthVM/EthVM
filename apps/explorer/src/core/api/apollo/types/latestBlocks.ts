@@ -16,6 +16,9 @@ export interface latestBlocks_blockSummaries_items {
   numFailedTxs: any | null;
   reward: any | null;
   uncleHashes: (string | null)[] | null;
+  transactionHashes: (string | null)[] | null;
+  difficulty: any | null;
+  timestamp: string | null;
 }
 
 export interface latestBlocks_blockSummaries {

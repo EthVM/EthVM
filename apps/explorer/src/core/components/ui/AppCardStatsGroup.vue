@@ -32,40 +32,10 @@
 
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import { Events } from '@app/core/hub'
-import { Block, BlockMetrics } from '@app/core/models'
-import { latestBlockStats } from '@app/core/components/ui/stats.graphql'
-import BN from 'bignumber.js'
+import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@app/core/components/ui/stats.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js';
-
-class Stats {
-
-  lastNumber?: BigNumber
-  lastTimestamp?: number
-  lastDifficulty?: BigNumber
-  hashRate?: BigNumber
-  lastNumSuccessfulTxs?: BigNumber
-  lastNumFailedTxs?: BigNumber
-
-  constructor(
-    lastNumber?: string,
-    lastTimestamp?: string,
-    lastDifficulty?: string,
-    hashRate?: string,
-    lastNumSuccessfulTxs?: string,
-    lastNumFailedTxs?: string
-  ) {
-    if(lastNumber) this.lastNumber = new BigNumber(lastNumber, 16)
-    if(lastTimestamp) this.lastTimestamp = +lastTimestamp
-    if(lastDifficulty) this.lastDifficulty = new BigNumber(lastDifficulty, 16)
-    if(hashRate) this.hashRate = new BigNumber(hashRate, 16)
-    if(lastNumSuccessfulTxs) this.lastNumSuccessfulTxs = new BigNumber(lastNumSuccessfulTxs, 16)
-    if(lastNumFailedTxs) this.lastNumFailedTxs = new BigNumber(lastNumFailedTxs, 16)
-  }
-
-}
-
+import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext";
 
 @Component({
   components: {
@@ -73,50 +43,46 @@ class Stats {
   },
   apollo: {
 
-    stats: {
+    blockSummary: {
 
-      query() {
-        return latestBlockStats
-      },
+      query: latestBlockStats,
 
-      update({ blockSummaries, hashRate }) {
+      update({ blockSummaries }) {
         const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = blockSummaries.items[0]
-        return new Stats(number, timestamp, difficulty, hashRate, numSuccessfulTxs, numFailedTxs)
+        return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
       },
 
-      // subscribeToMore: {
-      //
-      //   document: newBlock,
-      //
-      //   updateQuery: (previousResult, {subscriptionData}) => {
-      //
-      //     const {blockSummaries} = previousResult
-      //     const {newBlock} = subscriptionData.data
-      //
-      //     const items = Object.assign([], blockSummaries.items)
-      //     items.unshift(new BlockSummaryExt(newBlock))
-      //
-      //     // ensure order by block number desc
-      //     items.sort((a, b) => {
-      //       const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
-      //       const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
-      //       return numberB.minus(numberA).toNumber()
-      //     })
-      //
-      //     return {
-      //       ...previousResult,
-      //       blockSummaries: {
-      //         ...blockSummaries,
-      //         items,
-      //       }
-      //     }
-      //   },
-      //
-      //   skip() {
-      //     return this.pageType !== 'home'
-      //   }
-      // }
+      subscribeToMore: {
+
+        document: newBlockStats,
+
+        updateQuery: (previousResult, {subscriptionData}) => {
+          const { newBlock } = subscriptionData.data
+          const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = newBlock
+          return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
+        }
+      }
+    },
+
+    hashRate: {
+
+      query: latestHashRate,
+
+      update({ hashRate }) {
+        return new BigNumber(hashRate)
+      },
+
+      subscribeToMore: {
+
+        document: newHashRate,
+
+        updateQuery: (previousResult, {subscriptionData}) => {
+          const { newHashRate } = subscriptionData.data
+          return new BigNumber(newHashRate.hashRate)
+        }
+      }
     }
+
   }
 })
 export default class AppInfoCardGroup extends Vue {
@@ -134,8 +100,9 @@ export default class AppInfoCardGroup extends Vue {
   ===================================================================================
   */
 
-  stats: Stats = new Stats()
-  blockMetric: BlockMetrics | null = null
+  blockSummary: BlockSummaryExt | null = null
+  hashRate: BigNumber | null = null
+
   seconds: number = 0
   secondsInterval: number | null = null
 
@@ -149,21 +116,10 @@ export default class AppInfoCardGroup extends Vue {
     this.startCount()
   }
 
-  mounted() {
-    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, _ => {
-      const lastBlockMetric = this.$store.getters.blockMetrics.top()
-      if (lastBlockMetric) {
-        this.setBlockMetric(lastBlockMetric)
-        this.startCount()
-      }
-    })
-  }
-
   beforeDestroy() {
     if (this.secondsInterval) {
       clearInterval(this.secondsInterval)
     }
-    this.$eventHub.$off([Events.NEW_BLOCK_METRIC])
   }
 
   /*
@@ -174,8 +130,9 @@ export default class AppInfoCardGroup extends Vue {
 
   startCount(): void {
     this.secondsInterval = window.setInterval(() => {
-      if (this.stats) {
-        this.seconds = Math.ceil((new Date().getTime() - this.stats.lastTimestamp! * 1000) / 1000)
+      if (this.blockSummary) {
+        const lastTimestamp = this.blockSummary.timestampDate!
+        this.seconds = Math.ceil((new Date().getTime() - lastTimestamp.getTime()) / 1000)
       }
     }, 1000)
   }
@@ -187,7 +144,7 @@ export default class AppInfoCardGroup extends Vue {
   */
 
   get loading(): boolean {
-    return this.$apollo.queries.stats.loading
+    return this.$apollo.loading
   }
 
   get currentType(): string {
@@ -199,27 +156,33 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestBlockNumber(): string {
-    return !this.loading ? this.stats.lastNumber!.toString() : this.loadingMessage
+    const { loading, loadingMessage, blockSummary } = this
+    return !loading && blockSummary ? blockSummary.numberBN!.toString() : loadingMessage
   }
 
   get latestHashRate(): string {
-    return !this.loading ? this.stats.hashRate!.div('1e12').decimalPlaces(4).toString() : this.loadingMessage
+    const { loading, loadingMessage, hashRate } = this
+    return !loading && hashRate ? hashRate.div('1e12').decimalPlaces(4).toString() : loadingMessage
   }
 
   get latestDifficulty(): string {
-    return !this.loading ? this.stats.lastDifficulty!.div('1e12').decimalPlaces(4).toString() : this.loadingMessage
+    const { loading, loadingMessage, blockSummary } = this
+    return !loading && blockSummary ? blockSummary.difficultyBN!.div('1e12').decimalPlaces(4).toString() : loadingMessage
   }
 
   get latestBlockSuccessTxs(): string {
-    return !this.loading ? this.stats.lastNumSuccessfulTxs!.toString() : this.loadingMessage
+    const { loading, loadingMessage, blockSummary } = this
+    return !loading && blockSummary ? blockSummary.numSuccessfulTxsBN!.toString() : loadingMessage
   }
 
   get latestBlockFailedTxs(): string {
-    return !this.loading ? this.stats.lastNumFailedTxs!.toString() : this.loadingMessage
+    const { loading, loadingMessage, blockSummary } = this
+    return !loading && blockSummary ? blockSummary.numFailedTxsBN!.toString() : loadingMessage
   }
 
   get latestBlockPendingTxs(): string {
-    return !this.loading && this.blockMetric ? this.blockMetric.numPendingTxs.toString() : this.loadingMessage
+    // TODO
+    return this.loadingMessage
   }
 
   get secSinceLastBlock(): string {

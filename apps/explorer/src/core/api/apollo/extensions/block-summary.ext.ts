@@ -12,30 +12,40 @@ export class BlockSummaryExt implements BlockSummary {
   number!: any | null;
   reward!: any | null;
   uncleHashes!: (string | null)[] | null;
+  difficulty!: any | null
+  timestamp!: string | null
+  transactionHashes!: (string | null)[] | null
 
-
-  constructor(proto: BlockSummary) {
+  constructor(proto: any) {
     Object.assign(this, proto)
   }
 
-  get numberBN(): BN {
-    return new BN(this.number, 16)
+  get numberBN(): BN | null {
+    return this.number ? new BN(this.number, 16) : null
   }
 
-  get numTxsBN(): BN {
-    return new BN(this.numTxs, 16)
+  get numTxsBN(): BN | null{
+    return this.numTxs ? new BN(this.numTxs, 16) : null
   }
 
-  get numFailedTxsBN(): BN {
-    return new BN(this.numFailedTxs, 16)
+  get numFailedTxsBN(): BN | null {
+    return this.numFailedTxs ? new BN(this.numFailedTxs, 16) : null
   }
 
-  get numSuccessfulTxsBN(): BN {
-    return new BN(this.numSuccessfulTxs, 16)
+  get numSuccessfulTxsBN(): BN | null {
+    return this.numSuccessfulTxs ? new BN(this.numSuccessfulTxs, 16) : null
   }
 
-  get rewardBN(): BN {
-    return this.reward ? new BN(this.reward, 16) : new BN(0)
+  get rewardBN(): BN | null {
+    return this.reward ? new BN(this.reward, 16) : null
+  }
+
+  get difficultyBN(): BN | null {
+    return this.difficulty ? new BN(this.difficulty) : null
+  }
+
+  get timestampDate(): Date | null {
+    return this.timestamp ? new Date(+this.timestamp * 1000) : null
   }
 
 }

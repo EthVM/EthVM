@@ -16,6 +16,9 @@ export interface newBlock_newBlock {
   numFailedTxs: any | null;
   reward: any | null;
   uncleHashes: (string | null)[] | null;
+  transactionHashes: (string | null)[] | null;
+  difficulty: any | null;
+  timestamp: string | null;
 }
 
 export interface newBlock {

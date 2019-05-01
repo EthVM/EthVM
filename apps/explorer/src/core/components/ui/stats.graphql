@@ -10,7 +10,24 @@ query latestBlockStats {
     }
   }
 
-  hashRate
+}
+
+subscription newBlockStats {
+
+  newBlock {
+    number
+    timestamp
+    difficulty
+    numSuccessfulTxs
+    numFailedTxs
+  }
 
 }
 
+query latestHashRate {
+  hashRate
+}
+
+subscription newHashRate {
+  hashRate
+}

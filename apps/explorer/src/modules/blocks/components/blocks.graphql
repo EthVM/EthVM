@@ -14,6 +14,9 @@ fragment BlockSummary on BlockSummary {
   numFailedTxs
   reward
   uncleHashes
+  transactionHashes
+  difficulty
+  timestamp
 }
 
 fragment BlockSummaryPage on BlockSummaryPage {
