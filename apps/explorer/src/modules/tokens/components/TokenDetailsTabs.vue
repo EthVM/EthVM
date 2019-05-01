@@ -48,20 +48,20 @@
   import { Tab } from '@app/core/components/props'
   import { Component, Vue, Prop } from 'vue-property-decorator'
 
-  @Component({
-    components: {
-      AppTabs,
-      AppError,
-      TokenTableTransfers,
-      TokenTableHolders
-    }
-  })
-  export default class TokenDetailsTabs extends Vue {
-    /*
-    ===================================================================================
-      Props
-    ===================================================================================
-    */
+@Component({
+  components: {
+    AppError,
+    AppTabs,
+    TokenTableHolders,
+    TokenTableTransfers
+  }
+})
+export default class TokenDetailsTabs extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
 
     @Prop(String) addressRef!: string
     @Prop(Array) tokenTransfers!: Transfer[]

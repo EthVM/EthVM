@@ -36,7 +36,7 @@
                             <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                           </v-flex>
                           <v-flex xs9 pa-1>
-                            <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
+                            <app-transform-hash :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
                           </v-flex>
                         </v-layout>
                       </v-flex>
@@ -49,19 +49,19 @@
                         </div>
                       </v-flex>
                       <v-flex xs6 pa-2>
-                        <app-hash-concat v-if="getType(tx) === 'self'" :hash="tx.getFrom().toString()" :italic="true" />
+                        <app-transform-hash v-if="getType(tx) === 'self'" :hash="tx.getFrom().toString()" :italic="true" />
                         <div v-else>
                           <div v-if="tx.getContractAddress().isEmpty()">
-                            <app-hash-concat
+                            <app-transform-hash
                               v-if="getType(tx) === 'in'"
                               :hash="tx.getFrom().toString()"
                               :italic="true"
                               :link="`/address/${tx.getFrom().toString()}`"
                             />
-                            <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
+                            <app-transform-hash v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
                           </div>
                           <div v-else>
-                            <app-hash-concat
+                            <app-transform-hash
                               :hash="tx.getContractAddress().toString()"
                               :italic="true"
                               :link="`/address/${tx.getContractAddress().toString()}`"
@@ -115,7 +115,7 @@
                               <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                             </v-flex>
                             <v-flex sm10 pa-1>
-                              <app-hash-concat :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
+                              <app-transform-hash :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
                             </v-flex>
                           </v-layout>
                         </v-flex>
@@ -127,20 +127,20 @@
                               </div>
                             </v-flex>
                             <v-flex v-if="getType(tx) === 'self'" sm10>
-                              <app-hash-concat :hash="tx.getFrom().toString()" :italic="true" />
+                              <app-transform-hash :hash="tx.getFrom().toString()" :italic="true" />
                             </v-flex>
                             <v-flex sm10 v-else>
                               <div v-if="tx.getContractAddress().isEmpty()">
-                                <app-hash-concat
+                                <app-transform-hash
                                   v-if="getType(tx) === 'in'"
                                   :hash="tx.getFrom().toString()"
                                   :italic="true"
                                   :link="`/address/${tx.getFrom().toString()}`"
                                 />
-                                <app-hash-concat v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
+                                <app-transform-hash v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
                               </div>
                               <div v-else>
-                                <app-hash-concat
+                                <app-transform-hash
                                   :hash="tx.getContractAddress().toString()"
                                   :italic="true"
                                   :link="`/address/${tx.getContractAddress().toString()}`"
@@ -253,14 +253,14 @@
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
 import { TranslateResult } from 'vue-i18n'
 
 @Component({
   components: {
     AppTimeAgo,
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class TableAddressTxRow extends Mixins(StringConcatMixin) {

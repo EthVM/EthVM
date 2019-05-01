@@ -1,6 +1,6 @@
 import { ChartData, ChartPoints } from '@app/modules/charts/props'
-import { Component, Vue } from 'vue-property-decorator'
 import { EthValue } from '@app/core/models'
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export class ChartMixin extends Vue {

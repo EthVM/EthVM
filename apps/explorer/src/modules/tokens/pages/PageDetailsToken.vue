@@ -74,6 +74,8 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb } from '@app/core/components/props'
+import { Contract, Token, Tx } from '@app/core/models'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { TokenHolder, Transfer } from '@app/core/models'
 
 const MAX_ITEMS = 10
@@ -81,10 +83,10 @@ const MAX_ITEMS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    TokenDetailsList,
-    TokenDetailsTabs,
     HolderDetailsList,
-    HolderDetailsTabs
+    HolderDetailsTabs,
+    TokenDetailsList,
+    TokenDetailsTabs
   }
 })
 export default class PageDetailsToken extends Vue {
@@ -326,7 +328,6 @@ export default class PageDetailsToken extends Vue {
           this.totalHolderTransfers = totalCount
         })
         .catch(e => {
-          console.log('Err', e)
           this.errorHolderTransfers = this.$i18n.t('message.no-history').toString()
         })
 

@@ -1,3 +1,5 @@
+import Vuetify from 'vuetify/lib'
+import 'vuetify/src/stylus/app.styl'
 import { EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
 import router from '@app/core/router'
@@ -11,24 +13,14 @@ import { split } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
-import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import VueTimeago from 'vue-timeago'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
 
 /*
   ===================================================================================
     Vue: Plugins Configuration
   ===================================================================================
 */
-
-// -------------------------------------------------------
-//    VTooltip
-// -------------------------------------------------------
-
-Vue.use(VTooltip)
 
 // -------------------------------------------------------
 //    EventHub
@@ -76,19 +68,6 @@ const api = new EthvmApolloApi(apolloClient)
 
 Vue.use(VueApollo)
 Vue.use(VueEthvmApi, api)
-
-// -------------------------------------------------------
-//    TimeAgo
-// -------------------------------------------------------
-
-Vue.use(VueTimeago, {
-  name: 'timeago',
-  locale: 'en-US',
-  locales: {
-    'en-US': require('date-fns/locale/en'),
-    ru: require('date-fns/locale/ru')
-  }
-})
 
 // -------------------------------------------------------
 //    Vuetify

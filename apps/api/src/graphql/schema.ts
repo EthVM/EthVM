@@ -230,10 +230,6 @@ export class ContractSupport {
 }
 
 export abstract class IQuery {
-    abstract accountByAddress(address: string): Account | Promise<Account>;
-
-    abstract blockMetricsByDay(duration: Duration, fields?: string[]): BlockMetrics[] | Promise<BlockMetrics[]>;
-
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
@@ -243,6 +239,8 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
 
     abstract totalNumberOfBlocks(): number | Promise<number>;
+
+    abstract blockMetricsByDay(duration: Duration, fields?: string[]): BlockMetrics[] | Promise<BlockMetrics[]>;
 
     abstract contractByAddress(address: string): Contract | Promise<Contract>;
 
@@ -275,6 +273,8 @@ export abstract class IQuery {
     abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+
+    abstract accountByAddress(address: string): Account | Promise<Account>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 

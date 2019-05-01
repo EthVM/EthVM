@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import _debounce from 'lodash.debounce'
 
 @Component
 export default class AppPaginate extends Vue {
@@ -115,13 +114,6 @@ export default class AppPaginate extends Vue {
   ===================================================================================
   */
 
-  /**
-   * Upon manually updating computed property pageDisplay,
-   * setPage() with desired updated value (and emit to parent component/view)
-   * Set timeout is used to give the user adequate time to type in their desired page.
-   * Lodash _debounce is not used because it immediately triggers upon change as opposed
-   * to waiting 500ms initially.
-   */
   set pageDisplay(pageDisplay: string) {
     const desiredPage = parseInt(pageDisplay, 10) - 1
     ;(desiredPage >= 0 && desiredPage <= this.lastPage) || !pageDisplay ? (this.isError = false) : (this.isError = true)

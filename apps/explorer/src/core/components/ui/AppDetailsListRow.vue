@@ -26,8 +26,8 @@
             <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
           </div>
           <div v-else>
-            <app-hash-concat v-if="detail.link" :hash="detail.detail" :link="detail.link" />
-            <app-hash-concat v-else :hash="detail.detail" :is-blue="false" />
+            <app-transform-hash v-if="detail.link" :hash="detail.detail" :link="detail.link" />
+            <app-transform-hash v-else :hash="detail.detail" :is-blue="false" />
           </div>
         </div>
       </v-flex>
@@ -51,15 +51,15 @@
 </template>
 
 <script lang="ts">
-import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Detail } from '@app/core/components/props'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 
 @Component({
   components: {
     AppCopyToClip,
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class AppDetailsListRow extends Vue {
