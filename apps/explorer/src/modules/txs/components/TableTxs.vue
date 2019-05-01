@@ -155,8 +155,11 @@ import BigNumber from "bignumber.js";
         limit: 50
       },
 
-      update(data) {
-        return data.transactionSummaries
+      update({ transactionSummaries }) {
+        return {
+          ...transactionSummaries,
+          items: transactionSummaries.items.map(i => new TransactionSummaryExt(i))
+        }
       },
 
       subscribeToMore: {
@@ -169,9 +172,7 @@ import BigNumber from "bignumber.js";
           const {newTransaction} = subscriptionData.data
 
           const items = Object.assign([], transactionSummaries.items)
-          // add one at the beginning, remove one at the end
-
-          items.unshift(new TransactionSummaryExt(newTransaction))
+          items.unshift(newTransaction)
 
           // ensure order by block number desc and transaction index desc
           items.sort((a, b) => {

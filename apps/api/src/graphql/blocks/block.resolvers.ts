@@ -84,7 +84,12 @@ export class BlockResolvers {
     return this.pubSub.asyncIterator('newBlock')
   }
 
-  @Subscription()
+  @Subscription(
+    'hashRate', {
+      // TODO determine why we need to specify the resolve function for this to work
+      resolve: (hashRate: BigNumber) => hashRate,
+    } as SubscriptionOptions,
+  )
   hashRate() {
     return this.pubSub.asyncIterator('hashRate')
   }

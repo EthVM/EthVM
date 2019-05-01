@@ -153,17 +153,18 @@
     apollo: {
       blockPage: {
 
-        query() {
-          return latestBlocks
-        },
+        query: latestBlocks,
 
         variables: {
           offset: 0,
           limit: 50
         },
 
-        update(data) {
-          return data.blockSummaries
+        update({ blockSummaries }) {
+          return {
+            ...blockSummaries,
+            items: blockSummaries.items.map(i => new BlockSummaryExt(i))
+          }
         },
 
         subscribeToMore: {
@@ -176,7 +177,7 @@
             const {newBlock} = subscriptionData.data
 
             const items = Object.assign([], blockSummaries.items)
-            items.unshift(new BlockSummaryExt(newBlock))
+            items.unshift(newBlock)
 
             // ensure order by block number desc
             items.sort((a, b) => {

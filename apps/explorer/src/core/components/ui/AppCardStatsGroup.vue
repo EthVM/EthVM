@@ -58,8 +58,13 @@ import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext
 
         updateQuery: (previousResult, {subscriptionData}) => {
           const { newBlock } = subscriptionData.data
-          const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = newBlock
-          return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
+          return {
+            ...previousResult,
+            blockSummaries: {
+              ...previousResult.blockSummaries,
+              items: [newBlock]
+            }
+          }
         }
       }
     },
@@ -77,8 +82,11 @@ import {BlockSummaryExt} from "@app/core/api/apollo/extensions/block-summary.ext
         document: newHashRate,
 
         updateQuery: (previousResult, {subscriptionData}) => {
-          const { newHashRate } = subscriptionData.data
-          return new BigNumber(newHashRate.hashRate)
+          const { hashRate } = subscriptionData.data
+          return {
+            ...previousResult,
+            hashRate: hashRate
+          }
         }
       }
     }
