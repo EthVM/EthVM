@@ -30,18 +30,18 @@ export class TokenService {
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
   ) {}
 
-  async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<Erc20BalanceEntity[] | Erc721BalanceEntity[]> {
+  async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
     const skip = page * limit
     const findOptions: FindManyOptions = {
       where: { contract: address },
       take: limit,
       skip,
     }
-    const ercBalances = await this.erc20BalanceRepository.find(findOptions)
-    if (ercBalances.length) {
+    const ercBalances = await this.erc20BalanceRepository.findAndCount(findOptions)
+    if (ercBalances[1] > 0) {
       return ercBalances
     }
-    return await this.erc721BalanceRepository.find(findOptions)
+    return await this.erc721BalanceRepository.findAndCount(findOptions)
   }
 
   async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<Erc20BalanceEntity | Erc721BalanceEntity | undefined> {

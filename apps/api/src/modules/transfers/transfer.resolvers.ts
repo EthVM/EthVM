@@ -18,11 +18,10 @@ export class TransferResolvers {
     @Args('page', ParsePagePipe) page?: number,
   ): Promise<TransfersPageDto> {
     const result = await this.transferService.findTokenTransfersByContractAddress(contractAddress, limit, page)
-    const transfersPage = {
+    return new TransfersPageDto({
       items: result[0],
       totalCount: result[1],
-    }
-    return new TransfersPageDto(transfersPage)
+    })
   }
 
   @Query()
@@ -32,9 +31,12 @@ export class TransferResolvers {
     @Args('filter') filter: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
-  ): Promise<TransferDto[]> {
-    const entities = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, page)
-    return entities.map(e => new TransferDto(e))
+  ): Promise<TransfersPageDto> {
+    const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, page)
+    return new TransfersPageDto({
+      items: result[0],
+      totalCount: result[1],
+    })
   }
 
   @Query()
@@ -44,10 +46,9 @@ export class TransferResolvers {
     @Args('page', ParsePagePipe) page?: number,
   ): Promise<TransfersPageDto> {
     const result = await this.transferService.findInternalTransactionsByAddress(address, limit, page)
-    const transfersPage = {
+    return new TransfersPageDto({
       items: result[0],
       totalCount: result[1],
-    }
-    return new TransfersPageDto(transfersPage)
+    })
   }
 }

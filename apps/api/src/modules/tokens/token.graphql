@@ -1,5 +1,5 @@
 type Query {
-  tokenHolders(address: String!, limit: Int, page: Int): [TokenHolder]
+  tokenHolders(address: String!, limit: Int, page: Int): TokenHoldersPage
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
   addressAllTokensOwned(address: String!): [Token]!
   addressAmountTokensOwned(address: String!): Int!
@@ -66,6 +66,11 @@ type TokenMetadata {
   address: String
   decimals: Int
   logo: String
+}
+
+type TokenHoldersPage {
+  items: [TokenHolder]
+  totalCount: Int
 }
 
 enum ExchangeRatePair {

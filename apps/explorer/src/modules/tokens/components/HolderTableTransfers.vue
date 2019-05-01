@@ -1,9 +1,8 @@
 <template>
   <div>
     <!-- Pagination -->
-    <v-layout row fill-height align-center justify-space-between>
-      <div v-html="paginationText" class="ml-2"></div>
-      <v-pagination v-model="page" :length="numPages" class="mt-2 mb-2"> </v-pagination>
+    <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="numPages > 1">
+      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" />
     </v-layout>
     <!-- End Pagination -->
 
@@ -24,7 +23,10 @@
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="(tx, index) in transfersPage" class="transparent" flat :key="`${index}-${tx.transactionHash}`">
+    <v-card v-if="totalTransfers === 0" flat>
+      <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
+    </v-card>
+    <v-card color="white" v-for="(tx, index) in transfers" class="transparent" flat :key="`${index}-${tx.transactionHash}`">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
@@ -74,11 +76,15 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Transfer, Tx } from '@app/core/models'
 import BN from 'bignumber.js'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
 
 @Component({
-  components: { AppTimeAgo }
+  components: {
+    AppTimeAgo,
+    AppPaginate
+  }
 })
 export default class HolderTableTransfers extends Vue {
   /*
@@ -88,15 +94,11 @@ export default class HolderTableTransfers extends Vue {
   */
 
   @Prop(Array) transfers!: Array<any>
+  @Prop(Number) totalTransfers!: number
+  @Prop(Number) page!: number
   @Prop(String) decimals?: string
-
-  /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  page = 1 // Current pagination page number
+  @Prop(Boolean) loading?: boolean
+  @Prop(Boolean) hasError?: boolean
 
   /*
  ===================================================================================
@@ -120,6 +122,10 @@ export default class HolderTableTransfers extends Vue {
     return transfer.value
   }
 
+  setPage(page: number): void {
+    this.$emit('page', page)
+  }
+
   /*
   ===================================================================================
     Computed Values
@@ -131,28 +137,7 @@ export default class HolderTableTransfers extends Vue {
    * @return {Integer} - Number of pages of results
    */
   get numPages() {
-    return Math.ceil(this.transfers.length / MAX_ITEMS)
-  }
-
-  /**
-   *  Calculate which portion of the transfers array results to display
-   *  based on the current pagination page.
-   *  @return {Tx[]} - Array of transfers
-   */
-  get transfersPage(): Tx[] {
-    const startIndex = (this.page - 1) * MAX_ITEMS
-    const endIndex = startIndex + MAX_ITEMS
-    return this.transfers.slice(startIndex, endIndex)
-  }
-
-  /**
-   * Correctly generate/format text for pagination display.
-   * @return {String} - Pagination text
-   */
-  get paginationText() {
-    const start = this.transfers.length > 0 ? (this.page - 1) * MAX_ITEMS + 1 : 0
-    const end = this.transfers.length > 0 ? start + this.transfersPage.length - 1 : 0
-    return `Showing results ${start} - ${end} of ${this.transfers.length}`
+    return this.totalTransfers > 0 ? Math.ceil(this.totalTransfers / MAX_ITEMS) : 0
   }
 }
 </script>

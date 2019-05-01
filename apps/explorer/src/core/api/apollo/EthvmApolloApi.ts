@@ -45,11 +45,11 @@ import {
   Statistic,
   Token,
   TokenExchangeRate,
-  TokenTransfer,
   Transfer,
   Tx,
   Uncle,
-  CoinExchangeRate
+  CoinExchangeRate,
+  TokenHolder
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import { Observable } from 'apollo-client/util/Observable'
@@ -142,7 +142,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => new Block(res.data.blockByNumber))
   }
 
-  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<SimpleBlock[]> {
+  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[]; totalCount: number }> {
     return this.apollo
       .query({
         query: minedBlocksByAddress,
@@ -152,7 +152,13 @@ export class EthvmApolloApi implements EthvmApi {
           page
         }
       })
-      .then(res => res.data.minedBlocksByAddress.map(raw => new SimpleBlock(raw)))
+      .then(res => {
+        const { minedBlocksByAddress } = res.data
+        return {
+          items: minedBlocksByAddress.items.map(raw => new SimpleBlock(raw)),
+          totalCount: minedBlocksByAddress.totalCount
+        }
+      })
   }
 
   public getTotalNumberOfBlocks(): Promise<number> {
@@ -323,7 +329,7 @@ export class EthvmApolloApi implements EthvmApi {
   // Tokens
   // ------------------------------------------------------------------------------------
 
-  public getTokenHolders(address: string, limit?: number, page?: number): Promise<any> {
+  public getTokenHolders(address: string, limit?: number, page?: number): Promise<{ items: TokenHolder[]; totalCount: number }> {
     return this.apollo
       .query({
         query: tokenHolders,
@@ -349,7 +355,13 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenTransfersByContractAddress)
   }
 
-  public getTokenTransfersByContractAddressForHolder(address: string, holder: string, filter: string, limit: number, page: number): Promise<TokenTransfer[]> {
+  public getTokenTransfersByContractAddressForHolder(
+    address: string,
+    holder: string,
+    filter: string,
+    limit: number,
+    page: number
+  ): Promise<{ items: Transfer[]; totalCount: number }> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddressForHolder,

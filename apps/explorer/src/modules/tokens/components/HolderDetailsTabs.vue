@@ -3,7 +3,16 @@
     <!-- Transfers -->
     <v-tab-item slot="tabs-item" value="tab-0">
       <v-progress-linear color="blue" indeterminate v-if="isHolderTransfersLoading" class="mt-0" />
-      <holder-table-transfers v-if="!isHolderTransfersLoading && !hasErrorHolderTransfers" :transfers="holderTransfers" :decimals="decimals" />
+      <app-error :has-error="hasErrorHolderTransfers" :message="errorHolderTransfers" />
+      <holder-table-transfers
+        :transfers="holderTransfers"
+        :total-transfers="totalTransfers"
+        :page="transfersPage"
+        :error="errorHolderTransfers"
+        :loading="isHolderTransfersLoading"
+        :decimals="decimals"
+        @page="setPageTransfers"
+      />
     </v-tab-item>
     <!-- End Transfers -->
   </app-tabs>
@@ -12,33 +21,47 @@
 <script lang="ts">
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import HolderTableTransfers from '@app/modules/tokens/components/HolderTableTransfers.vue'
-import { Tab } from '@app/core/components/props'
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Tab } from '@app/core/components/props'
+import AppError from '@app/core/components/ui/AppError.vue'
 
 @Component({
   components: {
     AppTabs,
-    HolderTableTransfers
+    HolderTableTransfers,
+    AppError
   }
 })
 export default class HolderDetailsTabs extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
   @Prop(String) addressRef!: string
   @Prop(Array) holderTransfers!: any
+  @Prop(Number) totalTransfers!: number
+  @Prop(Number) transfersPage!: number
   @Prop(Boolean) isHolderTransfersLoading!: boolean
   @Prop(String) errorHolderTransfers!: string
   @Prop(String) decimals?: string
 
   /*
   ===================================================================================
-    Computed Values
+    Methods
   ===================================================================================
   */
+
+  setPageTransfers(page: number): void {
+    this.$emit('holdersTransfersPage', page)
+  }
+
+  /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
   /**
    * Determines whether or not component has an error.
@@ -63,6 +86,16 @@ export default class HolderDetailsTabs extends Vue {
       }
     ]
     return tabs
+  }
+
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
+  get hasErrorTokenTransfers(): boolean {
+    return this.errorHolderTransfers !== ''
   }
 }
 </script>

@@ -122,24 +122,27 @@ query blockByNumber($number: Int) {
 
 query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
   minedBlocksByAddress(address: $address, limit: $limit, page: $page) {
-    header {
-      hash
-      number
-      author
-    }
-    uncles {
-      hash
-    }
-    transactions {
-      hash
-      receipt {
-        status
+    items {
+      header {
+        hash
+        number
+        author
+      }
+      uncles {
+        hash
+      }
+      transactions {
+        hash
+        receipt {
+          status
+        }
+      }
+      rewards {
+        rewardType: deltaType
+        value: amount
       }
     }
-    rewards {
-      rewardType: deltaType
-      value: amount
-    }
+    totalCount
   }
 }
 

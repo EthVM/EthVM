@@ -5,6 +5,7 @@ import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe'
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
 import { BlockDto } from '@app/modules/blocks/dto/block.dto'
+import { BlocksPageDto } from '@app/modules/blocks/dto/blocks-page.dto'
 
 @Resolver('Block')
 export class BlockResolvers {
@@ -35,9 +36,12 @@ export class BlockResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
-  ) {
-    const entities = await this.blockService.findMinedBlocksByAddress(address, limit, page)
-    return entities.map(e => new BlockDto(e))
+  ): Promise<BlocksPageDto> {
+    const result = await this.blockService.findMinedBlocksByAddress(address, limit, page)
+    return new BlocksPageDto({
+      items: result[0],
+      totalCount: result[1],
+    })
   }
 
   @Query()

@@ -2,7 +2,7 @@
   <v-card color="white" flat class="pr-2 pl-2 pt-3">
     <!-- Pagination -->
     <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="numPages > 1">
-      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
+      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" />
     </v-layout>
     <!-- End Pagination -->
 

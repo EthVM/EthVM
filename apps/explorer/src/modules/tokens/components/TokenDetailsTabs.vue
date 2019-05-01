@@ -25,16 +25,26 @@
     -->
     <v-tab-item slot="tabs-item" value="tab-1">
       <v-progress-linear color="blue" indeterminate v-if="isTokenHoldersLoading" class="mt-0" />
-      <token-table-holders v-if="!isTokenHoldersLoading" :holders="tokenHolders" :address-ref="addressRef" :total-supply="totalSupply" :decimals="decimals" />
+      <token-table-holders
+        :holders="tokenHolders"
+        :page="holdersPage"
+        :total-holders="totalHolders"
+        :address-ref="addressRef"
+        :total-supply="totalSupply"
+        :decimals="decimals"
+        :loading="isTokenHoldersLoading"
+        :error="errorTokenHolders"
+        @page="setPageHolders"
+      />
     </v-tab-item>
   </app-tabs>
 </template>
 
 <script lang="ts">
-import AppError from '@app/core/components/ui/AppError.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
+import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
 import { Transfer, Tx } from '@app/core/models'
 import { Tab } from '@app/core/components/props'
 import { Component, Vue, Prop } from 'vue-property-decorator'
@@ -59,6 +69,8 @@ export default class TokenDetailsTabs extends Vue {
   @Prop(Number) totalTransfers!: number
   @Prop(Number) transfersPage!: number
   @Prop(Array) tokenHolders!: any
+  @Prop(Number) totalHolders!: number
+  @Prop(Number) holdersPage!: number
   @Prop(String) totalSupply?: string
   @Prop(Boolean) isTokenTransfersLoading!: boolean
   @Prop(Boolean) isTokenHoldersLoading!: boolean
@@ -67,20 +79,24 @@ export default class TokenDetailsTabs extends Vue {
   @Prop(String) decimals?: string
 
   /*
- ===================================================================================
-   Methods
- ===================================================================================
- */
+   ===================================================================================
+     Methods
+   ===================================================================================
+   */
 
   setPageTransfers(page: number): void {
     this.$emit('transfersPage', page)
   }
 
+  setPageHolders(page: number): void {
+    this.$emit('holdersPage', page)
+  }
+
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
   /**
    * Determines whether or not component has an error.
