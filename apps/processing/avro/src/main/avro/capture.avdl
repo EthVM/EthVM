@@ -97,7 +97,6 @@ protocol Capture {
   }
 
   record TransactionReceiptListRecord {
-    string blockHash;
     array<TransactionReceiptRecord> receipts;
   }
 
