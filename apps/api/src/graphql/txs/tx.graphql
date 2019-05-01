@@ -1,0 +1,89 @@
+type Query {
+
+  transactionSummaries(offset: Int = 0, limit: Int = 50): TransactionSummaryPage
+
+  tx(hash: String!): Transaction
+  txs(limit: Int, page: Int, fromBlock: BigNumber): [Transaction]
+  txsForAddress(hash: String!, filter: FilterEnum!, limit: Int, page: Int): [Transaction]
+  totalNumberOfTransactions: BigNumber
+}
+
+type Subscription {
+  newTransaction: TransactionSummary
+}
+
+type TransactionSummary {
+  hash: String
+  blockNumber: BigNumber
+  transactionIndex: Int
+  from: String
+  to: String
+  creates: String
+  contractName: String
+  contractSymbol: String
+  value: BigNumber
+  fee: BigNumber
+  successful: Boolean
+  timestamp: String
+}
+
+type TransactionSummaryPage {
+  items: [TransactionSummary]
+  totalCount: BigNumber
+}
+
+type Transaction {
+  hash: String
+  nonce: BigNumber
+  blockHash: String
+  blockNumber: BigNumber
+  transactionIndex: Int
+  from: String
+  to: String
+  value: BigNumber
+  gas: BigNumber
+  gasPrice: BigNumber
+  input: Buffer
+  v: String
+  r: String
+  s: String
+  timestamp: String
+  creates: String
+  chainId: String
+  receipt: Receipt
+  traces: [Trace]
+  successful: Boolean
+}
+
+type Receipt {
+  transactionHash: String
+  transactionIndex: String
+  blockHash: String
+  blockNumber: BigNumber
+  from: String
+  to: String
+  contractAddress: String
+  cumulativeGasUsed: BigNumber
+  gasUsed: BigNumber
+  logs: String
+  logsBloom: String
+  root: String
+  status: String
+}
+
+type Trace {
+  blockHash: String
+  transactionHash: String
+  traceAddress: String
+  transactionPosition: Int
+  blockNumber: BigNumber
+  subtraces: Int
+  error: String
+  type: String
+  action: String
+  result: String
+}
+
+enum Order {
+  asc, desc
+}

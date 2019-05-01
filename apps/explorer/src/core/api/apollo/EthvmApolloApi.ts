@@ -1,14 +1,19 @@
-import { EthvmApi } from '@app/core/api'
+import {EthvmApi} from '@app/core/api'
 import {
   accountByAddress,
   addressAllTokensOwned,
   addressAmountTokensOwned,
-  internalTransactionsByAddress
+  internalTransactionsByAddress,
 } from '@app/core/api/apollo/queries/addresses.graphql'
-import { blockMetricByHash, blockMetrics } from '@app/core/api/apollo/queries/block-metrics.graphql'
-import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
-import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
-import { search } from '@app/core/api/apollo/queries/search.graphql'
+import {
+  blockByHash,
+  blockByNumber,
+  blocks,
+  minedBlocksByAddress,
+  totalNumberOfBlocks,
+} from '@app/core/api/apollo/queries/blocks.graphql'
+import {contractByAddress, contractsCreatedBy} from '@app/core/api/apollo/queries/contracts.graphql'
+import {search} from '@app/core/api/apollo/queries/search.graphql'
 import {
   averageBlockTime,
   averageDifficulty,
@@ -18,41 +23,37 @@ import {
   averageMinerReward,
   averageTxFee,
   totalFailedTxs,
-  totalSuccessfulTxs
+  totalSuccessfulTxs,
 } from '@app/core/api/apollo/queries/statistics.graphql'
-import { newBlockMetrics, newSimpleBlocks, newSimpleTxs } from '@app/core/api/apollo/queries/subscriptions.graphql'
 import {
   holderDetails,
-  tokenHolders,
-  tokenTransfersByContractAddress,
-  tokenTransfersByContractAddressForHolder,
-  coinExchangeRate,
   tokenExchangeRateByAddress,
   tokenExchangeRateBySymbol,
   tokenExchangeRates,
-  totalNumTokenExchangeRates
+  tokenHolders,
+  tokenTransfersByContractAddress,
+  tokenTransfersByContractAddressForHolder,
+  totalNumTokenExchangeRates,
+  coinExchangeRate
 } from '@app/core/api/apollo/queries/tokens.graphql'
-import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
-import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
+import {totalNumberOfTransactions, tx, txs, txsForAddress} from '@app/core/api/apollo/queries/txs.graphql'
+import {totalNumberOfUncles, uncleByHash, uncles} from '@app/core/api/apollo/queries/uncles.graphql'
 import {
   Account,
   Block,
-  BlockMetrics,
+  CoinExchangeRate,
   Contract,
   PendingTx,
   SimpleBlock,
   SimpleTx,
   Statistic,
   Token,
-  TokenExchangeRate,
+  TokenExchangeRate, TokenHolder,
   Transfer,
   Tx,
   Uncle,
-  CoinExchangeRate,
-  TokenHolder
 } from '@app/core/models'
-import { ApolloClient } from 'apollo-client'
-import { Observable } from 'apollo-client/util/Observable'
+import {ApolloClient} from 'apollo-client'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}
@@ -128,7 +129,7 @@ export class EthvmApolloApi implements EthvmApi {
           fromBlock
         }
       })
-      .then(res => res.data.blocks.map(raw => new Block(raw)))
+      .then(res => res.data.transactions.map(raw => new Block(raw)))
   }
 
   public getBlockByNumber(number: number): Promise<Block> {
@@ -173,28 +174,29 @@ export class EthvmApolloApi implements EthvmApi {
   // Blocks Metrics
   // ------------------------------------------------------------------------------------
 
-  public getBlockMetric(hash: string): Promise<BlockMetrics> {
-    return this.apollo
-      .query({
-        query: blockMetricByHash,
-        variables: {
-          hash
-        }
-      })
-      .then(res => res.data.blockMetrics)
-  }
+  // public getBlockMetric(hash: string): Promise<BlockMetrics> {
+  //   return {} as BlockMetrics;
+  //   // return this.apollo
+  //   //   .query({
+  //   //     query: blockMetricByHash,
+  //   //     variables: {
+  //   //       hash
+  //   //     }
+  //   //   })
+  //   //   .then(res => res.data.blockMetrics)
+  // }
 
-  public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
-    return this.apollo
-      .query({
-        query: blockMetrics,
-        variables: {
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.blockMetrics)
-  }
+  // public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
+  //   return this.apollo
+  //     .query({
+  //       query: blockMetrics,
+  //       variables: {
+  //         limit,
+  //         page
+  //       }
+  //     })
+  //     .then(res => res.data.blockMetrics)
+  // }
 
   // ------------------------------------------------------------------------------------
   // Contracts
@@ -581,27 +583,42 @@ export class EthvmApolloApi implements EthvmApi {
   }
 
   // ------------------------------------------------------------------------------------
+  // Processing Metadata
+  // ------------------------------------------------------------------------------------
+
+  // public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
+  //   return this.apollo
+  //     .query({
+  //       query: processingMetadataById,
+  //       variables: {
+  //         id
+  //       }
+  //     })
+  //     .then(res => res.data.processingMetadataById)
+  // }
+
+  // ------------------------------------------------------------------------------------
   // Subscriptions
   // ------------------------------------------------------------------------------------
 
-  public observable<T>(type: string): Observable<T> {
-    let query
-    switch (type) {
-      case 'simpleBlocks':
-        query = newSimpleBlocks
-        break
-      case 'blockMetrics':
-        query = newBlockMetrics
-        break
-      case 'simpleTxs':
-        query = newSimpleTxs
-        break
-      default:
-      // TODO error
-    }
+  // public observable<T>(type: string): Observable<T> {
+  //   let query
+  //   switch (type) {
+  //     case 'simpleBlocks':
+  //       query = newSimpleBlocks
+  //       break
+  //     case 'blockMetrics':
+  //       query = newBlockMetrics
+  //       break
+  //     case 'simpleTxs':
+  //       query = newSimpleTxs
+  //       break
+  //     default:
+  //     // TODO error
+  //   }
 
-    return this.apollo.subscribe<T>({
-      query
-    })
-  }
+  //   return this.apollo.subscribe<T>({
+  //     query
+  //   })
+  // }
 }

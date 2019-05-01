@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { PrimaryColumn } from 'typeorm/decorator/columns/PrimaryColumn'
+import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import BigNumber from 'bignumber.js';
 
 @Entity('canonical_transaction_trace')
 export class TransactionTraceEntity {
@@ -22,8 +24,8 @@ export class TransactionTraceEntity {
   @Column({type: 'integer', readonly: true})
   transactionPosition?: number
 
-  @Column({type: 'numeric', readonly: true})
-  blockNumber!: string
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  blockNumber!: BigNumber
 
   @Column({type: 'integer', readonly: true})
   subtraces!: number

@@ -9,10 +9,10 @@ const socket_NEW_SIMPLE_BLOCK = function(this: any, { commit }, raw: any | any[]
     commit(Events.NEW_SIMPLE_BLOCK, sBlock)
     this._vm.$eventHub.$emit(Events.NEW_SIMPLE_BLOCK, sBlock)
 
-    sBlock.getTxs().forEach(tx => {
-      commit(Events.NEW_TX, tx)
-      this._vm.$eventHub.$emit(Events.NEW_TX, tx)
-    })
+    // sBlock.getTxs().forEach(tx => {
+    //   commit(Events.NEW_TX, tx)
+    //   this._vm.$eventHub.$emit(Events.NEW_TX, tx)
+    // })
   })
 }
 

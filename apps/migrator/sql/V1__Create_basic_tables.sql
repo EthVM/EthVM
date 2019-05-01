@@ -2,24 +2,28 @@
 
 CREATE TABLE canonical_block_header
 (
-  number            NUMERIC PRIMARY KEY,
-  hash              CHAR(66)  NOT NULL UNIQUE,
-  parent_hash       CHAR(66)  NOT NULL UNIQUE,
-  nonce             NUMERIC   NULL,
-  sha3_uncles       CHAR(66)  NOT NULL,
-  logs_bloom        CHAR(514) NOT NULL,
-  transactions_root CHAR(66)  NOT NULL,
-  state_root        CHAR(66)  NOT NULL,
-  receipts_root     CHAR(66)  NOT NULL,
-  author            CHAR(42)  NOT NULL,
-  difficulty        NUMERIC   NOT NULL,
-  total_difficulty  NUMERIC   NOT NULL,
-  extra_data        TEXT      NULL,
-  gas_limit         NUMERIC   NOT NULL,
-  gas_used          NUMERIC   NOT NULL,
-  timestamp         BIGINT    NOT NULL,
-  size              BIGINT    NOT NULL,
-  block_time        BIGINT    NULL
+  number             NUMERIC PRIMARY KEY,
+  hash               CHAR(66)  NOT NULL UNIQUE,
+  parent_hash        CHAR(66)  NOT NULL UNIQUE,
+  nonce              NUMERIC   NULL,
+  sha3_uncles        CHAR(66)  NOT NULL,
+  logs_bloom         CHAR(514) NOT NULL,
+  transactions_root  CHAR(66)  NOT NULL,
+  state_root         CHAR(66)  NOT NULL,
+  receipts_root      CHAR(66)  NOT NULL,
+  author             CHAR(42)  NOT NULL,
+  difficulty         NUMERIC   NOT NULL,
+  total_difficulty   NUMERIC   NOT NULL,
+  extra_data         TEXT      NULL,
+  gas_limit          NUMERIC   NOT NULL,
+  gas_used           NUMERIC   NOT NULL,
+  timestamp          BIGINT    NOT NULL,
+  block_time         BIGINT    NULL,
+  size               BIGINT    NOT NULL,
+  uncle_count        INT       NOT NULL,
+  uncle_hashes       TEXT      NULL,
+  transaction_count  INT       NULL,
+  transaction_hashes TEXT      NULL
 );
 
 CREATE INDEX idx_block_header_number ON canonical_block_header (number DESC);
@@ -36,7 +40,7 @@ FROM canonical_block_header AS cb
 GROUP BY cb.author
 ORDER BY count DESC;
 
-CREATE OR REPLACE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
+CREATE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
 $body$
 DECLARE
   record  RECORD;
@@ -52,7 +56,13 @@ BEGIN
   payload := json_build_object(
     'table', 'canonical_block_header',
     'action', TG_OP,
-    'payload', json_build_object('hash', record.hash, 'number', record.number)
+    'payload', json_build_object(
+      'block_hash', record.hash,
+      'number', record.number,
+      'transaction_count', record.transaction_count,
+      'uncle_count', record.uncle_count,
+      'author', record.author
+      )
     );
 
   PERFORM pg_notify('events', payload::text);
@@ -123,6 +133,8 @@ CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
+CREATE INDEX idx_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
+
 CREATE FUNCTION notify_transaction() RETURNS TRIGGER AS
 $body$
 DECLARE
@@ -139,7 +151,7 @@ BEGIN
   payload = json_build_object(
     'table', 'transaction',
     'action', TG_OP,
-    'id', json_build_object('hash', record.hash)
+    'payload', json_build_object('transaction_hash', record.hash, 'block_hash', record.block_hash)
     );
 
   PERFORM pg_notify('events', payload::text);
@@ -168,18 +180,18 @@ ORDER BY cb.number DESC,
 CREATE TABLE transaction_receipt
 (
   transaction_hash    CHAR(66) PRIMARY KEY,
-  transaction_index   INT       NOT NULL,
-  block_hash          CHAR(66)  NOT NULL,
-  block_number        NUMERIC   NOT NULL,
-  "from"              CHAR(42)  NOT NULL,
-  "to"                CHAR(42)  NULL,
-  contract_address    CHAR(42)  NULL,
-  cumulative_gas_used NUMERIC   NOT NULL,
-  gas_used            NUMERIC   NOT NULL,
-  logs                TEXT      NOT NULL,
-  logs_bloom          CHAR(514) NOT NULL,
-  root                CHAR(66)  NULL,
-  status              NUMERIC   NULL
+  transaction_index   INT          NOT NULL,
+  block_hash          CHAR(66)     NOT NULL,
+  block_number        NUMERIC      NOT NULL,
+  "from"              CHAR(42)     NOT NULL,
+  "to"                CHAR(42)     NULL,
+  contract_address    CHAR(42)     NULL,
+  cumulative_gas_used NUMERIC      NOT NULL,
+  gas_used            NUMERIC      NOT NULL,
+  logs                TEXT         NOT NULL,
+  logs_bloom          CHAR(514)    NOT NULL,
+  root                CHAR(66)     NULL,
+  status              VARCHAR(128) NULL
 );
 
 CREATE INDEX idx_transaction_receipt_block_hash ON transaction_receipt (block_hash);
@@ -187,6 +199,37 @@ CREATE INDEX idx_transaction_receipt_from ON transaction_receipt ("from");
 CREATE INDEX idx_transaction_receipt_to ON transaction_receipt ("to");
 CREATE INDEX idx_transaction_receipt_from_to ON transaction_receipt ("from", "to");
 CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("contract_address");
+
+CREATE FUNCTION notify_transaction_receipt() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload := json_build_object(
+    'table', 'transaction_receipt',
+    'action', TG_OP,
+    'payload', json_build_object('block_hash', record.block_hash, 'transaction_hash', record.transaction_hash)
+    );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_transaction_receipt
+  AFTER INSERT OR UPDATE OR DELETE
+  ON "transaction_receipt"
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_transaction_receipt();
 
 /* This view helps to filter out non canonical receipts based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_receipt AS
@@ -207,7 +250,7 @@ CREATE TABLE transaction_trace
   transaction_position INT          NULL,
   block_number         NUMERIC      NOT NULL,
   subtraces            INT          NOT NULL,
-  TYPE                 VARCHAR(66)  NOT NULL,
+  type                 VARCHAR(66)  NOT NULL,
   error                VARCHAR(514) NULL,
   action               TEXT         NOT NULL,
   result               TEXT         NULL,
@@ -217,6 +260,68 @@ CREATE TABLE transaction_trace
 CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
 CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
 CREATE INDEX idx_transaction_trace_transaction_position ON transaction_trace (transaction_position);
+CREATE INDEX idx_transaction_trace_block_hash__trace_address ON transaction_trace (block_hash, trace_address);
+
+CREATE FUNCTION notify_transaction_trace() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+/* we only want notified about top level calls and rewards */
+
+  IF (record.transaction_hash IS NULL) THEN
+    /* block or uncle reward trace */
+
+    payload := json_build_object(
+      'table', 'transaction_trace',
+      'action', TG_OP,
+      'payload', json_build_object(
+        'block_hash', record.block_hash,
+        'trace_address', record.trace_address,
+        'type', record.type,
+        'action', record.action
+        )
+      );
+
+    PERFORM pg_notify('events', payload::text);
+
+  ELSIF (record.trace_address = '[]' AND record.type = 'call') THEN
+    /* root call trace */
+
+    payload := json_build_object(
+      'table', 'transaction_trace',
+      'action', TG_OP,
+      'payload', json_build_object(
+        'block_hash', record.block_hash,
+        'transaction_hash', record.transaction_hash,
+        'trace_address', record.trace_address,
+        'type', record.type,
+        'error', record.error
+        )
+      );
+
+    PERFORM pg_notify('events', payload::text);
+
+  END IF;
+
+  RETURN NULL;
+
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_transaction_trace
+  AFTER INSERT OR UPDATE OR DELETE
+  ON "transaction_trace"
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_transaction_trace();
 
 /* This view helps to filter out non canonical traces based on the latest state of the canonical block header table */
 CREATE VIEW canonical_transaction_trace AS
@@ -229,61 +334,30 @@ WHERE cb.number IS NOT NULL
 CREATE TABLE contract
 (
   address                              CHAR(42) PRIMARY KEY,
-  creator                              CHAR(42)     NULL,
-  init                                 TEXT         NULL,
-  code                                 TEXT         NULL,
-  contract_type                        VARCHAR(32)  NULL,
-  refund_address                       CHAR(66)     NULL,
-  refund_balance                       NUMERIC      NULL,
-  trace_created_at_block_hash          CHAR(66)     NULL,
-  trace_created_at_block_number        NUMERIC      NULL,
-  trace_created_at_transaction_hash    CHAR(66)     NULL,
-  trace_created_at_transaction_index   INT          NULL,
-  trace_created_at_log_index           INT          NULL,
-  trace_created_at_trace_address       TEXT NULL,
-  trace_destroyed_at_block_hash        CHAR(66)     NULL,
-  trace_destroyed_at_block_number      NUMERIC      NULL,
-  trace_destroyed_at_transaction_hash  CHAR(66)     NULL,
-  trace_destroyed_at_transaction_index INT          NULL,
-  trace_destroyed_at_log_index         INT          NULL,
-  trace_destroyed_at_trace_address     TEXT NULL,
-  trace_destroyed_at                   TEXT         NULL
+  creator                              CHAR(42)    NULL,
+  init                                 TEXT        NULL,
+  code                                 TEXT        NULL,
+  contract_type                        VARCHAR(32) NULL,
+  refund_address                       CHAR(66)    NULL,
+  refund_balance                       NUMERIC     NULL,
+  trace_created_at_block_hash          CHAR(66)    NULL,
+  trace_created_at_block_number        NUMERIC     NULL,
+  trace_created_at_transaction_hash    CHAR(66)    NULL,
+  trace_created_at_transaction_index   INT         NULL,
+  trace_created_at_log_index           INT         NULL,
+  trace_created_at_trace_address       TEXT        NULL,
+  trace_destroyed_at_block_hash        CHAR(66)    NULL,
+  trace_destroyed_at_block_number      NUMERIC     NULL,
+  trace_destroyed_at_transaction_hash  CHAR(66)    NULL,
+  trace_destroyed_at_transaction_index INT         NULL,
+  trace_destroyed_at_log_index         INT         NULL,
+  trace_destroyed_at_trace_address     TEXT        NULL,
+  trace_destroyed_at                   TEXT        NULL
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
-
-CREATE FUNCTION notify_contract() RETURNS TRIGGER AS
-$body$
-DECLARE
-  record  RECORD;
-  payload JSON;
-BEGIN
-
-  IF (TG_OP = 'DELETE') THEN
-    record = OLD;
-  ELSE
-    record = NEW;
-  END IF;
-
-  payload = json_build_object(
-    'table', 'contract',
-    'action', TG_OP,
-    'id', json_build_object('address', record.address)
-    );
-
-  PERFORM pg_notify('events', payload::text);
-
-  RETURN NULL;
-END;
-$body$ LANGUAGE plpgsql;
-
-CREATE TRIGGER notify_contract
-  AFTER INSERT OR UPDATE OR DELETE
-  ON "contract"
-  FOR EACH ROW
-EXECUTE PROCEDURE notify_contract();
 
 CREATE VIEW canonical_contract AS
 SELECT c.*
@@ -344,18 +418,18 @@ WHERE fb.contract IS NOT NULL
 CREATE TABLE fungible_balance_delta
 (
   id                               BIGSERIAL,
-  address                          CHAR(42)     NOT NULL,
-  contract_address                 CHAR(42)     NULL,
-  counterpart_address              CHAR(42)     NULL,
-  token_type                       VARCHAR(32)  NOT NULL,
-  delta_type                       VARCHAR(32)  NOT NULL,
-  trace_location_block_hash        CHAR(66)     NULL,
-  trace_location_block_number      NUMERIC      NULL,
-  trace_location_transaction_hash  CHAR(66)     NULL,
-  trace_location_transaction_index INT          NULL,
-  trace_location_log_index         INT          NULL,
-  trace_location_trace_address     TEXT NULL,
-  amount                           NUMERIC      NOT NULL
+  address                          CHAR(42)    NOT NULL,
+  contract_address                 CHAR(42)    NULL,
+  counterpart_address              CHAR(42)    NULL,
+  token_type                       VARCHAR(32) NOT NULL,
+  delta_type                       VARCHAR(32) NOT NULL,
+  trace_location_block_hash        CHAR(66)    NULL,
+  trace_location_block_number      NUMERIC     NULL,
+  trace_location_transaction_hash  CHAR(66)    NULL,
+  trace_location_transaction_index INT         NULL,
+  trace_location_log_index         INT         NULL,
+  trace_location_trace_address     TEXT        NULL,
+  amount                           NUMERIC     NOT NULL
 );
 
 CREATE INDEX idx_fungible_balance_delta_address ON fungible_balance_delta (address);
@@ -425,15 +499,15 @@ ORDER BY balance DESC;
 
 CREATE TABLE non_fungible_balance
 (
-  contract                         CHAR(42)     NOT NULL,
-  token_id                         NUMERIC      NOT NULL,
-  address                          CHAR(42)     NOT NULL,
-  trace_location_block_hash        CHAR(66)     NULL,
-  trace_location_block_number      NUMERIC      NULL,
-  trace_location_transaction_hash  CHAR(66)     NULL,
-  trace_location_transaction_index INT          NULL,
-  trace_location_log_index         INT          NULL,
-  trace_location_trace_address     TEXT NULL,
+  contract                         CHAR(42) NOT NULL,
+  token_id                         NUMERIC  NOT NULL,
+  address                          CHAR(42) NOT NULL,
+  trace_location_block_hash        CHAR(66) NULL,
+  trace_location_block_number      NUMERIC  NULL,
+  trace_location_transaction_hash  CHAR(66) NULL,
+  trace_location_transaction_index INT      NULL,
+  trace_location_log_index         INT      NULL,
+  trace_location_trace_address     TEXT     NULL,
   PRIMARY KEY (contract, token_id)
 );
 
@@ -452,17 +526,17 @@ WHERE nfb.contract IS NOT NULL
 CREATE TABLE non_fungible_balance_delta
 (
   id                               BIGSERIAL,
-  contract                         CHAR(42)     NOT NULL,
-  token_id                         NUMERIC      NOT NULL,
-  token_type                       VARCHAR(32)  NOT NULL,
-  trace_location_block_hash        CHAR(66)     NULL,
-  trace_location_block_number      NUMERIC      NULL,
-  trace_location_transaction_hash  CHAR(66)     NULL,
-  trace_location_transaction_index INT          NULL,
-  trace_location_log_index         INT          NULL,
-  trace_location_trace_address     TEXT NULL,
-  "from"                           CHAR(42)     NOT NULL,
-  "to"                             CHAR(42)     NOT NULL
+  contract                         CHAR(42)    NOT NULL,
+  token_id                         NUMERIC     NOT NULL,
+  token_type                       VARCHAR(32) NOT NULL,
+  trace_location_block_hash        CHAR(66)    NULL,
+  trace_location_block_number      NUMERIC     NULL,
+  trace_location_transaction_hash  CHAR(66)    NULL,
+  trace_location_transaction_index INT         NULL,
+  trace_location_log_index         INT         NULL,
+  trace_location_trace_address     TEXT        NULL,
+  "from"                           CHAR(42)    NOT NULL,
+  "to"                             CHAR(42)    NOT NULL
 );
 
 CREATE INDEX idx_non_fungible_balance_delta_contract ON non_fungible_balance_delta (contract);
@@ -568,422 +642,66 @@ CREATE TABLE coin_exchange_rates
 /* metrics hyper tables */
 CREATE TABLE block_metrics_header
 (
-  block_number     NUMERIC  NOT NULL,
+  number           NUMERIC PRIMARY KEY,
   block_hash       CHAR(66) NOT NULL,
   timestamp        BIGINT   NOT NULL,
   block_time       BIGINT   NULL,
   num_uncles       INT      NOT NULL,
   difficulty       NUMERIC  NOT NULL,
-  total_difficulty NUMERIC  NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  total_difficulty NUMERIC  NOT NULL
 );
 
 CREATE TABLE block_metrics_transaction
 (
-  block_number    NUMERIC  NOT NULL,
+  number          NUMERIC PRIMARY KEY,
   block_hash      CHAR(66) NOT NULL,
   timestamp       BIGINT   NOT NULL,
   total_gas_price NUMERIC  NOT NULL,
   avg_gas_limit   NUMERIC  NOT NULL,
-  avg_gas_price   NUMERIC  NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  avg_gas_price   NUMERIC  NOT NULL
 );
 
 CREATE TABLE block_metrics_transaction_trace
 (
-  block_number       NUMERIC  NOT NULL,
+  number             NUMERIC PRIMARY KEY,
   block_hash         CHAR(66) NOT NULL,
   timestamp          BIGINT   NOT NULL,
   total_txs          INT      NOT NULL,
   num_successful_txs INT      NOT NULL,
   num_failed_txs     INT      NOT NULL,
-  num_internal_txs   INT      NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  num_internal_txs   INT      NOT NULL
 );
 
 CREATE TABLE block_metrics_transaction_fee
 (
-  block_number  NUMERIC  NOT NULL,
+  number        NUMERIC PRIMARY KEY,
   block_hash    CHAR(66) NOT NULL,
   timestamp     BIGINT   NOT NULL,
   total_tx_fees NUMERIC  NOT NULL,
-  avg_tx_fees   NUMERIC  NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  avg_tx_fees   NUMERIC  NOT NULL
 );
 
+CREATE VIEW canonical_block_metrics AS
+SELECT bh.number,
+       bh.block_hash,
+       bh.block_time,
+       bh.num_uncles,
+       bh.difficulty,
+       bh.total_difficulty,
+       bt.total_gas_price,
+       bt.avg_gas_limit,
+       bt.avg_gas_price,
+       btt.total_txs,
+       btt.num_successful_txs,
+       btt.num_failed_txs,
+       btt.num_internal_txs,
+       btf.total_tx_fees,
+       btf.avg_tx_fees
+FROM block_metrics_header AS bh
+       RIGHT JOIN canonical_block_header cb ON bh.block_hash = cb.hash
+       LEFT JOIN block_metrics_transaction AS bt ON bh.number = bt.number
+       LEFT JOIN block_metrics_transaction_trace AS btt ON bh.number = btt.number
+       LEFT JOIN block_metrics_transaction_fee AS btf ON bh.number = btf.number
+WHERE cb.number IS NOT NULL
+  AND bh.number IS NOT NULL;
 
-/* 1 day chunks */
-SELECT create_hypertable('block_metrics_header',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-SELECT create_hypertable('block_metrics_transaction',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-SELECT create_hypertable('block_metrics_transaction_trace',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-SELECT create_hypertable('block_metrics_transaction_fee',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-/* useful views */
-CREATE VIEW canonical_block_metrics_header_daily AS
-SELECT time_bucket(86400, bmh.timestamp) AS daily,
-       COUNT(*)                          AS count,
-       MAX(bmh.difficulty)               AS max_difficulty,
-       AVG(bmh.difficulty)               AS avg_difficulty,
-       MIN(bmh.difficulty)               AS min_difficulty,
-       SUM(bmh.difficulty)               AS sum_difficulty
-FROM block_metrics_header AS bmh
-       RIGHT JOIN canonical_block_header cbh ON bmh.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmh.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_header_hourly AS
-SELECT time_bucket(
-         3600,
-         bmh.timestamp)  AS hourly,
-       COUNT(
-         *)              AS count,
-       MAX(
-         bmh.difficulty) AS max_difficulty,
-       AVG(
-         bmh.difficulty) AS avg_difficulty,
-       MIN(
-         bmh.difficulty) AS min_difficulty,
-       SUM(
-         bmh.difficulty) AS sum_difficulty
-FROM block_metrics_header AS bmh
-       RIGHT JOIN canonical_block_header cbh ON bmh.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmh.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_fee_daily AS
-SELECT time_bucket(
-         86400,
-         bmtf.timestamp)     AS daily,
-       COUNT(
-         *)                  AS count,
-       MAX(
-         bmtf.total_tx_fees) AS max_total_tx_fees,
-       MIN(
-         bmtf.total_tx_fees) AS min_total_tx_fees,
-       AVG(
-         bmtf.total_tx_fees) AS avg_total_tx_fees,
-       SUM(
-         bmtf.total_tx_fees) AS sum_total_tx_fees,
-       MAX(
-         bmtf.avg_tx_fees)   AS max_avg_tx_fees,
-       MIN(
-         bmtf.avg_tx_fees)   AS min_avg_tx_fees,
-       AVG(
-         bmtf.avg_tx_fees)   AS avg_avg_tx_fees,
-       SUM(
-         bmtf.avg_tx_fees)   AS sum_avg_tx_fees
-FROM block_metrics_transaction_fee AS bmtf
-       RIGHT JOIN canonical_block_header cbh ON bmtf.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtf.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_fee_hourly AS
-SELECT time_bucket(
-         3600,
-         bmtf.timestamp)     AS hourly,
-       COUNT(
-         *)                  AS count,
-       MAX(
-         bmtf.total_tx_fees) AS max_total_tx_fees,
-       MIN(
-         bmtf.total_tx_fees) AS min_total_tx_fees,
-       AVG(
-         bmtf.total_tx_fees) AS avg_total_tx_fees,
-       SUM(
-         bmtf.total_tx_fees) AS sum_total_tx_fees,
-       MAX(
-         bmtf.avg_tx_fees)   AS max_avg_tx_fees,
-       MIN(
-         bmtf.avg_tx_fees)   AS min_avg_tx_fees,
-       AVG(
-         bmtf.avg_tx_fees)   AS avg_avg_tx_fees,
-       SUM(
-         bmtf.avg_tx_fees)   AS sum_avg_tx_fees
-FROM block_metrics_transaction_fee AS bmtf
-       RIGHT JOIN canonical_block_header cbh ON bmtf.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtf.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_daily AS
-SELECT time_bucket(
-         86400,
-         bmt.timestamp)       AS daily,
-       COUNT(*)               AS count,
-       MAX(
-         bmt.total_gas_price) AS max_total_gas_price,
-       MIN(
-         bmt.total_gas_price) AS min_total_gas_price,
-       AVG(
-         bmt.total_gas_price) AS avg_total_gas_price,
-       SUM(
-         bmt.total_gas_price) AS sum_total_gas_price,
-       MAX(
-         bmt.avg_gas_limit)   AS max_avg_gas_limit,
-       MIN(
-         bmt.avg_gas_limit)   AS min_avg_gas_limit,
-       AVG(
-         bmt.avg_gas_limit)   AS avg_avg_gas_limit,
-       SUM(
-         bmt.avg_gas_limit)   AS sum_avg_gas_limit,
-       MAX(
-         bmt.avg_gas_price)   AS max_avg_gas_price,
-       MIN(
-         bmt.avg_gas_price)   AS min_avg_gas_price,
-       AVG(
-         bmt.avg_gas_price)   AS avg_avg_gas_price,
-       SUM(
-         bmt.avg_gas_price)   AS sum_avg_gas_price
-FROM block_metrics_transaction AS bmt
-       RIGHT JOIN canonical_block_header cbh ON bmt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmt.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_hourly AS
-SELECT time_bucket(
-         3600,
-         bmt.timestamp)       AS hourly,
-       COUNT(
-         *)                   AS count,
-       MAX(
-         bmt.total_gas_price) AS max_total_gas_price,
-       MIN(
-         bmt.total_gas_price) AS min_total_gas_price,
-       AVG(
-         bmt.total_gas_price) AS avg_total_gas_price,
-       SUM(
-         bmt.total_gas_price) AS sum_total_gas_price,
-       MAX(
-         bmt.avg_gas_limit)   AS max_avg_gas_limit,
-       MIN(
-         bmt.avg_gas_limit)   AS min_avg_gas_limit,
-       AVG(
-         bmt.avg_gas_limit)   AS avg_avg_gas_limit,
-       SUM(
-         bmt.avg_gas_limit)   AS sum_avg_gas_limit,
-       MAX(
-         bmt.avg_gas_price)   AS max_avg_gas_price,
-       MIN(
-         bmt.avg_gas_price)   AS min_avg_gas_price,
-       AVG(
-         bmt.avg_gas_price)   AS avg_avg_gas_price,
-       SUM(
-         bmt.avg_gas_price)   AS sum_avg_gas_price
-FROM block_metrics_transaction AS bmt
-       RIGHT JOIN canonical_block_header cbh ON bmt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmt.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_trace_daily AS
-SELECT time_bucket(
-         86400,
-         bmtt.timestamp)          AS daily,
-       COUNT(
-         *)                       AS count,
-       MAX(
-         bmtt.total_txs)          AS max_total_txs,
-       MIN(
-         bmtt.total_txs)          AS min_total_txs,
-       AVG(
-         bmtt.total_txs)          AS avg_total_txs,
-       SUM(
-         bmtt.total_txs)          AS sum_total_txs,
-       MAX(
-         bmtt.num_successful_txs) AS max_num_successful_txs,
-       MIN(
-         bmtt.num_successful_txs) AS min_num_successful_txs,
-       AVG(
-         bmtt.num_successful_txs) AS avg_num_successful_txs,
-       SUM(
-         bmtt.num_successful_txs) AS sum_num_successful_txs,
-       MAX(
-         bmtt.num_failed_txs)     AS max_num_failed_txs,
-       MIN(
-         bmtt.num_failed_txs)     AS min_num_failed_txs,
-       AVG(
-         bmtt.num_failed_txs)     AS avg_num_failed_txs,
-       SUM(
-         bmtt.num_failed_txs)     AS sum_num_failed_txs,
-       MAX(
-         bmtt.num_internal_txs)   AS max_num_internal_txs,
-       MIN(
-         bmtt.num_internal_txs)   AS min_num_internal_txs,
-       AVG(
-         bmtt.num_internal_txs)   AS avg_num_internal_txs,
-       SUM(
-         bmtt.num_internal_txs)   AS sum_num_internal_txs
-FROM block_metrics_transaction_trace AS bmtt
-       RIGHT JOIN canonical_block_header cbh ON bmtt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtt.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_trace_hourly AS
-SELECT time_bucket(
-         86400,
-         bmtt.timestamp)          AS hourly,
-       COUNT(
-         *)                       AS count,
-       MAX(
-         bmtt.total_txs)          AS max_total_txs,
-       MIN(
-         bmtt.total_txs)          AS min_total_txs,
-       AVG(
-         bmtt.total_txs)          AS avg_total_txs,
-       SUM(
-         bmtt.total_txs)          AS sum_total_txs,
-       MAX(
-         bmtt.num_successful_txs) AS max_num_successful_txs,
-       MIN(
-         bmtt.num_successful_txs) AS min_num_successful_txs,
-       AVG(
-         bmtt.num_successful_txs) AS avg_num_successful_txs,
-       SUM(
-         bmtt.num_successful_txs) AS sum_num_successful_txs,
-       MAX(
-         bmtt.num_failed_txs)     AS max_num_failed_txs,
-       MIN(
-         bmtt.num_failed_txs)     AS min_num_failed_txs,
-       AVG(
-         bmtt.num_failed_txs)     AS avg_num_failed_txs,
-       SUM(
-         bmtt.num_failed_txs)     AS sum_num_failed_txs,
-       MAX(
-         bmtt.num_internal_txs)   AS max_num_internal_txs,
-       MIN(
-         bmtt.num_internal_txs)   AS min_num_internal_txs,
-       AVG(
-         bmtt.num_internal_txs)   AS avg_num_internal_txs,
-       SUM(
-         bmtt.num_internal_txs)   AS sum_num_internal_txs
-FROM block_metrics_transaction_trace AS bmtt
-       RIGHT JOIN canonical_block_header cbh ON bmtt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtt.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_daily AS
-SELECT h.daily  AS timestamp,
-       h.count  AS block_count,
-       h.max_difficulty,
-       h.avg_difficulty,
-       h.min_difficulty,
-       h.sum_difficulty,
-       t.count  AS tx_count,
-       t.max_total_gas_price,
-       t.min_total_gas_price,
-       t.avg_total_gas_price,
-       t.sum_total_gas_price,
-       t.max_avg_gas_limit,
-       t.min_avg_gas_limit,
-       t.avg_avg_gas_limit,
-       t.sum_avg_gas_limit,
-       t.max_avg_gas_price,
-       t.min_avg_gas_price,
-       t.avg_avg_gas_price,
-       t.sum_avg_gas_price,
-       tf.max_total_tx_fees,
-       tf.min_total_tx_fees,
-       tf.avg_total_tx_fees,
-       tf.sum_total_tx_fees,
-       tf.max_avg_tx_fees,
-       tf.min_avg_tx_fees,
-       tf.avg_avg_tx_fees,
-       tf.sum_avg_tx_fees,
-       tt.count as trace_count,
-       tt.max_total_txs,
-       tt.min_total_txs,
-       tt.avg_total_txs,
-       tt.sum_total_txs,
-       tt.max_num_successful_txs,
-       tt.min_num_successful_txs,
-       tt.avg_num_successful_txs,
-       tt.sum_num_successful_txs,
-       tt.max_num_failed_txs,
-       tt.min_num_failed_txs,
-       tt.avg_num_failed_txs,
-       tt.sum_num_failed_txs,
-       tt.max_num_internal_txs,
-       tt.min_num_internal_txs,
-       tt.avg_num_internal_txs,
-       tt.sum_num_internal_txs
-FROM canonical_block_metrics_header_daily AS h
-       LEFT JOIN canonical_block_metrics_transaction_daily as t ON h.daily = t.daily
-       LEFT JOIN canonical_block_metrics_transaction_fee_daily as tf ON h.daily = tf.daily
-       LEFT JOIN canonical_block_metrics_transaction_trace_daily as tt ON h.daily = tt.daily
-ORDER BY h.daily DESC;
-
-CREATE VIEW canonical_block_metrics_hourly AS
-SELECT h.hourly AS timestamp,
-       h.count  AS block_count,
-       h.max_difficulty,
-       h.avg_difficulty,
-       h.min_difficulty,
-       h.sum_difficulty,
-       t.count  AS tx_count,
-       t.max_total_gas_price,
-       t.min_total_gas_price,
-       t.avg_total_gas_price,
-       t.sum_total_gas_price,
-       t.max_avg_gas_limit,
-       t.min_avg_gas_limit,
-       t.avg_avg_gas_limit,
-       t.sum_avg_gas_limit,
-       t.max_avg_gas_price,
-       t.min_avg_gas_price,
-       t.avg_avg_gas_price,
-       t.sum_avg_gas_price,
-       tf.max_total_tx_fees,
-       tf.min_total_tx_fees,
-       tf.avg_total_tx_fees,
-       tf.sum_total_tx_fees,
-       tf.max_avg_tx_fees,
-       tf.min_avg_tx_fees,
-       tf.avg_avg_tx_fees,
-       tf.sum_avg_tx_fees,
-       tt.count as trace_count,
-       tt.max_total_txs,
-       tt.min_total_txs,
-       tt.avg_total_txs,
-       tt.sum_total_txs,
-       tt.max_num_successful_txs,
-       tt.min_num_successful_txs,
-       tt.avg_num_successful_txs,
-       tt.sum_num_successful_txs,
-       tt.max_num_failed_txs,
-       tt.min_num_failed_txs,
-       tt.avg_num_failed_txs,
-       tt.sum_num_failed_txs,
-       tt.max_num_internal_txs,
-       tt.min_num_internal_txs,
-       tt.avg_num_internal_txs,
-       tt.sum_num_internal_txs
-FROM canonical_block_metrics_header_hourly AS h
-       LEFT JOIN canonical_block_metrics_transaction_hourly as t ON h.hourly = t.hourly
-       LEFT JOIN canonical_block_metrics_transaction_fee_hourly as tf ON h.hourly = tf.hourly
-       LEFT JOIN canonical_block_metrics_transaction_trace_hourly as tt ON h.hourly = tt.hourly
-ORDER BY h.hourly DESC;

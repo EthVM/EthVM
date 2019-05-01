@@ -9,9 +9,6 @@
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
-          <v-flex d-flex v-if="pageType == 'blocks' && !loading">
-            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
-          </v-flex>
         </v-layout>
       </v-flex>
       <v-spacer />
@@ -75,9 +72,9 @@
     =====================================================================================
     -->
     <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <v-layout column class="mb-1">
+      <v-layout column v-scroll:#scroll-target class="mb-1">
         <v-flex v-if="!loading">
-          <div v-for="block in blocks" :key="block.getHash()">
+          <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
         </v-flex>
@@ -118,14 +115,20 @@
 
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
-import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
+import { latestBlocks, newBlock } from '@app/modules/blocks/components/blocks.graphql'
 import { Block, SimpleBlock } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { BlockSummary } from '@app/core/api/apollo/types/BlockSummary'
+import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
+import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {
@@ -135,43 +138,121 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     AppLiveUpdate,
     AppPaginate,
     TableBlocksRow
+  },
+  data() {
+    return {
+      page: 0,
+      error: undefined
+    }
+  },
+  apollo: {
+    blockPage: {
+      query: latestBlocks,
+
+      variables: {
+        offset: 0,
+        limit: 50
+      },
+
+      update({ blockSummaries }) {
+        return {
+          ...blockSummaries,
+          items: blockSummaries.items.map(i => new BlockSummaryExt(i))
+        }
+      },
+
+      subscribeToMore: {
+        document: newBlock,
+
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const { blockSummaries } = previousResult
+          const { newBlock } = subscriptionData.data
+
+          const items = Object.assign([], blockSummaries.items)
+          items.unshift(newBlock)
+
+          // ensure order by block number desc
+          items.sort((a, b) => {
+            const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
+            const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
+            return numberB.minus(numberA).toNumber()
+          })
+
+          return {
+            ...previousResult,
+            blockSummaries: {
+              ...blockSummaries,
+              items
+            }
+          }
+        },
+
+        skip() {
+          return this.pageType !== 'home'
+        }
+      }
+    }
   }
 })
 export default class TableBlocks extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
-  @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
-  @Prop(Array) blocks!: Block[] | SimpleBlock[]
-  @Prop({ type: Number, default: 0 }) totalBlocks!: number
+
   @Prop({ type: Number, default: 20 }) maxItems!: number
   @Prop({ type: Boolean, default: false }) simplePagination!: boolean
-  @Prop({ type: Number, default: 0 }) page!: number
-  @Prop(String) error!: string
+
+  page!: number
+
+  error?: string
+
+  blockPage?: BlockSummaryPage
+
+  get blockPageExt(): BlockSummaryPageExt | null {
+    return this.blockPage ? new BlockSummaryPageExt(this.blockPage) : null
+  }
+
+  get blocks(): (BlockSummaryPage_items | null)[] {
+    return this.blockPageExt ? this.blockPageExt.items || [] : []
+  }
 
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
   setPage(page: number): void {
-    this.$emit('getBlockPage', page)
+    const { blockPage } = this.$apollo.queries
+
+    const self = this
+
+    blockPage.fetchMore({
+      variables: {
+        offset: page * 50,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        this.page = page
+        return fetchMoreResult
+      }
+    })
   }
 
-  updateTable(): void {
-    this.$emit('updateTable')
-  }
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
+
+  get loading(): boolean {
+    return this.$apollo.queries.blockPage.loading
+  }
 
   /**
    * Determines whether or not component has an error.
@@ -180,7 +261,7 @@ export default class TableBlocks extends Vue {
    * @return {Boolean} - Whether or not error exists
    */
   get hasError(): boolean {
-    return this.error !== ''
+    return !!this.error && this.error !== ''
   }
 
   get getStyle(): string {
@@ -196,13 +277,14 @@ export default class TableBlocks extends Vue {
   }
 
   get pages(): number {
-    return this.totalBlocks ? Math.ceil(this.totalBlocks / this.maxItems) : 0
+    const { blockPageExt, maxItems } = this
+    return blockPageExt ? Math.ceil(blockPageExt.totalCountBN.div(maxItems).toNumber()) : 0
   }
 }
 </script>
 
 <style scoped lang="css">
-.title-live{
-  min-height:60px;
+.title-live {
+  min-height: 60px;
 }
 </style>

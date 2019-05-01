@@ -1,0 +1,24 @@
+type Query {
+  search(query: String!): Search
+}
+
+type Search {
+  type: SearchType
+  address: AddressBalance
+  block: Block
+  uncle: Uncle
+  tx: Transaction
+}
+
+enum SearchType {
+  Address,
+  Block,
+  Uncle,
+  Tx,
+  None
+}
+
+type AddressBalance {
+  address: String
+  balance: BigNumber
+}

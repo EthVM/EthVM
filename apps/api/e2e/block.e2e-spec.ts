@@ -46,7 +46,7 @@ describe('e2e', () => {
       })
       .expect(200)
       .then(response => {
-        expect(response.body.data.blocks).toHaveLength(10)
+        expect(response.body.data.transactions).toHaveLength(10)
         done()
       })
   })

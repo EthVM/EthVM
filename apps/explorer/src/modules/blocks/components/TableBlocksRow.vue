@@ -10,33 +10,31 @@
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.getHash()}`"
-                >{{ $t('block.number') }} {{ block.getNumber() }}</router-link
-              >
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`">{{ $t('block.number') }} {{ block.numberBN }}</router-link>
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
-                <p>{{ successfulTxs() }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
-                <p v-if="failedTxs() > 0" class="txFail--text pl-1 ">({{ failedTxs() }} {{ $tc('tx.failed', failedTranslate()) }})</p>
+                <p>{{ block.numSuccessfulTxsBN }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
+                <p v-if="block.numFailedTxsBN > 0" class="txFail--text pl-1 ">({{ block.numFailedTxsBN }} {{ $tc('tx.failed', failedTranslate()) }})</p>
               </v-layout>
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall">{{ $t('common.hash') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-transform-hash :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
+              <app-transform-hash :hash="block.hash" :link="`/block/${block.hash}`" />
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall pr-1">{{ $t('miner.name') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-transform-hash :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
+              <app-transform-hash :hash="block.author" :italic="true" :link="`/address/${block.author}`" />
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <p class="black--text align-center pl-2">{{ getRoundNumber(block.getTotalReward().toEth()) }}</p>
+              <p class="black--text align-center pl-2">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
             </v-flex>
           </v-layout>
         </div>
@@ -54,30 +52,30 @@
         -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex sm2>
-            <router-link class="black--text pb-1" :to="`/block/${block.getHash()}`">{{ block.getNumber() }}</router-link>
-            <div v-if="hasUncles(block)" class="arrow">
+            <router-link class="black--text pb-1" :to="`/block/${block.hash}`">{{ block.numberBN }}</router-link>
+            <div v-if="block.uncleHashes.length" class="arrow">
               <div class="line"></div>
             </div>
           </v-flex>
           <v-flex sm6>
             <v-layout row pb-2>
               <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-              <app-transform-hash :hash="block.getHash()" :link="`/block/${block.getHash()}`" />
+              <app-transform-hash :hash="block.hash" :link="`/block/${block.hash}`" />
             </v-layout>
             <v-layout row>
               <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
-              <app-transform-hash :hash="block.getMiner().toString()" :italic="true" :link="`/address/${block.getMiner().toString()}`" />
+              <app-transform-hash :hash="block.author" :italic="true" :link="`/address/${block.author}`" />
             </v-layout>
           </v-flex>
           <v-spacer hidden-xl-only />
           <v-flex sm2>
             <v-layout row wrap>
-              <p class="pr-1">{{ successfulTxs() }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
-              <p v-if="failedTxs() > 0" class="txFail--text">({{ failedTxs() }} {{ $tc('tx.failed', failedTranslate()) }})</p>
+              <p class="pr-1">{{ block.numSuccessfulTxsBN }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
+              <p v-if="block.numFailedTxsBN > 0" class="txFail--text">({{ block.numFailedTxsBN }} {{ $tc('tx.failed', failedTranslate()) }})</p>
             </v-layout>
           </v-flex>
           <v-flex sm1 xl2>
-            <p class="black--text align-center mb-0">{{ getRoundNumber(block.getTotalReward().toEth()) }}</p>
+            <p class="black--text align-center mb-0">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
           </v-flex>
         </v-layout>
         <!--
@@ -85,16 +83,16 @@
           Uncles Info
         =====================================================================================
         -->
-        <v-flex sm12 v-if="hasUncles(block)" pt-3>
+        <v-flex sm12 v-if="block.uncleHashes.length" pt-3>
           <v-layout row class="uncle">
             <v-flex sm2> </v-flex>
             <v-flex sm6>
               <div class="uncles">
                 <v-card flat color="transparent">
                   <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
-                  <v-layout row pl-4 pr-4 pb-2 v-for="(uncle, index) in block.getUncles()" :key="index">
+                  <v-layout row pl-4 pr-4 pb-2 v-for="(uncle, index) in block.uncleHashes" :key="index">
                     <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-                    <app-transform-hash :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
+                    <app-transform-hash :hash="uncle" :link="`/uncle/${uncle}`" />
                   </v-layout>
                 </v-card>
               </div>
@@ -110,9 +108,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Block, SimpleBlock, Tx, SimpleTx } from '@app/core/models'
+import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
+import { EthValue } from '@app/core/models'
+import BN from 'bignumber.js'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue';
 
 @Component({
   components: {
@@ -127,7 +127,7 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   */
 
   @Prop({ type: String, default: 'home' }) pageType!: string
-  @Prop(Object) block!: Block | SimpleBlock
+  @Prop(Object) block!: BlockSummaryExt
 
   /*
   ===================================================================================
@@ -135,25 +135,21 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
+  ethValue(number: BN) {
+    return new EthValue(number)
+  }
+
   hasUncles(block) {
-    return block.getUncles().length > 0
+    return false
+    // return block.getUncles().length > 0
   }
 
-  successfulTxs(): number {
-    const txs: any[] = this.block.getTxs()
-    return txs.filter((t: Tx | SimpleTx) => t.getStatus() === true).length
-  }
-
-  failedTxs(): number {
-    const failed = this.block.getTxs().length - this.successfulTxs()
-    return failed < 0 ? 0 : failed
-  }
   sucessTransalate(): number {
-    return this.successfulTxs() > 1 ? 2 : 1
+    return this.block && this.block.numSuccessfulTxsBN!.toNumber() > 1 ? 2 : 1
   }
 
   failedTranslate(): number {
-    return this.failedTxs() > 1 ? 2 : 1
+    return this.block && this.block.numFailedTxsBN!.toNumber() > 1 ? 2 : 1
   }
 }
 </script>

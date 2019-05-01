@@ -1,0 +1,15 @@
+type Query {
+
+  blockMetrics(offset: Int = 0, limit: Int = 10): [BlockMetric]
+
+}
+
+type BlockMetric {
+
+  number: BigNumber
+
+  avgTransactionFee: BigNumber
+  avgGasPrice: BigNumber
+
+}
+

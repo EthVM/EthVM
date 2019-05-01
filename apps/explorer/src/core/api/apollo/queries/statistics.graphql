@@ -1,11 +1,3 @@
-enum Duration {
-  ALL,
-  YEAR,
-  MONTH,
-  WEEK,
-  DAY
-}
-
 query totalTxs($duration: Duration!) {
   blockMetricsByDay(duration: $duration, fields: ["sumTotalTxs"]) {
     date: timestamp,
@@ -69,23 +61,23 @@ query averageTxFee($duration: Duration!) {
   }
 }
 
-query averageMinerReward($duration: Duration!) {
-  averageMinerReward(duration: $duration) {
-    date
-    value
-  }
-}
+# query averageMinerReward($duration: Duration!) {
+#   averageMinerReward(duration: $duration) {
+#     date
+#     value
+#   }
+# }
 
-query averageBlockTime($duration: Duration!) {
-  averageBlockTime(duration: $duration) {
-    date
-    value
-  }
-}
+# query averageBlockTime($duration: Duration!) {
+#   averageBlockTime(duration: $duration) {
+#     date
+#     value
+#   }
+# }
 
-query averageHashRate($duration: Duration!) {
-  averageHashRate(duration: $duration) {
-    date
-    value
-  }
-}
+# query averageHashRate($duration: Duration!) {
+#   averageHashRate(duration: $duration) {
+#     date
+#     value
+#   }
+# }

@@ -9,9 +9,6 @@
       <v-flex xs7 md6 lg5 xl4 pr-0 pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
-          <v-flex v-if="pageType == 'tx' && !loading" hidden-xs-only pr-0>
-            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
-          </v-flex>
         </v-layout>
       </v-flex>
       <v-flex xs5 md6 lg7 xl8 v-if="pageType == 'home'">
@@ -24,9 +21,6 @@
           <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
           <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
-      </v-flex>
-      <v-flex xs12 hidden-sm-and-up pt-0 v-if="pageType == 'tx' && !loading">
-        <app-live-update @refreshTable="updateTable" :page-type="pageType" />
       </v-flex>
     </v-layout>
     <!--
@@ -84,10 +78,10 @@
       <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
         <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
           <v-flex xs12 v-if="!loading">
-            <v-card v-for="tx in transactions" class="transparent" flat :key="tx.getHash()">
+            <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
-            <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
               <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
               <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
             </v-layout>
@@ -129,9 +123,13 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
-import { PendingTx, Tx, SimpleTx } from '@app/core/models'
-import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Footnote } from '@app/core/components/props'
+import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
+import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
+import { latestTransactions, newTransaction } from '@app/modules/txs/components/txs.graphql'
+import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {
@@ -140,6 +138,66 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     AppLiveUpdate,
     AppPaginate,
     TableTxsRow
+  },
+  data() {
+    return {
+      page: 0,
+      error: undefined
+    }
+  },
+  apollo: {
+    txPage: {
+      query: latestTransactions,
+
+      variables: {
+        offset: 0,
+        limit: 50
+      },
+
+      update({ transactionSummaries }) {
+        return {
+          ...transactionSummaries,
+          items: transactionSummaries.items.map(i => new TransactionSummaryExt(i))
+        }
+      },
+
+      subscribeToMore: {
+        document: newTransaction,
+
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const { transactionSummaries } = previousResult
+          const { newTransaction } = subscriptionData.data
+
+          const items = Object.assign([], transactionSummaries.items)
+          items.unshift(newTransaction)
+
+          // ensure order by block number desc and transaction index desc
+          items.sort((a, b) => {
+            const numberA = a.blockNumber ? new BigNumber(a.blockNumber, 16) : new BigNumber(0)
+            const numberB = b.blockNumber ? new BigNumber(b.blockNumber, 16) : new BigNumber(0)
+            const numberDiff = numberB.minus(numberA).toNumber()
+
+            if (numberDiff !== 0) {
+              return numberDiff
+            }
+
+            return b.transactionIndex - a.transactionIndex
+          })
+
+          return {
+            ...previousResult,
+            transactionSummaries: {
+              ...transactionSummaries,
+              items
+            }
+          }
+        },
+
+        skip() {
+          return this.pageType !== 'home'
+        }
+      }
+    }
   }
 })
 export default class TableTxs extends Vue {
@@ -149,14 +207,22 @@ export default class TableTxs extends Vue {
   ===================================================================================
   */
 
-  @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop(String) pageType!: string
   @Prop(String) showStyle!: string
-  @Prop(Array) transactions!: Tx[] | PendingTx[] | SimpleTx[]
-  @Prop({ type: Number, default: 0 }) totalTxs!: number
   @Prop(Number) maxItems!: number
-  @Prop(String) error!: string
-  @Prop({ type: Number, default: 0 }) page!: number
+
+  page!: number
+
+  error?: string
+  txPage?: TransactionSummaryPage
+
+  get txPageExt(): TransactionSummaryPageExt | null {
+    return this.txPage ? new TransactionSummaryPageExt(this.txPage) : null
+  }
+
+  get transactions(): (TransactionSummaryPage_items | null)[] {
+    return this.txPageExt ? this.txPageExt.items || [] : []
+  }
 
   /*
   ===================================================================================
@@ -165,11 +231,21 @@ export default class TableTxs extends Vue {
   */
 
   setPage(page: number): void {
-    this.$emit('getTxsPage', page)
-  }
+    const { txPage } = this.$apollo.queries
 
-  updateTable(): void {
-    this.$emit('updateTable')
+    const self = this
+
+    txPage.fetchMore({
+      variables: {
+        offset: page * 50,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        // TODO error handling
+        self.page = page
+        return fetchMoreResult
+      }
+    })
   }
 
   /*
@@ -178,12 +254,16 @@ export default class TableTxs extends Vue {
   ===================================================================================
   */
 
+  get loading() {
+    return this.$apollo.queries.txPage.loading
+  }
+
   get isSyncing() {
     return this.$store.getters.syncing
   }
 
   get hasError(): boolean {
-    return this.error !== ''
+    return !!this.error && this.error !== ''
   }
 
   get getStyle(): string {
@@ -208,7 +288,7 @@ export default class TableTxs extends Vue {
   }
 
   get pages(): number {
-    return this.totalTxs ? Math.ceil(this.totalTxs / this.maxItems) : 0
+    return this.txPage ? Math.ceil(this.txPageExt!.totalCountBN.div(this.maxItems).toNumber()) : 0
   }
 
   get footnotes(): Footnote[] {

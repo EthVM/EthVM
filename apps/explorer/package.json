@@ -12,7 +12,10 @@
     "build:staging": "vue-cli-service --mode staging build",
     "clean": "rm -rf dist/",
     "lint": "vue-cli-service lint --no-fix",
-    "lint:fix": "vue-cli-service lint"
+    "lint:fix": "vue-cli-service lint",
+    "apollo": "apollo",
+    "apollo:schema": "rm -f ./apollo/schemas/api.json && apollo service:download ./apollo/schemas/api.json",
+    "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript --outputFlat ./src/core/api/apollo/types"
   },
   "dependencies": {
     "@sentry/browser": "4.6.4",
@@ -55,6 +58,7 @@
     "@vue/cli-service": "^3.4.1",
     "@vue/eslint-config-prettier": "^4.0.1",
     "@vue/eslint-config-typescript": "^3.2.0",
+    "apollo": "^2.9.0",
     "babel-core": "7.0.0-bridge.0",
     "css-loader": "^2.1.1",
     "eslint-plugin-prettier": "^3.0.1",
@@ -78,5 +82,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "resolutions": {
+    "graphql": "14.1.1"
+  }
 }

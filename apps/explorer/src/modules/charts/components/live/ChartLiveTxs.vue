@@ -5,102 +5,141 @@
     :options="chartOptions"
     :chart-title="newTitle"
     :chart-description="newDescription"
-    :redraw="redraw"
+    :redraw="true"
     :footnotes="footnote"
     :live-chart="true"
   />
 </template>
 
 <script lang="ts">
-import { Events } from '@app/core/hub'
-import { BlockMetrics } from '@app/core/models'
 import Chart from '@app/modules/charts/components/Chart.vue'
-import { Footnote } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
+import { Footnote } from '@app/core/components/props'
+import { latestBlocks, newBlock } from '@app/modules/blocks/components/blocks.graphql'
+import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
+import BigNumber from 'bignumber.js'
+import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
 const MAX_ITEMS = 10
 
 class ChartData {
-  labels: string[] = []
-  sTxs: number[] = []
-  fTxs: number[] = []
-  pTxs: number[] = []
+  constructor(
+    public readonly labels: string[] = [],
+    public readonly sTxs: number[] = [],
+    public readonly fTxs: number[] = [],
+    public readonly pTxs: number[] = []
+  ) {
+    this.labels = labels
+    this.sTxs = sTxs
+    this.fTxs = fTxs
+    this.pTxs = pTxs
+  }
 }
 
 @Component({
   components: {
     Chart
+  },
+  apollo: {
+    blockPage: {
+      query: latestBlocks,
+
+      variables: {
+        offset: 0,
+        limit: MAX_ITEMS
+      },
+
+      update({ blockSummaries }) {
+        return new BlockSummaryPageExt(blockSummaries)
+      },
+
+      subscribeToMore: {
+        document: newBlock,
+
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const { blockSummaries } = previousResult
+          const { newBlock } = subscriptionData.data
+
+          const items = Object.assign([], blockSummaries.items)
+          items.unshift(newBlock)
+
+          // ensure order by block number desc
+          items.sort((a, b) => {
+            const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
+            const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
+            return numberB.minus(numberA).toNumber()
+          })
+
+          return {
+            ...previousResult,
+            blockSummaries: {
+              ...blockSummaries,
+              items
+            }
+          }
+        }
+      }
+    }
   }
 })
 export default class ChartLiveTxs extends Vue {
   /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
-  redraw = true
-  data = new ChartData()
+  blockPage?: BlockSummaryPageExt
 
   /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
+    ===================================================================================
+      Lifecycle
+    ===================================================================================
+    */
 
-  created() {
-    this.fillChartData(this.$store.getters.blockMetrics.items().slice(0, MAX_ITEMS))
-  }
+  /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
-  mounted() {
-    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, (bm: BlockMetrics[] | BlockMetrics) => {
-      this.redraw = false
-      this.fillChartData(bm)
+  toChartData(items: (BlockSummaryExt | null)[]) {
+    const numberLabel = this.$i18n.t('block.number')
+
+    const labels: string[] = []
+    const sTxs: number[] = []
+    const fTxs: number[] = []
+    const pTxs: number[] = []
+
+    items.forEach(item => {
+      labels.push(numberLabel + item!.numberBN!.toString())
+      sTxs.push(item!.numSuccessfulTxsBN!.toNumber())
+      fTxs.push(item!.numFailedTxsBN!.toNumber())
+      // TODO add pending txs
+      pTxs.push(0)
     })
-  }
 
-  beforeDestroy() {
-    this.$eventHub.$off(Events.NEW_BLOCK_METRIC)
-  }
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
-    bms = !Array.isArray(bms) ? [bms] : bms
-    const blockN = this.$i18n.t('block.number')
-    bms.forEach(bm => {
-      this.data.labels.push(blockN + bm.number)
-      this.data.sTxs.push(bm.numSuccessfulTxs)
-      this.data.fTxs.push(bm.numFailedTxs)
-      this.data.pTxs.push(bm.numPendingTxs)
-      if (this.data.labels.length > MAX_ITEMS) {
-        this.data.labels.shift()
-        this.data.sTxs.shift()
-        this.data.fTxs.shift()
-        this.data.pTxs.shift()
-      }
-    })
+    return new ChartData(labels, sTxs, fTxs, pTxs)
   }
 
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
   get chartData() {
+    const items: (BlockSummaryExt | null)[] = this.blockPage ? this.blockPage.items || [] : []
+    const data = this.toChartData(items)
+
     return {
-      labels: this.data.labels,
+      labels: data.labels,
       datasets: [
         {
           label: 'Pending',
           backgroundColor: '#eea66b',
           borderColor: '#eea66b',
-          data: this.data.pTxs,
+          data: data.pTxs,
           type: 'line',
           fill: false,
           yAxisID: 'y-axis-2'
@@ -108,13 +147,13 @@ export default class ChartLiveTxs extends Vue {
         {
           label: this.$i18n.t('common.success'),
           backgroundColor: '#40ce9c',
-          data: this.data.sTxs,
+          data: data.sTxs,
           yAxisID: 'y-axis-1'
         },
         {
           label: this.$i18n.t('common.fail'),
           backgroundColor: '#fe136c',
-          data: this.data.fTxs,
+          data: data.fTxs,
           yAxisID: 'y-axis-1'
         }
       ]
@@ -164,6 +203,7 @@ export default class ChartLiveTxs extends Vue {
               beginAtZero: true,
               callback: function(value) {
                 const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+
                 function formatNumber(n) {
                   for (let i = 0; i < ranges.length; i++) {
                     if (n >= ranges[i].divider) {
@@ -172,6 +212,7 @@ export default class ChartLiveTxs extends Vue {
                   }
                   return n
                 }
+
                 return formatNumber(value)
               }
             },
@@ -191,6 +232,7 @@ export default class ChartLiveTxs extends Vue {
               beginAtZero: true,
               callback: function(value) {
                 const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+
                 function formatNumber(n) {
                   for (let i = 0; i < ranges.length; i++) {
                     if (n >= ranges[i].divider) {
@@ -199,6 +241,7 @@ export default class ChartLiveTxs extends Vue {
                   }
                   return n
                 }
+
                 return formatNumber(value)
               }
             },

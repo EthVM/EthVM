@@ -1,118 +1,300 @@
-import { ConfigService } from '@app/shared/config.service'
-import { Inject, Injectable } from '@nestjs/common'
-import { PubSub } from 'graphql-subscriptions'
+import {BlockService} from '@app/dao/block.service'
+import {ConfigService} from '@app/shared/config.service'
+import {Inject, Injectable} from '@nestjs/common'
+import {PubSub} from 'graphql-subscriptions'
 import createSubscriber from 'pg-listen'
-import { Observable } from 'rxjs'
-import { Logger } from 'winston'
+import {Observable, Subject} from 'rxjs'
+import {bufferTime, filter} from 'rxjs/operators'
+import {Logger} from 'winston'
+import {CircuitBreaker, CircuitBreakerState} from './circuit-breaker'
+import {TxService} from '@app/dao/tx.service'
 
-interface CanonicalBlockHeaderPayload {
-  hash: string
+export interface CanonicalBlockHeaderPayload {
+  block_hash: string
   number: string
+  transaction_count: number
+  uncle_count: number
+  author: string
 }
 
-interface TransactionPayload {
-  hash: string
+export interface TransactionPayload {
+  transaction_hash: string
+  block_hash: string
 }
 
-interface ContractPayload {
-  address: string
+export interface TransactionReceiptPayload {
+  block_hash: string
+  transaction_hash: string
 }
 
-type EventPayload = CanonicalBlockHeaderPayload | TransactionPayload | ContractPayload
-
-interface Event {
-  table: string
-  action: string
-  payload: EventPayload
+export interface TransactionTracePayload {
+  block_hash: string
+  transaction_hash?: string
+  trace_address: string
+  type: string
+  action?: string
+  error?: string
 }
 
-class RateCalculator {
-  private countsBySecond: number[]
+export type PgEventPayload =
+  CanonicalBlockHeaderPayload | TransactionPayload | TransactionReceiptPayload | TransactionTracePayload
 
-  constructor(private readonly windowSeconds: number) {
-    this.countsBySecond = []
+export class PgEvent {
+
+  public readonly table: string
+  public readonly action: string
+  public readonly payload: PgEventPayload
+
+  constructor(data: any) {
+    this.table = data.table
+    this.action = data.action
+    this.payload = data.payload
   }
 
-  update(timestamp: number) {
-    const { countsBySecond, windowSeconds } = this
+}
 
-    // add new entry
+function inputIsCircuitBreakerState(input: CircuitBreakerState): input is CircuitBreakerState {
+  return input instanceof CircuitBreakerState
+}
 
-    const timestampSecond = Math.floor(timestamp / 1000)
-    countsBySecond[timestampSecond] = (countsBySecond[timestampSecond] || 0) + 1
+function isCircuitBreakerState<CircuitBreakerState>() {
+  return (source$: Observable<any>) => source$.pipe(
+    filter(inputIsCircuitBreakerState),
+  )
+}
 
-    const minTimestampSecond = timestampSecond - windowSeconds
-    const toRemove: number[] = []
+function inputIsEvent(input: PgEvent): input is PgEvent {
+  return input instanceof PgEvent
+}
 
-    let total = 0
-    let n = 0
 
-    // iterate over the sparse array
-    for (const key of countsBySecond) {
-      const keyNumber = +key
+function isPgEvent<PgEvent>() {
+  return (source$: Observable<any>) => source$.pipe(
+    filter(inputIsEvent),
+  )
+}
 
-      // record any entries which are outside the time window and need removed
-      if (keyNumber < minTimestampSecond) {
-        toRemove.push(keyNumber)
-      } else {
-        total += countsBySecond[key]
-        n += 1
-      }
-    }
+class BlockEvents {
 
-    // remove older entries
-    for (const key of toRemove) {
-      delete countsBySecond[key]
-    }
+  header?: CanonicalBlockHeaderPayload
+  rootCallTrace?: TransactionTracePayload
 
-    return total / n
+  transactions: Map<string, TransactionPayload> = new Map()
+  receipts: Map<String, TransactionReceiptPayload> = new Map()
+
+  blockRewardAuthor?: string
+  uncleRewards: Map<string, TransactionTracePayload> = new Map()
+
+  createdAt: Date = new Date()
+
+  constructor(private readonly instaMining: boolean) {
   }
+
+  isComplete(): boolean {
+
+    const {header, transactions, receipts, blockRewardAuthor, uncleRewards, rootCallTrace, instaMining} = this
+
+    if (header === undefined || rootCallTrace === undefined) return false
+
+    const {transaction_count, uncle_count} = header
+
+    // check transactions
+
+    if (transactions.size !== transaction_count) return false
+
+    // check receipts
+
+    if (receipts.size !== transaction_count) return false
+
+    // check rewards
+
+    if (!(instaMining || blockRewardAuthor === header.author)) return false
+
+    if (uncleRewards.size !== uncle_count) return false
+
+    // otherwise we have seen all the components that we need before we can send a notification
+    return true
+  }
+
 }
 
 @Injectable()
 export class PgSubscriptionService {
-  private readonly url: string
 
-  constructor(@Inject('PUB_SUB') private readonly pubSub: PubSub, @Inject('winston') private readonly logger: Logger, private readonly config: ConfigService) {
+  private readonly url: string
+  private readonly maxRate = 500
+
+  private blockEvents: Map<string, BlockEvents> = new Map()
+
+  constructor(
+    @Inject('PUB_SUB') private readonly pubSub: PubSub,
+    @Inject('winston') private readonly logger: Logger,
+    private readonly config: ConfigService,
+    private readonly blockService: BlockService,
+    private readonly transactionService: TxService,
+  ) {
+
     this.url = config.db.url
 
     this.init()
   }
 
-  private async init() {
-    const { url, logger } = this
+  private init() {
 
-    const events$ = Observable.create(async observer => {
-      try {
-        const subscriber = createSubscriber({ connectionString: url })
+    const {url, logger, blockService, transactionService, pubSub} = this
 
-        subscriber.notifications.on('events', e => observer.next(e))
-        subscriber.events.on('error', err => observer.error(err))
+    const events$ = Observable.create(
+      async observer => {
+        try {
+          const subscriber = createSubscriber({connectionString: url})
 
-        await subscriber.connect()
-        await subscriber.listenTo('events')
+          subscriber.notifications.on('events', e => observer.next(e))
+          subscriber.events.on('error', err => {
+            console.error('pg sub error', err)
+            observer.error(err)
+          })
 
-        return () => {
-          subscriber.close()
+          await subscriber.connect()
+          await subscriber.listenTo('events')
+
+          return () => {
+            subscriber.close()
+          }
+        } catch (err) {
+          console.error('Pg sub error', err)
+          observer.error(err)
         }
-      } catch (err) {
-        observer.error(err)
-      }
-    })
+      })
 
-    const rateCalculator = new RateCalculator(30)
+    const circuitBreaker = new CircuitBreaker<PgEvent>(5, this.maxRate)
 
-    events$.subscribe(event => {
-      const eventRate = rateCalculator.update(new Date().getTime())
+    const blockHashes$ = new Subject<string>()
 
-      if (eventRate < 200) {
-        this.logger.info(`Event rate: ${eventRate}`)
-        this.onEvent(event)
-      }
-    })
+    events$.subscribe(
+      event => circuitBreaker.next(new PgEvent(event)),
+      err => circuitBreaker.error(err),
+    )
+
+    circuitBreaker.subject
+      .pipe(isCircuitBreakerState())
+      .subscribe(event => {
+        pubSub.publish('isSyncing', !!event.isOpen)
+      })
+
+    const pgEvents$ = circuitBreaker.subject
+      .pipe(isPgEvent())
+
+    //
+    this.blockEvents = new Map()
+
+    pgEvents$.subscribe(event => this.onEvent(event, blockHashes$))
+
+    blockHashes$
+      .pipe(
+        bufferTime(100),
+        filter(blockHashes => blockHashes.length > 0),
+      )
+      .subscribe(async blockHashes => {
+
+        const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes)
+
+        blockSummaries.forEach(async blockSummary => {
+
+          pubSub.publish('newBlock', blockSummary)
+
+          const [txSummaries] = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
+
+          txSummaries.forEach(txSummary => {
+            pubSub.publish('newTransaction', txSummary)
+          })
+
+          const hashRate = await blockService.calculateHashRate()
+          pubSub.publish('hashRate', hashRate)
+        })
+
+      })
+
   }
 
-  private async onEvent(event: Event) {
-    this.logger.info('Event received', event)
+  private onEvent(event: PgEvent, blockHashes$: Subject<string>) {
+
+    const {blockEvents, config} = this
+
+    const {table, payload} = event
+    const {block_hash} = payload
+
+    let entry = blockEvents.get(block_hash)
+
+    if (!entry) {
+      entry = new BlockEvents(config.instaMining)
+      blockEvents.set(block_hash, entry)
+    }
+
+    switch (table) {
+
+      case 'canonical_block_header':
+        const header = payload as CanonicalBlockHeaderPayload
+        entry.header = header
+        break
+
+      case 'transaction':
+        const tx = payload as TransactionPayload
+        entry.transactions.set(tx.transaction_hash, tx)
+        break
+
+      case 'transaction_receipt':
+        const receipt = payload as TransactionReceiptPayload
+        entry.receipts.set(receipt.transaction_hash, receipt)
+        break
+
+      case 'transaction_trace':
+        const trace = payload as TransactionTracePayload
+
+        switch (trace.type) {
+
+          case 'call':
+            entry.rootCallTrace = trace
+            break
+
+          case 'reward':
+
+            const action = JSON.parse(trace.action || '{}')
+            const rewardType = action.TraceRewardActionRecord.rewardType
+
+            switch (rewardType) {
+
+              case 'block':
+                entry.blockRewardAuthor = action.TraceRewardActionRecord.author
+                break
+
+              case 'uncle':
+                entry.uncleRewards.set(action.author, trace)
+                break
+
+              default:
+                throw new Error(`Unexpected reward type: ${rewardType}`)
+
+            }
+            break
+
+          default:
+            throw new Error(`Unexpected trace type: ${trace.type}`)
+        }
+
+        break
+
+      default:
+        throw new Error(`Unexpected table name: ${table}`)
+
+    }
+
+    if (entry.isComplete()) {
+      // remove from the map and emit an event
+      blockHashes$.next(block_hash)
+      blockEvents.delete(block_hash)
+    }
+
   }
+
+
 }

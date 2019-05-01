@@ -4,7 +4,7 @@ scalar Decimal
 scalar Buffer
 scalar StatisticValue
 scalar Long
-
+scalar BigNumber
 
 enum FilterEnum {
   in, out, all

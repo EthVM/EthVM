@@ -10,40 +10,35 @@
         <div :class="txStatusClass">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.getBlockHash()}`"
-                >{{ $t('block.number') }} {{ tx.getBlockNumber() }}</router-link
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.blockHash}`"
+                >{{ $t('block.number') }} {{ tx.blockNumberBN }}</router-link
               >
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
-                <app-time-ago :timestamp="tx.getTimestamp()" />
+                <app-time-ago :timestamp="tx.timestampDate" />
               </v-layout>
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-transform-hash :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
+              <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`" />
             </v-flex>
             <v-flex xs12 pa-1>
               <v-layout row pa-2>
                 <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
-                <app-transform-hash :hash="tx.getFrom().toString()" :italic="true" :link="`/address/${tx.getFrom().toString()}`" />
+                <app-transform-hash :hash="tx.from" :italic="true" :link="`/address/${tx.from}`" />
                 <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                <app-transform-hash
-                  v-if="!tx.getContractAddress().isEmpty()"
-                  :hash="tx.getContractAddress().toString()"
-                  :italic="true"
-                  :link="`/address/${tx.getContractAddress().toString()}`"
-                />
-                <app-transform-hash v-else :hash="tx.getTo().toString()" :italic="true" :link="`/address/${tx.getTo().toString()}`" />
+                <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :italic="true" :link="`/address/${tx.creates}`" />
+                <app-transform-hash v-else :hash="tx.to" :italic="true" :link="`/address/${tx.to}`" />
               </v-layout>
             </v-flex>
             <v-flex shrink pa-1>
               <p class="info--text psmall">{{ $t('common.eth') }}:</p>
             </v-flex>
             <v-flex shrink pa-1>
-              <p class="black--text align-center">{{ getRoundNumber(tx.getValue().toEth()) }}</p>
+              <p class="black--text align-center">{{ getRoundNumber(ethValue(tx.valueBN).toEth()) }}</p>
             </v-flex>
           </v-layout>
         </div>
@@ -65,7 +60,7 @@
           =====================================================================================
           -->
           <v-flex sm2 md1 pr-1>
-            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.getBlockHash()}`">{{ tx.getBlockNumber() }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockHash}`">{{ tx.blockNumberBN }}</router-link>
           </v-flex>
           <!--
           =====================================================================================
@@ -84,24 +79,19 @@
                     <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                   </v-flex>
                   <v-flex sm10 lg11 pa-1>
-                    <app-transform-hash :hash="tx.getHash()" :link="`/tx/${tx.getHash()}`" />
+                    <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`" />
                   </v-flex>
                 </v-layout>
               </v-flex>
               <v-flex sm12 pa-2>
                 <v-layout row align-center justify-space-around fill-height pa-2>
                   <p class="info--text mb-0 mr-1">{{ $t('tx.from') }}:</p>
-                  <app-transform-hash :hash="tx.getFrom().toString()" :link="`/address/${tx.getFrom().toString()}`" :italic="true" />
+                  <app-transform-hash :hash="tx.from" :link="`/address/${tx.from}`" :italic="true" />
                   <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                  <p class="info--text mb-0 mr-1" v-if="!tx.getContractAddress().isEmpty()">{{ $tc('contract.name', 1) }}:</p>
+                  <p class="info--text mb-0 mr-1" v-if="tx.isContractCreation">{{ $tc('contract.name', 1) }}:</p>
                   <p class="info--text mb-0 mr-1" v-else>{{ $t('tx.to') }}:</p>
-                  <app-transform-hash
-                    v-if="!tx.getContractAddress().isEmpty()"
-                    :hash="tx.getContractAddress().toString()"
-                    :link="`/address/${tx.getContractAddress().toString()}`"
-                    :italic="true"
-                  />
-                  <app-transform-hash v-else :hash="tx.getTo().toString()" :link="`/address/${tx.getTo().toString()}`" :italic="true" />
+                  <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" />
+                  <app-transform-hash v-else :hash="tx.to" :link="`/address/${tx.to}`" :italic="true" />
                 </v-layout>
               </v-flex>
             </v-layout>
@@ -116,23 +106,22 @@
           =====================================================================================
           -->
           <v-flex d-flex sm2 md1 pr-0>
-            <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{ $t('common.amount') }}: {{ getRoundNumber(tx.getValue().toEth()) }}
+            <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
+              {{ $t('common.amount') }}: {{ getRoundNumber(ethValue(tx.valueBN).toEth()) }}
             </p>
-            <p v-else :class="[tx.getStatus() ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
+            <p v-else :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
               {{
                 getShortValue(
-                  tx
-                    .getValue()
+                  ethValue(tx.valueBN)
                     .toEth()
                     .toString()
                 )
               }}
-              <v-tooltip v-if="isShortValue(tx.getValue().toEth())" bottom>
+              <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
                 <template #activator="data">
                   <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
                 </template>
-                <span>{{ tx.getValue().toEth() }}</span>
+                <span>{{ ethValue(tx.valueBN).toEth() }}</span>
               </v-tooltip>
             </p>
           </v-flex>
@@ -146,7 +135,7 @@
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md2>
-            <app-time-ago :timestamp="tx.getTimestamp()" />
+            <app-time-ago :timestamp="tx.timestampDate" />
           </v-flex>
           <!--
           =====================================================================================
@@ -158,7 +147,7 @@
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md1>
-            <p class="black--text text-truncate mb-0">{{ getTxFee(tx) }}</p>
+            <p class="black--text text-truncate mb-0">{{ ethValue(tx.feeBN).toEth() }}</p>
           </v-flex>
           <!--
           =====================================================================================
@@ -170,7 +159,7 @@
           =====================================================================================
           -->
           <v-flex v-if="!isPending" sm1>
-            <v-icon v-if="tx.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
+            <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
             <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
           </v-flex>
         </v-layout>
@@ -181,11 +170,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Tx, SimpleTx, EthValue } from '@app/core/models'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {
@@ -200,7 +191,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Object) tx!: Tx | SimpleTx
+  @Prop(Object) tx!: TransactionSummaryExt
   @Prop({ type: Boolean, default: false }) isPending
 
   /*
@@ -209,8 +200,8 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  getTxFee(_tx): string {
-    return this.getRoundNumber(new EthValue(_tx.getGasPrice() * _tx.getGasUsed()).toEth())
+  ethValue(number: BigNumber) {
+    return new EthValue(number)
   }
 
   /*
@@ -220,7 +211,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   */
 
   get txStatusClass(): string {
-    return this.tx.getStatus() ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+    return this.tx.successful ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
   }
 }
 </script>

@@ -1,6 +1,3 @@
-enum FilterEnum {
-  in, out, all
-}
 
 query tx($hash: String!) {
   tx(hash: $hash) {
@@ -22,7 +19,7 @@ query tx($hash: String!) {
   }
 }
 
-query txs($limit: Int, $page: Int, $fromBlock: Int) {
+query txs($limit: Int, $page: Int, $fromBlock: BigNumber) {
   txs(limit: $limit, page: $page, fromBlock: $fromBlock) {
     blockHash
     blockNumber

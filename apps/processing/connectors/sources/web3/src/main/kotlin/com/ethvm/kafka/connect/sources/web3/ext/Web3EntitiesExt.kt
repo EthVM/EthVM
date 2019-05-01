@@ -34,14 +34,17 @@ import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
-fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): BlockHeaderRecord.Builder =
+fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Long?): BlockHeaderRecord.Builder =
   builder
     .setNumberBI(number)
     .setHash(hash)
     .setParentHash(parentHash)
-    .setNonceBI(nonce)
+    .setNonceBI(if(nonceRaw != null) nonce else null)
     .setSha3Uncles(sha3Uncles)
-    .setUncles(uncles)
+    .setTransactionCount(transactions.size)
+    .setTransactionHashes(transactions.map { (it.get() as EthBlock.TransactionObject).get().hash })
+    .setUncleCount(uncles.size)
+    .setUncleHashes(uncles)
     .setLogsBloom(logsBloom)
     .setTransactionsRoot(transactionsRoot)
     .setStateRoot(stateRoot)
@@ -53,6 +56,7 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder): Bloc
     .setGasLimitBI(gasLimit)
     .setGasUsedBI(gasUsed)
     .setTimestamp(timestamp.longValueExact())
+    .setBlockTime(blockTime)
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
 fun EthBlock.Block.toUncleRecord(index: Int, nephewHash: String, blockNumber: BigInteger, builder: UncleRecord.Builder): UncleRecord.Builder =

@@ -75,15 +75,15 @@ query holderDetails($address: String! $holderAddress: String!) {
   }
 }
 
-query holderTransfers($address: String!, $holderAddress: String!) {
-  holderTransfers(address: $address, holderAddress: $holderAddress) {
-    transactionHash
-    from
-    to
-    timestamp
-    value
-  }
-}
+# query holderTransfers($address: String!, $holderAddress: String!) {
+#   holderTransfers(address: $address, holderAddress: $holderAddress) {
+#     transactionHash
+#     from
+#     to
+#     timestamp
+#     value
+#   }
+# }
 
 query coinExchangeRate($pair: ExchangeRatePair!) {
   coinExchangeRate(pair: $pair) {

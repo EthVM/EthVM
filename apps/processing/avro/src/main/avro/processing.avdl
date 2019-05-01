@@ -157,7 +157,6 @@ protocol Processing {
   }
 
   record BlockMetricsHeaderRecord {
-    decimal(80, 0) blockNumber;
     string blockHash;
     union { null, long } blockTime = null;
     long timestamp;
@@ -167,7 +166,6 @@ protocol Processing {
   }
 
   record BlockMetricsTransactionTraceRecord {
-    decimal(80, 0) blockNumber;
     string blockHash;
     int totalTxs;
     int numSuccessfulTxs;
@@ -177,7 +175,6 @@ protocol Processing {
   }
 
   record BlockMetricsTransactionRecord {
-    decimal(80, 0) blockNumber;
     string blockHash;
     decimal(80, 0) totalGasPrice;
     decimal(80, 0) avgGasLimit;
@@ -186,7 +183,6 @@ protocol Processing {
   }
 
   record BlockMetricsTransactionFeeRecord {
-    decimal(80, 0) blockNumber;
     string blockHash;
     decimal(80, 0) totalTxFees;
     decimal(80, 0) avgTxFees;

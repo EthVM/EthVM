@@ -1,0 +1,38 @@
+type Query {
+  tokenTransfersByContractAddress(contractAddress: String!, limit: Int, page: Int): TransfersPage
+  tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum, limit: Int, page: Int): TransfersPage
+  internalTransactionsByAddress(address: String!, limit: Int, page: Int): TransfersPage
+}
+
+type TransfersPage {
+  items: [Transfer]
+  totalCount: BigNumber
+}
+
+type Transfer {
+  id: String
+  to: String
+  deltaType: DeltaType
+  from: String
+  contractAddress: String
+  tokenType: String
+  amount: BigNumber
+  traceLocationBlockHash: String
+  traceLocationBlockNumber: BigNumber
+  traceLocationTransactionHash: String
+  traceLocationTransactionIndex: Int
+  traceLocationLogIndex: Int
+  traceLocationTraceAddress: String
+  timestamp: String
+}
+
+enum DeltaType {
+  UNCLE_REWARD
+  BLOCK_REWARD
+  CONTRACT_CREATION
+  TOKEN_TRANSFER
+  CONTRACT_DESTRUCTION
+  TX
+  MINER_FEE
+  INTERNAL_TX
+}
