@@ -35,7 +35,7 @@ export class TransferResolvers {
     const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, page)
     return new TransfersPageDto({
       items: result[0],
-      totalCount: result[1]
+      totalCount: result[1],
     })
   }
 
@@ -48,7 +48,7 @@ export class TransferResolvers {
     const result = await this.transferService.findInternalTransactionsByAddress(address, limit, page)
     return new TransfersPageDto({
       items: result[0],
-      totalCount: result[1]
+      totalCount: result[1],
     })
   }
 }

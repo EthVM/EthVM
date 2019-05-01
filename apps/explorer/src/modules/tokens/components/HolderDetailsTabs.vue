@@ -2,8 +2,8 @@
   <app-tabs :tabs="tabs">
     <!-- Transfers -->
     <v-tab-item slot="tabs-item" value="tab-0">
-      <v-progress-linear color="blue" indeterminate v-if="isHolderTransfersLoading" class="mt-0"/>
-      <app-error :has-error="hasErrorHolderTransfers" :message="errorHolderTransfers"/>
+      <v-progress-linear color="blue" indeterminate v-if="isHolderTransfersLoading" class="mt-0" />
+      <app-error :has-error="hasErrorHolderTransfers" :message="errorHolderTransfers" />
       <holder-table-transfers
         :transfers="holderTransfers"
         :total-transfers="totalTransfers"
@@ -11,90 +11,91 @@
         :error="errorHolderTransfers"
         :loading="isHolderTransfersLoading"
         :decimals="decimals"
-        @page="setPageTransfers"/>
+        @page="setPageTransfers"
+      />
     </v-tab-item>
     <!-- End Transfers -->
   </app-tabs>
 </template>
 
 <script lang="ts">
-  import AppTabs from '@app/core/components/ui/AppTabs.vue'
-  import HolderTableTransfers from '@app/modules/tokens/components/HolderTableTransfers.vue'
-  import { Component, Vue, Prop } from 'vue-property-decorator'
-  import { Tab } from '@app/core/components/props'
-  import AppError from '@app/core/components/ui/AppError.vue';
+import AppTabs from '@app/core/components/ui/AppTabs.vue'
+import HolderTableTransfers from '@app/modules/tokens/components/HolderTableTransfers.vue'
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Tab } from '@app/core/components/props'
+import AppError from '@app/core/components/ui/AppError.vue'
 
-  @Component({
-    components: {
-      AppTabs,
-      HolderTableTransfers,
-      AppError
-    }
-  })
-  export default class HolderDetailsTabs extends Vue {
-    /*
+@Component({
+  components: {
+    AppTabs,
+    HolderTableTransfers,
+    AppError
+  }
+})
+export default class HolderDetailsTabs extends Vue {
+  /*
     ===================================================================================
       Props
     ===================================================================================
     */
 
-    @Prop(String) addressRef!: string
-    @Prop(Array) holderTransfers!: any
-    @Prop(Number) totalTransfers!: number
-    @Prop(Number) transfersPage!: number
-    @Prop(Boolean) isHolderTransfersLoading!: boolean
-    @Prop(String) errorHolderTransfers!: string
-    @Prop(String) decimals?: string
+  @Prop(String) addressRef!: string
+  @Prop(Array) holderTransfers!: any
+  @Prop(Number) totalTransfers!: number
+  @Prop(Number) transfersPage!: number
+  @Prop(Boolean) isHolderTransfersLoading!: boolean
+  @Prop(String) errorHolderTransfers!: string
+  @Prop(String) decimals?: string
 
-    /*
+  /*
   ===================================================================================
     Methods
   ===================================================================================
   */
 
-    setPageTransfers(page: number): void {
-      this.$emit('holdersTransfersPage', page)
-    }
+  setPageTransfers(page: number): void {
+    this.$emit('holdersTransfersPage', page)
+  }
 
-    /*
+  /*
     ===================================================================================
       Computed Values
     ===================================================================================
     */
 
-    /**
-     * Determines whether or not component has an error.
-     * If error property is empty string, there is no error.
-     *
-     * @return {Boolean} - Whether or not error exists
-     */
-    get hasErrorHolderTransfers(): boolean {
-      return this.errorHolderTransfers !== ''
-    }
-
-    /**
-     * Props object to describe tabs for AppTabs component
-     */
-
-    get tabs(): Tab[] {
-      const tabs = [
-        {
-          id: 0,
-          title: 'Transfers',
-          isActive: true
-        }
-      ]
-      return tabs
-    }
-
-    /**
-     * Determines whether or not component has an error.
-     * If error property is empty string, there is no error.
-     *
-     * @return {Boolean} - Whether or not error exists
-     */
-    get hasErrorTokenTransfers(): boolean {
-      return this.errorHolderTransfers !== ''
-    }
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
+  get hasErrorHolderTransfers(): boolean {
+    return this.errorHolderTransfers !== ''
   }
+
+  /**
+   * Props object to describe tabs for AppTabs component
+   */
+
+  get tabs(): Tab[] {
+    const tabs = [
+      {
+        id: 0,
+        title: 'Transfers',
+        isActive: true
+      }
+    ]
+    return tabs
+  }
+
+  /**
+   * Determines whether or not component has an error.
+   * If error property is empty string, there is no error.
+   *
+   * @return {Boolean} - Whether or not error exists
+   */
+  get hasErrorTokenTransfers(): boolean {
+    return this.errorHolderTransfers !== ''
+  }
+}
 </script>

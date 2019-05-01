@@ -54,7 +54,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
 
@@ -141,6 +141,5 @@ export default class TokenTableHolders extends Vue {
   get numPages() {
     return this.totalHolders > 0 ? Math.ceil(this.totalHolders / MAX_ITEMS) : 0
   }
-
 }
 </script>

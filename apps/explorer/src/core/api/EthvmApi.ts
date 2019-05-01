@@ -12,7 +12,8 @@ import {
   TokenExchangeRate,
   Transfer,
   Tx,
-  Uncle, TokenHolder
+  Uncle,
+  TokenHolder
 } from '@app/core/models'
 import { Observable } from 'apollo-client/util/Observable'
 
@@ -27,7 +28,7 @@ export interface EthvmApi {
   getBlock(hash: string): Promise<Block | null>
   getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]>
   getBlockByNumber(no: number): Promise<Block | null>
-  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{items: SimpleBlock[], totalCount: number}>
+  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[]; totalCount: number }>
   getTotalNumberOfBlocks(): Promise<number>
 
   // Block Metrics
@@ -53,7 +54,7 @@ export interface EthvmApi {
   getTotalNumberOfPendingTxs(): Promise<number>
 
   // Tokens
-  getTokenHolders(address: string, limit?: number, page?: number): Promise<{items: TokenHolder[], totalCount: number}>
+  getTokenHolders(address: string, limit?: number, page?: number): Promise<{ items: TokenHolder[]; totalCount: number }>
   getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
   getTokenTransfersByContractAddressForHolder(
     address: string,
@@ -61,7 +62,7 @@ export interface EthvmApi {
     filter?: string,
     limit?: number,
     page?: number
-  ): Promise<{ items: Transfer[], totalCount: number }>
+  ): Promise<{ items: Transfer[]; totalCount: number }>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>

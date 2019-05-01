@@ -356,7 +356,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 
-  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<{items: SimpleBlock[], totalCount: number}> {
+  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<{ items: SimpleBlock[]; totalCount: number }> {
     return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
   }
 

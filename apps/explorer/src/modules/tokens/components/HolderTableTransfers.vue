@@ -76,7 +76,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Transfer, Tx } from '@app/core/models'
 import BN from 'bignumber.js'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
 
@@ -139,6 +139,5 @@ export default class HolderTableTransfers extends Vue {
   get numPages() {
     return this.totalTransfers > 0 ? Math.ceil(this.totalTransfers / MAX_ITEMS) : 0
   }
-
 }
 </script>

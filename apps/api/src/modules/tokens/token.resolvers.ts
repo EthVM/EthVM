@@ -23,7 +23,7 @@ export class TokenResolvers {
     const result = await this.tokenService.findTokenHolders(address, limit, page)
     return new TokenHoldersPageDto({
       items: result[0],
-      totalCount: result[1]
+      totalCount: result[1],
     })
   }
 

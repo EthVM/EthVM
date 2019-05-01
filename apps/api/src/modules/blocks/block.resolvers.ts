@@ -40,7 +40,7 @@ export class BlockResolvers {
     const result = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return new BlocksPageDto({
       items: result[0],
-      totalCount: result[1]
+      totalCount: result[1],
     })
   }
 

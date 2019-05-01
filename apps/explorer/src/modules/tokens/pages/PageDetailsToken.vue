@@ -74,8 +74,6 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb } from '@app/core/components/props'
-import { Contract, Token, Tx } from '@app/core/models'
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { TokenHolder, Transfer } from '@app/core/models'
 
 const MAX_ITEMS = 10
@@ -321,7 +319,6 @@ export default class PageDetailsToken extends Vue {
    */
   loadHolderDetailsTabsTransactions() {
     return new Promise((resolve, reject) => {
-
       this.fetchHolderTransfers()
         .then(({ items, totalCount }) => {
           this.holderTransfers = items
@@ -330,7 +327,6 @@ export default class PageDetailsToken extends Vue {
         .catch(e => {
           this.errorHolderTransfers = this.$i18n.t('message.no-history').toString()
         })
-
     })
   }
 
@@ -414,7 +410,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of holders
    */
-  fetchTokenHolders(): Promise<{items: TokenHolder[], totalCount: number}> {
+  fetchTokenHolders(): Promise<{ items: TokenHolder[]; totalCount: number }> {
     return new Promise((resolve, reject) => {
       this.isTokenHoldersLoading = true
 
@@ -460,7 +456,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of transactions
    */
-  fetchHolderTransfers(): Promise<{items: Transfer[], totalCount: number}> {
+  fetchHolderTransfers(): Promise<{ items: Transfer[]; totalCount: number }> {
     return new Promise((resolve, reject) => {
       this.isHolderTransfersLoading = true
 
