@@ -134,6 +134,7 @@ class ParityBlocksSource(
       val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
 
       val transactionListRecord = TransactionListRecord.newBuilder()
+        .setBlockHash(blockRecord.getHash())
         .setTransactions(
           block.transactions
             .map { txResp -> txResp.get() as Transaction }

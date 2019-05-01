@@ -2,12 +2,19 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Between, FindManyOptions, Repository} from 'typeorm';
 import {BlockMetricsDailyEntity} from '@app/orm/entities/block-metrics-daily.entity';
+import {BlockMetric} from '@app/graphql/schema'
 
 @Injectable()
 export class BlockMetricsService {
 
   constructor(@InjectRepository(BlockMetricsDailyEntity)
               private readonly blockMetricsDailyRepository: Repository<BlockMetricsDailyEntity>) {
+  }
+
+  async blockMetrics(offset: number, limit: number): Promise<BlockMetric[]> {
+
+
+
   }
 
   async findBlockMetricsDaily(start: Date, end: Date, fields?: string[]): Promise<BlockMetricsDailyEntity[]> {

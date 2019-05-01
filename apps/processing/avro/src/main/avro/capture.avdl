@@ -97,6 +97,7 @@ protocol Capture {
   }
 
   record TransactionReceiptListRecord {
+    string blockHash;
     array<TransactionReceiptRecord> receipts;
   }
 
@@ -130,6 +131,7 @@ protocol Capture {
   }
 
   record TransactionListRecord {
+    string blockHash;
     array<TransactionRecord> transactions;
   }
 

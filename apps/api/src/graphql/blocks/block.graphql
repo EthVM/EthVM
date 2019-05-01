@@ -1,8 +1,8 @@
 
 type Query {
 
-  blockSummaries(offset: Int = 0, limit: Int = 50): BlockSummaryPage
   hashRate: BigNumber
+  blockSummaries(offset: Int = 0, limit: Int = 50): BlockSummaryPage
 
   blocks(limit: Int, page: Int, fromBlock: Long): [Block]
   blockByHash(hash: String): Block
@@ -34,6 +34,7 @@ type BlockSummary {
 }
 
 type BlockSummaryPage {
+
   items: [BlockSummary]
   totalCount: BigNumber
 }

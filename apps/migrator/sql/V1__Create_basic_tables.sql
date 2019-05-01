@@ -642,422 +642,66 @@ CREATE TABLE coin_exchange_rates
 /* metrics hyper tables */
 CREATE TABLE block_metrics_header
 (
-  block_number     NUMERIC  NOT NULL,
+  number           NUMERIC PRIMARY KEY,
   block_hash       CHAR(66) NOT NULL,
   timestamp        BIGINT   NOT NULL,
   block_time       BIGINT   NULL,
   num_uncles       INT      NOT NULL,
   difficulty       NUMERIC  NOT NULL,
-  total_difficulty NUMERIC  NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  total_difficulty NUMERIC  NOT NULL
 );
 
 CREATE TABLE block_metrics_transaction
 (
-  block_number    NUMERIC  NOT NULL,
+  number          NUMERIC PRIMARY KEY,
   block_hash      CHAR(66) NOT NULL,
   timestamp       BIGINT   NOT NULL,
   total_gas_price NUMERIC  NOT NULL,
   avg_gas_limit   NUMERIC  NOT NULL,
-  avg_gas_price   NUMERIC  NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  avg_gas_price   NUMERIC  NOT NULL
 );
 
 CREATE TABLE block_metrics_transaction_trace
 (
-  block_number       NUMERIC  NOT NULL,
+  number             NUMERIC PRIMARY KEY,
   block_hash         CHAR(66) NOT NULL,
   timestamp          BIGINT   NOT NULL,
   total_txs          INT      NOT NULL,
   num_successful_txs INT      NOT NULL,
   num_failed_txs     INT      NOT NULL,
-  num_internal_txs   INT      NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  num_internal_txs   INT      NOT NULL
 );
 
 CREATE TABLE block_metrics_transaction_fee
 (
-  block_number  NUMERIC  NOT NULL,
+  number        NUMERIC PRIMARY KEY,
   block_hash    CHAR(66) NOT NULL,
   timestamp     BIGINT   NOT NULL,
   total_tx_fees NUMERIC  NOT NULL,
-  avg_tx_fees   NUMERIC  NOT NULL,
-  UNIQUE (block_hash, timestamp)
+  avg_tx_fees   NUMERIC  NOT NULL
 );
 
+CREATE VIEW canonical_block_metrics AS
+SELECT bh.number,
+       bh.block_hash,
+       bh.block_time,
+       bh.num_uncles,
+       bh.difficulty,
+       bh.total_difficulty,
+       bt.total_gas_price,
+       bt.avg_gas_limit,
+       bt.avg_gas_price,
+       btt.total_txs,
+       btt.num_successful_txs,
+       btt.num_failed_txs,
+       btt.num_internal_txs,
+       btf.total_tx_fees,
+       btf.avg_tx_fees
+FROM block_metrics_header AS bh
+       RIGHT JOIN canonical_block_header cb ON bh.block_hash = cb.hash
+       LEFT JOIN block_metrics_transaction AS bt ON bh.number = bt.number
+       LEFT JOIN block_metrics_transaction_trace AS btt ON bh.number = btt.number
+       LEFT JOIN block_metrics_transaction_fee AS btf ON bh.number = btf.number
+WHERE cb.number IS NOT NULL
+  AND bh.number IS NOT NULL;
 
-/* 1 day chunks */
-SELECT create_hypertable('block_metrics_header',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-SELECT create_hypertable('block_metrics_transaction',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-SELECT create_hypertable('block_metrics_transaction_trace',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-SELECT create_hypertable('block_metrics_transaction_fee',
-                         'timestamp',
-                         chunk_time_interval => 86400);
-
-/* useful views */
-CREATE VIEW canonical_block_metrics_header_daily AS
-SELECT time_bucket(86400, bmh.timestamp) AS daily,
-       COUNT(*)                          AS count,
-       MAX(bmh.difficulty)               AS max_difficulty,
-       AVG(bmh.difficulty)               AS avg_difficulty,
-       MIN(bmh.difficulty)               AS min_difficulty,
-       SUM(bmh.difficulty)               AS sum_difficulty
-FROM block_metrics_header AS bmh
-       RIGHT JOIN canonical_block_header cbh ON bmh.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmh.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_header_hourly AS
-SELECT time_bucket(
-         3600,
-         bmh.timestamp)  AS hourly,
-       COUNT(
-         *)              AS count,
-       MAX(
-         bmh.difficulty) AS max_difficulty,
-       AVG(
-         bmh.difficulty) AS avg_difficulty,
-       MIN(
-         bmh.difficulty) AS min_difficulty,
-       SUM(
-         bmh.difficulty) AS sum_difficulty
-FROM block_metrics_header AS bmh
-       RIGHT JOIN canonical_block_header cbh ON bmh.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmh.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_fee_daily AS
-SELECT time_bucket(
-         86400,
-         bmtf.timestamp)     AS daily,
-       COUNT(
-         *)                  AS count,
-       MAX(
-         bmtf.total_tx_fees) AS max_total_tx_fees,
-       MIN(
-         bmtf.total_tx_fees) AS min_total_tx_fees,
-       AVG(
-         bmtf.total_tx_fees) AS avg_total_tx_fees,
-       SUM(
-         bmtf.total_tx_fees) AS sum_total_tx_fees,
-       MAX(
-         bmtf.avg_tx_fees)   AS max_avg_tx_fees,
-       MIN(
-         bmtf.avg_tx_fees)   AS min_avg_tx_fees,
-       AVG(
-         bmtf.avg_tx_fees)   AS avg_avg_tx_fees,
-       SUM(
-         bmtf.avg_tx_fees)   AS sum_avg_tx_fees
-FROM block_metrics_transaction_fee AS bmtf
-       RIGHT JOIN canonical_block_header cbh ON bmtf.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtf.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_fee_hourly AS
-SELECT time_bucket(
-         3600,
-         bmtf.timestamp)     AS hourly,
-       COUNT(
-         *)                  AS count,
-       MAX(
-         bmtf.total_tx_fees) AS max_total_tx_fees,
-       MIN(
-         bmtf.total_tx_fees) AS min_total_tx_fees,
-       AVG(
-         bmtf.total_tx_fees) AS avg_total_tx_fees,
-       SUM(
-         bmtf.total_tx_fees) AS sum_total_tx_fees,
-       MAX(
-         bmtf.avg_tx_fees)   AS max_avg_tx_fees,
-       MIN(
-         bmtf.avg_tx_fees)   AS min_avg_tx_fees,
-       AVG(
-         bmtf.avg_tx_fees)   AS avg_avg_tx_fees,
-       SUM(
-         bmtf.avg_tx_fees)   AS sum_avg_tx_fees
-FROM block_metrics_transaction_fee AS bmtf
-       RIGHT JOIN canonical_block_header cbh ON bmtf.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtf.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_daily AS
-SELECT time_bucket(
-         86400,
-         bmt.timestamp)       AS daily,
-       COUNT(*)               AS count,
-       MAX(
-         bmt.total_gas_price) AS max_total_gas_price,
-       MIN(
-         bmt.total_gas_price) AS min_total_gas_price,
-       AVG(
-         bmt.total_gas_price) AS avg_total_gas_price,
-       SUM(
-         bmt.total_gas_price) AS sum_total_gas_price,
-       MAX(
-         bmt.avg_gas_limit)   AS max_avg_gas_limit,
-       MIN(
-         bmt.avg_gas_limit)   AS min_avg_gas_limit,
-       AVG(
-         bmt.avg_gas_limit)   AS avg_avg_gas_limit,
-       SUM(
-         bmt.avg_gas_limit)   AS sum_avg_gas_limit,
-       MAX(
-         bmt.avg_gas_price)   AS max_avg_gas_price,
-       MIN(
-         bmt.avg_gas_price)   AS min_avg_gas_price,
-       AVG(
-         bmt.avg_gas_price)   AS avg_avg_gas_price,
-       SUM(
-         bmt.avg_gas_price)   AS sum_avg_gas_price
-FROM block_metrics_transaction AS bmt
-       RIGHT JOIN canonical_block_header cbh ON bmt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmt.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_hourly AS
-SELECT time_bucket(
-         3600,
-         bmt.timestamp)       AS hourly,
-       COUNT(
-         *)                   AS count,
-       MAX(
-         bmt.total_gas_price) AS max_total_gas_price,
-       MIN(
-         bmt.total_gas_price) AS min_total_gas_price,
-       AVG(
-         bmt.total_gas_price) AS avg_total_gas_price,
-       SUM(
-         bmt.total_gas_price) AS sum_total_gas_price,
-       MAX(
-         bmt.avg_gas_limit)   AS max_avg_gas_limit,
-       MIN(
-         bmt.avg_gas_limit)   AS min_avg_gas_limit,
-       AVG(
-         bmt.avg_gas_limit)   AS avg_avg_gas_limit,
-       SUM(
-         bmt.avg_gas_limit)   AS sum_avg_gas_limit,
-       MAX(
-         bmt.avg_gas_price)   AS max_avg_gas_price,
-       MIN(
-         bmt.avg_gas_price)   AS min_avg_gas_price,
-       AVG(
-         bmt.avg_gas_price)   AS avg_avg_gas_price,
-       SUM(
-         bmt.avg_gas_price)   AS sum_avg_gas_price
-FROM block_metrics_transaction AS bmt
-       RIGHT JOIN canonical_block_header cbh ON bmt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmt.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_trace_daily AS
-SELECT time_bucket(
-         86400,
-         bmtt.timestamp)          AS daily,
-       COUNT(
-         *)                       AS count,
-       MAX(
-         bmtt.total_txs)          AS max_total_txs,
-       MIN(
-         bmtt.total_txs)          AS min_total_txs,
-       AVG(
-         bmtt.total_txs)          AS avg_total_txs,
-       SUM(
-         bmtt.total_txs)          AS sum_total_txs,
-       MAX(
-         bmtt.num_successful_txs) AS max_num_successful_txs,
-       MIN(
-         bmtt.num_successful_txs) AS min_num_successful_txs,
-       AVG(
-         bmtt.num_successful_txs) AS avg_num_successful_txs,
-       SUM(
-         bmtt.num_successful_txs) AS sum_num_successful_txs,
-       MAX(
-         bmtt.num_failed_txs)     AS max_num_failed_txs,
-       MIN(
-         bmtt.num_failed_txs)     AS min_num_failed_txs,
-       AVG(
-         bmtt.num_failed_txs)     AS avg_num_failed_txs,
-       SUM(
-         bmtt.num_failed_txs)     AS sum_num_failed_txs,
-       MAX(
-         bmtt.num_internal_txs)   AS max_num_internal_txs,
-       MIN(
-         bmtt.num_internal_txs)   AS min_num_internal_txs,
-       AVG(
-         bmtt.num_internal_txs)   AS avg_num_internal_txs,
-       SUM(
-         bmtt.num_internal_txs)   AS sum_num_internal_txs
-FROM block_metrics_transaction_trace AS bmtt
-       RIGHT JOIN canonical_block_header cbh ON bmtt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtt.timestamp IS NOT NULL
-GROUP BY daily
-ORDER BY daily DESC;
-
-CREATE VIEW canonical_block_metrics_transaction_trace_hourly AS
-SELECT time_bucket(
-         86400,
-         bmtt.timestamp)          AS hourly,
-       COUNT(
-         *)                       AS count,
-       MAX(
-         bmtt.total_txs)          AS max_total_txs,
-       MIN(
-         bmtt.total_txs)          AS min_total_txs,
-       AVG(
-         bmtt.total_txs)          AS avg_total_txs,
-       SUM(
-         bmtt.total_txs)          AS sum_total_txs,
-       MAX(
-         bmtt.num_successful_txs) AS max_num_successful_txs,
-       MIN(
-         bmtt.num_successful_txs) AS min_num_successful_txs,
-       AVG(
-         bmtt.num_successful_txs) AS avg_num_successful_txs,
-       SUM(
-         bmtt.num_successful_txs) AS sum_num_successful_txs,
-       MAX(
-         bmtt.num_failed_txs)     AS max_num_failed_txs,
-       MIN(
-         bmtt.num_failed_txs)     AS min_num_failed_txs,
-       AVG(
-         bmtt.num_failed_txs)     AS avg_num_failed_txs,
-       SUM(
-         bmtt.num_failed_txs)     AS sum_num_failed_txs,
-       MAX(
-         bmtt.num_internal_txs)   AS max_num_internal_txs,
-       MIN(
-         bmtt.num_internal_txs)   AS min_num_internal_txs,
-       AVG(
-         bmtt.num_internal_txs)   AS avg_num_internal_txs,
-       SUM(
-         bmtt.num_internal_txs)   AS sum_num_internal_txs
-FROM block_metrics_transaction_trace AS bmtt
-       RIGHT JOIN canonical_block_header cbh ON bmtt.block_hash = cbh.hash
-WHERE cbh.number IS NOT NULL
-  AND bmtt.timestamp IS NOT NULL
-GROUP BY hourly
-ORDER BY hourly DESC;
-
-CREATE VIEW canonical_block_metrics_daily AS
-SELECT h.daily  AS timestamp,
-       h.count  AS block_count,
-       h.max_difficulty,
-       h.avg_difficulty,
-       h.min_difficulty,
-       h.sum_difficulty,
-       t.count  AS tx_count,
-       t.max_total_gas_price,
-       t.min_total_gas_price,
-       t.avg_total_gas_price,
-       t.sum_total_gas_price,
-       t.max_avg_gas_limit,
-       t.min_avg_gas_limit,
-       t.avg_avg_gas_limit,
-       t.sum_avg_gas_limit,
-       t.max_avg_gas_price,
-       t.min_avg_gas_price,
-       t.avg_avg_gas_price,
-       t.sum_avg_gas_price,
-       tf.max_total_tx_fees,
-       tf.min_total_tx_fees,
-       tf.avg_total_tx_fees,
-       tf.sum_total_tx_fees,
-       tf.max_avg_tx_fees,
-       tf.min_avg_tx_fees,
-       tf.avg_avg_tx_fees,
-       tf.sum_avg_tx_fees,
-       tt.count as trace_count,
-       tt.max_total_txs,
-       tt.min_total_txs,
-       tt.avg_total_txs,
-       tt.sum_total_txs,
-       tt.max_num_successful_txs,
-       tt.min_num_successful_txs,
-       tt.avg_num_successful_txs,
-       tt.sum_num_successful_txs,
-       tt.max_num_failed_txs,
-       tt.min_num_failed_txs,
-       tt.avg_num_failed_txs,
-       tt.sum_num_failed_txs,
-       tt.max_num_internal_txs,
-       tt.min_num_internal_txs,
-       tt.avg_num_internal_txs,
-       tt.sum_num_internal_txs
-FROM canonical_block_metrics_header_daily AS h
-       LEFT JOIN canonical_block_metrics_transaction_daily as t ON h.daily = t.daily
-       LEFT JOIN canonical_block_metrics_transaction_fee_daily as tf ON h.daily = tf.daily
-       LEFT JOIN canonical_block_metrics_transaction_trace_daily as tt ON h.daily = tt.daily
-ORDER BY h.daily DESC;
-
-CREATE VIEW canonical_block_metrics_hourly AS
-SELECT h.hourly AS timestamp,
-       h.count  AS block_count,
-       h.max_difficulty,
-       h.avg_difficulty,
-       h.min_difficulty,
-       h.sum_difficulty,
-       t.count  AS tx_count,
-       t.max_total_gas_price,
-       t.min_total_gas_price,
-       t.avg_total_gas_price,
-       t.sum_total_gas_price,
-       t.max_avg_gas_limit,
-       t.min_avg_gas_limit,
-       t.avg_avg_gas_limit,
-       t.sum_avg_gas_limit,
-       t.max_avg_gas_price,
-       t.min_avg_gas_price,
-       t.avg_avg_gas_price,
-       t.sum_avg_gas_price,
-       tf.max_total_tx_fees,
-       tf.min_total_tx_fees,
-       tf.avg_total_tx_fees,
-       tf.sum_total_tx_fees,
-       tf.max_avg_tx_fees,
-       tf.min_avg_tx_fees,
-       tf.avg_avg_tx_fees,
-       tf.sum_avg_tx_fees,
-       tt.count as trace_count,
-       tt.max_total_txs,
-       tt.min_total_txs,
-       tt.avg_total_txs,
-       tt.sum_total_txs,
-       tt.max_num_successful_txs,
-       tt.min_num_successful_txs,
-       tt.avg_num_successful_txs,
-       tt.sum_num_successful_txs,
-       tt.max_num_failed_txs,
-       tt.min_num_failed_txs,
-       tt.avg_num_failed_txs,
-       tt.sum_num_failed_txs,
-       tt.max_num_internal_txs,
-       tt.min_num_internal_txs,
-       tt.avg_num_internal_txs,
-       tt.sum_num_internal_txs
-FROM canonical_block_metrics_header_hourly AS h
-       LEFT JOIN canonical_block_metrics_transaction_hourly as t ON h.hourly = t.hourly
-       LEFT JOIN canonical_block_metrics_transaction_fee_hourly as tf ON h.hourly = tf.hourly
-       LEFT JOIN canonical_block_metrics_transaction_trace_hourly as tt ON h.hourly = tt.hourly
-ORDER BY h.hourly DESC;

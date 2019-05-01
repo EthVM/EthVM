@@ -106,51 +106,10 @@ export class BlockHeader {
     transactionHashes?: string[];
 }
 
-export class BlockMetrics {
-    timestamp?: string;
-    blockCount?: number;
-    maxDifficulty?: BigNumber;
-    avgDifficulty?: BigNumber;
-    minDifficulty?: BigNumber;
-    sumDifficulty?: BigNumber;
-    txCount?: number;
-    maxTotalGasPrice?: BigNumber;
-    minTotalGasPrice?: BigNumber;
-    avgTotalGasPrice?: BigNumber;
-    sumTotalGasPrice?: BigNumber;
-    maxAvgGasLimit?: BigNumber;
-    minAvgGasLimit?: BigNumber;
-    avgAvgGasLimit?: BigNumber;
-    sumAvgGasLimit?: BigNumber;
-    maxAvgGasPrice?: BigNumber;
-    minAvgGasPrice?: BigNumber;
-    avgAvgGasPrice?: BigNumber;
-    sumAvgGasPrice?: BigNumber;
-    maxTotalTxFees?: BigNumber;
-    minTotalTxFees?: BigNumber;
-    avgTotalTxFees?: BigNumber;
-    sumTotalTxFees?: BigNumber;
-    maxAvgTxFees?: BigNumber;
-    minAvgTxFees?: BigNumber;
-    avgAvgTxFees?: BigNumber;
-    sumAvgTxFees?: BigNumber;
-    traceCount?: number;
-    maxTotalTxs?: number;
-    minTotalTxs?: number;
-    avgTotalTxs?: number;
-    sumTotalTxs?: number;
-    maxNumSuccessfulTxs?: number;
-    minNumSuccessfulTxs?: number;
-    avgNumSuccessfulTxs?: number;
-    sumNumSuccessfulTxs?: number;
-    maxNumFailedTxs?: number;
-    minNumFailedTxs?: number;
-    avgNumFailedTxs?: number;
-    sumNumFailedTxs?: number;
-    maxNumInternalTxs?: number;
-    minNumInternalTxs?: number;
-    avgNumInternalTxs?: number;
-    sumNumInternalTxs?: number;
+export class BlockMetric {
+    number?: BigNumber;
+    avgTransactionFee?: BigNumber;
+    avgGasPrice?: BigNumber;
 }
 
 export class BlockSummary {
@@ -237,11 +196,11 @@ export class ContractSupport {
 export abstract class IQuery {
     abstract accountByAddress(address: string): Account | Promise<Account>;
 
-    abstract blockMetricsByDay(duration: Duration, fields?: string[]): BlockMetrics[] | Promise<BlockMetrics[]>;
-
-    abstract blockSummaries(offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
+    abstract blockMetrics(offset?: number, limit?: number): BlockMetric[] | Promise<BlockMetric[]>;
 
     abstract hashRate(): BigNumber | Promise<BigNumber>;
+
+    abstract blockSummaries(offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
 
     abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
 

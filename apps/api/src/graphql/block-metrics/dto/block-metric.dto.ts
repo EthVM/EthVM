@@ -1,10 +1,11 @@
+import {BlockMetric} from '@app/graphql/schema'
 import {assignClean} from '@app/shared/utils'
-import {BlockMetrics} from '@app/graphql/schema';
 
-export class BlockMetricsDto extends BlockMetrics {
+export class BlockMetricDto extends BlockMetric {
 
   constructor(data: any) {
     super()
     assignClean(this, data)
   }
+
 }

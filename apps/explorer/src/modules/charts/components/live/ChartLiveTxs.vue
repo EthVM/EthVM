@@ -138,8 +138,6 @@
       const items: (BlockSummaryExt | null)[] = this.blockPage ? this.blockPage.items || [] : []
       const data = this.toChartData(items)
 
-      this.drawCount += 1
-
       return {
         labels: data.labels,
         datasets: [
