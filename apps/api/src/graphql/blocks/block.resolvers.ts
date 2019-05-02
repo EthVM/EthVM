@@ -9,7 +9,7 @@ import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestj
 import { PubSub } from 'graphql-subscriptions';
 import {BlockSummary} from '../schema';
 import { BlockSummaryDto } from './dto/block-summary.dto';
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js';
 import {BlocksPageDto} from '@app/graphql/blocks/dto/blocks-page.dto'
 import {BlockSummaryPageDto} from './dto/block-summary-page.dto'
 

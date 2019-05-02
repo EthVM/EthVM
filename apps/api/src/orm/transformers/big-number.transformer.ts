@@ -1,5 +1,5 @@
 
-import { ValueTransformer } from "typeorm";
+import { ValueTransformer } from 'typeorm';
 import { BigNumber } from 'bignumber.js'
 
 export class BigNumberTransformer implements ValueTransformer {
