@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 
 class RateCalculator {
 
@@ -24,7 +24,7 @@ class RateCalculator {
 
         // iterate over the sparse array
 
-        for (const key in countsBySecond) {
+        for (const key of Object.keys(countsBySecond)) {
 
             const keyNumber = +key
 
@@ -59,7 +59,7 @@ export class CircuitBreaker<T> {
 
     constructor(
         private readonly windowSeconds: number,
-        private readonly maxRate: number
+        private readonly maxRate: number,
     ) {
 
         this.rateCalculator = new RateCalculator(windowSeconds)
