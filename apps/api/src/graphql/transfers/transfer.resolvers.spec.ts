@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
 import { FungibleBalanceTransferEntity } from '../../orm/entities/fungible-balance-transfer.entity'
-import { TransferService } from './transfer.service'
 import { TransferResolvers } from './transfer.resolvers'
 import { TransfersPageDto } from './dto/transfers-page.dto'
 import { TransferDto } from './dto/transfer.dto'
+import { TransferService } from '../../dao/transfer.service'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'

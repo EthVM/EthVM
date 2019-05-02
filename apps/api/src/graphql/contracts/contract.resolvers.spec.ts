@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing'
-import { ContractService } from './contract.service'
 import { ContractResolvers } from './contract.resolvers'
 import { ContractEntity } from '../../orm/entities/contract.entity'
 import { ContractDto } from './dto/contract.dto'
 import { EthService } from '../../shared/eth.service'
+import { ContractService } from '../../dao/contract.service'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
