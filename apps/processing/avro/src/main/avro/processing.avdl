@@ -6,7 +6,11 @@ protocol Processing {
 
   record BlockMetricKeyRecord {
     string blockHash;
-    union { null, long } timestamp = null;
+    timestamp_ms timestamp;
+  }
+
+  record BlockKeyRecord {
+    string blockHash;
   }
 
   record UncleKeyRecord {
@@ -158,16 +162,18 @@ protocol Processing {
 // metrics
 
   record BlockTimestampRecord {
-    long timestamp;
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsHeaderRecord {
     decimal(80, 0) number;
     union { null, long } blockTime = null;
-    long timestamp;
+
     int numUncles;
     decimal(80, 0) difficulty;
     decimal(80, 0) totalDifficulty;
+
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsTransactionTraceRecord {
@@ -175,20 +181,23 @@ protocol Processing {
     int numSuccessfulTxs;
     int numFailedTxs;
     int numInternalTxs;
-    union { null, long } timestamp = null;
+
+    timestamp_ms timestamp = 0;
   }
 
   record BlockMetricsTransactionRecord {
     decimal(80, 0) totalGasPrice;
     decimal(80, 0) avgGasLimit;
     decimal(80, 0) avgGasPrice;
-    union { null, long } timestamp = null;
+
+    timestamp_ms timestamp = 0;
   }
 
   record BlockMetricsTransactionFeeRecord {
     decimal(80, 0) totalTxFees;
     decimal(80, 0) avgTxFees;
-    union { null, long } timestamp = null;
+
+    timestamp_ms timestamp = 0;
   }
 
   record MetricKeyRecord {

@@ -42,12 +42,8 @@ export class BlockMetricExt implements BlockMetric {
     return this.avgTxFees ? new BigNumber(this.avgTxFees, 16) : null
   }
 
-  get blockTimeDate(): Date | null {
-    return this.blockTime ? new Date(this.blockTime * 1000) : null
-  }
-
   get timestampDate(): Date | null {
-    return this.timestamp ? new Date(this.timestamp * 1000) : null
+    return this.timestamp ? new Date(this.timestamp) : null
   }
 
   get difficultyBN(): BigNumber | null {

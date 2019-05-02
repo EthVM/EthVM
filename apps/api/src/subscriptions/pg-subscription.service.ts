@@ -245,8 +245,6 @@ export class PgSubscriptionService {
     const pgEvents$ = circuitBreaker.subject
       .pipe(isPgEvent())
 
-    pgEvents$.subscribe(pgEvent => console.log('Pg event', pgEvent))
-
     //
 
     this.blockEvents = new Map()

@@ -2,6 +2,7 @@ package com.ethvm.kafka.streams.config
 
 import com.ethvm.kafka.streams.Serdes.BlockAuthor
 import com.ethvm.kafka.streams.Serdes.BlockHeader
+import com.ethvm.kafka.streams.Serdes.BlockKey
 import com.ethvm.kafka.streams.Serdes.BlockMetricKey
 import com.ethvm.kafka.streams.Serdes.BlockMetricsHeader
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransaction
@@ -90,7 +91,7 @@ object Topics {
   val NonFungibleBalanceDelta = KafkaTopic("non_fungible_balance_delta", NonFungibleBalanceKey(), NonFungibleBalanceDelta())
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKey(), NonFungibleBalance())
 
-  val BlockTimestamp = KafkaTopic("block_timestamp", BlockMetricKey(), BlockTimestamp())
+  val BlockTimestamp = KafkaTopic("block_timestamp", BlockKey(), BlockTimestamp())
 
   val BlockMetricsHeader = KafkaTopic("block_metrics_header", BlockMetricKey(), BlockMetricsHeader())
   val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", BlockMetricKey(), BlockMetricsTransaction())

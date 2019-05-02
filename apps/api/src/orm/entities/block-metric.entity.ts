@@ -8,7 +8,7 @@ export class BlockMetricEntity {
   @PrimaryColumn({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
   number!: BigNumber
 
-  @PrimaryColumn({type: 'int', readonly: true})
+  @PrimaryColumn({type: 'timestamp', readonly: true})
   timestamp!: number
 
   @Column({type: 'character', length: 66, unique: true, readonly: true})

@@ -643,13 +643,13 @@ CREATE TABLE coin_exchange_rates
 
 CREATE TABLE block_metrics_header
 (
-  block_hash       CHAR(66) NOT NULL,
-  number           NUMERIC  NOT NULL,
-  timestamp        INT      NOT NULL,
-  block_time       INT   NULL,
-  num_uncles       INT      NOT NULL,
-  difficulty       NUMERIC  NOT NULL,
-  total_difficulty NUMERIC  NOT NULL,
+  block_hash       CHAR(66)  NOT NULL,
+  number           NUMERIC   NOT NULL,
+  timestamp        TIMESTAMP NOT NULL,
+  block_time       INT       NULL,
+  num_uncles       INT       NOT NULL,
+  difficulty       NUMERIC   NOT NULL,
+  total_difficulty NUMERIC   NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
 
@@ -658,31 +658,31 @@ CREATE INDEX idx_block_metrics_header_block_hash ON block_metrics_header (block_
 
 CREATE TABLE block_metrics_transaction
 (
-  block_hash      CHAR(66) NOT NULL,
-  timestamp       INT      NOT NULL,
-  total_gas_price NUMERIC  NOT NULL,
-  avg_gas_limit   NUMERIC  NOT NULL,
-  avg_gas_price   NUMERIC  NOT NULL,
+  block_hash      CHAR(66)  NOT NULL,
+  timestamp       TIMESTAMP NOT NULL,
+  total_gas_price NUMERIC   NOT NULL,
+  avg_gas_limit   NUMERIC   NOT NULL,
+  avg_gas_price   NUMERIC   NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
 
 CREATE TABLE block_metrics_transaction_trace
 (
-  block_hash         CHAR(66) NOT NULL,
-  timestamp          INT      NOT NULL,
-  total_txs          INT      NOT NULL,
-  num_successful_txs INT      NOT NULL,
-  num_failed_txs     INT      NOT NULL,
-  num_internal_txs   INT      NOT NULL,
+  block_hash         CHAR(66)  NOT NULL,
+  timestamp          TIMESTAMP NOT NULL,
+  total_txs          INT       NOT NULL,
+  num_successful_txs INT       NOT NULL,
+  num_failed_txs     INT       NOT NULL,
+  num_internal_txs   INT       NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
 
 CREATE TABLE block_metrics_transaction_fee
 (
-  block_hash    CHAR(66) NOT NULL,
-  timestamp     INT      NOT NULL,
-  total_tx_fees NUMERIC  NOT NULL,
-  avg_tx_fees   NUMERIC  NOT NULL,
+  block_hash    CHAR(66)  NOT NULL,
+  timestamp     TIMESTAMP NOT NULL,
+  total_tx_fees NUMERIC   NOT NULL,
+  avg_tx_fees   NUMERIC   NOT NULL,
   UNIQUE (block_hash, timestamp)
 );
 
@@ -742,19 +742,19 @@ EXECUTE PROCEDURE notify_block_metric('block_metrics_transaction_fee');
 
 SELECT create_hypertable('block_metrics_header',
                          'timestamp',
-                         chunk_time_interval => 3600);
+                         chunk_time_interval => interval '1 hour');
 
 SELECT create_hypertable('block_metrics_transaction',
                          'timestamp',
-                         chunk_time_interval => 3600);
+                         chunk_time_interval => interval '1 hour');
 
 SELECT create_hypertable('block_metrics_transaction_trace',
                          'timestamp',
-                         chunk_time_interval => 3600);
+                         chunk_time_interval => interval '1 hour');
 
 SELECT create_hypertable('block_metrics_transaction_fee',
                          'timestamp',
-                         chunk_time_interval => 3600);
+                         chunk_time_interval => interval '1 hour');
 
 CREATE VIEW canonical_block_metric AS
 SELECT bh.number,

@@ -93,6 +93,10 @@ object Serdes : KoinComponent {
     configure(config, true)
   }
 
+  fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
   fun BlockMetricKey() = SpecificAvroSerde<BlockMetricKeyRecord>(registryClient).apply {
     configure(config, true)
   }
