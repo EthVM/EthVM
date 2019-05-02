@@ -4,6 +4,7 @@ import { ContractEntity } from '../../orm/entities/contract.entity'
 import { ContractDto } from './dto/contract.dto'
 import { EthService } from '../../shared/eth.service'
 import { ContractService } from '../../dao/contract.service'
+import { ContractsPageDto } from './dto/contracts-page.dto'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -125,10 +126,11 @@ describe('ContractResolvers', () => {
   })
 
   describe('contractsCreatedBy', () => {
-    it('should return a page with items (array of ContractDto instances) and totalCount created by the address provided', async () => {
+    it('should return a ContractsPageDto with items (array of ContractDto instances) and totalCount created by the address provided', async () => {
       const contractsCreatedByCreatorOne = await contractResolvers.contractsCreatedBy(creator1)
       const contractsCreatedByCreatorTwo = await contractResolvers.contractsCreatedBy(creator2)
 
+      expect(contractsCreatedByCreatorOne).toBeInstanceOf(ContractsPageDto)
       expect(contractsCreatedByCreatorOne).toHaveProperty('items')
       expect(contractsCreatedByCreatorOne).toHaveProperty('totalCount', 4)
       if (contractsCreatedByCreatorOne.items) {
@@ -136,6 +138,7 @@ describe('ContractResolvers', () => {
         expect(contractsCreatedByCreatorOne.items[0]).toHaveProperty('id', address1)
       }
 
+      expect(contractsCreatedByCreatorTwo).toBeInstanceOf(ContractsPageDto)
       expect(contractsCreatedByCreatorTwo).toHaveProperty('items')
       expect(contractsCreatedByCreatorTwo).toHaveProperty('totalCount', 2)
       if (contractsCreatedByCreatorTwo.items) {
