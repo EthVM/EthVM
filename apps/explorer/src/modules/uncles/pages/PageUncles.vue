@@ -45,7 +45,7 @@ export default class PageUncles extends Vue {
   page = 0
   firstLoad: boolean = true
   isLoading = true
-  total = 0
+  total: string = ''
   error = ''
 
   /*
@@ -60,7 +60,7 @@ export default class PageUncles extends Vue {
         this.total = res
       },
       err => {
-        this.total = 0
+        this.total = ''
       }
     )
     this.getPage(0)
@@ -98,7 +98,7 @@ export default class PageUncles extends Vue {
     return this.$api.getUncles(this.max, page, this.from)
   }
 
-  fetchTotalUncles(): Promise<number> {
+  fetchTotalUncles(): Promise<string> {
     return this.$api.getTotalNumberOfUncles()
   }
 

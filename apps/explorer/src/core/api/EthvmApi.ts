@@ -70,7 +70,7 @@ export interface EthvmApi {
   // Uncles
   getUncle(hash: string): Promise<Uncle | null>
   getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]>
-  getTotalNumberOfUncles(): Promise<number>
+  getTotalNumberOfUncles(): Promise<string>
 
   // Statistics
   getAverageBlockTimeStats(duration: string): Promise<Statistic[]>
