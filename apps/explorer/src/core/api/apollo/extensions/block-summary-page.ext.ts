@@ -1,6 +1,5 @@
-import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
-import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
-import { BlockSummary } from '@app/core/api/apollo/types/BlockSummary'
+import {BlockSummaryPage} from '@app/core/api/apollo/types/BlockSummaryPage'
+import {BlockSummaryExt} from '@app/core/api/apollo/extensions/block-summary.ext'
 import BN from 'bignumber.js'
 
 export class BlockSummaryPageExt implements BlockSummaryPage {

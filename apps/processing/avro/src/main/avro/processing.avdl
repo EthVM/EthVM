@@ -4,6 +4,11 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
+  record BlockMetricKeyRecord {
+    string blockHash;
+    union { null, long } timestamp = null;
+  }
+
   record UncleKeyRecord {
     string hash;
   }
@@ -157,7 +162,7 @@ protocol Processing {
   }
 
   record BlockMetricsHeaderRecord {
-    string blockHash;
+    decimal(80, 0) number;
     union { null, long } blockTime = null;
     long timestamp;
     int numUncles;
@@ -166,7 +171,6 @@ protocol Processing {
   }
 
   record BlockMetricsTransactionTraceRecord {
-    string blockHash;
     int totalTxs;
     int numSuccessfulTxs;
     int numFailedTxs;
@@ -175,7 +179,6 @@ protocol Processing {
   }
 
   record BlockMetricsTransactionRecord {
-    string blockHash;
     decimal(80, 0) totalGasPrice;
     decimal(80, 0) avgGasLimit;
     decimal(80, 0) avgGasPrice;
@@ -183,7 +186,6 @@ protocol Processing {
   }
 
   record BlockMetricsTransactionFeeRecord {
-    string blockHash;
     decimal(80, 0) totalTxFees;
     decimal(80, 0) avgTxFees;
     union { null, long } timestamp = null;

@@ -61,7 +61,13 @@ class ChartData {
           const { newBlock } = subscriptionData.data
 
           const items = Object.assign([], blockSummaries.items)
+
+          // add to the beginning of the array
           items.unshift(newBlock)
+
+          if(items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           // ensure order by block number desc
           items.sort((a, b) => {
@@ -131,6 +137,8 @@ export default class ChartLiveTxs extends Vue {
   get chartData() {
     const items: (BlockSummaryExt | null)[] = this.blockPage ? this.blockPage.items || [] : []
     const data = this.toChartData(items)
+
+    this.updateCount += 1
 
     return {
       labels: data.labels,

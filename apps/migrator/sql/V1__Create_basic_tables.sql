@@ -639,51 +639,127 @@ CREATE TABLE coin_exchange_rates
   last_updated BIGINT  NOT NULL
 );
 
-/* metrics hyper tables */
+/* basic block metrics tables */
+
 CREATE TABLE block_metrics_header
 (
-  number           NUMERIC PRIMARY KEY,
   block_hash       CHAR(66) NOT NULL,
-  timestamp        BIGINT   NOT NULL,
-  block_time       BIGINT   NULL,
+  number           NUMERIC  NOT NULL,
+  timestamp        INT      NOT NULL,
+  block_time       INT   NULL,
   num_uncles       INT      NOT NULL,
   difficulty       NUMERIC  NOT NULL,
-  total_difficulty NUMERIC  NOT NULL
+  total_difficulty NUMERIC  NOT NULL,
+  UNIQUE (block_hash, timestamp)
 );
+
+CREATE INDEX idx_block_metrics_header_number ON block_metrics_header (number DESC);
+CREATE INDEX idx_block_metrics_header_block_hash ON block_metrics_header (block_hash);
 
 CREATE TABLE block_metrics_transaction
 (
-  number          NUMERIC PRIMARY KEY,
   block_hash      CHAR(66) NOT NULL,
-  timestamp       BIGINT   NOT NULL,
+  timestamp       INT      NOT NULL,
   total_gas_price NUMERIC  NOT NULL,
   avg_gas_limit   NUMERIC  NOT NULL,
-  avg_gas_price   NUMERIC  NOT NULL
+  avg_gas_price   NUMERIC  NOT NULL,
+  UNIQUE (block_hash, timestamp)
 );
 
 CREATE TABLE block_metrics_transaction_trace
 (
-  number             NUMERIC PRIMARY KEY,
   block_hash         CHAR(66) NOT NULL,
-  timestamp          BIGINT   NOT NULL,
+  timestamp          INT      NOT NULL,
   total_txs          INT      NOT NULL,
   num_successful_txs INT      NOT NULL,
   num_failed_txs     INT      NOT NULL,
-  num_internal_txs   INT      NOT NULL
+  num_internal_txs   INT      NOT NULL,
+  UNIQUE (block_hash, timestamp)
 );
 
 CREATE TABLE block_metrics_transaction_fee
 (
-  number        NUMERIC PRIMARY KEY,
   block_hash    CHAR(66) NOT NULL,
-  timestamp     BIGINT   NOT NULL,
+  timestamp     INT      NOT NULL,
   total_tx_fees NUMERIC  NOT NULL,
-  avg_tx_fees   NUMERIC  NOT NULL
+  avg_tx_fees   NUMERIC  NOT NULL,
+  UNIQUE (block_hash, timestamp)
 );
 
-CREATE VIEW canonical_block_metrics AS
+CREATE FUNCTION notify_block_metric() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload := json_build_object(
+    'table', TG_ARGV[0],
+    'action', TG_OP,
+    'payload', json_build_object(
+      'block_hash', record.block_hash,
+      'timestamp', record.timestamp
+      )
+    );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_block_metrics_header
+  AFTER INSERT OR UPDATE OR DELETE
+  ON block_metrics_header
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_block_metric('block_metrics_header');
+
+CREATE TRIGGER notify_block_metrics_transaction
+  AFTER INSERT OR UPDATE OR DELETE
+  ON block_metrics_transaction
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_block_metric('block_metrics_transaction');
+
+CREATE TRIGGER notify_block_metrics_transaction_trace
+  AFTER INSERT OR UPDATE OR DELETE
+  ON block_metrics_transaction_trace
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_block_metric('block_metrics_transaction_trace');
+
+CREATE TRIGGER notify_block_metrics_transaction_fee
+  AFTER INSERT OR UPDATE OR DELETE
+  ON block_metrics_transaction_fee
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_block_metric('block_metrics_transaction_fee');
+
+/* 1 hour chunks */
+
+SELECT create_hypertable('block_metrics_header',
+                         'timestamp',
+                         chunk_time_interval => 3600);
+
+SELECT create_hypertable('block_metrics_transaction',
+                         'timestamp',
+                         chunk_time_interval => 3600);
+
+SELECT create_hypertable('block_metrics_transaction_trace',
+                         'timestamp',
+                         chunk_time_interval => 3600);
+
+SELECT create_hypertable('block_metrics_transaction_fee',
+                         'timestamp',
+                         chunk_time_interval => 3600);
+
+CREATE VIEW canonical_block_metric AS
 SELECT bh.number,
        bh.block_hash,
+       bh.timestamp,
        bh.block_time,
        bh.num_uncles,
        bh.difficulty,
@@ -699,9 +775,10 @@ SELECT bh.number,
        btf.avg_tx_fees
 FROM block_metrics_header AS bh
        RIGHT JOIN canonical_block_header cb ON bh.block_hash = cb.hash
-       LEFT JOIN block_metrics_transaction AS bt ON bh.number = bt.number
-       LEFT JOIN block_metrics_transaction_trace AS btt ON bh.number = btt.number
-       LEFT JOIN block_metrics_transaction_fee AS btf ON bh.number = btf.number
+       LEFT JOIN block_metrics_transaction AS bt ON bh.block_hash = bt.block_hash
+       LEFT JOIN block_metrics_transaction_trace AS btt ON bh.block_hash = btt.block_hash
+       LEFT JOIN block_metrics_transaction_fee AS btf ON bh.block_hash = btf.block_hash
 WHERE cb.number IS NOT NULL
   AND bh.number IS NOT NULL;
+
 

@@ -73,17 +73,6 @@ export interface EthvmApi {
   getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]>
   getTotalNumberOfUncles(): Promise<number>
 
-  // Statistics
-  getAverageBlockTimeStats(duration: string): Promise<Statistic[]>
-  getAverageDifficultyStats(duration: string): Promise<Statistic[]>
-  getAverageGasLimitStats(duration: string): Promise<Statistic[]>
-  getAverageGasPriceStats(duration: string): Promise<Statistic[]>
-  getAverageHashRateStats(duration: string): Promise<Statistic[]>
-  getAverageMinerRewardsStats(duration: string): Promise<Statistic[]>
-  getAverageTxFeeStats(duration: string): Promise<Statistic[]>
-  getFailedTxStats(duration: string): Promise<Statistic[]>
-  getSuccessfulTxStats(duration: string): Promise<Statistic[]>
-
   // Search
   search(hash: string): Promise<any>
 

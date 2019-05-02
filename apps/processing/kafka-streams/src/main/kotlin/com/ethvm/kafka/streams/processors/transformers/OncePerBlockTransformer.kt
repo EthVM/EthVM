@@ -1,4 +1,4 @@
-package com.ethvm.kafka.streams.transformers
+package com.ethvm.kafka.streams.processors.transformers
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord

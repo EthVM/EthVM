@@ -131,6 +131,8 @@ import { latestTransactions, newTransaction } from '@app/modules/txs/components/
 import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
 import BigNumber from 'bignumber.js'
 
+const MAX_ITEMS = 50
+
 @Component({
   components: {
     AppError,
@@ -151,7 +153,7 @@ import BigNumber from 'bignumber.js'
 
       variables: {
         offset: 0,
-        limit: 50
+        limit: MAX_ITEMS
       },
 
       update({ transactionSummaries }) {
@@ -170,6 +172,10 @@ import BigNumber from 'bignumber.js'
 
           const items = Object.assign([], transactionSummaries.items)
           items.unshift(newTransaction)
+
+          if(items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           // ensure order by block number desc and transaction index desc
           items.sort((a, b) => {

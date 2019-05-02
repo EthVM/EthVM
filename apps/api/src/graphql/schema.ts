@@ -103,9 +103,29 @@ export class BlockHeader {
 }
 
 export class BlockMetric {
-    number?: BigNumber;
-    avgTransactionFee?: BigNumber;
+    number: BigNumber;
+    blockHash?: string;
+    timestamp?: number;
+    blockTime?: number;
+    numUncles?: number;
+    difficulty?: BigNumber;
+    totalDifficulty?: BigNumber;
+    totalGasPrice?: BigNumber;
+    avgGasLimit?: BigNumber;
     avgGasPrice?: BigNumber;
+    totalTxs?: number;
+    numSuccessfulTxs?: number;
+    numFailedTxs?: number;
+    numInternalTxs?: number;
+    totalTxFees?: BigNumber;
+    avgTxFees?: BigNumber;
+}
+
+export class BlockMetricPage {
+    items?: BlockMetric[];
+    offset?: number;
+    limit?: number;
+    totalCount?: BigNumber;
 }
 
 export class BlocksPage {
@@ -212,7 +232,7 @@ export class ContractSupport {
 export abstract class IQuery {
     abstract accountByAddress(address: string): Account | Promise<Account>;
 
-    abstract blockMetrics(offset?: number, limit?: number): BlockMetric[] | Promise<BlockMetric[]>;
+    abstract blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
 
     abstract hashRate(): BigNumber | Promise<BigNumber>;
 
@@ -313,6 +333,8 @@ export class Search {
 }
 
 export abstract class ISubscription {
+    abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
+
     abstract newBlock(): BlockSummary | Promise<BlockSummary>;
 
     abstract hashRate(): BigNumber | Promise<BigNumber>;

@@ -1,15 +1,42 @@
 type Query {
 
-  blockMetrics(offset: Int = 0, limit: Int = 10): [BlockMetric]
+  blockMetrics(offset: Int = 0, limit: Int = 10): BlockMetricPage!
 
 }
 
+type Subscription {
+  newBlockMetric: BlockMetric
+}
+
+type BlockMetricPage {
+
+  items: [BlockMetric]
+
+  offset: Int
+  limit: Int
+  totalCount: BigNumber
+
+}
+
+
 type BlockMetric {
 
-  number: BigNumber
-
-  avgTransactionFee: BigNumber
+  number: BigNumber!
+  blockHash: String
+  timestamp: Int
+  blockTime: Int
+  numUncles: Int
+  difficulty: BigNumber
+  totalDifficulty: BigNumber
+  totalGasPrice: BigNumber
+  avgGasLimit: BigNumber
   avgGasPrice: BigNumber
+  totalTxs: Int
+  numSuccessfulTxs: Int
+  numFailedTxs: Int
+  numInternalTxs: Int
+  totalTxFees: BigNumber
+  avgTxFees: BigNumber
 
 }
 

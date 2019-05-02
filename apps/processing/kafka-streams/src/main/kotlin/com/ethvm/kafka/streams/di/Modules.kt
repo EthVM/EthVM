@@ -1,19 +1,18 @@
 package com.ethvm.kafka.streams.di
 
-import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
-import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import com.ethvm.kafka.streams.config.AppConfig
 import com.ethvm.kafka.streams.config.Web3Config
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
+import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import org.apache.avro.Schema
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.websocket.WebSocketService
-import java.util.Properties
+import java.util.*
 
 object Modules {
 

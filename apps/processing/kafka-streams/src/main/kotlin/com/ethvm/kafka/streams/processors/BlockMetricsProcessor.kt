@@ -25,6 +25,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
+import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
@@ -53,34 +54,49 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
     val builder = StreamsBuilder().apply {}
 
     val canonicalBlock = CanonicalBlockHeader.stream(builder)
+      // we don't want to process tombstones
+      .filterNot { _, v -> v == null }
 
     canonicalBlock
-      .mapValues { _, v ->
-        BlockTimestampRecord.newBuilder()
-          .setTimestamp(v.getTimestamp())
-          .build()
+      .map { _, v ->
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder()
+            .setBlockHash(v.getHash())
+            .build(),
+          BlockTimestampRecord.newBuilder()
+            .setTimestamp(v.getTimestamp())
+            .build()
+        )
       }.toTopic(BlockTimestamp)
 
     //
 
     canonicalBlock
-      .mapValues { header ->
-        BlockMetricsHeaderRecord.newBuilder()
-          .setBlockHash(header.getHash())
-          .setBlockTime(header.getBlockTime())
-          .setNumUncles(header.getUncleHashes().size)
-          .setDifficulty(header.getDifficulty())
-          .setTotalDifficulty(header.getTotalDifficulty())
-          .setTimestamp(header.getTimestamp())
-          .build()
+      .map { _, header ->
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder()
+            .setBlockHash(header.getHash())
+            .setTimestamp(header.getTimestamp())
+            .build(),
+          BlockMetricsHeaderRecord.newBuilder()
+            .setNumber(header.getNumber())
+            .setBlockTime(header.getBlockTime())
+            .setNumUncles(header.getUncleHashes().size)
+            .setDifficulty(header.getDifficulty())
+            .setTotalDifficulty(header.getTotalDifficulty())
+            .setTimestamp(header.getTimestamp())
+            .build()
+        )
       }.toTopic(BlockMetricsHeader)
 
     val blockTimestamp = BlockTimestamp.stream(builder)
 
     CanonicalTraces.stream(builder)
+      // we don't want to process tombstones
+      .filterNot { _, v -> v == null }
       // genesis block has no traces
       .filter { _, v -> v.getTraces().isNotEmpty() }
-      .mapValues { traceList ->
+      .map { _, traceList ->
 
         var successful = 0
         var failed = 0
@@ -96,9 +112,8 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
             traces.forEach { trace ->
 
-              val action = trace.getAction()
+              when (val action = trace.getAction()) {
 
-              when (action) {
                 is TraceCallActionRecord -> {
 
                   if (trace.getTraceAddress().isEmpty()) {
@@ -117,50 +132,66 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
                     internalTxs += 1
                   }
                 }
+
                 is TraceCreateActionRecord -> {
                   if (action.getValueBI() > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
+
                 is TraceDestroyActionRecord -> {
                   if (action.getBalanceBI() > BigInteger.ZERO) {
                     internalTxs += 1
                   }
                 }
+
                 else -> {
                 }
+
               }
             }
           }
 
-        // there is always a reward trace even if there is no transactions except for genesis block
+        // there is always a reward trace even if there is no transactions, except for genesis block
         val blockHash = traces.first { it.blockHash != null }.blockHash
 
-        BlockMetricsTransactionTraceRecord.newBuilder()
-          .setBlockHash(blockHash)
-          .setNumSuccessfulTxs(successful)
-          .setNumFailedTxs(failed)
-          .setTotalTxs(total)
-          .setNumInternalTxs(internalTxs)
-          .build()
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder()
+            .setBlockHash(blockHash)
+            .build(),
+          BlockMetricsTransactionTraceRecord.newBuilder()
+            .setNumSuccessfulTxs(successful)
+            .setNumFailedTxs(failed)
+            .setTotalTxs(total)
+            .setNumInternalTxs(internalTxs)
+            .build()
+        )
       }
       .join(
         blockTimestamp,
         { left, right ->
-
-          logger.info { "Join triggered: right = $right, left = $left" }
-
           BlockMetricsTransactionTraceRecord.newBuilder(left)
             .setTimestamp(right.getTimestamp())
             .build()
         },
         JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.CanonicalKey(), Serdes.BlockMetricsTransactionTrace(), Serdes.BlockTimestamp())
+        Joined.with(Serdes.BlockMetricKey(), Serdes.BlockMetricsTransactionTrace(), Serdes.BlockTimestamp())
       )
+      .map { k, v ->
+        // add timestamp into the key
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder(k)
+            .setTimestamp(v.getTimestamp())
+            .build(),
+          v
+        )
+      }
       .toTopic(BlockMetricsTransactionTrace)
 
     CanonicalTransactions.stream(builder)
-      .mapValues { transactionsList ->
+      // we don't want to process tombstones
+      .filterNot { _, v -> v == null }
+      .map { _, transactionsList ->
 
         val transactions = transactionsList.getTransactions()
 
@@ -182,12 +213,17 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           )
         }
 
-        BlockMetricsTransactionRecord.newBuilder()
-          .setBlockHash(transactionsList.getBlockHash())
-          .setTotalGasPriceBI(totalGasPrice)
-          .setAvgGasPriceBI(avgGasPrice)
-          .setAvgGasLimitBI(avgGasLimit)
-          .build()
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder()
+            .setBlockHash(transactionsList.getBlockHash())
+            .build(),
+          BlockMetricsTransactionRecord.newBuilder()
+            .setTotalGasPriceBI(totalGasPrice)
+            .setAvgGasPriceBI(avgGasPrice)
+            .setAvgGasLimitBI(avgGasLimit)
+            .build()
+        )
+
       }
       .join(
         blockTimestamp,
@@ -197,46 +233,67 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .build()
         },
         JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.CanonicalKey(), Serdes.BlockMetricsTransaction(), Serdes.BlockTimestamp())
+        Joined.with(Serdes.BlockMetricKey(), Serdes.BlockMetricsTransaction(), Serdes.BlockTimestamp())
       )
+      .map { k, v ->
+        // add timestamp into the key
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder(k)
+            .setTimestamp(v.getTimestamp())
+            .build(),
+          v
+        )
+      }
       .toTopic(BlockMetricsTransaction)
 
-//    CanonicalTransactionFees.stream(builder)
-//      .mapValues { txFeeList ->
-//
-//        val transactionFees = txFeeList.getTransactionFees()
-//        val count = transactionFees.size.toBigInteger()
-//
-//          val totalTxFees = transactionFees.fold(BigInteger.ZERO) { memo, next ->
-//            memo + next.getTransactionFeeBI()
-//          }
-//
-//          val avgTxFees = when(count) {
-//            BigInteger.ZERO -> BigInteger.ZERO
-//            else -> totalTxFees / count
-//          }
-//
-//          val blockHash = txFeeList.getBlockHash()
-//
-//          BlockMetricsTransactionFeeRecord.newBuilder()
-//            .setBlockHash(blockHash)
-//            .setTotalTxFeesBI(totalTxFees)
-//            .setAvgTxFeesBI(avgTxFees)
-//            .build()
-//
-//      }
-//      .filterNot { _, v -> v == null }
-//      .join(
-//        blockTimestamp,
-//        { left, right ->
-//          BlockMetricsTransactionFeeRecord.newBuilder(left)
-//            .setTimestamp(right.getTimestamp())
-//            .build()
-//        },
-//        JoinWindows.of(Duration.ofHours(2)),
-//        Joined.with(Serdes.CanonicalKey(), Serdes.BlockMetricsTransactionFee(), Serdes.BlockTimestamp())
-//      )
-//      .toTopic(BlockMetricsTransactionFee)
+    CanonicalTransactionFees.stream(builder)
+      // we don't want to process tombstones or genesis block
+      .filterNot { _, v -> v?.getBlockHash() == null }
+      .map { _, txFeeList ->
+
+        val transactionFees = txFeeList.getTransactionFees()
+        val count = transactionFees.size.toBigInteger()
+
+        val totalTxFees = transactionFees.fold(BigInteger.ZERO) { memo, next ->
+          memo + next.getTransactionFeeBI()
+        }
+
+        val avgTxFees = when (count) {
+          BigInteger.ZERO -> BigInteger.ZERO
+          else -> totalTxFees / count
+        }
+
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder()
+            .setBlockHash(txFeeList.getBlockHash())
+            .build(),
+          BlockMetricsTransactionFeeRecord.newBuilder()
+            .setTotalTxFeesBI(totalTxFees)
+            .setAvgTxFeesBI(avgTxFees)
+            .build()
+        )
+
+      }
+      .join(
+        blockTimestamp,
+        { left, right ->
+          BlockMetricsTransactionFeeRecord.newBuilder(left)
+            .setTimestamp(right.getTimestamp())
+            .build()
+        },
+        JoinWindows.of(Duration.ofHours(2)),
+        Joined.with(Serdes.BlockMetricKey(), Serdes.BlockMetricsTransactionFee(), Serdes.BlockTimestamp())
+      )
+      .map { k, v ->
+        // add timestamp into the key
+        KeyValue(
+          BlockMetricKeyRecord.newBuilder(k)
+            .setTimestamp(v.getTimestamp())
+            .build(),
+          v
+        )
+      }
+      .toTopic(BlockMetricsTransactionFee)
 
     //
 
