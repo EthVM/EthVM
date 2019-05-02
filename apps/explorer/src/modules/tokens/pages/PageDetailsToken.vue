@@ -109,7 +109,7 @@ export default class PageDetailsToken extends Vue {
   tokenDetails: any = {} // Token details object
 
   tokenTransfers: Transfer[] = [] // Array of token transfers
-  totalTransfers: number = 0 // Total number of transfers
+  totalTransfers: string = '' // Total number of transfers as hex
   transfersPage: number = 0 // Current page of transfers
 
   tokenHolders: any[] = [] // Array of token holders
@@ -129,7 +129,7 @@ export default class PageDetailsToken extends Vue {
   holderDetails: any = {} // Balance/information for a particular holder address
 
   holderTransfers: any[] = [] // Transactions for a particular holder address
-  totalHolderTransfers: number = 0 // Total number of transfers for holder and contract
+  totalHolderTransfers: string = '' // Total number of transfers for holder and contract as hex
   holderTransfersPage: number = 0 // Current page of holder transfers
 
   isHolderTransfersLoading = true // Can technically be empty array, so must be manually set
@@ -385,7 +385,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of token transfers/info
    */
-  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: number }> {
+  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: string }> {
     return new Promise((resolve, reject) => {
       this.isTokenTransfersLoading = true
 
@@ -456,7 +456,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of transactions
    */
-  fetchHolderTransfers(): Promise<{ items: Transfer[]; totalCount: number }> {
+  fetchHolderTransfers(): Promise<{ items: Transfer[]; totalCount: string }> {
     return new Promise((resolve, reject) => {
       this.isHolderTransfersLoading = true
 

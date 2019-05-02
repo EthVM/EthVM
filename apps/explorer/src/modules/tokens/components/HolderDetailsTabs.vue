@@ -41,7 +41,7 @@ export default class HolderDetailsTabs extends Vue {
 
   @Prop(String) addressRef!: string
   @Prop(Array) holderTransfers!: any
-  @Prop(Number) totalTransfers!: number
+  @Prop(String) totalTransfers!: string
   @Prop(Number) transfersPage!: number
   @Prop(Boolean) isHolderTransfersLoading!: boolean
   @Prop(String) errorHolderTransfers!: string
