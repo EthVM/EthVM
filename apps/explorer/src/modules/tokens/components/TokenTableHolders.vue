@@ -116,7 +116,6 @@ export default class TokenTableHolders extends Vue {
   holderBalance(holder) {
     const n = new BN(holder.balance, 16)
     if (this.decimals) {
-
       return n
         .div(new BN(10).pow(this.decimals))
         .toFixed()

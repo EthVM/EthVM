@@ -121,7 +121,9 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
       return 'null'
     }
     const priceChangeAsBN = new BN(this.token.priceChangePercentage24h)
-    if (priceChangeAsBN.toNumber() === 0) return 'null'
+    if (priceChangeAsBN.toNumber() === 0) {
+      return 'null'
+    }
     return priceChangeAsBN.toNumber() > 0 ? '+' : ''
   }
 

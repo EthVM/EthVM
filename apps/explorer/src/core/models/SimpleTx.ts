@@ -71,14 +71,11 @@ export class SimpleTx {
   }
 
   public getStatus(): boolean {
-
     if (!this.cache.status) {
-
       let status = this.getReceipt().getStatus()
 
       // Status not found in receipt - need to check traces
       if (!status) {
-
         const { traces } = this.tx
 
         if (!(traces && traces.length)) {
@@ -113,5 +110,4 @@ export class SimpleTx {
     }
     return this.cache.txReceipt
   }
-
 }

@@ -154,7 +154,9 @@ export default class TokenTableTransfers extends Vue {
    * @return {Number} - Total number of pagination pages
    */
   get numPages(): number {
-    if (!this.totalTransfers.length) return 0
+    if (!this.totalTransfers.length) {
+      return 0
+    }
     return Math.ceil(new BN(this.totalTransfers, 16).toNumber() / MAX_ITEMS)
   }
 }
