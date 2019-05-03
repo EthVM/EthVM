@@ -172,8 +172,8 @@
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Tx, SimpleTx, EthValue } from '@app/core/models'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { EthValue } from '@app/core/models'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
 import BigNumber from 'bignumber.js'

@@ -28,7 +28,7 @@ export class AccountInfo {
   public type: string = ''
 
   public internalTransfers: Transfer[] = []
-  public totalInternalTransfers: number = 0
+  public totalInternalTransfers: string = ''
 
   constructor(public readonly address: string) {}
 }

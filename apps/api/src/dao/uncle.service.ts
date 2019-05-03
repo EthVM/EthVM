@@ -20,7 +20,8 @@ export class UncleService {
     const offset = fromUncle && fromUncle !== new BigNumber(-1) ? fromUncle : await this.findLatestUncleBlockNumber()
     const skip = page * take
     const findOptions: FindManyOptions = {
-      where: { number: LessThanOrEqual(offset) },
+      // TODO fix uncle offset - caused by changing field type to BigNumber
+      // where: { number: LessThanOrEqual(offset) },
       order: { nephewNumber: 'DESC', number: 'DESC' },
       take,
       skip,
