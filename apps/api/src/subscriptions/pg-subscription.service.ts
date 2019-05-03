@@ -53,22 +53,21 @@ export class PgEvent {
 
 }
 
-function inputIsCircuitBreakerState(input: CircuitBreakerState): input is CircuitBreakerState {
+function inputIsCircuitBreakerState(input: any): input is CircuitBreakerState {
   return input instanceof CircuitBreakerState
 }
 
-function isCircuitBreakerState<CircuitBreakerState>() {
+function isCircuitBreakerState() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsCircuitBreakerState),
   )
 }
 
-function inputIsEvent(input: PgEvent): input is PgEvent {
+function inputIsEvent(input: any): input is PgEvent {
   return input instanceof PgEvent
 }
 
-
-function isPgEvent<PgEvent>() {
+function isPgEvent() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsEvent),
   )
@@ -80,7 +79,7 @@ class BlockEvents {
   rootCallTrace?: TransactionTracePayload
 
   transactions: Map<string, TransactionPayload> = new Map()
-  receipts: Map<String, TransactionReceiptPayload> = new Map()
+  receipts: Map<string, TransactionReceiptPayload> = new Map()
 
   blockRewardAuthor?: string
   uncleRewards: Map<string, TransactionTracePayload> = new Map()
@@ -295,6 +294,5 @@ export class PgSubscriptionService {
     }
 
   }
-
 
 }

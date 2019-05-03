@@ -3,7 +3,6 @@ import {Injectable} from '@nestjs/common'
 import {InjectRepository} from '@nestjs/typeorm'
 import {FindManyOptions, In, Repository} from 'typeorm'
 
-
 @Injectable()
 export class ReceiptService {
 
@@ -26,7 +25,7 @@ export class ReceiptService {
       where: {transactionHash: In(txHashes)},
     }
 
-    if(select.length > 0) {
+    if (select.length > 0) {
       options.select = select
     }
 

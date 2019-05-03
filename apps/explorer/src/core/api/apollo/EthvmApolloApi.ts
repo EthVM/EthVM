@@ -1,19 +1,13 @@
-import {EthvmApi} from '@app/core/api'
+import { EthvmApi } from '@app/core/api'
 import {
   accountByAddress,
   addressAllTokensOwned,
   addressAmountTokensOwned,
-  internalTransactionsByAddress,
+  internalTransactionsByAddress
 } from '@app/core/api/apollo/queries/addresses.graphql'
-import {
-  blockByHash,
-  blockByNumber,
-  blocks,
-  minedBlocksByAddress,
-  totalNumberOfBlocks,
-} from '@app/core/api/apollo/queries/blocks.graphql'
-import {contractByAddress, contractsCreatedBy} from '@app/core/api/apollo/queries/contracts.graphql'
-import {search} from '@app/core/api/apollo/queries/search.graphql'
+import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
+import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
+import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
   averageBlockTime,
   averageDifficulty,
@@ -23,7 +17,7 @@ import {
   averageMinerReward,
   averageTxFee,
   totalFailedTxs,
-  totalSuccessfulTxs,
+  totalSuccessfulTxs
 } from '@app/core/api/apollo/queries/statistics.graphql'
 import {
   holderDetails,
@@ -36,8 +30,8 @@ import {
   totalNumTokenExchangeRates,
   coinExchangeRate
 } from '@app/core/api/apollo/queries/tokens.graphql'
-import {totalNumberOfTransactions, tx, txs, txsForAddress} from '@app/core/api/apollo/queries/txs.graphql'
-import {totalNumberOfUncles, uncleByHash, uncles} from '@app/core/api/apollo/queries/uncles.graphql'
+import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
+import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import {
   Account,
   Block,
@@ -48,12 +42,13 @@ import {
   SimpleTx,
   Statistic,
   Token,
-  TokenExchangeRate, TokenHolder,
+  TokenExchangeRate,
+  TokenHolder,
   Transfer,
   Tx,
-  Uncle,
+  Uncle
 } from '@app/core/models'
-import {ApolloClient} from 'apollo-client'
+import { ApolloClient } from 'apollo-client'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}

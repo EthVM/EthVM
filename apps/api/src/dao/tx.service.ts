@@ -169,7 +169,7 @@ export class TxService {
       relations: ['receipt'],
     }
 
-    let txs = await this.transactionRepository.find(findOptions)
+    const txs = await this.transactionRepository.find(findOptions)
     if (!txs.length) return []
 
     return this.findAndMapTraces(txs)

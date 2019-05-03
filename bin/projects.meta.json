@@ -26,6 +26,12 @@
       "version": "${APPS_PATH}/processing/version.properties"
     },
     {
+      "id": "kafka-connect",
+      "dockerfile": "${APPS_PATH}/processing/connectors/Dockerfile",
+      "context": "${APPS_PATH}/processing/",
+      "version": "${APPS_PATH}/processing/connectors/version.properties"
+    },
+    {
       "id": "mongodb",
       "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/mongodb",

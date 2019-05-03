@@ -1,6 +1,6 @@
-import { Scalar } from "@nestjs/graphql";
+import { Scalar } from '@nestjs/graphql';
 import { BigNumber } from 'bignumber.js';
-import { Kind, ValueNode } from "graphql";
+import { Kind, ValueNode } from 'graphql';
 
 @Scalar('BigNumber')
 export class BigNumberScalar {
