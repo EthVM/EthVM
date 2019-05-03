@@ -1,8 +1,7 @@
 import { ArgsType, Field } from 'type-graphql'
 
 @ArgsType()
-export class TokensMetadataArgs {
+export class TokenExchangeRatesArgs {
   @Field(type => [String])
   symbols = []
-
 }

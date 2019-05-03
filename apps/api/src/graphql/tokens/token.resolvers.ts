@@ -7,6 +7,7 @@ import {TokenExchangeRateDto} from '@app/graphql/tokens/dto/token-exchange-rate.
 import {TokenMetadataDto} from '@app/graphql/tokens/dto/token-metadata.dto'
 import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
 import {TokenHoldersPageDto} from '@app/graphql/tokens/dto/token-holders-page.dto'
+import {TokenExchangeRatesArgs} from '@app/graphql/tokens/args/token-exchange-rates.args'
 import {TokensMetadataArgs} from '@app/graphql/tokens/args/tokens-metadata.args'
 
 @Resolver('Token')
@@ -52,8 +53,13 @@ export class TokenResolvers {
   }
 
   @Query()
-  async tokenExchangeRates(@Args('filter') filter: string, @Args('limit', ParseLimitPipe) limit?: number, @Args('page', ParsePagePipe) page?: number) {
-    const entities = await this.tokenService.findTokenExchangeRates(filter, limit, page)
+  async tokenExchangeRates(
+    @Args('filter') filter: string,
+    @Args() {symbols}: TokenExchangeRatesArgs,
+    @Args('limit', ParseLimitPipe) limit?: number,
+    @Args('page', ParsePagePipe) page?: number
+  ) {
+    const entities = await this.tokenService.findTokenExchangeRates(filter, limit, page, symbols)
     return entities.map(e => new TokenExchangeRateDto(e))
   }
 
