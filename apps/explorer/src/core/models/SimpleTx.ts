@@ -71,9 +71,23 @@ export class SimpleTx {
   }
 
   public getStatus(): boolean {
+
     if (!this.cache.status) {
-      const receipt = this.getReceipt()
-      this.cache.status = receipt.getStatus()
+
+      let status = this.getReceipt().getStatus()
+
+      // Status not found in receipt - need to check traces
+      if (!status) {
+
+        const { traces } = this.tx
+
+        if (!(traces && traces.length)) {
+          status = true
+        } else {
+          status = !traces[0].error
+        }
+      }
+      this.cache.status = status
     }
     return this.cache.status
   }
@@ -99,4 +113,5 @@ export class SimpleTx {
     }
     return this.cache.txReceipt
   }
+
 }
