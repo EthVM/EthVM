@@ -83,7 +83,6 @@ class ParityBlocksSource(
             return@thenCompose unclesFuture.thenApply { uncles ->
               Pair(block, uncles)
             }
-
           }
       }.map { f -> f.join() }
 
@@ -102,7 +101,7 @@ class ParityBlocksSource(
         .setNumberBI(blockNumber)
         .build()
 
-      val blockTime = when(val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
+      val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
         null -> null
         else -> block.timestamp.toLong() - prevTimestamp
       }
@@ -179,21 +178,19 @@ class ParityBlocksSource(
 
       listOf(headerSourceRecord, txsSourceRecord, unclesSourceRecord)
     }.flatten()
-
   }
 
   private fun tryCleanTimestamps() {
 
-    if(timestampsLock.compareAndSet(false, true)) {
+    if (timestampsLock.compareAndSet(false, true)) {
 
-      while(blockTimestamps.size > 5000) {
+      while (blockTimestamps.size > 5000) {
         // map is ordered, remove older entries first
         blockTimestamps.remove(blockTimestamps.firstKey())
       }
 
       timestampsLock.set(false)
     }
-
   }
 
   override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
