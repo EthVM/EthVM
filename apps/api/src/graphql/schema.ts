@@ -244,7 +244,7 @@ export abstract class IQuery {
 
     abstract coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
 
-    abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number, symbols?: string[]): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+    abstract tokenExchangeRates(filter?: TokenExchangeRateFilter, limit?: number, page?: number, symbols?: string[]): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
 
     abstract totalNumTokenExchangeRates(): number | Promise<number>;
 

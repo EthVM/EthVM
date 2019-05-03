@@ -4,7 +4,7 @@ type Query {
   addressAllTokensOwned(address: String!): [Token]!
   addressAmountTokensOwned(address: String!): Int!
   coinExchangeRate(pair: ExchangeRatePair!): CoinExchangeRate
-  tokenExchangeRates(filter: TokenExchangeRateFilter!, limit: Int, page: Int, symbols: [String]): [TokenExchangeRate]!
+  tokenExchangeRates(filter: TokenExchangeRateFilter, limit: Int, page: Int, symbols: [String]): [TokenExchangeRate]!
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate

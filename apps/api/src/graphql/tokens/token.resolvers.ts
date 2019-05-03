@@ -54,8 +54,8 @@ export class TokenResolvers {
 
   @Query()
   async tokenExchangeRates(
-    @Args('filter') filter: string,
     @Args() {symbols}: TokenExchangeRatesArgs,
+    @Args('filter') filter: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number
   ) {
