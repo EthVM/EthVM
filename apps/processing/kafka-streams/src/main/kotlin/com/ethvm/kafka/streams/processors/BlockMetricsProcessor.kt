@@ -3,17 +3,24 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
 import com.ethvm.avro.capture.TraceDestroyActionRecord
-import com.ethvm.avro.processing.*
-import com.ethvm.common.extensions.*
+import com.ethvm.avro.processing.BlockMetricsHeaderRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionRecord
+import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
+import com.ethvm.avro.processing.BlockTimestampRecord
+import com.ethvm.common.extensions.getBalanceBI
+import com.ethvm.common.extensions.getGasBI
+import com.ethvm.common.extensions.getGasPriceBI
+import com.ethvm.common.extensions.getValueBI
+import com.ethvm.common.extensions.setAvgGasLimitBI
+import com.ethvm.common.extensions.setAvgGasPriceBI
+import com.ethvm.common.extensions.setTotalGasPriceBI
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsHeader
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransaction
-import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionFee
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionTrace
 import com.ethvm.kafka.streams.config.Topics.BlockTimestamp
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
-import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
@@ -25,7 +32,7 @@ import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
 import java.math.BigInteger
 import java.time.Duration
-import java.util.*
+import java.util.Properties
 
 class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
@@ -72,7 +79,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
     CanonicalTraces.stream(builder)
       // genesis block has no traces
-      .filter{ _, v -> v.getTraces().isNotEmpty()}
+      .filter { _, v -> v.getTraces().isNotEmpty() }
       .mapValues { traceList ->
 
         var successful = 0
@@ -136,7 +143,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setTotalTxs(total)
           .setNumInternalTxs(internalTxs)
           .build()
-
       }
       .join(
         blockTimestamp,
@@ -168,7 +174,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
         val txCount = transactions.size.toBigInteger()
 
-        val (avgGasPrice, avgGasLimit) = when(txCount) {
+        val (avgGasPrice, avgGasLimit) = when (txCount) {
           BigInteger.ZERO -> listOf(BigInteger.ZERO, BigInteger.ZERO)
           else -> listOf(
             totalGasPrice / txCount,
@@ -182,7 +188,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
           .setAvgGasPriceBI(avgGasPrice)
           .setAvgGasLimitBI(avgGasLimit)
           .build()
-
       }
       .join(
         blockTimestamp,
@@ -233,9 +238,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 //      )
 //      .toTopic(BlockMetricsTransactionFee)
 
-
     //
-
 
     return builder.build()
   }
