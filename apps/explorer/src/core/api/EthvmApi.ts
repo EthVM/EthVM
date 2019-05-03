@@ -8,10 +8,11 @@ import {
   SimpleTx,
   Statistic,
   Token,
-  TokenExchangeRate, TokenHolder,
+  TokenExchangeRate,
+  TokenHolder,
   Transfer,
   Tx,
-  Uncle,
+  Uncle
 } from '@app/core/models'
 
 export interface EthvmApi {

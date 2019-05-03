@@ -39,7 +39,7 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, block
     .setNumberBI(number)
     .setHash(hash)
     .setParentHash(parentHash)
-    .setNonceBI(if(nonceRaw != null) nonce else null)
+    .setNonceBI(if (nonceRaw != null) nonce else null)
     .setSha3Uncles(sha3Uncles)
     .setTransactionCount(transactions.size)
     .setTransactionHashes(transactions.map { (it.get() as EthBlock.TransactionObject).get().hash })

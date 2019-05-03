@@ -78,5 +78,4 @@ import {TxService} from '@app/dao/tx.service'
 })
 export class DaoModule {
 
-
 }

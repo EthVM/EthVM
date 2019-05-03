@@ -21,7 +21,7 @@ export class UncleResolvers {
   async uncles(
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
-    @Args('fromUncle', ParseBigNumberPipe) fromUncle?: BigNumber
+    @Args('fromUncle', ParseBigNumberPipe) fromUncle?: BigNumber,
   ) {
     const entities = await this.uncleService.findUncles(limit, page, fromUncle)
     return entities.map(e => new UncleDto(e))

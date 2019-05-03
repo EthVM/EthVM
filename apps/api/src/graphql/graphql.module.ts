@@ -40,7 +40,7 @@ import { BigNumberScalar } from './scalars/big-number.scalar';
     DecimalScalar,
     BufferScalar,
     BigNumberScalar,
-    LongScalar
+    LongScalar,
   ],
 })
 export class GraphQLModule { }

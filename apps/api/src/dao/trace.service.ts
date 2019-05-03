@@ -53,7 +53,7 @@ export class TraceService {
 
   async findTxStatusByBlockHash(blockHashes: string[]): Promise<TransactionStatus[]> {
 
-    if(blockHashes.length === 0) return []
+    if (blockHashes.length === 0) return []
 
     // find root level call trace and use it's error field to determine transaction status
 
