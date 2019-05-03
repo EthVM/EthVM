@@ -10,7 +10,7 @@ export interface BlockMetric {
   __typename: "BlockMetric";
   number: any;
   blockHash: string | null;
-  timestamp: number | null;
+  timestamp: any | null;
   blockTime: number | null;
   numUncles: number | null;
   difficulty: any | null;

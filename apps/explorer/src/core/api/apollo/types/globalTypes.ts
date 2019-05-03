@@ -35,6 +35,14 @@ export enum SearchType {
   Uncle = "Uncle",
 }
 
+export enum TimeBucket {
+  ONE_DAY = "ONE_DAY",
+  ONE_HOUR = "ONE_HOUR",
+  ONE_MONTH = "ONE_MONTH",
+  ONE_WEEK = "ONE_WEEK",
+  ONE_YEAR = "ONE_YEAR",
+}
+
 export enum TokenExchangeRateFilter {
   market_cap_high = "market_cap_high",
   market_cap_low = "market_cap_low",

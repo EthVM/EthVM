@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: latestBlockMetrics
+// GraphQL subscription operation: newBlockMetric
 // ====================================================
 
-export interface latestBlockMetrics_blockMetrics_items {
+export interface newBlockMetric_newBlockMetric {
   __typename: "BlockMetric";
   number: any;
   blockHash: string | null;
@@ -26,15 +26,6 @@ export interface latestBlockMetrics_blockMetrics_items {
   avgTxFees: any | null;
 }
 
-export interface latestBlockMetrics_blockMetrics {
-  __typename: "BlockMetricPage";
-  items: (latestBlockMetrics_blockMetrics_items | null)[] | null;
-}
-
-export interface latestBlockMetrics {
-  blockMetrics: latestBlockMetrics_blockMetrics;
-}
-
-export interface latestBlockMetricsVariables {
-  limit?: number | null;
+export interface newBlockMetric {
+  newBlockMetric: newBlockMetric_newBlockMetric | null;
 }
