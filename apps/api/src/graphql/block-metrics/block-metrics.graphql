@@ -1,3 +1,4 @@
+
 enum TimeBucket {
   ONE_HOUR,
   ONE_DAY,
@@ -6,11 +7,16 @@ enum TimeBucket {
   ONE_YEAR
 }
 
+enum BlockMetricField {
+  BLOCK_TIME, NUM_UNCLES, DIFFICULTY, TOTAL_DIFFICULTY, GAS_LIMIT, GAS_PRICE, NUM_TXS, NUM_SUCCESSFUL_TXS,
+  NUM_FAILED_TXS, NUM_INTERNAL_TXS, TX_FEES, TOTAL_TX_FEES
+}
+
 type Query {
 
   blockMetrics(offset: Int = 0, limit: Int = 10): BlockMetricPage!
 
-  aggregateBlockMetrics(start: Date!, end: Date!, bucket: TimeBucket!, offset: Int = 0, limit: Int = 20): AggregateBlockMetricPage!
+  blockMetricsAverage(start: Date!, end: Date!, bucket: TimeBucket!, fields: [BlockMetricField]!, offset: Int = 0, limit: Int = 20): [AggregateBlockMetric]!
 
 }
 
@@ -21,16 +27,6 @@ type Subscription {
 type BlockMetricPage {
 
   items: [BlockMetric]
-
-  offset: Int
-  limit: Int
-  totalCount: Int
-
-}
-
-type AggregateBlockMetricPage {
-
-  items: [AggregateBlockMetric]
 
   offset: Int
   limit: Int

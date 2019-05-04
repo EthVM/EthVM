@@ -1,10 +1,13 @@
 import {Injectable} from '@nestjs/common'
 import {InjectRepository} from '@nestjs/typeorm'
-import {Between, In, Repository} from 'typeorm'
+import {In, Repository} from 'typeorm'
 import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
-import BigNumber from 'bignumber.js'
-import {AggregateBlockMetric, TimeBucket} from '@app/graphql/schema'
+import {AggregateBlockMetric, BlockMetricField, TimeBucket} from '@app/graphql/schema'
+import {unitOfTime} from 'moment'
+import moment = require('moment')
 
+type Metric = 'blockTime' | 'numUncles' | 'difficulty' | 'totalDifficulty' | 'gasLimit' | 'gasPrice' | 'numTxs'
+  | 'numSuccessfulTxs' | 'numFailedTxs' | 'numInternalTxs' | 'txFees' | 'totalTxFees'
 
 @Injectable()
 export class BlockMetricsService {
@@ -31,7 +34,47 @@ export class BlockMetricsService {
       })
   }
 
-  async aggregate(start: Date, end: Date, bucket: TimeBucket, offset: number, limit: number): Promise<[AggregateBlockMetric[], number]> {
+  private estimateDatapoints(start: Date, end: Date, bucket: TimeBucket): number {
+
+    const startMoment = moment(start)
+    const endMoment = moment(end)
+
+    let timeUnit: unitOfTime.Diff
+    switch (bucket) {
+      case TimeBucket.ONE_HOUR:
+        timeUnit = 'hours'
+        break
+      case TimeBucket.ONE_DAY:
+        timeUnit = 'days'
+        break
+      case TimeBucket.ONE_WEEK:
+        timeUnit = 'weeks'
+        break
+      case TimeBucket.ONE_MONTH:
+        timeUnit = 'months'
+        break
+      case TimeBucket.ONE_YEAR:
+        timeUnit = 'years'
+        break
+      default:
+        throw new Error(`Unexpected time bucket: ${bucket}`)
+    }
+
+    return startMoment.diff(endMoment, timeUnit)
+  }
+
+  async average(
+    start: Date,
+    end: Date,
+    bucket: TimeBucket,
+    fields: BlockMetricField[],
+  ): Promise<AggregateBlockMetric[]> {
+
+    const datapoints = this.estimateDatapoints(start, end, bucket)
+
+    if (datapoints > 10000) {
+      throw new Error('Estimated datapoints exceeds 10,000. Try refining your date range or adjusting your time bucket')
+    }
 
     const select: string[] = []
 
@@ -55,35 +98,59 @@ export class BlockMetricsService {
         throw new Error(`Unexpected bucket value: ${bucket}`)
     }
 
-    select.push('round(avg(block_time)) as avg_block_time')
-    select.push('round(avg(num_uncles)) as avg_num_uncles')
-    select.push('round(avg(difficulty)) as avg_difficulty')
-    select.push('round(avg(total_difficulty)) as avg_total_difficulty')
-    select.push('round(avg(avg_gas_limit)) as avg_gas_limit')
-    select.push('round(avg(avg_gas_price)) as avg_gas_price')
-    select.push('round(avg(total_txs)) as avg_num_txs')
-    select.push('round(avg(num_successful_txs)) as avg_num_successful_txs')
-    select.push('round(avg(num_failed_txs)) as avg_num_failed_txs')
-    select.push('round(avg(num_internal_txs)) as avg_num_internal_txs')
-    select.push('round(avg(avg_tx_fees)) as avg_tx_fees')
-    select.push('round(avg(total_tx_fees)) as avg_total_tx_fees')
+    fields.forEach(m => {
+      switch (m) {
+        case BlockMetricField.BLOCK_TIME:
+          select.push('round(avg(block_time)) as avg_block_time')
+          break
+        case BlockMetricField.NUM_UNCLES:
+          select.push('round(avg(num_uncles)) as avg_num_uncles')
+          break
+        case BlockMetricField.DIFFICULTY:
+          select.push('round(avg(difficulty)) as avg_difficulty')
+          break
+        case BlockMetricField.TOTAL_DIFFICULTY:
+          select.push('round(avg(total_difficulty)) as avg_total_difficulty')
+          break
+        case BlockMetricField.GAS_LIMIT:
+          select.push('round(avg(avg_gas_limit)) as avg_gas_limit')
+          break
+        case BlockMetricField.GAS_PRICE:
+          select.push('round(avg(avg_gas_price)) as avg_gas_price')
+          break
+        case BlockMetricField.NUM_TXS:
+          select.push('round(avg(total_txs)) as avg_num_txs')
+          break
+        case BlockMetricField.NUM_SUCCESSFUL_TXS:
+          select.push('round(avg(num_successful_txs)) as avg_num_successful_txs')
+          break
+        case BlockMetricField.NUM_FAILED_TXS:
+          select.push('round(avg(num_failed_txs)) as avg_num_failed_txs')
+          break
+        case BlockMetricField.NUM_INTERNAL_TXS:
+          select.push('round(avg(num_internal_txs)) as avg_num_internal_txs')
+          break
+        case BlockMetricField.TX_FEES:
+          select.push('round(avg(avg_tx_fees)) as avg_tx_fees')
+          break
+        case BlockMetricField.TOTAL_TX_FEES:
+          select.push('round(avg(total_tx_fees)) as avg_total_tx_fees')
+          break
+        default:
+          throw new Error(`Unexpected metric: ${m}`)
+      }
+    })
 
-    const baseQuery = this.blockMetricsRepository
+    const items = await this.blockMetricsRepository
       .createQueryBuilder('bm')
       .select(select)
       .where('timestamp between :start and :end')
       .groupBy('time')
       .orderBy({time: 'DESC'})
-      .setParameters({ start, end })
-
-    const count = await baseQuery.getCount()
-
-    const items = await baseQuery
-      .offset(offset)
-      .limit(limit)
+      .setParameters({start, end})
       .getRawMany()
 
-    const metrics = items.map(item => {
+    return items.map(item => {
 
       return {
         timestamp: item.time,
@@ -102,8 +169,6 @@ export class BlockMetricsService {
       } as AggregateBlockMetric
 
     })
-
-    return [metrics, count]
   }
 
 }

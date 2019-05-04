@@ -5,6 +5,21 @@
  */
 
 /* tslint:disable */
+export enum BlockMetricField {
+    BLOCK_TIME = "BLOCK_TIME",
+    NUM_UNCLES = "NUM_UNCLES",
+    DIFFICULTY = "DIFFICULTY",
+    TOTAL_DIFFICULTY = "TOTAL_DIFFICULTY",
+    GAS_LIMIT = "GAS_LIMIT",
+    GAS_PRICE = "GAS_PRICE",
+    NUM_TXS = "NUM_TXS",
+    NUM_SUCCESSFUL_TXS = "NUM_SUCCESSFUL_TXS",
+    NUM_FAILED_TXS = "NUM_FAILED_TXS",
+    NUM_INTERNAL_TXS = "NUM_INTERNAL_TXS",
+    TX_FEES = "TX_FEES",
+    TOTAL_TX_FEES = "TOTAL_TX_FEES"
+}
+
 export enum DeltaType {
     UNCLE_REWARD = "UNCLE_REWARD",
     BLOCK_REWARD = "BLOCK_REWARD",
@@ -94,13 +109,6 @@ export class AggregateBlockMetric {
     avgNumInternalTxs?: number;
     avgTxFees?: BigNumber;
     avgTotalTxFees?: BigNumber;
-}
-
-export class AggregateBlockMetricPage {
-    items?: AggregateBlockMetric[];
-    offset?: number;
-    limit?: number;
-    totalCount?: number;
 }
 
 export class Block {
@@ -265,7 +273,7 @@ export abstract class IQuery {
 
     abstract blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
 
-    abstract aggregateBlockMetrics(start: Date, end: Date, bucket: TimeBucket, offset?: number, limit?: number): AggregateBlockMetricPage | Promise<AggregateBlockMetricPage>;
+    abstract blockMetricsAverage(start: Date, end: Date, bucket: TimeBucket, fields?: BlockMetricField[], offset?: number, limit?: number): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
 
     abstract hashRate(): BigNumber | Promise<BigNumber>;
 
