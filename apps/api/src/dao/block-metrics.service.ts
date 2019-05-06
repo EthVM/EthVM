@@ -1,15 +1,18 @@
-import {Injectable} from '@nestjs/common'
-import {InjectRepository} from '@nestjs/typeorm'
-import {In, Repository} from 'typeorm'
-import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
-import {AggregateBlockMetric, BlockMetricField, TimeBucket} from '@app/graphql/schema'
-import {unitOfTime} from 'moment'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { In, Repository } from 'typeorm'
+import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
+import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
+import { unitOfTime } from 'moment'
 import moment = require('moment')
+import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 
 @Injectable()
 export class BlockMetricsService {
 
-  constructor(@InjectRepository(BlockMetricEntity)
+  constructor(@InjectRepository(BlockHeaderEntity)
+              private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
+              @InjectRepository(BlockMetricEntity)
               private readonly blockMetricsRepository: Repository<BlockMetricEntity>) {
   }
 
@@ -23,12 +26,20 @@ export class BlockMetricsService {
   }
 
   async find(offset: number, limit: number): Promise<[BlockMetricEntity[], number]> {
-    return this.blockMetricsRepository
-      .findAndCount({
-        order: {number: 'DESC'},
+
+    const items = await this.blockMetricsRepository
+      .find({
+        order: { number: 'DESC' },
         skip: offset,
         take: limit,
       })
+
+    // much cheaper to do the count against canonical block header table instead of using the
+    // usual count mechanism
+    const count = await this.blockHeaderRepository
+      .count()
+
+    return [items, count]
   }
 
   private estimateDatapoints(start: Date, end: Date, bucket: TimeBucket): number {
@@ -143,8 +154,8 @@ export class BlockMetricsService {
       .select(select)
       .where('timestamp between :end and :start')
       .groupBy('time')
-      .orderBy({time: 'DESC'})
-      .setParameters({start, end})
+      .orderBy({ time: 'DESC' })
+      .setParameters({ start, end })
       .getRawMany()
 
     return items.map(item => {
