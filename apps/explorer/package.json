@@ -45,6 +45,7 @@
     "vue-property-decorator": "^7.3.0",
     "vue-qr": "^1.5.2",
     "vue-router": "^3.0.2",
+    "vue-scroll": "^2.1.9",
     "vue-timeago": "^5.0.0",
     "vuetify": "^1.5.4",
     "vuetify-loader": "^1.2.2",

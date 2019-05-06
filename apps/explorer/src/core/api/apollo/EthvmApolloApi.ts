@@ -86,7 +86,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.addressAmountTokensOwned)
   }
 
-  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
+  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }> {
     return this.apollo
       .query({
         query: internalTransactionsByAddress,
@@ -335,7 +335,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenHolders)
   }
 
-  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
+  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddress,
@@ -354,7 +354,7 @@ export class EthvmApolloApi implements EthvmApi {
     filter: string,
     limit: number,
     page: number
-  ): Promise<{ items: Transfer[]; totalCount: number }> {
+  ): Promise<{ items: Transfer[]; totalCount: string }> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddressForHolder,
@@ -447,12 +447,12 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.uncles.map(raw => new Uncle(raw)))
   }
 
-  public getTotalNumberOfUncles(): Promise<number> {
+  public getTotalNumberOfUncles(): Promise<string> {
     return this.apollo
       .query({
         query: totalNumberOfUncles
       })
-      .then(res => res.data.totalNumberOfUncles as number)
+      .then(res => res.data.totalNumberOfUncles)
   }
 
   // ------------------------------------------------------------------------------------

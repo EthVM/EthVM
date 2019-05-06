@@ -4,17 +4,7 @@
     <app-card-stats-group type="txs" />
     <v-layout row justify-center mb-4>
       <v-flex xs12>
-        <table-txs
-          :transactions="txs"
-          page-type="tx"
-          :loading="isLoading"
-          :max-items="maxItems"
-          :total-txs="totalTxs"
-          :page="page"
-          :error="error"
-          @getTxsPage="getPage"
-          @updateTable="initialLoad"
-        />
+        <table-txs page-type="tx" :max-items="maxItems" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -73,56 +63,7 @@ export default class PageTxs extends Vue {
   */
 
   initialLoad(): void {
-    this.isLoading = true
-    this.fetchTotalTxs().then(res => (this.totalTxs = res), err => (this.totalTxs = 0))
-    this.getPage(0).then(res => {
-      const first = this.txs.length > 0 ? this.txs[0].getBlockNumber() : -1
-      this.pages.push(first)
-      this.firstLoad = false
-    })
     window.scrollTo(0, 0)
-  }
-
-  fetchTxs(newPage: number): Promise<SimpleTx[]> {
-    if (!this.firstLoad) {
-      const length = this.txs.length
-      const first = length > 0 ? this.txs[0].getBlockNumber() : -1
-      const last = length > 0 ? this.txs[length - 1].getBlockNumber() : -1
-
-      if (newPage > this.page) {
-        this.pages.push(first)
-        this.from = last
-      } else {
-        const newFrom = this.pages.pop()
-        this.from = newFrom ? newFrom : -1
-      }
-    }
-
-    this.page = newPage
-
-    return this.$api.getTxs(this.maxItems, 'desc', this.from)
-  }
-
-  fetchTotalTxs(): Promise<number> {
-    return this.$api.getTotalNumberOfTxs()
-  }
-
-  getPage(page: number): Promise<boolean> {
-    this.isLoading = true
-    return new Promise((resolve, reject) => {
-      this.fetchTxs(page).then(
-        (res: SimpleTx[]) => {
-          this.isLoading = false
-          this.txs = res
-          resolve(true)
-        },
-        err => {
-          this.error = this.$i18n.t('message.tx.no-history').toString()
-          Promise.resolve(false)
-          reject()
-        }
-      )
-    })
   }
 
   /*
