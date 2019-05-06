@@ -2,6 +2,8 @@ package com.ethvm.kafka.streams.config
 
 import com.ethvm.kafka.streams.Serdes.BlockAuthor
 import com.ethvm.kafka.streams.Serdes.BlockHeader
+import com.ethvm.kafka.streams.Serdes.BlockKey
+import com.ethvm.kafka.streams.Serdes.BlockMetricKey
 import com.ethvm.kafka.streams.Serdes.BlockMetricsHeader
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransaction
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionFee
@@ -89,12 +91,12 @@ object Topics {
   val NonFungibleBalanceDelta = KafkaTopic("non_fungible_balance_delta", NonFungibleBalanceKey(), NonFungibleBalanceDelta())
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKey(), NonFungibleBalance())
 
-  val BlockTimestamp = KafkaTopic("block_timestamp", CanonicalKey(), BlockTimestamp())
+  val BlockTimestamp = KafkaTopic("block_timestamp", BlockKey(), BlockTimestamp())
 
-  val BlockMetricsHeader = KafkaTopic("block_metrics_header", CanonicalKey(), BlockMetricsHeader())
-  val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", CanonicalKey(), BlockMetricsTransaction())
-  val BlockMetricsTransactionTrace = KafkaTopic("block_metrics_transaction_trace", CanonicalKey(), BlockMetricsTransactionTrace())
-  val BlockMetricsTransactionFee = KafkaTopic("block_metrics_transaction_fee", CanonicalKey(), BlockMetricsTransactionFee())
+  val BlockMetricsHeader = KafkaTopic("block_metrics_header", BlockMetricKey(), BlockMetricsHeader())
+  val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", BlockMetricKey(), BlockMetricsTransaction())
+  val BlockMetricsTransactionTrace = KafkaTopic("block_metrics_transaction_trace", BlockMetricKey(), BlockMetricsTransactionTrace())
+  val BlockMetricsTransactionFee = KafkaTopic("block_metrics_transaction_fee", BlockMetricKey(), BlockMetricsTransactionFee())
 
   val CanonicalGasPrices = KafkaTopic("canonical_gas_prices", CanonicalKey(), TransactionGasPriceList())
   val CanonicalGasUsed = KafkaTopic("canonical_gas_used", CanonicalKey(), TransactionGasUsedList())

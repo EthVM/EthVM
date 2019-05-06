@@ -7,10 +7,11 @@ import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe';
 import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe';
 import { Global, Module } from '@nestjs/common';
 import { ParseLimitPipe } from './validation/parse-limit.pipe.1';
+import {ParseDatePipe} from '@app/shared/validation/parse-date.pipe.1'
 
 @Global()
 @Module({
-  providers: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, ParseBigNumberPipe],
-  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, ParseBigNumberPipe],
+  providers: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, ParseBigNumberPipe, ParseDatePipe],
+  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, ParseBigNumberPipe, ParseDatePipe],
 })
 export class SharedModule { }

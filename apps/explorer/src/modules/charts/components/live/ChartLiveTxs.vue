@@ -61,7 +61,13 @@ class ChartData {
           const { newBlock } = subscriptionData.data
 
           const items = Object.assign([], blockSummaries.items)
+
+          // add to the beginning of the array
           items.unshift(newBlock)
+
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           // ensure order by block number desc
           items.sort((a, b) => {

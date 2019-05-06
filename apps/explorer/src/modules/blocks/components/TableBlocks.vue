@@ -130,6 +130,8 @@ import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summa
 import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BigNumber from 'bignumber.js'
 
+const MAX_ITEMS = 50
+
 @Component({
   components: {
     AppError,
@@ -151,7 +153,7 @@ import BigNumber from 'bignumber.js'
 
       variables: {
         offset: 0,
-        limit: 50
+        limit: MAX_ITEMS
       },
 
       update({ blockSummaries }) {
@@ -170,6 +172,10 @@ import BigNumber from 'bignumber.js'
 
           const items = Object.assign([], blockSummaries.items)
           items.unshift(newBlock)
+
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           // ensure order by block number desc
           items.sort((a, b) => {

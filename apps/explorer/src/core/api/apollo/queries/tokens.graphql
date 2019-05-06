@@ -1,29 +1,3 @@
-# -------------------------------------------------------------
-#   Types & Enums
-# -------------------------------------------------------------
-
-type CoinExchangeRate {
-  currency: String
-  price: Decimal
-  marketCap: Decimal
-  vol24h: Decimal
-  change24h: Decimal
-  lastUpdated: Decimal
-}
-
-enum ExchangeRatePair {
-  ethereum_usd
-}
-
-enum TokenExchangeRateFilter {
-  price_high
-  price_low
-  volume_high
-  volume_low
-  market_cap_high
-  market_cap_low
-  market_cap_rank
-}
 
 # -------------------------------------------------------------
 #   Queries

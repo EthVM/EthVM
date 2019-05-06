@@ -11,8 +11,6 @@ type Query {
   totalNumberOfBlocks: BigNumber!
 }
 
-
-
 type Subscription {
   newBlock: BlockSummary
   hashRate: BigNumber

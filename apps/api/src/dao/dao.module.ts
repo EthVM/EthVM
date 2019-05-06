@@ -1,6 +1,5 @@
 import {AccountEntity} from '@app/orm/entities/account.entity'
 import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
-import {BlockMetricsDailyEntity} from '@app/orm/entities/block-metrics-daily.entity'
 import {ContractMetadataEntity} from '@app/orm/entities/contract-metadata.entity'
 import {ContractEntity} from '@app/orm/entities/contract.entity'
 import {Erc20BalanceEntity} from '@app/orm/entities/erc20-balance.entity'
@@ -27,13 +26,13 @@ import {ReceiptService} from '@app/dao/receipt.service'
 import {TraceService} from '@app/dao/trace.service'
 import {UncleService} from '@app/dao/uncle.service'
 import {TxService} from '@app/dao/tx.service'
+import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AccountEntity,
       BlockHeaderEntity,
-      BlockMetricsDailyEntity,
       UncleEntity,
       ContractEntity,
       ContractMetadataEntity,
@@ -47,6 +46,7 @@ import {TxService} from '@app/dao/tx.service'
       Erc20MetadataEntity,
       Erc721MetadataEntity,
       CoinExchangeRateEntity,
+      BlockMetricEntity,
     ]),
   ],
   providers: [

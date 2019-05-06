@@ -5,6 +5,7 @@ query latestBlocks($offset: Int, $limit: Int) {
   }
 
 }
+
 fragment BlockSummary on BlockSummary {
   number
   hash
@@ -31,5 +32,44 @@ subscription newBlock {
   newBlock {
     ...BlockSummary
   }
+
+}
+
+query latestBlockMetrics($limit: Int) {
+
+  blockMetrics(offset: 0, limit: $limit) {
+    items {
+      ...BlockMetric
+    }
+  }
+
+}
+
+subscription newBlockMetric {
+
+  newBlockMetric {
+    ...BlockMetric
+  }
+
+}
+
+fragment BlockMetric on BlockMetric {
+
+  number
+  blockHash
+  timestamp
+  blockTime
+  numUncles
+  difficulty
+  totalDifficulty
+  totalGasPrice
+  avgGasLimit
+  avgGasPrice
+  totalTxs
+  numSuccessfulTxs
+  numFailedTxs
+  numInternalTxs
+  totalTxFees
+  avgTxFees
 
 }

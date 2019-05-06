@@ -1,7 +1,6 @@
-import {Inject, Injectable} from '@nestjs/common'
+import {Injectable} from '@nestjs/common'
 import convict from 'convict'
 import {join} from 'path'
-import {Logger} from 'winston'
 
 /* tslint:disable:max-line-length */
 const schema = {
@@ -95,17 +94,11 @@ export interface DbConfig {
 export class ConfigService {
   public config: convict.Config<any>
 
-  constructor(@Inject('winston') private readonly logger: Logger) {
+  constructor() {
     const config = (this.config = convict(schema))
 
     config.loadFile(join(process.cwd(), `src/config/${this.env}.json`))
     config.validate({allowed: 'strict'})
-
-    const {env} = this
-
-    if (env === 'development') {
-      this.logger.info('Configuration: ' + config.toString())
-    }
   }
 
   get env(): string {
