@@ -19,19 +19,15 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
-import {BlockMetricPageExt} from "@app/core/api/apollo/extensions/block-metric-page.ext";
+import { BlockMetricPageExt } from '@app/core/api/apollo/extensions/block-metric-page.ext'
 import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/components/blocks.graphql'
-import {BlockMetricExt} from "@app/core/api/apollo/extensions/block-metric.ext";
-import BigNumber from 'bignumber.js';
+import { BlockMetricExt } from '@app/core/api/apollo/extensions/block-metric.ext'
+import BigNumber from 'bignumber.js'
 
 const MAX_ITEMS = 10
 
 class ChartData {
-  constructor(
-    public readonly labels: string[] = [],
-    public readonly avgFees: number[] = [],
-    public readonly avgPrice: number[] = []
-  ) {
+  constructor(public readonly labels: string[] = [], public readonly avgFees: number[] = [], public readonly avgPrice: number[] = []) {
     this.labels = labels
     this.avgFees = avgFees
     this.avgPrice = avgPrice
@@ -67,7 +63,7 @@ class ChartData {
           // add one to the beginning and pop one from the end
           items.unshift(newBlockMetric)
 
-          if(items.length > MAX_ITEMS) {
+          if (items.length > MAX_ITEMS) {
             items.pop()
           }
 
@@ -119,7 +115,6 @@ export default class ChartLiveTxFees extends Vue {
     const avgFees: number[] = []
     const avgPrice: number[] = []
 
-
     items.forEach(item => {
       labels.push(numberLabel + item.numberBN!.toString())
       avgFees.push(new EthValue(item.avgTxFeesBN!).toEth())
@@ -136,7 +131,6 @@ export default class ChartLiveTxFees extends Vue {
   */
 
   get chartData() {
-
     const items: BlockMetricExt[] = this.metricsPage ? this.metricsPage.items || [] : []
     const data = this.toChartData(items)
 

@@ -48,9 +48,9 @@ export class BlockMetricEntity {
   numInternalTxs!: number
 
   @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
-  totalTxFees!: BigNumber
+  totalTxFees?: BigNumber
 
   @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
-  avgTxFees!: BigNumber
+  avgTxFees?: BigNumber
 
 }

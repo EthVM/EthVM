@@ -173,7 +173,7 @@ const MAX_ITEMS = 50
           const items = Object.assign([], transactionSummaries.items)
           items.unshift(newTransaction)
 
-          if(items.length > MAX_ITEMS) {
+          if (items.length > MAX_ITEMS) {
             items.pop()
           }
 

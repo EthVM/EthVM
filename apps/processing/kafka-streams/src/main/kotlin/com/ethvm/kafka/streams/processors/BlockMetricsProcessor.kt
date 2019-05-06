@@ -74,7 +74,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setBlockHash(v.getHash())
             .build(),
           BlockTimestampRecord.newBuilder()
-            .setTimestamp(timestamp)  // convert to millis
+            .setTimestamp(timestamp) // convert to millis
             .build()
         )
       }.toTopic(BlockTimestamp)
@@ -160,7 +160,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
                 else -> {
                 }
-
               }
             }
           }
@@ -237,7 +236,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setAvgGasLimitBI(avgGasLimit)
             .build()
         )
-
       }
       .join(
         blockTimestamp,
@@ -287,7 +285,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setAvgTxFeesBI(avgTxFees)
             .build()
         )
-
       }
       .join(
         blockTimestamp,

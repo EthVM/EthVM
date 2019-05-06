@@ -5,15 +5,9 @@ import {
   addressAmountTokensOwned,
   internalTransactionsByAddress
 } from '@app/core/api/apollo/queries/addresses.graphql'
-import {
-  blockByHash,
-  blockByNumber,
-  blocks,
-  minedBlocksByAddress,
-  totalNumberOfBlocks,
-} from '@app/core/api/apollo/queries/blocks.graphql'
-import {contractByAddress, contractsCreatedBy} from '@app/core/api/apollo/queries/contracts.graphql'
-import {search} from '@app/core/api/apollo/queries/search.graphql'
+import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
+import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
+import { search } from '@app/core/api/apollo/queries/search.graphql'
 
 import {
   holderDetails,

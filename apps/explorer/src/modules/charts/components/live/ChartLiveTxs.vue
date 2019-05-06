@@ -65,7 +65,7 @@ class ChartData {
           // add to the beginning of the array
           items.unshift(newBlock)
 
-          if(items.length > MAX_ITEMS) {
+          if (items.length > MAX_ITEMS) {
             items.pop()
           }
 

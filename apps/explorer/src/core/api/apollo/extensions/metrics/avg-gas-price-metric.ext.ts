@@ -1,9 +1,8 @@
-import {AvgGasPriceMetric} from '@app/core/api/apollo/types/AvgGasPriceMetric'
+import { AvgGasPriceMetric } from '@app/core/api/apollo/types/AvgGasPriceMetric'
 import BigNumber from 'bignumber.js'
 
 export class AvgGasPriceMetricExt implements AvgGasPriceMetric {
-
-  __typename!: "AggregateBlockMetric"
+  __typename!: 'AggregateBlockMetric'
 
   avgGasPrice: any | null
   timestamp: any | null
@@ -19,5 +18,4 @@ export class AvgGasPriceMetricExt implements AvgGasPriceMetric {
   get timestampDate(): Date {
     return new Date(this.timestamp!)
   }
-
 }

@@ -1,9 +1,8 @@
-import {BlockMetric} from '@app/core/api/apollo/types/BlockMetric'
+import { BlockMetric } from '@app/core/api/apollo/types/BlockMetric'
 import BigNumber from 'bignumber.js'
 
 export class BlockMetricExt implements BlockMetric {
-
-  __typename!: "BlockMetric"
+  __typename!: 'BlockMetric'
   avgGasLimit!: any | null
   avgGasPrice!: any | null
   avgTxFees!: any | null
@@ -20,7 +19,6 @@ export class BlockMetricExt implements BlockMetric {
   totalTxFees!: any | null
   blockTime!: number | null
   timestamp!: number | null
-
 
   constructor(proto: any) {
     Object.assign(this, proto)
@@ -61,5 +59,4 @@ export class BlockMetricExt implements BlockMetric {
   get totalTxFeesBN(): BigNumber | null {
     return this.totalTxFees ? new BigNumber(this.totalTxFees, 16) : null
   }
-
 }

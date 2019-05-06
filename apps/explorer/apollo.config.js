@@ -4,7 +4,7 @@ module.exports = {
       name: 'api',
       url: 'http://api:3000/graphql',
       includes: ['**/*.graphql.ts'],
-      excludes: ['node_modules/**', "src/core/api/apollo/types/**"]
+      excludes: ['node_modules/**', 'src/core/api/apollo/types/**']
     }
   }
 }

@@ -173,7 +173,7 @@ const MAX_ITEMS = 50
           const items = Object.assign([], blockSummaries.items)
           items.unshift(newBlock)
 
-          if(items.length > MAX_ITEMS) {
+          if (items.length > MAX_ITEMS) {
             items.pop()
           }
 

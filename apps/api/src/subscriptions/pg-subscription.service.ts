@@ -63,26 +63,28 @@ export class PgEvent {
 
 }
 
-function inputIsCircuitBreakerState(input: CircuitBreakerState): input is CircuitBreakerState {
+function inputIsCircuitBreakerState(input: any): input is CircuitBreakerState {
   return input instanceof CircuitBreakerState
 }
 
+// tslint:disable-next-line:no-shadowed-variable
 function isCircuitBreakerState<CircuitBreakerState>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsCircuitBreakerState),
   )
 }
 
-function inputIsEvent(input: PgEvent): input is PgEvent {
+function inputIsEvent(input: any): input is PgEvent {
   return input instanceof PgEvent
 }
-
+// tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsEvent),
   )
 }
 
+// tslint:disable-next-line:no-shadowed-variable
 function isBlockEvent<PgEvent>() {
 
   const tables = new Set<string>([
@@ -98,6 +100,7 @@ function isBlockEvent<PgEvent>() {
   )
 }
 
+// tslint:disable-next-line:no-shadowed-variable
 function isBlockMetricEvent<PgEvent>() {
 
   const tables = new Set<string>([
@@ -138,7 +141,7 @@ class BlockEvents {
   rootCallTrace?: TransactionTracePayload
 
   transactions: Map<string, TransactionPayload> = new Map()
-  receipts: Map<String, TransactionReceiptPayload> = new Map()
+  receipts: Map<string, TransactionReceiptPayload> = new Map()
 
   blockRewardAuthor?: string
   uncleRewards: Map<string, TransactionTracePayload> = new Map()
@@ -419,6 +422,5 @@ export class PgSubscriptionService {
     }
 
   }
-
 
 }
