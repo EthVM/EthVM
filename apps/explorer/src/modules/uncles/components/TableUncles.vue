@@ -168,7 +168,7 @@ export default class TableUncles extends Vue {
     if (!this.totalUncles) {
       return 0
     }
-    return this.totalUncles ? Math.ceil(new BN(this.totalUncles, 16).toNumber() / this.maxItems) : 0
+    return this.totalUncles ? Math.ceil(new BN(this.totalUncles).toNumber() / this.maxItems) : 0
   }
 }
 </script>

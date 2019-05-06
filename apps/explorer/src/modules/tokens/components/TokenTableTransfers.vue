@@ -134,7 +134,7 @@ export default class TokenTableTransfers extends Vue {
   }
 
   calculateTransferValue(value: string) {
-    const n = new BN(value, 16)
+    const n = new BN(value)
     if (this.decimals) {
       return n
         .div(new BN(10).pow(this.decimals))
@@ -157,7 +157,7 @@ export default class TokenTableTransfers extends Vue {
     if (!this.totalTransfers.length) {
       return 0
     }
-    return Math.ceil(new BN(this.totalTransfers, 16).toNumber() / MAX_ITEMS)
+    return Math.ceil(new BN(this.totalTransfers).toNumber() / MAX_ITEMS)
   }
 }
 </script>

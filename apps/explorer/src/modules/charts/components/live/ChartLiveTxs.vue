@@ -71,8 +71,8 @@ class ChartData {
 
           // ensure order by block number desc
           items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
+            const numberA = a.number ? new BigNumber(a.number) : new BigNumber(0)
+            const numberB = b.number ? new BigNumber(b.number) : new BigNumber(0)
             return numberB.minus(numberA).toNumber()
           })
 

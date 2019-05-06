@@ -25,19 +25,19 @@ export class BlockMetricExt implements BlockMetric {
   }
 
   get numberBN(): BigNumber | null {
-    return this.number ? new BigNumber(this.number, 16) : null
+    return this.number ? new BigNumber(this.number) : null
   }
 
   get avgGasLimitBN(): BigNumber | null {
-    return this.avgGasLimit ? new BigNumber(this.avgGasLimit, 16) : null
+    return this.avgGasLimit ? new BigNumber(this.avgGasLimit) : null
   }
 
   get avgGasPriceBN(): BigNumber | null {
-    return this.avgGasPrice ? new BigNumber(this.avgGasPrice, 16) : null
+    return this.avgGasPrice ? new BigNumber(this.avgGasPrice) : null
   }
 
   get avgTxFeesBN(): BigNumber | null {
-    return this.avgTxFees ? new BigNumber(this.avgTxFees, 16) : null
+    return this.avgTxFees ? new BigNumber(this.avgTxFees) : null
   }
 
   get timestampDate(): Date | null {
@@ -45,18 +45,18 @@ export class BlockMetricExt implements BlockMetric {
   }
 
   get difficultyBN(): BigNumber | null {
-    return this.difficulty ? new BigNumber(this.difficulty, 16) : null
+    return this.difficulty ? new BigNumber(this.difficulty) : null
   }
 
   get totalDifficultyBN(): BigNumber | null {
-    return this.totalDifficulty ? new BigNumber(this.totalDifficulty, 16) : null
+    return this.totalDifficulty ? new BigNumber(this.totalDifficulty) : null
   }
 
   get totalGasPriceBN(): BigNumber | null {
-    return this.totalGasPrice ? new BigNumber(this.totalGasPrice, 16) : null
+    return this.totalGasPrice ? new BigNumber(this.totalGasPrice) : null
   }
 
   get totalTxFeesBN(): BigNumber | null {
-    return this.totalTxFees ? new BigNumber(this.totalTxFees, 16) : null
+    return this.totalTxFees ? new BigNumber(this.totalTxFees) : null
   }
 }
