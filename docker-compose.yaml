@@ -124,6 +124,7 @@ services:
   timescale:
     image: timescale/timescaledb:${TIMESCALE_VERSION}
     restart: unless-stopped
+    shm_size: 1g
     volumes:
       - timescale-volume:/var/lib/postgresql/data
     networks:
