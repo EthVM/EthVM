@@ -32,12 +32,6 @@
       "version": "${APPS_PATH}/processing/connectors/version.properties"
     },
     {
-      "id": "mongodb",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/mongodb",
-      "version": "${DOCKER_IMAGES_PATH}/mongodb/version.properties"
-    },
-    {
       "id": "traefik",
       "dockerfile": "${DOCKER_IMAGES_PATH}/traefik/Dockerfile",
       "context": "${DOCKER_IMAGES_PATH}/traefik/",
