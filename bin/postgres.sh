@@ -13,13 +13,15 @@ run() {
   local command="${1}"
   local action="${2}"
 
-  local filepath="${ROOT_DIR}/datasets/ethvm_dev.sql.gz"
+  local datasets_dir="${ROOT_DIR}/datasets"
+  local filename="ethvm_dev.sql.gz"
+  local filepath="${datasets_dir}/${filename}"
 
   case "${command}" in
 
     dump)
       docker-compose exec -u postgres timescale pg_dump ethvm_dev | gzip > ${filepath}
-      md5sum ${filepath} > ${filepath}.md5
+      cd ${datasets_dir} && md5sum ${filename} > ${filename}.md5 # to avoid full path in md5 sum file
       ;;
 
     upload-dump)
