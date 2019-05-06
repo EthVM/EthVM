@@ -8,15 +8,15 @@ enum TimeBucket {
 }
 
 enum BlockMetricField {
-  BLOCK_TIME, NUM_UNCLES, DIFFICULTY, TOTAL_DIFFICULTY, GAS_LIMIT, GAS_PRICE, NUM_TXS, NUM_SUCCESSFUL_TXS,
-  NUM_FAILED_TXS, NUM_INTERNAL_TXS, TX_FEES, TOTAL_TX_FEES
+  AVG_BLOCK_TIME, AVG_NUM_UNCLES, AVG_DIFFICULTY, AVG_TOTAL_DIFFICULTY, AVG_GAS_LIMIT, AVG_GAS_PRICE, AVG_NUM_TXS,
+  AVG_NUM_SUCCESSFUL_TXS, AVG_NUM_FAILED_TXS, AVG_NUM_INTERNAL_TXS, AVG_TX_FEES, AVG_TOTAL_TX_FEES
 }
 
 type Query {
 
   blockMetrics(offset: Int = 0, limit: Int = 10): BlockMetricPage!
 
-  blockMetricsAverage(start: Date!, end: Date!, bucket: TimeBucket!, fields: [BlockMetricField]!, offset: Int = 0, limit: Int = 20): [AggregateBlockMetric]!
+  blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: [BlockMetricField]): [AggregateBlockMetric]!
 
 }
 

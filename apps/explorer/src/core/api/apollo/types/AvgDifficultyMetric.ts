@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: AvgGasPriceMetric
+// GraphQL fragment: AvgDifficultyMetric
 // ====================================================
 
-export interface AvgGasPriceMetric {
+export interface AvgDifficultyMetric {
   __typename: "AggregateBlockMetric";
   timestamp: any | null;
   value: any | null;

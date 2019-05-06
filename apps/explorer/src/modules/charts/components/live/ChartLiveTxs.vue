@@ -138,8 +138,6 @@ export default class ChartLiveTxs extends Vue {
     const items: (BlockSummaryExt | null)[] = this.blockPage ? this.blockPage.items || [] : []
     const data = this.toChartData(items)
 
-    this.updateCount += 1
-
     return {
       labels: data.labels,
       datasets: [

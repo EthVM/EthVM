@@ -15,7 +15,7 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartMixin } from '@app/modules/charts/mixins'
 import { Component, Mixins } from 'vue-property-decorator'
-import { avgGasPriceHistory } from '@app/modules/charts/components/history/history.graphql'
+import { avgGasPriceHistory } from '@app/modules/charts/components/history/timeseries.graphql'
 import {avgGasPrice_aggregateBlockMetrics} from '@app/core/api/apollo/types/avgGasPrice';
 import {Statistic} from '@app/core/models';
 import BigNumber from 'bignumber.js';
@@ -84,7 +84,7 @@ export default class ChartGasPrice extends Mixins(ChartMixin) {
   }
 
   get title(): string {
-    return this.$i18n.t('charts.gas-price.title ').toString()
+    return this.$i18n.t('charts.gas-price.title').toString()
   }
 
   get labelString(): string {

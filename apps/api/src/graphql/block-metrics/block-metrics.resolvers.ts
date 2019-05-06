@@ -28,13 +28,13 @@ export class BlockMetricsResolvers {
   }
 
   @Query()
-  async blockMetricsAverage(
+  async blockMetricsTimeseries(
     @Args('start', ParseDatePipe) start: Date,
     @Args('end', ParseDatePipe) end: Date,
     @Args('bucket') bucket: TimeBucket,
     @Args({name: 'fields', type: () => [BlockMetricField]}) fields: BlockMetricField[],
   ): Promise<AggregateBlockMetricDto[]> {
-    const entities = await this.blockMetricsService.average(start, end, bucket, fields)
+    const entities = await this.blockMetricsService.timeseries(start, end, bucket, fields)
     return entities.map(e => new AggregateBlockMetricDto(e))
   }
 

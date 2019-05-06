@@ -6,9 +6,6 @@ import {AggregateBlockMetric, BlockMetricField, TimeBucket} from '@app/graphql/s
 import {unitOfTime} from 'moment'
 import moment = require('moment')
 
-type Metric = 'blockTime' | 'numUncles' | 'difficulty' | 'totalDifficulty' | 'gasLimit' | 'gasPrice' | 'numTxs'
-  | 'numSuccessfulTxs' | 'numFailedTxs' | 'numInternalTxs' | 'txFees' | 'totalTxFees'
-
 @Injectable()
 export class BlockMetricsService {
 
@@ -63,7 +60,7 @@ export class BlockMetricsService {
     return startMoment.diff(endMoment, timeUnit)
   }
 
-  async average(
+  async timeseries(
     start: Date,
     end: Date,
     bucket: TimeBucket,
@@ -100,40 +97,40 @@ export class BlockMetricsService {
 
     fields.forEach(m => {
       switch (m) {
-        case BlockMetricField.BLOCK_TIME:
+        case BlockMetricField.AVG_BLOCK_TIME:
           select.push('round(avg(block_time)) as avg_block_time')
           break
-        case BlockMetricField.NUM_UNCLES:
+        case BlockMetricField.AVG_NUM_UNCLES:
           select.push('round(avg(num_uncles)) as avg_num_uncles')
           break
-        case BlockMetricField.DIFFICULTY:
+        case BlockMetricField.AVG_DIFFICULTY:
           select.push('round(avg(difficulty)) as avg_difficulty')
           break
-        case BlockMetricField.TOTAL_DIFFICULTY:
+        case BlockMetricField.AVG_TOTAL_DIFFICULTY:
           select.push('round(avg(total_difficulty)) as avg_total_difficulty')
           break
-        case BlockMetricField.GAS_LIMIT:
+        case BlockMetricField.AVG_GAS_LIMIT:
           select.push('round(avg(avg_gas_limit)) as avg_gas_limit')
           break
-        case BlockMetricField.GAS_PRICE:
+        case BlockMetricField.AVG_GAS_PRICE:
           select.push('round(avg(avg_gas_price)) as avg_gas_price')
           break
-        case BlockMetricField.NUM_TXS:
+        case BlockMetricField.AVG_NUM_TXS:
           select.push('round(avg(total_txs)) as avg_num_txs')
           break
-        case BlockMetricField.NUM_SUCCESSFUL_TXS:
+        case BlockMetricField.AVG_NUM_SUCCESSFUL_TXS:
           select.push('round(avg(num_successful_txs)) as avg_num_successful_txs')
           break
-        case BlockMetricField.NUM_FAILED_TXS:
+        case BlockMetricField.AVG_NUM_FAILED_TXS:
           select.push('round(avg(num_failed_txs)) as avg_num_failed_txs')
           break
-        case BlockMetricField.NUM_INTERNAL_TXS:
+        case BlockMetricField.AVG_NUM_INTERNAL_TXS:
           select.push('round(avg(num_internal_txs)) as avg_num_internal_txs')
           break
-        case BlockMetricField.TX_FEES:
+        case BlockMetricField.AVG_TX_FEES:
           select.push('round(avg(avg_tx_fees)) as avg_tx_fees')
           break
-        case BlockMetricField.TOTAL_TX_FEES:
+        case BlockMetricField.AVG_TOTAL_TX_FEES:
           select.push('round(avg(total_tx_fees)) as avg_total_tx_fees')
           break
         default:
@@ -144,7 +141,7 @@ export class BlockMetricsService {
     const items = await this.blockMetricsRepository
       .createQueryBuilder('bm')
       .select(select)
-      .where('timestamp between :start and :end')
+      .where('timestamp between :end and :start')
       .groupBy('time')
       .orderBy({time: 'DESC'})
       .setParameters({start, end})

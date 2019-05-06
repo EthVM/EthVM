@@ -78,20 +78,16 @@
             "deprecationReason": null
           },
           {
-            "name": "aggregateBlockMetrics",
+            "name": "blockMetricsTimeseries",
             "description": null,
             "args": [
               {
                 "name": "start",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Date",
-                    "ofType": null
-                  }
+                  "kind": "SCALAR",
+                  "name": "Date",
+                  "ofType": null
                 },
                 "defaultValue": null
               },
@@ -99,13 +95,9 @@
                 "name": "end",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Date",
-                    "ofType": null
-                  }
+                  "kind": "SCALAR",
+                  "name": "Date",
+                  "ofType": null
                 },
                 "defaultValue": null
               },
@@ -113,44 +105,38 @@
                 "name": "bucket",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "ENUM",
-                    "name": "TimeBucket",
-                    "ofType": null
-                  }
+                  "kind": "ENUM",
+                  "name": "TimeBucket",
+                  "ofType": null
                 },
                 "defaultValue": null
               },
               {
-                "name": "offset",
+                "name": "fields",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "BlockMetricField",
+                    "ofType": null
+                  }
                 },
-                "defaultValue": "0"
-              },
-              {
-                "name": "limit",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "20"
+                "defaultValue": null
               }
             ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "AggregateBlockMetricPage",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "AggregateBlockMetric",
+                  "ofType": null
+                }
               }
             },
             "isDeprecated": false,
@@ -1729,66 +1715,86 @@
         "possibleTypes": null
       },
       {
-        "kind": "OBJECT",
-        "name": "AggregateBlockMetricPage",
+        "kind": "ENUM",
+        "name": "BlockMetricField",
         "description": null,
-        "fields": [
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
           {
-            "name": "items",
+            "name": "AVG_BLOCK_TIME",
             "description": null,
-            "args": [],
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "AggregateBlockMetric",
-                "ofType": null
-              }
-            },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "offset",
+            "name": "AVG_NUM_UNCLES",
             "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "limit",
+            "name": "AVG_DIFFICULTY",
             "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "AVG_TOTAL_DIFFICULTY",
             "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_GAS_LIMIT",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_GAS_PRICE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_NUM_TXS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_NUM_SUCCESSFUL_TXS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_NUM_FAILED_TXS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_NUM_INTERNAL_TXS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_TX_FEES",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AVG_TOTAL_TX_FEES",
+            "description": null,
             "isDeprecated": false,
             "deprecationReason": null
           }
         ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
         "possibleTypes": null
       },
       {

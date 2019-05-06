@@ -5,20 +5,20 @@
 import { TimeBucket } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: avgGasPriceHistory
+// GraphQL query operation: avgGasLimitHistory
 // ====================================================
 
-export interface avgGasPriceHistory_blockMetricsTimeseries {
+export interface avgGasLimitHistory_blockMetricsTimeseries {
   __typename: "AggregateBlockMetric";
   timestamp: any | null;
   value: any | null;
 }
 
-export interface avgGasPriceHistory {
-  blockMetricsTimeseries: (avgGasPriceHistory_blockMetricsTimeseries | null)[];
+export interface avgGasLimitHistory {
+  blockMetricsTimeseries: (avgGasLimitHistory_blockMetricsTimeseries | null)[];
 }
 
-export interface avgGasPriceHistoryVariables {
+export interface avgGasLimitHistoryVariables {
   start?: any | null;
   end?: any | null;
   bucket?: TimeBucket | null;
