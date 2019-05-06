@@ -14,6 +14,6 @@ export class TransactionSummaryPageExt implements TransactionSummaryPage {
   }
 
   get totalCountBN(): BN {
-    return new BN(this.totalCount, 16)
+    return new BN(this.totalCount)
   }
 }

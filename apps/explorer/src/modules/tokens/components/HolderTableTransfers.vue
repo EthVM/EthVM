@@ -112,7 +112,7 @@ export default class HolderTableTransfers extends Vue {
   }
 
   calculateTransferValue(value: string) {
-    const n = new BN(value, 16)
+    const n = new BN(value)
     if (this.decimals) {
       return n
         .div(new BN(10).pow(this.decimals))
@@ -137,7 +137,7 @@ export default class HolderTableTransfers extends Vue {
    * @return {Integer} - Number of pages of results
    */
   get numPages() {
-    return this.totalTransfers.length > 0 ? Math.ceil(new BN(this.totalTransfers, 16).toNumber() / MAX_ITEMS) : 0
+    return this.totalTransfers.length > 0 ? Math.ceil(new BN(this.totalTransfers).toNumber() / MAX_ITEMS) : 0
   }
 }
 </script>

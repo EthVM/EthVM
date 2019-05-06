@@ -22,7 +22,7 @@ export class TransactionSummaryExt implements TransactionSummary {
   }
 
   get blockNumberBN(): BN {
-    return new BN(this.blockNumber, 16)
+    return new BN(this.blockNumber)
   }
 
   get fromHex(): Hex {
@@ -38,11 +38,11 @@ export class TransactionSummaryExt implements TransactionSummary {
   }
 
   get feeBN(): BN {
-    return new BN(this.fee, 16)
+    return new BN(this.fee)
   }
 
   get valueBN(): BN {
-    return new BN(this.value, 16)
+    return new BN(this.value)
   }
 
   get isContractCreation(): boolean {

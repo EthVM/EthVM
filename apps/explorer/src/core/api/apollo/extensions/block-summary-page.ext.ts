@@ -13,6 +13,6 @@ export class BlockSummaryPageExt implements BlockSummaryPage {
   }
 
   get totalCountBN(): BN {
-    return new BN(this.totalCount, 16)
+    return new BN(this.totalCount)
   }
 }

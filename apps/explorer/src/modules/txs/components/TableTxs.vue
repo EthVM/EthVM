@@ -179,8 +179,8 @@ const MAX_ITEMS = 50
 
           // ensure order by block number desc and transaction index desc
           items.sort((a, b) => {
-            const numberA = a.blockNumber ? new BigNumber(a.blockNumber, 16) : new BigNumber(0)
-            const numberB = b.blockNumber ? new BigNumber(b.blockNumber, 16) : new BigNumber(0)
+            const numberA = a.blockNumber ? new BigNumber(a.blockNumber) : new BigNumber(0)
+            const numberB = b.blockNumber ? new BigNumber(b.blockNumber) : new BigNumber(0)
             const numberDiff = numberB.minus(numberA).toNumber()
 
             if (numberDiff !== 0) {

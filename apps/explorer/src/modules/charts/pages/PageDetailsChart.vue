@@ -61,14 +61,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import ChartBlockDiff from '@app/modules/charts/components/history/ChartBlockDiff.vue'
-import ChartBlockTime from '@app/modules/charts/components/history/ChartBlockTime.vue'
-import ChartGasLimit from '@app/modules/charts/components/history/ChartGasLimit.vue'
-import ChartGasPrice from '@app/modules/charts/components/history/ChartGasPrice.vue'
 import ChartHashRate from '@app/modules/charts/components/history/ChartHashRate.vue'
-import ChartTxFail from '@app/modules/charts/components/history/ChartTxFail.vue'
-import ChartTxSuccess from '@app/modules/charts/components/history/ChartTxSuccess.vue'
-import ChartTxFees from '@app/modules/charts/components/history/ChartTxFees.vue'
 import { ChartTypes } from '@app/modules/charts/helpers'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
@@ -86,14 +79,7 @@ import {
 @Component({
   components: {
     AppBreadCrumbs,
-    ChartBlockDiff,
-    ChartBlockTime,
-    ChartGasLimit,
-    ChartGasPrice,
     ChartHashRate,
-    ChartTxFail,
-    ChartTxSuccess,
-    ChartTxFees,
     ChartTimeseries
   }
 })
