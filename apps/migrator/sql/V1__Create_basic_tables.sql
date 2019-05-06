@@ -742,19 +742,19 @@ EXECUTE PROCEDURE notify_block_metric('block_metrics_transaction_fee');
 
 SELECT create_hypertable('block_metrics_header',
                          'timestamp',
-                         chunk_time_interval => interval '1 hour');
+                         chunk_time_interval => interval '1 day');
 
 SELECT create_hypertable('block_metrics_transaction',
                          'timestamp',
-                         chunk_time_interval => interval '1 hour');
+                         chunk_time_interval => interval '1 day');
 
 SELECT create_hypertable('block_metrics_transaction_trace',
                          'timestamp',
-                         chunk_time_interval => interval '1 hour');
+                         chunk_time_interval => interval '1 day');
 
 SELECT create_hypertable('block_metrics_transaction_fee',
                          'timestamp',
-                         chunk_time_interval => interval '1 hour');
+                         chunk_time_interval => interval '1 day');
 
 CREATE VIEW canonical_block_metric AS
 SELECT bh.number,
