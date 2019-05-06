@@ -91,7 +91,7 @@ up_simple() {
   echo -e "Checking current dataset...\n"
   mkdir -p ${ROOT_DIR}/datasets
   set +o errexit
-  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${ROOT_DIR}/datasets/${DATASET}.md5 &>/dev/null)
+  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${DATASET}.md5 &>/dev/null)
   [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo -e "You're using latest dataset version! \n"
   set -o errexit
 
