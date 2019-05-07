@@ -95,7 +95,7 @@ class ParityBlocksSource(
 
       val blockNumber = block.number
 
-      val partitionOffset = mapOf("blockNumber" to blockNumber)
+      val partitionOffset = mapOf("blockNumber" to blockNumber.toLong())
 
       val blockKeyRecord = CanonicalKeyRecord.newBuilder()
         .setNumberBI(blockNumber)
