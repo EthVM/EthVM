@@ -7,10 +7,9 @@ USER root
 ENV DOCKERIZE_VERSION v0.6.1
 
 ENV FLYWAY_EDITION community
-ENV FLYWAY_JDBC_URL jdbc:postgresql://timescale:5432/ethvm_dev
-ENV FLYWAY_USER postgres
-ENV FLYWAY_PASSWORD 1234
 ENV FLYWAY_CONNECT_RETRIES 30
+
+ENV POSTGRES_JDBC_URL jdbc:postgresql://timescale:5432/ethvm_dev?user=postgres&password=1234&ssl=false
 
 # Install dockerize
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
