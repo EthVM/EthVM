@@ -266,7 +266,7 @@ export default class TableTxs extends Vue {
 
     txPage.fetchMore({
       variables: {
-        offset: page * 50,
+        offset: page * this.maxItems,
         limit: this.maxItems
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
