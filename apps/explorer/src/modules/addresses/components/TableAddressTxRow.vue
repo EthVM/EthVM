@@ -176,9 +176,7 @@
                           )
                         "
                       >
-                        <p :class="getTxTypeClass(tx)">
-                          {{ getSign(tx) }}{{ getRoundNumber(tx.getValue().toEth()) }}
-                        </p>
+                        <p :class="getTxTypeClass(tx)">{{ getSign(tx) }}{{ getRoundNumber(tx.getValue().toEth()) }}</p>
                         <v-tooltip bottom>
                           <template #activator="data">
                             <v-icon v-on="data.on" small class="info--text text-xs-center ml-1">fa fa-question-circle</v-icon>
@@ -318,7 +316,9 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   }
 
   getType(tx): string {
-    if (tx.getValue().value === "0") return 'default' // Don't display any symbol if no value is transferred
+    if (tx.getValue().value === '0') {
+      return 'default'
+    } // Don't display any symbol if no value is transferred
 
     if (
       tx
