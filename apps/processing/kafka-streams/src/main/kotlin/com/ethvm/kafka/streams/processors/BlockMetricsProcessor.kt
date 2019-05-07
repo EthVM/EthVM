@@ -84,7 +84,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
     canonicalBlock
       .map { _, header ->
 
-        val timestamp = DateTime(header.getTimestamp() * 1000)
+        val timestamp = DateTime(header.getTimestamp() * 1000L)
 
         KeyValue(
           BlockMetricKeyRecord.newBuilder()

@@ -1,13 +1,13 @@
-import {BlockSummary} from '@app/graphql/schema'
-import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
-import {TransactionTraceEntity} from '@app/orm/entities/transaction-trace.entity'
-import {TransactionEntity} from '@app/orm/entities/transaction.entity'
-import {UncleEntity} from '@app/orm/entities/uncle.entity'
-import {Injectable} from '@nestjs/common'
-import {InjectRepository} from '@nestjs/typeorm'
+import { BlockSummary } from '@app/graphql/schema'
+import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
+import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { UncleEntity } from '@app/orm/entities/uncle.entity'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import {In, LessThanOrEqual, Repository} from 'typeorm'
-import {TraceService} from './trace.service'
+import { In, LessThanOrEqual, Repository } from 'typeorm'
+import { TraceService } from './trace.service'
 
 @Injectable()
 export class BlockService {
@@ -26,7 +26,7 @@ export class BlockService {
     const blocks = await this.blockHeaderRepository
       .find({
         select: ['number', 'difficulty', 'blockTime'],
-        order: {number: 'DESC'},
+        order: { number: 'DESC' },
         take: 20,
       })
 
@@ -48,7 +48,7 @@ export class BlockService {
       .findAndCount({
         select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
         relations: ['rewards'],
-        order: {number: 'DESC'},
+        order: { number: 'DESC' },
         skip: offset,
         take: limit,
       })
@@ -63,9 +63,9 @@ export class BlockService {
 
     const headersWithRewards = await this.blockHeaderRepository.find({
       select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
-      where: {hash: In(blockHashes)},
+      where: { hash: In(blockHashes) },
       relations: ['rewards'],
-      order: {number: 'DESC'},
+      order: { number: 'DESC' },
     })
 
     return this.summarise(headersWithRewards)
@@ -81,7 +81,7 @@ export class BlockService {
     const failedCountByBlock = new Map<string, number>()
 
     txStatuses.forEach(status => {
-      const {blockHash, successful} = status
+      const { blockHash, successful } = status
       if (successful) {
         const current = successfulCountByBlock.get(blockHash) || 0
         successfulCountByBlock.set(blockHash, current + 1)
@@ -93,7 +93,7 @@ export class BlockService {
 
     return headersWithRewards.map(header => {
 
-      const {number, hash, author, uncleHashes, transactionHashes, difficulty, timestamp } = header
+      const { number, hash, author, uncleHashes, transactionHashes, difficulty, timestamp } = header
 
       const rewardsByBlock = new Map<string, BigNumber>()
 
@@ -116,37 +116,27 @@ export class BlockService {
 
   }
 
-  async findOneByBlockHash(hash: string): Promise<BlockHeaderEntity | undefined> {
-    const blockHeader = await this.blockHeaderRepository.findOne({where: {hash}, relations: ['uncles', 'rewards']})
-    if (!blockHeader) return undefined
-
-    blockHeader.txs = await this.findTxsByBlockHash(hash)
-    return blockHeader
-  }
-
-  async findByBlockHash(hashes: string[]): Promise<BlockHeaderEntity[]> {
-    const blocks = await this.blockHeaderRepository.find({hash: In(hashes)})
-    return this.findAndMapTxsAndUncles(blocks)
+  async findBlockByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
+    return this.blockHeaderRepository.findOne({ where: { hash }, relations: ['uncles', 'rewards'] })
   }
 
   async findBlocks(limit: number = 10, page: number = 0, fromBlock: number = -1): Promise<BlockHeaderEntity[]> {
-    const where = fromBlock !== -1 ? {number: LessThanOrEqual(fromBlock)} : {}
+    const where = fromBlock !== -1 ? { number: LessThanOrEqual(fromBlock) } : {}
     const skip = page * limit
-    const blocks = await this.blockHeaderRepository.find({
+    return await this.blockHeaderRepository.find({
       where,
       take: limit,
       skip,
-      order: {number: 'DESC'},
+      order: { number: 'DESC' },
       relations: ['rewards'],
     })
-    return this.findAndMapTxsAndUncles(blocks)
   }
 
   private async findAndMapTxsAndUncles(blocks: BlockHeaderEntity[]): Promise<BlockHeaderEntity[]> {
 
     const blockHashes = blocks.map(b => b.hash)
-    const txs = await this.transactionRepository.find({where: {blockHash: In(blockHashes)}, relations: ['receipt']})
-    const uncles = await this.uncleRepository.find({where: {nephewHash: In(blockHashes)}})
+    const txs = await this.transactionRepository.find({ where: { blockHash: In(blockHashes) }, relations: ['receipt'] })
+    const uncles = await this.uncleRepository.find({ where: { nephewHash: In(blockHashes) } })
 
     const blocksByHash = blocks.reduce((memo, next) => {
       next.txs = []
@@ -166,32 +156,11 @@ export class BlockService {
 
   }
 
-  async findBlockByNumber(number: number): Promise<BlockHeaderEntity | undefined> {
-
-    const header = await this.blockHeaderRepository.findOne({where: {number}, relations: ['uncles', 'rewards']})
-    if (!header) return undefined
-
-    header.txs = await this.findTxsByBlockHash(header.hash)
-    return header
-  }
-
-  private async findTxsByBlockHash(blockHash: string): Promise<TransactionEntity[]> {
-
-    const txs = await this.transactionRepository.find({where: {blockHash}, relations: ['receipt']})
-    const traces = await this.transactionTraceRepository.find({where: {blockHash}})
-
-    const txsByHash = txs.reduce((memo, next) => {
-      next.traces = []
-      memo[next.hash] = next
-      return memo
-    }, {})
-
-    traces.forEach(trace => {
-      txsByHash[trace.transactionHash].traces.push(trace)
+  async findBlockByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
+    return this.blockHeaderRepository.findOne({
+      where: { number: number.toString() },
+      relations: ['uncles', 'rewards'],
     })
-
-    return txs
-
   }
 
   async findMinedBlocksByAddress(address: string, limit: number = 10, page: number = 0): Promise<[BlockHeaderEntity[], number]> {
@@ -200,7 +169,7 @@ export class BlockService {
       where: { author: address },
       take: limit,
       skip,
-      order: {number: 'DESC'},
+      order: { number: 'DESC' },
       relations: ['rewards'],
     })
     result[0] = await this.findAndMapTxsAndUncles(result[0])

@@ -20,7 +20,7 @@ import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
 import { BlockMetricPageExt } from '@app/core/api/apollo/extensions/block-metric-page.ext'
-import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/components/blocks.graphql'
+import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/blocks.graphql'
 import { BlockMetricExt } from '@app/core/api/apollo/extensions/block-metric.ext'
 import BigNumber from 'bignumber.js'
 

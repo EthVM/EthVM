@@ -53,7 +53,7 @@ const schema = {
     windowMs: {
       doc: 'Express Rate Limit window(ms)',
       env: 'EXPRESS_RATE_LIMIT_WINDOW_MS',
-      default: 15 * 60 * 1000,
+      default: 15 * 1000,
     },
     max: {
       doc: 'Express Rate Limit max requests per window(ms)',

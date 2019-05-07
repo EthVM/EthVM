@@ -24,6 +24,13 @@ export class Block {
     return this.cache.number
   }
 
+  public getNumberBN(): BN {
+    if (!this.cache.numberBN) {
+      this.cache.numberBN = new BN(this.block.header.number)
+    }
+    return this.cache.numberBN
+  }
+
   public getParentHash(): Hex {
     if (!this.cache.parentHash) {
       this.cache.parentHash = new Hex(this.block.header.parentHash)

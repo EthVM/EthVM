@@ -5,8 +5,10 @@ type Query {
   blockSummaries(offset: Int = 0, limit: Int = 50): BlockSummaryPage
 
   blocks(limit: Int, page: Int, fromBlock: Long): [Block]
+
   blockByHash(hash: String): Block
-  blockByNumber(number: Int): Block
+  blockByNumber(number: BigNumber): Block
+
   minedBlocksByAddress(address: String, limit: Int, page: Int): BlocksPage
   totalNumberOfBlocks: BigNumber!
 }
@@ -32,15 +34,14 @@ type BlockSummary {
 }
 
 type BlockSummaryPage {
-
   items: [BlockSummary]
   totalCount: BigNumber
 }
 
 type Block {
   header: BlockHeader
-  transactions: [Transaction]
-  uncles: [Uncle]
+  uncleHashes: [String]
+  transactionHashes: [String]
   rewards: [Reward]
 }
 
@@ -60,11 +61,9 @@ type BlockHeader {
   extraData: String
   gasLimit: BigNumber
   gasUsed: BigNumber
-  timestamp: String
-  size: String
-  blockTime: String
-  uncleHashes: [String]
-  transactionHashes: [String]
+  timestamp: Int
+  size: Int
+  blockTime: Int
 }
 
 type Reward {

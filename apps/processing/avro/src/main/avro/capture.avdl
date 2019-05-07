@@ -165,7 +165,7 @@ protocol Capture {
     int uncleCount;
     array<string> uncleHashes = [];
 
-    union { null, long } blockTime = null;
+    union { null, int } blockTime = null;
 
   }
 

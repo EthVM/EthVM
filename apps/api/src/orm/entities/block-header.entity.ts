@@ -59,8 +59,8 @@ export class BlockHeaderEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   gasUsed!: BigNumber
 
-  @Column({ type: 'bigint', readonly: true })
-  timestamp!: string
+  @Column({ type: 'int', readonly: true })
+  timestamp!: number
 
   @Column({ type: 'text', readonly: true })
   uncleHashes!: string
@@ -68,10 +68,10 @@ export class BlockHeaderEntity {
   @Column({ type: 'text', readonly: true })
   transactionHashes!: string
 
-  @Column({ type: 'bigint', readonly: true })
-  size!: string
+  @Column({ type: 'int', readonly: true })
+  size!: number
 
-  @Column({ type: 'bigint', readonly: true })
+  @Column({ type: 'int', readonly: true })
   blockTime?: number
 
   @OneToMany(type => TransactionEntity, tx => tx.blockHeader)
