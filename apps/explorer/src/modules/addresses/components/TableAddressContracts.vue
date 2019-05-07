@@ -6,7 +6,7 @@
     =====================================================================================
     -->
     <div v-if="!hasError">
-      <v-layout justify-space-between align-center row wrap class="pr-2 pl-2">
+      <v-layout justify-space-between row wrap class="pr-2 pl-2">
         <v-flex v-if="loading" xs12>
           <v-progress-linear color="blue" indeterminate />
         </v-flex>
@@ -18,9 +18,11 @@
             {{ contractString }}
           </p>
         </v-flex>
-        <v-flex v-if="!loading && totalPages > 1" xs12 sm6>
-          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
-        </v-flex>
+        <v-layout justify-end v-if="!loading && totalPages > 1" xs12 sm6>
+          <v-flex shrink>
+            <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+          </v-flex>
+        </v-layout>
         <!--
         =====================================================================================
           TABLE HEADER
