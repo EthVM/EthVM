@@ -1,14 +1,14 @@
-import {BlockService} from '@app/dao/block.service'
-import {ConfigService} from '@app/shared/config.service'
-import {Inject, Injectable} from '@nestjs/common'
-import {PubSub} from 'graphql-subscriptions'
+import { BlockService } from '@app/dao/block.service'
+import { ConfigService } from '@app/shared/config.service'
+import { Inject, Injectable } from '@nestjs/common'
+import { PubSub } from 'graphql-subscriptions'
 import createSubscriber from 'pg-listen'
-import {Observable, Subject} from 'rxjs'
-import {bufferTime, filter} from 'rxjs/operators'
-import {Logger} from 'winston'
-import {CircuitBreaker, CircuitBreakerState} from './circuit-breaker'
-import {TxService} from '@app/dao/tx.service'
-import {BlockMetricsService} from '@app/dao/block-metrics.service'
+import { Observable, Subject } from 'rxjs'
+import { bufferTime, filter } from 'rxjs/operators'
+import { Logger } from 'winston'
+import { CircuitBreaker, CircuitBreakerState } from './circuit-breaker'
+import { TxService } from '@app/dao/tx.service'
+import { BlockMetricsService } from '@app/dao/block-metrics.service'
 
 export interface CanonicalBlockHeaderPayload {
   block_hash: string
@@ -77,6 +77,7 @@ function isCircuitBreakerState<CircuitBreakerState>() {
 function inputIsEvent(input: any): input is PgEvent {
   return input instanceof PgEvent
 }
+
 // tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
@@ -153,11 +154,11 @@ class BlockEvents {
 
   get isComplete(): boolean {
 
-    const {header, transactions, receipts, blockRewardAuthor, uncleRewards, rootCallTrace, instaMining} = this
+    const { header, transactions, receipts, blockRewardAuthor, uncleRewards, rootCallTrace, instaMining } = this
 
     if (header === undefined || rootCallTrace === undefined) return false
 
-    const {transaction_count, uncle_count} = header
+    const { transaction_count, uncle_count } = header
 
     // check transactions
 
@@ -204,12 +205,12 @@ export class PgSubscriptionService {
 
   private init() {
 
-    const {url, logger, blockService, transactionService, blockMetricsService, pubSub} = this
+    const { url, logger, blockService, transactionService, blockMetricsService, pubSub } = this
 
     const events$ = Observable.create(
       async observer => {
         try {
-          const subscriber = createSubscriber({connectionString: url})
+          const subscriber = createSubscriber({ connectionString: url })
 
           subscriber.notifications.on('events', e => observer.next(e))
           subscriber.events.on('error', err => {
@@ -274,7 +275,7 @@ export class PgSubscriptionService {
 
           pubSub.publish('newBlock', blockSummary)
 
-          const [txSummaries] = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
+          const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
 
           txSummaries.forEach(txSummary => {
             pubSub.publish('newTransaction', txSummary)
@@ -300,10 +301,10 @@ export class PgSubscriptionService {
 
   private onBlockEvent(event: PgEvent, blockHashes$: Subject<string>) {
 
-    const {blockEvents, config} = this
+    const { blockEvents, config } = this
 
-    const {table, payload} = event
-    const {block_hash} = payload
+    const { table, payload } = event
+    const { block_hash } = payload
 
     let entry = blockEvents.get(block_hash)
 
@@ -380,10 +381,10 @@ export class PgSubscriptionService {
 
   private onBlockMetricEvent(event: PgEvent, blockMetrics$: Subject<string>) {
 
-    const {blockMetricEvents} = this
+    const { blockMetricEvents } = this
 
-    const {table, payload} = event
-    const {block_hash} = payload as BlockMetricPayload
+    const { table, payload } = event
+    const { block_hash } = payload as BlockMetricPayload
 
     let entry = blockMetricEvents.get(block_hash)
 

@@ -113,8 +113,8 @@ export class AggregateBlockMetric {
 
 export class Block {
     header?: BlockHeader;
-    transactions?: Transaction[];
-    uncles?: Uncle[];
+    uncleHashes?: string[];
+    transactionHashes?: string[];
     rewards?: Reward[];
 }
 
@@ -134,11 +134,9 @@ export class BlockHeader {
     extraData?: string;
     gasLimit?: BigNumber;
     gasUsed?: BigNumber;
-    timestamp?: string;
-    size?: string;
-    blockTime?: string;
-    uncleHashes?: string[];
-    transactionHashes?: string[];
+    timestamp?: number;
+    size?: number;
+    blockTime?: number;
 }
 
 export class BlockMetric {
@@ -283,7 +281,7 @@ export abstract class IQuery {
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
 
-    abstract blockByNumber(number?: number): Block | Promise<Block>;
+    abstract blockByNumber(number?: BigNumber): Block | Promise<Block>;
 
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
 
@@ -322,6 +320,10 @@ export abstract class IQuery {
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract transactionSummaries(offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+
+    abstract transactionSummariesForBlockNumber(number?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+
+    abstract transactionSummariesForBlockHash(hash?: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 

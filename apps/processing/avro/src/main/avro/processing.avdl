@@ -167,7 +167,7 @@ protocol Processing {
 
   record BlockMetricsHeaderRecord {
     decimal(80, 0) number;
-    union { null, long } blockTime = null;
+    union { null, int } blockTime = null;
 
     int numUncles;
     decimal(80, 0) difficulty;

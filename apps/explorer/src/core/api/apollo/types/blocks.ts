@@ -13,39 +13,17 @@ export interface blocks_blocks_header {
   author: string | null;
 }
 
-export interface blocks_blocks_transactions_receipt {
-  __typename: "Receipt";
-  status: string | null;
-}
-
-export interface blocks_blocks_transactions_traces {
-  __typename: "Trace";
-  error: string | null;
-}
-
-export interface blocks_blocks_transactions {
-  __typename: "Transaction";
-  hash: string | null;
-  receipt: blocks_blocks_transactions_receipt | null;
-  traces: (blocks_blocks_transactions_traces | null)[] | null;
-}
-
 export interface blocks_blocks_rewards {
   __typename: "Reward";
   value: any | null;
 }
 
-export interface blocks_blocks_uncles {
-  __typename: "Uncle";
-  hash: string | null;
-}
-
 export interface blocks_blocks {
   __typename: "Block";
   header: blocks_blocks_header | null;
-  transactions: (blocks_blocks_transactions | null)[] | null;
+  transactionHashes: (string | null)[] | null;
+  uncleHashes: (string | null)[] | null;
   rewards: (blocks_blocks_rewards | null)[] | null;
-  uncles: (blocks_blocks_uncles | null)[] | null;
 }
 
 export interface blocks {

@@ -5,10 +5,10 @@
 import { DeltaType } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: blockByHash
+// GraphQL fragment: BlockDetail
 // ====================================================
 
-export interface blockByHash_blockDetail_header {
+export interface BlockDetail_header {
   __typename: "BlockHeader";
   number: any | null;
   hash: string | null;
@@ -30,37 +30,17 @@ export interface blockByHash_blockDetail_header {
   blockTime: number | null;
 }
 
-export interface blockByHash_blockDetail_rewards {
+export interface BlockDetail_rewards {
   __typename: "Reward";
   address: string | null;
   deltaType: DeltaType | null;
   amount: any | null;
 }
 
-export interface blockByHash_blockDetail {
+export interface BlockDetail {
   __typename: "Block";
-  header: blockByHash_blockDetail_header | null;
+  header: BlockDetail_header | null;
   uncleHashes: (string | null)[] | null;
   transactionHashes: (string | null)[] | null;
-  rewards: (blockByHash_blockDetail_rewards | null)[] | null;
-}
-
-export interface blockByHash_transactionsSummary_items {
-  __typename: "TransactionSummary";
-  fee: any | null;
-}
-
-export interface blockByHash_transactionsSummary {
-  __typename: "TransactionSummaryPage";
-  items: (blockByHash_transactionsSummary_items | null)[] | null;
-  totalCount: any | null;
-}
-
-export interface blockByHash {
-  blockDetail: blockByHash_blockDetail | null;
-  transactionsSummary: blockByHash_transactionsSummary;
-}
-
-export interface blockByHashVariables {
-  blockHash?: string | null;
+  rewards: (BlockDetail_rewards | null)[] | null;
 }

@@ -43,12 +43,12 @@ export class BlockResolvers {
 
   @Query()
   async blockByHash(@Args('hash', ParseHashPipe) hash: string) {
-    const entity = await this.blockService.findOneByBlockHash(hash)
+    const entity = await this.blockService.findBlockByHash(hash)
     return entity ? new BlockDto(entity) : null
   }
 
   @Query()
-  async blockByNumber(@Args('number') number: number) {
+  async blockByNumber(@Args('number') number: BigNumber) {
     const entity = await this.blockService.findBlockByNumber(number)
     return entity ? new BlockDto(entity) : null
   }

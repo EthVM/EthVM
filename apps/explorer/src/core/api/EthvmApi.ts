@@ -14,6 +14,7 @@ import {
   Tx,
   Uncle
 } from '@app/core/models'
+import BigNumber from 'bignumber.js'
 
 export interface EthvmApi {
   // Address
@@ -25,7 +26,7 @@ export interface EthvmApi {
   // Blocks
   getBlock(hash: string): Promise<Block | null>
   getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]>
-  getBlockByNumber(no: number): Promise<Block | null>
+  getBlockByNumber(no: BigNumber): Promise<Block | null>
   getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[]; totalCount: number }>
   getTotalNumberOfBlocks(): Promise<number>
 

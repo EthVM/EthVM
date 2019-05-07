@@ -34,7 +34,7 @@ import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
-fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Long?): BlockHeaderRecord.Builder =
+fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Int?): BlockHeaderRecord.Builder =
   builder
     .setNumberBI(number)
     .setHash(hash)

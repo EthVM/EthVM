@@ -15,22 +15,6 @@ export interface minedBlocksByAddress_minedBlocksByAddress_items_header {
   author: string | null;
 }
 
-export interface minedBlocksByAddress_minedBlocksByAddress_items_uncles {
-  __typename: "Uncle";
-  hash: string | null;
-}
-
-export interface minedBlocksByAddress_minedBlocksByAddress_items_transactions_receipt {
-  __typename: "Receipt";
-  status: string | null;
-}
-
-export interface minedBlocksByAddress_minedBlocksByAddress_items_transactions {
-  __typename: "Transaction";
-  hash: string | null;
-  receipt: minedBlocksByAddress_minedBlocksByAddress_items_transactions_receipt | null;
-}
-
 export interface minedBlocksByAddress_minedBlocksByAddress_items_rewards {
   __typename: "Reward";
   rewardType: DeltaType | null;
@@ -40,8 +24,8 @@ export interface minedBlocksByAddress_minedBlocksByAddress_items_rewards {
 export interface minedBlocksByAddress_minedBlocksByAddress_items {
   __typename: "Block";
   header: minedBlocksByAddress_minedBlocksByAddress_items_header | null;
-  uncles: (minedBlocksByAddress_minedBlocksByAddress_items_uncles | null)[] | null;
-  transactions: (minedBlocksByAddress_minedBlocksByAddress_items_transactions | null)[] | null;
+  transactionHashes: (string | null)[] | null;
+  uncleHashes: (string | null)[] | null;
   rewards: (minedBlocksByAddress_minedBlocksByAddress_items_rewards | null)[] | null;
 }
 

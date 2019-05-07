@@ -120,7 +120,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import { latestBlocks, newBlock } from '@app/modules/blocks/components/blocks.graphql'
+import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import { Block, SimpleBlock } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -151,9 +151,13 @@ const MAX_ITEMS = 50
     blockPage: {
       query: latestBlocks,
 
-      variables: {
-        offset: 0,
-        limit: MAX_ITEMS
+      fetchPolicy: 'cache-and-network',
+
+      variables() {
+        return {
+          offset: 0,
+          limit: this.maxItems
+        }
       },
 
       update({ blockSummaries }) {
@@ -202,10 +206,10 @@ const MAX_ITEMS = 50
 })
 export default class TableBlocks extends Vue {
   /*
-    ===================================================================================
-      Props
-    ===================================================================================
-    */
+      ===================================================================================
+        Props
+      ===================================================================================
+      */
 
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
@@ -228,10 +232,10 @@ export default class TableBlocks extends Vue {
   }
 
   /*
-    ===================================================================================
-      Methods
-    ===================================================================================
-    */
+      ===================================================================================
+        Methods
+      ===================================================================================
+      */
 
   setPage(page: number): void {
     const { blockPage } = this.$apollo.queries
@@ -251,10 +255,10 @@ export default class TableBlocks extends Vue {
   }
 
   /*
-    ===================================================================================
-      Computed Values
-    ===================================================================================
-    */
+      ===================================================================================
+        Computed Values
+      ===================================================================================
+      */
 
   get loading(): boolean {
     return this.$apollo.queries.blockPage.loading

@@ -30,6 +30,26 @@ export class TxResolvers {
   }
 
   @Query()
+  async transactionSummariesForBlockNumber(
+    @Args('number') number: number,
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+  ) {
+    const [summaries, count] = await this.txService.findSummariesByBlockNumber(number, offset, limit)
+    return new TransactionSummaryPageDto(summaries, count)
+  }
+
+  @Query()
+  async transactionSummariesForBlockHash(
+    @Args('hash') hash: string,
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+  ) {
+    const [summaries, count] = await this.txService.findSummariesByBlockHash(hash, offset, limit)
+    return new TransactionSummaryPageDto(summaries, count)
+  }
+
+  @Query()
   async tx(@Args('hash', ParseHashPipe) hash: string): Promise<TxDto | null> {
     const entity = await this.txService.findOneByHash(hash)
     return entity ? new TxDto(entity) : null
