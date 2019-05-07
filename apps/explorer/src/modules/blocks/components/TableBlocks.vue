@@ -160,10 +160,27 @@ const MAX_ITEMS = 50
         }
       },
 
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
       update({ blockSummaries }) {
-        return {
-          ...blockSummaries,
-          items: blockSummaries.items.map(i => new BlockSummaryExt(i))
+        if (blockSummaries) {
+          return {
+            ...blockSummaries,
+            items: blockSummaries.items.map(i => new BlockSummaryExt(i))
+          }
+        }
+        this.error = this.error || this.$i18n.t('message.err')
+        return null
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
         }
       },
 
@@ -219,7 +236,7 @@ export default class TableBlocks extends Vue {
 
   page!: number
 
-  error?: string
+  error: string = ''
 
   blockPage?: BlockSummaryPage
 
