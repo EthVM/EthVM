@@ -5,20 +5,10 @@ query blocks($limit: Int, $page: Int, $fromBlock: Long) {
       number
       author
     }
-    transactions {
-      hash
-      receipt {
-        status
-      }
-      traces {
-        error
-      }
-    }
+    transactionHashes
+    uncleHashes
     rewards {
       value: amount
-    }
-    uncles {
-      hash
     }
   }
 }
@@ -44,34 +34,16 @@ query blockByHash($hash: String) {
       receiptsRoot
       totalDifficulty
     }
-    transactions {
-      hash
-      blockNumber
-      from
-      gasPrice
-      timestamp
-      to
-      value
-      receipt {
-        contractAddress
-        gasUsed
-        status
-      }
-      traces {
-        error
-      }
-    }
+    transactionHashes
+    uncleHashes
     rewards {
       author: address
       rewardType: deltaType
       value: amount
     }
-    uncles {
-      hash
-    }
   }
 }
-query blockByNumber($number: Int) {
+query blockByNumber($number: BigNumber) {
   blockByNumber(number: $number) {
     header {
       number
@@ -92,30 +64,12 @@ query blockByNumber($number: Int) {
       receiptsRoot
       totalDifficulty
     }
-    transactions {
-      hash
-      blockNumber
-      from
-      gasPrice
-      timestamp
-      to
-      value
-      receipt {
-        contractAddress
-        gasUsed
-        status
-      }
-      traces {
-        error
-      }
-    }
+    transactionHashes
+    uncleHashes
     rewards {
       author: address
       rewardType: deltaType
       value: amount
-    }
-    uncles {
-      hash
     }
   }
 }
@@ -128,15 +82,8 @@ query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
         number
         author
       }
-      uncles {
-        hash
-      }
-      transactions {
-        hash
-        receipt {
-          status
-        }
-      }
+      transactionHashes
+      uncleHashes
       rewards {
         rewardType: deltaType
         value: amount

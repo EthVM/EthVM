@@ -39,6 +39,7 @@ import {
   Uncle
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
+import BigNumber from 'bignumber.js'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}
@@ -117,12 +118,12 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.transactions.map(raw => new Block(raw)))
   }
 
-  public getBlockByNumber(number: number): Promise<Block> {
+  public getBlockByNumber(number: BigNumber): Promise<Block> {
     return this.apollo
       .query({
         query: blockByNumber,
         variables: {
-          number
+          number: number.toString()
         }
       })
       .then(res => new Block(res.data.blockByNumber))

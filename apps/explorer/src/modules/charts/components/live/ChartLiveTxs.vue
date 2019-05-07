@@ -15,7 +15,7 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
-import { latestBlocks, newBlock } from '@app/modules/blocks/components/blocks.graphql'
+import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 import BigNumber from 'bignumber.js'
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
