@@ -176,7 +176,7 @@
                           )
                         "
                       >
-                        <p :class="[!getType(tx) ? 'success--text mb-0 text-truncate' : 'error--text mb-0 text-truncate']">
+                        <p :class="getTxTypeClass(tx)">
                           {{ getSign(tx) }}{{ getRoundNumber(tx.getValue().toEth()) }}
                         </p>
                         <v-tooltip bottom>
@@ -193,7 +193,7 @@
                           }}</span>
                         </v-tooltip>
                       </v-layout>
-                      <p v-else :class="[!getType(tx) ? 'success--text mb-0 ' : 'error--text mb-0 ']">{{ getSign(tx) }}{{ tx.getValue().toEth() }}</p>
+                      <p v-else :class="getTxTypeClass(tx)">{{ getSign(tx) }}{{ tx.getValue().toEth() }}</p>
                     </v-flex>
                     <!--
               =====================================================================================
@@ -318,6 +318,8 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   }
 
   getType(tx): string {
+    if (tx.getValue().value === "0") return 'default' // Don't display any symbol if no value is transferred
+
     if (
       tx
         .getTo()
@@ -342,12 +344,12 @@ export default class TableAddressTxRow extends Mixins(StringConcatMixin) {
   getSign(tx): string {
     const type = this.getTypeString(tx)
     switch (type) {
-      case this.$i18n.t('tx.self'):
-        return ''
+      case this.$i18n.t('filter.out'):
+        return '-'
       case this.$i18n.t('filter.in'):
         return '+'
       default:
-        return '-'
+        return ''
     }
   }
 
