@@ -67,6 +67,7 @@
           :error="hasTransfersError"
           :page="transfersPage"
           :show-type="true"
+          :convert-to-eth="true"
           @page="setPageTransfers"
         />
       </v-tab-item>

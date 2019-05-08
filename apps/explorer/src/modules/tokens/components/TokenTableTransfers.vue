@@ -94,7 +94,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import { Transfer } from '@app/core/models'
+import { EthValue, Transfer } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
@@ -117,6 +117,7 @@ export default class TokenTableTransfers extends Vue {
   @Prop(Boolean) loading
   @Prop(Boolean) showType
   @Prop(String) decimals
+  @Prop(Boolean) convertToEth
 
   /*
   ===================================================================================
@@ -134,6 +135,10 @@ export default class TokenTableTransfers extends Vue {
   }
 
   calculateTransferValue(value: string) {
+    if (this.convertToEth) {
+      return new EthValue(value).toEthFormatted().toString()
+    }
+
     const n = new BN(value)
     if (this.decimals) {
       return n
