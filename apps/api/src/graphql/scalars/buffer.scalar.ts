@@ -4,15 +4,15 @@ import { Scalar } from '@nestjs/graphql'
 export class BufferScalar {
   description = 'Buffer custom scalar type'
 
-  parseValue(value) {
-    return value.Buffer // value from the client
+  parseValue(value: string) {
+    return Buffer.from(value, 'hex') // value sent to the client
   }
 
-  serialize(value) {
-    return Buffer.from(value) // value sent to the client
+  serialize(value: Buffer) {
+    return value.toString('hex')
   }
 
   parseLiteral(ast) {
-    return Buffer.from(ast.value)
+    return Buffer.from(ast.value, 'hex')
   }
 }
