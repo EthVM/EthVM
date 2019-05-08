@@ -8,17 +8,7 @@ import {
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
-import {
-  averageBlockTime,
-  averageDifficulty,
-  averageGasLimit,
-  averageGasPrice,
-  averageHashRate,
-  averageMinerReward,
-  averageTxFee,
-  totalFailedTxs,
-  totalSuccessfulTxs
-} from '@app/core/api/apollo/queries/statistics.graphql'
+
 import {
   holderDetails,
   tokenExchangeRateByAddress,
@@ -49,6 +39,7 @@ import {
   Uncle
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
+import BigNumber from 'bignumber.js'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}
@@ -90,7 +81,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.addressAmountTokensOwned)
   }
 
-  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
+  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }> {
     return this.apollo
       .query({
         query: internalTransactionsByAddress,
@@ -127,12 +118,12 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.transactions.map(raw => new Block(raw)))
   }
 
-  public getBlockByNumber(number: number): Promise<Block> {
+  public getBlockByNumber(number: BigNumber): Promise<Block> {
     return this.apollo
       .query({
         query: blockByNumber,
         variables: {
-          number
+          number: number.toString()
         }
       })
       .then(res => new Block(res.data.blockByNumber))
@@ -339,7 +330,7 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.tokenHolders)
   }
 
-  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }> {
+  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddress,
@@ -358,7 +349,7 @@ export class EthvmApolloApi implements EthvmApi {
     filter: string,
     limit: number,
     page: number
-  ): Promise<{ items: Transfer[]; totalCount: number }> {
+  ): Promise<{ items: Transfer[]; totalCount: string }> {
     return this.apollo
       .query({
         query: tokenTransfersByContractAddressForHolder,
@@ -451,116 +442,17 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.uncles.map(raw => new Uncle(raw)))
   }
 
-  public getTotalNumberOfUncles(): Promise<number> {
+  public getTotalNumberOfUncles(): Promise<string> {
     return this.apollo
       .query({
         query: totalNumberOfUncles
       })
-      .then(res => res.data.totalNumberOfUncles as number)
+      .then(res => res.data.totalNumberOfUncles)
   }
 
   // ------------------------------------------------------------------------------------
   // Statistics
   // ------------------------------------------------------------------------------------
-
-  public getAverageBlockTimeStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: averageBlockTime,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getAverageDifficultyStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: averageDifficulty,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getAverageGasLimitStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: averageGasLimit,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getAverageGasPriceStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: averageGasPrice,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getAverageHashRateStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: averageHashRate,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getAverageMinerRewardsStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: averageMinerReward,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getAverageTxFeeStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: averageTxFee,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getFailedTxStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: totalFailedTxs,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
-
-  public getSuccessfulTxStats(duration: string): Promise<Statistic[]> {
-    return this.apollo
-      .query({
-        query: totalSuccessfulTxs,
-        variables: {
-          duration
-        }
-      })
-      .then(res => res.data.blockMetricsByDay)
-  }
 
   // ------------------------------------------------------------------------------------
   // Search
