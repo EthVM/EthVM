@@ -8,6 +8,8 @@
     :redraw="true"
     :footnotes="footnote"
     :live-chart="true"
+    :data-loading="loading"
+    :error="error"
   />
 </template>
 
@@ -49,8 +51,21 @@ class ChartData {
         limit: MAX_ITEMS
       },
 
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
       update({ blockSummaries }) {
         return new BlockSummaryPageExt(blockSummaries)
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
       },
 
       subscribeToMore: {
@@ -96,6 +111,7 @@ export default class ChartLiveTxs extends Vue {
     */
 
   blockPage?: BlockSummaryPageExt
+  error = ''
 
   /*
     ===================================================================================
@@ -192,6 +208,10 @@ export default class ChartLiveTxs extends Vue {
 
   get newDescription() {
     return this.$i18n.t('charts.tx-summary.description')
+  }
+
+  get loading(): boolean {
+    return this.$apollo.queries.blockPage.loading
   }
 
   get chartOptions() {

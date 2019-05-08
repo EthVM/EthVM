@@ -9,6 +9,8 @@
     unfilled="true"
     :footnotes="footnote"
     :live-chart="true"
+    :data-loading="loading"
+    :error="error"
   />
 </template>
 
@@ -47,8 +49,21 @@ class ChartData {
         limit: MAX_ITEMS
       },
 
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
       update({ blockMetrics }) {
         return new BlockMetricPageExt(blockMetrics)
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
       },
 
       subscribeToMore: {
@@ -95,6 +110,8 @@ export default class ChartLiveTxFees extends Vue {
 
   redraw = true
   metricsPage?: BlockMetricPageExt
+
+  error = ''
 
   /*
   ===================================================================================
@@ -250,6 +267,10 @@ export default class ChartLiveTxFees extends Vue {
         icon: 'fa fa-circle'
       }
     ]
+  }
+
+  get loading(): boolean {
+    return this.$apollo.queries.metricsPage.loading
   }
 }
 </script>
