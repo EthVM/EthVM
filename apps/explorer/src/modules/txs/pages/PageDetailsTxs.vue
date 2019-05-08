@@ -16,7 +16,7 @@ import { eth } from '@app/core/helper'
 import { Tx } from '@app/core/models'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import Signatures from '@app/signatures.json'
+import Signatures from '@app/core/helper/signatures.json'
 
 @Component({
   components: {
