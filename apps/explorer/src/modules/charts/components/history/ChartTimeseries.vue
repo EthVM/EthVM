@@ -6,6 +6,8 @@
     :data="chartData"
     :options="chartOptions"
     :redraw="true"
+    :data-loading="loading"
+    :error="error"
     unfilled="true"
     @timeFrame="setTimeFrame"
   />
@@ -51,9 +53,22 @@ interface QueryOptions {
         }
       },
 
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
       update({ blockMetricsTimeseries }) {
         return blockMetricsTimeseries
-      }
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      },
     }
   }
 })
@@ -73,6 +88,8 @@ export default class ChartTimeseries extends Vue {
   queryOptions!: QueryOptions
 
   timeseries!: any[]
+
+  error = ''
 
   /*
     ===================================================================================
@@ -243,6 +260,10 @@ export default class ChartTimeseries extends Vue {
         }
       ]
     }
+  }
+
+  get loading(): boolean {
+    return this.$apollo.queries.timeseries.loading
   }
 }
 </script>

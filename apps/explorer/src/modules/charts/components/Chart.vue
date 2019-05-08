@@ -16,11 +16,12 @@
     </v-layout>
     <v-divider></v-divider>
     <v-layout align-center justify-end row fill-height v-if="footnotes" pb-3 pt-2> <app-footnotes :footnotes="footnotes" /> </v-layout>
-    <app-info-load v-show="data && data.datasets && data.datasets[0].data.length === 0" />
-    <div v-show="data && data.datasets && data.datasets[0].data.length !== 0">
+    <app-info-load v-show="dataLoading" />
+    <div v-show="!(dataLoading || hasError)">
       <canvas v-if="!liveChart" ref="chart" :class="chartClass" />
       <canvas v-else ref="chart" />
     </div>
+    <app-error :has-error="hasError" :message="error" class="mb-4" />
   </v-card>
 </template>
 
@@ -31,6 +32,7 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Footnote } from '@app/core/components/props'
 import { ChartData } from '@app/modules/charts/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import AppError from '@app/core/components/ui/AppError.vue';
 
 ChartJs.defaults.global = Object.assign(ChartJs.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
@@ -72,7 +74,8 @@ ChartJs.defaults.doughnut.animation = Object.assign(ChartJs.defaults.doughnut.an
 @Component({
   components: {
     AppFootnotes,
-    AppInfoLoad
+    AppInfoLoad,
+    AppError
   }
 })
 export default class AppChart extends Vue {
@@ -91,6 +94,7 @@ export default class AppChart extends Vue {
   @Prop({ type: String }) chartDescription!: string
   @Prop({ type: Array }) footnotes?: Footnote[]
   @Prop({ type: Boolean }) dataLoading?: boolean
+  @Prop({ type: String }) error!: string
 
   /*
   ===================================================================================
@@ -150,6 +154,10 @@ export default class AppChart extends Vue {
       default:
         return ''
     }
+  }
+
+  get hasError(): boolean {
+    return this.error !== ''
   }
   /*
   ===================================================================================
