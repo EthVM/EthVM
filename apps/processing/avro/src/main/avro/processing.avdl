@@ -4,6 +4,15 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
+  record BlockMetricKeyRecord {
+    string blockHash;
+    timestamp_ms timestamp;
+  }
+
+  record BlockKeyRecord {
+    string blockHash;
+  }
+
   record UncleKeyRecord {
     string hash;
   }
@@ -153,40 +162,42 @@ protocol Processing {
 // metrics
 
   record BlockTimestampRecord {
-    long timestamp;
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsHeaderRecord {
-    string blockHash;
-    union { null, long } blockTime = null;
-    long timestamp;
+    decimal(80, 0) number;
+    union { null, int } blockTime = null;
+
     int numUncles;
     decimal(80, 0) difficulty;
     decimal(80, 0) totalDifficulty;
+
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsTransactionTraceRecord {
-    string blockHash;
     int totalTxs;
     int numSuccessfulTxs;
     int numFailedTxs;
     int numInternalTxs;
-    union { null, long } timestamp = null;
+
+    timestamp_ms timestamp = 0;
   }
 
   record BlockMetricsTransactionRecord {
-    string blockHash;
     decimal(80, 0) totalGasPrice;
     decimal(80, 0) avgGasLimit;
     decimal(80, 0) avgGasPrice;
-    union { null, long } timestamp = null;
+
+    timestamp_ms timestamp = 0;
   }
 
   record BlockMetricsTransactionFeeRecord {
-    string blockHash;
     decimal(80, 0) totalTxFees;
     decimal(80, 0) avgTxFees;
-    union { null, long } timestamp = null;
+
+    timestamp_ms timestamp = 0;
   }
 
   record MetricKeyRecord {

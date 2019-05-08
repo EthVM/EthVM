@@ -1,0 +1,136 @@
+query latestBlocks($offset: Int, $limit: Int) {
+
+  blockSummaries(offset: $offset, limit: $limit) {
+    ...BlockSummaryPage
+  }
+
+}
+
+fragment BlockSummary on BlockSummary {
+  number
+  hash
+  author
+  numTxs
+  numSuccessfulTxs
+  numFailedTxs
+  reward
+  uncleHashes
+  transactionHashes
+  difficulty
+  timestamp
+}
+
+fragment BlockSummaryPage on BlockSummaryPage {
+  items {
+    ...BlockSummary
+  }
+  totalCount
+}
+
+subscription newBlock {
+
+  newBlock {
+    ...BlockSummary
+  }
+
+}
+
+query latestBlockMetrics($limit: Int) {
+
+  blockMetrics(offset: 0, limit: $limit) {
+    items {
+      ...BlockMetric
+    }
+  }
+
+}
+
+subscription newBlockMetric {
+
+  newBlockMetric {
+    ...BlockMetric
+  }
+
+}
+
+fragment BlockMetric on BlockMetric {
+
+  number
+  blockHash
+  timestamp
+  blockTime
+  numUncles
+  difficulty
+  totalDifficulty
+  totalGasPrice
+  avgGasLimit
+  avgGasPrice
+  totalTxs
+  numSuccessfulTxs
+  numFailedTxs
+  numInternalTxs
+  totalTxFees
+  avgTxFees
+
+}
+
+
+query blockByHash($blockHash: String) {
+
+  blockDetail: blockByHash(hash: $blockHash) {
+    ...BlockDetail
+  }
+
+  transactionsSummary: transactionSummariesForBlockHash(hash: $blockHash, offset: 0, limit: 1000) {
+    items {
+      fee
+    }
+    totalCount
+  }
+
+}
+
+query blockByNumber($blockNumber: BigNumber) {
+
+  blockDetail: blockByNumber(number: $blockNumber){
+    ...BlockDetail
+  }
+
+  transactionsSummary: transactionSummariesForBlockNumber(number: $blockNumber, offset: 0, limit: 1000) {
+    items {
+      fee
+    }
+    totalCount
+  }
+
+}
+
+fragment BlockDetail on Block {
+  header {
+    number
+    hash
+    parentHash
+    nonce
+    sha3Uncles
+    logsBloom
+    transactionsRoot
+    stateRoot
+    receiptsRoot
+    author
+    difficulty
+    totalDifficulty
+    extraData
+    gasLimit
+    gasUsed
+    timestamp
+    size
+    blockTime
+  }
+  uncleHashes
+  transactionHashes
+  rewards {
+    address
+    deltaType
+    amount
+  }
+}

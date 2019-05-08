@@ -7,25 +7,45 @@ import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1';
 import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe';
 import {Args, Query, Resolver, Subscription, SubscriptionOptions} from '@nestjs/graphql';
 import BigNumber from 'bignumber.js';
-import {TransactionSummaryPageDto} from "@app/graphql/txs/dto/transaction-summary-page.dto";
-import {PubSub} from "graphql-subscriptions";
-import {Inject} from "@nestjs/common";
-import {TransactionSummaryDto} from "@app/graphql/txs/dto/transaction-summary.dto";
-import {TransactionSummary} from "@app/graphql/schema";
+import {TransactionSummaryPageDto} from '@app/graphql/txs/dto/transaction-summary-page.dto';
+import {PubSub} from 'graphql-subscriptions';
+import {Inject} from '@nestjs/common';
+import {TransactionSummaryDto} from '@app/graphql/txs/dto/transaction-summary.dto';
+import {TransactionSummary} from '@app/graphql/schema';
 
 @Resolver('Transaction')
 export class TxResolvers {
   constructor(
     private readonly txService: TxService,
-    @Inject('PUB_SUB') private pubSub: PubSub
+    @Inject('PUB_SUB') private pubSub: PubSub,
   ) { }
 
   @Query()
   async transactionSummaries(
     @Args('offset') offset: number,
-    @Args('limit') limit: number
+    @Args('limit') limit: number,
   ) {
     const [summaries, count] = await this.txService.findSummaries(offset, limit)
+    return new TransactionSummaryPageDto(summaries, count)
+  }
+
+  @Query()
+  async transactionSummariesForBlockNumber(
+    @Args('number') number: number,
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+  ) {
+    const [summaries, count] = await this.txService.findSummariesByBlockNumber(number, offset, limit)
+    return new TransactionSummaryPageDto(summaries, count)
+  }
+
+  @Query()
+  async transactionSummariesForBlockHash(
+    @Args('hash') hash: string,
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+  ) {
+    const [summaries, count] = await this.txService.findSummariesByBlockHash(hash, offset, limit)
     return new TransactionSummaryPageDto(summaries, count)
   }
 
@@ -39,7 +59,7 @@ export class TxResolvers {
   async txs(
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page') page?: number,
-    @Args('fromBlock', ParseBigNumberPipe) fromBlock?: BigNumber
+    @Args('fromBlock', ParseBigNumberPipe) fromBlock?: BigNumber,
   ): Promise<TxDto[]> {
     const entities = await this.txService.find(limit, page, fromBlock)
     return entities.map(e => new TxDto(e))

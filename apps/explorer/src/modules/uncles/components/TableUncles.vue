@@ -99,7 +99,8 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import { Uncle } from '@app/core/models'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import BN from 'bignumber.js'
 
 @Component({
   components: {
@@ -120,7 +121,7 @@ export default class TableUncles extends Vue {
   @Prop({ type: Array, default: [] }) uncles!: Uncle[]
   @Prop({ type: Boolean, default: true }) loading!: boolean
   // @Prop({ type: Boolean, default: false }) error: boolean
-  @Prop({ type: Number, default: 0 }) totalUncles!: number
+  @Prop({ type: String }) totalUncles?: string
   @Prop({ type: Number, default: 0 }) page!: number // Page passed from parent view. Syncs pagination components
   @Prop(Number) maxItems!: number
   @Prop(String) error!: string
@@ -164,7 +165,10 @@ export default class TableUncles extends Vue {
   }
 
   get pages(): number {
-    return this.totalUncles ? Math.ceil(this.totalUncles / this.maxItems) : 0
+    if (!this.totalUncles) {
+      return 0
+    }
+    return this.totalUncles ? Math.ceil(new BN(this.totalUncles).toNumber() / this.maxItems) : 0
   }
 }
 </script>

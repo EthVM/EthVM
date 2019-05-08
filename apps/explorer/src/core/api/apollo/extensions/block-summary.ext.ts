@@ -20,23 +20,23 @@ export class BlockSummaryExt implements BlockSummary {
   }
 
   get numberBN(): BN | null {
-    return this.number ? new BN(this.number, 16) : null
+    return this.number ? new BN(this.number) : null
   }
 
   get numTxsBN(): BN | null {
-    return this.numTxs ? new BN(this.numTxs, 16) : null
+    return this.numTxs ? new BN(this.numTxs) : null
   }
 
   get numFailedTxsBN(): BN | null {
-    return this.numFailedTxs ? new BN(this.numFailedTxs, 16) : null
+    return this.numFailedTxs ? new BN(this.numFailedTxs) : null
   }
 
   get numSuccessfulTxsBN(): BN | null {
-    return this.numSuccessfulTxs ? new BN(this.numSuccessfulTxs, 16) : null
+    return this.numSuccessfulTxs ? new BN(this.numSuccessfulTxs) : null
   }
 
   get rewardBN(): BN | null {
-    return this.reward ? new BN(this.reward, 16) : null
+    return this.reward ? new BN(this.reward) : null
   }
 
   get difficultyBN(): BN | null {

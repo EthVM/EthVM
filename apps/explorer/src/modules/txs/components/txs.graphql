@@ -1,9 +1,21 @@
-query latestTransactions($offset: Int, $limit: Int) {
+query latestTransactionSummaries($offset: Int, $limit: Int) {
 
-  transactionSummaries(offset: $offset, limit: $limit) {
+  summaries: transactionSummaries(offset: $offset, limit: $limit) {
     ...TransactionSummaryPage
   }
 
+}
+
+query transactionSummariesByBlockNumber($number: BigNumber, $offset: Int, $limit: Int) {
+  summaries: transactionSummariesForBlockNumber(number: $number, offset: $offset, limit: $limit) {
+    ...TransactionSummaryPage
+  }
+}
+
+query transactionSummariesByBlockHash($hash: String, $offset: Int, $limit: Int) {
+  summaries: transactionSummariesForBlockHash(hash: $hash, offset: $offset, limit: $limit) {
+    ...TransactionSummaryPage
+  }
 }
 
 fragment TransactionSummary on TransactionSummary {

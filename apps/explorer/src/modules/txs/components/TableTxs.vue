@@ -37,7 +37,9 @@
     =====================================================================================
     -->
     <v-layout>
-      <v-flex hidden-sm-and-up pt-0 pb-0 pl-3> <app-footnotes :footnotes="footnotes" pl-2 pr-2 /> </v-flex>
+      <v-flex hidden-sm-and-up pt-0 pb-0 pl-3>
+        <app-footnotes :footnotes="footnotes" pl-2 pr-2 />
+      </v-flex>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
@@ -127,9 +129,16 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
 import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
-import { latestTransactions, newTransaction } from '@app/modules/txs/components/txs.graphql'
+import {
+  latestTransactionSummaries,
+  transactionSummariesByBlockNumber,
+  transactionSummariesByBlockHash,
+  newTransaction
+} from '@app/modules/txs/components/txs.graphql'
 import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
 import BigNumber from 'bignumber.js'
+
+const MAX_ITEMS = 50
 
 @Component({
   components: {
@@ -147,17 +156,30 @@ import BigNumber from 'bignumber.js'
   },
   apollo: {
     txPage: {
-      query: latestTransactions,
-
-      variables: {
-        offset: 0,
-        limit: 50
+      query() {
+        if (this.blockNumber) {
+          return transactionSummariesByBlockNumber
+        } else if (this.blockHash) {
+          return transactionSummariesByBlockHash
+        }
+        return latestTransactionSummaries
       },
 
-      update({ transactionSummaries }) {
+      fetchPolicy: 'cache-and-network',
+
+      variables() {
         return {
-          ...transactionSummaries,
-          items: transactionSummaries.items.map(i => new TransactionSummaryExt(i))
+          number: this.blockNumber ? this.blockNumber.toString(10) : null,
+          hash: this.blockHash,
+          offset: 0,
+          limit: this.maxItems
+        }
+      },
+
+      update({ summaries }) {
+        return {
+          ...summaries,
+          items: summaries.items.map(i => new TransactionSummaryExt(i))
         }
       },
 
@@ -165,16 +187,20 @@ import BigNumber from 'bignumber.js'
         document: newTransaction,
 
         updateQuery: (previousResult, { subscriptionData }) => {
-          const { transactionSummaries } = previousResult
+          const { summaries } = previousResult
           const { newTransaction } = subscriptionData.data
 
-          const items = Object.assign([], transactionSummaries.items)
+          const items = Object.assign([], summaries.items)
           items.unshift(newTransaction)
+
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           // ensure order by block number desc and transaction index desc
           items.sort((a, b) => {
-            const numberA = a.blockNumber ? new BigNumber(a.blockNumber, 16) : new BigNumber(0)
-            const numberB = b.blockNumber ? new BigNumber(b.blockNumber, 16) : new BigNumber(0)
+            const numberA = a.blockNumber ? new BigNumber(a.blockNumber) : new BigNumber(0)
+            const numberB = b.blockNumber ? new BigNumber(b.blockNumber) : new BigNumber(0)
             const numberDiff = numberB.minus(numberA).toNumber()
 
             if (numberDiff !== 0) {
@@ -186,8 +212,8 @@ import BigNumber from 'bignumber.js'
 
           return {
             ...previousResult,
-            transactionSummaries: {
-              ...transactionSummaries,
+            summaries: {
+              ...summaries,
               items
             }
           }
@@ -202,14 +228,17 @@ import BigNumber from 'bignumber.js'
 })
 export default class TableTxs extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
   @Prop(String) pageType!: string
   @Prop(String) showStyle!: string
   @Prop(Number) maxItems!: number
+
+  @Prop(String) blockHash?: string
+  @Prop(BigNumber) blockNumber?: BigNumber
 
   page!: number
 
@@ -225,10 +254,10 @@ export default class TableTxs extends Vue {
   }
 
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
   setPage(page: number): void {
     const { txPage } = this.$apollo.queries
@@ -237,7 +266,7 @@ export default class TableTxs extends Vue {
 
     txPage.fetchMore({
       variables: {
-        offset: page * 50,
+        offset: page * this.maxItems,
         limit: this.maxItems
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -249,13 +278,13 @@ export default class TableTxs extends Vue {
   }
 
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
   get loading() {
-    return this.$apollo.queries.txPage.loading
+    return this.$apollo.loading
   }
 
   get isSyncing() {

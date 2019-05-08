@@ -8,45 +8,35 @@ import { DeltaType } from "./globalTypes";
 // GraphQL query operation: minedBlocksByAddress
 // ====================================================
 
-export interface minedBlocksByAddress_minedBlocksByAddress_header {
+export interface minedBlocksByAddress_minedBlocksByAddress_items_header {
   __typename: "BlockHeader";
   hash: string | null;
   number: any | null;
   author: string | null;
 }
 
-export interface minedBlocksByAddress_minedBlocksByAddress_uncles {
-  __typename: "Uncle";
-  hash: string | null;
-}
-
-export interface minedBlocksByAddress_minedBlocksByAddress_transactions_receipt {
-  __typename: "Receipt";
-  status: string | null;
-}
-
-export interface minedBlocksByAddress_minedBlocksByAddress_transactions {
-  __typename: "Transaction";
-  hash: string | null;
-  receipt: minedBlocksByAddress_minedBlocksByAddress_transactions_receipt | null;
-}
-
-export interface minedBlocksByAddress_minedBlocksByAddress_rewards {
+export interface minedBlocksByAddress_minedBlocksByAddress_items_rewards {
   __typename: "Reward";
   rewardType: DeltaType | null;
   value: any | null;
 }
 
-export interface minedBlocksByAddress_minedBlocksByAddress {
+export interface minedBlocksByAddress_minedBlocksByAddress_items {
   __typename: "Block";
-  header: minedBlocksByAddress_minedBlocksByAddress_header | null;
-  uncles: (minedBlocksByAddress_minedBlocksByAddress_uncles | null)[] | null;
-  transactions: (minedBlocksByAddress_minedBlocksByAddress_transactions | null)[] | null;
-  rewards: (minedBlocksByAddress_minedBlocksByAddress_rewards | null)[] | null;
+  header: minedBlocksByAddress_minedBlocksByAddress_items_header | null;
+  transactionHashes: (string | null)[] | null;
+  uncleHashes: (string | null)[] | null;
+  rewards: (minedBlocksByAddress_minedBlocksByAddress_items_rewards | null)[] | null;
+}
+
+export interface minedBlocksByAddress_minedBlocksByAddress {
+  __typename: "BlocksPage";
+  items: (minedBlocksByAddress_minedBlocksByAddress_items | null)[] | null;
+  totalCount: number | null;
 }
 
 export interface minedBlocksByAddress {
-  minedBlocksByAddress: (minedBlocksByAddress_minedBlocksByAddress | null)[] | null;
+  minedBlocksByAddress: minedBlocksByAddress_minedBlocksByAddress | null;
 }
 
 export interface minedBlocksByAddressVariables {

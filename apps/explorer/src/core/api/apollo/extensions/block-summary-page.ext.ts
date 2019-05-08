@@ -1,6 +1,5 @@
-import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
+import { BlockSummaryPage } from '@app/core/api/apollo/types/BlockSummaryPage'
 import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
-import { BlockSummary } from '@app/core/api/apollo/types/BlockSummary'
 import BN from 'bignumber.js'
 
 export class BlockSummaryPageExt implements BlockSummaryPage {
@@ -14,6 +13,6 @@ export class BlockSummaryPageExt implements BlockSummaryPage {
   }
 
   get totalCountBN(): BN {
-    return new BN(this.totalCount, 16)
+    return new BN(this.totalCount)
   }
 }

@@ -34,12 +34,12 @@ import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
 import java.math.BigInteger
 
-fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Long?): BlockHeaderRecord.Builder =
+fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Int?): BlockHeaderRecord.Builder =
   builder
     .setNumberBI(number)
     .setHash(hash)
     .setParentHash(parentHash)
-    .setNonceBI(if(nonceRaw != null) nonce else null)
+    .setNonceBI(if (nonceRaw != null) nonce else null)
     .setSha3Uncles(sha3Uncles)
     .setTransactionCount(transactions.size)
     .setTransactionHashes(transactions.map { (it.get() as EthBlock.TransactionObject).get().hash })

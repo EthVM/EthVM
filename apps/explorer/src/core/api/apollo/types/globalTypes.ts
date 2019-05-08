@@ -17,20 +17,8 @@ export enum DeltaType {
   UNCLE_REWARD = "UNCLE_REWARD",
 }
 
-export enum Duration {
-  ALL = "ALL",
-  DAY = "DAY",
-  MONTH = "MONTH",
-  WEEK = "WEEK",
-  YEAR = "YEAR",
-}
-
-export enum ExchangeFrom {
-  ETH = "ETH",
-}
-
-export enum ExchangeTo {
-  USD = "USD",
+export enum ExchangeRatePair {
+  ethereum_usd = "ethereum_usd",
 }
 
 export enum FilterEnum {
@@ -45,6 +33,14 @@ export enum SearchType {
   None = "None",
   Tx = "Tx",
   Uncle = "Uncle",
+}
+
+export enum TimeBucket {
+  ONE_DAY = "ONE_DAY",
+  ONE_HOUR = "ONE_HOUR",
+  ONE_MONTH = "ONE_MONTH",
+  ONE_WEEK = "ONE_WEEK",
+  ONE_YEAR = "ONE_YEAR",
 }
 
 export enum TokenExchangeRateFilter {

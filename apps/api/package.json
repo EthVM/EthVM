@@ -56,6 +56,7 @@
     "graphql-subscriptions": "~1.0.0",
     "graphql-type-json": "~0.2.1",
     "helmet": "^3.16.0",
+    "moment": "^2.24.0",
     "nest-winston": "~1.0.2",
     "passport": "~0.4.0",
     "passport-jwt": "~4.0.0",

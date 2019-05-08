@@ -14,6 +14,9 @@ export class TxDto extends Transaction {
     if (receipt) {
       this.receipt = new TxReceiptDto(receipt)
     }
+    if (traces) {
+      this.traces = traces.map(t => new TxTraceDto(t))
+    }
     delete data.receipt
     delete data.traces
 

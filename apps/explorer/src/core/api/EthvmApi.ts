@@ -14,18 +14,19 @@ import {
   Tx,
   Uncle
 } from '@app/core/models'
+import BigNumber from 'bignumber.js'
 
 export interface EthvmApi {
   // Address
   getAccount(address: string): Promise<Account | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
+  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
   getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]>
-  getBlockByNumber(no: number): Promise<Block | null>
+  getBlockByNumber(no: BigNumber): Promise<Block | null>
   getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[]; totalCount: number }>
   getTotalNumberOfBlocks(): Promise<number>
 
@@ -53,14 +54,14 @@ export interface EthvmApi {
 
   // Tokens
   getTokenHolders(address: string, limit?: number, page?: number): Promise<{ items: TokenHolder[]; totalCount: number }>
-  getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: number }>
+  getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }>
   getTokenTransfersByContractAddressForHolder(
     address: string,
     holder: string,
     filter?: string,
     limit?: number,
     page?: number
-  ): Promise<{ items: Transfer[]; totalCount: number }>
+  ): Promise<{ items: Transfer[]; totalCount: string }>
 
   // Txs
   getTx(hash: string): Promise<Tx | null>
@@ -71,18 +72,7 @@ export interface EthvmApi {
   // Uncles
   getUncle(hash: string): Promise<Uncle | null>
   getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]>
-  getTotalNumberOfUncles(): Promise<number>
-
-  // Statistics
-  getAverageBlockTimeStats(duration: string): Promise<Statistic[]>
-  getAverageDifficultyStats(duration: string): Promise<Statistic[]>
-  getAverageGasLimitStats(duration: string): Promise<Statistic[]>
-  getAverageGasPriceStats(duration: string): Promise<Statistic[]>
-  getAverageHashRateStats(duration: string): Promise<Statistic[]>
-  getAverageMinerRewardsStats(duration: string): Promise<Statistic[]>
-  getAverageTxFeeStats(duration: string): Promise<Statistic[]>
-  getFailedTxStats(duration: string): Promise<Statistic[]>
-  getSuccessfulTxStats(duration: string): Promise<Statistic[]>
+  getTotalNumberOfUncles(): Promise<string>
 
   // Search
   search(hash: string): Promise<any>

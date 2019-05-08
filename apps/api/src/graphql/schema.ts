@@ -5,6 +5,21 @@
  */
 
 /* tslint:disable */
+export enum BlockMetricField {
+    AVG_BLOCK_TIME = "AVG_BLOCK_TIME",
+    AVG_NUM_UNCLES = "AVG_NUM_UNCLES",
+    AVG_DIFFICULTY = "AVG_DIFFICULTY",
+    AVG_TOTAL_DIFFICULTY = "AVG_TOTAL_DIFFICULTY",
+    AVG_GAS_LIMIT = "AVG_GAS_LIMIT",
+    AVG_GAS_PRICE = "AVG_GAS_PRICE",
+    AVG_NUM_TXS = "AVG_NUM_TXS",
+    AVG_NUM_SUCCESSFUL_TXS = "AVG_NUM_SUCCESSFUL_TXS",
+    AVG_NUM_FAILED_TXS = "AVG_NUM_FAILED_TXS",
+    AVG_NUM_INTERNAL_TXS = "AVG_NUM_INTERNAL_TXS",
+    AVG_TX_FEES = "AVG_TX_FEES",
+    AVG_TOTAL_TX_FEES = "AVG_TOTAL_TX_FEES"
+}
+
 export enum DeltaType {
     UNCLE_REWARD = "UNCLE_REWARD",
     BLOCK_REWARD = "BLOCK_REWARD",
@@ -47,6 +62,14 @@ export enum SearchType {
     None = "None"
 }
 
+export enum TimeBucket {
+    ONE_HOUR = "ONE_HOUR",
+    ONE_DAY = "ONE_DAY",
+    ONE_WEEK = "ONE_WEEK",
+    ONE_MONTH = "ONE_MONTH",
+    ONE_YEAR = "ONE_YEAR"
+}
+
 export enum TokenExchangeRateFilter {
     price_high = "price_high",
     price_low = "price_low",
@@ -72,10 +95,26 @@ export class AddressBalance {
     balance?: BigNumber;
 }
 
+export class AggregateBlockMetric {
+    timestamp?: Date;
+    avgBlockTime?: number;
+    avgNumUncles?: number;
+    avgDifficulty?: BigNumber;
+    avgTotalDifficulty?: BigNumber;
+    avgGasLimit?: BigNumber;
+    avgGasPrice?: BigNumber;
+    avgNumTxs?: number;
+    avgNumSuccessfulTxs?: number;
+    avgNumFailedTxs?: number;
+    avgNumInternalTxs?: number;
+    avgTxFees?: BigNumber;
+    avgTotalTxFees?: BigNumber;
+}
+
 export class Block {
     header?: BlockHeader;
-    transactions?: Transaction[];
-    uncles?: Uncle[];
+    uncleHashes?: string[];
+    transactionHashes?: string[];
     rewards?: Reward[];
 }
 
@@ -95,17 +134,35 @@ export class BlockHeader {
     extraData?: string;
     gasLimit?: BigNumber;
     gasUsed?: BigNumber;
-    timestamp?: string;
-    size?: string;
-    blockTime?: string;
-    uncleHashes?: string[];
-    transactionHashes?: string[];
+    timestamp?: number;
+    size?: number;
+    blockTime?: number;
 }
 
 export class BlockMetric {
-    number?: BigNumber;
-    avgTransactionFee?: BigNumber;
+    number: BigNumber;
+    blockHash?: string;
+    timestamp?: Date;
+    blockTime?: number;
+    numUncles?: number;
+    difficulty?: BigNumber;
+    totalDifficulty?: BigNumber;
+    totalGasPrice?: BigNumber;
+    avgGasLimit?: BigNumber;
     avgGasPrice?: BigNumber;
+    totalTxs?: number;
+    numSuccessfulTxs?: number;
+    numFailedTxs?: number;
+    numInternalTxs?: number;
+    totalTxFees?: BigNumber;
+    avgTxFees?: BigNumber;
+}
+
+export class BlockMetricPage {
+    items?: BlockMetric[];
+    offset?: number;
+    limit?: number;
+    totalCount?: number;
 }
 
 export class BlocksPage {
@@ -212,7 +269,9 @@ export class ContractSupport {
 export abstract class IQuery {
     abstract accountByAddress(address: string): Account | Promise<Account>;
 
-    abstract blockMetrics(offset?: number, limit?: number): BlockMetric[] | Promise<BlockMetric[]>;
+    abstract blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
+
+    abstract blockMetricsTimeseries(start?: Date, end?: Date, bucket?: TimeBucket, fields?: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
 
     abstract hashRate(): BigNumber | Promise<BigNumber>;
 
@@ -222,7 +281,7 @@ export abstract class IQuery {
 
     abstract blockByHash(hash?: string): Block | Promise<Block>;
 
-    abstract blockByNumber(number?: number): Block | Promise<Block>;
+    abstract blockByNumber(number?: BigNumber): Block | Promise<Block>;
 
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
 
@@ -244,7 +303,7 @@ export abstract class IQuery {
 
     abstract coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
 
-    abstract tokenExchangeRates(filter: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+    abstract tokenExchangeRates(filter?: TokenExchangeRateFilter, limit?: number, page?: number, symbols?: string[]): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
 
     abstract totalNumTokenExchangeRates(): number | Promise<number>;
 
@@ -261,6 +320,10 @@ export abstract class IQuery {
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
     abstract transactionSummaries(offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+
+    abstract transactionSummariesForBlockNumber(number?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+
+    abstract transactionSummariesForBlockHash(hash?: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
 
     abstract tx(hash: string): Transaction | Promise<Transaction>;
 
@@ -313,6 +376,8 @@ export class Search {
 }
 
 export abstract class ISubscription {
+    abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
+
     abstract newBlock(): BlockSummary | Promise<BlockSummary>;
 
     abstract hashRate(): BigNumber | Promise<BigNumber>;

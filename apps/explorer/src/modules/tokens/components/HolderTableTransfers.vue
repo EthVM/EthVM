@@ -61,7 +61,7 @@
 
         <!-- Column 3 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ tx.value }}</p>
+          <p>{{ calculateTransferValue(tx.value) }}</p>
         </v-flex>
         <!-- End Column 3 -->
       </v-layout>
@@ -94,7 +94,7 @@ export default class HolderTableTransfers extends Vue {
   */
 
   @Prop(Array) transfers!: Array<any>
-  @Prop(Number) totalTransfers!: number
+  @Prop(String) totalTransfers!: string
   @Prop(Number) page!: number
   @Prop(String) decimals?: string
   @Prop(Boolean) loading?: boolean
@@ -111,15 +111,15 @@ export default class HolderTableTransfers extends Vue {
     return new Date(bn.times(1000).toNumber())
   }
 
-  calculateTransferValue(transfer: Transfer) {
+  calculateTransferValue(value: string) {
+    const n = new BN(value)
     if (this.decimals) {
-      const n = new BN(transfer.value)
       return n
         .div(new BN(10).pow(this.decimals))
         .toFixed()
         .toString()
     }
-    return transfer.value
+    return n.toFormat().toString()
   }
 
   setPage(page: number): void {
@@ -137,7 +137,7 @@ export default class HolderTableTransfers extends Vue {
    * @return {Integer} - Number of pages of results
    */
   get numPages() {
-    return this.totalTransfers > 0 ? Math.ceil(this.totalTransfers / MAX_ITEMS) : 0
+    return this.totalTransfers.length > 0 ? Math.ceil(new BN(this.totalTransfers).toNumber() / MAX_ITEMS) : 0
   }
 }
 </script>

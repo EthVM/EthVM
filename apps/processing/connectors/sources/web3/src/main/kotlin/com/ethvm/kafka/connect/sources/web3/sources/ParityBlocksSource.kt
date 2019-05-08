@@ -33,7 +33,7 @@ class ParityBlocksSource(
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "block")
 
-  private val blockTimestamps = sortedMapOf<BigInteger, Long>()
+  private val blockTimestamps = sortedMapOf<BigInteger, Int>()
   private val timestampsLock = AtomicBoolean(false)
 
   override fun fetchRange(range: LongRange): List<SourceRecord> {
@@ -52,7 +52,7 @@ class ParityBlocksSource(
 
             // record timestamp
 
-            val blockTimestamp = block.timestamp.toLong()
+            val blockTimestamp = block.timestamp.toInt()
             blockTimestamps[blockNumberBI] = blockTimestamp
 
             // uncles
@@ -83,7 +83,6 @@ class ParityBlocksSource(
             return@thenCompose unclesFuture.thenApply { uncles ->
               Pair(block, uncles)
             }
-
           }
       }.map { f -> f.join() }
 
@@ -96,15 +95,15 @@ class ParityBlocksSource(
 
       val blockNumber = block.number
 
-      val partitionOffset = mapOf("blockNumber" to blockNumber)
+      val partitionOffset = mapOf("blockNumber" to blockNumber.toLong())
 
       val blockKeyRecord = CanonicalKeyRecord.newBuilder()
         .setNumberBI(blockNumber)
         .build()
 
-      val blockTime = when(val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
+      val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
         null -> null
-        else -> block.timestamp.toLong() - prevTimestamp
+        else -> block.timestamp.toInt() - prevTimestamp
       }
 
       val blockRecord = block
@@ -179,21 +178,19 @@ class ParityBlocksSource(
 
       listOf(headerSourceRecord, txsSourceRecord, unclesSourceRecord)
     }.flatten()
-
   }
 
   private fun tryCleanTimestamps() {
 
-    if(timestampsLock.compareAndSet(false, true)) {
+    if (timestampsLock.compareAndSet(false, true)) {
 
-      while(blockTimestamps.size > 5000) {
+      while (blockTimestamps.size > 5000) {
         // map is ordered, remove older entries first
         blockTimestamps.remove(blockTimestamps.firstKey())
       }
 
       timestampsLock.set(false)
     }
-
   }
 
   override fun tombstonesForRange(range: LongRange): List<SourceRecord> =

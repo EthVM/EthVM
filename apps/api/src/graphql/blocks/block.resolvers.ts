@@ -9,7 +9,7 @@ import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestj
 import { PubSub } from 'graphql-subscriptions';
 import {BlockSummary} from '../schema';
 import { BlockSummaryDto } from './dto/block-summary.dto';
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js';
 import {BlocksPageDto} from '@app/graphql/blocks/dto/blocks-page.dto'
 import {BlockSummaryPageDto} from './dto/block-summary-page.dto'
 
@@ -43,12 +43,12 @@ export class BlockResolvers {
 
   @Query()
   async blockByHash(@Args('hash', ParseHashPipe) hash: string) {
-    const entity = await this.blockService.findOneByBlockHash(hash)
+    const entity = await this.blockService.findBlockByHash(hash)
     return entity ? new BlockDto(entity) : null
   }
 
   @Query()
-  async blockByNumber(@Args('number') number: number) {
+  async blockByNumber(@Args('number') number: BigNumber) {
     const entity = await this.blockService.findBlockByNumber(number)
     return entity ? new BlockDto(entity) : null
   }

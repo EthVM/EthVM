@@ -114,14 +114,14 @@ export default class TokenTableHolders extends Vue {
    * @return {String} - Amount
    */
   holderBalance(holder) {
+    const n = new BN(holder.balance)
     if (this.decimals) {
-      const n = new BN(holder.balance)
       return n
         .div(new BN(10).pow(this.decimals))
         .toFixed()
         .toString()
     }
-    return holder.balance
+    return n.toFormat().toString()
   }
 
   setPage(page: number): void {

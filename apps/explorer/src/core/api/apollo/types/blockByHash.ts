@@ -8,76 +8,59 @@ import { DeltaType } from "./globalTypes";
 // GraphQL query operation: blockByHash
 // ====================================================
 
-export interface blockByHash_blockByHash_header {
+export interface blockByHash_blockDetail_header {
   __typename: "BlockHeader";
   number: any | null;
   hash: string | null;
-  timestamp: string | null;
-  author: string | null;
   parentHash: string | null;
-  difficulty: any | null;
-  size: string | null;
   nonce: any | null;
+  sha3Uncles: string | null;
+  logsBloom: string | null;
+  transactionsRoot: string | null;
   stateRoot: string | null;
+  receiptsRoot: string | null;
+  author: string | null;
+  difficulty: any | null;
+  totalDifficulty: any | null;
   extraData: string | null;
   gasLimit: any | null;
   gasUsed: any | null;
-  logsBloom: string | null;
-  sha3Uncles: string | null;
-  transactionsRoot: string | null;
-  receiptsRoot: string | null;
-  totalDifficulty: any | null;
+  timestamp: number | null;
+  size: number | null;
+  blockTime: number | null;
 }
 
-export interface blockByHash_blockByHash_transactions_receipt {
-  __typename: "Receipt";
-  contractAddress: string | null;
-  gasUsed: any | null;
-  status: string | null;
-}
-
-export interface blockByHash_blockByHash_transactions_traces {
-  __typename: "Trace";
-  error: string | null;
-}
-
-export interface blockByHash_blockByHash_transactions {
-  __typename: "Transaction";
-  hash: string | null;
-  blockNumber: any | null;
-  from: string | null;
-  gasPrice: any | null;
-  timestamp: string | null;
-  to: string | null;
-  value: any | null;
-  receipt: blockByHash_blockByHash_transactions_receipt | null;
-  traces: (blockByHash_blockByHash_transactions_traces | null)[] | null;
-}
-
-export interface blockByHash_blockByHash_rewards {
+export interface blockByHash_blockDetail_rewards {
   __typename: "Reward";
-  author: string | null;
-  rewardType: DeltaType | null;
-  value: any | null;
+  address: string | null;
+  deltaType: DeltaType | null;
+  amount: any | null;
 }
 
-export interface blockByHash_blockByHash_uncles {
-  __typename: "Uncle";
-  hash: string | null;
-}
-
-export interface blockByHash_blockByHash {
+export interface blockByHash_blockDetail {
   __typename: "Block";
-  header: blockByHash_blockByHash_header | null;
-  transactions: (blockByHash_blockByHash_transactions | null)[] | null;
-  rewards: (blockByHash_blockByHash_rewards | null)[] | null;
-  uncles: (blockByHash_blockByHash_uncles | null)[] | null;
+  header: blockByHash_blockDetail_header | null;
+  uncleHashes: (string | null)[] | null;
+  transactionHashes: (string | null)[] | null;
+  rewards: (blockByHash_blockDetail_rewards | null)[] | null;
+}
+
+export interface blockByHash_transactionsSummary_items {
+  __typename: "TransactionSummary";
+  fee: any | null;
+}
+
+export interface blockByHash_transactionsSummary {
+  __typename: "TransactionSummaryPage";
+  items: (blockByHash_transactionsSummary_items | null)[] | null;
+  totalCount: any | null;
 }
 
 export interface blockByHash {
-  blockByHash: blockByHash_blockByHash | null;
+  blockDetail: blockByHash_blockDetail | null;
+  transactionsSummary: blockByHash_transactionsSummary;
 }
 
 export interface blockByHashVariables {
-  hash?: string | null;
+  blockHash?: string | null;
 }

@@ -1,5 +1,4 @@
 import BN from 'bignumber.js'
-import ethUnits from 'ethereumjs-units'
 import NumberFormatter from 'number-formatter'
 
 export class EthValue {
@@ -22,22 +21,21 @@ export class EthValue {
 
   public toEth(): number {
     const value = this.value instanceof BN ? this.value : new BN(this.value)
-    return ethUnits.convert(value.toFixed(), 'wei', 'eth')
+    return value.div(1_000_000_000_000_000_000).toNumber()
   }
 
   public toWei(): number {
     const value = this.value instanceof BN ? this.value : new BN(this.value)
-    return ethUnits.convert(value.toFixed(), 'wei', 'wei')
+    return value.toNumber()
   }
 
   public toGWei(): number {
     const value = this.value instanceof BN ? this.value : new BN(this.value)
-    return ethUnits.convert(value.toFixed(), 'wei', 'gwei')
+    return value.div(1_000_000_000).toNumber()
   }
 
-  public toEthFormated(): number {
-    const value = this.value instanceof BN ? this.value : new BN(this.value)
-    return NumberFormatter('#,##0.##', ethUnits.convert(value.toFixed(), 'wei', 'eth'))
+  public toEthFormatted(): number {
+    return NumberFormatter('#,##0.##', this.toEth())
   }
 
   public toString(): string {

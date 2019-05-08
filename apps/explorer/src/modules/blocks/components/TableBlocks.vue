@@ -120,7 +120,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import { latestBlocks, newBlock } from '@app/modules/blocks/components/blocks.graphql'
+import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import { Block, SimpleBlock } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -129,6 +129,8 @@ import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.e
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BigNumber from 'bignumber.js'
+
+const MAX_ITEMS = 50
 
 @Component({
   components: {
@@ -149,9 +151,13 @@ import BigNumber from 'bignumber.js'
     blockPage: {
       query: latestBlocks,
 
-      variables: {
-        offset: 0,
-        limit: 50
+      fetchPolicy: 'cache-and-network',
+
+      variables() {
+        return {
+          offset: 0,
+          limit: this.maxItems
+        }
       },
 
       update({ blockSummaries }) {
@@ -171,10 +177,14 @@ import BigNumber from 'bignumber.js'
           const items = Object.assign([], blockSummaries.items)
           items.unshift(newBlock)
 
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
+
           // ensure order by block number desc
           items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
+            const numberA = a.number ? new BigNumber(a.number) : new BigNumber(0)
+            const numberB = b.number ? new BigNumber(b.number) : new BigNumber(0)
             return numberB.minus(numberA).toNumber()
           })
 
@@ -196,10 +206,10 @@ import BigNumber from 'bignumber.js'
 })
 export default class TableBlocks extends Vue {
   /*
-    ===================================================================================
-      Props
-    ===================================================================================
-    */
+      ===================================================================================
+        Props
+      ===================================================================================
+      */
 
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
@@ -222,10 +232,10 @@ export default class TableBlocks extends Vue {
   }
 
   /*
-    ===================================================================================
-      Methods
-    ===================================================================================
-    */
+      ===================================================================================
+        Methods
+      ===================================================================================
+      */
 
   setPage(page: number): void {
     const { blockPage } = this.$apollo.queries
@@ -245,10 +255,10 @@ export default class TableBlocks extends Vue {
   }
 
   /*
-    ===================================================================================
-      Computed Values
-    ===================================================================================
-    */
+      ===================================================================================
+        Computed Values
+      ===================================================================================
+      */
 
   get loading(): boolean {
     return this.$apollo.queries.blockPage.loading

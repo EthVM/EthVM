@@ -15,7 +15,7 @@
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
-import { latestBlocks, newBlock } from '@app/modules/blocks/components/blocks.graphql'
+import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 import BigNumber from 'bignumber.js'
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
@@ -61,12 +61,18 @@ class ChartData {
           const { newBlock } = subscriptionData.data
 
           const items = Object.assign([], blockSummaries.items)
+
+          // add to the beginning of the array
           items.unshift(newBlock)
+
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           // ensure order by block number desc
           items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
+            const numberA = a.number ? new BigNumber(a.number) : new BigNumber(0)
+            const numberB = b.number ? new BigNumber(b.number) : new BigNumber(0)
             return numberB.minus(numberA).toNumber()
           })
 

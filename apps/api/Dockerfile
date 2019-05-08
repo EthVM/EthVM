@@ -4,8 +4,6 @@ ENV WORKDIR /var/www/api
 
 RUN apk --no-cache add bash ca-certificates git make gcc g++ python postgresql-dev
 
-RUN apk add --no-cache --virtual bash
-
 WORKDIR ${WORKDIR}
 
 COPY . ${WORKDIR}/

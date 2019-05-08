@@ -2,6 +2,9 @@ type Query {
 
   transactionSummaries(offset: Int = 0, limit: Int = 50): TransactionSummaryPage
 
+  transactionSummariesForBlockNumber(number: BigNumber, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
+  transactionSummariesForBlockHash(hash: String, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
+
   tx(hash: String!): Transaction
   txs(limit: Int, page: Int, fromBlock: BigNumber): [Transaction]
   txsForAddress(hash: String!, filter: FilterEnum!, limit: Int, page: Int): [Transaction]

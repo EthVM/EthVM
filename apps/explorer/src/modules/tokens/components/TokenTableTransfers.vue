@@ -70,7 +70,7 @@
 
         <!-- Column 3 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ calculateTransferValue(tx) }}</p>
+          <p>{{ calculateTransferValue(tx.value) }}</p>
         </v-flex>
         <!-- End Column 3 -->
 
@@ -112,7 +112,7 @@ export default class TokenTableTransfers extends Vue {
   */
 
   @Prop(Array) transfers
-  @Prop(Number) totalTransfers
+  @Prop(String) totalTransfers!: string
   @Prop(Number) page
   @Prop(Boolean) loading
   @Prop(Boolean) showType
@@ -133,15 +133,15 @@ export default class TokenTableTransfers extends Vue {
     this.$emit('page', page)
   }
 
-  calculateTransferValue(transfer: Transfer) {
+  calculateTransferValue(value: string) {
+    const n = new BN(value)
     if (this.decimals) {
-      const n = new BN(transfer.value)
       return n
         .div(new BN(10).pow(this.decimals))
         .toFixed()
         .toString()
     }
-    return transfer.value
+    return n.toFormat().toString()
   }
 
   /*
@@ -154,7 +154,10 @@ export default class TokenTableTransfers extends Vue {
    * @return {Number} - Total number of pagination pages
    */
   get numPages(): number {
-    return this.totalTransfers > 0 ? Math.ceil(this.totalTransfers / MAX_ITEMS) : 0
+    if (!this.totalTransfers.length) {
+      return 0
+    }
+    return Math.ceil(new BN(this.totalTransfers).toNumber() / MAX_ITEMS)
   }
 }
 </script>

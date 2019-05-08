@@ -66,7 +66,7 @@ export default class TokenDetailsTabs extends Vue {
 
   @Prop(String) addressRef!: string
   @Prop(Array) tokenTransfers!: Transfer[]
-  @Prop(Number) totalTransfers!: number
+  @Prop(String) totalTransfers!: string
   @Prop(Number) transfersPage!: number
   @Prop(Array) tokenHolders!: any
   @Prop(Number) totalHolders!: number

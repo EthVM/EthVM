@@ -352,7 +352,7 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
-  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: number }> {
+  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: string }> {
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 
