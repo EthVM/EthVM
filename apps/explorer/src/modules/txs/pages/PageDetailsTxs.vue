@@ -16,6 +16,7 @@ import { eth } from '@app/core/helper'
 import { Tx } from '@app/core/models'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import Signatures from '@app/signatures.json'
 
 @Component({
   components: {
@@ -103,17 +104,6 @@ export default class PageDetailsTxs extends Vue {
     this.transaction = tx
     this.timestamp = tx.getTimestamp()
     this.getTxDataInput()
-  }
-
-  fetchSignatures(): Promise<any> {
-    return fetch('https://raw.githubusercontent.com/EthVM/eth4ByteDirectory/master/data.json')
-      .then(result => result.json())
-      .then(newJSON => {
-        return newJSON.results
-      })
-      .catch(err => {
-        throw err
-      })
   }
 
   /*
@@ -309,10 +299,10 @@ export default class PageDetailsTxs extends Vue {
     return Object.keys(this.tx).length === 0
   }
 
-  async getTxDataInput(): Promise<string[] | undefined> {
+  getTxDataInput(): string[] | undefined {
     if (this.tx.getInput()) {
       const sig = `0x${this.tx.getInput().substr(0, 8)}`
-      const signatures = await this.fetchSignatures()
+      const signatures = Signatures.results
       if (signatures && signatures.length > 0) {
         const index = signatures.findIndex(i => i.hex_signature === sig)
         this.txInput = [`${this.$i18n.t('tx.method')}: ${sig}`]
