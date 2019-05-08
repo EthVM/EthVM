@@ -1,12 +1,12 @@
 <template>
   <v-app class="content">
     <the-navigation-drawer />
-    <v-content >
+    <v-content>
       <v-layout column fill-height>
         <app-greeting v-if="appGreet" :greet="appGreet" />
-        <app-sync-message  v-if="isSyncing" />
+        <app-sync-message v-if="isSyncing" />
         <v-flex>
-          <router-view  :key="$route.path" />
+          <router-view :key="$route.path" />
         </v-flex>
         <v-spacer />
         <the-footer />
