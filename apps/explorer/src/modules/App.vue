@@ -1,11 +1,16 @@
 <template>
-  <v-app style="background: #f3f4f8;">
+  <v-app class="content">
     <the-navigation-drawer />
     <v-content>
-      <app-greeting v-if="appGreet" :greet="appGreet" />
-      <app-sync-message v-if="isSyncing" />
-      <router-view :key="$route.path" />
-      <the-footer />
+      <v-layout column fill-height>
+        <app-greeting v-if="appGreet" :greet="appGreet" />
+        <app-sync-message v-if="isSyncing" />
+        <v-flex>
+          <router-view :key="$route.path" />
+        </v-flex>
+        <v-spacer />
+        <the-footer />
+      </v-layout>
     </v-content>
   </v-app>
 </template>
@@ -65,4 +70,8 @@ export default class App extends Vue {
 
 <style scoped lang="css">
 @import '~cssPath/global.css';
+
+.content {
+  background: #f3f4f8;
+}
 </style>

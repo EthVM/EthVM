@@ -175,8 +175,21 @@ const MAX_ITEMS = 50
         }
       },
 
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
       update({ summaries }) {
         return new TransactionSummaryPageExt(summaries)
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
       },
 
       subscribeToMore: {
