@@ -68,7 +68,7 @@ interface QueryOptions {
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
         }
-      },
+      }
     }
   }
 })
