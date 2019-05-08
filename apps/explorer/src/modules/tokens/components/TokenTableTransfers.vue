@@ -135,7 +135,6 @@ export default class TokenTableTransfers extends Vue {
   }
 
   calculateTransferValue(value: string) {
-
     if (this.convertToEth) {
       return new EthValue(value).toEthFormatted().toString()
     }
