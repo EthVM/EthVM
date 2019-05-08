@@ -8,6 +8,7 @@
     :redraw="true"
     :footnotes="footnote"
     :live-chart="true"
+    :error="error"
   />
 </template>
 
@@ -39,6 +40,9 @@ class ChartData {
 @Component({
   components: {
     Chart
+  },
+  data: {
+    error: ''
   },
   apollo: {
     blockPage: {
@@ -94,6 +98,8 @@ export default class ChartLiveTxs extends Vue {
       Initial Data
     ===================================================================================
     */
+
+  error: string = ''
 
   blockPage?: BlockSummaryPageExt
 

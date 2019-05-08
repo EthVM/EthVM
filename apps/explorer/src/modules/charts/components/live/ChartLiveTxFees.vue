@@ -9,6 +9,7 @@
     unfilled="true"
     :footnotes="footnote"
     :live-chart="true"
+    :error="error"
   />
 </template>
 
@@ -37,6 +38,9 @@ class ChartData {
 @Component({
   components: {
     Chart
+  },
+  data: {
+    error: ''
   },
   apollo: {
     metricsPage: {
@@ -93,7 +97,9 @@ export default class ChartLiveTxFees extends Vue {
   ===================================================================================
   */
 
+
   redraw = true
+  error: string = ''
   metricsPage?: BlockMetricPageExt
 
   /*
