@@ -1,6 +1,6 @@
 import Vuetify from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
-import { EthvmApolloApi } from '@app/core/api'
+import { EthvmApi, EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
 import router from '@app/core/router'
 import store from '@app/core/store'
@@ -16,6 +16,7 @@ import { getMainDefinition } from 'apollo-utilities'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import vuescroll from 'vue-scroll'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 /*
   ===================================================================================
@@ -38,17 +39,37 @@ const httpLink = new HttpLink({
   uri: process.env.VUE_APP_API_ENDPOINT || ''
 })
 
-const wsLink = new WebSocketLink({
-  uri: process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '',
-  options: {
-    reconnect: true
-  }
+const wsTransport = new SubscriptionClient(process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '', {
+  reconnect: true
 })
+
+const VueApolloSubscriptionState = {
+
+  install(Vue: any, client: SubscriptionClient) {
+
+    Vue.prototype.$wsConnected = false
+
+    wsTransport.onConnected(() => {
+      Vue.prototype.$wsConnected = true
+    })
+
+    wsTransport.onDisconnected(() => {
+      Vue.prototype.$wsConnected = false
+    })
+
+    wsTransport.onReconnected(() => {
+      Vue.prototype.$wsConnected = true
+    })
+
+  }
+}
+
+const wsLink = new WebSocketLink(wsTransport)
 
 const link = split(
   // split based on operation type
-  ({ query }) => {
-    const { kind, operation } = getMainDefinition(query)
+  ({query}) => {
+    const {kind, operation} = getMainDefinition(query)
     return kind === 'OperationDefinition' && operation === 'subscription'
   },
   wsLink,
@@ -69,6 +90,7 @@ const api = new EthvmApolloApi(apolloClient)
 
 Vue.use(VueApollo)
 Vue.use(VueEthvmApi, api)
+Vue.use(VueApolloSubscriptionState, wsTransport)
 
 // -------------------------------------------------------
 //    Vuetify
@@ -134,7 +156,7 @@ const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
 if (sentryToken) {
   Sentry.init({
     dsn: sentryToken,
-    integrations: [new Sentry.Integrations.Vue({ Vue })],
+    integrations: [new Sentry.Integrations.Vue({Vue})],
     maxBreadcrumbs: 0
   })
 }

@@ -1,5 +1,7 @@
 <template>
   <v-container grid-list-lg class="mb-0">
+    <h1>Connected: {{ $wsConnected }}</h1>
+
     <app-bread-crumbs />
     <!--
     =====================================================================================
