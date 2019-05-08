@@ -1,5 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
+    <notice-new-block @reload="resetFromBlock" />
+
     <!--
     =====================================================================================
       TITLE
@@ -23,11 +25,7 @@
         </v-layout>
       </v-flex>
     </v-layout>
-    <!--
-    =====================================================================================
-      LOADING / ERROR
-    =====================================================================================
-    -->
+
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
     <app-error :has-error="hasError" :message="error" class="mb-4" />
 
@@ -137,6 +135,7 @@ import {
 } from '@app/modules/txs/components/txs.graphql'
 import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
 import BigNumber from 'bignumber.js'
+import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 
 const MAX_ITEMS = 50
 
@@ -146,11 +145,13 @@ const MAX_ITEMS = 50
     AppFootnotes,
     AppLiveUpdate,
     AppPaginate,
-    TableTxsRow
+    TableTxsRow,
+    NoticeNewBlock
   },
   data() {
     return {
       page: 0,
+      fromBlock: undefined,
       error: undefined
     }
   },
@@ -165,22 +166,17 @@ const MAX_ITEMS = 50
         return latestTransactionSummaries
       },
 
-      fetchPolicy: 'cache-and-network',
-
       variables() {
+        const { blockHash: hash, blockNumber } = this
+
         return {
-          number: this.blockNumber ? this.blockNumber.toString(10) : null,
-          hash: this.blockHash,
-          offset: 0,
-          limit: this.maxItems
+          number: blockNumber ? blockNumber.toString(10) : undefined,
+          hash
         }
       },
 
       update({ summaries }) {
-        return {
-          ...summaries,
-          items: summaries.items.map(i => new TransactionSummaryExt(i))
-        }
+        return new TransactionSummaryPageExt(summaries)
       },
 
       subscribeToMore: {
@@ -243,14 +239,12 @@ export default class TableTxs extends Vue {
   page!: number
 
   error?: string
-  txPage?: TransactionSummaryPage
 
-  get txPageExt(): TransactionSummaryPageExt | null {
-    return this.txPage ? new TransactionSummaryPageExt(this.txPage) : null
-  }
+  fromBlock?: BigNumber
+  txPage?: TransactionSummaryPageExt
 
   get transactions(): (TransactionSummaryPage_items | null)[] {
-    return this.txPageExt ? this.txPageExt.items || [] : []
+    return this.txPage ? this.txPage.items || [] : []
   }
 
   /*
@@ -259,18 +253,32 @@ export default class TableTxs extends Vue {
     ===================================================================================
     */
 
-  setPage(page: number): void {
-    const { txPage } = this.$apollo.queries
+  resetFromBlock() {
+    this.setPage(0, true)
+  }
+
+  setPage(page: number, resetFrom: boolean = false): void {
+    const { txPage } = this
+    const { txPage: query } = this.$apollo.queries
 
     const self = this
 
-    txPage.fetchMore({
+    if (resetFrom) {
+      this.fromBlock = undefined
+    } else {
+      const { items } = txPage!
+      if (!this.fromBlock && items!.length) {
+        this.fromBlock = items![0]!.blockNumberBN
+      }
+    }
+
+    query.fetchMore({
       variables: {
+        fromBlock: this.fromBlock ? this.fromBlock.toString(10) : undefined,
         offset: page * this.maxItems,
         limit: this.maxItems
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        // TODO error handling
         self.page = page
         return fetchMoreResult
       }
@@ -317,7 +325,7 @@ export default class TableTxs extends Vue {
   }
 
   get pages(): number {
-    return this.txPage ? Math.ceil(this.txPageExt!.totalCountBN.div(this.maxItems).toNumber()) : 0
+    return this.txPage ? Math.ceil(this.txPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
   }
 
   get footnotes(): Footnote[] {

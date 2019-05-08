@@ -1,6 +1,6 @@
 type Query {
 
-  transactionSummaries(offset: Int = 0, limit: Int = 50): TransactionSummaryPage
+  transactionSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 50): TransactionSummaryPage
 
   transactionSummariesForBlockNumber(number: BigNumber, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
   transactionSummariesForBlockHash(hash: String, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!

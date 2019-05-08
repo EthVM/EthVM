@@ -24,10 +24,11 @@ export class BlockResolvers {
 
   @Query()
   async blockSummaries(
+    @Args('fromBlock') fromBlock: BigNumber,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ) {
-    const [summaries, count] = await this.blockService.findSummaries(offset, limit)
+    const [summaries, count] = await this.blockService.findSummaries(offset, limit, fromBlock)
     return new BlockSummaryPageDto(summaries, count)
   }
 
