@@ -24,6 +24,7 @@ import { BlockMetricPageExt } from '@app/core/api/apollo/extensions/block-metric
 import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/blocks.graphql'
 import { BlockMetricExt } from '@app/core/api/apollo/extensions/block-metric.ext'
 import BigNumber from 'bignumber.js'
+import { Subscription } from 'rxjs'
 
 const MAX_ITEMS = 10
 
@@ -114,11 +115,29 @@ export default class ChartLiveTxFees extends Vue {
   error: string = ''
   metricsPage?: BlockMetricPageExt
 
+  stateSubscription?: Subscription
+
   /*
   ===================================================================================
     Lifecycle
   ===================================================================================
   */
+
+  created() {
+    this.stateSubscription = this.$subscriptionState.subscribe(state => {
+      switch(state) {
+        case 'reconnected':
+          this.$apollo.queries.metricsPage.refetch()
+          break;
+      }
+    })
+  }
+
+  destroyed() {
+    if(this.stateSubscription) {
+      this.stateSubscription.unsubscribe()
+    }
+  }
 
   /*
   ===================================================================================

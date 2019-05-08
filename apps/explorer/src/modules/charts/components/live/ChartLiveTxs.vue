@@ -20,6 +20,7 @@ import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 import BigNumber from 'bignumber.js'
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { Subscription } from 'rxjs'
 
 const MAX_ITEMS = 10
 
@@ -119,11 +120,30 @@ export default class ChartLiveTxs extends Vue {
 
   blockPage?: BlockSummaryPageExt
 
+  stateSubscription?: Subscription
+
   /*
     ===================================================================================
       Lifecycle
     ===================================================================================
     */
+
+  created() {
+    this.stateSubscription = this.$subscriptionState.subscribe(state => {
+      switch(state) {
+        case 'reconnected':
+          this.$apollo.queries.blockPage.refetch()
+          break;
+      }
+    })
+  }
+
+  destroyed() {
+    if(this.stateSubscription) {
+      this.stateSubscription.unsubscribe()
+    }
+  }
+
 
   /*
     ===================================================================================

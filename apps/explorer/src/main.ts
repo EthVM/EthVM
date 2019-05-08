@@ -39,32 +39,11 @@ const httpLink = new HttpLink({
   uri: process.env.VUE_APP_API_ENDPOINT || ''
 })
 
-const wsTransport = new SubscriptionClient(process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '', {
+const subscriptionClient = new SubscriptionClient(process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '', {
   reconnect: true
 })
 
-const VueApolloSubscriptionState = {
-
-  install(Vue: any, client: SubscriptionClient) {
-
-    Vue.prototype.$wsConnected = false
-
-    wsTransport.onConnected(() => {
-      Vue.prototype.$wsConnected = true
-    })
-
-    wsTransport.onDisconnected(() => {
-      Vue.prototype.$wsConnected = false
-    })
-
-    wsTransport.onReconnected(() => {
-      Vue.prototype.$wsConnected = true
-    })
-
-  }
-}
-
-const wsLink = new WebSocketLink(wsTransport)
+const wsLink = new WebSocketLink(subscriptionClient)
 
 const link = split(
   // split based on operation type
@@ -89,8 +68,7 @@ const apolloProvider = new VueApollo({
 const api = new EthvmApolloApi(apolloClient)
 
 Vue.use(VueApollo)
-Vue.use(VueEthvmApi, api)
-Vue.use(VueApolloSubscriptionState, wsTransport)
+Vue.use(VueEthvmApi, { api, subscriptionClient })
 
 // -------------------------------------------------------
 //    Vuetify

@@ -36,6 +36,7 @@ import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@a
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
+import { Subscription } from 'rxjs'
 
 @Component({
   components: {
@@ -43,11 +44,16 @@ import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.e
   },
   apollo: {
     blockSummary: {
+
       query: latestBlockStats,
 
       update({ blockSummaries }) {
-        const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = blockSummaries.items[0]
-        return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
+        if(blockSummaries) {
+          const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = blockSummaries.items[0]
+          return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
+        } else {
+          return null
+        }
       },
 
       subscribeToMore: {
@@ -67,10 +73,11 @@ import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.e
     },
 
     hashRate: {
+
       query: latestHashRate,
 
       update({ hashRate }) {
-        return new BigNumber(hashRate)
+        return hashRate ? new BigNumber(hashRate) : null
       },
 
       subscribeToMore: {
@@ -108,6 +115,8 @@ export default class AppInfoCardGroup extends Vue {
   seconds: number = 0
   secondsInterval: number | null = null
 
+  stateSubscription?: Subscription
+
   /*
   ===================================================================================
     Lifecycle
@@ -116,13 +125,26 @@ export default class AppInfoCardGroup extends Vue {
 
   created() {
     this.startCount()
+
+    this.stateSubscription = this.$subscriptionState.subscribe(async state => {
+      switch(state) {
+        case 'reconnected':
+          this.$apollo.queries.blockSummary.refetch()
+          this.$apollo.queries.hashRate.refetch()
+          break;
+      }
+    })
   }
 
-  beforeDestroy() {
+  destroyed() {
     if (this.secondsInterval) {
       clearInterval(this.secondsInterval)
     }
+    if(this.stateSubscription){
+      this.stateSubscription.unsubscribe()
+    }
   }
+
 
   /*
   ===================================================================================
