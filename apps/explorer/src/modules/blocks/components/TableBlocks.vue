@@ -168,6 +168,7 @@ const MAX_ITEMS = 50
 
       update({ blockSummaries }) {
         if (blockSummaries) {
+          this.error = '' // clear error
           return {
             ...blockSummaries,
             items: blockSummaries.items.map(i => new BlockSummaryExt(i))

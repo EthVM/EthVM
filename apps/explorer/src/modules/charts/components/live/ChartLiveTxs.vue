@@ -41,9 +41,6 @@ class ChartData {
   components: {
     Chart
   },
-  data: {
-    error: ''
-  },
   apollo: {
     blockPage: {
       query: latestBlocks,
@@ -54,11 +51,30 @@ class ChartData {
       },
 
       update({ blockSummaries }) {
-        return new BlockSummaryPageExt(blockSummaries)
+        if(blockSummaries) {
+          this.error = '' // clear any previous error
+          return new BlockSummaryPageExt(blockSummaries)
+        } else {
+          this.error = this.$i18n.t('message.no-data')
+          return null
+        }
+      },
+
+      error({ graphQLErrors, networkError }) {
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        } else {
+          this.error = this.$i18n.t('message.err')
+        }
       },
 
       subscribeToMore: {
+
         document: newBlock,
+
+        error(err) {
+          console.log('Subscription error')
+        },
 
         updateQuery: (previousResult, { subscriptionData }) => {
           const { blockSummaries } = previousResult

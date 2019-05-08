@@ -39,9 +39,6 @@ class ChartData {
   components: {
     Chart
   },
-  data: {
-    error: ''
-  },
   apollo: {
     metricsPage: {
       query: latestBlockMetrics,
@@ -52,7 +49,22 @@ class ChartData {
       },
 
       update({ blockMetrics }) {
-        return new BlockMetricPageExt(blockMetrics)
+        if(blockMetrics) {
+          this.error = '' // clear error
+          return new BlockMetricPageExt(blockMetrics)
+        } else {
+          this.error = this.$i18n.t('message.no-data')
+          return null
+        }
+
+      },
+
+      error({ graphQLErrors, networkError }) {
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        } else {
+          this.error = this.$i18n.t('message.err')
+        }
       },
 
       subscribeToMore: {
