@@ -273,10 +273,6 @@ export abstract class IQuery {
 
     abstract blockMetricsTimeseries(start?: Date, end?: Date, bucket?: TimeBucket, fields?: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
 
-    abstract contractByAddress(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
-
     abstract hashRate(): BigNumber | Promise<BigNumber>;
 
     abstract blockSummaries(offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
@@ -290,6 +286,10 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
 
     abstract totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
+
+    abstract contractByAddress(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
 
     abstract search(query: string): Search | Promise<Search>;
 
@@ -319,14 +319,6 @@ export abstract class IQuery {
 
     abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
 
-    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
-
-    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
-
-    abstract totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
-
-    abstract latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
-
     abstract transactionSummaries(offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
 
     abstract transactionSummariesForBlockNumber(number?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
@@ -340,6 +332,14 @@ export abstract class IQuery {
     abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
 
     abstract totalNumberOfTransactions(): BigNumber | Promise<BigNumber>;
+
+    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
+
+    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
+
+    abstract totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
+
+    abstract latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
