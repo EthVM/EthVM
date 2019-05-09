@@ -21,7 +21,7 @@ export interface tokenExchangeRates_tokenExchangeRates {
 }
 
 export interface tokenExchangeRates {
-  tokenExchangeRates: (tokenExchangeRates_tokenExchangeRates | null)[];
+  tokenExchangeRates: tokenExchangeRates_tokenExchangeRates[];
 }
 
 export interface tokenExchangeRatesVariables {

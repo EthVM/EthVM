@@ -8,6 +8,6 @@
 
 export interface AvgGasPriceMetric {
   __typename: "AggregateBlockMetric";
-  timestamp: any | null;
+  timestamp: any;
   value: any | null;
 }

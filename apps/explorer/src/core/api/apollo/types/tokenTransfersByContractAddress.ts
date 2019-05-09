@@ -8,23 +8,23 @@
 
 export interface tokenTransfersByContractAddress_tokenTransfersByContractAddress_items {
   __typename: "Transfer";
-  id: string | null;
+  id: string;
   transactionHash: string | null;
-  value: any | null;
+  value: any;
   from: string | null;
-  to: string | null;
+  to: string;
   address: string | null;
-  timestamp: string | null;
+  timestamp: number;
 }
 
 export interface tokenTransfersByContractAddress_tokenTransfersByContractAddress {
   __typename: "TransfersPage";
-  items: (tokenTransfersByContractAddress_tokenTransfersByContractAddress_items | null)[] | null;
-  totalCount: any | null;
+  items: tokenTransfersByContractAddress_tokenTransfersByContractAddress_items[];
+  totalCount: any;
 }
 
 export interface tokenTransfersByContractAddress {
-  tokenTransfersByContractAddress: tokenTransfersByContractAddress_tokenTransfersByContractAddress | null;
+  tokenTransfersByContractAddress: tokenTransfersByContractAddress_tokenTransfersByContractAddress;
 }
 
 export interface tokenTransfersByContractAddressVariables {

@@ -1,9 +1,23 @@
-import { BlockSummary } from '@app/graphql/schema';
-import { assignClean } from '@app/shared/utils';
+import { BlockSummary } from '@app/graphql/schema'
+import { assignClean } from '@app/shared/utils'
+import BigNumber from 'bignumber.js'
 
-export class BlockSummaryDto extends BlockSummary {
-    constructor(data: any) {
-        super()
-        assignClean(this, data)
-    }
+export class BlockSummaryDto implements BlockSummary {
+
+  author!: string
+  difficulty!: BigNumber
+  hash!: string
+  numFailedTxs!: BigNumber
+  numSuccessfulTxs!: BigNumber
+  numTxs!: BigNumber
+  number!: BigNumber
+  reward!: BigNumber
+  timestamp!: number
+  transactionHashes!: string[]
+  uncleHashes!: string[]
+
+  constructor(data: any) {
+    assignClean(this, data)
+  }
+
 }

@@ -107,14 +107,13 @@ export class BlockService {
         .map(r => rewardsByBlock.set(r.blockHash, r.amount))
 
       return {
-        number, hash, author, difficulty,
-        timestamp: timestamp!.toString(),
+        number, hash, author, difficulty, timestamp,
         uncleHashes: JSON.parse(uncleHashes),
         transactionHashes: JSON.parse(transactionHashes),
         numTxs: transactionHashes.length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
-        reward: rewardsByBlock.get(hash),
+        reward: rewardsByBlock.get(hash) || 0,
       } as BlockSummary
 
     })
@@ -125,8 +124,8 @@ export class BlockService {
     return this.blockHeaderRepository.findOne({ where: { hash }, relations: ['uncles', 'rewards'] })
   }
 
-  async findBlocks(limit: number = 10, page: number = 0, fromBlock: number = -1): Promise<BlockHeaderEntity[]> {
-    const where = fromBlock !== -1 ? { number: LessThanOrEqual(fromBlock) } : {}
+  async findBlocks(limit: number = 10, page: number = 0, fromBlock?: BigNumber): Promise<BlockHeaderEntity[]> {
+    const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
     const skip = page * limit
     return await this.blockHeaderRepository.find({
       where,
@@ -163,7 +162,7 @@ export class BlockService {
 
   async findBlockByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
     return this.blockHeaderRepository.findOne({
-      where: { number: number.toString() },
+      where: { number },
       relations: ['uncles', 'rewards'],
     })
   }

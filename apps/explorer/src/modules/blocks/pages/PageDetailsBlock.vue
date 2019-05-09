@@ -59,9 +59,11 @@ const MAX_TXS = 10
   apollo: {
     blockDetail: {
       query() {
-        if (this.blockNumber) {
+        const self = this as any
+
+        if (self.blockNumber) {
           return blockByNumber
-        } else if (this.blockHash) {
+        } else if (self.blockHash) {
           return blockByHash
         }
         return null
@@ -72,7 +74,7 @@ const MAX_TXS = 10
       variables() {
         const { blockNumber, blockHash } = this
         if (blockNumber) {
-          return { blockNumber }
+          return { blockNumber: blockNumber.toString() }
         }
         return { blockHash }
       },
@@ -349,7 +351,7 @@ export default class PageDetailsBlock extends Vue {
     if (blockNumber) {
       number = blockNumber
     } else if (blockHash && blockDetail) {
-      number = blockDetail.header!.numberBN!
+      number = blockDetail.header.numberBN
     }
 
     if (number) {

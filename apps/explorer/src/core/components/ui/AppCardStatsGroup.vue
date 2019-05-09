@@ -37,8 +37,8 @@ import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@app/core/components/ui/stats.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
-import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 import { Subscription } from 'rxjs'
+import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
 @Component({
   components: {
@@ -49,9 +49,8 @@ import { Subscription } from 'rxjs'
       query: latestBlockStats,
 
       update({ blockSummaries }) {
-        if (blockSummaries) {
-          const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = blockSummaries.items[0]
-          return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
+        if (blockSummaries && blockSummaries.items.length) {
+          return new BlockSummaryPageExt_items(blockSummaries.items[0])
         }
         return null
       },
@@ -108,11 +107,11 @@ export default class AppInfoCardGroup extends Vue {
     ===================================================================================
     */
 
-  blockSummary: BlockSummaryExt | null = null
-  hashRate: BigNumber | null = null
+  blockSummary?: BlockSummaryPageExt_items
+  hashRate?: BigNumber
 
   seconds: number = 0
-  secondsInterval: number | null = null
+  secondsInterval?: number
 
   connectedSubscription?: Subscription
 
@@ -167,7 +166,7 @@ export default class AppInfoCardGroup extends Vue {
   startCount(): void {
     this.secondsInterval = window.setInterval(() => {
       if (this.blockSummary) {
-        const lastTimestamp = this.blockSummary.timestampDate!
+        const lastTimestamp = this.blockSummary.timestampDate
         this.seconds = Math.ceil((new Date().getTime() - lastTimestamp.getTime()) / 1000)
       }
     }, 1000)
@@ -193,7 +192,7 @@ export default class AppInfoCardGroup extends Vue {
 
   get latestBlockNumber(): string {
     const { loading, loadingMessage, blockSummary } = this
-    return !loading && blockSummary ? blockSummary.numberBN!.toString() : loadingMessage
+    return !loading && !!blockSummary ? blockSummary.numberBN.toString() : loadingMessage
   }
 
   get latestHashRate(): string {

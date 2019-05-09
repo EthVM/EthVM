@@ -9,7 +9,7 @@
 export interface txs_txs_receipt {
   __typename: "Receipt";
   contractAddress: string | null;
-  gasUsed: any | null;
+  gasUsed: any;
   status: string | null;
 }
 
@@ -20,22 +20,22 @@ export interface txs_txs_traces {
 
 export interface txs_txs {
   __typename: "Transaction";
-  blockHash: string | null;
-  blockNumber: any | null;
-  from: string | null;
-  gas: any | null;
-  gasPrice: any | null;
-  hash: string | null;
-  input: any | null;
-  timestamp: string | null;
+  blockHash: string;
+  blockNumber: any;
+  from: string;
+  gas: any;
+  gasPrice: any;
+  hash: string;
+  input: any;
+  timestamp: number;
   to: string | null;
-  value: any | null;
+  value: any;
   receipt: txs_txs_receipt | null;
-  traces: (txs_txs_traces | null)[] | null;
+  traces: txs_txs_traces[];
 }
 
 export interface txs {
-  txs: (txs_txs | null)[] | null;
+  txs: txs_txs[];
 }
 
 export interface txsVariables {

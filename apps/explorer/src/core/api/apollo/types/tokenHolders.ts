@@ -8,18 +8,18 @@
 
 export interface tokenHolders_tokenHolders_items {
   __typename: "TokenHolder";
-  address: string | null;
-  balance: any | null;
+  address: string;
+  balance: any;
 }
 
 export interface tokenHolders_tokenHolders {
   __typename: "TokenHoldersPage";
-  items: (tokenHolders_tokenHolders_items | null)[] | null;
-  totalCount: number | null;
+  items: tokenHolders_tokenHolders_items[];
+  totalCount: number;
 }
 
 export interface tokenHolders {
-  tokenHolders: tokenHolders_tokenHolders | null;
+  tokenHolders: tokenHolders_tokenHolders;
 }
 
 export interface tokenHoldersVariables {

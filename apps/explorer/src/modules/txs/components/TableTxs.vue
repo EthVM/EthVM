@@ -123,22 +123,24 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
-import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
 import {
   latestTransactionSummaries,
-  transactionSummariesByBlockNumber,
+  newTransaction,
   transactionSummariesByBlockHash,
-  newTransaction
+  transactionSummariesByBlockNumber
 } from '@app/modules/txs/components/txs.graphql'
-import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
 import BigNumber from 'bignumber.js'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { Subscription } from 'rxjs'
 
 const MAX_ITEMS = 50
+
+class TableTxsMixin extends Vue {
+  pageType!: string
+}
 
 @Component({
   components: {
@@ -159,9 +161,11 @@ const MAX_ITEMS = 50
   apollo: {
     txPage: {
       query() {
-        if (this.blockNumber) {
+        const self = this as any
+
+        if (self.blockNumber) {
           return transactionSummariesByBlockNumber
-        } else if (this.blockHash) {
+        } else if (self.blockHash) {
           return transactionSummariesByBlockHash
         }
         return latestTransactionSummaries
@@ -229,13 +233,13 @@ const MAX_ITEMS = 50
         },
 
         skip() {
-          return this.pageType !== 'home'
+          return (this as any).pageType !== 'home'
         }
       }
     }
   }
 })
-export default class TableTxs extends Vue {
+export default class TableTxs extends TableTxsMixin {
   /*
       ===================================================================================
         Props

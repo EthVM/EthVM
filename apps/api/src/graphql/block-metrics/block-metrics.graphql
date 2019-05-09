@@ -14,29 +14,28 @@ enum BlockMetricField {
 
 type Query {
 
-  blockMetrics(offset: Int = 0, limit: Int = 10): BlockMetricPage!
-
-  blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: [BlockMetricField]): [AggregateBlockMetric]!
+  blockMetrics(offset: Int = 0, limit: Int = 20): BlockMetricPage!
+  blockMetricsTimeseries(start: Date!, end: Date!, bucket: TimeBucket!, fields: [BlockMetricField!]!): [AggregateBlockMetric!]!
 
 }
 
 type Subscription {
-  newBlockMetric: BlockMetric
+  newBlockMetric: BlockMetric!
 }
 
 type BlockMetricPage {
 
-  items: [BlockMetric]
+  items: [BlockMetric!]!
 
-  offset: Int
-  limit: Int
-  totalCount: Int
+  offset: Int!
+  limit: Int!
+  totalCount: Int!
 
 }
 
 type AggregateBlockMetric {
 
-  timestamp: Date
+  timestamp: Date!
 
   avgBlockTime: Int
   avgNumUncles: Int
@@ -56,21 +55,21 @@ type AggregateBlockMetric {
 type BlockMetric {
 
   number: BigNumber!
-  blockHash: String
-  timestamp: Date
-  blockTime: Int
-  numUncles: Int
-  difficulty: BigNumber
-  totalDifficulty: BigNumber
-  totalGasPrice: BigNumber
-  avgGasLimit: BigNumber
-  avgGasPrice: BigNumber
-  totalTxs: Int
-  numSuccessfulTxs: Int
-  numFailedTxs: Int
-  numInternalTxs: Int
-  totalTxFees: BigNumber
-  avgTxFees: BigNumber
+  blockHash: String!
+  timestamp: Date!
+  blockTime: Int!
+  numUncles: Int!
+  difficulty: BigNumber!
+  totalDifficulty: BigNumber!
+  totalGasPrice: BigNumber!
+  avgGasLimit: BigNumber!
+  avgGasPrice: BigNumber!
+  totalTxs: Int!
+  numSuccessfulTxs: Int!
+  numFailedTxs: Int!
+  numInternalTxs: Int!
+  totalTxFees: BigNumber!
+  avgTxFees: BigNumber!
 
 }
 

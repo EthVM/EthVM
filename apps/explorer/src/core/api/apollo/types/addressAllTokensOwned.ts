@@ -17,7 +17,7 @@ export interface addressAllTokensOwned_addressAllTokensOwned {
 }
 
 export interface addressAllTokensOwned {
-  addressAllTokensOwned: (addressAllTokensOwned_addressAllTokensOwned | null)[];
+  addressAllTokensOwned: addressAllTokensOwned_addressAllTokensOwned[];
 }
 
 export interface addressAllTokensOwnedVariables {

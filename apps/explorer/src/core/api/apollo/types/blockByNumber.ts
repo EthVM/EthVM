@@ -10,50 +10,50 @@ import { DeltaType } from "./globalTypes";
 
 export interface blockByNumber_blockDetail_header {
   __typename: "BlockHeader";
-  number: any | null;
-  hash: string | null;
-  parentHash: string | null;
+  number: any;
+  hash: string;
+  parentHash: string;
   nonce: any | null;
-  sha3Uncles: string | null;
-  logsBloom: string | null;
-  transactionsRoot: string | null;
-  stateRoot: string | null;
-  receiptsRoot: string | null;
-  author: string | null;
-  difficulty: any | null;
-  totalDifficulty: any | null;
-  extraData: string | null;
-  gasLimit: any | null;
-  gasUsed: any | null;
-  timestamp: number | null;
-  size: number | null;
-  blockTime: number | null;
+  sha3Uncles: string;
+  logsBloom: string;
+  transactionsRoot: string;
+  stateRoot: string;
+  receiptsRoot: string;
+  author: string;
+  difficulty: any;
+  totalDifficulty: any;
+  extraData: string;
+  gasLimit: any;
+  gasUsed: any;
+  timestamp: number;
+  size: number;
+  blockTime: number;
 }
 
 export interface blockByNumber_blockDetail_rewards {
   __typename: "Reward";
-  address: string | null;
-  deltaType: DeltaType | null;
-  amount: any | null;
+  address: string;
+  deltaType: DeltaType;
+  amount: any;
 }
 
 export interface blockByNumber_blockDetail {
   __typename: "Block";
-  header: blockByNumber_blockDetail_header | null;
-  uncleHashes: (string | null)[] | null;
-  transactionHashes: (string | null)[] | null;
-  rewards: (blockByNumber_blockDetail_rewards | null)[] | null;
+  header: blockByNumber_blockDetail_header;
+  uncleHashes: string[];
+  transactionHashes: string[];
+  rewards: blockByNumber_blockDetail_rewards[];
 }
 
 export interface blockByNumber_transactionsSummary_items {
   __typename: "TransactionSummary";
-  fee: any | null;
+  fee: any;
 }
 
 export interface blockByNumber_transactionsSummary {
   __typename: "TransactionSummaryPage";
-  items: (blockByNumber_transactionsSummary_items | null)[] | null;
-  totalCount: any | null;
+  items: blockByNumber_transactionsSummary_items[];
+  totalCount: number;
 }
 
 export interface blockByNumber {
@@ -62,5 +62,5 @@ export interface blockByNumber {
 }
 
 export interface blockByNumberVariables {
-  blockNumber?: any | null;
+  blockNumber: any;
 }

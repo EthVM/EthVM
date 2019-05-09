@@ -6,13 +6,13 @@ query latestTransactionSummaries($fromBlock: BigNumber, $offset: Int, $limit: In
 
 }
 
-query transactionSummariesByBlockNumber($number: BigNumber, $offset: Int, $limit: Int) {
+query transactionSummariesByBlockNumber($number: BigNumber!, $offset: Int, $limit: Int) {
   summaries: transactionSummariesForBlockNumber(number: $number, offset: $offset, limit: $limit) {
     ...TransactionSummaryPage
   }
 }
 
-query transactionSummariesByBlockHash($hash: String, $offset: Int, $limit: Int) {
+query transactionSummariesByBlockHash($hash: String!, $offset: Int, $limit: Int) {
   summaries: transactionSummariesForBlockHash(hash: $hash, offset: $offset, limit: $limit) {
     ...TransactionSummaryPage
   }

@@ -10,22 +10,22 @@ import { FilterEnum } from "./globalTypes";
 
 export interface tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder_items {
   __typename: "Transfer";
-  id: string | null;
-  value: any | null;
+  id: string;
+  value: any;
   address: string | null;
   from: string | null;
-  timestamp: string | null;
-  to: string | null;
+  timestamp: number;
+  to: string;
 }
 
 export interface tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder {
   __typename: "TransfersPage";
-  items: (tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder_items | null)[] | null;
-  totalCount: any | null;
+  items: tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder_items[];
+  totalCount: any;
 }
 
 export interface tokenTransfersByContractAddressForHolder {
-  tokenTransfersByContractAddressForHolder: tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder | null;
+  tokenTransfersByContractAddressForHolder: tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder;
 }
 
 export interface tokenTransfersByContractAddressForHolderVariables {

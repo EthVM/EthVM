@@ -38,11 +38,18 @@ subscription newBlock {
 query latestBlockMetrics($limit: Int) {
 
   blockMetrics(offset: 0, limit: $limit) {
-    items {
-      ...BlockMetric
-    }
+    ...BlockMetricPage
   }
 
+}
+
+fragment BlockMetricPage on BlockMetricPage {
+  items {
+    ...BlockMetric
+  }
+  offset
+  limit
+  totalCount
 }
 
 subscription newBlockMetric {
@@ -75,7 +82,7 @@ fragment BlockMetric on BlockMetric {
 }
 
 
-query blockByHash($blockHash: String) {
+query blockByHash($blockHash: String!) {
 
   blockDetail: blockByHash(hash: $blockHash) {
     ...BlockDetail
@@ -90,7 +97,7 @@ query blockByHash($blockHash: String) {
 
 }
 
-query blockByNumber($blockNumber: BigNumber) {
+query blockByNumber($blockNumber: BigNumber!) {
 
   blockDetail: blockByNumber(number: $blockNumber){
     ...BlockDetail

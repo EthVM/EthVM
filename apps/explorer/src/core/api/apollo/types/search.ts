@@ -10,11 +10,11 @@ import { SearchType } from "./globalTypes";
 
 export interface search_search {
   __typename: "Search";
-  type: SearchType | null;
+  type: SearchType;
 }
 
 export interface search {
-  search: search_search | null;
+  search: search_search;
 }
 
 export interface searchVariables {

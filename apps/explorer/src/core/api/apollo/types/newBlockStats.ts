@@ -8,13 +8,13 @@
 
 export interface newBlockStats_newBlock {
   __typename: "BlockSummary";
-  number: any | null;
-  timestamp: string | null;
-  difficulty: any | null;
-  numSuccessfulTxs: any | null;
-  numFailedTxs: any | null;
+  number: any;
+  timestamp: number;
+  difficulty: any;
+  numSuccessfulTxs: any;
+  numFailedTxs: any;
 }
 
 export interface newBlockStats {
-  newBlock: newBlockStats_newBlock | null;
+  newBlock: newBlockStats_newBlock;
 }

@@ -1,13 +1,14 @@
-import {BlockSummary, BlockSummaryPage} from '@app/graphql/schema';
-import {BlockSummaryDto} from '@app/graphql/blocks/dto/block-summary.dto';
-import BigNumber from 'bignumber.js';
+import { BlockSummary, BlockSummaryPage } from '@app/graphql/schema'
+import { BlockSummaryDto } from '@app/graphql/blocks/dto/block-summary.dto'
 
-export class BlockSummaryPageDto extends BlockSummaryPage {
+export class BlockSummaryPageDto implements BlockSummaryPage {
+
+  items: BlockSummaryDto[]
+  totalCount: number
 
   constructor(items: BlockSummary[], totalCount: number) {
-    super()
     this.items = items.map(s => new BlockSummaryDto(s))
-    this.totalCount = new BigNumber(totalCount)
+    this.totalCount = totalCount
   }
 
 }

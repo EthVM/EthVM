@@ -1,9 +1,9 @@
 type Query {
-  search(query: String!): Search
+  search(query: String!): Search!
 }
 
 type Search {
-  type: SearchType
+  type: SearchType!
   address: AddressBalance
   block: Block
   uncle: Uncle
@@ -19,6 +19,6 @@ enum SearchType {
 }
 
 type AddressBalance {
-  address: String
-  balance: BigNumber
+  address: String!
+  balance: BigNumber!
 }

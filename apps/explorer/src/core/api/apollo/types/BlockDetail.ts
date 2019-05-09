@@ -10,37 +10,37 @@ import { DeltaType } from "./globalTypes";
 
 export interface BlockDetail_header {
   __typename: "BlockHeader";
-  number: any | null;
-  hash: string | null;
-  parentHash: string | null;
+  number: any;
+  hash: string;
+  parentHash: string;
   nonce: any | null;
-  sha3Uncles: string | null;
-  logsBloom: string | null;
-  transactionsRoot: string | null;
-  stateRoot: string | null;
-  receiptsRoot: string | null;
-  author: string | null;
-  difficulty: any | null;
-  totalDifficulty: any | null;
-  extraData: string | null;
-  gasLimit: any | null;
-  gasUsed: any | null;
-  timestamp: number | null;
-  size: number | null;
-  blockTime: number | null;
+  sha3Uncles: string;
+  logsBloom: string;
+  transactionsRoot: string;
+  stateRoot: string;
+  receiptsRoot: string;
+  author: string;
+  difficulty: any;
+  totalDifficulty: any;
+  extraData: string;
+  gasLimit: any;
+  gasUsed: any;
+  timestamp: number;
+  size: number;
+  blockTime: number;
 }
 
 export interface BlockDetail_rewards {
   __typename: "Reward";
-  address: string | null;
-  deltaType: DeltaType | null;
-  amount: any | null;
+  address: string;
+  deltaType: DeltaType;
+  amount: any;
 }
 
 export interface BlockDetail {
   __typename: "Block";
-  header: BlockDetail_header | null;
-  uncleHashes: (string | null)[] | null;
-  transactionHashes: (string | null)[] | null;
-  rewards: (BlockDetail_rewards | null)[] | null;
+  header: BlockDetail_header;
+  uncleHashes: string[];
+  transactionHashes: string[];
+  rewards: BlockDetail_rewards[];
 }

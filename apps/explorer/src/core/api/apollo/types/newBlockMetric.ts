@@ -9,23 +9,23 @@
 export interface newBlockMetric_newBlockMetric {
   __typename: "BlockMetric";
   number: any;
-  blockHash: string | null;
-  timestamp: any | null;
-  blockTime: number | null;
-  numUncles: number | null;
-  difficulty: any | null;
-  totalDifficulty: any | null;
-  totalGasPrice: any | null;
-  avgGasLimit: any | null;
-  avgGasPrice: any | null;
-  totalTxs: number | null;
-  numSuccessfulTxs: number | null;
-  numFailedTxs: number | null;
-  numInternalTxs: number | null;
-  totalTxFees: any | null;
-  avgTxFees: any | null;
+  blockHash: string;
+  timestamp: any;
+  blockTime: number;
+  numUncles: number;
+  difficulty: any;
+  totalDifficulty: any;
+  totalGasPrice: any;
+  avgGasLimit: any;
+  avgGasPrice: any;
+  totalTxs: number;
+  numSuccessfulTxs: number;
+  numFailedTxs: number;
+  numInternalTxs: number;
+  totalTxFees: any;
+  avgTxFees: any;
 }
 
 export interface newBlockMetric {
-  newBlockMetric: newBlockMetric_newBlockMetric | null;
+  newBlockMetric: newBlockMetric_newBlockMetric;
 }

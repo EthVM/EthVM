@@ -1,11 +1,34 @@
-import {Contract} from '@app/graphql/schema'
+import { BigNumber, Buffer, Contract, ContractMetadata, Long, Transaction } from '@app/graphql/schema'
 import {assignClean} from '@app/shared/utils'
 import {ContractMetadataDto} from '@app/graphql/contracts/dto/contract-metadata.dto'
 import {TxDto} from '@app/graphql/txs/dto/tx.dto'
 
-export class ContractDto extends Contract {
+export class ContractDto implements Contract {
+
+  address?: string;
+  creator?: string;
+  init?: string;
+  code?: string;
+  refundAddress?: string;
+  refundBalance?: BigNumber;
+  traceCreatedAtBlockHash?: string;
+  traceCreatedAtBlockNumber?: BigNumber;
+  traceCreatedAtTransactionHash?: string;
+  traceCreatedAtTransactionIndex?: number;
+  traceCreatedAtLogIndex?: number;
+  traceCreatedAtTraceAddress?: string;
+  traceDestroyedAtBlockHash?: string;
+  traceDestroyedAtBlockNumber?: BigNumber;
+  traceDestroyedAtTransactionHash?: string;
+  traceDestroyedAtTransactionIndex?: Long;
+  traceDestroyedAtLogIndex?: Long;
+  traceDestroyedAtTraceAddress?: string;
+  traceDestroyedAt?: Buffer;
+  metadata?: ContractMetadata;
+  totalSupply?: BigNumber;
+  createdAtTx?: Transaction;
+
   constructor(data) {
-    super()
 
     if (data.metadata) {
       this.metadata = new ContractMetadataDto(data.metadata)

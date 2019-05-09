@@ -10,16 +10,16 @@ import { TimeBucket } from "./globalTypes";
 
 export interface avgNumSuccessfulTxsHistory_blockMetricsTimeseries {
   __typename: "AggregateBlockMetric";
-  timestamp: any | null;
+  timestamp: any;
   value: number | null;
 }
 
 export interface avgNumSuccessfulTxsHistory {
-  blockMetricsTimeseries: (avgNumSuccessfulTxsHistory_blockMetricsTimeseries | null)[];
+  blockMetricsTimeseries: avgNumSuccessfulTxsHistory_blockMetricsTimeseries[];
 }
 
 export interface avgNumSuccessfulTxsHistoryVariables {
-  start?: any | null;
-  end?: any | null;
-  bucket?: TimeBucket | null;
+  start: any;
+  end: any;
+  bucket: TimeBucket;
 }

@@ -7,5 +7,5 @@
 // ====================================================
 
 export interface totalNumberOfTransactions {
-  totalNumberOfTransactions: any | null;
+  totalNumberOfTransactions: any;
 }

@@ -10,37 +10,37 @@ import { DeltaType } from "./globalTypes";
 
 export interface minedBlocksByAddress_minedBlocksByAddress_items_header {
   __typename: "BlockHeader";
-  hash: string | null;
-  number: any | null;
-  author: string | null;
+  hash: string;
+  number: any;
+  author: string;
 }
 
 export interface minedBlocksByAddress_minedBlocksByAddress_items_rewards {
   __typename: "Reward";
-  rewardType: DeltaType | null;
-  value: any | null;
+  rewardType: DeltaType;
+  value: any;
 }
 
 export interface minedBlocksByAddress_minedBlocksByAddress_items {
   __typename: "Block";
-  header: minedBlocksByAddress_minedBlocksByAddress_items_header | null;
-  transactionHashes: (string | null)[] | null;
-  uncleHashes: (string | null)[] | null;
-  rewards: (minedBlocksByAddress_minedBlocksByAddress_items_rewards | null)[] | null;
+  header: minedBlocksByAddress_minedBlocksByAddress_items_header;
+  transactionHashes: string[];
+  uncleHashes: string[];
+  rewards: minedBlocksByAddress_minedBlocksByAddress_items_rewards[];
 }
 
 export interface minedBlocksByAddress_minedBlocksByAddress {
   __typename: "BlocksPage";
-  items: (minedBlocksByAddress_minedBlocksByAddress_items | null)[] | null;
-  totalCount: number | null;
+  items: minedBlocksByAddress_minedBlocksByAddress_items[];
+  totalCount: number;
 }
 
 export interface minedBlocksByAddress {
-  minedBlocksByAddress: minedBlocksByAddress_minedBlocksByAddress | null;
+  minedBlocksByAddress: minedBlocksByAddress_minedBlocksByAddress;
 }
 
 export interface minedBlocksByAddressVariables {
-  address?: string | null;
+  address: string;
   limit?: number | null;
   page?: number | null;
 }
