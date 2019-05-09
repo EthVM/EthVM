@@ -1,6 +1,8 @@
 <template>
   <v-layout row wrap justify-space-between mb-4>
-    <v-flex xs12 sm6 md3> <app-info-card :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" /> </v-flex>
+    <v-flex xs12 sm6 md3>
+      <app-info-card :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" />
+    </v-flex>
     <v-flex xs12 sm6 md3>
       <app-info-card
         v-if="type === 'generic'"
@@ -36,6 +38,7 @@ import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@a
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
+import { Subscription } from 'rxjs'
 
 @Component({
   components: {
@@ -46,8 +49,11 @@ import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.e
       query: latestBlockStats,
 
       update({ blockSummaries }) {
-        const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = blockSummaries.items[0]
-        return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
+        if (blockSummaries) {
+          const { number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs } = blockSummaries.items[0]
+          return new BlockSummaryExt({ number, timestamp, difficulty, numSuccessfulTxs, numFailedTxs })
+        }
+        return null
       },
 
       subscribeToMore: {
@@ -70,7 +76,7 @@ import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.e
       query: latestHashRate,
 
       update({ hashRate }) {
-        return new BigNumber(hashRate)
+        return hashRate ? new BigNumber(hashRate) : null
       },
 
       subscribeToMore: {
@@ -89,18 +95,18 @@ import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.e
 })
 export default class AppInfoCardGroup extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
   @Prop({ type: String, default: 'generic' }) type!: string
 
   /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
   blockSummary: BlockSummaryExt | null = null
   hashRate: BigNumber | null = null
@@ -108,27 +114,55 @@ export default class AppInfoCardGroup extends Vue {
   seconds: number = 0
   secondsInterval: number | null = null
 
+  connectedSubscription?: Subscription
+
+  disconnected: boolean = false
+
   /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
+    ===================================================================================
+      Lifecycle
+    ===================================================================================
+    */
 
   created() {
-    this.startCount()
+    this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
+      switch (state) {
+        case 'disconnected':
+          this.disconnected = true
+          if (this.secondsInterval) {
+            clearInterval(this.secondsInterval)
+          }
+          break
+
+        case 'connected':
+          this.startCount()
+          this.disconnected = false
+          break
+
+        case 'reconnected':
+          this.startCount()
+          this.disconnected = false
+          this.$apollo.queries.blockSummary.refetch()
+          this.$apollo.queries.hashRate.refetch()
+          break
+      }
+    })
   }
 
-  beforeDestroy() {
+  destroyed() {
     if (this.secondsInterval) {
       clearInterval(this.secondsInterval)
+    }
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
     }
   }
 
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
   startCount(): void {
     this.secondsInterval = window.setInterval(() => {
@@ -140,13 +174,13 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
   get loading(): boolean {
-    return this.$apollo.loading
+    return this.disconnected || this.$apollo.loading
   }
 
   get currentType(): string {

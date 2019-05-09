@@ -146,6 +146,7 @@
   },
 
   "message": {
+    "disconnected": "Disconnected from the server. Attempting to connect...",
     "no-data": "Oops something went wrong, no data from server :(",
     "err": "Error",
     "tx" : {

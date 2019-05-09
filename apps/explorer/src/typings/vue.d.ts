@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import { EthvmApi } from '@app/core/api'
-
-import { NormalizedCacheObject } from 'apollo-cache-inmemory'
-import { ApolloClient } from 'apollo-client'
+import { BehaviorSubject } from 'rxjs'
+import { SubscriptionState } from '@app/core/plugins'
 
 declare module 'vue/types/vue' {
   interface Vue {
     $eventHub: Vue
     $api: EthvmApi
+    $subscriptionState: BehaviorSubject<SubscriptionState>
   }
 }
 

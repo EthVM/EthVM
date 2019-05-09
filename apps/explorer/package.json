@@ -34,6 +34,7 @@
     "graphql-tag": "^2.10.1",
     "moment": "^2.24.0",
     "number-formatter": "^1.2.0",
+    "rxjs": "^6.5.1",
     "store": "^2.0.12",
     "subscriptions-transport-ws": "^0.9.16",
     "visibilityjs": "^2.0.2",

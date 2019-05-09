@@ -9,7 +9,6 @@
     unfilled="true"
     :footnotes="footnote"
     :live-chart="true"
-    :data-loading="loading"
     :error="error"
   />
 </template>
@@ -25,6 +24,7 @@ import { BlockMetricPageExt } from '@app/core/api/apollo/extensions/block-metric
 import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/blocks.graphql'
 import { BlockMetricExt } from '@app/core/api/apollo/extensions/block-metric.ext'
 import BigNumber from 'bignumber.js'
+import { Subscription } from 'rxjs'
 
 const MAX_ITEMS = 10
 
@@ -49,20 +49,20 @@ class ChartData {
         limit: MAX_ITEMS
       },
 
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
-
       update({ blockMetrics }) {
-        return new BlockMetricPageExt(blockMetrics)
+        if (blockMetrics) {
+          this.error = '' // clear error
+          return new BlockMetricPageExt(blockMetrics)
+        }
+        this.error = this.$i18n.t('message.no-data')
+        return null
       },
 
       error({ graphQLErrors, networkError }) {
-        // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
+        } else {
+          this.error = this.$i18n.t('message.err')
         }
       },
 
@@ -103,27 +103,44 @@ class ChartData {
 })
 export default class ChartLiveTxFees extends Vue {
   /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
   redraw = true
+  error: string = ''
   metricsPage?: BlockMetricPageExt
 
-  error = ''
+  connectedSubscription?: Subscription
 
   /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
+    ===================================================================================
+      Lifecycle
+    ===================================================================================
+    */
+
+  created() {
+    this.connectedSubscription = this.$subscriptionState.subscribe(state => {
+      switch (state) {
+        case 'reconnected':
+          this.$apollo.queries.metricsPage.refetch()
+          break
+      }
+    })
+  }
+
+  destroyed() {
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
+    }
+  }
 
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
   toChartData(items: BlockMetricExt[]) {
     const numberLabel = this.$i18n.t('block.number')
@@ -142,10 +159,10 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
   get chartData() {
     const items: BlockMetricExt[] = this.metricsPage ? this.metricsPage.items || [] : []
@@ -189,7 +206,15 @@ export default class ChartLiveTxFees extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                const ranges = [
+                  { divider: 1e9, suffix: 'B' },
+                  { divider: 1e6, suffix: 'M' },
+                  {
+                    divider: 1e3,
+                    suffix: 'k'
+                  }
+                ]
+
                 function formatNumber(n) {
                   for (let i = 0; i < ranges.length; i++) {
                     if (n >= ranges[i].divider) {
@@ -198,6 +223,7 @@ export default class ChartLiveTxFees extends Vue {
                   }
                   return n
                 }
+
                 return formatNumber(value)
               }
             },
@@ -215,7 +241,15 @@ export default class ChartLiveTxFees extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                const ranges = [
+                  { divider: 1e9, suffix: 'B' },
+                  { divider: 1e6, suffix: 'M' },
+                  {
+                    divider: 1e3,
+                    suffix: 'k'
+                  }
+                ]
+
                 function formatNumber(n) {
                   for (let i = 0; i < ranges.length; i++) {
                     if (n >= ranges[i].divider) {
@@ -224,6 +258,7 @@ export default class ChartLiveTxFees extends Vue {
                   }
                   return n
                 }
+
                 return formatNumber(value)
               }
             },
@@ -267,10 +302,6 @@ export default class ChartLiveTxFees extends Vue {
         icon: 'fa fa-circle'
       }
     ]
-  }
-
-  get loading(): boolean {
-    return this.$apollo.queries.metricsPage.loading
   }
 }
 </script>

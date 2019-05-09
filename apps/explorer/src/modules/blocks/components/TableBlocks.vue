@@ -131,6 +131,7 @@ import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.e
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BigNumber from 'bignumber.js'
+import { Subscription } from 'rxjs'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 
 const MAX_ITEMS = 50
@@ -173,6 +174,7 @@ const MAX_ITEMS = 50
 
       update({ blockSummaries }) {
         if (blockSummaries) {
+          this.error = '' // clear error
           return new BlockSummaryPageExt(blockSummaries)
         }
         this.error = this.error || this.$i18n.t('message.err')
@@ -242,6 +244,35 @@ export default class TableBlocks extends Vue {
 
   blockPage?: BlockSummaryPageExt
   fromBlock?: BigNumber
+  blockPage?: BlockSummaryPage
+
+  connectedSubscription?: Subscription
+
+  /*
+    ===================================================================================
+      Lifecycle
+    ===================================================================================
+    */
+
+  created() {
+    if (this.pageType === 'home') {
+      this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
+        if (state === 'reconnected') {
+          this.$apollo.queries.blockPage.refetch()
+        }
+      })
+    }
+  }
+
+  destroyed() {
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
+    }
+  }
+
+  get blockPageExt(): BlockSummaryPageExt | null {
+    return this.blockPage ? new BlockSummaryPageExt(this.blockPage) : null
+  }
 
   get blocks(): (BlockSummaryPage_items | null)[] {
     return this.blockPage ? this.blockPage.items || [] : []

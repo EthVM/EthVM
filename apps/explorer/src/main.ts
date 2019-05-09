@@ -1,6 +1,6 @@
 import Vuetify from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
-import { EthvmApolloApi } from '@app/core/api'
+import { EthvmApi, EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
 import router from '@app/core/router'
 import store from '@app/core/store'
@@ -16,6 +16,7 @@ import { getMainDefinition } from 'apollo-utilities'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import vuescroll from 'vue-scroll'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 /*
   ===================================================================================
@@ -38,12 +39,11 @@ const httpLink = new HttpLink({
   uri: process.env.VUE_APP_API_ENDPOINT || ''
 })
 
-const wsLink = new WebSocketLink({
-  uri: process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '',
-  options: {
-    reconnect: true
-  }
+const subscriptionClient = new SubscriptionClient(process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '', {
+  reconnect: true
 })
+
+const wsLink = new WebSocketLink(subscriptionClient)
 
 const link = split(
   // split based on operation type
@@ -68,7 +68,7 @@ const apolloProvider = new VueApollo({
 const api = new EthvmApolloApi(apolloClient)
 
 Vue.use(VueApollo)
-Vue.use(VueEthvmApi, api)
+Vue.use(VueEthvmApi, { api, subscriptionClient })
 
 // -------------------------------------------------------
 //    Vuetify
