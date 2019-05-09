@@ -273,10 +273,6 @@ export abstract class IQuery {
 
     abstract blockMetricsTimeseries(start?: Date, end?: Date, bucket?: TimeBucket, fields?: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
 
-    abstract contractByAddress(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
-
     abstract hashRate(): BigNumber | Promise<BigNumber>;
 
     abstract blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
@@ -290,6 +286,10 @@ export abstract class IQuery {
     abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
 
     abstract totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
+
+    abstract contractByAddress(address: string): Contract | Promise<Contract>;
+
+    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
 
     abstract search(query: string): Search | Promise<Search>;
 

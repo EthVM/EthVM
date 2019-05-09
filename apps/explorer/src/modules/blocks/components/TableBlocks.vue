@@ -172,12 +172,11 @@ const MAX_ITEMS = 50
       },
 
       update({ blockSummaries }) {
-        if(blockSummaries) {
+        if (blockSummaries) {
           return new BlockSummaryPageExt(blockSummaries)
-        } else {
-          this.error = this.error || this.$i18n.t('message.err')
-          return blockSummaries
         }
+        this.error = this.error || this.$i18n.t('message.err')
+        return blockSummaries
       },
 
       error({ graphQLErrors, networkError }) {
