@@ -1,31 +1,38 @@
 type Query {
+
   uncleByHash(hash: String!): Uncle
-  uncles(limit: Int, page: Int, fromUncle: Int): [Uncle]!
+  uncles(offset: Int = 0, limit: Int = 20, fromUncle: BigNumber): UnclePage!
+
   totalNumberOfUncles: BigNumber!
   latestUncleBlockNumber: BigNumber!
 }
 
 type Uncle {
-  hash: String
-  index: Int
-  nephewNumber: BigNumber
-  nephewHash: String
-  number: BigNumber
-  height: String
-  parentHash: String
+  hash: String!
+  index: Int!
+  nephewNumber: BigNumber!
+  nephewHash: String!
+  number: BigNumber!
+  height: String!
+  parentHash: String!
   nonce: BigNumber
-  sha3Uncles: String
-  logsBloom: String
-  transactionsRoot: String
-  stateRoot: String
-  receiptsRoot: String
-  author: String
-  difficulty: BigNumber
-  totalDifficulty: BigNumber
-  extraData: String
-  gasLimit: BigNumber
-  gasUsed: BigNumber
-  timestamp: String
-  size: String
-  rewardAmount: BigNumber
+  sha3Uncles: String!
+  logsBloom: String!
+  transactionsRoot: String!
+  stateRoot: String!
+  receiptsRoot: String!
+  author: String!
+  difficulty: BigNumber!
+  totalDifficulty: BigNumber!
+  extraData: String!
+  gasLimit: BigNumber!
+  gasUsed: BigNumber!
+  timestamp: Int!
+  size: Int!
+  rewardAmount: BigNumber!
+}
+
+type UnclePage {
+  items: [Uncle!]
+  totalCount: Int!
 }

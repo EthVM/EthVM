@@ -1,29 +1,37 @@
 query uncleByHash($hash: String!) {
   uncleByHash(hash: $hash) {
-    author
-    number
-    gasLimit
-    gasUsed
-    hash
-    number
-    parentHash
-    sha3Uncles
-    timestamp
-    nephewNumber
-    uncleIndex: index
+    ...UncleDetail
   }
 }
 
-query uncles($limit: Int, $page: Int, $fromUncle: Int) {
-  uncles(limit: $limit, page: $page, fromUncle: $fromUncle) {
-    author
-    number
-    hash
-    number
-    nephewNumber
-    uncleIndex: index
-    uncleReward: rewardAmount
+query uncles($offset: Int, $limit: Int, $fromUncle: BigNumber) {
+  uncles(offset: $offset, limit: $limit, fromUncle: $fromUncle) {
+    ...UncleSummary
   }
+}
+
+fragment UncleSummary on Uncle {
+  author
+  number
+  hash
+  number
+  nephewNumber
+  uncleIndex: index
+  uncleReward: rewardAmount
+}
+
+fragment UncleDetail on Uncle {
+  author
+  number
+  gasLimit
+  gasUsed
+  hash
+  number
+  parentHash
+  sha3Uncles
+  timestamp
+  nephewNumber
+  uncleIndex: index
 }
 
 query totalNumberOfUncles {

@@ -107,8 +107,7 @@ export class BlockService {
         .map(r => rewardsByBlock.set(r.blockHash, r.amount))
 
       return {
-        number, hash, author, difficulty,
-        timestamp: timestamp!.toString(),
+        number, hash, author, difficulty, timestamp,
         uncleHashes: JSON.parse(uncleHashes),
         transactionHashes: JSON.parse(transactionHashes),
         numTxs: transactionHashes.length,

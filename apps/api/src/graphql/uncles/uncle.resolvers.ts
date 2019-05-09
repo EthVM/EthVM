@@ -1,11 +1,8 @@
-import { UncleService } from '@app/dao/uncle.service';
-import { UncleDto } from '@app/graphql/uncles/uncle.dto';
-import { ParseBigNumberPipe } from '@app/shared/validation/parse-big-number.pipe';
-import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe';
-import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe.1';
-import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe';
-import { Args, Query, Resolver } from '@nestjs/graphql';
-import BigNumber from 'bignumber.js';
+import { UncleService } from '@app/dao/uncle.service'
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
+import { Args, Query, Resolver } from '@nestjs/graphql'
+import BigNumber from 'bignumber.js'
+import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
 
 @Resolver('Uncle')
 export class UncleResolvers {
@@ -19,11 +16,11 @@ export class UncleResolvers {
 
   @Query()
   async uncles(
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
-    @Args('fromUncle', ParseBigNumberPipe) fromUncle?: BigNumber,
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+    @Args('fromUncle') fromUncle?: BigNumber,
   ) {
-    const entities = await this.uncleService.findUncles(limit, page, fromUncle)
+    const entities = await this.uncleService.findUncles(offset, limit, fromUncle)
     return entities.map(e => new UncleDto(e))
   }
 

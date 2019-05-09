@@ -20,8 +20,8 @@ export class ContractResolvers {
   @Query()
   async contractsCreatedBy(
     @Args('creator', ParseAddressPipe) creator: string,
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
+    @Args('limit') limit: number,
+    @Args('page') page: number,
   ): Promise<ContractsPageDto> {
     const results = await this.contractService.findContractsCreatedBy(creator, limit, page)
     return {

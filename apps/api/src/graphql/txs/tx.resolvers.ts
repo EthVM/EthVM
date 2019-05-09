@@ -22,9 +22,9 @@ export class TxResolvers {
 
   @Query()
   async transactionSummaries(
-    @Args('fromBlock') fromBlock: BigNumber,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
+    @Args('fromBlock') fromBlock?: BigNumber
   ) {
     const [summaries, count] = await this.txService.findSummaries(offset, limit, fromBlock)
     return new TransactionSummaryPageDto(summaries, count)
@@ -42,7 +42,7 @@ export class TxResolvers {
 
   @Query()
   async transactionSummariesForBlockHash(
-    @Args('hash') hash: string,
+    @Args('hash', ParseHashPipe) hash: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ) {
@@ -58,8 +58,8 @@ export class TxResolvers {
 
   @Query()
   async txs(
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page') page?: number,
+    @Args('limit') limit: number,
+    @Args('page') page: number,
     @Args('fromBlock', ParseBigNumberPipe) fromBlock?: BigNumber,
   ): Promise<TxDto[]> {
     const entities = await this.txService.find(limit, page, fromBlock)
@@ -69,7 +69,7 @@ export class TxResolvers {
   @Query()
   async txsForAddress(
     @Args('hash', ParseAddressPipe) hash: string,
-    @Args('filter') filter?: string,
+    @Args('filter') filter: string,
     @Args('limit', ParseLimitPipe) limit?: number,
     @Args('page', ParsePagePipe) page?: number,
   ): Promise<TxDto[]> {

@@ -1,10 +1,13 @@
-import { TokenHoldersPage } from '@app/graphql/schema'
+import { TokenHolder, TokenHoldersPage } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
-import {TokenHolderDto} from '@app/graphql/tokens/dto/token-holder.dto'
+import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
 
-export class TokenHoldersPageDto extends TokenHoldersPage {
+export class TokenHoldersPageDto implements TokenHoldersPage {
+
+  items!: TokenHolder[]
+  totalCount!: number
+
   constructor(data: any) {
-    super()
     if (data.items) {
       this.items = data.items.map(i => new TokenHolderDto(i))
       delete data.items

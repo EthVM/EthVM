@@ -69,8 +69,8 @@ export class UncleEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   gasUsed!: BigNumber
 
-  @Column({ type: 'bigint', readonly: true })
-  timestamp!: string
+  @Column({ type: 'int', readonly: true })
+  timestamp!: number
 
   @Column({ type: 'bigint', readonly: true })
   size!: string

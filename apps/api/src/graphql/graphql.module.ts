@@ -23,7 +23,7 @@ import { BigNumberScalar } from './scalars/big-number.scalar';
           cors: true,
           definitions: {
             path: join(process.cwd(), 'src/graphql/schema.ts'),
-            outputAs: 'class',
+            outputAs: 'interface',
           },
           context: ({ req, res }) => ({
             request: req,

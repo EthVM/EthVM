@@ -1,80 +1,80 @@
 
 type Query {
 
-  hashRate: BigNumber
+  hashRate: BigNumber!
 
-  blockSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 50): BlockSummaryPage!
+  blockSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
 
-  blocks(limit: Int, page: Int, fromBlock: Long): [Block]
+  blocks(limit: Int = 20, page: Int = 0, fromBlock: Long): [Block!]
 
-  blockByHash(hash: String): Block
-  blockByNumber(number: BigNumber): Block
+  blockByHash(hash: String!): Block
+  blockByNumber(number: BigNumber!): Block
 
-  minedBlocksByAddress(address: String, limit: Int, page: Int): BlocksPage
+  minedBlocksByAddress(address: String!, limit: Int = 20, page: Int = 0): BlocksPage!
   totalNumberOfBlocks: BigNumber!
 }
 
 type Subscription {
-  newBlock: BlockSummary
-  hashRate: BigNumber
-  isSyncing: Boolean
+  newBlock: BlockSummary!
+  hashRate: BigNumber!
+  isSyncing: Boolean!
 }
 
 type BlockSummary {
-  number: BigNumber
-  hash: String
-  author: String
-  numTxs: BigNumber
-  numSuccessfulTxs: BigNumber
-  numFailedTxs: BigNumber
-  reward: BigNumber
-  uncleHashes: [String]
-  transactionHashes: [String]
-  difficulty: BigNumber
-  timestamp: String
+  number: BigNumber!
+  hash: String!
+  author: String!
+  numTxs: BigNumber!
+  numSuccessfulTxs: BigNumber!
+  numFailedTxs: BigNumber!
+  reward: BigNumber!
+  uncleHashes: [String!]
+  transactionHashes: [String!]
+  difficulty: BigNumber!
+  timestamp: Int!
 }
 
 type BlockSummaryPage {
-  items: [BlockSummary]
-  totalCount: BigNumber
+  items: [BlockSummary!]
+  totalCount: Int!
 }
 
 type Block {
-  header: BlockHeader
-  uncleHashes: [String]
-  transactionHashes: [String]
-  rewards: [Reward]
+  header: BlockHeader!
+  uncleHashes: [String!]
+  transactionHashes: [String!]
+  rewards: [Reward!]
 }
 
 type BlockHeader {
-  number: BigNumber
-  hash: String
-  parentHash: String
+  number: BigNumber!
+  hash: String!
+  parentHash: String!
   nonce: BigNumber
-  sha3Uncles: String
-  logsBloom: String
-  transactionsRoot: String
-  stateRoot: String
-  receiptsRoot: String
-  author: String
-  difficulty: BigNumber
-  totalDifficulty: BigNumber
-  extraData: String
-  gasLimit: BigNumber
-  gasUsed: BigNumber
-  timestamp: Int
-  size: Int
-  blockTime: Int
+  sha3Uncles: String!
+  logsBloom: String!
+  transactionsRoot: String!
+  stateRoot: String!
+  receiptsRoot: String!
+  author: String!
+  difficulty: BigNumber!
+  totalDifficulty: BigNumber!
+  extraData: String!
+  gasLimit: BigNumber!
+  gasUsed: BigNumber!
+  timestamp: Int!
+  size: Int!
+  blockTime: Int!
 }
 
 type Reward {
-  address: String
-  blockHash: String
-  deltaType: DeltaType
-  amount: BigNumber
+  address: String!
+  blockHash: String!
+  deltaType: DeltaType!
+  amount: BigNumber!
 }
 
 type BlocksPage {
-  items: [Block]
-  totalCount: Int
+  items: [Block!]
+  totalCount: Int!
 }

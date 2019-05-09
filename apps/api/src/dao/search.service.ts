@@ -8,8 +8,8 @@ import { TxDto } from '@app/graphql/txs/dto/tx.dto'
 import { BlockDto } from '@app/graphql/blocks/dto/block.dto'
 import { UncleService } from '@app/dao/uncle.service'
 import { AccountService } from '@app/dao/account.service'
-import { UncleDto } from '@app/graphql/uncles/uncle.dto'
 import { AccountDto } from '@app/graphql/accounts/account.dto'
+import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
 
 @Injectable()
 export class SearchService {

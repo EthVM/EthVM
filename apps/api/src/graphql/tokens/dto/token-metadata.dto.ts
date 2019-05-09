@@ -1,10 +1,17 @@
-import {TokenMetadata} from '@app/graphql/schema'
-import {assignClean} from '@app/shared/utils'
+import { TokenMetadata } from '@app/graphql/schema'
+import { assignClean } from '@app/shared/utils'
 
-export class TokenMetadataDto extends TokenMetadata {
+export class TokenMetadataDto implements TokenMetadata {
+
+  name?: string
+  website?: string
+  email?: string
+  symbol?: string
+  address?: string
+  decimals?: number
+  logo?: string
 
   constructor(data: any) {
-    super()
     assignClean(this, data)
   }
 

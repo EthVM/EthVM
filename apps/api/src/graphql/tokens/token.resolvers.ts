@@ -1,14 +1,14 @@
-import {Args, Query, Resolver} from '@nestjs/graphql'
-import {ParseAddressPipe} from '@app/shared/validation/parse-address.pipe'
-import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe'
-import {TokenService} from '@app/dao/token.service'
-import {TokenHolderDto} from '@app/graphql/tokens/dto/token-holder.dto'
-import {TokenExchangeRateDto} from '@app/graphql/tokens/dto/token-exchange-rate.dto'
-import {TokenMetadataDto} from '@app/graphql/tokens/dto/token-metadata.dto'
-import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
-import {TokenHoldersPageDto} from '@app/graphql/tokens/dto/token-holders-page.dto'
-import {TokenExchangeRatesArgs} from '@app/graphql/tokens/args/token-exchange-rates.args'
-import {TokensMetadataArgs} from '@app/graphql/tokens/args/tokens-metadata.args'
+import { Args, Query, Resolver } from '@nestjs/graphql'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
+import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe'
+import { TokenService } from '@app/dao/token.service'
+import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
+import { TokenExchangeRateDto } from '@app/graphql/tokens/dto/token-exchange-rate.dto'
+import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
+import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe.1'
+import { TokenHoldersPageDto } from '@app/graphql/tokens/dto/token-holders-page.dto'
+import { TokenExchangeRatesArgs } from '@app/graphql/tokens/args/token-exchange-rates.args'
+import { TokensMetadataArgs } from '@app/graphql/tokens/args/tokens-metadata.args'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -18,8 +18,8 @@ export class TokenResolvers {
   @Query()
   async tokenHolders(
     @Args('address', ParseAddressPipe) address: string,
-    @Args('limit', ParseLimitPipe) limit: number,
-    @Args('page', ParsePagePipe) page: number,
+    @Args('limit') limit: number,
+    @Args('page') page: number,
   ): Promise<TokenHoldersPageDto> {
     const result = await this.tokenService.findTokenHolders(address, limit, page)
     return new TokenHoldersPageDto({
@@ -56,8 +56,8 @@ export class TokenResolvers {
   async tokenExchangeRates(
     @Args() {symbols}: TokenExchangeRatesArgs,
     @Args('filter') filter: string,
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
+    @Args('limit') limit: number,
+    @Args('page') page: number,
   ) {
     const entities = await this.tokenService.findTokenExchangeRates(filter, limit, page, symbols)
     return entities.map(e => new TokenExchangeRateDto(e))
