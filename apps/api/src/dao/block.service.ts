@@ -57,8 +57,6 @@ export class BlockService {
         take: limit
       })
 
-    console.log('Headers with rewards', headersWithRewards)
-
     return [
       await this.summarise(headersWithRewards),
       count
