@@ -3,6 +3,15 @@ protocol Capture {
 
   import idl "common.avdl";
 
+  record ParitySyncStateKeyRecord {
+    string source;
+  }
+
+  record ParitySyncStateRecord {
+    decimal(80, 0) number;
+    decimal(80, 0) head;
+  }
+
   record CanonicalKeyRecord {
     decimal(80, 0) number;
   }
