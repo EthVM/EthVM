@@ -83,6 +83,8 @@ services:
       - timescale
     networks:
       - back
+    ports:
+      - 3000:3000
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
