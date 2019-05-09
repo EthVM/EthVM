@@ -21,6 +21,7 @@ export class BlockMetricsResolvers {
     @Args('limit') limit: number,
   ): Promise<BlockMetricPage> {
     const [items, count] = await this.blockMetricsService.find(offset, limit)
+    console.log('Block metrics', items)
     return new BlockMetricPageDto(offset, limit, items, count)
   }
 
