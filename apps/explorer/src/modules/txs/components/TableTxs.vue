@@ -177,14 +177,12 @@ const MAX_ITEMS = 50
       },
 
       update({ summaries }) {
-        if(summaries) {
+        if (summaries) {
           this.error = '' // clear the error
           return new TransactionSummaryPageExt(summaries)
-        } else {
-          this.error = this.error || this.$i18n.t('message.err')
-          return summaries
         }
-
+        this.error = this.error || this.$i18n.t('message.err')
+        return summaries
       },
 
       error({ graphQLErrors, networkError }) {
