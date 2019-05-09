@@ -11,7 +11,6 @@ export type SubscriptionState = 'connecting' | 'connected' | 'disconnected' | 'r
 
 export const VueEthvmApi = {
   install(Vue: any, options: VueEthvmApiOptions) {
-
     const { api, subscriptionClient } = options
 
     // install api

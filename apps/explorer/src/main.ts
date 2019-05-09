@@ -47,8 +47,8 @@ const wsLink = new WebSocketLink(subscriptionClient)
 
 const link = split(
   // split based on operation type
-  ({query}) => {
-    const {kind, operation} = getMainDefinition(query)
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query)
     return kind === 'OperationDefinition' && operation === 'subscription'
   },
   wsLink,
@@ -134,7 +134,7 @@ const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
 if (sentryToken) {
   Sentry.init({
     dsn: sentryToken,
-    integrations: [new Sentry.Integrations.Vue({Vue})],
+    integrations: [new Sentry.Integrations.Vue({ Vue })],
     maxBreadcrumbs: 0
   })
 }

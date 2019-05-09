@@ -7,45 +7,38 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from 'vue-property-decorator'
-  import { Subscription } from 'rxjs'
-  import { SubscriptionState } from '@app/core/plugins'
+import { Vue, Component } from 'vue-property-decorator'
+import { Subscription } from 'rxjs'
+import { SubscriptionState } from '@app/core/plugins'
 
-  @Component
-  export default class AppConnectionMessage extends Vue {
+@Component
+export default class AppConnectionMessage extends Vue {
+  state: SubscriptionState = 'connecting'
 
-    state: SubscriptionState = 'connecting'
+  connectedSubscription?: Subscription
 
-    connectedSubscription?: Subscription
+  private readonly connectedStates: Set<SubscriptionState> = new Set(['connected', 'reconnected'] as SubscriptionState[])
 
-    private readonly connectedStates: Set<SubscriptionState> = new Set(['connected', 'reconnected'] as SubscriptionState[])
-
-    /*
+  /*
     ===================================================================================
       Lifecycle
     ===================================================================================
     */
 
-    created() {
-
-      this.connectedSubscription = this.$subscriptionState
-        .subscribe(async state => {
-          console.log('State update', state)
-          this.state = state
-        })
-
-    }
-
-    destroyed() {
-      if (this.connectedSubscription) {
-        this.connectedSubscription.unsubscribe()
-      }
-    }
-
-    get displayMessage(): boolean {
-      console.log('Display message', !this.connectedStates.has(this.state))
-      return !this.connectedStates.has(this.state)
-    }
-
+  created() {
+    this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
+      this.state = state
+    })
   }
+
+  destroyed() {
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
+    }
+  }
+
+  get displayMessage(): boolean {
+    return !this.connectedStates.has(this.state)
+  }
+}
 </script>

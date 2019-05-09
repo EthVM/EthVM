@@ -18,9 +18,8 @@
       </v-flex>
       <v-flex v-else xs5 md6 lg7 xl8>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page"/>
-          <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false"
-                        :has-last="false" :has-input="false"/>
+          <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
+          <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -29,8 +28,8 @@
       LOADING / ERROR
     =====================================================================================
     -->
-    <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0"/>
-    <app-error :has-error="hasError" :message="error" class="mb-4"/>
+    <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
+    <app-error :has-error="hasError" :message="error" class="mb-4" />
 
     <!--
     =====================================================================================
@@ -39,7 +38,7 @@
     -->
     <v-layout>
       <v-flex hidden-sm-and-up pt-0 pb-0 pl-3>
-        <app-footnotes :footnotes="footnotes" pl-2 pr-2/>
+        <app-footnotes :footnotes="footnotes" pl-2 pr-2 />
       </v-flex>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
@@ -82,12 +81,11 @@
         <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
-              <table-txs-row :tx="tx" :is-pending="pending"/>
+              <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
             <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-              <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page"/>
-              <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-input="false"
-                            :has-first="false" :has-last="false"/>
+              <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
+              <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
             </v-layout>
           </v-flex>
           <v-flex xs12 v-if="loading">
@@ -112,7 +110,7 @@
                   <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
                 </v-flex>
               </v-layout>
-              <v-divider class="mb-2 mt-2"/>
+              <v-divider class="mb-2 mt-2" />
             </div>
           </v-flex>
         </v-layout>
@@ -122,266 +120,257 @@
 </template>
 
 <script lang="ts">
-  import AppError from '@app/core/components/ui/AppError.vue'
-  import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
-  import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
-  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-  import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
-  import { Vue, Component, Prop } from 'vue-property-decorator'
-  import { Footnote } from '@app/core/components/props'
-  import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
-  import {
-    TransactionSummaryPage,
-    TransactionSummaryPage_items
-  } from '@app/core/api/apollo/types/TransactionSummaryPage'
-  import {
-    latestTransactionSummaries,
-    transactionSummariesByBlockNumber,
-    transactionSummariesByBlockHash,
-    newTransaction
-  } from '@app/modules/txs/components/txs.graphql'
-  import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
-  import BigNumber from 'bignumber.js'
-  import { Subscription } from 'rxjs'
+import AppError from '@app/core/components/ui/AppError.vue'
+import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
+import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Footnote } from '@app/core/components/props'
+import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
+import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
+import {
+  latestTransactionSummaries,
+  transactionSummariesByBlockNumber,
+  transactionSummariesByBlockHash,
+  newTransaction
+} from '@app/modules/txs/components/txs.graphql'
+import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
+import BigNumber from 'bignumber.js'
+import { Subscription } from 'rxjs'
 
-  const MAX_ITEMS = 50
+const MAX_ITEMS = 50
 
-  @Component({
-    components: {
-      AppError,
-      AppFootnotes,
-      AppLiveUpdate,
-      AppPaginate,
-      TableTxsRow
-    },
-    data() {
-      return {
-        page: 0,
-        error: undefined
-      }
-    },
-    apollo: {
-      txPage: {
-        query() {
-          if (this.blockNumber) {
-            return transactionSummariesByBlockNumber
-          } else if (this.blockHash) {
-            return transactionSummariesByBlockHash
+@Component({
+  components: {
+    AppError,
+    AppFootnotes,
+    AppLiveUpdate,
+    AppPaginate,
+    TableTxsRow
+  },
+  data() {
+    return {
+      page: 0,
+      error: undefined
+    }
+  },
+  apollo: {
+    txPage: {
+      query() {
+        if (this.blockNumber) {
+          return transactionSummariesByBlockNumber
+        } else if (this.blockHash) {
+          return transactionSummariesByBlockHash
+        }
+        return latestTransactionSummaries
+      },
+
+      fetchPolicy: 'cache-and-network',
+
+      variables() {
+        return {
+          number: this.blockNumber ? this.blockNumber.toString(10) : null,
+          hash: this.blockHash,
+          offset: 0,
+          limit: this.maxItems
+        }
+      },
+
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
+      update({ summaries }) {
+        return {
+          ...summaries,
+          items: summaries.items.map(i => new TransactionSummaryExt(i))
+        }
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      },
+
+      subscribeToMore: {
+        document: newTransaction,
+
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const { summaries } = previousResult
+          const { newTransaction } = subscriptionData.data
+
+          const items = Object.assign([], summaries.items)
+          items.unshift(newTransaction)
+
+          if (items.length > MAX_ITEMS) {
+            items.pop()
           }
-          return latestTransactionSummaries
-        },
 
-        fetchPolicy: 'cache-and-network',
+          // ensure order by block number desc and transaction index desc
+          items.sort((a, b) => {
+            const numberA = a.blockNumber ? new BigNumber(a.blockNumber) : new BigNumber(0)
+            const numberB = b.blockNumber ? new BigNumber(b.blockNumber) : new BigNumber(0)
+            const numberDiff = numberB.minus(numberA).toNumber()
 
-        variables() {
-          return {
-            number: this.blockNumber ? this.blockNumber.toString(10) : null,
-            hash: this.blockHash,
-            offset: 0,
-            limit: this.maxItems
-          }
-        },
-
-        watchLoading(isLoading) {
-          if (isLoading) {
-            this.error = ''
-          } // clear the error on load
-        },
-
-        update({ summaries }) {
-          return {
-            ...summaries,
-            items: summaries.items.map(i => new TransactionSummaryExt(i))
-          }
-        },
-
-        error({ graphQLErrors, networkError }) {
-          // TODO refine
-          if (networkError) {
-            this.error = this.$i18n.t('message.no-data')
-          }
-        },
-
-        subscribeToMore: {
-          document: newTransaction,
-
-          updateQuery: (previousResult, { subscriptionData }) => {
-            const { summaries } = previousResult
-            const { newTransaction } = subscriptionData.data
-
-            const items = Object.assign([], summaries.items)
-            items.unshift(newTransaction)
-
-            if (items.length > MAX_ITEMS) {
-              items.pop()
+            if (numberDiff !== 0) {
+              return numberDiff
             }
 
-            // ensure order by block number desc and transaction index desc
-            items.sort((a, b) => {
-              const numberA = a.blockNumber ? new BigNumber(a.blockNumber) : new BigNumber(0)
-              const numberB = b.blockNumber ? new BigNumber(b.blockNumber) : new BigNumber(0)
-              const numberDiff = numberB.minus(numberA).toNumber()
+            return b.transactionIndex - a.transactionIndex
+          })
 
-              if (numberDiff !== 0) {
-                return numberDiff
-              }
-
-              return b.transactionIndex - a.transactionIndex
-            })
-
-            return {
-              ...previousResult,
-              summaries: {
-                ...summaries,
-                items
-              }
+          return {
+            ...previousResult,
+            summaries: {
+              ...summaries,
+              items
             }
-          },
-
-          skip() {
-            return this.pageType !== 'home'
           }
+        },
+
+        skip() {
+          return this.pageType !== 'home'
         }
       }
     }
-  })
-  export default class TableTxs extends Vue {
-    /*
+  }
+})
+export default class TableTxs extends Vue {
+  /*
       ===================================================================================
         Props
       ===================================================================================
       */
 
-    @Prop(String) pageType!: string
-    @Prop(String) showStyle!: string
-    @Prop(Number) maxItems!: number
+  @Prop(String) pageType!: string
+  @Prop(String) showStyle!: string
+  @Prop(Number) maxItems!: number
 
-    @Prop(String) blockHash?: string
-    @Prop(BigNumber) blockNumber?: BigNumber
+  @Prop(String) blockHash?: string
+  @Prop(BigNumber) blockNumber?: BigNumber
 
-    page!: number
+  page!: number
 
-    error?: string
-    txPage?: TransactionSummaryPage
+  error?: string
+  txPage?: TransactionSummaryPage
 
-    connectedSubscription?: Subscription
+  connectedSubscription?: Subscription
 
-    /*
+  /*
     ===================================================================================
       Lifecycle
     ===================================================================================
     */
 
-    created() {
-
-      if (this.pageType === 'home') {
-
-        this.connectedSubscription = this.$subscriptionState
-          .subscribe(async state => {
-            if (state === 'reconnected') {
-              this.$apollo.queries.txPage.refetch()
-            }
-          })
-
-      }
-
+  created() {
+    if (this.pageType === 'home') {
+      this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
+        if (state === 'reconnected') {
+          this.$apollo.queries.txPage.refetch()
+        }
+      })
     }
+  }
 
-    destroyed() {
-      if (this.connectedSubscription) {
-        this.connectedSubscription.unsubscribe()
-      }
+  destroyed() {
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
     }
+  }
 
+  get txPageExt(): TransactionSummaryPageExt | null {
+    return this.txPage ? new TransactionSummaryPageExt(this.txPage) : null
+  }
 
-    get txPageExt(): TransactionSummaryPageExt | null {
-      return this.txPage ? new TransactionSummaryPageExt(this.txPage) : null
-    }
+  get transactions(): (TransactionSummaryPage_items | null)[] {
+    return this.txPageExt ? this.txPageExt.items || [] : []
+  }
 
-    get transactions(): (TransactionSummaryPage_items | null)[] {
-      return this.txPageExt ? this.txPageExt.items || [] : []
-    }
-
-    /*
+  /*
       ===================================================================================
         Methods
       ===================================================================================
       */
 
-    setPage(page: number): void {
-      const { txPage } = this.$apollo.queries
+  setPage(page: number): void {
+    const { txPage } = this.$apollo.queries
 
-      const self = this
+    const self = this
 
-      txPage.fetchMore({
-        variables: {
-          offset: page * this.maxItems,
-          limit: this.maxItems
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          // TODO error handling
-          self.page = page
-          return fetchMoreResult
-        }
-      })
-    }
+    txPage.fetchMore({
+      variables: {
+        offset: page * this.maxItems,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        // TODO error handling
+        self.page = page
+        return fetchMoreResult
+      }
+    })
+  }
 
-    /*
+  /*
       ===================================================================================
         Computed Values
       ===================================================================================
       */
 
-    get loading() {
-      return this.$apollo.loading
-    }
-
-    get isSyncing() {
-      return this.$store.getters.syncing
-    }
-
-    get hasError(): boolean {
-      return !!this.error && this.error !== ''
-    }
-
-    get getStyle(): string {
-      return this.showStyle
-    }
-
-    get getTitle(): string {
-      const titles = {
-        tx: this.$i18n.t('tx.last'),
-        pending: this.$i18n.tc('tx.pending', 2),
-        block: this.$i18n.t('block.txs')
-      }
-      return titles[this.pageType] || titles['tx']
-    }
-
-    get pending(): boolean {
-      return this.pageType == 'pending'
-    }
-
-    get isBlockDetail(): boolean {
-      return this.pageType === 'block'
-    }
-
-    get pages(): number {
-      return this.txPage ? Math.ceil(this.txPageExt!.totalCountBN.div(this.maxItems).toNumber()) : 0
-    }
-
-    get footnotes(): Footnote[] {
-      return [
-        {
-          color: 'txSuccess',
-          text: this.$i18n.t('common.success'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'txFail',
-          text: this.$i18n.t('common.fail'),
-          icon: 'fa fa-circle'
-        }
-      ]
-    }
+  get loading() {
+    return this.$apollo.loading
   }
+
+  get isSyncing() {
+    return this.$store.getters.syncing
+  }
+
+  get hasError(): boolean {
+    return !!this.error && this.error !== ''
+  }
+
+  get getStyle(): string {
+    return this.showStyle
+  }
+
+  get getTitle(): string {
+    const titles = {
+      tx: this.$i18n.t('tx.last'),
+      pending: this.$i18n.tc('tx.pending', 2),
+      block: this.$i18n.t('block.txs')
+    }
+    return titles[this.pageType] || titles['tx']
+  }
+
+  get pending(): boolean {
+    return this.pageType == 'pending'
+  }
+
+  get isBlockDetail(): boolean {
+    return this.pageType === 'block'
+  }
+
+  get pages(): number {
+    return this.txPage ? Math.ceil(this.txPageExt!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  }
+
+  get footnotes(): Footnote[] {
+    return [
+      {
+        color: 'txSuccess',
+        text: this.$i18n.t('common.success'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txFail',
+        text: this.$i18n.t('common.fail'),
+        icon: 'fa fa-circle'
+      }
+    ]
+  }
+}
 </script>
