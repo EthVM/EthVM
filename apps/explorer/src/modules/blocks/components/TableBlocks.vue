@@ -172,9 +172,10 @@ const MAX_ITEMS = 50
         if (blockSummaries) {
           this.error = '' // clear error
           return new BlockSummaryPageExt(blockSummaries)
+        } else {
+          this.error = this.error || this.$i18n.t('message.err')
+          return blockSummaries
         }
-        this.error = this.error || this.$i18n.t('message.err')
-        return blockSummaries
       },
 
       error({ graphQLErrors, networkError }) {
@@ -263,10 +264,6 @@ export default class TableBlocks extends Vue {
     if (this.connectedSubscription) {
       this.connectedSubscription.unsubscribe()
     }
-  }
-
-  get blockPageExt(): BlockSummaryPageExt | null {
-    return this.blockPage ? new BlockSummaryPageExt(this.blockPage) : null
   }
 
   get blocks(): (BlockSummaryPage_items | null)[] {
