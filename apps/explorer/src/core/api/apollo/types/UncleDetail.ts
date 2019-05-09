@@ -3,18 +3,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL subscription operation: newBlockStats
+// GraphQL fragment: UncleDetail
 // ====================================================
 
-export interface newBlockStats_newBlock {
-  __typename: "BlockSummary";
+export interface UncleDetail {
+  __typename: "Uncle";
+  author: string;
   number: any;
+  gasLimit: any;
+  gasUsed: any;
+  hash: string;
+  parentHash: string;
+  sha3Uncles: string;
   timestamp: number;
-  difficulty: any;
-  numSuccessfulTxs: any;
-  numFailedTxs: any;
-}
-
-export interface newBlockStats {
-  newBlock: newBlockStats_newBlock;
+  nephewNumber: any;
+  uncleIndex: number;
 }

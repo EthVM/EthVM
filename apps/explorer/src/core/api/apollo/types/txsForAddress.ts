@@ -11,7 +11,7 @@ import { FilterEnum } from "./globalTypes";
 export interface txsForAddress_txsForAddress_receipt {
   __typename: "Receipt";
   contractAddress: string | null;
-  gasUsed: any | null;
+  gasUsed: any;
   status: string | null;
 }
 
@@ -22,20 +22,20 @@ export interface txsForAddress_txsForAddress_traces {
 
 export interface txsForAddress_txsForAddress {
   __typename: "Transaction";
-  hash: string | null;
-  blockHash: string | null;
-  blockNumber: any | null;
-  from: string | null;
-  gasPrice: any | null;
-  timestamp: string | null;
+  hash: string;
+  blockHash: string;
+  blockNumber: any;
+  from: string;
+  gasPrice: any;
+  timestamp: number;
   to: string | null;
-  value: any | null;
+  value: any;
   receipt: txsForAddress_txsForAddress_receipt | null;
-  traces: (txsForAddress_txsForAddress_traces | null)[] | null;
+  traces: txsForAddress_txsForAddress_traces[];
 }
 
 export interface txsForAddress {
-  txsForAddress: (txsForAddress_txsForAddress | null)[] | null;
+  txsForAddress: txsForAddress_txsForAddress[];
 }
 
 export interface txsForAddressVariables {

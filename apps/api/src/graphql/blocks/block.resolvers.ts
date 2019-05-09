@@ -36,7 +36,7 @@ export class BlockResolvers {
   async blocks(
     @Args('page') page: number,
     @Args('limit') limit: number,
-    @Args('fromBlock') fromBlock?: number,
+    @Args('fromBlock') fromBlock?: BigNumber,
   ) {
     const entities = await this.blockService.findBlocks(limit, page, fromBlock)
     return entities.map(e => new BlockDto(e))

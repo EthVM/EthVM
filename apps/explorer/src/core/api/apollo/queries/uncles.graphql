@@ -6,8 +6,15 @@ query uncleByHash($hash: String!) {
 
 query uncles($offset: Int, $limit: Int, $fromUncle: BigNumber) {
   uncles(offset: $offset, limit: $limit, fromUncle: $fromUncle) {
+    ...UnclePage
+  }
+}
+
+fragment UnclePage on UnclePage {
+  items {
     ...UncleSummary
   }
+  totalCount
 }
 
 fragment UncleSummary on Uncle {

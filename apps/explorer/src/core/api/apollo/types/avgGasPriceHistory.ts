@@ -10,16 +10,16 @@ import { TimeBucket } from "./globalTypes";
 
 export interface avgGasPriceHistory_blockMetricsTimeseries {
   __typename: "AggregateBlockMetric";
-  timestamp: any | null;
+  timestamp: any;
   value: any | null;
 }
 
 export interface avgGasPriceHistory {
-  blockMetricsTimeseries: (avgGasPriceHistory_blockMetricsTimeseries | null)[];
+  blockMetricsTimeseries: avgGasPriceHistory_blockMetricsTimeseries[];
 }
 
 export interface avgGasPriceHistoryVariables {
-  start?: any | null;
-  end?: any | null;
-  bucket?: TimeBucket | null;
+  start: any;
+  end: any;
+  bucket: TimeBucket;
 }

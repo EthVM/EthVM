@@ -1,23 +1,22 @@
 import BN from 'bignumber.js'
 import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
 import { TransactionSummary } from '@app/core/api/apollo/types/TransactionSummary'
-import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
 import { Hex } from '@app/core/models'
 
 export class TransactionSummaryPageExt_items implements TransactionSummaryPage_items {
   __typename!: 'TransactionSummary'
-  blockNumber!: any | null
-  transactionIndex!: number | null
+  hash!: string
+  blockNumber: any
+  transactionIndex!: number
+  from!: string
+  to!: string | null
   creates!: string | null
   contractName!: string | null
   contractSymbol!: string | null
-  fee!: any | null
-  from!: string | null
-  hash!: string | null
-  successful!: boolean | null
-  timestamp!: string | null
-  to!: string | null
-  value!: any | null
+  value: any
+  fee: any
+  successful!: boolean
+  timestamp!: number
 
   constructor(proto: TransactionSummary) {
     Object.assign(this, proto)
@@ -58,11 +57,11 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
 
 export class TransactionSummaryPageExt implements TransactionSummaryPage {
   __typename!: 'TransactionSummaryPage'
-  items: (TransactionSummaryPageExt_items | null)[] | null
-  totalCount: any | null
+  items: (TransactionSummaryPageExt_items)[]
+  totalCount: any
 
   constructor(proto: TransactionSummaryPage) {
-    this.items = proto.items!.map(s => new TransactionSummaryPageExt_items(s as TransactionSummary))
+    this.items = proto.items.map(s => new TransactionSummaryPageExt_items(s as TransactionSummary))
     this.totalCount = proto.totalCount
   }
 

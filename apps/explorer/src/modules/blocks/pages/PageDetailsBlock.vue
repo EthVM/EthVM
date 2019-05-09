@@ -59,9 +59,11 @@ const MAX_TXS = 10
   apollo: {
     blockDetail: {
       query() {
-        if (this.blockNumber) {
+        const self = this as any
+
+        if (self.blockNumber) {
           return blockByNumber
-        } else if (this.blockHash) {
+        } else if (self.blockHash) {
           return blockByHash
         }
         return null

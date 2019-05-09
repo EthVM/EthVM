@@ -8,13 +8,13 @@
 
 export interface accountByAddress_accountByAddress {
   __typename: "Account";
-  address: string | null;
-  balance: any | null;
-  totalTxCount: any | null;
-  inTxCount: any | null;
-  outTxCount: any | null;
-  isMiner: boolean | null;
-  isContractCreator: boolean | null;
+  address: string;
+  balance: any;
+  totalTxCount: any;
+  inTxCount: any;
+  outTxCount: any;
+  isMiner: boolean;
+  isContractCreator: boolean;
 }
 
 export interface accountByAddress {

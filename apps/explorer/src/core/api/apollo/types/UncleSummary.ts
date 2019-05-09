@@ -3,11 +3,15 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: AvgBlockTimeMetric
+// GraphQL fragment: UncleSummary
 // ====================================================
 
-export interface AvgBlockTimeMetric {
-  __typename: "AggregateBlockMetric";
-  timestamp: any;
-  value: number | null;
+export interface UncleSummary {
+  __typename: "Uncle";
+  author: string;
+  number: any;
+  hash: string;
+  nephewNumber: any;
+  uncleIndex: number;
+  uncleReward: any;
 }

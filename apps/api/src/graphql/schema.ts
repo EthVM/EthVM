@@ -160,8 +160,8 @@ export interface BlockMetric {
 
 export interface BlockMetricPage {
     items: BlockMetric[];
-    offset?: number;
-    limit?: number;
+    offset: number;
+    limit: number;
     totalCount: number;
 }
 
@@ -272,7 +272,7 @@ export interface IQuery {
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
-    blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
+    blocks(limit?: number, page?: number, fromBlock?: BigNumber): Block[] | Promise<Block[]>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
     minedBlocksByAddress(address: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;

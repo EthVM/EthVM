@@ -16,7 +16,7 @@ import { newBlock } from '@app/modules/blocks/blocks.graphql'
         query: newBlock,
 
         result({ data }) {
-          this.display = true
+          ;(this as any).display = true
         }
       }
     }

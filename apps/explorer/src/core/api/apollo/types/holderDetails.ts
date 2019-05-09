@@ -8,8 +8,8 @@
 
 export interface holderDetails_tokenHolder {
   __typename: "TokenHolder";
-  address: string | null;
-  balance: any | null;
+  address: string;
+  balance: any;
 }
 
 export interface holderDetails {

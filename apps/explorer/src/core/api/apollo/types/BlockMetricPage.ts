@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: BlockMetric
+// GraphQL fragment: BlockMetricPage
 // ====================================================
 
-export interface BlockMetric {
+export interface BlockMetricPage_items {
   __typename: "BlockMetric";
   number: any;
   blockHash: string;
@@ -24,4 +24,12 @@ export interface BlockMetric {
   numInternalTxs: number;
   totalTxFees: any;
   avgTxFees: any;
+}
+
+export interface BlockMetricPage {
+  __typename: "BlockMetricPage";
+  items: BlockMetricPage_items[];
+  offset: number;
+  limit: number;
+  totalCount: number;
 }

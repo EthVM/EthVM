@@ -8,23 +8,23 @@
 
 export interface latestBlocks_blockSummaries_items {
   __typename: "BlockSummary";
-  number: any | null;
-  hash: string | null;
-  author: string | null;
-  numTxs: any | null;
-  numSuccessfulTxs: any | null;
-  numFailedTxs: any | null;
-  reward: any | null;
-  uncleHashes: (string | null)[] | null;
-  transactionHashes: (string | null)[] | null;
-  difficulty: any | null;
-  timestamp: string | null;
+  number: any;
+  hash: string;
+  author: string;
+  numTxs: any;
+  numSuccessfulTxs: any;
+  numFailedTxs: any;
+  reward: any;
+  uncleHashes: string[];
+  transactionHashes: string[];
+  difficulty: any;
+  timestamp: number;
 }
 
 export interface latestBlocks_blockSummaries {
   __typename: "BlockSummaryPage";
-  items: (latestBlocks_blockSummaries_items | null)[] | null;
-  totalCount: any | null;
+  items: latestBlocks_blockSummaries_items[];
+  totalCount: number;
 }
 
 export interface latestBlocks {

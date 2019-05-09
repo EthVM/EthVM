@@ -15,7 +15,7 @@ enum BlockMetricField {
 type Query {
 
   blockMetrics(offset: Int = 0, limit: Int = 20): BlockMetricPage!
-  blockMetricsTimeseries(start: Date!, end: Date!, bucket: TimeBucket!, fields: [BlockMetricField!]): [AggregateBlockMetric!]
+  blockMetricsTimeseries(start: Date!, end: Date!, bucket: TimeBucket!, fields: [BlockMetricField!]!): [AggregateBlockMetric!]!
 
 }
 
@@ -25,10 +25,10 @@ type Subscription {
 
 type BlockMetricPage {
 
-  items: [BlockMetric!]
+  items: [BlockMetric!]!
 
-  offset: Int
-  limit: Int
+  offset: Int!
+  limit: Int!
   totalCount: Int!
 
 }

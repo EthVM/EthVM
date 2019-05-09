@@ -17,7 +17,7 @@ export const VueEthvmApi = {
     Vue.prototype.$api = api
 
     // install subscription state
-    const $subscriptionState = new BehaviorSubject<SubscriptionState>()
+    const $subscriptionState = new BehaviorSubject<SubscriptionState>('connecting')
 
     subscriptionClient.onConnecting(() => $subscriptionState.next('connecting'))
     subscriptionClient.onConnected(() => $subscriptionState.next('connected'))

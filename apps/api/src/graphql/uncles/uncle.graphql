@@ -33,6 +33,6 @@ type Uncle {
 }
 
 type UnclePage {
-  items: [Uncle!]
+  items: [Uncle!]!
   totalCount: Int!
 }

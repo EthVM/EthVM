@@ -8,24 +8,24 @@
 
 export interface transactionSummariesByBlockHash_summaries_items {
   __typename: "TransactionSummary";
-  hash: string | null;
-  blockNumber: any | null;
-  transactionIndex: number | null;
-  from: string | null;
+  hash: string;
+  blockNumber: any;
+  transactionIndex: number;
+  from: string;
   to: string | null;
   creates: string | null;
   contractName: string | null;
   contractSymbol: string | null;
-  value: any | null;
-  fee: any | null;
-  successful: boolean | null;
-  timestamp: string | null;
+  value: any;
+  fee: any;
+  successful: boolean;
+  timestamp: number;
 }
 
 export interface transactionSummariesByBlockHash_summaries {
   __typename: "TransactionSummaryPage";
-  items: (transactionSummariesByBlockHash_summaries_items | null)[] | null;
-  totalCount: any | null;
+  items: transactionSummariesByBlockHash_summaries_items[];
+  totalCount: number;
 }
 
 export interface transactionSummariesByBlockHash {
@@ -33,7 +33,7 @@ export interface transactionSummariesByBlockHash {
 }
 
 export interface transactionSummariesByBlockHashVariables {
-  hash?: string | null;
+  hash: string;
   offset?: number | null;
   limit?: number | null;
 }

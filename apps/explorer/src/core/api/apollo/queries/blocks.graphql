@@ -1,4 +1,4 @@
-query blocks($limit: Int, $page: Int, $fromBlock: Long) {
+query blocks($limit: Int, $page: Int, $fromBlock: BigNumber) {
   blocks(limit: $limit, page: $page, fromBlock: $fromBlock) {
     header {
       hash
@@ -13,7 +13,7 @@ query blocks($limit: Int, $page: Int, $fromBlock: Long) {
   }
 }
 
-query blockByHash($hash: String) {
+query blockByHash($hash: String!) {
   blockByHash(hash: $hash) {
     header {
       number
@@ -43,7 +43,7 @@ query blockByHash($hash: String) {
     }
   }
 }
-query blockByNumber($number: BigNumber) {
+query blockByNumber($number: BigNumber!) {
   blockByNumber(number: $number) {
     header {
       number
@@ -74,7 +74,7 @@ query blockByNumber($number: BigNumber) {
   }
 }
 
-query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
+query minedBlocksByAddress($address: String!, $limit: Int, $page: Int) {
   minedBlocksByAddress(address: $address, limit: $limit, page: $page) {
     items {
       header {

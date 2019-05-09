@@ -16,8 +16,8 @@
 <script lang="ts">
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { BlockMetricField, TimeBucket } from '@app/core/api/apollo/types/globalTypes'
-import * as moment from 'moment'
+import { TimeBucket } from '@app/core/api/apollo/types/globalTypes'
+import moment from 'moment'
 import { ChartData } from '@app/modules/charts/props'
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
@@ -34,7 +34,7 @@ interface QueryOptions {
   },
   data() {
     return {
-      queryOptions: this.calculateTimePeriod('week')
+      queryOptions: (this as any).calculateTimePeriod('week')
     }
   },
   apollo: {
@@ -192,8 +192,8 @@ export default class ChartTimeseries extends Vue {
   }
 
   calculateTimePeriod(period: 'day' | 'week' | 'month' | 'year' | 'all'): QueryOptions {
-    const start = moment()
-    let end, bucket
+    const start: moment.Moment = moment()
+    let end: moment.Moment, bucket
 
     switch (period) {
       case 'day':

@@ -1,41 +1,41 @@
 
-query avgGasPriceHistory($start: Date, $end: Date, $bucket: TimeBucket) {
+query avgGasPriceHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, fields: [AVG_GAS_PRICE]) {
     ...AvgGasPriceMetric
   }
 }
 
-query avgBlockTimeHistory($start: Date, $end: Date, $bucket: TimeBucket) {
+query avgBlockTimeHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, fields: [AVG_BLOCK_TIME]) {
     ...AvgBlockTimeMetric
   }
 }
 
-query avgGasLimitHistory($start: Date, $end: Date, $bucket: TimeBucket) {
+query avgGasLimitHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, fields: [AVG_GAS_LIMIT]) {
     ...AvgGasLimitMetric
   }
 }
 
-query avgDifficultyHistory($start: Date, $end: Date, $bucket: TimeBucket) {
+query avgDifficultyHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, fields: [AVG_DIFFICULTY]) {
     ...AvgDifficultyMetric
   }
 }
 
-query avgNumFailedTxsHistory($start: Date, $end: Date, $bucket: TimeBucket) {
+query avgNumFailedTxsHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, fields: [AVG_NUM_FAILED_TXS]) {
     ...AvgNumFailedTxsMetric
   }
 }
 
-query avgNumSuccessfulTxsHistory($start: Date, $end: Date, $bucket: TimeBucket) {
+query avgNumSuccessfulTxsHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, fields: [AVG_NUM_SUCCESSFUL_TXS]) {
     ...AvgNumSuccessfulTxsMetric
   }
 }
 
-query avgTxFeesHistory($start: Date, $end: Date, $bucket: TimeBucket) {
+query avgTxFeesHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, fields: [AVG_TX_FEES]) {
     ...AvgTxFeesMetric
   }
