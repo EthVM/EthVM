@@ -59,7 +59,6 @@ export default class AppTransformHash extends Vue {
   get url(): string {
     return this.link
   }
-
 }
 </script>
 
