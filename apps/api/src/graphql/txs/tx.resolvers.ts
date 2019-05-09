@@ -24,7 +24,7 @@ export class TxResolvers {
   async transactionSummaries(
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-    @Args('fromBlock') fromBlock?: BigNumber
+    @Args('fromBlock') fromBlock?: BigNumber,
   ) {
     const [summaries, count] = await this.txService.findSummaries(offset, limit, fromBlock)
     return new TransactionSummaryPageDto(summaries, count)

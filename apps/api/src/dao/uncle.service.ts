@@ -22,7 +22,7 @@ export class UncleService {
         where,
         order: { nephewNumber: 'DESC', number: 'DESC' },
         skip: offset,
-        take: limit
+        take: limit,
       })
   }
 

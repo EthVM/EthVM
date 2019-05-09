@@ -17,7 +17,7 @@ export class BlockService {
     @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
     @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
     @InjectEntityManager() private readonly entityManager: EntityManager,
-    private readonly traceService: TraceService
+    private readonly traceService: TraceService,
   ) {
   }
 
@@ -28,7 +28,7 @@ export class BlockService {
       .find({
         select: ['number', 'difficulty', 'blockTime'],
         order: { number: 'DESC' },
-        take: 20
+        take: 20,
       })
 
     if (blocks.length === 0) return null
@@ -54,12 +54,12 @@ export class BlockService {
         relations: ['rewards'],
         order: { number: 'DESC' },
         skip: offset,
-        take: limit
+        take: limit,
       })
 
     return [
       await this.summarise(headersWithRewards),
-      count
+      count,
     ]
 
   }
@@ -70,7 +70,7 @@ export class BlockService {
       select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
-      order: { number: 'DESC' }
+      order: { number: 'DESC' },
     })
 
     return this.summarise(headersWithRewards)
@@ -113,7 +113,7 @@ export class BlockService {
         numTxs: transactionHashes.length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
-        reward: rewardsByBlock.get(hash) || 0
+        reward: rewardsByBlock.get(hash) || 0,
       } as BlockSummary
 
     })
@@ -132,7 +132,7 @@ export class BlockService {
       take: limit,
       skip,
       order: { number: 'DESC' },
-      relations: ['rewards']
+      relations: ['rewards'],
     })
   }
 
@@ -163,7 +163,7 @@ export class BlockService {
   async findBlockByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
     return this.blockHeaderRepository.findOne({
       where: { number },
-      relations: ['uncles', 'rewards']
+      relations: ['uncles', 'rewards'],
     })
   }
 
@@ -174,7 +174,7 @@ export class BlockService {
       take: limit,
       skip,
       order: { number: 'DESC' },
-      relations: ['rewards']
+      relations: ['rewards'],
     })
     result[0] = await this.findAndMapTxsAndUncles(result[0])
     return result

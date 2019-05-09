@@ -3,7 +3,7 @@ import { UncleSummaryPage, UncleSummaryPage_items } from '@app/core/api/apollo/t
 import { EthValue } from '@app/core/models'
 
 export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
-  __typename!: "Uncle"
+  __typename!: 'Uncle'
   author: string
   hash: string
   nephewNumber: any
@@ -38,7 +38,7 @@ export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
 }
 
 export class UncleSummaryPageExt implements UncleSummaryPage {
-  __typename!: "UnclePage"
+  __typename!: 'UnclePage'
   items: UncleSummaryPage_items[]
   totalCount: number
 
