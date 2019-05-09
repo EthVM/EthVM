@@ -5,6 +5,7 @@
       <v-layout column fill-height>
         <app-greeting v-if="appGreet" :greet="appGreet" />
         <app-sync-message v-if="isSyncing" />
+        <app-connection-message />
         <v-flex>
           <router-view :key="$route.path" />
         </v-flex>
@@ -23,6 +24,7 @@ import TheFooter from '@app/core/components/layout/TheFooter.vue'
 import { Events } from '@app/core/hub'
 import storePack from 'store'
 import { Vue, Component } from 'vue-property-decorator'
+import AppConnectionMessage from '@app/core/components/ui/AppConnectionMessage.vue'
 
 const MAX_ITEMS = 10
 
@@ -30,6 +32,7 @@ const MAX_ITEMS = 10
   components: {
     AppGreeting,
     AppSyncMessage,
+    AppConnectionMessage,
     TheNavigationDrawer,
     TheFooter
   }

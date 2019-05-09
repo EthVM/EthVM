@@ -124,6 +124,8 @@
 
     connectedSubscription?: Subscription
 
+    disconnected: boolean = false
+
     /*
     ===================================================================================
       Lifecycle
@@ -131,13 +133,31 @@
     */
 
     created() {
-      this.startCount()
+
 
       this.connectedSubscription = this.$subscriptionState
         .subscribe(async state => {
-          if (state === 'reconnected') {
-            this.$apollo.queries.blockSummary.refetch()
-            this.$apollo.queries.hashRate.refetch()
+          switch(state) {
+
+            case 'disconnected':
+              this.disconnected = true
+              if (this.secondsInterval) {
+                clearInterval(this.secondsInterval)
+              }
+              break;
+
+            case 'connected':
+              this.startCount()
+              this.disconnected = false
+              break;
+
+            case 'reconnected':
+              this.startCount();
+              this.disconnected = false
+              this.$apollo.queries.blockSummary.refetch()
+              this.$apollo.queries.hashRate.refetch()
+              break;
+
           }
         })
     }
@@ -174,7 +194,7 @@
     */
 
     get loading(): boolean {
-      return this.$apollo.loading
+      return this.disconnected || this.$apollo.loading
     }
 
     get currentType(): string {

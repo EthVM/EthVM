@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import { EthvmApi } from '@app/core/api'
+import { BehaviorSubject } from 'rxjs'
+import { SubscriptionState } from '@app/core/plugins'
 
 declare module 'vue/types/vue' {
-  import { BehaviorSubject } from 'rxjs'
-  import { SubscriptionState } from '@app/core/plugins'
-
   interface Vue {
     $eventHub: Vue
     $api: EthvmApi
