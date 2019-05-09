@@ -4,9 +4,9 @@ import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.enti
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { UncleEntity } from '@app/orm/entities/uncle.entity'
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { In, LessThanOrEqual, Repository } from 'typeorm'
+import { EntityManager, In, LessThan, LessThanOrEqual, Repository } from 'typeorm'
 import { TraceService } from './trace.service'
 
 @Injectable()
@@ -16,6 +16,7 @@ export class BlockService {
     @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
     @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
+    @InjectEntityManager() private readonly entityManager: EntityManager,
     private readonly traceService: TraceService,
   ) {
   }
@@ -42,11 +43,14 @@ export class BlockService {
       .integerValue()
   }
 
-  async findSummaries(offset: number, limit: number): Promise<[BlockSummary[], number]> {
+  async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[BlockSummary[], number]> {
+
+    const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
 
     const [headersWithRewards, count] = await this.blockHeaderRepository
       .findAndCount({
         select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
+        where,
         relations: ['rewards'],
         order: { number: 'DESC' },
         skip: offset,
@@ -57,6 +61,7 @@ export class BlockService {
       await this.summarise(headersWithRewards),
       count,
     ]
+
   }
 
   async findSummariesByBlockHash(blockHashes: string[]): Promise<BlockSummary[]> {

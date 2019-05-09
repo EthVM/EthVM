@@ -1,6 +1,6 @@
-query latestBlocks($offset: Int, $limit: Int) {
+query latestBlocks($fromBlock: BigNumber, $offset: Int, $limit: Int) {
 
-  blockSummaries(offset: $offset, limit: $limit) {
+  blockSummaries(fromBlock: $fromBlock, offset: $offset, limit: $limit) {
     ...BlockSummaryPage
   }
 

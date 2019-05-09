@@ -1,5 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3 mt-0">
+    <notice-new-block @reload="resetFromBlock" />
+
     <!--
     =====================================================================================
       TITLE
@@ -123,13 +125,14 @@ import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import { Block, SimpleBlock } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { BlockSummary } from '@app/core/api/apollo/types/BlockSummary'
 import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
+import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 
 const MAX_ITEMS = 50
 
@@ -140,11 +143,13 @@ const MAX_ITEMS = 50
     AppInfoLoad,
     AppLiveUpdate,
     AppPaginate,
-    TableBlocksRow
+    TableBlocksRow,
+    NoticeNewBlock
   },
   data() {
     return {
       page: 0,
+      fromBlock: undefined,
       error: undefined
     }
   },
@@ -170,13 +175,10 @@ const MAX_ITEMS = 50
       update({ blockSummaries }) {
         if (blockSummaries) {
           this.error = '' // clear error
-          return {
-            ...blockSummaries,
-            items: blockSummaries.items.map(i => new BlockSummaryExt(i))
-          }
+          return new BlockSummaryPageExt(blockSummaries)
         }
         this.error = this.error || this.$i18n.t('message.err')
-        return null
+        return blockSummaries
       },
 
       error({ graphQLErrors, networkError }) {
@@ -240,6 +242,8 @@ export default class TableBlocks extends Vue {
 
   error: string = ''
 
+  blockPage?: BlockSummaryPageExt
+  fromBlock?: BigNumber
   blockPage?: BlockSummaryPage
 
   connectedSubscription?: Subscription
@@ -271,7 +275,7 @@ export default class TableBlocks extends Vue {
   }
 
   get blocks(): (BlockSummaryPage_items | null)[] {
-    return this.blockPageExt ? this.blockPageExt.items || [] : []
+    return this.blockPage ? this.blockPage.items || [] : []
   }
 
   /*
@@ -280,13 +284,26 @@ export default class TableBlocks extends Vue {
         ===================================================================================
         */
 
-  setPage(page: number): void {
-    const { blockPage } = this.$apollo.queries
+  resetFromBlock() {
+    this.setPage(0, true)
+  }
 
-    const self = this
+  setPage(page: number, resetFrom: boolean = false): void {
+    const { blockPage } = this
+    const { blockPage: query } = this.$apollo.queries
 
-    blockPage.fetchMore({
+    if (resetFrom) {
+      this.fromBlock = undefined
+    } else {
+      const { totalCountBN } = blockPage!
+      if (!this.fromBlock) {
+        this.fromBlock = totalCountBN.minus(1)
+      }
+    }
+
+    query.fetchMore({
       variables: {
+        fromBlock: this.fromBlock ? this.fromBlock.toString(10) : undefined,
         offset: page * 50,
         limit: this.maxItems
       },
@@ -330,8 +347,8 @@ export default class TableBlocks extends Vue {
   }
 
   get pages(): number {
-    const { blockPageExt, maxItems } = this
-    return blockPageExt ? Math.ceil(blockPageExt.totalCountBN.div(maxItems).toNumber()) : 0
+    const { blockPage, maxItems } = this
+    return blockPage ? Math.ceil(blockPage.totalCountBN.div(maxItems).toNumber()) : 0
   }
 }
 </script>

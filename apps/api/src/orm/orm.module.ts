@@ -13,7 +13,7 @@ import { SnakeCaseNamingStrategy } from '@app/orm/config'
         synchronize: false,
         namingStrategy: new SnakeCaseNamingStrategy(),
         entities: ['src/**/**.entity{.ts,.js}'],
-        logging: ['error'],
+        logging: ['error', 'query'],
       }),
       inject: [ConfigService],
     }),

@@ -33,6 +33,7 @@ export interface latestTransactionSummaries {
 }
 
 export interface latestTransactionSummariesVariables {
+  fromBlock?: any | null;
   offset?: number | null;
   limit?: number | null;
 }
