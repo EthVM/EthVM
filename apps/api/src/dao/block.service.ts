@@ -162,7 +162,7 @@ export class BlockService {
 
   async findBlockByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
     return this.blockHeaderRepository.findOne({
-      where: { number: number.toString() },
+      where: { number },
       relations: ['uncles', 'rewards']
     })
   }
