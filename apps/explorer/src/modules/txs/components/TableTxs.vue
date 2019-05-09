@@ -176,14 +176,15 @@ const MAX_ITEMS = 50
         }
       },
 
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
-
       update({ summaries }) {
-        return new TransactionSummaryPageExt(summaries)
+        if(summaries) {
+          this.error = '' // clear the error
+          return new TransactionSummaryPageExt(summaries)
+        } else {
+          this.error = this.error || this.$i18n.t('message.err')
+          return summaries
+        }
+
       },
 
       error({ graphQLErrors, networkError }) {
@@ -281,11 +282,7 @@ export default class TableTxs extends Vue {
     }
   }
 
-  get txPageExt(): TransactionSummaryPageExt | null {
-    return this.txPage ? new TransactionSummaryPageExt(this.txPage) : null
-  }
-
-  get transactions(): (TransactionSummaryPage_items | null)[] {
+  get transactions() {
     return this.txPage ? this.txPage.items || [] : []
   }
 
