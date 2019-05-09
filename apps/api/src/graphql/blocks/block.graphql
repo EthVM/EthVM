@@ -2,7 +2,8 @@
 type Query {
 
   hashRate: BigNumber
-  blockSummaries(offset: Int = 0, limit: Int = 50): BlockSummaryPage
+
+  blockSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 50): BlockSummaryPage!
 
   blocks(limit: Int, page: Int, fromBlock: Long): [Block]
 

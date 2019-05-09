@@ -65,13 +65,16 @@ export class TxService {
     return [summaries, count]
   }
 
-  async findSummaries(offset: number, limit: number): Promise<[TransactionSummary[], number]> {
+  async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[TransactionSummary[], number]> {
 
     const { transactionRepository } = this
+
+    const where = fromBlock ? { blockNumber: LessThanOrEqual(fromBlock) } : {}
 
     const [txs, count] = await transactionRepository
       .findAndCount({
         select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value'],
+        where,
         order: {
           blockNumber: 'DESC',
           transactionIndex: 'DESC',

@@ -21,5 +21,5 @@ export interface latestBlockStats_blockSummaries {
 }
 
 export interface latestBlockStats {
-  blockSummaries: latestBlockStats_blockSummaries | null;
+  blockSummaries: latestBlockStats_blockSummaries;
 }

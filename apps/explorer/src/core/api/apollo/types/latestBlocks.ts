@@ -28,10 +28,11 @@ export interface latestBlocks_blockSummaries {
 }
 
 export interface latestBlocks {
-  blockSummaries: latestBlocks_blockSummaries | null;
+  blockSummaries: latestBlocks_blockSummaries;
 }
 
 export interface latestBlocksVariables {
+  fromBlock?: any | null;
   offset?: number | null;
   limit?: number | null;
 }
