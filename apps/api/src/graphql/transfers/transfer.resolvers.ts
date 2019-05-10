@@ -1,6 +1,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TransferService } from '@app/dao/transfer.service'
 import {ParseAddressPipe} from '@app/shared/validation/parse-address.pipe'
+import {ParseAddressesPipe} from '@app/shared/validation/parse-addresses.pipe'
 import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
 import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe'
 import {TransfersPageDto} from '@app/graphql/transfers/dto/transfers-page.dto'
@@ -40,7 +41,7 @@ export class TransferResolvers {
 
   @Query()
   async tokenTransfersByContractAddressesForHolder(
-    @Args({name: 'contractAddresses', type: () => [String]}) contractAddresses: string[],
+    @Args({name: 'contractAddresses', type: () => [String]}, ParseAddressesPipe) contractAddresses: string[],
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
     @Args('filter') filter: string,
     @Args('limit') limit: number,
