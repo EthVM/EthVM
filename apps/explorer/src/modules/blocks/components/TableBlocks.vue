@@ -73,8 +73,8 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <v-layout column v-scroll:#scroll-target class="mb-1">
+    <v-container v-if="!hasError" flat :style="getStyle" class="scroll-y pa-2">
+      <v-layout column class="mb-1">
         <v-flex v-if="!loading">
           <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />

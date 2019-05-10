@@ -75,8 +75,8 @@
       </v-layout>
     </v-card>
     <div v-else>
-      <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
-        <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
+      <v-card flat v-if="!hasError" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+        <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />

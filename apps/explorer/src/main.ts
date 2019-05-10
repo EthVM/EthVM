@@ -15,7 +15,6 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import vuescroll from 'vue-scroll'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 /*
@@ -102,8 +101,6 @@ Vue.use(Vuetify, {
     // background: String(colors.grey.darken3)
   }
 })
-
-Vue.use(vuescroll)
 
 /*
   ===================================================================================
