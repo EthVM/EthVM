@@ -12,7 +12,7 @@ export class ParseAddressesPipe implements PipeTransform<string[], string[]> {
       }
       if (val.substring(0, 2) !== '0x') {
         val = `0x${val}`
-      }      
+      }
     })
     return value
   }

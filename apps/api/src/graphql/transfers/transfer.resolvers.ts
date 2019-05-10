@@ -1,10 +1,8 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TransferService } from '@app/dao/transfer.service'
-import {ParseAddressPipe} from '@app/shared/validation/parse-address.pipe'
-import {ParseAddressesPipe} from '@app/shared/validation/parse-addresses.pipe'
-import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
-import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe'
-import {TransfersPageDto} from '@app/graphql/transfers/dto/transfers-page.dto'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
+import { ParseAddressesPipe } from '@app/shared/validation/parse-addresses.pipe'
+import { TransfersPageDto } from '@app/graphql/transfers/dto/transfers-page.dto'
 
 @Resolver('Transfer')
 export class TransferResolvers {
@@ -49,7 +47,8 @@ export class TransferResolvers {
     @Args('timestampFrom') timestampFrom: number,
     @Args('timestampTo') timestampTo: number,
   ): Promise<TransfersPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddressesForHolder(contractAddresses, holderAddress, filter, limit, page, timestampFrom, timestampTo)
+    const result = await this.transferService
+      .findTokenTransfersByContractAddressesForHolder(contractAddresses, holderAddress, filter, limit, page, timestampFrom, timestampTo)
     return new TransfersPageDto({
       items: result[0],
       totalCount: result[1],

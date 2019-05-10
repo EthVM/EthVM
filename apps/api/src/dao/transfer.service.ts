@@ -76,7 +76,7 @@ export class TransferService {
     take: number = 10,
     page: number = 0,
     timestampFrom: number = 0,
-    timestampTo: number = 0
+    timestampTo: number = 0,
   ): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
 
