@@ -296,6 +296,7 @@ export interface IQuery {
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     tx(hash: string): Transaction | Promise<Transaction>;
     txs(limit?: number, page?: number, fromBlock?: BigNumber): Transaction[] | Promise<Transaction[]>;
     txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
