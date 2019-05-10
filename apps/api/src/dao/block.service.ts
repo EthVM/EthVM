@@ -64,6 +64,27 @@ export class BlockService {
 
   }
 
+  async findSummariesByAuthor(author: string, offset: number = 0, limit: number = 20): Promise<[BlockSummary[], number]> {
+
+    const [headersWithRewards, count] = await this.blockHeaderRepository
+      .findAndCount({
+        select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
+        where: { author },
+        relations: ['rewards'],
+        order: { number: 'DESC' },
+        skip: offset,
+        take: limit,
+      })
+
+    if (count === 0) return [[], count]
+
+    return [
+      await this.summarise(headersWithRewards),
+      count,
+    ]
+
+  }
+
   async findSummariesByBlockHash(blockHashes: string[]): Promise<BlockSummary[]> {
 
     const headersWithRewards = await this.blockHeaderRepository.find({
