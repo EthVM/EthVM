@@ -39,6 +39,23 @@ export class TransferResolvers {
   }
 
   @Query()
+  async tokenTransfersByContractAddressesForHolder(
+    @Args({name: 'contractAddresses', type: () => [String]}) contractAddresses: string[],
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+    @Args('filter') filter: string,
+    @Args('limit') limit: number,
+    @Args('page') page: number,
+    @Args('timestampFrom') timestampFrom: number,
+    @Args('timestampTo') timestampTo: number,
+  ): Promise<TransfersPageDto> {
+    const result = await this.transferService.findTokenTransfersByContractAddressesForHolder(contractAddresses, holderAddress, filter, limit, page, timestampFrom, timestampTo)
+    return new TransfersPageDto({
+      items: result[0],
+      totalCount: result[1],
+    })
+  }
+
+  @Query()
   async internalTransactionsByAddress(
     @Args('address', ParseAddressPipe) address: string,
     @Args('limit') limit: number,
