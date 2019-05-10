@@ -67,7 +67,7 @@ export class TransferService {
    * is that this query:
    *
    * 1) Accepts an array of possible token contractAddresses
-   * 2) Accepts timestampTo/timestampFrom
+   * 2) Accepts timestampTo/timestampFrom and sorts accordingly
    */
   async findTokenTransfersByContractAddressesForHolder(
     addresses: string[],
@@ -114,7 +114,6 @@ export class TransferService {
     return builder
       .setParameters({ addresses, deltaType: 'TOKEN_TRANSFER', holder, timestampFrom, timestampTo })
       .orderBy('t.timestamp', 'DESC')
-      // .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(skip)
       .take(take)
       .getManyAndCount()
