@@ -97,7 +97,7 @@ export default class PageBlocks extends Vue {
         this.isLoading = false
       },
       err => {
-        this.error = this.$i18n.t('message.error').toString()
+        this.error = this.$i18n.t('message.err').toString()
       }
     )
   }
