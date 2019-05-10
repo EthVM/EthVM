@@ -10,23 +10,23 @@ import { DeltaType } from "./globalTypes";
 
 export interface internalTransactionsByAddress_internalTransactionsByAddress_items {
   __typename: "Transfer";
-  id: string | null;
+  id: string;
   transactionHash: string | null;
-  value: any | null;
+  value: any;
   from: string | null;
-  to: string | null;
-  timestamp: string | null;
-  deltaType: DeltaType | null;
+  to: string;
+  timestamp: number;
+  deltaType: DeltaType;
 }
 
 export interface internalTransactionsByAddress_internalTransactionsByAddress {
   __typename: "TransfersPage";
-  items: (internalTransactionsByAddress_internalTransactionsByAddress_items | null)[] | null;
-  totalCount: any | null;
+  items: internalTransactionsByAddress_internalTransactionsByAddress_items[];
+  totalCount: any;
 }
 
 export interface internalTransactionsByAddress {
-  internalTransactionsByAddress: internalTransactionsByAddress_internalTransactionsByAddress | null;
+  internalTransactionsByAddress: internalTransactionsByAddress_internalTransactionsByAddress;
 }
 
 export interface internalTransactionsByAddressVariables {

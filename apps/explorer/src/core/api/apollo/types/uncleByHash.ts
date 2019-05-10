@@ -8,16 +8,16 @@
 
 export interface uncleByHash_uncleByHash {
   __typename: "Uncle";
-  author: string | null;
-  number: any | null;
-  gasLimit: any | null;
-  gasUsed: any | null;
-  hash: string | null;
-  parentHash: string | null;
-  sha3Uncles: string | null;
-  timestamp: string | null;
-  nephewNumber: any | null;
-  uncleIndex: number | null;
+  author: string;
+  number: any;
+  gasLimit: any;
+  gasUsed: any;
+  hash: string;
+  parentHash: string;
+  sha3Uncles: string;
+  timestamp: number;
+  nephewNumber: any;
+  uncleIndex: number;
 }
 
 export interface uncleByHash {

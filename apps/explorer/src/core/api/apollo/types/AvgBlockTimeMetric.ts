@@ -8,6 +8,6 @@
 
 export interface AvgBlockTimeMetric {
   __typename: "AggregateBlockMetric";
-  timestamp: any | null;
+  timestamp: any;
   value: number | null;
 }

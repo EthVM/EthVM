@@ -80,23 +80,23 @@ export enum TokenExchangeRateFilter {
     market_cap_rank = "market_cap_rank"
 }
 
-export class Account {
-    address?: string;
-    balance?: BigNumber;
-    totalTxCount?: BigNumber;
-    inTxCount?: BigNumber;
-    outTxCount?: BigNumber;
-    isMiner?: boolean;
-    isContractCreator?: boolean;
+export interface Account {
+    address: string;
+    balance: BigNumber;
+    totalTxCount: BigNumber;
+    inTxCount: BigNumber;
+    outTxCount: BigNumber;
+    isMiner: boolean;
+    isContractCreator: boolean;
 }
 
-export class AddressBalance {
-    address?: string;
-    balance?: BigNumber;
+export interface AddressBalance {
+    address: string;
+    balance: BigNumber;
 }
 
-export class AggregateBlockMetric {
-    timestamp?: Date;
+export interface AggregateBlockMetric {
+    timestamp: Date;
     avgBlockTime?: number;
     avgNumUncles?: number;
     avgDifficulty?: BigNumber;
@@ -111,85 +111,85 @@ export class AggregateBlockMetric {
     avgTotalTxFees?: BigNumber;
 }
 
-export class Block {
-    header?: BlockHeader;
-    uncleHashes?: string[];
-    transactionHashes?: string[];
-    rewards?: Reward[];
+export interface Block {
+    header: BlockHeader;
+    uncleHashes: string[];
+    transactionHashes: string[];
+    rewards: Reward[];
 }
 
-export class BlockHeader {
-    number?: BigNumber;
-    hash?: string;
-    parentHash?: string;
-    nonce?: BigNumber;
-    sha3Uncles?: string;
-    logsBloom?: string;
-    transactionsRoot?: string;
-    stateRoot?: string;
-    receiptsRoot?: string;
-    author?: string;
-    difficulty?: BigNumber;
-    totalDifficulty?: BigNumber;
-    extraData?: string;
-    gasLimit?: BigNumber;
-    gasUsed?: BigNumber;
-    timestamp?: number;
-    size?: number;
-    blockTime?: number;
-}
-
-export class BlockMetric {
+export interface BlockHeader {
     number: BigNumber;
-    blockHash?: string;
-    timestamp?: Date;
-    blockTime?: number;
-    numUncles?: number;
-    difficulty?: BigNumber;
-    totalDifficulty?: BigNumber;
-    totalGasPrice?: BigNumber;
-    avgGasLimit?: BigNumber;
-    avgGasPrice?: BigNumber;
-    totalTxs?: number;
-    numSuccessfulTxs?: number;
-    numFailedTxs?: number;
-    numInternalTxs?: number;
-    totalTxFees?: BigNumber;
-    avgTxFees?: BigNumber;
+    hash: string;
+    parentHash: string;
+    nonce?: BigNumber;
+    sha3Uncles: string;
+    logsBloom: string;
+    transactionsRoot: string;
+    stateRoot: string;
+    receiptsRoot: string;
+    author: string;
+    difficulty: BigNumber;
+    totalDifficulty: BigNumber;
+    extraData: string;
+    gasLimit: BigNumber;
+    gasUsed: BigNumber;
+    timestamp: number;
+    size: number;
+    blockTime: number;
 }
 
-export class BlockMetricPage {
-    items?: BlockMetric[];
-    offset?: number;
-    limit?: number;
-    totalCount?: number;
+export interface BlockMetric {
+    number: BigNumber;
+    blockHash: string;
+    timestamp: Date;
+    blockTime: number;
+    numUncles: number;
+    difficulty: BigNumber;
+    totalDifficulty: BigNumber;
+    totalGasPrice: BigNumber;
+    avgGasLimit: BigNumber;
+    avgGasPrice: BigNumber;
+    totalTxs: number;
+    numSuccessfulTxs: number;
+    numFailedTxs: number;
+    numInternalTxs: number;
+    totalTxFees: BigNumber;
+    avgTxFees: BigNumber;
 }
 
-export class BlocksPage {
-    items?: Block[];
-    totalCount?: number;
+export interface BlockMetricPage {
+    items: BlockMetric[];
+    offset: number;
+    limit: number;
+    totalCount: number;
 }
 
-export class BlockSummary {
-    number?: BigNumber;
-    hash?: string;
-    author?: string;
-    numTxs?: BigNumber;
-    numSuccessfulTxs?: BigNumber;
-    numFailedTxs?: BigNumber;
-    reward?: BigNumber;
-    uncleHashes?: string[];
-    transactionHashes?: string[];
-    difficulty?: BigNumber;
-    timestamp?: string;
+export interface BlocksPage {
+    items: Block[];
+    totalCount: number;
 }
 
-export class BlockSummaryPage {
-    items?: BlockSummary[];
-    totalCount?: BigNumber;
+export interface BlockSummary {
+    number: BigNumber;
+    hash: string;
+    author: string;
+    numTxs: BigNumber;
+    numSuccessfulTxs: BigNumber;
+    numFailedTxs: BigNumber;
+    reward: BigNumber;
+    uncleHashes: string[];
+    transactionHashes: string[];
+    difficulty: BigNumber;
+    timestamp: number;
 }
 
-export class CoinExchangeRate {
+export interface BlockSummaryPage {
+    items: BlockSummary[];
+    totalCount: number;
+}
+
+export interface CoinExchangeRate {
     currency?: string;
     price?: Decimal;
     marketCap?: Decimal;
@@ -198,7 +198,7 @@ export class CoinExchangeRate {
     lastUpdated?: Decimal;
 }
 
-export class Contract {
+export interface Contract {
     address?: string;
     creator?: string;
     init?: string;
@@ -223,11 +223,11 @@ export class Contract {
     createdAtTx?: Transaction;
 }
 
-export class ContractLogo {
+export interface ContractLogo {
     src?: string;
 }
 
-export class ContractMetadata {
+export interface ContractMetadata {
     address?: string;
     name?: string;
     symbol?: string;
@@ -240,7 +240,7 @@ export class ContractMetadata {
     website?: string;
 }
 
-export class ContractSocial {
+export interface ContractSocial {
     blog?: string;
     chat?: string;
     facebook?: string;
@@ -256,138 +256,97 @@ export class ContractSocial {
     youtube?: string;
 }
 
-export class ContractsPage {
-    items?: Contract[];
-    totalCount?: number;
+export interface ContractsPage {
+    items: Contract[];
+    totalCount: number;
 }
 
-export class ContractSupport {
+export interface ContractSupport {
     email?: string;
     url?: string;
 }
 
-export abstract class IQuery {
-    abstract accountByAddress(address: string): Account | Promise<Account>;
-
-    abstract blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
-
-    abstract blockMetricsTimeseries(start?: Date, end?: Date, bucket?: TimeBucket, fields?: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
-
-    abstract hashRate(): BigNumber | Promise<BigNumber>;
-
-    abstract blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
-
-    abstract blocks(limit?: number, page?: number, fromBlock?: Long): Block[] | Promise<Block[]>;
-
-    abstract blockByHash(hash?: string): Block | Promise<Block>;
-
-    abstract blockByNumber(number?: BigNumber): Block | Promise<Block>;
-
-    abstract minedBlocksByAddress(address?: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
-
-    abstract totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
-
-    abstract contractByAddress(address: string): Contract | Promise<Contract>;
-
-    abstract contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
-
-    abstract search(query: string): Search | Promise<Search>;
-
-    abstract tokenHolders(address: string, limit?: number, page?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
-
-    abstract tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
-
-    abstract addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
-
-    abstract addressAmountTokensOwned(address: string): number | Promise<number>;
-
-    abstract coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
-
-    abstract tokenExchangeRates(filter?: TokenExchangeRateFilter, limit?: number, page?: number, symbols?: string[]): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
-
-    abstract totalNumTokenExchangeRates(): number | Promise<number>;
-
-    abstract tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
-    abstract tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-
-    abstract tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
-
-    abstract tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
-
-    abstract tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
-
-    abstract internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
-
-    abstract transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-
-    abstract transactionSummariesForBlockNumber(number?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-
-    abstract transactionSummariesForBlockHash(hash?: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-
-    abstract tx(hash: string): Transaction | Promise<Transaction>;
-
-    abstract txs(limit?: number, page?: number, fromBlock?: BigNumber): Transaction[] | Promise<Transaction[]>;
-
-    abstract txsForAddress(hash: string, filter: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
-
-    abstract totalNumberOfTransactions(): BigNumber | Promise<BigNumber>;
-
-    abstract uncleByHash(hash: string): Uncle | Promise<Uncle>;
-
-    abstract uncles(limit?: number, page?: number, fromUncle?: number): Uncle[] | Promise<Uncle[]>;
-
-    abstract totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
-
-    abstract latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
-
-    abstract temp__(): boolean | Promise<boolean>;
+export interface IQuery {
+    accountByAddress(address: string): Account | Promise<Account>;
+    blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
+    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
+    hashRate(): BigNumber | Promise<BigNumber>;
+    blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
+    blocks(limit?: number, page?: number, fromBlock?: BigNumber): Block[] | Promise<Block[]>;
+    blockByHash(hash: string): Block | Promise<Block>;
+    blockByNumber(number: BigNumber): Block | Promise<Block>;
+    minedBlocksByAddress(address: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
+    totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
+    contractByAddress(address: string): Contract | Promise<Contract>;
+    contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
+    search(query: string): Search | Promise<Search>;
+    tokenHolders(address: string, limit?: number, page?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
+    tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
+    addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
+    addressAmountTokensOwned(address: string): number | Promise<number>;
+    coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
+    tokenExchangeRates(filter: TokenExchangeRateFilter, symbols: string[], limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+    totalNumTokenExchangeRates(): number | Promise<number>;
+    tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+    tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
+    tokensMetadata(symbols: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
+    tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+    tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+    internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+    transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    tx(hash: string): Transaction | Promise<Transaction>;
+    txs(limit?: number, page?: number, fromBlock?: BigNumber): Transaction[] | Promise<Transaction[]>;
+    txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
+    totalNumberOfTransactions(): BigNumber | Promise<BigNumber>;
+    uncleByHash(hash: string): Uncle | Promise<Uncle>;
+    uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
+    totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
+    latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
+    temp__(): boolean | Promise<boolean>;
 }
 
-export class Receipt {
-    transactionHash?: string;
-    transactionIndex?: string;
-    blockHash?: string;
-    blockNumber?: BigNumber;
-    from?: string;
+export interface Receipt {
+    transactionHash: string;
+    transactionIndex: string;
+    blockHash: string;
+    blockNumber: BigNumber;
+    from: string;
     to?: string;
     contractAddress?: string;
-    cumulativeGasUsed?: BigNumber;
-    gasUsed?: BigNumber;
-    logs?: string;
-    logsBloom?: string;
-    root?: string;
+    cumulativeGasUsed: BigNumber;
+    gasUsed: BigNumber;
+    logs: string;
+    logsBloom: string;
+    root: string;
     status?: string;
 }
 
-export class Reward {
-    address?: string;
-    blockHash?: string;
-    deltaType?: DeltaType;
-    amount?: BigNumber;
+export interface Reward {
+    address: string;
+    blockHash: string;
+    deltaType: DeltaType;
+    amount: BigNumber;
 }
 
-export class Search {
-    type?: SearchType;
+export interface Search {
+    type: SearchType;
     address?: AddressBalance;
     block?: Block;
     uncle?: Uncle;
     tx?: Transaction;
 }
 
-export abstract class ISubscription {
-    abstract newBlockMetric(): BlockMetric | Promise<BlockMetric>;
-
-    abstract newBlock(): BlockSummary | Promise<BlockSummary>;
-
-    abstract hashRate(): BigNumber | Promise<BigNumber>;
-
-    abstract isSyncing(): boolean | Promise<boolean>;
-
-    abstract newTransaction(): TransactionSummary | Promise<TransactionSummary>;
+export interface ISubscription {
+    newBlockMetric(): BlockMetric | Promise<BlockMetric>;
+    newBlock(): BlockSummary | Promise<BlockSummary>;
+    hashRate(): BigNumber | Promise<BigNumber>;
+    isSyncing(): boolean | Promise<boolean>;
+    newTransaction(): TransactionSummary | Promise<TransactionSummary>;
 }
 
-export class Token {
+export interface Token {
     name?: string;
     website?: string;
     email?: string;
@@ -398,7 +357,7 @@ export class Token {
     currentPrice?: BigNumber;
 }
 
-export class TokenExchangeRate {
+export interface TokenExchangeRate {
     address?: string;
     symbol?: string;
     name?: string;
@@ -420,17 +379,17 @@ export class TokenExchangeRate {
     holdersCount?: number;
 }
 
-export class TokenHolder {
-    address?: string;
-    balance?: BigNumber;
+export interface TokenHolder {
+    address: string;
+    balance: BigNumber;
 }
 
-export class TokenHoldersPage {
-    items?: TokenHolder[];
-    totalCount?: number;
+export interface TokenHoldersPage {
+    items: TokenHolder[];
+    totalCount: number;
 }
 
-export class TokenMetadata {
+export interface TokenMetadata {
     name?: string;
     website?: string;
     email?: string;
@@ -440,107 +399,112 @@ export class TokenMetadata {
     logo?: string;
 }
 
-export class Trace {
-    blockHash?: string;
+export interface Trace {
+    blockHash: string;
     transactionHash?: string;
-    traceAddress?: string;
+    traceAddress: string;
     transactionPosition?: number;
-    blockNumber?: BigNumber;
-    subtraces?: number;
+    blockNumber: BigNumber;
+    subtraces: number;
     error?: string;
-    type?: string;
-    action?: string;
-    result?: string;
+    type: string;
+    action: string;
+    result: string;
 }
 
-export class Transaction {
-    hash?: string;
-    nonce?: BigNumber;
-    blockHash?: string;
-    blockNumber?: BigNumber;
-    transactionIndex?: number;
-    from?: string;
+export interface Transaction {
+    hash: string;
+    nonce: BigNumber;
+    blockHash: string;
+    blockNumber: BigNumber;
+    transactionIndex: number;
+    from: string;
     to?: string;
-    value?: BigNumber;
-    gas?: BigNumber;
-    gasPrice?: BigNumber;
-    input?: Buffer;
-    v?: string;
-    r?: string;
-    s?: string;
-    timestamp?: string;
+    value: BigNumber;
+    gas: BigNumber;
+    gasPrice: BigNumber;
+    input: Buffer;
+    v: string;
+    r: string;
+    s: string;
+    timestamp: number;
     creates?: string;
     chainId?: string;
     receipt?: Receipt;
-    traces?: Trace[];
-    successful?: boolean;
+    traces: Trace[];
+    successful: boolean;
 }
 
-export class TransactionSummary {
-    hash?: string;
-    blockNumber?: BigNumber;
-    transactionIndex?: number;
-    from?: string;
+export interface TransactionSummary {
+    hash: string;
+    blockNumber: BigNumber;
+    transactionIndex: number;
+    from: string;
     to?: string;
     creates?: string;
     contractName?: string;
     contractSymbol?: string;
-    value?: BigNumber;
-    fee?: BigNumber;
-    successful?: boolean;
-    timestamp?: string;
+    value: BigNumber;
+    fee: BigNumber;
+    successful: boolean;
+    timestamp: number;
 }
 
-export class TransactionSummaryPage {
-    items?: TransactionSummary[];
-    totalCount?: BigNumber;
+export interface TransactionSummaryPage {
+    items: TransactionSummary[];
+    totalCount: number;
 }
 
-export class Transfer {
-    id?: string;
-    to?: string;
-    deltaType?: DeltaType;
+export interface Transfer {
+    id: string;
+    to: string;
+    deltaType: DeltaType;
     from?: string;
     contractAddress?: string;
     tokenType?: string;
-    amount?: BigNumber;
-    traceLocationBlockHash?: string;
-    traceLocationBlockNumber?: BigNumber;
+    amount: BigNumber;
+    traceLocationBlockHash: string;
+    traceLocationBlockNumber: BigNumber;
     traceLocationTransactionHash?: string;
     traceLocationTransactionIndex?: number;
     traceLocationLogIndex?: number;
     traceLocationTraceAddress?: string;
-    timestamp?: string;
+    timestamp: number;
 }
 
-export class TransfersPage {
-    items?: Transfer[];
-    totalCount?: BigNumber;
+export interface TransfersPage {
+    items: Transfer[];
+    totalCount: BigNumber;
 }
 
-export class Uncle {
-    hash?: string;
-    index?: number;
-    nephewNumber?: BigNumber;
-    nephewHash?: string;
-    number?: BigNumber;
-    height?: string;
-    parentHash?: string;
+export interface Uncle {
+    hash: string;
+    index: number;
+    nephewNumber: BigNumber;
+    nephewHash: string;
+    number: BigNumber;
+    height: string;
+    parentHash: string;
     nonce?: BigNumber;
-    sha3Uncles?: string;
-    logsBloom?: string;
-    transactionsRoot?: string;
-    stateRoot?: string;
-    receiptsRoot?: string;
-    author?: string;
-    difficulty?: BigNumber;
-    totalDifficulty?: BigNumber;
-    extraData?: string;
-    gasLimit?: BigNumber;
-    gasUsed?: BigNumber;
-    timestamp?: string;
-    size?: string;
-    rewardAmount?: BigNumber;
+    sha3Uncles: string;
+    logsBloom: string;
+    transactionsRoot: string;
+    stateRoot: string;
+    receiptsRoot: string;
+    author: string;
+    difficulty: BigNumber;
+    totalDifficulty: BigNumber;
+    extraData: string;
+    gasLimit: BigNumber;
+    gasUsed: BigNumber;
+    timestamp: number;
+    size: number;
+    rewardAmount: BigNumber;
+}
+
+export interface UnclePage {
+    items: Uncle[];
+    totalCount: number;
 }
 
 export type BigNumber = any;

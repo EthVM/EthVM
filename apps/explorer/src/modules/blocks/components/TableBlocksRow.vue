@@ -109,10 +109,10 @@
 <script lang="ts">
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 import { EthValue } from '@app/core/models'
 import BN from 'bignumber.js'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
 @Component({
   components: {
@@ -127,7 +127,7 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   */
 
   @Prop({ type: String, default: 'home' }) pageType!: string
-  @Prop(Object) block!: BlockSummaryExt
+  @Prop(Object) block!: BlockSummaryPageExt_items
 
   /*
   ===================================================================================

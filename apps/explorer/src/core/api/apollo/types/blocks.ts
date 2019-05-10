@@ -8,26 +8,26 @@
 
 export interface blocks_blocks_header {
   __typename: "BlockHeader";
-  hash: string | null;
-  number: any | null;
-  author: string | null;
+  hash: string;
+  number: any;
+  author: string;
 }
 
 export interface blocks_blocks_rewards {
   __typename: "Reward";
-  value: any | null;
+  value: any;
 }
 
 export interface blocks_blocks {
   __typename: "Block";
-  header: blocks_blocks_header | null;
-  transactionHashes: (string | null)[] | null;
-  uncleHashes: (string | null)[] | null;
-  rewards: (blocks_blocks_rewards | null)[] | null;
+  header: blocks_blocks_header;
+  transactionHashes: string[];
+  uncleHashes: string[];
+  rewards: blocks_blocks_rewards[];
 }
 
 export interface blocks {
-  blocks: (blocks_blocks | null)[] | null;
+  blocks: blocks_blocks[];
 }
 
 export interface blocksVariables {

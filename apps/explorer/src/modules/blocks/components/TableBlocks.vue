@@ -123,16 +123,12 @@ import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
-import { Block, SimpleBlock } from '@app/core/models'
-import { Footnote } from '@app/core/components/props'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import { BlockSummary } from '@app/core/api/apollo/types/BlockSummary'
-import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
-import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
-import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
+import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
 const MAX_ITEMS = 50
 
@@ -219,7 +215,7 @@ const MAX_ITEMS = 50
         },
 
         skip() {
-          return this.pageType !== 'home'
+          return (this as any).pageType !== 'home'
         }
       }
     }
@@ -244,7 +240,6 @@ export default class TableBlocks extends Vue {
 
   blockPage?: BlockSummaryPageExt
   fromBlock?: BigNumber
-  blockPage?: BlockSummaryPage
 
   connectedSubscription?: Subscription
 
@@ -268,10 +263,6 @@ export default class TableBlocks extends Vue {
     if (this.connectedSubscription) {
       this.connectedSubscription.unsubscribe()
     }
-  }
-
-  get blockPageExt(): BlockSummaryPageExt | null {
-    return this.blockPage ? new BlockSummaryPageExt(this.blockPage) : null
   }
 
   get blocks(): (BlockSummaryPage_items | null)[] {

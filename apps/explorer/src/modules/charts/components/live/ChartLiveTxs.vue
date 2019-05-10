@@ -17,9 +17,8 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
-import { BlockSummaryExt } from '@app/core/api/apollo/extensions/block-summary.ext'
 import BigNumber from 'bignumber.js'
-import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { Subscription } from 'rxjs'
 
 const MAX_ITEMS = 10
@@ -142,7 +141,7 @@ export default class ChartLiveTxs extends Vue {
       ===================================================================================
       */
 
-  toChartData(items: (BlockSummaryExt | null)[]) {
+  toChartData(items: (BlockSummaryPageExt_items)[]) {
     const numberLabel = this.$i18n.t('block.number')
 
     const labels: string[] = []
@@ -168,7 +167,7 @@ export default class ChartLiveTxs extends Vue {
       */
 
   get chartData() {
-    const items: (BlockSummaryExt | null)[] = this.blockPage ? this.blockPage.items || [] : []
+    const items = this.blockPage ? this.blockPage.items : []
     const data = this.toChartData(items)
 
     return {

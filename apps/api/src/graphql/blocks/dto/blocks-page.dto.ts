@@ -1,14 +1,16 @@
 import { BlocksPage } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
-import {BlockDto} from '@app/graphql/blocks/dto/block.dto'
+import { BlockDto } from '@app/graphql/blocks/dto/block.dto'
 
-export class BlocksPageDto extends BlocksPage {
+export class BlocksPageDto implements BlocksPage {
+
+  items!: BlockDto[]
+  totalCount!: number
+
   constructor(data: any) {
-    super()
+    assignClean(this, data)
     if (data.items) {
       this.items = data.items.map(i => new BlockDto(i))
-      delete data.items
     }
-    assignClean(this, data)
   }
 }

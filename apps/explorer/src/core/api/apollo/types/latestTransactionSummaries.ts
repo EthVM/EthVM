@@ -8,28 +8,28 @@
 
 export interface latestTransactionSummaries_summaries_items {
   __typename: "TransactionSummary";
-  hash: string | null;
-  blockNumber: any | null;
-  transactionIndex: number | null;
-  from: string | null;
+  hash: string;
+  blockNumber: any;
+  transactionIndex: number;
+  from: string;
   to: string | null;
   creates: string | null;
   contractName: string | null;
   contractSymbol: string | null;
-  value: any | null;
-  fee: any | null;
-  successful: boolean | null;
-  timestamp: string | null;
+  value: any;
+  fee: any;
+  successful: boolean;
+  timestamp: number;
 }
 
 export interface latestTransactionSummaries_summaries {
   __typename: "TransactionSummaryPage";
-  items: (latestTransactionSummaries_summaries_items | null)[] | null;
-  totalCount: any | null;
+  items: latestTransactionSummaries_summaries_items[];
+  totalCount: number;
 }
 
 export interface latestTransactionSummaries {
-  summaries: latestTransactionSummaries_summaries | null;
+  summaries: latestTransactionSummaries_summaries;
 }
 
 export interface latestTransactionSummariesVariables {

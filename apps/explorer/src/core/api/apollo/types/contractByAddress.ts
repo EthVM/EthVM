@@ -45,7 +45,7 @@ export interface contractByAddress_contractByAddress {
 }
 
 export interface contractByAddress {
-  contractByAddress: contractByAddress_contractByAddress | null;
+  contractByAddress: contractByAddress_contractByAddress;
 }
 
 export interface contractByAddressVariables {

@@ -133,7 +133,7 @@ export class TxService {
 
   private async summarise(txs: TransactionEntity[], count: number): Promise<[TransactionSummary[], number]> {
 
-    if (!txs.length) return [txs, count]
+    if (!txs.length) return [[], 0]
 
     const { traceService, contractService } = this
 
@@ -188,7 +188,7 @@ export class TxService {
         fee: tx.gasPrice.multipliedBy(tx.receipt!.gasUsed),
         successful: txStatusByHash.get(tx.hash)!.successful,
         timestamp: tx.timestamp,
-      }
+      } as TransactionSummary
     })
 
     return [summaries, count]

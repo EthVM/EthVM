@@ -8,16 +8,16 @@
 
 export interface latestBlockStats_blockSummaries_items {
   __typename: "BlockSummary";
-  number: any | null;
-  timestamp: string | null;
-  difficulty: any | null;
-  numSuccessfulTxs: any | null;
-  numFailedTxs: any | null;
+  number: any;
+  timestamp: number;
+  difficulty: any;
+  numSuccessfulTxs: any;
+  numFailedTxs: any;
 }
 
 export interface latestBlockStats_blockSummaries {
   __typename: "BlockSummaryPage";
-  items: (latestBlockStats_blockSummaries_items | null)[] | null;
+  items: latestBlockStats_blockSummaries_items[];
 }
 
 export interface latestBlockStats {

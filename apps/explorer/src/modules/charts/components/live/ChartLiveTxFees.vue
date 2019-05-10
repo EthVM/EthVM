@@ -20,9 +20,8 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
-import { BlockMetricPageExt } from '@app/core/api/apollo/extensions/block-metric-page.ext'
+import { BlockMetricPageExt, BlockMetricPageExt_items } from '@app/core/api/apollo/extensions/block-metric-page.ext'
 import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/blocks.graphql'
-import { BlockMetricExt } from '@app/core/api/apollo/extensions/block-metric.ext'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 
@@ -142,7 +141,7 @@ export default class ChartLiveTxFees extends Vue {
     ===================================================================================
     */
 
-  toChartData(items: BlockMetricExt[]) {
+  toChartData(items: BlockMetricPageExt_items[]) {
     const numberLabel = this.$i18n.t('block.number')
 
     const labels: string[] = []
@@ -165,7 +164,7 @@ export default class ChartLiveTxFees extends Vue {
     */
 
   get chartData() {
-    const items: BlockMetricExt[] = this.metricsPage ? this.metricsPage.items || [] : []
+    const items = this.metricsPage ? this.metricsPage.items || [] : []
     const data = this.toChartData(items)
 
     return {

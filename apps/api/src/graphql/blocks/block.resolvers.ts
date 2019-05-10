@@ -34,9 +34,9 @@ export class BlockResolvers {
 
   @Query()
   async blocks(
-    @Args('page', ParsePagePipe) page: number,
-    @Args('limit', ParseLimitPipe) limit: number,
-    @Args('fromBlock') fromBlock?: number,
+    @Args('page') page: number,
+    @Args('limit') limit: number,
+    @Args('fromBlock') fromBlock?: BigNumber,
   ) {
     const entities = await this.blockService.findBlocks(limit, page, fromBlock)
     return entities.map(e => new BlockDto(e))
@@ -57,8 +57,8 @@ export class BlockResolvers {
   @Query()
   async minedBlocksByAddress(
     @Args('address', ParseAddressPipe) address: string,
-    @Args('limit', ParseLimitPipe) limit?: number,
-    @Args('page', ParsePagePipe) page?: number,
+    @Args('limit') limit: number,
+    @Args('page') page: number,
   ): Promise<BlocksPageDto> {
     const result = await this.blockService.findMinedBlocksByAddress(address, limit, page)
     return new BlocksPageDto({

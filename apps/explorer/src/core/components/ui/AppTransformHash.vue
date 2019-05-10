@@ -1,8 +1,17 @@
 <template>
-  <div :class="hashClass" @click="reroute">
-    <p>{{ first }}</p>
-    <p class="concat">{{ middle }}</p>
-    <p>{{ last }}</p>
+  <div class="transform-hash-container">
+    <router-link v-if="link" :to="url">
+      <div :class="hashClass">
+        <div class="hash-section">{{ first }}</div>
+        <div class="concat hash-section">{{ middle }}</div>
+        <div class="hash-section">{{ last }}</div>
+      </div>
+    </router-link>
+    <div :class="hashClass" v-else>
+      <div class="hash-section">{{ first }}</div>
+      <div class="concat hash-section">{{ middle }}</div>
+      <div class="hash-section">{{ last }}</div>
+    </div>
   </div>
 </template>
 
@@ -47,16 +56,8 @@ export default class AppTransformHash extends Vue {
     return this.italic ? 'hash-container font-italic secondary--text font-mono' : ' hash-container secondary--text font-mono'
   }
 
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  reroute(): void {
-    if (this.link) {
-      this.$router.push({ path: this.link })
-    }
+  get url(): string {
+    return this.link
   }
 }
 </script>
@@ -68,13 +69,15 @@ export default class AppTransformHash extends Vue {
   text-overflow: ellipsis;
 
 }
+.transform-hash-container {
+ overflow: hidden;
+}
 .hash-container {
   min-width: 80px;
   display: flex;
   flex-shrink: 2;
 }
-
-p{
-  margin-bottom: 0px;
+.hash-section {
+  display: inline;
 }
 </style>

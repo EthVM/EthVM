@@ -56,8 +56,8 @@ export class TransactionEntity {
   @Column({ type: 'character', length: 78, readonly: true })
   s!: string
 
-  @Column({ type: 'bigint', readonly: true })
-  timestamp!: string
+  @Column({ type: 'int', readonly: true })
+  timestamp!: number
 
   @Column({ type: 'character', length: 66, readonly: true })
   creates?: string

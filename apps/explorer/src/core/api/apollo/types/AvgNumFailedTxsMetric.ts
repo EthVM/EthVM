@@ -8,6 +8,6 @@
 
 export interface AvgNumFailedTxsMetric {
   __typename: "AggregateBlockMetric";
-  timestamp: any | null;
+  timestamp: any;
   value: number | null;
 }

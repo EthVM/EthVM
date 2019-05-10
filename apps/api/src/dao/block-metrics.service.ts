@@ -6,6 +6,7 @@ import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql
 import { unitOfTime } from 'moment'
 import moment = require('moment')
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
+import BigNumber from 'bignumber.js'
 
 @Injectable()
 export class BlockMetricsService {
@@ -38,6 +39,12 @@ export class BlockMetricsService {
     // usual count mechanism
     const count = await this.blockHeaderRepository
       .count()
+
+    items.forEach(item => {
+      // if there is no txs these fields can be null
+      item.totalTxFees = item.totalTxFees || new BigNumber(0)
+      item.avgTxFees = item.avgTxFees || new BigNumber(0)
+    })
 
     return [items, count]
   }

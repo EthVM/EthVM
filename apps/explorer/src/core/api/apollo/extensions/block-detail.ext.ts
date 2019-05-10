@@ -3,83 +3,83 @@ import BigNumber from 'bignumber.js'
 import { DeltaType } from '@app/core/api/apollo/types/globalTypes'
 import { EthValue } from '@app/core/models'
 import { TransactionSummaryPage } from '@app/core/api/apollo/types/TransactionSummaryPage'
-import { TransactionSummaryExt } from '@app/core/api/apollo/extensions/transaction-summary.ext'
+import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
 
 export class BlockDetailExt_header implements BlockDetail_header {
   __typename!: 'BlockHeader'
-  author!: string | null
-  blockTime!: number | null
-  difficulty!: any | null
-  extraData!: string | null
-  gasLimit!: any | null
-  gasUsed!: any | null
-  hash!: string | null
-  logsBloom!: string | null
-  nonce!: any | null
-  number!: any | null
-  parentHash!: string | null
-  receiptsRoot!: string | null
-  sha3Uncles!: string | null
-  size!: number | null
-  stateRoot!: string | null
-  timestamp!: number | null
-  totalDifficulty!: any | null
-  transactionsRoot!: string | null
+  author!: string
+  blockTime!: number
+  difficulty: any
+  extraData!: string
+  gasLimit: any
+  gasUsed: any
+  hash!: string
+  logsBloom!: string
+  nonce: any | null
+  number: any
+  parentHash!: string
+  receiptsRoot!: string
+  sha3Uncles!: string
+  size!: number
+  stateRoot!: string
+  timestamp!: number
+  totalDifficulty!: any
+  transactionsRoot!: string
 
   constructor(data: any) {
     Object.assign(this, data)
   }
 
-  get difficultyBN(): BigNumber | null {
-    return this.difficulty ? new BigNumber(this.difficulty) : null
+  get difficultyBN(): BigNumber {
+    return new BigNumber(this.difficulty)
   }
 
-  get gasLimitBN(): BigNumber | null {
-    return this.gasLimit ? new BigNumber(this.gasLimit) : null
+  get gasLimitBN(): BigNumber {
+    return new BigNumber(this.gasLimit)
   }
 
-  get gasUsedBN(): BigNumber | null {
-    return this.gasUsed ? new BigNumber(this.gasUsed) : null
+  get gasUsedBN(): BigNumber {
+    return new BigNumber(this.gasUsed)
   }
 
   get nonceBN(): BigNumber | null {
     return this.nonce ? new BigNumber(this.nonce) : null
   }
 
-  get numberBN(): BigNumber | null {
-    return this.number ? new BigNumber(this.number) : null
+  get numberBN(): BigNumber {
+    return new BigNumber(this.number)
   }
 
-  get totalDifficultyBN(): BigNumber | null {
-    return this.totalDifficulty ? new BigNumber(this.totalDifficulty) : null
+  get totalDifficultyBN(): BigNumber {
+    return new BigNumber(this.totalDifficulty)
   }
 
-  get timestampMs(): number | null {
-    return this.timestamp ? this.timestamp * 1000 : null
+  get timestampMs(): number {
+    return this.timestamp * 1000
   }
 }
 
 export class BlockDetailExt_rewards implements BlockDetail_rewards {
   __typename!: 'Reward'
-  address!: string | null
-  amount!: any | null
-  deltaType!: DeltaType | null
+  address!: string
+  amount!: any
+  deltaType!: DeltaType
 
   constructor(data: any) {
     Object.assign(this, data)
   }
 
-  get amountBN(): BigNumber | null {
-    return this.amount ? new BigNumber(this.amount) : null
+  get amountBN(): BigNumber {
+    return new BigNumber(this.amount)
   }
 }
 
 export class BlockDetailExt implements BlockDetail {
   __typename!: 'Block'
-  header!: BlockDetailExt_header | null
-  rewards!: (BlockDetailExt_rewards | null)[] | null
-  transactionHashes!: (string | null)[] | null
-  uncleHashes!: (string | null)[] | null
+  header: BlockDetailExt_header
+  rewards: BlockDetailExt_rewards[]
+  transactionHashes!: string[]
+  uncleHashes!: string[]
 
   totalTxFees: EthValue
 
@@ -91,8 +91,8 @@ export class BlockDetailExt implements BlockDetail {
 
     const { header, rewards } = detail
 
-    this.header = header ? new BlockDetailExt_header(header) : null
-    this.rewards = rewards ? rewards.map(r => (r ? new BlockDetailExt_rewards(r) : null)) : null
+    this.header = new BlockDetailExt_header(header)
+    this.rewards = rewards.map(r => new BlockDetailExt_rewards(r))
 
     if (!transactionSummaryPage) {
       throw new Error('transactionSummaryPage is required')
@@ -103,8 +103,8 @@ export class BlockDetailExt implements BlockDetail {
       throw new Error('Not all transaction summaries were retrieved')
     }
 
-    const totalTxFees = items!
-      .map(summary => new TransactionSummaryExt(summary!))
+    const totalTxFees = items
+      .map(summary => new TransactionSummaryPageExt_items(summary!))
       .map(summary => summary.feeBN!)
       .reduce((memo, next) => memo.plus(next), new BigNumber(0))
 
