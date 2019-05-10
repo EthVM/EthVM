@@ -62,6 +62,13 @@ export class TransferService {
 
   }
 
+  /**
+   * The difference between this query and findTokenTransfersByContractAddressForHolder
+   * is that this query:
+   *
+   * 1) Accepts an array of possible token contractAddresses
+   * 2) Accepts timestampTo/timestampFrom
+   */
   async findTokenTransfersByContractAddressesForHolder(
     addresses: string[],
     holder: string,
@@ -106,8 +113,8 @@ export class TransferService {
 
     return builder
       .setParameters({ addresses, deltaType: 'TOKEN_TRANSFER', holder, timestampFrom, timestampTo })
-      .orderBy('t.traceLocationBlockNumber', 'DESC')
-      .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
+      .orderBy('t.timestamp', 'DESC')
+      // .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(skip)
       .take(take)
       .getManyAndCount()
