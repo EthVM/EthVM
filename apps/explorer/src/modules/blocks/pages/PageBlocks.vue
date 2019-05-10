@@ -4,7 +4,7 @@
     <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :max-items="max"/>
+        <table-blocks :max-items="max" />
       </v-flex>
     </v-layout>
   </v-container>
