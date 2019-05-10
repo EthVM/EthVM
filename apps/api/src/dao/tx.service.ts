@@ -84,7 +84,7 @@ export class TxService {
         where,
         select: ['hash'],
         skip: offset,
-        take: limit
+        take: limit,
       })
 
     if (count === 0) return [[], count]

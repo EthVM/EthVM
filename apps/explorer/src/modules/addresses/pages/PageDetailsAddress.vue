@@ -28,7 +28,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-0">
-        <table-txs :address="addressRef" :page-type="'address'" :max-items="max" ></table-txs>
+        <table-txs :address="addressRef" :page-type="'address'" :max-items="max"></table-txs>
       </v-tab-item>
       <!--
       =====================================================================================
@@ -114,7 +114,7 @@ import { Crumb, Tab } from '@app/core/components/props'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import TableTxs from '@app/modules/txs/components/TableTxs.vue';
+import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 
 const MAX_ITEMS = 10
 
@@ -251,7 +251,6 @@ export default class PageDetailsAddress extends Vue {
 
           Promise.all(promises)
             .then((res: any[]) => {
-
               // Pending Txs
               // this.account.pendingTxs = res[1] || []
               // this.pendingTxsLoading = false

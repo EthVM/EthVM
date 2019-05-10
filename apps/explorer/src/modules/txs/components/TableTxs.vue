@@ -404,7 +404,6 @@ export default class TableTxs extends TableTxsMixin {
   }
 
   get footnotes(): Footnote[] {
-
     if (this.isAddressDetail) {
       return [
         {
@@ -473,9 +472,9 @@ export default class TableTxs extends TableTxsMixin {
   get text(): string {
     if (this.isAddressDetail) {
       const messages = {
-        'all': this.$i18n.t('message.tx.no-all'),
-        'in': this.$i18n.t('message.tx.no-in'),
-        'out': this.$i18n.t('message.tx.no-out')
+        all: this.$i18n.t('message.tx.no-all'),
+        in: this.$i18n.t('message.tx.no-in'),
+        out: this.$i18n.t('message.tx.no-out')
       }
       return messages[this.filter].toString()
     }
