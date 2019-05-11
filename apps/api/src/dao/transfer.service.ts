@@ -149,28 +149,31 @@ export class TransferService {
     timestampTo: number = 0
   ): Promise<[FungibleBalanceDeltaEntity[], number]>{
 
-
-    /**
-     * Notes: DISTINCT?
-     * https://github.com/typeorm/typeorm/pull/3065
-     */
+    // Need to make subQuery somehow?? //
+    // SEE: https://github.com/typeorm/typeorm/blob/17f3224c58b7126a9c1360ce21f43cda83a35e04/test/functional/query-builder/subquery/query-builder-subquery.ts#L328-L327
+    // https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#partial-selection
+    // https://dba.stackexchange.com/questions/192553/calculate-running-sum-of-each-row-from-start-even-when-filtering-records
     const builder = this.deltaRepository.createQueryBuilder('t')
-      .innerJoinAndSelect("t.transaction", "transaction")
-      .addSelect("SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance")
+      // .innerJoinAndSelect('t.transaction', 'transaction')
+      .addSelect('*, SUM(t.amount) OVER (ORDER BY t.trace_location_block_number) AS balance')
+
       .where('t.contract_address = ANY(:addresses)')
       .andWhere('t.address = :holder')
-      .groupBy('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, transaction.hash, transaction.nonce, transaction.blockHash, transaction.blockNumber, transaction.transactionIndex, transaction.from, transaction.to, transaction.value, transaction.gas, transaction.gasPrice, transaction.input, transaction.v, transaction.r, transaction.s, transaction.timestamp, transaction.creates, transaction.chainId')
 
 
+    const now = Date.now()
     const items = await builder
+      // .innerJoinAndSelect('t.transaction', 'transaction')
       .setParameters({ addresses, holder, timestampFrom, timestampTo })
       .getRawMany()
+      
+      console.log(items)
 
-      console.log('items', items)
-
-    const count = await builder
-      .setParameters({ addresses, holder, timestampFrom, timestampTo })
-      .getCount()
+    console.log(Date.now() - now)
+    const count = items.length
+    // const count = await builder
+    //   .setParameters({ addresses, holder, timestampFrom, timestampTo })
+    //   .getCount()
 
     return [
 
@@ -184,7 +187,7 @@ export class TransferService {
           tokenType: item.t_tokenType,
           amount: item.t_amount,
           balance: item.balance,
-          timestamp: item.transaction_timestamp,
+          timestamp: 1480022882, // item.transaction_timestamp,
           traceLocationBlockHash: item.t_trace_location_block_hash,
           traceLocationBlockNumber: item.t_trace_location_block_number,
           traceLocationTransactionHash: item.t_trace_location_transaction_hash,

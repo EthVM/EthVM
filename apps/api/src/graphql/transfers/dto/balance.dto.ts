@@ -9,9 +9,9 @@ export class BalanceDto implements Balance {
   // deltaType!: DeltaType;
   contractAddress?: string;
   tokenType?: string;
-  amount?: BigNumber;
-  balance?: BigNumber;
-  timestamp?: number;
+  amount!: BigNumber;
+  balance!: BigNumber;
+  timestamp!: number;
   // traceLocationBlockHash!: string;
   // traceLocationBlockNumber!: BigNumber;
   // traceLocationTransactionHash?: string;
