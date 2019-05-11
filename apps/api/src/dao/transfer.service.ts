@@ -155,10 +155,11 @@ export class TransferService {
      * https://github.com/typeorm/typeorm/pull/3065
      */
     const builder = this.deltaRepository.createQueryBuilder('t')
-      .addSelect("SUM(t.amount) OVER (ORDER BY t.trace_location_block_number) AS balance")
+      .innerJoinAndSelect("t.transaction", "transaction")
+      .addSelect("SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance")
       .where('t.contract_address = ANY(:addresses)')
       .andWhere('t.address = :holder')
-      .groupBy('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress')
+      .groupBy('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, transaction.hash, transaction.nonce, transaction.blockHash, transaction.blockNumber, transaction.transactionIndex, transaction.from, transaction.to, transaction.value, transaction.gas, transaction.gasPrice, transaction.input, transaction.v, transaction.r, transaction.s, transaction.timestamp, transaction.creates, transaction.chainId')
 
 
     const items = await builder
@@ -182,12 +183,14 @@ export class TransferService {
           contractAddress: item.t_contractAddress,
           tokenType: item.t_tokenType,
           amount: item.t_amount,
-          traceLocationBlockHash: item.t_traceLocationBlockHash,
-          traceLocationBlockNumber: item.t_traceLocationBlockNumber,
-          traceLocationTransactionHash: item.t_traceLocationTransactionHash,
-          traceLocationTransactionIndex: item.t_traceLocationTransactionIndex,
-          traceLocationLogIndex: item.t_traceLocationLogIndex,
-          traceLocationTraceAddress: item.t_traceLocationTraceAddress,
+          balance: item.balance,
+          timestamp: item.transaction_timestamp,
+          traceLocationBlockHash: item.t_trace_location_block_hash,
+          traceLocationBlockNumber: item.t_trace_location_block_number,
+          traceLocationTransactionHash: item.t_trace_location_transaction_hash,
+          traceLocationTransactionIndex: item.t_trace_location_transaction_index,
+          traceLocationLogIndex: item.t_trace_location_log_index,
+          traceLocationTraceAddress: item.t_trace_location_trace_address,
           // transaction: item.transaction
         } as FungibleBalanceDeltaEntity
       }),

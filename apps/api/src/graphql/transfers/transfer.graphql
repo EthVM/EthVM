@@ -37,18 +37,20 @@ type BalancesPage {
 type Balance {
   id: String!,
   address: String!,
-  counterpartAddress: String,
-  deltaType: DeltaType!
+  # counterpartAddress: String,
+  # deltaType: DeltaType!
   contractAddress: String
   tokenType: String
   amount: BigNumber!
-  traceLocationBlockHash: String!
-  traceLocationBlockNumber: BigNumber!
-  traceLocationTransactionHash: String
-  traceLocationTransactionIndex: Int
-  traceLocationLogIndex: Int
-  traceLocationTraceAddress: String
-  transaction: Transaction
+  balance: BigNumber!
+  timestamp: Int!
+  # traceLocationBlockHash: String!
+  # traceLocationBlockNumber: BigNumber!
+  # traceLocationTransactionHash: String
+  # traceLocationTransactionIndex: Int
+  # traceLocationLogIndex: Int
+  # traceLocationTraceAddress: String
+  # transaction: Transaction
 }
 
 enum DeltaType {

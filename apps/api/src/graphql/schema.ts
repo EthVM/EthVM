@@ -114,18 +114,11 @@ export interface AggregateBlockMetric {
 export interface Balance {
     id: string;
     address: string;
-    counterpartAddress?: string;
-    deltaType: DeltaType;
     contractAddress?: string;
     tokenType?: string;
     amount: BigNumber;
-    traceLocationBlockHash: string;
-    traceLocationBlockNumber: BigNumber;
-    traceLocationTransactionHash?: string;
-    traceLocationTransactionIndex?: number;
-    traceLocationLogIndex?: number;
-    traceLocationTraceAddress?: string;
-    transaction?: Transaction;
+    balance: BigNumber;
+    timestamp: number;
 }
 
 export interface BalancesPage {
