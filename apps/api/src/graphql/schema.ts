@@ -111,6 +111,27 @@ export interface AggregateBlockMetric {
     avgTotalTxFees?: BigNumber;
 }
 
+export interface Balance {
+    id: string;
+    address: string;
+    counterpartAddress?: string;
+    deltaType: DeltaType;
+    contractAddress?: string;
+    tokenType?: string;
+    amount: BigNumber;
+    traceLocationBlockHash: string;
+    traceLocationBlockNumber: BigNumber;
+    traceLocationTransactionHash?: string;
+    traceLocationTransactionIndex?: number;
+    traceLocationLogIndex?: number;
+    traceLocationTraceAddress?: string;
+    transaction?: Transaction;
+}
+
+export interface BalancesPage {
+    items: Balance[];
+}
+
 export interface Block {
     header: BlockHeader;
     uncleHashes: string[];
@@ -294,6 +315,7 @@ export interface IQuery {
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransfersPage | Promise<TransfersPage>;
     internalTransactionsByAddress(address: string, limit?: number, page?: number): TransfersPage | Promise<TransfersPage>;
+    tokenBalancesByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;

@@ -5,6 +5,7 @@ import {ParseAddressesPipe} from '@app/shared/validation/parse-addresses.pipe'
 import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
 import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe'
 import {TransfersPageDto} from '@app/graphql/transfers/dto/transfers-page.dto'
+import {BalancesPageDto} from '@app/graphql/transfers/dto/balances-page.dto'
 
 @Resolver('Transfer')
 export class TransferResolvers {
@@ -67,5 +68,23 @@ export class TransferResolvers {
       items: result[0],
       totalCount: result[1],
     })
+  }
+
+  @Query()
+  async tokenBalancesByContractAddressesForHolder(
+    @Args({name: 'contractAddresses', type: () => [String]}, ParseAddressesPipe) contractAddresses: string[],
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+    @Args('timestampFrom') timestampFrom: number,
+    @Args('timestampTo') timestampTo: number,
+  ): Promise<any> {
+    const result = await this.transferService.findTokenBalancesByContractAddressesForHolder(contractAddresses, holderAddress, timestampFrom, timestampTo)
+    return {
+      items: result[0],
+      totalCount: result[1]
+    }
+    // return new BalancesPageDto({
+    //   items: result[0],
+    //   totalCount: result[1],
+    // })
   }
 }

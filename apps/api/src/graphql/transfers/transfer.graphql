@@ -3,6 +3,8 @@ type Query {
   tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum = all, limit: Int = 20, page: Int = 0): TransfersPage!
   tokenTransfersByContractAddressesForHolder(contractAddresses: [String!], holderAddress: String!, filter: FilterEnum = all, limit: Int = 20, page: Int = 0, timestampFrom: Int = 0, timestampTo: Int = 0): TransfersPage
   internalTransactionsByAddress(address: String!, limit: Int = 20, page: Int = 0): TransfersPage!
+
+  tokenBalancesByContractAddressesForHolder(contractAddresses: [String!], holderAddress: String!, timestampFrom: Int = 0, timestampTo: Int = 0): BalancesPage
 }
 
 type TransfersPage {
@@ -25,6 +27,27 @@ type Transfer {
   traceLocationLogIndex: Int
   traceLocationTraceAddress: String
   timestamp: Int!
+}
+
+type BalancesPage {
+  items: [Balance!]!
+}
+
+type Balance {
+  id: String!,
+  address: String!,
+  counterpartAddress: String,
+  deltaType: DeltaType!
+  contractAddress: String
+  tokenType: String
+  amount: BigNumber!
+  traceLocationBlockHash: String!
+  traceLocationBlockNumber: BigNumber!
+  traceLocationTransactionHash: String
+  traceLocationTransactionIndex: Int
+  traceLocationLogIndex: Int
+  traceLocationTraceAddress: String
+  transaction: Transaction
 }
 
 enum DeltaType {

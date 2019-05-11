@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Brackets, FindManyOptions, Repository } from 'typeorm'
 import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
+import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 
 @Injectable()
 export class TransferService {
@@ -9,6 +10,8 @@ export class TransferService {
   constructor(
     @InjectRepository(FungibleBalanceTransferEntity)
     private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
+    @InjectRepository(FungibleBalanceDeltaEntity)
+    private readonly deltaRepository: Repository<FungibleBalanceDeltaEntity>,
   ) {
   }
 
@@ -136,6 +139,98 @@ export class TransferService {
       .offset(skip)
       .limit(take)
       .getManyAndCount()
+
+  }
+
+  async findTokenBalancesByContractAddressesForHolder(
+    addresses: string[],
+    holder: string,
+    timestampFrom: number = 0,
+    timestampTo: number = 0
+  ): Promise<[ Promise<any[]>, Promise<number>]>{
+
+
+    /**
+     * Notes: DISTINCT?
+     * https://github.com/typeorm/typeorm/pull/3065
+     */
+    const builder = this.deltaRepository.createQueryBuilder('t')
+      .select("SUM(t.amount)", "balance")
+      .where('t.contract_address = ANY(:addresses)')
+      // .addSelect('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, t.transaction, SUM(t.amount) AS balance')
+      // .groupBy('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, t.transaction')
+      // .innerJoinAndSelect("t.transaction", "transaction")
+
+      // .addSelect(qb => {
+      //     const subQuery = qb.subQuery()
+      //         .select('t.id, t.trace_location_block_number, SUM(t.amount) AS balance')
+      //         .groupBy('t.id, t.trace_location_block_number, t.amount')
+      //         .getQuery();
+      //     return subQuery;
+      // })
+
+      // .select('t.id, t.trace_location_block_number, SUM(t.amount)', 'balance')
+      // .groupBy('t.id, t.trace_location_block_number, t.amount')
+
+
+    //   .select('SUM(t.amount)', 'balance')
+    // .groupBy('id, amount, transaction')
+    // .where('balance.contract_address = ANY(:addresses)')
+
+    //   // .where(qb => {
+    //   //   const subQuery = new qb.subQuery()
+    //   //     .select('SUM(t.amount)', 'balance')
+    //   //     .where('t.contract_address = ANY(:addresses)')
+    //   //     .getQuery()
+    //   //   return subQuery
+    //   // })
+    //   .innerJoinAndSelect("balance.transaction", "transaction")
+
+    // switch (filter) {
+    //   case 'in':
+    //     builder.andWhere('t.from = :holder')
+    //     break
+    //   case 'out':
+    //     builder.andWhere('t.to = :holder')
+    //     break
+    //   default:
+    //     builder.andWhere(new Brackets(sqb => {
+    //       sqb.where('t.from = :holder')
+    //       sqb.orWhere('t.to = :holder')
+    //     }))
+    //     break
+    // }
+
+    // if (timestampFrom > 0) {
+    //   builder.andWhere(new Brackets(sqb => {
+    //     sqb.where('transaction.timestamp > :timestampFrom')
+    //   }))
+    // }
+
+    // if (timestampTo > 0) {
+    //   builder.andWhere(new Brackets(sqb => {
+    //     sqb.where('transaction.timestamp < :timestampTo')
+    //   }))
+    // }
+
+    return [
+      builder
+      .setParameters({ addresses, holder, timestampFrom, timestampTo })
+      // .orderBy('transaction.timestamp', 'DESC')
+      // .offset(skip)
+      // .take(take)
+      // .getManyAndCount()
+      .getRawMany(),
+      builder
+      .setParameters({ addresses, holder, timestampFrom, timestampTo })
+      // .orderBy('transaction.timestamp', 'DESC')
+      // .offset(skip)
+      // .take(take)
+      // .getManyAndCount()
+      // .getRawMany()
+      .getCount()
+      // .getCount()
+    ]
 
   }
 
