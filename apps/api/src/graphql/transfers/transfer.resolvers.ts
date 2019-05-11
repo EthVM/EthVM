@@ -76,15 +76,11 @@ export class TransferResolvers {
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
     @Args('timestampFrom') timestampFrom: number,
     @Args('timestampTo') timestampTo: number,
-  ): Promise<any> {
+  ): Promise<BalancesPageDto> {
     const result = await this.transferService.findTokenBalancesByContractAddressesForHolder(contractAddresses, holderAddress, timestampFrom, timestampTo)
-    return {
+    return new BalancesPageDto({
       items: result[0],
-      totalCount: result[1]
-    }
-    // return new BalancesPageDto({
-    //   items: result[0],
-    //   totalCount: result[1],
-    // })
+      totalCount: result[1],
+    })
   }
 }

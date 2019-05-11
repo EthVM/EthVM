@@ -130,6 +130,7 @@ export interface Balance {
 
 export interface BalancesPage {
     items: Balance[];
+    totalCount: BigNumber;
 }
 
 export interface Block {

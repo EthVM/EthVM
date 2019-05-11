@@ -147,7 +147,7 @@ export class TransferService {
     holder: string,
     timestampFrom: number = 0,
     timestampTo: number = 0
-  ): Promise<[ Promise<any[]>, Promise<number>]>{
+  ): Promise<[FungibleBalanceDeltaEntity[], number]>{
 
 
     /**
@@ -155,8 +155,47 @@ export class TransferService {
      * https://github.com/typeorm/typeorm/pull/3065
      */
     const builder = this.deltaRepository.createQueryBuilder('t')
-      .select("SUM(t.amount)", "balance")
+      .addSelect("SUM(t.amount) OVER (ORDER BY t.trace_location_block_number) AS balance")
       .where('t.contract_address = ANY(:addresses)')
+      .andWhere('t.address = :holder')
+      .groupBy('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress')
+
+
+    const items = await builder
+      .setParameters({ addresses, holder, timestampFrom, timestampTo })
+      .getRawMany()
+
+      console.log('items', items)
+
+    const count = await builder
+      .setParameters({ addresses, holder, timestampFrom, timestampTo })
+      .getCount()
+
+    return [
+
+      items.map(item => {
+        return {
+          id: item.t_id,
+          address: item.t_address,
+          counterpartAddress: item.t_counterpartAddress,
+          deltaType: item.t_deltaType,
+          contractAddress: item.t_contractAddress,
+          tokenType: item.t_tokenType,
+          amount: item.t_amount,
+          traceLocationBlockHash: item.t_traceLocationBlockHash,
+          traceLocationBlockNumber: item.t_traceLocationBlockNumber,
+          traceLocationTransactionHash: item.t_traceLocationTransactionHash,
+          traceLocationTransactionIndex: item.t_traceLocationTransactionIndex,
+          traceLocationLogIndex: item.t_traceLocationLogIndex,
+          traceLocationTraceAddress: item.t_traceLocationTraceAddress,
+          // transaction: item.transaction
+        } as FungibleBalanceDeltaEntity
+      }),
+
+      count as number
+
+    ]
+
       // .addSelect('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, t.transaction, SUM(t.amount) AS balance')
       // .groupBy('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, t.transaction')
       // .innerJoinAndSelect("t.transaction", "transaction")
@@ -212,25 +251,6 @@ export class TransferService {
     //     sqb.where('transaction.timestamp < :timestampTo')
     //   }))
     // }
-
-    return [
-      builder
-      .setParameters({ addresses, holder, timestampFrom, timestampTo })
-      // .orderBy('transaction.timestamp', 'DESC')
-      // .offset(skip)
-      // .take(take)
-      // .getManyAndCount()
-      .getRawMany(),
-      builder
-      .setParameters({ addresses, holder, timestampFrom, timestampTo })
-      // .orderBy('transaction.timestamp', 'DESC')
-      // .offset(skip)
-      // .take(take)
-      // .getManyAndCount()
-      // .getRawMany()
-      .getCount()
-      // .getCount()
-    ]
 
   }
 

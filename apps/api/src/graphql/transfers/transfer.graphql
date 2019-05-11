@@ -30,7 +30,8 @@ type Transfer {
 }
 
 type BalancesPage {
-  items: [Balance!]!
+  items: [Balance!]!,
+  totalCount: BigNumber!
 }
 
 type Balance {
