@@ -69,16 +69,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-        <table-blocks
-          :loading="minerBlocksLoading"
-          :blocks="account.minedBlocks"
-          :page-type="detailsType"
-          :total-blocks="account.totalMinedBlocks"
-          :max-items="max"
-          :page="minedPage"
-          :error="minerBlocksError"
-          @getBlockPage="setMinedPage"
-        />
+        <table-blocks :author="addressRef" :page-type="detailsType" :max-items="max" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -169,11 +160,6 @@ export default class PageDetailsAddress extends Vue {
   tokensLoading = true
   tokensError = ''
 
-  /* Miner Blocks: */
-  minerBlocksLoading = true
-  minerBlocksError = ''
-  minedPage = 0
-
   /* Contracts: */
   contractsLoading = true
   contractsError = ''
@@ -241,13 +227,12 @@ export default class PageDetailsAddress extends Vue {
         enter: () => {
           // TODO: Re-enable whenever pending tx calls available
           // const addressPendingTxs = this.fetchPendingTxs()
-          const minedBlocks = this.account.isMiner ? this.fetchMinedBlocks() : Promise.resolve([])
           const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
           const internalTransfers = this.fetchTransfers()
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
           // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
-          const promises = [minedBlocks, contractsCreated, internalTransfers].map(p => p.catch(() => undefined))
+          const promises = [contractsCreated, internalTransfers].map(p => p.catch(() => undefined))
 
           Promise.all(promises)
             .then((res: any[]) => {
@@ -255,20 +240,14 @@ export default class PageDetailsAddress extends Vue {
               // this.account.pendingTxs = res[1] || []
               // this.pendingTxsLoading = false
 
-              // Mined Blocks
-              const minedBlocksPage = res[0]
-              this.account.minedBlocks = minedBlocksPage ? minedBlocksPage.items : []
-              this.account.totalMinedBlocks = minedBlocksPage ? minedBlocksPage.totalCount : 0
-              this.minerBlocksLoading = false
-
               // Contract Creator
-              const contractsPage = res[1]
+              const contractsPage = res[0]
               this.account.contracts = contractsPage ? contractsPage.items : []
               this.account.totalContracts = contractsPage ? contractsPage.totalCount : 0
               this.contractsLoading = false
 
               // Internal transfers
-              const transfersPage = res[2]
+              const transfersPage = res[1]
               this.account.internalTransfers = transfersPage ? transfersPage.items : []
               this.account.totalInternalTransfers = transfersPage ? transfersPage.totalCount : 0
               this.transfersLoading = false
@@ -334,17 +313,8 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 
-  fetchMinedBlocks(page = this.minedPage, limit = MAX_ITEMS): Promise<{ items: SimpleBlock[]; totalCount: number }> {
-    return this.$api.getBlocksMinedOfAddress(this.addressRef, limit, page)
-  }
-
   fetchContractsCreated(limit = MAX_ITEMS): Promise<{ items: Contract[]; totalCount: number }> {
     return this.$api.getContractsCreatedBy(this.addressRef, limit, this.contractsPage)
-  }
-
-  setMinedPage(page: number): void {
-    this.minedPage = page
-    this.minerBlocksLoading = true
   }
 
   setPageTransfers(page: number): void {
@@ -355,19 +325,6 @@ export default class PageDetailsAddress extends Vue {
   setContractsPage(page: number): void {
     this.contractsLoading = true
     this.contractsPage = page
-  }
-
-  updateMined(): void {
-    this.fetchMinedBlocks().then(
-      res => {
-        this.account.minedBlocks = res.items
-        this.account.totalMinedBlocks = res.totalCount
-        this.minerBlocksLoading = false
-      },
-      err => {
-        this.minerBlocksError = this.$i18n.t('message.no-data').toString()
-      }
-    )
   }
 
   updateTransfers(): void {
@@ -402,11 +359,6 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
-  @Watch('minedPage')
-  onMinedPageChanged(newVal: number, oldVal: number): void {
-    this.updateMined()
-  }
-
   @Watch('transfersPage')
   onTransfersPageChanges(newVal: number, oldVal: number): void {
     this.updateTransfers()
@@ -437,10 +389,6 @@ export default class PageDetailsAddress extends Vue {
 
   get hasTokensError(): boolean {
     return this.tokensError !== ''
-  }
-
-  get hasMinerBlocksError(): boolean {
-    return this.minerBlocksError !== ''
   }
 
   get hasContractsError(): boolean {

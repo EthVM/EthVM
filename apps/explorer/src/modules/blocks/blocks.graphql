@@ -6,6 +6,14 @@ query latestBlocks($fromBlock: BigNumber, $offset: Int, $limit: Int) {
 
 }
 
+query blocksByAuthor($author: String!, $offset: Int, $limit: Int) {
+
+  blockSummaries: blockSummariesByAuthor(author: $author, offset: $offset, limit: $limit) {
+    ...BlockSummaryPage
+  }
+
+}
+
 fragment BlockSummary on BlockSummary {
   number
   hash
