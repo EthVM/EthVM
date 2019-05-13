@@ -92,6 +92,12 @@ export class TxResolvers {
   async totalNumberOfTransactions(): Promise<number> {
     return await this.txService.countTransactions()
   }
+
+  @Query()
+  async countTxsForAddress(@Args('address', ParseAddressPipe) address: string): Promise<number> {
+    return await this.txService.countTransactions(address)
+  }
+
   @Subscription(
     'newTransaction', {
       resolve: (summary: TransactionSummary) => new TransactionSummaryDto(summary),

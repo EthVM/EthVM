@@ -13,7 +13,7 @@
     -->
     <v-layout v-if="!loading && !hasError" row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <address-detail :account="account" :type-addrs="detailsType" />
+        <address-detail :account="account" :type-addrs="detailsType" :address="addressRef" />
       </v-flex>
     </v-layout>
     <!--
