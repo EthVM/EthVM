@@ -8,12 +8,6 @@ query contractsCreatedBy($address: String!, $offset: Int, $limit: Int) {
   }
 }
 
-query addressAllTokensOwned($address: String!, $offset: Int, $limit: Int) {
-  tokens: addressAllTokensOwned(address: $address, offset: $offset, limit: $limit) {
-    ...TokenPage
-  }
-}
-
 fragment ContractSummary on ContractSummary {
   address
   creator
@@ -30,6 +24,12 @@ fragment ContractSummaryPage on ContractSummaryPage {
   totalCount
 }
 
+query addressAllTokensOwned($address: String!, $offset: Int, $limit: Int) {
+  tokens: addressAllTokensOwned(address: $address, offset: $offset, limit: $limit) {
+    ...TokenPage
+  }
+}
+
 fragment Token on Token {
   name
   symbol
@@ -44,4 +44,21 @@ fragment TokenPage on TokenPage {
     ...Token
   }
   totalCount
+}
+
+query addressDetail($address: String!) {
+  account: accountByAddress(address: $address) {
+    ...Account
+  }
+}
+
+fragment Account on Account {
+  address
+  balance
+  totalTxCount
+  inTxCount
+  outTxCount
+  isMiner
+  isContractCreator
+  isContract
 }

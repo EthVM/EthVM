@@ -88,6 +88,7 @@ export interface Account {
     outTxCount: BigNumber;
     isMiner: boolean;
     isContractCreator: boolean;
+    isContract: boolean;
 }
 
 export interface AddressBalance {
