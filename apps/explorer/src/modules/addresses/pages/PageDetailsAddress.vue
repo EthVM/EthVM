@@ -28,15 +28,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-0">
-        <table-address-txs
-          :loading="txsLoading"
-          :address="account.address"
-          :txs="account.txs"
-          :total-txs="totalFilter"
-          :error="txsError"
-          :page="txsPage"
-          @filter="setFilterTxs"
-        />
+        <table-txs :address="addressRef" :page-type="'address'" :max-items="max"></table-txs>
       </v-tab-item>
       <!--
       =====================================================================================
@@ -104,7 +96,6 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -114,6 +105,7 @@ import { Crumb, Tab } from '@app/core/components/props'
 import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 
 const MAX_ITEMS = 10
 
@@ -128,10 +120,10 @@ const CONTRACT_DETAIL_TYPE = 'contract'
     AppError,
     AppTabs,
     AddressDetail,
-    TableAddressTxs,
     TableBlocks,
     TableAddressTokens,
-    TableAddressContracts
+    TableAddressContracts,
+    TableTxs
   }
 })
 export default class PageDetailsAddress extends Vue {
@@ -154,12 +146,6 @@ export default class PageDetailsAddress extends Vue {
   loading = true
   validHash = true
   account = new AccountInfo(this.addressRef)
-
-  /*Transactions: */
-  txsLoading = true
-  txsError = ''
-  txsPage = 0
-  txsFilter = 'all'
 
   /* Pending Txs: */
   pendingTxsLoading = true
@@ -239,7 +225,6 @@ export default class PageDetailsAddress extends Vue {
       {
         name: 'load-complementary-info',
         enter: () => {
-          const addressTxs = this.fetchTxs()
           // TODO: Re-enable whenever pending tx calls available
           // const addressPendingTxs = this.fetchPendingTxs()
           const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
@@ -247,26 +232,22 @@ export default class PageDetailsAddress extends Vue {
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
           // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
-          const promises = [addressTxs, contractsCreated, internalTransfers].map(p => p.catch(() => undefined))
+          const promises = [contractsCreated, internalTransfers].map(p => p.catch(() => undefined))
 
           Promise.all(promises)
             .then((res: any[]) => {
-              // Txs
-              this.account.txs = res[0] || []
-              this.txsLoading = false
-
               // Pending Txs
               // this.account.pendingTxs = res[1] || []
               // this.pendingTxsLoading = false
 
               // Contract Creator
-              const contractsPage = res[1]
+              const contractsPage = res[0]
               this.account.contracts = contractsPage ? contractsPage.items : []
               this.account.totalContracts = contractsPage ? contractsPage.totalCount : 0
               this.contractsLoading = false
 
               // Internal transfers
-              const transfersPage = res[2]
+              const transfersPage = res[1]
               this.account.internalTransfers = transfersPage ? transfersPage.items : []
               this.account.totalInternalTransfers = transfersPage ? transfersPage.totalCount : 0
               this.transfersLoading = false
@@ -324,10 +305,6 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
-  fetchTxs(page = this.txsPage, limit = MAX_ITEMS, filter = this.txsFilter): Promise<SimpleTx[]> {
-    return this.$api.getTxsOfAddress(this.addressRef, filter, limit, page)
-  }
-
   fetchPendingTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<PendingTx[]> {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
@@ -340,12 +317,6 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getContractsCreatedBy(this.addressRef, limit, this.contractsPage)
   }
 
-  setFilterTxs(filter: string, page: number): void {
-    this.txsFilter = filter
-    this.txsPage = page
-    this.txsLoading = true
-  }
-
   setPageTransfers(page: number): void {
     this.transfersPage = page
     this.transfersLoading = true
@@ -354,18 +325,6 @@ export default class PageDetailsAddress extends Vue {
   setContractsPage(page: number): void {
     this.contractsLoading = true
     this.contractsPage = page
-  }
-
-  updateTxs(): void {
-    this.fetchTxs().then(
-      res => {
-        this.account.txs = res
-        this.txsLoading = false
-      },
-      err => {
-        this.txsError = this.$i18n.t('message.invalid.addr').toString()
-      }
-    )
   }
 
   updateTransfers(): void {
@@ -400,18 +359,6 @@ export default class PageDetailsAddress extends Vue {
   ===================================================================================
   */
 
-  @Watch('txsFilter')
-  onTxsFilterChanged(newVal: number, oldVal: number): void {
-    if (newVal) {
-      this.updateTxs()
-    }
-  }
-
-  @Watch('txsPage')
-  onTxsPageChanged(newVal: number, oldVal: number): void {
-    this.updateTxs()
-  }
-
   @Watch('transfersPage')
   onTransfersPageChanges(newVal: number, oldVal: number): void {
     this.updateTransfers()
@@ -432,10 +379,6 @@ export default class PageDetailsAddress extends Vue {
     return this.error !== ''
   }
 
-  get hasTxsError(): boolean {
-    return this.txsError !== ''
-  }
-
   get hasPendingTxsError(): boolean {
     return this.pendingTxsError !== ''
   }
@@ -454,19 +397,6 @@ export default class PageDetailsAddress extends Vue {
 
   get max(): number {
     return MAX_ITEMS
-  }
-
-  get totalFilter(): number {
-    switch (this.txsFilter) {
-      case 'all':
-        return this.account.totalTxs
-      case 'in':
-        return this.account.toTxCount
-      case 'out':
-        return this.account.fromTxCount
-      default:
-        return 0
-    }
   }
 
   get crumbs(): Crumb[] {
