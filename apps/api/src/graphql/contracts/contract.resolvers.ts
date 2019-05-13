@@ -1,10 +1,8 @@
-import {Args, Query, Resolver} from '@nestjs/graphql'
-import {ContractService} from '@app/dao/contract.service'
-import {ParsePagePipe} from '@app/shared/validation/parse-page.pipe'
-import {ParseAddressPipe} from '@app/shared/validation/parse-address.pipe'
-import {ContractDto} from '@app/graphql/contracts/dto/contract.dto'
-import {ParseLimitPipe} from '@app/shared/validation/parse-limit.pipe.1'
-import {ContractsPageDto} from '@app/graphql/contracts/dto/contracts-page.dto'
+import { Args, Query, Resolver } from '@nestjs/graphql'
+import { ContractService } from '@app/dao/contract.service'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
+import { ContractDto } from '@app/graphql/contracts/dto/contract.dto'
+import { ContractSummaryPageDto } from '@app/graphql/contracts/dto/contract-summary-page.dto'
 
 @Resolver('Contract')
 export class ContractResolvers {
@@ -20,13 +18,10 @@ export class ContractResolvers {
   @Query()
   async contractsCreatedBy(
     @Args('creator', ParseAddressPipe) creator: string,
-    @Args('limit') limit: number,
-    @Args('page') page: number,
-  ): Promise<ContractsPageDto> {
-    const results = await this.contractService.findContractsCreatedBy(creator, limit, page)
-    return {
-      items: results[0].map(e => new ContractDto(e)),
-      totalCount: results[1],
-    }
+    @Args('offset') offset: number,
+    @Args('limit') limit: number
+  ): Promise<ContractSummaryPageDto> {
+    const [contractSummaries, totalCount] = await this.contractService.findContractsCreatedBy(creator, offset, limit)
+    return new ContractSummaryPageDto(contractSummaries, totalCount)
   }
 }

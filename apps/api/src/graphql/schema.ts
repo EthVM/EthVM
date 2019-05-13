@@ -221,6 +221,7 @@ export interface Contract {
     metadata?: ContractMetadata;
     totalSupply?: BigNumber;
     createdAtTx?: Transaction;
+    createdAtTxSummary?: TransactionSummary;
 }
 
 export interface ContractLogo {
@@ -256,8 +257,17 @@ export interface ContractSocial {
     youtube?: string;
 }
 
-export interface ContractsPage {
-    items: Contract[];
+export interface ContractSummary {
+    address: string;
+    creator: string;
+    blockNumber: BigNumber;
+    txHash: string;
+    txFee: BigNumber;
+    timestamp: number;
+}
+
+export interface ContractSummaryPage {
+    items: ContractSummary[];
     totalCount: number;
 }
 
@@ -279,7 +289,7 @@ export interface IQuery {
     minedBlocksByAddress(address: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
     totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
     contractByAddress(address: string): Contract | Promise<Contract>;
-    contractsCreatedBy(creator: string, limit?: number, page?: number): ContractsPage | Promise<ContractsPage>;
+    contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     search(query: string): Search | Promise<Search>;
     tokenHolders(address: string, limit?: number, page?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;

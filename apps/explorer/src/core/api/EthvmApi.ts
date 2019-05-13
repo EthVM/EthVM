@@ -36,7 +36,6 @@ export interface EthvmApi {
 
   // Contracts
   getContract(address: string): Promise<Contract | null>
-  getContractsCreatedBy(address: string, limit: number, page: number): Promise<{ items: Contract[]; totalCount: number }>
 
   // Exchanges
   getExchangeRateQuote(pair: string): Promise<CoinExchangeRate>

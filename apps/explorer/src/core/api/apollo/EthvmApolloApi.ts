@@ -6,7 +6,7 @@ import {
   internalTransactionsByAddress
 } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
-import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
+import { contractByAddress } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 
 import {
@@ -198,29 +198,6 @@ export class EthvmApolloApi implements EthvmApi {
         fetchPolicy: 'network-only'
       })
       .then(res => res.data.contractByAddress)
-  }
-
-  public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<{ items: Contract[]; totalCount: number }> {
-    return this.apollo
-      .query({
-        query: contractsCreatedBy,
-        variables: {
-          hash: address,
-          limit,
-          page
-        }
-      })
-      .then(res => {
-        const { contractsCreatedBy } = res.data as any
-        contractsCreatedBy.items = contractsCreatedBy.items.map(contract => {
-          // TODO work out why this check is necessary and remove it if possible
-          if (contract.tx && !(contract.tx instanceof SimpleTx)) {
-            contract.tx = new SimpleTx(contract.tx)
-          }
-          return contract
-        })
-        return contractsCreatedBy
-      })
   }
 
   // ------------------------------------------------------------------------------------

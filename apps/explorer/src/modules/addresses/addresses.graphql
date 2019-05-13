@@ -1,3 +1,25 @@
 query totalTxsForAddress($address: String!) {
   totalTxs: countTxsForAddress(address: $address)
 }
+
+query contractsCreatedBy($address: String!, $offset: Int, $limit: Int) {
+  summaries: contractsCreatedBy(creator: $address, offset: $offset, limit: $limit) {
+    ...ContractSummaryPage
+  }
+}
+
+fragment ContractSummary on ContractSummary {
+  address
+  creator
+  blockNumber
+  txHash
+  timestamp
+  txFee
+}
+
+fragment ContractSummaryPage on ContractSummaryPage {
+  items {
+    ...ContractSummary
+  }
+  totalCount
+}

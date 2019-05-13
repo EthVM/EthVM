@@ -13,14 +13,14 @@
         <v-flex xs12 sm6>
           <p class="info--text mb-0 pl-2">
             {{ $t('contract.total') }}:
-            <span v-if="!loading" class="black--text">{{ totalContracts }}</span>
+            <span v-if="!loading" class="black--text">{{ totalCount.toString() }}</span>
             <span v-else class="table-row-loading" />
             {{ contractString }}
           </p>
         </v-flex>
-        <v-layout justify-end v-if="!loading && totalPages > 1" xs12 sm6>
+        <v-layout justify-end v-if="!loading && pages > 1" xs12 sm6>
           <v-flex shrink>
-            <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+            <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
           </v-flex>
         </v-layout>
         <!--
@@ -104,8 +104,8 @@
         <div v-if="contracts.length > 0">
           <table-address-contracts-row v-for="(contract, index) in contracts" :key="index" :contract="contract" />
         </div>
-        <v-layout v-if="totalPages > 1" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+        <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+          <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
         </v-layout>
       </div>
     </div>
@@ -123,8 +123,10 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Contract } from '@app/core/models'
 import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
+import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
+import { ContractSummaryPageExt } from "@app/core/api/apollo/extensions/contract-summary-page.ext";
+import BigNumber from 'bignumber.js';
 
 const MAX_ITEMS = 10
 
@@ -134,6 +136,41 @@ const MAX_ITEMS = 10
     AppInfoLoad,
     AppPaginate,
     TableAddressContractsRow
+  },
+  data() {
+    return {
+      page: 0,
+      error: undefined
+    }
+  },
+  apollo: {
+    contractsPage: {
+      query: contractsCreatedBy,
+
+      variables() {
+        const {address} = this
+
+        return {
+          address
+        }
+      },
+
+      update({summaries}) {
+        if (summaries) {
+          this.error = '' // clear the error
+          return new ContractSummaryPageExt(summaries)
+        }
+        this.error = this.error || this.$i18n.t('message.err')
+        return summaries
+      },
+
+      error({graphQLErrors, networkError}) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      },
+    },
   }
 })
 export default class TableAddressContracts extends Vue {
@@ -143,11 +180,11 @@ export default class TableAddressContracts extends Vue {
   ===================================================================================
   */
 
-  @Prop(Array) contracts!: Contract[]
-  @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop(String) error!: string
-  @Prop(Number) totalContracts: number = 0
-  @Prop(Number) page: number = 0
+  @Prop(String!) address!: string
+
+  contractsPage?: ContractSummaryPageExt
+  error?: string
+  page?: number
 
   /*
   ===================================================================================
@@ -159,7 +196,21 @@ export default class TableAddressContracts extends Vue {
    * Upon page update from AppPagination, set page equal to pagination page.
    */
   setPage(page: number): void {
-    this.$emit('page', page)
+    const { contractsPage: query } = this.$apollo.queries
+
+    const self = this
+
+    query.fetchMore({
+      variables: {
+        address: self.address,
+        offset: page * this.maxItems,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        self.page = page
+        return fetchMoreResult
+      }
+    })
   }
 
   /*
@@ -168,8 +219,24 @@ export default class TableAddressContracts extends Vue {
   ===================================================================================
   */
 
+  get contracts() {
+    return this.contractsPage ? this.contractsPage.items || [] : []
+  }
+
+  get loading() {
+    return this.$apollo.loading
+  }
+
+  get hasError(): boolean {
+    return !!this.error && this.error !== ''
+  }
+
+  get totalCount(): BigNumber {
+    return this.contractsPage ? this.contractsPage.totalCountBN : new BigNumber(0)
+  }
+
   get contractString(): string {
-    return this.totalContracts > 1 ? this.$i18n.tc('contract.name', 2) : this.$i18n.tc('contract.name', 2)
+    return this.totalCount.isGreaterThan(1) ? this.$i18n.tc('contract.name', 2) : this.$i18n.tc('contract.name', 2)
   }
 
   /**
@@ -182,17 +249,8 @@ export default class TableAddressContracts extends Vue {
   /**
    * @return {Number} - Total number of pagination pages
    */
-  get totalPages(): number {
-    return this.totalContracts > 0 ? Math.ceil(this.totalContracts / this.maxItems) : 0
-  }
-
-  /**
-   * If the error string is empty, there is no error.
-   *
-   * @return {Boolean} - Whether or not there is an error.
-   */
-  get hasError(): boolean {
-    return this.error !== ''
+  get pages(): number {
+    return this.contractsPage ? Math.ceil(this.contractsPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
   }
 }
 </script>

@@ -77,14 +77,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" v-if="account.isCreator" value="tab-4">
-        <table-address-contracts
-          :contracts="account.contracts"
-          :total-contracts="account.totalContracts"
-          :page="contractsPage"
-          :loading="contractsLoading"
-          :error="contractsError"
-          @page="setContractsPage"
-        />
+        <table-address-contracts :address="addressRef" />
       </v-tab-item>
     </app-tabs>
   </v-container>
@@ -160,11 +153,6 @@ export default class PageDetailsAddress extends Vue {
   tokensLoading = true
   tokensError = ''
 
-  /* Contracts: */
-  contractsLoading = true
-  contractsError = ''
-  contractsPage = 0
-
   // State Machine
   sm!: TinySM
 
@@ -227,12 +215,11 @@ export default class PageDetailsAddress extends Vue {
         enter: () => {
           // TODO: Re-enable whenever pending tx calls available
           // const addressPendingTxs = this.fetchPendingTxs()
-          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
           const internalTransfers = this.fetchTransfers()
 
           // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
           // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
-          const promises = [contractsCreated, internalTransfers].map(p => p.catch(() => undefined))
+          const promises = [internalTransfers].map(p => p.catch(() => undefined))
 
           Promise.all(promises)
             .then((res: any[]) => {
@@ -240,14 +227,8 @@ export default class PageDetailsAddress extends Vue {
               // this.account.pendingTxs = res[1] || []
               // this.pendingTxsLoading = false
 
-              // Contract Creator
-              const contractsPage = res[0]
-              this.account.contracts = contractsPage ? contractsPage.items : []
-              this.account.totalContracts = contractsPage ? contractsPage.totalCount : 0
-              this.contractsLoading = false
-
               // Internal transfers
-              const transfersPage = res[1]
+              const transfersPage = res[0]
               this.account.internalTransfers = transfersPage ? transfersPage.items : []
               this.account.totalInternalTransfers = transfersPage ? transfersPage.totalCount : 0
               this.transfersLoading = false
@@ -313,18 +294,9 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
   }
 
-  fetchContractsCreated(limit = MAX_ITEMS): Promise<{ items: Contract[]; totalCount: number }> {
-    return this.$api.getContractsCreatedBy(this.addressRef, limit, this.contractsPage)
-  }
-
   setPageTransfers(page: number): void {
     this.transfersPage = page
     this.transfersLoading = true
-  }
-
-  setContractsPage(page: number): void {
-    this.contractsLoading = true
-    this.contractsPage = page
   }
 
   updateTransfers(): void {
@@ -340,19 +312,6 @@ export default class PageDetailsAddress extends Vue {
     )
   }
 
-  updateContracts(): void {
-    this.fetchContractsCreated().then(
-      (res: { items: Contract[]; totalCount: number }) => {
-        this.account.contracts = res.items
-        this.account.totalContracts = res.totalCount
-        this.contractsLoading = false
-      },
-      err => {
-        this.contractsError = this.$i18n.t('message.no-data').toString()
-      }
-    )
-  }
-
   /*
   ===================================================================================
     Watch
@@ -362,11 +321,6 @@ export default class PageDetailsAddress extends Vue {
   @Watch('transfersPage')
   onTransfersPageChanges(newVal: number, oldVal: number): void {
     this.updateTransfers()
-  }
-
-  @Watch('contractsPage')
-  onContractsPageChanges(newVal: number, oldVal: number): void {
-    this.updateContracts()
   }
 
   /*
@@ -389,10 +343,6 @@ export default class PageDetailsAddress extends Vue {
 
   get hasTokensError(): boolean {
     return this.tokensError !== ''
-  }
-
-  get hasContractsError(): boolean {
-    return this.contractsError !== ''
   }
 
   get max(): number {
