@@ -52,16 +52,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-5">
-        <token-table-transfers
-          :transfers="account.internalTransfers"
-          :total-transfers="account.totalInternalTransfers"
-          :loading="transfersLoading"
-          :error="hasTransfersError"
-          :page="transfersPage"
-          :show-type="true"
-          :convert-to-eth="true"
-          @page="setPageTransfers"
-        />
+        <table-transfers :address="addressRef" :page-type="'internal'" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -84,21 +75,21 @@
 </template>
 
 <script lang="ts">
-import { Contract, EthValue, PendingTx, SimpleBlock, SimpleTx, Transfer } from '@app/core/models'
+import { EthValue, PendingTx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { eth, TinySM } from '@app/core/helper'
 import { AccountInfo } from '@app/modules/addresses/props'
 import { Crumb, Tab } from '@app/core/components/props'
-import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue';
 
 const MAX_ITEMS = 10
 
@@ -107,7 +98,6 @@ const CONTRACT_DETAIL_TYPE = 'contract'
 
 @Component({
   components: {
-    TokenTableTransfers,
     AppInfoLoad,
     AppBreadCrumbs,
     AppError,
@@ -116,7 +106,8 @@ const CONTRACT_DETAIL_TYPE = 'contract'
     TableBlocks,
     TableAddressTokens,
     TableAddressContracts,
-    TableTxs
+    TableTxs,
+    TableTransfers
   }
 })
 export default class PageDetailsAddress extends Vue {
@@ -143,11 +134,6 @@ export default class PageDetailsAddress extends Vue {
   /* Pending Txs: */
   pendingTxsLoading = true
   pendingTxsError = ''
-
-  /* Internal Transfers */
-  transfersLoading = true
-  transfersError = ''
-  transfersPage = 0
 
   /* Tokens: */
   tokensLoading = true
@@ -204,34 +190,6 @@ export default class PageDetailsAddress extends Vue {
 
               this.error = ''
               this.loading = false
-
-              this.sm.transition('load-complementary-info')
-            })
-            .catch(err => this.sm.transition('error'))
-        }
-      },
-      {
-        name: 'load-complementary-info',
-        enter: () => {
-          // TODO: Re-enable whenever pending tx calls available
-          // const addressPendingTxs = this.fetchPendingTxs()
-          const internalTransfers = this.fetchTransfers()
-
-          // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-          // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
-          const promises = [internalTransfers].map(p => p.catch(() => undefined))
-
-          Promise.all(promises)
-            .then((res: any[]) => {
-              // Pending Txs
-              // this.account.pendingTxs = res[1] || []
-              // this.pendingTxsLoading = false
-
-              // Internal transfers
-              const transfersPage = res[0]
-              this.account.internalTransfers = transfersPage ? transfersPage.items : []
-              this.account.totalInternalTransfers = transfersPage ? transfersPage.totalCount : 0
-              this.transfersLoading = false
 
               this.sm.transition('load-token-complementary-info')
             })
@@ -290,39 +248,6 @@ export default class PageDetailsAddress extends Vue {
     return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
   }
 
-  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: string }> {
-    return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
-  }
-
-  setPageTransfers(page: number): void {
-    this.transfersPage = page
-    this.transfersLoading = true
-  }
-
-  updateTransfers(): void {
-    this.fetchTransfers().then(
-      res => {
-        this.account.internalTransfers = res.items
-        this.account.totalInternalTransfers = res.totalCount
-        this.transfersLoading = false
-      },
-      err => {
-        this.transfersError = this.$i18n.t('message.no-data').toString()
-      }
-    )
-  }
-
-  /*
-  ===================================================================================
-    Watch
-  ===================================================================================
-  */
-
-  @Watch('transfersPage')
-  onTransfersPageChanges(newVal: number, oldVal: number): void {
-    this.updateTransfers()
-  }
-
   /*
   ===================================================================================
     Computed Values
@@ -335,10 +260,6 @@ export default class PageDetailsAddress extends Vue {
 
   get hasPendingTxsError(): boolean {
     return this.pendingTxsError !== ''
-  }
-
-  get hasTransfersError(): boolean {
-    return this.transfersError !== ''
   }
 
   get hasTokensError(): boolean {

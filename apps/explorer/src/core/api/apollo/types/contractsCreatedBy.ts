@@ -6,7 +6,7 @@
 // GraphQL query operation: contractsCreatedBy
 // ====================================================
 
-export interface contractsCreatedBy_contractsCreatedBy_items {
+export interface contractsCreatedBy_summaries_items {
   __typename: "ContractSummary";
   address: string;
   creator: string;
@@ -16,18 +16,18 @@ export interface contractsCreatedBy_contractsCreatedBy_items {
   txFee: any;
 }
 
-export interface contractsCreatedBy_contractsCreatedBy {
+export interface contractsCreatedBy_summaries {
   __typename: "ContractSummaryPage";
-  items: contractsCreatedBy_contractsCreatedBy_items[];
+  items: contractsCreatedBy_summaries_items[];
   totalCount: number;
 }
 
 export interface contractsCreatedBy {
-  contractsCreatedBy: contractsCreatedBy_contractsCreatedBy;
+  summaries: contractsCreatedBy_summaries;
 }
 
 export interface contractsCreatedByVariables {
-  hash: string;
+  address: string;
   offset?: number | null;
   limit?: number | null;
 }

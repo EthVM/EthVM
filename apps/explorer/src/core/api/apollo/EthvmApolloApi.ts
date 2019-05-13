@@ -2,8 +2,7 @@ import { EthvmApi } from '@app/core/api'
 import {
   accountByAddress,
   addressAllTokensOwned,
-  addressAmountTokensOwned,
-  internalTransactionsByAddress
+  addressAmountTokensOwned
 } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress } from '@app/core/api/apollo/queries/contracts.graphql'
@@ -79,15 +78,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.addressAmountTokensOwned)
-  }
-
-  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }> {
-    return this.apollo
-      .query({
-        query: internalTransactionsByAddress,
-        variables: { address, limit, page }
-      })
-      .then(res => res.data.internalTransactionsByAddress)
   }
 
   // ------------------------------------------------------------------------------------

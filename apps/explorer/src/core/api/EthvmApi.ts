@@ -21,7 +21,6 @@ export interface EthvmApi {
   getAccount(address: string): Promise<Account | null>
   getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>

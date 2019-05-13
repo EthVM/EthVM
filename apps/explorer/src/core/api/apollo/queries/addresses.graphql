@@ -24,18 +24,3 @@ query accountByAddress($address: String!) {
     isContractCreator
   }
 }
-
-query internalTransactionsByAddress($address: String!, $limit: Int, $page: Int) {
-  internalTransactionsByAddress(address: $address, limit: $limit, page: $page) {
-    items {
-      id
-      transactionHash: traceLocationTransactionHash
-      value: amount
-      from
-      to
-      timestamp
-      deltaType
-    }
-    totalCount
-  }
-}

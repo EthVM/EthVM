@@ -5,10 +5,10 @@
 import { DeltaType } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: internalTransactionsByAddress
+// GraphQL fragment: TransferPage
 // ====================================================
 
-export interface internalTransactionsByAddress_transfers_items {
+export interface TransferPage_items {
   __typename: "Transfer";
   id: string;
   transactionHash: string | null;
@@ -19,18 +19,8 @@ export interface internalTransactionsByAddress_transfers_items {
   deltaType: DeltaType;
 }
 
-export interface internalTransactionsByAddress_transfers {
+export interface TransferPage {
   __typename: "TransferPage";
-  items: internalTransactionsByAddress_transfers_items[];
+  items: TransferPage_items[];
   totalCount: any;
-}
-
-export interface internalTransactionsByAddress {
-  transfers: internalTransactionsByAddress_transfers;
-}
-
-export interface internalTransactionsByAddressVariables {
-  address: string;
-  offset?: number | null;
-  limit?: number | null;
 }
