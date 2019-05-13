@@ -36,7 +36,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-1">
-        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :holder="account.address" :error="tokensError" />
+        <table-address-tokens :address="addressRef" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -135,10 +135,6 @@ export default class PageDetailsAddress extends Vue {
   pendingTxsLoading = true
   pendingTxsError = ''
 
-  /* Tokens: */
-  tokensLoading = true
-  tokensError = ''
-
   // State Machine
   sm!: TinySM
 
@@ -191,23 +187,6 @@ export default class PageDetailsAddress extends Vue {
               this.error = ''
               this.loading = false
 
-              this.sm.transition('load-token-complementary-info')
-            })
-            .catch(err => this.sm.transition('error'))
-        }
-      },
-      {
-        name: 'load-token-complementary-info',
-        enter: () => {
-          const totalTokensOwned = this.$api.getAddressAllTokensOwned(this.addressRef)
-
-          const promises = [totalTokensOwned].map(p => p.catch(() => undefined))
-
-          Promise.all(promises)
-            .then((res: any[]) => {
-              this.account.tokens = res[0] || []
-              this.account.tokensOwned = this.account.tokens.length
-              this.tokensLoading = false
             })
             .catch(err => this.sm.transition('error'))
         }
@@ -260,10 +239,6 @@ export default class PageDetailsAddress extends Vue {
 
   get hasPendingTxsError(): boolean {
     return this.pendingTxsError !== ''
-  }
-
-  get hasTokensError(): boolean {
-    return this.tokensError !== ''
   }
 
   get max(): number {

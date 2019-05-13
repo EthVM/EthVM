@@ -1,7 +1,6 @@
 import { EthvmApi } from '@app/core/api'
 import {
   accountByAddress,
-  addressAllTokensOwned,
   addressAmountTokensOwned
 } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
@@ -56,17 +55,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.accountByAddress)
-  }
-
-  public getAddressAllTokensOwned(address: string): Promise<Token[]> {
-    return this.apollo
-      .query({
-        query: addressAllTokensOwned,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.addressAllTokensOwned)
   }
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {

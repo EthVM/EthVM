@@ -293,7 +293,7 @@ export interface IQuery {
     search(query: string): Search | Promise<Search>;
     tokenHolders(address: string, limit?: number, page?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
-    addressAllTokensOwned(address: string): Token[] | Promise<Token[]>;
+    addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
     addressAmountTokensOwned(address: string): number | Promise<number>;
     coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
     tokenExchangeRates(filter: TokenExchangeRateFilter, symbols: string[], limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
@@ -410,6 +410,11 @@ export interface TokenMetadata {
     address?: string;
     decimals?: number;
     logo?: string;
+}
+
+export interface TokenPage {
+    items: Token[];
+    totalCount: number;
 }
 
 export interface Trace {

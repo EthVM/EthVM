@@ -19,7 +19,6 @@ import BigNumber from 'bignumber.js'
 export interface EthvmApi {
   // Address
   getAccount(address: string): Promise<Account | null>
-  getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
 
   // Blocks

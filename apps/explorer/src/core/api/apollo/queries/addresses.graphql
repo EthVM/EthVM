@@ -1,14 +1,3 @@
-query addressAllTokensOwned($address: String!) {
-  addressAllTokensOwned(address: $address) {
-    name
-    symbol
-    address
-    decimals
-    balance
-    currentPrice
-  }
-}
-
 query addressAmountTokensOwned($address: String!) {
   addressAmountTokensOwned(address: $address)
 }

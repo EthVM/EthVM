@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: addressAllTokensOwned
+// GraphQL fragment: TokenPage
 // ====================================================
 
-export interface addressAllTokensOwned_tokens_items {
+export interface TokenPage_items {
   __typename: "Token";
   name: string | null;
   symbol: string | null;
@@ -16,18 +16,8 @@ export interface addressAllTokensOwned_tokens_items {
   currentPrice: any | null;
 }
 
-export interface addressAllTokensOwned_tokens {
+export interface TokenPage {
   __typename: "TokenPage";
-  items: addressAllTokensOwned_tokens_items[];
+  items: TokenPage_items[];
   totalCount: number;
-}
-
-export interface addressAllTokensOwned {
-  tokens: addressAllTokensOwned_tokens;
-}
-
-export interface addressAllTokensOwnedVariables {
-  address: string;
-  offset?: number | null;
-  limit?: number | null;
 }
