@@ -10,6 +10,7 @@
     "build": "vue-cli-service --mode production build",
     "build:production": "yarn build",
     "build:development": "vue-cli-service --mode development build",
+    "build:development-ci": "vue-cli-service --mode development-ci build",
     "build:staging": "vue-cli-service --mode staging build",
     "clean": "rm -rf dist/",
     "lint": "vue-cli-service lint --no-fix",
