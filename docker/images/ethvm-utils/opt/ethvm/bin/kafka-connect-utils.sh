@@ -54,6 +54,12 @@ register_sinks() {
   curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-non-keyed-sink.json
 } >&2
 
+register() {
+  echo "===> Registering ${1} ..."
+  ensure_kafka_connect
+  curl_register ${KAFKA_CONNECT_DIR}/${1}
+} >&2
+
 init() {
 
   register_sinks
@@ -67,10 +73,11 @@ run() {
   shift
 
   case ${command} in
-    ensure-kafka-connect)   ensure_kafka_connect "$@";;
-    ensure-sinks)           register_sinks "$@";;
-    ensure-sources)         register_sources "$@";;
-    init)                   init "$@";;
+    ensure-kafka-connect) ensure_kafka_connect "$@";;
+    ensure-sinks)         register_sinks "$@"      ;;
+    ensure-sources)       register_sources "$@"    ;;
+    register)             register "$@"            ;;
+    init)                 init "$@"                ;;
   esac
 } >&2
 
