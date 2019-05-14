@@ -12,6 +12,8 @@ RUN yarn install
 
 EXPOSE 3000
 
+RUN chown -R node ${WORKDIR}
+
 USER node
 
 CMD yarn start
