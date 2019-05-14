@@ -40,7 +40,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   traefik:
-    image: ethvm/traefik:0.1.5
+    image: ethvm/traefik:0.1.6
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
