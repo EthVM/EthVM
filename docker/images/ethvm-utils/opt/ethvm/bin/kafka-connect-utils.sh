@@ -45,6 +45,7 @@ register_sources() {
   curl_register ${KAFKA_CONNECT_DIR}/sources/eth-lists-source.json
   curl_register ${KAFKA_CONNECT_DIR}/sources/exchange-rates-source.json
   curl_register ${KAFKA_CONNECT_DIR}/sources/parity-source.json
+  curl_register ${KAFKA_CONNECT_DIR}/sources/kafka-consumer-group-offsets-source.json
 } >&2
 
 register_sinks() {
@@ -52,6 +53,8 @@ register_sinks() {
   ensure_kafka_connect
   curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-keyed-sink.json
   curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-non-keyed-sink.json
+  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-kafka-offset-info-log.json
+  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-parity-sync-state-log.json
 } >&2
 
 init() {

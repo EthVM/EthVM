@@ -70,8 +70,14 @@ up_default() {
   echo -e "Re-building kafka connect connector...\n"
   ${SCRIPT_DIR}/kafka-connect.sh build-connector
 
-  echo "Registering sinks and sources into kafka connect...\n"
+  echo -e "Registering sinks and sources into kafka connect...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
+
+  echo -e "Ensuring parity mount point exists and has correct permissions...\n"
+  mkdir -p ${PARITY_VOLUME_MOUNTPOINT}
+
+  echo -e "Starting parity and lenses...\n"
+  docker-compose up -d parity lenses
 }
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend

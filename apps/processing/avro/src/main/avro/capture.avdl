@@ -8,6 +8,8 @@ protocol Capture {
   }
 
   record ParitySyncStateRecord {
+    string source;
+    long timestamp;
     decimal(80, 0) number;
     decimal(80, 0) head;
   }

@@ -62,13 +62,17 @@ abstract class AbstractParityEntitySource(
 
   private fun syncStateRecord(range: LongRange): SourceRecord {
 
+    val source = partitionKey["model"] as String
+
     val syncStateKey = ParitySyncStateKeyRecord
       .newBuilder()
-      .setSource(partitionKey["model"] as String)
+      .setSource(source)
       .build()
 
     val syncState = ParitySyncStateRecord
       .newBuilder()
+      .setSource(source)
+      .setTimestamp(System.currentTimeMillis())
       .setHeadBI(chainTracker.head.toBigInteger())
       .setNumberBI(range.endInclusive.toBigInteger())
       .build()

@@ -6,6 +6,12 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: kafka_offset_info
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
   - name: canonical_block_header
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
