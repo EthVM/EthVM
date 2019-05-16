@@ -305,7 +305,6 @@ export interface IQuery {
     countTxsForAddress(address: string): BigNumber | Promise<BigNumber>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
-    totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
     temp__(): boolean | Promise<boolean>;
 }

@@ -20,7 +20,7 @@ const webpackCommon = {
 const webpackDevelopment = {}
 
 const webpackProduction = {
-//  plugins: [new BundleAnalyzerPlugin()],
+  //  plugins: [new BundleAnalyzerPlugin()],
   plugins: [],
   optimization: {
     namedModules: true,
