@@ -40,7 +40,7 @@ export class TokenResolvers {
   async addressAllTokensOwned(
     @Args('address', ParseAddressPipe) address: string,
     @Args('offset') offset: number,
-    @Args('limit') limit: number
+    @Args('limit') limit: number,
   ): Promise<TokenPageDto> {
     const [tokens, totalCount] = await this.tokenService.findAddressAllTokensOwned(address, offset, limit)
     return new TokenPageDto({items: tokens, totalCount})

@@ -54,7 +54,7 @@ export class ContractService {
         txFee: txSummary!.fee,
         timestamp: txSummary!.timestamp,
         blockNumber: c.traceCreatedAtBlockNumber,
-        txHash: c.traceCreatedAtTransactionHash
+        txHash: c.traceCreatedAtTransactionHash,
       } as ContractSummary
     })
 

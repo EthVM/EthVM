@@ -7,7 +7,7 @@ import { AccountEntity } from '@app/orm/entities/account.entity'
 export class AccountService {
   constructor(
     @InjectRepository(AccountEntity)
-    private readonly accountRepository: Repository<AccountEntity>
+    private readonly accountRepository: Repository<AccountEntity>,
   ) {}
 
   async findAccountByAddress(address: string): Promise<AccountEntity | undefined> {
