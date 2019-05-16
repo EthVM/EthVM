@@ -100,8 +100,8 @@ import TableAddressTokensRow from '@app/modules/addresses/components/TableAddres
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { TokenPageExt } from "@app/core/api/apollo/extensions/token-page.ext";
-import { addressAllTokensOwned } from "@app/modules/addresses/addresses.graphql";
+import { TokenPageExt } from '@app/core/api/apollo/extensions/token-page.ext'
+import { addressAllTokensOwned } from '@app/modules/addresses/addresses.graphql'
 
 const MAX_ITEMS = 10
 
@@ -123,16 +123,16 @@ const MAX_ITEMS = 10
       query: addressAllTokensOwned,
 
       variables() {
-        const {address} = this
+        const { address } = this
 
         return {
           address,
           offset: 0,
-          limit: MAX_ITEMS,
+          limit: MAX_ITEMS
         }
       },
 
-      update({tokens}) {
+      update({ tokens }) {
         if (tokens) {
           this.error = '' // clear the error
           return new TokenPageExt(tokens)
@@ -141,13 +141,13 @@ const MAX_ITEMS = 10
         return tokens
       },
 
-      error({graphQLErrors, networkError}) {
+      error({ graphQLErrors, networkError }) {
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
         }
-      },
-    },
+      }
+    }
   }
 })
 export default class TableAddressTokens extends Mixins(StringConcatMixin) {
@@ -237,7 +237,6 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get getTotalMonetaryValue(): string {
-
     if (this.loading) {
       return this.$i18n.t('message.load').toString()
     }

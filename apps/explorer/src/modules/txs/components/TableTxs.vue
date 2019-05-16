@@ -486,6 +486,5 @@ export default class TableTxs extends TableTxsMixin {
     }
     return this.$i18n.t('message.tx.no-history').toString()
   }
-
 }
 </script>

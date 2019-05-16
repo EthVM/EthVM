@@ -1,8 +1,9 @@
 import { Account } from '@app/core/api/apollo/types/Account'
 import BigNumber from 'bignumber.js'
+import { EthValue } from '@app/core/models'
 
 export class AccountExt implements Account {
-  __typename!: "Account"
+  __typename!: 'Account'
   address: string
   balance: any
   inTxCount: any
@@ -25,5 +26,14 @@ export class AccountExt implements Account {
 
   get balanceBN(): BigNumber {
     return new BigNumber(this.balance || 0)
+  }
+
+  get balanceEth(): number {
+    const ethValue = new EthValue(this.balance || 0)
+    return ethValue.toEth()
+  }
+
+  get totalTxCountBN(): BigNumber {
+    return new BigNumber(this.totalTxCount || 0)
   }
 }

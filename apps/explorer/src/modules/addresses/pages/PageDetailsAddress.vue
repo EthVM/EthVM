@@ -6,14 +6,11 @@
     <!--
     =====================================================================================
       ADDRESS DETAILS
-
-      This section shows all of the data loaded from "load-basic-info"
-      It will load as soon as that particular information has been retrieved.
     =====================================================================================
     -->
     <v-layout v-if="!loading && !hasError" row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <address-detail :account="account" :type-addrs="detailsType" :address="addressRef" />
+        <address-detail :account="account" :address="addressRef" />
       </v-flex>
     </v-layout>
     <!--
@@ -75,28 +72,22 @@
 </template>
 
 <script lang="ts">
-import { EthValue, PendingTx } from '@app/core/models'
-import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppError from '@app/core/components/ui/AppError.vue'
-import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
-import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { eth, TinySM } from '@app/core/helper'
-import { AccountInfo } from '@app/modules/addresses/props'
-import { Crumb, Tab } from '@app/core/components/props'
-import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
-import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue'
-import { addressDetail } from '@app/modules/addresses/addresses.graphql'
-import { AccountExt } from "@app/core/api/apollo/extensions/account.ext";
+  import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+  import AppError from '@app/core/components/ui/AppError.vue'
+  import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
+  import AppTabs from '@app/core/components/ui/AppTabs.vue'
+  import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+  import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
+  import { Component, Prop, Vue } from 'vue-property-decorator'
+  import { Crumb, Tab } from '@app/core/components/props'
+  import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
+  import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+  import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+  import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue'
+  import { addressDetail } from '@app/modules/addresses/addresses.graphql'
+  import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
 
-const MAX_ITEMS = 10
-
-const ADDRESS_DETAIL_TYPE = 'address'
-const CONTRACT_DETAIL_TYPE = 'contract'
+  const MAX_ITEMS = 10
 
 @Component({
   components: {
@@ -165,102 +156,6 @@ export default class PageDetailsAddress extends Vue {
   error = ''
   account?: AccountExt
 
-  /* Pending Txs: */
-  pendingTxsLoading = true
-  pendingTxsError = ''
-
-  // State Machine
-  sm!: TinySM
-
-  /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-  // mounted(): void {
-  //   const ref = this.addressRef
-  //
-  //   // 1. Create State Machine
-  //   this.sm = new TinySM([
-  //     {
-  //       name: 'initial',
-  //       enter: () => {
-  //         // 1. Check that current block ref is a valid one
-  //         if (!eth.isValidAddress(ref)) {
-  //           this.sm.transition('error')
-  //           return
-  //         }
-  //         // 2. If everything goes well, we proceed to load basic information
-  //         this.sm.transition('load-basic-info')
-  //       }
-  //     },
-  //     {
-  //       name: 'load-basic-info',
-  //       enter: () => {
-  //         const account = this.$api.getAccount(this.addressRef)
-  //         const contract = this.$api.getContract(this.addressRef)
-  //         const exchangeRate = this.$api.getExchangeRateQuote('ethereum_usd')
-  //
-  //         // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-  //         const promises = [account, contract, exchangeRate].map(p => p.catch(() => undefined))
-  //
-  //         Promise.all(promises)
-  //           .then((res: any[]) => {
-  //             const account = res[0] || {}
-  //             this.account.isCreator = account.isContractCreator || false
-  //             this.account.isMiner = account.isMiner || false
-  //             this.account.totalTxs = account.totalTxCount || 0
-  //             this.account.fromTxCount = account.outTxCount || 0
-  //             this.account.toTxCount = account.inTxCount || 0
-  //             this.account.balance = new EthValue(account.balance || 0)
-  //
-  //             this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
-  //             this.account.exchangeRate.USD = res[2] ? res[2].price : 0
-  //
-  //             this.error = ''
-  //             this.loading = false
-  //
-  //           })
-  //           .catch(err => this.sm.transition('error'))
-  //       }
-  //     },
-  //     {
-  //       name: 'success',
-  //       enter: () => {
-  //         // 1. Disable global error
-  //         this.error = ''
-  //
-  //         // 2. Disable global loading
-  //         this.loading = false
-  //       }
-  //     },
-  //     {
-  //       name: 'error',
-  //       enter: () => {
-  //         // 1. Set global error to error
-  //         this.error = this.$i18n.t('message.invalid.addr').toString()
-  //
-  //         // 2. Disable global loading
-  //         this.loading = false
-  //       }
-  //     }
-  //   ])
-  //
-  //   // 2. Kickstart State Machine
-  //   this.sm.transition('initial')
-  // }
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  fetchPendingTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<PendingTx[]> {
-    return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
-  }
-
   /*
   ===================================================================================
     Computed Values
@@ -273,10 +168,6 @@ export default class PageDetailsAddress extends Vue {
 
   get loading(): boolean {
     return this.$apollo.loading
-  }
-
-  get hasPendingTxsError(): boolean {
-    return this.pendingTxsError !== ''
   }
 
   get max(): number {

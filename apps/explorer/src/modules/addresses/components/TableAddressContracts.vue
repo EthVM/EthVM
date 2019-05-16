@@ -125,8 +125,8 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
 import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
-import { ContractSummaryPageExt } from "@app/core/api/apollo/extensions/contract-summary-page.ext";
-import BigNumber from 'bignumber.js';
+import { ContractSummaryPageExt } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
+import BigNumber from 'bignumber.js'
 
 const MAX_ITEMS = 10
 
@@ -148,14 +148,14 @@ const MAX_ITEMS = 10
       query: contractsCreatedBy,
 
       variables() {
-        const {address} = this
+        const { address } = this
 
         return {
           address
         }
       },
 
-      update({summaries}) {
+      update({ summaries }) {
         if (summaries) {
           this.error = '' // clear the error
           return new ContractSummaryPageExt(summaries)
@@ -164,13 +164,13 @@ const MAX_ITEMS = 10
         return summaries
       },
 
-      error({graphQLErrors, networkError}) {
+      error({ graphQLErrors, networkError }) {
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
         }
-      },
-    },
+      }
+    }
   }
 })
 export default class TableAddressContracts extends Vue {

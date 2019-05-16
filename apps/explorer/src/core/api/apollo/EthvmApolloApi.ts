@@ -1,13 +1,11 @@
 import { EthvmApi } from '@app/core/api'
-import {
-  accountByAddress,
-  addressAmountTokensOwned
-} from '@app/core/api/apollo/queries/addresses.graphql'
+import { addressAmountTokensOwned } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 
 import {
+  coinExchangeRate,
   holderDetails,
   tokenExchangeRateByAddress,
   tokenExchangeRateBySymbol,
@@ -15,27 +13,11 @@ import {
   tokenHolders,
   tokenTransfersByContractAddress,
   tokenTransfersByContractAddressForHolder,
-  totalNumTokenExchangeRates,
-  coinExchangeRate
+  totalNumTokenExchangeRates
 } from '@app/core/api/apollo/queries/tokens.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
 import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
-import {
-  Account,
-  Block,
-  CoinExchangeRate,
-  Contract,
-  PendingTx,
-  SimpleBlock,
-  SimpleTx,
-  Statistic,
-  Token,
-  TokenExchangeRate,
-  TokenHolder,
-  Transfer,
-  Tx,
-  Uncle
-} from '@app/core/models'
+import { Block, CoinExchangeRate, Contract, PendingTx, SimpleBlock, SimpleTx, TokenExchangeRate, TokenHolder, Transfer, Tx, Uncle } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import BigNumber from 'bignumber.js'
 
@@ -45,17 +27,6 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
   // Address
   // ------------------------------------------------------------------------------------
-
-  public getAccount(address: string): Promise<Account | null> {
-    return this.apollo
-      .query({
-        query: accountByAddress,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.accountByAddress)
-  }
 
   public getAddressAmountTokensOwned(address: string): Promise<number> {
     return this.apollo

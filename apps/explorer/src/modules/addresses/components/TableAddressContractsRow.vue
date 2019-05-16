@@ -68,7 +68,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { EthValue } from '@app/core/models'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
-import { ContractSummaryPageExt_items } from "@app/core/api/apollo/extensions/contract-summary-page.ext";
+import { ContractSummaryPageExt_items } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
 
 @Component({
   components: {

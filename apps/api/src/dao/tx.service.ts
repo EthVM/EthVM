@@ -279,12 +279,7 @@ export class TxService {
     return Array.from(txsByHash.values())
   }
 
-  async countTransactions(address?: string): Promise<number> {
-
-    if (address) {
-      return this.transactionRepository.count({ where:  [{ from: address }, { to: address }]  })
-    }
-
+  async countTransactions(): Promise<number> {
     return this.transactionRepository.count()
   }
 
