@@ -47,9 +47,6 @@ export class FungibleBalanceDeltaEntity {
   @Column({type: 'character varying', length: 64, readonly: true})
   traceLocationTraceAddress!: string
 
-  // @Column({type: 'int', readonly: true})
-  // timestamp!: number
-
   @OneToOne(type => TransactionEntity)
   @JoinColumn({
     name: 'traceLocationTransactionHash',

@@ -142,8 +142,8 @@ export class TransferService {
 
   }
 
-  async findTokenBalancesByContractAddressesForHolder(
-    addresses: string[],
+  async findTokenBalancesByContractAddressForHolder(
+    address: string,
     holder: string,
     timestampFrom: number = 0,
     timestampTo: number = 0
@@ -154,27 +154,19 @@ export class TransferService {
     // https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#partial-selection
     // https://dba.stackexchange.com/questions/192553/calculate-running-sum-of-each-row-from-start-even-when-filtering-records
     const builder = this.deltaRepository.createQueryBuilder('t')
-      // .innerJoinAndSelect('t.transaction', 'transaction')
-      .addSelect('*, SUM(t.amount) OVER (ORDER BY t.trace_location_block_number) AS balance')
-
-      .where('t.contract_address = ANY(:addresses)')
+      .leftJoinAndSelect('t.transaction', 'transaction')
+      .addSelect('*, SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance')
+      .where('t.contract_address = :address')
       .andWhere('t.address = :holder')
 
 
-    const now = Date.now()
     const items = await builder
-      // .innerJoinAndSelect('t.transaction', 'transaction')
-      .setParameters({ addresses, holder, timestampFrom, timestampTo })
+      .setParameters({ address, holder, timestampFrom, timestampTo })
       .getRawMany()
       
-      console.log(items)
-
-    console.log(Date.now() - now)
     const count = items.length
-    // const count = await builder
-    //   .setParameters({ addresses, holder, timestampFrom, timestampTo })
-    //   .getCount()
 
+    // Need to cast items as FungibleBalanceDeltaEntity because of getRawMany() //
     return [
 
       items.map(item => {
@@ -187,7 +179,7 @@ export class TransferService {
           tokenType: item.t_tokenType,
           amount: item.t_amount,
           balance: item.balance,
-          timestamp: 1480022882, // item.transaction_timestamp,
+          timestamp: item.transaction_timestamp,
           traceLocationBlockHash: item.t_trace_location_block_hash,
           traceLocationBlockNumber: item.t_trace_location_block_number,
           traceLocationTransactionHash: item.t_trace_location_transaction_hash,
@@ -201,63 +193,6 @@ export class TransferService {
       count as number
 
     ]
-
-      // .addSelect('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, t.transaction, SUM(t.amount) AS balance')
-      // .groupBy('t.id, t.address, t.counterpartAddress, t.deltaType, t.contractAddress, t.tokenType, t.amount, t.traceLocationBlockHash, t.traceLocationBlockNumber, t.traceLocationTransactionHash, t.traceLocationTransactionIndex, t.traceLocationLogIndex, t.traceLocationTraceAddress, t.transaction')
-      // .innerJoinAndSelect("t.transaction", "transaction")
-
-      // .addSelect(qb => {
-      //     const subQuery = qb.subQuery()
-      //         .select('t.id, t.trace_location_block_number, SUM(t.amount) AS balance')
-      //         .groupBy('t.id, t.trace_location_block_number, t.amount')
-      //         .getQuery();
-      //     return subQuery;
-      // })
-
-      // .select('t.id, t.trace_location_block_number, SUM(t.amount)', 'balance')
-      // .groupBy('t.id, t.trace_location_block_number, t.amount')
-
-
-    //   .select('SUM(t.amount)', 'balance')
-    // .groupBy('id, amount, transaction')
-    // .where('balance.contract_address = ANY(:addresses)')
-
-    //   // .where(qb => {
-    //   //   const subQuery = new qb.subQuery()
-    //   //     .select('SUM(t.amount)', 'balance')
-    //   //     .where('t.contract_address = ANY(:addresses)')
-    //   //     .getQuery()
-    //   //   return subQuery
-    //   // })
-    //   .innerJoinAndSelect("balance.transaction", "transaction")
-
-    // switch (filter) {
-    //   case 'in':
-    //     builder.andWhere('t.from = :holder')
-    //     break
-    //   case 'out':
-    //     builder.andWhere('t.to = :holder')
-    //     break
-    //   default:
-    //     builder.andWhere(new Brackets(sqb => {
-    //       sqb.where('t.from = :holder')
-    //       sqb.orWhere('t.to = :holder')
-    //     }))
-    //     break
-    // }
-
-    // if (timestampFrom > 0) {
-    //   builder.andWhere(new Brackets(sqb => {
-    //     sqb.where('transaction.timestamp > :timestampFrom')
-    //   }))
-    // }
-
-    // if (timestampTo > 0) {
-    //   builder.andWhere(new Brackets(sqb => {
-    //     sqb.where('transaction.timestamp < :timestampTo')
-    //   }))
-    // }
-
   }
 
 }

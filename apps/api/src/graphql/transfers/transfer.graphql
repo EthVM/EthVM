@@ -3,8 +3,7 @@ type Query {
   tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum = all, limit: Int = 20, page: Int = 0): TransfersPage!
   tokenTransfersByContractAddressesForHolder(contractAddresses: [String!], holderAddress: String!, filter: FilterEnum = all, limit: Int = 20, page: Int = 0, timestampFrom: Int = 0, timestampTo: Int = 0): TransfersPage
   internalTransactionsByAddress(address: String!, limit: Int = 20, page: Int = 0): TransfersPage!
-
-  tokenBalancesByContractAddressesForHolder(contractAddresses: [String!], holderAddress: String!, timestampFrom: Int = 0, timestampTo: Int = 0): BalancesPage
+  tokenBalancesByContractAddressForHolder(contractAddress: String!, holderAddress: String!, timestampFrom: Int = 0, timestampTo: Int = 0): BalancesPage
 }
 
 type TransfersPage {

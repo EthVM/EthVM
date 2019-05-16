@@ -71,13 +71,13 @@ export class TransferResolvers {
   }
 
   @Query()
-  async tokenBalancesByContractAddressesForHolder(
-    @Args({name: 'contractAddresses', type: () => [String]}, ParseAddressesPipe) contractAddresses: string[],
+  async tokenBalancesByContractAddressForHolder(
+    @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
     @Args('timestampFrom') timestampFrom: number,
     @Args('timestampTo') timestampTo: number,
   ): Promise<BalancesPageDto> {
-    const result = await this.transferService.findTokenBalancesByContractAddressesForHolder(contractAddresses, holderAddress, timestampFrom, timestampTo)
+    const result = await this.transferService.findTokenBalancesByContractAddressForHolder(contractAddress, holderAddress, timestampFrom, timestampTo)
     return new BalancesPageDto({
       items: result[0],
       totalCount: result[1],
