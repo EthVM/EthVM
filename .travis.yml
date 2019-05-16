@@ -38,6 +38,7 @@ matrix:
       language: generic
 
 before_install:
+  - chmod +x ./.travis/before-install.sh
   - './.travis/before-install.sh'
 
 install:
