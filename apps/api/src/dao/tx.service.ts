@@ -111,6 +111,10 @@ export class TxService {
         take: limit,
       })
 
+    if (count === 0) {
+      return [[], 0]
+    }
+
     const receipts = await this.receiptService
       .findByTxHash(txs.map(tx => tx.hash), ['transactionHash', 'gasUsed'])
 
