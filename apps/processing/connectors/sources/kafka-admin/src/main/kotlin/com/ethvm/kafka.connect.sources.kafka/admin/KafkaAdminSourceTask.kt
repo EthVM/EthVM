@@ -28,7 +28,7 @@ class KafkaAdminSourceTask : SourceTask() {
 
   private var intervalMs: Long = 10000
 
-  private val waitForResponseTime: Long = 1000
+  private val waitForResponseTime: Long = 10000
 
   private var assignedPartitions: List<TopicPartition> = emptyList()
 
