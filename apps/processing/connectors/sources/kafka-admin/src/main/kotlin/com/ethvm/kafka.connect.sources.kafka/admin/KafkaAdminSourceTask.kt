@@ -12,7 +12,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
-import org.joda.time.DateTime
 import java.util.Properties
 import java.util.concurrent.TimeUnit
 
@@ -32,7 +31,6 @@ class KafkaAdminSourceTask : SourceTask() {
 
   private var assignedPartitions: List<TopicPartition> = emptyList()
 
-
   override fun version(): String = Versions.CURRENT
 
   override fun start(props: MutableMap<String, String>) {
@@ -45,13 +43,10 @@ class KafkaAdminSourceTask : SourceTask() {
     consumer = createConsumer(bootstrapServers)
 
     assignedPartitions = emptyList()
-
   }
 
   override fun stop() {
-
   }
-
 
   override fun poll(): MutableList<SourceRecord> {
 
@@ -82,7 +77,6 @@ class KafkaAdminSourceTask : SourceTask() {
         .get(waitForResponseTime, TimeUnit.MILLISECONDS)
         .map { it.groupId() }
     }
-
   }
 
   private fun determineLag(): List<SourceRecord> {
@@ -138,13 +132,9 @@ class KafkaAdminSourceTask : SourceTask() {
               valueSchemaAndValue.schema(),
               valueSchemaAndValue.value()
             )
-
           }.toList()
-
       }.flatten()
-
   }
-
 
   private fun getLogEndOffset(topicPartition: TopicPartition): Long {
 
@@ -178,7 +168,5 @@ class KafkaAdminSourceTask : SourceTask() {
     }
 
     return KafkaConsumer(kafkaProps)
-
   }
-
 }

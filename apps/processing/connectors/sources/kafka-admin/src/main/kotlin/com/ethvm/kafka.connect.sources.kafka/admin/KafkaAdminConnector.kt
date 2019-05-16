@@ -14,9 +14,7 @@ import com.ethvm.kafka.connect.sources.kafka.admin.KafkaAdminConnector.Config.IN
 import com.ethvm.kafka.connect.sources.kafka.admin.KafkaAdminConnector.Config.INTERVAL_DEFAULT
 import com.ethvm.kafka.connect.sources.kafka.admin.KafkaAdminConnector.Config.INTERVAL_DOC
 
-
 class KafkaAdminConnector : SourceConnector() {
-
 
   private lateinit var config: MutableMap<String, String>
 
@@ -30,14 +28,11 @@ class KafkaAdminConnector : SourceConnector() {
     return mutableListOf(config)
   }
 
-
   override fun stop() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
   }
 
-
   override fun taskClass(): Class<out Task> = KafkaAdminSourceTask::class.java
-
 
   override fun config(): ConfigDef = ConfigDef().apply {
 
@@ -65,6 +60,5 @@ class KafkaAdminConnector : SourceConnector() {
     fun consumerGroups(props: MutableMap<String, String>) = props.getOrDefault(CONSUMER_GROUPS_CONFIG, CONSUMER_GROUPS_DEFAULT).split(",").filter { it != "" }
 
     fun interval(props: MutableMap<String, String>) = props.getOrDefault(INTERVAL_CONFIG, INTERVAL_DEFAULT).toLong()
-
   }
 }
