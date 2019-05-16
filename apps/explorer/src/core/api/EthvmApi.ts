@@ -69,11 +69,6 @@ export interface EthvmApi {
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]>
   getTotalNumberOfTxs(): Promise<number>
 
-  // Uncles
-  getUncle(hash: string): Promise<Uncle | null>
-  getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]>
-  getTotalNumberOfUncles(): Promise<string>
-
   // Search
   search(hash: string): Promise<any>
 

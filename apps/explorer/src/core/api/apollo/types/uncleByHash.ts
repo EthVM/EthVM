@@ -6,7 +6,7 @@
 // GraphQL query operation: uncleByHash
 // ====================================================
 
-export interface uncleByHash_uncleByHash {
+export interface uncleByHash_uncleDetail {
   __typename: "Uncle";
   author: string;
   number: any;
@@ -21,7 +21,7 @@ export interface uncleByHash_uncleByHash {
 }
 
 export interface uncleByHash {
-  uncleByHash: uncleByHash_uncleByHash | null;
+  uncleDetail: uncleByHash_uncleDetail | null;
 }
 
 export interface uncleByHashVariables {

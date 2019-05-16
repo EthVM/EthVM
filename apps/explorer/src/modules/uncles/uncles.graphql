@@ -1,5 +1,5 @@
 query uncleByHash($hash: String!) {
-  uncleByHash(hash: $hash) {
+  uncleDetail: uncleByHash(hash: $hash) {
     ...UncleDetail
   }
 }
