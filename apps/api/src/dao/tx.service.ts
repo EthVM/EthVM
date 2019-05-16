@@ -65,6 +65,34 @@ export class TxService {
     return [summaries, count]
   }
 
+  async findSummariesByAddress(address: string, filter?: string, offset: number = 0, limit: number = 20): Promise<[TransactionSummary[], number]> {
+    let where
+    switch (filter) {
+      case 'in':
+        where = { to: address }
+        break
+      case 'out':
+        where = { from: address }
+        break
+      default:
+        where = [{ from: address }, { to: address }]
+        break
+    }
+
+    const [txs, count] = await this.transactionRepository
+      .findAndCount({
+        where,
+        select: ['hash'],
+        skip: offset,
+        take: limit,
+      })
+
+    if (count === 0) return [[], count]
+
+    const summaries = await this.findSummariesByHash(txs.map(t => t.hash))
+    return [summaries, count]
+  }
+
   async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[TransactionSummary[], number]> {
 
     const { transactionRepository } = this
@@ -82,6 +110,10 @@ export class TxService {
         skip: offset,
         take: limit,
       })
+
+    if (count === 0) {
+      return [[], 0]
+    }
 
     const receipts = await this.receiptService
       .findByTxHash(txs.map(tx => tx.hash), ['transactionHash', 'gasUsed'])
@@ -250,7 +282,13 @@ export class TxService {
     return Array.from(txsByHash.values())
   }
 
-  async countTransactions(): Promise<number> {
+  async countTransactions(address?: string): Promise<number> {
+
+    if (address) {
+      return this.transactionRepository.count({ where:  [{ from: address }, { to: address }]  })
+    }
+
     return this.transactionRepository.count()
   }
+
 }

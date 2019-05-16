@@ -3,7 +3,7 @@
     <app-bread-crumbs :new-items="crumbs" />
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-details-list :title="title" :details="uncleDetails" :is-loading="isLoading" :error="error" />
+        <app-details-list :title="title" :details="uncleDetails" :is-loading="loading" :error="error" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -13,14 +13,44 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { eth } from '@app/core/helper'
-import { Uncle } from '@app/core/models'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { uncleByHash } from '@app/modules/uncles/uncles.graphql'
+import { UncleDetailExt } from '@app/core/api/apollo/extensions/uncle-detail.ext'
 
 @Component({
   components: {
     AppBreadCrumbs,
     AppDetailsList
+  },
+  apollo: {
+    uncleDetail: {
+      query() {
+        const self = this as any
+        const validHash = eth.isValidHash(self.uncleRef)
+        if (!validHash) {
+          self.error = this.$i18n.t('message.invalid.uncle')
+          return null
+        }
+        return uncleByHash
+      },
+      variables() {
+        return { hash: this.uncleRef }
+      },
+      update({ uncleDetail }) {
+        if (uncleDetail) {
+          return new UncleDetailExt(uncleDetail)
+        }
+        this.error = this.error || this.$i18n.t('message.invalid.uncle')
+        return null
+      },
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.invalid.uncle')
+        }
+      }
+    }
   }
 })
 export default class PageDetailsUncle extends Vue {
@@ -38,52 +68,8 @@ export default class PageDetailsUncle extends Vue {
   ===================================================================================
   */
 
-  uncle = {} as Uncle
-  timestamp = new Date()
+  uncleDetail?: UncleDetailExt
   error = ''
-
-  /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-  created() {
-    const ref = this.uncleRef
-
-    // 1. Check that current uncle ref is valid one
-    if (!eth.isValidHash(ref)) {
-      this.error = this.$i18n.t('message.invalid.uncle').toString()
-      return
-    }
-
-    // 2. Fetch uncle
-    this.fetchUncle()
-  }
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  fetchUncle() {
-    this.$api
-      .getUncle(this.uncleRef)
-      .then(uncle => {
-        if (uncle === null) {
-          this.error = this.$i18n.t('message.invalid.uncle').toString()
-          return
-        }
-        this.setUncleInfo(uncle)
-      })
-      .catch(err => (this.error = this.$i18n.t('message.invalid.uncle').toString()))
-  }
-
-  setUncleInfo(uncle: Uncle) {
-    this.uncle = uncle
-    this.timestamp = this.uncle.getTimestamp()
-  }
 
   /*
   ===================================================================================
@@ -108,7 +94,7 @@ export default class PageDetailsUncle extends Vue {
    */
   get uncleDetails(): Detail[] {
     let details: Detail[]
-    if (this.isLoading) {
+    if (this.loading) {
       details = [
         {
           title: this.$i18n.t('uncle.height')
@@ -142,54 +128,58 @@ export default class PageDetailsUncle extends Vue {
         }
       ]
     } else {
+      if (!this.uncleDetail) {
+        this.error = this.$i18n.t('message.invalid.uncle').toString()
+        return []
+      }
       details = [
         {
           title: this.$i18n.t('uncle.height'),
-          detail: this.uncle.getNumber()
+          detail: this.uncleDetail.numberBN.toString()
         },
         {
           title: this.$i18n.t('uncle.position'),
-          detail: this.uncle.getPosition()
+          detail: this.uncleDetail.uncleIndex
         },
         {
           title: this.$i18n.t('uncle.included'),
-          detail: this.uncle.getBlockHeight(),
-          link: `/block/${this.uncle.getBlockHeight()}`
+          detail: this.uncleDetail.nephewNumberBN.toString(),
+          link: `/block/${this.uncleDetail.nephewNumberBN.toString()}`
         },
         {
           title: this.$i18n.t('common.hash'),
-          detail: this.uncle.getHash(),
+          detail: this.uncleDetail.hash,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('block.p-hash'),
-          detail: this.uncle.getParentHash().toString(),
+          detail: this.uncleDetail.parentHash,
           mono: true
         },
         {
           title: this.$i18n.tc('miner.name', 1),
-          detail: this.uncle.getMiner().toString(),
-          link: `/address/${this.uncle.getMiner().toString()}`,
+          detail: this.uncleDetail.author,
+          link: `/address/${this.uncleDetail.author}`,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.$i18n.d(this.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+          detail: this.$i18n.d(this.uncleDetail.timestampMs, 'long', this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('common.sha'),
-          detail: this.uncle.getSha3Uncles().toString(),
+          detail: this.uncleDetail.sha3Uncles,
           mono: true
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: this.uncle.getGasLimit().toNumber()
+          detail: this.uncleDetail.gasLimitBN.toString()
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: this.uncle.getGasUsed().toNumber()
+          detail: this.uncleDetail.gasUsedBN.toString()
         }
       ]
     }
@@ -227,18 +217,8 @@ export default class PageDetailsUncle extends Vue {
    *
    * @return {Boolean}
    */
-  get isLoading(): boolean {
-    return Object.keys(this.uncle).length === 0
-  }
-
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
-  get hasError(): boolean {
-    return this.error !== ''
+  get loading() {
+    return this.$apollo.loading
   }
 }
 </script>

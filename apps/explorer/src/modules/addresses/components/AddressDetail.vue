@@ -76,7 +76,7 @@
           <v-flex xs12 md4>
             <v-card class="warning white--text pl-2" flat>
               <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-              <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
+              <v-card-title class="headline text-truncate">{{ totalTxsString }}</v-card-title>
             </v-card>
           </v-flex>
           <!-- End Number of Tx -->
@@ -107,7 +107,7 @@
 
           <v-card class="warning white--text xs-div" flat>
             <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-            <v-card-title class="headline text-truncate">{{ formatStr(account.totalTxs.toString()) }}</v-card-title>
+            <v-card-title class="headline text-truncate">{{ totalTxsString }}</v-card-title>
           </v-card>
 
           <div class="empty-xs"></div>
@@ -123,13 +123,28 @@ import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import Blockies from '@app/modules/addresses/components/Blockies.vue'
 import { AccountInfo } from '@app/modules/addresses/props'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { totalTxsForAddress } from '@app/modules/addresses/addresses.graphql'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {
     AddressQr,
     AppCopyToClip,
     Blockies
+  },
+  apollo: {
+    totalTxs: {
+      query: totalTxsForAddress,
+      variables() {
+        return {
+          address: this.address
+        }
+      },
+      update({ totalTxs }) {
+        return new BigNumber(totalTxs || 0)
+      }
+    }
   }
 })
 export default class AddressDetail extends Mixins(StringConcatMixin) {
@@ -140,6 +155,9 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
   */
 
   @Prop(Object) account!: AccountInfo
+  @Prop(String!) address!: string
+
+  totalTxs?: BigNumber
 
   /*
   ===================================================================================
@@ -168,6 +186,13 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
       default:
         return 'pa-3'
     }
+  }
+
+  get totalTxsString(): string {
+    if (this.$apollo.loading) {
+      return this.$i18n.t('message.load').toString()
+    }
+    return this.totalTxs ? this.totalTxs.toString() : '0'
   }
 }
 </script>

@@ -2,6 +2,23 @@
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
     <notice-new-block @reload="resetFromBlock" />
 
+    <!-- Tx Input Filter -->
+    <v-layout row>
+      <v-flex v-if="isAddressDetail" d-flex xs12 sm4 md3>
+        <v-layout row align-center justify-start fill-height height="40px">
+          <v-flex>
+            <p class="pr-2 ma-0">{{ $t('filter.view') }}:</p>
+          </v-flex>
+          <v-flex>
+            <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
+              <v-select solo flat hide-details v-model="filter" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" />
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+    <!-- End Tx Input Filter -->
+
     <!--
     =====================================================================================
       TITLE
@@ -9,7 +26,8 @@
     -->
     <v-layout row wrap align-end>
       <v-flex xs7 md6 lg5 xl4 pr-0 pb-0>
-        <v-layout align-end justify-start row fill-height>
+        <v-layout v-if="isAddressDetail" justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnotes"/></v-layout>
+        <v-layout v-else align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
         </v-layout>
       </v-flex>
@@ -39,7 +57,7 @@
         <app-footnotes :footnotes="footnotes" pl-2 pr-2 />
       </v-flex>
       <v-flex hidden-xs-only sm12>
-        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
+        <v-card v-if="!hasError" :color="headerColor" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex xs4 sm3 md1 pl-3>
               <h5>{{ $t('block.number') }}</h5>
@@ -75,8 +93,8 @@
       </v-layout>
     </v-card>
     <div v-else>
-      <v-card flat v-if="!hasError" id="scroll-target" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
-        <v-layout column fill-height class="mb-1" v-scroll:#scroll-target>
+      <v-card flat v-if="!hasError" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+        <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />
@@ -85,6 +103,9 @@
               <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
               <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
             </v-layout>
+            <v-card v-if="!transactions.length" flat>
+              <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
+            </v-card>
           </v-flex>
           <v-flex xs12 v-if="loading">
             <div v-for="i in maxItems" :key="i">
@@ -130,7 +151,8 @@ import {
   latestTransactionSummaries,
   newTransaction,
   transactionSummariesByBlockHash,
-  transactionSummariesByBlockNumber
+  transactionSummariesByBlockNumber,
+  transactionSummariesByAddress
 } from '@app/modules/txs/components/txs.graphql'
 import BigNumber from 'bignumber.js'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
@@ -167,16 +189,20 @@ class TableTxsMixin extends Vue {
           return transactionSummariesByBlockNumber
         } else if (self.blockHash) {
           return transactionSummariesByBlockHash
+        } else if (self.address) {
+          return transactionSummariesByAddress
         }
         return latestTransactionSummaries
       },
 
       variables() {
-        const { blockHash: hash, blockNumber } = this
+        const { blockHash: hash, blockNumber, address, filter } = this
 
         return {
           number: blockNumber ? blockNumber.toString(10) : undefined,
-          hash
+          hash,
+          address,
+          filter
         }
       },
 
@@ -253,12 +279,16 @@ export default class TableTxs extends TableTxsMixin {
   @Prop(String) blockHash?: string
   @Prop(BigNumber) blockNumber?: BigNumber
 
+  @Prop(String) address?: string
+
   page!: number
 
   error?: string
 
   fromBlock?: BigNumber
   txPage?: TransactionSummaryPageExt
+
+  filter: string = 'all'
 
   connectedSubscription?: Subscription
 
@@ -365,11 +395,30 @@ export default class TableTxs extends TableTxsMixin {
     return this.pageType === 'block'
   }
 
+  get isAddressDetail(): boolean {
+    return this.pageType === 'address'
+  }
+
   get pages(): number {
     return this.txPage ? Math.ceil(this.txPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
   }
 
   get footnotes(): Footnote[] {
+    if (this.isAddressDetail) {
+      return [
+        {
+          color: 'success',
+          text: this.$i18n.t('filter.in'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'error',
+          text: this.$i18n.t('filter.out'),
+          icon: 'fa fa-circle'
+        }
+      ]
+    }
+
     return [
       {
         color: 'txSuccess',
@@ -382,6 +431,58 @@ export default class TableTxs extends TableTxsMixin {
         icon: 'fa fa-circle'
       }
     ]
+  }
+
+  get footnoteMobile(): Footnote[] {
+    return [
+      {
+        color: 'txSuccess',
+        text: this.$i18n.t('common.success'),
+        icon: 'fa fa-circle'
+      },
+      {
+        color: 'txFail',
+        text: this.$i18n.t('common.fail'),
+        icon: 'fa fa-circle'
+      }
+    ]
+  }
+
+  get options() {
+    return [
+      {
+        text: this.$i18n.t('filter.all'),
+        value: 'all'
+      },
+      {
+        text: this.$i18n.t('filter.in'),
+        value: 'in'
+      },
+      {
+        text: this.$i18n.t('filter.out'),
+        value: 'out'
+      }
+    ]
+  }
+
+  get headerColor() {
+    return this.isAddressDetail ? 'primary' : 'info'
+  }
+
+  get text(): string {
+    if (this.isAddressDetail) {
+      const messages = {
+        all: this.$i18n.t('message.tx.no-all'),
+        in: this.$i18n.t('message.tx.no-in'),
+        out: this.$i18n.t('message.tx.no-out')
+      }
+      return messages[this.filter].toString()
+    }
+
+    if (this.isBlockDetail) {
+      return this.$i18n.t('message.tx.no-in-block').toString()
+    }
+    return this.$i18n.t('message.tx.no-history').toString()
   }
 }
 </script>

@@ -287,6 +287,7 @@ export interface IQuery {
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
+    blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blocks(limit?: number, page?: number, fromBlock?: BigNumber): Block[] | Promise<Block[]>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
@@ -313,13 +314,14 @@ export interface IQuery {
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     tx(hash: string): Transaction | Promise<Transaction>;
     txs(limit?: number, page?: number, fromBlock?: BigNumber): Transaction[] | Promise<Transaction[]>;
     txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
     totalNumberOfTransactions(): BigNumber | Promise<BigNumber>;
+    countTxsForAddress(address: string): BigNumber | Promise<BigNumber>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
-    totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
     temp__(): boolean | Promise<boolean>;
 }

@@ -11,6 +11,9 @@ ENV KAFKA_REPLICATION_FACTOR 1
 ENV KAFKA_SCHEMA_REGISTRY http://kafka-schema-registry:8081
 ENV KAFKA_CONNECT_URL http://kafka-connect:8083
 ENV PARITY_WS_URL ws://parity:8546
+ENV POSTGRES_JDBC_URL jdbc:postgresql://timescale:5432/ethvm_dev
+ENV POSTGRES_USER postgres
+ENV POSTGRES_PASSWORD 1234
 
 LABEL name="kafka" version=${KAFKA_VERSION}
 

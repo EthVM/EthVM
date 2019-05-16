@@ -1,4 +1,4 @@
-FROM zenika/kotlin:1.3.10-jdk11-slim as builder
+FROM zenika/kotlin:1.3.10-jdk8-slim as builder
 
 # Create workdir
 RUN mkdir -p /tmp
