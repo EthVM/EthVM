@@ -26,10 +26,6 @@ export class UncleService {
       })
   }
 
-  async countUncles(): Promise<BigNumber> {
-    return new BigNumber(await this.uncleRepository.count())
-  }
-
   async findLatestUncleBlockNumber(): Promise<BigNumber> {
     const findOptions: FindManyOptions = { order: { nephewNumber: 'DESC', number: 'DESC' }, take: 1 }
     const latest = await this.uncleRepository.find(findOptions)

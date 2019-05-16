@@ -30,10 +30,6 @@ export interface EthvmApi {
   getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[]; totalCount: number }>
   getTotalNumberOfBlocks(): Promise<number>
 
-  // Block Metrics
-  // getBlockMetric(hash: string): Promise<BlockMetrics | null>
-  // getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]>
-
   // Contracts
   getContract(address: string): Promise<Contract | null>
   getContractsCreatedBy(address: string, limit: number, page: number): Promise<{ items: Contract[]; totalCount: number }>
@@ -71,10 +67,4 @@ export interface EthvmApi {
 
   // Search
   search(hash: string): Promise<any>
-
-  // Processing Metadata
-  // getProcessingMetadata(id: string): Promise<ProcessingMetadata | null>
-
-  // Subscriptions
-  // observable<T>(query): Observable<T>
 }

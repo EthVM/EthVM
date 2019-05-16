@@ -40,7 +40,3 @@ fragment UncleDetail on Uncle {
   nephewNumber
   uncleIndex: index
 }
-
-query totalNumberOfUncles {
-  totalNumberOfUncles
-}

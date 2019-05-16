@@ -15,8 +15,8 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { eth } from '@app/core/helper'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { uncleByHash } from '@app/modules/uncles/uncles.graphql';
-import { UncleDetailExt } from "@app/core/api/apollo/extensions/uncle-detail.ext";
+import { uncleByHash } from '@app/modules/uncles/uncles.graphql'
+import { UncleDetailExt } from '@app/core/api/apollo/extensions/uncle-detail.ext'
 
 @Component({
   components: {
@@ -26,9 +26,10 @@ import { UncleDetailExt } from "@app/core/api/apollo/extensions/uncle-detail.ext
   apollo: {
     uncleDetail: {
       query() {
-        const validHash = eth.isValidHash(this.uncleRef)
+        const self = this as any
+        const validHash = eth.isValidHash(self.uncleRef)
         if (!validHash) {
-          this.error = this.$i18n.t('message.invalid.uncle')
+          self.error = this.$i18n.t('message.invalid.uncle')
           return null
         }
         return uncleByHash
@@ -49,7 +50,7 @@ import { UncleDetailExt } from "@app/core/api/apollo/extensions/uncle-detail.ext
           this.error = this.$i18n.t('message.invalid.uncle')
         }
       }
-    },
+    }
   }
 })
 export default class PageDetailsUncle extends Vue {
