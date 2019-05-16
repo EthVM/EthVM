@@ -1,8 +1,6 @@
 sudo: true
+
 language: generic
-git:
-  submodules:
-    false
 
 matrix:
   include:
@@ -39,6 +37,9 @@ matrix:
         - ACTION='./gradlew --no-daemon :kafka-streams:test'
       language: generic
 
+before_install:
+  - './.travis/before-install.sh'
+
 install:
   - cd $PROJECT_DIR
   - eval $INSTALL
@@ -47,3 +48,11 @@ script:
   - cd $PROJECT_DIR
   - eval $ACTION
 
+after_success:
+  - ./.travis/after-success-sh
+  #- if [[ "$TRAVIS_BRANCH" == "develop" ]]; then
+  #  ./.travis/after-success.sh
+  #  fi
+
+notifications:
+  email: false
