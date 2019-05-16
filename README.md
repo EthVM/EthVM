@@ -81,7 +81,7 @@ We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CON
 
 ## Stay in touch!
 
-We have created our `#EthVM - Devs` channel in on [our Slack](https://myetherwallet.slack.com/), feel free to join (you can use this [invite link](https://join.slack.com/t/myetherwallet/shared_invite/enQtNTc2MjAxMzUxOTc0LWQwNzMzOWEzOGE0NzU2YjcwMDFhMjdlY2YwOWJhMWQ2YzNjZTU5MmFkMTZmYjllZTU1OWVmMmIxM2RkMTgwN2M)).
+We have created our `EthVM - Devs` [Telegram channel](https://t.me/ethvm), feel free to join.
 
 ## License
 
