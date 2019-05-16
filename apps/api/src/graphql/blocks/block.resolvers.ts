@@ -33,6 +33,16 @@ export class BlockResolvers {
   }
 
   @Query()
+  async blockSummariesByAuthor(
+    @Args('author', ParseAddressPipe) author: string,
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+  ): Promise<BlockSummaryPageDto> {
+    const [summaries, count] = await this.blockService.findSummariesByAuthor(author, offset, limit)
+    return new BlockSummaryPageDto(summaries, count)
+  }
+
+  @Query()
   async blocks(
     @Args('page') page: number,
     @Args('limit') limit: number,

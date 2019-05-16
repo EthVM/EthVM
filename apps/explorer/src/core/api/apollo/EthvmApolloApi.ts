@@ -10,6 +10,7 @@ import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/quer
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 
 import {
+  coinExchangeRate,
   holderDetails,
   tokenExchangeRateByAddress,
   tokenExchangeRateBySymbol,
@@ -17,11 +18,9 @@ import {
   tokenHolders,
   tokenTransfersByContractAddress,
   tokenTransfersByContractAddressForHolder,
-  totalNumTokenExchangeRates,
-  coinExchangeRate
+  totalNumTokenExchangeRates
 } from '@app/core/api/apollo/queries/tokens.graphql'
 import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
-import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import {
   Account,
   Block,
@@ -30,13 +29,11 @@ import {
   PendingTx,
   SimpleBlock,
   SimpleTx,
-  Statistic,
   Token,
   TokenExchangeRate,
   TokenHolder,
   Transfer,
-  Tx,
-  Uncle
+  Tx
 } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import BigNumber from 'bignumber.js'
@@ -155,34 +152,6 @@ export class EthvmApolloApi implements EthvmApi {
       })
       .then(res => res.data.totalNumberOfBlocks as number)
   }
-
-  // ------------------------------------------------------------------------------------
-  // Blocks Metrics
-  // ------------------------------------------------------------------------------------
-
-  // public getBlockMetric(hash: string): Promise<BlockMetrics> {
-  //   return {} as BlockMetrics;
-  //   // return this.apollo
-  //   //   .query({
-  //   //     query: blockMetricByHash,
-  //   //     variables: {
-  //   //       hash
-  //   //     }
-  //   //   })
-  //   //   .then(res => res.data.blockMetrics)
-  // }
-
-  // public getBlockMetrics(limit: number, page: number): Promise<BlockMetrics[]> {
-  //   return this.apollo
-  //     .query({
-  //       query: blockMetrics,
-  //       variables: {
-  //         limit,
-  //         page
-  //       }
-  //     })
-  //     .then(res => res.data.blockMetrics)
-  // }
 
   // ------------------------------------------------------------------------------------
   // Contracts
@@ -415,46 +384,6 @@ export class EthvmApolloApi implements EthvmApi {
   }
 
   // ------------------------------------------------------------------------------------
-  // Uncles
-  // ------------------------------------------------------------------------------------
-
-  public getUncle(hash: string): Promise<Uncle> {
-    return this.apollo
-      .query({
-        query: uncleByHash,
-        variables: {
-          hash
-        }
-      })
-      .then(res => new Uncle(res.data.uncleByHash))
-  }
-
-  public getUncles(limit: number, page: number, fromUncle: number): Promise<Uncle[]> {
-    return this.apollo
-      .query({
-        query: uncles,
-        variables: {
-          limit,
-          page,
-          fromUncle
-        }
-      })
-      .then(res => res.data.uncles.map(raw => new Uncle(raw)))
-  }
-
-  public getTotalNumberOfUncles(): Promise<string> {
-    return this.apollo
-      .query({
-        query: totalNumberOfUncles
-      })
-      .then(res => res.data.totalNumberOfUncles)
-  }
-
-  // ------------------------------------------------------------------------------------
-  // Statistics
-  // ------------------------------------------------------------------------------------
-
-  // ------------------------------------------------------------------------------------
   // Search
   // ------------------------------------------------------------------------------------
 
@@ -468,44 +397,4 @@ export class EthvmApolloApi implements EthvmApi {
       })
       .then(res => res.data.search)
   }
-
-  // ------------------------------------------------------------------------------------
-  // Processing Metadata
-  // ------------------------------------------------------------------------------------
-
-  // public getProcessingMetadata(id: string): Promise<ProcessingMetadata> {
-  //   return this.apollo
-  //     .query({
-  //       query: processingMetadataById,
-  //       variables: {
-  //         id
-  //       }
-  //     })
-  //     .then(res => res.data.processingMetadataById)
-  // }
-
-  // ------------------------------------------------------------------------------------
-  // Subscriptions
-  // ------------------------------------------------------------------------------------
-
-  // public observable<T>(type: string): Observable<T> {
-  //   let query
-  //   switch (type) {
-  //     case 'simpleBlocks':
-  //       query = newSimpleBlocks
-  //       break
-  //     case 'blockMetrics':
-  //       query = newBlockMetrics
-  //       break
-  //     case 'simpleTxs':
-  //       query = newSimpleTxs
-  //       break
-  //     default:
-  //     // TODO error
-  //   }
-
-  //   return this.apollo.subscribe<T>({
-  //     query
-  //   })
-  // }
 }

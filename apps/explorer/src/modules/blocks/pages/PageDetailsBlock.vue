@@ -24,9 +24,6 @@
     <v-layout row wrap justify-start class="mb-4" v-if="!hasError">
       <v-flex xs12>
         <table-txs :block-number="blockNumber" :block-hash="blockHash" :page-type="'block'" class="mt-3" :max-items="max" />
-        <v-card v-if="!$apollo.loading && blockDetail && blockDetail.transactionCount === 0" flat color="white">
-          <v-card-text class="text-xs-center text-muted">{{ $t('message.tx.no-in-block') }}</v-card-text>
-        </v-card>
       </v-flex>
     </v-layout>
   </v-container>

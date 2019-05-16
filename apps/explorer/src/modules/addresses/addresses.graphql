@@ -1,0 +1,3 @@
+query totalTxsForAddress($address: String!) {
+  totalTxs: countTxsForAddress(address: $address)
+}

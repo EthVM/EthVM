@@ -1,5 +1,5 @@
 query uncleByHash($hash: String!) {
-  uncleByHash(hash: $hash) {
+  uncleDetail: uncleByHash(hash: $hash) {
     ...UncleDetail
   }
 }
@@ -39,8 +39,4 @@ fragment UncleDetail on Uncle {
   timestamp
   nephewNumber
   uncleIndex: index
-}
-
-query totalNumberOfUncles {
-  totalNumberOfUncles
 }
