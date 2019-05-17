@@ -9,8 +9,8 @@ export class AccountResolvers {
 
   @Query()
   async accountByAddress(@Args('address', ParseAddressPipe) address: string): Promise<AccountDto | null> {
-    const entity = await this.accountService.findAccountByAddress(address)
-    return entity ? new AccountDto(entity) : null
+    const account = await this.accountService.findAccountByAddress(address)
+    return account ? new AccountDto(account) : null
   }
 
 }

@@ -27,21 +27,3 @@ query contractByAddress($address: String!) {
     }
   }
 }
-
-query contractsCreatedBy($hash: String!, $limit: Int, $page: Int) {
-  contractsCreatedBy(creator: $hash, limit: $limit, page: $page) {
-    items {
-      address
-      blockNumber: traceCreatedAtBlockNumber
-      tx: createdAtTx {
-        hash
-        timestamp
-        gasPrice
-        receipt {
-          gasUsed
-        }
-      }
-    }
-    totalCount
-  }
-}

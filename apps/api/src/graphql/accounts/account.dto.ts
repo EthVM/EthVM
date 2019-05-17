@@ -11,6 +11,7 @@ export class AccountDto implements Account {
   isMiner!: boolean
   outTxCount!: BigNumber
   totalTxCount!: BigNumber
+  isContract!: boolean
 
   constructor(data: any) {
     assignClean(this, data)

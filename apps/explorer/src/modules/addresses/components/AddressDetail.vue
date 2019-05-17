@@ -12,8 +12,8 @@
             <v-layout row wrap align-center justify-space-between>
               <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 ">{{ title }}</v-card-title>
               <v-layout hidden-xs-only align-center justify-start row fill-height pt-2>
-                <div v-if="account.type === 'address' && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-                <div v-if="account.type === 'address' && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+                <div v-if="!account.isContract && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+                <div v-if="!account.isContract && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
               </v-layout>
               <address-qr :address="account.address" :large="true" />
             </v-layout>
@@ -26,8 +26,8 @@
           </v-flex>
           <v-flex xs12 hidden-sm-and-up v-if="hasChips">
             <v-layout align-center justify-start row fill-height pt-2>
-              <div v-if="account.type === 'address' && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-              <div v-if="account.type === 'address' && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+              <div v-if="!account.isContract && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
+              <div v-if="!account.isContract && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -50,25 +50,25 @@
             <v-card class="primary white--text pl-2" flat>
               <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
               <!-- isShortValue -->
-              <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
-                >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
+              <v-card-title v-if="!isShortValue(account.balanceEth.toString())" class="headline text-truncate pr-1"
+                >{{ getShortValue(account.balanceEth) }} {{ $t('common.eth') }}
                 <v-tooltip bottom>
                   <template #activator="data">
                     <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
                   </template>
-                  <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
+                  <span>{{ formatStr(account.balanceEth.toString()) }} {{ $t('common.eth') }}</span>
                 </v-tooltip>
               </v-card-title>
               <!-- !isShortValue -->
-              <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
+              <v-card-title v-else class="headline text-truncate">{{ account.balanceEth }} {{ $t('common.eth') }}</v-card-title>
             </v-card>
           </v-flex>
           <!-- End Ether Balance -->
           <!-- USD Value -->
           <v-flex xs12 md4>
             <v-card class="error white--text pl-2" flat>
-              <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
-              <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
+              <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(exchangeRatePrice) }})</v-card-text>
+              <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balanceEth * exchangeRatePrice) }}</v-card-title>
             </v-card>
           </v-flex>
           <!-- End USD Value -->
@@ -76,7 +76,7 @@
           <v-flex xs12 md4>
             <v-card class="warning white--text pl-2" flat>
               <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-              <v-card-title class="headline text-truncate">{{ totalTxsString }}</v-card-title>
+              <v-card-title class="headline text-truncate">{{ account.totalTxCountBN.toString() }}</v-card-title>
             </v-card>
           </v-flex>
           <!-- End Number of Tx -->
@@ -87,27 +87,27 @@
           <v-card class="primary xs-div white--text ">
             <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
             <!-- isShortValue -->
-            <v-card-title v-if="!isShortValue(account.balance.toEth().toString())" class="headline text-truncate pr-1"
-              >{{ getShortValue(account.balance.toEth()) }} {{ $t('common.eth') }}
+            <v-card-title v-if="!isShortValue(account.balanceEth.toString())" class="headline text-truncate pr-1"
+              >{{ getShortValue(account.balanceEth) }} {{ $t('common.eth') }}
               <v-tooltip bottom>
                 <template #activator="data">
                   <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
                 </template>
-                <span>{{ formatStr(account.balance.toEth().toString()) }} {{ $t('common.eth') }}</span>
+                <span>{{ formatStr(account.balanceEth.toString()) }} {{ $t('common.eth') }}</span>
               </v-tooltip>
             </v-card-title>
             <!-- !isShortValue -->
-            <v-card-title v-else class="headline text-truncate">{{ account.balance.toEth() }} {{ $t('common.eth') }}</v-card-title>
+            <v-card-title v-else class="headline text-truncate">{{ account.balanceEth }} {{ $t('common.eth') }}</v-card-title>
           </v-card>
 
           <v-card class="error white--text xs-div " flat>
-            <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(account.exchangeRate.USD) }})</v-card-text>
-            <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balance.toEth() * account.exchangeRate.USD) }}</v-card-title>
+            <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(exchangeRatePrice) }})</v-card-text>
+            <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balanceEth * exchangeRatePrice) }}</v-card-title>
           </v-card>
 
           <v-card class="warning white--text xs-div" flat>
             <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-            <v-card-title class="headline text-truncate">{{ totalTxsString }}</v-card-title>
+            <v-card-title class="headline text-truncate">{{ account.totalTxCountBN.toString() }}</v-card-title>
           </v-card>
 
           <div class="empty-xs"></div>
@@ -122,10 +122,9 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import Blockies from '@app/modules/addresses/components/Blockies.vue'
-import { AccountInfo } from '@app/modules/addresses/props'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { totalTxsForAddress } from '@app/modules/addresses/addresses.graphql'
-import BigNumber from 'bignumber.js'
+import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
+import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
 
 @Component({
   components: {
@@ -134,15 +133,11 @@ import BigNumber from 'bignumber.js'
     Blockies
   },
   apollo: {
-    totalTxs: {
-      query: totalTxsForAddress,
-      variables() {
-        return {
-          address: this.address
-        }
-      },
-      update({ totalTxs }) {
-        return new BigNumber(totalTxs || 0)
+    exchangeRate: {
+      query: exchangeRate,
+      update({ exchangeRate }) {
+        // TODO handle no exchange rate data case
+        return exchangeRate ? exchangeRate.price : 0
       }
     }
   }
@@ -154,10 +149,10 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Object) account!: AccountInfo
+  @Prop(Object) account!: AccountExt
   @Prop(String!) address!: string
 
-  totalTxs?: BigNumber
+  exchangeRatePrice = 0
 
   /*
   ===================================================================================
@@ -166,15 +161,11 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
   */
 
   get title(): string {
-    const titles = {
-      address: this.$i18n.tc('address.name', 1),
-      contract: this.$i18n.tc('contract.name', 1)
-    }
-    return titles[this.account.type]
+    return this.account.isContract ? this.$i18n.tc('contract.name', 1) : this.$i18n.tc('address.name', 1)
   }
 
   get hasChips(): boolean {
-    return this.account.type === 'address' && (this.account.isMiner || this.account.isCreator)
+    return !this.account.isContract && (this.account.isMiner || this.account.isContractCreator)
   }
 
   get layoutPadding(): string {
@@ -186,13 +177,6 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
       default:
         return 'pa-3'
     }
-  }
-
-  get totalTxsString(): string {
-    if (this.$apollo.loading) {
-      return this.$i18n.t('message.load').toString()
-    }
-    return this.totalTxs ? this.totalTxs.toString() : '0'
   }
 }
 </script>

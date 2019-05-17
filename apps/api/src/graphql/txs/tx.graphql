@@ -10,7 +10,6 @@ type Query {
   txs(limit: Int = 20, page: Int = 0, fromBlock: BigNumber): [Transaction!]!
   txsForAddress(hash: String!, filter: FilterEnum = all, limit: Int = 20, page: Int = 0): [Transaction!]!
   totalNumberOfTransactions: BigNumber!
-  countTxsForAddress(address: String!): BigNumber!
 }
 
 type Subscription {

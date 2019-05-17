@@ -8,7 +8,7 @@ import { DeltaType } from "./globalTypes";
 // GraphQL query operation: internalTransactionsByAddress
 // ====================================================
 
-export interface internalTransactionsByAddress_internalTransactionsByAddress_items {
+export interface internalTransactionsByAddress_transfers_items {
   __typename: "Transfer";
   id: string;
   transactionHash: string | null;
@@ -19,18 +19,18 @@ export interface internalTransactionsByAddress_internalTransactionsByAddress_ite
   deltaType: DeltaType;
 }
 
-export interface internalTransactionsByAddress_internalTransactionsByAddress {
-  __typename: "TransfersPage";
-  items: internalTransactionsByAddress_internalTransactionsByAddress_items[];
+export interface internalTransactionsByAddress_transfers {
+  __typename: "TransferPage";
+  items: internalTransactionsByAddress_transfers_items[];
   totalCount: any;
 }
 
 export interface internalTransactionsByAddress {
-  internalTransactionsByAddress: internalTransactionsByAddress_internalTransactionsByAddress;
+  transfers: internalTransactionsByAddress_transfers;
 }
 
 export interface internalTransactionsByAddressVariables {
   address: string;
+  offset?: number | null;
   limit?: number | null;
-  page?: number | null;
 }

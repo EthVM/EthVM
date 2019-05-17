@@ -1,0 +1,31 @@
+query internalTransactionsByAddress($address: String!, $offset: Int, $limit: Int) {
+  transfers: internalTransactionsByAddress(address: $address, offset: $offset, limit: $limit) {
+    items {
+      id
+      transactionHash: traceLocationTransactionHash
+      value: amount
+      from
+      to
+      timestamp
+      deltaType
+    }
+    totalCount
+  }
+}
+
+fragment Transfer on Transfer {
+  id
+  transactionHash: traceLocationTransactionHash
+  value: amount
+  from
+  to
+  timestamp
+  deltaType
+}
+
+fragment TransferPage on TransferPage {
+  items {
+    ...Transfer
+  }
+  totalCount
+}

@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
 import { FungibleBalanceTransferEntity } from '../../orm/entities/fungible-balance-transfer.entity'
 import { TransferResolvers } from './transfer.resolvers'
-import { TransfersPageDto } from './dto/transfers-page.dto'
+import { TransferPageDto } from './dto/transfer-page.dto'
 import { TransferDto } from './dto/transfer.dto'
 import { TransferService } from '../../dao/transfer.service'
 
@@ -192,7 +192,7 @@ describe('TransferResolvers', () => {
       const transfersForAddress1 = await transferResolvers.tokenTransfersByContractAddress(address1)
       const transfersForAddress2 = await transferResolvers.tokenTransfersByContractAddress(address2)
 
-      expect(transfersForAddress1).toBeInstanceOf(TransfersPageDto)
+      expect(transfersForAddress1).toBeInstanceOf(TransferPageDto)
       expect(transfersForAddress1).toHaveProperty('items')
       expect(transfersForAddress1).toHaveProperty('totalCount', 3)
       if (transfersForAddress1.items) {
@@ -200,7 +200,7 @@ describe('TransferResolvers', () => {
         expect(transfersForAddress1.items[0]).toHaveProperty('contractAddress', address1)
       }
 
-      expect(transfersForAddress2).toBeInstanceOf(TransfersPageDto)
+      expect(transfersForAddress2).toBeInstanceOf(TransferPageDto)
       expect(transfersForAddress2).toHaveProperty('items')
       expect(transfersForAddress2).toHaveProperty('totalCount', 2)
       if (transfersForAddress2.items) {
@@ -289,7 +289,7 @@ describe('TransferResolvers', () => {
       const transfers1 = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder1, 'all')
       const transfers2 = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder2, 'all')
 
-      expect(transfers1).toBeInstanceOf(TransfersPageDto)
+      expect(transfers1).toBeInstanceOf(TransferPageDto)
       expect(transfers1).toHaveProperty('items')
       expect(transfers1).toHaveProperty('totalCount', 2)
       if (transfers1.items) {
@@ -300,7 +300,7 @@ describe('TransferResolvers', () => {
         expect(transfers1.items[1]).toHaveProperty('from', holder1)
       }
 
-      expect(transfers2).toBeInstanceOf(TransfersPageDto)
+      expect(transfers2).toBeInstanceOf(TransferPageDto)
       expect(transfers2).toHaveProperty('items')
       expect(transfers2).toHaveProperty('totalCount', 1)
       if (transfers2.items) {
@@ -404,7 +404,7 @@ describe('TransferResolvers', () => {
       const transfersForAddress1 = await transferResolvers.internalTransactionsByAddress(holder3)
       const transfersForAddress2 = await transferResolvers.internalTransactionsByAddress(holder4)
 
-      expect(transfersForAddress1).toBeInstanceOf(TransfersPageDto)
+      expect(transfersForAddress1).toBeInstanceOf(TransferPageDto)
       expect(transfersForAddress1).toHaveProperty('items')
       expect(transfersForAddress1).toHaveProperty('totalCount', 3)
       if (transfersForAddress1.items) {
@@ -414,7 +414,7 @@ describe('TransferResolvers', () => {
         expect(transfersForAddress1.items[2]).toHaveProperty('to', holder3)
       }
 
-      expect(transfersForAddress2).toBeInstanceOf(TransfersPageDto)
+      expect(transfersForAddress2).toBeInstanceOf(TransferPageDto)
       expect(transfersForAddress2).toHaveProperty('items')
       expect(transfersForAddress2).toHaveProperty('totalCount', 2)
       if (transfersForAddress2.items) {

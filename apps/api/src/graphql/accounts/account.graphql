@@ -10,4 +10,5 @@ type Account {
   outTxCount: BigNumber!
   isMiner: Boolean!
   isContractCreator: Boolean!
+  isContract: Boolean!
 }
