@@ -1,5 +1,5 @@
 {
-  "name": "ethvm-kafka-consumer-group-offsets",
+  "name": "kafka-consumer-group-offsets",
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.kafka.admin.KafkaAdminConnector",
     "tasks.max": 1,
