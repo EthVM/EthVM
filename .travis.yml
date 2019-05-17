@@ -8,7 +8,7 @@ matrix:
       env:
         - ID=api/lint
         - METADATA_ID=api
-        - FLAVOR=development-ci
+        - FLAVOR=""
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn lint'
@@ -19,7 +19,7 @@ matrix:
       env:
         - ID=explorer/lint
         - METADATA_ID=explorer
-        - FLAVOR=""
+        - FLAVOR=development-ci
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
         - INSTALL='yarn install'
         - ACTION='yarn lint'
@@ -57,7 +57,7 @@ after_success:
   - chmod +x $TRAVIS_BUILD_DIR/.travis/after-success.sh
   - $TRAVIS_BUILD_DIR/.travis/after-success.sh $METADATA_ID $FLAVOR
   #- if [[ "$TRAVIS_BRANCH" == "develop" ]]; then
-  #  $TRAVIS_BUILD_DIR/.travis/after-success.sh
+  #  $TRAVIS_BUILD_DIR/.travis/after-success.sh $METADATA_ID $FLAVOR
   #  fi
 
 notifications:
