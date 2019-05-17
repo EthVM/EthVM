@@ -486,12 +486,6 @@ SELECT fb.address,
             TRUE
           END AS is_contract,
        CASE
-         WHEN cont.creator IS NULL THEN
-           FALSE
-         ELSE
-           TRUE
-         END AS is_contract,
-       CASE
          WHEN a.count > 0 THEN
            TRUE
          ELSE

@@ -3,6 +3,7 @@ import { TransferService } from '@app/dao/transfer.service'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseAddressesPipe } from '@app/shared/validation/parse-addresses.pipe'
 import { TransferPageDto } from '@app/graphql/transfers/dto/transfer-page.dto'
+import { BalancesPageDto } from '@app/graphql/transfers/dto/balances-page.dto'
 
 @Resolver('Transfer')
 export class TransferResolvers {
@@ -60,6 +61,20 @@ export class TransferResolvers {
     const result = await this.transferService
       .findTokenTransfersByContractAddressesForHolder(contractAddresses, holderAddress, filter, limit, page, timestampFrom, timestampTo)
     return new TransferPageDto({
+      items: result[0],
+      totalCount: result[1],
+    })
+  }
+
+  @Query()
+  async tokenBalancesByContractAddressForHolder(
+    @Args('contractAddress', ParseAddressPipe) contractAddress: string,
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+    @Args('timestampFrom') timestampFrom: number,
+    @Args('timestampTo') timestampTo: number,
+  ): Promise<BalancesPageDto> {
+    const result = await this.transferService.findTokenBalancesByContractAddressForHolder(contractAddress, holderAddress, timestampFrom, timestampTo)
+    return new BalancesPageDto({
       items: result[0],
       totalCount: result[1],
     })
