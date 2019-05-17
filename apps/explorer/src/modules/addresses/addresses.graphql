@@ -68,3 +68,7 @@ query exchangeRate {
 fragment CoinExchangeRate on CoinExchangeRate {
   price
 }
+
+query totalTokensValue($address: String!) {
+  totalTokensValue: addressTotalTokenValueUSD(address: $address)
+}

@@ -101,7 +101,8 @@ import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenPageExt } from '@app/core/api/apollo/extensions/token-page.ext'
-import { addressAllTokensOwned } from '@app/modules/addresses/addresses.graphql'
+import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
+import { BigNumberScalar } from "../../../../../api/src/graphql/scalars/big-number.scalar";
 
 const MAX_ITEMS = 10
 
@@ -147,6 +148,21 @@ const MAX_ITEMS = 10
           this.error = this.$i18n.t('message.no-data')
         }
       }
+    },
+    totalTokensValue: {
+      query: totalTokensValue,
+      variables() {
+        return { address: this.address }
+      },
+      update({ totalTokensValue }) {
+        return totalTokensValue ? new BN(totalTokensValue) : null
+      },
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      }
     }
   }
 })
@@ -168,6 +184,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   tokensPage?: TokenPageExt
   error?: string
   page?: number
+  totalTokensValue?: BN
 
   /*
   ===================================================================================
@@ -240,24 +257,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     if (this.loading) {
       return this.$i18n.t('message.load').toString()
     }
-
-    // TODO calculate this on server!
-    if (!(this.tokens && this.tokens.length)) {
-      return '0'
-    }
-
-    const tokensWithPriceInfo = this.tokens.filter(token => token.balance && token.currentPrice)
-    if (!tokensWithPriceInfo.length) {
-      return '0'
-    }
-
-    const amount = tokensWithPriceInfo
-      .filter(token => !!token.balance)
-      .map(token => this.getBalance(token.balance, token.decimals).multipliedBy(new BN(token.currentPrice)))
-      .reduceRight((acc, val) => acc.plus(val))
-      .toFixed()
-
-    return this.getShortValue(amount)
+    return this.totalTokensValue ? this.totalTokensValue.toFormat(2).toString() : '0'
   }
 
   get totalTokens(): string {

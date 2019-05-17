@@ -3,13 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: addressAmountTokensOwned
+// GraphQL fragment: CoinExchangeRate
 // ====================================================
 
-export interface addressAmountTokensOwned {
-  addressAmountTokensOwned: number;
-}
-
-export interface addressAmountTokensOwnedVariables {
-  address: string;
+export interface CoinExchangeRate {
+  __typename: "CoinExchangeRate";
+  price: any | null;
 }

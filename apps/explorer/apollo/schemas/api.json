@@ -713,7 +713,7 @@
             "deprecationReason": null
           },
           {
-            "name": "addressAmountTokensOwned",
+            "name": "addressTotalTokenValueUSD",
             "description": null,
             "args": [
               {
@@ -732,13 +732,9 @@
               }
             ],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "BigNumber",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1506,37 +1502,6 @@
             "name": "totalNumberOfTransactions",
             "description": null,
             "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "BigNumber",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "countTxsForAddress",
-            "description": null,
-            "args": [
-              {
-                "name": "address",
-                "description": null,
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null
-              }
-            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
