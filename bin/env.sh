@@ -3,8 +3,11 @@
 # Give script sane defaults
 set -o errexit
 # set -o nounset
-# set -o xtrace
-# set -o verbose
+
+if [ "${TRACE:-}" == "true" ]; then
+  set -o xtrace
+  set -o verbose
+fi
 
 # Export common vars
 ORG="${ORG:-ethvm}"
