@@ -1,5 +1,5 @@
 {
-  "name": "ethvm-exchange-rates-source",
+  "name": "coin-gecko-exchange-rates-source",
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector",
     "tasks.max": 1,

@@ -34,6 +34,7 @@ allprojects {
     set("logback-version", "1.2.3")
     set("kotlin-logging-version", "1.6.26")
     set("kafka-connect-api-version", "2.1.0")
+    set("kafka-clients-version", "2.1.0")
     set("kafka-schema-registry-client-version", "5.1.0")
     set("kafka-connect-avro-converter-version", "5.1.0")
   }

@@ -14,8 +14,9 @@ import org.web3j.protocol.core.DefaultBlockParameter
 class ParityTracesSource(
   sourceContext: SourceTaskContext,
   parity: JsonRpc2_0ParityExtended,
-  private val tracesTopic: String
-) : AbstractParityEntitySource(sourceContext, parity) {
+  private val tracesTopic: String,
+  syncStateTopic: String
+) : AbstractParityEntitySource(sourceContext, parity, syncStateTopic) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "trace")
 

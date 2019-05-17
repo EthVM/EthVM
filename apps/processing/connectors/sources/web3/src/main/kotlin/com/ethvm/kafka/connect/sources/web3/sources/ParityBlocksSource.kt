@@ -26,8 +26,9 @@ class ParityBlocksSource(
   parity: JsonRpc2_0ParityExtended,
   private val blocksTopic: String,
   private val txsBlockTopic: String,
-  private val unclesTopic: String
-) : AbstractParityEntitySource(sourceContext, parity) {
+  private val unclesTopic: String,
+  syncStateTopic: String
+) : AbstractParityEntitySource(sourceContext, parity, syncStateTopic) {
 
   private val logger = KotlinLogging.logger {}
 

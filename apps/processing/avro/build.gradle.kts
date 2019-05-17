@@ -21,6 +21,7 @@ avro {
   fieldVisibility = "PUBLIC"
   isEnableDecimalLogicalType = false
   isValidateDefaults = true
+  
 }
 
 tasks {
