@@ -8,7 +8,7 @@ type Query {
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
-  tokensMetadata(symbols: [String!]!): [TokenMetadata!]!
+  tokensMetadata(symbols: [String]): [TokenMetadata!]!
 }
 
 type Token {
