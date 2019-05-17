@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -o errexit
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
@@ -17,10 +19,10 @@ main() {
   docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
 
   echo "Building $id $flavor docker image..."
-  ROOT_DIR/bin/docker-build.sh build $id $flavor
+  $ROOT_DIR/bin/docker-build.sh build $id $flavor
 
   echo "Pushing $id $flavor docker image to repository..."
-  ROOT_DIR/bin/docker-build.sh push $id $flavor
+  $ROOT_DIR/bin/docker-build.sh push $id $flavor
 }
 
 main "$@"
