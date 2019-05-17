@@ -183,7 +183,7 @@ export class TokenService {
       .groupBy('erc20.address')
       .getRawOne()
 
-    return usdValue? new BigNumber(usdValue) : undefined
+    return usdValue ? new BigNumber(usdValue) : undefined
 
   }
 
