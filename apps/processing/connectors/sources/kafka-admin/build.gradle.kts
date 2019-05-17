@@ -22,7 +22,7 @@ dependencies {
   implementation(project(":avro"))
 
   implementation("joda-time:joda-time:2.10.1")
-  
+
   // Kafka
   compileOnly("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
   implementation("org.apache.kafka:kafka-clients:${ext.get("kafka-connect-api-version") as String}")

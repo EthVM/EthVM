@@ -53,7 +53,7 @@ abstract class AbstractParityEntitySource(
     // Returns tombstones + range
     return range.fold({ emptyList() }, { range ->
       val records = fetchRange(range)
-      when(records.isEmpty()) {
+      when (records.isEmpty()) {
         true -> records
         false -> records + syncStateRecord(range)
       }
