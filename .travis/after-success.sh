@@ -3,14 +3,21 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 
-echo "Building API docker image..."
-ROOT_DIR/bin/docker-build.sh build api
+main() {
+  echo "Login to Docker Hub..."
+  docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
 
-echo "Pushing API docker image to repository..."
-ROOT_DIR/bin/docker-build.sh push api
+  echo "Building API docker image..."
+  ROOT_DIR/bin/docker-build.sh build api
 
-echo "Building explorer docker image..."
-ROOT_DIR/bin/docker-build.sh build explorer development-ci
+  echo "Pushing API docker image to repository..."
+  ROOT_DIR/bin/docker-build.sh push api
 
-echo "Pushing explorer docker image to repository..."
-ROOT_DIR/bin/docker-build.sh push explorer development-ci
+  echo "Building explorer docker image..."
+  ROOT_DIR/bin/docker-build.sh build explorer development-ci
+
+  echo "Pushing explorer docker image to repository..."
+  ROOT_DIR/bin/docker-build.sh push explorer development-ci
+}
+
+main
