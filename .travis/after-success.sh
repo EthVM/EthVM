@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit
+set -o xtrace
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
@@ -8,7 +9,6 @@ ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 main() {
   local id="${1:-}"
   local flavor="${2:-}"
-  shift 2
 
   if [[ -z "$id" ]]; then
     echo "Ignoring docker image build..."
