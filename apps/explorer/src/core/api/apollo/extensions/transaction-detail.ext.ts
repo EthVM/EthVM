@@ -4,9 +4,9 @@ import { EthValue } from '@app/core/models'
 import Signatures from '@app/core/helper/signatures.json'
 
 export class TransactionDetailExt_receipt implements TransactionDetail_receipt {
-  __typename!: 'Receipt';
-  contractAddress: string | null;
-  gasUsed: any;
+  __typename!: 'Receipt'
+  contractAddress: string | null
+  gasUsed: any
 
   constructor(proto: TransactionDetail_receipt) {
     this.contractAddress = proto.contractAddress
@@ -19,19 +19,19 @@ export class TransactionDetailExt_receipt implements TransactionDetail_receipt {
 }
 
 export class TransactionDetailExt implements TransactionDetail {
-  __typename!: 'Transaction';
-  blockHash!: string;
-  blockNumber: any;
-  from!: string;
-  gas: any;
-  gasPrice: any;
-  hash!: string;
-  input: any;
-  nonce: any;
-  timestamp!: number;
-  to: string | null;
-  value: any;
-  receipt: TransactionDetailExt_receipt | null;
+  __typename!: 'Transaction'
+  blockHash!: string
+  blockNumber: any
+  from!: string
+  gas: any
+  gasPrice: any
+  hash!: string
+  input: any
+  nonce: any
+  timestamp!: number
+  to: string | null
+  value: any
+  receipt: TransactionDetailExt_receipt | null
 
   constructor(proto: TransactionDetail) {
     this.blockHash = proto.blockHash
@@ -48,7 +48,6 @@ export class TransactionDetailExt implements TransactionDetail {
 
     const { receipt } = proto
     this.receipt = receipt ? new TransactionDetailExt_receipt(receipt) : null
-
   }
 
   get blockNumberBN(): BigNumber {
@@ -89,23 +88,24 @@ export class TransactionDetailExt implements TransactionDetail {
   }
 
   get inputMethodId(): string | null {
-
     return this.input ? `0x${this.input.substr(0, 8)}` : null
   }
 
   get inputFunction(): string | null {
-
-    if (!this.input) return null
+    if (!this.input) {
+      return null
+    }
 
     const methodId = this.inputMethodId
 
     const signatures = Signatures.results
 
-    if (!signatures && signatures.length) return null
+    if (!signatures && signatures.length) {
+      return null
+    }
 
     const index = signatures.findIndex(i => i.hex_signature === methodId)
 
     return index > -1 ? signatures[index].text_signature : null
   }
-
 }

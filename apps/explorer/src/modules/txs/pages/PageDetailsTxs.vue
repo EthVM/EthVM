@@ -16,7 +16,7 @@ import { eth } from '@app/core/helper'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { transactionDetail } from '@app/modules/txs/txs.graphql'
-import { TransactionDetailExt } from "@app/core/api/apollo/extensions/transaction-detail.ext";
+import { TransactionDetailExt } from '@app/core/api/apollo/extensions/transaction-detail.ext'
 
 @Component({
   components: {
@@ -122,7 +122,6 @@ export default class PageDetailsTxs extends Vue {
    * @return {Detail}
    */
   toDetail(transaction: TransactionDetailExt): Detail {
-
     const { receipt } = transaction
 
     if (receipt && receipt.contractAddress) {
@@ -139,7 +138,7 @@ export default class PageDetailsTxs extends Vue {
       title: this.$i18n.t('tx.to').toString(),
       detail: transaction.to!,
       copy: true,
-      link: `/address/'${transaction.to!}`,
+      link: `/address/${transaction.to!}`,
       mono: true
     }
   }
@@ -184,7 +183,6 @@ export default class PageDetailsTxs extends Vue {
         }
       ]
     } else {
-
       const transaction = this.transactionDetail!
       const receipt = transaction.receipt!
 
@@ -213,9 +211,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.amount'),
-          detail: `${transaction.valueEth
-            .toEthFormatted()
-            .toString()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.valueEth.toEthFormatted().toString()} ${this.$i18n.t('common.eth')}`
         },
         this.toDetail(transaction),
         {
@@ -284,11 +280,14 @@ export default class PageDetailsTxs extends Vue {
   }
 
   get inputFormatted(): string[] {
-
-    if (!this.transactionDetail) return ['0x']
+    if (!this.transactionDetail) {
+      return ['0x']
+    }
 
     const methodId = this.transactionDetail.inputMethodId
-    if (!methodId) return ['0x']
+    if (!methodId) {
+      return ['0x']
+    }
 
     const methodFormatted = `${this.$i18n.t('tx.method')}: ${methodId}`
 
