@@ -72,22 +72,22 @@
 </template>
 
 <script lang="ts">
-  import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-  import AppError from '@app/core/components/ui/AppError.vue'
-  import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
-  import AppTabs from '@app/core/components/ui/AppTabs.vue'
-  import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-  import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
-  import { Component, Prop, Vue } from 'vue-property-decorator'
-  import { Crumb, Tab } from '@app/core/components/props'
-  import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
-  import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-  import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-  import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue'
-  import { addressDetail } from '@app/modules/addresses/addresses.graphql'
-  import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
+import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
+import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
+import AppTabs from '@app/core/components/ui/AppTabs.vue'
+import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Crumb, Tab } from '@app/core/components/props'
+import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue'
+import { addressDetail } from '@app/modules/addresses/addresses.graphql'
+import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
 
-  const MAX_ITEMS = 10
+const MAX_ITEMS = 10
 
 @Component({
   components: {
