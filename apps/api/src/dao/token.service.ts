@@ -171,10 +171,20 @@ export class TokenService {
     return numHolders
   }
 
-  async countTokensByHolderAddress(address: string): Promise<number> {
-    const numErc20Tokens = await this.erc20BalanceRepository.count({ where: { address } })
-    const numErc721Tokens = await this.erc721BalanceRepository.count({ where: { address } })
-    return numErc20Tokens + numErc721Tokens
+  async totalValueUSDByAddress(address: string): Promise<BigNumber | undefined> {
+
+    // Only for erc20Tokens as these have fungible value
+    const { usdValue } = await this.erc20BalanceRepository
+      .createQueryBuilder('erc20')
+      .leftJoin('erc20.tokenExchangeRate', 'ter')
+      .select('SUM(erc20.amount * ter.currentPrice)', 'usdValue')
+      .where('erc20.address = :address', { address })
+      .andWhere('ter.currentPrice IS NOT NULL')
+      .groupBy('erc20.address')
+      .getRawOne()
+
+    return usdValue? new BigNumber(usdValue) : undefined
+
   }
 
   async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataDto[]> {

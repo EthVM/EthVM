@@ -8,6 +8,7 @@ import { TokenHoldersPageDto } from '@app/graphql/tokens/dto/token-holders-page.
 import { TokenExchangeRatesArgs } from '@app/graphql/tokens/args/token-exchange-rates.args'
 import { TokensMetadataArgs } from '@app/graphql/tokens/args/tokens-metadata.args'
 import { TokenPageDto } from '@app/graphql/tokens/dto/token-page.dto'
+import BigNumber from 'bignumber.js'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -47,8 +48,10 @@ export class TokenResolvers {
   }
 
   @Query()
-  async addressAmountTokensOwned(@Args('address', ParseAddressPipe) address: string) {
-    return this.tokenService.countTokensByHolderAddress(address)
+  async addressTotalTokenValueUSD(
+    @Args('address', ParseAddressPipe) address: string,
+  ): Promise<BigNumber | undefined> {
+    return this.tokenService.totalValueUSDByAddress(address)
   }
 
   @Query()
