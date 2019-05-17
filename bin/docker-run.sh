@@ -115,11 +115,12 @@ logs() {
 run() {
   local command="${1}"
   local action="${2}"
+  shift 2
 
   case "${command}" in
     up)      up "${action}"       ;;
     down)    down                 ;;
-    logs)    logs "$2"            ;;
+    logs)    logs "$action"       ;;
     help|*)  docker_usage; exit 0 ;;
   esac
 }
