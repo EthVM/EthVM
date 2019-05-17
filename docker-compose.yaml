@@ -28,10 +28,10 @@ volumes:
     #
     # If you're on Mac, make sure you comment the following lines
     # and leave it as a regular docker volume
-    # driver: local-persist
-    # driver_opts:
-    #   name: "paritydb"
-    #   mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
+    driver: local-persist
+    driver_opts:
+      name: "paritydb"
+      mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
 
 services:
 
@@ -55,6 +55,22 @@ services:
       LETS_ENCRYPT_ENABLED: 'false'
       SWARM_MODE: 'false'
       TRAEFIK_DASHBOARD_ENABLED: 'true'
+
+  grafana:
+    image: grafana/grafana:6.1.6
+    networks:
+      - back
+    environment:
+      GF_SERVER_ROOT_URL: 'http://grafana.ethvm.lan'
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
+      - 'traefik.backend=grafana'
+      - 'traefik.port=3000'
 
   explorer:
     build:
@@ -108,7 +124,7 @@ services:
     networks:
       - back
     volumes:
-      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
+      - /home/brian/.local/share/io.parity.ethereum/docker/:/home/parity/.local/share/io.parity.ethereum/
     ports:
       - 8545:8545
       - 8546:8546

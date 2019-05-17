@@ -31,4 +31,7 @@ export class AccountEntity {
   @Column({ type: 'boolean', readonly: true })
   isContractCreator!: boolean
 
+  @Column({ type: 'boolean', readonly: true})
+  isContract!: boolean
+
 }

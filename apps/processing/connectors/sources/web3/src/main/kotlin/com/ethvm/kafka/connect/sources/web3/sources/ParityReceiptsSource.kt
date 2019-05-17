@@ -14,8 +14,9 @@ import org.web3j.protocol.core.DefaultBlockParameter
 class ParityReceiptsSource(
   sourceContext: SourceTaskContext,
   parity: JsonRpc2_0ParityExtended,
-  private val receiptsTopic: String
-) : AbstractParityEntitySource(sourceContext, parity) {
+  private val receiptsTopic: String,
+  syncStateTopic: String
+) : AbstractParityEntitySource(sourceContext, parity, syncStateTopic) {
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "receipt")
 

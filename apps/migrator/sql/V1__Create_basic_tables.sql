@@ -479,6 +479,12 @@ SELECT fb.address,
        (SELECT COUNT(*)
         FROM canonical_transaction AS ct
         WHERE ct.from = fb.address) AS out_tx_count,
+        CASE
+          WHEN cont.creator IS NULL THEN
+            FALSE
+          ELSE
+            TRUE
+          END AS is_contract,
        CASE
          WHEN a.count > 0 THEN
            TRUE
@@ -494,6 +500,7 @@ SELECT fb.address,
 FROM fungible_balance AS fb
        LEFT JOIN canonical_block_author AS a ON fb.address = a.address
        LEFT JOIN canonical_contract_creator AS cc ON fb.address = cc.address
+       LEFT JOIN canonical_contract AS cont ON fb.address = cont.address
 WHERE fb.contract = ''
 ORDER BY balance DESC;
 
@@ -782,3 +789,64 @@ WHERE cb.number IS NOT NULL
   AND bh.number IS NOT NULL;
 
 
+/* */
+
+CREATE TABLE parity_sync_state
+(
+  source    VARCHAR(64) PRIMARY KEY,
+  timestamp TIMESTAMP NOT NULL,
+  head      NUMERIC   NOT NULL,
+  number    NUMERIC   NOT NULL
+);
+
+CREATE TABLE parity_sync_state_log
+(
+  source    VARCHAR(64) NOT NULL,
+  timestamp TIMESTAMP   NOT NULL,
+  head      NUMERIC     NOT NULL,
+  number    NUMERIC     NOT NULL
+);
+
+CREATE VIEW parity_sync_state_log_grafana AS
+SELECT source,
+       "timestamp",
+       head,
+       number,
+       (head - number) as lag
+FROM parity_sync_state_log;
+
+
+/* */
+
+CREATE TABLE kafka_offset_info
+(
+  consumer_group_id VARCHAR(256) NOT NULL,
+  topic             VARCHAR(256) NOT NULL,
+  timestamp         TIMESTAMP    NOT NULL,
+  total_length      BIGINT       NOT NULL,
+  total_offset      BIGINT       NOT NULL,
+  PRIMARY KEY (consumer_group_id, topic)
+);
+
+CREATE TABLE kafka_offset_info_log
+(
+  timestamp         TIMESTAMP    NOT NULL,
+  consumer_group_id VARCHAR(256) NOT NULL,
+  topic             VARCHAR(256) NOT NULL,
+  total_length      BIGINT       NOT NULL,
+  total_offset      BIGINT       NOT NULL
+);
+
+SELECT create_hypertable('kafka_offset_info_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 hour');
+
+CREATE VIEW kafka_offset_info_log_grafana AS
+SELECT "timestamp",
+       consumer_group_id,
+       topic,
+       CONCAT(consumer_group_id, ':', topic) AS consumer_group_and_topic,
+       total_length,
+       total_offset,
+       (total_length - total_offset)         AS lag
+FROM kafka_offset_info_log;

@@ -2,7 +2,8 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import { TransferService } from '@app/dao/transfer.service'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseAddressesPipe } from '@app/shared/validation/parse-addresses.pipe'
-import { TransfersPageDto } from '@app/graphql/transfers/dto/transfers-page.dto'
+import { TransferPageDto } from '@app/graphql/transfers/dto/transfer-page.dto'
+import { BalancesPageDto } from '@app/graphql/transfers/dto/balances-page.dto'
 
 @Resolver('Transfer')
 export class TransferResolvers {
@@ -14,9 +15,9 @@ export class TransferResolvers {
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('limit') limit: number,
     @Args('page') page: number,
-  ): Promise<TransfersPageDto> {
+  ): Promise<TransferPageDto> {
     const result = await this.transferService.findTokenTransfersByContractAddress(contractAddress, limit, page)
-    return new TransfersPageDto({
+    return new TransferPageDto({
       items: result[0],
       totalCount: result[1],
     })
@@ -29,12 +30,22 @@ export class TransferResolvers {
     @Args('filter') filter: string,
     @Args('limit') limit: number,
     @Args('page') page: number,
-  ): Promise<TransfersPageDto> {
+  ): Promise<TransferPageDto> {
     const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, page)
-    return new TransfersPageDto({
+    return new TransferPageDto({
       items: result[0],
       totalCount: result[1],
     })
+  }
+
+  @Query()
+  async internalTransactionsByAddress(
+    @Args('address', ParseAddressPipe) address: string,
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+  ): Promise<TransferPageDto> {
+    const [items, totalCount] = await this.transferService.findInternalTransactionsByAddress(address, offset, limit)
+    return new TransferPageDto({ items, totalCount })
   }
 
   @Query()
@@ -46,23 +57,24 @@ export class TransferResolvers {
     @Args('page') page: number,
     @Args('timestampFrom') timestampFrom: number,
     @Args('timestampTo') timestampTo: number,
-  ): Promise<TransfersPageDto> {
+  ): Promise<TransferPageDto> {
     const result = await this.transferService
       .findTokenTransfersByContractAddressesForHolder(contractAddresses, holderAddress, filter, limit, page, timestampFrom, timestampTo)
-    return new TransfersPageDto({
+    return new TransferPageDto({
       items: result[0],
       totalCount: result[1],
     })
   }
 
   @Query()
-  async internalTransactionsByAddress(
-    @Args('address', ParseAddressPipe) address: string,
-    @Args('limit') limit: number,
-    @Args('page') page: number,
-  ): Promise<TransfersPageDto> {
-    const result = await this.transferService.findInternalTransactionsByAddress(address, limit, page)
-    return new TransfersPageDto({
+  async tokenBalancesByContractAddressForHolder(
+    @Args('contractAddress', ParseAddressPipe) contractAddress: string,
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+    @Args('timestampFrom') timestampFrom: number,
+    @Args('timestampTo') timestampTo: number,
+  ): Promise<BalancesPageDto> {
+    const result = await this.transferService.findTokenBalancesByContractAddressForHolder(contractAddress, holderAddress, timestampFrom, timestampTo)
+    return new BalancesPageDto({
       items: result[0],
       totalCount: result[1],
     })

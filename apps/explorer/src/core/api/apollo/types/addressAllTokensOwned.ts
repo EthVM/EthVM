@@ -6,7 +6,7 @@
 // GraphQL query operation: addressAllTokensOwned
 // ====================================================
 
-export interface addressAllTokensOwned_addressAllTokensOwned {
+export interface addressAllTokensOwned_tokens_items {
   __typename: "Token";
   name: string | null;
   symbol: string | null;
@@ -16,10 +16,18 @@ export interface addressAllTokensOwned_addressAllTokensOwned {
   currentPrice: any | null;
 }
 
+export interface addressAllTokensOwned_tokens {
+  __typename: "TokenPage";
+  items: addressAllTokensOwned_tokens_items[];
+  totalCount: number;
+}
+
 export interface addressAllTokensOwned {
-  addressAllTokensOwned: addressAllTokensOwned_addressAllTokensOwned[];
+  tokens: addressAllTokensOwned_tokens;
 }
 
 export interface addressAllTokensOwnedVariables {
   address: string;
+  offset?: number | null;
+  limit?: number | null;
 }

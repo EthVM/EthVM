@@ -4,9 +4,23 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
+  record KafkaOffsetInfoKeyRecord {
+    long timestamp;
+    string consumerGroupId;
+    string topic;
+  }
+
+  record KafkaOffsetInfoRecord {
+    long timestamp;
+    string consumerGroupId;
+    string topic;
+    long totalLength;
+    long totalOffset;
+  }
+
   record BlockMetricKeyRecord {
     string blockHash;
-    timestamp_ms timestamp;
+    timestamp_ms timestamp = 0;
   }
 
   record BlockKeyRecord {
@@ -162,7 +176,7 @@ protocol Processing {
 // metrics
 
   record BlockTimestampRecord {
-    timestamp_ms timestamp;
+    timestamp_ms timestamp = 0;
   }
 
   record BlockMetricsHeaderRecord {
@@ -173,7 +187,7 @@ protocol Processing {
     decimal(80, 0) difficulty;
     decimal(80, 0) totalDifficulty;
 
-    timestamp_ms timestamp;
+    timestamp_ms timestamp = 0;
   }
 
   record BlockMetricsTransactionTraceRecord {

@@ -6,14 +6,11 @@
     <!--
     =====================================================================================
       ADDRESS DETAILS
-
-      This section shows all of the data loaded from "load-basic-info"
-      It will load as soon as that particular information has been retrieved.
     =====================================================================================
     -->
     <v-layout v-if="!loading && !hasError" row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <address-detail :account="account" :type-addrs="detailsType" :address="addressRef" />
+        <address-detail :account="account" :address="addressRef" />
       </v-flex>
     </v-layout>
     <!--
@@ -36,7 +33,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-1">
-        <table-address-tokens :loading="tokensLoading" :tokens="account.tokens" :holder="account.address" :error="tokensError" />
+        <table-address-tokens :address="addressRef" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -52,16 +49,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-5">
-        <token-table-transfers
-          :transfers="account.internalTransfers"
-          :total-transfers="account.totalInternalTransfers"
-          :loading="transfersLoading"
-          :error="hasTransfersError"
-          :page="transfersPage"
-          :show-type="true"
-          :convert-to-eth="true"
-          @page="setPageTransfers"
-        />
+        <table-transfers :address="addressRef" :page-type="'internal'" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -77,44 +65,32 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" v-if="account.isCreator" value="tab-4">
-        <table-address-contracts
-          :contracts="account.contracts"
-          :total-contracts="account.totalContracts"
-          :page="contractsPage"
-          :loading="contractsLoading"
-          :error="contractsError"
-          @page="setContractsPage"
-        />
+        <table-address-contracts :address="addressRef" />
       </v-tab-item>
     </app-tabs>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Contract, EthValue, PendingTx, SimpleBlock, SimpleTx, Transfer } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AddressDetail from '@app/modules/addresses/components/AddressDetail.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import TableAddressTokens from '@app/modules/addresses/components/TableAddressTokens.vue'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { eth, TinySM } from '@app/core/helper'
-import { AccountInfo } from '@app/modules/addresses/props'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
-import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
 import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue'
+import { addressDetail } from '@app/modules/addresses/addresses.graphql'
+import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
 
 const MAX_ITEMS = 10
 
-const ADDRESS_DETAIL_TYPE = 'address'
-const CONTRACT_DETAIL_TYPE = 'contract'
-
 @Component({
   components: {
-    TokenTableTransfers,
     AppInfoLoad,
     AppBreadCrumbs,
     AppError,
@@ -123,7 +99,42 @@ const CONTRACT_DETAIL_TYPE = 'contract'
     TableBlocks,
     TableAddressTokens,
     TableAddressContracts,
-    TableTxs
+    TableTxs,
+    TableTransfers
+  },
+  apollo: {
+    account: {
+      query: addressDetail,
+
+      fetchPolicy: 'cache-and-network',
+
+      variables() {
+        const { addressRef } = this
+        return { address: addressRef }
+      },
+
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
+      update({ account }) {
+        if (account) {
+          return new AccountExt(account)
+        }
+
+        this.error = this.error || this.$i18n.t('message.invalid.addr')
+        return null
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      }
+    }
   }
 })
 export default class PageDetailsAddress extends Vue {
@@ -143,231 +154,7 @@ export default class PageDetailsAddress extends Vue {
 
   detailsType = 'address'
   error = ''
-  loading = true
-  validHash = true
-  account = new AccountInfo(this.addressRef)
-
-  /* Pending Txs: */
-  pendingTxsLoading = true
-  pendingTxsError = ''
-
-  /* Internal Transfers */
-  transfersLoading = true
-  transfersError = ''
-  transfersPage = 0
-
-  /* Tokens: */
-  tokensLoading = true
-  tokensError = ''
-
-  /* Contracts: */
-  contractsLoading = true
-  contractsError = ''
-  contractsPage = 0
-
-  // State Machine
-  sm!: TinySM
-
-  /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-  mounted(): void {
-    const ref = this.addressRef
-
-    // 1. Create State Machine
-    this.sm = new TinySM([
-      {
-        name: 'initial',
-        enter: () => {
-          // 1. Check that current block ref is a valid one
-          if (!eth.isValidAddress(ref)) {
-            this.sm.transition('error')
-            return
-          }
-          // 2. If everything goes well, we proceed to load basic information
-          this.sm.transition('load-basic-info')
-        }
-      },
-      {
-        name: 'load-basic-info',
-        enter: () => {
-          const account = this.$api.getAccount(this.addressRef)
-          const contract = this.$api.getContract(this.addressRef)
-          const exchangeRate = this.$api.getExchangeRateQuote('ethereum_usd')
-
-          // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-          const promises = [account, contract, exchangeRate].map(p => p.catch(() => undefined))
-
-          Promise.all(promises)
-            .then((res: any[]) => {
-              const account = res[0] || {}
-              this.account.isCreator = account.isContractCreator || false
-              this.account.isMiner = account.isMiner || false
-              this.account.totalTxs = account.totalTxCount || 0
-              this.account.fromTxCount = account.outTxCount || 0
-              this.account.toTxCount = account.inTxCount || 0
-              this.account.balance = new EthValue(account.balance || 0)
-
-              this.account.type = res[1] ? CONTRACT_DETAIL_TYPE : ADDRESS_DETAIL_TYPE
-              this.account.exchangeRate.USD = res[2] ? res[2].price : 0
-
-              this.error = ''
-              this.loading = false
-
-              this.sm.transition('load-complementary-info')
-            })
-            .catch(err => this.sm.transition('error'))
-        }
-      },
-      {
-        name: 'load-complementary-info',
-        enter: () => {
-          // TODO: Re-enable whenever pending tx calls available
-          // const addressPendingTxs = this.fetchPendingTxs()
-          const contractsCreated = this.account.isCreator ? this.fetchContractsCreated() : Promise.resolve([])
-          const internalTransfers = this.fetchTransfers()
-
-          // If one promise fails, we still continue processing every entry (and for those failed we receive undefined)
-          // const promises = [addressTxs, addressPendingTxs, minedBlocks, contractsCreated].map(p => p.catch(() => undefined))
-          const promises = [contractsCreated, internalTransfers].map(p => p.catch(() => undefined))
-
-          Promise.all(promises)
-            .then((res: any[]) => {
-              // Pending Txs
-              // this.account.pendingTxs = res[1] || []
-              // this.pendingTxsLoading = false
-
-              // Contract Creator
-              const contractsPage = res[0]
-              this.account.contracts = contractsPage ? contractsPage.items : []
-              this.account.totalContracts = contractsPage ? contractsPage.totalCount : 0
-              this.contractsLoading = false
-
-              // Internal transfers
-              const transfersPage = res[1]
-              this.account.internalTransfers = transfersPage ? transfersPage.items : []
-              this.account.totalInternalTransfers = transfersPage ? transfersPage.totalCount : 0
-              this.transfersLoading = false
-
-              this.sm.transition('load-token-complementary-info')
-            })
-            .catch(err => this.sm.transition('error'))
-        }
-      },
-      {
-        name: 'load-token-complementary-info',
-        enter: () => {
-          const totalTokensOwned = this.$api.getAddressAllTokensOwned(this.addressRef)
-
-          const promises = [totalTokensOwned].map(p => p.catch(() => undefined))
-
-          Promise.all(promises)
-            .then((res: any[]) => {
-              this.account.tokens = res[0] || []
-              this.account.tokensOwned = this.account.tokens.length
-              this.tokensLoading = false
-            })
-            .catch(err => this.sm.transition('error'))
-        }
-      },
-      {
-        name: 'success',
-        enter: () => {
-          // 1. Disable global error
-          this.error = ''
-
-          // 2. Disable global loading
-          this.loading = false
-        }
-      },
-      {
-        name: 'error',
-        enter: () => {
-          // 1. Set global error to error
-          this.error = this.$i18n.t('message.invalid.addr').toString()
-
-          // 2. Disable global loading
-          this.loading = false
-        }
-      }
-    ])
-
-    // 2. Kickstart State Machine
-    this.sm.transition('initial')
-  }
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  fetchPendingTxs(page = 0, limit = MAX_ITEMS, filter = 'all'): Promise<PendingTx[]> {
-    return this.$api.getPendingTxsOfAddress(this.addressRef, filter, limit, page)
-  }
-
-  fetchTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: string }> {
-    return this.$api.getInternalTransactionsByAddress(this.addressRef, limit, page)
-  }
-
-  fetchContractsCreated(limit = MAX_ITEMS): Promise<{ items: Contract[]; totalCount: number }> {
-    return this.$api.getContractsCreatedBy(this.addressRef, limit, this.contractsPage)
-  }
-
-  setPageTransfers(page: number): void {
-    this.transfersPage = page
-    this.transfersLoading = true
-  }
-
-  setContractsPage(page: number): void {
-    this.contractsLoading = true
-    this.contractsPage = page
-  }
-
-  updateTransfers(): void {
-    this.fetchTransfers().then(
-      res => {
-        this.account.internalTransfers = res.items
-        this.account.totalInternalTransfers = res.totalCount
-        this.transfersLoading = false
-      },
-      err => {
-        this.transfersError = this.$i18n.t('message.no-data').toString()
-      }
-    )
-  }
-
-  updateContracts(): void {
-    this.fetchContractsCreated().then(
-      (res: { items: Contract[]; totalCount: number }) => {
-        this.account.contracts = res.items
-        this.account.totalContracts = res.totalCount
-        this.contractsLoading = false
-      },
-      err => {
-        this.contractsError = this.$i18n.t('message.no-data').toString()
-      }
-    )
-  }
-
-  /*
-  ===================================================================================
-    Watch
-  ===================================================================================
-  */
-
-  @Watch('transfersPage')
-  onTransfersPageChanges(newVal: number, oldVal: number): void {
-    this.updateTransfers()
-  }
-
-  @Watch('contractsPage')
-  onContractsPageChanges(newVal: number, oldVal: number): void {
-    this.updateContracts()
-  }
+  account?: AccountExt
 
   /*
   ===================================================================================
@@ -379,20 +166,8 @@ export default class PageDetailsAddress extends Vue {
     return this.error !== ''
   }
 
-  get hasPendingTxsError(): boolean {
-    return this.pendingTxsError !== ''
-  }
-
-  get hasTransfersError(): boolean {
-    return this.transfersError !== ''
-  }
-
-  get hasTokensError(): boolean {
-    return this.tokensError !== ''
-  }
-
-  get hasContractsError(): boolean {
-    return this.contractsError !== ''
+  get loading(): boolean {
+    return this.$apollo.loading
   }
 
   get max(): number {
@@ -437,7 +212,7 @@ export default class PageDetailsAddress extends Vue {
       }
     ]
 
-    if (!this.loading && !this.error) {
+    if (!this.loading && !this.error && this.account) {
       if (this.account.isMiner) {
         const newTab = {
           id: 3,
@@ -447,7 +222,7 @@ export default class PageDetailsAddress extends Vue {
         tabs.push(newTab)
       }
 
-      if (this.account.isCreator) {
+      if (this.account.isContractCreator) {
         const newTab = {
           id: 4,
           title: this.$i18n.tc('contract.name', 2).toString(),

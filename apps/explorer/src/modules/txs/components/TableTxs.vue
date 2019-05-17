@@ -38,8 +38,7 @@
       </v-flex>
       <v-flex v-else xs5 md6 lg7 xl8>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
-          <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -100,8 +99,7 @@
               <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
             <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-              <app-paginate v-if="isBlockDetail" :total="pages" @newPage="setPage" :current-page="page" />
-              <app-paginate v-else :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
+              <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
             </v-layout>
             <v-card v-if="!transactions.length" flat>
               <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
@@ -397,6 +395,10 @@ export default class TableTxs extends TableTxsMixin {
 
   get isAddressDetail(): boolean {
     return this.pageType === 'address'
+  }
+
+  get isHome(): boolean {
+    return this.pageType === 'home'
   }
 
   get pages(): number {
