@@ -103,7 +103,7 @@ class ParityBlocksSource(
         .build()
 
       val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
-        null -> null
+        null -> 0 // should only occur for genesis block
         else -> block.timestamp.toInt() - prevTimestamp
       }
 
