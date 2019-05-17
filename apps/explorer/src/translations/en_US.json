@@ -190,7 +190,10 @@
       "tx": "new tx | new txs",
       "block": "new block | new blocks"
     },
-    "sec": "sec"
+    "sec": "sec",
+    "uncle": {
+      "no-uncles": "There are no uncles"
+    }
   },
   "charts": {
     "name": "Charts",
