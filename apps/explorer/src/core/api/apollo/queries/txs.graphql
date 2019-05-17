@@ -1,24 +1,4 @@
 
-query tx($hash: String!) {
-  tx(hash: $hash) {
-    blockHash
-    blockNumber
-    from
-    gas
-    gasPrice
-    hash
-    input
-    nonce
-    timestamp
-    to
-    value
-    receipt {
-      contractAddress
-      gasUsed
-    }
-  }
-}
-
 query txs($limit: Int, $page: Int, $fromBlock: BigNumber) {
   txs(limit: $limit, page: $page, fromBlock: $fromBlock) {
     blockHash

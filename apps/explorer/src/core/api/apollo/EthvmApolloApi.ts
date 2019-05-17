@@ -14,22 +14,8 @@ import {
   tokenTransfersByContractAddressForHolder,
   totalNumTokenExchangeRates
 } from '@app/core/api/apollo/queries/tokens.graphql'
-import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
-import {
-  Account,
-  Block,
-  CoinExchangeRate,
-  Contract,
-  PendingTx,
-  SimpleBlock,
-  SimpleTx,
-  Token,
-  TokenExchangeRate,
-  TokenHolder,
-  Transfer,
-  Tx
-} from '@app/core/models'
-import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
+import { totalNumberOfTransactions, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
+import { Block, CoinExchangeRate, Contract, PendingTx, SimpleBlock, SimpleTx, TokenExchangeRate, TokenHolder, Transfer } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import BigNumber from 'bignumber.js'
 
@@ -262,17 +248,6 @@ export class EthvmApolloApi implements EthvmApi {
   // ------------------------------------------------------------------------------------
   // Txs
   // ------------------------------------------------------------------------------------
-
-  public getTx(hash: string): Promise<Tx> {
-    return this.apollo
-      .query({
-        query: tx,
-        variables: {
-          hash
-        }
-      })
-      .then(res => new Tx(res.data.tx))
-  }
 
   public getTxs(limit: number, order: string, fromBlock: number): Promise<SimpleTx[]> {
     return this.apollo

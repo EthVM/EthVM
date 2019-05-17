@@ -38,7 +38,6 @@ export interface EthvmApi {
   ): Promise<{ items: Transfer[]; totalCount: string }>
 
   // Txs
-  getTx(hash: string): Promise<Tx | null>
   getTxs(limit: number, order: string, fromBlock: number): Promise<SimpleTx[]>
   getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]>
   getTotalNumberOfTxs(): Promise<number>

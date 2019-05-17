@@ -151,7 +151,7 @@ import {
   transactionSummariesByBlockHash,
   transactionSummariesByBlockNumber,
   transactionSummariesByAddress
-} from '@app/modules/txs/components/txs.graphql'
+} from '@app/modules/txs/txs.graphql'
 import BigNumber from 'bignumber.js'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { Subscription } from 'rxjs'
@@ -380,7 +380,7 @@ export default class TableTxs extends TableTxsMixin {
     const titles = {
       tx: this.$i18n.t('tx.last'),
       pending: this.$i18n.tc('tx.pending', 2),
-      block: this.$i18n.t('block.txs')
+      block: this.$i18n.t('txs')
     }
     return titles[this.pageType] || titles['tx']
   }
