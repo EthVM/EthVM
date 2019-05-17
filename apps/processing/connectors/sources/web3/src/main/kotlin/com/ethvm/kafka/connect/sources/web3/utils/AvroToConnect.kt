@@ -4,6 +4,8 @@ import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.CanonicalRecord
 import com.ethvm.avro.capture.EthListRecord
+import com.ethvm.avro.capture.ParitySyncStateKeyRecord
+import com.ethvm.avro.capture.ParitySyncStateRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
@@ -31,7 +33,9 @@ object AvroToConnect {
     TransactionRecord::class to TransactionRecord.`SCHEMA$`,
     TransactionReceiptRecord::class to TransactionReceiptRecord.`SCHEMA$`,
     UncleListRecord::class to UncleListRecord.`SCHEMA$`,
-    UncleRecord::class to UncleRecord.`SCHEMA$`
+    UncleRecord::class to UncleRecord.`SCHEMA$`,
+    ParitySyncStateKeyRecord::class to ParitySyncStateKeyRecord.`SCHEMA$`,
+    ParitySyncStateRecord::class to ParitySyncStateRecord.`SCHEMA$`
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)

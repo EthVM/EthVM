@@ -1,12 +1,7 @@
 import { EthvmApi } from '@app/core/api'
-import {
-  accountByAddress,
-  addressAllTokensOwned,
-  addressAmountTokensOwned,
-  internalTransactionsByAddress
-} from '@app/core/api/apollo/queries/addresses.graphql'
+import { addressAmountTokensOwned } from '@app/core/api/apollo/queries/addresses.graphql'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
-import { contractByAddress, contractsCreatedBy } from '@app/core/api/apollo/queries/contracts.graphql'
+import { contractByAddress } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 
 import {
@@ -35,6 +30,7 @@ import {
   Transfer,
   Tx
 } from '@app/core/models'
+import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
 import { ApolloClient } from 'apollo-client'
 import BigNumber from 'bignumber.js'
 
@@ -45,28 +41,6 @@ export class EthvmApolloApi implements EthvmApi {
   // Address
   // ------------------------------------------------------------------------------------
 
-  public getAccount(address: string): Promise<Account | null> {
-    return this.apollo
-      .query({
-        query: accountByAddress,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.accountByAddress)
-  }
-
-  public getAddressAllTokensOwned(address: string): Promise<Token[]> {
-    return this.apollo
-      .query({
-        query: addressAllTokensOwned,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.addressAllTokensOwned)
-  }
-
   public getAddressAmountTokensOwned(address: string): Promise<number> {
     return this.apollo
       .query({
@@ -76,15 +50,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.addressAmountTokensOwned)
-  }
-
-  public getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }> {
-    return this.apollo
-      .query({
-        query: internalTransactionsByAddress,
-        variables: { address, limit, page }
-      })
-      .then(res => res.data.internalTransactionsByAddress)
   }
 
   // ------------------------------------------------------------------------------------
@@ -167,29 +132,6 @@ export class EthvmApolloApi implements EthvmApi {
         fetchPolicy: 'network-only'
       })
       .then(res => res.data.contractByAddress)
-  }
-
-  public getContractsCreatedBy(address: string, limit?: number, page?: number): Promise<{ items: Contract[]; totalCount: number }> {
-    return this.apollo
-      .query({
-        query: contractsCreatedBy,
-        variables: {
-          hash: address,
-          limit,
-          page
-        }
-      })
-      .then(res => {
-        const { contractsCreatedBy } = res.data as any
-        contractsCreatedBy.items = contractsCreatedBy.items.map(contract => {
-          // TODO work out why this check is necessary and remove it if possible
-          if (contract.tx && !(contract.tx instanceof SimpleTx)) {
-            contract.tx = new SimpleTx(contract.tx)
-          }
-          return contract
-        })
-        return contractsCreatedBy
-      })
   }
 
   // ------------------------------------------------------------------------------------

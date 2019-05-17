@@ -1,5 +1,5 @@
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
-import { Injectable } from '@nestjs/common'
+import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import { FindManyOptions, In, LessThanOrEqual, Repository } from 'typeorm'
@@ -17,6 +17,7 @@ export class TxService {
   constructor(
     private readonly receiptService: ReceiptService,
     private readonly traceService: TraceService,
+    @Inject(forwardRef(() => ContractService))
     private readonly contractService: ContractService,
     @InjectRepository(TransactionEntity)
     private readonly transactionRepository: Repository<TransactionEntity>,
@@ -282,12 +283,7 @@ export class TxService {
     return Array.from(txsByHash.values())
   }
 
-  async countTransactions(address?: string): Promise<number> {
-
-    if (address) {
-      return this.transactionRepository.count({ where:  [{ from: address }, { to: address }]  })
-    }
-
+  async countTransactions(): Promise<number> {
     return this.transactionRepository.count()
   }
 

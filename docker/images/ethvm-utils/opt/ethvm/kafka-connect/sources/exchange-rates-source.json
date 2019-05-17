@@ -1,9 +1,0 @@
-{
-  "name": "ethvm-exchange-rates-source",
-  "config": {
-    "connector.class": "com.ethvm.kafka.connect.sources.exchanges.ExchangeRatesSourceConnector",
-    "tasks.max": 1,
-    "sync.interval": 300,
-    "exchange.provider": "CoinGecko"
-  }
-}

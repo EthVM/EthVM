@@ -1,27 +1,9 @@
-import {
-  Account,
-  Block,
-  CoinExchangeRate,
-  Contract,
-  PendingTx,
-  SimpleBlock,
-  SimpleTx,
-  Statistic,
-  Token,
-  TokenExchangeRate,
-  TokenHolder,
-  Transfer,
-  Tx,
-  Uncle
-} from '@app/core/models'
+import { Block, CoinExchangeRate, Contract, PendingTx, SimpleBlock, SimpleTx, TokenExchangeRate, TokenHolder, Transfer, Tx, Uncle } from '@app/core/models'
 import BigNumber from 'bignumber.js'
 
 export interface EthvmApi {
   // Address
-  getAccount(address: string): Promise<Account | null>
-  getAddressAllTokensOwned(address: string): Promise<Token[]>
   getAddressAmountTokensOwned(address: string): Promise<number>
-  getInternalTransactionsByAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }>
 
   // Blocks
   getBlock(hash: string): Promise<Block | null>
@@ -32,7 +14,6 @@ export interface EthvmApi {
 
   // Contracts
   getContract(address: string): Promise<Contract | null>
-  getContractsCreatedBy(address: string, limit: number, page: number): Promise<{ items: Contract[]; totalCount: number }>
 
   // Exchanges
   getExchangeRateQuote(pair: string): Promise<CoinExchangeRate>

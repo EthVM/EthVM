@@ -65,6 +65,24 @@ export class TransferService {
 
   }
 
+  async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceTransferEntity[], number]> {
+    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']
+
+    return this.transferRepository.createQueryBuilder('t')
+      .where('t.delta_type IN (:...deltaTypes)')
+      .andWhere(new Brackets(sqb => {
+        sqb.where('t.from = :address')
+        sqb.orWhere('t.to = :address')
+      }))
+      .setParameters({ deltaTypes, address })
+      .orderBy('t.traceLocationBlockNumber', 'DESC')
+      .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
+      .offset(offset)
+      .limit(limit)
+      .getManyAndCount()
+
+  }
+
   /**
    * The difference between this query and findTokenTransfersByContractAddressForHolder
    * is that this query:
@@ -79,7 +97,7 @@ export class TransferService {
     take: number = 10,
     page: number = 0,
     timestampFrom: number = 0,
-    timestampTo: number = 0
+    timestampTo: number = 0,
   ): Promise<[FungibleBalanceTransferEntity[], number]> {
     const skip = take * page
 
@@ -123,25 +141,6 @@ export class TransferService {
 
   }
 
-  async findInternalTransactionsByAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
-    const skip = take * page
-    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']
-
-    return this.transferRepository.createQueryBuilder('t')
-      .where('t.delta_type IN (:...deltaTypes)')
-      .andWhere(new Brackets(sqb => {
-        sqb.where('t.from = :address')
-        sqb.orWhere('t.to = :address')
-      }))
-      .setParameters({ deltaTypes, address })
-      .orderBy('t.traceLocationBlockNumber', 'DESC')
-      .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
-      .offset(skip)
-      .limit(take)
-      .getManyAndCount()
-
-  }
-
   async findTokenBalancesByContractAddressForHolder(
     address: string,
     holder: string,
@@ -163,7 +162,7 @@ export class TransferService {
     const items = await builder
       .setParameters({ address, holder, timestampFrom, timestampTo })
       .getRawMany()
-      
+
     const count = items.length
 
     // Need to cast items as FungibleBalanceDeltaEntity because of getRawMany() //

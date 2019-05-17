@@ -1,5 +1,5 @@
 {
-  "name": "ethvm-parity-source",
+  "name": "parity-source",
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.web3.ParitySourceConnector",
     "tasks.max": 3,

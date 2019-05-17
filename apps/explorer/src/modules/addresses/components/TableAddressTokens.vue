@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat v-if="tokens" class="pt-3 pr-2 pl-2 pb-0">
+  <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-0">
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -12,7 +12,7 @@
       INFO BOXES
     =====================================================================================
     -->
-    <v-layout v-if="!loading" row wrap justify-space-between mb-3>
+    <v-layout row wrap justify-space-between mb-3>
       <v-flex xs12 sm6>
         <v-card class="primary white--text pl-2" flat>
           <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
@@ -26,8 +26,8 @@
         </v-card>
       </v-flex>
       <v-flex xs12>
-        <v-layout justify-end row class="pr-2 pl-2" v-if="totalPages > 1">
-          <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+        <v-layout justify-end row class="pr-2 pl-2" v-if="pages > 1">
+          <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -79,14 +79,14 @@
       </v-flex>
     </div>
     <div v-if="!loading">
-      <v-card v-if="totalTokens === 0" flat>
+      <v-card v-if="totalCount === 0" flat>
         <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
       </v-card>
-      <div v-else-if="totalTokens > 0" v-for="(token, index) in tokensPage" :key="index">
-        <table-address-tokens-row :token="token" :holder="holder" />
+      <div v-else v-for="(token, index) in tokens" :key="index">
+        <table-address-tokens-row :token="token" :holder="address" />
       </div>
-      <v-layout v-else-if="totalTokens > 0" justify-end row class="pb-1 pr-2 pl-2">
-        <app-paginate :total="totalPages" :current-page="page" @newPage="setPage" />
+      <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+        <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
       </v-layout>
     </div>
   </v-card>
@@ -99,7 +99,9 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { TokenPageExt } from '@app/core/api/apollo/extensions/token-page.ext'
+import { addressAllTokensOwned } from '@app/modules/addresses/addresses.graphql'
 
 const MAX_ITEMS = 10
 
@@ -109,6 +111,43 @@ const MAX_ITEMS = 10
     AppInfoLoad,
     AppPaginate,
     TableAddressTokensRow
+  },
+  data() {
+    return {
+      page: 0,
+      error: undefined
+    }
+  },
+  apollo: {
+    tokensPage: {
+      query: addressAllTokensOwned,
+
+      variables() {
+        const { address } = this
+
+        return {
+          address,
+          offset: 0,
+          limit: MAX_ITEMS
+        }
+      },
+
+      update({ tokens }) {
+        if (tokens) {
+          this.error = '' // clear the error
+          return new TokenPageExt(tokens)
+        }
+        this.error = this.error || this.$i18n.t('message.err')
+        return tokens
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      }
+    }
   }
 })
 export default class TableAddressTokens extends Mixins(StringConcatMixin) {
@@ -118,10 +157,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Array) tokens!: any[]
-  @Prop(String) holder!: string
-  @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop(String) error!: string
+  @Prop(String) address!: string
 
   /*
   ===================================================================================
@@ -129,8 +165,9 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  placeholder = 'Search Tokens Symbol/Name'
-  page = 0 // Current pagintion page
+  tokensPage?: TokenPageExt
+  error?: string
+  page?: number
 
   /*
   ===================================================================================
@@ -146,7 +183,21 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
    * Upon page update from AppPagination, set page equal to pagination page.
    */
   setPage(page: number): void {
-    this.page = page
+    const { tokensPage: query } = this.$apollo.queries
+
+    const self = this
+
+    query.fetchMore({
+      variables: {
+        address: self.address,
+        offset: page * this.maxItems,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        self.page = page
+        return fetchMoreResult
+      }
+    })
   }
 
   /*
@@ -154,6 +205,22 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     Computed Values
   ===================================================================================
   */
+
+  get tokens() {
+    return this.tokensPage ? this.tokensPage.items || [] : []
+  }
+
+  get loading() {
+    return this.$apollo.loading
+  }
+
+  get hasError(): boolean {
+    return !!this.error && this.error !== ''
+  }
+
+  get totalCount(): number {
+    return this.tokensPage ? this.tokensPage.totalCount : 0
+  }
 
   /**
    * @return {Number} - MAX_ITEMS per pagination page
@@ -165,39 +232,16 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   /**
    * @return {Number} - Total number of pagination pages
    */
-  get totalPages(): number {
-    return this.totalTokens > 0 ? Math.ceil(this.totalTokens / this.maxItems) : 0
-  }
-
-  /**
-   * The tokens array is retrieved in its entirety. In order to correctly paginate the results,
-   * the array must be sliced according to the current page number.
-   *
-   * @return {Array} - Current "page" of tokens results
-   */
-  get tokensPage(): Array<any> {
-    const start = this.page * this.maxItems
-    const end = start + this.maxItems
-    return this.tokens.slice(start, end)
-  }
-
-  /**
-   * If the error string is empty, there is no error.
-   *
-   * @return {Boolean} - Whether or not there is an error.
-   */
-  get hasError(): boolean {
-    return this.error !== ''
-  }
-
-  /**
-   * @return - Total number of tokens
-   */
-  get totalTokens(): number {
-    return this.tokens.length
+  get pages(): number {
+    return this.tokensPage ? Math.ceil(this.tokensPage.totalCount / this.maxItems) : 0
   }
 
   get getTotalMonetaryValue(): string {
+    if (this.loading) {
+      return this.$i18n.t('message.load').toString()
+    }
+
+    // TODO calculate this on server!
     if (!(this.tokens && this.tokens.length)) {
       return '0'
     }
@@ -214,6 +258,13 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
       .toFixed()
 
     return this.getShortValue(amount)
+  }
+
+  get totalTokens(): string {
+    if (this.loading) {
+      return this.$i18n.t('message.load').toString()
+    }
+    return this.totalCount.toString()
   }
 }
 </script>

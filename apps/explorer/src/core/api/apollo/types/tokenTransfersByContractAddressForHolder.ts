@@ -19,7 +19,7 @@ export interface tokenTransfersByContractAddressForHolder_tokenTransfersByContra
 }
 
 export interface tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder {
-  __typename: "TransfersPage";
+  __typename: "TransferPage";
   items: tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder_items[];
   totalCount: any;
 }

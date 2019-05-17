@@ -11,6 +11,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Repository, FindOneOptions, Any } from 'typeorm'
 import {TokenDto} from '@app/graphql/tokens/dto/token.dto'
 import {TokenMetadataDto} from '@app/graphql/tokens/dto/token-metadata.dto'
+import { Token } from '@app/graphql/schema'
+import BigNumber from 'bignumber.js'
 
 @Injectable()
 export class TokenService {
@@ -52,10 +54,10 @@ export class TokenService {
     return this.erc721BalanceRepository.findOne({ where })
   }
 
-  async findAddressAllTokensOwned(address: string): Promise<TokenDto[]> {
-    const findOptions: FindManyOptions = { where: { address }, relations: ['tokenExchangeRate', 'metadata'] }
-    const erc20Tokens = await this.erc20BalanceRepository.find(findOptions)
-    const erc721Tokens = await this.erc721BalanceRepository.find(findOptions)
+  async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenDto[], number]> {
+    const findOptions: FindManyOptions = { where: { address }, relations: ['tokenExchangeRate', 'metadata'], take: limit, skip: offset }
+    const [erc20Tokens, erc20Count] = await this.erc20BalanceRepository.findAndCount(findOptions)
+    const [erc721Tokens, erc721Count] = await this.erc721BalanceRepository.findAndCount(findOptions)
 
     const tokenDtos: TokenDto[] = []
 
@@ -66,7 +68,7 @@ export class TokenService {
       tokenDtos.push(this.constructTokenDto(entity))
     })
 
-    return tokenDtos
+    return [tokenDtos, (erc20Count + erc721Count)]
   }
 
   private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
