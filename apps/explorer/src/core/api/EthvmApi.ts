@@ -2,9 +2,6 @@ import { Block, CoinExchangeRate, Contract, PendingTx, SimpleBlock, SimpleTx, To
 import BigNumber from 'bignumber.js'
 
 export interface EthvmApi {
-  // Address
-  getAddressAmountTokensOwned(address: string): Promise<number>
-
   // Blocks
   getBlock(hash: string): Promise<Block | null>
   getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]>
