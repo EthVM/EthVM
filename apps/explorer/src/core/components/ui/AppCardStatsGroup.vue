@@ -227,7 +227,7 @@ export default class AppInfoCardGroup extends Vue {
 
   get latestBlockPendingTxs(): string {
     // TODO
-    return this.loadingMessage
+    return this.$i18n.t('message.coming-soon').toString()
   }
 
   get secSinceLastBlock(): string {
