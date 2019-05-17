@@ -102,7 +102,6 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenPageExt } from '@app/core/api/apollo/extensions/token-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
-import { BigNumberScalar } from '../../../../../api/src/graphql/scalars/big-number.scalar'
 
 const MAX_ITEMS = 10
 
