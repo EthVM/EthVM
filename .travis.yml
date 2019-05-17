@@ -7,6 +7,8 @@ matrix:
     -
       env:
         - ID=api/lint
+        - METADATA_ID=api
+        - FLAVOR=development-ci
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
         - INSTALL='yarn install'
         - ACTION='yarn lint'
@@ -16,6 +18,8 @@ matrix:
     -
       env:
         - ID=explorer/lint
+        - METADATA_ID=explorer
+        - FLAVOR=""
         - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/explorer
         - INSTALL='yarn install'
         - ACTION='yarn lint'
@@ -38,8 +42,8 @@ matrix:
       language: generic
 
 before_install:
-  - chmod +x ./.travis/before-install.sh
-  - './.travis/before-install.sh'
+  - chmod +x $TRAVIS_BUILD_DIR/.travis/before-install.sh
+  - $TRAVIS_BUILD_DIR/.travis/before-install.sh
 
 install:
   - cd $PROJECT_DIR
@@ -50,10 +54,10 @@ script:
   - eval $ACTION
 
 after_success:
-  - chmod +x ./.travis/after-success.sh
-  - ./.travis/after-success.sh
+  - chmod +x $TRAVIS_BUILD_DIR/.travis/after-success.sh
+  - $TRAVIS_BUILD_DIR/.travis/after-success.sh $METADATA_ID $FLAVOR
   #- if [[ "$TRAVIS_BRANCH" == "develop" ]]; then
-  #  ./.travis/after-success.sh
+  #  $TRAVIS_BUILD_DIR/.travis/after-success.sh
   #  fi
 
 notifications:
