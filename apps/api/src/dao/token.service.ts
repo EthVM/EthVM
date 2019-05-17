@@ -174,7 +174,7 @@ export class TokenService {
   async totalValueUSDByAddress(address: string): Promise<BigNumber | undefined> {
 
     // Only for erc20Tokens as these have fungible value
-    const { usdValue } = await this.erc20BalanceRepository
+    const raw = await this.erc20BalanceRepository
       .createQueryBuilder('erc20')
       .leftJoin('erc20.tokenExchangeRate', 'ter')
       .select('SUM(erc20.amount * ter.currentPrice)', 'usdValue')
@@ -183,7 +183,7 @@ export class TokenService {
       .groupBy('erc20.address')
       .getRawOne()
 
-    return usdValue ? new BigNumber(usdValue) : undefined
+    return raw && raw.usdValue ? new BigNumber(raw.usdValue) : undefined
 
   }
 
