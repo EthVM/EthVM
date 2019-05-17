@@ -2,7 +2,7 @@ import { BigNumber, Transfer, TransferPage } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import { TransferDto } from '@app/graphql/transfers/dto/transfer.dto'
 
-export class TransfersPageDto implements TransferPage {
+export class TransferPageDto implements TransferPage {
 
   items!: Transfer[];
   totalCount!: BigNumber;

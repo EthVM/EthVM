@@ -11,7 +11,7 @@
       "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
       "context": "${APPS_PATH}/explorer",
       "version": "${APPS_PATH}/explorer/package.json",
-      "targets": ["development", "staging", "production"]
+      "targets": ["development-ci", "staging", "production"]
     },
     {
       "id": "ethvm-utils",

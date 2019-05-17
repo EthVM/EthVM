@@ -3,7 +3,6 @@ type Query {
   uncleByHash(hash: String!): Uncle
   uncles(offset: Int = 0, limit: Int = 20, fromUncle: BigNumber): UnclePage!
 
-  totalNumberOfUncles: BigNumber!
   latestUncleBlockNumber: BigNumber!
 }
 

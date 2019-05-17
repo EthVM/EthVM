@@ -26,11 +26,6 @@ export class UncleResolvers {
   }
 
   @Query()
-  async totalNumberOfUncles() {
-    return await this.uncleService.countUncles()
-  }
-
-  @Query()
   async latestUncleBlockNumber(): Promise<BigNumber> {
     return await this.uncleService.findLatestUncleBlockNumber()
   }

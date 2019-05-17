@@ -3,9 +3,13 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: totalNumberOfUncles
+// GraphQL query operation: totalTxsForAddress
 // ====================================================
 
-export interface totalNumberOfUncles {
-  totalNumberOfUncles: any;
+export interface totalTxsForAddress {
+  totalTxs: any;
+}
+
+export interface totalTxsForAddressVariables {
+  address: string;
 }

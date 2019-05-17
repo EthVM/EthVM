@@ -301,10 +301,11 @@ export interface IQuery {
     totalNumTokenExchangeRates(): number | Promise<number>;
     tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-    tokensMetadata(symbols: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
+    tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
     tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
+    tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
@@ -315,7 +316,6 @@ export interface IQuery {
     totalNumberOfTransactions(): BigNumber | Promise<BigNumber>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
-    totalNumberOfUncles(): BigNumber | Promise<BigNumber>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
     temp__(): boolean | Promise<boolean>;
 }
