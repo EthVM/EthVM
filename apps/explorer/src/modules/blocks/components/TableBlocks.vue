@@ -73,8 +73,8 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <v-layout column v-scroll:#scroll-target class="mb-1">
+    <v-container v-if="!hasError" flat :style="getStyle" class="scroll-y pa-2">
+      <v-layout column class="mb-1">
         <v-flex v-if="!loading">
           <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />
@@ -122,7 +122,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
+import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BigNumber from 'bignumber.js'
@@ -151,14 +151,19 @@ const MAX_ITEMS = 50
   },
   apollo: {
     blockPage: {
-      query: latestBlocks,
+      query() {
+        const self = this as any
+
+        return self.author ? blocksByAuthor : latestBlocks
+      },
 
       fetchPolicy: 'cache-and-network',
 
       variables() {
         return {
           offset: 0,
-          limit: this.maxItems
+          limit: this.maxItems,
+          author: this.author
         }
       },
 
@@ -234,6 +239,8 @@ export default class TableBlocks extends Vue {
   @Prop({ type: Number, default: 20 }) maxItems!: number
   @Prop({ type: Boolean, default: false }) simplePagination!: boolean
 
+  @Prop({ type: String }) author?: string
+
   page!: number
 
   error: string = ''
@@ -295,7 +302,7 @@ export default class TableBlocks extends Vue {
     query.fetchMore({
       variables: {
         fromBlock: this.fromBlock ? this.fromBlock.toString(10) : undefined,
-        offset: page * 50,
+        offset: page * this.maxItems,
         limit: this.maxItems
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {

@@ -15,6 +15,11 @@ defaultEntryPoints = ["https", "http"]
   compress = true
   {{end}}
 
+  {{if isTrue .Env.TRAEFIK_PING_ENABLED }}
+  [entryPoints.ping]
+  address = ":{{ .Env.TRAEFIK_PING_PORT }}"
+  {{end}}
+
   [entryPoints.http]
   address = ":80"
   compress = true
@@ -69,4 +74,13 @@ caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
 entryPoint = "traefik"
 dashboard = true
 debug = false
+{{end}}
+
+{{if isTrue .Env.TRAEFIK_PING_ENABLED }}
+################################################################
+# Traefik Ping
+###############################################################
+
+[ping]
+  entryPoint = "ping"
 {{end}}

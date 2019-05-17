@@ -4,6 +4,7 @@ type Query {
   hashRate: BigNumber!
 
   blockSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
+  blockSummariesByAuthor(author: String!, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
 
   blocks(limit: Int = 20, page: Int = 0, fromBlock: BigNumber): [Block!]!
 

@@ -1,17 +1,15 @@
 {
-  "name": "postgres-balance-delta-sink",
+  "name": "postgres-exchange-rates-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "tasks.max": 5,
-    "topics": "fungible_balance_delta,non_fungible_balance_delta",
-    "insert.mode": "insert",
-    "pk.mode": "none",
+    "tasks.max": 1,
+    "topics": "token_exchange_rates,coin_exchange_rates",
+    "pk.mode": "record_key",
+    "insert.mode": "upsert",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",
     "connection.password": "{{ .Env.POSTGRES_PASSWORD }}",
-    "transforms": "snakeCaseKey,snakeCaseValue,flattenValue",
-    "transforms.flattenValue.type": "com.ethvm.kafka.connect.transforms.Flatten$Value",
-    "transforms.flattenValue.delimiter": "_",
+    "transforms": "snakeCaseKey,snakeCaseValue",
     "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
     "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value"
   }

@@ -480,6 +480,12 @@ SELECT fb.address,
         FROM canonical_transaction AS ct
         WHERE ct.from = fb.address) AS out_tx_count,
        CASE
+         WHEN cont.creator IS NULL THEN
+           FALSE
+         ELSE
+           TRUE
+         END AS is_contract,
+       CASE
          WHEN a.count > 0 THEN
            TRUE
          ELSE
@@ -494,6 +500,7 @@ SELECT fb.address,
 FROM fungible_balance AS fb
        LEFT JOIN canonical_block_author AS a ON fb.address = a.address
        LEFT JOIN canonical_contract_creator AS cc ON fb.address = cc.address
+       LEFT JOIN canonical_contract AS cont ON fb.address = cont.address
 WHERE fb.contract = ''
 ORDER BY balance DESC;
 

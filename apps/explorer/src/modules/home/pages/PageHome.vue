@@ -68,8 +68,6 @@ export default class PageHome extends Vue {
   */
 
   tableStyle = 'max-height: 450px'
-  errorTableTxs = ''
-  errorTableBlocks = ''
 
   get maxItems(): number {
     return MAX_ITEMS
