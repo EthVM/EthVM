@@ -55,9 +55,7 @@ script:
 
 after_success:
   - chmod +x $TRAVIS_BUILD_DIR/.travis/after-success.sh
-  - if [[ "$TRAVIS_BRANCH" == "develop" ]]; then
-      $TRAVIS_BUILD_DIR/.travis/after-success.sh $METADATA_ID $FLAVOR
-    fi
+  - [[ "$TRAVIS_BRANCH" == "develop" ]] && $TRAVIS_BUILD_DIR/.travis/after-success.sh $METADATA_ID $FLAVOR
 
 notifications:
   email: false
