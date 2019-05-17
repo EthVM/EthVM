@@ -19,6 +19,20 @@ volumes:
 
   zookeeper-volume:
 
+  parity-volume:
+    # Note:
+    #
+    # If you're on Linux, use local-persist instead of a regular docker volume
+    # This allows to persist downloaded blockchain data.
+    # More info: https://github.com/CWSpear/local-persist
+    #
+    # If you're on Mac, make sure you comment the following lines
+    # and leave it as a regular docker volume
+    # driver: local-persist
+    # driver_opts:
+    #   name: "paritydb"
+    #   mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
+
 services:
 
   # ///////////////////////////////////////////////////////
