@@ -60,7 +60,8 @@
     -->
     <v-layout column fill-height class="mb-1">
       <v-flex xs12 v-if="!loading">
-        <v-card v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
+        <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
+        <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
         </v-card>
       </v-flex>
@@ -88,7 +89,7 @@
       </v-flex>
       <v-flex xs12>
         <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -100,9 +101,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
-import { Uncle } from '@app/core/models'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import BN from 'bignumber.js'
 import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
 import { uncleSummaries } from '@app/modules/uncles/uncles.graphql'
 import BigNumber from 'bignumber.js'

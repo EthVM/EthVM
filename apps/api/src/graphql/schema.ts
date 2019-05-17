@@ -329,7 +329,6 @@ export interface IQuery {
     tx(hash: string): Transaction | Promise<Transaction>;
     txs(limit?: number, page?: number, fromBlock?: BigNumber): Transaction[] | Promise<Transaction[]>;
     txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
-    totalNumberOfTransactions(): BigNumber | Promise<BigNumber>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;

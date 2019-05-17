@@ -13,15 +13,43 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { eth } from '@app/core/helper'
-import { Tx } from '@app/core/models'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import Signatures from '@app/core/helper/signatures.json'
+import { transactionDetail } from '@app/modules/txs/txs.graphql'
+import { TransactionDetailExt } from '@app/core/api/apollo/extensions/transaction-detail.ext'
 
 @Component({
   components: {
     AppBreadCrumbs,
     AppDetailsList
+  },
+  apollo: {
+    transactionDetail: {
+      query: transactionDetail,
+      variables() {
+        return { hash: this.txHash }
+      },
+      fetchPolicy: 'cache-and-network',
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+      update({ transaction }) {
+        if (transaction) {
+          return new TransactionDetailExt(transaction)
+        }
+
+        this.error = this.error || this.$i18n.t('message.invalid.tx')
+        return null
+      },
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      }
+    }
   }
 })
 export default class PageDetailsTxs extends Vue {
@@ -40,10 +68,10 @@ export default class PageDetailsTxs extends Vue {
   */
 
   error = ''
+  transactionDetail?: TransactionDetailExt
+
+  // TODO remove these?
   listType = 'tx'
-  transaction = {} as Tx
-  timestamp = new Date()
-  txInput = ['0x']
 
   /*
   ===================================================================================
@@ -52,58 +80,14 @@ export default class PageDetailsTxs extends Vue {
   */
 
   created() {
-    const ref = this.txRef
+    // Check that current tx ref is valid one
 
-    // 1. Check that current tx ref is valid one
-    if (!eth.isValidHash(ref)) {
+    if (!this.txHash) {
       this.error = this.$i18n.t('message.invalid.tx').toString()
-    } else {
-      this.loadTx()
-      window.scrollTo(0, 0)
+      return
     }
-  }
 
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  /**
-   * Load/fetch all of the data required to display the Tx details component
-   * and handle any errors.
-   */
-  loadTx() {
-    this.fetchTx().then(
-      res => {
-        if (res === null) {
-          this.error = this.$i18n.t('message.tx.not-exist').toString()
-          return
-        }
-        this.setTxInfo(res)
-      },
-      err => {
-        this.error = this.$i18n.t('message.tx.not-exist').toString()
-      }
-    )
-  }
-
-  /**
-   * Fetch Tx object via API given a @txRef
-   *
-   * @return {Promise<Tx>}
-   */
-  fetchTx(): Promise<Tx | null> {
-    return this.$api.getTx(this.txRef)
-  }
-
-  /**
-   * Set pertinent Tx information
-   */
-  setTxInfo(tx: Tx) {
-    this.transaction = tx
-    this.timestamp = tx.getTimestamp()
-    this.getTxDataInput()
+    window.scrollTo(0, 0)
   }
 
   /*
@@ -111,6 +95,11 @@ export default class PageDetailsTxs extends Vue {
     Computed Values
   ===================================================================================
   */
+
+  get txHash(): string | null {
+    const { txRef } = this
+    return eth.isValidHash(txRef) ? txRef : null
+  }
 
   /**
    * Create properly-formatted title from tokenDetails
@@ -121,46 +110,35 @@ export default class PageDetailsTxs extends Vue {
     return this.$i18n.t('tx.detail').toString()
   }
 
-  /**
-   * Return transaction details Tx[] object
-   *
-   * @return {Tx}
-   */
-  get tx(): Tx {
-    return this.transaction
-  }
+  /*
+ ===================================================================================
+   Methods
+ ===================================================================================
+ */
 
   /**
    * Return properly-formatted Detail for "to" row in list component.
-   * If still loading, only return title for placeholder,
-   * otherwise determine proper formatting.
    *
    * @return {Detail}
    */
-  get toDetail(): Detail {
-    // Only include title if still loading (for placeholder) //
-    if (this.isLoading) {
-      return {
-        title: this.$i18n.t('tx.to').toString()
-      }
-    }
+  toDetail(transaction: TransactionDetailExt): Detail {
+    const { receipt } = transaction
 
-    // If empty, format differently //
-    if (!this.tx.getContractAddress().isEmpty()) {
+    if (receipt && receipt.contractAddress) {
       return {
         title: `${this.$i18n.t('tx.to')} ${this.$i18n.tc('contract.name', 1).toString()}`,
-        detail: this.tx.getContractAddress().toString(),
+        detail: receipt.contractAddress,
         copy: true,
-        link: `/address/${this.tx.getContractAddress().toString()}`,
+        link: `/address/${receipt.contractAddress}`,
         mono: true
       }
     }
 
     return {
       title: this.$i18n.t('tx.to').toString(),
-      detail: this.tx.getTo().toString(),
+      detail: transaction.to!,
       copy: true,
-      link: `/address/'${this.tx.getTo().toString()}`,
+      link: `/address/${transaction.to!}`,
       mono: true
     }
   }
@@ -171,7 +149,7 @@ export default class PageDetailsTxs extends Vue {
    */
   get txDetails(): Detail[] {
     let details: Detail[]
-    if (this.isLoading) {
+    if (this.isLoading || this.error) {
       details = [
         {
           title: this.$i18n.t('block.number')
@@ -188,7 +166,9 @@ export default class PageDetailsTxs extends Vue {
         {
           title: this.$i18n.t('common.amount')
         },
-        this.toDetail,
+        {
+          title: this.$i18n.t('tx.to').toString()
+        },
         {
           title: this.$i18n.t('gas.limit')
         },
@@ -203,61 +183,61 @@ export default class PageDetailsTxs extends Vue {
         }
       ]
     } else {
+      const transaction = this.transactionDetail!
+      const receipt = transaction.receipt!
+
       details = [
         {
           title: this.$i18n.t('block.number'),
-          detail: this.tx.getBlockNumber(),
-          link: `/block/${this.tx.getBlockHash().toString()}`
+          detail: transaction.blockNumberBN.toString(),
+          link: `/block/${transaction.blockHash}`
         },
         {
           title: this.$i18n.t('common.hash'),
-          detail: this.tx.getHash(),
+          detail: transaction.hash,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.$i18n.d(this.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+          detail: this.$i18n.d(transaction.timestampMs, 'long', this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('tx.from'),
-          detail: this.tx.getFrom().toString(),
+          detail: transaction.from,
           copy: true,
-          link: `/address/${this.tx.getFrom().toString()}`,
+          link: `/address/${transaction.from}`,
           mono: true
         },
         {
           title: this.$i18n.t('common.amount'),
-          detail: `${this.tx
-            .getValue()
-            .toEthFormatted()
-            .toString()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.valueEth.toEthFormatted().toString()} ${this.$i18n.t('common.eth')}`
         },
-        this.toDetail,
+        this.toDetail(transaction),
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${this.tx.getTxCost().toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.feeEth.toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: this.tx.getGas().toNumber()
+          detail: transaction.gasBN.toString()
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: this.tx.getGasUsed().toNumber()
+          detail: receipt.gasUsedBN.toString()
         },
         {
           title: this.$i18n.t('gas.price'),
-          detail: `${this.tx.getGasPrice().toGWei()} ${this.$i18n.t('common.gwei')}`
+          detail: `${transaction.gasPriceEth.toGWei()} ${this.$i18n.t('common.gwei')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: this.tx.getNonce()
+          detail: transaction.nonceBN.toString()
         },
         {
           title: this.$i18n.t('tx.input'),
           detail: '',
-          txInput: this.txInput
+          txInput: this.inputFormatted
         }
       ]
     }
@@ -296,24 +276,28 @@ export default class PageDetailsTxs extends Vue {
    * @return {Boolean}
    */
   get isLoading(): boolean {
-    return Object.keys(this.tx).length === 0
+    return this.$apollo.loading
   }
 
-  getTxDataInput(): string[] | undefined {
-    if (this.tx.getInput()) {
-      const sig = `0x${this.tx.getInput().substr(0, 8)}`
-      const signatures = Signatures.results
-      if (signatures && signatures.length > 0) {
-        const index = signatures.findIndex(i => i.hex_signature === sig)
-        this.txInput = [`${this.$i18n.t('tx.method')}: ${sig}`]
-        if (index != -1) {
-          this.txInput.unshift(`${this.$i18n.t('tx.func')}: ${signatures[index].text_signature}`)
-        }
-        return this.txInput
-      }
-    } else {
-      return this.txInput
+  get inputFormatted(): string[] {
+    if (!this.transactionDetail) {
+      return ['0x']
     }
+
+    const methodId = this.transactionDetail.inputMethodId
+    if (!methodId) {
+      return ['0x']
+    }
+
+    const methodFormatted = `${this.$i18n.t('tx.method')}: ${methodId}`
+
+    const inputFunction = this.transactionDetail.inputFunction
+
+    if (inputFunction) {
+      return [`${this.$i18n.t('tx.func')}: ${inputFunction}`, methodFormatted]
+    }
+
+    return [methodFormatted]
   }
 }
 </script>

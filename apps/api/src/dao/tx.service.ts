@@ -283,8 +283,4 @@ export class TxService {
     return Array.from(txsByHash.values())
   }
 
-  async countTransactions(): Promise<number> {
-    return this.transactionRepository.count()
-  }
-
 }

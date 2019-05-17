@@ -1,9 +1,9 @@
 {
-  "name": "kafka-consumer-group-offsets",
+  "name": "kafka-consumer-group-offsets-source",
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.kafka.admin.KafkaAdminConnector",
     "tasks.max": 1,
-    "bootstrapServers": "kafka-1:9091",
-    "name": "ethvm-kafka-consumer-group-offsets"
+    "bootstrapServers": "{{ .Env.KAFKA_BOOTSTRAP_SERVERS }}",
+    "name": "kafka-consumer-group-offsets-source"
   }
 }

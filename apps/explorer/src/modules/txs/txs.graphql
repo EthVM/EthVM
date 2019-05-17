@@ -53,3 +53,27 @@ subscription newTransaction {
   }
 
 }
+
+query transactionDetail($hash: String!) {
+  transaction: tx(hash: $hash) {
+    ...TransactionDetail
+  }
+}
+
+fragment TransactionDetail on Transaction {
+  blockHash
+  blockNumber
+  from
+  gas
+  gasPrice
+  hash
+  input
+  nonce
+  timestamp
+  to
+  value
+  receipt {
+    contractAddress
+    gasUsed
+  }
+}

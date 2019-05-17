@@ -55,6 +55,7 @@ services:
       LETS_ENCRYPT_ENABLED: 'false'
       SWARM_MODE: 'false'
       TRAEFIK_DASHBOARD_ENABLED: 'true'
+      TRAEFIK_PING_ENABLED: 'false'
 
   grafana:
     image: grafana/grafana:6.1.6
@@ -64,7 +65,6 @@ services:
       GF_SERVER_ROOT_URL: 'http://grafana.ethvm.lan'
       GF_SECURITY_ADMIN_PASSWORD: 'admin'
       GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
-
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'

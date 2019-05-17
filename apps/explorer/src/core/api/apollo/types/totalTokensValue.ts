@@ -3,9 +3,13 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: totalNumberOfTransactions
+// GraphQL query operation: totalTokensValue
 // ====================================================
 
-export interface totalNumberOfTransactions {
-  totalNumberOfTransactions: any;
+export interface totalTokensValue {
+  totalTokensValue: any | null;
+}
+
+export interface totalTokensValueVariables {
+  address: string;
 }
