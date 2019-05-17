@@ -145,11 +145,12 @@ export class TransferService {
     address: string,
     holder: string,
     timestampFrom: number = 0,
-    timestampTo: number = 0
+    timestampTo: number = 0,
   ): Promise<[FungibleBalanceDeltaEntity[], number]>{
 
     // Need to make subQuery somehow?? //
-    // SEE: https://github.com/typeorm/typeorm/blob/17f3224c58b7126a9c1360ce21f43cda83a35e04/test/functional/query-builder/subquery/query-builder-subquery.ts#L328-L327
+    // SEE: https://github.com/typeorm/typeorm/blob/17f3224c58b7126a9c1360ce21f43cda83a35e04/test/functional
+    // /query-builder/subquery/query-builder-subquery.ts#L328-L327
     // https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#partial-selection
     // https://dba.stackexchange.com/questions/192553/calculate-running-sum-of-each-row-from-start-even-when-filtering-records
     const builder = this.deltaRepository.createQueryBuilder('t')
@@ -157,7 +158,6 @@ export class TransferService {
       .addSelect('*, SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance')
       .where('t.contract_address = :address')
       .andWhere('t.address = :holder')
-
 
     const items = await builder
       .setParameters({ address, holder, timestampFrom, timestampTo })
@@ -189,7 +189,7 @@ export class TransferService {
         } as FungibleBalanceDeltaEntity
       }),
 
-      count as number
+      count as number,
 
     ]
   }
