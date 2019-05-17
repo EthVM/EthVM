@@ -1589,22 +1589,6 @@
             "deprecationReason": null
           },
           {
-            "name": "totalNumberOfUncles",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "BigNumber",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "latestUncleBlockNumber",
             "description": null,
             "args": [],

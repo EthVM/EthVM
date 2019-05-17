@@ -22,7 +22,7 @@ class CanonicalChainTracker(
 
   // single write multiple readers so we can use volatile
   @Volatile
-  private var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact() + 1L
+  var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact() + 1L
 
   private var exception: Throwable? = null
 

@@ -44,6 +44,7 @@ export class BlockMetricsService {
       // if there is no txs these fields can be null
       item.totalTxFees = item.totalTxFees || new BigNumber(0)
       item.avgTxFees = item.avgTxFees || new BigNumber(0)
+      item.blockTime = item.blockTime || 0
     })
 
     return [items, count]

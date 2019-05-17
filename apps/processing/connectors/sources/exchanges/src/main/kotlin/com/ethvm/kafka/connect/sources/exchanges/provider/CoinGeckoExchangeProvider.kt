@@ -30,25 +30,26 @@ class CoinGeckoExchangeProvider(
   override val id: String = CoinGeckoExchangeProvider::class.simpleName!!
 
   private val providers: List<ExchangeProvider> by lazy {
+
     val providers: MutableList<ExchangeProvider> = mutableListOf()
 
-    when {
-      options.containsKey("CoinGeckoCurrencyExchangeProvider") -> {
-        @Suppress("UNCHECKED_CAST")
-        val currencyOpts: Map<String, Any> = when (val raw = options["CoinGeckoCurrencyExchangeProvider"]) {
-          is Map<*, *> -> raw as Map<String, Any>
-          else -> CoinGeckoCurrencyExchangeProvider.DEFAULT_OPTS
-        }
-        providers.add(CoinGeckoCurrencyExchangeProvider(currencyOpts, okHttpClient, jackson))
+    if (options.containsKey("CoinGeckoCurrencyExchangeProvider")) {
+      @Suppress("UNCHECKED_CAST")
+      val currencyOpts: Map<String, Any> = when (val raw = options["CoinGeckoCurrencyExchangeProvider"]) {
+        is Map<*, *> -> raw as Map<String, Any>
+        else -> CoinGeckoCurrencyExchangeProvider.DEFAULT_OPTS
       }
-      options.containsKey("CoinGeckoTokenExchangeProvider") -> {
-        @Suppress("UNCHECKED_CAST")
-        val tokensOpts: Map<String, Any> = when (val raw = options["CoinGeckoTokenExchangeProvider"]) {
-          is Map<*, *> -> raw as Map<String, Any>
-          else -> CoinGeckoTokenExchangeProvider.DEFAULT_OPTS
-        }
-        providers.add(CoinGeckoTokenExchangeProvider(tokensOpts, okHttpClient, jackson))
+      providers.add(CoinGeckoCurrencyExchangeProvider(currencyOpts, okHttpClient, jackson))
+    }
+
+    if (options.containsKey("CoinGeckoTokenExchangeProvider")) {
+
+      @Suppress("UNCHECKED_CAST")
+      val tokensOpts: Map<String, Any> = when (val raw = options["CoinGeckoTokenExchangeProvider"]) {
+        is Map<*, *> -> raw as Map<String, Any>
+        else -> CoinGeckoTokenExchangeProvider.DEFAULT_OPTS
       }
+      providers.add(CoinGeckoTokenExchangeProvider(tokensOpts, okHttpClient, jackson))
     }
 
     providers
@@ -209,6 +210,8 @@ class CoinGeckoTokenExchangeProvider(
 
   @Throws(Exception::class)
   override fun fetch(): List<SourceRecord> {
+
+    logger.info { "Running fetch in coin gecko token exchange provider" }
 
     return tokenIds
       .chunked(perPage)

@@ -33,47 +33,54 @@ usage() {
 
 # build - builds docker images
 build() {
-  local name=$(jq -r '.id' <<< "$1")
-  local dockerfile=$(eval echo -e $(jq -r '.dockerfile' <<< "$1"))
-  local context=$(eval echo -e $(jq -r '.context' <<< "$1"))
-  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
-  local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$1"))
+  local image="$1"
+  local target="${2:-}"
+
+  local name=$(jq -r '.id' <<< "$image")
+  local dockerfile=$(eval echo -e $(jq -r '.dockerfile' <<< "$image"))
+  local context=$(eval echo -e $(jq -r '.context' <<< "$image"))
+  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$image"))
+  local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$image"))
   local version=$(to_version "${raw_version}")
 
   if [[ ! -z "${targets}" ]]; then
 
-    for target in ${targets}
+    for t in ${targets}
     do
-
-      echo "Building target ${target}"
-
-      cmd="build -t ${ORG}/${name}:${version}-${target} -f ${dockerfile} --build-arg TARGET=${target}"
-      docker ${cmd} ${context}
+      if [[ -z "${target}" || ${target} == "${t}" ]]; then
+        echo "Building target ${t}"
+        cmd="build -t ${ORG}/${name}:${version}-${t} -f ${dockerfile} --build-arg TARGET=${t}"
+        docker ${cmd} ${context}
+      fi
     done
 
   else
-
     cmd="build -t ${ORG}/${name}:${version} -f ${dockerfile}"
     docker ${cmd} ${context}
-
   fi
 
 }
 
 # push - sends the built docker image to the registered registry
 push() {
-  local name=$(jq -r '.id' <<< "$1")
-  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$1"))
+  local image="$1"
+  local target="${2:-}"
+
+  local name=$(jq -r '.id' <<< "$image")
+  local raw_version=$(eval echo -e $(jq -r '.version' <<< "$image"))
   local version=$(to_version $raw_version)
-  local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$1"))
+  local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$image"))
 
   if [[ ! -z "${targets}" ]]; then
 
-    for target in ${targets}
+    for t in ${targets}
     do
-      echo "Pushing target ${target}"
-      cmd="push ${ORG}/${name}:${version}-${target}"
-      docker ${cmd}
+
+      if [[ -z "${target}" || ${target} == "${t}" ]]; then
+        echo "Pushing target ${t}"
+        cmd="push ${ORG}/${name}:${version}-${t}"
+        docker ${cmd}
+      fi
     done
 
   else
@@ -86,6 +93,7 @@ push() {
 process_subcommand() {
   local action=$1
   local image=$2
+  shift 2
 
   case ${image} in
     *)
@@ -101,7 +109,7 @@ process_subcommand() {
       for project in $(jq -car '.projects[]' $PROJECTS_PATH); do
         local id=$(jq -r '.id' <<< "$project")
         if [[ $image == "all" || $image == $id ]]; then
-          $action "$project"
+          $action "$project" "$@"
           builds=true
         fi
       done
@@ -122,11 +130,13 @@ process_subcommand() {
 run() {
   local command="${1:-""}"
   local image="${2:-false}"
+  shift
+  shift
 
   case ${command} in
-    build)  process_subcommand "build" $image ;;
-    push)   process_subcommand "push"  $image ;;
-    help|*) usage; exit 0                     ;;
+    build)  process_subcommand "build" $image $@ ;;
+    push)   process_subcommand "push"  $image $@ ;;
+    help|*) usage; exit 0                        ;;
   esac
 }
 run "$@"

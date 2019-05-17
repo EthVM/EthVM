@@ -42,16 +42,31 @@ curl_register() {
 register_sources() {
   echo "===> Registering sources ..."
   ensure_kafka_connect
-  curl_register ${KAFKA_CONNECT_DIR}/sources/eth-lists-source.json
-  curl_register ${KAFKA_CONNECT_DIR}/sources/exchange-rates-source.json
-  curl_register ${KAFKA_CONNECT_DIR}/sources/parity-source.json
+
+  local SOURCES=$(ls ${KAFKA_CONNECT_DIR}/sources/*.json)
+
+  for FILE in ${SOURCES}; do
+    curl_register ${FILE}
+  done
+
 } >&2
 
 register_sinks() {
   echo "===> Registering sinks ..."
   ensure_kafka_connect
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-keyed-sink.json
-  curl_register ${KAFKA_CONNECT_DIR}/sinks/postgres-non-keyed-sink.json
+
+  local SINKS=$(ls ${KAFKA_CONNECT_DIR}/sinks/*.json)
+
+  for FILE in ${SINKS}; do
+    curl_register ${FILE}
+  done
+
+} >&2
+
+register() {
+  echo "===> Registering ${1} ..."
+  ensure_kafka_connect
+  curl_register ${KAFKA_CONNECT_DIR}/${1}
 } >&2
 
 init() {
@@ -67,10 +82,11 @@ run() {
   shift
 
   case ${command} in
-    ensure-kafka-connect)   ensure_kafka_connect "$@";;
-    ensure-sinks)           register_sinks "$@";;
-    ensure-sources)         register_sources "$@";;
-    init)                   init "$@";;
+    ensure-kafka-connect) ensure_kafka_connect "$@";;
+    ensure-sinks)         register_sinks "$@"      ;;
+    ensure-sources)       register_sources "$@"    ;;
+    register)             register "$@"            ;;
+    init)                 init "$@"                ;;
   esac
 } >&2
 

@@ -28,7 +28,7 @@ kafka_connect_usage() {
 build_connector() {
   local processing_dir=$(cd ${ROOT_DIR}/apps/processing; pwd)
   local kafka_connect_dir=$(cd ${processing_dir}/connectors; pwd)
-  local connectors=('sinks/jdbc' 'sources/eth-tokens-list' 'sources/exchanges' 'sources/web3')
+  local connectors=('sinks/jdbc' 'sources/eth-tokens-list' 'sources/exchanges' 'sources/web3' 'sources/kafka-admin')
 
   echo "Building connectors..."
   (cd ${processing_dir}; ./gradlew shadowJar)
