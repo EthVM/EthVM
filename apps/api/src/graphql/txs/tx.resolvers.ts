@@ -88,11 +88,6 @@ export class TxResolvers {
     return entities.map(e => new TxDto(e))
   }
 
-  @Query()
-  async totalNumberOfTransactions(): Promise<number> {
-    return await this.txService.countTransactions()
-  }
-
   @Subscription(
     'newTransaction', {
       resolve: (summary: TransactionSummary) => new TransactionSummaryDto(summary),

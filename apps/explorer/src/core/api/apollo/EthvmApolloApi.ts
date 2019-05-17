@@ -2,7 +2,6 @@ import { EthvmApi } from '@app/core/api'
 import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
-
 import {
   coinExchangeRate,
   holderDetails,
@@ -14,22 +13,7 @@ import {
   tokenTransfersByContractAddressForHolder,
   totalNumTokenExchangeRates
 } from '@app/core/api/apollo/queries/tokens.graphql'
-import { totalNumberOfTransactions, tx, txs, txsForAddress } from '@app/core/api/apollo/queries/txs.graphql'
-import {
-  Account,
-  Block,
-  CoinExchangeRate,
-  Contract,
-  PendingTx,
-  SimpleBlock,
-  SimpleTx,
-  Token,
-  TokenExchangeRate,
-  TokenHolder,
-  Transfer,
-  Tx
-} from '@app/core/models'
-import { totalNumberOfUncles, uncleByHash, uncles } from '@app/core/api/apollo/queries/uncles.graphql'
+import { Block, CoinExchangeRate, Contract, PendingTx, SimpleBlock, TokenExchangeRate, TokenHolder, Transfer } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 import BigNumber from 'bignumber.js'
 
@@ -257,56 +241,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.tokenTransfersByContractAddressForHolder)
-  }
-
-  // ------------------------------------------------------------------------------------
-  // Txs
-  // ------------------------------------------------------------------------------------
-
-  public getTx(hash: string): Promise<Tx> {
-    return this.apollo
-      .query({
-        query: tx,
-        variables: {
-          hash
-        }
-      })
-      .then(res => new Tx(res.data.tx))
-  }
-
-  public getTxs(limit: number, order: string, fromBlock: number): Promise<SimpleTx[]> {
-    return this.apollo
-      .query({
-        query: txs,
-        variables: {
-          limit,
-          order,
-          fromBlock
-        }
-      })
-      .then(res => res.data.txs.map(raw => new SimpleTx(raw)))
-  }
-
-  public getTxsOfAddress(hash: string, filter: string, limit: number, page: number): Promise<SimpleTx[]> {
-    return this.apollo
-      .query({
-        query: txsForAddress,
-        variables: {
-          hash: hash ? hash : '',
-          filter,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.txsForAddress.map(raw => new SimpleTx(raw)))
-  }
-
-  public getTotalNumberOfTxs(): Promise<number> {
-    return this.apollo
-      .query({
-        query: totalNumberOfTransactions
-      })
-      .then(res => res.data.totalNumberOfTransactions as number)
   }
 
   // ------------------------------------------------------------------------------------
