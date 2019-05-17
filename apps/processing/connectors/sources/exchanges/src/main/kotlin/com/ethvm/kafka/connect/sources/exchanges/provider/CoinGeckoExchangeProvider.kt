@@ -52,7 +52,6 @@ class CoinGeckoExchangeProvider(
       providers.add(CoinGeckoTokenExchangeProvider(tokensOpts, okHttpClient, jackson))
     }
 
-
     providers
   }
 
@@ -211,7 +210,6 @@ class CoinGeckoTokenExchangeProvider(
 
   @Throws(Exception::class)
   override fun fetch(): List<SourceRecord> {
-
 
     logger.info { "Running fetch in coin gecko token exchange provider" }
 
