@@ -133,7 +133,7 @@ import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
     Blockies
   },
   apollo: {
-    exchangeRate: {
+    exchangeRatePrice: {
       query: exchangeRate,
       update({ exchangeRate }) {
         // TODO handle no exchange rate data case
