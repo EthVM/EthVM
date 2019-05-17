@@ -102,7 +102,8 @@
     <v-card flat v-if="!hasError">
       <v-layout column fill-height class="mb-1">
         <v-flex xs12 v-if="!loading">
-          <div v-for="token in tokens" class="transparent" flat :key="token._id">
+          <v-card-text v-if="!tokens.length" class="text-xs-center secondary--text">{{ $t('message.token.no-tokens') }}</v-card-text>
+          <div v-else v-for="token in tokens" class="transparent" flat :key="token._id">
             <token-table-row :token="token" />
           </div>
           <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
