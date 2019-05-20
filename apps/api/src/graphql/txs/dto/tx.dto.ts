@@ -1,8 +1,9 @@
-import { BigNumber, Buffer, Receipt, Trace, Transaction } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
+import { BigNumber, Buffer, Transaction } from '@app/graphql/schema'
+import { assignClean, isGzip } from '@app/shared/utils'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TxReceiptDto } from '@app/graphql/txs/dto/tx-receipt.dto'
 import { TxTraceDto } from '@app/graphql/txs/dto/tx-trace.dto'
+import zlib from 'zlib'
 
 export class TxDto implements Transaction {
 
@@ -40,6 +41,13 @@ export class TxDto implements Transaction {
     }
     delete data.receipt
     delete data.traces
+
+    // Decompress input field if necessary
+
+    const { input } = data
+    if (input && isGzip(input)) {
+      this.input = zlib.gunzipSync(input)
+    }
 
     assignClean(this, data)
   }

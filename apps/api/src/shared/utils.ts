@@ -18,3 +18,16 @@ export function assignClean(target: any, source: any) {
 
   return Object.assign(target, sourceCopy)
 }
+
+/**
+ * Determines if a Buffer is a GZIP file
+ * modified from https://github.com/kevva/is-gzip
+ * @param buffer
+ */
+export function isGzip(buffer: Buffer): boolean {
+  if (!buffer || buffer.length < 3) {
+    return false;
+  }
+
+  return buffer[0] === 0x1F && buffer[1] === 0x8B && buffer[2] === 0x08;
+}
