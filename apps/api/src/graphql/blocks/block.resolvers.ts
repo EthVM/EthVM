@@ -1,24 +1,23 @@
-import { BlockService } from '@app/dao/block.service';
-import { BlockDto } from '@app/graphql/blocks/dto/block.dto';
-import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe';
-import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe';
-import { ParseLimitPipe } from '@app/shared/validation/parse-limit.pipe.1';
-import { ParsePagePipe } from '@app/shared/validation/parse-page.pipe';
-import {Inject, ParseIntPipe} from '@nestjs/common';
-import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestjs/graphql';
-import { PubSub } from 'graphql-subscriptions';
-import {BlockSummary} from '../schema';
-import { BlockSummaryDto } from './dto/block-summary.dto';
-import BigNumber from 'bignumber.js';
-import {BlocksPageDto} from '@app/graphql/blocks/dto/blocks-page.dto'
-import {BlockSummaryPageDto} from './dto/block-summary-page.dto'
+import { BlockService } from '@app/dao/block.service'
+import { BlockDto } from '@app/graphql/blocks/dto/block.dto'
+import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
+import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
+import { Inject } from '@nestjs/common'
+import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestjs/graphql'
+import { PubSub } from 'graphql-subscriptions'
+import { BlockSummary } from '../schema'
+import { BlockSummaryDto } from './dto/block-summary.dto'
+import BigNumber from 'bignumber.js'
+import { BlockSummaryPageDto } from './dto/block-summary-page.dto'
+import retry from 'async-retry'
+import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 
 @Resolver('Block')
 export class BlockResolvers {
 
   constructor(
     private readonly blockService: BlockService,
-    @Inject('PUB_SUB') private pubSub: PubSub,
+    @Inject('PUB_SUB') private pubSub: PubSub
   ) {
   }
 
@@ -26,27 +25,65 @@ export class BlockResolvers {
   async blockSummaries(
     @Args('fromBlock') fromBlock: BigNumber,
     @Args('offset') offset: number,
-    @Args('limit') limit: number,
+    @Args('limit') limit: number
   ) {
-    const [summaries, count] = await this.blockService.findSummaries(offset, limit, fromBlock)
-    return new BlockSummaryPageDto(summaries, count)
+
+    return retry(async bail => {
+
+      try {
+        const [summaries, count] = await this.blockService.findSummaries(offset, limit, fromBlock)
+        return new BlockSummaryPageDto(summaries, count)
+      } catch (err) {
+
+        if (err instanceof PartialReadException) {
+          // re-throw for retry
+          throw err
+        } else {
+          bail(err)
+        }
+
+      }
+    }, {
+      retries: 3,
+      factor: 2,
+      minTimeout: 500
+    })
+
   }
 
   @Query()
   async blockSummariesByAuthor(
     @Args('author', ParseAddressPipe) author: string,
     @Args('offset') offset: number,
-    @Args('limit') limit: number,
-  ): Promise<BlockSummaryPageDto> {
-    const [summaries, count] = await this.blockService.findSummariesByAuthor(author, offset, limit)
-    return new BlockSummaryPageDto(summaries, count)
+    @Args('limit') limit: number
+  ): Promise<BlockSummaryPageDto | undefined> {
+    return retry(async bail => {
+
+      try {
+        const [summaries, count] = await this.blockService.findSummariesByAuthor(author, offset, limit)
+        return new BlockSummaryPageDto(summaries, count)
+      } catch (err) {
+
+        if (err instanceof PartialReadException) {
+          // re-throw for retry
+          throw err
+        } else {
+          bail(err)
+        }
+
+      }
+    }, {
+      retries: 3,
+      factor: 2,
+      minTimeout: 500
+    })
   }
 
   @Query()
   async blocks(
     @Args('page') page: number,
     @Args('limit') limit: number,
-    @Args('fromBlock') fromBlock?: BigNumber,
+    @Args('fromBlock') fromBlock?: BigNumber
   ) {
     const entities = await this.blockService.findBlocks(limit, page, fromBlock)
     return entities.map(e => new BlockDto(e))
@@ -65,19 +102,6 @@ export class BlockResolvers {
   }
 
   @Query()
-  async minedBlocksByAddress(
-    @Args('address', ParseAddressPipe) address: string,
-    @Args('limit') limit: number,
-    @Args('page') page: number,
-  ): Promise<BlocksPageDto> {
-    const result = await this.blockService.findMinedBlocksByAddress(address, limit, page)
-    return new BlocksPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
-  }
-
-  @Query()
   async totalNumberOfBlocks() {
     return this.blockService.findTotalNumberOfBlocks()
   }
@@ -89,7 +113,7 @@ export class BlockResolvers {
 
   @Subscription(
     'newBlock', {
-      resolve: (summary: BlockSummary) => new BlockSummaryDto(summary),
+      resolve: (summary: BlockSummary) => new BlockSummaryDto(summary)
     } as SubscriptionOptions)
   newBlock() {
     return this.pubSub.asyncIterator('newBlock')
@@ -98,8 +122,8 @@ export class BlockResolvers {
   @Subscription(
     'hashRate', {
       // TODO determine why we need to specify the resolve function for this to work
-      resolve: (hashRate: BigNumber) => hashRate,
-    } as SubscriptionOptions,
+      resolve: (hashRate: BigNumber) => hashRate
+    } as SubscriptionOptions
   )
   hashRate() {
     return this.pubSub.asyncIterator('hashRate')

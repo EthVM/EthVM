@@ -8,6 +8,9 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import { EntityManager, In, LessThan, LessThanOrEqual, Repository } from 'typeorm'
 import { TraceService } from './trace.service'
+import { PartialReadException } from '@app/shared/errors/partial-read-exception'
+import { setEquals } from '@app/shared/utils'
+import { ConfigService } from '@app/shared/config.service'
 
 @Injectable()
 export class BlockService {
@@ -18,6 +21,7 @@ export class BlockService {
     @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
     @InjectEntityManager() private readonly entityManager: EntityManager,
     private readonly traceService: TraceService,
+    private readonly configService: ConfigService
   ) {
   }
 
@@ -28,7 +32,7 @@ export class BlockService {
       .find({
         select: ['number', 'difficulty', 'blockTime'],
         order: { number: 'DESC' },
-        take: 20,
+        take: 20
       })
 
     if (blocks.length === 0) return null
@@ -54,12 +58,12 @@ export class BlockService {
         relations: ['rewards'],
         order: { number: 'DESC' },
         skip: offset,
-        take: limit,
+        take: limit
       })
 
     return [
       await this.summarise(headersWithRewards),
-      count,
+      count
     ]
 
   }
@@ -73,14 +77,14 @@ export class BlockService {
         relations: ['rewards'],
         order: { number: 'DESC' },
         skip: offset,
-        take: limit,
+        take: limit
       })
 
     if (count === 0) return [[], count]
 
     return [
       await this.summarise(headersWithRewards),
-      count,
+      count
     ]
 
   }
@@ -91,7 +95,7 @@ export class BlockService {
       select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
-      order: { number: 'DESC' },
+      order: { number: 'DESC' }
     })
 
     return this.summarise(headersWithRewards)
@@ -106,8 +110,21 @@ export class BlockService {
     const successfulCountByBlock = new Map<string, number>()
     const failedCountByBlock = new Map<string, number>()
 
+    const txHashesByBlock = new Map<string, Set<string>>()
+
     txStatuses.forEach(status => {
-      const { blockHash, successful } = status
+
+      const { blockHash, transactionHash, successful } = status
+
+      // keep track of returned tx hashes for verification later
+      let txHashes = txHashesByBlock.get(blockHash)
+      if (!txHashes) {
+        txHashes = new Set<string>()
+        txHashesByBlock.set(blockHash, txHashes)
+      }
+      txHashes.add(transactionHash)
+
+      // add to successful or failed count
       if (successful) {
         const current = successfulCountByBlock.get(blockHash) || 0
         successfulCountByBlock.set(blockHash, current + 1)
@@ -119,7 +136,23 @@ export class BlockService {
 
     return headersWithRewards.map(header => {
 
+      const { instaMining } = this.configService
       const { number, hash, author, uncleHashes, transactionHashes, difficulty, timestamp } = header
+
+      // partial read checks
+
+      // look for block reward
+      if (!instaMining && !(header.rewards && header.rewards.length)) {
+        throw new PartialReadException(`Rewards missing, block hash = ${header.hash}`)
+      }
+
+      // check transaction hashes
+      const expectedTxHashes = new Set<string>(JSON.parse(transactionHashes))
+      const retrievedTxHashes = txHashesByBlock.get(hash) || new Set<string>()
+
+      if (!setEquals(expectedTxHashes, retrievedTxHashes)) {
+        throw new PartialReadException(`Transactions did not match, block hash = ${header.hash}`)
+      }
 
       const rewardsByBlock = new Map<string, BigNumber>()
 
@@ -134,7 +167,7 @@ export class BlockService {
         numTxs: transactionHashes.length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
-        reward: rewardsByBlock.get(hash) || 0,
+        reward: rewardsByBlock.get(hash) || 0
       } as BlockSummary
 
     })
@@ -153,52 +186,15 @@ export class BlockService {
       take: limit,
       skip,
       order: { number: 'DESC' },
-      relations: ['rewards'],
+      relations: ['rewards']
     })
-  }
-
-  private async findAndMapTxsAndUncles(blocks: BlockHeaderEntity[]): Promise<BlockHeaderEntity[]> {
-
-    const blockHashes = blocks.map(b => b.hash)
-    const txs = await this.transactionRepository.find({ where: { blockHash: In(blockHashes) }, relations: ['receipt'] })
-    const uncles = await this.uncleRepository.find({ where: { nephewHash: In(blockHashes) } })
-
-    const blocksByHash = blocks.reduce((memo, next) => {
-      next.txs = []
-      next.uncles = []
-      memo[next.hash] = next
-      return memo
-    }, {})
-
-    txs.forEach(tx => {
-      blocksByHash[tx.blockHash].txs.push(tx)
-    })
-    uncles.forEach(uncle => {
-      blocksByHash[uncle.nephewHash].uncles.push(uncle)
-    })
-
-    return Object.values(blocksByHash)
-
   }
 
   async findBlockByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
     return this.blockHeaderRepository.findOne({
       where: { number },
-      relations: ['uncles', 'rewards'],
+      relations: ['uncles', 'rewards']
     })
-  }
-
-  async findMinedBlocksByAddress(address: string, limit: number = 10, page: number = 0): Promise<[BlockHeaderEntity[], number]> {
-    const skip = page * limit
-    const result = await this.blockHeaderRepository.findAndCount({
-      where: { author: address },
-      take: limit,
-      skip,
-      order: { number: 'DESC' },
-      relations: ['rewards'],
-    })
-    result[0] = await this.findAndMapTxsAndUncles(result[0])
-    return result
   }
 
   async findTotalNumberOfBlocks(): Promise<BigNumber> {

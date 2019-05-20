@@ -19,6 +19,12 @@ export function assignClean(target: any, source: any) {
   return Object.assign(target, sourceCopy)
 }
 
+export function setEquals(as, bs) {
+  if (as.size !== bs.size) return false
+  for (const a of as) if (!bs.has(a)) return false
+  return true
+}
+
 /**
  * Determines if a Buffer is a GZIP file
  * modified from https://github.com/kevva/is-gzip
