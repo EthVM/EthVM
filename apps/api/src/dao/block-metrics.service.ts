@@ -72,6 +72,9 @@ export class BlockMetricsService {
           item.avgTxFees = item.avgTxFees || new BigNumber(0)
           item.blockTime = item.blockTime || 0
           item.totalTxs = item.totalTxs || 0
+          item.numSuccessfulTxs = item.numSuccessfulTxs || 0
+          item.numFailedTxs = item.numFailedTxs || 0
+          item.numInternalTxs = item.numInternalTxs || 0
         })
 
         const sortedItems = items.sort((a, b) => b.number.minus(a.number).toNumber())
