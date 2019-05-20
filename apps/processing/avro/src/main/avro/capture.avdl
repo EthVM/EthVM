@@ -3,6 +3,17 @@ protocol Capture {
 
   import idl "common.avdl";
 
+  record ParitySyncStateKeyRecord {
+    string source;
+  }
+
+  record ParitySyncStateRecord {
+    string source;
+    long timestamp;
+    decimal(80, 0) number;
+    decimal(80, 0) head;
+  }
+
   record CanonicalKeyRecord {
     decimal(80, 0) number;
   }
@@ -130,6 +141,7 @@ protocol Capture {
   }
 
   record TransactionListRecord {
+    string blockHash;
     array<TransactionRecord> transactions;
   }
 
@@ -158,8 +170,13 @@ protocol Capture {
     long timestamp;                                     // the unix timestamp for when the block was collated
     long size;
 
-    array<string> uncles = [];
-    union { null, long } blockTime = null;
+    int transactionCount;
+    array<string> transactionHashes = [];
+
+    int uncleCount;
+    array<string> uncleHashes = [];
+
+    union { null, int } blockTime = null;
 
   }
 

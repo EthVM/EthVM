@@ -17,89 +17,44 @@ import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.methods.response.Transaction
+import java.math.BigInteger
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ParityBlocksSource(
   sourceContext: SourceTaskContext,
   parity: JsonRpc2_0ParityExtended,
   private val blocksTopic: String,
   private val txsBlockTopic: String,
-  private val unclesTopic: String
-) : AbstractParityEntitySource(sourceContext, parity) {
+  private val unclesTopic: String,
+  syncStateTopic: String
+) : AbstractParityEntitySource(sourceContext, parity, syncStateTopic) {
 
   private val logger = KotlinLogging.logger {}
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "block")
 
-  override fun fetchRange(range: LongRange): List<SourceRecord> =
-    range
+  private val blockTimestamps = sortedMapOf<BigInteger, Int>()
+  private val timestampsLock = AtomicBoolean(false)
+
+  override fun fetchRange(range: LongRange): List<SourceRecord> {
+
+    val components = range
       .map { blockNumber ->
 
         val blockNumberBI = blockNumber.toBigInteger()
         val blockParam = DefaultBlockParameter.valueOf(blockNumberBI)
 
-        val partitionOffset = mapOf("blockNumber" to blockNumber)
-
-        val blockFuture = parity.ethGetBlockByNumber(blockParam, true).sendAsync()
+        parity
+          .ethGetBlockByNumber(blockParam, true).sendAsync()
           .thenCompose { resp ->
 
             val block = resp.block
 
-            val blockKeyRecord = CanonicalKeyRecord.newBuilder()
-              .setNumberBI(blockNumberBI)
-              .build()
+            // record timestamp
 
-            val blockRecord = block
-              .toBlockHeaderRecord(BlockHeaderRecord.newBuilder())
-              .build()
-
-            val keySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
-            val valueSchemaAndValue = AvroToConnect.toConnectData(blockRecord)
-
-            val headerSourceRecord =
-              SourceRecord(
-                partitionKey,
-                partitionOffset,
-                blocksTopic,
-                keySchemaAndValue.schema(),
-                keySchemaAndValue.value(),
-                valueSchemaAndValue.schema(),
-                valueSchemaAndValue.value()
-              )
-
-            // transactions
-
-            val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
-              .setNumberBI(blockNumberBI)
-              .build()
-
-            val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
-
-            val transactionListRecord = TransactionListRecord.newBuilder()
-              .setTransactions(
-                block.transactions
-                  .map { txResp -> txResp.get() as Transaction }
-                  .map { tx ->
-                    tx.toTransactionRecord(
-                      TransactionRecord
-                        .newBuilder()
-                        .setTimestamp(block.timestamp.longValueExact())
-                    ).build()
-                  }
-              ).build()
-
-            val txListValueSchemaAndValue = AvroToConnect.toConnectData(transactionListRecord)
-
-            val txsSourceRecord =
-              SourceRecord(
-                partitionKey,
-                partitionOffset,
-                txsBlockTopic,
-                canonicalKeySchemaAndValue.schema(),
-                canonicalKeySchemaAndValue.value(),
-                txListValueSchemaAndValue.schema(),
-                txListValueSchemaAndValue.value()
-              )
+            val blockTimestamp = block.timestamp.toInt()
+            blockTimestamps[blockNumberBI] = blockTimestamp
 
             // uncles
 
@@ -126,34 +81,118 @@ class ParityBlocksSource(
                 }
               }
 
-            val thenApply = unclesFuture.thenApply { uncles ->
-
-              val uncleListRecord = UncleListRecord.newBuilder()
-                .setUncles(uncles.mapIndexed { index, u -> u.block.toUncleRecord(index, block.hash, blockNumberBI, UncleRecord.newBuilder()).build() })
-                .build()
-
-              val uncleKeySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
-              val uncleValueSchemaAndValue = AvroToConnect.toConnectData(uncleListRecord)
-
-              return@thenApply SourceRecord(
-                partitionKey,
-                partitionOffset,
-                unclesTopic,
-                uncleKeySchemaAndValue.schema(),
-                uncleKeySchemaAndValue.value(),
-                uncleValueSchemaAndValue.schema(),
-                uncleValueSchemaAndValue.value()
-              )
+            return@thenCompose unclesFuture.thenApply { uncles ->
+              Pair(block, uncles)
             }
-            return@thenCompose thenApply.thenApply { unclesRecord -> listOf(headerSourceRecord, txsSourceRecord, unclesRecord) }
           }
+      }.map { f -> f.join() }
 
-        blockFuture
-      }.map { future ->
-        // wait for everything to complete
-        future.join()
+    //
+    tryCleanTimestamps()
+
+    //
+
+    return components.map { (block, uncles) ->
+
+      val blockNumber = block.number
+
+      val partitionOffset = mapOf("blockNumber" to blockNumber.toLong())
+
+      val blockKeyRecord = CanonicalKeyRecord.newBuilder()
+        .setNumberBI(blockNumber)
+        .build()
+
+      val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
+        null -> 0 // should only occur for genesis block
+        else -> block.timestamp.toInt() - prevTimestamp
       }
-      .flatten()
+
+      val blockRecord = block
+        .toBlockHeaderRecord(BlockHeaderRecord.newBuilder(), blockTime)
+        .build()
+
+      val keySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
+      val valueSchemaAndValue = AvroToConnect.toConnectData(blockRecord)
+
+      val headerSourceRecord =
+        SourceRecord(
+          partitionKey,
+          partitionOffset,
+          blocksTopic,
+          keySchemaAndValue.schema(),
+          keySchemaAndValue.value(),
+          valueSchemaAndValue.schema(),
+          valueSchemaAndValue.value()
+        )
+
+      // transactions
+
+      val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
+        .setNumberBI(blockNumber)
+        .build()
+
+      val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
+
+      val transactionListRecord = TransactionListRecord.newBuilder()
+        .setBlockHash(blockRecord.getHash())
+        .setTransactions(
+          block.transactions
+            .map { txResp -> txResp.get() as Transaction }
+            .map { tx ->
+              tx.toTransactionRecord(
+                TransactionRecord
+                  .newBuilder()
+                  .setTimestamp(block.timestamp.longValueExact())
+              ).build()
+            }
+        ).build()
+
+      val txListValueSchemaAndValue = AvroToConnect.toConnectData(transactionListRecord)
+
+      val txsSourceRecord =
+        SourceRecord(
+          partitionKey,
+          partitionOffset,
+          txsBlockTopic,
+          canonicalKeySchemaAndValue.schema(),
+          canonicalKeySchemaAndValue.value(),
+          txListValueSchemaAndValue.schema(),
+          txListValueSchemaAndValue.value()
+        )
+
+      val uncleListRecord = UncleListRecord.newBuilder()
+        .setUncles(uncles.mapIndexed { index, u -> u.block.toUncleRecord(index, block.hash, blockNumber, UncleRecord.newBuilder()).build() })
+        .build()
+
+      val uncleKeySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
+      val uncleValueSchemaAndValue = AvroToConnect.toConnectData(uncleListRecord)
+
+      val unclesSourceRecord = SourceRecord(
+        partitionKey,
+        partitionOffset,
+        unclesTopic,
+        uncleKeySchemaAndValue.schema(),
+        uncleKeySchemaAndValue.value(),
+        uncleValueSchemaAndValue.schema(),
+        uncleValueSchemaAndValue.value()
+      )
+
+      listOf(headerSourceRecord, txsSourceRecord, unclesSourceRecord)
+    }.flatten()
+  }
+
+  private fun tryCleanTimestamps() {
+
+    if (timestampsLock.compareAndSet(false, true)) {
+
+      while (blockTimestamps.size > 5000) {
+        // map is ordered, remove older entries first
+        blockTimestamps.remove(blockTimestamps.firstKey())
+      }
+
+      timestampsLock.set(false)
+    }
+  }
 
   override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
     range

@@ -1,18 +1,17 @@
-import Bn from 'bignumber.js'
-import ethUnits from 'ethereumjs-units'
+import BN from 'bignumber.js'
 import NumberFormatter from 'number-formatter'
 
 export class EthValue {
-  private value: string | number
+  private value: string | number | BN
 
-  constructor(raw: Buffer | string | number) {
+  constructor(raw: Buffer | BN | string | number) {
     if (raw instanceof Buffer) {
       this.value = '0x' + Buffer.from(raw).toString('hex')
       this.value = this.value === '0x' ? '0x0' : this.value
       return
     }
 
-    if (typeof raw === 'string' || typeof raw === 'number') {
+    if (typeof raw === 'string' || typeof raw === 'number' || raw instanceof BN) {
       this.value = raw
       return
     }
@@ -21,23 +20,26 @@ export class EthValue {
   }
 
   public toEth(): number {
-    return ethUnits.convert(new Bn(this.value).toFixed(), 'wei', 'eth')
+    const value = this.value instanceof BN ? this.value : new BN(this.value)
+    return value.div(1_000_000_000_000_000_000).toNumber()
   }
 
   public toWei(): number {
-    return ethUnits.convert(new Bn(this.value).toFixed(), 'wei', 'wei')
+    const value = this.value instanceof BN ? this.value : new BN(this.value)
+    return value.toNumber()
   }
 
   public toGWei(): number {
-    return ethUnits.convert(new Bn(this.value).toFixed(), 'wei', 'gwei')
+    const value = this.value instanceof BN ? this.value : new BN(this.value)
+    return value.div(1_000_000_000).toNumber()
   }
 
-  public toEthFormated(): number {
-    return NumberFormatter('#,##0.##', ethUnits.convert(new Bn(this.value).toFixed(), 'wei', 'eth'))
+  public toEthFormatted(): number {
+    return NumberFormatter('#,##0.##', this.toEth())
   }
 
   public toString(): string {
-    if (typeof this.value === 'number') {
+    if (typeof this.value === 'number' || this.value instanceof BN) {
       return this.value.toString()
     }
     return this.value

@@ -1,0 +1,75 @@
+
+enum TimeBucket {
+  ONE_HOUR,
+  ONE_DAY,
+  ONE_WEEK,
+  ONE_MONTH,
+  ONE_YEAR
+}
+
+enum BlockMetricField {
+  AVG_BLOCK_TIME, AVG_NUM_UNCLES, AVG_DIFFICULTY, AVG_TOTAL_DIFFICULTY, AVG_GAS_LIMIT, AVG_GAS_PRICE, AVG_NUM_TXS,
+  AVG_NUM_SUCCESSFUL_TXS, AVG_NUM_FAILED_TXS, AVG_NUM_INTERNAL_TXS, AVG_TX_FEES, AVG_TOTAL_TX_FEES
+}
+
+type Query {
+
+  blockMetrics(offset: Int = 0, limit: Int = 20): BlockMetricPage!
+  blockMetricsTimeseries(start: Date!, end: Date!, bucket: TimeBucket!, fields: [BlockMetricField!]!): [AggregateBlockMetric!]!
+
+}
+
+type Subscription {
+  newBlockMetric: BlockMetric!
+}
+
+type BlockMetricPage {
+
+  items: [BlockMetric!]!
+
+  offset: Int!
+  limit: Int!
+  totalCount: Int!
+
+}
+
+type AggregateBlockMetric {
+
+  timestamp: Date!
+
+  avgBlockTime: Int
+  avgNumUncles: Int
+  avgDifficulty: BigNumber
+  avgTotalDifficulty: BigNumber
+  avgGasLimit: BigNumber
+  avgGasPrice: BigNumber
+  avgNumTxs: Int
+  avgNumSuccessfulTxs: Int
+  avgNumFailedTxs: Int
+  avgNumInternalTxs: Int
+  avgTxFees: BigNumber
+  avgTotalTxFees: BigNumber
+
+}
+
+type BlockMetric {
+
+  number: BigNumber!
+  blockHash: String!
+  timestamp: Date!
+  blockTime: Int!
+  numUncles: Int!
+  difficulty: BigNumber!
+  totalDifficulty: BigNumber!
+  totalGasPrice: BigNumber!
+  avgGasLimit: BigNumber!
+  avgGasPrice: BigNumber!
+  totalTxs: Int!
+  numSuccessfulTxs: Int!
+  numFailedTxs: Int!
+  numInternalTxs: Int!
+  totalTxFees: BigNumber!
+  avgTxFees: BigNumber!
+
+}
+

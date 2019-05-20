@@ -1,4 +1,6 @@
-import { EthvmApolloApi } from '@app/core/api'
+import Vuetify from 'vuetify/lib'
+import 'vuetify/src/stylus/app.styl'
+import { EthvmApi, EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
 import router from '@app/core/router'
 import store from '@app/core/store'
@@ -11,24 +13,15 @@ import { split } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
-import VTooltip from 'v-tooltip'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import VueTimeago from 'vue-timeago'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 /*
   ===================================================================================
     Vue: Plugins Configuration
   ===================================================================================
 */
-
-// -------------------------------------------------------
-//    VTooltip
-// -------------------------------------------------------
-
-Vue.use(VTooltip)
 
 // -------------------------------------------------------
 //    EventHub
@@ -45,12 +38,11 @@ const httpLink = new HttpLink({
   uri: process.env.VUE_APP_API_ENDPOINT || ''
 })
 
-const wsLink = new WebSocketLink({
-  uri: process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '',
-  options: {
-    reconnect: true
-  }
+const subscriptionClient = new SubscriptionClient(process.env.VUE_APP_API_SUBSCRIPTIONS_ENDPOINT || '', {
+  reconnect: true
 })
+
+const wsLink = new WebSocketLink(subscriptionClient)
 
 const link = split(
   // split based on operation type
@@ -75,20 +67,7 @@ const apolloProvider = new VueApollo({
 const api = new EthvmApolloApi(apolloClient)
 
 Vue.use(VueApollo)
-Vue.use(VueEthvmApi, api)
-
-// -------------------------------------------------------
-//    TimeAgo
-// -------------------------------------------------------
-
-Vue.use(VueTimeago, {
-  name: 'timeago',
-  locale: 'en-US',
-  locales: {
-    'en-US': require('date-fns/locale/en'),
-    ru: require('date-fns/locale/ru')
-  }
-})
+Vue.use(VueEthvmApi, { api, subscriptionClient })
 
 // -------------------------------------------------------
 //    Vuetify

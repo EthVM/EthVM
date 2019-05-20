@@ -11,7 +11,7 @@
       "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
       "context": "${APPS_PATH}/explorer",
       "version": "${APPS_PATH}/explorer/package.json",
-      "targets": ["development", "staging", "production"]
+      "targets": ["development-ci", "staging", "production"]
     },
     {
       "id": "ethvm-utils",
@@ -26,10 +26,10 @@
       "version": "${APPS_PATH}/processing/version.properties"
     },
     {
-      "id": "mongodb",
-      "dockerfile": "${DOCKER_IMAGES_PATH}/mongodb/Dockerfile",
-      "context": "${DOCKER_IMAGES_PATH}/mongodb",
-      "version": "${DOCKER_IMAGES_PATH}/mongodb/version.properties"
+      "id": "kafka-connect",
+      "dockerfile": "${APPS_PATH}/processing/connectors/Dockerfile",
+      "context": "${APPS_PATH}/processing/",
+      "version": "${APPS_PATH}/processing/connectors/version.properties"
     },
     {
       "id": "traefik",

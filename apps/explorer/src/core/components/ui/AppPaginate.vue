@@ -3,7 +3,7 @@
     <v-container grid-list-xs pa-1>
       <v-layout row align-center justify-end fill-height>
         <v-btn v-if="hasFirst" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('btn.first') }}</v-btn>
-        <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small
+        <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small :disabled="currentPage === 0"
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
         <div v-if="hasInput" class="page-input">
@@ -11,7 +11,7 @@
         </div>
         <p v-else class="info--text pr-1">{{ pageDisplay }}</p>
         <p class="info--text">out of {{ total }}</p>
-        <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small
+        <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small :disabled="currentPage === lastPage"
           ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
         </v-btn>
         <v-btn v-if="hasLast" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('btn.last') }}</v-btn>
@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import _debounce from 'lodash.debounce'
 
 @Component
 export default class AppPaginate extends Vue {
@@ -115,13 +114,6 @@ export default class AppPaginate extends Vue {
   ===================================================================================
   */
 
-  /**
-   * Upon manually updating computed property pageDisplay,
-   * setPage() with desired updated value (and emit to parent component/view)
-   * Set timeout is used to give the user adequate time to type in their desired page.
-   * Lodash _debounce is not used because it immediately triggers upon change as opposed
-   * to waiting 500ms initially.
-   */
   set pageDisplay(pageDisplay: string) {
     const desiredPage = parseInt(pageDisplay, 10) - 1
     ;(desiredPage >= 0 && desiredPage <= this.lastPage) || !pageDisplay ? (this.isError = false) : (this.isError = true)

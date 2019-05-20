@@ -1,29 +1,19 @@
-query blocks($limit: Int, $page: Int, $fromBlock: Long) {
+query blocks($limit: Int, $page: Int, $fromBlock: BigNumber) {
   blocks(limit: $limit, page: $page, fromBlock: $fromBlock) {
     header {
       hash
       number
       author
     }
-    transactions {
-      hash
-      receipt {
-        status
-      }
-      traces {
-        error
-      }
-    }
+    transactionHashes
+    uncleHashes
     rewards {
       value: amount
-    }
-    uncles {
-      hash
     }
   }
 }
 
-query blockByHash($hash: String) {
+query blockByHash($hash: String!) {
   blockByHash(hash: $hash) {
     header {
       number
@@ -44,34 +34,16 @@ query blockByHash($hash: String) {
       receiptsRoot
       totalDifficulty
     }
-    transactions {
-      hash
-      blockNumber
-      from
-      gasPrice
-      timestamp
-      to
-      value
-      receipt {
-        contractAddress
-        gasUsed
-        status
-      }
-      traces {
-        error
-      }
-    }
+    transactionHashes
+    uncleHashes
     rewards {
       author: address
       rewardType: deltaType
       value: amount
     }
-    uncles {
-      hash
-    }
   }
 }
-query blockByNumber($number: Int) {
+query blockByNumber($number: BigNumber!) {
   blockByNumber(number: $number) {
     header {
       number
@@ -92,54 +64,32 @@ query blockByNumber($number: Int) {
       receiptsRoot
       totalDifficulty
     }
-    transactions {
-      hash
-      blockNumber
-      from
-      gasPrice
-      timestamp
-      to
-      value
-      receipt {
-        contractAddress
-        gasUsed
-        status
-      }
-      traces {
-        error
-      }
-    }
+    transactionHashes
+    uncleHashes
     rewards {
       author: address
       rewardType: deltaType
       value: amount
     }
-    uncles {
-      hash
-    }
   }
 }
 
-query minedBlocksByAddress($address: String, $limit: Int, $page: Int) {
+query minedBlocksByAddress($address: String!, $limit: Int, $page: Int) {
   minedBlocksByAddress(address: $address, limit: $limit, page: $page) {
-    header {
-      hash
-      number
-      author
-    }
-    uncles {
-      hash
-    }
-    transactions {
-      hash
-      receipt {
-        status
+    items {
+      header {
+        hash
+        number
+        author
+      }
+      transactionHashes
+      uncleHashes
+      rewards {
+        rewardType: deltaType
+        value: amount
       }
     }
-    rewards {
-      rewardType: deltaType
-      value: amount
-    }
+    totalCount
   }
 }
 

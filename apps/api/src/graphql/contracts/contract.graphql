@@ -1,0 +1,82 @@
+type Query {
+  contractByAddress(address: String!): Contract!
+  contractsCreatedBy(creator: String!, offset: Int = 0, limit: Int = 20): ContractSummaryPage!
+}
+
+type ContractSummaryPage {
+  items: [ContractSummary!]!
+  totalCount: Int!
+}
+
+type ContractSummary {
+  address: String!
+  creator: String!
+  blockNumber: BigNumber!
+  txHash: String!
+  txFee: BigNumber!
+  timestamp: Int!
+}
+
+type Contract {
+  address: String
+  creator: String
+  init: String
+  code: String
+  refundAddress: String
+  refundBalance: BigNumber
+  traceCreatedAtBlockHash: String
+  traceCreatedAtBlockNumber: BigNumber
+  traceCreatedAtTransactionHash: String
+  traceCreatedAtTransactionIndex: Int
+  traceCreatedAtLogIndex: Int
+  traceCreatedAtTraceAddress: String
+  traceDestroyedAtBlockHash: String
+  traceDestroyedAtBlockNumber: BigNumber
+  traceDestroyedAtTransactionHash: String
+  traceDestroyedAtTransactionIndex: Long
+  traceDestroyedAtLogIndex: Long
+  traceDestroyedAtTraceAddress: String
+  traceDestroyedAt: Buffer
+  metadata: ContractMetadata
+  totalSupply: BigNumber
+  createdAtTx: Transaction
+  createdAtTxSummary: TransactionSummary
+}
+
+type ContractMetadata {
+  address: String
+  name: String
+  symbol: String
+  decimals: Int
+  ensAddress: String
+  type: String
+  logo: ContractLogo
+  support: ContractSupport
+  social: ContractSocial
+  website: String
+}
+
+type ContractLogo {
+  src: String
+}
+
+type ContractSupport {
+  email: String
+  url: String
+}
+
+type ContractSocial {
+  blog: String
+  chat: String
+  facebook: String
+  forum: String
+  github: String
+  gitter: String
+  instagram: String
+  linkedin: String
+  reddit: String
+  slack: String
+  telegram: String
+  twitter: String
+  youtube: String
+}

@@ -14,7 +14,7 @@
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
-                <router-link class="linkBlue--text font-weight-medium pr-2" :to="`/uncle/${uncle.getHash()}`">{{ uncle.getNumber() }}</router-link>
+                <router-link class="linkBlue--text font-weight-medium pr-2" :to="`/uncle/${uncle.hash}`">{{ uncle.numberBN }}</router-link>
               </v-layout>
             </v-flex>
             <v-flex xs12 pa-1>
@@ -23,7 +23,7 @@
                   <p class="info--text psmall">{{ $t('common.hash') }}:</p>
                 </v-flex>
                 <v-flex xs10>
-                  <app-hash-concat :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
+                  <app-transform-hash :hash="uncle.hash" :link="`/uncle/${uncle.hash}`" />
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -33,14 +33,14 @@
                   <p class="info--text psmall">{{ $t('miner.name') }}:</p>
                 </v-flex>
                 <v-flex xs10>
-                  <app-hash-concat :hash="uncle.getMiner().toString()" :link="`/address/${uncle.getMiner().toString()}`" />
+                  <app-transform-hash :hash="uncle.author" :link="`/address/${uncle.author}`" />
                 </v-flex>
               </v-layout>
             </v-flex>
             <v-flex xs12 pa-1>
               <p class="info--text psmall">
-                {{ $t('uncle.included') }}:<router-link class="secondary--text pl-1" :to="`/block/${uncle.getBlockHeight()}`">{{
-                  uncle.getBlockHeight()
+                {{ $t('uncle.included') }}:<router-link class="secondary--text pl-1" :to="`/block/${uncle.nephewNumberBN}`">{{
+                  uncle.nephewNumberBN
                 }}</router-link>
               </p>
             </v-flex>
@@ -56,33 +56,33 @@
       -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex xs3 sm2 order-xs1>
-            <router-link class="secondary--text pb-1" :to="`/block/${uncle.getBlockHeight()}`">{{ uncle.getBlockHeight() }}</router-link>
+            <router-link class="secondary--text pb-1" :to="`/block/${uncle.nephewNumberBN}`">{{ uncle.nephewNumberBN }}</router-link>
           </v-flex>
           <v-flex xs3 sm2 order-xs1>
-            <router-link class="secondary--text pb-1" :to="`/uncle/${uncle.getHash()}`">{{ uncle.getNumber() }}</router-link>
+            <router-link class="secondary--text pb-1" :to="`/uncle/${uncle.hash}`">{{ uncle.numberBN }}</router-link>
           </v-flex>
           <v-flex xs12 sm5 md5 order-xs3 order-sm2>
             <v-layout row pl-2 pt-2 pr-3 pb-0>
               <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-              <app-hash-concat :hash="uncle.getHash()" :link="`/uncle/${uncle.getHash()}`" />
+              <app-transform-hash :hash="uncle.hash" :link="`/uncle/${uncle.hash}`" />
             </v-layout>
             <v-layout row pl-2 pt-2 pr-3 pb-2>
               <p class="info--text psmall pr-2">{{ $tc('miner.name', 1) }}:</p>
-              <app-hash-concat :hash="uncle.getMiner().toString()" :link="`/address/${uncle.getMiner().toString()}`" />
+              <app-transform-hash :hash="uncle.author" :link="`/address/${uncle.author}`" />
             </v-layout>
           </v-flex>
           <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
-            <p class="txSuccess--text mb-0 psmall">{{ uncle.getPosition() }}</p>
+            <p class="txSuccess--text mb-0 psmall">{{ uncle.uncleIndex }}</p>
           </v-flex>
           <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
             <p class="text-truncate black--text align-center mb-0">
-              <v-tooltip v-if="!isShortValue(uncle.getTotalReward().toEth())" bottom>
+              <v-tooltip v-if="!isShortValue(uncle.uncleRewardEth.toEth())" bottom>
                 <template #activator="data">
                   <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
                 </template>
-                <span>{{ uncle.getTotalReward().toEth() }}</span>
+                <span>{{ uncle.uncleRewardEth.toEth() }}</span>
               </v-tooltip>
-              {{ getShortValue(uncle.getTotalReward().toEth()) }}
+              {{ getShortValue(uncle.uncleRewardEth.toEth()) }}
             </p>
           </v-flex>
         </v-layout>
@@ -93,14 +93,15 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Uncle } from '@app/core/models'
-import AppHashConcat from '@app/core/components/ui/AppHashConcat.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import { UncleSummaryPageExt_items } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
 
 @Component({
   components: {
-    AppHashConcat
+    AppTransformHash
   }
 })
 export default class TableUnclesRow extends Mixins(StringConcatMixin) {
@@ -110,7 +111,7 @@ export default class TableUnclesRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Object) uncle!: Uncle
+  @Prop(UncleSummaryPageExt_items) uncle!: UncleSummaryPageExt_items
   @Prop({ type: String, default: 'home' }) pageType!: string
 }
 </script>

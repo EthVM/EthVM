@@ -1,5 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import BigNumber from 'bignumber.js';
 
 @Entity('canonical_fungible_balance_transfer')
 export class FungibleBalanceTransferEntity {
@@ -26,14 +28,14 @@ export class FungibleBalanceTransferEntity {
   @Column({type: 'character varying', length: 32, readonly: true})
   tokenType!: string
 
-  @Column({type: 'numeric', readonly: true})
-  amount!: string
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  amount!: BigNumber
 
   @Column({type: 'character', length: 66, readonly: true})
   traceLocationBlockHash!: string
 
-  @Column({type: 'numeric', readonly: true})
-  traceLocationBlockNumber!: string
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  traceLocationBlockNumber!: BigNumber
 
   @Column({type: 'character', length: 66, readonly: true})
   traceLocationTransactionHash?: string
@@ -47,7 +49,7 @@ export class FungibleBalanceTransferEntity {
   @Column({type: 'character varying', length: 64, readonly: true})
   traceLocationTraceAddress!: string
 
-  @Column({type: 'bigint', readonly: true})
-  timestamp!: string
+  @Column({type: 'int', readonly: true})
+  timestamp!: number
 
 }

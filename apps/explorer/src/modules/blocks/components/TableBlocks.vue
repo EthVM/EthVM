@@ -1,5 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3 mt-0">
+    <notice-new-block @reload="resetFromBlock" />
+
     <!--
     =====================================================================================
       TITLE
@@ -9,9 +11,6 @@
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
-          <v-flex d-flex v-if="pageType == 'blocks' && !loading">
-            <app-live-update @refreshTable="updateTable" :page-type="pageType" />
-          </v-flex>
         </v-layout>
       </v-flex>
       <v-spacer />
@@ -74,10 +73,10 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-container v-if="!hasError" flat id="scroll-target" :style="getStyle" class="scroll-y pa-2">
-      <v-layout column v-scroll:#scroll-target class="mb-1">
+    <v-container v-if="!hasError" flat :style="getStyle" class="scroll-y pa-2">
+      <v-layout column class="mb-1">
         <v-flex v-if="!loading">
-          <div v-for="block in blocks" :key="block.getHash()">
+          <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
         </v-flex>
@@ -123,9 +122,15 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import { Block, SimpleBlock } from '@app/core/models'
-import { Footnote } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
+import BigNumber from 'bignumber.js'
+import { Subscription } from 'rxjs'
+import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
+import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+
+const MAX_ITEMS = 50
 
 @Component({
   components: {
@@ -134,44 +139,188 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     AppInfoLoad,
     AppLiveUpdate,
     AppPaginate,
-    TableBlocksRow
+    TableBlocksRow,
+    NoticeNewBlock
+  },
+  data() {
+    return {
+      page: 0,
+      fromBlock: undefined,
+      error: undefined
+    }
+  },
+  apollo: {
+    blockPage: {
+      query() {
+        const self = this as any
+
+        return self.author ? blocksByAuthor : latestBlocks
+      },
+
+      fetchPolicy: 'cache-and-network',
+
+      variables() {
+        return {
+          offset: 0,
+          limit: this.maxItems,
+          author: this.author
+        }
+      },
+
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
+      update({ blockSummaries }) {
+        if (blockSummaries) {
+          this.error = '' // clear error
+          return new BlockSummaryPageExt(blockSummaries)
+        }
+        this.error = this.error || this.$i18n.t('message.err')
+        return blockSummaries
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      },
+
+      subscribeToMore: {
+        document: newBlock,
+
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const { blockSummaries } = previousResult
+          const { newBlock } = subscriptionData.data
+
+          const items = Object.assign([], blockSummaries.items)
+          items.unshift(newBlock)
+
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
+
+          // ensure order by block number desc
+          items.sort((a, b) => {
+            const numberA = a.number ? new BigNumber(a.number) : new BigNumber(0)
+            const numberB = b.number ? new BigNumber(b.number) : new BigNumber(0)
+            return numberB.minus(numberA).toNumber()
+          })
+
+          return {
+            ...previousResult,
+            blockSummaries: {
+              ...blockSummaries,
+              items
+            }
+          }
+        },
+
+        skip() {
+          return (this as any).pageType !== 'home'
+        }
+      }
+    }
   }
 })
 export default class TableBlocks extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+        ===================================================================================
+          Props
+        ===================================================================================
+        */
 
-  @Prop({ type: Boolean, default: true }) loading!: boolean
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
-  @Prop(Array) blocks!: Block[] | SimpleBlock[]
-  @Prop({ type: Number, default: 0 }) totalBlocks!: number
+
   @Prop({ type: Number, default: 20 }) maxItems!: number
   @Prop({ type: Boolean, default: false }) simplePagination!: boolean
-  @Prop({ type: Number, default: 0 }) page!: number
-  @Prop(String) error!: string
+
+  @Prop({ type: String }) author?: string
+
+  page!: number
+
+  error: string = ''
+
+  blockPage?: BlockSummaryPageExt
+  fromBlock?: BigNumber
+
+  connectedSubscription?: Subscription
 
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Lifecycle
+    ===================================================================================
+    */
 
-  setPage(page: number): void {
-    this.$emit('getBlockPage', page)
+  created() {
+    if (this.pageType === 'home') {
+      this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
+        if (state === 'reconnected') {
+          this.$apollo.queries.blockPage.refetch()
+        }
+      })
+    }
   }
 
-  updateTable(): void {
-    this.$emit('updateTable')
+  destroyed() {
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
+    }
   }
+
+  get blocks(): (BlockSummaryPage_items | null)[] {
+    return this.blockPage ? this.blockPage.items || [] : []
+  }
+
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+        ===================================================================================
+          Methods
+        ===================================================================================
+        */
+
+  resetFromBlock() {
+    this.setPage(0, true)
+  }
+
+  setPage(page: number, resetFrom: boolean = false): void {
+    const { blockPage } = this
+    const { blockPage: query } = this.$apollo.queries
+
+    if (resetFrom) {
+      this.fromBlock = undefined
+    } else {
+      const { totalCountBN } = blockPage!
+      if (!this.fromBlock) {
+        this.fromBlock = totalCountBN.minus(1)
+      }
+    }
+
+    query.fetchMore({
+      variables: {
+        fromBlock: this.fromBlock ? this.fromBlock.toString(10) : undefined,
+        offset: page * this.maxItems,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        this.page = page
+        return fetchMoreResult
+      }
+    })
+  }
+
+  /*
+        ===================================================================================
+          Computed Values
+        ===================================================================================
+        */
+
+  get loading(): boolean {
+    return this.$apollo.queries.blockPage.loading
+  }
 
   /**
    * Determines whether or not component has an error.
@@ -180,7 +329,7 @@ export default class TableBlocks extends Vue {
    * @return {Boolean} - Whether or not error exists
    */
   get hasError(): boolean {
-    return this.error !== ''
+    return !!this.error && this.error !== ''
   }
 
   get getStyle(): string {
@@ -196,13 +345,14 @@ export default class TableBlocks extends Vue {
   }
 
   get pages(): number {
-    return this.totalBlocks ? Math.ceil(this.totalBlocks / this.maxItems) : 0
+    const { blockPage, maxItems } = this
+    return blockPage ? Math.ceil(blockPage.totalCountBN.div(maxItems).toNumber()) : 0
   }
 }
 </script>
 
 <style scoped lang="css">
-.title-live{
-  min-height:60px;
+.title-live {
+  min-height: 60px;
 }
 </style>

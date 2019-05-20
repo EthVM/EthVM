@@ -9,7 +9,7 @@
       <v-flex xs12 sm4 md6>
         <v-layout row align-end justify-start>
           <v-card-title class="title font-weight-bold">{{ $tc('token.name', 2) }}</v-card-title>
-          <v-card-title class="info--text">(Total: {{ totalItems }} {{ $tc('token.name', 2) }})</v-card-title>
+          <v-card-title class="info--text">(Total: {{ totalTokens }} {{ $tc('token.name', 2) }})</v-card-title>
         </v-layout>
       </v-flex>
       <v-spacer />
@@ -102,7 +102,8 @@
     <v-card flat v-if="!hasError">
       <v-layout column fill-height class="mb-1">
         <v-flex xs12 v-if="!loading">
-          <div v-for="token in tokens" class="transparent" flat :key="token._id">
+          <v-card-text v-if="!tokens.length" class="text-xs-center secondary--text">{{ $t('message.token.no-tokens') }}</v-card-text>
+          <div v-else v-for="token in tokens" class="transparent" flat :key="token._id">
             <token-table-row :token="token" />
           </div>
           <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
@@ -123,10 +124,9 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
-import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
 import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
+import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
 import { TokenExchange } from '@app/modules/tokens/props'
-
 import { PendingTx, Tx, SimpleTx } from '@app/core/models'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 

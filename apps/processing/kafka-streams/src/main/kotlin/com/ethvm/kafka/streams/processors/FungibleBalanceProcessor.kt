@@ -29,7 +29,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.FungibleBalance
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
-import com.ethvm.kafka.streams.transformers.OncePerBlockTransformer
+import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging

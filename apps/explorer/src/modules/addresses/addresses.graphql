@@ -1,0 +1,74 @@
+query contractsCreatedBy($address: String!, $offset: Int, $limit: Int) {
+  summaries: contractsCreatedBy(creator: $address, offset: $offset, limit: $limit) {
+    ...ContractSummaryPage
+  }
+}
+
+fragment ContractSummary on ContractSummary {
+  address
+  creator
+  blockNumber
+  txHash
+  timestamp
+  txFee
+}
+
+fragment ContractSummaryPage on ContractSummaryPage {
+  items {
+    ...ContractSummary
+  }
+  totalCount
+}
+
+query addressAllTokensOwned($address: String!, $offset: Int, $limit: Int) {
+  tokens: addressAllTokensOwned(address: $address, offset: $offset, limit: $limit) {
+    ...TokenPage
+  }
+}
+
+fragment Token on Token {
+  name
+  symbol
+  address
+  decimals
+  balance
+  currentPrice
+}
+
+fragment TokenPage on TokenPage {
+  items {
+    ...Token
+  }
+  totalCount
+}
+
+query addressDetail($address: String!) {
+  account: accountByAddress(address: $address) {
+    ...Account
+  }
+}
+
+fragment Account on Account {
+  address
+  balance
+  totalTxCount
+  inTxCount
+  outTxCount
+  isMiner
+  isContractCreator
+  isContract
+}
+
+query exchangeRate {
+  exchangeRate: coinExchangeRate(pair: ethereum_usd) {
+    ...CoinExchangeRate
+  }
+}
+
+fragment CoinExchangeRate on CoinExchangeRate {
+  price
+}
+
+query totalTokensValue($address: String!) {
+  totalTokensValue: addressTotalTokenValueUSD(address: $address)
+}

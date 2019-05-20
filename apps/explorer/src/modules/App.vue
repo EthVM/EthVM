@@ -1,11 +1,17 @@
 <template>
-  <v-app style="background: #f3f4f8;">
+  <v-app class="content">
     <the-navigation-drawer />
     <v-content>
-      <app-greeting v-if="appGreet" :greet="appGreet" />
-      <app-sync-message v-if="isSyncing" />
-      <router-view :key="$route.path" />
-      <the-footer />
+      <v-layout column fill-height>
+        <app-greeting v-if="appGreet" :greet="appGreet" />
+        <app-sync-message v-if="isSyncing" />
+        <app-connection-message />
+        <v-flex>
+          <router-view :key="$route.path" />
+        </v-flex>
+        <v-spacer />
+        <the-footer />
+      </v-layout>
     </v-content>
   </v-app>
 </template>
@@ -15,10 +21,10 @@ import AppSyncMessage from '@app/core/components/ui/AppSyncMessage.vue'
 import AppGreeting from '@app/core/components/ui/AppGreeting.vue'
 import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
-import { Vue, Component } from 'vue-property-decorator'
 import { Events } from '@app/core/hub'
 import storePack from 'store'
-import 'vuetify/dist/vuetify.min.css'
+import { Vue, Component } from 'vue-property-decorator'
+import AppConnectionMessage from '@app/core/components/ui/AppConnectionMessage.vue'
 
 const MAX_ITEMS = 10
 
@@ -26,6 +32,7 @@ const MAX_ITEMS = 10
   components: {
     AppGreeting,
     AppSyncMessage,
+    AppConnectionMessage,
     TheNavigationDrawer,
     TheFooter
   }
@@ -38,7 +45,8 @@ export default class App extends Vue {
   */
 
   created() {
-    // TODO Load initial processing status
+    // Load initial processing status
+    // this.$api.getProcessingMetadata('syncing').then(ev => this.$store.commit('NEW_SYNC', ev ? ev.value : true))
     // Preload some previous block metrics
     // TODO re-enable metrics
     // this.$api.getBlockHeaderMetrics(MAX_ITEMS, 0).then(bms => {
@@ -65,4 +73,8 @@ export default class App extends Vue {
 
 <style scoped lang="css">
 @import '~cssPath/global.css';
+
+.content {
+  background: #f3f4f8;
+}
 </style>

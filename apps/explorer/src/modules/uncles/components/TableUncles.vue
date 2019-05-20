@@ -1,5 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 mt-0">
+    <notice-new-block @reload="resetFromUncle" />
+
     <!--
     =====================================================================================
       TITLE
@@ -11,7 +13,7 @@
       </v-flex>
       <v-flex xs6 v-if="pages > 1">
         <v-layout justify-end class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -58,7 +60,8 @@
     -->
     <v-layout column fill-height class="mb-1">
       <v-flex xs12 v-if="!loading">
-        <v-card v-for="uncle in uncles" class="transparent" flat :key="uncle.getHash()">
+        <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
+        <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
         </v-card>
       </v-flex>
@@ -86,7 +89,7 @@
       </v-flex>
       <v-flex xs12>
         <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" :has-input="false" :has-first="false" :has-last="false" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -97,59 +100,156 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import AppPaginateTwo from '@app/core/components/ui/AppPaginate.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
-import { Uncle } from '@app/core/models'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
+import { uncleSummaries } from '@app/modules/uncles/uncles.graphql'
+import BigNumber from 'bignumber.js'
+import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
+import { Subscription } from 'rxjs'
 
 @Component({
   components: {
     AppError,
     AppInfoLoad,
     AppPaginate,
-    AppPaginateTwo,
-    TableUnclesRow
+    TableUnclesRow,
+    NoticeNewBlock
+  },
+  data() {
+    return {
+      page: 0,
+      fromUncle: undefined,
+      error: ''
+    }
+  },
+  apollo: {
+    unclePage: {
+      query: uncleSummaries,
+
+      variables() {
+        const self = this as any
+        return {
+          offset: 0,
+          limit: self.maxItems
+        }
+      },
+
+      update({ summaries }) {
+        const self = this as any
+
+        if (summaries) {
+          self.error = '' // clear error
+          return new UncleSummaryPageExt(summaries)
+        }
+        self.error = this.error || this.$i18n.t('message.err')
+        return summaries
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      }
+    }
   }
 })
 export default class TableUncles extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
   @Prop({ type: String, default: '' }) showStyle!: string
-  @Prop({ type: Array, default: [] }) uncles!: Uncle[]
-  @Prop({ type: Boolean, default: true }) loading!: boolean
-  // @Prop({ type: Boolean, default: false }) error: boolean
-  @Prop({ type: Number, default: 0 }) totalUncles!: number
-  @Prop({ type: Number, default: 0 }) page!: number // Page passed from parent view. Syncs pagination components
   @Prop(Number) maxItems!: number
-  @Prop(String) error!: string
+
+  page!: number
+  error: string = ''
 
   /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
   pageType = 'uncles'
+  fromUncle?: BigNumber
+
+  unclePage?: UncleSummaryPageExt
+
+  connectedSubscription?: Subscription
 
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+      ===================================================================================
+        Lifecycle
+      ===================================================================================
+      */
 
-  setPage(page: number): void {
-    this.$emit('getUnclePage', page)
+  created() {
+    this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
+      if (state === 'reconnected') {
+        this.$apollo.queries.unclePage.refetch()
+      }
+    })
+  }
+
+  destroyed() {
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
+    }
   }
 
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+  resetFromUncle() {
+    this.setPage(0, true)
+  }
+
+  setPage(page: number, resetFrom: boolean = false): void {
+    const { unclePage } = this
+    const { unclePage: query } = this.$apollo.queries
+
+    if (resetFrom) {
+      this.fromUncle = undefined
+    } else {
+      const { items } = unclePage!
+      if (!this.fromUncle && items.length) {
+        this.fromUncle = items[0].number
+      }
+    }
+
+    query.fetchMore({
+      variables: {
+        fromUncle: this.fromUncle ? this.fromUncle.toString(10) : undefined,
+        offset: page * 50,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        this.page = page
+        return fetchMoreResult
+      }
+    })
+  }
+
+  /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
+
+  get uncles() {
+    return this.unclePage ? this.unclePage.items || [] : []
+  }
+
+  get loading(): boolean {
+    return this.$apollo.loading
+  }
 
   /**
    * Determines whether or not component has an error.
@@ -166,7 +266,8 @@ export default class TableUncles extends Vue {
   }
 
   get pages(): number {
-    return this.totalUncles ? Math.ceil(this.totalUncles / this.maxItems) : 0
+    const { unclePage, maxItems } = this
+    return unclePage ? Math.ceil(unclePage.totalCountBN.div(maxItems).toNumber()) : 0
   }
 }
 </script>

@@ -31,7 +31,7 @@ volumes:
     driver: local-persist
     driver_opts:
       name: "paritydb"
-      mountpoint: ${PARITY_VOLUME_MOUNTPOINT}
+      mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
 
 services:
 
@@ -40,7 +40,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   traefik:
-    image: ethvm/traefik:0.1.4
+    image: ethvm/traefik:0.1.6
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -52,8 +52,25 @@ services:
       - 8080:8080
     environment:
       DEBUG: 'true'
-      LETS_ENCRYPT_ENABLED:
+      LETS_ENCRYPT_ENABLED: 'false'
       SWARM_MODE: 'false'
+      TRAEFIK_DASHBOARD_ENABLED: 'true'
+      TRAEFIK_PING_ENABLED: 'false'
+
+  grafana:
+    image: grafana/grafana:6.1.6
+    networks:
+      - back
+    environment:
+      GF_SERVER_ROOT_URL: 'http://grafana.ethvm.lan'
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
+      - 'traefik.backend=grafana'
+      - 'traefik.port=3000'
 
   explorer:
     build:
@@ -82,6 +99,8 @@ services:
       - timescale
     networks:
       - back
+    ports:
+      - 3000:3000
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
@@ -93,6 +112,7 @@ services:
       - 'traefik.frontend.entryPoints=http,https,ws,wss'
     environment:
       GRAPHQL_PLAYGROUND: 'true'
+      INSTA_MINING: '${PARITY_INSTA_MINING}'
     command: bash -c "yarn && yarn start:dev"
 
   # ///////////////////////////////////////////////////////
@@ -100,16 +120,21 @@ services:
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: parity/parity:v2.3.3
+    image: ethvm/parity:v2.3.3
     networks:
       - back
     volumes:
-      - parity-volume:/home/parity/.local/share/io.parity.ethereum/
+      - /home/brian/.local/share/io.parity.ethereum/docker/:/home/parity/.local/share/io.parity.ethereum/
     ports:
       - 8545:8545
       - 8546:8546
       - 30303:30303
+    # By default we have enabled a private ethereum network (amarok) to be used in development
+    # If you want, also there's the option to use ropsten or even mainnet to test with real networks.
+    # Just uncomment below line:
     command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    #command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    #command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -118,6 +143,7 @@ services:
   timescale:
     image: timescale/timescaledb:${TIMESCALE_VERSION}
     restart: unless-stopped
+    shm_size: 1g
     volumes:
       - timescale-volume:/var/lib/postgresql/data
     networks:
@@ -172,7 +198,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-#      KAFKA_COMPRESSION_TYPE: zstd
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
       CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1

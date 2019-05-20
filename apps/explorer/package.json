@@ -1,18 +1,23 @@
 {
   "name": "ethvm",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "EthVM: Open source Ethereum networks explorer",
   "author": "EthVM Team",
   "private": true,
   "scripts": {
     "start:dev": "vue-cli-service serve",
+    "start:dev:no-docker": "vue-cli-service --mode development-no-docker serve",
     "build": "vue-cli-service --mode production build",
     "build:production": "yarn build",
     "build:development": "vue-cli-service --mode development build",
+    "build:development-ci": "vue-cli-service --mode development-ci build",
     "build:staging": "vue-cli-service --mode staging build",
     "clean": "rm -rf dist/",
     "lint": "vue-cli-service lint --no-fix",
-    "lint:fix": "vue-cli-service lint"
+    "lint:fix": "vue-cli-service lint",
+    "apollo": "apollo",
+    "apollo:schema": "rm -f ./apollo/schemas/api.json && apollo service:download ./apollo/schemas/api.json",
+    "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript --outputFlat ./src/core/api/apollo/types"
   },
   "dependencies": {
     "@sentry/browser": "4.6.4",
@@ -22,30 +27,29 @@
     "apollo-link-http": "^1.5.14",
     "apollo-link-ws": "^1.0.17",
     "apollo-utilities": "^1.2.1",
-    "bignumber.js": "^8.1.1",
+    "bignumber.js": "~8.1.1",
     "canvas-confetti": "^0.1.0",
     "chart.js": "^2.7.3",
     "clipboard-copy": "^3.0.0",
     "date-fns": "^1.30.1",
-    "ethereumjs-units": "^0.2.0",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
-    "lodash.debounce": "^4.0.8",
+    "moment": "^2.24.0",
     "number-formatter": "^1.2.0",
+    "rxjs": "^6.5.1",
     "store": "^2.0.12",
     "subscriptions-transport-ws": "^0.9.16",
-    "v-tooltip": "^2.0.0-rc.33",
     "visibilityjs": "^2.0.2",
     "vue": "^2.6.7",
     "vue-apollo": "^3.0.0-beta.28",
     "vue-class-component": "^7.0.1",
     "vue-i18n": "^8.8.2",
-    "vue-paginate": "^3.6.0",
     "vue-property-decorator": "^7.3.0",
     "vue-qr": "^1.5.2",
     "vue-router": "^3.0.2",
     "vue-timeago": "^5.0.0",
     "vuetify": "^1.5.4",
+    "vuetify-loader": "^1.2.2",
     "vuex": "^3.1.0",
     "vuex-class": "^0.3.1"
   },
@@ -57,14 +61,21 @@
     "@vue/cli-service": "^3.4.1",
     "@vue/eslint-config-prettier": "^4.0.1",
     "@vue/eslint-config-typescript": "^3.2.0",
+    "apollo": "^2.9.0",
     "babel-core": "7.0.0-bridge.0",
+    "css-loader": "^2.1.1",
     "eslint-plugin-prettier": "^3.0.1",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "prettier": "1.16.4",
+    "style-loader": "^0.23.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.3.1",
-    "vue-template-compiler": "^2.6.7"
+    "vue-template-compiler": "^2.6.7",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0"
   },
   "engines": {
     "node": ">= 8.0.0",
@@ -74,5 +85,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "resolutions": {
+    "graphql": "14.1.1"
+  }
 }

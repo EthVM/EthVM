@@ -87,7 +87,9 @@
   "contract": {
     "name": "Contract | Contracts",
     "creator": "Contract Creator",
-    "hash": "Contract #"
+    "hash": "Contract #",
+    "created": "Created at",
+    "total": "Total"
   },
 
   "gas": {
@@ -144,6 +146,7 @@
   },
 
   "message": {
+    "disconnected": "Disconnected from the server. Attempting to connect...",
     "no-data": "Oops something went wrong, no data from server :(",
     "err": "Error",
     "tx" : {
@@ -158,7 +161,6 @@
       "not-exist": "This transaction does not exist",
       "no-pending": "There are no pending transactions"
     },
-    "no-tokens": "Address does not hold any supported tokens",
     "load": "Loading",
     "load-block-tx": "Loading block transactions",
     "not-mined": "This block has not been mined yet",
@@ -187,7 +189,15 @@
       "tx": "new tx | new txs",
       "block": "new block | new blocks"
     },
-    "sec": "sec"
+    "sec": "sec",
+    "uncle": {
+      "no-uncles": "There are no uncles"
+    },
+    "token": {
+      "no-tokens": "There are no supported tokens",
+      "no-tokens-for-address": "Address does not hold any supported tokens"
+    },
+    "coming-soon": "Coming soon"
   },
   "charts": {
     "name": "Charts",

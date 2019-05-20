@@ -1,8 +1,9 @@
 import { SimpleTx, Uncle } from '@app/core/models'
+import BigNumber from 'bignumber.js'
 
 export class BlockInfo {
-  public next: number | null = null
-  public prev: number | null = null
+  public next: BigNumber | null = null
+  public prev: BigNumber | null = null
   public mined: boolean = false
   public txs: SimpleTx[] = []
   public totalTxs: number = 0

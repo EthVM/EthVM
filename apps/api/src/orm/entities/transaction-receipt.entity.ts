@@ -1,6 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import BigNumber from 'bignumber.js';
 
 @Entity('canonical_transaction_receipt')
 export class TransactionReceiptEntity {
@@ -30,11 +32,11 @@ export class TransactionReceiptEntity {
   @Column({type: 'character', length: 66, readonly: true})
   contractAddress?: string
 
-  @Column({type: 'numeric', readonly: true})
-  cumulativeGasUsed!: string
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  cumulativeGasUsed!: BigNumber
 
-  @Column({type: 'numeric', readonly: true})
-  gasUsed!: string
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  gasUsed!: BigNumber
 
   @Column({type: 'text', readonly: true})
   logs!: string
@@ -45,8 +47,8 @@ export class TransactionReceiptEntity {
   @Column({type: 'character', length: 66, readonly: true})
   root?: string
 
-  @Column({type: 'numeric', readonly: true})
-  status?: string
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  status?: BigNumber
 
   @OneToOne(type => TransactionEntity, tx => tx.receipt)
   @JoinColumn({

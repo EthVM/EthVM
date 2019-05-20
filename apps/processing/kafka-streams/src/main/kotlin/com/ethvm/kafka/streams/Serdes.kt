@@ -15,6 +15,8 @@ import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.avro.processing.BlockAuthorRecord
+import com.ethvm.avro.processing.BlockKeyRecord
+import com.ethvm.avro.processing.BlockMetricKeyRecord
 import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
@@ -90,6 +92,14 @@ object Serdes : KoinComponent {
   }
 
   fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun BlockMetricKey() = SpecificAvroSerde<BlockMetricKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 

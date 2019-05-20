@@ -1,9 +1,8 @@
 <template>
   <div>
     <!-- Pagination -->
-    <v-layout row fill-height align-center justify-space-between>
-      <div v-html="paginationText" class="ml-2"></div>
-      <v-pagination v-model="page" :length="numPages" class="mt-2 mb-2"> </v-pagination>
+    <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="numPages > 1">
+      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" />
     </v-layout>
     <!-- End Pagination -->
 
@@ -24,7 +23,7 @@
     <!-- End Table Header -->
 
     <!-- Start Rows -->
-    <v-card color="white" v-for="holder in holdersPage" class="transparent" flat :key="holder.address">
+    <v-card color="white" v-for="holder in holders" class="transparent" flat :key="holder.address">
       <v-layout align-center justify-start row fill-height pr-3>
         <!-- Column 1 -->
         <v-flex xs6 sm8 md5>
@@ -55,10 +54,15 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
-const MAX_ITEMS = 5
+const MAX_ITEMS = 10
 
-@Component
+@Component({
+  components: {
+    AppPaginate
+  }
+})
 export default class TokenTableHolders extends Vue {
   /*
   ===================================================================================
@@ -67,17 +71,12 @@ export default class TokenTableHolders extends Vue {
   */
 
   @Prop(Array) holders!: Array<any>
+  @Prop(Number) totalHolders!: number
+  @Prop(Number) page!: number
   @Prop(String) addressRef!: string
   @Prop(String) totalSupply?: string
   @Prop(String) decimals?: string
-
-  /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-  page = 1 // Current pagination page number
+  @Prop(Boolean) loading?: boolean
 
   /*
   ===================================================================================
@@ -115,14 +114,18 @@ export default class TokenTableHolders extends Vue {
    * @return {String} - Amount
    */
   holderBalance(holder) {
+    const n = new BN(holder.balance)
     if (this.decimals) {
-      const n = new BN(holder.balance)
       return n
         .div(new BN(10).pow(this.decimals))
         .toFixed()
         .toString()
     }
-    return holder.balance
+    return n.toFormat().toString()
+  }
+
+  setPage(page: number): void {
+    this.$emit('page', page)
   }
 
   /*
@@ -136,28 +139,7 @@ export default class TokenTableHolders extends Vue {
    * @return {Integer} - Number of pages of results
    */
   get numPages() {
-    return Math.ceil(this.holders.length / MAX_ITEMS)
-  }
-
-  /**
-   *  Calculate which portion of the holders array results to display
-   *  based on the current pagination page.
-   *  @return {Array} - Array of holders
-   */
-  get holdersPage() {
-    const startIndex = (this.page - 1) * MAX_ITEMS
-    const endIndex = startIndex + MAX_ITEMS
-    return this.holders.slice(startIndex, endIndex)
-  }
-
-  /**
-   * Correctly generate/format text for pagination display.
-   * @return {String} - Pagination text
-   */
-  get paginationText() {
-    const start = this.holders.length > 0 ? (this.page - 1) * MAX_ITEMS + 1 : 0
-    const end = this.holders.length > 0 ? start + this.holdersPage.length - 1 : 0
-    return `Showing results ${start} - ${end} of ${this.holders.length}`
+    return this.totalHolders > 0 ? Math.ceil(this.totalHolders / MAX_ITEMS) : 0
   }
 }
 </script>

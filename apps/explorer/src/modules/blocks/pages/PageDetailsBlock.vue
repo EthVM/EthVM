@@ -8,9 +8,9 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-details-list :details="blockDetails" :is-loading="isLoading" class="mb-4" :error="error" :max-items="8">
+        <app-details-list :details="blockDetails" :is-loading="$apollo.loading" class="mb-4" :error="error" :max-items="8">
           <template v-slot:title>
-            <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="blockInfo.uncles.map(u => u.getHash())" />
+            <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncleHashes" />
             <v-divider class="lineGrey" />
           </template>
         </app-details-list>
@@ -22,22 +22,8 @@
     =====================================================================================
     -->
     <v-layout row wrap justify-start class="mb-4" v-if="!hasError">
-      <v-flex v-if="blockInfo.txs" xs12>
-        <table-txs
-          v-if="blockInfo.txs"
-          :transactions="txsFiltered"
-          :page="txsPage"
-          :page-type="listType"
-          :loading="isLoading"
-          class="mt-3"
-          :max-items="max"
-          :total-txs="blockInfo.totalTxs"
-          :error="''"
-          @getTxsPage="setPageTxs"
-        />
-        <v-card v-if="blockInfo.txs.length === 0" flat color="white">
-          <v-card-text class="text-xs-center text-muted">{{ $t('message.tx.no-in-block') }}</v-card-text>
-        </v-card>
+      <v-flex xs12>
+        <table-txs :block-number="blockNumber" :block-hash="blockHash" :page-type="'block'" class="mt-3" :max-items="max" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -47,110 +33,139 @@
 import { Block, Uncle, SimpleTx } from '@app/core/models'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import BlockDetailsTitle from '@app/modules/blocks/components/BlockDetailsTitle.vue'
+import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { BlockInfo } from '@app/modules/blocks/props'
 import { Detail, Crumb } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import BigNumber from 'bignumber.js'
+
+import { blockByNumber, blockByHash } from '@app/modules/blocks/blocks.graphql'
+import { BlockDetailExt } from '@app/core/api/apollo/extensions/block-detail.ext'
 
 const MAX_TXS = 10
 
 @Component({
   components: {
     AppBreadCrumbs,
-    TableTxs,
     AppDetailsList,
-    BlockDetailsTitle
+    BlockDetailsTitle,
+    TableTxs
+  },
+  apollo: {
+    blockDetail: {
+      query() {
+        const self = this as any
+
+        if (self.blockNumber) {
+          return blockByNumber
+        } else if (self.blockHash) {
+          return blockByHash
+        }
+        return null
+      },
+
+      fetchPolicy: 'cache-and-network',
+
+      variables() {
+        const { blockNumber, blockHash } = this
+        if (blockNumber) {
+          return { blockNumber: blockNumber.toString() }
+        }
+        return { blockHash }
+      },
+
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
+      update({ blockDetail, transactionsSummary }) {
+        if (blockDetail) {
+          return new BlockDetailExt(blockDetail, transactionsSummary)
+        }
+
+        this.error = this.error || this.$i18n.t('message.invalid.block')
+        return null
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      }
+    }
   }
 })
 export default class PageDetailsBlock extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
   @Prop({ type: String }) blockRef!: string
 
   /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
+  blockDetail?: BlockDetailExt
   error = ''
-  listType = 'block'
-  block = {} as Block
-  blockInfo = new BlockInfo(this.blockRef)
-  txsPage = 0
 
   /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
+    ===================================================================================
+      Lifecycle
+    ===================================================================================
+    */
 
   created() {
-    const ref = this.blockRef
+    // Check that current block ref is valid one
 
-    // 1. Check that current block ref is valid one
-    if (!eth.isValidHash(ref) && !eth.isValidBlockNumber(ref)) {
+    if (!(this.blockNumber || this.blockHash)) {
       this.error = this.$i18n.t('message.invalid.block').toString()
       return
     }
-
-    // 2. Fetch block
-    this.fetchBlock()
 
     window.scrollTo(0, 0)
   }
 
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  setPageTxs(page: number): void {
-    this.txsPage = page
-  }
-
-  fetchBlock() {
-    const promise = eth.isValidHash(this.blockRef) ? this.$api.getBlock(this.blockRef) : this.$api.getBlockByNumber(Number(this.blockRef))
-    promise
-      .then(block => {
-        if (block === null) {
-          this.error = `${this.$i18n.t('message.invalid.block').toString()}: ${this.blockRef}`
-          return
-        }
-        this.setBlockInfo(block)
-      })
-      .catch(err => {
-        this.error = `${this.$i18n.t('message.invalid.block').toString()}: ${this.blockRef}`
-      })
-  }
-
-  setBlockInfo(block: Block) {
-    this.block = block
-    this.blockInfo.mined = true
-    this.blockInfo.next = this.block.getNumber() + 1
-    this.blockInfo.prev = this.block.getNumber() === 0 ? 0 : this.block.getNumber() - 1
-    this.blockInfo.timestamp = block.getTimestamp()
-    this.blockInfo.txs = this.block.getTxs()
-    this.blockInfo.totalTxs = this.block.getTransactionCount()
-    this.blockInfo.uncles = this.block.getUncles()
-  }
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
   /*
-  ===================================================================================
-    Computed
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+
+  get uncleHashes(): (string | null)[] {
+    const { blockDetail } = this
+    return blockDetail ? blockDetail.uncleHashes! : []
+  }
+
+  get blockNumber(): BigNumber | null {
+    const { blockRef } = this
+    return !eth.isValidHash(blockRef) && eth.isValidBlockNumber(blockRef) ? new BigNumber(blockRef) : null
+  }
+
+  get blockHash(): string | null {
+    const { blockRef } = this
+    return eth.isValidHash(blockRef) ? blockRef : null
+  }
 
   get blockDetails(): Detail[] {
     let details: Detail[]
-    if (this.isLoading) {
+
+    if (this.$apollo.loading || this.error) {
       details = [
         {
           title: this.$i18n.t('common.height')
@@ -217,104 +232,107 @@ export default class PageDetailsBlock extends Vue {
         }
       ]
     } else {
+      const blockDetail = this.blockDetail!
+      const header = blockDetail.header!
+
       details = [
         {
           title: this.$i18n.t('common.height'),
-          detail: this.block.getNumber()
+          detail: header.number
         },
         {
           title: this.$i18n.t('common.hash'),
-          detail: this.block.getHash(),
+          detail: header.hash!,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('block.p-hash'),
-          detail: this.block.getParentHash().toString(),
-          link: `/block/${this.block.getParentHash().toString()}`,
+          detail: header.parentHash!,
+          link: `/block/${header.parentHash!}`,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('miner.name'),
-          detail: this.block.getMiner().toString(),
-          link: `/address/${this.block.getMiner().toString()}`,
+          detail: header.author!,
+          link: `/address/${header.author!}`,
           copy: true,
           mono: true
         },
         {
           title: this.$i18n.t('miner.reward'),
-          detail: `${this.block.getMinerReward().toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.minerReward.toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('common.timestmp'),
-          detail: this.$i18n.d(this.blockInfo.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+          detail: this.$i18n.d(header.timestampMs!, 'long', this.$i18n.locale.replace('_', '-'))
         },
         {
           title: this.$i18n.t('uncle.reward'),
-          detail: `${this.block.getUncleReward().toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.uncleReward.toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.tc('tx.name', 2),
-          detail: this.block.getTransactionCount()
+          detail: blockDetail.transactionCount!
         },
         {
           title: this.$i18n.t('diff.name'),
-          detail: this.block.getDifficulty().toNumber()
+          detail: header.difficulty
         },
         {
           title: this.$i18n.t('diff.total'),
-          detail: this.block.getTotalDifficulty().toNumber()
+          detail: header.totalDifficulty
         },
         {
           title: this.$i18n.t('common.size'),
-          detail: `${this.block.getSize().toString()} ${this.$i18n.t('block.bytes')}`
+          detail: `${header.size!.toString()} ${this.$i18n.t('block.bytes')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: this.block.getNonce().toString(),
+          detail: header.nonce,
           mono: true
         },
         {
           title: this.$i18n.t('block.state-root'),
-          detail: this.block.getStateRoot().toString(),
+          detail: header.stateRoot!.toString(),
           mono: true
         },
         {
           title: this.$i18n.t('block.data'),
-          detail: this.block.getExtraData().toString(),
+          detail: header.extraData!.toString(),
           mono: true
         },
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${this.block.getTxFees().toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.totalTxFees.toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: this.block.getGasLimit().toNumber()
+          detail: header.gasLimit
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: this.block.getGasUsed().toNumber()
+          detail: header.gasUsed
         },
         {
           title: this.$i18n.t('block.logs'),
-          detail: this.block.getLogsBloom().toString(),
+          detail: header.logsBloom!,
           mono: true
         },
         {
           title: this.$i18n.t('tx.root'),
-          detail: this.block.getTransactionsRoot().toString(),
+          detail: header.transactionsRoot!,
           mono: true
         },
         {
           title: this.$i18n.t('block.rcpt-root'),
-          detail: this.block.getReceiptsRoot().toString(),
+          detail: header.receiptsRoot!,
           mono: true
         },
         {
           title: `${this.$i18n.tc('uncle.name', 2)} ${this.$i18n.t('common.sha')}`,
-          detail: this.block.getSha3Uncles().toString(),
+          detail: header.sha3Uncles!,
           mono: true
         }
       ]
@@ -323,33 +341,37 @@ export default class PageDetailsBlock extends Vue {
   }
 
   get nextBlock(): String {
-    if (this.blockInfo.mined && this.blockInfo) {
-      return `/block/${this.blockInfo.next}`
+    const { blockNumber, blockHash, blockDetail } = this
+
+    let number: BigNumber | null = null
+
+    if (blockNumber) {
+      number = blockNumber
+    } else if (blockHash && blockDetail) {
+      number = blockDetail.header.numberBN
     }
 
-    if (!this.$route.params.blockRef.includes('0x')) {
-      const next = Number(this.$route.params.blockRef) + 1
-      return `/block/${next}`
+    if (number) {
+      return `/block/${number.plus(1)}`
     }
     return ''
   }
 
   get previousBlock(): String {
-    if (this.blockInfo.mined && this.blockInfo.prev) {
-      return `/block/${this.blockInfo.prev}`
+    const { blockNumber, blockHash, blockDetail } = this
+
+    let number: BigNumber | null = null
+
+    if (blockNumber) {
+      number = blockNumber
+    } else if (blockHash && blockDetail) {
+      number = blockDetail.header!.numberBN!
     }
 
-    if (!this.$route.params.blockRef.includes('0x')) {
-      const prev = Number(this.$route.params.blockRef) - 1
-      return `/block/${prev}`
+    if (number && number.isGreaterThan(0)) {
+      return `/block/${number.minus(1)}`
     }
     return ''
-  }
-
-  get txsFiltered(): SimpleTx[] {
-    const start = this.txsPage * this.max
-    const end = start + this.max
-    return this.blockInfo.txs.slice(start, end)
   }
 
   /**
@@ -397,15 +419,6 @@ export default class PageDetailsBlock extends Vue {
 
   get max(): number {
     return MAX_TXS
-  }
-
-  /**
-   * Determines whether or not the block object has been loaded/populated.
-   *
-   * @return {Boolean}
-   */
-  get isLoading(): boolean {
-    return Object.keys(this.block).length === 0
   }
 
   /**

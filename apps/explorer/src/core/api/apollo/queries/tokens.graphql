@@ -1,29 +1,3 @@
-# -------------------------------------------------------------
-#   Types & Enums
-# -------------------------------------------------------------
-
-type CoinExchangeRate {
-  currency: String
-  price: Decimal
-  marketCap: Decimal
-  vol24h: Decimal
-  change24h: Decimal
-  lastUpdated: Decimal
-}
-
-enum ExchangeRatePair {
-  ethereum_usd
-}
-
-enum TokenExchangeRateFilter {
-  price_high
-  price_low
-  volume_high
-  volume_low
-  market_cap_high
-  market_cap_low
-  market_cap_rank
-}
 
 # -------------------------------------------------------------
 #   Queries
@@ -46,19 +20,25 @@ query tokenTransfersByContractAddress($address: String!, $limit: Int, $page: Int
 
 query tokenTransfersByContractAddressForHolder($address: String!, $holder: String!, $filter: FilterEnum, $limit: Int, $page: Int) {
   tokenTransfersByContractAddressForHolder(contractAddress: $address, holderAddress: $holder, filter: $filter, limit: $limit, page: $page) {
-    id
-    value: amount
-    contract: contractAddress
-    from
-    timestamp
-    to
+    items {
+      id
+      value: amount
+      address: contractAddress
+      from
+      timestamp
+      to
+    }
+    totalCount
   }
 }
 
 query tokenHolders($address: String!, $limit: Int, $page: Int) {
   tokenHolders(address: $address, limit: $limit, page: $page) {
-    address
-    balance
+    items {
+      address
+      balance
+    }
+    totalCount
   }
 }
 
@@ -69,15 +49,15 @@ query holderDetails($address: String! $holderAddress: String!) {
   }
 }
 
-query holderTransfers($address: String!, $holderAddress: String!) {
-  holderTransfers(address: $address, holderAddress: $holderAddress) {
-    transactionHash
-    from
-    to
-    timestamp
-    value
-  }
-}
+# query holderTransfers($address: String!, $holderAddress: String!) {
+#   holderTransfers(address: $address, holderAddress: $holderAddress) {
+#     transactionHash
+#     from
+#     to
+#     timestamp
+#     value
+#   }
+# }
 
 query coinExchangeRate($pair: ExchangeRatePair!) {
   coinExchangeRate(pair: $pair) {

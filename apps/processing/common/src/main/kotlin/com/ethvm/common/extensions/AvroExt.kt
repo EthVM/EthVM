@@ -4,6 +4,7 @@ import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractLifecyleType
+import com.ethvm.avro.capture.ParitySyncStateRecord
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
 import com.ethvm.avro.capture.TraceDestroyActionRecord
@@ -27,6 +28,10 @@ import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
 import java.math.BigInteger
+
+fun ParitySyncStateRecord.Builder.setHeadBI(head: BigInteger) = setHead(head.byteBuffer())
+
+fun ParitySyncStateRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
 // ------------------------------------------------------------
 // CanonicalKeyRecord
@@ -289,7 +294,7 @@ fun TransactionRecord.getGasBI() = getGas().bigInteger()
 
 fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
-fun BlockHeaderRecord.Builder.setNonceBI(nonce: BigInteger) = setNonce(nonce.byteBuffer())
+fun BlockHeaderRecord.Builder.setNonceBI(nonce: BigInteger?) = setNonce(nonce?.byteBuffer())
 
 fun BlockHeaderRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.byteBuffer())
 

@@ -2,7 +2,7 @@
   <v-card color="white" flat class="pr-2 pl-2 pt-3">
     <!-- Pagination -->
     <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="numPages > 1">
-      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" :has-first="false" :has-last="false" :has-input="false" />
+      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" />
     </v-layout>
     <!-- End Pagination -->
 
@@ -70,7 +70,7 @@
 
         <!-- Column 3 -->
         <v-flex hidden-sm-and-down md2>
-          <p>{{ calculateTransferValue(tx) }}</p>
+          <p>{{ calculateTransferValue(tx.value) }}</p>
         </v-flex>
         <!-- End Column 3 -->
 
@@ -94,7 +94,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import { Transfer } from '@app/core/models'
+import { EthValue, Transfer } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
@@ -112,11 +112,12 @@ export default class TokenTableTransfers extends Vue {
   */
 
   @Prop(Array) transfers
-  @Prop(Number) totalTransfers
+  @Prop(String) totalTransfers!: string
   @Prop(Number) page
   @Prop(Boolean) loading
   @Prop(Boolean) showType
   @Prop(String) decimals
+  @Prop(Boolean) convertToEth
 
   /*
   ===================================================================================
@@ -133,15 +134,19 @@ export default class TokenTableTransfers extends Vue {
     this.$emit('page', page)
   }
 
-  calculateTransferValue(transfer: Transfer) {
+  calculateTransferValue(value: string) {
+    if (this.convertToEth) {
+      return new EthValue(value).toEthFormatted().toString()
+    }
+
+    const n = new BN(value)
     if (this.decimals) {
-      const n = new BN(transfer.value)
       return n
         .div(new BN(10).pow(this.decimals))
         .toFixed()
         .toString()
     }
-    return transfer.value
+    return n.toFormat().toString()
   }
 
   /*
@@ -154,7 +159,10 @@ export default class TokenTableTransfers extends Vue {
    * @return {Number} - Total number of pagination pages
    */
   get numPages(): number {
-    return this.totalTransfers > 0 ? Math.ceil(this.totalTransfers / MAX_ITEMS) : 0
+    if (!this.totalTransfers.length) {
+      return 0
+    }
+    return Math.ceil(new BN(this.totalTransfers).toNumber() / MAX_ITEMS)
   }
 }
 </script>

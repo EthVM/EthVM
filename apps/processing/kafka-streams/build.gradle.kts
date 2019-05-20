@@ -23,6 +23,7 @@ dependencies {
   // Avro
   implementation(project(":common"))
   implementation(project(":avro"))
+  implementation("joda-time:joda-time:2.10.1")
 
   // Ethereumj
   implementation("org.ethereum:ethereumj-core:${ext.get("ethereumj-version") as String}") {

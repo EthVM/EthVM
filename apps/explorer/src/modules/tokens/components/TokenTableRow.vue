@@ -68,8 +68,8 @@
 
 <script lang="ts">
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { TokenExchange } from '@app/modules/tokens/props'
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import BN from 'bignumber.js'
 
 @Component
 export default class TokenTableRow extends Mixins(StringConcatMixin) {
@@ -120,7 +120,11 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
     if (!this.token.priceChangePercentage24h) {
       return 'null'
     }
-    return this.token.priceChangePercentage24h > 0 ? '+' : ''
+    const priceChangeAsBN = new BN(this.token.priceChangePercentage24h)
+    if (priceChangeAsBN.toNumber() === 0) {
+      return 'null'
+    }
+    return priceChangeAsBN.toNumber() > 0 ? '+' : ''
   }
 
   get tokenLink(): string {

@@ -9,6 +9,7 @@
     unfilled="true"
     :footnotes="footnote"
     :live-chart="true"
+    :error="error"
   />
 </template>
 
@@ -16,90 +17,164 @@
 import { Events } from '@app/core/hub'
 import { BlockMetrics } from '@app/core/models'
 import Chart from '@app/modules/charts/components/Chart.vue'
-import { Vue, Component } from 'vue-property-decorator'
 import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
+import { Vue, Component } from 'vue-property-decorator'
+import { BlockMetricPageExt, BlockMetricPageExt_items } from '@app/core/api/apollo/extensions/block-metric-page.ext'
+import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/blocks.graphql'
+import BigNumber from 'bignumber.js'
+import { Subscription } from 'rxjs'
 
 const MAX_ITEMS = 10
 
 class ChartData {
-  labels: string[] = []
-  avgFees: number[] = []
-  avgPrice: number[] = []
+  constructor(public readonly labels: string[] = [], public readonly avgFees: number[] = [], public readonly avgPrice: number[] = []) {
+    this.labels = labels
+    this.avgFees = avgFees
+    this.avgPrice = avgPrice
+  }
 }
 
 @Component({
   components: {
     Chart
+  },
+  apollo: {
+    metricsPage: {
+      query: latestBlockMetrics,
+
+      variables: {
+        offset: 0,
+        limit: MAX_ITEMS
+      },
+
+      update({ blockMetrics }) {
+        if (blockMetrics) {
+          this.error = '' // clear error
+          return new BlockMetricPageExt(blockMetrics)
+        }
+        this.error = this.$i18n.t('message.no-data')
+        return null
+      },
+
+      error({ graphQLErrors, networkError }) {
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        } else {
+          this.error = this.$i18n.t('message.err')
+        }
+      },
+
+      subscribeToMore: {
+        document: newBlockMetric,
+
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const { blockMetrics } = previousResult
+          const { newBlockMetric } = subscriptionData.data
+
+          const items = Object.assign([], blockMetrics.items)
+
+          // add one to the beginning and pop one from the end
+          items.unshift(newBlockMetric)
+
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
+
+          // ensure order by block number desc
+          items.sort((a, b) => {
+            const numberA = a.number ? new BigNumber(a.number, 16) : new BigNumber(0)
+            const numberB = b.number ? new BigNumber(b.number, 16) : new BigNumber(0)
+            return numberB.minus(numberA).toNumber()
+          })
+
+          return {
+            ...previousResult,
+            blockMetrics: {
+              ...blockMetrics,
+              items
+            }
+          }
+        }
+      }
+    }
   }
 })
 export default class ChartLiveTxFees extends Vue {
   /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
   redraw = true
-  data = new ChartData()
+  error: string = ''
+  metricsPage?: BlockMetricPageExt
+
+  connectedSubscription?: Subscription
 
   /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
+    ===================================================================================
+      Lifecycle
+    ===================================================================================
+    */
 
   created() {
-    this.fillChartData(this.$store.getters.blockMetrics.items().slice(0, MAX_ITEMS))
-  }
-
-  mounted() {
-    this.$eventHub.$on(Events.NEW_BLOCK_METRIC, (bm: BlockMetrics[] | BlockMetrics) => {
-      this.redraw = false
-      this.fillChartData(bm)
-    })
-  }
-
-  beforeDestroy() {
-    this.$eventHub.$off(Events.NEW_BLOCK_METRIC)
-  }
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  fillChartData(bms: BlockMetrics[] | BlockMetrics = []) {
-    bms = !Array.isArray(bms) ? [bms] : bms
-    const blockN = this.$i18n.t('block.number')
-    bms.forEach(bm => {
-      this.data.labels.push(blockN + bm.number)
-      this.data.avgFees.push(new EthValue(bm.avgTxFees).toEth())
-      this.data.avgPrice.push(new EthValue(bm.avgGasPrice).toGWei())
-      if (this.data.labels.length > MAX_ITEMS) {
-        this.data.labels.shift()
-        this.data.avgFees.shift()
-        this.data.avgPrice.shift()
+    this.connectedSubscription = this.$subscriptionState.subscribe(state => {
+      switch (state) {
+        case 'reconnected':
+          this.$apollo.queries.metricsPage.refetch()
+          break
       }
     })
   }
 
+  destroyed() {
+    if (this.connectedSubscription) {
+      this.connectedSubscription.unsubscribe()
+    }
+  }
+
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+  toChartData(items: BlockMetricPageExt_items[]) {
+    const numberLabel = this.$i18n.t('block.number')
+
+    const labels: string[] = []
+    const avgFees: number[] = []
+    const avgPrice: number[] = []
+
+    items.forEach(item => {
+      labels.push(numberLabel + item.numberBN!.toString())
+      avgFees.push(new EthValue(item.avgTxFeesBN!).toEth())
+      avgPrice.push(new EthValue(item.avgGasPriceBN!).toGWei())
+    })
+
+    return new ChartData(labels, avgFees, avgPrice)
+  }
+
+  /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
   get chartData() {
+    const items = this.metricsPage ? this.metricsPage.items || [] : []
+    const data = this.toChartData(items)
+
     return {
-      labels: this.data.labels,
+      labels: data.labels,
       datasets: [
         {
           label: this.$i18n.tc('tx.fee', 2),
           borderColor: '#40ce9c',
           backgroundColor: '#40ce9c',
-          data: this.data.avgFees,
+          data: data.avgFees,
           yAxisID: 'y-axis-1',
           fill: false
         },
@@ -107,7 +182,7 @@ export default class ChartLiveTxFees extends Vue {
           label: this.$i18n.t('gas.price'),
           borderColor: '#eea66b',
           backgroundColor: '#eea56b',
-          data: this.data.avgPrice,
+          data: data.avgPrice,
           yAxisID: 'y-axis-2',
           fill: false
         }
@@ -130,7 +205,15 @@ export default class ChartLiveTxFees extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                const ranges = [
+                  { divider: 1e9, suffix: 'B' },
+                  { divider: 1e6, suffix: 'M' },
+                  {
+                    divider: 1e3,
+                    suffix: 'k'
+                  }
+                ]
+
                 function formatNumber(n) {
                   for (let i = 0; i < ranges.length; i++) {
                     if (n >= ranges[i].divider) {
@@ -139,6 +222,7 @@ export default class ChartLiveTxFees extends Vue {
                   }
                   return n
                 }
+
                 return formatNumber(value)
               }
             },
@@ -156,7 +240,15 @@ export default class ChartLiveTxFees extends Vue {
             ticks: {
               beginAtZero: true,
               callback: function(value) {
-                const ranges = [{ divider: 1e9, suffix: 'B' }, { divider: 1e6, suffix: 'M' }, { divider: 1e3, suffix: 'k' }]
+                const ranges = [
+                  { divider: 1e9, suffix: 'B' },
+                  { divider: 1e6, suffix: 'M' },
+                  {
+                    divider: 1e3,
+                    suffix: 'k'
+                  }
+                ]
+
                 function formatNumber(n) {
                   for (let i = 0; i < ranges.length; i++) {
                     if (n >= ranges[i].divider) {
@@ -165,6 +257,7 @@ export default class ChartLiveTxFees extends Vue {
                   }
                   return n
                 }
+
                 return formatNumber(value)
               }
             },

@@ -23,6 +23,8 @@
         :total-transfers="totalTransfers"
         :transfers-page="transfersPage"
         :token-holders="tokenHolders"
+        :total-holders="totalHolders"
+        :holders-page="holdersPage"
         :total-supply="contractDetails.totalSupply"
         :decimals="decimals"
         :is-token-transfers-loading="isTokenTransfersLoading"
@@ -30,6 +32,7 @@
         :error-token-transfers="errorTokenTransfersTab"
         :error-token-holders="errorTokenHoldersTab"
         @transfersPage="setPageTransfers"
+        @holdersPage="setPageHolders"
       />
     </div>
     <!--
@@ -52,9 +55,12 @@
       <holder-details-tabs
         :address-ref="addressRef"
         :holder-transfers="holderTransfers"
+        :total-transfers="totalHolderTransfers"
+        :transfers-page="holderTransfersPage"
         :is-holder-transfers-loading="isHolderTransfersLoading"
         :error-holder-transfers="errorHolderTransfers"
         :decimals="decimals"
+        @holdersTransfersPage="setPageHolderTransfers"
       />
     </div>
   </v-container>
@@ -68,17 +74,17 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb } from '@app/core/components/props'
-import { Transfer } from '@app/core/models'
+import { TokenHolder, Transfer } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
 @Component({
   components: {
     AppBreadCrumbs,
-    TokenDetailsList,
-    TokenDetailsTabs,
     HolderDetailsList,
-    HolderDetailsTabs
+    HolderDetailsTabs,
+    TokenDetailsList,
+    TokenDetailsTabs
   }
 })
 export default class PageDetailsToken extends Vue {
@@ -101,10 +107,15 @@ export default class PageDetailsToken extends Vue {
   // Basic //
   contractDetails: any = {} // Contract details object
   tokenDetails: any = {} // Token details object
+
   tokenTransfers: Transfer[] = [] // Array of token transfers
-  totalTransfers: number = 0 // Total number of transfers
+  totalTransfers: string = '' // Total number of transfers as hex
   transfersPage: number = 0 // Current page of transfers
+
   tokenHolders: any[] = [] // Array of token holders
+  totalHolders: number = 0 // Total number of token holders
+  holdersPage: number = 0 // Current page of holders
+
   isTokenTransfersLoading = true // Can technically be empty array, so must be manually set
   isTokenHoldersLoading = true // Can technically be empty array, so must be manually set
   errorTokenDetailsList = '' // Error string pertaining to the TokenDetailsList component
@@ -116,7 +127,11 @@ export default class PageDetailsToken extends Vue {
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
   holderAddress: any = '' // Address of current token holder, if applicable
   holderDetails: any = {} // Balance/information for a particular holder address
+
   holderTransfers: any[] = [] // Transactions for a particular holder address
+  totalHolderTransfers: string = '' // Total number of transfers for holder and contract as hex
+  holderTransfersPage: number = 0 // Current page of holder transfers
+
   isHolderTransfersLoading = true // Can technically be empty array, so must be manually set
   errorHolderDetailsList = '' // Error string pertaining to the HolderDetailsList component
   errorHolderTransfers = '' // Error string pertaining to the HolderDetailsTabs component
@@ -245,7 +260,8 @@ export default class PageDetailsToken extends Vue {
 
       Promise.all([tokenHoldersPromise])
         .then(([tokenHolders]) => {
-          this.tokenHolders = tokenHolders as any[]
+          this.tokenHolders = tokenHolders.items
+          this.totalHolders = tokenHolders.totalCount
           resolve()
         })
         .catch(e => {
@@ -303,11 +319,10 @@ export default class PageDetailsToken extends Vue {
    */
   loadHolderDetailsTabsTransactions() {
     return new Promise((resolve, reject) => {
-      const holderTransfersPromise = this.fetchHolderTransfers()
-
-      Promise.all([holderTransfersPromise])
-        .then(([holderTransfers]) => {
-          this.holderTransfers = holderTransfers as any[]
+      this.fetchHolderTransfers()
+        .then(({ items, totalCount }) => {
+          this.holderTransfers = items
+          this.totalHolderTransfers = totalCount
         })
         .catch(e => {
           this.errorHolderTransfers = this.$i18n.t('message.no-history').toString()
@@ -370,7 +385,7 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of token transfers/info
    */
-  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: number }> {
+  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: string }> {
     return new Promise((resolve, reject) => {
       this.isTokenTransfersLoading = true
 
@@ -395,12 +410,12 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of holders
    */
-  fetchTokenHolders() {
+  fetchTokenHolders(): Promise<{ items: TokenHolder[]; totalCount: number }> {
     return new Promise((resolve, reject) => {
       this.isTokenHoldersLoading = true
 
       this.$api
-        .getTokenHolders(this.addressRef)
+        .getTokenHolders(this.addressRef, MAX_ITEMS, this.holdersPage)
         .then(response => {
           this.isTokenHoldersLoading = false
           if (response === null) {
@@ -441,12 +456,12 @@ export default class PageDetailsToken extends Vue {
    *
    * @return {Array} - Array of transactions
    */
-  fetchHolderTransfers() {
+  fetchHolderTransfers(): Promise<{ items: Transfer[]; totalCount: string }> {
     return new Promise((resolve, reject) => {
       this.isHolderTransfersLoading = true
 
       this.$api
-        .getTokenTransfersByContractAddressForHolder(this.addressRef, this.holderAddress)
+        .getTokenTransfersByContractAddressForHolder(this.addressRef, this.holderAddress, undefined, MAX_ITEMS, this.holderTransfersPage)
         .then(response => {
           this.isHolderTransfersLoading = false
           if (response === null) {
@@ -466,6 +481,16 @@ export default class PageDetailsToken extends Vue {
     this.isTokenTransfersLoading = true
   }
 
+  setPageHolders(page: number): void {
+    this.holdersPage = page
+    this.isTokenHoldersLoading = true
+  }
+
+  setPageHolderTransfers(page: number): void {
+    this.holderTransfersPage = page
+    this.isHolderTransfersLoading = true
+  }
+
   updateTransfers(): void {
     this.fetchTokenTransfers().then(
       res => {
@@ -479,6 +504,32 @@ export default class PageDetailsToken extends Vue {
     )
   }
 
+  updateHolders(): void {
+    this.fetchTokenHolders().then(
+      res => {
+        this.tokenHolders = res.items
+        this.totalHolders = res.totalCount
+        this.isTokenHoldersLoading = false
+      },
+      err => {
+        this.errorTokenHoldersTab = this.$i18n.t('message.no-data').toString()
+      }
+    )
+  }
+
+  updateHolderTransfers(): void {
+    this.fetchHolderTransfers().then(
+      res => {
+        this.holderTransfers = res.items
+        this.totalHolderTransfers = res.totalCount
+        this.isHolderTransfersLoading = false
+      },
+      err => {
+        this.errorHolderTransfers = this.$i18n.t('message.no-data').toString()
+      }
+    )
+  }
+
   /*
  ===================================================================================
    Watch
@@ -488,6 +539,16 @@ export default class PageDetailsToken extends Vue {
   @Watch('transfersPage')
   onTransfersPageChanges(newVal: number, oldVal: number): void {
     this.updateTransfers()
+  }
+
+  @Watch('holdersPage')
+  onHoldersPageChanges(newVal: number, oldVal: number): void {
+    this.updateHolders()
+  }
+
+  @Watch('holderTransfersPage')
+  onHolderTransfersPageChanges(newVal: number, oldVal: number): void {
+    this.updateHolderTransfers()
   }
 
   /*

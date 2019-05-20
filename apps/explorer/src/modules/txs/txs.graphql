@@ -1,0 +1,79 @@
+query latestTransactionSummaries($fromBlock: BigNumber, $offset: Int, $limit: Int) {
+
+  summaries: transactionSummaries(fromBlock: $fromBlock, offset: $offset, limit: $limit) {
+    ...TransactionSummaryPage
+  }
+
+}
+
+query transactionSummariesByBlockNumber($number: BigNumber!, $offset: Int, $limit: Int) {
+  summaries: transactionSummariesForBlockNumber(number: $number, offset: $offset, limit: $limit) {
+    ...TransactionSummaryPage
+  }
+}
+
+query transactionSummariesByBlockHash($hash: String!, $offset: Int, $limit: Int) {
+  summaries: transactionSummariesForBlockHash(hash: $hash, offset: $offset, limit: $limit) {
+    ...TransactionSummaryPage
+  }
+}
+
+query transactionSummariesByAddress($address: String!, $filter: FilterEnum = all, $offset: Int, $limit: Int) {
+  summaries: transactionSummariesForAddress(address: $address, filter: $filter, offset: $offset, limit: $limit) {
+    ...TransactionSummaryPage
+  }
+}
+
+fragment TransactionSummary on TransactionSummary {
+  hash
+  blockNumber
+  transactionIndex
+  from
+  to
+  creates
+  contractName
+  contractSymbol
+  value
+  fee
+  successful
+  timestamp
+}
+
+fragment TransactionSummaryPage on TransactionSummaryPage {
+  items {
+    ...TransactionSummary
+  }
+  totalCount
+}
+
+subscription newTransaction {
+
+  newTransaction {
+    ...TransactionSummary
+  }
+
+}
+
+query transactionDetail($hash: String!) {
+  transaction: tx(hash: $hash) {
+    ...TransactionDetail
+  }
+}
+
+fragment TransactionDetail on Transaction {
+  blockHash
+  blockNumber
+  from
+  gas
+  gasPrice
+  hash
+  input
+  nonce
+  timestamp
+  to
+  value
+  receipt {
+    contractAddress
+    gasUsed
+  }
+}

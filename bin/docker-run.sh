@@ -70,8 +70,14 @@ up_default() {
   echo -e "Re-building kafka connect connector...\n"
   ${SCRIPT_DIR}/kafka-connect.sh build-connector
 
-  echo "Registering sinks and sources into kafka connect...\n"
+  echo -e "Registering sinks and sources into kafka connect...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
+
+  echo -e "Ensuring parity mount point exists and has correct permissions...\n"
+  mkdir -p ${PARITY_VOLUME_MOUNTPOINT}
+
+  echo -e "Starting parity and lenses...\n"
+  docker-compose up -d parity lenses
 }
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend
@@ -91,7 +97,7 @@ up_simple() {
   echo -e "Checking current dataset...\n"
   mkdir -p ${ROOT_DIR}/datasets
   set +o errexit
-  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${ROOT_DIR}/datasets/${DATASET}.md5 &>/dev/null)
+  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${DATASET}.md5 &>/dev/null)
   [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo -e "You're using latest dataset version! \n"
   set -o errexit
 
@@ -115,11 +121,12 @@ logs() {
 run() {
   local command="${1}"
   local action="${2}"
+  shift 2
 
   case "${command}" in
     up)      up "${action}"       ;;
     down)    down                 ;;
-    logs)    logs "$2"            ;;
+    logs)    logs "$action"       ;;
     help|*)  docker_usage; exit 0 ;;
   esac
 }

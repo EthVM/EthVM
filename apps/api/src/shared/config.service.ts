@@ -1,7 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common'
+import {Injectable} from '@nestjs/common'
 import convict from 'convict'
-import { join } from 'path'
-import { Logger } from 'winston'
+import {join} from 'path'
 
 /* tslint:disable:max-line-length */
 const schema = {
@@ -30,6 +29,12 @@ const schema = {
       default: 'info',
     },
   },
+  instaMining: {
+    doc: 'Indicates if we are running a private development chain which can impact subscriptions',
+    env: 'INSTA_MINING',
+    format: 'Boolean',
+    default: false,
+  },
   db: {
     url: {
       doc: 'Timescale connection URL',
@@ -48,7 +53,7 @@ const schema = {
     windowMs: {
       doc: 'Express Rate Limit window(ms)',
       env: 'EXPRESS_RATE_LIMIT_WINDOW_MS',
-      default: 15 * 60 * 1000,
+      default: 15 * 1000,
     },
     max: {
       doc: 'Express Rate Limit max requests per window(ms)',
@@ -89,17 +94,11 @@ export interface DbConfig {
 export class ConfigService {
   public config: convict.Config<any>
 
-  constructor(@Inject('winston') private readonly logger: Logger) {
+  constructor() {
     const config = (this.config = convict(schema))
 
     config.loadFile(join(process.cwd(), `src/config/${this.env}.json`))
-    config.validate({ allowed: 'strict' })
-
-    const { env } = this
-
-    if (env === 'development') {
-      this.logger.info('Configuration: ' + config.toString())
-    }
+    config.validate({allowed: 'strict'})
   }
 
   get env(): string {
@@ -116,6 +115,10 @@ export class ConfigService {
 
   get graphql(): GraphqlConfig {
     return this.config.get('graphql')
+  }
+
+  get instaMining(): boolean {
+    return this.config.get('instaMining')
   }
 
   get db(): DbConfig {
