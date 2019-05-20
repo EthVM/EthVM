@@ -21,6 +21,10 @@ export class ReceiptService {
 
   async findByTxHash(entityManager: EntityManager, txHashes: string[], select: string[] = []): Promise<TransactionReceiptEntity[]> {
 
+    if (!(txHashes && txHashes.length)) {
+      return []
+    }
+
     const options: FindManyOptions = {
       where: {transactionHash: In(txHashes)},
     }
