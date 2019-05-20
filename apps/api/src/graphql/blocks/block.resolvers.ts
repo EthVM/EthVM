@@ -80,30 +80,52 @@ export class BlockResolvers {
   }
 
   @Query()
-  async blocks(
-    @Args('page') page: number,
-    @Args('limit') limit: number,
-    @Args('fromBlock') fromBlock?: BigNumber
-  ) {
-    const entities = await this.blockService.findBlocks(limit, page, fromBlock)
-    return entities.map(e => new BlockDto(e))
-  }
-
-  @Query()
   async blockByHash(@Args('hash', ParseHashPipe) hash: string) {
-    const entity = await this.blockService.findBlockByHash(hash)
-    return entity ? new BlockDto(entity) : null
+
+    return retry(async bail => {
+
+      try {
+        const entity = await this.blockService.findOne({ hash })
+        return entity ? new BlockDto(entity) : null
+      } catch (err) {
+
+        if (err instanceof PartialReadException) {
+          // re-throw for retry
+          throw err
+        } else {
+          bail(err)
+        }
+
+      }
+    }, {
+      retries: 3,
+      factor: 2,
+      minTimeout: 500
+    })
   }
 
   @Query()
   async blockByNumber(@Args('number') number: BigNumber) {
-    const entity = await this.blockService.findBlockByNumber(number)
-    return entity ? new BlockDto(entity) : null
-  }
+    return retry(async bail => {
 
-  @Query()
-  async totalNumberOfBlocks() {
-    return this.blockService.findTotalNumberOfBlocks()
+      try {
+        const entity = await this.blockService.findOne({ number })
+        return entity ? new BlockDto(entity) : null
+      } catch (err) {
+
+        if (err instanceof PartialReadException) {
+          // re-throw for retry
+          throw err
+        } else {
+          bail(err)
+        }
+
+      }
+    }, {
+      retries: 3,
+      factor: 2,
+      minTimeout: 500
+    })
   }
 
   @Query('hashRate')

@@ -6,12 +6,9 @@ type Query {
   blockSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
   blockSummariesByAuthor(author: String!, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
 
-  blocks(limit: Int = 20, page: Int = 0, fromBlock: BigNumber): [Block!]!
-
   blockByHash(hash: String!): Block
   blockByNumber(number: BigNumber!): Block
 
-  totalNumberOfBlocks: BigNumber!
 }
 
 type Subscription {
@@ -72,9 +69,4 @@ type Reward {
   blockHash: String!
   deltaType: DeltaType!
   amount: BigNumber!
-}
-
-type BlocksPage {
-  items: [Block!]!
-  totalCount: Int!
 }

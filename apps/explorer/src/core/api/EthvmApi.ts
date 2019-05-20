@@ -1,13 +1,6 @@
-import { Block, CoinExchangeRate, Contract, PendingTx, SimpleBlock, SimpleTx, TokenExchangeRate, TokenHolder, Transfer, Tx, Uncle } from '@app/core/models'
-import BigNumber from 'bignumber.js'
+import { CoinExchangeRate, Contract, PendingTx, TokenExchangeRate, TokenHolder, Transfer } from '@app/core/models'
 
 export interface EthvmApi {
-  // Blocks
-  getBlock(hash: string): Promise<Block | null>
-  getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]>
-  getBlockByNumber(no: BigNumber): Promise<Block | null>
-  getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[]; totalCount: number }>
-  getTotalNumberOfBlocks(): Promise<number>
 
   // Contracts
   getContract(address: string): Promise<Contract | null>

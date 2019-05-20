@@ -6,7 +6,7 @@ import { UncleEntity } from '@app/orm/entities/uncle.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, In, LessThan, LessThanOrEqual, Repository } from 'typeorm'
+import { EntityManager, FindConditions, In, LessThanOrEqual, ObjectLiteral, Repository } from 'typeorm'
 import { TraceService } from './trace.service'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { setEquals } from '@app/shared/utils'
@@ -174,30 +174,28 @@ export class BlockService {
 
   }
 
-  async findBlockByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
-    return this.blockHeaderRepository.findOne({ where: { hash }, relations: ['uncles', 'rewards'] })
+  async findOne(where: FindConditions<BlockHeaderEntity>[] | FindConditions<BlockHeaderEntity> | ObjectLiteral): Promise<BlockHeaderEntity | undefined> {
+    const { instaMining } = this.configService
+    const blockHeader = await this.blockHeaderRepository.findOne({ where, relations: ['uncles', 'rewards'] })
+
+    if (!blockHeader) return undefined
+
+    // partial read checks
+
+    // look for block reward
+    if (!instaMining && !(blockHeader.rewards && blockHeader.rewards.length)) {
+      throw new PartialReadException(`Rewards missing, block hash = ${blockHeader.hash}`)
+    }
+
+    // check uncle hashes
+    const expectedUncleHashes = new Set<string>(JSON.parse(blockHeader.uncleHashes))
+    const retrievedUncleHashes = new Set<string>(blockHeader.uncles ? blockHeader.uncles.map(u => u.hash) : null)
+
+    if (!setEquals(expectedUncleHashes, retrievedUncleHashes)) {
+      throw new PartialReadException(`Uncles did not match, block hash = ${blockHeader.hash}`)
+    }
+
+    return blockHeader
   }
 
-  async findBlocks(limit: number = 10, page: number = 0, fromBlock?: BigNumber): Promise<BlockHeaderEntity[]> {
-    const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
-    const skip = page * limit
-    return await this.blockHeaderRepository.find({
-      where,
-      take: limit,
-      skip,
-      order: { number: 'DESC' },
-      relations: ['rewards']
-    })
-  }
-
-  async findBlockByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
-    return this.blockHeaderRepository.findOne({
-      where: { number },
-      relations: ['uncles', 'rewards']
-    })
-  }
-
-  async findTotalNumberOfBlocks(): Promise<BigNumber> {
-    return new BigNumber(await this.blockHeaderRepository.count())
-  }
 }

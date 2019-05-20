@@ -181,11 +181,6 @@ export interface BlockMetricPage {
     totalCount: number;
 }
 
-export interface BlocksPage {
-    items: Block[];
-    totalCount: number;
-}
-
 export interface BlockSummary {
     number: BigNumber;
     hash: string;
@@ -296,15 +291,13 @@ export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
     blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
-    contractByAddress(address: string): Contract | Promise<Contract>;
-    contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
-    blocks(limit?: number, page?: number, fromBlock?: BigNumber): Block[] | Promise<Block[]>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
-    totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
+    contractByAddress(address: string): Contract | Promise<Contract>;
+    contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     search(query: string): Search | Promise<Search>;
     tokenHolders(address: string, limit?: number, page?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
