@@ -64,7 +64,7 @@
         CONTRACT CREATOR TAB
       =====================================================================================
       -->
-      <v-tab-item slot="tabs-item" v-if="account.isCreator" value="tab-4">
+      <v-tab-item slot="tabs-item" v-if="account.isContractCreator" value="tab-4">
         <table-address-contracts :address="addressRef" />
       </v-tab-item>
     </app-tabs>
