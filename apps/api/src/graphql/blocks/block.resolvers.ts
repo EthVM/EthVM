@@ -17,7 +17,7 @@ export class BlockResolvers {
 
   constructor(
     private readonly blockService: BlockService,
-    @Inject('PUB_SUB') private pubSub: PubSub
+    @Inject('PUB_SUB') private pubSub: PubSub,
   ) {
   }
 
@@ -25,7 +25,7 @@ export class BlockResolvers {
   async blockSummaries(
     @Args('fromBlock') fromBlock: BigNumber,
     @Args('offset') offset: number,
-    @Args('limit') limit: number
+    @Args('limit') limit: number,
   ) {
 
     return retry(async bail => {
@@ -46,7 +46,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500
+      minTimeout: 500,
     })
 
   }
@@ -55,7 +55,7 @@ export class BlockResolvers {
   async blockSummariesByAuthor(
     @Args('author', ParseAddressPipe) author: string,
     @Args('offset') offset: number,
-    @Args('limit') limit: number
+    @Args('limit') limit: number,
   ): Promise<BlockSummaryPageDto | undefined> {
     return retry(async bail => {
 
@@ -75,7 +75,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500
+      minTimeout: 500,
     })
   }
 
@@ -100,7 +100,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500
+      minTimeout: 500,
     })
   }
 
@@ -124,7 +124,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500
+      minTimeout: 500,
     })
   }
 
@@ -135,7 +135,7 @@ export class BlockResolvers {
 
   @Subscription(
     'newBlock', {
-      resolve: (summary: BlockSummary) => new BlockSummaryDto(summary)
+      resolve: (summary: BlockSummary) => new BlockSummaryDto(summary),
     } as SubscriptionOptions)
   newBlock() {
     return this.pubSub.asyncIterator('newBlock')
@@ -144,8 +144,8 @@ export class BlockResolvers {
   @Subscription(
     'hashRate', {
       // TODO determine why we need to specify the resolve function for this to work
-      resolve: (hashRate: BigNumber) => hashRate
-    } as SubscriptionOptions
+      resolve: (hashRate: BigNumber) => hashRate,
+    } as SubscriptionOptions,
   )
   hashRate() {
     return this.pubSub.asyncIterator('hashRate')
