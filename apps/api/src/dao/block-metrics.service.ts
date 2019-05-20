@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { EntityManager, In, Repository } from 'typeorm'
+import { InjectEntityManager } from '@nestjs/typeorm'
+import { EntityManager, In } from 'typeorm'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
 import { unitOfTime } from 'moment'
-import moment = require('moment')
-import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import BigNumber from 'bignumber.js'
+import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
+import moment = require('moment')
 
 @Injectable()
 export class BlockMetricsService {
@@ -31,13 +31,39 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [ { count } ] = await txn
+        const [{ count }] = await txn
           .query('select count(number) from canonical_block_header') as [{ count: number }]
 
+        // cheaper to look up the block hashes from canonical block header first and use timestamp to filter down
+        // the hypertable
+        const headers = await txn
+          .find(BlockHeaderEntity, {
+            select: ['hash', 'timestamp'],
+            skip: offset,
+            take: limit,
+            order: {
+              number: 'DESC'
+            }
+          })
+
+        const nowSeconds = new Date().getTime() / 1000
+
+        let start = nowSeconds
+        let end = nowSeconds
+
+        const blockHashes = headers.map(h => {
+          if (h.timestamp > start) start = h.timestamp
+          if (h.timestamp < end) end = h.timestamp
+          return h.hash
+        })
+
+        if (!blockHashes.length) {
+          return [[], 0]
+        }
+
         const items = await txn.find(BlockMetricEntity, {
-          order: { number: 'DESC' },
-          skip: offset,
-          take: limit
+          where: { blockHash: In(blockHashes) },
+          take: limit // helps improve speed of query
         })
 
         items.forEach(item => {
@@ -47,7 +73,9 @@ export class BlockMetricsService {
           item.blockTime = item.blockTime || 0
         })
 
-        return [items, count]
+        const sortedItems = items.sort((a, b) => b.number.minus(a.number).toNumber())
+
+        return [sortedItems, count]
       })
 
   }
