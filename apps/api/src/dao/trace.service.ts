@@ -14,7 +14,7 @@ export class TraceService {
 
   constructor(
     @InjectRepository(TransactionTraceEntity)
-    private readonly traceRepository: Repository<TransactionTraceEntity>
+    private readonly traceRepository: Repository<TransactionTraceEntity>,
   ) {
   }
 
@@ -41,8 +41,8 @@ export class TraceService {
         select: ['blockHash', 'transactionHash', 'error'],
         where: {
           transactionHash: In(txHashes),
-          traceAddress: '[]'
-        }
+          traceAddress: '[]',
+        },
       })
 
     return entities.map(e => {
@@ -62,8 +62,8 @@ export class TraceService {
       select: ['blockHash', 'transactionHash', 'error'],
       where: {
         blockHash: In(blockHashes),
-        traceAddress: '[]'
-      }
+        traceAddress: '[]',
+      },
     })
 
     return entities.map(e => {

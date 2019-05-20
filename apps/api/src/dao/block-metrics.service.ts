@@ -18,8 +18,8 @@ export class BlockMetricsService {
     return this.entityManager
       .find(BlockMetricEntity, {
         where: {
-          blockHash: In(blockHashes)
-        }
+          blockHash: In(blockHashes),
+        },
       })
   }
 
@@ -42,8 +42,8 @@ export class BlockMetricsService {
             skip: offset,
             take: limit,
             order: {
-              number: 'DESC'
-            }
+              number: 'DESC',
+            },
           })
 
         const nowSeconds = new Date().getTime() / 1000
@@ -63,7 +63,7 @@ export class BlockMetricsService {
 
         const items = await txn.find(BlockMetricEntity, {
           where: { blockHash: In(blockHashes) },
-          take: limit // helps improve speed of query
+          take: limit, // helps improve speed of query
         })
 
         items.forEach(item => {
@@ -72,6 +72,9 @@ export class BlockMetricsService {
           item.avgTxFees = item.avgTxFees || new BigNumber(0)
           item.blockTime = item.blockTime || 0
           item.totalTxs = item.totalTxs || 0
+          item.numSuccessfulTxs = item.numSuccessfulTxs || 0
+          item.numFailedTxs = item.numFailedTxs || 0
+          item.numInternalTxs = item.numInternalTxs || 0
         })
 
         const sortedItems = items.sort((a, b) => b.number.minus(a.number).toNumber())
@@ -114,7 +117,7 @@ export class BlockMetricsService {
     start: Date,
     end: Date,
     bucket: TimeBucket,
-    fields: BlockMetricField[]
+    fields: BlockMetricField[],
   ): Promise<AggregateBlockMetric[]> {
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
@@ -212,7 +215,7 @@ export class BlockMetricsService {
         avgNumFailedTxs: item.avg_num_failed_txs,
         avgNumInternalTxs: item.avg_num_internal_txs,
         avgTxFees: item.avg_tx_fees,
-        avgTotalTxFees: item.avg_total_tx_fees
+        avgTotalTxFees: item.avg_total_tx_fees,
       } as AggregateBlockMetric
 
     })
