@@ -109,7 +109,7 @@ export class TxResolvers {
     @Args('filter') filter: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TransactionSummaryPageDto> {
+  ): Promise<TransactionSummaryPageDto | undefined> {
     return retry(async bail => {
 
       try {
@@ -133,12 +133,12 @@ export class TxResolvers {
   }
 
   @Query()
-  async tx(@Args('hash', ParseHashPipe) hash: string): Promise<TxDto | null> {
+  async tx(@Args('hash', ParseHashPipe) hash: string): Promise<TxDto | undefined> {
     return retry(async bail => {
 
       try {
         const entity = await this.txService.findOneByHash(hash)
-        return entity ? new TxDto(entity) : null
+        return entity ? new TxDto(entity) : undefined
       } catch (err) {
 
         if (err instanceof PartialReadException) {
