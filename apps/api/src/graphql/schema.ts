@@ -319,8 +319,6 @@ export interface IQuery {
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     tx(hash: string): Transaction | Promise<Transaction>;
-    txs(limit?: number, page?: number, fromBlock?: BigNumber): Transaction[] | Promise<Transaction[]>;
-    txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;

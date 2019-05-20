@@ -2,14 +2,14 @@ import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { FindManyOptions, In, LessThanOrEqual, Repository } from 'typeorm'
+import { In, LessThanOrEqual, Repository } from 'typeorm'
 import { ReceiptService } from './receipt.service'
 import { TraceService, TransactionStatus } from './trace.service'
-import { BlockSummary, TransactionSummary } from '@app/graphql/schema'
+import { TransactionSummary } from '@app/graphql/schema'
 import { ContractService } from '@app/dao/contract.service'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
-import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
+import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 
 @Injectable()
 export class TxService {
@@ -26,7 +26,24 @@ export class TxService {
 
   async findOneByHash(hash: string): Promise<TransactionEntity | undefined> {
     const txs = await this.findByHash(hash)
-    return txs.length === 1 ? txs[0] : undefined
+
+    if (txs.length !== 1) return undefined
+
+    const tx = txs[0]
+
+    // Partial read checks
+
+    // Receipt
+    if (!tx.receipt) {
+      throw new PartialReadException(`Receipt not found, tx hash = ${tx.hash}`)
+    }
+
+    // Partial read check
+    if (!(tx.traces && tx.traces.length)) {
+      throw new PartialReadException(`Traces not found, tx hash = ${tx.hash}`)
+    }
+
+    return tx
   }
 
   async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
@@ -208,6 +225,20 @@ export class TxService {
         (contract && contract.erc20Metadata && contract.erc20Metadata.symbol) ||
         (contract && contract.erc721Metadata && contract.erc721Metadata.symbol)
 
+      // Partial read checks
+
+      const txStatus = txStatusByHash.get(tx.hash)
+      const { receipt } = tx
+
+      // Root trace
+      if (!txStatus) {
+        throw new PartialReadException(`Root trace missing, tx hash = ${tx.hash}`)
+      }
+      // Receipt
+      if (!receipt) {
+        throw new PartialReadException(`Receipt missing, tx hash = ${tx.hash}`)
+      }
+
       return {
         hash: tx.hash,
         blockNumber: tx.blockNumber,
@@ -218,51 +249,13 @@ export class TxService {
         contractName,
         contractSymbol,
         value: tx.value,
-        fee: tx.gasPrice.multipliedBy(tx.receipt!.gasUsed),
-        successful: txStatusByHash.get(tx.hash)!.successful,
+        fee: tx.gasPrice.multipliedBy(receipt.gasUsed),
+        successful: txStatus.successful,
         timestamp: tx.timestamp,
       } as TransactionSummary
     })
 
     return [summaries, count]
-  }
-
-  async find(take: number = 10, page: number = 0, fromBlock: BigNumber = new BigNumber(-1)): Promise<TransactionEntity[]> {
-
-    const skip = page * take
-    const where = fromBlock.toNumber() !== -1 ? { blockNumber: LessThanOrEqual(fromBlock.toNumber()) } : {}
-
-    const findOptions: FindManyOptions = {
-      where,
-      order: { blockNumber: 'DESC', transactionIndex: 'DESC', timestamp: 'DESC' },
-      take,
-      skip,
-      relations: ['receipt'],
-    }
-
-    const txs = await this.transactionRepository.find(findOptions)
-    if (!txs.length) return []
-
-    return this.findAndMapTraces(txs)
-  }
-
-  async findByAddress(address: string, filter?: string, take: number = 10, page: number = 0): Promise<TransactionEntity[]> {
-    const skip = page * take
-    let where
-    switch (filter) {
-      case 'in':
-        where = { to: address }
-        break
-      case 'out':
-        where = { from: address }
-        break
-      default:
-        where = [{ from: address }, { to: address }]
-        break
-    }
-    const txs = await this.transactionRepository.find({ where, take, skip, relations: ['receipt'] })
-
-    return txs.length === 0 ? [] : this.findAndMapTraces(txs)
   }
 
   private async findAndMapTraces(txs: TransactionEntity[]): Promise<TransactionEntity[]> {
