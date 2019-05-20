@@ -1,7 +1,7 @@
 import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity'
 import {Injectable} from '@nestjs/common'
 import {InjectRepository} from '@nestjs/typeorm'
-import {FindManyOptions, In, Repository} from 'typeorm'
+import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
 
 @Injectable()
 export class ReceiptService {
@@ -19,7 +19,7 @@ export class ReceiptService {
     return this.receiptRepository.find({where: {blockHash: In(blockHashes)}})
   }
 
-  async findByTxHash(txHashes: string[], select: string[] = []): Promise<TransactionReceiptEntity[]> {
+  async findByTxHash(entityManager: EntityManager, txHashes: string[], select: string[] = []): Promise<TransactionReceiptEntity[]> {
 
     const options: FindManyOptions = {
       where: {transactionHash: In(txHashes)},
@@ -29,6 +29,6 @@ export class ReceiptService {
       options.select = select
     }
 
-    return this.receiptRepository.find(options)
+    return entityManager.find(TransactionReceiptEntity, options)
   }
 }

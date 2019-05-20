@@ -46,7 +46,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
 
   }
@@ -75,7 +75,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 
@@ -100,7 +100,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 
@@ -124,7 +124,7 @@ export class BlockResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 

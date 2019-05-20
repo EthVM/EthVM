@@ -43,7 +43,7 @@ export class TxResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 
@@ -71,7 +71,7 @@ export class TxResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 
@@ -99,7 +99,7 @@ export class TxResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 
@@ -128,7 +128,7 @@ export class TxResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 
@@ -152,7 +152,7 @@ export class TxResolvers {
     }, {
       retries: 3,
       factor: 2,
-      minTimeout: 500,
+      minTimeout: 1000,
     })
   }
 

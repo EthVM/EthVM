@@ -32,7 +32,7 @@ export class BlockService {
       .find({
         select: ['number', 'difficulty', 'blockTime'],
         order: { number: 'DESC' },
-        take: 20,
+        take: 20
       })
 
     if (blocks.length === 0) return null
@@ -49,22 +49,32 @@ export class BlockService {
 
   async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[BlockSummary[], number]> {
 
-    const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
+    return this.entityManager
+      .transaction(
+        'READ COMMITTED',
+        async (txn): Promise<[BlockSummary[], number]> => {
 
-    const [headersWithRewards, count] = await this.blockHeaderRepository
-      .findAndCount({
-        select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
-        where,
-        relations: ['rewards'],
-        order: { number: 'DESC' },
-        skip: offset,
-        take: limit,
-      })
+          const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
 
-    return [
-      await this.summarise(headersWithRewards),
-      count,
-    ]
+          const [ { count } ] = await txn
+            .query('select count(number) from canonical_block_header') as [{ count: number }]
+
+          const headersWithRewards = await txn.find(BlockHeaderEntity, {
+            select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
+            where,
+            relations: ['rewards'],
+            order: { number: 'DESC' },
+            skip: offset,
+            take: limit
+          })
+
+          return [
+            await this.summarise(txn, headersWithRewards),
+            count
+          ]
+
+        })
+
 
   }
 
@@ -77,14 +87,14 @@ export class BlockService {
         relations: ['rewards'],
         order: { number: 'DESC' },
         skip: offset,
-        take: limit,
+        take: limit
       })
 
     if (count === 0) return [[], count]
 
     return [
-      await this.summarise(headersWithRewards),
-      count,
+      await this.summarise(this.entityManager, headersWithRewards),
+      count
     ]
 
   }
@@ -95,17 +105,17 @@ export class BlockService {
       select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
-      order: { number: 'DESC' },
+      order: { number: 'DESC' }
     })
 
-    return this.summarise(headersWithRewards)
+    return this.summarise(this.entityManager, headersWithRewards)
 
   }
 
-  private async summarise(headersWithRewards: BlockHeaderEntity[]): Promise<BlockSummary[]> {
+  private async summarise(tx: EntityManager, headersWithRewards: BlockHeaderEntity[]): Promise<BlockSummary[]> {
 
     const blockHashes = headersWithRewards.map(h => h.hash)
-    const txStatuses = await this.traceService.findTxStatusByBlockHash(blockHashes)
+    const txStatuses = await this.traceService.findTxStatusByBlockHash(tx, blockHashes)
 
     const successfulCountByBlock = new Map<string, number>()
     const failedCountByBlock = new Map<string, number>()
@@ -167,7 +177,7 @@ export class BlockService {
         numTxs: transactionHashes.length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
-        reward: rewardsByBlock.get(hash) || 0,
+        reward: rewardsByBlock.get(hash) || 0
       } as BlockSummary
 
     })

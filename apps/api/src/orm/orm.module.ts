@@ -14,6 +14,7 @@ import { SnakeCaseNamingStrategy } from '@app/orm/config'
         namingStrategy: new SnakeCaseNamingStrategy(),
         entities: ['src/**/**.entity{.ts,.js}'],
         logging: ['error'],
+        maxQueryExecutionTime: 1000,
       }),
       inject: [ConfigService],
     }),
