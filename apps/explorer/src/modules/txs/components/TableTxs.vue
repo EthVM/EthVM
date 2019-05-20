@@ -380,7 +380,7 @@ export default class TableTxs extends TableTxsMixin {
     const titles = {
       tx: this.$i18n.t('tx.last'),
       pending: this.$i18n.tc('tx.pending', 2),
-      block: this.$i18n.t('txs')
+      block: this.$i18n.t('block.txs')
     }
     return titles[this.pageType] || titles['tx']
   }
