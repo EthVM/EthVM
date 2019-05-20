@@ -1,0 +1,23 @@
+query tokenExchangeRates($sort: TokenExchangeRateFilter!, $offset: Int, $limit: Int) {
+  tokenExchangeRatePage(sort: $sort, offset: $offset, limit: $limit) {
+    ...TokenExchangeRatePage
+  }
+}
+
+fragment TokenExchangeRate on TokenExchangeRate {
+  address
+  currentPrice
+  image
+  marketCap
+  name
+  priceChangePercentage24h
+  symbol
+  totalVolume
+}
+
+fragment TokenExchangeRatePage on TokenExchangeRatesPage {
+  items {
+    ...TokenExchangeRate
+  }
+  totalCount
+}

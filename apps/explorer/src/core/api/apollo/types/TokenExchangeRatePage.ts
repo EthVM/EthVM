@@ -2,13 +2,11 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { TokenExchangeRateFilter } from "./globalTypes";
-
 // ====================================================
-// GraphQL query operation: tokenExchangeRates
+// GraphQL fragment: TokenExchangeRatePage
 // ====================================================
 
-export interface tokenExchangeRates_tokenExchangeRatePage_items {
+export interface TokenExchangeRatePage_items {
   __typename: "TokenExchangeRate";
   address: string | null;
   currentPrice: any | null;
@@ -20,18 +18,8 @@ export interface tokenExchangeRates_tokenExchangeRatePage_items {
   totalVolume: any | null;
 }
 
-export interface tokenExchangeRates_tokenExchangeRatePage {
+export interface TokenExchangeRatePage {
   __typename: "TokenExchangeRatesPage";
-  items: tokenExchangeRates_tokenExchangeRatePage_items[];
+  items: TokenExchangeRatePage_items[];
   totalCount: number;
-}
-
-export interface tokenExchangeRates {
-  tokenExchangeRatePage: tokenExchangeRates_tokenExchangeRatePage;
-}
-
-export interface tokenExchangeRatesVariables {
-  sort: TokenExchangeRateFilter;
-  offset?: number | null;
-  limit?: number | null;
 }

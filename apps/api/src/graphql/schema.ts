@@ -309,6 +309,7 @@ export interface IQuery {
     tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
+    tokenExchangeRatePage(sort: TokenExchangeRateFilter, symbols: string[], offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
     tokenTransfersByContractAddress(contractAddress: string, limit?: number, page?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, limit?: number, page?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
@@ -395,6 +396,11 @@ export interface TokenExchangeRate {
     lastUpdated?: string;
     owner?: string;
     holdersCount?: number;
+}
+
+export interface TokenExchangeRatesPage {
+    items: TokenExchangeRate[];
+    totalCount: number;
 }
 
 export interface TokenHolder {

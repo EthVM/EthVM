@@ -9,6 +9,7 @@ import { TokenExchangeRatesArgs } from '@app/graphql/tokens/args/token-exchange-
 import { TokensMetadataArgs } from '@app/graphql/tokens/args/tokens-metadata.args'
 import { TokenPageDto } from '@app/graphql/tokens/dto/token-page.dto'
 import BigNumber from 'bignumber.js'
+import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange-rate-page.dto'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -68,6 +69,17 @@ export class TokenResolvers {
   ) {
     const entities = await this.tokenService.findTokenExchangeRates(filter, limit, page, symbols)
     return entities.map(e => new TokenExchangeRateDto(e))
+  }
+
+  @Query()
+  async tokenExchangeRatePage(
+    @Args() {symbols}: TokenExchangeRatesArgs,
+    @Args('sort') sort: string,
+    @Args('limit') limit: number,
+    @Args('offset') offset: number,
+  ): Promise<TokenExchangeRatePageDto> {
+    const [items, totalCount] = await this.tokenService.findTokenExchangeRatesPage(sort, limit, offset, symbols)
+    return new TokenExchangeRatePageDto({ items, totalCount })
   }
 
   @Query()

@@ -9,6 +9,8 @@ type Query {
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
   tokensMetadata(symbols: [String]): [TokenMetadata!]!
+
+  tokenExchangeRatePage(sort: TokenExchangeRateFilter!, symbols: [String!], offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
 }
 
 type TokenPage {
@@ -30,6 +32,11 @@ type Token {
 type TokenHolder {
   address: String!
   balance: BigNumber!
+}
+
+type TokenExchangeRatesPage {
+  items: [TokenExchangeRate!]!
+  totalCount: Int!
 }
 
 type TokenExchangeRate {
