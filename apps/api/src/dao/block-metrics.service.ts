@@ -71,6 +71,7 @@ export class BlockMetricsService {
           item.totalTxFees = item.totalTxFees || new BigNumber(0)
           item.avgTxFees = item.avgTxFees || new BigNumber(0)
           item.blockTime = item.blockTime || 0
+          item.totalTxs = item.totalTxs || 0
         })
 
         const sortedItems = items.sort((a, b) => b.number.minus(a.number).toNumber())
