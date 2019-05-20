@@ -133,7 +133,8 @@ CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
-CREATE INDEX idx_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
+CREATE INDEX idx_transaction_transaction_index ON transaction (transaction_index DESC);
+CREATE INDEX idx_transaction_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
 
 CREATE FUNCTION notify_transaction() RETURNS TRIGGER AS
 $body$
@@ -172,9 +173,7 @@ SELECT t.*
 FROM "transaction" AS t
        RIGHT JOIN canonical_block_header AS cb ON t.block_hash = cb.hash
 WHERE cb.number IS NOT NULL
-  AND t.hash IS NOT NULL
-ORDER BY cb.number DESC,
-         t.transaction_index DESC;
+  AND t.hash IS NOT NULL;
 
 /* All receipts including possible receipts from old forks */
 CREATE TABLE transaction_receipt
@@ -237,9 +236,7 @@ SELECT tr.*
 FROM transaction_receipt AS tr
        RIGHT JOIN canonical_block_header AS cb ON tr.block_hash = cb.hash
 WHERE cb.number IS NOT NULL
-  AND tr.transaction_hash IS NOT NULL
-ORDER BY cb.number DESC,
-         tr.transaction_index DESC;
+  AND tr.transaction_hash IS NOT NULL;
 
 /* All traces including possible traces from old forks */
 CREATE TABLE transaction_trace
@@ -364,16 +361,13 @@ SELECT c.*
 FROM contract AS c
        RIGHT JOIN canonical_block_header AS cb ON c.trace_created_at_block_hash = cb.hash
 WHERE cb.number IS NOT NULL
-  AND c.address IS NOT NULL
-ORDER BY cb.number DESC,
-         c.trace_created_at_transaction_index DESC;
+  AND c.address IS NOT NULL;
 
 CREATE VIEW canonical_contract_creator AS
 SELECT c.creator AS address,
        COUNT(*)  AS count
 FROM canonical_contract AS c
-GROUP BY c.creator
-ORDER BY count DESC;
+GROUP BY c.creator;
 
 CREATE TABLE eth_list_contract_metadata
 (

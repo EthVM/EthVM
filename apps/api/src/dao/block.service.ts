@@ -52,16 +52,14 @@ export class BlockService {
     return this.entityManager
       .transaction(
         'READ COMMITTED',
-        async (tx): Promise<[BlockSummary[], number]> => {
+        async (txn): Promise<[BlockSummary[], number]> => {
 
           const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
 
-          const count = await tx.count(BlockHeaderEntity, {
-            select: ['number'],
-            where
-          })
+          const [ { count } ] = await txn
+            .query('select count(number) from canonical_block_header') as [{ count: number }]
 
-          const headersWithRewards = await tx.find(BlockHeaderEntity, {
+          const headersWithRewards = await txn.find(BlockHeaderEntity, {
             select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
             where,
             relations: ['rewards'],
@@ -71,7 +69,7 @@ export class BlockService {
           })
 
           return [
-            await this.summarise(tx, headersWithRewards),
+            await this.summarise(txn, headersWithRewards),
             count
           ]
 

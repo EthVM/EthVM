@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { In, Repository } from 'typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { EntityManager, In, Repository } from 'typeorm'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
 import { unitOfTime } from 'moment'
@@ -11,43 +11,45 @@ import BigNumber from 'bignumber.js'
 @Injectable()
 export class BlockMetricsService {
 
-  constructor(@InjectRepository(BlockHeaderEntity)
-              private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
-              @InjectRepository(BlockMetricEntity)
-              private readonly blockMetricsRepository: Repository<BlockMetricEntity>) {
+  constructor(@InjectEntityManager() private readonly entityManager: EntityManager) {
   }
 
   async findByBlockHash(blockHashes: string[]): Promise<BlockMetricEntity[]> {
-    return this.blockMetricsRepository
-      .find({
+    return this.entityManager
+      .find(BlockMetricEntity, {
         where: {
-          blockHash: In(blockHashes),
-        },
+          blockHash: In(blockHashes)
+        }
       })
   }
 
   async find(offset: number, limit: number): Promise<[BlockMetricEntity[], number]> {
 
-    const items = await this.blockMetricsRepository
-      .find({
-        order: { number: 'DESC' },
-        skip: offset,
-        take: limit,
+    return this.entityManager
+      .transaction('READ COMMITTED', async (txn): Promise<[BlockMetricEntity[], number]> => {
+
+        // much cheaper to do the count against canonical block header table instead of using the
+        // usual count mechanism
+
+        const [ { count } ] = await txn
+          .query('select count(number) from canonical_block_header') as [{ count: number }]
+
+        const items = await txn.find(BlockMetricEntity, {
+          order: { number: 'DESC' },
+          skip: offset,
+          take: limit
+        })
+
+        items.forEach(item => {
+          // if there is no txs these fields can be null
+          item.totalTxFees = item.totalTxFees || new BigNumber(0)
+          item.avgTxFees = item.avgTxFees || new BigNumber(0)
+          item.blockTime = item.blockTime || 0
+        })
+
+        return [items, count]
       })
 
-    // much cheaper to do the count against canonical block header table instead of using the
-    // usual count mechanism
-    const count = await this.blockHeaderRepository
-      .count()
-
-    items.forEach(item => {
-      // if there is no txs these fields can be null
-      item.totalTxFees = item.totalTxFees || new BigNumber(0)
-      item.avgTxFees = item.avgTxFees || new BigNumber(0)
-      item.blockTime = item.blockTime || 0
-    })
-
-    return [items, count]
   }
 
   private estimateDatapoints(start: Date, end: Date, bucket: TimeBucket): number {
@@ -83,7 +85,7 @@ export class BlockMetricsService {
     start: Date,
     end: Date,
     bucket: TimeBucket,
-    fields: BlockMetricField[],
+    fields: BlockMetricField[]
   ): Promise<AggregateBlockMetric[]> {
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
@@ -157,8 +159,8 @@ export class BlockMetricsService {
       }
     })
 
-    const items = await this.blockMetricsRepository
-      .createQueryBuilder('bm')
+    const items = await this.entityManager
+      .createQueryBuilder(BlockMetricEntity, 'bm')
       .select(select)
       .where('timestamp between :end and :start')
       .groupBy('time')
@@ -181,7 +183,7 @@ export class BlockMetricsService {
         avgNumFailedTxs: item.avg_num_failed_txs,
         avgNumInternalTxs: item.avg_num_internal_txs,
         avgTxFees: item.avg_tx_fees,
-        avgTotalTxFees: item.avg_total_tx_fees,
+        avgTotalTxFees: item.avg_total_tx_fees
       } as AggregateBlockMetric
 
     })

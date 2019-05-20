@@ -1,63 +1,80 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
-import {InjectRepository} from '@nestjs/typeorm'
-import {ContractEntity} from '@app/orm/entities/contract.entity'
-import {FindManyOptions, In, Repository} from 'typeorm'
-import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity'
-import {TransactionEntity} from '@app/orm/entities/transaction.entity'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { ContractEntity } from '@app/orm/entities/contract.entity'
+import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
+import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TxService } from '@app/dao/tx.service'
 import { ContractSummary, TransactionSummary } from '@app/graphql/schema'
 
 @Injectable()
 export class ContractService {
-  constructor(@InjectRepository(ContractEntity) private readonly contractRepository: Repository<ContractEntity>,
-              @Inject(forwardRef(() => TxService)) private readonly txService: TxService) {
+  constructor(@InjectRepository(ContractEntity)
+              private readonly contractRepository: Repository<ContractEntity>,
+              @Inject(forwardRef(() => TxService))
+              private readonly txService: TxService,
+              @InjectEntityManager()
+              private readonly entityManager: EntityManager) {
   }
 
   async findContractByAddress(address: string): Promise<ContractEntity | undefined> {
-    return this.contractRepository.findOne({where: {address}, relations: ['metadata', 'erc20Metadata']})
+    return this.contractRepository.findOne({ where: { address }, relations: ['metadata', 'erc20Metadata'] })
   }
 
-  async findAllByAddress(addresses: string[]): Promise<ContractEntity[]> {
+  async findAllByAddress(entityManager: EntityManager, addresses: string[]): Promise<ContractEntity[]> {
 
     if (!addresses.length) return []
 
-    return this.contractRepository.find(
-      {
-        where: {address: In(addresses)},
-        relations: ['metadata', 'erc20Metadata', 'erc721Metadata'],
-      },
+    return entityManager.find(ContractEntity, {
+        where: { address: In(addresses) },
+        relations: ['metadata', 'erc20Metadata', 'erc721Metadata']
+      }
     )
   }
 
   async findContractsCreatedBy(creator: string, offset: number = 0, limit: number = 10): Promise<[ContractSummary[], number]> {
-    const [contracts, count] = await this.contractRepository.findAndCount({
-      where: {creator},
-      take: limit,
-      skip: offset,
-      select: ['address', 'creator', 'traceCreatedAtBlockNumber', 'traceCreatedAtTransactionHash'],
-    })
 
-    // Get tx summaries
-    const txSummaries = await this.txService.findSummariesByHash(contracts.map(c => c.traceCreatedAtTransactionHash))
+    return this.entityManager.transaction(
+      'READ COMMITTED',
+      async (txn): Promise<[ContractSummary[], number]> => {
 
-    // Map summaries to contracts
-    const summariesByHash = new Map<string, TransactionSummary>()
-    txSummaries.forEach(tx => {
-      summariesByHash.set(tx.hash, tx)
-    })
+        const where = { creator }
 
-    const contractSummaries = contracts.map(c => {
-      const txSummary = summariesByHash.get(c.traceCreatedAtTransactionHash)
-      return {
-        address: c.address,
-        creator: c.creator,
-        txFee: txSummary!.fee,
-        timestamp: txSummary!.timestamp,
-        blockNumber: c.traceCreatedAtBlockNumber,
-        txHash: c.traceCreatedAtTransactionHash,
-      } as ContractSummary
-    })
+        const count = await txn.count(ContractEntity, { where })
+        const contracts = await txn.find(ContractEntity, {
+          select: ['address', 'creator', 'traceCreatedAtBlockNumber', 'traceCreatedAtTransactionHash'],
+          where,
+          skip: offset,
+          take: limit
+        })
 
-    return [contractSummaries, count]
+        // Get tx summaries
+        const txSummaries = await this.txService
+          .findSummariesByHash(
+            contracts.map(c => c.traceCreatedAtTransactionHash),
+            txn
+          )
+
+        // Map summaries to contracts
+        const summariesByHash = new Map<string, TransactionSummary>()
+        txSummaries.forEach(tx => {
+          summariesByHash.set(tx.hash, tx)
+        })
+
+        const contractSummaries = contracts.map(c => {
+          const txSummary = summariesByHash.get(c.traceCreatedAtTransactionHash)
+          return {
+            address: c.address,
+            creator: c.creator,
+            txFee: txSummary!.fee,
+            timestamp: txSummary!.timestamp,
+            blockNumber: c.traceCreatedAtBlockNumber,
+            txHash: c.traceCreatedAtTransactionHash
+          } as ContractSummary
+        })
+
+        return [contractSummaries, count]
+      }
+    )
   }
 }
