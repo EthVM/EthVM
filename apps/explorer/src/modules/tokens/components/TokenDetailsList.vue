@@ -10,6 +10,7 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
 import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
+import { TokenExchangeRateDetailExt } from "@app/core/api/apollo/extensions/token-exchange-rate-detail.ext";
 
 @Component({
   components: {
@@ -24,8 +25,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   */
 
   @Prop(String) addressRef!: string // Token contract address
-  @Prop(Object) contractDetails!: any
-  @Prop(Object) tokenDetails!: any
+  @Prop(Object) tokenDetails!: TokenExchangeRateDetailExt
   @Prop(Boolean) isLoading!: boolean
   @Prop(String) error!: string
 
@@ -102,13 +102,14 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         }
       ]
     } else {
-      const { address, owner, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount } = this.tokenDetails
+      const { address, contract, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount } = this.tokenDetails
+      const owner = contract ? contract.creator : ''
 
       details = [
         {
           title: this.$i18n.tc('contract.name', 1),
-          detail: new Hex(address).toString(),
-          link: this.tokenDetails ? `/address/${new Hex(address).toString()}` : ''
+          detail: new Hex(address!).toString(),
+          link: this.tokenDetails ? `/address/${new Hex(address!).toString()}` : ''
         }
       ]
 
@@ -163,7 +164,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
       }
 
-      const { metadata, type } = this.contractDetails
+      const { metadata } = contract!
 
       if (metadata) {
         if (metadata.decimals) {
@@ -184,33 +185,33 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
             detail: `<a href="mailto:${metadata.support.email}" target="_BLANK">${metadata.support.email}</a>`
           })
         }
-      }
+        if (metadata.type) {
+          details.push({
+            title: this.$i18n.t('token.type').toString(),
+            detail: metadata.type
+          })
+        }
 
-      if (type && type.string) {
-        details.push({
-          title: this.$i18n.t('token.type').toString(),
-          detail: type.string
-        })
-      }
+        if (metadata.social) {
+          details.push({
+            title: this.$i18n.t('token.links'),
+            detail: Object.entries(metadata.social)
+              .map(obj => {
+                const name = obj[0]
+                const url = obj[1]
+                if (url === null || url === '') {
+                  return ''
+                }
+                return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
+                  icons[name]
+                  } pr-2 material-icons theme--light"></i></a>`
+              })
+              .reduce((a, b) => {
+                return `${a}${b}`
+              })
+          })
+        }
 
-      if (metadata && metadata.social) {
-        details.push({
-          title: this.$i18n.t('token.links'),
-          detail: Object.entries(metadata.social)
-            .map(obj => {
-              const name = obj[0]
-              const url = obj[1]
-              if (url === null || url === '') {
-                return ''
-              }
-              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
-                icons[name]
-              } pr-2 material-icons theme--light"></i></a>`
-            })
-            .reduce((a, b) => {
-              return `${a}${b}`
-            })
-        })
       }
     }
     return details

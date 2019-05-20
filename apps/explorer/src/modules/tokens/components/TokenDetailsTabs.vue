@@ -41,15 +41,16 @@
 </template>
 
 <script lang="ts">
-import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import AppError from '@app/core/components/ui/AppError.vue'
-import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
-import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
-import { Transfer, Tx } from '@app/core/models'
-import { Tab } from '@app/core/components/props'
-import { Component, Vue, Prop } from 'vue-property-decorator'
+  import AppTabs from '@app/core/components/ui/AppTabs.vue'
+  import AppError from '@app/core/components/ui/AppError.vue'
+  import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
+  import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
+  import { Transfer } from '@app/core/models'
+  import { Tab } from '@app/core/components/props'
+  import { Component, Prop, Vue } from 'vue-property-decorator'
+  import BigNumber from 'bignumber.js'
 
-@Component({
+  @Component({
   components: {
     AppError,
     AppTabs,
@@ -71,7 +72,7 @@ export default class TokenDetailsTabs extends Vue {
   @Prop(Array) tokenHolders!: any
   @Prop(Number) totalHolders!: number
   @Prop(Number) holdersPage!: number
-  @Prop(String) totalSupply?: string
+  @Prop(BigNumber) totalSupply?: BigNumber
   @Prop(Boolean) isTokenTransfersLoading!: boolean
   @Prop(Boolean) isTokenHoldersLoading!: boolean
   @Prop(String) errorTokenTransfers!: string

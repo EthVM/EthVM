@@ -55,7 +55,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-
+import BigNumber from 'bignumber.js'
 const MAX_ITEMS = 10
 
 @Component({
@@ -74,7 +74,7 @@ export default class TokenTableHolders extends Vue {
   @Prop(Number) totalHolders!: number
   @Prop(Number) page!: number
   @Prop(String) addressRef!: string
-  @Prop(String) totalSupply?: string
+  @Prop(BigNumber) totalSupply?: BigNumber
   @Prop(String) decimals?: string
   @Prop(Boolean) loading?: boolean
 

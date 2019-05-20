@@ -12,9 +12,8 @@
     <div v-if="!isHolder">
       <token-details-list
         :address-ref="addressRef"
-        :contract-details="contractDetails"
         :token-details="tokenDetails"
-        :is-loading="isTokenDetailsListLoading"
+        :is-loading="isTokenDetailsLoading"
         :error="errorTokenDetailsList"
       />
       <token-details-tabs
@@ -25,7 +24,7 @@
         :token-holders="tokenHolders"
         :total-holders="totalHolders"
         :holders-page="holdersPage"
-        :total-supply="contractDetails.totalSupply"
+        :total-supply="totalSupply"
         :decimals="decimals"
         :is-token-transfers-loading="isTokenTransfersLoading"
         :is-token-holders-loading="isTokenHoldersLoading"
@@ -46,7 +45,6 @@
     <div v-if="isHolder">
       <holder-details-list
         :address-ref="addressRef"
-        :contract-details="contractDetails"
         :token-details="tokenDetails"
         :holder-details="holderDetails"
         :is-loading="isHolderDetailsListLoading"
@@ -75,6 +73,9 @@ import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb } from '@app/core/components/props'
 import { TokenHolder, Transfer } from '@app/core/models'
+import { tokenDetails } from '@app/modules/tokens/tokens.graphql'
+import { TokenExchangeRateDetailExt } from "@app/core/api/apollo/extensions/token-exchange-rate-detail.ext";
+import BigNumber from 'bignumber.js'
 
 const MAX_ITEMS = 10
 
@@ -85,6 +86,37 @@ const MAX_ITEMS = 10
     HolderDetailsTabs,
     TokenDetailsList,
     TokenDetailsTabs
+  },
+  apollo: {
+    tokenDetails: {
+      query: tokenDetails,
+
+      variables() {
+        return { address: this.addressRef}
+      },
+
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+
+      update({ tokenDetails }) {
+        if (tokenDetails) {
+          return new TokenExchangeRateDetailExt(tokenDetails)
+        }
+
+        this.errorTokenDetailsList = this.errorTokenDetailsList || this.$i18n.t('message.invalid.token')
+        return null
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.errorTokenDetailsList = this.$i18n.t('message.no-data')
+        }
+      }
+    }
   }
 })
 export default class PageDetailsToken extends Vue {
@@ -102,12 +134,11 @@ export default class PageDetailsToken extends Vue {
   ===================================================================================
   */
 
+  tokenDetails?: TokenExchangeRateDetailExt
+
   address = '' // TEMP: Formatted address with "0x" removed from beginning
 
   // Basic //
-  contractDetails: any = {} // Contract details object
-  tokenDetails: any = {} // Token details object
-
   tokenTransfers: Transfer[] = [] // Array of token transfers
   totalTransfers: string = '' // Total number of transfers as hex
   transfersPage: number = 0 // Current page of transfers
@@ -196,37 +227,11 @@ export default class PageDetailsToken extends Vue {
    */
   loadBasicData() {
     return new Promise((resolve, reject) => {
-      const tokenDetailsListPromise = this.loadTokenDetailsList()
       const tokenDetailsTabsTransfersPromise = this.loadTokenDetailsTabsTransfers()
       const tokenDetailsTabsHoldersPromise = this.loadTokenDetailsTabsHolders()
-      const promises = [tokenDetailsListPromise, tokenDetailsTabsTransfersPromise, tokenDetailsTabsHoldersPromise]
+      const promises = [tokenDetailsTabsTransfersPromise, tokenDetailsTabsHoldersPromise]
 
       Promise.all(promises).then(resolve)
-    })
-  }
-
-  /**
-   * Load all data required and handle errors for TokenDetailsList component
-   */
-  loadTokenDetailsList() {
-    return new Promise((resolve, reject) => {
-      const contractDetailsPromise = this.fetchContractDetails()
-      const tokenDetailsPromise = this.fetchTokenDetails()
-      const promises = [contractDetailsPromise, tokenDetailsPromise]
-
-      Promise.all(promises)
-        .then(([contractDetails, tokenDetails]) => {
-          this.contractDetails = contractDetails as any
-          this.tokenDetails = tokenDetails as any
-          if (this.contractDetails && this.contractDetails.erc20Metadata) {
-            this.decimals = this.contractDetails.erc20Metadata.decimals
-          }
-          resolve()
-        })
-        .catch(e => {
-          this.errorTokenDetailsList = this.$i18n.t('message.invalid.token').toString()
-          resolve()
-        })
     })
   }
 
@@ -335,50 +340,6 @@ export default class PageDetailsToken extends Vue {
     Methods - Fetch Data - Individual Calls
   ===================================================================================
   */
-
-  /**
-   * Retrieve contract details for a the given token contract address.
-   *
-   * @return {Object} - Contract details and metadata
-   */
-  fetchContractDetails(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.$api
-        .getContract(this.addressRef)
-        .then(response => {
-          if (response === null) {
-            reject(this.$i18n.t('message.invalid.addr').toString())
-          } else {
-            resolve(response)
-          }
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
-  }
-
-  /**
-   * GET and return a JSON details object for a particular token address
-   *
-   * @return {Array} - Token details
-   */
-  fetchTokenDetails() {
-    return new Promise((resolve, reject) => {
-      this.$api
-        .getTokenExchangeRateByAddress(this.addressRef)
-        .then(response => {
-          if (response === null) {
-            reject(this.$i18n.t('message.invalid.addr').toString())
-          } else {
-            resolve(response)
-          }
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
-  }
 
   /**
    * Fetch token transfers for a particular token contract
@@ -573,6 +534,7 @@ export default class PageDetailsToken extends Vue {
    * @return {Array} - Breadcrumb entry. See description.
    */
   get crumbsBasic(): Crumb[] {
+
     return [
       {
         text: 'token.name',
@@ -585,7 +547,7 @@ export default class PageDetailsToken extends Vue {
         disabled: true,
         plural: 1,
         label: {
-          name: this.isTokenDetailsLoading ? `: ${this.addressRef}` : `: ${this.tokenDetails.symbol.toUpperCase()}`
+          name: this.tokenLabel
         }
       }
     ]
@@ -606,7 +568,9 @@ export default class PageDetailsToken extends Vue {
       },
       {
         text: '',
-        label: this.isTokenDetailsLoading ? this.addressRef : this.tokenDetails.symbol.toUpperCase(),
+        label: {
+          name: this.tokenLabel
+        },
         link: `/token/${this.addressRef}`,
         disabled: false
       },
@@ -627,21 +591,12 @@ export default class PageDetailsToken extends Vue {
   */
 
   /**
-   * Determines whether or not the contractDetails object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isContractDetailsLoading(): boolean {
-    return Object.keys(this.contractDetails).length === 0
-  }
-
-  /**
    * Determines whether or not the tokenDetails object has been loaded/populated
    *
    * @return {Boolean}
    */
   get isTokenDetailsLoading(): boolean {
-    return Object.keys(this.tokenDetails).length === 0
+    return this.$apollo.queries.tokenDetails.loading
   }
 
   /**
@@ -654,21 +609,20 @@ export default class PageDetailsToken extends Vue {
   }
 
   /**
-   * Determines whether or not all of the required objects for the TokenDetailsList component are loaded
-   *
-   * @return {Boolean}
-   */
-  get isTokenDetailsListLoading(): boolean {
-    return this.isContractDetailsLoading || this.isTokenDetailsLoading
-  }
-
-  /**
    * Determines whether or not all of required objects for the HolderDetailsList component are loaded
    *
    * @return {Boolean}
    */
   get isHolderDetailsListLoading(): boolean {
-    return this.isTokenDetailsListLoading || this.isHolderDetailsLoading
+    return this.isTokenDetailsLoading || this.isHolderDetailsLoading
+  }
+
+  get totalSupply(): BigNumber | null {
+    return this.tokenDetails ? this.tokenDetails.totalSupplyBN : null
+  }
+
+  get tokenLabel(): string {
+    return this.tokenDetails && this.tokenDetails.symbol ? this.tokenDetails.symbol!.toUpperCase() : this.addressRef
   }
 }
 </script>

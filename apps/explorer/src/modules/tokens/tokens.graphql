@@ -22,8 +22,8 @@ fragment TokenExchangeRatePage on TokenExchangeRatesPage {
   totalCount
 }
 
-query tokenExchangeRateByAddress($address: String!) {
-  tokenExchangeRateByAddress(address: $address) {
+query tokenDetails($address: String!) {
+  tokenDetails: tokenExchangeRateByAddress(address: $address) {
     ...TokenExchangeRateDetail
   }
 }

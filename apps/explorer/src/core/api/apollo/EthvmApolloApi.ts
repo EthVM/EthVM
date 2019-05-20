@@ -4,7 +4,6 @@ import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
   coinExchangeRate,
   holderDetails,
-  tokenExchangeRateByAddress,
   tokenExchangeRateBySymbol,
   tokenExchangeRates,
   tokenHolders,
@@ -79,17 +78,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.tokenExchangeRateBySymbol)
-  }
-
-  public getTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRate> {
-    return this.apollo
-      .query({
-        query: tokenExchangeRateByAddress,
-        variables: {
-          address
-        }
-      })
-      .then(res => res.data.tokenExchangeRateByAddress)
   }
 
   public getHolderDetails(address: string, holderAddress: string): Promise<any> {
