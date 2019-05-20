@@ -1,5 +1,4 @@
 import { EthvmApi } from '@app/core/api'
-import { blockByHash, blockByNumber, blocks, minedBlocksByAddress, totalNumberOfBlocks } from '@app/core/api/apollo/queries/blocks.graphql'
 import { contractByAddress } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
 import {
@@ -13,78 +12,11 @@ import {
   tokenTransfersByContractAddressForHolder,
   totalNumTokenExchangeRates
 } from '@app/core/api/apollo/queries/tokens.graphql'
-import { Block, CoinExchangeRate, Contract, PendingTx, SimpleBlock, TokenExchangeRate, TokenHolder, Transfer } from '@app/core/models'
+import { CoinExchangeRate, Contract, PendingTx, TokenExchangeRate, TokenHolder, Transfer } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
-import BigNumber from 'bignumber.js'
 
 export class EthvmApolloApi implements EthvmApi {
   constructor(private readonly apollo: ApolloClient<{}>) {}
-
-  // ------------------------------------------------------------------------------------
-  // Blocks
-  // ------------------------------------------------------------------------------------
-
-  public getBlock(hash: string): Promise<Block> {
-    return this.apollo
-      .query({
-        query: blockByHash,
-        variables: {
-          hash
-        }
-      })
-      .then(res => new Block(res.data.blockByHash))
-  }
-
-  public getBlocks(limit: number, page: number, fromBlock: number): Promise<SimpleBlock[]> {
-    return this.apollo
-      .query({
-        query: blocks,
-        variables: {
-          limit,
-          page,
-          fromBlock
-        }
-      })
-      .then(res => res.data.transactions.map(raw => new Block(raw)))
-  }
-
-  public getBlockByNumber(number: BigNumber): Promise<Block> {
-    return this.apollo
-      .query({
-        query: blockByNumber,
-        variables: {
-          number: number.toString()
-        }
-      })
-      .then(res => new Block(res.data.blockByNumber))
-  }
-
-  public getBlocksMinedOfAddress(address: string, limit: number, page: number): Promise<{ items: SimpleBlock[]; totalCount: number }> {
-    return this.apollo
-      .query({
-        query: minedBlocksByAddress,
-        variables: {
-          address,
-          limit,
-          page
-        }
-      })
-      .then(res => {
-        const { minedBlocksByAddress } = res.data
-        return {
-          items: minedBlocksByAddress.items.map(raw => new SimpleBlock(raw)),
-          totalCount: minedBlocksByAddress.totalCount
-        }
-      })
-  }
-
-  public getTotalNumberOfBlocks(): Promise<number> {
-    return this.apollo
-      .query({
-        query: totalNumberOfBlocks
-      })
-      .then(res => res.data.totalNumberOfBlocks as number)
-  }
 
   // ------------------------------------------------------------------------------------
   // Contracts

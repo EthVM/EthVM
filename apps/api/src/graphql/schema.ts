@@ -181,11 +181,6 @@ export interface BlockMetricPage {
     totalCount: number;
 }
 
-export interface BlocksPage {
-    items: Block[];
-    totalCount: number;
-}
-
 export interface BlockSummary {
     number: BigNumber;
     hash: string;
@@ -299,11 +294,8 @@ export interface IQuery {
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
-    blocks(limit?: number, page?: number, fromBlock?: BigNumber): Block[] | Promise<Block[]>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
-    minedBlocksByAddress(address: string, limit?: number, page?: number): BlocksPage | Promise<BlocksPage>;
-    totalNumberOfBlocks(): BigNumber | Promise<BigNumber>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     search(query: string): Search | Promise<Search>;
@@ -327,8 +319,6 @@ export interface IQuery {
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     tx(hash: string): Transaction | Promise<Transaction>;
-    txs(limit?: number, page?: number, fromBlock?: BigNumber): Transaction[] | Promise<Transaction[]>;
-    txsForAddress(hash: string, filter?: FilterEnum, limit?: number, page?: number): Transaction[] | Promise<Transaction[]>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;

@@ -7,8 +7,6 @@ type Query {
   transactionSummariesForAddress(address: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
 
   tx(hash: String!): Transaction
-  txs(limit: Int = 20, page: Int = 0, fromBlock: BigNumber): [Transaction!]!
-  txsForAddress(hash: String!, filter: FilterEnum = all, limit: Int = 20, page: Int = 0): [Transaction!]!
 }
 
 type Subscription {

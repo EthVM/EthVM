@@ -6,6 +6,8 @@
  * @param target
  * @param source
  */
+import { PartialReadException } from '@app/shared/errors/partial-read-exception'
+
 export function assignClean(target: any, source: any) {
   const sourceCopy = { ...source }
 
@@ -17,6 +19,12 @@ export function assignClean(target: any, source: any) {
   }
 
   return Object.assign(target, sourceCopy)
+}
+
+export function setEquals(as, bs) {
+  if (as.size !== bs.size) return false
+  for (const a of as) if (!bs.has(a)) return false
+  return true
 }
 
 /**
