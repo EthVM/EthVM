@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { BigNumberTransformer } from '../transformers/big-number.transformer';
 
-@Entity('token_exchange_rates')
+@Entity('canonical_token_exchange_rates')
 export class TokenExchangeRateEntity {
 
   constructor(data: any) {
