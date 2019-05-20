@@ -21,3 +21,50 @@ fragment TokenExchangeRatePage on TokenExchangeRatesPage {
   }
   totalCount
 }
+
+query tokenExchangeRateByAddress($address: String!) {
+  tokenExchangeRateByAddress(address: $address) {
+    ...TokenExchangeRateDetail
+  }
+}
+
+fragment TokenExchangeRateDetail on TokenExchangeRate {
+  address
+  circulatingSupply
+  currentPrice
+  image
+  marketCap
+  name
+  priceChangePercentage24h
+  symbol
+  totalSupply
+  totalVolume
+  holdersCount
+  contract {
+    creator
+    metadata {
+      type
+      decimals
+      website
+      support {
+        email
+        url
+      }
+      social {
+        blog
+        chat
+        facebook
+        forum
+        github
+        gitter
+        instagram
+        linkedin
+        reddit
+        slack
+        telegram
+        twitter
+        youtube
+      }
+    }
+  }
+}

@@ -49,16 +49,6 @@ query holderDetails($address: String! $holderAddress: String!) {
   }
 }
 
-# query holderTransfers($address: String!, $holderAddress: String!) {
-#   holderTransfers(address: $address, holderAddress: $holderAddress) {
-#     transactionHash
-#     from
-#     to
-#     timestamp
-#     value
-#   }
-# }
-
 query coinExchangeRate($pair: ExchangeRatePair!) {
   coinExchangeRate(pair: $pair) {
     currency
@@ -89,22 +79,5 @@ query tokenExchangeRateBySymbol($symbol: String!) {
     symbol
     totalSupply
     totalVolume
-  }
-}
-
-query tokenExchangeRateByAddress($address: String!) {
-  tokenExchangeRateByAddress(address: $address) {
-    address
-    circulatingSupply
-    currentPrice
-    image
-    marketCap
-    name
-    priceChangePercentage24h
-    symbol
-    totalSupply
-    totalVolume
-    owner
-    holdersCount
   }
 }

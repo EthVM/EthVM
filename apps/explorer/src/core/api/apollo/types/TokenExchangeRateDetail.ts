@@ -3,16 +3,16 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: tokenExchangeRateByAddress
+// GraphQL fragment: TokenExchangeRateDetail
 // ====================================================
 
-export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract_metadata_support {
+export interface TokenExchangeRateDetail_contract_metadata_support {
   __typename: "ContractSupport";
   email: string | null;
   url: string | null;
 }
 
-export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract_metadata_social {
+export interface TokenExchangeRateDetail_contract_metadata_social {
   __typename: "ContractSocial";
   blog: string | null;
   chat: string | null;
@@ -29,22 +29,22 @@ export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract_
   youtube: string | null;
 }
 
-export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract_metadata {
+export interface TokenExchangeRateDetail_contract_metadata {
   __typename: "ContractMetadata";
   type: string | null;
   decimals: number | null;
   website: string | null;
-  support: tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract_metadata_support | null;
-  social: tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract_metadata_social | null;
+  support: TokenExchangeRateDetail_contract_metadata_support | null;
+  social: TokenExchangeRateDetail_contract_metadata_social | null;
 }
 
-export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract {
+export interface TokenExchangeRateDetail_contract {
   __typename: "Contract";
   creator: string | null;
-  metadata: tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract_metadata | null;
+  metadata: TokenExchangeRateDetail_contract_metadata | null;
 }
 
-export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress {
+export interface TokenExchangeRateDetail {
   __typename: "TokenExchangeRate";
   address: string | null;
   circulatingSupply: any | null;
@@ -57,13 +57,5 @@ export interface tokenExchangeRateByAddress_tokenExchangeRateByAddress {
   totalSupply: any | null;
   totalVolume: any | null;
   holdersCount: number | null;
-  contract: tokenExchangeRateByAddress_tokenExchangeRateByAddress_contract | null;
-}
-
-export interface tokenExchangeRateByAddress {
-  tokenExchangeRateByAddress: tokenExchangeRateByAddress_tokenExchangeRateByAddress | null;
-}
-
-export interface tokenExchangeRateByAddressVariables {
-  address: string;
+  contract: TokenExchangeRateDetail_contract | null;
 }

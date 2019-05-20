@@ -394,8 +394,8 @@ export interface TokenExchangeRate {
     circulatingSupply?: BigNumber;
     totalSupply?: BigNumber;
     lastUpdated?: string;
-    owner?: string;
     holdersCount?: number;
+    contract?: Contract;
 }
 
 export interface TokenExchangeRatesPage {

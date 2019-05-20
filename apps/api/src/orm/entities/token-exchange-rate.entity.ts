@@ -2,8 +2,9 @@ import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity';
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity';
 import { assignClean } from '@app/shared/utils';
 import BigNumber from 'bignumber.js';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
 import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import { ContractEntity } from '@app/orm/entities/contract.entity'
 
 @Entity('canonical_token_exchange_rates')
 export class TokenExchangeRateEntity {
@@ -76,4 +77,11 @@ export class TokenExchangeRateEntity {
     referencedColumnName: 'contract',
   })
   erc721Balances?: Erc721BalanceEntity[]
+
+  @OneToOne(type => ContractEntity, c => c.tokenExchangeRate)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'address'
+  })
+  contract?: ContractEntity
 }
