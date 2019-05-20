@@ -1,7 +1,7 @@
 import {TransactionTraceEntity} from '@app/orm/entities/transaction-trace.entity'
 import {Injectable} from '@nestjs/common'
 import {InjectRepository} from '@nestjs/typeorm'
-import {In, Repository} from 'typeorm'
+import { EntityManager, In, Repository } from 'typeorm'
 
 export interface TransactionStatus {
   blockHash: string
@@ -51,13 +51,13 @@ export class TraceService {
 
   }
 
-  async findTxStatusByBlockHash(blockHashes: string[]): Promise<TransactionStatus[]> {
+  async findTxStatusByBlockHash(tx: EntityManager, blockHashes: string[]): Promise<TransactionStatus[]> {
 
     if (blockHashes.length === 0) return []
 
     // find root level call trace and use it's error field to determine transaction status
 
-    const entities = await this.traceRepository.find({
+    const entities = await tx.find(TransactionTraceEntity, {
       select: ['blockHash', 'transactionHash', 'error'],
       where: {
         blockHash: In(blockHashes),
