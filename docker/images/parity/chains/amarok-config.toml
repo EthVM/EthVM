@@ -1,5 +1,5 @@
 [parity]
-chain = "/home/parity/chains/amarok-chain-specs.json"
+chain = "/home/parity/amarok-chain-specs.json"
 base_path = "/home/parity"
 
 [network]
@@ -8,12 +8,12 @@ port = 30303
 [rpc]
 port = 8545
 interface = "all"
-apis = ["web3", "eth", "net", "pubsub", "parity", "parity_pubsub", "traces", "rpc", "shh", "shh_pubsub"]
+apis = ["web3", "eth", "net", "pubsub", "parity", "parity_pubsub", "traces", "rpc", "shh", "shh_pubsub", "personal"]
 
 [websockets]
 port = 8446
 interface = "all"
-apis = ["web3", "eth", "net", "pubsub", "parity", "parity_pubsub", "traces", "rpc", "shh", "shh_pubsub"]
+apis = ["web3", "eth", "net", "pubsub", "parity", "parity_pubsub", "traces", "rpc", "shh", "shh_pubsub", "personal"]
 
 [mining]
 reseal_min_period = 0
