@@ -10,6 +10,12 @@ query tokenTransfersByContractAddress($address: String!, $offset: Int, $limit: I
   }
 }
 
+query tokenTransfersByContractAddressForHolder($address: String!, $holder: String!, $filter: FilterEnum, $offset: Int, $limit: Int) {
+  transfers: tokenTransfersByContractAddressForHolder(contractAddress: $address, holderAddress: $holder, filter: $filter, offset: $offset, limit: $limit) {
+    ...TransferPage
+  }
+}
+
 fragment Transfer on Transfer {
   id
   transactionHash: traceLocationTransactionHash

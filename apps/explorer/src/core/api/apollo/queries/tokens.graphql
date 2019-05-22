@@ -3,20 +3,6 @@
 #   Queries
 # -------------------------------------------------------------
 
-query tokenTransfersByContractAddressForHolder($address: String!, $holder: String!, $filter: FilterEnum, $limit: Int, $page: Int) {
-  tokenTransfersByContractAddressForHolder(contractAddress: $address, holderAddress: $holder, filter: $filter, limit: $limit, page: $page) {
-    items {
-      id
-      value: amount
-      address: contractAddress
-      from
-      timestamp
-      to
-    }
-    totalCount
-  }
-}
-
 query tokenHolders($address: String!, $limit: Int, $page: Int) {
   tokenHolders(address: $address, limit: $limit, page: $page) {
     items {

@@ -28,10 +28,10 @@ export class TransferResolvers {
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
     @Args('filter') filter: string,
+    @Args('offset') offset: number,
     @Args('limit') limit: number,
-    @Args('page') page: number,
   ): Promise<TransferPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, page)
+    const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, offset)
     return new TransferPageDto({
       items: result[0],
       totalCount: result[1],

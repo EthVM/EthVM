@@ -2,12 +2,12 @@
   <v-card color="white" flat class="pr-2 pl-2 pt-3">
     <!-- LOADING / ERROR -->
     <v-flex v-if="loading" xs12>
-      <v-progress-linear color="blue" indeterminate />
+      <v-progress-linear color="blue" indeterminate/>
     </v-flex>
-    <app-error :has-error="hasError" :message="error" class="mb-4" />
+    <app-error :has-error="hasError" :message="error" class="mb-4"/>
     <!-- Pagination -->
     <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="pages > 1">
-      <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      <app-paginate :total="pages" @newPage="setPage" :current-page="page"/>
     </v-layout>
     <!-- End Pagination -->
 
@@ -49,7 +49,7 @@
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
             </v-layout>
-            <v-divider class="mb-2 mt-2" />
+            <v-divider class="mb-2 mt-2"/>
           </div>
         </v-flex>
       </div>
@@ -95,7 +95,7 @@
 
             <!-- Column 2 -->
             <v-flex hidden-sm-and-down md2>
-              <app-time-ago :timestamp="transfer.timestampDate" />
+              <app-time-ago :timestamp="transfer.timestampDate"/>
             </v-flex>
             <!-- End Column 2 -->
 
@@ -111,11 +111,11 @@
             </v-flex>
             <!-- End Column 4 -->
           </v-layout>
-          <v-divider class="mb-2 mt-2" />
+          <v-divider class="mb-2 mt-2"/>
         </v-card>
         <!-- End Rows -->
         <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page"/>
         </v-layout>
       </div>
     </div>
@@ -123,172 +123,185 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
-import BN from 'bignumber.js'
-import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import { EthValue } from '@app/core/models'
-import { internalTransactionsByAddress, tokenTransfersByContractAddress } from '@app/modules/transfers/transfers.graphql'
-import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
-import BigNumber from 'bignumber.js'
-import AppError from '@app/core/components/ui/AppError.vue'
+  import { Component, Vue, Prop } from 'vue-property-decorator'
+  import BN from 'bignumber.js'
+  import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+  import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+  import { EthValue } from '@app/core/models'
+  import {
+    internalTransactionsByAddress,
+    tokenTransfersByContractAddress,
+    tokenTransfersByContractAddressForHolder
+  } from '@app/modules/transfers/transfers.graphql'
+  import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
+  import BigNumber from 'bignumber.js'
+  import AppError from '@app/core/components/ui/AppError.vue'
 
-const MAX_ITEMS = 10
+  const MAX_ITEMS = 10
 
-@Component({
-  components: {
-    AppTimeAgo,
-    AppPaginate,
-    AppError
-  },
-  data() {
-    return {
-      page: 0,
-      error: undefined
-    }
-  },
-  apollo: {
-    transferPage: {
-      query() {
-        const self = this as any
-        if (self.isToken) {
-          return tokenTransfersByContractAddress
-        }
-        return internalTransactionsByAddress
-      },
+  @Component({
+    components: {
+      AppTimeAgo,
+      AppPaginate,
+      AppError
+    },
+    data() {
+      return {
+        page: 0,
+        error: undefined
+      }
+    },
+    apollo: {
+      transferPage: {
+        query() {
+          const self = this as any
+          if (self.isToken) {
+            return tokenTransfersByContractAddress
+          }
+          if (self.isTokenHolder) {
+            return tokenTransfersByContractAddressForHolder
+          }
+          return internalTransactionsByAddress
+        },
 
-      variables() {
-        const { address, maxItems, page } = this
-        return {
-          address,
-          limit: maxItems,
-          page: page
-        }
-      },
+        variables() {
+          const {address, maxItems, page, holder} = this
+          return {
+            address,
+            limit: maxItems,
+            page,
+            holder
+          }
+        },
 
-      update({ transfers }) {
-        if (transfers) {
-          this.error = '' // clear the error
-          return new TransferPageExt(transfers)
-        }
-        this.error = this.error || this.$i18n.t('message.err')
-        return transfers
-      },
+        update({transfers}) {
+          if (transfers) {
+            this.error = '' // clear the error
+            return new TransferPageExt(transfers)
+          }
+          this.error = this.error || this.$i18n.t('message.err')
+          return transfers
+        },
 
-      error({ graphQLErrors, networkError }) {
-        // TODO refine
-        if (networkError) {
-          this.error = this.$i18n.t('message.no-data')
+        error({graphQLErrors, networkError}) {
+          // TODO refine
+          if (networkError) {
+            this.error = this.$i18n.t('message.no-data')
+          }
         }
       }
     }
-  }
-})
-export default class TransfersTable extends Vue {
-  /*
-      ===================================================================================
-        Props
-      ===================================================================================
-      */
+  })
+  export default class TransfersTable extends Vue {
+    /*
+        ===================================================================================
+          Props
+        ===================================================================================
+        */
 
-  @Prop(String) address!: string
-  @Prop(String) pageType!: string
-  @Prop(Number) decimals?: number
+    @Prop(String) address!: string
+    @Prop(String) pageType!: string
+    @Prop(Number) decimals?: number
+    @Prop(String) holder?: string
 
-  transferPage?: TransferPageExt
-  error?: string
-  page?: number
+    transferPage?: TransferPageExt
+    error?: string
+    page?: number
 
-  /*
-      ===================================================================================
-        Methods
-      ===================================================================================
-      */
+    /*
+        ===================================================================================
+          Methods
+        ===================================================================================
+        */
 
-  setPage(page: number): void {
-    const { transferPage: query } = this.$apollo.queries
+    setPage(page: number): void {
+      const {transferPage: query} = this.$apollo.queries
 
-    const self = this
+      const self = this
 
-    query.fetchMore({
-      variables: {
-        address: self.address,
-        offset: page * this.maxItems,
-        limit: this.maxItems
-      },
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        self.page = page
-        return fetchMoreResult
+      query.fetchMore({
+        variables: {
+          address: self.address,
+          offset: page * this.maxItems,
+          limit: this.maxItems
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          self.page = page
+          return fetchMoreResult
+        }
+      })
+    }
+
+    calculateTransferValue(value: string) {
+      if (this.isInternal) {
+        return new EthValue(value).toEthFormatted().toString()
       }
-    })
-  }
 
-  calculateTransferValue(value: string) {
-    if (this.isInternal) {
-      return new EthValue(value).toEthFormatted().toString()
+      let n = new BN(value)
+
+      if (this.decimals) {
+        n = n.div(new BN(10).pow(this.decimals))
+      }
+      return n.toFormat(2).toString()
     }
 
-    let n = new BN(value)
+    /*
+        ===================================================================================
+          Computed Values
+        ===================================================================================
+        */
 
-    if (this.decimals) {
-      n = n.div(new BN(10).pow(this.decimals))
+    get isInternal(): boolean {
+      return this.pageType === 'internal'
     }
-    return n.toFormat(2).toString()
-  }
 
-  /*
-      ===================================================================================
-        Computed Values
-      ===================================================================================
-      */
+    get isToken(): boolean {
+      return this.pageType === 'token'
+    }
 
-  get isInternal(): boolean {
-    return this.pageType === 'internal'
-  }
+    get isTokenHolder(): boolean {
+      return this.pageType === 'tokenHolder'
+    }
 
-  get isToken(): boolean {
-    return this.pageType === 'token'
-  }
+    get transfers() {
+      return this.transferPage ? this.transferPage.items || [] : []
+    }
 
-  get transfers() {
-    return this.transferPage ? this.transferPage.items || [] : []
-  }
+    get loading() {
+      return this.$apollo.loading
+    }
 
-  get loading() {
-    return this.$apollo.loading
-  }
+    get hasError(): boolean {
+      return !!this.error && this.error !== ''
+    }
 
-  get hasError(): boolean {
-    return !!this.error && this.error !== ''
-  }
+    get totalCount(): BigNumber {
+      return this.transferPage ? this.transferPage.totalCountBN : new BigNumber(0)
+    }
 
-  get totalCount(): BigNumber {
-    return this.transferPage ? this.transferPage.totalCountBN : new BigNumber(0)
-  }
+    get hasItems(): boolean {
+      return this.totalCount.isGreaterThan(0)
+    }
 
-  get hasItems(): boolean {
-    return this.totalCount.isGreaterThan(0)
-  }
+    /**
+     * @return {Number} - Total number of pagination pages
+     */
+    get pages(): number {
+      return this.transferPage ? Math.ceil(this.transferPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+    }
 
-  /**
-   * @return {Number} - Total number of pagination pages
-   */
-  get pages(): number {
-    return this.transferPage ? Math.ceil(this.transferPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+    /**
+     * @return {Number} - MAX_ITEMS per pagination page
+     */
+    get maxItems(): number {
+      return MAX_ITEMS
+    }
   }
-
-  /**
-   * @return {Number} - MAX_ITEMS per pagination page
-   */
-  get maxItems(): number {
-    return MAX_ITEMS
-  }
-}
 </script>
 <style scoped lang="css">
-.table-row-loading {
-  background: #e6e6e6;
-  height: 12px;
-  border-radius: 2px;
-}
+  .table-row-loading {
+    background: #e6e6e6;
+    height: 12px;
+    border-radius: 2px;
+  }
 </style>
