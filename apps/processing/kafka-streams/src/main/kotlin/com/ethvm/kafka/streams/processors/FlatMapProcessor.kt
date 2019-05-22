@@ -82,7 +82,6 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
                 .setTraces(rewardTraces)
                 .build()
             )
-
         }
 
         if (txTraces.isNotEmpty()) {
@@ -90,7 +89,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
           val blockHash = txTraces.map { it.blockHash }.first()
 
           records = records + txTraces
-            .groupBy{ it.transactionHash }
+            .groupBy { it.transactionHash }
             .map { (transactionHash, tracesForTransaction) ->
 
               val rootError = tracesForTransaction
@@ -106,9 +105,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
                   .setTraces(tracesForTransaction)
                   .build()
               )
-
             }
-
         }
 
         records

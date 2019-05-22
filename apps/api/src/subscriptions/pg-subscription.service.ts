@@ -67,7 +67,7 @@ function inputIsCircuitBreakerState(input: any): input is CircuitBreakerState {
 // tslint:disable-next-line:no-shadowed-variable
 function isCircuitBreakerState<CircuitBreakerState>() {
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsCircuitBreakerState)
+    filter(inputIsCircuitBreakerState),
   )
 }
 
@@ -78,7 +78,7 @@ function inputIsEvent(input: any): input is PgEvent {
 // tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsEvent)
+    filter(inputIsEvent),
   )
 }
 
@@ -89,12 +89,12 @@ function isBlockEvent<PgEvent>() {
     'canonical_block_header',
     'transaction',
     'transaction_trace',
-    'transaction_receipt'
+    'transaction_receipt',
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsEvent),
-    filter(e => tables.has(e.table))
+    filter(e => tables.has(e.table)),
   )
 }
 
@@ -105,12 +105,12 @@ function isBlockMetricEvent<PgEvent>() {
     'block_metrics_header',
     'block_metrics_transaction',
     'block_metrics_transaction_trace',
-    'block_metrics_transaction_fee'
+    'block_metrics_transaction_fee',
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsEvent),
-    filter(e => tables.has(e.table))
+    filter(e => tables.has(e.table)),
   )
 
 }
@@ -184,7 +184,7 @@ export class PgSubscriptionService {
     private readonly config: ConfigService,
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
-    private readonly blockMetricsService: BlockMetricsService
+    private readonly blockMetricsService: BlockMetricsService,
   ) {
 
     this.url = config.db.url
@@ -226,7 +226,7 @@ export class PgSubscriptionService {
 
     events$.subscribe(
       event => circuitBreaker.next(new PgEvent(event)),
-      err => circuitBreaker.error(err)
+      err => circuitBreaker.error(err),
     )
 
     circuitBreaker.subject
@@ -254,7 +254,7 @@ export class PgSubscriptionService {
     blockHashes$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0)
+        filter(blockHashes => blockHashes.length > 0),
       )
       .subscribe(async blockHashes => {
 
@@ -279,7 +279,7 @@ export class PgSubscriptionService {
     blockMetrics$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0)
+        filter(blockHashes => blockHashes.length > 0),
       )
       .subscribe(async blockHashes => {
         const metrics = await blockMetricsService.findByBlockHash(blockHashes)

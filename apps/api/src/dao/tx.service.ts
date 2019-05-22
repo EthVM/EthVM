@@ -283,7 +283,6 @@ export class TxService {
 
       // Root trace
       if (!txStatus) {
-        console.log('Tx statuses', tx.hash, txStatusByHash)
         throw new PartialReadException(`Root trace missing, tx hash = ${tx.hash}`)
       }
       // Receipt

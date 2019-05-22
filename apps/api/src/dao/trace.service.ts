@@ -40,7 +40,7 @@ export class TraceService {
       TransactionTraceEntity, {
         select: ['blockHash', 'transactionHash', 'rootError'],
         where: {
-          transactionHash: In(txHashes)
+          transactionHash: In(txHashes),
         },
       })
 
@@ -60,7 +60,7 @@ export class TraceService {
     const entities = await tx.find(TransactionTraceEntity, {
       select: ['blockHash', 'transactionHash', 'rootError'],
       where: {
-        blockHash: In(blockHashes)
+        blockHash: In(blockHashes),
       },
     })
 

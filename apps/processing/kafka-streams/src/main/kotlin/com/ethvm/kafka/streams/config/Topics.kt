@@ -25,7 +25,6 @@ import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDeltaList
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceKey
 import com.ethvm.kafka.streams.Serdes.ReceiptList
-import com.ethvm.kafka.streams.Serdes.Trace
 import com.ethvm.kafka.streams.Serdes.TraceKey
 import com.ethvm.kafka.streams.Serdes.TraceList
 import com.ethvm.kafka.streams.Serdes.Transaction
