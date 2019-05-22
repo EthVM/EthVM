@@ -124,7 +124,7 @@ services:
     networks:
       - back
     volumes:
-      - /home/brian/.local/share/io.parity.ethereum/docker/:/home/parity/.local/share/io.parity.ethereum/
+      - ${PARITY_VOLUME_MOUNTPOINT}:/home/parity/.local/share/io.parity.ethereum/
     ports:
       - 8545:8545
       - 8546:8546
@@ -198,6 +198,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_COMPRESSION_TYPE: "zstd"
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
       CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
