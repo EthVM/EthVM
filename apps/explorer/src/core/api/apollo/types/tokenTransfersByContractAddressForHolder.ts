@@ -2,36 +2,38 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { FilterEnum } from "./globalTypes";
+import { FilterEnum, DeltaType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: tokenTransfersByContractAddressForHolder
 // ====================================================
 
-export interface tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder_items {
+export interface tokenTransfersByContractAddressForHolder_transfers_items {
   __typename: "Transfer";
   id: string;
+  transactionHash: string | null;
   value: any;
-  address: string | null;
   from: string | null;
-  timestamp: number;
   to: string;
+  timestamp: number;
+  deltaType: DeltaType;
+  address: string | null;
 }
 
-export interface tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder {
+export interface tokenTransfersByContractAddressForHolder_transfers {
   __typename: "TransferPage";
-  items: tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder_items[];
+  items: tokenTransfersByContractAddressForHolder_transfers_items[];
   totalCount: any;
 }
 
 export interface tokenTransfersByContractAddressForHolder {
-  tokenTransfersByContractAddressForHolder: tokenTransfersByContractAddressForHolder_tokenTransfersByContractAddressForHolder;
+  transfers: tokenTransfersByContractAddressForHolder_transfers;
 }
 
 export interface tokenTransfersByContractAddressForHolderVariables {
   address: string;
   holder: string;
   filter?: FilterEnum | null;
+  offset?: number | null;
   limit?: number | null;
-  page?: number | null;
 }

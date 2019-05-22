@@ -49,7 +49,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-5">
-        <table-transfers :address="addressRef" :page-type="'internal'" />
+        <transfers-table :address="addressRef" :page-type="'internal'" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -83,9 +83,9 @@ import { Crumb, Tab } from '@app/core/components/props'
 import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue'
 import { addressDetail } from '@app/modules/addresses/addresses.graphql'
 import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
+import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
 
 const MAX_ITEMS = 10
 
@@ -100,7 +100,7 @@ const MAX_ITEMS = 10
     TableAddressTokens,
     TableAddressContracts,
     TableTxs,
-    TableTransfers
+    TransfersTable
   },
   apollo: {
     account: {

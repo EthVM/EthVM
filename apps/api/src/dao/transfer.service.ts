@@ -15,13 +15,11 @@ export class TransferService {
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
-    const skip = take * page
-
+  async findTokenTransfersByContractAddress(address: string, limit: number = 10, offset: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
     const findOptions: FindManyOptions = {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
-      skip,
-      take,
+      skip: offset,
+      take: limit,
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
     }
     return this.transferRepository.findAndCount(findOptions)
@@ -31,10 +29,9 @@ export class TransferService {
     address: string,
     holder: string,
     filter: string = 'all',
-    take: number = 10,
-    page: number = 0,
+    limit: number = 10,
+    offset: number = 0,
   ): Promise<[FungibleBalanceTransferEntity[], number]> {
-    const skip = take * page
 
     const builder = this.transferRepository.createQueryBuilder('t')
       .where('t.contract_address = :address')
@@ -59,8 +56,8 @@ export class TransferService {
       .setParameters({ address, deltaType: 'TOKEN_TRANSFER', holder })
       .orderBy('t.traceLocationBlockNumber', 'DESC')
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
-      .offset(skip)
-      .take(take)
+      .offset(offset)
+      .take(limit)
       .getManyAndCount()
 
   }

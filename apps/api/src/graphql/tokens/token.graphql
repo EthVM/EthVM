@@ -1,5 +1,4 @@
 type Query {
-  tokenHolders(address: String!, limit: Int = 20, page: Int = 0): TokenHoldersPage!
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
   addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10): TokenPage!
   addressTotalTokenValueUSD(address: String!): BigNumber
@@ -9,6 +8,9 @@ type Query {
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
   tokensMetadata(symbols: [String]): [TokenMetadata!]!
+
+  tokenExchangeRatePage(sort: TokenExchangeRateFilter!, symbols: [String!], offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
+  tokenHolders(address: String!, offset: Int = 0, limit: Int = 20): TokenHoldersPage!
 }
 
 type TokenPage {
@@ -32,6 +34,16 @@ type TokenHolder {
   balance: BigNumber!
 }
 
+type TokenHoldersPage {
+  items: [TokenHolder!]!
+  totalCount: Int!
+}
+
+type TokenExchangeRatesPage {
+  items: [TokenExchangeRate!]!
+  totalCount: Int!
+}
+
 type TokenExchangeRate {
   address: String
   symbol: String
@@ -50,8 +62,8 @@ type TokenExchangeRate {
   circulatingSupply: BigNumber
   totalSupply: BigNumber
   lastUpdated: String
-  owner: String
   holdersCount: Int
+  contract: Contract
 }
 
 type CoinExchangeRate {
@@ -71,11 +83,6 @@ type TokenMetadata {
   address: String
   decimals: Int
   logo: String
-}
-
-type TokenHoldersPage {
-  items: [TokenHolder!]!
-  totalCount: Int!
 }
 
 enum ExchangeRatePair {

@@ -2,33 +2,36 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { DeltaType } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: tokenTransfersByContractAddress
 // ====================================================
 
-export interface tokenTransfersByContractAddress_tokenTransfersByContractAddress_items {
+export interface tokenTransfersByContractAddress_transfers_items {
   __typename: "Transfer";
   id: string;
   transactionHash: string | null;
   value: any;
   from: string | null;
   to: string;
-  address: string | null;
   timestamp: number;
+  deltaType: DeltaType;
+  address: string | null;
 }
 
-export interface tokenTransfersByContractAddress_tokenTransfersByContractAddress {
+export interface tokenTransfersByContractAddress_transfers {
   __typename: "TransferPage";
-  items: tokenTransfersByContractAddress_tokenTransfersByContractAddress_items[];
+  items: tokenTransfersByContractAddress_transfers_items[];
   totalCount: any;
 }
 
 export interface tokenTransfersByContractAddress {
-  tokenTransfersByContractAddress: tokenTransfersByContractAddress_tokenTransfersByContractAddress;
+  transfers: tokenTransfersByContractAddress_transfers;
 }
 
 export interface tokenTransfersByContractAddressVariables {
   address: string;
+  offset?: number | null;
   limit?: number | null;
-  page?: number | null;
 }

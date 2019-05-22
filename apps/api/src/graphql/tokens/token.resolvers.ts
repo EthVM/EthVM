@@ -9,6 +9,7 @@ import { TokenExchangeRatesArgs } from '@app/graphql/tokens/args/token-exchange-
 import { TokensMetadataArgs } from '@app/graphql/tokens/args/tokens-metadata.args'
 import { TokenPageDto } from '@app/graphql/tokens/dto/token-page.dto'
 import BigNumber from 'bignumber.js'
+import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange-rate-page.dto'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -18,10 +19,10 @@ export class TokenResolvers {
   @Query()
   async tokenHolders(
     @Args('address', ParseAddressPipe) address: string,
+    @Args('offset') offset: number,
     @Args('limit') limit: number,
-    @Args('page') page: number,
   ): Promise<TokenHoldersPageDto> {
-    const result = await this.tokenService.findTokenHolders(address, limit, page)
+    const result = await this.tokenService.findTokenHolders(address, limit, offset)
     return new TokenHoldersPageDto({
       items: result[0],
       totalCount: result[1],
@@ -71,6 +72,17 @@ export class TokenResolvers {
   }
 
   @Query()
+  async tokenExchangeRatePage(
+    @Args() {symbols}: TokenExchangeRatesArgs,
+    @Args('sort') sort: string,
+    @Args('limit') limit: number,
+    @Args('offset') offset: number,
+  ): Promise<TokenExchangeRatePageDto> {
+    const [items, totalCount] = await this.tokenService.findTokenExchangeRatesPage(sort, limit, offset, symbols)
+    return new TokenExchangeRatePageDto({ items, totalCount })
+  }
+
+  @Query()
   async totalNumTokenExchangeRates() {
     return await this.tokenService.countTokenExchangeRates()
   }
@@ -85,9 +97,8 @@ export class TokenResolvers {
   async tokenExchangeRateByAddress(@Args('address', ParseAddressPipe) address: string) {
     const tokenExchangeRate = await this.tokenService.findTokenExchangeRateByAddress(address)
     if (!tokenExchangeRate) return null
-    const contract = await this.tokenService.findContractInfoForToken(address)
     const holdersCount = await this.tokenService.countTokenHolders(address)
-    return new TokenExchangeRateDto({...tokenExchangeRate, owner: contract ? contract.creator : null, holdersCount})
+    return new TokenExchangeRateDto({...tokenExchangeRate, holdersCount})
   }
 
   @Query()

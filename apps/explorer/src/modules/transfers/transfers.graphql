@@ -1,15 +1,18 @@
 query internalTransactionsByAddress($address: String!, $offset: Int, $limit: Int) {
   transfers: internalTransactionsByAddress(address: $address, offset: $offset, limit: $limit) {
-    items {
-      id
-      transactionHash: traceLocationTransactionHash
-      value: amount
-      from
-      to
-      timestamp
-      deltaType
-    }
-    totalCount
+    ...TransferPage
+  }
+}
+
+query tokenTransfersByContractAddress($address: String!, $offset: Int, $limit: Int) {
+  transfers: tokenTransfersByContractAddress(contractAddress: $address, offset: $offset, limit: $limit) {
+    ...TransferPage
+  }
+}
+
+query tokenTransfersByContractAddressForHolder($address: String!, $holder: String!, $filter: FilterEnum, $offset: Int, $limit: Int) {
+  transfers: tokenTransfersByContractAddressForHolder(contractAddress: $address, holderAddress: $holder, filter: $filter, offset: $offset, limit: $limit) {
+    ...TransferPage
   }
 }
 
@@ -21,6 +24,7 @@ fragment Transfer on Transfer {
   to
   timestamp
   deltaType
+  address: contractAddress
 }
 
 fragment TransferPage on TransferPage {
