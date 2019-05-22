@@ -184,7 +184,7 @@
       }
     }
   })
-  export default class TableTransfers extends Vue {
+  export default class TransfersTable extends Vue {
     /*
       ===================================================================================
         Props

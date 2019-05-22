@@ -23,7 +23,7 @@
         =====================================================================================
         -->
         <v-tab-item slot="tabs-item" value="tab-0">
-          <table-transfers :address="addressRef" :pageType="'token'" :decimals="decimals" />
+          <transfers-table :address="addressRef" :pageType="'token'" :decimals="decimals" />
         </v-tab-item>
         <!--
         =====================================================================================
@@ -77,8 +77,8 @@ import { tokenDetails } from '@app/modules/tokens/tokens.graphql'
 import { TokenExchangeRateDetailExt } from "@app/core/api/apollo/extensions/token-exchange-rate-detail.ext";
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue';
-import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue';
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue';
+import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue';
 
 const MAX_ITEMS = 10
 
@@ -90,7 +90,7 @@ const MAX_ITEMS = 10
     TokenDetailsList,
     AppTabs,
     TokenTableHolders,
-    TableTransfers
+    TransfersTable
   },
   apollo: {
     tokenDetails: {
