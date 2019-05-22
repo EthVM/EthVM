@@ -75,7 +75,7 @@ export default class TokenTableHolders extends Vue {
   @Prop(Number) page!: number
   @Prop(String) addressRef!: string
   @Prop(BigNumber) totalSupply?: BigNumber
-  @Prop(String) decimals?: string
+  @Prop(Number) decimals?: number
   @Prop(Boolean) loading?: boolean
 
   /*

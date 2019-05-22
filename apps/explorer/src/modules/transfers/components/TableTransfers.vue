@@ -124,7 +124,7 @@ import BN from 'bignumber.js'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import { EthValue } from '@app/core/models'
-import { internalTransactionsByAddress } from '@app/modules/transfers/transfers.graphql'
+import { internalTransactionsByAddress, tokenTransfersByContractAddress } from '@app/modules/transfers/transfers.graphql'
 import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
 import BigNumber from 'bignumber.js'
 
@@ -143,11 +143,16 @@ const MAX_ITEMS = 10
   },
   apollo: {
     transferPage: {
-      query: internalTransactionsByAddress,
+      query() {
+        const self = this as any
+        if (self.isToken) {
+          return tokenTransfersByContractAddress
+        }
+        return  internalTransactionsByAddress
+      },
 
       variables() {
         const { address } = this
-
         return {
           address
         }
@@ -180,7 +185,7 @@ export default class TableTransfers extends Vue {
 
   @Prop(String) address!: string
   @Prop(String) pageType!: string
-  @Prop(String) decimals?: number
+  @Prop(Number) decimals?: number
 
   transferPage?: TransferPageExt
   error?: string
@@ -233,6 +238,10 @@ export default class TableTransfers extends Vue {
 
   get isInternal(): boolean {
     return this.pageType === 'internal'
+  }
+
+  get isToken(): boolean {
+    return this.pageType === 'token'
   }
 
   get transfers() {

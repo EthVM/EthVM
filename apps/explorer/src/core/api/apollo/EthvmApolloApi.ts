@@ -7,7 +7,6 @@ import {
   tokenExchangeRateBySymbol,
   tokenExchangeRates,
   tokenHolders,
-  tokenTransfersByContractAddress,
   tokenTransfersByContractAddressForHolder,
   totalNumTokenExchangeRates
 } from '@app/core/api/apollo/queries/tokens.graphql'
@@ -127,19 +126,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.tokenHolders)
-  }
-
-  public getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }> {
-    return this.apollo
-      .query({
-        query: tokenTransfersByContractAddress,
-        variables: {
-          address,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.tokenTransfersByContractAddress)
   }
 
   public getTokenTransfersByContractAddressForHolder(

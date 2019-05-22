@@ -192,7 +192,7 @@ export class TokenService {
   }
 
   async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | undefined> {
-    return this.tokenExchangeRateRepository.findOne({ where: { address }, relations: ['contract'] })
+    return this.tokenExchangeRateRepository.findOne({ where: { address }, relations: ['contract', 'contract.metadata'] })
   }
 
   async findContractInfoForToken(address: string): Promise<ContractEntity | undefined> {

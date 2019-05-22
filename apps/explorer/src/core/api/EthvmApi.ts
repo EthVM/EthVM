@@ -19,7 +19,6 @@ export interface EthvmApi {
 
   // Tokens
   getTokenHolders(address: string, limit?: number, page?: number): Promise<{ items: TokenHolder[]; totalCount: number }>
-  getTokenTransfersByContractAddress(address: string, limit?: number, page?: number): Promise<{ items: Transfer[]; totalCount: string }>
   getTokenTransfersByContractAddressForHolder(
     address: string,
     holder: string,

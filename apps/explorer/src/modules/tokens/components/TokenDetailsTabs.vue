@@ -6,17 +6,7 @@
     =====================================================================================
     -->
     <v-tab-item slot="tabs-item" value="tab-0">
-      <v-progress-linear color="blue" indeterminate v-if="isTokenTransfersLoading" class="mt-0" />
-      <app-error :has-error="hasErrorTokenTransfers" :message="errorTokenTransfers" />
-      <token-table-transfers
-        :transfers="tokenTransfers"
-        :total-transfers="totalTransfers"
-        :loading="isTokenTransfersLoading"
-        :error="errorTokenTransfers"
-        :page="transfersPage"
-        :decimals="decimals"
-        @page="setPageTransfers"
-      />
+      <table-transfers :address="addressRef" :pageType="'token'" :decimals="decimals" />
     </v-tab-item>
     <!--
     =====================================================================================
@@ -43,19 +33,19 @@
 <script lang="ts">
   import AppTabs from '@app/core/components/ui/AppTabs.vue'
   import AppError from '@app/core/components/ui/AppError.vue'
-  import TokenTableTransfers from '@app/modules/tokens/components/TokenTableTransfers.vue'
   import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
   import { Transfer } from '@app/core/models'
   import { Tab } from '@app/core/components/props'
   import { Component, Prop, Vue } from 'vue-property-decorator'
   import BigNumber from 'bignumber.js'
+  import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue';
 
   @Component({
   components: {
     AppError,
     AppTabs,
     TokenTableHolders,
-    TokenTableTransfers
+    TableTransfers
   }
 })
 export default class TokenDetailsTabs extends Vue {
@@ -66,18 +56,13 @@ export default class TokenDetailsTabs extends Vue {
   */
 
   @Prop(String) addressRef!: string
-  @Prop(Array) tokenTransfers!: Transfer[]
-  @Prop(String) totalTransfers!: string
-  @Prop(Number) transfersPage!: number
   @Prop(Array) tokenHolders!: any
   @Prop(Number) totalHolders!: number
   @Prop(Number) holdersPage!: number
   @Prop(BigNumber) totalSupply?: BigNumber
-  @Prop(Boolean) isTokenTransfersLoading!: boolean
   @Prop(Boolean) isTokenHoldersLoading!: boolean
-  @Prop(String) errorTokenTransfers!: string
   @Prop(String) errorTokenHolders!: string
-  @Prop(String) decimals?: string
+  @Prop(Number) decimals?: number
 
   /*
    ===================================================================================

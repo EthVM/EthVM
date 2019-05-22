@@ -51,4 +51,12 @@ export class TokenExchangeRateDetailExt implements TokenExchangeRateDetail {
     return new BigNumber(this.totalSupply || 0)
   }
 
+  get decimals(): number | null {
+    const { contract } = this
+    if (!(contract && contract.metadata)) {
+      return null
+    }
+    return contract.metadata.decimals
+  }
+
 }

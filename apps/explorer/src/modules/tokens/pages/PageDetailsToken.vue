@@ -18,19 +18,13 @@
       />
       <token-details-tabs
         :address-ref="addressRef"
-        :token-transfers="tokenTransfers"
-        :total-transfers="totalTransfers"
-        :transfers-page="transfersPage"
         :token-holders="tokenHolders"
         :total-holders="totalHolders"
         :holders-page="holdersPage"
         :total-supply="totalSupply"
         :decimals="decimals"
-        :is-token-transfers-loading="isTokenTransfersLoading"
         :is-token-holders-loading="isTokenHoldersLoading"
-        :error-token-transfers="errorTokenTransfersTab"
         :error-token-holders="errorTokenHoldersTab"
-        @transfersPage="setPageTransfers"
         @holdersPage="setPageHolders"
       />
     </div>
@@ -139,20 +133,13 @@ export default class PageDetailsToken extends Vue {
   address = '' // TEMP: Formatted address with "0x" removed from beginning
 
   // Basic //
-  tokenTransfers: Transfer[] = [] // Array of token transfers
-  totalTransfers: string = '' // Total number of transfers as hex
-  transfersPage: number = 0 // Current page of transfers
-
   tokenHolders: any[] = [] // Array of token holders
   totalHolders: number = 0 // Total number of token holders
   holdersPage: number = 0 // Current page of holders
 
-  isTokenTransfersLoading = true // Can technically be empty array, so must be manually set
   isTokenHoldersLoading = true // Can technically be empty array, so must be manually set
   errorTokenDetailsList = '' // Error string pertaining to the TokenDetailsList component
-  errorTokenTransfersTab = '' // Error string pertaining to the TokenDetailsTabs -> Transfers component
   errorTokenHoldersTab = '' // Error string pertaining to the TokenDetailsTabs -> Holders component
-  decimals: string = '' // Decimals field from token metadata
 
   // Holder //
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
@@ -227,32 +214,10 @@ export default class PageDetailsToken extends Vue {
    */
   loadBasicData() {
     return new Promise((resolve, reject) => {
-      const tokenDetailsTabsTransfersPromise = this.loadTokenDetailsTabsTransfers()
       const tokenDetailsTabsHoldersPromise = this.loadTokenDetailsTabsHolders()
-      const promises = [tokenDetailsTabsTransfersPromise, tokenDetailsTabsHoldersPromise]
+      const promises = [tokenDetailsTabsHoldersPromise]
 
       Promise.all(promises).then(resolve)
-    })
-  }
-
-  /**
-   * Load all data required and handle errors for the TokenDetailsTabs -> Transfers component
-   */
-  loadTokenDetailsTabsTransfers() {
-    return new Promise((resolve, reject) => {
-      const tokenTransfersPromise = this.fetchTokenTransfers()
-      const promises = [tokenTransfersPromise]
-
-      Promise.all(promises)
-        .then(([transfersPage]) => {
-          this.tokenTransfers = transfersPage.items
-          this.totalTransfers = transfersPage.totalCount
-          resolve()
-        })
-        .catch(e => {
-          this.errorTokenTransfersTab = '' // 0 transfers is not an 'error'
-          resolve()
-        })
     })
   }
 
@@ -342,31 +307,6 @@ export default class PageDetailsToken extends Vue {
   */
 
   /**
-   * Fetch token transfers for a particular token contract
-   *
-   * @return {Array} - Array of token transfers/info
-   */
-  fetchTokenTransfers(page = this.transfersPage, limit = MAX_ITEMS): Promise<{ items: Transfer[]; totalCount: string }> {
-    return new Promise((resolve, reject) => {
-      this.isTokenTransfersLoading = true
-
-      this.$api
-        .getTokenTransfersByContractAddress(this.addressRef, limit, page)
-        .then(response => {
-          this.isTokenTransfersLoading = false
-          if (response === null) {
-            reject(this.$i18n.t('message.invalidAddress').toString())
-          }
-          resolve(response)
-        })
-        .catch(e => {
-          this.isTokenTransfersLoading = false
-          reject(e)
-        })
-    })
-  }
-
-  /**
    * GET and return a JSON array of top holders for a particular token address
    *
    * @return {Array} - Array of holders
@@ -437,11 +377,6 @@ export default class PageDetailsToken extends Vue {
     })
   }
 
-  setPageTransfers(page: number): void {
-    this.transfersPage = page
-    this.isTokenTransfersLoading = true
-  }
-
   setPageHolders(page: number): void {
     this.holdersPage = page
     this.isTokenHoldersLoading = true
@@ -450,19 +385,6 @@ export default class PageDetailsToken extends Vue {
   setPageHolderTransfers(page: number): void {
     this.holderTransfersPage = page
     this.isHolderTransfersLoading = true
-  }
-
-  updateTransfers(): void {
-    this.fetchTokenTransfers().then(
-      res => {
-        this.tokenTransfers = res.items
-        this.totalTransfers = res.totalCount
-        this.isTokenTransfersLoading = false
-      },
-      err => {
-        this.errorTokenTransfersTab = this.$i18n.t('message.no-data').toString()
-      }
-    )
   }
 
   updateHolders(): void {
@@ -496,11 +418,6 @@ export default class PageDetailsToken extends Vue {
    Watch
  ===================================================================================
  */
-
-  @Watch('transfersPage')
-  onTransfersPageChanges(newVal: number, oldVal: number): void {
-    this.updateTransfers()
-  }
 
   @Watch('holdersPage')
   onHoldersPageChanges(newVal: number, oldVal: number): void {
@@ -623,6 +540,11 @@ export default class PageDetailsToken extends Vue {
 
   get tokenLabel(): string {
     return this.tokenDetails && this.tokenDetails.symbol ? this.tokenDetails.symbol!.toUpperCase() : this.addressRef
+  }
+
+  get decimals(): number | null {
+    const { tokenDetails } = this
+    return tokenDetails ? tokenDetails.decimals : null
   }
 }
 </script>

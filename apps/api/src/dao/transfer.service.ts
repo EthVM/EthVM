@@ -15,14 +15,12 @@ export class TransferService {
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, take: number = 10, page: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
-    const skip = take * page
-
+  async findTokenTransfersByContractAddress(address: string, limit: number = 10, offset: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
     const findOptions: FindManyOptions = {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
-      skip,
-      take,
-      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
+      skip: offset,
+      take: limit,
+      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'}
     }
     return this.transferRepository.findAndCount(findOptions)
   }

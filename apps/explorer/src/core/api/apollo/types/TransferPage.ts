@@ -17,6 +17,7 @@ export interface TransferPage_items {
   to: string;
   timestamp: number;
   deltaType: DeltaType;
+  address: string | null;
 }
 
 export interface TransferPage {
