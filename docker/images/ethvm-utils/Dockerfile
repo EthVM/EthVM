@@ -17,11 +17,10 @@ ENV POSTGRES_PASSWORD 1234
 
 LABEL name="kafka" version=${KAFKA_VERSION}
 
-RUN apk add --no-cache openjdk8-jre bash coreutils su-exec openssl jq curl git
+# Install dependencies
 
-# Install dockerize
-
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+RUN apk add --no-cache openjdk8-jre bash coreutils su-exec openssl jq curl git tini && \
+    wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
@@ -39,13 +38,10 @@ RUN apk add --no-cache -t .build-deps curl ca-certificates jq \
 COPY opt/ethvm /opt/ethvm
 
 # setup path
-
 ENV PATH /sbin:/opt/kafka/bin/:/opt/ethvm/bin/:$PATH
 
-ENTRYPOINT [ \
-  "dockerize", \
-  "-template", "/opt/ethvm/kafka:/opt/ethvm/kafka", \
-  "-template", "/opt/ethvm/kafka-connect/sinks:/opt/ethvm/kafka-connect/sinks", \
-  "-template", "/opt/ethvm/kafka-connect/sources:/opt/ethvm/kafka-connect/sources", \
-  "ethvm-utils.sh" \
-]
+# copy entrypoint
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/sbin/tini", "--", "/docker-entrypoint.sh"]
