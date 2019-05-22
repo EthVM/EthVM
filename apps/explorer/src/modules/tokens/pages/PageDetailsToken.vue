@@ -16,11 +16,24 @@
         :is-loading="isTokenDetailsLoading"
         :error="errorTokenDetailsList"
       />
-      <token-details-tabs
-        :address-ref="addressRef"
-        :total-supply="totalSupply"
-        :decimals="decimals"
-      />
+      <app-tabs :tabs="tabsTokenDetails">
+        <!--
+        =====================================================================================
+          TRANSFERS
+        =====================================================================================
+        -->
+        <v-tab-item slot="tabs-item" value="tab-0">
+          <table-transfers :address="addressRef" :pageType="'token'" :decimals="decimals" />
+        </v-tab-item>
+        <!--
+        =====================================================================================
+          HOLDERS
+        =====================================================================================
+        -->
+        <v-tab-item slot="tabs-item" value="tab-1">
+          <token-table-holders :address-ref="addressRef" :total-supply="totalSupply" :decimals="decimals" />
+        </v-tab-item>
+      </app-tabs>
     </div>
     <!--
     =====================================================================================
@@ -55,15 +68,17 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
-import TokenDetailsTabs from '@app/modules/tokens/components/TokenDetailsTabs.vue'
 import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
 import HolderDetailsTabs from '@app/modules/tokens/components/HolderDetailsTabs.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { Crumb } from '@app/core/components/props'
-import { TokenHolder, Transfer } from '@app/core/models'
+import { Crumb, Tab } from '@app/core/components/props'
+import { Transfer } from '@app/core/models'
 import { tokenDetails } from '@app/modules/tokens/tokens.graphql'
 import { TokenExchangeRateDetailExt } from "@app/core/api/apollo/extensions/token-exchange-rate-detail.ext";
 import BigNumber from 'bignumber.js'
+import AppTabs from '@app/core/components/ui/AppTabs.vue';
+import TableTransfers from '@app/modules/transfers/components/TableTransfers.vue';
+import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue';
 
 const MAX_ITEMS = 10
 
@@ -73,7 +88,9 @@ const MAX_ITEMS = 10
     HolderDetailsList,
     HolderDetailsTabs,
     TokenDetailsList,
-    TokenDetailsTabs
+    AppTabs,
+    TokenTableHolders,
+    TableTransfers
   },
   apollo: {
     tokenDetails: {
@@ -448,6 +465,25 @@ export default class PageDetailsToken extends Vue {
   get decimals(): number | null {
     const { tokenDetails } = this
     return tokenDetails ? tokenDetails.decimals : null
+  }
+
+  /**
+   * Props object to describe tabs for AppTabs component
+   */
+  get tabsTokenDetails(): Tab[] {
+    const tabs = [
+      {
+        id: 0,
+        title: 'Transfers',
+        isActive: true
+      },
+      {
+        id: 1,
+        title: 'Holders',
+        isActive: false
+      }
+    ]
+    return tabs
   }
 }
 </script>
