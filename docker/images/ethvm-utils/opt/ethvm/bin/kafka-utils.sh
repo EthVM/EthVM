@@ -15,9 +15,11 @@ export KAFKA_DIR="${ROOT_DIR}/kafka"
 export CLASSPATH="${ROOT_DIR}/classpath/*"
 
 ensure_zookeeper() {
+
   local TIMEOUT_MS=${1:-60000}
   java -cp "${CLASSPATH}" \
     io.confluent.admin.utils.cli.ZookeeperReadyCommand ${KAFKA_ZOOKEEPER_CONNECT} ${TIMEOUT_MS}
+
 } >&2
 
 

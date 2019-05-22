@@ -20,7 +20,7 @@ ensure_kafka_connect() {
 
   # TODO extract port
 
-  echo "Ensuring kafka-connect ${KAFKA_CONNECT_URL}"
+  echo "Ensuring kafka-connect on URL: ${KAFKA_CONNECT_URL}"
 
   # Wait until mongo logs that it's ready (or timeout after 60s)
   COUNTER=0
@@ -40,6 +40,7 @@ curl_register() {
 } >&2
 
 register_sources() {
+
   echo "===> Registering sources ..."
   ensure_kafka_connect
 
@@ -52,6 +53,7 @@ register_sources() {
 } >&2
 
 register_sinks() {
+
   echo "===> Registering sinks ..."
   ensure_kafka_connect
 
@@ -64,9 +66,11 @@ register_sinks() {
 } >&2
 
 register() {
+
   echo "===> Registering ${1} ..."
   ensure_kafka_connect
   curl_register ${KAFKA_CONNECT_DIR}/${1}
+
 } >&2
 
 init() {
