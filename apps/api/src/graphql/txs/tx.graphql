@@ -52,7 +52,7 @@ type Transaction {
   creates: String
   chainId: String
   receipt: Receipt
-  traces: [Trace!]!
+  trace: Trace!
   successful: Boolean!
 }
 
@@ -75,14 +75,8 @@ type Receipt {
 type Trace {
   blockHash: String!
   transactionHash: String
-  traceAddress: String!
-  transactionPosition: Int
-  blockNumber: BigNumber!
-  subtraces: Int!
-  error: String
-  type: String!
-  action: String!
-  result: String!
+  rootError: String
+  traces: String!
 }
 
 enum Order {

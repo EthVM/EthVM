@@ -25,7 +25,6 @@ import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDeltaList
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceKey
 import com.ethvm.kafka.streams.Serdes.ReceiptList
-import com.ethvm.kafka.streams.Serdes.Trace
 import com.ethvm.kafka.streams.Serdes.TraceKey
 import com.ethvm.kafka.streams.Serdes.TraceList
 import com.ethvm.kafka.streams.Serdes.Transaction
@@ -75,7 +74,7 @@ object Topics {
 
   val Transaction = KafkaTopic("transaction", TransactionKey(), Transaction())
   val TransactionReceipt = KafkaTopic("transaction_receipt", TransactionReceiptKey(), TransactionReceipt())
-  val TransactionTrace = KafkaTopic("transaction_trace", TraceKey(), Trace())
+  val TransactionTrace = KafkaTopic("transaction_trace", TraceKey(), TraceList())
   val Uncle = KafkaTopic("uncle", UncleKey(), Uncle())
 
   val CanonicalTracesEtherDeltas = KafkaTopic("canonical_traces_ether_deltas", CanonicalKey(), FungibleBalanceDeltaList())

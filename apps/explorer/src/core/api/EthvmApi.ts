@@ -1,7 +1,6 @@
 import { CoinExchangeRate, Contract, PendingTx, TokenExchangeRate, TokenHolder, Transfer } from '@app/core/models'
 
 export interface EthvmApi {
-
   // Contracts
   getContract(address: string): Promise<Contract | null>
 

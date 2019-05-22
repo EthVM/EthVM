@@ -38,16 +38,15 @@ export class TraceService {
 
     const entities = await entityManager.find(
       TransactionTraceEntity, {
-        select: ['blockHash', 'transactionHash', 'error'],
+        select: ['blockHash', 'transactionHash', 'rootError'],
         where: {
           transactionHash: In(txHashes),
-          traceAddress: '[]',
         },
       })
 
     return entities.map(e => {
-      const { blockHash, transactionHash, error } = e
-      return { blockHash, transactionHash, successful: error === null } as TransactionStatus
+      const { blockHash, transactionHash, rootError } = e
+      return { blockHash, transactionHash, successful: rootError === null } as TransactionStatus
     })
 
   }
@@ -59,16 +58,15 @@ export class TraceService {
     // find root level call trace and use it's error field to determine transaction status
 
     const entities = await tx.find(TransactionTraceEntity, {
-      select: ['blockHash', 'transactionHash', 'error'],
+      select: ['blockHash', 'transactionHash', 'rootError'],
       where: {
         blockHash: In(blockHashes),
-        traceAddress: '[]',
       },
     })
 
     return entities.map(e => {
-      const { blockHash, transactionHash, error } = e
-      return { blockHash, transactionHash, successful: error === null } as TransactionStatus
+      const { blockHash, transactionHash, rootError } = e
+      return { blockHash, transactionHash, successful: rootError === null } as TransactionStatus
     })
 
   }
