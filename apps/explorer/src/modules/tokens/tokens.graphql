@@ -68,3 +68,21 @@ fragment TokenExchangeRateDetail on TokenExchangeRate {
     }
   }
 }
+
+query tokenHolders($address: String!, $limit: Int, $offset: Int) {
+  tokenHolders(address: $address, limit: $limit, offset: $offset) {
+    ...TokenHolderPage
+  }
+}
+
+fragment TokenHolder on TokenHolder {
+  address
+  balance
+}
+
+fragment TokenHolderPage on TokenHoldersPage {
+  items {
+    ...TokenHolder
+  }
+  totalCount
+}

@@ -25,5 +25,5 @@ export interface tokenHolders {
 export interface tokenHoldersVariables {
   address: string;
   limit?: number | null;
-  page?: number | null;
+  offset?: number | null;
 }

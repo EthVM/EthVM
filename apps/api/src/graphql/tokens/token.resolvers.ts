@@ -19,10 +19,10 @@ export class TokenResolvers {
   @Query()
   async tokenHolders(
     @Args('address', ParseAddressPipe) address: string,
+    @Args('offset') offset: number,
     @Args('limit') limit: number,
-    @Args('page') page: number,
   ): Promise<TokenHoldersPageDto> {
-    const result = await this.tokenService.findTokenHolders(address, limit, page)
+    const result = await this.tokenService.findTokenHolders(address, limit, offset)
     return new TokenHoldersPageDto({
       items: result[0],
       totalCount: result[1],

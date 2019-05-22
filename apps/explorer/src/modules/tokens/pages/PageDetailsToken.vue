@@ -18,14 +18,8 @@
       />
       <token-details-tabs
         :address-ref="addressRef"
-        :token-holders="tokenHolders"
-        :total-holders="totalHolders"
-        :holders-page="holdersPage"
         :total-supply="totalSupply"
         :decimals="decimals"
-        :is-token-holders-loading="isTokenHoldersLoading"
-        :error-token-holders="errorTokenHoldersTab"
-        @holdersPage="setPageHolders"
       />
     </div>
     <!--
@@ -129,17 +123,9 @@ export default class PageDetailsToken extends Vue {
   */
 
   tokenDetails?: TokenExchangeRateDetailExt
+  address = ''
 
-  address = '' // TEMP: Formatted address with "0x" removed from beginning
-
-  // Basic //
-  tokenHolders: any[] = [] // Array of token holders
-  totalHolders: number = 0 // Total number of token holders
-  holdersPage: number = 0 // Current page of holders
-
-  isTokenHoldersLoading = true // Can technically be empty array, so must be manually set
   errorTokenDetailsList = '' // Error string pertaining to the TokenDetailsList component
-  errorTokenHoldersTab = '' // Error string pertaining to the TokenDetailsTabs -> Holders component
 
   // Holder //
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
@@ -170,10 +156,7 @@ export default class PageDetailsToken extends Vue {
 
     if (query.holder) {
       this.isHolder = true
-      await this.loadBasicData()
       await this.loadHolderData()
-    } else {
-      await this.loadBasicData()
     }
   }
 
@@ -208,38 +191,6 @@ export default class PageDetailsToken extends Vue {
     Methods - Load Data - Basic View
   ===================================================================================
   */
-
-  /**
-   * Perform each method to load data required for every "basic view" component
-   */
-  loadBasicData() {
-    return new Promise((resolve, reject) => {
-      const tokenDetailsTabsHoldersPromise = this.loadTokenDetailsTabsHolders()
-      const promises = [tokenDetailsTabsHoldersPromise]
-
-      Promise.all(promises).then(resolve)
-    })
-  }
-
-  /**
-   * Load all data required and handle errors for the TokenDetailsTabs -> Holders component
-   */
-  loadTokenDetailsTabsHolders() {
-    return new Promise((resolve, reject) => {
-      const tokenHoldersPromise = this.fetchTokenHolders()
-
-      Promise.all([tokenHoldersPromise])
-        .then(([tokenHolders]) => {
-          this.tokenHolders = tokenHolders.items
-          this.totalHolders = tokenHolders.totalCount
-          resolve()
-        })
-        .catch(e => {
-          this.errorTokenHoldersTab = '' // 0 holders is not an 'error'
-          resolve()
-        })
-    })
-  }
 
   /*
   ===================================================================================
@@ -307,31 +258,6 @@ export default class PageDetailsToken extends Vue {
   */
 
   /**
-   * GET and return a JSON array of top holders for a particular token address
-   *
-   * @return {Array} - Array of holders
-   */
-  fetchTokenHolders(): Promise<{ items: TokenHolder[]; totalCount: number }> {
-    return new Promise((resolve, reject) => {
-      this.isTokenHoldersLoading = true
-
-      this.$api
-        .getTokenHolders(this.addressRef, MAX_ITEMS, this.holdersPage)
-        .then(response => {
-          this.isTokenHoldersLoading = false
-          if (response === null) {
-            reject(this.$i18n.t('message.invalidAddress').toString())
-          }
-          resolve(response)
-        })
-        .catch(e => {
-          this.isTokenHoldersLoading = false
-          reject(e)
-        })
-    })
-  }
-
-  /**
    * GET and return JSON object of balances and information for a particular address/token
    *
    * @return {Object} - Information object
@@ -377,27 +303,9 @@ export default class PageDetailsToken extends Vue {
     })
   }
 
-  setPageHolders(page: number): void {
-    this.holdersPage = page
-    this.isTokenHoldersLoading = true
-  }
-
   setPageHolderTransfers(page: number): void {
     this.holderTransfersPage = page
     this.isHolderTransfersLoading = true
-  }
-
-  updateHolders(): void {
-    this.fetchTokenHolders().then(
-      res => {
-        this.tokenHolders = res.items
-        this.totalHolders = res.totalCount
-        this.isTokenHoldersLoading = false
-      },
-      err => {
-        this.errorTokenHoldersTab = this.$i18n.t('message.no-data').toString()
-      }
-    )
   }
 
   updateHolderTransfers(): void {
@@ -418,11 +326,6 @@ export default class PageDetailsToken extends Vue {
    Watch
  ===================================================================================
  */
-
-  @Watch('holdersPage')
-  onHoldersPageChanges(newVal: number, oldVal: number): void {
-    this.updateHolders()
-  }
 
   @Watch('holderTransfersPage')
   onHolderTransfersPageChanges(newVal: number, oldVal: number): void {

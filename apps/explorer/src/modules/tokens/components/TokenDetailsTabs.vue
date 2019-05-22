@@ -14,18 +14,7 @@
     =====================================================================================
     -->
     <v-tab-item slot="tabs-item" value="tab-1">
-      <v-progress-linear color="blue" indeterminate v-if="isTokenHoldersLoading" class="mt-0" />
-      <token-table-holders
-        :holders="tokenHolders"
-        :page="holdersPage"
-        :total-holders="totalHolders"
-        :address-ref="addressRef"
-        :total-supply="totalSupply"
-        :decimals="decimals"
-        :loading="isTokenHoldersLoading"
-        :error="errorTokenHolders"
-        @page="setPageHolders"
-      />
+      <token-table-holders :address-ref="addressRef" :total-supply="totalSupply" :decimals="decimals" />
     </v-tab-item>
   </app-tabs>
 </template>
@@ -56,53 +45,14 @@ export default class TokenDetailsTabs extends Vue {
   */
 
   @Prop(String) addressRef!: string
-  @Prop(Array) tokenHolders!: any
-  @Prop(Number) totalHolders!: number
-  @Prop(Number) holdersPage!: number
   @Prop(BigNumber) totalSupply?: BigNumber
-  @Prop(Boolean) isTokenHoldersLoading!: boolean
-  @Prop(String) errorTokenHolders!: string
   @Prop(Number) decimals?: number
-
-  /*
-   ===================================================================================
-     Methods
-   ===================================================================================
-   */
-
-  setPageTransfers(page: number): void {
-    this.$emit('transfersPage', page)
-  }
-
-  setPageHolders(page: number): void {
-    this.$emit('holdersPage', page)
-  }
 
   /*
     ===================================================================================
       Computed Values
     ===================================================================================
     */
-
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
-  get hasErrorTokenTransfers(): boolean {
-    return this.errorTokenTransfers !== ''
-  }
-
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
-  get hasErrorTokenHolders(): boolean {
-    return this.errorTokenHolders !== ''
-  }
 
   /**
    * Props object to describe tabs for AppTabs component

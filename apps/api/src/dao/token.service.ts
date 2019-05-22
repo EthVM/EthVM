@@ -33,16 +33,16 @@ export class TokenService {
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
   ) {}
 
-  async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
-    const skip = page * limit
+  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
     const findOptions: FindManyOptions = {
       where: { contract: address },
       take: limit,
-      skip,
+      skip: offset,
     }
-    const ercBalances = await this.erc20BalanceRepository.findAndCount(findOptions)
-    if (ercBalances[1] > 0) {
-      return ercBalances
+    const findOptionsErc20: FindManyOptions = {...findOptions, select: ['address', 'amount']}
+    const erc20Balances = await this.erc20BalanceRepository.findAndCount(findOptionsErc20)
+    if (erc20Balances[1] > 0) {
+      return erc20Balances
     }
     return await this.erc721BalanceRepository.findAndCount(findOptions)
   }
