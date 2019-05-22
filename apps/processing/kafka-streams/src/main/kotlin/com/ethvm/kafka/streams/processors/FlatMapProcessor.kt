@@ -1,5 +1,6 @@
 package com.ethvm.kafka.streams.processors
 
+import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.processing.TraceKeyRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
 import com.ethvm.avro.processing.TransactionReceiptKeyRecord
@@ -61,16 +62,53 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .toTopic(Topics.TransactionReceipt)
 
     CanonicalTraces.stream(builder)
-      .flatMapValues { _, v -> v.getTraces() }
-      .map { _, v ->
-        KeyValue(
-          TraceKeyRecord.newBuilder()
-            .setBlockHash(v.getBlockHash())
-            .setTransactionHash(v.getTransactionHash())
-            .setTraceAddress(v.getTraceAddress())
-            .build(),
-          v
-        )
+      .flatMap { _, v ->
+
+        val traces = v.getTraces()
+
+        val rewardTraces = traces.filter { it.transactionHash == null }
+        val txTraces = traces.filterNot { it.transactionHash == null }
+
+        var records = emptyList<KeyValue<TraceKeyRecord, TraceListRecord>>()
+
+        if (rewardTraces.isNotEmpty()) {
+          records = records +
+            // block reward and uncle reward traces
+            KeyValue(
+              TraceKeyRecord.newBuilder()
+                .setBlockHash(rewardTraces.map { it.blockHash }.first())
+                .build(),
+              TraceListRecord.newBuilder()
+                .setTraces(rewardTraces)
+                .build()
+            )
+        }
+
+        if (txTraces.isNotEmpty()) {
+
+          val blockHash = txTraces.map { it.blockHash }.first()
+
+          records = records + txTraces
+            .groupBy { it.transactionHash }
+            .map { (transactionHash, tracesForTransaction) ->
+
+              val rootError = tracesForTransaction
+                .first { it.traceAddress.isEmpty() }.error
+
+              KeyValue(
+                TraceKeyRecord.newBuilder()
+                  .setBlockHash(blockHash)
+                  .setTransactionHash(transactionHash)
+                  .build(),
+                TraceListRecord.newBuilder()
+                  .setRootError(rootError)
+                  .setTraces(tracesForTransaction)
+                  .build()
+              )
+            }
+        }
+
+        records
       }
       .toTopic(Topics.TransactionTrace)
 

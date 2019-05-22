@@ -81,6 +81,7 @@ protocol Capture {
   }
 
   record TraceListRecord {
+    union { null, string } rootError = null;
     array<TraceRecord> traces;
   }
 
