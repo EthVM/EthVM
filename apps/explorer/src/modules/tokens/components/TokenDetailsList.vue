@@ -10,7 +10,7 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
 import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
-import { TokenExchangeRateDetailExt } from "@app/core/api/apollo/extensions/token-exchange-rate-detail.ext";
+import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
 
 @Component({
   components: {
@@ -204,14 +204,13 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
                 }
                 return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
                   icons[name]
-                  } pr-2 material-icons theme--light"></i></a>`
+                } pr-2 material-icons theme--light"></i></a>`
               })
               .reduce((a, b) => {
                 return `${a}${b}`
               })
           })
         }
-
       }
     }
     return details

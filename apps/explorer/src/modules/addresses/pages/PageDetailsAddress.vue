@@ -85,7 +85,7 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { addressDetail } from '@app/modules/addresses/addresses.graphql'
 import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
-import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue';
+import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
 
 const MAX_ITEMS = 10
 

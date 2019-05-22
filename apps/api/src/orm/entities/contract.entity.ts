@@ -103,7 +103,7 @@ export class ContractEntity {
   @OneToOne(type => TokenExchangeRateEntity, t => t.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   tokenExchangeRate?: TokenExchangeRateEntity
 

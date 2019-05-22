@@ -58,5 +58,4 @@ export class TokenExchangeRateDetailExt implements TokenExchangeRateDetail {
     }
     return contract.metadata.decimals
   }
-
 }

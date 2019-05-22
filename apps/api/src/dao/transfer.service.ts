@@ -20,7 +20,7 @@ export class TransferService {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
       skip: offset,
       take: limit,
-      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'}
+      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
     }
     return this.transferRepository.findAndCount(findOptions)
   }

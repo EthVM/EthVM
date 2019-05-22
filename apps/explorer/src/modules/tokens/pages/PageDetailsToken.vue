@@ -10,12 +10,7 @@
     =====================================================================================
     -->
     <div v-if="!isHolder">
-      <token-details-list
-        :address-ref="addressRef"
-        :token-details="tokenDetails"
-        :is-loading="isTokenDetailsLoading"
-        :error="errorTokenDetailsList"
-      />
+      <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="isTokenDetailsLoading" :error="errorTokenDetailsList" />
       <app-tabs :tabs="tabsTokenDetails">
         <!--
         =====================================================================================
@@ -23,7 +18,7 @@
         =====================================================================================
         -->
         <v-tab-item slot="tabs-item" value="tab-0">
-          <transfers-table :address="addressRef" :pageType="'token'" :decimals="decimals" />
+          <transfers-table :address="addressRef" :page-type="'token'" :decimals="decimals" />
         </v-tab-item>
         <!--
         =====================================================================================
@@ -74,11 +69,11 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import { Transfer } from '@app/core/models'
 import { tokenDetails } from '@app/modules/tokens/tokens.graphql'
-import { TokenExchangeRateDetailExt } from "@app/core/api/apollo/extensions/token-exchange-rate-detail.ext";
+import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
 import BigNumber from 'bignumber.js'
-import AppTabs from '@app/core/components/ui/AppTabs.vue';
-import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue';
-import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue';
+import AppTabs from '@app/core/components/ui/AppTabs.vue'
+import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
+import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
 
 const MAX_ITEMS = 10
 
@@ -97,7 +92,7 @@ const MAX_ITEMS = 10
       query: tokenDetails,
 
       variables() {
-        return { address: this.addressRef}
+        return { address: this.addressRef }
       },
 
       watchLoading(isLoading) {
@@ -371,7 +366,6 @@ export default class PageDetailsToken extends Vue {
    * @return {Array} - Breadcrumb entry. See description.
    */
   get crumbsBasic(): Crumb[] {
-
     return [
       {
         text: 'token.name',
