@@ -6,6 +6,7 @@ import { ContractMetadataEntity } from '@app/orm/entities/contract-metadata.enti
 import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer'
 import BigNumber from 'bignumber.js'
 import {TransactionEntity} from '@app/orm/entities/transaction.entity'
+import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 
 @Entity('canonical_contract')
 export class ContractEntity {
@@ -98,5 +99,12 @@ export class ContractEntity {
     referencedColumnName: 'hash',
   })
   createdAtTx?: TransactionEntity;
+
+  @OneToOne(type => TokenExchangeRateEntity, t => t.contract)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'address',
+  })
+  tokenExchangeRate?: TokenExchangeRateEntity
 
 }

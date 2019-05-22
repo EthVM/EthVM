@@ -1,0 +1,97 @@
+query tokenExchangeRates($sort: TokenExchangeRateFilter!, $offset: Int, $limit: Int) {
+  tokenExchangeRatePage(sort: $sort, offset: $offset, limit: $limit) {
+    ...TokenExchangeRatePage
+  }
+}
+
+fragment TokenExchangeRate on TokenExchangeRate {
+  address
+  currentPrice
+  image
+  marketCap
+  name
+  priceChangePercentage24h
+  symbol
+  totalVolume
+}
+
+fragment TokenExchangeRatePage on TokenExchangeRatesPage {
+  items {
+    ...TokenExchangeRate
+  }
+  totalCount
+}
+
+query tokenDetails($address: String!) {
+  tokenDetails: tokenExchangeRateByAddress(address: $address) {
+    ...TokenExchangeRateDetail
+  }
+}
+
+fragment TokenExchangeRateDetail on TokenExchangeRate {
+  address
+  circulatingSupply
+  currentPrice
+  image
+  marketCap
+  name
+  priceChangePercentage24h
+  symbol
+  totalSupply
+  totalVolume
+  holdersCount
+  contract {
+    creator
+    metadata {
+      type
+      decimals
+      website
+      support {
+        email
+        url
+      }
+      social {
+        blog
+        chat
+        facebook
+        forum
+        github
+        gitter
+        instagram
+        linkedin
+        reddit
+        slack
+        telegram
+        twitter
+        youtube
+      }
+    }
+  }
+}
+
+query tokenHolders($address: String!, $limit: Int, $offset: Int) {
+  tokenHolders(address: $address, limit: $limit, offset: $offset) {
+    ...TokenHolderPage
+  }
+}
+
+fragment TokenHolder on TokenHolder {
+  address
+  balance
+}
+
+fragment TokenHolderPage on TokenHoldersPage {
+  items {
+    ...TokenHolder
+  }
+  totalCount
+}
+
+query tokenHolderDetails($address: String! $holderAddress: String!) {
+  tokenHolder(address: $address, holderAddress: $holderAddress) {
+    ...TokenHolder
+  }
+  tokenDetails: tokenExchangeRateByAddress(address: $address) {
+    ...TokenExchangeRateDetail
+  }
+}

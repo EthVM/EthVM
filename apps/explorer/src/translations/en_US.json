@@ -195,7 +195,8 @@
     },
     "token": {
       "no-tokens": "There are no supported tokens",
-      "no-tokens-for-address": "Address does not hold any supported tokens"
+      "no-tokens-for-address": "Address does not hold any supported tokens",
+      "no-holders": "There are no holders of this token"
     },
     "coming-soon": "Coming soon"
   },

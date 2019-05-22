@@ -615,6 +615,11 @@ CREATE TABLE token_exchange_rates
   last_updated                    BIGINT      NULL
 );
 
+CREATE VIEW canonical_token_exchange_rates AS
+SELECT ter.*
+FROM token_exchange_rates AS ter
+    INNER JOIN canonical_contract AS cc on ter.address = cc.address;
+
 /* Coin exchange rates table */
 CREATE TABLE coin_exchange_rates
 (

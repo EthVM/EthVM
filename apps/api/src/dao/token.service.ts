@@ -33,16 +33,16 @@ export class TokenService {
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
   ) {}
 
-  async findTokenHolders(address: string, limit: number = 10, page: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
-    const skip = page * limit
+  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
     const findOptions: FindManyOptions = {
       where: { contract: address },
       take: limit,
-      skip,
+      skip: offset,
     }
-    const ercBalances = await this.erc20BalanceRepository.findAndCount(findOptions)
-    if (ercBalances[1] > 0) {
-      return ercBalances
+    const findOptionsErc20: FindManyOptions = {...findOptions, select: ['address', 'amount']}
+    const erc20Balances = await this.erc20BalanceRepository.findAndCount(findOptionsErc20)
+    if (erc20Balances[1] > 0) {
+      return erc20Balances
     }
     return await this.erc721BalanceRepository.findAndCount(findOptions)
   }
@@ -147,6 +147,42 @@ export class TokenService {
     return this.tokenExchangeRateRepository.find(findOptions)
   }
 
+  async findTokenExchangeRatesPage(sort: string, limit: number = 10, offset: number = 0, symbols: string[] = []): Promise<[TokenExchangeRateEntity[], number]> {
+    let order
+    switch (sort) {
+      case 'price_high':
+        order = { currentPrice: -1 }
+        break
+      case 'price_low':
+        order = { currentPrice: 1 }
+        break
+      case 'volume_high':
+        order = { totalVolume: -1 }
+        break
+      case 'volume_low':
+        order = { totalVolume: 1 }
+        break
+      case 'market_cap_high':
+        order = { marketCap: -1 }
+        break
+      case 'market_cap_low':
+        order = { marketCap: 1 }
+        break
+      case 'market_cap_rank':
+      default:
+        order = { marketCapRank: 1 }
+        break
+    }
+    const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
+    const findOptions: FindManyOptions = {
+      where,
+      order,
+      take: limit,
+      skip: offset,
+    }
+    return this.tokenExchangeRateRepository.findAndCount(findOptions)
+  }
+
   async countTokenExchangeRates(): Promise<number> {
     return this.tokenExchangeRateRepository.count()
   }
@@ -156,7 +192,7 @@ export class TokenService {
   }
 
   async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | undefined> {
-    return this.tokenExchangeRateRepository.findOne({ where: { address } })
+    return this.tokenExchangeRateRepository.findOne({ where: { address }, relations: ['contract', 'contract.metadata'] })
   }
 
   async findContractInfoForToken(address: string): Promise<ContractEntity | undefined> {

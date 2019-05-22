@@ -12,6 +12,7 @@ export class TransferPageExt_items implements TransferPage_items {
   to!: string
   transactionHash: string | null
   value: any
+  address: string | null
 
   constructor(proto: Transfer) {
     this.deltaType = proto.deltaType
@@ -21,6 +22,7 @@ export class TransferPageExt_items implements TransferPage_items {
     this.to = proto.to
     this.transactionHash = proto.transactionHash
     this.value = proto.value
+    this.address = proto.address
   }
 
   get valueBN(): BN | null {

@@ -17,6 +17,7 @@ export interface internalTransactionsByAddress_transfers_items {
   to: string;
   timestamp: number;
   deltaType: DeltaType;
+  address: string | null;
 }
 
 export interface internalTransactionsByAddress_transfers {

@@ -9,13 +9,13 @@
       <v-flex xs12 sm4 md6>
         <v-layout row align-end justify-start>
           <v-card-title class="title font-weight-bold">{{ $tc('token.name', 2) }}</v-card-title>
-          <v-card-title class="info--text">(Total: {{ totalTokens }} {{ $tc('token.name', 2) }})</v-card-title>
+          <v-card-title class="info--text">(Total: {{ totalCount }} {{ $tc('token.name', 2) }})</v-card-title>
         </v-layout>
       </v-flex>
       <v-spacer />
       <v-flex xs12 v-if="pages > 1 && !hasError" sm7 md6>
         <v-layout justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="currPage" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -107,7 +107,7 @@
             <token-table-row :token="token" />
           </div>
           <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :current-page="currPage" />
+            <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
           </v-layout>
         </v-flex>
         <v-flex xs12 v-else>
@@ -126,9 +126,9 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
 import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
 import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
-import { TokenExchange } from '@app/modules/tokens/props'
-import { PendingTx, Tx, SimpleTx } from '@app/core/models'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { tokenExchangeRates } from '@app/modules/tokens/tokens.graphql'
+import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
 
 @Component({
   components: {
@@ -137,6 +137,45 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
     TokenFilter,
     TokenTableRow,
     TokenTableRowLoading
+  },
+  data() {
+    return {
+      page: 0,
+      error: undefined,
+      sort: 'price_high'
+    }
+  },
+  apollo: {
+    tokenExchangeRatePage: {
+      query: tokenExchangeRates,
+      variables() {
+        return {
+          offset: 0,
+          limit: this.maxItems,
+          sort: this.filterValues[this.selectedFilter]
+        }
+      },
+      watchLoading(isLoading) {
+        if (isLoading) {
+          this.error = ''
+        } // clear the error on load
+      },
+      update({ tokenExchangeRatePage }) {
+        if (tokenExchangeRatePage) {
+          this.error = '' // clear error
+          return new TokenExchangeRatePageExt(tokenExchangeRatePage)
+        }
+        this.error = this.error || this.$i18n.t('message.err')
+        return tokenExchangeRatePage
+      },
+
+      error({ graphQLErrors, networkError }) {
+        // TODO refine
+        if (networkError) {
+          this.error = this.$i18n.t('message.no-data')
+        }
+      }
+    }
   }
 })
 export default class TokenTable extends Vue {
@@ -145,61 +184,52 @@ export default class TokenTable extends Vue {
     Props
   ===================================================================================
   */
-
-  @Prop({ type: Boolean, default: true }) loading!: boolean
-  @Prop(Array) tokens!: TokenExchange[]
-  @Prop({ type: Number, default: 0 }) totalTokens!: number
-  @Prop({ type: Number, default: 0 }) page!: number
-  @Prop(String) error!: string
+  @Prop(Number!) maxItems!: number
 
   /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+      ===================================================================================
+        Initial Data
+      ===================================================================================
+      */
 
-  maxItems = 50
   selectedFilter = 0
-  currPage = 0
+  page!: number
+  error: string = ''
+  filterValues = ['price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
+
+  tokenExchangeRatePage?: TokenExchangeRatePageExt
 
   /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-  mounted() {
-    this.currPage = this.page
-  }
-
-  /*
-  ===================================================================================
-    Watchers
-  ===================================================================================
-  */
-
-  @Watch('currPage')
-  onCurrPageChanged(newVal: number, oldVal: number): void {
-    this.$emit('getTokens', newVal, this.selectedFilter)
-  }
-
-  @Watch('selectedFilter')
-  onSelectedFilterChanged(newVal: number, oldVal: number): void {
-    this.$emit('getTokens', this.page, newVal)
-  }
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  setPage(value: number): void {
-    this.currPage = value
-  }
+      ===================================================================================
+        Methods
+      ===================================================================================
+      */
 
   selectFilter(_value: number): void {
     this.selectedFilter = _value
+    this.page = 0
+  }
+
+  /**
+   * Upon page update from AppPagination, set page equal to pagination page.
+   */
+  setPage(page: number): void {
+    const { tokenExchangeRatePage: query } = this.$apollo.queries
+
+    const self = this
+    const sort = self.filterValues[self.selectedFilter]
+
+    query.fetchMore({
+      variables: {
+        sort,
+        offset: page * this.maxItems,
+        limit: this.maxItems
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        self.page = page
+        return fetchMoreResult
+      }
+    })
   }
 
   isActive(_value: number): boolean {
@@ -207,23 +237,29 @@ export default class TokenTable extends Vue {
   }
 
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+      ===================================================================================
+        Computed Values
+      ===================================================================================
+      */
 
-  /**
-   * Determines whether or not component has an error.
-   * If error property is empty string, there is no error.
-   *
-   * @return {Boolean} - Whether or not error exists
-   */
+  get tokens() {
+    return this.tokenExchangeRatePage ? this.tokenExchangeRatePage.items || [] : []
+  }
+
+  get loading() {
+    return this.$apollo.loading
+  }
+
   get hasError(): boolean {
-    return this.error !== ''
+    return !!this.error && this.error !== ''
+  }
+
+  get totalCount(): number {
+    return this.tokenExchangeRatePage ? this.tokenExchangeRatePage.totalCount : 0
   }
 
   get pages(): number {
-    return this.totalTokens ? Math.ceil(this.totalTokens / this.maxItems) : 0
+    return this.tokenExchangeRatePage ? Math.ceil(this.tokenExchangeRatePage!.totalCount / this.maxItems) : 0
   }
 }
 </script>

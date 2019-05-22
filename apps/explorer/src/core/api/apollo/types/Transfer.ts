@@ -17,4 +17,5 @@ export interface Transfer {
   to: string;
   timestamp: number;
   deltaType: DeltaType;
+  address: string | null;
 }
