@@ -1,16 +1,8 @@
 import { EthvmApi } from '@app/core/api'
 import { contractByAddress } from '@app/core/api/apollo/queries/contracts.graphql'
 import { search } from '@app/core/api/apollo/queries/search.graphql'
-import {
-  coinExchangeRate,
-  holderDetails,
-  tokenExchangeRateBySymbol,
-  tokenExchangeRates,
-  tokenHolders,
-  tokenTransfersByContractAddressForHolder,
-  totalNumTokenExchangeRates
-} from '@app/core/api/apollo/queries/tokens.graphql'
-import { CoinExchangeRate, Contract, PendingTx, TokenExchangeRate, TokenHolder, Transfer } from '@app/core/models'
+import { coinExchangeRate, tokenExchangeRateBySymbol } from '@app/core/api/apollo/queries/tokens.graphql'
+import { CoinExchangeRate, Contract, PendingTx, TokenExchangeRate } from '@app/core/models'
 import { ApolloClient } from 'apollo-client'
 
 export class EthvmApolloApi implements EthvmApi {
@@ -47,27 +39,6 @@ export class EthvmApolloApi implements EthvmApi {
       .then(res => res.data.coinExchangeRate)
   }
 
-  public getTokenExchangeRates(filter: string, limit: number, page: number): Promise<TokenExchangeRate[]> {
-    return this.apollo
-      .query({
-        query: tokenExchangeRates,
-        variables: {
-          filter,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.tokenExchangeRates)
-  }
-
-  public getTotalNumberOfTokenExchangeRates(): Promise<number> {
-    return this.apollo
-      .query({
-        query: totalNumTokenExchangeRates
-      })
-      .then(res => res.data.totalNumTokenExchangeRates)
-  }
-
   public getTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRate> {
     return this.apollo
       .query({
@@ -77,18 +48,6 @@ export class EthvmApolloApi implements EthvmApi {
         }
       })
       .then(res => res.data.tokenExchangeRateBySymbol)
-  }
-
-  public getHolderDetails(address: string, holderAddress: string): Promise<any> {
-    return this.apollo
-      .query({
-        query: holderDetails,
-        variables: {
-          address,
-          holderAddress
-        }
-      })
-      .then(res => res.data.holderDetails)
   }
 
   // ------------------------------------------------------------------------------------
@@ -109,44 +68,6 @@ export class EthvmApolloApi implements EthvmApi {
 
   public getTotalNumberOfPendingTxs(): Promise<number> {
     throw new Error('Method not implemented.')
-  }
-
-  // ------------------------------------------------------------------------------------
-  // Tokens
-  // ------------------------------------------------------------------------------------
-
-  public getTokenHolders(address: string, limit?: number, page?: number): Promise<{ items: TokenHolder[]; totalCount: number }> {
-    return this.apollo
-      .query({
-        query: tokenHolders,
-        variables: {
-          address,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.tokenHolders)
-  }
-
-  public getTokenTransfersByContractAddressForHolder(
-    address: string,
-    holder: string,
-    filter: string,
-    limit: number,
-    page: number
-  ): Promise<{ items: Transfer[]; totalCount: string }> {
-    return this.apollo
-      .query({
-        query: tokenTransfersByContractAddressForHolder,
-        variables: {
-          address,
-          holder,
-          filter,
-          limit,
-          page
-        }
-      })
-      .then(res => res.data.tokenTransfersByContractAddressForHolder)
   }
 
   // ------------------------------------------------------------------------------------

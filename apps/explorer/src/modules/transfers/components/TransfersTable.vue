@@ -188,6 +188,11 @@
           if (networkError) {
             this.error = this.$i18n.t('message.no-data')
           }
+        },
+
+        skip() {
+          if (!this.isTokenHolder) return false
+          return !this.holder
         }
       }
     }

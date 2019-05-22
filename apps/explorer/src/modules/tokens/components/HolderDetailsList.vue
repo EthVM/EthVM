@@ -10,6 +10,8 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import BN from 'bignumber.js'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext';
+import { TokenHolderExt } from "@app/core/api/apollo/extensions/token-holder.ext";
 
 @Component({
   components: {
@@ -24,9 +26,8 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
   */
 
   @Prop(String) addressRef!: string // Token contract address
-  @Prop(Object) contractDetails!: any
-  @Prop(Object) tokenDetails!: any
-  @Prop(Object) holderDetails!: any
+  @Prop(Object) tokenDetails!: TokenExchangeRateDetailExt
+  @Prop(Object) holderDetails!: TokenHolderExt
   @Prop(Boolean) isLoading!: boolean
   @Prop(String) error!: string
 
@@ -47,7 +48,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
     }
     return `<img src="${this.tokenDetails.image}" class="mr-2" style="width: 25px" />  ${
       this.tokenDetails.name
-    } (${this.tokenDetails.symbol.toUpperCase()}) - Filtered by Holder`
+    } (${this.tokenDetails.symbol!.toUpperCase()}) - Filtered by Holder`
   }
 
   /**
@@ -110,7 +111,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         },
         {
           title: this.$i18n.t('common.balance').toString(),
-          detail: this.holderDetails.balance ? `${this.balance} (${this.tokenDetails.symbol.toUpperCase()})` : 'N/A'
+          detail: this.holderDetails && this.holderDetails.balance ? `${this.balance} (${this.tokenDetails.symbol!.toUpperCase()})` : 'N/A'
         },
         {
           title: this.$i18n.t('usd.total'),
@@ -121,23 +122,42 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
           detail: `$${this.getRoundNumber(this.tokenDetails.currentPrice)}`,
           priceChange: this.getPriceChange()
         },
-        {
-          title: this.$i18n.t('token.decimals'),
-          detail: this.contractDetails.metadata.decimals
-        }
       ]
+
+      if (this.tokenDetails.contract && this.tokenDetails.contract.metadata) {
+        details.push(
+          {
+            title: this.$i18n.t('token.decimals'),
+            detail: this.tokenDetails.contract.metadata.decimals || undefined
+          }
+        )
+      }
+
     }
     return details
   }
 
   get balanceUsd(): string {
-    const n = new BN(this.holderDetails.balance).div(new BN(10).pow(this.contractDetails.metadata.decimals)).multipliedBy(this.tokenDetails.currentPrice)
-    return this.holderDetails.balance ? `$${this.getRoundNumber(n)}` : 'N/A'
+
+    if (!this.holderDetails) return ''
+
+    const decimals = this.tokenDetails.decimals
+    let n = new BN(this.holderDetails.balance)
+
+    if (decimals) {
+      n = n.div(new BN(10).pow(decimals))
+    }
+
+    return this.holderDetails.balance ? `$${this.getRoundNumber(n.multipliedBy(this.tokenDetails.currentPrice))}` : 'N/A'
   }
 
   get balance(): string {
-    const n = new BN(this.holderDetails.balance)
-    return this.getRoundNumber(n.div(new BN(10).pow(this.contractDetails.metadata.decimals)))
+    const decimals = this.tokenDetails.decimals
+    let n = new BN(this.holderDetails.balance)
+    if (decimals) {
+      n = n.div(new BN(10).pow(decimals))
+    }
+    return this.getRoundNumber(n)
   }
 
   //Methods:

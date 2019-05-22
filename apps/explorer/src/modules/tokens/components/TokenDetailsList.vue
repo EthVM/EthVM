@@ -44,7 +44,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     if (this.isLoading || this.error !== '') {
       return ''
     }
-    return `<img src="${this.tokenDetails.image}" class="mr-2" style="width: 25px" /> ${this.tokenDetails.name} (${this.tokenDetails.symbol.toUpperCase()})`
+    return `<img src="${this.tokenDetails.image}" class="mr-2" style="width: 25px" /> ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()})`
   }
 
   /**

@@ -86,3 +86,12 @@ fragment TokenHolderPage on TokenHoldersPage {
   }
   totalCount
 }
+
+query tokenHolderDetails($address: String! $holderAddress: String!) {
+  tokenHolder(address: $address, holderAddress: $holderAddress) {
+    ...TokenHolder
+  }
+  tokenDetails: tokenExchangeRateByAddress(address: $address) {
+    ...TokenExchangeRateDetail
+  }
+}

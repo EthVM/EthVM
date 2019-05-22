@@ -3,23 +3,6 @@
 #   Queries
 # -------------------------------------------------------------
 
-query tokenHolders($address: String!, $limit: Int, $page: Int) {
-  tokenHolders(address: $address, limit: $limit, page: $page) {
-    items {
-      address
-      balance
-    }
-    totalCount
-  }
-}
-
-query holderDetails($address: String! $holderAddress: String!) {
-  tokenHolder(address: $address, holderAddress: $holderAddress) {
-    address
-    balance
-  }
-}
-
 query coinExchangeRate($pair: ExchangeRatePair!) {
   coinExchangeRate(pair: $pair) {
     currency

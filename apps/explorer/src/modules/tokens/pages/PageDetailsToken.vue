@@ -10,7 +10,7 @@
     =====================================================================================
     -->
     <div v-if="!isHolder">
-      <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="isTokenDetailsLoading" :error="errorTokenDetailsList" />
+      <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" :error="error" />
       <app-tabs :tabs="tabsTokenDetails">
         <!--
         =====================================================================================
@@ -43,8 +43,8 @@
         :address-ref="addressRef"
         :token-details="tokenDetails"
         :holder-details="holderDetails"
-        :is-loading="isHolderDetailsListLoading"
-        :error="errorTokenDetailsList"
+        :is-loading="loading"
+        :error="error"
       />
       <app-tabs :tabs="tabsTokenHolderDetails">
         <!-- Transfers -->
@@ -63,12 +63,13 @@ import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vu
 import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
-import { tokenDetails } from '@app/modules/tokens/tokens.graphql'
+import { tokenDetails, tokenHolderDetails } from '@app/modules/tokens/tokens.graphql'
 import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
 import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
+import { TokenHolderExt } from "@app/core/api/apollo/extensions/token-holder.ext";
 
 const MAX_ITEMS = 10
 
@@ -81,12 +82,21 @@ const MAX_ITEMS = 10
     TokenTableHolders,
     TransfersTable
   },
+  data() {
+    return {
+      holderAddress: undefined,
+      holderDetails: undefined
+    }
+  },
   apollo: {
     tokenDetails: {
-      query: tokenDetails,
+      query() {
+        const self = this as any
+        return self.isHolder ? tokenHolderDetails : tokenDetails
+      },
 
       variables() {
-        return { address: this.addressRef }
+        return { address: this.addressRef, holderAddress: this.holderAddress }
       },
 
       watchLoading(isLoading) {
@@ -95,22 +105,27 @@ const MAX_ITEMS = 10
         } // clear the error on load
       },
 
-      update({ tokenDetails }) {
+      update({ tokenDetails, tokenHolder }) {
+
+        if (tokenHolder) {
+          this.holderDetails = new TokenHolderExt(tokenHolder)
+        }
+
         if (tokenDetails) {
           return new TokenExchangeRateDetailExt(tokenDetails)
         }
 
-        this.errorTokenDetailsList = this.errorTokenDetailsList || this.$i18n.t('message.invalid.token')
+        this.error = this.error || this.$i18n.t('message.invalid.token')
         return null
       },
 
       error({ graphQLErrors, networkError }) {
         // TODO refine
         if (networkError) {
-          this.errorTokenDetailsList = this.$i18n.t('message.no-data')
+          this.error = this.$i18n.t('message.no-data')
         }
       }
-    }
+    },
   }
 })
 export default class PageDetailsToken extends Vue {
@@ -129,16 +144,14 @@ export default class PageDetailsToken extends Vue {
   */
 
   tokenDetails?: TokenExchangeRateDetailExt
+  holderDetails?: TokenHolderExt
   address = ''
 
-  errorTokenDetailsList = '' // Error string pertaining to the TokenDetailsList component
+  error = '' // Error string pertaining to the TokenDetailsList component
 
   // Holder //
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
-  holderAddress: any = '' // Address of current token holder, if applicable
-  holderDetails: any = {} // Balance/information for a particular holder address
-
-  errorHolderDetailsList = '' // Error string pertaining to the HolderDetailsList component
+  holderAddress?: string // Address of current token holder, if applicable
 
   /*
   ===================================================================================
@@ -147,16 +160,14 @@ export default class PageDetailsToken extends Vue {
   */
 
   /**
-   * Fetch all data relevant to the view.
-   * Additional data will be loaded/displayed if "holder" is included in the query parameters.
-   * Data is loaded in an async/await fashion for proper error handling.
+   * Set isHolder and holderAddress if found in route
    */
   async mounted() {
     const query = this.$route.query
 
     if (query.holder) {
       this.isHolder = true
-      await this.loadHolderData()
+      this.holderAddress = query.holder as string
     }
   }
 
@@ -175,86 +186,14 @@ export default class PageDetailsToken extends Vue {
   onRouteChange() {
     const query = this.$route.query
     if (query.holder) {
-      this.loadHolderData()
+      this.isHolder = true
+      this.holderAddress = query.holder as string
     } else {
       this.isHolder = false
-      this.holderAddress = ''
-      this.holderDetails = {}
+      this.holderAddress = undefined
+      this.holderDetails = undefined
     }
     window.scrollTo(0, 0)
-  }
-
-  /*
-  ===================================================================================
-    Methods - Load Data - Basic View
-  ===================================================================================
-  */
-
-  /*
-  ===================================================================================
-    Methods - Fetch Data - Holder View
-  ===================================================================================
-  */
-
-  /**
-   * Load additional data required for a "holder view" load
-   */
-  loadHolderData() {
-    return new Promise((resolve, reject) => {
-      const query = this.$route.query
-      this.isHolder = true
-      this.holderAddress = query.holder
-      this.holderDetails = {}
-
-      const holderDetailsListPromise = this.loadHolderDetailsList()
-      const promises = [holderDetailsListPromise]
-
-      Promise.all(promises).then(resolve)
-    })
-  }
-
-  /**
-   * Load all data required and handle errors for the HolderDetailsList component
-   */
-  loadHolderDetailsList() {
-    return new Promise((resolve, reject) => {
-      const holderDetailsPromise = this.fetchHolderDetails()
-
-      Promise.all([holderDetailsPromise])
-        .then(([holderDetails]) => {
-          this.holderDetails = holderDetails as any
-        })
-        .catch(e => {
-          this.errorHolderDetailsList = '' // Any address can be "legitimate" just might not have details
-        })
-    })
-  }
-
-  /*
-  ===================================================================================
-    Methods - Fetch Data - Individual Calls
-  ===================================================================================
-  */
-
-  /**
-   * GET and return JSON object of balances and information for a particular address/token
-   *
-   * @return {Object} - Information object
-   */
-  fetchHolderDetails() {
-    return new Promise((resolve, reject) => {
-      this.$api
-        .getHolderDetails(this.addressRef, this.holderAddress)
-        .then(response => {
-          if (response === null) {
-            reject(this.$i18n.t('message.invalidAddress').toString())
-          }
-          resolve(response)
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
   }
 
   /*
@@ -330,35 +269,12 @@ export default class PageDetailsToken extends Vue {
 
   /*
   ===================================================================================
-    Computed Values - isLoading
+    Computed Values
   ===================================================================================
   */
 
-  /**
-   * Determines whether or not the tokenDetails object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isTokenDetailsLoading(): boolean {
-    return this.$apollo.queries.tokenDetails.loading
-  }
-
-  /**
-   * Determines whether or not the holderDetails object has been loaded/populated
-   *
-   * @return {Boolean}
-   */
-  get isHolderDetailsLoading(): boolean {
-    return false
-  }
-
-  /**
-   * Determines whether or not all of required objects for the HolderDetailsList component are loaded
-   *
-   * @return {Boolean}
-   */
-  get isHolderDetailsListLoading(): boolean {
-    return this.isTokenDetailsLoading || this.isHolderDetailsLoading
+  get loading(): boolean {
+    return this.$apollo.loading
   }
 
   get totalSupply(): BigNumber | null {
