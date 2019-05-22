@@ -10,8 +10,8 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import BN from 'bignumber.js'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext';
-import { TokenHolderExt } from "@app/core/api/apollo/extensions/token-holder.ext";
+import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
+import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
 
 @Component({
   components: {
@@ -121,25 +121,23 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
           title: this.$i18n.t('token.market').toString(),
           detail: `$${this.getRoundNumber(this.tokenDetails.currentPrice)}`,
           priceChange: this.getPriceChange()
-        },
+        }
       ]
 
       if (this.tokenDetails.contract && this.tokenDetails.contract.metadata) {
-        details.push(
-          {
-            title: this.$i18n.t('token.decimals'),
-            detail: this.tokenDetails.contract.metadata.decimals || undefined
-          }
-        )
+        details.push({
+          title: this.$i18n.t('token.decimals'),
+          detail: this.tokenDetails.contract.metadata.decimals || undefined
+        })
       }
-
     }
     return details
   }
 
   get balanceUsd(): string {
-
-    if (!this.holderDetails) return ''
+    if (!this.holderDetails) {
+      return ''
+    }
 
     const decimals = this.tokenDetails.decimals
     let n = new BN(this.holderDetails.balance)

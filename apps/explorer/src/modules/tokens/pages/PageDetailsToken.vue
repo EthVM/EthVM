@@ -39,13 +39,7 @@
     =====================================================================================
     -->
     <div v-if="isHolder">
-      <holder-details-list
-        :address-ref="addressRef"
-        :token-details="tokenDetails"
-        :holder-details="holderDetails"
-        :is-loading="loading"
-        :error="error"
-      />
+      <holder-details-list :address-ref="addressRef" :token-details="tokenDetails" :holder-details="holderDetails" :is-loading="loading" :error="error" />
       <app-tabs :tabs="tabsTokenHolderDetails">
         <!-- Transfers -->
         <v-tab-item slot="tabs-item" value="tab-0">
@@ -69,7 +63,7 @@ import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
 import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
-import { TokenHolderExt } from "@app/core/api/apollo/extensions/token-holder.ext";
+import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
 
 const MAX_ITEMS = 10
 
@@ -106,7 +100,6 @@ const MAX_ITEMS = 10
       },
 
       update({ tokenDetails, tokenHolder }) {
-
         if (tokenHolder) {
           this.holderDetails = new TokenHolderExt(tokenHolder)
         }
@@ -125,7 +118,7 @@ const MAX_ITEMS = 10
           this.error = this.$i18n.t('message.no-data')
         }
       }
-    },
+    }
   }
 })
 export default class PageDetailsToken extends Vue {
