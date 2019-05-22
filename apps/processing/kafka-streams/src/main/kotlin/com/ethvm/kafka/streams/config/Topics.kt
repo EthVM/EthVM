@@ -75,7 +75,7 @@ object Topics {
 
   val Transaction = KafkaTopic("transaction", TransactionKey(), Transaction())
   val TransactionReceipt = KafkaTopic("transaction_receipt", TransactionReceiptKey(), TransactionReceipt())
-  val TransactionTrace = KafkaTopic("transaction_trace", TraceKey(), Trace())
+  val TransactionTrace = KafkaTopic("transaction_trace", TraceKey(), TraceList())
   val Uncle = KafkaTopic("uncle", UncleKey(), Uncle())
 
   val CanonicalTracesEtherDeltas = KafkaTopic("canonical_traces_ether_deltas", CanonicalKey(), FungibleBalanceDeltaList())

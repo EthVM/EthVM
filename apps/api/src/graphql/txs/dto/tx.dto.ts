@@ -25,22 +25,22 @@ export class TxDto implements Transaction {
   creates?: string;
   chainId?: string;
   receipt?: TxReceiptDto;
-  traces!: TxTraceDto[];
+  trace!: TxTraceDto;
   successful!: boolean;
 
   constructor(data: TransactionEntity) {
 
     // Convert relations to Dto instances
 
-    const { receipt, traces } = data
+    const { receipt, trace } = data
     if (receipt) {
       this.receipt = new TxReceiptDto(receipt)
     }
-    if (traces) {
-      this.traces = traces.map(t => new TxTraceDto(t))
+    if (trace) {
+      this.trace = new TxTraceDto(trace)
     }
     delete data.receipt
-    delete data.traces
+    delete data.trace
 
     // Decompress input field if necessary
 

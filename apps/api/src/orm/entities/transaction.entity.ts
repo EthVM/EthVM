@@ -79,12 +79,12 @@ export class TransactionEntity {
   })
   receipt?: TransactionReceiptEntity
 
-  @OneToMany(type => TransactionTraceEntity, trace => trace.tx)
+  @OneToOne(type => TransactionTraceEntity, trace => trace.tx)
   @JoinColumn({
     name: 'hash',
     referencedColumnName: 'transactionHash',
   })
-  traces?: TransactionTraceEntity[]
+  trace?: TransactionTraceEntity
 
   @OneToMany(type => ContractEntity, contract => contract.createdAtTx)
   @JoinColumn({

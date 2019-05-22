@@ -243,23 +243,15 @@ CREATE TABLE transaction_trace
 (
   block_hash           CHAR(66)     NOT NULL,
   transaction_hash     CHAR(66)     NULL,
-  trace_address        TEXT         NOT NULL,
-  transaction_position INT          NULL,
-  block_number         NUMERIC      NOT NULL,
-  subtraces            INT          NOT NULL,
-  type                 VARCHAR(66)  NOT NULL,
-  error                VARCHAR(514) NULL,
-  action               TEXT         NOT NULL,
-  result               TEXT         NULL,
-  UNIQUE (block_hash, transaction_hash, trace_address)
+  root_error           VARCHAR(514) NULL,
+  traces               TEXT         NOT NULL,
+  UNIQUE (block_hash, transaction_hash)
 );
 
 CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
 CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
-CREATE INDEX idx_transaction_trace_transaction_position ON transaction_trace (transaction_position);
-CREATE INDEX idx_transaction_trace_block_hash__trace_address ON transaction_trace (block_hash, trace_address);
 
-CREATE FUNCTION notify_transaction_trace() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION notify_transaction_trace() RETURNS TRIGGER AS
 $body$
 DECLARE
   record  RECORD;
@@ -281,16 +273,13 @@ BEGIN
       'table', 'transaction_trace',
       'action', TG_OP,
       'payload', json_build_object(
-        'block_hash', record.block_hash,
-        'trace_address', record.trace_address,
-        'type', record.type,
-        'action', record.action
+        'block_hash', record.block_hash
         )
       );
 
     PERFORM pg_notify('events', payload::text);
 
-  ELSIF (record.trace_address = '[]' AND record.type = 'call') THEN
+  ELSE
     /* root call trace */
 
     payload := json_build_object(
@@ -299,9 +288,7 @@ BEGIN
       'payload', json_build_object(
         'block_hash', record.block_hash,
         'transaction_hash', record.transaction_hash,
-        'trace_address', record.trace_address,
-        'type', record.type,
-        'error', record.error
+        'root_error', record.root_error
         )
       );
 

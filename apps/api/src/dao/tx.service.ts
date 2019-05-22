@@ -41,7 +41,7 @@ export class TxService {
     }
 
     // Partial read check
-    if (!(tx.traces && tx.traces.length)) {
+    if (!tx.trace) {
       throw new PartialReadException(`Traces not found, tx hash = ${tx.hash}`)
     }
 
@@ -283,6 +283,7 @@ export class TxService {
 
       // Root trace
       if (!txStatus) {
+        console.log('Tx statuses', tx.hash, txStatusByHash)
         throw new PartialReadException(`Root trace missing, tx hash = ${tx.hash}`)
       }
       // Receipt
@@ -314,14 +315,13 @@ export class TxService {
     const traces = await this.traceService.findByTxHash(txs.map(tx => tx.hash))
 
     const txsByHash = txs.reduce((memo, next) => {
-      next.traces = []
       memo.set(next.hash, next)
       return memo
     }, new Map<string, TransactionEntity>())
 
     traces.forEach(trace => {
-      const tx = txsByHash.get(trace.transactionHash)!
-      tx.traces!.push(trace)
+      const tx = txsByHash.get(trace.transactionHash!)!
+      tx.trace = trace
     })
 
     return Array.from(txsByHash.values())

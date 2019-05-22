@@ -425,14 +425,8 @@ export interface TokenPage {
 export interface Trace {
     blockHash: string;
     transactionHash?: string;
-    traceAddress: string;
-    transactionPosition?: number;
-    blockNumber: BigNumber;
-    subtraces: number;
-    error?: string;
-    type: string;
-    action: string;
-    result: string;
+    rootError?: string;
+    traces: string;
 }
 
 export interface Transaction {
@@ -454,7 +448,7 @@ export interface Transaction {
     creates?: string;
     chainId?: string;
     receipt?: Receipt;
-    traces: Trace[];
+    trace: Trace;
     successful: boolean;
 }
 

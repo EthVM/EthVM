@@ -42,7 +42,6 @@ protocol Processing {
   record TraceKeyRecord {
     string blockHash;
     union { null, string } transactionHash = null;
-    array<int> traceAddress;
   }
 
   record FungibleBalanceKeyRecord {

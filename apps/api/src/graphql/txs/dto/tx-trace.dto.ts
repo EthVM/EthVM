@@ -5,14 +5,8 @@ export class TxTraceDto implements Trace {
 
   blockHash!: string
   transactionHash?: string
-  traceAddress!: string
-  transactionPosition?: number
-  blockNumber!: BigNumber
-  subtraces!: number
-  error?: string
-  type!: string
-  action!: string
-  result!: string
+  rootError?: string
+  traces!: string
 
   constructor(data: any) {
     assignClean(this, data)
