@@ -8,5 +8,4 @@ export class SearchResultExt implements SearchResult {
   constructor(proto: SearchResult) {
     this.type = proto.type
   }
-
 }

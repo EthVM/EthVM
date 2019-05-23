@@ -37,22 +37,24 @@ import {SearchType} from "../../api/apollo/types/globalTypes";
       </v-card>
     </v-flex>
     <v-flex hidden-sm-and-down md4 style="max-width: 115px;">
-      <v-btn v-if="phText === 'default'" @click="onSearch" depressed color="secondary" class="search-button text-capitalize ml-0">{{ $t('search.name') }}</v-btn>
+      <v-btn v-if="phText === 'default'" @click="onSearch" depressed color="secondary" class="search-button text-capitalize ml-0">{{
+        $t('search.name')
+      }}</v-btn>
       <v-btn v-else @click="onSearch" depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey">{{ $t('search.name') }}</v-btn>
     </v-flex>
   </v-layout>
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Watch } from 'vue-property-decorator'
-  import { search } from '@app/core/components/ui/search.graphql'
-  import { SearchResultExt } from '@app/core/api/apollo/extensions/search-result.ext'
-  import { SearchType } from '@app/core/api/apollo/types/globalTypes';
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { search } from '@app/core/components/ui/search.graphql'
+import { SearchResultExt } from '@app/core/api/apollo/extensions/search-result.ext'
+import { SearchType } from '@app/core/api/apollo/types/globalTypes'
 
-  @Component({
+@Component({
   data() {
     return {
-      query: undefined,
+      query: undefined
     }
   },
   apollo: {
@@ -65,7 +67,6 @@ import {SearchType} from "../../api/apollo/types/globalTypes";
       },
       manual: true,
       result({ data, loading }) {
-
         if (!loading && data.search) {
           const self = this as any
           self.processSearchResult(new SearchResultExt(data.search))
