@@ -38,7 +38,6 @@ const MAX_ITEMS = 10
   }
 })
 export default class App extends Vue {
-
   /*
   ===================================================================================
     Computed values

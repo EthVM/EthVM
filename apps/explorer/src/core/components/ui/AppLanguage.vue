@@ -76,7 +76,6 @@ export default class AppLanguage extends Vue {
     this.$i18n.setLocaleMessage(this.language, messages.default)
     this.loaded.push(this.language)
     this.setLang()
-
   }
 
   setLang(): void {
