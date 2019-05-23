@@ -21,7 +21,7 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { Tx, PendingTx } from '@app/core/models'
+import { PendingTx } from '@app/core/models'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
 
@@ -51,21 +51,21 @@ export default class PagePendingTxs extends Vue {
     Lifecycle
   ===================================================================================
   */
-
-  created() {
-    this.getPage(0)
-  }
-
-  mounted() {
-    this.fetchTotalPendingTxs().then(
-      res => {
-        this.totalTx = res
-      },
-      err => {
-        this.totalTx = 0
-      }
-    )
-  }
+  //
+  // created() {
+  //   this.getPage(0)
+  // }
+  //
+  // mounted() {
+  //   this.fetchTotalPendingTxs().then(
+  //     res => {
+  //       this.totalTx = res
+  //     },
+  //     err => {
+  //       this.totalTx = 0
+  //     }
+  //   )
+  // }
 
   /*
   ===================================================================================
@@ -73,27 +73,27 @@ export default class PagePendingTxs extends Vue {
   ===================================================================================
   */
 
-  getPage(page: number): void {
-    this.isLoading = true
-    this.page = page
-    this.fetchPendingTxs(page).then(
-      res => {
-        this.isLoading = false
-        this.pendingTxs = res as PendingTx[]
-      },
-      err => {
-        this.error = `${JSON.stringify(err)}`
-      }
-    )
-  }
+  // getPage(page: number): void {
+  //   this.isLoading = true
+  //   this.page = page
+  //   this.fetchPendingTxs(page).then(
+  //     res => {
+  //       this.isLoading = false
+  //       this.pendingTxs = res as PendingTx[]
+  //     },
+  //     err => {
+  //       this.error = `${JSON.stringify(err)}`
+  //     }
+  //   )
+  // }
 
-  fetchPendingTxs(page: number): Promise<PendingTx[]> {
-    return this.$api.getPendingTxs(this.maxItems, page)
-  }
-
-  fetchTotalPendingTxs(): Promise<number> {
-    return this.$api.getTotalNumberOfPendingTxs()
-  }
+  // fetchPendingTxs(page: number): Promise<PendingTx[]> {
+  //   return this.$api.getPendingTxs(this.maxItems, page)
+  // }
+  //
+  // fetchTotalPendingTxs(): Promise<number> {
+  //   return this.$api.getTotalNumberOfPendingTxs()
+  // }
 
   /*
   ===================================================================================

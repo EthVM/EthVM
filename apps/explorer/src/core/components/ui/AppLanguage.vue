@@ -51,22 +51,31 @@ export default class AppLanguage extends Vue {
   ===================================================================================
   */
 
-  changeLocale(): void {
-    if (this.$i18n.locale !== this.language) {
-      if (!this.loaded.includes(this.language)) {
-        import(/* webpackChunkName: "lang-[request]" */ `@app/translations/${this.language}.json`)
-          .then(msgs => {
-            this.$i18n.setLocaleMessage(this.language, msgs.default)
-            this.loaded.push(this.language)
-            this.setLang()
-          })
-          .catch(err => {
-            throw err
-          })
-      } else {
-        this.setLang()
-      }
+  async changeLocale(): Promise<void> {
+    if (this.$i18n.locale === this.language) {
+      return
     }
+
+    if (this.loaded.includes(this.language)) {
+      this.setLang()
+      return
+    }
+
+    let messages
+
+    try {
+      messages = await import(/* webpackChunkName: "lang-[request]" */ `@app/translations/${this.language}.json`)
+    } catch (e) {
+      throw e
+    }
+
+    if (!messages) {
+      throw new Error(`No messages found for language ${this.language}`)
+    }
+
+    this.$i18n.setLocaleMessage(this.language, messages.default)
+    this.loaded.push(this.language)
+    this.setLang()
   }
 
   setLang(): void {

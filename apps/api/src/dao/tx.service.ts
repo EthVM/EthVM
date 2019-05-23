@@ -202,6 +202,8 @@ export class TxService {
 
   async findSummariesByHash(hashes: string[], entityManager: EntityManager = this.entityManager): Promise<TransactionSummary[]> {
 
+    if (!(hashes && hashes.length)) return []
+
     const manager = entityManager || this.entityManager
 
     const txs = await manager

@@ -2,10 +2,13 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { SearchType } from "./globalTypes";
+
 // ====================================================
-// GraphQL query operation: totalNumTokenExchangeRates
+// GraphQL fragment: SearchResult
 // ====================================================
 
-export interface totalNumTokenExchangeRates {
-  totalNumTokenExchangeRates: number;
+export interface SearchResult {
+  __typename: "Search";
+  type: SearchType;
 }
