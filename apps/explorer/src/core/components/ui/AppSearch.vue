@@ -1,4 +1,3 @@
-import {SearchType} from "../../api/apollo/types/globalTypes";
 <template>
   <v-layout align-center fill-height justify-end row height="48px" class="pl-1">
     <v-flex xs12 md8>
