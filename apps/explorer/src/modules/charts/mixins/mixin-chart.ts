@@ -89,33 +89,37 @@ export class ChartMixin extends Vue {
     }
   }
 
-  setData(state: number): void {
+  async setData(state: number): Promise<void> {
     const duration = this.data[state].state.toUpperCase()
-    this.fetchData(duration).then(res => {
-      res = res.map(r => {
-        r.date = new Date(+r.date)
-        return r
-      })
 
-      if (res) {
-        if (this.chartTitle === this.$i18n.t('charts.gas-price.title ').toString()) {
-          res.forEach(point => {
-            this.data[state].points.push(new EthValue(point.value).toGWei())
-            this.data[state].labels.push(point.date)
-          })
-        } else if (this.chartTitle === this.$i18n.t('charts.tx-fees.title').toString()) {
-          res.forEach(point => {
-            this.data[state].points.push(new EthValue(point.value).toEth())
-            this.data[state].labels.push(point.date)
-          })
-        } else {
-          res.forEach(point => {
-            this.data[state].points.push(point.value)
-            this.data[state].labels.push(point.date)
-          })
-        }
-      }
+    let data = await this.fetchData(duration)
+
+    if (!data) {
+       return
+    }
+
+    data = data.map(r => {
+      r.date = new Date(+r.date)
+      return r
     })
+
+    if (this.chartTitle === this.$i18n.t('charts.gas-price.title ').toString()) {
+      data.forEach(point => {
+        this.data[state].points.push(new EthValue(point.value).toGWei())
+        this.data[state].labels.push(point.date)
+      })
+    } else if (this.chartTitle === this.$i18n.t('charts.tx-fees.title').toString()) {
+      data.forEach(point => {
+        this.data[state].points.push(new EthValue(point.value).toEth())
+        this.data[state].labels.push(point.date)
+      })
+    } else {
+      data.forEach(point => {
+        this.data[state].points.push(point.value)
+        this.data[state].labels.push(point.date)
+      })
+    }
+
   }
 
   // Method intended to be overriden by implementors
