@@ -1,6 +1,5 @@
 import Vuetify from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
-import { EthvmApi, EthvmApolloApi } from '@app/core/api'
 import { VueEthvmApi } from '@app/core/plugins'
 import router from '@app/core/router'
 import store from '@app/core/store'
@@ -64,10 +63,8 @@ const apolloProvider = new VueApollo({
   defaultClient: apolloClient
 })
 
-const api = new EthvmApolloApi(apolloClient)
-
 Vue.use(VueApollo)
-Vue.use(VueEthvmApi, { api, subscriptionClient })
+Vue.use(VueEthvmApi, { subscriptionClient })
 
 // -------------------------------------------------------
 //    Vuetify

@@ -1,5 +1,0 @@
-query search($query: String!) {
-  search(query: $query) {
-    type
-  }
-}

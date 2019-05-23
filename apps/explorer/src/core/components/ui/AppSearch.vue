@@ -52,7 +52,7 @@ import {SearchType} from "../../api/apollo/types/globalTypes";
   @Component({
   data() {
     return {
-      query: undefined
+      query: undefined,
     }
   },
   apollo: {
@@ -65,8 +65,10 @@ import {SearchType} from "../../api/apollo/types/globalTypes";
       },
       manual: true,
       result({ data, loading }) {
+
         if (!loading && data.search) {
-          this.processSearchResult(new SearchResultExt(data.search))
+          const self = this as any
+          self.processSearchResult(new SearchResultExt(data.search))
         }
       },
       skip() {
