@@ -17,10 +17,6 @@ export enum DeltaType {
   UNCLE_REWARD = "UNCLE_REWARD",
 }
 
-export enum ExchangeRatePair {
-  ethereum_usd = "ethereum_usd",
-}
-
 export enum FilterEnum {
   all = "all",
   in = "in",

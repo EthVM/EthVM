@@ -1,9 +1,7 @@
-import { EthvmApi } from '@app/core/api'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { BehaviorSubject } from 'rxjs'
 
 interface VueEthvmApiOptions {
-  api: EthvmApi
   subscriptionClient: SubscriptionClient
 }
 
@@ -11,10 +9,7 @@ export type SubscriptionState = 'connecting' | 'connected' | 'disconnected' | 'r
 
 export const VueEthvmApi = {
   install(Vue: any, options: VueEthvmApiOptions) {
-    const { api, subscriptionClient } = options
-
-    // install api
-    Vue.prototype.$api = api
+    const { subscriptionClient } = options
 
     // install subscription state
     const $subscriptionState = new BehaviorSubject<SubscriptionState>('connecting')
