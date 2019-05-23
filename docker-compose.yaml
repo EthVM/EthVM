@@ -116,11 +116,11 @@ services:
     command: bash -c "yarn && yarn start:dev"
 
   # ///////////////////////////////////////////////////////
-  # Etherum Client
+  # Ethereum Client
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: ethvm/parity:v2.3.3
+    image: ethvm/parity:experiment
     networks:
       - back
     volumes:
@@ -132,7 +132,7 @@ services:
     # By default we have enabled a private ethereum network (amarok) to be used in development
     # If you want, also there's the option to use ropsten or even mainnet to test with real networks.
     # Just uncomment below line:
-    command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    command: --logging rpc=trace --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
     #command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
     #command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
 

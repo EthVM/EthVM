@@ -59,12 +59,12 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, block
     .setBlockTime(blockTime)
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
-fun EthBlock.Block.toUncleRecord(index: Int, nephewHash: String, blockNumber: BigInteger, builder: UncleRecord.Builder): UncleRecord.Builder =
+fun UncleBlock.Block.toUncleRecord(builder: UncleRecord.Builder): UncleRecord.Builder =
   builder
-    .setIndex(index)
+    .setIndex(uncleIndex)
     .setNephewHash(nephewHash)
     .setNumberBI(number)
-    .setHeightBI(blockNumber)
+    .setHeightBI(nephewNumber)
     .setHash(hash)
     .setParentHash(parentHash)
     .setNonceBI(nonce)

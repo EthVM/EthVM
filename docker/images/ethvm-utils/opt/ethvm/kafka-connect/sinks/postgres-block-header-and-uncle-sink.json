@@ -3,6 +3,7 @@
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": 2,
+    "max.poll.records": 1000,
     "topics": "canonical_block_header,uncle",
     "insert.mode": "upsert",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",

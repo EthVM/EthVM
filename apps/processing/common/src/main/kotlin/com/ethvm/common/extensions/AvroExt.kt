@@ -42,6 +42,24 @@ fun CanonicalKeyRecord.getNumberBI() = getNumber().bigInteger()
 fun CanonicalKeyRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
 // ------------------------------------------------------------
+// TransactionReceiptRecord
+// ------------------------------------------------------------
+
+fun UncleRecord.getHeightBI() = getHeight().bigInteger()
+
+// ------------------------------------------------------------
+// TransactionReceiptRecord
+// ------------------------------------------------------------
+
+fun TransactionReceiptRecord.getBlockNumberBI() = getBlockNumber().bigInteger()
+
+// ------------------------------------------------------------
+// TraceRecord
+// ------------------------------------------------------------
+
+fun TraceRecord.getBlockNumberBI() = getBlockNumber().bigInteger()
+
+// ------------------------------------------------------------
 // TraceCallActionRecord
 // ------------------------------------------------------------
 
