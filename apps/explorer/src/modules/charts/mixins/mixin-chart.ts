@@ -95,7 +95,7 @@ export class ChartMixin extends Vue {
     let data = await this.fetchData(duration)
 
     if (!data) {
-       return
+      return
     }
 
     data = data.map(r => {
@@ -119,7 +119,6 @@ export class ChartMixin extends Vue {
         this.data[state].labels.push(point.date)
       })
     }
-
   }
 
   // Method intended to be overriden by implementors
