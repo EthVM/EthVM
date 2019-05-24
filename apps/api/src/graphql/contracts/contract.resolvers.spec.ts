@@ -4,7 +4,8 @@ import { ContractEntity } from '../../orm/entities/contract.entity'
 import { ContractDto } from './dto/contract.dto'
 import { EthService } from '../../shared/eth.service'
 import { ContractService } from '../../dao/contract.service'
-import { ContractsPageDto } from './dto/contracts-page.dto'
+import { ContractSummaryPageDto } from './dto/contract-summary-page.dto'
+import { ContractSummary } from '../schema'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -20,32 +21,26 @@ const creator3 = '0000000000000000000000000000000000000006'
 
 const contracts = {
   '0000000000000000000000000000000000000001': {
-    id: address1,
     address: address1,
     creator: creator1
   },
   '0000000000000000000000000000000000000002': {
-    id: address2,
     address: address2,
     creator: creator2
   },
   '0000000000000000000000000000000000000003': {
-    id: address3,
     address: address3,
     creator: creator1
   },
   '0000000000000000000000000000000000000004': {
-    id: address4,
     address: address4,
     creator: creator2
   },
   '0000000000000000000000000000000000000005': {
-    id: address5,
     address: address5,
     creator: creator1
   },
   '0000000000000000000000000000000000000006': {
-    id: address6,
     address: address6,
     creator: creator1
   }
@@ -56,13 +51,12 @@ const mockService = {
     const data = contracts[address]
     return data ? new ContractEntity(data) : null
   },
-  async findContractsCreatedBy(creator, limit = 10, page = 0) {
+  async findContractsCreatedBy(creator, offset = 0, limit = 10) {
     const contractsCreatedBy = Object.values(contracts).filter(b => b.creator === creator)
-    const start = page * limit
-    const end = start + limit
-    const items = contractsCreatedBy.slice(start, end)
+    const end = offset + limit
+    const items = contractsCreatedBy.slice(offset, end)
     return [
-      items.map(i => new ContractEntity(i)),
+      items as ContractSummary[],
       contractsCreatedBy.length
     ]
   }
@@ -103,11 +97,11 @@ describe('ContractResolvers', () => {
 
       expect(contractOne).not.toBeNull()
       expect(contractOne).toBeInstanceOf(ContractDto)
-      expect(contractOne).toHaveProperty('id', address1)
+      expect(contractOne).toHaveProperty('address', address1)
 
       expect(contractTwo).not.toBeNull()
       expect(contractTwo).toBeInstanceOf(ContractDto)
-      expect(contractTwo).toHaveProperty('id', address2)
+      expect(contractTwo).toHaveProperty('address', address2)
 
       expect(contractOne).not.toEqual(contractTwo)
     })
@@ -117,7 +111,6 @@ describe('ContractResolvers', () => {
 
       expect(contractOne).toEqual(
         new ContractDto({
-          id: address1,
           address: address1,
           creator: creator1
         })
@@ -126,64 +119,64 @@ describe('ContractResolvers', () => {
   })
 
   describe('contractsCreatedBy', () => {
-    it('should return a ContractsPageDto with items (array of ContractDto instances) and totalCount created by the address provided', async () => {
-      const contractsCreatedByCreatorOne = await contractResolvers.contractsCreatedBy(creator1)
-      const contractsCreatedByCreatorTwo = await contractResolvers.contractsCreatedBy(creator2)
+    it('should return a ContractSummaryPageDto with items and totalCount created by the address provided', async () => {
+      const contractsCreatedByCreatorOne = await contractResolvers.contractsCreatedBy(creator1, 0, 10)
+      const contractsCreatedByCreatorTwo = await contractResolvers.contractsCreatedBy(creator2, 0, 10)
 
-      expect(contractsCreatedByCreatorOne).toBeInstanceOf(ContractsPageDto)
+      expect(contractsCreatedByCreatorOne).toBeInstanceOf(ContractSummaryPageDto)
       expect(contractsCreatedByCreatorOne).toHaveProperty('items')
       expect(contractsCreatedByCreatorOne).toHaveProperty('totalCount', 4)
       if (contractsCreatedByCreatorOne.items) {
         expect(contractsCreatedByCreatorOne.items).toHaveLength(4)
-        expect(contractsCreatedByCreatorOne.items[0]).toHaveProperty('id', address1)
+        expect(contractsCreatedByCreatorOne.items[0]).toHaveProperty('address', address1)
       }
 
-      expect(contractsCreatedByCreatorTwo).toBeInstanceOf(ContractsPageDto)
+      expect(contractsCreatedByCreatorTwo).toBeInstanceOf(ContractSummaryPageDto)
       expect(contractsCreatedByCreatorTwo).toHaveProperty('items')
       expect(contractsCreatedByCreatorTwo).toHaveProperty('totalCount', 2)
       if (contractsCreatedByCreatorTwo.items) {
         expect(contractsCreatedByCreatorTwo.items).toHaveLength(2)
-        expect(contractsCreatedByCreatorTwo.items[0]).toHaveProperty('id', address2)
+        expect(contractsCreatedByCreatorTwo.items[0]).toHaveProperty('address', address2)
       }
 
       expect(contractsCreatedByCreatorOne).not.toEqual(contractsCreatedByCreatorTwo)
     })
 
     it('should respect given limit and page parameters', async () => {
-      const contractsOne = await contractResolvers.contractsCreatedBy(creator1, 2, 0)
+      const contractsOne = await contractResolvers.contractsCreatedBy(creator1, 0, 2)
 
       expect(contractsOne).toHaveProperty('totalCount', 4)
       expect(contractsOne).toHaveProperty('items')
       if (contractsOne.items) {
         expect(contractsOne.items).toHaveLength(2)
-        expect(contractsOne.items[0]).toHaveProperty('id', address1)
-        expect(contractsOne.items[1]).toHaveProperty('id', address3)
+        expect(contractsOne.items[0]).toHaveProperty('address', address1)
+        expect(contractsOne.items[1]).toHaveProperty('address', address3)
       }
 
-      const contractsTwo = await contractResolvers.contractsCreatedBy(creator1, 2, 1)
+      const contractsTwo = await contractResolvers.contractsCreatedBy(creator1, 2, 2)
 
       expect(contractsTwo).toHaveProperty('totalCount', 4)
       expect(contractsTwo).toHaveProperty('items')
       if (contractsTwo.items) {
         expect(contractsTwo.items).toHaveLength(2)
-        expect(contractsTwo.items[0]).toHaveProperty('id', address5)
-        expect(contractsTwo.items[1]).toHaveProperty('id', address6)
+        expect(contractsTwo.items[0]).toHaveProperty('address', address5)
+        expect(contractsTwo.items[1]).toHaveProperty('address', address6)
       }
 
       // Check an empty array is returned if no items available for requested page
-      const contractsThree = await contractResolvers.contractsCreatedBy(creator3, 10, 1)
+      const contractsThree = await contractResolvers.contractsCreatedBy(creator3, 10, 10)
       expect(contractsThree).toHaveProperty('totalCount', 0)
       expect(contractsThree).toHaveProperty('items')
       expect(contractsThree.items).toHaveLength(0)
     })
 
-    it('should convert an array of ContractEntity instances to an array of ContractDto instances', async () => {
-      const contracts = await contractResolvers.contractsCreatedBy(creator1)
+    it('should return an items field with an array of ContractSummaryDto instances', async () => {
+      const contracts = await contractResolvers.contractsCreatedBy(creator1, 0, 10)
       const expected = [
-        new ContractDto({ id: address1, address: address1, creator: creator1 }),
-        new ContractDto({ id: address3, address: address3, creator: creator1 }),
-        new ContractDto({ id: address5, address: address5, creator: creator1 }),
-        new ContractDto({ id: address6, address: address6, creator: creator1 })
+        new ContractDto({ address: address1, creator: creator1 }),
+        new ContractDto({ address: address3, creator: creator1 }),
+        new ContractDto({ address: address5, creator: creator1 }),
+        new ContractDto({ address: address6, creator: creator1 })
       ]
       expect(contracts.items).toEqual(expect.arrayContaining(expected))
     })
