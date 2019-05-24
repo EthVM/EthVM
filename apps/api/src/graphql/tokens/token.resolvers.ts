@@ -10,6 +10,7 @@ import { TokensMetadataArgs } from '@app/graphql/tokens/args/tokens-metadata.arg
 import { TokenPageDto } from '@app/graphql/tokens/dto/token-page.dto'
 import BigNumber from 'bignumber.js'
 import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange-rate-page.dto'
+import { CoinExchangeRateDto } from '@app/graphql/tokens/dto/coin-exchange-rate.dto'
 
 @Resolver('Token')
 export class TokenResolvers {
@@ -56,8 +57,9 @@ export class TokenResolvers {
   }
 
   @Query()
-  async coinExchangeRate(@Args('pair') pair: string) {
-    return await this.tokenService.findCoinExchangeRate(pair)
+  async coinExchangeRate(@Args('pair') pair: string): Promise<CoinExchangeRateDto | undefined> {
+    const entity = await this.tokenService.findCoinExchangeRate(pair)
+    return entity ? new CoinExchangeRateDto(entity) : undefined
   }
 
   @Query()
@@ -73,10 +75,10 @@ export class TokenResolvers {
 
   @Query()
   async tokenExchangeRatePage(
-    @Args() {symbols}: TokenExchangeRatesArgs,
+    @Args({name: 'symbols', type: () => [String]}) symbols: string[],
     @Args('sort') sort: string,
-    @Args('limit') limit: number,
     @Args('offset') offset: number,
+    @Args('limit') limit: number,
   ): Promise<TokenExchangeRatePageDto> {
     const [items, totalCount] = await this.tokenService.findTokenExchangeRatesPage(sort, limit, offset, symbols)
     return new TokenExchangeRatePageDto({ items, totalCount })
@@ -102,7 +104,7 @@ export class TokenResolvers {
   }
 
   @Query()
-  async tokensMetadata(@Args() {symbols}: TokensMetadataArgs): Promise<TokenMetadataDto[]> {
+  async tokensMetadata(@Args({name: 'symbols', type: () => [String]}) symbols: string[]): Promise<TokenMetadataDto[]> {
     return await this.tokenService.findTokensMetadata(symbols)
   }
 }
