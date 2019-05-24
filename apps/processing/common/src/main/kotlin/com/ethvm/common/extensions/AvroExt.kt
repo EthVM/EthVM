@@ -330,7 +330,7 @@ fun UncleRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteB
 
 fun UncleRecord.Builder.setHeightBI(number: BigInteger) = setHeight(number.byteBuffer())
 
-fun UncleRecord.Builder.setNonceBI(nonce: BigInteger) = setNonce(nonce.byteBuffer())
+fun UncleRecord.Builder.setNonceBI(nonce: BigInteger?) = setNonce(nonce?.byteBuffer())
 
 fun UncleRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.byteBuffer())
 

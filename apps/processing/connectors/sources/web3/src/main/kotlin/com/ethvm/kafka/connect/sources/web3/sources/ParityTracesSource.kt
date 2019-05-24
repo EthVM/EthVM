@@ -21,95 +21,67 @@ class ParityTracesSource(
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "trace")
 
-  override val batchSize = 128
+  override val batchSize = 256
+
+  private val chunkSize = batchSize / 4
 
   override fun fetchRange(range: LongRange): List<SourceRecord> {
 
-    val resp = parity.ethvmGetTracesByNumber(
-      range.first.toBigInteger(),
-      range.endInclusive.toBigInteger()
-    ).send()
+    val futures = range
+      .chunked(chunkSize)
+      .map{ chunkedRange ->
 
-    val traceRecordsByBlockNumber = resp.traces
-      .map { it.toTraceRecord(TraceRecord.newBuilder()).build() }
-      .groupBy { it.getBlockNumberBI() }
+        parity.ethvmGetTracesByNumber(
+          chunkedRange.first().toBigInteger(),
+          chunkedRange.last().toBigInteger()
+        ).sendAsync()
+          .thenApply { resp ->
 
-    return range.map { blockNumber ->
+            val traceRecordsByBlockNumber = resp.traces
+              .map { it.toTraceRecord(TraceRecord.newBuilder()).build() }
+              .groupBy { it.getBlockNumberBI() }
 
-      val blockNumberBI = blockNumber.toBigInteger()
+            chunkedRange.map { blockNumber ->
 
-      val traceRecords = traceRecordsByBlockNumber
-        .getOrDefault(blockNumberBI, emptyList())
+              val blockNumberBI = blockNumber.toBigInteger()
 
-      val partitionOffset = mapOf("blockNumber" to blockNumber)
+              val traceRecords = traceRecordsByBlockNumber
+                .getOrDefault(blockNumberBI, emptyList())
 
-      val traceKeyRecord = CanonicalKeyRecord.newBuilder()
-        .setNumberBI(blockNumberBI)
-        .build()
+              val partitionOffset = mapOf("blockNumber" to blockNumber)
 
-      val traceListRecord = TraceListRecord
-        .newBuilder()
-        .setTraces(traceRecords)
-        .build()
+              val traceKeyRecord = CanonicalKeyRecord.newBuilder()
+                .setNumberBI(blockNumberBI)
+                .build()
 
-      val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
-      val traceValueSchemaAndValue = AvroToConnect.toConnectData(traceListRecord)
+              val traceListRecord = TraceListRecord
+                .newBuilder()
+                .setTraces(traceRecords)
+                .build()
 
-      SourceRecord(
-        partitionKey,
-        partitionOffset,
-        tracesTopic,
-        traceKeySchemaAndValue.schema(),
-        traceKeySchemaAndValue.value(),
-        traceValueSchemaAndValue.schema(),
-        traceValueSchemaAndValue.value()
-      )
-    }
+              val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
+              val traceValueSchemaAndValue = AvroToConnect.toConnectData(traceListRecord)
+
+              SourceRecord(
+                partitionKey,
+                partitionOffset,
+                tracesTopic,
+                traceKeySchemaAndValue.schema(),
+                traceKeySchemaAndValue.value(),
+                traceValueSchemaAndValue.schema(),
+                traceValueSchemaAndValue.value()
+              )
+
+            }
+          }
+
+      }
+
+    return futures
+      .map { it.join() }
+      .flatten()
 
   }
-
-//  override fun fetchRange(range: LongRange): List<SourceRecord> =
-//    range
-//      .map { blockNumber ->
-//
-//        val blockNumberBI = blockNumber.toBigInteger()
-//        val blockParam = DefaultBlockParameter.valueOf(blockNumberBI)
-//
-//        val partitionOffset = mapOf("blockNumber" to blockNumber)
-//
-//        parity.traceBlock(blockParam).sendAsync()
-//          .thenApply { resp ->
-//
-//            val traceKeyRecord = CanonicalKeyRecord.newBuilder()
-//              .setNumberBI(blockNumberBI)
-//              .build()
-//
-//            val traceRecords = resp.traces.map { trace ->
-//              trace.toTraceRecord(TraceRecord.newBuilder()).build()
-//            }
-//
-//            val traceListRecord = TraceListRecord
-//              .newBuilder()
-//              .setTraces(traceRecords)
-//              .build()
-//
-//            val traceKeySchemaAndValue = AvroToConnect.toConnectData(traceKeyRecord)
-//            val traceValueSchemaAndValue = AvroToConnect.toConnectData(traceListRecord)
-//
-//            SourceRecord(
-//              partitionKey,
-//              partitionOffset,
-//              tracesTopic,
-//              traceKeySchemaAndValue.schema(),
-//              traceKeySchemaAndValue.value(),
-//              traceValueSchemaAndValue.schema(),
-//              traceValueSchemaAndValue.value()
-//            )
-//          }
-//      }.map { future ->
-//        // wait for everything to complete
-//        future.join()
-//      }
 
   override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
     range

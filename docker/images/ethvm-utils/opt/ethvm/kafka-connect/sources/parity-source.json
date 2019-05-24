@@ -2,10 +2,8 @@
   "name": "parity-source",
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.web3.ParitySourceConnector",
-    "tasks.max": 3,
+    "tasks.max": 1,
     "ws.url": "{{ .Env.PARITY_WS_URL }}",
-    "schema.registry.url": "{{ .Env.KAFKA_SCHEMA_REGISTRY_URL }}",
-    "producer.max.request.size": 52428800,
-    "max.request.size": 52428800
+    "schema.registry.url": "{{ .Env.KAFKA_SCHEMA_REGISTRY_URL }}"
   }
 }

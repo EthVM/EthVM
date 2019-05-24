@@ -43,6 +43,7 @@ import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
+import org.apache.kafka.streams.kstream.Suppressed
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import java.math.BigInteger
 import java.time.Duration
@@ -99,6 +100,8 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
       )
+      // only emit unique updates each second
+      .suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(1), Suppressed.BufferConfig.unbounded()))
       .toStream()
       .toTopic(FungibleBalance)
 

@@ -3,7 +3,6 @@
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": 1,
-    "max.poll.records": 1000,
     "topics": "contract,eth_list_contract_metadata,erc20_metadata,erc721_metadata,token_exchange_rates",
     "insert.mode": "upsert",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",

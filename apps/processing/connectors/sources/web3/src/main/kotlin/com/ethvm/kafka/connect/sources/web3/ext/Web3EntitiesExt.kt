@@ -59,15 +59,15 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, block
     .setBlockTime(blockTime)
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
-fun UncleBlock.Block.toUncleRecord(builder: UncleRecord.Builder): UncleRecord.Builder =
+fun EthBlock.Block.toUncleRecord(builder: UncleRecord.Builder, nephew: EthBlock.Block, index: Int): UncleRecord.Builder =
   builder
-    .setIndex(uncleIndex)
-    .setNephewHash(nephewHash)
+    .setIndex(index)
+    .setNephewHash(nephew.hash)
     .setNumberBI(number)
-    .setHeightBI(nephewNumber)
+    .setHeightBI(nephew.number)
     .setHash(hash)
     .setParentHash(parentHash)
-    .setNonceBI(nonce)
+    .setNonceBI(if (nonceRaw != null) nonce else null)
     .setSha3Uncles(sha3Uncles)
     .setLogsBloom(logsBloom)
     .setTransactionsRoot(transactionsRoot)
@@ -101,7 +101,7 @@ fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder): Transac
     .setChainId(chainId)
 
   if (input != null) {
-    // we compress if the input fixed is more than 150 bytes as some blocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
+    // we compress if the input fixed is more than 150 bytes as some fullBlocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
     builder.input = input.hexBuffer().compress(150)
   }
 
@@ -145,7 +145,7 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
         .setValueBI(action.value)
 
       if (action.input != null) {
-        // we compress if the input fixed is more than 150 bytes as some blocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
+        // we compress if the input fixed is more than 150 bytes as some fullBlocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
         actionBuilder.input = action.input.hexBuffer().compress(150)
       }
 

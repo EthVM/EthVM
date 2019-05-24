@@ -3,7 +3,6 @@
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": 1,
-    "max.poll.records": 1000,
     "topics": "kafka_offset_info",
     "insert.mode": "insert",
     "pk.mode": "none",

@@ -26,6 +26,8 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
+import org.apache.kafka.streams.kstream.Suppressed
+import java.time.Duration
 import java.util.Properties
 
 class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
@@ -97,6 +99,8 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
       )
+      // only emit unique updates each second
+      .suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(1), Suppressed.BufferConfig.unbounded()))
       .toStream()
       .toTopic(NonFungibleBalance)
 
