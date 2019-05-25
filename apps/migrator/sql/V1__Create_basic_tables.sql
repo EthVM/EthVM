@@ -403,7 +403,8 @@ CREATE TABLE contract
   trace_destroyed_at_transaction_index INT         NULL,
   trace_destroyed_at_log_index         INT         NULL,
   trace_destroyed_at_trace_address     TEXT        NULL,
-  trace_destroyed_at_timestamp         TIMESTAMP   NOT NULL
+  trace_destroyed_at_timestamp         TIMESTAMP   NOT NULL,
+  timestamp                            TIMESTAMP   NOT NULL
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
@@ -601,7 +602,7 @@ CREATE TABLE non_fungible_balance_delta
   trace_location_transaction_index INT         NULL,
   trace_location_log_index         INT         NULL,
   trace_location_trace_address     TEXT        NULL,
-  trace_location_timestamp         TIMESTAMP NOT NULL,
+  trace_location_timestamp         TIMESTAMP   NOT NULL,
   "from"                           CHAR(42)    NOT NULL,
   "to"                             CHAR(42)    NOT NULL
 );

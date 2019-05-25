@@ -2,6 +2,7 @@ package com.ethvm.kafka.streams.di
 
 import com.ethvm.kafka.streams.config.AppConfig
 import com.ethvm.kafka.streams.config.Web3Config
+import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import org.apache.avro.Schema
@@ -65,6 +66,9 @@ object Modules {
         // Serdes - Defaults
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().javaClass.name)
+
+        // custom timestamp extractor using chain event time
+        put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, BlockEventTimestampExtractor::class.java)
       }
     }
   }
