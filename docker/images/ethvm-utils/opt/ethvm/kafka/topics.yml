@@ -46,25 +46,25 @@ topics:
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
-      retention.ms: 21600000
+      retention.ms: 2592000000
 
   - name: transaction
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
-      retention.ms: 21600000
+      retention.ms: 2592000000
 
   - name: transaction_receipt
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
-      retention.ms: 21600000
+      retention.ms: 2592000000
 
   - name: transaction_trace
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
-      retention.ms: 21600000
+      retention.ms: 2592000000
 
   - name: canonical_block_author
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}

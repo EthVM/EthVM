@@ -1,7 +1,5 @@
 package com.ethvm.kafka.streams.utils
 
-import org.apache.avro.Schema
-import org.apache.avro.generic.GenericRecord
 import org.apache.avro.specific.SpecificRecord
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.streams.processor.TimestampExtractor
