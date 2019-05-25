@@ -23,6 +23,7 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
+import org.joda.time.DateTime
 import java.time.Duration
 import java.util.Properties
 
@@ -54,6 +55,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
           else ->
             TransactionGasPriceListRecord.newBuilder()
               .setBlockHash(blockHash)
+              .setTimestamp(DateTime(transactionsList.getTimestamp()))
               .setGasPrices(
                 transactionsList.getTransactions()
                   .map { tx ->
@@ -79,6 +81,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
           null -> null
           else ->
             TransactionGasUsedListRecord.newBuilder()
+              .setTimestamp(DateTime(receiptsList.getTimestamp()))
               .setBlockHash(blockHash)
               .setGasUsed(
                 receiptsList.getReceipts()
@@ -105,8 +108,16 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
             val gasPrices = left.getGasPrices()
             val gasUsage = right.getGasUsed()
 
+            // use the latest timestamp
+            val timestamp = if (left.timestamp <= right.timestamp) {
+              right.timestamp
+            } else {
+              left.timestamp
+            }
+
             TransactionFeeListRecord.newBuilder()
               .setBlockHash(left.getBlockHash())
+              .setTimestamp(timestamp)
               .setTransactionFees(
 
                 // prices and usages should be in the same transaction order so we just zip them
@@ -124,6 +135,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                       .setTransactionPosition(gasPrice.getTransactionPosition())
                       .setAddress(gasPrice.getAddress())
                       .setTransactionFeeBI(fee)
+                      .setTimestamp(timestamp)
                       .build()
                   }
               ).build()

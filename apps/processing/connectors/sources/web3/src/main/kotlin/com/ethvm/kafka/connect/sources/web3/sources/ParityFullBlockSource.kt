@@ -12,6 +12,7 @@ import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.common.extensions.getNumberBI
+import com.ethvm.common.extensions.setHeightBI
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import com.ethvm.kafka.connect.sources.web3.ext.toBlockHeaderRecord
@@ -22,6 +23,7 @@ import com.ethvm.kafka.connect.sources.web3.ext.toUncleRecord
 import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
+import org.joda.time.DateTime
 import org.web3j.protocol.core.methods.response.Transaction
 import java.math.BigInteger
 
@@ -38,7 +40,7 @@ class ParityFullBlockSource(
 
   override val partitionKey: Map<String, Any> = mapOf("model" to "fullBlocks")
 
-  private val blockTimestamps = sortedMapOf<BigInteger, Int>()
+  private val blockTimestamps = sortedMapOf<BigInteger, Long>()
 
   override val batchSize = 512
 
@@ -64,6 +66,12 @@ class ParityFullBlockSource(
 
                 val blockNumber = block.number
 
+                // unix timestamp in seconds since epoch
+                val timestamp = block.timestamp.longValueExact() * 1000
+
+                // record timestamp for later
+                blockTimestamps[blockNumber] = timestamp
+
                 val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
                   .setNumberBI(blockNumber)
                   .build()
@@ -72,32 +80,31 @@ class ParityFullBlockSource(
                   .toBlockHeaderRecord(BlockHeaderRecord.newBuilder(), 0)
                   .build()
 
-                // record timestamp for later
-                blockTimestamps[blockNumber] = blockRecord.getTimestamp().toInt()
-
                 val uncleListRecord = UncleListRecord.newBuilder()
+                  .setTimestamp(timestamp)
                   .setUncles(
                     fullBlock.uncles
                       .mapIndexed { index, uncle ->
-                        uncle.toUncleRecord(UncleRecord.newBuilder(), block, index).build()
+                        uncle.toUncleRecord(
+                          UncleRecord.newBuilder()
+                            .setNephewHash(block.hash)
+                            .setHeightBI(block.number)
+                            .setIndex(index)
+                        ).build()
                       }
                   ).build()
 
                 val transactionListRecord = TransactionListRecord.newBuilder()
                   .setBlockHash(blockRecord.getHash())
+                  .setTimestamp(timestamp)
                   .setTransactions(
                     block.transactions
                       .map { txResp -> txResp.get() as Transaction }
-                      .map { tx ->
-                        tx.toTransactionRecord(
-                          TransactionRecord
-                            .newBuilder()
-                            .setTimestamp(block.timestamp.longValueExact())
-                        ).build()
-                      }
+                      .map { tx -> tx.toTransactionRecord(TransactionRecord.newBuilder()).build() }
                   ).build()
 
                 val receiptListRecord = TransactionReceiptListRecord.newBuilder()
+                  .setTimestamp(timestamp)
                   .setReceipts(
                     fullBlock.receipts
                       .map { it.toTransactionReceiptRecord(TransactionReceiptRecord.newBuilder()).build() }
@@ -105,6 +112,7 @@ class ParityFullBlockSource(
 
 
                 val traceListRecord = TraceListRecord.newBuilder()
+                  .setTimestamp(timestamp)
                   .setTraces(
                     fullBlock.traces
                       .map { it.toTraceRecord(TraceRecord.newBuilder()).build() }
@@ -128,14 +136,14 @@ class ParityFullBlockSource(
 
       val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
         null -> 0 // should only occur for genesis block
-        else -> block.timestamp.toInt() - prevTimestamp
+        else -> block.timestamp - prevTimestamp
       }
 
       val partitionOffset = mapOf("blockNumber" to blockNumber.toLong())
 
       val blockWithTimestamp = BlockHeaderRecord
         .newBuilder(block)
-        .setBlockTime(blockTime)
+        .setBlockTime((blockTime / 1000).toInt()) // seconds
         .build()
 
       val keySchemaAndValue = AvroToConnect.toConnectData(key)

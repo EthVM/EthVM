@@ -9,7 +9,7 @@
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",
     "connection.password": "{{ .Env.POSTGRES_PASSWORD }}",
-    "transforms": "snakeCaseKey,snakeCaseValue,dropFields,toJsonKey,toJsonValue,flattenValue",
+    "transforms": "snakeCaseKey,snakeCaseValue,dropFields,toJsonKey,toJsonValue,flattenValue,convertTimestamp",
     "transforms.flattenValue.type": "com.ethvm.kafka.connect.transforms.Flatten$Value",
     "transforms.flattenValue.delimiter": "_",
     "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
@@ -20,6 +20,9 @@
     "transforms.toJsonKey.whitelist": "logs,action,result,trace_address",
     "transforms.toJsonValue.type": "com.ethvm.kafka.connect.transforms.JsonField$Value",
     "transforms.toJsonValue.whitelist": "logs,action,result,trace_address,uncle_hashes,transaction_hashes,init,code,logo,support,social",
+    "transforms.convertTimestamp.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.convertTimestamp.target.type": "Timestamp",
+    "transforms.convertTimestamp.field": "timestamp",
     "pk.mode": "record_key"
   }
 }

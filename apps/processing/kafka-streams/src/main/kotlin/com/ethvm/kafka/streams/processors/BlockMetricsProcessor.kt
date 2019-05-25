@@ -3,13 +3,11 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
 import com.ethvm.avro.capture.TraceDestroyActionRecord
-import com.ethvm.avro.processing.BlockKeyRecord
 import com.ethvm.avro.processing.BlockMetricKeyRecord
 import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
-import com.ethvm.avro.processing.BlockTimestampRecord
 import com.ethvm.common.extensions.getBalanceBI
 import com.ethvm.common.extensions.getGasBI
 import com.ethvm.common.extensions.getGasPriceBI
@@ -20,12 +18,10 @@ import com.ethvm.common.extensions.setAvgGasPriceBI
 import com.ethvm.common.extensions.setAvgTxFeesBI
 import com.ethvm.common.extensions.setTotalGasPriceBI
 import com.ethvm.common.extensions.setTotalTxFeesBI
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsHeader
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransaction
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionFee
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionTrace
-import com.ethvm.kafka.streams.config.Topics.BlockTimestamp
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
@@ -37,11 +33,8 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.JoinWindows
-import org.apache.kafka.streams.kstream.Joined
 import org.joda.time.DateTime
 import java.math.BigInteger
-import java.time.Duration
 import java.util.Properties
 
 class BlockMetricsProcessor : AbstractKafkaProcessor() {
@@ -66,30 +59,15 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
       // we don't want to process tombstones
       .filterNot { _, v -> v == null }
 
-    canonicalBlock
-      .map { _, v ->
-        val timestamp = DateTime(v.getTimestamp() * 1000)
-        KeyValue(
-          BlockKeyRecord.newBuilder()
-            .setBlockHash(v.getHash())
-            .build(),
-          BlockTimestampRecord.newBuilder()
-            .setTimestamp(timestamp) // convert to millis
-            .build()
-        )
-      }.toTopic(BlockTimestamp)
-
     //
 
     canonicalBlock
       .map { _, header ->
 
-        val timestamp = DateTime(header.getTimestamp() * 1000L)
-
         KeyValue(
           BlockMetricKeyRecord.newBuilder()
             .setBlockHash(header.getHash())
-            .setTimestamp(timestamp)
+            .setTimestamp(DateTime(header.getTimestamp()))
             .build(),
           BlockMetricsHeaderRecord.newBuilder()
             .setNumber(header.getNumber())
@@ -97,12 +75,10 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
             .setNumUncles(header.getUncleHashes().size)
             .setDifficulty(header.getDifficulty())
             .setTotalDifficulty(header.getTotalDifficulty())
-            .setTimestamp(timestamp)
+            .setTimestamp(DateTime(header.getTimestamp()))
             .build()
         )
       }.toTopic(BlockMetricsHeader)
-
-    val blockTimestamp = BlockTimestamp.stream(builder)
 
     CanonicalTraces.stream(builder)
       // we don't want to process tombstones
@@ -168,35 +144,17 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         val blockHash = traces.first { it.blockHash != null }.blockHash
 
         KeyValue(
-          BlockKeyRecord.newBuilder()
+          BlockMetricKeyRecord.newBuilder()
             .setBlockHash(blockHash)
+            .setTimestamp(DateTime(traceList.getTimestamp()))
             .build(),
           BlockMetricsTransactionTraceRecord.newBuilder()
+            .setTimestamp(DateTime(traceList.getTimestamp()))
             .setNumSuccessfulTxs(successful)
             .setNumFailedTxs(failed)
             .setTotalTxs(total)
             .setNumInternalTxs(internalTxs)
             .build()
-        )
-      }
-      .join(
-        blockTimestamp,
-        { left, right ->
-          BlockMetricsTransactionTraceRecord.newBuilder(left)
-            .setTimestamp(right.getTimestamp())
-            .build()
-        },
-        JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.BlockKey(), Serdes.BlockMetricsTransactionTrace(), Serdes.BlockTimestamp())
-      )
-      .map { k, v ->
-        // add timestamp into the key
-        KeyValue(
-          BlockMetricKeyRecord.newBuilder()
-            .setBlockHash(k.getBlockHash())
-            .setTimestamp(v.getTimestamp())
-            .build(),
-          v
         )
       }
       .toTopic(BlockMetricsTransactionTrace)
@@ -227,34 +185,16 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         }
 
         KeyValue(
-          BlockKeyRecord.newBuilder()
+          BlockMetricKeyRecord.newBuilder()
             .setBlockHash(transactionsList.getBlockHash())
+            .setTimestamp(DateTime(transactionsList.getTimestamp()))
             .build(),
           BlockMetricsTransactionRecord.newBuilder()
+            .setTimestamp(DateTime(transactionsList.getTimestamp()))
             .setTotalGasPriceBI(totalGasPrice)
             .setAvgGasPriceBI(avgGasPrice)
             .setAvgGasLimitBI(avgGasLimit)
             .build()
-        )
-      }
-      .join(
-        blockTimestamp,
-        { left, right ->
-          BlockMetricsTransactionRecord.newBuilder(left)
-            .setTimestamp(right.getTimestamp())
-            .build()
-        },
-        JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.BlockKey(), Serdes.BlockMetricsTransaction(), Serdes.BlockTimestamp())
-      )
-      .map { k, v ->
-        // add timestamp into the key
-        KeyValue(
-          BlockMetricKeyRecord.newBuilder()
-            .setBlockHash(k.getBlockHash())
-            .setTimestamp(v.getTimestamp())
-            .build(),
-          v
         )
       }
       .toTopic(BlockMetricsTransaction)
@@ -277,33 +217,15 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
         }
 
         KeyValue(
-          BlockKeyRecord.newBuilder()
+          BlockMetricKeyRecord.newBuilder()
             .setBlockHash(txFeeList.getBlockHash())
+            .setTimestamp(txFeeList.getTimestamp())
             .build(),
           BlockMetricsTransactionFeeRecord.newBuilder()
+            .setTimestamp(txFeeList.getTimestamp())
             .setTotalTxFeesBI(totalTxFees)
             .setAvgTxFeesBI(avgTxFees)
             .build()
-        )
-      }
-      .join(
-        blockTimestamp,
-        { left, right ->
-          BlockMetricsTransactionFeeRecord.newBuilder(left)
-            .setTimestamp(right.getTimestamp())
-            .build()
-        },
-        JoinWindows.of(Duration.ofHours(2)),
-        Joined.with(Serdes.BlockKey(), Serdes.BlockMetricsTransactionFee(), Serdes.BlockTimestamp())
-      )
-      .map { k, v ->
-        // add timestamp into the key
-        KeyValue(
-          BlockMetricKeyRecord.newBuilder()
-            .setBlockHash(k.getBlockHash())
-            .setTimestamp(v.getTimestamp())
-            .build(),
-          v
         )
       }
       .toTopic(BlockMetricsTransactionFee)

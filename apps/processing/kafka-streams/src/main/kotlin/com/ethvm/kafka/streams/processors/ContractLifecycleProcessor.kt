@@ -21,6 +21,7 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Materialized
+import org.joda.time.DateTime
 import java.util.Properties
 
 class ContractLifecycleProcessor : AbstractKafkaProcessor() {
@@ -52,13 +53,16 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
 
             val blockHash = v.getTraces().firstOrNull()?.getBlockHash()
 
+            val timestamp = DateTime(v.getTimestamp())
+
             // we only want contract related traces
             ContractLifecycleListRecord.newBuilder()
+              .setTimestamp(timestamp)
               .setBlockHash(blockHash)
               .setDeltas(
                 v.getTraces()
                   .filter { trace -> contractTypes.contains(trace.getType()) }
-                  .mapNotNull { it.toContractLifecycleRecord() }
+                  .mapNotNull { it.toContractLifecycleRecord(timestamp) }
                   .map { record ->
                     when (record.type) {
 
@@ -89,11 +93,14 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
             logger.warn { "Update received. Agg = $agg, next = $next" }
 
             ContractLifecycleListRecord.newBuilder(agg)
+              .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
+
           } else {
 
             ContractLifecycleListRecord.newBuilder()
+              .setTimestamp(next.getTimestamp())
               .setBlockHash(next.getBlockHash())
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas())
@@ -135,45 +142,44 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
       .groupByKey()
       .aggregate(
         { null },
-        { _, new, agg ->
+        { _, next, agg ->
 
-          val b = when (agg) {
-            null -> ContractRecord.newBuilder()
-            else -> ContractRecord.newBuilder(agg)
+          val record = when (agg) {
+            null -> ContractRecord.newBuilder().setTimestamp(next.getTimestamp())
+            else -> ContractRecord.newBuilder(agg).setTimestamp(next.getTimestamp())
           }
 
-          when (new.getType()!!) {
+          when (next.getType()!!) {
 
             ContractLifecyleType.CREATE -> {
 
-              if (new.getReverse()) {
-
+              if (next.getReverse()) {
                 null
               } else {
-                b
-                  .setAddress(new.getAddress())
-                  .setCreator(new.getCreator())
-                  .setInit(new.getInit())
-                  .setCode(new.getCode())
-                  .setContractType(new.getContractType())
-                  .setTraceCreatedAt(new.getCreatedAt())
+                record
+                  .setAddress(next.getAddress())
+                  .setCreator(next.getCreator())
+                  .setInit(next.getInit())
+                  .setCode(next.getCode())
+                  .setContractType(next.getContractType())
+                  .setTraceCreatedAt(next.getCreatedAt())
                   .build()
               }
             }
 
             ContractLifecyleType.DESTROY -> {
 
-              if (new.getReverse()) {
-                b
+              if (next.getReverse()) {
+                record
                   .setRefundAddress(null)
                   .setRefundBalance(null)
                   .setTraceDestroyedAt(null)
                   .build()
               } else {
-                b
-                  .setRefundAddress(new.getRefundAddress())
-                  .setRefundBalance(new.getRefundBalance())
-                  .setTraceDestroyedAt(new.getDestroyedAt())
+                record
+                  .setRefundAddress(next.getRefundAddress())
+                  .setRefundBalance(next.getRefundBalance())
+                  .setTraceDestroyedAt(next.getDestroyedAt())
                   .build()
               }
             }

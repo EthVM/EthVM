@@ -75,6 +75,7 @@ protocol Capture {
     string blockHash;
     decimal(80, 0) blockNumber;
 
+    union { null, long } timestamp = null;
     union { null, string } transactionHash;
     union { null, int } transactionPosition;
 
@@ -82,6 +83,7 @@ protocol Capture {
 
   record TraceListRecord {
     union { null, string } rootError = null;
+    long timestamp;   
     array<TraceRecord> traces;
   }
 
@@ -89,6 +91,8 @@ protocol Capture {
 
     union { null, string } blockHash = null;            // hash of the block where this transaction was in
     union { null, decimal(80, 0) } blockNumber = null;  // integer block number where this transaction was in
+
+    union { null, long } timestamp = null;
 
     string from;
     union { null, string } to = null;
@@ -109,6 +113,7 @@ protocol Capture {
   }
 
   record TransactionReceiptListRecord {
+    long timestamp;   
     array<TransactionReceiptRecord> receipts;
   }
 
@@ -134,7 +139,7 @@ protocol Capture {
     string r;
     string s;
 
-    long timestamp;
+    union { null, long } timestamp = null;
 
     union { null, string } creates = null;              // created contract hash
 
@@ -143,6 +148,7 @@ protocol Capture {
 
   record TransactionListRecord {
     string blockHash;
+    long timestamp;   
     array<TransactionRecord> transactions;
   }
 
@@ -168,7 +174,7 @@ protocol Capture {
     decimal(80, 0) gasLimit;                            // the maximum gas allowed in this block
     decimal(80, 0) gasUsed;                             // the total used gas by all transactions in this block
 
-    long timestamp;                                     // the unix timestamp for when the block was collated
+    long timestamp;                               
     long size;
 
     int transactionCount;
@@ -212,6 +218,7 @@ protocol Capture {
   }
 
   record UncleListRecord {
+    long timestamp;   
     array<UncleRecord> uncles;
   }
 
@@ -281,11 +288,14 @@ protocol Capture {
     union { null, string } refundAddress = null;
     union { null, decimal(80, 0) } refundBalance = null;
     union { null, com.ethvm.avro.common.TraceLocationRecord } destroyedAt = null;
+
+    timestamp_ms timestamp = 0;
   }
 
   record ContractLifecycleListRecord {
 
     boolean apply = true;
+    timestamp_ms timestamp = 0;
     array<ContractLifecycleRecord> deltas = [];
     array<ContractLifecycleRecord> reversals = [];
     union { null, string } blockHash = null;
@@ -304,6 +314,8 @@ protocol Capture {
 
     union { null, com.ethvm.avro.common.TraceLocationRecord } traceCreatedAt = null;
     union { null, com.ethvm.avro.common.TraceLocationRecord } traceDestroyedAt = null;
+
+    timestamp_ms timestamp = 0;
 
   }
 

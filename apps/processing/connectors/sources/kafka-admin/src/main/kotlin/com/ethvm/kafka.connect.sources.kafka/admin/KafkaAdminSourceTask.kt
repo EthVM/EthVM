@@ -12,6 +12,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
+import org.joda.time.DateTime
 import java.util.Properties
 import java.util.concurrent.TimeUnit
 

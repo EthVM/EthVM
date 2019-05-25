@@ -27,6 +27,7 @@ import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Suppressed
+import org.joda.time.DateTime
 import java.time.Duration
 import java.util.Properties
 
@@ -135,10 +136,13 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
                 }
               }
 
+            val timestamp = DateTime(v.getTimestamp())
+
             val deltas = receiptsWithErc721Logs
               .flatMap { receipt ->
 
                 val traceLocation = TraceLocationRecord.newBuilder()
+                  .setTimestamp(timestamp)
                   .setBlockNumber(receipt.getBlockNumber())
                   .setBlockHash(receipt.getBlockHash())
                   .setTransactionHash(receipt.getTransactionHash())
@@ -167,6 +171,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
               }
 
             NonFungibleBalanceDeltaListRecord.newBuilder()
+              .setTimestamp(timestamp)
               .setBlockHash(blockHash)
               .setDeltas(deltas)
               .build()
@@ -192,6 +197,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
             logger.warn { "Update received. Agg = $agg, next = $next" }
 
             NonFungibleBalanceDeltaListRecord.newBuilder(agg)
+              .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
           } else {
@@ -199,6 +205,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
             // reverse previous deltas
 
             NonFungibleBalanceDeltaListRecord.newBuilder()
+              .setTimestamp(next.getTimestamp())
               .setBlockHash(next.getBlockHash())
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas().map { it.reverse() })

@@ -1,6 +1,9 @@
 package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.capture.TraceListRecord
+import com.ethvm.avro.capture.TransactionReceiptRecord
+import com.ethvm.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.avro.processing.TraceKeyRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
 import com.ethvm.avro.processing.TransactionReceiptKeyRecord
@@ -38,7 +41,14 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
     val builder = StreamsBuilder()
 
     CanonicalTransactions.stream(builder)
-      .flatMapValues { _, v -> v.getTransactions() }
+      .flatMapValues { _, v ->
+        v.getTransactions()
+          .map {
+            TransactionRecord.newBuilder(it)
+              .setTimestamp(v.getTimestamp())
+              .build()
+          }
+      }
       .map { _, v ->
         KeyValue(
           TransactionKeyRecord.newBuilder()
@@ -50,7 +60,14 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .toTopic(Topics.Transaction)
 
     CanonicalReceipts.stream(builder)
-      .flatMapValues { _, v -> v.getReceipts() }
+      .flatMapValues { _, v ->
+        v.getReceipts()
+          .map {
+            TransactionReceiptRecord.newBuilder(it)
+              .setTimestamp(v.getTimestamp())
+              .build()
+          }
+      }
       .map { _, v ->
         KeyValue(
           TransactionReceiptKeyRecord.newBuilder()
@@ -79,6 +96,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
                 .setBlockHash(rewardTraces.map { it.blockHash }.first())
                 .build(),
               TraceListRecord.newBuilder()
+                .setTimestamp(v.getTimestamp())
                 .setTraces(rewardTraces)
                 .build()
             )
@@ -101,6 +119,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
                   .setTransactionHash(transactionHash)
                   .build(),
                 TraceListRecord.newBuilder()
+                  .setTimestamp(v.getTimestamp())
                   .setRootError(rootError)
                   .setTraces(tracesForTransaction)
                   .build()
@@ -113,7 +132,14 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .toTopic(Topics.TransactionTrace)
 
     CanonicalUncles.stream(builder)
-      .flatMapValues { _, v -> v.getUncles() }
+      .flatMapValues { _, v ->
+        v.getUncles()
+          .map {
+            UncleRecord.newBuilder(it)
+              .setTimestamp(v.getTimestamp())
+              .build()
+          }
+      }
       .map { _, v ->
         KeyValue(
           UncleKeyRecord.newBuilder()

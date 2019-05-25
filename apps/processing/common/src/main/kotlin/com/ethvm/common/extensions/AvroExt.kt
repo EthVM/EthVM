@@ -27,6 +27,7 @@ import com.ethvm.avro.processing.TransactionFeeListRecord
 import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
+import org.joda.time.DateTime
 import java.math.BigInteger
 
 fun ParitySyncStateRecord.Builder.setHeadBI(head: BigInteger) = setHead(head.byteBuffer())
@@ -110,7 +111,7 @@ fun TraceRecord.hasError(): Boolean {
   return error != null && error.isNotBlank()
 }
 
-fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
+fun TraceRecord.toContractLifecycleRecord(timestamp: DateTime): ContractLifecycleRecord? {
 
   // error check first
   val error = getError()
@@ -130,13 +131,14 @@ fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
         .setCreator(action.getFrom())
         .setInit(action.getInit())
         .setCode(getResult().getCode())
-
+        .setTimestamp(timestamp)
         .setCreatedAt(
           TraceLocationRecord.newBuilder()
             .setBlockNumber(getBlockNumber())
             .setBlockHash(getBlockHash())
             .setTransactionHash(getTransactionHash())
             .setTraceAddress(getTraceAddress())
+            .setTimestamp(timestamp)
             .build()
         ).build()
 
@@ -147,12 +149,14 @@ fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
         .setType(ContractLifecyleType.DESTROY)
         .setRefundAddress(action.getRefundAddress())
         .setRefundBalance(action.getBalance())
+        .setTimestamp(timestamp)
         .setDestroyedAt(
           TraceLocationRecord.newBuilder()
             .setBlockNumber(getBlockNumber())
             .setBlockHash(getBlockHash())
             .setTransactionHash(getTransactionHash())
             .setTraceAddress(getTraceAddress())
+            .setTimestamp(timestamp)
             .build()
         ).build()
 
@@ -160,7 +164,7 @@ fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
   }
 }
 
-fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
+fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalanceDeltaRecord> {
 
   // error check first
   val error = getError()
@@ -175,6 +179,7 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
     .setBlockHash(getBlockHash())
     .setTransactionHash(getTransactionHash())
     .setTraceAddress(getTraceAddress())
+    .setTimestamp(timestamp)
     .build()
 
   return when (action) {
@@ -406,6 +411,7 @@ fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
         .setBlockHash(getBlockHash())
         .setBlockNumber(getBlockNumber())
         .setTransactionHash(getTransactionHash())
+        .setTimestamp(getTimestamp())
         .build()
     )
     .setAddress(getAddress())
@@ -450,9 +456,11 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       var deltas = emptyList<FungibleBalanceDeltaRecord>()
 
+      val timestamp = DateTime(getTimestamp())
+
       deltas = if (key.second == null) {
         // dealing with block and uncle rewards
-        deltas + traces.map { it.toFungibleBalanceDeltas() }.flatten()
+        deltas + traces.map { it.toFungibleBalanceDeltas(timestamp) }.flatten()
       } else {
 
         // all other traces
@@ -461,7 +469,7 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
         deltas + when (root.hasError()) {
           true -> emptyList()
           false -> traces
-            .map { trace -> trace.toFungibleBalanceDeltas() }
+            .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
             .flatten()
         }
       }

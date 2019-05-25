@@ -58,7 +58,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     contractStream
       // we only want creations
       .filter { _, v -> v.contractType == ContractType.ERC20 && v.traceDestroyedAt == null }
-      .mapValues { k, _ ->
+      .mapValues { k, v ->
 
         val name = fetchName(k.address)
         val symbol = fetchSymbol(k.address)
@@ -66,26 +66,30 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
         val totalSupply = fetchTotalSupply(k.address)
 
         Erc20MetadataRecord.newBuilder()
+          .setTimestamp(v.getTimestamp())
           .setName(name.join())
           .setSymbol(symbol.join())
           .setDecimals(decimals.join()?.intValueExact())
           .setTotalSupply(totalSupply.join()?.byteBuffer())
           .build()
+
       }.toTopic(Erc20Metadata)
 
     // erc721
     contractStream
       // we only want creations
       .filter { _, v -> v.contractType == ContractType.ERC721 && v.traceDestroyedAt == null }
-      .mapValues { k, _ ->
+      .mapValues { k, v ->
 
         val name = fetchName(k.address)
         val symbol = fetchSymbol(k.address)
 
         Erc721MetadataRecord.newBuilder()
+          .setTimestamp(v.getTimestamp())
           .setName(name.join())
           .setSymbol(symbol.join())
           .build()
+
       }.toTopic(Erc721Metadata)
 
     return builder.build()

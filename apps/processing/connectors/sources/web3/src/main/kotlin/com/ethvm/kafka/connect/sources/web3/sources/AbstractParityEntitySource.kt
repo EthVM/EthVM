@@ -10,6 +10,7 @@ import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import mu.KotlinLogging
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
+import org.joda.time.DateTime
 
 abstract class AbstractParityEntitySource(
   private val sourceContext: SourceTaskContext,

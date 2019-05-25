@@ -3,8 +3,6 @@ package com.ethvm.kafka.connect.sources.web3
 import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
 import com.ethvm.kafka.connect.sources.web3.sources.AbstractParityEntitySource
 import com.ethvm.kafka.connect.sources.web3.sources.ParityFullBlockSource
-import com.ethvm.kafka.connect.sources.web3.sources.ParityReceiptsSource
-import com.ethvm.kafka.connect.sources.web3.sources.ParityTracesSource
 import mu.KotlinLogging
 import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
@@ -130,8 +128,6 @@ class ParitySourceTask : SourceTask() {
       entitySources = entitiesList.map {
         when (it) {
           "full_block" -> ParityFullBlockSource(context, parity!!, "canonical_block_header", "canonical_transactions", "canonical_receipts", "canonical_uncles",  "canonical_traces", "parity_sync_state")
-          "receipts" -> ParityReceiptsSource(context, parity!!, "canonical_receipts", "parity_sync_state")
-          "traces" -> ParityTracesSource(context, parity!!, "canonical_traces", "parity_sync_state")
           else -> throw IllegalArgumentException("Unexpected entity: $it")
         }
       }

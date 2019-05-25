@@ -21,6 +21,8 @@ dependencies {
   implementation(project(":common"))
   implementation(project(":avro"))
 
+  implementation("joda-time:joda-time:2.10.1")
+
   // Kafka
   compileOnly("org.apache.kafka:connect-api:${ext.get("kafka-connect-api-version") as String}")
   implementation("io.confluent:kafka-schema-registry-client:${ext.get("kafka-schema-registry-client-version") as String}")

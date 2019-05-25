@@ -45,6 +45,7 @@ import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.Suppressed
 import org.apache.kafka.streams.kstream.TransformerSupplier
+import org.joda.time.DateTime
 import java.math.BigInteger
 import java.time.Duration
 import java.util.Properties
@@ -95,6 +96,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         { _, delta, balance ->
 
           FungibleBalanceRecord.newBuilder()
+            .setTimestamp(delta.getTraceLocation().getTimestamp())
             .setAmountBI(delta.getAmountBI() + balance.getAmountBI())
             .build()
         },
@@ -144,6 +146,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .setDeltaType(FungibleBalanceDeltaType.PREMINE_BALANCE)
                   .setTraceLocation(
                     TraceLocationRecord.newBuilder()
+                      .setTimestamp(DateTime(0))
                       .setBlockNumberBI(BigInteger.ZERO)
                       .build()
                   )
@@ -205,7 +208,10 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
           null -> null
           else -> {
 
+            val timestamp = DateTime(tracesList.getTimestamp())
+
             FungibleBalanceDeltaListRecord.newBuilder()
+              .setTimestamp(timestamp)
               .setBlockHash(blockHash)
               .setDeltas(tracesList.toFungibleBalanceDeltas())
               .build()
@@ -225,6 +231,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
         if (feeList != null) {
           FungibleBalanceDeltaListRecord.newBuilder()
+            .setTimestamp(feeList.getTimestamp())
             .setBlockHash(feeList.getBlockHash())
             .setDeltas(feeList.toEtherBalanceDeltas())
             .build()
@@ -256,6 +263,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               .setDeltaType(FungibleBalanceDeltaType.MINER_FEE)
               .setTraceLocation(
                 TraceLocationRecord.newBuilder()
+                  .setTimestamp(left.getTimestamp())
                   .setBlockNumber(left.getBlockNumber())
                   .setBlockHash(left.getBlockHash())
                   .build()
@@ -274,6 +282,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
         if (v != null) {
           FungibleBalanceDeltaListRecord.newBuilder()
+            .setTimestamp(v.getTraceLocation().getTimestamp())
             .setBlockHash(v.getTraceLocation().getBlockHash())
             .setDeltas(listOf(v))
             .build()
@@ -291,6 +300,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
             // we assume no material change and therefore emit an event which will have no impact on the balances
 
             FungibleBalanceDeltaListRecord.newBuilder(agg)
+              .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
           } else {
@@ -298,6 +308,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
             // reverse previous deltas
 
             FungibleBalanceDeltaListRecord.newBuilder()
+              .setTimestamp(next.getTimestamp())
               .setBlockHash(next.getBlockHash())
               .setApply(true)
               .setDeltas(next.getDeltas())
@@ -354,6 +365,8 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                 }
               }
 
+            val timestamp = DateTime(v.getTimestamp())
+
             val deltas = receiptsWithErc20Logs
               .flatMap { receipt ->
 
@@ -361,6 +374,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
                   .setBlockNumber(receipt.getBlockNumber())
                   .setBlockHash(receipt.getBlockHash())
                   .setTransactionHash(receipt.getTransactionHash())
+                  .setTimestamp(timestamp)
                   .build()
 
                 receipt.getLogs()
@@ -398,6 +412,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
               }
 
             FungibleBalanceDeltaListRecord.newBuilder()
+              .setTimestamp(timestamp)
               .setBlockHash(blockHash)
               .setDeltas(deltas)
               .build()
@@ -423,6 +438,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
             logger.warn { "Update received. Agg = $agg, next = $next" }
 
             FungibleBalanceDeltaListRecord.newBuilder(agg)
+              .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
           } else {
@@ -430,6 +446,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
             // reverse previous deltas
 
             FungibleBalanceDeltaListRecord.newBuilder()
+              .setTimestamp(next.getTimestamp())
               .setBlockHash(next.getBlockHash())
               .setDeltas(next.getDeltas())
               .setReversals(agg.getDeltas().map { it.reverse() })

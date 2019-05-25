@@ -26,6 +26,7 @@ import com.ethvm.common.extensions.setNonceBI
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.common.extensions.setTotalDifficultyBI
 import com.ethvm.common.extensions.setValueBI
+import org.joda.time.DateTime
 import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
@@ -55,16 +56,13 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, block
     .setExtraData(extraData)
     .setGasLimitBI(gasLimit)
     .setGasUsedBI(gasUsed)
-    .setTimestamp(timestamp.longValueExact())
+    .setTimestamp(timestamp.longValueExact() * 1000)
     .setBlockTime(blockTime)
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
-fun EthBlock.Block.toUncleRecord(builder: UncleRecord.Builder, nephew: EthBlock.Block, index: Int): UncleRecord.Builder =
+fun EthBlock.Block.toUncleRecord(builder: UncleRecord.Builder): UncleRecord.Builder =
   builder
-    .setIndex(index)
-    .setNephewHash(nephew.hash)
     .setNumberBI(number)
-    .setHeightBI(nephew.number)
     .setHash(hash)
     .setParentHash(parentHash)
     .setNonceBI(if (nonceRaw != null) nonce else null)
