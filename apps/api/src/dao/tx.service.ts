@@ -53,7 +53,7 @@ export class TxService {
     return this.findAndMapTraces(txs)
   }
 
-  async findSummariesByBlockNumber(number: number, offset: number, limit: number): Promise<[TransactionSummary[], number]> {
+  async findSummariesByBlockNumber(number: BigNumber, offset: number, limit: number): Promise<[TransactionSummary[], number]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
