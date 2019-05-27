@@ -3,8 +3,9 @@ import { UncleResolvers } from './uncle.resolvers'
 import { EthService } from '../../shared/eth.service'
 import { UncleService } from '../../dao/uncle.service'
 import BigNumber from 'bignumber.js'
-import { UncleDto } from './uncle.dto'
 import { UncleEntity } from '../../orm/entities/uncle.entity'
+import { UncleDto } from './dto/uncle.dto'
+import { UnclePageDto } from './dto/uncle-page.dto'
 
 const hash1 = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hash2 = '0x0000000000000000000000000000000000000000000000000000000000000002'
@@ -52,11 +53,11 @@ const mockService = {
     const uncle = uncles.find(u => u.hash === hash)
     return uncle ? new UncleEntity(uncle) : null;
   },
-  async findUncles(limit: number = 10, page: number = 0, fromUncle: BigNumber) {
+  async findUncles(offset: number = 0, limit: number = 10, fromUncle: BigNumber): Promise<[UncleEntity[], number]> {
     if (!fromUncle) {
       fromUncle = await this.findLatestUncleBlockNumber()
     }
-    const data = uncles
+    let data = uncles
       .filter(u => u.number <= fromUncle.toNumber())
       .sort((a, b) => {
         if (a.nephewNumber === b.nephewNumber) {
@@ -65,15 +66,11 @@ const mockService = {
           return b.nephewNumber - a.nephewNumber
         }
       })
+    const totalCount = data.length
 
-    const start = page * limit
-    const end = start + limit
+    data = data.slice(offset, offset + limit)
 
-    return data.slice(start, end).map(u => new UncleEntity(u))
-
-  },
-  async countUncles() {
-    return new BigNumber(uncles.length)
+    return [data.map(u => new UncleEntity(u)), totalCount]
   },
   async findLatestUncleBlockNumber(): Promise<BigNumber> {
     const orderedByNumbers = uncles.sort((a, b) => b.number - a.number)
@@ -146,70 +143,109 @@ describe('UncleResolvers', () => {
       const latestNumber = await uncleResolvers.latestUncleBlockNumber()
       expect(latestNumber.toNumber()).toEqual(6)
     })
-
-  })
-
-  describe('totalNumberOfUncles', () => {
-
-    it('should return a BigNumber', async () => {
-      const totalUncles = await uncleResolvers.totalNumberOfUncles()
-      expect(totalUncles).not.toBeNull()
-      // Find a better way to check if result is instance of big number
-      expect(totalUncles).toEqual(new BigNumber(6))
-    })
-
-    it('should return the total number of uncles', async () => {
-      const totalUncles = await uncleResolvers.totalNumberOfUncles()
-      expect(totalUncles.toNumber()).toEqual(6)
-    })
-
   })
 
   describe('uncles', () => {
 
-    it('should return an array of UncleDto instances', async () => {
-      const uncles = await uncleResolvers.uncles()
+    it('should return an instance of UnclePageDto with totalCount and array of UncleDto items', async () => {
+      const uncles = await uncleResolvers.uncles(0, 10)
 
-      expect(uncles).toHaveLength(6)
-      expect(uncles[0]).toBeInstanceOf(UncleDto)
+      expect(uncles).not.toBeNull()
+      expect(uncles).toBeInstanceOf(UnclePageDto)
+      expect(uncles).toHaveProperty('totalCount', 6)
+      expect(uncles).toHaveProperty('items')
+
+      if(uncles) {
+        expect(uncles.items).toHaveLength(6)
+        expect(uncles.items[0]).toBeInstanceOf(UncleDto)
+      }
 
     })
 
     it('should respect given limit and page parameters', async () => {
-      const uncles1 = await uncleResolvers.uncles(5, 0)
-      const uncles2 = await uncleResolvers.uncles(5, 1)
+      const uncles1 = await uncleResolvers.uncles(0, 5)
+      const uncles2 = await uncleResolvers.uncles(5, 5)
 
-      expect(uncles1).toHaveLength(5)
-      expect(uncles2).toHaveLength(1)
+      expect(uncles1).not.toBeNull()
+      expect(uncles1).toBeInstanceOf(UnclePageDto)
+      expect(uncles1).toHaveProperty('totalCount', 6)
+      expect(uncles1).toHaveProperty('items')
+
+      if (uncles1) {
+        expect(uncles1.items).toHaveLength(5)
+      }
+
+      expect(uncles2).not.toBeNull()
+      expect(uncles2).toBeInstanceOf(UnclePageDto)
+      expect(uncles2).toHaveProperty('totalCount', 6)
+      expect(uncles2).toHaveProperty('items')
+
+      if (uncles2) {
+        expect(uncles2.items).toHaveLength(1)
+      }
+
       expect(uncles1).not.toEqual(uncles2)
 
       // Check an empty array is returned if no items available for requested page
-      const uncles3 = await uncleResolvers.uncles(5, 2)
-      expect(uncles3).toHaveLength(0)
-    })
-
-    it('should convert an array of UncleEntity instances to an array of UncleDto instances', async () => {
-      const uncles = await uncleResolvers.uncles(2)
-      const expected = [
-        new UncleDto({ nephewNumber: 6, number: 6, hash: hash6 }),
-        new UncleDto({ nephewNumber: 5, number: 5, hash: hash5 })
-      ]
-      expect(uncles).toEqual(expect.arrayContaining(expected))
+      const uncles3 = await uncleResolvers.uncles(10, 5)
+      expect(uncles3).not.toBeNull()
+      expect(uncles3).toHaveProperty('totalCount', 6)
+      expect(uncles3).toHaveProperty('items')
+      if (uncles3) {
+        expect(uncles3.items).toHaveLength(0)
+      }
     })
 
     it('should order Uncles by nephew number and number DESC', async () => {
-      const uncles = await uncleResolvers.uncles()
+      const uncles = await uncleResolvers.uncles(0, 10)
 
-      expect(uncles).toHaveLength(6)
-      expect(uncles[0]).toHaveProperty('nephewNumber', 6)
-      expect(uncles[1]).toHaveProperty('nephewNumber', 5)
-      expect(uncles[2]).toHaveProperty('nephewNumber', 3)
-      expect(uncles[3]).toHaveProperty('nephewNumber', 2)
-      expect(uncles[4]).toHaveProperty('nephewNumber', 1)
-      expect(uncles[5]).toHaveProperty('nephewNumber', 1)
-      expect(uncles[4]).toHaveProperty('number', 2)
-      expect(uncles[5]).toHaveProperty('number', 1)
+      expect(uncles).not.toBeNull()
+      expect(uncles).toHaveProperty('items')
 
+      if (uncles) {
+        expect(uncles.items).toHaveLength(6)
+        expect(uncles.items[0]).toHaveProperty('nephewNumber', 6)
+        expect(uncles.items[0]).toHaveProperty('number', 6)
+        expect(uncles.items[1]).toHaveProperty('nephewNumber', 5)
+        expect(uncles.items[1]).toHaveProperty('number', 5)
+        expect(uncles.items[2]).toHaveProperty('nephewNumber', 3)
+        expect(uncles.items[2]).toHaveProperty('number', 4)
+        expect(uncles.items[3]).toHaveProperty('nephewNumber', 2)
+        expect(uncles.items[3]).toHaveProperty('number', 3)
+        expect(uncles.items[4]).toHaveProperty('nephewNumber', 1)
+        expect(uncles.items[4]).toHaveProperty('number', 2)
+        expect(uncles.items[5]).toHaveProperty('nephewNumber', 1)
+        expect(uncles.items[5]).toHaveProperty('number', 1)
+      }
+    })
+
+    it('should only return information for uncles with number <= fromUncle parameter', async () => {
+
+      const unclesPage1 = await uncleResolvers.uncles(0, 2, new BigNumber(5))
+
+      expect(unclesPage1).not.toBeNull()
+
+      // Check uncles greater than fromUncle are not included in totalCount
+      expect(unclesPage1).toHaveProperty('totalCount', 5)
+      expect(unclesPage1).toHaveProperty('items')
+      if (unclesPage1) {
+        expect(unclesPage1.items).toHaveLength(2)
+        expect(unclesPage1.items[0]).toHaveProperty('number', 5)
+        expect(unclesPage1.items[1]).toHaveProperty('number', 4)
+      }
+
+      // Check fromUncle is respected with offset param
+
+      const unclesPage2 = await uncleResolvers.uncles(2, 2, new BigNumber(5))
+
+      expect(unclesPage2).not.toBeNull()
+      expect(unclesPage2).toHaveProperty('totalCount', 5)
+      expect(unclesPage2).toHaveProperty('items')
+      if (unclesPage2) {
+        expect(unclesPage2.items).toHaveLength(2)
+        expect(unclesPage2.items[0]).toHaveProperty('number', 3)
+        expect(unclesPage2.items[1]).toHaveProperty('number', 2)
+      }
     })
 
   })
