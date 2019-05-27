@@ -17,6 +17,17 @@ matrix:
         - "10"
     -
       env:
+        - ID=api/test
+        - METADATA_ID=api
+        - FLAVOR=""
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
+        - INSTALL='yarn install'
+        - ACTION='yarn test'
+      language: node_js
+      node_js:
+        - "10"
+    -
+      env:
         - ID=explorer/lint
         - METADATA_ID=explorer
         - FLAVOR=development-ci

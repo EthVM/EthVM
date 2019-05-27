@@ -15,7 +15,7 @@ export class TransferService {
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, limit: number = 10, offset: number = 0): Promise<[FungibleBalanceTransferEntity[], number]> {
+  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceTransferEntity[], number]> {
     const findOptions: FindManyOptions = {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
       skip: offset,
@@ -29,8 +29,8 @@ export class TransferService {
     address: string,
     holder: string,
     filter: string = 'all',
-    limit: number = 10,
     offset: number = 0,
+    limit: number = 10,
   ): Promise<[FungibleBalanceTransferEntity[], number]> {
 
     const builder = this.transferRepository.createQueryBuilder('t')

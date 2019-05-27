@@ -1,9 +1,14 @@
 import {BigNumber} from 'bignumber.js'
 import {Column, Entity, PrimaryColumn} from 'typeorm'
 import {BigNumberTransformer} from '../transformers/big-number.transformer'
+import { assignClean } from '@app/shared/utils'
 
 @Entity('canonical_block_metric')
 export class BlockMetricEntity {
+
+  constructor(data: any) {
+    assignClean(this, data);
+  }
 
   @PrimaryColumn({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
   number!: BigNumber

@@ -4,7 +4,7 @@ import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
 
 export class TokenHoldersPageDto implements TokenHoldersPage {
 
-  items!: TokenHolder[]
+  items!: TokenHolderDto[]
   totalCount!: number
 
   constructor(data: any) {

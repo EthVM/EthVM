@@ -1,9 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
-import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
-import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { EntityManager, In, Repository } from 'typeorm'
 import { TxService } from '@app/dao/tx.service'
 import { ContractSummary, TransactionSummary } from '@app/graphql/schema'
 
