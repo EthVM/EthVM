@@ -115,7 +115,6 @@ protocol Processing {
     union { null, string } contract = null;
     union { null, decimal(80, 0) } tokenId;
 
-    timestamp_ms timestamp = 0;
   }
 
   record NonFungibleBalanceRecord {

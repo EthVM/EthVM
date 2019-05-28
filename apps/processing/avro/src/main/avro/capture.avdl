@@ -83,7 +83,8 @@ protocol Capture {
 
   record TraceListRecord {
     union { null, string } rootError = null;
-    long timestamp;   
+    long timestamp;
+    int traceCount;
     array<TraceRecord> traces;
   }
 

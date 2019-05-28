@@ -96,6 +96,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
                 .setBlockHash(rewardTraces.map { it.blockHash }.first())
                 .build(),
               TraceListRecord.newBuilder()
+                .setTraceCount(rewardTraces.size)
                 .setTimestamp(v.getTimestamp())
                 .setTraces(rewardTraces)
                 .build()
@@ -121,6 +122,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
                 TraceListRecord.newBuilder()
                   .setTimestamp(v.getTimestamp())
                   .setRootError(rootError)
+                  .setTraceCount(tracesForTransaction.size)
                   .setTraces(tracesForTransaction)
                   .build()
               )

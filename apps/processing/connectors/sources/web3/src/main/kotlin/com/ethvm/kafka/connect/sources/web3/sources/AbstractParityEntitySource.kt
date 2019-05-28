@@ -55,11 +55,13 @@ abstract class AbstractParityEntitySource(
     val (range, reOrgs) = chainTracker.nextRange(batchSize)
 
     // Returns tombstones + range
-    return range.fold({ emptyList() }, { range ->
-      val records = fetchRange(range)
+    return range.fold({ emptyList() }, { r ->
+
+      val records = fetchRange(r)
+
       when (records.isEmpty()) {
         true -> records
-        false -> records + syncStateRecord(range)
+        false -> records + syncStateRecord(r)
       }
     })
   }

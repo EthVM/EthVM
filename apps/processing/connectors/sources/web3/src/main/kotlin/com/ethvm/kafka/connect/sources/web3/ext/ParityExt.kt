@@ -37,12 +37,13 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(we
     )
   }
 
-  fun ethvmGetBlocksByNumber(from: BigInteger, to: BigInteger): Request<*, EthvmBlocksResponse> {
+  fun ethvmGetBlocksByNumber(from: BigInteger, to: BigInteger, maxTraceCount: Int): Request<*, EthvmBlocksResponse> {
     return Request(
       "ethvm_getBlocksByNumber",
       Arrays.asList(
         DefaultBlockParameter.valueOf(from),
-        DefaultBlockParameter.valueOf(to)
+        DefaultBlockParameter.valueOf(to),
+        maxTraceCount
       ),
       web3jService,
       EthvmBlocksResponse::class.java
@@ -81,3 +82,4 @@ class EthvmTracesResponse : Response<List<Trace>>() {
   val traces: List<Trace>
     get() = result
 }
+

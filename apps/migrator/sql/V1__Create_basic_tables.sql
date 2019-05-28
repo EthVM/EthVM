@@ -303,6 +303,7 @@ CREATE TABLE transaction_trace
   transaction_hash CHAR(66)     NULL,
   root_error       VARCHAR(514) NULL,
   timestamp        TIMESTAMP    NOT NULL,
+  trace_count      INT          NOT NULL,
   traces           TEXT         NOT NULL,
   UNIQUE (block_hash, transaction_hash)
 );
@@ -628,7 +629,8 @@ CREATE TABLE erc20_metadata
   "name"         VARCHAR(128) NULL,
   "symbol"       VARCHAR(512) NULL,
   "decimals"     INT          NULL,
-  "total_supply" NUMERIC      NULL
+  "total_supply" NUMERIC      NULL,
+  "timestamp" TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_erc20_metadata_name ON erc20_metadata (name);
@@ -638,7 +640,8 @@ CREATE TABLE erc721_metadata
 (
   "address" CHAR(42) PRIMARY KEY,
   "name"    VARCHAR(128) NULL,
-  "symbol"  VARCHAR(512) NULL
+  "symbol"  VARCHAR(512) NULL,
+  "timestamp" TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_erc721_metadata_name ON erc721_metadata (name);

@@ -315,6 +315,8 @@ fun TransactionRecord.getGasBI() = getGas().bigInteger()
 // BlockHeaderRecord
 // ------------------------------------------------------------
 
+fun BlockHeaderRecord.getNumberBI() = getNumber().bigInteger()
+
 fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
 fun BlockHeaderRecord.Builder.setNonceBI(nonce: BigInteger?) = setNonce(nonce?.byteBuffer())

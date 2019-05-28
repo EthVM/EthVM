@@ -42,6 +42,7 @@ import com.ethvm.avro.processing.UncleKeyRecord
 import com.ethvm.kafka.streams.config.KafkaConfig
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+import org.apache.avro.specific.SpecificRecord
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -95,10 +96,6 @@ object Serdes : KoinComponent {
     configure(config, true)
   }
 
-  fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>(registryClient).apply {
-    configure(config, true)
-  }
-
   fun BlockMetricKey() = SpecificAvroSerde<BlockMetricKeyRecord>(registryClient).apply {
     configure(config, true)
   }
@@ -128,10 +125,6 @@ object Serdes : KoinComponent {
   }
 
   fun TransactionReceipt() = SpecificAvroSerde<TransactionReceiptRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun Trace() = SpecificAvroSerde<TraceRecord>(registryClient).apply {
     configure(config, false)
   }
 
@@ -172,10 +165,6 @@ object Serdes : KoinComponent {
   }
 
   fun Erc721Metadata() = SpecificAvroSerde<Erc721MetadataRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun BlockTimestamp() = SpecificAvroSerde<BlockTimestampRecord>(registryClient).apply {
     configure(config, false)
   }
 
