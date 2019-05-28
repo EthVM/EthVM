@@ -17,6 +17,17 @@ matrix:
         - "10"
     -
       env:
+        - ID=api/test
+        - METADATA_ID=api
+        - FLAVOR=""
+        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/api
+        - INSTALL='yarn install'
+        - ACTION='yarn test'
+      language: node_js
+      node_js:
+        - "10"
+    -
+      env:
         - ID=explorer/lint
         - METADATA_ID=explorer
         - FLAVOR=development-ci
@@ -55,7 +66,7 @@ script:
 
 after_success:
   - chmod +x $TRAVIS_BUILD_DIR/.travis/after-success.sh
-  - [[ "$TRAVIS_BRANCH" == "develop" ]] && $TRAVIS_BUILD_DIR/.travis/after-success.sh $METADATA_ID $FLAVOR
+  - test $TRAVIS_BRANCH = "develop" && $TRAVIS_BUILD_DIR/.travis/after-success.sh $METADATA_ID $FLAVOR
 
 notifications:
   email: false

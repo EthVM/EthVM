@@ -16,7 +16,7 @@ export class TransferResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<TransferPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddress(contractAddress, limit, offset)
+    const result = await this.transferService.findTokenTransfersByContractAddress(contractAddress, offset, limit)
     return new TransferPageDto({
       items: result[0],
       totalCount: result[1],
@@ -31,7 +31,7 @@ export class TransferResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<TransferPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, limit, offset)
+    const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, offset, limit)
     return new TransferPageDto({
       items: result[0],
       totalCount: result[1],

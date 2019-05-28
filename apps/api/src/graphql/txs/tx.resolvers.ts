@@ -49,7 +49,7 @@ export class TxResolvers {
 
   @Query()
   async transactionSummariesForBlockNumber(
-    @Args('number') number: number,
+    @Args('number') number: BigNumber,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ) {
