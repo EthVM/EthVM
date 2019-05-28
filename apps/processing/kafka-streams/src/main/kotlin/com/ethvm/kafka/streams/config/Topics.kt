@@ -129,9 +129,11 @@ object Topics {
 
   val FungibleBalanceDelta = KafkaTopic("fungible_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
   val FungibleBalance = KafkaTopic("fungible_balance", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
+  val FungibleBalanceLog = KafkaTopic("fungible_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
 
   val NonFungibleBalanceDelta = KafkaTopic("non_fungible_balance_delta", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceDeltaRecord.`SCHEMA$`, NonFungibleBalanceDelta())
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())
+  val NonFungibleBalanceLog = KafkaTopic("non_fungible_balance_log", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())
 
   val BlockMetricsHeader = KafkaTopic("block_metrics_header", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsHeaderRecord.`SCHEMA$`, BlockMetricsHeader())
   val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsTransactionRecord.`SCHEMA$`, BlockMetricsTransaction())

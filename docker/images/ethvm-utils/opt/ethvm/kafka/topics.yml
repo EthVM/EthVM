@@ -133,6 +133,13 @@ topics:
     config:
       retention.ms: -1
 
+  - name: fungible_balance_log
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      retention.ms: -1
+
+
   - name: fungible_balance
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
@@ -144,6 +151,13 @@ topics:
     partitions: 12
     config:
       retention.ms: -1
+
+  - name: non_fungible_balance_log
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      retention.ms: -1
+
 
   - name: non_fungible_balance
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}

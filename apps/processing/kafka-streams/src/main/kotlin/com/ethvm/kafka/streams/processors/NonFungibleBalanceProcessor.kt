@@ -15,6 +15,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalReceiptErc721Deltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalance
+import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceLog
 import com.ethvm.kafka.streams.utils.ERC721Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
@@ -60,7 +61,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
 
   private fun aggregateBalances(builder: StreamsBuilder) {
 
-    NonFungibleBalanceDelta.stream(builder)
+    val balanceDeltaAgg = NonFungibleBalanceDelta.stream(builder)
       .groupByKey(Grouped.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalanceDelta()))
       .aggregate(
         {
@@ -100,7 +101,20 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
       )
-      // only emit unique updates each second
+
+    // capture every balance update and stream it to a log topic
+    balanceDeltaAgg
+      .toStream()
+      .mapValues{ k, v ->
+        NonFungibleBalanceRecord.newBuilder(v)
+          .setContract(k.getContract())
+          .setTokenId(k.getTokenId())
+          .build()
+      }
+      .toTopic(NonFungibleBalanceLog)
+
+    balanceDeltaAgg
+      // only emit unique updates each second for latest balance
       .suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(1), Suppressed.BufferConfig.unbounded()))
       .toStream()
       .toTopic(NonFungibleBalance)

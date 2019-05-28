@@ -52,7 +52,8 @@ object Modules {
 
       logger.info { "Registering schemas with schema registry" }
 
-      // pre-emptively register schemas to prevent issues with ad-hoc registration under load
+      // pre-emptively register schemas to prevent issues with ad-hoc registration under load and to
+      // get schema migration error feedback immediately on startup
       Topics.all
         .map { topic ->
 

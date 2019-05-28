@@ -29,6 +29,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.FungibleBalance
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
+import com.ethvm.kafka.streams.config.Topics.FungibleBalanceLog
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
@@ -85,7 +86,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
   private fun aggregateBalances(builder: StreamsBuilder) {
 
-    FungibleBalanceDelta.stream(builder)
+    val balanceDeltaAgg = FungibleBalanceDelta.stream(builder)
       .groupByKey(Grouped.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalanceDelta()))
       .aggregate(
         {
@@ -102,7 +103,21 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
       )
-      // only emit unique updates each second
+
+    // capture every balance update and stream it to a log topic
+    balanceDeltaAgg
+      .toStream()
+      .mapValues { k, v ->
+        // copy key values into value object for database sink
+        FungibleBalanceRecord.newBuilder(v)
+          .setAddress(k.getAddress())
+          .setContract(k.getContract())
+          .build()
+      }
+      .toTopic(FungibleBalanceLog)
+
+    balanceDeltaAgg
+      // only emit unique updates each second for latest balance
       .suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(1), Suppressed.BufferConfig.unbounded()))
       .toStream()
       .toTopic(FungibleBalance)

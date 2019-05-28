@@ -1,9 +1,9 @@
 {
-  "name": "postgres-balance-delta-sink",
+  "name": "postgres-balance-log-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "tasks.max": 1,
-    "topics": "fungible_balance_delta,non_fungible_balance_delta",
+    "tasks.max": 3,
+    "topics": "fungible_balance_log,non_fungible_balance_log",
     "insert.mode": "insert",
     "pk.mode": "none",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",

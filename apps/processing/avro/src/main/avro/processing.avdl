@@ -83,6 +83,8 @@ protocol Processing {
   record FungibleBalanceRecord {
     timestamp_ms timestamp = 0;
     decimal(80, 0) amount;
+    union { null, string } address = null;
+    union { null, string } contract = null;
   }
 
   record FungibleBalanceDeltaListRecord {
@@ -120,6 +122,9 @@ protocol Processing {
   record NonFungibleBalanceRecord {
     com.ethvm.avro.common.TraceLocationRecord traceLocation;
     string address;
+
+    union { null, decimal(80, 0) } tokenId = null;
+    union { null, string } contract = null;
   }
 
   record NonFungibleBalanceDeltaListRecord {

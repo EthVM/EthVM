@@ -457,6 +457,19 @@ CREATE TABLE fungible_balance
 
 CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
 
+CREATE TABLE fungible_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('fungible_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+
 CREATE VIEW canonical_ether_balance AS
 SELECT fb.address,
        fb.amount
@@ -582,6 +595,24 @@ CREATE TABLE non_fungible_balance
 CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);
 CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
+
+CREATE TABLE non_fungible_balance_log
+(
+  contract                         CHAR(42)  NOT NULL,
+  token_id                         NUMERIC   NOT NULL,
+  address                          CHAR(42)  NOT NULL,
+  trace_location_block_hash        CHAR(66)  NULL,
+  trace_location_block_number      NUMERIC   NULL,
+  trace_location_transaction_hash  CHAR(66)  NULL,
+  trace_location_transaction_index INT       NULL,
+  trace_location_log_index         INT       NULL,
+  trace_location_trace_address     TEXT      NULL,
+  trace_location_timestamp         TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('non_fungible_balance_log',
+                         'trace_location_timestamp',
+                         chunk_time_interval => interval '1 day');
 
 CREATE VIEW canonical_erc721_balance AS
 SELECT nfb.*
