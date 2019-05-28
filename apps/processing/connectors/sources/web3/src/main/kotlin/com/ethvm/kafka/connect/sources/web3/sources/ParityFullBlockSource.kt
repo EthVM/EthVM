@@ -203,11 +203,11 @@ class ParityFullBlockSource(
         val blockNumberBI = blockNumber.toBigInteger()
         val partitionOffset = mapOf("blockNumber" to blockNumber)
 
-        val blockKeyRecord = CanonicalKeyRecord.newBuilder()
+        val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
           .setNumberBI(blockNumberBI)
           .build()
 
-        val keySchemaAndValue = AvroToConnect.toConnectData(blockKeyRecord)
+        val keySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
 
         val headerSourceRecord =
           SourceRecord(
@@ -222,24 +222,57 @@ class ParityFullBlockSource(
 
         // transactions
 
-        val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
-          .setNumberBI(blockNumberBI)
-          .build()
-
-        val canonicalKeySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
-
         val txsSourceRecord =
           SourceRecord(
             partitionKey,
             partitionOffset,
             txTopic,
-            canonicalKeySchemaAndValue.schema(),
-            canonicalKeySchemaAndValue.value(),
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
             AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`),
             null
           )
 
-        listOf(headerSourceRecord, txsSourceRecord)
+        // receipts
+
+        val receiptsSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            receiptsTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`),
+            null
+          )
+
+        // traces
+
+        val tracesSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            tracesTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`),
+            null
+          )
+
+        // uncles
+
+        val unclesSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            unclesTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`),
+            null
+          )
+
+        listOf(headerSourceRecord, txsSourceRecord, receiptsSourceRecord, tracesSourceRecord, unclesSourceRecord)
       }
       .flatten()
 
