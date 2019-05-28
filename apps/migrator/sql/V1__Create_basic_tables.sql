@@ -124,8 +124,7 @@ CREATE TABLE "transaction"
   s                 CHAR(78) NOT NULL,
   timestamp         BIGINT   NOT NULL,
   creates           CHAR(42) NULL,
-  chain_id          BIGINT   NULL,
-  UNIQUE ("from", nonce)
+  chain_id          BIGINT   NULL
 );
 
 CREATE INDEX idx_transaction_hash ON TRANSACTION (hash);
@@ -241,10 +240,10 @@ WHERE cb.number IS NOT NULL
 /* All traces including possible traces from old forks */
 CREATE TABLE transaction_trace
 (
-  block_hash           CHAR(66)     NOT NULL,
-  transaction_hash     CHAR(66)     NULL,
-  root_error           VARCHAR(514) NULL,
-  traces               TEXT         NOT NULL,
+  block_hash       CHAR(66)     NOT NULL,
+  transaction_hash CHAR(66)     NULL,
+  root_error       VARCHAR(514) NULL,
+  traces           TEXT         NOT NULL,
   UNIQUE (block_hash, transaction_hash)
 );
 
@@ -460,12 +459,12 @@ SELECT fb.address,
        (SELECT COUNT(*)
         FROM canonical_transaction AS ct
         WHERE ct.from = fb.address) AS out_tx_count,
-        CASE
-          WHEN cont.creator IS NULL THEN
-            FALSE
-          ELSE
-            TRUE
-          END AS is_contract,
+       CASE
+         WHEN cont.creator IS NULL THEN
+           FALSE
+         ELSE
+           TRUE
+         END                        AS is_contract,
        CASE
          WHEN a.count > 0 THEN
            TRUE
@@ -618,7 +617,7 @@ CREATE TABLE token_exchange_rates
 CREATE VIEW canonical_token_exchange_rates AS
 SELECT ter.*
 FROM token_exchange_rates AS ter
-    INNER JOIN canonical_contract AS cc on ter.address = cc.address;
+       INNER JOIN canonical_contract AS cc on ter.address = cc.address;
 
 /* Coin exchange rates table */
 CREATE TABLE coin_exchange_rates
