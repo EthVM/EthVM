@@ -32,7 +32,9 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
 
   override val id: String = "contract-metadata-processor"
 
-  private val ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+  private val zeroAddress = "0x0000000000000000000000000000000000000000"
+
+  private val nonUtf8Regex = Regex("[^\\u0000-\\uFFFF]")
 
   override val kafkaProps: Properties = Properties()
     .apply {
@@ -97,12 +99,17 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     val function = AbiFunction(method, emptyList(), listOf(object : TypeReference<Utf8String>() {}))
     val encoded = FunctionEncoder.encode(function)
     return web3.ethCall(
-      Transaction.createEthCallTransaction(ZERO_ADDRESS, contractAddress, encoded),
+      Transaction.createEthCallTransaction(zeroAddress, contractAddress, encoded),
       DefaultBlockParameterName.LATEST
     ).sendAsync()
       .thenApply { call ->
         val output = FunctionReturnDecoder.decode(call.value, function.outputParameters)
-        output.firstOrNull()?.value as String?
+        val result = output
+          .firstOrNull()?.value as String?
+
+        // Some values can have non-four-byte-UTF-8 characters
+        result?.replace(nonUtf8Regex, "")
+
       }.handle { result, ex ->
         when (ex) {
           null -> result
@@ -118,7 +125,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     val function = AbiFunction("decimals", emptyList(), listOf(object : TypeReference<Uint8>() {}))
     val encoded = FunctionEncoder.encode(function)
     return web3.ethCall(
-      Transaction.createEthCallTransaction(ZERO_ADDRESS, contractAddress, encoded),
+      Transaction.createEthCallTransaction(zeroAddress, contractAddress, encoded),
       DefaultBlockParameterName.LATEST
     ).sendAsync()
       .thenApply { call ->
@@ -140,7 +147,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     val function = AbiFunction("totalSupply", emptyList(), listOf(object : TypeReference<Uint256>() {}))
     val encoded = FunctionEncoder.encode(function)
     return web3.ethCall(
-      Transaction.createEthCallTransaction(ZERO_ADDRESS, contractAddress, encoded),
+      Transaction.createEthCallTransaction(zeroAddress, contractAddress, encoded),
       DefaultBlockParameterName.LATEST
     ).sendAsync()
       .thenApply { call ->
