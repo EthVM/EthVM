@@ -42,6 +42,12 @@
       "dockerfile": "${APPS_PATH}/migrator/Dockerfile",
       "context": "${APPS_PATH}/migrator/",
       "version": "${APPS_PATH}/migrator/version.properties"
+    },
+    {
+      "id": "parity",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/parity/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/parity/",
+      "version": "${DOCKER_IMAGES_PATH}/parity/version.properties"
     }
   ]
 }
