@@ -10,6 +10,7 @@
     :footnotes="footnote"
     :live-chart="true"
     :error="error"
+    :data-loading="loading"
   />
 </template>
 
@@ -162,6 +163,10 @@ export default class ChartLiveTxFees extends Vue {
       Computed Values
     ===================================================================================
     */
+
+  get loading(): boolean {
+    return this.$apollo.queries.metricsPage.loading
+  }
 
   get chartData() {
     const items = this.metricsPage ? this.metricsPage.items || [] : []
