@@ -28,8 +28,8 @@ export class UncleService {
         let [{ count: totalCount }] = await entityManager.find(RowCount, {
           select: ['count'],
           where: {
-            relation: 'uncle'
-          }
+            relation: 'uncle',
+          },
         })
 
         if (totalCount === 0) return [[], totalCount]
@@ -39,8 +39,8 @@ export class UncleService {
           // this is much faster way of determining the count
           const filterCount = await entityManager.count(UncleEntity, {
             where: {
-              number: MoreThan(fromUncle)
-            }
+              number: MoreThan(fromUncle),
+            },
           })
 
           totalCount = totalCount - filterCount
@@ -52,7 +52,7 @@ export class UncleService {
           where,
           order: { nephewNumber: 'DESC', number: 'DESC' },
           skip: offset,
-          take: limit
+          take: limit,
         })
 
         return [uncles, totalCount]

@@ -35,10 +35,10 @@ export class BlockMetricsService {
         const [{ count }] = await txn.find(RowCount, {
           select: ['count'],
           where: {
-            relation: 'canonical_block_header'
-          }
+            relation: 'canonical_block_header',
+          },
         })
-        
+
         // cheaper to look up the block hashes from canonical block header first and use timestamp to filter down
         // the hypertable
         const headers = await txn
