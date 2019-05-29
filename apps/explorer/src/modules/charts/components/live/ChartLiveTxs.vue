@@ -9,6 +9,7 @@
     :footnotes="footnote"
     :live-chart="true"
     :error="error"
+    :data-loading="loading"
   />
 </template>
 
@@ -165,6 +166,10 @@ export default class ChartLiveTxs extends Vue {
         Computed Values
       ===================================================================================
       */
+
+  get loading(): boolean {
+    return this.$apollo.queries.blockPage.loading
+  }
 
   get chartData() {
     const items = this.blockPage ? this.blockPage.items : []
