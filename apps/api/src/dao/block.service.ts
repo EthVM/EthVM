@@ -11,6 +11,7 @@ import { TraceService } from './trace.service'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { setEquals } from '@app/shared/utils'
 import { ConfigService } from '@app/shared/config.service'
+import { RowCount } from '@app/orm/entities/row-counts.entity'
 
 @Injectable()
 export class BlockService {
@@ -21,7 +22,7 @@ export class BlockService {
     @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
     @InjectEntityManager() private readonly entityManager: EntityManager,
     private readonly traceService: TraceService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
   }
 
@@ -32,7 +33,7 @@ export class BlockService {
       .find({
         select: ['number', 'difficulty', 'blockTime'],
         order: { number: 'DESC' },
-        take: 20,
+        take: 20
       })
 
     if (blocks.length === 0) return null
@@ -56,8 +57,12 @@ export class BlockService {
 
           const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
 
-          const [ { count } ] = await txn
-            .query('select count(number) from canonical_block_header') as [{ count: number }]
+          const [{ count }] = await txn.find(RowCount, {
+            select: ['count'],
+            where: {
+              relation: 'canonical_block_header'
+            }
+          })
 
           const headersWithRewards = await txn.find(BlockHeaderEntity, {
             select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
@@ -65,12 +70,12 @@ export class BlockService {
             relations: ['rewards'],
             order: { number: 'DESC' },
             skip: offset,
-            take: limit,
+            take: limit
           })
 
           return [
             await this.summarise(txn, headersWithRewards),
-            count,
+            count
           ]
 
         })
@@ -86,14 +91,14 @@ export class BlockService {
         relations: ['rewards'],
         order: { number: 'DESC' },
         skip: offset,
-        take: limit,
+        take: limit
       })
 
     if (count === 0) return [[], count]
 
     return [
       await this.summarise(this.entityManager, headersWithRewards),
-      count,
+      count
     ]
 
   }
@@ -104,7 +109,7 @@ export class BlockService {
       select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
-      order: { number: 'DESC' },
+      order: { number: 'DESC' }
     })
 
     return this.summarise(this.entityManager, headersWithRewards)
@@ -176,7 +181,7 @@ export class BlockService {
         numTxs: transactionHashes.length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
-        reward: rewardsByBlock.get(hash) || 0,
+        reward: rewardsByBlock.get(hash) || 0
       } as BlockSummary
 
     })

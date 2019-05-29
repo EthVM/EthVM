@@ -7,6 +7,7 @@ import { unitOfTime } from 'moment'
 import BigNumber from 'bignumber.js'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import moment = require('moment')
+import { RowCount } from '@app/orm/entities/row-counts.entity'
 
 @Injectable()
 export class BlockMetricsService {
@@ -31,9 +32,13 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{ count }] = await txn
-          .query('select count(number) from canonical_block_header') as [{ count: number }]
-
+        const [{ count }] = await txn.find(RowCount, {
+          select: ['count'],
+          where: {
+            relation: 'canonical_block_header'
+          }
+        })
+        
         // cheaper to look up the block hashes from canonical block header first and use timestamp to filter down
         // the hypertable
         const headers = await txn

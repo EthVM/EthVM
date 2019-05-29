@@ -2,7 +2,7 @@ import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, In, LessThanOrEqual, Repository } from 'typeorm'
+import { EntityManager, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
 import { ReceiptService } from './receipt.service'
 import { TraceService, TransactionStatus } from './trace.service'
 import { TransactionSummary } from '@app/graphql/schema'
@@ -10,6 +10,7 @@ import { ContractService } from '@app/dao/contract.service'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
+import { RowCount } from '@app/orm/entities/row-counts.entity'
 
 @Injectable()
 export class TxService {
@@ -22,7 +23,7 @@ export class TxService {
     @InjectRepository(TransactionEntity)
     private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectEntityManager()
-    private readonly entityManager: EntityManager,
+    private readonly entityManager: EntityManager
   ) {
   }
 
@@ -61,7 +62,7 @@ export class TxService {
 
         const where = { blockNumber: number }
 
-        const [ { count } ] = await txn
+        const [{ count }] = await txn
           .query('select count(hash) from transaction where block_number = $1', [number]) as [{ count: number }]
 
         if (count === 0) return [[], count]
@@ -70,12 +71,12 @@ export class TxService {
           select: ['hash'],
           where,
           skip: offset,
-          take: limit,
+          take: limit
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      },
+      }
     )
 
   }
@@ -88,7 +89,7 @@ export class TxService {
 
         const where = { blockHash: hash }
 
-        const [ { count } ] = await txn
+        const [{ count }] = await txn
           .query('select count(hash) from transaction where block_hash = $1', [hash]) as [{ count: number }]
 
         if (count === 0) return [[], count]
@@ -97,12 +98,12 @@ export class TxService {
           select: ['hash'],
           where,
           skip: offset,
-          take: limit,
+          take: limit
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      },
+      }
     )
 
   }
@@ -144,12 +145,12 @@ export class TxService {
           select: ['hash'],
           where,
           skip: offset,
-          take: limit,
+          take: limit
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      },
+      }
     )
 
   }
@@ -157,28 +158,42 @@ export class TxService {
   async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[TransactionSummary[], number]> {
 
     const where = fromBlock ? { blockNumber: LessThanOrEqual(fromBlock) } : {}
-    let countQuery = 'select count(hash) from transaction'
-
-    countQuery = fromBlock ? `${countQuery} where block_number <= $1` : countQuery
-    const countArgs = fromBlock ? [fromBlock.toString(10)] : []
 
     return this.entityManager.transaction(
       'READ COMMITTED',
       async (entityManager): Promise<[TransactionSummary[], number]> => {
 
-        const [{ count }] = await entityManager.query(countQuery, countArgs)
+        let [{ count: totalCount }] = await entityManager.find(RowCount, {
+          select: ['count'],
+          where: {
+            relation: 'transaction'
+          }
+        })
 
-        if (count === 0) return [[], count]
+
+        if (totalCount === 0) return [[], totalCount]
+
+        if (fromBlock) {
+          // we count all txs in blocks greater than the from block and deduct from total
+          // this is much faster way of determining the count
+          const filterCount = await entityManager.count(TransactionEntity, {
+            where: {
+              blockNumber: MoreThan(fromBlock)
+            }
+          })
+
+          totalCount = totalCount - filterCount
+        }
 
         const txs = await entityManager.find(TransactionEntity, {
           select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value'],
           where,
           order: {
             blockNumber: 'DESC',
-            transactionIndex: 'DESC',
+            transactionIndex: 'DESC'
           },
           skip: offset,
-          take: limit,
+          take: limit
         })
 
         const receipts = await this.receiptService
@@ -187,15 +202,15 @@ export class TxService {
         const receiptsByTxHash = receipts
           .reduceRight(
             (memo, next) => memo.set(next.transactionHash, next),
-            new Map<string, TransactionReceiptEntity>(),
+            new Map<string, TransactionReceiptEntity>()
           )
 
         const txsWithReceipts = txs.map(tx => {
           const receipt = receiptsByTxHash.get(tx.hash)
           return new TransactionEntity({ ...tx, receipt })
         })
-        return this.summarise(entityManager, txsWithReceipts, count)
-      },
+        return this.summarise(entityManager, txsWithReceipts, totalCount)
+      }
     )
 
   }
@@ -212,8 +227,8 @@ export class TxService {
         where: { hash: In(hashes) },
         order: {
           blockNumber: 'DESC',
-          transactionIndex: 'DESC',
-        },
+          transactionIndex: 'DESC'
+        }
       })
 
     const receipts = await this.receiptService
@@ -222,7 +237,7 @@ export class TxService {
     const receiptsByTxHash = receipts
       .reduceRight(
         (memo, next) => memo.set(next.transactionHash, next),
-        new Map<string, TransactionReceiptEntity>(),
+        new Map<string, TransactionReceiptEntity>()
       )
 
     const txsWithReceipts = txs.map(tx => {
@@ -304,7 +319,7 @@ export class TxService {
         value: tx.value,
         fee: tx.gasPrice.multipliedBy(receipt.gasUsed),
         successful: txStatus.successful,
-        timestamp: tx.timestamp,
+        timestamp: tx.timestamp
       } as TransactionSummary
     })
 
