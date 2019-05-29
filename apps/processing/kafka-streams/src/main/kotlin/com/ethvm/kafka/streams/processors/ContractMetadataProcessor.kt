@@ -109,7 +109,6 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
 
         // Some values can have non-four-byte-UTF-8 characters
         result?.replace(nonUtf8Regex, "")
-
       }.handle { result, ex ->
         when (ex) {
           null -> result
