@@ -16,6 +16,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalance
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceLog
+import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import com.ethvm.kafka.streams.utils.ERC721Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
@@ -41,8 +42,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
-      put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000L)
-      put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 2000000000)
+      put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, BlockEventTimestampExtractor::class.java)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -81,6 +81,8 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
           val newBalance = NonFungibleBalanceRecord.newBuilder()
             .setTraceLocation(deltaLocation)
             .setAddress(delta.getTo())
+            .setContract(delta.getContract())
+            .setTokenId(delta.getTokenId())
             .build()
 
           /**
@@ -102,22 +104,14 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
         Materialized.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
       )
 
-    // capture every balance update and stream it to a log topic
-    balanceDeltaAgg
-      .toStream()
-      .mapValues{ k, v ->
-        NonFungibleBalanceRecord.newBuilder(v)
-          .setContract(k.getContract())
-          .setTokenId(k.getTokenId())
-          .build()
-      }
-      .toTopic(NonFungibleBalanceLog)
-
-    balanceDeltaAgg
+    val balanceStream = balanceDeltaAgg
       // only emit unique updates each second for latest balance
       .suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(1), Suppressed.BufferConfig.unbounded()))
       .toStream()
-      .toTopic(NonFungibleBalance)
+
+    balanceStream.toTopic(NonFungibleBalance)
+    balanceStream.toTopic(NonFungibleBalanceLog)
+
 
     NonFungibleBalance.stream(builder)
       .peek { k, v -> logger.debug { "Balance update | ${k.getContract()}, ${k.getTokenId()} -> ${v.getAddress()}" } }

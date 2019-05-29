@@ -31,6 +31,7 @@ import com.ethvm.kafka.streams.config.Topics.FungibleBalance
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceLog
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
+import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
@@ -59,9 +60,8 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 8)
-      put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000L)
-      put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 2000000000)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, BlockEventTimestampExtractor::class.java)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -99,28 +99,21 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
           FungibleBalanceRecord.newBuilder()
             .setTimestamp(delta.getTraceLocation().getTimestamp())
             .setAmountBI(delta.getAmountBI() + balance.getAmountBI())
+            .setAddress(delta.getAddress())
+            .setContract(delta.getContractAddress())
             .build()
         },
         Materialized.with(Serdes.FungibleBalanceKey(), Serdes.FungibleBalance())
       )
 
-    // capture every balance update and stream it to a log topic
-    balanceDeltaAgg
-      .toStream()
-      .mapValues { k, v ->
-        // copy key values into value object for database sink
-        FungibleBalanceRecord.newBuilder(v)
-          .setAddress(k.getAddress())
-          .setContract(k.getContract())
-          .build()
-      }
-      .toTopic(FungibleBalanceLog)
-
-    balanceDeltaAgg
+    val balanceStream = balanceDeltaAgg
       // only emit unique updates each second for latest balance
       .suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(1), Suppressed.BufferConfig.unbounded()))
       .toStream()
-      .toTopic(FungibleBalance)
+
+    balanceStream.toTopic(FungibleBalanceLog)
+
+    balanceStream.toTopic(FungibleBalance)
 
     FungibleBalance.stream(builder)
       .peek { k, v -> logger.debug { "Balance update | ${k.getAddress()}, ${k.getContract()} -> ${v.getAmountBI()}" } }
