@@ -1,12 +1,18 @@
 import { UncleEntity } from '@app/orm/entities/uncle.entity'
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { FindManyOptions, LessThanOrEqual, Repository } from 'typeorm'
+import { EntityManager, FindManyOptions, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
+import { TransactionSummary } from '@app/graphql/schema'
+import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 
 @Injectable()
 export class UncleService {
-  constructor(@InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>) {
+  constructor(@InjectRepository(UncleEntity)
+              private readonly uncleRepository: Repository<UncleEntity>,
+              @InjectEntityManager()
+              private readonly entityManager: EntityManager) {
   }
 
   async findUncleByHash(hash: string): Promise<UncleEntity | undefined> {
@@ -15,15 +21,44 @@ export class UncleService {
 
   async findUncles(offset: number = 0, limit: number = 20, fromUncle?: BigNumber): Promise<[UncleEntity[], number]> {
 
-    const where = fromUncle ? { number: LessThanOrEqual(fromUncle) } : {}
+    return this.entityManager.transaction(
+      'READ COMMITTED',
+      async (entityManager): Promise<[UncleEntity[], number]> => {
 
-    return this.uncleRepository
-      .findAndCount({
-        where,
-        order: { nephewNumber: 'DESC', number: 'DESC' },
-        skip: offset,
-        take: limit,
+        let [{ count: totalCount }] = await entityManager.find(RowCount, {
+          select: ['count'],
+          where: {
+            relation: 'uncle',
+          },
+        })
+
+        if (totalCount === 0) return [[], totalCount]
+
+        if (fromUncle) {
+          // we count all uncles greater than the from uncle and deduct from total
+          // this is much faster way of determining the count
+          const filterCount = await entityManager.count(UncleEntity, {
+            where: {
+              number: MoreThan(fromUncle),
+            },
+          })
+
+          totalCount = totalCount - filterCount
+        }
+
+        const where = fromUncle ? { number: LessThanOrEqual(fromUncle) } : {}
+
+        const uncles = await entityManager.find(UncleEntity, {
+          where,
+          order: { nephewNumber: 'DESC', number: 'DESC' },
+          skip: offset,
+          take: limit,
+        })
+
+        return [uncles, totalCount]
+
       })
+
   }
 
   async findLatestUncleBlockNumber(): Promise<BigNumber> {

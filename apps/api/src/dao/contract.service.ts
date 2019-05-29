@@ -39,6 +39,7 @@ export class ContractService {
         const where = { creator }
 
         const count = await txn.count(ContractEntity, { where })
+
         const contracts = await txn.find(ContractEntity, {
           select: ['address', 'creator', 'traceCreatedAtBlockNumber', 'traceCreatedAtTransactionHash'],
           where,
