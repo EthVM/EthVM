@@ -21,12 +21,6 @@ import { SubscriptionClient } from 'subscriptions-transport-ws'
     Vue: Plugins Configuration
   ===================================================================================
 */
-
-// -------------------------------------------------------
-//    EventHub
-// -------------------------------------------------------
-
-Vue.prototype.$eventHub = new Vue()
 Vue.config.productionTip = false
 
 // -------------------------------------------------------
