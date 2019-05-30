@@ -3,15 +3,15 @@
 CREATE TABLE row_count
 (
   relation VARCHAR(128) PRIMARY KEY,
-  count   BIGINT
+  count    BIGINT
 );
 
-INSERT INTO row_count VALUES
-  ('canonical_block_header', 0),
-  ('transaction', 0),
-  ('transaction_trace', 0),
-  ('transaction_receipt', 0),
-  ('uncle', 0);
+INSERT INTO row_count
+VALUES ('canonical_block_header', 0),
+       ('transaction', 0),
+       ('transaction_trace', 0),
+       ('transaction_receipt', 0),
+       ('uncle', 0);
 
 CREATE FUNCTION adjust_count()
   RETURNS TRIGGER AS
@@ -67,15 +67,6 @@ CREATE TRIGGER canonical_block_header_count
   ON canonical_block_header
   FOR EACH ROW
 EXECUTE PROCEDURE adjust_count();
-
-/* A view to help with address metadata */
-
-CREATE VIEW canonical_block_author AS
-SELECT cb.author AS address,
-       COUNT(*)  AS count
-FROM canonical_block_header AS cb
-GROUP BY cb.author
-ORDER BY count DESC;
 
 CREATE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
 $body$
@@ -426,12 +417,6 @@ FROM contract AS c
 WHERE cb.number IS NOT NULL
   AND c.address IS NOT NULL;
 
-CREATE VIEW canonical_contract_creator AS
-SELECT c.creator AS address,
-       COUNT(*)  AS count
-FROM canonical_contract AS c
-GROUP BY c.creator;
-
 CREATE TABLE eth_list_contract_metadata
 (
   address     CHAR(42) PRIMARY KEY,
@@ -461,8 +446,8 @@ CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
 CREATE TABLE transaction_count
 (
   address   CHAR(42) PRIMARY KEY,
-  total_in  INT NOT NULL,
-  total_out INT NOT NULL,
+  total_in  INT       NOT NULL,
+  total_out INT       NOT NULL,
   timestamp TIMESTAMP NOT NULL
 );
 
@@ -623,37 +608,23 @@ WHERE bh.number IS NOT NULL
 
 CREATE VIEW canonical_account AS
 SELECT fb.address,
-       fb.amount                    AS balance,
+       fb.amount                       AS balance,
        (SELECT total_in + total_out
         FROM transaction_count AS tc
-        WHERE tc.address = fb.address)   AS total_tx_count,
+        WHERE tc.address = fb.address) AS total_tx_count,
        (SELECT total_in
         FROM transaction_count AS tc
-        WHERE tc.address = fb.address)   AS in_tx_count,
+        WHERE tc.address = fb.address) AS in_tx_count,
        (SELECT total_out
         FROM transaction_count AS tc
-        WHERE tc.address = fb.address)   AS out_tx_count,
+        WHERE tc.address = fb.address) AS out_tx_count,
        CASE
          WHEN cont.creator IS NULL THEN
            FALSE
          ELSE
            TRUE
-         END                        AS is_contract,
-       CASE
-         WHEN a.count > 0 THEN
-           TRUE
-         ELSE
-           FALSE
-         END                        AS is_miner,
-       CASE
-         WHEN cc.count > 0 THEN
-           TRUE
-         ELSE
-           FALSE
-         END                        AS is_contract_creator
+         END                           AS is_contract
 FROM fungible_balance AS fb
-       LEFT JOIN canonical_block_author AS a ON fb.address = a.address
-       LEFT JOIN canonical_contract_creator AS cc ON fb.address = cc.address
        LEFT JOIN canonical_contract AS cont ON fb.address = cont.address
 WHERE fb.contract = ''
 ORDER BY balance DESC;
@@ -742,7 +713,7 @@ CREATE TABLE erc20_metadata
   "symbol"       VARCHAR(512) NULL,
   "decimals"     INT          NULL,
   "total_supply" NUMERIC      NULL,
-  "timestamp" TIMESTAMP NOT NULL
+  "timestamp"    TIMESTAMP    NOT NULL
 );
 
 CREATE INDEX idx_erc20_metadata_name ON erc20_metadata (name);
@@ -750,10 +721,10 @@ CREATE INDEX idx_erc20_metadata_symbol ON erc20_metadata (symbol);
 
 CREATE TABLE erc721_metadata
 (
-  "address" CHAR(42) PRIMARY KEY,
-  "name"    VARCHAR(128) NULL,
-  "symbol"  VARCHAR(512) NULL,
-  "timestamp" TIMESTAMP NOT NULL
+  "address"   CHAR(42) PRIMARY KEY,
+  "name"      VARCHAR(128) NULL,
+  "symbol"    VARCHAR(512) NULL,
+  "timestamp" TIMESTAMP    NOT NULL
 );
 
 CREATE INDEX idx_erc721_metadata_name ON erc721_metadata (name);

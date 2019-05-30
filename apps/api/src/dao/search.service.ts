@@ -18,8 +18,9 @@ export class SearchService {
     private readonly accountService: AccountService,
     private readonly uncleService: UncleService,
     private readonly txService: TxService,
-    private readonly ethService: EthService,
-  ) {}
+    private readonly ethService: EthService
+  ) {
+  }
 
   async search(query: string = ''): Promise<SearchDto | null> {
     const s: SearchDto = { type: SearchType.None }
@@ -29,9 +30,13 @@ export class SearchService {
 
     // Check Accounts
     if (this.ethService.isValidAddress(query)) {
-      const address = await this.accountService.findAccountByAddress(query)
-      if (address != null) {
-        s.address = new AccountDto(address)
+      const account = await this.accountService.findAccountByAddress(query)
+      if (account != null) {
+
+        const isMiner = await this.accountService.findIsMiner(account.address)
+        const isContractCreator = await this.accountService.findIsContractCreator(account.address)
+
+        s.address = new AccountDto({ ...account, isMiner, isContractCreator })
         s.type = SearchType.Address
         return s
       }
