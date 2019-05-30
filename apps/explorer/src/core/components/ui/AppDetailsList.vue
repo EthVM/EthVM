@@ -13,7 +13,7 @@
     -->
     <div v-if="isLoading && !hasError">
       <v-card-title class="title font-weight-bold pl-4">
-        <div style="width: 300px; height: 20px; background: #e6e6e6; border-radius: 2px;"></div>
+        <div class="details-list-title-loading"></div>
       </v-card-title>
       <v-divider class="lineGrey mt-1 mb-1" />
     </div>
@@ -188,3 +188,11 @@ export default class AppDetailsList extends Vue {
   }
 }
 </script>
+<style scoped lang="css">
+  .details-list-title-loading {
+    width: 300px;
+    height: 20px;
+    background: #e6e6e6;
+    border-radius: 2px;
+  }
+</style>

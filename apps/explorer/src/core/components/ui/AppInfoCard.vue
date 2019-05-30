@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text" height="150px" style="padding-top: 42px; padding-left: 24px;">
+  <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text info-card" height="150px">
     <v-layout wrap fill-height>
       <v-flex xs12>
         <v-layout align-end row pr-2>
@@ -15,64 +15,71 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+  import { Vue, Component, Prop } from 'vue-property-decorator'
 
-@Component
-export default class AppInfoCard extends Vue {
-  /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+  @Component
+  export default class AppInfoCard extends Vue {
+    /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
-  @Prop(String) value!: string
-  @Prop(String) title!: string
-  @Prop(String) colorType!: string
-  @Prop(String) metrics!: string
-  @Prop(String) backType!: string
+    @Prop(String) value!: string
+    @Prop(String) title!: string
+    @Prop(String) colorType!: string
+    @Prop(String) metrics!: string
+    @Prop(String) backType!: string
 
-  /*
-  ===================================================================================
-    Computed
-  ===================================================================================
-  */
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
 
-  get getColor(): string {
-    return this.colorType
+    get getColor(): string {
+      return this.colorType
+    }
+
+    get getBackground(): string {
+      return this.backType
+    }
   }
-
-  get getBackground(): string {
-    return this.backType
-  }
-}
 </script>
 
 <style scoped lang="css">
-.last-block {
-  background-position: right -10px bottom -17px;
-  background-image: url('~@/assets/smallblocks/cubes-in-stack-with-shadow.svg');
-}
+  .info-card {
+    padding-top: 42px;
+    padding-left: 24px;
+  }
 
-.time-since {
-  background-position: right -10px bottom -17px;
-  background-image: url('~@/assets/smallblocks/hourglass.svg');
-}
+  .last-block {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/cubes-in-stack-with-shadow.svg');
+  }
 
-.hash-rate {
-  background-position: right -10px bottom -17px;
-  background-image: url('~@/assets/smallblocks/hash.svg');
-}
+  .time-since {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/hourglass.svg');
+  }
 
-.difficulty {
-  background-position: right -10px bottom -17px;
-  background-image: url('~@/assets/smallblocks/dashboard.svg');
-}
-.success-txs {
-  background-position: right -10px bottom -17px;
-  background-image: url('~@/assets/smallblocks/target.svg');
-}
-.failed-txs {
-  background-position: right -10px bottom -17px;
-  background-image: url('~@/assets/smallblocks/danger-sing.svg');
-}
+  .hash-rate {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/hash.svg');
+  }
+
+  .difficulty {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/dashboard.svg');
+  }
+
+  .success-txs {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/target.svg');
+  }
+
+  .failed-txs {
+    background-position: right -10px bottom -17px;
+    background-image: url('~@/assets/smallblocks/danger-sing.svg');
+  }
 </style>

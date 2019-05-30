@@ -62,16 +62,16 @@
         <div v-for="i in maxItems" :key="i">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
             <v-flex xs6 sm2>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
             <v-flex hidden-xs-only sm4 md3>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
             <v-flex xs6 sm3 md4>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
             <v-flex idden-xs-only sm3>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
           </v-layout>
           <v-divider class="mb-2 mt-2" />

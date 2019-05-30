@@ -46,7 +46,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
     if (this.isLoading) {
       return ''
     }
-    return `<img src="${this.tokenDetails.image}" class="mr-2" style="width: 25px" />  ${
+    return `<img src="${this.tokenDetails.image}" class="mr-2 token-image" />  ${
       this.tokenDetails.name
     } (${this.tokenDetails.symbol!.toUpperCase()}) - Filtered by Holder`
   }

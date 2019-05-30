@@ -305,10 +305,3 @@ export default class TransfersTable extends Vue {
   }
 }
 </script>
-<style scoped lang="css">
-.table-row-loading {
-  background: #e6e6e6;
-  height: 12px;
-  border-radius: 2px;
-}
-</style>
