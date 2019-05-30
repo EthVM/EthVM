@@ -50,6 +50,7 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
   if(failures.length > 0) {
     spinner.fail(`${failures.length} discrepancies found`)
     failures.forEach(failure => spinner.fail(failure))
+    spinner.succeed(`${matched} matches`)
     process.exit(1)
   } else {
     spinner.succeed('No discrepancies found')

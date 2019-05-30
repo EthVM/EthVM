@@ -95,6 +95,9 @@ protocol Processing {
     union { null, string } blockHash = null;
   }
 
+  record FungibleBalanceDeltaListsRecord {
+    array<FungibleBalanceDeltaListRecord> deltaLists = [];
+  }
 //
 
   record NonFungibleBalanceKeyRecord {

@@ -25,6 +25,7 @@ import com.ethvm.avro.processing.BlockTimestampRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaListsRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
@@ -69,6 +70,10 @@ object Serdes : KoinComponent {
   }
 
   fun FungibleBalanceDeltaList() = SpecificAvroSerde<FungibleBalanceDeltaListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun FungibleBalanceDeltaLists() = SpecificAvroSerde<FungibleBalanceDeltaListsRecord>(registryClient).apply {
     configure(config, false)
   }
 

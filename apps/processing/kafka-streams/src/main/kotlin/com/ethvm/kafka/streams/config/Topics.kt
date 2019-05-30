@@ -22,6 +22,7 @@ import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaListsRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
@@ -53,6 +54,7 @@ import com.ethvm.kafka.streams.Serdes.Erc721Metadata
 import com.ethvm.kafka.streams.Serdes.FungibleBalance
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceDelta
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceDeltaList
+import com.ethvm.kafka.streams.Serdes.FungibleBalanceDeltaLists
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceKey
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalance
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDelta
@@ -109,42 +111,54 @@ data class KafkaTopic<K, V>(
 
 object Topics {
 
-  val CanonicalBlockHeader = KafkaTopic("canonical_block_header", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockHeaderRecord.`SCHEMA$`, BlockHeader())
-  val CanonicalTransactions = KafkaTopic("canonical_transactions", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionListRecord.`SCHEMA$`, TransactionList())
-  val CanonicalReceipts = KafkaTopic("canonical_receipts", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionReceiptListRecord.`SCHEMA$`, ReceiptList())
-  val CanonicalTraces = KafkaTopic("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())
-  val CanonicalUncles = KafkaTopic("canonical_uncles", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), UncleListRecord.`SCHEMA$`, UncleList())
+  val CanonicalBlockHeader = KafkaTopic<CanonicalKeyRecord, BlockHeaderRecord?>("canonical_block_header", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockHeaderRecord.`SCHEMA$`, BlockHeader())
+  val CanonicalTransactions = KafkaTopic<CanonicalKeyRecord, TransactionListRecord?>("canonical_transactions", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionListRecord.`SCHEMA$`, TransactionList())
+  val CanonicalReceipts = KafkaTopic<CanonicalKeyRecord, TransactionReceiptListRecord?>("canonical_receipts", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionReceiptListRecord.`SCHEMA$`, ReceiptList())
+  val CanonicalTraces = KafkaTopic<CanonicalKeyRecord, TraceListRecord?>("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())
+  val CanonicalUncles = KafkaTopic<CanonicalKeyRecord, UncleListRecord?>("canonical_uncles", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), UncleListRecord.`SCHEMA$`, UncleList())
 
   val Transaction = KafkaTopic("transaction", TransactionKeyRecord.`SCHEMA$`, TransactionKey(), TransactionRecord.`SCHEMA$`, Transaction())
   val TransactionReceipt = KafkaTopic("transaction_receipt", TransactionReceiptKeyRecord.`SCHEMA$`, TransactionReceiptKey(), TransactionReceiptRecord.`SCHEMA$`, TransactionReceipt())
   val TransactionTrace = KafkaTopic("transaction_trace", TraceKeyRecord.`SCHEMA$`, TraceKey(), TraceListRecord.`SCHEMA$`, TraceList())
   val Uncle = KafkaTopic("uncle", UncleKeyRecord.`SCHEMA$`, UncleKey(), UncleRecord.`SCHEMA$`, Uncle())
 
-  val CanonicalTracesEtherDeltas = KafkaTopic("canonical_traces_ether_deltas", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDeltaList())
-  val CanonicalTransactionFeesEtherDeltas = KafkaTopic("canonical_transaction_fees_ether_deltas", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), FungibleBalanceDeltaListRecord.`SCHEMA$`, FungibleBalanceDeltaList())
-  val CanonicalMinerFeesEtherDeltas = KafkaTopic("canonical_miner_fees_ether_deltas", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
-
-  val CanonicalReceiptErc20Deltas = KafkaTopic("canonical_receipt_erc20_deltas", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), FungibleBalanceDeltaListRecord.`SCHEMA$`, FungibleBalanceDeltaList())
-  val CanonicalReceiptErc721Deltas = KafkaTopic("canonical_receipt_erc721_deltas", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), NonFungibleBalanceDeltaListRecord.`SCHEMA$`, NonFungibleBalanceDeltaList())
+  val CanonicalMinerFeesEtherDeltas = KafkaTopic<CanonicalKeyRecord, FungibleBalanceDeltaRecord?>("canonical_miner_fees_ether_deltas", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
 
   val FungibleBalanceDelta = KafkaTopic("fungible_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
+
+  val PremineBalanceDelta = KafkaTopic("premine_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
+  val HardForkBalanceDelta = KafkaTopic("hard_fork_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
+  val TransactionBalanceDelta = KafkaTopic("transaction_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
+  val TransactionFeeBalanceDelta = KafkaTopic("transaction_fee_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
+  val MinerFeeBalanceDelta = KafkaTopic("miner_fee_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
+  val Erc20BalanceDelta = KafkaTopic("erc20_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
+
+  val Erc721BalanceDelta = KafkaTopic("erc721_balance_delta", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceDeltaRecord.`SCHEMA$`, NonFungibleBalanceDelta())
+
   val FungibleBalance = KafkaTopic("fungible_balance", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
   val FungibleBalanceLog = KafkaTopic("fungible_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
 
+  val PremineBalanceLog = KafkaTopic("premine_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
+  val HardForkBalanceLog = KafkaTopic("hard_fork_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
+  val TransactionBalanceLog = KafkaTopic("transaction_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
+  val TransactionFeeBalanceLog = KafkaTopic("transaction_fee_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
+  val MinerFeeBalanceLog = KafkaTopic("miner_fee_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
+  val Erc20BalanceLog = KafkaTopic("erc20_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
+
   val NonFungibleBalanceDelta = KafkaTopic("non_fungible_balance_delta", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceDeltaRecord.`SCHEMA$`, NonFungibleBalanceDelta())
+  val Erc721BalanceLog = KafkaTopic("erc721_balance_log", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())
-  val NonFungibleBalanceLog = KafkaTopic("non_fungible_balance_log", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())
 
   val BlockMetricsHeader = KafkaTopic("block_metrics_header", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsHeaderRecord.`SCHEMA$`, BlockMetricsHeader())
   val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsTransactionRecord.`SCHEMA$`, BlockMetricsTransaction())
   val BlockMetricsTransactionTrace = KafkaTopic("block_metrics_transaction_trace", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsTransactionTraceRecord.`SCHEMA$`, BlockMetricsTransactionTrace())
   val BlockMetricsTransactionFee = KafkaTopic("block_metrics_transaction_fee", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsTransactionFeeRecord.`SCHEMA$`, BlockMetricsTransactionFee())
 
-  val CanonicalGasPrices = KafkaTopic("canonical_gas_prices", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasPriceListRecord.`SCHEMA$`, TransactionGasPriceList())
-  val CanonicalGasUsed = KafkaTopic("canonical_gas_used", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasUsedListRecord.`SCHEMA$`, TransactionGasUsedList())
-  val CanonicalTransactionFees = KafkaTopic("canonical_transaction_fees", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionFeeListRecord.`SCHEMA$`, TransactionFeeList())
+  val CanonicalGasPrices = KafkaTopic<CanonicalKeyRecord, TransactionGasPriceListRecord?>("canonical_gas_prices", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasPriceListRecord.`SCHEMA$`, TransactionGasPriceList())
+  val CanonicalGasUsed = KafkaTopic<CanonicalKeyRecord, TransactionGasUsedListRecord?>("canonical_gas_used", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasUsedListRecord.`SCHEMA$`, TransactionGasUsedList())
+  val CanonicalTransactionFees = KafkaTopic<CanonicalKeyRecord, TransactionFeeListRecord?>("canonical_transaction_fees", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionFeeListRecord.`SCHEMA$`, TransactionFeeList())
 
-  val CanonicalBlockAuthor = KafkaTopic("canonical_block_author", CanonicalKeyRecord.`SCHEMA$`,  CanonicalKey(), BlockAuthorRecord.`SCHEMA$`, BlockAuthor())
+  val CanonicalBlockAuthor = KafkaTopic<CanonicalKeyRecord, BlockAuthorRecord?>("canonical_block_author", CanonicalKeyRecord.`SCHEMA$`,  CanonicalKey(), BlockAuthorRecord.`SCHEMA$`, BlockAuthor())
 
   val CanonicalContractLifecycle = KafkaTopic("canonical_contract_lifecycle", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), ContractLifecycleListRecord.`SCHEMA$`, ContractLifecycleList())
   val ContractLifecycleEvents = KafkaTopic("contract_lifecycle_events", ContractKeyRecord.`SCHEMA$`, ContractKey(), ContractLifecycleRecord.`SCHEMA$`, ContractLifecycle())
@@ -164,11 +178,7 @@ object Topics {
       TransactionReceipt,
       TransactionTrace,
       Uncle,
-      CanonicalTracesEtherDeltas,
-      CanonicalTransactionFeesEtherDeltas,
       CanonicalMinerFeesEtherDeltas,
-      CanonicalReceiptErc20Deltas,
-      CanonicalReceiptErc721Deltas,
       FungibleBalanceDelta,
       FungibleBalance,
       NonFungibleBalanceDelta,

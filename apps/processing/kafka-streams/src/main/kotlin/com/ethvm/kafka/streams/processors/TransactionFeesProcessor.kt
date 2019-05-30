@@ -48,50 +48,64 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
     CanonicalTransactions.stream(builder)
       .mapValues { transactionsList ->
 
-        val blockHash = transactionsList.getTransactions().firstOrNull()?.getBlockHash()
+        if(transactionsList == null) {
+          // pass through the tombstone
+          null
+        } else {
 
-        when (transactionsList) {
-          null -> null
-          else ->
-            TransactionGasPriceListRecord.newBuilder()
-              .setBlockHash(blockHash)
-              .setTimestamp(DateTime(transactionsList.getTimestamp()))
-              .setGasPrices(
-                transactionsList.getTransactions()
-                  .map { tx ->
-                    TransactionGasPriceRecord.newBuilder()
-                      .setBlockNumber(tx.getBlockNumber())
-                      .setBlockHash(tx.getBlockHash())
-                      .setTransactionHash(tx.getHash())
-                      .setTransactionPosition(tx.getTransactionIndex())
-                      .setAddress(tx.getFrom())
-                      .setGasPrice(tx.getGasPrice())
-                      .build()
-                  }
-              ).build()
+          val blockHash = transactionsList.getTransactions().firstOrNull()?.getBlockHash()
+
+          when (transactionsList) {
+            null -> null
+            else ->
+              TransactionGasPriceListRecord.newBuilder()
+                .setBlockHash(blockHash)
+                .setTimestamp(DateTime(transactionsList.getTimestamp()))
+                .setGasPrices(
+                  transactionsList.getTransactions()
+                    .map { tx ->
+                      TransactionGasPriceRecord.newBuilder()
+                        .setBlockNumber(tx.getBlockNumber())
+                        .setBlockHash(tx.getBlockHash())
+                        .setTransactionHash(tx.getHash())
+                        .setTransactionPosition(tx.getTransactionIndex())
+                        .setAddress(tx.getFrom())
+                        .setGasPrice(tx.getGasPrice())
+                        .build()
+                    }
+                ).build()
+          }
+
         }
+
       }.toTopic(CanonicalGasPrices)
 
     CanonicalReceipts.stream(builder)
       .mapValues { receiptsList ->
 
-        val blockHash = receiptsList.getReceipts().firstOrNull()?.getBlockHash()
+        if(receiptsList == null) {
+          // pass through the tombstone
+          null
+        } else {
+          val blockHash = receiptsList.getReceipts().firstOrNull()?.getBlockHash()
 
-        when (receiptsList) {
-          null -> null
-          else ->
-            TransactionGasUsedListRecord.newBuilder()
-              .setTimestamp(DateTime(receiptsList.getTimestamp()))
-              .setBlockHash(blockHash)
-              .setGasUsed(
-                receiptsList.getReceipts()
-                  .map { receipt ->
-                    TransactionGasUsedRecord.newBuilder()
-                      .setGasUsed(receipt.getGasUsed())
-                      .build()
-                  }
-              ).build()
+          when (receiptsList) {
+            null -> null
+            else ->
+              TransactionGasUsedListRecord.newBuilder()
+                .setTimestamp(DateTime(receiptsList.getTimestamp()))
+                .setBlockHash(blockHash)
+                .setGasUsed(
+                  receiptsList.getReceipts()
+                    .map { receipt ->
+                      TransactionGasUsedRecord.newBuilder()
+                        .setGasUsed(receipt.getGasUsed())
+                        .build()
+                    }
+                ).build()
+          }
         }
+
       }.toTopic(CanonicalGasUsed)
 
     CanonicalGasPrices.stream(builder)
@@ -99,7 +113,10 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
         CanonicalGasUsed.stream(builder),
         { left, right ->
 
-          if (left.getBlockHash() != right.getBlockHash()) {
+          // null values do no trigger the join, so in a re-org scenario we will only re-emit
+          // once the tombstones have arrived and subsequent updates take their place
+
+          if (left!!.getBlockHash() != right!!.getBlockHash()) {
 
             // We're in the middle of an update/fork so we publish a tombstone
             null

@@ -13,7 +13,7 @@ INSERT INTO row_count VALUES
   ('transaction_receipt', 0),
   ('uncle', 0);
 
-CREATE OR REPLACE FUNCTION adjust_count()
+CREATE FUNCTION adjust_count()
   RETURNS TRIGGER AS
 $$
 DECLARE
@@ -469,6 +469,78 @@ SELECT create_hypertable('fungible_balance_log',
                          'timestamp',
                          chunk_time_interval => interval '1 day');
 
+CREATE TABLE premine_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('premine_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE hard_fork_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('hard_fork_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE transaction_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('transaction_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE transaction_fee_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('transaction_fee_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE miner_fee_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('miner_fee_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE erc20_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('erc20_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
 
 CREATE VIEW canonical_ether_balance AS
 SELECT fb.address,
@@ -596,7 +668,7 @@ CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);
 CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
 
-CREATE TABLE non_fungible_balance_log
+CREATE TABLE erc721_balance_log
 (
   contract                         CHAR(42)  NOT NULL,
   token_id                         NUMERIC   NOT NULL,
@@ -610,7 +682,7 @@ CREATE TABLE non_fungible_balance_log
   trace_location_timestamp         TIMESTAMP NOT NULL
 );
 
-SELECT create_hypertable('non_fungible_balance_log',
+SELECT create_hypertable('erc721_balance_log',
                          'trace_location_timestamp',
                          chunk_time_interval => interval '1 day');
 

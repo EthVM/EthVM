@@ -41,8 +41,9 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
     val builder = StreamsBuilder()
 
     CanonicalTransactions.stream(builder)
+      .filter { _, v -> v != null }
       .flatMapValues { _, v ->
-        v.getTransactions()
+        v!!.getTransactions()
           .map {
             TransactionRecord.newBuilder(it)
               .setTimestamp(v.getTimestamp())
@@ -60,8 +61,9 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .toTopic(Topics.Transaction)
 
     CanonicalReceipts.stream(builder)
+      .filter { _, v -> v != null }
       .flatMapValues { _, v ->
-        v.getReceipts()
+        v!!.getReceipts()
           .map {
             TransactionReceiptRecord.newBuilder(it)
               .setTimestamp(v.getTimestamp())
@@ -79,9 +81,10 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .toTopic(Topics.TransactionReceipt)
 
     CanonicalTraces.stream(builder)
+      .filter { _, v -> v != null }
       .flatMap { _, v ->
 
-        val traces = v.getTraces()
+        val traces = v!!.getTraces()
 
         val rewardTraces = traces.filter { it.transactionHash == null }
         val txTraces = traces.filterNot { it.transactionHash == null }
@@ -134,8 +137,9 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .toTopic(Topics.TransactionTrace)
 
     CanonicalUncles.stream(builder)
+      .filter { _, v -> v != null }
       .flatMapValues { _, v ->
-        v.getUncles()
+        v!!.getUncles()
           .map {
             UncleRecord.newBuilder(it)
               .setTimestamp(v.getTimestamp())

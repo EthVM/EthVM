@@ -3,7 +3,8 @@
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
     "tasks.max": 3,
-    "topics": "fungible_balance_log,non_fungible_balance_log",
+    "table.name.format": "${topic}",
+    "topics.regex": "*_balance_log",
     "insert.mode": "insert",
     "pk.mode": "none",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
