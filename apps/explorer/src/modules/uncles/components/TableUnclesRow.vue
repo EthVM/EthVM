@@ -95,7 +95,6 @@
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { StringConcatMixin } from '@app/core/components/mixins'
-import { Uncle } from '@app/core/models'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { UncleSummaryPageExt_items } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
 

@@ -119,7 +119,6 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
-import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
@@ -137,7 +136,6 @@ const MAX_ITEMS = 50
     AppError,
     AppFootnotes,
     AppInfoLoad,
-    AppLiveUpdate,
     AppPaginate,
     TableBlocksRow,
     NoticeNewBlock
