@@ -457,6 +457,16 @@ CREATE TABLE fungible_balance
 
 CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
 
+
+CREATE TABLE transaction_count
+(
+  address   CHAR(42) PRIMARY KEY,
+  total_in  INT NOT NULL,
+  total_out INT NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+
 CREATE TABLE fungible_balance_log
 (
   address   CHAR(42)  NOT NULL,
@@ -614,16 +624,15 @@ WHERE bh.number IS NOT NULL
 CREATE VIEW canonical_account AS
 SELECT fb.address,
        fb.amount                    AS balance,
-       (SELECT COUNT(*)
-        FROM canonical_transaction AS ct
-        WHERE ct.from = fb.address
-           OR ct.to = fb.address)   AS total_tx_count,
-       (SELECT COUNT(*)
-        FROM canonical_transaction AS ct
-        WHERE ct.to = fb.address)   AS in_tx_count,
-       (SELECT COUNT(*)
-        FROM canonical_transaction AS ct
-        WHERE ct.from = fb.address) AS out_tx_count,
+       (SELECT total_in + total_out
+        FROM transaction_count AS tc
+        WHERE tc.address = fb.address)   AS total_tx_count,
+       (SELECT total_in
+        FROM transaction_count AS tc
+        WHERE tc.address = fb.address)   AS in_tx_count,
+       (SELECT total_out
+        FROM transaction_count AS tc
+        WHERE tc.address = fb.address)   AS out_tx_count,
        CASE
          WHEN cont.creator IS NULL THEN
            FALSE

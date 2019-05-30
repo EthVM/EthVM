@@ -7,25 +7,22 @@ import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractRecord
 import com.ethvm.avro.capture.TraceListRecord
-import com.ethvm.avro.capture.TraceRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
 import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
+import com.ethvm.avro.processing.AccountKeyRecord
 import com.ethvm.avro.processing.BlockAuthorRecord
-import com.ethvm.avro.processing.BlockKeyRecord
 import com.ethvm.avro.processing.BlockMetricKeyRecord
 import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
-import com.ethvm.avro.processing.BlockTimestampRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
-import com.ethvm.avro.processing.FungibleBalanceDeltaListsRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
@@ -34,6 +31,9 @@ import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleBalanceRecord
 import com.ethvm.avro.processing.TraceKeyRecord
+import com.ethvm.avro.processing.TransactionCountDeltaListRecord
+import com.ethvm.avro.processing.TransactionCountDeltaRecord
+import com.ethvm.avro.processing.TransactionCountRecord
 import com.ethvm.avro.processing.TransactionFeeListRecord
 import com.ethvm.avro.processing.TransactionGasPriceListRecord
 import com.ethvm.avro.processing.TransactionGasUsedListRecord
@@ -43,7 +43,6 @@ import com.ethvm.avro.processing.UncleKeyRecord
 import com.ethvm.kafka.streams.config.KafkaConfig
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-import org.apache.avro.specific.SpecificRecord
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -73,7 +72,19 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun FungibleBalanceDeltaLists() = SpecificAvroSerde<FungibleBalanceDeltaListsRecord>(registryClient).apply {
+  fun TransactionCountDeltaList() = SpecificAvroSerde<TransactionCountDeltaListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TransactionCountDelta() = SpecificAvroSerde<TransactionCountDeltaRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun AccountKey() = SpecificAvroSerde<AccountKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun TransactionCount() = SpecificAvroSerde<TransactionCountRecord>(registryClient).apply {
     configure(config, false)
   }
 

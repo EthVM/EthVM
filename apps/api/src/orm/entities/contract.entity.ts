@@ -1,18 +1,18 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn} from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
 import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { ContractMetadataEntity } from '@app/orm/entities/contract-metadata.entity'
-import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer'
+import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
 import BigNumber from 'bignumber.js'
-import {TransactionEntity} from '@app/orm/entities/transaction.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 
 @Entity('canonical_contract')
 export class ContractEntity {
 
   constructor(data: any) {
-    assignClean(this, data);
+    assignClean(this, data)
   }
 
   @PrimaryColumn({ type: 'character', length: 42, readonly: true })
@@ -39,7 +39,7 @@ export class ContractEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   traceCreatedAtBlockNumber?: BigNumber
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @Column({ type: 'character', length: 66, readonly: true })
   traceCreatedAtTransactionHash!: string
 
   @Column({ type: 'integer', readonly: true })
@@ -69,41 +69,38 @@ export class ContractEntity {
   @Column({ type: 'character', length: 64, readonly: true })
   traceDestroyedAtTraceAddress?: string
 
-  @Column({ type: 'text', readonly: true })
-  traceDestroyedAt?: string
-
   @OneToOne(type => Erc20MetadataEntity, metadata => metadata.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address',
+    referencedColumnName: 'address'
   })
   erc20Metadata?: Erc20MetadataEntity
 
   @OneToOne(type => Erc721MetadataEntity, metadata => metadata.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address',
+    referencedColumnName: 'address'
   })
   erc721Metadata?: Erc721MetadataEntity
 
   @OneToOne(type => ContractMetadataEntity, metadata => metadata.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address',
+    referencedColumnName: 'address'
   })
   metadata?: ContractMetadataEntity
 
   @ManyToOne(type => TransactionEntity, tx => tx.contracts)
   @JoinColumn({
     name: 'traceCreatedAtTransactionHash',
-    referencedColumnName: 'hash',
+    referencedColumnName: 'hash'
   })
-  createdAtTx?: TransactionEntity;
+  createdAtTx?: TransactionEntity
 
   @OneToOne(type => TokenExchangeRateEntity, t => t.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address',
+    referencedColumnName: 'address'
   })
   tokenExchangeRate?: TokenExchangeRateEntity
 

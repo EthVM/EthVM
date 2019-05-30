@@ -211,6 +211,18 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: transaction_count_delta
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      retention.ms: -1
+
+  - name: transaction_count
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
   - name: block_metrics_header
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12

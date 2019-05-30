@@ -39,6 +39,10 @@ protocol Processing {
     string transactionHash;
   }
 
+  record AccountKeyRecord {
+    string address;
+  }
+
   record TraceKeyRecord {
     string blockHash;
     union { null, string } transactionHash = null;
@@ -290,6 +294,27 @@ protocol Processing {
     timestamp_ms timestamp;
     union { null, string } name = null;
     union { null, string } symbol = null;
+  }
+
+  record TransactionCountDeltaRecord {
+    timestamp_ms timestamp = 0;
+    string address;
+    int in = 0;
+    int out = 0;
+  }
+
+  record TransactionCountDeltaListRecord {
+    boolean apply = true;
+    string blockHash;
+    timestamp_ms timestamp;
+    array<TransactionCountDeltaRecord> counts;
+    array<TransactionCountDeltaRecord> reversals = [];
+  }
+
+  record TransactionCountRecord {
+    timestamp_ms timestamp = 0;
+    long totalIn = 0;
+    long totalOut = 0;
   }
 
 }

@@ -13,6 +13,7 @@ import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
+import com.ethvm.avro.processing.AccountKeyRecord
 import com.ethvm.avro.processing.BlockAuthorRecord
 import com.ethvm.avro.processing.BlockMetricKeyRecord
 import com.ethvm.avro.processing.BlockMetricsHeaderRecord
@@ -21,22 +22,22 @@ import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
-import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
-import com.ethvm.avro.processing.FungibleBalanceDeltaListsRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
-import com.ethvm.avro.processing.NonFungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleBalanceRecord
 import com.ethvm.avro.processing.TraceKeyRecord
+import com.ethvm.avro.processing.TransactionCountDeltaRecord
+import com.ethvm.avro.processing.TransactionCountRecord
 import com.ethvm.avro.processing.TransactionFeeListRecord
 import com.ethvm.avro.processing.TransactionGasPriceListRecord
 import com.ethvm.avro.processing.TransactionGasUsedListRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
 import com.ethvm.avro.processing.TransactionReceiptKeyRecord
 import com.ethvm.avro.processing.UncleKeyRecord
+import com.ethvm.kafka.streams.Serdes.AccountKey
 import com.ethvm.kafka.streams.Serdes.BlockAuthor
 import com.ethvm.kafka.streams.Serdes.BlockHeader
 import com.ethvm.kafka.streams.Serdes.BlockMetricKey
@@ -53,17 +54,15 @@ import com.ethvm.kafka.streams.Serdes.Erc20Metadata
 import com.ethvm.kafka.streams.Serdes.Erc721Metadata
 import com.ethvm.kafka.streams.Serdes.FungibleBalance
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceDelta
-import com.ethvm.kafka.streams.Serdes.FungibleBalanceDeltaList
-import com.ethvm.kafka.streams.Serdes.FungibleBalanceDeltaLists
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceKey
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalance
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDelta
-import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDeltaList
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceKey
 import com.ethvm.kafka.streams.Serdes.ReceiptList
 import com.ethvm.kafka.streams.Serdes.TraceKey
 import com.ethvm.kafka.streams.Serdes.TraceList
 import com.ethvm.kafka.streams.Serdes.Transaction
+import com.ethvm.kafka.streams.Serdes.TransactionCountDelta
 import com.ethvm.kafka.streams.Serdes.TransactionFeeList
 import com.ethvm.kafka.streams.Serdes.TransactionGasPriceList
 import com.ethvm.kafka.streams.Serdes.TransactionGasUsedList
@@ -71,11 +70,11 @@ import com.ethvm.kafka.streams.Serdes.TransactionKey
 import com.ethvm.kafka.streams.Serdes.TransactionList
 import com.ethvm.kafka.streams.Serdes.TransactionReceipt
 import com.ethvm.kafka.streams.Serdes.TransactionReceiptKey
+import com.ethvm.kafka.streams.Serdes.TransactionCount
 import com.ethvm.kafka.streams.Serdes.Uncle
 import com.ethvm.kafka.streams.Serdes.UncleKey
 import com.ethvm.kafka.streams.Serdes.UncleList
 import org.apache.avro.Schema
-import org.apache.avro.specific.SpecificRecord
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
@@ -83,7 +82,6 @@ import org.apache.kafka.streams.kstream.GlobalKTable
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.KTable
 import org.apache.kafka.streams.kstream.Produced
-import kotlin.reflect.full.declaredMembers
 
 data class KafkaTopic<K, V>(
   val name: String,
@@ -153,6 +151,9 @@ object Topics {
   val BlockMetricsTransaction = KafkaTopic("block_metrics_transaction", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsTransactionRecord.`SCHEMA$`, BlockMetricsTransaction())
   val BlockMetricsTransactionTrace = KafkaTopic("block_metrics_transaction_trace", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsTransactionTraceRecord.`SCHEMA$`, BlockMetricsTransactionTrace())
   val BlockMetricsTransactionFee = KafkaTopic("block_metrics_transaction_fee", BlockMetricKeyRecord.`SCHEMA$`, BlockMetricKey(), BlockMetricsTransactionFeeRecord.`SCHEMA$`, BlockMetricsTransactionFee())
+
+  val TransactionCountDelta = KafkaTopic("transaction_count_delta", AccountKeyRecord.`SCHEMA$`, AccountKey(), TransactionCountDeltaRecord.`SCHEMA$`, TransactionCountDelta())
+  val TransactionCount = KafkaTopic("transaction_count", AccountKeyRecord.`SCHEMA$`, AccountKey(), TransactionCountRecord.`SCHEMA$`, TransactionCount())
 
   val CanonicalGasPrices = KafkaTopic<CanonicalKeyRecord, TransactionGasPriceListRecord?>("canonical_gas_prices", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasPriceListRecord.`SCHEMA$`, TransactionGasPriceList())
   val CanonicalGasUsed = KafkaTopic<CanonicalKeyRecord, TransactionGasUsedListRecord?>("canonical_gas_used", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasUsedListRecord.`SCHEMA$`, TransactionGasUsedList())

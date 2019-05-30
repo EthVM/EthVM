@@ -23,6 +23,7 @@ import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleBalanceRecord
 import com.ethvm.avro.processing.FungibleTokenType
 import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
+import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.avro.processing.TransactionFeeListRecord
 import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionGasPriceRecord
@@ -479,3 +480,14 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null && delta.getAmountBI() != BigInteger.ZERO }
+
+// ------------------------------------------------------------
+// TransactionCountDeltaRecord
+// ------------------------------------------------------------
+
+fun TransactionCountDeltaRecord.reverse() =
+  TransactionCountDeltaRecord.newBuilder()
+    .setAddress(this.address)
+    .setIn(this.`in` * -1)
+    .setOut(this.out * -1)
+    .build()

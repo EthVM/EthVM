@@ -288,9 +288,9 @@ export interface ContractSupport {
 }
 
 export interface IQuery {
-    accountByAddress(address: string): Account | Promise<Account>;
     blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
+    accountByAddress(address: string): Account | Promise<Account>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;

@@ -10,8 +10,9 @@ import com.ethvm.kafka.streams.config.KafkaConfig
 import com.ethvm.kafka.streams.config.Web3Config
 import com.ethvm.kafka.streams.di.Modules.kafkaStreams
 import com.ethvm.kafka.streams.di.Modules.web3
-import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaProcessor
 import com.ethvm.kafka.streams.processors.BlockAuthorProcessor
+import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaProcessor
+import com.ethvm.kafka.streams.processors.CountDeltaProcessor
 import com.ethvm.kafka.streams.processors.BlockMetricsProcessor
 import com.ethvm.kafka.streams.processors.ContractLifecycleProcessor
 import com.ethvm.kafka.streams.processors.ContractMetadataProcessor
@@ -20,6 +21,7 @@ import com.ethvm.kafka.streams.processors.FungibleBalanceProcessor
 import com.ethvm.kafka.streams.processors.KafkaProcessor
 import com.ethvm.kafka.streams.processors.NonFungibleBalanceDeltaProcessor
 import com.ethvm.kafka.streams.processors.NonFungibleBalanceProcessor
+import com.ethvm.kafka.streams.processors.CountProcessor
 import com.ethvm.kafka.streams.processors.TransactionFeesProcessor
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -106,6 +108,8 @@ class Cli : CliktCommand() {
       FungibleBalanceProcessor(),
       NonFungibleBalanceProcessor(),
       BlockAuthorProcessor(),
+      CountDeltaProcessor(),
+      CountProcessor(),
       BlockMetricsProcessor(),
       ContractLifecycleProcessor(),
       FlatMapProcessor(),
