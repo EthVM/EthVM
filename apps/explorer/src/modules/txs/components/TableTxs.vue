@@ -139,7 +139,6 @@
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
-import AppLiveUpdate from '@app/core/components/ui/AppLiveUpdate.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -166,7 +165,6 @@ class TableTxsMixin extends Vue {
   components: {
     AppError,
     AppFootnotes,
-    AppLiveUpdate,
     AppPaginate,
     TableTxsRow,
     NoticeNewBlock
