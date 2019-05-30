@@ -142,11 +142,11 @@ export default class AppSearch extends Vue {
 }
 </script>
 <style scoped lang="css">
-  .search-input-container {
-    height: 48px;
-    border: solid 1px #efefef !important;
-  }
-  .search-button-container {
-    max-width: 115px !important;
-  }
+.search-input-container {
+  height: 48px;
+  border: solid 1px #efefef !important;
+}
+.search-button-container {
+  max-width: 115px !important;
+}
 </style>

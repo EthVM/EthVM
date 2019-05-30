@@ -487,8 +487,8 @@ export default class TableTxs extends TableTxsMixin {
 }
 </script>
 <style scoped lang="css">
-  .tx-filter-select-container {
-    border: solid 1px #efefef;
-    padding-top: 1px;
-  }
+.tx-filter-select-container {
+  border: solid 1px #efefef;
+  padding-top: 1px;
+}
 </style>

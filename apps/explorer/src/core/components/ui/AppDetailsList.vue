@@ -189,10 +189,10 @@ export default class AppDetailsList extends Vue {
 }
 </script>
 <style scoped lang="css">
-  .details-list-title-loading {
-    width: 300px;
-    height: 20px;
-    background: #e6e6e6;
-    border-radius: 2px;
-  }
+.details-list-title-loading {
+  width: 300px;
+  height: 20px;
+  background: #e6e6e6;
+  border-radius: 2px;
+}
 </style>

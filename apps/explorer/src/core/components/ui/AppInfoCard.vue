@@ -15,71 +15,71 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-  @Component
-  export default class AppInfoCard extends Vue {
-    /*
+@Component
+export default class AppInfoCard extends Vue {
+  /*
     ===================================================================================
       Props
     ===================================================================================
     */
 
-    @Prop(String) value!: string
-    @Prop(String) title!: string
-    @Prop(String) colorType!: string
-    @Prop(String) metrics!: string
-    @Prop(String) backType!: string
+  @Prop(String) value!: string
+  @Prop(String) title!: string
+  @Prop(String) colorType!: string
+  @Prop(String) metrics!: string
+  @Prop(String) backType!: string
 
-    /*
+  /*
     ===================================================================================
       Computed
     ===================================================================================
     */
 
-    get getColor(): string {
-      return this.colorType
-    }
-
-    get getBackground(): string {
-      return this.backType
-    }
+  get getColor(): string {
+    return this.colorType
   }
+
+  get getBackground(): string {
+    return this.backType
+  }
+}
 </script>
 
 <style scoped lang="css">
-  .info-card {
-    padding-top: 42px;
-    padding-left: 24px;
-  }
+.info-card {
+  padding-top: 42px;
+  padding-left: 24px;
+}
 
-  .last-block {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/cubes-in-stack-with-shadow.svg');
-  }
+.last-block {
+  background-position: right -10px bottom -17px;
+  background-image: url('~@/assets/smallblocks/cubes-in-stack-with-shadow.svg');
+}
 
-  .time-since {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/hourglass.svg');
-  }
+.time-since {
+  background-position: right -10px bottom -17px;
+  background-image: url('~@/assets/smallblocks/hourglass.svg');
+}
 
-  .hash-rate {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/hash.svg');
-  }
+.hash-rate {
+  background-position: right -10px bottom -17px;
+  background-image: url('~@/assets/smallblocks/hash.svg');
+}
 
-  .difficulty {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/dashboard.svg');
-  }
+.difficulty {
+  background-position: right -10px bottom -17px;
+  background-image: url('~@/assets/smallblocks/dashboard.svg');
+}
 
-  .success-txs {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/target.svg');
-  }
+.success-txs {
+  background-position: right -10px bottom -17px;
+  background-image: url('~@/assets/smallblocks/target.svg');
+}
 
-  .failed-txs {
-    background-position: right -10px bottom -17px;
-    background-image: url('~@/assets/smallblocks/danger-sing.svg');
-  }
+.failed-txs {
+  background-position: right -10px bottom -17px;
+  background-image: url('~@/assets/smallblocks/danger-sing.svg');
+}
 </style>
