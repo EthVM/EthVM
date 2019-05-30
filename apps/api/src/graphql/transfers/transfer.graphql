@@ -26,7 +26,7 @@ type Transfer {
   traceLocationTransactionIndex: Int
   traceLocationLogIndex: Int
   traceLocationTraceAddress: String
-  timestamp: Int!
+  timestamp: Date!
 }
 
 type BalancesPage {
@@ -43,7 +43,7 @@ type Balance {
   tokenType: String
   amount: BigNumber!
   balance: BigNumber!
-  timestamp: Int!
+  timestamp: Date!
   # traceLocationBlockHash: String!
   # traceLocationBlockNumber: BigNumber!
   # traceLocationTransactionHash: String

@@ -6,6 +6,6 @@ import { Module } from '@nestjs/common';
 @Module({
   imports: [DaoModule, SubscriptionsModule],
   providers: [BlockResolvers],
-  exports: [],
+  exports: []
 })
 export class BlockModule { }

@@ -49,7 +49,7 @@ export class FungibleBalanceTransferEntity {
   @Column({type: 'character varying', length: 64, readonly: true})
   traceLocationTraceAddress!: string
 
-  @Column({type: 'int', readonly: true})
-  timestamp!: number
+  @Column({type: 'timestamp', readonly: true})
+  timestamp!: Date
 
 }

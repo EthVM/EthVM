@@ -14,7 +14,7 @@ type ContractSummary {
   blockNumber: BigNumber!
   txHash: String!
   txFee: BigNumber!
-  timestamp: Int!
+  timestamp: Date!
 }
 
 type Contract {
@@ -41,6 +41,7 @@ type Contract {
   totalSupply: BigNumber
   createdAtTx: Transaction
   createdAtTxSummary: TransactionSummary
+  timestamp: Date
 }
 
 type ContractMetadata {

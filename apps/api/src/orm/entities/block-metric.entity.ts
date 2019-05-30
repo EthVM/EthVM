@@ -14,7 +14,7 @@ export class BlockMetricEntity {
   number!: BigNumber
 
   @PrimaryColumn({type: 'timestamp', readonly: true})
-  timestamp!: number
+  timestamp!: Date
 
   @Column({type: 'character', length: 66, unique: true, readonly: true})
   blockHash!: string

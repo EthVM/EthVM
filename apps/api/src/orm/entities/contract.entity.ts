@@ -27,6 +27,9 @@ export class ContractEntity {
   @Column({ type: 'text', readonly: true })
   code?: string
 
+  @Column({ type: 'varchar', length: 32, readonly: true })
+  contractType?: string
+
   @Column({ type: 'character', length: 66, readonly: true })
   refundAddress?: string
 
@@ -51,6 +54,9 @@ export class ContractEntity {
   @Column({ type: 'character', length: 64, readonly: true })
   traceCreatedAtTraceAddress?: string
 
+  @Column({ type: 'timestamp', readonly: true })
+  traceCreatedAtTimestamp?: Date
+
   @Column({ type: 'character', length: 66, readonly: true })
   traceDestroyedAtBlockHash?: string
 
@@ -68,6 +74,12 @@ export class ContractEntity {
 
   @Column({ type: 'character', length: 64, readonly: true })
   traceDestroyedAtTraceAddress?: string
+
+  @Column({ type: 'timestamp', readonly: true })
+  traceDestroyedAtTimestamp?: Date
+
+  @Column({ type: 'timestamp', readonly: true })
+  timestamp?: Date
 
   @OneToOne(type => Erc20MetadataEntity, metadata => metadata.contract)
   @JoinColumn({
