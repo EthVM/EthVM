@@ -1,7 +1,6 @@
 import BN from 'bignumber.js'
 import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
 import { TransactionSummary } from '@app/core/api/apollo/types/TransactionSummary'
-import { Hex } from '@app/core/models'
 
 export class TransactionSummaryPageExt_items implements TransactionSummaryPage_items {
   __typename!: 'TransactionSummary'
@@ -24,18 +23,6 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
 
   get blockNumberBN(): BN {
     return new BN(this.blockNumber)
-  }
-
-  get fromHex(): Hex {
-    return new Hex(this.from || '')
-  }
-
-  get toHex(): Hex {
-    return new Hex(this.to || '')
-  }
-
-  get createsHex(): Hex {
-    return new Hex(this.creates || '')
   }
 
   get feeBN(): BN {

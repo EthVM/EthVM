@@ -1,5 +1,3 @@
-import { Block, SimpleBlock } from '@app/core/models'
-
 const dedup = (block: Block | SimpleBlock, pastBlocks: Block[] | SimpleBlock[]): Block[] | SimpleBlock[] => {
   for (let i = 0; i < pastBlocks.length; i++) {
     if (block.getId() === pastBlocks[i].getId()) {
