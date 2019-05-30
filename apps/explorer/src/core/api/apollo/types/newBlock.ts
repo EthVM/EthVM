@@ -18,7 +18,7 @@ export interface newBlock_newBlock {
   uncleHashes: string[];
   transactionHashes: string[];
   difficulty: any;
-  timestamp: number;
+  timestamp: any;
 }
 
 export interface newBlock {

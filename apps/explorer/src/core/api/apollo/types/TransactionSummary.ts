@@ -19,5 +19,5 @@ export interface TransactionSummary {
   value: any;
   fee: any;
   successful: boolean;
-  timestamp: number;
+  timestamp: any;
 }

@@ -24,7 +24,7 @@ export class ContractSummaryPageExt_items implements ContractSummaryPage_items {
   }
 
   get timestampDate(): Date | null {
-    return this.timestamp ? new Date(+this.timestamp * 1000) : null
+    return this.timestamp ? new Date(this.timestamp) : null
   }
 }
 

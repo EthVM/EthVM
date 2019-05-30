@@ -15,7 +15,7 @@ export interface tokenTransfersByContractAddressForHolder_transfers_items {
   value: any;
   from: string | null;
   to: string;
-  timestamp: number;
+  timestamp: any;
   deltaType: DeltaType;
   address: string | null;
 }

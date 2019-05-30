@@ -19,7 +19,7 @@ export interface transactionSummariesByBlockHash_summaries_items {
   value: any;
   fee: any;
   successful: boolean;
-  timestamp: number;
+  timestamp: any;
 }
 
 export interface transactionSummariesByBlockHash_summaries {

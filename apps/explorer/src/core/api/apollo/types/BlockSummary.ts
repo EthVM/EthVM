@@ -18,5 +18,5 @@ export interface BlockSummary {
   uncleHashes: string[];
   transactionHashes: string[];
   difficulty: any;
-  timestamp: number;
+  timestamp: any;
 }

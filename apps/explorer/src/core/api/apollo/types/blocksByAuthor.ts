@@ -18,7 +18,7 @@ export interface blocksByAuthor_blockSummaries_items {
   uncleHashes: string[];
   transactionHashes: string[];
   difficulty: any;
-  timestamp: number;
+  timestamp: any;
 }
 
 export interface blocksByAuthor_blockSummaries {

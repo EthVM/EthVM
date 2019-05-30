@@ -12,6 +12,6 @@ export interface ContractSummary {
   creator: string;
   blockNumber: any;
   txHash: string;
-  timestamp: number;
+  timestamp: any;
   txFee: any;
 }

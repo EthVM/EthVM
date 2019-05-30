@@ -28,7 +28,7 @@ export class TransactionDetailExt implements TransactionDetail {
   hash!: string
   input: any
   nonce: any
-  timestamp!: number
+  timestamp!: any
   to: string | null
   value: any
   receipt: TransactionDetailExt_receipt | null
@@ -79,7 +79,7 @@ export class TransactionDetailExt implements TransactionDetail {
   }
 
   get timestampMs(): number {
-    return this.timestamp * 1000
+    return this.timestamp
   }
 
   get feeEth(): EthValue {
