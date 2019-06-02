@@ -77,7 +77,9 @@ object Modules {
 
         //
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
-        put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000) // important when dealing with aggregations/reduces
+
+        // Allows for large messages, in our case large lists of traces primarily
+        put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 62_914_560) // 60 mb
 
         put(StreamsConfig.STATE_DIR_CONFIG, config.kafka.streamsStateDir)
 
