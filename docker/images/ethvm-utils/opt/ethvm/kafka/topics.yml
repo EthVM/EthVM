@@ -193,6 +193,12 @@ topics:
     config:
       retention.ms: -1
 
+  - name: non_fungible_balance_delta
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      retention.ms: -1
+
   - name: non_fungible_balance
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
