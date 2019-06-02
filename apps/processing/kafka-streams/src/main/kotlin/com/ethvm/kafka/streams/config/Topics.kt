@@ -134,7 +134,6 @@ object Topics {
   val Erc721BalanceDelta = KafkaTopic("erc721_balance_delta", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceDeltaRecord.`SCHEMA$`, NonFungibleBalanceDelta())
 
   val FungibleBalance = KafkaTopic("fungible_balance", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
-  val FungibleBalanceLog = KafkaTopic("fungible_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
 
   val PremineBalanceLog = KafkaTopic("premine_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
   val HardForkBalanceLog = KafkaTopic("hard_fork_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
@@ -143,7 +142,6 @@ object Topics {
   val MinerFeeBalanceLog = KafkaTopic("miner_fee_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
   val Erc20BalanceLog = KafkaTopic("erc20_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
 
-  val NonFungibleBalanceDelta = KafkaTopic("non_fungible_balance_delta", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceDeltaRecord.`SCHEMA$`, NonFungibleBalanceDelta())
   val Erc721BalanceLog = KafkaTopic("erc721_balance_log", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())
   val NonFungibleBalance = KafkaTopic("non_fungible_balance", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())
 
@@ -182,7 +180,6 @@ object Topics {
       CanonicalMinerFeesEtherDeltas,
       FungibleBalanceDelta,
       FungibleBalance,
-      NonFungibleBalanceDelta,
       NonFungibleBalance,
       BlockMetricsHeader,
       BlockMetricsTransaction,
