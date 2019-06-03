@@ -5,7 +5,6 @@
     "tasks.max": 1,
     "ws.url": "{{ .Env.PARITY_WS_URL }}",
     "schema.registry.url": "{{ .Env.KAFKA_SCHEMA_REGISTRY_URL }}",
-    "producer.max.request.size": 52428800,
-    "max.request.size": 52428800
+    "producer.max.request.size": 52428800
   }
 }

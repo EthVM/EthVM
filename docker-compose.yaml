@@ -198,7 +198,9 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-#      KAFKA_COMPRESSION_TYPE: "zstd"
+      KAFKA_COMPRESSION_TYPE: "zstd"
+      KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       KAFKA_MESSAGE_MAX_BYTES: 52428800
       KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
@@ -273,6 +275,8 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
+      CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       KAFKA_JMX_PORT: 9588
 
   # ///////////////////////////////////////////////////////
