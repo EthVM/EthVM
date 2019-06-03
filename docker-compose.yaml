@@ -28,10 +28,10 @@ volumes:
     #
     # If you're on Mac, make sure you comment the following lines
     # and leave it as a regular docker volume
-    driver: local-persist
-    driver_opts:
-     name: "paritydb"
-     mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
+    # driver: local-persist
+    # driver_opts:
+    #  name: "paritydb"
+    #  mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
 
 services:
 
