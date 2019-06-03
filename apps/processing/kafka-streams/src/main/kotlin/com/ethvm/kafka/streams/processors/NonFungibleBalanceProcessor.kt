@@ -30,7 +30,6 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
-      put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, BlockEventTimestampExtractor::class.java)
     }
 
   override val logger = KotlinLogging.logger {}
