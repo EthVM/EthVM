@@ -123,12 +123,12 @@ describe('SearchResolvers', () => {
       expect(balanceOne).not.toBeNull()
       expect(balanceOne).toBeInstanceOf(SearchDto)
       expect(balanceOne).toHaveProperty('type', SearchType.Address)
-      expect(balanceOne).toHaveProperty('address', { address: addressHashOne })
+      expect(balanceOne).toHaveProperty('address', { address: addressHashOne, inTxCount: 0, outTxCount: 0, totalTxCount: 0 })
 
       expect(balanceTwo).not.toBeNull()
       expect(balanceTwo).toBeInstanceOf(SearchDto)
       expect(balanceOne).toHaveProperty('type', SearchType.Address)
-      expect(balanceTwo).toHaveProperty('address', { address: addressHashTwo })
+      expect(balanceTwo).toHaveProperty('address', { address: addressHashTwo, inTxCount: 0, outTxCount: 0, totalTxCount: 0 })
 
       expect(balanceOne).not.toEqual(balanceTwo)
     })
