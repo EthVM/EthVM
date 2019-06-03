@@ -49,11 +49,11 @@ class ParityFullBlockSource(
 
   override var batchSize = 16
 
-  private val noThreads = 8
+  private val noThreads = 4
 
   private var targetFetchTimeMs = 1000
 
-  private val maxRequestTraceCount = 2000
+  private val maxRequestTraceCount = 1000
 
   private val executor = Executors.newFixedThreadPool(noThreads)
 
@@ -209,11 +209,16 @@ class ParityFullBlockSource(
       return records
 
     } catch (ex: TimeoutException) {
+
+      // likely we overloaded parity, let's reduce for retry
+      batchSize /= 2
+
       // parity is probably under high load
       throw RetriableException(ex)
     }
 
   }
+
 
   private fun cleanTimestamps() {
 
