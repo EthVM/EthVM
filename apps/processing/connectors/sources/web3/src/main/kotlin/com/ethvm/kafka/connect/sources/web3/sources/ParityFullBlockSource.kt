@@ -51,11 +51,11 @@ class ParityFullBlockSource(
 
   private val noThreads = 4
 
-  private var targetFetchTimeMs = 1000
+  private var targetFetchTimeMs = 2000
 
   private val chunkSize = batchSize / noThreads
 
-  private val maxRequestTraceCount = 1000
+  private val maxRequestTraceCount = 4000
 
   private val executor = Executors.newFixedThreadPool(noThreads)
 
@@ -193,7 +193,7 @@ class ParityFullBlockSource(
 
       if (count > 0) {
 
-        logger.debug { "Fetched $count blocks. Batch size = $batchSize, elapsed ms = $elapsedMs, percentage of target fetch time = $percentageOfTargetFetchTime, total trace count = $totalTraceCount, Avg trace count = $avgTraceCount" }
+        logger.debug { "Fetched $count blocks. Elapsed = $elapsedMs ms, target fetch = $targetFetchTimeMs ms, % of target fetch = $percentageOfTargetFetchTime, trace count = $totalTraceCount, avg trace count = $avgTraceCount" }
 
         batchSize = when {
           percentageOfTargetFetchTime < 0.5 -> batchSize * 2
