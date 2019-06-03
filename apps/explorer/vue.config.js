@@ -68,6 +68,6 @@ module.exports = {
   devServer: {
     disableHostCheck: true,
     noInfo: true,
-    public: 'ethvm.lan/'
+    public: 'ethvm.lan/' // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
   }
 }
