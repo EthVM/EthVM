@@ -61,7 +61,10 @@ class ParityFullBlockSource(
 
     try {
 
-      val chunkSize = batchSize / noThreads
+      val chunkSize = when {
+        batchSize < noThreads -> 1
+        else -> batchSize / noThreads
+      }
 
       val startMs = System.currentTimeMillis()
 
