@@ -21,6 +21,7 @@ import com.ethvm.kafka.connect.sources.web3.ext.toTransactionRecord
 import com.ethvm.kafka.connect.sources.web3.ext.toUncleRecord
 import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import mu.KotlinLogging
+import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.methods.response.Transaction
@@ -29,6 +30,7 @@ import java.util.SortedMap
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class ParityFullBlockSource(
   sourceContext: SourceTaskContext,
@@ -59,147 +61,155 @@ class ParityFullBlockSource(
 
   override fun fetchRange(range: LongRange): List<SourceRecord> {
 
-    val startMs = System.currentTimeMillis()
+    try {
 
-    val futures = range
-      .chunked(chunkSize)
-      .map { chunk ->
-        val chunkedRange = LongRange(chunk.first(), chunk.last())
-        executor.submit(FetchTask(chunkedRange, parity, maxRequestTraceCount))
+      val startMs = System.currentTimeMillis()
+
+      val futures = range
+        .chunked(chunkSize)
+        .map { chunk ->
+          val chunkedRange = LongRange(chunk.first(), chunk.last())
+          executor.submit(FetchTask(chunkedRange, parity, maxRequestTraceCount))
+        }
+
+      val fetchResults = futures
+        .map { it.get(10, TimeUnit.SECONDS) }
+
+      val (blockTimestamps, blockRecordsList) = fetchResults
+        .fold(Pair(sortedMapOf<BigInteger, Long>(), emptyList<BlockRecords>()), { memo, next ->
+          Pair(
+            (memo.first + next.blockTimestamps).toSortedMap(),
+            memo.second + next.blockRecords
+          )
+        })
+
+      var totalTraceCount = 0
+      var totalTxCount = 0
+
+      val records = blockRecordsList.map { blockRecords ->
+
+        val (key, header, txList, receiptList, traceList, uncleList) = blockRecords
+
+        val blockNumber = header.getNumberBI()
+
+        val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
+          null -> 0 // should only occur for genesis block
+          else -> header.timestamp - prevTimestamp
+        }
+
+        val partitionOffset = mapOf("blockNumber" to blockNumber.toLong())
+
+        val blockWithTimestamp = BlockHeaderRecord
+          .newBuilder(header)
+          .setBlockTime((blockTime / 1000).toInt()) // seconds
+          .build()
+
+        val keySchemaAndValue = AvroToConnect.toConnectData(key)
+        val valueSchemaAndValue = AvroToConnect.toConnectData(blockWithTimestamp)
+
+        val headerSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            blocksTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            valueSchemaAndValue.schema(),
+            valueSchemaAndValue.value()
+          )
+
+        val uncleListValueSchemaAndValue = AvroToConnect.toConnectData(uncleList)
+
+        val unclesSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            unclesTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            uncleListValueSchemaAndValue.schema(),
+            uncleListValueSchemaAndValue.value()
+          )
+
+        val txListValueSchemaAndValue = AvroToConnect.toConnectData(txList)
+
+        val txsSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            txTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            txListValueSchemaAndValue.schema(),
+            txListValueSchemaAndValue.value()
+          )
+
+        val receiptListValueSchemaAndValue = AvroToConnect.toConnectData(receiptList)
+
+        val receiptsSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            receiptsTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            receiptListValueSchemaAndValue.schema(),
+            receiptListValueSchemaAndValue.value()
+          )
+
+
+        val traceListValueSchemaAndValue = AvroToConnect.toConnectData(traceList)
+
+        val tracesSourceRecord =
+          SourceRecord(
+            partitionKey,
+            partitionOffset,
+            tracesTopic,
+            keySchemaAndValue.schema(),
+            keySchemaAndValue.value(),
+            traceListValueSchemaAndValue.schema(),
+            traceListValueSchemaAndValue.value()
+          )
+
+        totalTxCount += txList.transactions.size
+        totalTraceCount += traceList.traces.size
+
+        listOf(headerSourceRecord, unclesSourceRecord, txsSourceRecord, receiptsSourceRecord, tracesSourceRecord)
+      }.flatten()
+
+      cleanTimestamps()
+
+      val elapsedMs = System.currentTimeMillis() - startMs
+      val count = range.last - range.first
+
+      val avgTraceCount = when {
+        totalTxCount > 0 -> totalTraceCount / totalTxCount
+        else -> 0
       }
 
-    val fetchResults = futures
-      .map { it.get(10, TimeUnit.SECONDS) }
+      val percentageOfTargetFetchTime = elapsedMs.toFloat() / targetFetchTimeMs
 
-    val (blockTimestamps, blockRecordsList) = fetchResults
-      .fold(Pair(sortedMapOf<BigInteger, Long>(), emptyList<BlockRecords>()), { memo, next ->
-        Pair(
-          (memo.first + next.blockTimestamps).toSortedMap(),
-          memo.second + next.blockRecords
-        )
-      })
+      // Adjust batch size to try and meet target fetch time in order to present consistent load to parity
 
-    var totalTraceCount = 0
-    var totalTxCount = 0
+      if (count > 0) {
 
-    val records = blockRecordsList.map { blockRecords ->
+        logger.debug { "Fetched $count blocks. Batch size = $batchSize, elapsed ms = $elapsedMs, percentage of target fetch time = $percentageOfTargetFetchTime, total trace count = $totalTraceCount, Avg trace count = $avgTraceCount" }
 
-      val (key, header, txList, receiptList, traceList, uncleList) = blockRecords
+        batchSize = when {
+          percentageOfTargetFetchTime < 0.5 -> batchSize * 2
+          percentageOfTargetFetchTime > 1.5 -> batchSize / 2
+          else -> batchSize
+        }
 
-      val blockNumber = header.getNumberBI()
-
-      val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
-        null -> 0 // should only occur for genesis block
-        else -> header.timestamp - prevTimestamp
       }
 
-      val partitionOffset = mapOf("blockNumber" to blockNumber.toLong())
+      return records
 
-      val blockWithTimestamp = BlockHeaderRecord
-        .newBuilder(header)
-        .setBlockTime((blockTime / 1000).toInt()) // seconds
-        .build()
-
-      val keySchemaAndValue = AvroToConnect.toConnectData(key)
-      val valueSchemaAndValue = AvroToConnect.toConnectData(blockWithTimestamp)
-
-      val headerSourceRecord =
-        SourceRecord(
-          partitionKey,
-          partitionOffset,
-          blocksTopic,
-          keySchemaAndValue.schema(),
-          keySchemaAndValue.value(),
-          valueSchemaAndValue.schema(),
-          valueSchemaAndValue.value()
-        )
-
-      val uncleListValueSchemaAndValue = AvroToConnect.toConnectData(uncleList)
-
-      val unclesSourceRecord =
-        SourceRecord(
-          partitionKey,
-          partitionOffset,
-          unclesTopic,
-          keySchemaAndValue.schema(),
-          keySchemaAndValue.value(),
-          uncleListValueSchemaAndValue.schema(),
-          uncleListValueSchemaAndValue.value()
-        )
-
-      val txListValueSchemaAndValue = AvroToConnect.toConnectData(txList)
-
-      val txsSourceRecord =
-        SourceRecord(
-          partitionKey,
-          partitionOffset,
-          txTopic,
-          keySchemaAndValue.schema(),
-          keySchemaAndValue.value(),
-          txListValueSchemaAndValue.schema(),
-          txListValueSchemaAndValue.value()
-        )
-
-      val receiptListValueSchemaAndValue = AvroToConnect.toConnectData(receiptList)
-
-      val receiptsSourceRecord =
-        SourceRecord(
-          partitionKey,
-          partitionOffset,
-          receiptsTopic,
-          keySchemaAndValue.schema(),
-          keySchemaAndValue.value(),
-          receiptListValueSchemaAndValue.schema(),
-          receiptListValueSchemaAndValue.value()
-        )
-
-
-      val traceListValueSchemaAndValue = AvroToConnect.toConnectData(traceList)
-
-      val tracesSourceRecord =
-        SourceRecord(
-          partitionKey,
-          partitionOffset,
-          tracesTopic,
-          keySchemaAndValue.schema(),
-          keySchemaAndValue.value(),
-          traceListValueSchemaAndValue.schema(),
-          traceListValueSchemaAndValue.value()
-        )
-
-      totalTxCount += txList.transactions.size
-      totalTraceCount += traceList.traces.size
-
-      listOf(headerSourceRecord, unclesSourceRecord, txsSourceRecord, receiptsSourceRecord, tracesSourceRecord)
-    }.flatten()
-
-    cleanTimestamps()
-
-    val elapsedMs = System.currentTimeMillis() - startMs
-    val count = range.last - range.first
-
-    val avgTraceCount = when {
-      totalTxCount > 0 -> totalTraceCount / totalTxCount
-      else -> 0
+    } catch (ex: TimeoutException) {
+      // parity is probably under high load
+      throw RetriableException(ex)
     }
 
-    val percentageOfTargetFetchTime = elapsedMs.toFloat() / targetFetchTimeMs
-
-    // Adjust batch size to try and meet target fetch time in order to present consistent load to parity
-
-    if(count > 0) {
-
-      logger.debug { "Fetched $count blocks. Batch size = $batchSize, elapsed ms = $elapsedMs, percentage of target fetch time = $percentageOfTargetFetchTime, total trace count = $totalTraceCount, Avg trace count = $avgTraceCount" }
-
-      batchSize = when {
-        percentageOfTargetFetchTime < 0.5 -> batchSize * 2
-        percentageOfTargetFetchTime > 1.5 -> batchSize / 2
-        else -> batchSize
-      }
-
-    }
-
-    return records
   }
 
   private fun cleanTimestamps() {
