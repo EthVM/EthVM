@@ -45,13 +45,15 @@ class ParityFullBlockSource(
 
   private val blockTimestamps = sortedMapOf<BigInteger, Long>()
 
-  override val batchSize = 16
+  override var batchSize = 16
 
   private val noThreads = 4
 
+  private var targetFetchTimeMs = 1000
+
   private val chunkSize = batchSize / noThreads
 
-  private val maxTraceCount = 1000
+  private val maxRequestTraceCount = 1000
 
   private val executor = Executors.newFixedThreadPool(noThreads)
 
@@ -63,7 +65,7 @@ class ParityFullBlockSource(
       .chunked(chunkSize)
       .map { chunk ->
         val chunkedRange = LongRange(chunk.first(), chunk.last())
-        executor.submit(FetchTask(chunkedRange, parity, maxTraceCount))
+        executor.submit(FetchTask(chunkedRange, parity, maxRequestTraceCount))
       }
 
     val fetchResults = futures
@@ -176,13 +178,26 @@ class ParityFullBlockSource(
     val elapsedMs = System.currentTimeMillis() - startMs
     val count = range.last - range.first
 
-
     val avgTraceCount = when {
       totalTxCount > 0 -> totalTraceCount / totalTxCount
       else -> 0
     }
 
-    logger.debug { "Fetched $count blocks. Elapsed ms = $elapsedMs, Total trace count = $totalTraceCount, Avg trace count = $avgTraceCount" }
+    val percentageOfTargetFetchTime = elapsedMs.toFloat() / targetFetchTimeMs
+
+    // Adjust batch size to try and meet target fetch time in order to present consistent load to parity
+
+    if(count > 0) {
+
+      logger.debug { "Fetched $count blocks. Batch size = $batchSize, elapsed ms = $elapsedMs, percentage of target fetch time = $percentageOfTargetFetchTime, total trace count = $totalTraceCount, Avg trace count = $avgTraceCount" }
+
+      batchSize = when {
+        percentageOfTargetFetchTime < 0.5 -> batchSize * 2
+        percentageOfTargetFetchTime > 1.5 -> batchSize / 2
+        else -> batchSize
+      }
+
+    }
 
     return records
   }
