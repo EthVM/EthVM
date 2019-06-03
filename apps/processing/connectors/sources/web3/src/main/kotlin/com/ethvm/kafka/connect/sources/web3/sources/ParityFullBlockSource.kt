@@ -51,17 +51,17 @@ class ParityFullBlockSource(
 
   private val noThreads = 4
 
-  private var targetFetchTimeMs = 2000
+  private var targetFetchTimeMs = 1000
 
-  private val chunkSize = batchSize / noThreads
-
-  private val maxRequestTraceCount = 4000
+  private val maxRequestTraceCount = 2000
 
   private val executor = Executors.newFixedThreadPool(noThreads)
 
   override fun fetchRange(range: LongRange): List<SourceRecord> {
 
     try {
+
+      val chunkSize = batchSize / noThreads
 
       val startMs = System.currentTimeMillis()
 
