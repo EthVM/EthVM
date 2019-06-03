@@ -9,6 +9,7 @@ import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
+import org.joda.time.DateTime
 import java.util.Properties
 
 class BlockAuthorProcessor : AbstractKafkaProcessor() {
@@ -37,6 +38,7 @@ class BlockAuthorProcessor : AbstractKafkaProcessor() {
             .setAuthor(v.getAuthor())
             .setBlockNumber(v.getNumber())
             .setBlockHash(v.getHash())
+            .setTimestamp(DateTime(v.getTimestamp()))
             .build()
         }
       }.toTopic(CanonicalBlockAuthor)

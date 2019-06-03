@@ -46,9 +46,22 @@ list_topics() {
 
 # TODO: reset_topics - reset registered Kafka topics (if any)
 reset_streams() {
-#  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id canonical-processor --input-topics canonical-chain"
-  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id ether-balance-processor --input-topics canonical-traces,canonical-receipts,canonical-blocks,canonical-transactions,canonical-transaction-fees"
-  docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id logger-processor --input-topics ether-balance-deltas,ether-balances,transaction-fees,transaction-ether-balance-deltas,canonical-transactions-concurrent"
+
+  declare -A topics=(\
+    ['block-author-processor']='canonical_block_header' \
+    ['block-metrics-processor']='canonical_block_header,canonical_transactions,canonical_transaction_fees,canonical_traces' \
+    ['contract-lifecycle-processor']='canonical_traces,canonical_contract_lifecycle,contract_lifecycle_events' \
+    ['contract-metadata-processor']='contract' \
+    ['flat-map-processor']='canonical_uncles,canonical_transactions,canonical_receipts,canonical_traces' \
+    ['fungible-balance-processor']='fungible_balance_delta,fungible_balance,canonical_block_header,canonical_traces,canonical_traces_ether_deltas,canonical_transaction_fees,canonical_transaction_fees_ether_deltas,canonical_block_author,canonical_miner_fees_ether_deltas,canonical_receipts,canonical_receipt_erc20_deltas' \
+    ['non-fungible-balance-processor']='non_fungible_balance_delta,non_fungible_balance,canonical_receipts,canonical_receipt_erc721_deltas,' \
+    ['transaction-fees-processor']='canonical_transactions,canonical_receipts,canonical_gas_prices,canonical_gas_used,' \
+  )
+
+  for processor in "${!topics[@]}"; do
+    docker-compose exec kafka-1 sh -c "kafka-streams-application-reset --zookeeper zookeeper:2181 --bootstrap-servers kafka-1:9091 --application-id ${processor} --input-topics ${topics[${processor}]}"
+  done
+
 }
 
 run() {

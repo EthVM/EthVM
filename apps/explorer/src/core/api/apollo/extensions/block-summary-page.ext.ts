@@ -11,7 +11,7 @@ export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
   numTxs: any
   number: any
   reward: any
-  timestamp!: number
+  timestamp!: any
   transactionHashes!: string[]
   uncleHashes!: string[]
 
@@ -44,7 +44,7 @@ export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
   }
 
   get timestampDate(): Date {
-    return new Date(+this.timestamp * 1000)
+    return new Date(this.timestamp)
   }
 }
 

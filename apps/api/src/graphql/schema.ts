@@ -119,7 +119,7 @@ export interface Balance {
     tokenType?: string;
     amount: BigNumber;
     balance: BigNumber;
-    timestamp: number;
+    timestamp: Date;
 }
 
 export interface BalancesPage {
@@ -150,7 +150,7 @@ export interface BlockHeader {
     extraData: string;
     gasLimit: BigNumber;
     gasUsed: BigNumber;
-    timestamp: number;
+    timestamp: Date;
     size: number;
     blockTime: number;
 }
@@ -192,7 +192,7 @@ export interface BlockSummary {
     uncleHashes: string[];
     transactionHashes: string[];
     difficulty: BigNumber;
-    timestamp: number;
+    timestamp: Date;
 }
 
 export interface BlockSummaryPage {
@@ -233,6 +233,7 @@ export interface Contract {
     totalSupply?: BigNumber;
     createdAtTx?: Transaction;
     createdAtTxSummary?: TransactionSummary;
+    timestamp?: Date;
 }
 
 export interface ContractLogo {
@@ -274,7 +275,7 @@ export interface ContractSummary {
     blockNumber: BigNumber;
     txHash: string;
     txFee: BigNumber;
-    timestamp: number;
+    timestamp: Date;
 }
 
 export interface ContractSummaryPage {
@@ -288,9 +289,9 @@ export interface ContractSupport {
 }
 
 export interface IQuery {
+    accountByAddress(address: string): Account | Promise<Account>;
     blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
-    accountByAddress(address: string): Account | Promise<Account>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
@@ -450,7 +451,7 @@ export interface Transaction {
     v: string;
     r: string;
     s: string;
-    timestamp: number;
+    timestamp: Date;
     creates?: string;
     chainId?: string;
     receipt?: Receipt;
@@ -470,7 +471,7 @@ export interface TransactionSummary {
     value: BigNumber;
     fee: BigNumber;
     successful: boolean;
-    timestamp: number;
+    timestamp: Date;
 }
 
 export interface TransactionSummaryPage {
@@ -492,7 +493,7 @@ export interface Transfer {
     traceLocationTransactionIndex?: number;
     traceLocationLogIndex?: number;
     traceLocationTraceAddress?: string;
-    timestamp: number;
+    timestamp: Date;
 }
 
 export interface TransferPage {
@@ -520,7 +521,7 @@ export interface Uncle {
     extraData: string;
     gasLimit: BigNumber;
     gasUsed: BigNumber;
-    timestamp: number;
+    timestamp: Date;
     size: number;
     rewardAmount: BigNumber;
 }

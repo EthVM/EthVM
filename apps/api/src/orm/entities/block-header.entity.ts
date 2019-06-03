@@ -59,8 +59,8 @@ export class BlockHeaderEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   gasUsed!: BigNumber
 
-  @Column({ type: 'int', readonly: true })
-  timestamp!: number
+  @Column({ type: 'timestamp', readonly: true })
+  timestamp!: Date
 
   @Column({ type: 'text', readonly: true })
   uncleHashes!: string

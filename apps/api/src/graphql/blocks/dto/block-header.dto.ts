@@ -20,7 +20,7 @@ export class BlockHeaderDto implements BlockHeader {
   sha3Uncles!: string
   size!: number
   stateRoot!: string
-  timestamp!: number
+  timestamp!: Date
   totalDifficulty!: BigNumber
   transactionsRoot!: string
 

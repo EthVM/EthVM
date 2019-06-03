@@ -15,5 +15,10 @@ export class AccountDto implements Account {
 
   constructor(data: any) {
     assignClean(this, data)
+
+    // default counts
+    this.inTxCount = this.inTxCount || 0;
+    this.outTxCount = this.outTxCount || 0;
+    this.totalTxCount = this.totalTxCount || 0;
   }
 }

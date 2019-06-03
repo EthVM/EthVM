@@ -6,6 +6,7 @@ protocol Common {
   }
 
   record TraceLocationRecord {
+    timestamp_ms timestamp = 0;
     union { null, string } blockHash = null;
     union { null, decimal(80,0) } blockNumber = null;
     union { null, string } transactionHash = null;

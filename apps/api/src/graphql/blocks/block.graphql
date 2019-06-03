@@ -28,7 +28,7 @@ type BlockSummary {
   uncleHashes: [String!]!
   transactionHashes: [String!]!
   difficulty: BigNumber!
-  timestamp: Int!
+  timestamp: Date!
 }
 
 type BlockSummaryPage {
@@ -59,7 +59,7 @@ type BlockHeader {
   extraData: String!
   gasLimit: BigNumber!
   gasUsed: BigNumber!
-  timestamp: Int!
+  timestamp: Date!
   size: Int!
   blockTime: Int!
 }

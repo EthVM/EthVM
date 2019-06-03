@@ -23,10 +23,12 @@ import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleBalanceRecord
 import com.ethvm.avro.processing.FungibleTokenType
 import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
+import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.avro.processing.TransactionFeeListRecord
 import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
+import org.joda.time.DateTime
 import java.math.BigInteger
 
 fun ParitySyncStateRecord.Builder.setHeadBI(head: BigInteger) = setHead(head.byteBuffer())
@@ -40,6 +42,24 @@ fun ParitySyncStateRecord.Builder.setNumberBI(number: BigInteger) = setNumber(nu
 fun CanonicalKeyRecord.getNumberBI() = getNumber().bigInteger()
 
 fun CanonicalKeyRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
+
+// ------------------------------------------------------------
+// TransactionReceiptRecord
+// ------------------------------------------------------------
+
+fun UncleRecord.getHeightBI() = getHeight().bigInteger()
+
+// ------------------------------------------------------------
+// TransactionReceiptRecord
+// ------------------------------------------------------------
+
+fun TransactionReceiptRecord.getBlockNumberBI() = getBlockNumber().bigInteger()
+
+// ------------------------------------------------------------
+// TraceRecord
+// ------------------------------------------------------------
+
+fun TraceRecord.getBlockNumberBI() = getBlockNumber().bigInteger()
 
 // ------------------------------------------------------------
 // TraceCallActionRecord
@@ -92,7 +112,7 @@ fun TraceRecord.hasError(): Boolean {
   return error != null && error.isNotBlank()
 }
 
-fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
+fun TraceRecord.toContractLifecycleRecord(timestamp: DateTime): ContractLifecycleRecord? {
 
   // error check first
   val error = getError()
@@ -112,13 +132,14 @@ fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
         .setCreator(action.getFrom())
         .setInit(action.getInit())
         .setCode(getResult().getCode())
-
+        .setTimestamp(timestamp)
         .setCreatedAt(
           TraceLocationRecord.newBuilder()
             .setBlockNumber(getBlockNumber())
             .setBlockHash(getBlockHash())
             .setTransactionHash(getTransactionHash())
             .setTraceAddress(getTraceAddress())
+            .setTimestamp(timestamp)
             .build()
         ).build()
 
@@ -129,12 +150,14 @@ fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
         .setType(ContractLifecyleType.DESTROY)
         .setRefundAddress(action.getRefundAddress())
         .setRefundBalance(action.getBalance())
+        .setTimestamp(timestamp)
         .setDestroyedAt(
           TraceLocationRecord.newBuilder()
             .setBlockNumber(getBlockNumber())
             .setBlockHash(getBlockHash())
             .setTransactionHash(getTransactionHash())
             .setTraceAddress(getTraceAddress())
+            .setTimestamp(timestamp)
             .build()
         ).build()
 
@@ -142,7 +165,7 @@ fun TraceRecord.toContractLifecycleRecord(): ContractLifecycleRecord? {
   }
 }
 
-fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
+fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalanceDeltaRecord> {
 
   // error check first
   val error = getError()
@@ -157,6 +180,7 @@ fun TraceRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> {
     .setBlockHash(getBlockHash())
     .setTransactionHash(getTransactionHash())
     .setTraceAddress(getTraceAddress())
+    .setTimestamp(timestamp)
     .build()
 
   return when (action) {
@@ -292,6 +316,8 @@ fun TransactionRecord.getGasBI() = getGas().bigInteger()
 // BlockHeaderRecord
 // ------------------------------------------------------------
 
+fun BlockHeaderRecord.getNumberBI() = getNumber().bigInteger()
+
 fun BlockHeaderRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
 fun BlockHeaderRecord.Builder.setNonceBI(nonce: BigInteger?) = setNonce(nonce?.byteBuffer())
@@ -312,7 +338,7 @@ fun UncleRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteB
 
 fun UncleRecord.Builder.setHeightBI(number: BigInteger) = setHeight(number.byteBuffer())
 
-fun UncleRecord.Builder.setNonceBI(nonce: BigInteger) = setNonce(nonce.byteBuffer())
+fun UncleRecord.Builder.setNonceBI(nonce: BigInteger?) = setNonce(nonce?.byteBuffer())
 
 fun UncleRecord.Builder.setGasLimitBI(gasLimit: BigInteger) = setGasLimit(gasLimit.byteBuffer())
 
@@ -388,6 +414,7 @@ fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
         .setBlockHash(getBlockHash())
         .setBlockNumber(getBlockNumber())
         .setTransactionHash(getTransactionHash())
+        .setTimestamp(getTimestamp())
         .build()
     )
     .setAddress(getAddress())
@@ -432,9 +459,11 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       var deltas = emptyList<FungibleBalanceDeltaRecord>()
 
+      val timestamp = DateTime(getTimestamp())
+
       deltas = if (key.second == null) {
         // dealing with block and uncle rewards
-        deltas + traces.map { it.toFungibleBalanceDeltas() }.flatten()
+        deltas + traces.map { it.toFungibleBalanceDeltas(timestamp) }.flatten()
       } else {
 
         // all other traces
@@ -443,7 +472,7 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
         deltas + when (root.hasError()) {
           true -> emptyList()
           false -> traces
-            .map { trace -> trace.toFungibleBalanceDeltas() }
+            .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
             .flatten()
         }
       }
@@ -451,3 +480,14 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null && delta.getAmountBI() != BigInteger.ZERO }
+
+// ------------------------------------------------------------
+// TransactionCountDeltaRecord
+// ------------------------------------------------------------
+
+fun TransactionCountDeltaRecord.reverse() =
+  TransactionCountDeltaRecord.newBuilder()
+    .setAddress(this.address)
+    .setIn(this.`in` * -1)
+    .setOut(this.out * -1)
+    .build()

@@ -12,7 +12,7 @@ export class BlockSummaryDto implements BlockSummary {
   numTxs!: BigNumber
   number!: BigNumber
   reward!: BigNumber
-  timestamp!: number
+  timestamp!: Date
   transactionHashes!: string[]
   uncleHashes!: string[]
 

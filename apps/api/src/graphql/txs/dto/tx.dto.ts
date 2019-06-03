@@ -21,7 +21,7 @@ export class TxDto implements Transaction {
   v!: string;
   r!: string;
   s!: string;
-  timestamp!: number;
+  timestamp!: Date;
   creates?: string;
   chainId?: string;
   receipt?: TxReceiptDto;

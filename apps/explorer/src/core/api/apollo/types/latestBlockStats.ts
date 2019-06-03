@@ -9,7 +9,7 @@
 export interface latestBlockStats_blockSummaries_items {
   __typename: "BlockSummary";
   number: any;
-  timestamp: number;
+  timestamp: any;
   difficulty: any;
   numSuccessfulTxs: any;
   numFailedTxs: any;

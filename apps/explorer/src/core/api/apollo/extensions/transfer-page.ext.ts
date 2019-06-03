@@ -8,7 +8,7 @@ export class TransferPageExt_items implements TransferPage_items {
   deltaType!: DeltaType
   from: string | null
   id!: string
-  timestamp!: number
+  timestamp!: any
   to!: string
   transactionHash: string | null
   value: any
@@ -30,7 +30,7 @@ export class TransferPageExt_items implements TransferPage_items {
   }
 
   get timestampDate(): Date | null {
-    return this.timestamp ? new Date(+this.timestamp * 1000) : null
+    return this.timestamp ? new Date(this.timestamp) : null
   }
 }
 

@@ -11,7 +11,7 @@ export class UncleDetailExt implements UncleDetail {
   number: any
   parentHash!: string
   sha3Uncles!: string
-  timestamp!: number
+  timestamp!: any
   uncleIndex!: number
 
   constructor(detail: UncleDetail) {
@@ -35,10 +35,10 @@ export class UncleDetailExt implements UncleDetail {
   }
 
   get timestampDate(): Date {
-    return new Date(this.timestamp * 1000)
+    return new Date(this.timestamp)
   }
 
   get timestampMs(): number {
-    return this.timestamp * 1000
+    return this.timestamp
   }
 }

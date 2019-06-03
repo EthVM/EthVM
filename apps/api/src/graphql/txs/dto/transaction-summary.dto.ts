@@ -14,7 +14,7 @@ export class TransactionSummaryDto implements TransactionSummary {
   value!: BigNumber
   fee!: BigNumber
   successful!: boolean
-  timestamp!: number
+  timestamp!: Date
 
   constructor(data: any) {
     assignClean(this, data)

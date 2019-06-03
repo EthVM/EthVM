@@ -22,7 +22,7 @@ export class BlockDetailExt_header implements BlockDetail_header {
   sha3Uncles!: string
   size!: number
   stateRoot!: string
-  timestamp!: number
+  timestamp!: any
   totalDifficulty!: any
   transactionsRoot!: string
 
@@ -55,7 +55,7 @@ export class BlockDetailExt_header implements BlockDetail_header {
   }
 
   get timestampMs(): number {
-    return this.timestamp * 1000
+    return this.timestamp
   }
 }
 

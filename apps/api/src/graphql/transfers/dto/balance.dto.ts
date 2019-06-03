@@ -11,7 +11,7 @@ export class BalanceDto implements Balance {
   tokenType?: string;
   amount!: BigNumber;
   balance!: BigNumber;
-  timestamp!: number;
+  timestamp!: Date;
   // traceLocationBlockHash!: string;
   // traceLocationBlockNumber!: BigNumber;
   // traceLocationTransactionHash?: string;

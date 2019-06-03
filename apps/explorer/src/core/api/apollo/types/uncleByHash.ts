@@ -15,7 +15,7 @@ export interface uncleByHash_uncleDetail {
   hash: string;
   parentHash: string;
   sha3Uncles: string;
-  timestamp: number;
+  timestamp: any;
   nephewNumber: any;
   uncleIndex: number;
 }

@@ -22,6 +22,12 @@ const mockService = {
   async findAccountByAddress(address: string) {
     const data = accounts[address]
     return data ? new AccountEntity(data) : null
+  },
+  async findIsMiner(address: string) {
+    return false
+  },
+  async findIsContractCreator(address: string) {
+    return false
   }
 }
 
@@ -76,7 +82,9 @@ describe('AccountResolvers', () => {
 
       expect(account1).toEqual(
         new AccountDto({
-          address: address1
+          address: address1,
+          isContractCreator: false,
+          isMiner: false
         })
       )
     })

@@ -7,21 +7,19 @@ import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractRecord
 import com.ethvm.avro.capture.TraceListRecord
-import com.ethvm.avro.capture.TraceRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
 import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleListRecord
 import com.ethvm.avro.capture.UncleRecord
+import com.ethvm.avro.processing.AccountKeyRecord
 import com.ethvm.avro.processing.BlockAuthorRecord
-import com.ethvm.avro.processing.BlockKeyRecord
 import com.ethvm.avro.processing.BlockMetricKeyRecord
 import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
-import com.ethvm.avro.processing.BlockTimestampRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
@@ -33,6 +31,9 @@ import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleBalanceRecord
 import com.ethvm.avro.processing.TraceKeyRecord
+import com.ethvm.avro.processing.TransactionCountDeltaListRecord
+import com.ethvm.avro.processing.TransactionCountDeltaRecord
+import com.ethvm.avro.processing.TransactionCountRecord
 import com.ethvm.avro.processing.TransactionFeeListRecord
 import com.ethvm.avro.processing.TransactionGasPriceListRecord
 import com.ethvm.avro.processing.TransactionGasUsedListRecord
@@ -71,6 +72,22 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
+  fun TransactionCountDeltaList() = SpecificAvroSerde<TransactionCountDeltaListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TransactionCountDelta() = SpecificAvroSerde<TransactionCountDeltaRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun AccountKey() = SpecificAvroSerde<AccountKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun TransactionCount() = SpecificAvroSerde<TransactionCountRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
   fun NonFungibleBalanceKey() = SpecificAvroSerde<NonFungibleBalanceKeyRecord>(registryClient).apply {
     configure(config, true)
   }
@@ -92,10 +109,6 @@ object Serdes : KoinComponent {
   }
 
   fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
-    configure(config, true)
-  }
-
-  fun BlockKey() = SpecificAvroSerde<BlockKeyRecord>(registryClient).apply {
     configure(config, true)
   }
 
@@ -128,10 +141,6 @@ object Serdes : KoinComponent {
   }
 
   fun TransactionReceipt() = SpecificAvroSerde<TransactionReceiptRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun Trace() = SpecificAvroSerde<TraceRecord>(registryClient).apply {
     configure(config, false)
   }
 
@@ -172,10 +181,6 @@ object Serdes : KoinComponent {
   }
 
   fun Erc721Metadata() = SpecificAvroSerde<Erc721MetadataRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun BlockTimestamp() = SpecificAvroSerde<BlockTimestampRecord>(registryClient).apply {
     configure(config, false)
   }
 

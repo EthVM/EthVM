@@ -23,6 +23,7 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
+import org.joda.time.DateTime
 import java.time.Duration
 import java.util.Properties
 
@@ -47,47 +48,60 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
     CanonicalTransactions.stream(builder)
       .mapValues { transactionsList ->
 
-        val blockHash = transactionsList.getTransactions().firstOrNull()?.getBlockHash()
+        if (transactionsList == null) {
+          // pass through the tombstone
+          null
+        } else {
 
-        when (transactionsList) {
-          null -> null
-          else ->
-            TransactionGasPriceListRecord.newBuilder()
-              .setBlockHash(blockHash)
-              .setGasPrices(
-                transactionsList.getTransactions()
-                  .map { tx ->
-                    TransactionGasPriceRecord.newBuilder()
-                      .setBlockNumber(tx.getBlockNumber())
-                      .setBlockHash(tx.getBlockHash())
-                      .setTransactionHash(tx.getHash())
-                      .setTransactionPosition(tx.getTransactionIndex())
-                      .setAddress(tx.getFrom())
-                      .setGasPrice(tx.getGasPrice())
-                      .build()
-                  }
-              ).build()
+          val blockHash = transactionsList.getTransactions().firstOrNull()?.getBlockHash()
+
+          when (transactionsList) {
+            null -> null
+            else ->
+              TransactionGasPriceListRecord.newBuilder()
+                .setBlockHash(blockHash)
+                .setTimestamp(DateTime(transactionsList.getTimestamp()))
+                .setGasPrices(
+                  transactionsList.getTransactions()
+                    .map { tx ->
+                      TransactionGasPriceRecord.newBuilder()
+                        .setBlockNumber(tx.getBlockNumber())
+                        .setBlockHash(tx.getBlockHash())
+                        .setTransactionHash(tx.getHash())
+                        .setTransactionPosition(tx.getTransactionIndex())
+                        .setAddress(tx.getFrom())
+                        .setGasPrice(tx.getGasPrice())
+                        .build()
+                    }
+                ).build()
+          }
         }
       }.toTopic(CanonicalGasPrices)
 
     CanonicalReceipts.stream(builder)
       .mapValues { receiptsList ->
 
-        val blockHash = receiptsList.getReceipts().firstOrNull()?.getBlockHash()
+        if (receiptsList == null) {
+          // pass through the tombstone
+          null
+        } else {
+          val blockHash = receiptsList.getReceipts().firstOrNull()?.getBlockHash()
 
-        when (receiptsList) {
-          null -> null
-          else ->
-            TransactionGasUsedListRecord.newBuilder()
-              .setBlockHash(blockHash)
-              .setGasUsed(
-                receiptsList.getReceipts()
-                  .map { receipt ->
-                    TransactionGasUsedRecord.newBuilder()
-                      .setGasUsed(receipt.getGasUsed())
-                      .build()
-                  }
-              ).build()
+          when (receiptsList) {
+            null -> null
+            else ->
+              TransactionGasUsedListRecord.newBuilder()
+                .setTimestamp(DateTime(receiptsList.getTimestamp()))
+                .setBlockHash(blockHash)
+                .setGasUsed(
+                  receiptsList.getReceipts()
+                    .map { receipt ->
+                      TransactionGasUsedRecord.newBuilder()
+                        .setGasUsed(receipt.getGasUsed())
+                        .build()
+                    }
+                ).build()
+          }
         }
       }.toTopic(CanonicalGasUsed)
 
@@ -96,7 +110,10 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
         CanonicalGasUsed.stream(builder),
         { left, right ->
 
-          if (left.getBlockHash() != right.getBlockHash()) {
+          // null values do no trigger the join, so in a re-org scenario we will only re-emit
+          // once the tombstones have arrived and subsequent updates take their place
+
+          if (left!!.getBlockHash() != right!!.getBlockHash()) {
 
             // We're in the middle of an update/fork so we publish a tombstone
             null
@@ -105,8 +122,16 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
             val gasPrices = left.getGasPrices()
             val gasUsage = right.getGasUsed()
 
+            // use the latest timestamp
+            val timestamp = if (left.timestamp <= right.timestamp) {
+              right.timestamp
+            } else {
+              left.timestamp
+            }
+
             TransactionFeeListRecord.newBuilder()
               .setBlockHash(left.getBlockHash())
+              .setTimestamp(timestamp)
               .setTransactionFees(
 
                 // prices and usages should be in the same transaction order so we just zip them
@@ -124,6 +149,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                       .setTransactionPosition(gasPrice.getTransactionPosition())
                       .setAddress(gasPrice.getAddress())
                       .setTransactionFeeBI(fee)
+                      .setTimestamp(timestamp)
                       .build()
                   }
               ).build()

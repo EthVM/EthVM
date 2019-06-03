@@ -12,7 +12,7 @@ export interface ContractSummaryPage_items {
   creator: string;
   blockNumber: any;
   txHash: string;
-  timestamp: number;
+  timestamp: any;
   txFee: any;
 }
 

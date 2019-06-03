@@ -25,7 +25,7 @@ export interface blockByHash_blockDetail_header {
   extraData: string;
   gasLimit: any;
   gasUsed: any;
-  timestamp: number;
+  timestamp: any;
   size: number;
   blockTime: number;
 }

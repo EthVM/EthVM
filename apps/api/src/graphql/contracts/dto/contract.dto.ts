@@ -27,6 +27,7 @@ export class ContractDto implements Contract {
   metadata?: ContractMetadata;
   totalSupply?: BigNumber;
   createdAtTx?: Transaction;
+  timestamp?: Date;
 
   constructor(data) {
 

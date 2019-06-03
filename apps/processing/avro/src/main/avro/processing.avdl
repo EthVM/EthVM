@@ -20,7 +20,7 @@ protocol Processing {
 
   record BlockMetricKeyRecord {
     string blockHash;
-    timestamp_ms timestamp = 0;
+    timestamp_ms timestamp;
   }
 
   record BlockKeyRecord {
@@ -37,6 +37,10 @@ protocol Processing {
 
   record TransactionReceiptKeyRecord {
     string transactionHash;
+  }
+
+  record AccountKeyRecord {
+    string address;
   }
 
   record TraceKeyRecord {
@@ -81,16 +85,23 @@ protocol Processing {
   }
 
   record FungibleBalanceRecord {
+    timestamp_ms timestamp = 0;
     decimal(80, 0) amount;
+    union { null, string } address = null;
+    union { null, string } contract = null;
   }
 
   record FungibleBalanceDeltaListRecord {
+    timestamp_ms timestamp = 0;
     boolean apply = true;
     array<FungibleBalanceDeltaRecord> deltas = [];
     array<FungibleBalanceDeltaRecord> reversals = [];
     union { null, string } blockHash = null;
   }
 
+  record FungibleBalanceDeltaListsRecord {
+    array<FungibleBalanceDeltaListRecord> deltaLists = [];
+  }
 //
 
   record NonFungibleBalanceKeyRecord {
@@ -118,9 +129,13 @@ protocol Processing {
   record NonFungibleBalanceRecord {
     com.ethvm.avro.common.TraceLocationRecord traceLocation;
     string address;
+
+    union { null, decimal(80, 0) } tokenId = null;
+    union { null, string } contract = null;
   }
 
   record NonFungibleBalanceDeltaListRecord {
+    timestamp_ms timestamp = 0;
     boolean apply = true;
     array<NonFungibleBalanceDeltaRecord> deltas = [];
     array<NonFungibleBalanceDeltaRecord> reversals = [];
@@ -133,6 +148,7 @@ protocol Processing {
     string author;
     decimal(80, 0) blockNumber;
     string blockHash;
+    timestamp_ms timestamp;
   }
 
   record TransactionGasPriceRecord {
@@ -147,6 +163,7 @@ protocol Processing {
   record TransactionGasPriceListRecord {
     array<TransactionGasPriceRecord> gasPrices;
     union { null, string } blockHash = null;
+    timestamp_ms timestamp;
   }
 
   record TransactionGasUsedRecord {
@@ -154,6 +171,7 @@ protocol Processing {
   }
 
   record TransactionGasUsedListRecord {
+    timestamp_ms timestamp = 0;
     array<TransactionGasUsedRecord> gasUsed;
     union { null, string } blockHash = null;
   }
@@ -165,17 +183,19 @@ protocol Processing {
     int transactionPosition;
     string address;
     decimal(80, 0) transactionFee;
+    timestamp_ms timestamp;
   }
 
   record TransactionFeeListRecord {
     array<TransactionFeeRecord> transactionFees;
     union { null, string } blockHash = null;
+    timestamp_ms timestamp;
   }
 
 // metrics
 
   record BlockTimestampRecord {
-    timestamp_ms timestamp = 0;
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsHeaderRecord {
@@ -186,7 +206,7 @@ protocol Processing {
     decimal(80, 0) difficulty;
     decimal(80, 0) totalDifficulty;
 
-    timestamp_ms timestamp = 0;
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsTransactionTraceRecord {
@@ -195,7 +215,7 @@ protocol Processing {
     int numFailedTxs;
     int numInternalTxs;
 
-    timestamp_ms timestamp = 0;
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsTransactionRecord {
@@ -203,14 +223,14 @@ protocol Processing {
     decimal(80, 0) avgGasLimit;
     decimal(80, 0) avgGasPrice;
 
-    timestamp_ms timestamp = 0;
+    timestamp_ms timestamp;
   }
 
   record BlockMetricsTransactionFeeRecord {
     decimal(80, 0) totalTxFees;
     decimal(80, 0) avgTxFees;
 
-    timestamp_ms timestamp = 0;
+    timestamp_ms timestamp;
   }
 
   record MetricKeyRecord {
@@ -228,7 +248,7 @@ protocol Processing {
 
   }
 
-// Processing Metadata
+  // Processing Metadata
 
   record ProcessingMetadataKeyRecord {
     string name;
@@ -256,12 +276,14 @@ protocol Processing {
   }
 
   record AddressMetadataRecord {
+    timestamp_ms timestamp;
     union { null, long } count = null;
     union { null, boolean } flag = null;
   }
 
 
   record Erc20MetadataRecord {
+    timestamp_ms timestamp;
     union { null, string } name = null;
     union { null, string } symbol = null;
     union { null, int } decimals = null;
@@ -269,8 +291,30 @@ protocol Processing {
   }
 
   record Erc721MetadataRecord {
+    timestamp_ms timestamp;
     union { null, string } name = null;
     union { null, string } symbol = null;
+  }
+
+  record TransactionCountDeltaRecord {
+    timestamp_ms timestamp = 0;
+    string address;
+    int in = 0;
+    int out = 0;
+  }
+
+  record TransactionCountDeltaListRecord {
+    boolean apply = true;
+    string blockHash;
+    timestamp_ms timestamp;
+    array<TransactionCountDeltaRecord> counts;
+    array<TransactionCountDeltaRecord> reversals = [];
+  }
+
+  record TransactionCountRecord {
+    timestamp_ms timestamp = 0;
+    long totalIn = 0;
+    long totalOut = 0;
   }
 
 }

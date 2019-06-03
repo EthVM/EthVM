@@ -15,7 +15,7 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
   value: any
   fee: any
   successful!: boolean
-  timestamp!: number
+  timestamp!: any
 
   constructor(proto: TransactionSummary) {
     Object.assign(this, proto)
@@ -38,7 +38,7 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
   }
 
   get timestampDate(): Date | null {
-    return this.timestamp ? new Date(+this.timestamp * 1000) : null
+    return this.timestamp ? new Date(this.timestamp) : null
   }
 }
 

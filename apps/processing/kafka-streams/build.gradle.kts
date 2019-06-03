@@ -20,9 +20,12 @@ dependencies {
   // Kotlin
   implementation(kotlin("stdlib"))
 
+  implementation(kotlin("reflect"))
+
   // Avro
   implementation(project(":common"))
   implementation(project(":avro"))
+
   implementation("joda-time:joda-time:2.10.1")
 
   // Ethereumj
@@ -36,6 +39,7 @@ dependencies {
 
   // Kafka
   implementation("org.apache.kafka:kafka-streams:2.1.1")
+  implementation("io.confluent:kafka-schema-registry-client:5.1.0")
   implementation("io.confluent:kafka-streams-avro-serde:5.1.0")
 
   // Utils

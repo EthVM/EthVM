@@ -25,7 +25,7 @@ type TransactionSummary {
   value: BigNumber!
   fee: BigNumber!
   successful: Boolean!
-  timestamp: Int!
+  timestamp: Date!
 }
 
 type TransactionSummaryPage {
@@ -48,7 +48,7 @@ type Transaction {
   v: String!
   r: String!
   s: String!
-  timestamp: Int!
+  timestamp: Date!
   creates: String
   chainId: String
   receipt: Receipt

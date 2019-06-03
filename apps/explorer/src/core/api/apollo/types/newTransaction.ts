@@ -19,7 +19,7 @@ export interface newTransaction_newTransaction {
   value: any;
   fee: any;
   successful: boolean;
-  timestamp: number;
+  timestamp: any;
 }
 
 export interface newTransaction {

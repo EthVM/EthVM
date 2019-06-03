@@ -1,0 +1,16 @@
+{
+  "name": "postgres-count-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": 1,
+    "topics": "transaction_count",
+    "insert.mode": "upsert",
+    "pk.mode": "record_key",
+    "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
+    "connection.user": "{{ .Env.POSTGRES_USER }}",
+    "connection.password": "{{ .Env.POSTGRES_PASSWORD }}",
+    "transforms": "snakeCaseKey,snakeCaseValue",
+    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value"
+  }
+}

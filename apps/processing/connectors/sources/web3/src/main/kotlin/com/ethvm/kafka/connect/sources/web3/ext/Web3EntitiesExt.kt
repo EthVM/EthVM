@@ -21,7 +21,6 @@ import com.ethvm.common.extensions.setGasBI
 import com.ethvm.common.extensions.setGasLimitBI
 import com.ethvm.common.extensions.setGasPriceBI
 import com.ethvm.common.extensions.setGasUsedBI
-import com.ethvm.common.extensions.setHeightBI
 import com.ethvm.common.extensions.setNonceBI
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.common.extensions.setTotalDifficultyBI
@@ -32,7 +31,6 @@ import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
-import java.math.BigInteger
 
 fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Int): BlockHeaderRecord.Builder =
   builder
@@ -55,19 +53,16 @@ fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, block
     .setExtraData(extraData)
     .setGasLimitBI(gasLimit)
     .setGasUsedBI(gasUsed)
-    .setTimestamp(timestamp.longValueExact())
+    .setTimestamp(timestamp.longValueExact() * 1000)
     .setBlockTime(blockTime)
     .setSize(Numeric.decodeQuantity(sizeRaw ?: "0x0").longValueExact())
 
-fun EthBlock.Block.toUncleRecord(index: Int, nephewHash: String, blockNumber: BigInteger, builder: UncleRecord.Builder): UncleRecord.Builder =
+fun EthBlock.Block.toUncleRecord(builder: UncleRecord.Builder): UncleRecord.Builder =
   builder
-    .setIndex(index)
-    .setNephewHash(nephewHash)
     .setNumberBI(number)
-    .setHeightBI(blockNumber)
     .setHash(hash)
     .setParentHash(parentHash)
-    .setNonceBI(nonce)
+    .setNonceBI(if (nonceRaw != null) nonce else null)
     .setSha3Uncles(sha3Uncles)
     .setLogsBloom(logsBloom)
     .setTransactionsRoot(transactionsRoot)
@@ -101,7 +96,7 @@ fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder): Transac
     .setChainId(chainId)
 
   if (input != null) {
-    // we compress if the input fixed is more than 150 bytes as some blocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
+    // we compress if the input fixed is more than 150 bytes as some fullBlocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
     builder.input = input.hexBuffer().compress(150)
   }
 
@@ -145,7 +140,7 @@ fun Trace.toTraceRecord(builder: TraceRecord.Builder): TraceRecord.Builder {
         .setValueBI(action.value)
 
       if (action.input != null) {
-        // we compress if the input fixed is more than 150 bytes as some blocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
+        // we compress if the input fixed is more than 150 bytes as some fullBlocks later in the chain have nonsense inputs which are very large and mostly repeat themselves
         actionBuilder.input = action.input.hexBuffer().compress(150)
       }
 

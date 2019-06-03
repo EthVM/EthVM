@@ -1,20 +1,24 @@
 package com.ethvm.kafka.streams.di
 
 import com.ethvm.kafka.streams.config.AppConfig
+import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Web3Config
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
-import org.apache.avro.Schema
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
+import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.websocket.WebSocketService
 import java.util.Properties
+import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 object Modules {
+
+  val logger = KotlinLogging.logger {}
 
   val web3 = module {
 
@@ -34,16 +38,31 @@ object Modules {
 
       val config = get<AppConfig>()
 
-      when (config.unitTesting) {
-        false -> CachedSchemaRegistryClient(config.kafka.schemaRegistryUrl, 100)
-        true -> MockSchemaRegistryClient().apply {
-
-          // TODO: After refactor, re-add this logic to properly tests processors
-          val subjectsWithSchemas: List<Pair<String, Schema>> = emptyList()
-
-          subjectsWithSchemas.forEach { (subject, schema) -> register(subject, schema) }
-        }
+      val registryClient = when (config.unitTesting) {
+        false -> CachedSchemaRegistryClient(config.kafka.schemaRegistryUrl, 200)
+        true -> MockSchemaRegistryClient()
       }
+
+      registryClient
+    }
+
+    single(createdAtStart = true) {
+
+      val registryClient = get<SchemaRegistryClient>()
+
+      logger.info { "Registering schemas with schema registry" }
+
+      // pre-emptively register schemas to prevent issues with ad-hoc registration under load and to
+      // get schema migration error feedback immediately on startup
+      Topics.all
+        .map { topic ->
+
+          registryClient.register(topic.keySubject, topic.keySchema)
+          registryClient.register(topic.valueSubject, topic.valueSchema)
+        }
+
+      // to stop koin from complaining
+      Topics
     }
 
     factory(named("baseKafkaStreamsConfig")) {
@@ -57,14 +76,15 @@ object Modules {
 
         //
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
-        put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 52428800) // 50 mb
-        put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000) // important when dealing with aggregations/reduces
+
+        // Allows for large messages, in our case large lists of traces primarily
+        put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 62_914_560) // 60 mb
 
         put(StreamsConfig.STATE_DIR_CONFIG, config.kafka.streamsStateDir)
 
         // Serdes - Defaults
-        put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().javaClass.name)
-        put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().javaClass.name)
+        put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, KafkaSerdes.String().javaClass.name)
+        put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, KafkaSerdes.ByteArray().javaClass.name)
       }
     }
   }

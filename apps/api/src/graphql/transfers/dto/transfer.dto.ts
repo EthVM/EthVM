@@ -16,7 +16,7 @@ export class TransferDto implements Transfer {
   traceLocationTransactionIndex?: number;
   traceLocationLogIndex?: number;
   traceLocationTraceAddress?: string;
-  timestamp!: number;
+  timestamp!: Date;
 
   constructor(data: any) {
     assignClean(this, data)

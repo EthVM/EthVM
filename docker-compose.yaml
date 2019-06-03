@@ -116,11 +116,11 @@ services:
     command: bash -c "yarn && yarn start:dev"
 
   # ///////////////////////////////////////////////////////
-  # Etherum Client
+  # Ethereum Client
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: ethvm/parity:v2.3.3
+    image: ethvm/parity:experiment
     networks:
       - back
     volumes:
@@ -199,6 +199,10 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_COMPRESSION_TYPE: "zstd"
+      KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      KAFKA_MESSAGE_MAX_BYTES: 52428800
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
       CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
@@ -226,11 +230,13 @@ services:
       - "traefik.backend=kafka-schema-registry"
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka-1:9091"
+      SCHEMA_REGISTRY_KAFKASTORE_TIMEOUT_MS: 10000
       SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       SCHEMA_REGISTRY_JMX_PORT: 9587
+
 
   kafka-connect:
     build:
@@ -269,6 +275,8 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
+      CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       KAFKA_JMX_PORT: 9588
 
   # ///////////////////////////////////////////////////////

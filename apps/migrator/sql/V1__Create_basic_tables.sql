@@ -3,17 +3,17 @@
 CREATE TABLE row_count
 (
   relation VARCHAR(128) PRIMARY KEY,
-  count   BIGINT
+  count    BIGINT
 );
 
-INSERT INTO row_count VALUES
-  ('canonical_block_header', 0),
-  ('transaction', 0),
-  ('transaction_trace', 0),
-  ('transaction_receipt', 0),
-  ('uncle', 0);
+INSERT INTO row_count
+VALUES ('canonical_block_header', 0),
+       ('transaction', 0),
+       ('transaction_trace', 0),
+       ('transaction_receipt', 0),
+       ('uncle', 0);
 
-CREATE OR REPLACE FUNCTION adjust_count()
+CREATE FUNCTION adjust_count()
   RETURNS TRIGGER AS
 $$
 DECLARE
@@ -48,7 +48,7 @@ CREATE TABLE canonical_block_header
   extra_data         TEXT      NULL,
   gas_limit          NUMERIC   NOT NULL,
   gas_used           NUMERIC   NOT NULL,
-  timestamp          INT       NOT NULL,
+  timestamp          TIMESTAMP NOT NULL,
   block_time         INT       NULL,
   size               INT       NOT NULL,
   uncle_count        INT       NOT NULL,
@@ -67,15 +67,6 @@ CREATE TRIGGER canonical_block_header_count
   ON canonical_block_header
   FOR EACH ROW
 EXECUTE PROCEDURE adjust_count();
-
-/* A view to help with address metadata */
-
-CREATE VIEW canonical_block_author AS
-SELECT cb.author AS address,
-       COUNT(*)  AS count
-FROM canonical_block_header AS cb
-GROUP BY cb.author
-ORDER BY count DESC;
 
 CREATE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
 $body$
@@ -134,7 +125,7 @@ CREATE TABLE uncle
   extra_data        TEXT      NULL,
   gas_limit         NUMERIC   NOT NULL,
   gas_used          NUMERIC   NOT NULL,
-  timestamp         BIGINT    NOT NULL,
+  timestamp         TIMESTAMP NOT NULL,
   size              BIGINT    NOT NULL
 );
 
@@ -153,22 +144,22 @@ EXECUTE PROCEDURE adjust_count();
 CREATE TABLE "transaction"
 (
   hash              CHAR(66) PRIMARY KEY,
-  nonce             NUMERIC  NOT NULL,
-  block_hash        CHAR(66) NOT NULL,
-  block_number      NUMERIC  NOT NULL,
-  transaction_index INT      NOT NULL,
-  "from"            CHAR(42) NOT NULL,
-  "to"              CHAR(42) NULL,
-  value             NUMERIC  NOT NULL,
-  gas_price         NUMERIC  NOT NULL,
-  gas               NUMERIC  NOT NULL,
-  input             BYTEA    NULL,
-  v                 BIGINT   NOT NULL,
-  r                 CHAR(78) NOT NULL,
-  s                 CHAR(78) NOT NULL,
-  timestamp         BIGINT   NOT NULL,
-  creates           CHAR(42) NULL,
-  chain_id          BIGINT   NULL
+  nonce             NUMERIC   NOT NULL,
+  block_hash        CHAR(66)  NOT NULL,
+  block_number      NUMERIC   NOT NULL,
+  transaction_index INT       NOT NULL,
+  "from"            CHAR(42)  NOT NULL,
+  "to"              CHAR(42)  NULL,
+  value             NUMERIC   NOT NULL,
+  gas_price         NUMERIC   NOT NULL,
+  gas               NUMERIC   NOT NULL,
+  input             BYTEA     NULL,
+  v                 BIGINT    NOT NULL,
+  r                 CHAR(78)  NOT NULL,
+  s                 CHAR(78)  NOT NULL,
+  timestamp         TIMESTAMP NOT NULL,
+  creates           CHAR(42)  NULL,
+  chain_id          BIGINT    NULL
 );
 
 CREATE INDEX idx_transaction_hash ON TRANSACTION (hash);
@@ -240,7 +231,8 @@ CREATE TABLE transaction_receipt
   logs                TEXT         NOT NULL,
   logs_bloom          CHAR(514)    NOT NULL,
   root                CHAR(66)     NULL,
-  status              VARCHAR(128) NULL
+  status              VARCHAR(128) NULL,
+  timestamp           TIMESTAMP    NOT NULL
 );
 
 CREATE INDEX idx_transaction_receipt_block_hash ON transaction_receipt (block_hash);
@@ -301,6 +293,8 @@ CREATE TABLE transaction_trace
   block_hash       CHAR(66)     NOT NULL,
   transaction_hash CHAR(66)     NULL,
   root_error       VARCHAR(514) NULL,
+  timestamp        TIMESTAMP    NOT NULL,
+  trace_count      INT          NOT NULL,
   traces           TEXT         NOT NULL,
   UNIQUE (block_hash, transaction_hash)
 );
@@ -394,13 +388,15 @@ CREATE TABLE contract
   trace_created_at_transaction_index   INT         NULL,
   trace_created_at_log_index           INT         NULL,
   trace_created_at_trace_address       TEXT        NULL,
+  trace_created_at_timestamp           TIMESTAMP   NOT NULL,
   trace_destroyed_at_block_hash        CHAR(66)    NULL,
   trace_destroyed_at_block_number      NUMERIC     NULL,
   trace_destroyed_at_transaction_hash  CHAR(66)    NULL,
   trace_destroyed_at_transaction_index INT         NULL,
   trace_destroyed_at_log_index         INT         NULL,
   trace_destroyed_at_trace_address     TEXT        NULL,
-  trace_destroyed_at                   TEXT        NULL
+  trace_destroyed_at_timestamp         TIMESTAMP   NOT NULL,
+  timestamp                            TIMESTAMP   NOT NULL
 );
 
 CREATE INDEX idx_contract_creator ON contract (creator);
@@ -421,12 +417,6 @@ FROM contract AS c
 WHERE cb.number IS NOT NULL
   AND c.address IS NOT NULL;
 
-CREATE VIEW canonical_contract_creator AS
-SELECT c.creator AS address,
-       COUNT(*)  AS count
-FROM canonical_contract AS c
-GROUP BY c.creator;
-
 CREATE TABLE eth_list_contract_metadata
 (
   address     CHAR(42) PRIMARY KEY,
@@ -443,13 +433,109 @@ CREATE TABLE eth_list_contract_metadata
 
 CREATE TABLE fungible_balance
 (
-  address  CHAR(42) NOT NULL,
-  contract CHAR(42) NULL,
-  amount   NUMERIC  NOT NULL,
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL,
   PRIMARY KEY (address, contract)
 );
 
 CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
+
+
+CREATE TABLE transaction_count
+(
+  address   CHAR(42) PRIMARY KEY,
+  total_in  INT       NOT NULL,
+  total_out INT       NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+
+CREATE TABLE fungible_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('fungible_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE premine_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('premine_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE hard_fork_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('hard_fork_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE transaction_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('transaction_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE transaction_fee_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('transaction_fee_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE miner_fee_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('miner_fee_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
+CREATE TABLE erc20_balance_log
+(
+  address   CHAR(42)  NOT NULL,
+  contract  CHAR(42)  NULL,
+  amount    NUMERIC   NOT NULL,
+  timestamp TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('erc20_balance_log',
+                         'timestamp',
+                         chunk_time_interval => interval '1 day');
+
 
 CREATE VIEW canonical_ether_balance AS
 SELECT fb.address,
@@ -481,6 +567,7 @@ CREATE TABLE fungible_balance_delta
   trace_location_transaction_index INT         NULL,
   trace_location_log_index         INT         NULL,
   trace_location_trace_address     TEXT        NULL,
+  trace_location_timestamp         TIMESTAMP   NOT NULL,
   amount                           NUMERIC     NOT NULL
 );
 
@@ -501,8 +588,8 @@ WHERE cb.number IS NOT NULL
 
 CREATE VIEW canonical_fungible_balance_transfer AS
 SELECT fbd.id,
-       fbd.counterpart_address AS "from",
-       fbd.address             AS "to",
+       fbd.counterpart_address      AS "from",
+       fbd.address                  AS "to",
        fbd.contract_address,
        fbd.delta_type,
        fbd.token_type,
@@ -513,66 +600,71 @@ SELECT fbd.id,
        fbd.trace_location_transaction_index,
        fbd.trace_location_log_index,
        fbd.trace_location_trace_address,
-       bh.timestamp
+       fbd.trace_location_timestamp AS "timestamp"
 FROM canonical_fungible_balance_delta AS fbd
        LEFT JOIN canonical_block_header AS bh ON fbd.trace_location_block_hash = bh.hash
-WHERE fbd.amount > 0;
+WHERE bh.number IS NOT NULL
+  AND fbd.amount > 0;
 
 CREATE VIEW canonical_account AS
 SELECT fb.address,
-       fb.amount                    AS balance,
-       (SELECT COUNT(*)
-        FROM canonical_transaction AS ct
-        WHERE ct.from = fb.address
-           OR ct.to = fb.address)   AS total_tx_count,
-       (SELECT COUNT(*)
-        FROM canonical_transaction AS ct
-        WHERE ct.to = fb.address)   AS in_tx_count,
-       (SELECT COUNT(*)
-        FROM canonical_transaction AS ct
-        WHERE ct.from = fb.address) AS out_tx_count,
+       fb.amount                       AS balance,
+       (SELECT total_in + total_out
+        FROM transaction_count AS tc
+        WHERE tc.address = fb.address) AS total_tx_count,
+       (SELECT total_in
+        FROM transaction_count AS tc
+        WHERE tc.address = fb.address) AS in_tx_count,
+       (SELECT total_out
+        FROM transaction_count AS tc
+        WHERE tc.address = fb.address) AS out_tx_count,
        CASE
          WHEN cont.creator IS NULL THEN
            FALSE
          ELSE
            TRUE
-         END                        AS is_contract,
-       CASE
-         WHEN a.count > 0 THEN
-           TRUE
-         ELSE
-           FALSE
-         END                        AS is_miner,
-       CASE
-         WHEN cc.count > 0 THEN
-           TRUE
-         ELSE
-           FALSE
-         END                        AS is_contract_creator
+         END                           AS is_contract
 FROM fungible_balance AS fb
-       LEFT JOIN canonical_block_author AS a ON fb.address = a.address
-       LEFT JOIN canonical_contract_creator AS cc ON fb.address = cc.address
        LEFT JOIN canonical_contract AS cont ON fb.address = cont.address
 WHERE fb.contract = ''
 ORDER BY balance DESC;
 
 CREATE TABLE non_fungible_balance
 (
-  contract                         CHAR(42) NOT NULL,
-  token_id                         NUMERIC  NOT NULL,
-  address                          CHAR(42) NOT NULL,
-  trace_location_block_hash        CHAR(66) NULL,
-  trace_location_block_number      NUMERIC  NULL,
-  trace_location_transaction_hash  CHAR(66) NULL,
-  trace_location_transaction_index INT      NULL,
-  trace_location_log_index         INT      NULL,
-  trace_location_trace_address     TEXT     NULL,
+  contract                         CHAR(42)  NOT NULL,
+  token_id                         NUMERIC   NOT NULL,
+  address                          CHAR(42)  NOT NULL,
+  trace_location_block_hash        CHAR(66)  NULL,
+  trace_location_block_number      NUMERIC   NULL,
+  trace_location_transaction_hash  CHAR(66)  NULL,
+  trace_location_transaction_index INT       NULL,
+  trace_location_log_index         INT       NULL,
+  trace_location_trace_address     TEXT      NULL,
+  trace_location_timestamp         TIMESTAMP NOT NULL,
   PRIMARY KEY (contract, token_id)
 );
 
 CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);
 CREATE INDEX idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
+
+CREATE TABLE erc721_balance_log
+(
+  contract                         CHAR(42)  NOT NULL,
+  token_id                         NUMERIC   NOT NULL,
+  address                          CHAR(42)  NOT NULL,
+  trace_location_block_hash        CHAR(66)  NULL,
+  trace_location_block_number      NUMERIC   NULL,
+  trace_location_transaction_hash  CHAR(66)  NULL,
+  trace_location_transaction_index INT       NULL,
+  trace_location_log_index         INT       NULL,
+  trace_location_trace_address     TEXT      NULL,
+  trace_location_timestamp         TIMESTAMP NOT NULL
+);
+
+SELECT create_hypertable('erc721_balance_log',
+                         'trace_location_timestamp',
+                         chunk_time_interval => interval '1 day');
 
 CREATE VIEW canonical_erc721_balance AS
 SELECT nfb.*
@@ -594,6 +686,7 @@ CREATE TABLE non_fungible_balance_delta
   trace_location_transaction_index INT         NULL,
   trace_location_log_index         INT         NULL,
   trace_location_trace_address     TEXT        NULL,
+  trace_location_timestamp         TIMESTAMP   NOT NULL,
   "from"                           CHAR(42)    NOT NULL,
   "to"                             CHAR(42)    NOT NULL
 );
@@ -619,7 +712,8 @@ CREATE TABLE erc20_metadata
   "name"         VARCHAR(128) NULL,
   "symbol"       VARCHAR(512) NULL,
   "decimals"     INT          NULL,
-  "total_supply" NUMERIC      NULL
+  "total_supply" NUMERIC      NULL,
+  "timestamp"    TIMESTAMP    NOT NULL
 );
 
 CREATE INDEX idx_erc20_metadata_name ON erc20_metadata (name);
@@ -627,9 +721,10 @@ CREATE INDEX idx_erc20_metadata_symbol ON erc20_metadata (symbol);
 
 CREATE TABLE erc721_metadata
 (
-  "address" CHAR(42) PRIMARY KEY,
-  "name"    VARCHAR(128) NULL,
-  "symbol"  VARCHAR(512) NULL
+  "address"   CHAR(42) PRIMARY KEY,
+  "name"      VARCHAR(128) NULL,
+  "symbol"    VARCHAR(512) NULL,
+  "timestamp" TIMESTAMP    NOT NULL
 );
 
 CREATE INDEX idx_erc721_metadata_name ON erc721_metadata (name);

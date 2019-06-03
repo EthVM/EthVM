@@ -51,10 +51,10 @@ export class BlockMetricsService {
             },
           })
 
-        const nowSeconds = new Date().getTime() / 1000
+        const now = new Date()
 
-        let start = nowSeconds
-        let end = nowSeconds
+        let start = now
+        let end = now
 
         const blockHashes = headers.map(h => {
           if (h.timestamp > start) start = h.timestamp

@@ -22,7 +22,7 @@ export class UncleDto implements Uncle {
   extraData!: string
   gasLimit!: BigNumber
   gasUsed!: BigNumber
-  timestamp!: number
+  timestamp!: Date
   size!: number
   rewardAmount!: BigNumber
 

@@ -22,7 +22,7 @@ export interface TransactionDetail {
   hash: string;
   input: any;
   nonce: any;
-  timestamp: number;
+  timestamp: any;
   to: string | null;
   value: any;
   receipt: TransactionDetail_receipt | null;

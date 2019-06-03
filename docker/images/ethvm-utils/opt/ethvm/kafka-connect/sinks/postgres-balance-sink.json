@@ -2,7 +2,7 @@
   "name": "postgres-balance-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "tasks.max": 2,
+    "tasks.max": 1,
     "topics": "fungible_balance,non_fungible_balance",
     "insert.mode": "upsert",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",

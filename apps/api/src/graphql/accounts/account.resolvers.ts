@@ -10,7 +10,9 @@ export class AccountResolvers {
   @Query()
   async accountByAddress(@Args('address', ParseAddressPipe) address: string): Promise<AccountDto | null> {
     const account = await this.accountService.findAccountByAddress(address)
-    return account ? new AccountDto(account) : null
+    const isMiner = await this.accountService.findIsMiner(address)
+    const isContractCreator = await this.accountService.findIsContractCreator(address)
+    return account ? new AccountDto({ ...account, isMiner, isContractCreator }) : null
   }
 
 }
