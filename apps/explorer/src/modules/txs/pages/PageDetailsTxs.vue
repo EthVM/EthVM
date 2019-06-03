@@ -15,7 +15,7 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { eth } from '@app/core/helper'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { transactionDetail } from '@app/modules/txs/txs.graphql'
+import { transactionDetailQuery } from '@app/modules/txs/txs.graphql'
 import { TransactionDetailExt } from '@app/core/api/apollo/extensions/transaction-detail.ext'
 
 @Component({
@@ -25,7 +25,7 @@ import { TransactionDetailExt } from '@app/core/api/apollo/extensions/transactio
   },
   apollo: {
     transactionDetail: {
-      query: transactionDetail,
+      query: transactionDetailQuery,
       variables() {
         return { hash: this.txHash }
       },
