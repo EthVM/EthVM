@@ -55,14 +55,11 @@ class CountProcessor : AbstractKafkaProcessor() {
             .setTotalIn(balance.getTotalIn() + delta.`in`)
             .setTotalOut(balance.getTotalOut() + delta.out)
             .build()
-
         },
         Materialized.with(Serdes.AccountKey(), Serdes.TransactionCount())
       )
 
     agg.toStream()
       .toTopic(TransactionCount)
-
   }
-
 }

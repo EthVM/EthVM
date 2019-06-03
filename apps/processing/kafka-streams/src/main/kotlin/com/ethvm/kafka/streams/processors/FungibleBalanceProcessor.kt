@@ -24,17 +24,13 @@ import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
-import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
-import org.apache.kafka.streams.kstream.Suppressed
-import org.apache.kafka.streams.kstream.TimeWindows
 import java.math.BigInteger
-import java.time.Duration
 import java.util.Properties
 
 class FungibleBalanceProcessor : AbstractKafkaProcessor() {
@@ -109,7 +105,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
       )
 
     return agg.toStream()
-
   }
 
 //

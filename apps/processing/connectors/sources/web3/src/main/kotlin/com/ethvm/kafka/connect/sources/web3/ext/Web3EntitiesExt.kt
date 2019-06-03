@@ -21,19 +21,16 @@ import com.ethvm.common.extensions.setGasBI
 import com.ethvm.common.extensions.setGasLimitBI
 import com.ethvm.common.extensions.setGasPriceBI
 import com.ethvm.common.extensions.setGasUsedBI
-import com.ethvm.common.extensions.setHeightBI
 import com.ethvm.common.extensions.setNonceBI
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.common.extensions.setTotalDifficultyBI
 import com.ethvm.common.extensions.setValueBI
-import org.joda.time.DateTime
 import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.core.methods.response.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.methods.response.Trace
 import org.web3j.utils.Numeric
-import java.math.BigInteger
 
 fun EthBlock.Block.toBlockHeaderRecord(builder: BlockHeaderRecord.Builder, blockTime: Int): BlockHeaderRecord.Builder =
   builder

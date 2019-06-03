@@ -49,7 +49,6 @@ class NonFungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
     return builder.build()
   }
 
-
   private fun erc721DeltasForReceipts(builder: StreamsBuilder) =
     withReversals(
       CanonicalReceipts.stream(builder)

@@ -85,7 +85,7 @@ import org.apache.kafka.streams.kstream.Produced
 
 data class KafkaTopic<K, V>(
   val name: String,
-  val keySchema: Schema,  // TODO replace with reflection
+  val keySchema: Schema, // TODO replace with reflection
   val keySerde: Serde<K>,
   val valueSchema: Schema,
   val valueSerde: Serde<V>
@@ -104,7 +104,6 @@ data class KafkaTopic<K, V>(
   fun table(builder: StreamsBuilder): KTable<K, V> = builder.table(name, consumer)
 
   fun globalTable(builder: StreamsBuilder): GlobalKTable<K, V> = builder.globalTable(name, consumer)
-
 }
 
 object Topics {
@@ -158,7 +157,7 @@ object Topics {
   val CanonicalGasUsed = KafkaTopic<CanonicalKeyRecord, TransactionGasUsedListRecord?>("canonical_gas_used", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasUsedListRecord.`SCHEMA$`, TransactionGasUsedList())
   val CanonicalTransactionFees = KafkaTopic<CanonicalKeyRecord, TransactionFeeListRecord?>("canonical_transaction_fees", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionFeeListRecord.`SCHEMA$`, TransactionFeeList())
 
-  val CanonicalBlockAuthor = KafkaTopic<CanonicalKeyRecord, BlockAuthorRecord?>("canonical_block_author", CanonicalKeyRecord.`SCHEMA$`,  CanonicalKey(), BlockAuthorRecord.`SCHEMA$`, BlockAuthor())
+  val CanonicalBlockAuthor = KafkaTopic<CanonicalKeyRecord, BlockAuthorRecord?>("canonical_block_author", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockAuthorRecord.`SCHEMA$`, BlockAuthor())
 
   val CanonicalContractLifecycle = KafkaTopic("canonical_contract_lifecycle", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), ContractLifecycleListRecord.`SCHEMA$`, ContractLifecycleList())
   val ContractLifecycleEvents = KafkaTopic("contract_lifecycle_events", ContractKeyRecord.`SCHEMA$`, ContractKey(), ContractLifecycleRecord.`SCHEMA$`, ContractLifecycle())
@@ -197,5 +196,4 @@ object Topics {
       Erc20Metadata,
       Erc721Metadata
     )
-
 }

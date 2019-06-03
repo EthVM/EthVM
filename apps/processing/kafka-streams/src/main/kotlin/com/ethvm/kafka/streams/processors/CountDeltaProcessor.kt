@@ -69,7 +69,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
                 }
 
                 counts
-
               }.flatten()
 
             TransactionCountDeltaListRecord.newBuilder()
@@ -77,10 +76,8 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
               .setBlockHash(v.getBlockHash())
               .setCounts(txCounts)
               .build()
-
           }
         }
-
       }
 
     val deltasWithReversals = deltas
@@ -102,7 +99,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
               .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
-
           } else {
 
             // reverse previous deltas
@@ -134,14 +130,11 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
                   .build()
               )
             }
-
         } else {
           emptyList()
         }
-
       }
 
     deltasForAddress.toTopic(TransactionCountDelta)
   }
-
 }

@@ -160,7 +160,6 @@ class ParityFullBlockSource(
             receiptListValueSchemaAndValue.value()
           )
 
-
         val traceListValueSchemaAndValue = AvroToConnect.toConnectData(traceList)
 
         val tracesSourceRecord =
@@ -203,11 +202,9 @@ class ParityFullBlockSource(
           percentageOfTargetFetchTime > 1.5 -> batchSize / 2
           else -> batchSize
         }
-
       }
 
       return records
-
     } catch (ex: TimeoutException) {
 
       // likely we overloaded parity, let's reduce for retry
@@ -216,9 +213,7 @@ class ParityFullBlockSource(
       // parity is probably under high load
       throw RetriableException(ex)
     }
-
   }
-
 
   private fun cleanTimestamps() {
 
@@ -226,7 +221,6 @@ class ParityFullBlockSource(
       // map is ordered, remove older entries first
       blockTimestamps.remove(blockTimestamps.firstKey())
     }
-
   }
 
   override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
@@ -323,10 +317,11 @@ class ParityFullBlockSource(
     val blockRecords: List<BlockRecords>
   )
 
-  class FetchTask(val range: LongRange,
-                  val parity: JsonRpc2_0ParityExtended,
-                  val maxTraceCount: Int) : Callable<FetchResult> {
-
+  class FetchTask(
+    val range: LongRange,
+    val parity: JsonRpc2_0ParityExtended,
+    val maxTraceCount: Int
+  ) : Callable<FetchResult> {
 
     protected val logger = KotlinLogging.logger {}
 
@@ -400,7 +395,6 @@ class ParityFullBlockSource(
                 .map { it.toTransactionReceiptRecord(TransactionReceiptRecord.newBuilder()).build() }
             ).build()
 
-
           val traces = fullBlock.traces
 
           val traceListRecord = TraceListRecord.newBuilder()
@@ -423,8 +417,6 @@ class ParityFullBlockSource(
           }
           else -> null
         }
-
-
       } while (nextRange != null)
 
       return FetchResult(blockTimestamps, blockRecords)

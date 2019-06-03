@@ -3,13 +3,10 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.common.TraceLocationRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
-import com.ethvm.avro.processing.FungibleBalanceDeltaListsRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
-import com.ethvm.avro.processing.FungibleBalanceRecord
 import com.ethvm.avro.processing.FungibleTokenType
-import com.ethvm.common.extensions.getAmountBI
 import com.ethvm.common.extensions.getNumberBI
 import com.ethvm.common.extensions.getTransactionFeeBI
 import com.ethvm.common.extensions.hexToBI
@@ -19,7 +16,6 @@ import com.ethvm.common.extensions.setBlockNumberBI
 import com.ethvm.common.extensions.toEtherBalanceDeltas
 import com.ethvm.common.extensions.toFungibleBalanceDeltas
 import com.ethvm.kafka.streams.Serdes
-import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
@@ -33,7 +29,6 @@ import com.ethvm.kafka.streams.config.Topics.PremineBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
-import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
@@ -46,8 +41,6 @@ import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Materialized
-import org.apache.kafka.streams.kstream.Suppressed
-import org.apache.kafka.streams.kstream.TimeWindows
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.joda.time.DateTime
 import java.math.BigInteger
@@ -159,9 +152,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
               }
           )
           .build()
-
       }
-
 
     // hard fork
 
@@ -181,12 +172,10 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
               .hardForkFungibleDeltas(blockNumber)
           )
           .build()
-
       }
 
     return Pair(withReversals(premineStream), withReversals(hardForkStream))
   }
-
 
   /**
    *
@@ -216,9 +205,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
                   .build()
               }
             }
-
           }
-
         }
     )
 
@@ -291,7 +278,6 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
             .setDeltas(listOf(v))
             .build()
         }
-
       }
       .groupByKey()
       .reduce(
@@ -309,7 +295,6 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
               .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
-
           } else {
 
             // reverse previous deltas
@@ -327,13 +312,11 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
       )
       .toStream()
 
-
     return Pair(withReversals(txFeeDeltas), withReversals(minerFeeDeltas))
   }
 
   private fun erc20DeltasForReceipts(builder: StreamsBuilder) =
     withReversals(
-
 
       CanonicalReceipts.stream(builder)
         .mapValues { _, v ->
@@ -436,7 +419,6 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
               .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
-
           } else {
 
             // reverse previous deltas
@@ -452,7 +434,6 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
         Materialized.with(Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
       )
       .toStream()
-
 
   override fun start(cleanUp: Boolean) {
     logger.info { "Starting ${this.javaClass.simpleName}..." }

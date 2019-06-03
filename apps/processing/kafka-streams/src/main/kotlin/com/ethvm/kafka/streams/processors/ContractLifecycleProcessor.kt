@@ -96,7 +96,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
               .setTimestamp(next.getTimestamp())
               .setApply(false)
               .build()
-
           } else {
 
             ContractLifecycleListRecord.newBuilder()

@@ -48,7 +48,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
     CanonicalTransactions.stream(builder)
       .mapValues { transactionsList ->
 
-        if(transactionsList == null) {
+        if (transactionsList == null) {
           // pass through the tombstone
           null
         } else {
@@ -75,15 +75,13 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                     }
                 ).build()
           }
-
         }
-
       }.toTopic(CanonicalGasPrices)
 
     CanonicalReceipts.stream(builder)
       .mapValues { receiptsList ->
 
-        if(receiptsList == null) {
+        if (receiptsList == null) {
           // pass through the tombstone
           null
         } else {
@@ -105,7 +103,6 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                 ).build()
           }
         }
-
       }.toTopic(CanonicalGasUsed)
 
     CanonicalGasPrices.stream(builder)

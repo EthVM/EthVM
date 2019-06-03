@@ -72,7 +72,6 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
           .setDecimals(decimals.join()?.intValueExact())
           .setTotalSupply(totalSupply.join()?.byteBuffer())
           .build()
-
       }.toTopic(Erc20Metadata)
 
     // erc721
@@ -89,7 +88,6 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
           .setName(name.join())
           .setSymbol(symbol.join())
           .build()
-
       }.toTopic(Erc721Metadata)
 
     return builder.build()

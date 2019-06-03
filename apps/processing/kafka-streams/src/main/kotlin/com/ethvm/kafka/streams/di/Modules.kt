@@ -46,7 +46,7 @@ object Modules {
       registryClient
     }
 
-    single (createdAtStart = true) {
+    single(createdAtStart = true) {
 
       val registryClient = get<SchemaRegistryClient>()
 
@@ -59,7 +59,6 @@ object Modules {
 
           registryClient.register(topic.keySubject, topic.keySchema)
           registryClient.register(topic.valueSubject, topic.valueSchema)
-
         }
 
       // to stop koin from complaining
@@ -86,7 +85,6 @@ object Modules {
         // Serdes - Defaults
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, KafkaSerdes.String().javaClass.name)
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, KafkaSerdes.ByteArray().javaClass.name)
-
       }
     }
   }

@@ -64,7 +64,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
     canonicalBlock
       .map { _, header ->
 
-        if(header == null) {
+        if (header == null) {
           null
         } else {
           KeyValue(
@@ -82,7 +82,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
               .build()
           )
         }
-
       }.toTopic(BlockMetricsHeader)
 
     CanonicalTraces.stream(builder)
@@ -92,7 +91,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
       .filter { _, v -> v!!.getTraces().isNotEmpty() }
       .map { _, traceList ->
 
-        if(traceList == null) {
+        if (traceList == null) {
           null
         } else {
 
@@ -165,10 +164,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
               .setNumInternalTxs(internalTxs)
               .build()
           )
-
         }
-
-
       }
       .toTopic(BlockMetricsTransactionTrace)
 
@@ -177,7 +173,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
       .filterNot { _, v -> v == null }
       .map { _, transactionList ->
 
-        if(transactionList == null) {
+        if (transactionList == null) {
           null
         } else {
           val transactions = transactionList.getTransactions()
@@ -213,8 +209,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
               .build()
           )
         }
-
-
       }
       .toTopic(BlockMetricsTransaction)
 
@@ -223,7 +217,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
       .filterNot { _, v -> v?.getBlockHash() == null }
       .map { _, txFeeList ->
 
-        if(txFeeList == null) {
+        if (txFeeList == null) {
           null
         } else {
 
@@ -250,10 +244,7 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
               .setAvgTxFeesBI(avgTxFees)
               .build()
           )
-
         }
-
-
       }
       .toTopic(BlockMetricsTransactionFee)
 

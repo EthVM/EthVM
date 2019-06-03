@@ -4,7 +4,6 @@ import org.web3j.protocol.Web3jService
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.Request
 import org.web3j.protocol.core.Response
-import org.web3j.protocol.core.methods.response.EthBlock
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.protocol.parity.JsonRpc2_0Parity
 import org.web3j.protocol.parity.methods.response.Trace
@@ -82,4 +81,3 @@ class EthvmTracesResponse : Response<List<Trace>>() {
   val traces: List<Trace>
     get() = result
 }
-

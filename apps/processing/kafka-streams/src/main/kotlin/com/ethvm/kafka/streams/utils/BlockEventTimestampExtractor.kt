@@ -25,14 +25,12 @@ class BlockEventTimestampExtractor : TimestampExtractor {
             else -> record.timestamp()
         }
 
-        when(timestampValue) {
+        when (timestampValue) {
           is Long -> timestampValue
           is DateTime -> timestampValue.millis
           else -> throw IllegalArgumentException("Timestamp field must be a Long or DateTime")
         }
-
       }
-      else -> record.timestamp()  // default to record timestamp
+      else -> record.timestamp() // default to record timestamp
     }
-
 }
