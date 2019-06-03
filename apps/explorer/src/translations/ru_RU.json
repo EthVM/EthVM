@@ -72,14 +72,19 @@
     "transfers": "Переводы",
     "links": "Ссылки",
     "website": "Сайт",
-    "support": "Поддержка"
+    "support": "Поддержка",
+    "type": "Type",
+    "circSupply": "Circulating Supply"
   },
   "address": {
     "name": "Адрес | Адреса"
   },
   "contract": {
     "name": "Контракт | Контракты",
-    "creator": "Создатель Контракта"
+    "creator": "Создатель Контракта",
+    "hash": "Contract #",
+    "created": "Created at",
+    "total": "Total"
   },
   "gas": {
     "name": "Газ",
@@ -144,7 +149,6 @@
       "not-exist": "Эта транзакция не существует",
       "no-pending": "Нет ожидающих транзакций"
     },
-    "no-tokens": "Адрес не имеет известных токенов",
     "load": "Загрузка",
     "load-block-tx": "Загрузка транзакций блока",
     "not-mined": "Этот блок еще не подтвержден",
@@ -173,7 +177,16 @@
       "tx": "Новая Tx | Новых Txs",
       "block": "Новый блок | Новых блока"
     },
-    "sec": "сек."
+    "sec": "сек.",
+    "uncle": {
+      "no-uncles": "There are no uncles"
+    },
+    "token": {
+      "no-tokens": "There are no supported tokens",
+      "no-tokens-for-address": "Address does not hold any supported tokens",
+      "no-holders": "There are no holders of this token"
+    },
+    "coming-soon": "Coming soon"
   },
   "charts": {
     "name": "Графики",
@@ -521,5 +534,12 @@
       "title": "Изменения в Политике конфиденциальности",
       "p1": "Периодически мы можем вносить в настоящую Политику изменения. Если мы вносим какие-либо изменения, мы изменяем дату Последнего обновления выше. Также мы можем предоставить дополнительное уведомление, в соответствующих случаях, в зависимости от типа изменений. Если вы возражаете против внесения каких-либо изменений, вы можете прекратить пользоваться Услугами. Если вы продолжаете пользоваться Услугами после того как мы опубликовали или иным образом уведомили о наших изменениях в Политике конфиденциальности, это означает, что Вы соглашаетесь с обновленной Политикой."
     }
+  },
+  "transfer": {
+    "internal": "Internal Transfers",
+    "INTERNAL_TX": "call",
+    "CONTRACT_CREATION": "create",
+    "CONTRACT_DESTRUCTION": "destroy",
+    "empty": "No transfers"
   }
 }
