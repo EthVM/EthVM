@@ -54,7 +54,7 @@ subscription newTransaction {
 
 }
 
-query transactionDetail($hash: String!) {
+query transactionDetailQuery($hash: String!) {
   transaction: tx(hash: $hash) {
     ...TransactionDetail
   }
