@@ -304,7 +304,7 @@ export interface IQuery {
     addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
     addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
     coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
-    tokenExchangeRates(filter: TokenExchangeRateFilter, symbols: string[], limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+    tokenExchangeRates(symbols: string[], filter?: TokenExchangeRateFilter, limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
     totalNumTokenExchangeRates(): number | Promise<number>;
     tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
