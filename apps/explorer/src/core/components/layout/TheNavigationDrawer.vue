@@ -67,8 +67,8 @@
         =====================================================================================
         -->
         <v-flex v-if="!mini">
-          <v-layout align-center justify-end column fill-height pt-4 pb-5>
-            <p class="white--text">{{ $t('message.report') }}</p>
+          <v-layout align-center justify-end column fill-height pa-4>
+            <p class="white--text text-xs-center pb-2">{{ $t('message.report') }}</p>
             <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="`mailto:${supportEmail}`">{{ $t('btn.report') }}</v-btn>
           </v-layout>
         </v-flex>
