@@ -13,7 +13,7 @@ export class AccountService {
     @InjectRepository(BlockHeaderEntity)
     private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(ContractEntity)
-    private readonly contractRepository: Repository<ContractEntity>
+    private readonly contractRepository: Repository<ContractEntity>,
   ) {
   }
 
@@ -26,8 +26,8 @@ export class AccountService {
     const header = await this.blockHeaderRepository.findOne({
       select: ['number'],
       where: {
-        author: address
-      }
+        author: address,
+      },
     })
 
     return !!header
@@ -38,8 +38,8 @@ export class AccountService {
     const contract = await this.contractRepository.findOne({
       select: ['creator'],
       where: {
-        creator: address
-      }
+        creator: address,
+      },
     })
 
     return !!contract

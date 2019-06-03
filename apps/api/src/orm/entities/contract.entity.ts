@@ -84,35 +84,35 @@ export class ContractEntity {
   @OneToOne(type => Erc20MetadataEntity, metadata => metadata.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   erc20Metadata?: Erc20MetadataEntity
 
   @OneToOne(type => Erc721MetadataEntity, metadata => metadata.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   erc721Metadata?: Erc721MetadataEntity
 
   @OneToOne(type => ContractMetadataEntity, metadata => metadata.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   metadata?: ContractMetadataEntity
 
   @ManyToOne(type => TransactionEntity, tx => tx.contracts)
   @JoinColumn({
     name: 'traceCreatedAtTransactionHash',
-    referencedColumnName: 'hash'
+    referencedColumnName: 'hash',
   })
   createdAtTx?: TransactionEntity
 
   @OneToOne(type => TokenExchangeRateEntity, t => t.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   tokenExchangeRate?: TokenExchangeRateEntity
 

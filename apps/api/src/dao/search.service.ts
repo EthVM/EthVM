@@ -18,7 +18,7 @@ export class SearchService {
     private readonly accountService: AccountService,
     private readonly uncleService: UncleService,
     private readonly txService: TxService,
-    private readonly ethService: EthService
+    private readonly ethService: EthService,
   ) {
   }
 
