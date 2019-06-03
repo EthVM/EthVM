@@ -1,6 +1,6 @@
 {
   "name": "ethvm",
-  "version": "0.4.0-experiment",
+  "version": "0.4.0",
   "description": "EthVM: Open source Ethereum networks explorer",
   "author": "EthVM Team",
   "private": true,

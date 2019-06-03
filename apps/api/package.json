@@ -1,6 +1,6 @@
 {
   "name": "ethvm-api-new",
-  "version": "0.4.0-experiment",
+  "version": "0.4.0",
   "description": "Backend API 2 for EthVM",
   "repository": {
     "type": "git",
