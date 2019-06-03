@@ -49,7 +49,7 @@ class ParityFullBlockSource(
 
   override var batchSize = 16
 
-  private val noThreads = 4
+  private val noThreads = 8
 
   private var targetFetchTimeMs = 1000
 
@@ -196,7 +196,7 @@ class ParityFullBlockSource(
         logger.debug { "Fetched $count blocks. Elapsed = $elapsedMs ms, target fetch = $targetFetchTimeMs ms, % of target fetch = $percentageOfTargetFetchTime, trace count = $totalTraceCount, avg trace count = $avgTraceCount" }
 
         batchSize = when {
-          percentageOfTargetFetchTime < 0.5 -> batchSize * 2
+          percentageOfTargetFetchTime < 0.7 -> batchSize * 2
           percentageOfTargetFetchTime > 1.5 -> batchSize / 2
           else -> batchSize
         }
