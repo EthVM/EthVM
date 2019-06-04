@@ -63,7 +63,7 @@ export class TxService {
         const where = { blockNumber: number }
 
         const [{ count }] = await txn
-          .query('select count(hash) from transaction where block_number = $1', [number]) as [{ count: number }]
+          .query('select count(hash) from transaction where block_number = $1', [number.toNumber()]) as [{ count: number }]
 
         if (count === 0) return [[], count]
 
