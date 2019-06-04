@@ -66,6 +66,8 @@ abstract class AbstractParityEntitySource(
       }
     })
 
+    logger.debug { "Reorg size = ${reorgRecords.size}, records size = ${records.size}"}
+
     return reorgRecords + records
   }
 

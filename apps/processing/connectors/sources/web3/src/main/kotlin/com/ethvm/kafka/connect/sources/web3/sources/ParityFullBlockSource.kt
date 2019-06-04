@@ -207,7 +207,7 @@ class ParityFullBlockSource(
       // whilst allowing forward progress through the chain
       val canResizeBatch = noBlocksFetched > initialBatchResizeBackoff
 
-      if(canResizeBatch) {
+      if (canResizeBatch) {
         batchSize = when {
           percentageOfTargetFetchTime < 0.7 -> batchSize * 2
           percentageOfTargetFetchTime > 1.5 -> batchSize / 2
@@ -361,6 +361,8 @@ class ParityFullBlockSource(
           maxTraceCount
         ).send()
 
+        logger.debug { "Parity request: $first, $last, $maxTraceCount" }
+
         blockRecords = blockRecords + resp.fullBlocks.map { fullBlock ->
 
           val block = fullBlock.block
@@ -424,6 +426,10 @@ class ParityFullBlockSource(
           BlockRecords(canonicalKeyRecord, headerRecord, txListRecord, receiptListRecord, traceListRecord, uncleListRecord)
         }
 
+        if (blockRecords.isEmpty()) {
+          break
+        }
+
         val latestBlockNumber = blockTimestamps.lastKey().longValueExact()
 
         nextRange = when {
@@ -433,6 +439,7 @@ class ParityFullBlockSource(
           }
           else -> null
         }
+
       } while (nextRange != null)
 
       return FetchResult(blockTimestamps, blockRecords)
