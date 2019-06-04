@@ -53,6 +53,8 @@ abstract class AbstractParityEntitySource(
 
     val (range, reOrgs) = chainTracker.nextRange(batchSize)
 
+    logger.debug { "Fetching next range, range = $range batchSize = $batchSize" }
+
     val reorgRecords = reOrgs.map{ tombstonesForRange(it) }.flatten()
 
     // Returns tombstones + range

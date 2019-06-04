@@ -70,6 +70,7 @@ class ParityFullBlockSource(
 
       val futures = range
         .chunked(chunkSize)
+        .filter { it.isNotEmpty() }
         .map { chunk ->
           val chunkedRange = LongRange(chunk.first(), chunk.last())
           executor.submit(FetchTask(chunkedRange, parity, maxRequestTraceCount))
