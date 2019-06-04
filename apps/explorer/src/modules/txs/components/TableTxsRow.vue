@@ -147,7 +147,7 @@
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md1>
-            <p class="black--text text-truncate mb-0">{{ ethValue(tx.feeBN).toEth() }}</p>
+            <p class="black--text text-truncate mb-0">{{ ethValue(tx.feeBN.toFixed()).toEth() }}</p>
           </v-flex>
           <!--
           =====================================================================================
