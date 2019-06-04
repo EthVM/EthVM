@@ -479,7 +479,7 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       deltas
     }.flatten()
-    .filter { delta -> delta.getAmount() != null && delta.getAmountBI() != BigInteger.ZERO }
+    .filter { delta -> delta.getAmount() != null }
 
 // ------------------------------------------------------------
 // TransactionCountDeltaRecord
