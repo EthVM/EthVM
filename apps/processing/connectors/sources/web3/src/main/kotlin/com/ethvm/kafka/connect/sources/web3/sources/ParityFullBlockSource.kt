@@ -55,6 +55,10 @@ class ParityFullBlockSource(
 
   private val maxRequestTraceCount = 1000
 
+  private val initialBatchResizeBackoff = 10000
+
+  private var noBlocksFetched = 0L
+
   private val executor = Executors.newFixedThreadPool(noThreads)
 
   override fun fetchRange(range: LongRange): List<SourceRecord> {
@@ -185,6 +189,9 @@ class ParityFullBlockSource(
       val elapsedMs = System.currentTimeMillis() - startMs
       val count = (range.last - range.first) + 1 // end is inclusive
 
+      // update overall count
+      noBlocksFetched += count
+
       val avgTraceCount = when {
         totalTxCount > 0 -> totalTraceCount / totalTxCount
         else -> 0
@@ -194,13 +201,20 @@ class ParityFullBlockSource(
 
       // Adjust batch size to try and meet target fetch time in order to present consistent load to parity
 
-      logger.debug { "Fetched $count blocks. Elapsed = $elapsedMs ms, target fetch = $targetFetchTimeMs ms, % of target fetch = $percentageOfTargetFetchTime, trace count = $totalTraceCount, avg trace count = $avgTraceCount" }
+      logger.debug { "Total blocks fetched = $noBlocksFetched, fetch count = $count. Elapsed = $elapsedMs ms, target fetch = $targetFetchTimeMs ms, % of target fetch = $percentageOfTargetFetchTime, trace count = $totalTraceCount, avg trace count = $avgTraceCount" }
 
-      batchSize = when {
-        percentageOfTargetFetchTime < 0.7 -> batchSize * 2
-        percentageOfTargetFetchTime > 1.5 -> batchSize / 2
-        else -> batchSize
+      // initial back off is to help when we restart as a result of a timeout. It is intended to put less stress on parity for a while
+      // whilst allowing forward progress through the chain
+      val canResizeBatch = noBlocksFetched > initialBatchResizeBackoff
+
+      if(canResizeBatch) {
+        batchSize = when {
+          percentageOfTargetFetchTime < 0.7 -> batchSize * 2
+          percentageOfTargetFetchTime > 1.5 -> batchSize / 2
+          else -> batchSize
+        }
       }
+
 
       return records
     } catch (ex: TimeoutException) {
@@ -335,7 +349,11 @@ class ParityFullBlockSource(
         logger.debug { "Fetching range: $range. Next = $nextRange" }
 
         val first = nextRange!!.first
-        val last = nextRange.last
+
+        val last = when {
+          nextRange.last == 0L -> 1L
+          else -> nextRange.last
+        }
 
         val resp = parity.ethvmGetBlocksByNumber(
           first.toBigInteger(),
