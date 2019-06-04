@@ -141,7 +141,7 @@ export class TokenService {
       where,
       order,
       take: limit,
-      skip: offset
+      skip: offset,
     }
     return this.tokenExchangeRateRepository.findAndCount(findOptions)
   }
