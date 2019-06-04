@@ -38,7 +38,7 @@ export default class PageBlocks extends Vue {
       {
         text: 'block.name',
         disabled: true,
-        plural: 1
+        plural: 2
       }
     ]
   }
