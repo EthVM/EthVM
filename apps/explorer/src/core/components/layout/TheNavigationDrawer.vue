@@ -16,11 +16,11 @@
           -->
           <v-layout v-if="mini" column>
             <v-img :src="require('@/assets/logo-compact.png')" height="70px" max-width="80px" contain class="mb-2 mt-2"></v-img>
-            <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="80px" contain class="mb-2"></v-img>
+            <v-img :src="require('@/assets/beta.png')" height="18px" max-width="80px" contain class="mb-2"></v-img>
           </v-layout>
           <v-layout v-else align-end justify-start row>
             <v-img :src="require('@/assets/logo-white.png')" height="50px" max-width="130px" contain class="mb-4 mt-4 ml-2"></v-img>
-            <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="50px" contain class="mb-4 "></v-img>
+            <v-img :src="require('@/assets/beta.png')" height="18px" max-width="50px" contain class="mb-4 "></v-img>
           </v-layout>
 
           <!--
@@ -67,8 +67,8 @@
         =====================================================================================
         -->
         <v-flex v-if="!mini">
-          <v-layout align-center justify-end column fill-height pt-4 pb-5>
-            <p class="white--text">{{ $t('message.report') }}</p>
+          <v-layout align-center justify-end column fill-height pa-4>
+            <p class="white--text text-xs-center pb-2">{{ $t('message.report') }}</p>
             <v-btn outline color="bttnReport" class="text-capitalize font-weight-regular" :href="`mailto:${supportEmail}`">{{ $t('btn.report') }}</v-btn>
           </v-layout>
         </v-flex>
@@ -95,7 +95,7 @@
         <v-flex shrink>
           <v-layout align-end justify-start row fill-height>
             <v-img :src="require('@/assets/logo-white.png')" height="30px" width="70px" contain></v-img>
-            <v-img :src="require('@/assets/alpha.png')" height="16px" width="40px" contain></v-img>
+            <v-img :src="require('@/assets/beta.png')" height="16px" width="40px" contain></v-img>
           </v-layout>
         </v-flex>
         <v-spacer />

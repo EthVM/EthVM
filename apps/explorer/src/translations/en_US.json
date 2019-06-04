@@ -178,9 +178,11 @@
     },
     "not-found": "Oops! Page Not Found :(",
     "welcome": {
-      "title": "Welcome to EthVM!",
-      "text1": "We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
-      "text2": ", so we can continue to make EthVM even better!",
+      "title": "Welcome to EthVM Beta!",
+      "text1": "We are now on Ethereum mainnet, so have a look around and let us know about any bugs or feature requests at ",
+      "text2": ", or go to ",
+      "text3": "for updates and to contribute. ",
+      "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",
       "btn": "Onward!"
     },
     "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",

@@ -10,34 +10,34 @@
               <v-card-text>{{ $t('about.text') }}</v-card-text>
             </v-flex>
             <v-flex xs12>
-              <v-layout row wrap align-center>
+              <v-layout row wrap align-start justify-start pt-3>
                 <v-flex xs12 sm6 md3>
-                  <button href="https://github.com/EthVM">
+                  <a href="https://github.com/EthVM" class="black--text">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-github" large></v-icon></v-layout>
                     <v-card-title class="title pb-1 ">{{ $t('about.git.title') }}</v-card-title>
                     <v-card-text class="text-xs-left">{{ $t('about.git.text') }}</v-card-text>
-                  </button>
+                  </a>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
-                  <button href="https://medium.com/@myetherwallet">
+                  <a href="https://medium.com/@myetherwallet" class="black--text">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-medium-m" large></v-icon></v-layout>
                     <v-card-title class="title pb-1">{{ $t('about.medium.title') }}</v-card-title>
                     <v-card-text class="text-xs-left">{{ $t('about.medium.text') }}</v-card-text>
-                  </button>
+                  </a>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
-                  <button href="https://twitter.com/Eth_VM">
+                  <a href="https://twitter.com/Eth_VM" class="black--text">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-twitter" large></v-icon></v-layout>
                     <v-card-title class="title pb-1">{{ $t('about.twitter.title') }}</v-card-title>
                     <v-card-text class="text-xs-left">{{ $t('about.twitter.text') }}.</v-card-text>
-                  </button>
+                  </a>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
-                  <button href="https://www.reddit.com/r/ethvm">
+                  <a href="https://www.reddit.com/r/ethvm" class="black--text">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-reddit text-xs-left" large></v-icon></v-layout>
                     <v-card-title class="title pb-1" href="https://www.reddit.com/r/ethvm">{{ $t('about.reddit.title') }}</v-card-title>
                     <v-card-text class="text-xs-left">{{ $t('about.reddit.text') }}</v-card-text>
-                  </button>
+                  </a>
                 </v-flex>
               </v-layout>
             </v-flex>

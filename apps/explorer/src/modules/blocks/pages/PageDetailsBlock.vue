@@ -68,7 +68,7 @@ const MAX_TXS = 10
       variables() {
         const { blockNumber, blockHash } = this
         if (blockNumber) {
-          return { blockNumber: blockNumber.toString() }
+          return { blockNumber }
         }
         return { blockHash }
       },
@@ -354,7 +354,7 @@ export default class PageDetailsBlock extends Vue {
     return ''
   }
 
-  get previousBlock(): String {
+  get previousBlock(): string {
     const { blockNumber, blockHash, blockDetail } = this
 
     let number: BigNumber | null = null

@@ -5,16 +5,16 @@
         <div class="token-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height>
             <v-flex xs2>
-              <div class="loading"></div>
+              <div class="table-row-loading"></div>
             </v-flex>
             <v-flex xs8>
-              <div class="loading"></div>
-              <div class="loading"></div>
-              <div class="loading"></div>
-              <div class="loading"></div>
+              <div class="table-row-loading"></div>
+              <div class="table-row-loading"></div>
+              <div class="table-row-loading"></div>
+              <div class="table-row-loading"></div>
             </v-flex>
             <v-flex xs2>
-              <div class="loading"></div>
+              <div class="table-row-loading"></div>
             </v-flex>
           </v-layout>
         </div>
@@ -22,22 +22,22 @@
       <v-flex hidden-xs-only sm12>
         <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
           <v-flex xs1>
-            <div class="loading"></div>
+            <div class="table-row-loading"></div>
           </v-flex>
           <v-flex xs2>
-            <div class="loading"></div>
+            <div class="table-row-loading"></div>
           </v-flex>
           <v-flex xs2>
-            <div class="loading"></div>
+            <div class="table-row-loading"></div>
           </v-flex>
           <v-flex xs1>
-            <div class="loading"></div>
+            <div class="table-row-loading"></div>
           </v-flex>
           <v-flex xs3>
-            <div class="loading"></div>
+            <div class="table-row-loading"></div>
           </v-flex>
           <v-flex xs3>
-            <div class="loading"></div>
+            <div class="table-row-loading"></div>
           </v-flex>
         </v-layout>
         <v-divider class="mb-2 mt-2" />
@@ -54,11 +54,8 @@ export default class TokenTableRowLoading extends Vue {}
 </script>
 
 <style scoped lang="css">
-.loading {
-  background: #e6e6e6;
-  height: 12px;
-  border-radius: 2px;
-  margin:1px;
+.table-row-loading {
+  margin: 1px;
 }
 .token-mobile {
   border: 1px solid #b4bfd2;

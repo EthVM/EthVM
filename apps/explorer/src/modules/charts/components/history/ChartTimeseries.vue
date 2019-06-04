@@ -158,11 +158,11 @@ export default class ChartTimeseries extends Vue {
       case 'any':
         return value
       case 'bignumber':
-        return new BigNumber(value, 16)
+        return new BigNumber(value)
       case 'eth':
-        return new EthValue(new BigNumber(value, 16)).toEth()
+        return new EthValue(new BigNumber(value)).toEth()
       case 'gwei':
-        return new EthValue(new BigNumber(value, 16)).toGWei()
+        return new EthValue(new BigNumber(value)).toGWei()
       default:
         throw new Error(`Unexpected valueType: ${this.valueType}`)
     }

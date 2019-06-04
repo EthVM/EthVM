@@ -13,7 +13,7 @@
               <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 ">{{ title }}</v-card-title>
               <v-layout hidden-xs-only align-center justify-start row fill-height pt-2>
                 <div v-if="!account.isContract && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-                <div v-if="!account.isContract && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+                <div v-if="!account.isContract && account.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
               </v-layout>
               <address-qr :address="account.address" :large="true" />
             </v-layout>
@@ -27,7 +27,7 @@
           <v-flex xs12 hidden-sm-and-up v-if="hasChips">
             <v-layout align-center justify-start row fill-height pt-2>
               <div v-if="!account.isContract && account.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-              <div v-if="!account.isContract && account.isCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+              <div v-if="!account.isContract && account.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
             </v-layout>
           </v-flex>
         </v-layout>

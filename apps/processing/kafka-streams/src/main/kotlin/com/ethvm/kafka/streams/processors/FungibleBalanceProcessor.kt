@@ -21,7 +21,6 @@ import com.ethvm.kafka.streams.config.Topics.TransactionBalanceLog
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceLog
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
-import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
@@ -42,7 +41,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
-      put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, BlockEventTimestampExtractor::class.java)
     }
 
   override val logger = KotlinLogging.logger {}

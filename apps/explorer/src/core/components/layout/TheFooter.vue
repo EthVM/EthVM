@@ -40,25 +40,22 @@
         MD: 8/12 (5)
       =====================================================================================
       -->
-      <v-flex xs12 sm9 md5 :class="flexClass">
+      <v-flex xs12 sm5 md4 :class="flexClass">
         <v-card flat>
           <v-layout row pa-0 align-center>
             <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.donate') }}</v-card-title>
-            <v-flex hidden-xs-only hidden-md-and-up pa-0>
+            <!-- <v-flex hidden-xs-only hidden-md-and-up pa-0>
               <app-language />
-            </v-flex>
+            </v-flex> -->
           </v-layout>
-          <v-layout row wrap justify-start>
+          <v-layout row justify-start align-center>
             <v-btn outline color="secondary" class="text-lowercase font-weight-regular donation-btn" :to="`/address/${ethAddr}`">
               <v-icon class="secondary--text fab fa-ethereum pr-2" />
               {{ $t('common.eth') }} - {{ $t('footer.ens') }}
             </v-btn>
-            <v-layout reverse>
-              <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
-              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copy-eth-addr') }}</v-card-text>
-            </v-layout>
+            <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
           </v-layout>
-          <v-layout row wrap justify-start>
+          <v-layout row justify-start align-center>
             <v-btn
               outline
               color="secondary"
@@ -68,10 +65,7 @@
               <v-icon class="secondary--text fab fa-btc pr-2" />
               {{ $t('footer.btc') }} - blockchain.com
             </v-btn>
-            <v-layout reverse>
-              <app-copy-to-clip :value-to-copy="btcAddr"></app-copy-to-clip>
-              <v-card-text class="pl-0 secondary--text">{{ $t('footer.copy-btc-addr') }}</v-card-text>
-            </v-layout>
+            <app-copy-to-clip :value-to-copy="btcAddr"></app-copy-to-clip>
           </v-layout>
         </v-card>
       </v-flex>
@@ -85,23 +79,27 @@
         MD: 14/12 (4)
       =====================================================================================
       -->
-      <v-flex xs12 md4 :class="flexClass">
-        <v-layout column justify-end fill-height>
-          <v-flex hidden-sm-and-down xs12>
+      <v-flex xs12 sm4 md5 :class="flexClass">
+        <v-layout column justify-end align-end fill-height class="pb-3">
+          <v-flex hidden-xs-only md12 pa-1>
             <app-language />
           </v-flex>
-          <v-spacer></v-spacer>
           <v-flex xs12>
-            <v-layout row justify-end align-end fill-height>
-              <v-btn href="https://www.reddit.com/r/ethvm" icon> <v-icon class="fab fa-reddit grey--text"></v-icon> </v-btn>
-              <v-btn href="https://twitter.com/Eth_VM" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
-              <v-btn href="https://github.com/EthVM" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
-              <v-btn href="https://medium.com/@myetherwallet" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
+            <v-layout row justify-end align-end fill-height pa-1>
+              <v-btn href="https://www.reddit.com/r/ethvm" icon class="ma-1"> <v-icon small class="fab fa-reddit grey--text"></v-icon> </v-btn>
+              <v-btn href="https://twitter.com/Eth_VM" icon class="ma-1"> <v-icon small class="fab fa-twitter grey--text"></v-icon> </v-btn>
+              <v-btn href="https://github.com/EthVM" icon class="ma-1"> <v-icon small class="fab fa-github grey--text"></v-icon> </v-btn>
+              <v-btn href="https://medium.com/@myetherwallet" icon class="ma-1"> <v-icon small class="fab fa-medium-m grey--text"></v-icon> </v-btn>
             </v-layout>
           </v-flex>
           <v-flex xs12>
-            <v-layout align-end justify-end fill-height>
-              <p class="info--text text-xs-right">© {{ $t('footer.copy') }} {{ $t('footer.mew') }}</p>
+            <v-layout align-end justify-end fill-height pa-2>
+              <v-img :src="require('@/assets/powered-by-MEW.png')" height="20px" width="160px" contain></v-img>
+            </v-layout>
+          </v-flex>
+          <v-flex xs12>
+            <v-layout align-end justify-end fill-height pr-3>
+              <p class="info--text text-xs-right caption">© {{ $t('footer.copy') }} {{ $t('footer.mew') }}</p>
             </v-layout>
           </v-flex>
         </v-layout>
