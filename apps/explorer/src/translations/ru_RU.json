@@ -166,9 +166,11 @@
     },
     "not-found": "Страница не найдена :(",
     "welcome": {
-      "title": "Добро пожаловать в EthVM!",
-      "text1": "Мы все еще находимся на Alpha этапе, поэтому некоторые функции могут не работать в полном объеме. Если вы найдете какие нибудь ошибки, свяжитесь с нами ",
-      "text2": ", чтобы мы могли сделать EthVM еще лучше!",
+      "title": "Welcome to EthVM Beta!",
+      "text1": "We are now on Ethereum mainnet, so have a look around and let us know about any bugs or feature requests at ",
+      "text2": ", or go to ",
+      "text3": "for updates and to contribute. ",
+      "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",
       "btn": "Вперед!"
     },
     "ropsten-no-token": "EthVM все еще находится в тестировании, поэтому в настоящее время мы показываем данные из тест-нета Ropsten ETH. В тест-нете Ropsten нет токенов которые имеют ценность. Балансы всех ценных токенов появятся здесь, когда мы подключим Mainnet.",
