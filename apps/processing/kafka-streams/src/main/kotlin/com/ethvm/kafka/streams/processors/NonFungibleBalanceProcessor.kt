@@ -10,7 +10,6 @@ import com.ethvm.kafka.streams.config.Topics.Erc721BalanceDelta
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalance
 import com.ethvm.kafka.streams.config.Topics.Erc721BalanceLog
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDelta
-import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder

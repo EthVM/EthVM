@@ -16,7 +16,7 @@
       -->
       <v-flex xs7 sm8 md9 pr-0 v-if="!detail.txInput">
         <div v-if="isLoading">
-          <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+          <v-flex xs12 class="table-row-loading"></v-flex>
         </div>
         <div v-else>
           <div v-if="!isMono">

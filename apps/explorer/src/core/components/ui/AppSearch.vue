@@ -1,7 +1,7 @@
 <template>
   <v-layout align-center fill-height justify-end row height="48px" class="pl-1">
     <v-flex xs12 md8>
-      <v-card flat style="height: 48px; border: solid 1px #efefef;">
+      <v-card flat class="search-input-container">
         <v-layout align-center justify-end>
           <v-text-field
             v-model="searchInput"
@@ -35,7 +35,7 @@
         </v-layout>
       </v-card>
     </v-flex>
-    <v-flex hidden-sm-and-down md4 style="max-width: 115px;">
+    <v-flex hidden-sm-and-down md4 class="search-button-container">
       <v-btn v-if="phText === 'default'" @click="onSearch" depressed color="secondary" class="search-button text-capitalize ml-0">{{
         $t('search.name')
       }}</v-btn>
@@ -141,3 +141,12 @@ export default class AppSearch extends Vue {
   }
 }
 </script>
+<style scoped lang="css">
+.search-input-container {
+  height: 48px;
+  border: solid 1px #efefef !important;
+}
+.search-button-container {
+  max-width: 115px !important;
+}
+</style>

@@ -77,3 +77,15 @@ p {
     opacity: 0;
     transform: translateY(30px);
 }
+
+/* loading placeholders */
+.table-row-loading {
+  background: #e6e6e6;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* token images */
+.token-image {
+  width: 25px;
+}

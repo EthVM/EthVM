@@ -10,7 +10,7 @@
             <p class="pr-2 ma-0">{{ $t('filter.view') }}:</p>
           </v-flex>
           <v-flex>
-            <v-card flat style="border: solid 1px #efefef; padding-top: 1px;" height="36px" class="pl-2">
+            <v-card flat class="tx-filter-select-container pl-2" height="36px">
               <v-select solo flat hide-details v-model="filter" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" />
             </v-card>
           </v-flex>
@@ -109,22 +109,22 @@
             <div v-for="i in maxItems" :key="i">
               <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
                 <v-flex xs3 sm3 md1 pl-3>
-                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                  <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
                 <v-flex xs7 sm6 md6>
-                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                  <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
                 <v-flex xs2 sm2 md1>
-                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                  <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
                 <v-flex hidden-sm-and-down md1>
-                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                  <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
                 <v-flex hidden-sm-and-down md2>
-                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                  <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
                 <v-flex hidden-xs-only sm1>
-                  <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+                  <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
               </v-layout>
               <v-divider class="mb-2 mt-2" />
@@ -486,3 +486,9 @@ export default class TableTxs extends TableTxsMixin {
   }
 }
 </script>
+<style scoped lang="css">
+.tx-filter-select-container {
+  border: solid 1px #efefef;
+  padding-top: 1px;
+}
+</style>

@@ -260,9 +260,4 @@ export default class TableAddressContracts extends Vue {
 .table-row-mobile {
   border: 1px solid #b4bfd2;
 }
-.table-row-loading {
-  background: #e6e6e6;
-  height: 12px;
-  border-radius: 2px;
-}
 </style>

@@ -44,11 +44,11 @@
             ripple
             >{{ item.title }}</v-tab
           >
-          <v-tabs-slider color="primary" class="mb-0" style="height: 4px;" />
+          <v-tabs-slider color="primary" class="mb-0 tabs-slider" />
         </v-tabs>
       </v-flex>
     </v-layout>
-    <v-tabs-items v-model="activeTab" style="border-top: 1px solid #efefef">
+    <v-tabs-items v-model="activeTab" class="tabs-items">
       <v-container grid-list-xs :class="tabContainerClass"> <slot name="tabs-item"/></v-container>
     </v-tabs-items>
   </v-card>
@@ -117,4 +117,12 @@ export default class AppTabs extends Vue {
 .v-select__selections{
   color:#6270fc !important;
 }
+
+  .tabs-slider {
+    height: 4px;
+  }
+
+  .tabs-items {
+    border-top: 1px solid #efefef
+  }
 </style>
