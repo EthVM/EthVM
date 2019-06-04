@@ -182,7 +182,7 @@ class ParityFullBlockSource(
       cleanTimestamps()
 
       val elapsedMs = System.currentTimeMillis() - startMs
-      val count = range.last - range.first
+      val count = (range.last - range.first) + 1 // end is inclusive
 
       val avgTraceCount = when {
         totalTxCount > 0 -> totalTraceCount / totalTxCount
@@ -193,15 +193,12 @@ class ParityFullBlockSource(
 
       // Adjust batch size to try and meet target fetch time in order to present consistent load to parity
 
-      if (count > 0) {
+      logger.debug { "Fetched $count blocks. Elapsed = $elapsedMs ms, target fetch = $targetFetchTimeMs ms, % of target fetch = $percentageOfTargetFetchTime, trace count = $totalTraceCount, avg trace count = $avgTraceCount" }
 
-        logger.debug { "Fetched $count blocks. Elapsed = $elapsedMs ms, target fetch = $targetFetchTimeMs ms, % of target fetch = $percentageOfTargetFetchTime, trace count = $totalTraceCount, avg trace count = $avgTraceCount" }
-
-        batchSize = when {
-          percentageOfTargetFetchTime < 0.7 -> batchSize * 2
-          percentageOfTargetFetchTime > 1.5 -> batchSize / 2
-          else -> batchSize
-        }
+      batchSize = when {
+        percentageOfTargetFetchTime < 0.7 -> batchSize * 2
+        percentageOfTargetFetchTime > 1.5 -> batchSize / 2
+        else -> batchSize
       }
 
       return records
