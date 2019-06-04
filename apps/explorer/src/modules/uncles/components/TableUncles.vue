@@ -69,19 +69,19 @@
         <div v-for="i in maxItems" :key="i">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
             <v-flex xs3 sm2 order-xs1>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
             <v-flex xs3 sm2 order-xs1>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
             <v-flex xs12 sm5 md5 class="pr-0" order-xs3 order-sm2>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
             <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
             <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
-              <v-flex xs12 style="background: #e6e6e6; height: 12px; border-radius: 2px;"></v-flex>
+              <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
           </v-layout>
           <v-divider class="mb-2 mt-2" />

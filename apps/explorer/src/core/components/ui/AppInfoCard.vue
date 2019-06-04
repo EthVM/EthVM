@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text" height="150px" style="padding-top: 42px; padding-left: 24px;">
+  <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text info-card" height="150px">
     <v-layout wrap fill-height>
       <v-flex xs12>
         <v-layout align-end row pr-2>
@@ -20,10 +20,10 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component
 export default class AppInfoCard extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
   @Prop(String) value!: string
   @Prop(String) title!: string
@@ -32,10 +32,10 @@ export default class AppInfoCard extends Vue {
   @Prop(String) backType!: string
 
   /*
-  ===================================================================================
-    Computed
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
 
   get getColor(): string {
     return this.colorType
@@ -48,6 +48,11 @@ export default class AppInfoCard extends Vue {
 </script>
 
 <style scoped lang="css">
+.info-card {
+  padding-top: 42px;
+  padding-left: 24px;
+}
+
 .last-block {
   background-position: right -10px bottom -17px;
   background-image: url('~@/assets/smallblocks/cubes-in-stack-with-shadow.svg');
@@ -67,10 +72,12 @@ export default class AppInfoCard extends Vue {
   background-position: right -10px bottom -17px;
   background-image: url('~@/assets/smallblocks/dashboard.svg');
 }
+
 .success-txs {
   background-position: right -10px bottom -17px;
   background-image: url('~@/assets/smallblocks/target.svg');
 }
+
 .failed-txs {
   background-position: right -10px bottom -17px;
   background-image: url('~@/assets/smallblocks/danger-sing.svg');
