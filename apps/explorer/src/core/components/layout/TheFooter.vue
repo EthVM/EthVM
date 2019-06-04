@@ -55,7 +55,7 @@
             </v-btn>
             <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
           </v-layout>
-          <v-layout row  justify-start align-center>
+          <v-layout row justify-start align-center>
             <v-btn
               outline
               color="secondary"
@@ -93,12 +93,12 @@
             </v-layout>
           </v-flex>
           <v-flex xs12>
-            <v-layout  align-end justify-end fill-height pa-2>
+            <v-layout align-end justify-end fill-height pa-2>
               <v-img :src="require('@/assets/powered-by-MEW.png')" height="20px" width="160px" contain></v-img>
             </v-layout>
           </v-flex>
           <v-flex xs12>
-            <v-layout align-end justify-end fill-height pr-3 >
+            <v-layout align-end justify-end fill-height pr-3>
               <p class="info--text text-xs-right caption">© {{ $t('footer.copy') }} {{ $t('footer.mew') }}</p>
             </v-layout>
           </v-flex>

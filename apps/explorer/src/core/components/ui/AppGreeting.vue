@@ -6,18 +6,19 @@
         {{ $t('message.welcome.title') }}
       </v-card-title>
       <v-card-text>
-        {{ $t('message.welcome.text1') }} <a :href="`mailto:${supportEmail}`">{{ supportEmail }}</a> {{ $t('message.welcome.text2') }} <a href="https://github.com/EthVM/EthVM" >{{ $t('about.git.title') }} </a> {{ $t('message.welcome.text3') }}</a>
+        {{ $t('message.welcome.text1') }} <a :href="`mailto:${supportEmail}`">{{ supportEmail }}</a> {{ $t('message.welcome.text2') }}
+        <a href="https://github.com/EthVM/EthVM">{{ $t('about.git.title') }} </a> {{ $t('message.welcome.text3') }}
       </v-card-text>
-       <v-card-text>
+      <v-card-text>
         {{ $t('message.welcome.text4') }}
       </v-card-text>
       <v-card-actions>
-                  <v-layout row justify-end align-end fill-height>
-              <v-btn href="https://www.reddit.com/r/ethvm" icon> <v-icon class="fab fa-reddit grey--text"></v-icon> </v-btn>
-              <v-btn href="https://twitter.com/Eth_VM" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
-              <v-btn href="https://github.com/EthVM" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
-              <v-btn href="https://medium.com/@myetherwallet" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
-            </v-layout>
+        <v-layout row justify-end align-end fill-height>
+          <v-btn href="https://www.reddit.com/r/ethvm" icon> <v-icon class="fab fa-reddit grey--text"></v-icon> </v-btn>
+          <v-btn href="https://twitter.com/Eth_VM" icon> <v-icon class="fab fa-twitter grey--text"></v-icon> </v-btn>
+          <v-btn href="https://github.com/EthVM" icon> <v-icon class="fab fa-github grey--text"></v-icon> </v-btn>
+          <v-btn href="https://medium.com/@myetherwallet" icon> <v-icon class="fab fa-medium-m grey--text"></v-icon> </v-btn>
+        </v-layout>
       </v-card-actions>
       <v-card-actions>
         <v-layout align-center justify-center row fill-height>
