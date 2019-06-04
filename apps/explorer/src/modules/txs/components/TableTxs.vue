@@ -195,7 +195,7 @@ class TableTxsMixin extends Vue {
         const { blockHash: hash, blockNumber, address, filter } = this
 
         return {
-          number: blockNumber ? blockNumber.toString(10) : undefined,
+          number: blockNumber,
           hash,
           address,
           filter
