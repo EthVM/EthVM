@@ -47,7 +47,7 @@ class ParityFullBlockSource(
 
   private val blockTimestamps = sortedMapOf<BigInteger, Long>()
 
-  override var batchSize = 16
+  override var batchSize = 1
 
   private val noThreads = 4
 
