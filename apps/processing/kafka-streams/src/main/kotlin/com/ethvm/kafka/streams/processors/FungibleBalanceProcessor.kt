@@ -21,7 +21,6 @@ import com.ethvm.kafka.streams.config.Topics.TransactionBalanceLog
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceLog
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
-import com.ethvm.kafka.streams.utils.BlockEventTimestampExtractor
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
