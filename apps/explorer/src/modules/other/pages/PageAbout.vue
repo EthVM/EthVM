@@ -10,7 +10,7 @@
               <v-card-text>{{ $t('about.text') }}</v-card-text>
             </v-flex>
             <v-flex xs12>
-              <v-layout row wrap align-center justify-space-between>
+              <v-layout row wrap align-start justify-start pt-3>
                 <v-flex xs12 sm6 md3>
                   <a href="https://github.com/EthVM" class="black--text">
                     <v-layout justify-start pl-3><v-icon class="primary--text pl-2 fab fa-github" large></v-icon></v-layout>
