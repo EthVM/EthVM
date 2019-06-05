@@ -41,6 +41,19 @@ const webpackProduction = {
   // }
 }
 
+const publicUrl = process.env.VUE_APP_PUBLIC_URL
+
+const devServer = {
+  disableHostCheck: true,
+  noInfo: true
+}
+
+if (publicUrl) {
+  devServer.public = publicUrl // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
+}
+
+console.log('Dev server config', devServer)
+
 module.exports = {
   chainWebpack: config => {
     config.plugin('html').tap(args => {
@@ -65,9 +78,5 @@ module.exports = {
   },
   configureWebpack: process.env.NODE_ENV === 'production' ? merge(webpackCommon, webpackProduction) : webpackCommon,
   productionSourceMap: false,
-  devServer: {
-    disableHostCheck: true,
-    noInfo: true,
-    public: 'ethvm.lan/' // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
-  }
+  devServer
 }
