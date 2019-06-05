@@ -55,7 +55,7 @@
               <v-flex sm3>
                 <h5>{{ $t('usd.value') }}</h5>
               </v-flex>
-              <v-flex sm2 >
+              <v-flex sm2>
                 <h5>{{ $t('token.change') }}</h5>
               </v-flex>
             </v-layout>

@@ -6,7 +6,7 @@
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-3 pr-3 pt-2 pb-2">
             <v-flex xs2 pl-1 pr-1>
               <div class="token-image">
-                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain/>
+                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
                 <v-img v-else :src="token.image" contain />
               </div>
             </v-flex>
