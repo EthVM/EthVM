@@ -55,7 +55,7 @@ class ParityFullBlockSource(
 
   private val maxRequestTraceCount = 1000
 
-  private val initialBatchResizeBackoff = 10000
+  private val initialBatchResizeBackoff = 1000
 
   private var noBlocksFetched = 0L
 

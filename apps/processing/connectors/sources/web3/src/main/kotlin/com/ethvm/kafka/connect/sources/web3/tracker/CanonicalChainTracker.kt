@@ -1,116 +1,111 @@
 package com.ethvm.kafka.connect.sources.web3.tracker
 
-import arrow.core.Option
-import arrow.core.toOption
-import com.ethvm.common.extensions.hexToBI
-import io.reactivex.disposables.Disposable
 import mu.KotlinLogging
-import org.web3j.protocol.parity.Parity
 import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 
 class CanonicalChainTracker(
-  parity: Parity,
-  startFrom: Long = 0L
+  initialTail: Long = 0L,
+  initialHead: Long = -1L
 ) {
 
   private val logger = KotlinLogging.logger {}
 
-  // multiple readers on tail so we use AtomicLong
-  private val tail = AtomicLong(startFrom)
-
-  // single write multiple readers so we can use volatile
   @Volatile
-  var head: Long = parity.ethBlockNumber().send().blockNumber.longValueExact() + 1L
+  public var head: Long = initialHead
 
-  private var exception: Throwable? = null
-
-  private var subscription: Disposable
+  // multiple readers on tail so we use AtomicLong
+  private val tail = AtomicLong(initialTail)
 
   private var reOrgs: ArrayBlockingQueue<LongRange> = ArrayBlockingQueue(10)
 
-  init {
-    assert(startFrom >= 0L) { "StartFrom needs to be >= 0" }
+  fun newHeads(heads: List<Long>) {
 
-    logger.debug { "Starting subscription to new heads!" }
+    // we don't process an empty list
+    if(heads.isEmpty()) {
+      return
+    }
 
-    subscription =
-      parity
-        .newHeadsNotifications()
-        .map { it.params.result }
-        .map { it.number.hexToBI().longValueExact() }
-        .buffer(1, TimeUnit.SECONDS, 256)
-        .onBackpressureBuffer()
-        .filter { it.isNotEmpty() }
-        .subscribe(
-          { heads ->
+    // read once against the volatile
+    val currentHead = this.head
 
-            head = heads.max()!! + 1L
-            val tail = heads.min()!!
+    // determine the range the new heads span
+    val max = heads.max()!!
+    val min = heads.min()!!
 
-            logger.debug { "New head notification! - Tail: $tail - Head: $head" }
+    // update head
+    if(max > currentHead) {
+      this.head = max
+    }
 
-            val reOrg: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
+    // determine duplicates indicating a chain re-org, sorting them into their natural order
 
-            if (reOrg.isNotEmpty()) {
-              val minReOrg = reOrg.min()
-              val maxReOrg = reOrg.max()
-              val range = LongRange(minReOrg!!, maxReOrg!!)
-              reOrgs.add(range)
+    val reOrg = heads
+      .groupingBy { it }
+      .eachCount()
+      .filter { it.value > 1 }
+      .map { it.key }
+      .sorted()
 
-              logger.debug { "Chain reorganization detected! Affecting range: $range" }
-            }
+    if (reOrg.isNotEmpty()) {
 
-            tryResetTail(tail)
-          },
-          { ex -> exception = ex }
-        )
-  }
+      LongRange(reOrg.min()!!, reOrg.max()!!)
+        .apply {
+          reOrgs.add(this)
+          logger.debug { "Chain re-organization detected! Re-org: $this" }
+        }
 
-  fun stop() {
-    subscription.dispose()
+    }
+
+    // update tail
+    tryResetTail(min)
   }
 
   private fun tryResetTail(value: Long) {
+
+    logger.debug { "Trying to reset tail to $value" }
 
     // it's possible the tail gets updated after we read it so we loop whilst our value is less than the current tail and
     // keep attempting to write
 
     do {
       val currentTail = tail.get()
+      logger.debug { "Current tail = $currentTail" }
     } while (value < currentTail && !tail.compareAndSet(currentTail, value))
+
+    logger.debug{ "After reset attempt tail = ${tail.get()}" }
   }
 
-  fun nextRange(maxSize: Int = 128): Pair<Option<LongRange>, List<LongRange>> {
-
-    // Throw exception if any
-    val ex = exception
-    if (ex != null) {
-      throw ex
-    }
+  fun nextRange(maxSize: Int = 4): Pair<LongRange?, List<LongRange>> {
 
     val currentHead = head
     val currentTail = tail.get()
-    val reOrg = ArrayList<LongRange>().apply { if (reOrgs.isNotEmpty()) reOrgs.drainTo(this) }
 
-    if (currentTail == currentHead + 1) {
-      logger.debug { "Tail: $currentTail == Head: $currentHead. Skipping!" }
-      return Pair(Option.empty(), reOrg)
-    }
-
-    val range = currentTail.until(currentTail + maxSize) // range is not inclusive at the end
-      .let { range ->
-        when {
-          range.endInclusive > currentHead -> currentTail.until(currentHead)
-          else -> range
-        }
+    val reOrgRanges = ArrayList<LongRange>()
+      .apply {
+        if (reOrgs.isNotEmpty()) reOrgs.drainTo(this)
       }
 
-    logger.debug { "Next range: $range" }
+    logger.debug { "Next range. Current tail = $currentTail, current head = $currentHead" }
 
-    tail.compareAndSet(currentTail, range.endInclusive + 1)
+    if (currentTail == currentHead + 1) {
+      // we have caught up to the head and there is nothing new
+      return Pair(null, reOrgRanges)
+    }
 
-    return Pair(range.toOption(), reOrg)
+    val targetHead = currentTail + maxSize - 1
+
+    val range = when {
+      targetHead > currentHead -> LongRange(currentTail, currentHead)
+      else -> LongRange(currentTail, targetHead)
+    }
+
+    logger.debug { "Next range from chain tracker: $range" }
+
+    // update tail for next fetch
+    tail.compareAndSet(currentTail, range.last + 1)
+
+    return Pair(range, reOrgRanges)
   }
+
 }
