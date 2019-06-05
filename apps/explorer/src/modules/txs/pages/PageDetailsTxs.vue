@@ -23,6 +23,11 @@ import { TransactionDetailExt } from '@app/core/api/apollo/extensions/transactio
     AppBreadCrumbs,
     AppDetailsList
   },
+  data() {
+    return {
+      syncing: undefined
+    }
+  },
   apollo: {
     transactionDetail: {
       query: transactionDetailQuery,
@@ -30,20 +35,31 @@ import { TransactionDetailExt } from '@app/core/api/apollo/extensions/transactio
         return { hash: this.txHash }
       },
       fetchPolicy: 'cache-and-network',
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
       update({ transaction }) {
         if (transaction) {
           return new TransactionDetailExt(transaction)
+        } else if (!this.syncing) {
+          this.error = this.error || this.$i18n.t('message.invalid.tx')
         }
-
-        this.error = this.error || this.$i18n.t('message.invalid.tx')
         return null
       },
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if(graphQLErrors) {
+          graphQLErrors.forEach(error => {
+
+            switch(error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true;
+                break;
+              default:
+              // Do nothing
+            }
+
+          })
+        }
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -68,6 +84,7 @@ export default class PageDetailsTxs extends Vue {
   */
 
   error = ''
+  syncing?: boolean
   transactionDetail?: TransactionDetailExt
 
   // TODO remove these?
@@ -275,8 +292,8 @@ export default class PageDetailsTxs extends Vue {
    *
    * @return {Boolean}
    */
-  get isLoading(): boolean {
-    return this.$apollo.loading
+  get isLoading(): boolean | undefined {
+    return this.$apollo.loading || this.syncing
   }
 
   get inputFormatted(): string[] {
