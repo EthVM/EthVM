@@ -10,6 +10,7 @@ export class TokenPageExt_items implements TokenPage_items {
   decimals: number | null
   name: string | null
   symbol: string | null
+  priceChange24h: any | null
 
   constructor(proto: Token) {
     this.address = proto.address
@@ -18,14 +19,38 @@ export class TokenPageExt_items implements TokenPage_items {
     this.decimals = proto.decimals
     this.name = proto.name
     this.symbol = proto.symbol
+    this.priceChange24h = proto.priceChange24h
   }
 
   get currentPriceBN(): BN | null {
     return this.currentPrice ? new BN(this.currentPrice) : null
   }
 
-  get balanceBN(): BN | null {
-    return this.balance ? new BN(this.balance) : null
+  get formattedBalance(): string {
+    const { decimals, balanceBN } = this
+
+    if (!decimals) {
+      return balanceBN.toFixed()
+    }
+
+    return balanceBN.div(new BN(10).pow(decimals)).toFixed()
+
+  }
+
+  get balanceBN(): BN {
+    return new BN(this.balance || 0)
+  }
+
+  get usdValueBN(): BN {
+    const { currentPriceBN, balanceBN } = this
+
+    if (!currentPriceBN) return new BN(0.00)
+
+    return balanceBN.multipliedBy(currentPriceBN)
+  }
+
+  get priceChange24hBN(): BN | null {
+    return this.priceChange24h ? new BN(this.priceChange24h) : null
   }
 }
 

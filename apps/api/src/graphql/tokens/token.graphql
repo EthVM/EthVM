@@ -27,6 +27,7 @@ type Token {
   decimals: Int
   balance: BigNumber
   currentPrice: BigNumber
+  priceChange24h: BigNumber
 }
 
 type TokenHolder {

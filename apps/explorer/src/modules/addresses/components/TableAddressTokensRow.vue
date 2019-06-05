@@ -54,6 +54,7 @@
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
+import { TokenPageExt_items } from "@app/core/api/apollo/extensions/token-page.ext";
 
 @Component
 export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
@@ -63,17 +64,8 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Object) token!: any
+  @Prop(Object) token!: TokenPageExt_items
   @Prop(String) holder!: string
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-
-
 
   /*
   ===================================================================================
@@ -81,40 +73,35 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-
-  get balance(): string{
-    return new BN(this.token.balance)
-      .div(new BN(10).pow(this.token.decimals)).toFixed()
+  get balance(): string {
+    return this.token.formattedBalance
   }
 
   get tokenLink(): string {
-    return `/token/${this.token.addr}?holder=${this.holder}`
+    return `/token/${this.token.address}?holder=${this.holder}`
   }
 
   get currPrice(): string {
-    return this.token.currentPrice? this.getRoundNumber(new BN(this.token.currentPrice)) : '0.00'
+    return this.token.currentPriceBN ? this.getRoundNumber(this.token.currentPriceBN) : '0.00'
   }
 
-  get  usdValue(): string{
-    return this.token.currentPrice ? this.getRoundNumber(new BN(new BN(this.balance())).multipliedBy(this.token.currentPrice)) : '0.00'
+  get  usdValue(): string {
+    return this.getRoundNumber(this.token.usdValueBN)
   }
 
-
-  //TODO: implement token price change
   get changeInPrice(): string {
-    // if (!this.token.priceChangePercentage24h) {
-    //   return 'null'
-    // }
-    // const priceChangeAsBN = new BN(this.token.priceChangePercentage24h)
-    // if (priceChangeAsBN.toNumber() === 0) {
-    //   return 'null'
-    // }
-    // return priceChangeAsBN.toNumber() > 0 ? '+' : '-'
-    return 'null'
+
+    const { priceChange24hBN } = this.token
+
+    if (!priceChange24hBN || priceChange24hBN.toNumber() === 0) {
+      return 'null'
+    }
+
+    return priceChange24hBN.toNumber() > 0 ? '+' : '-'
   }
 
   get tokenPriceChange(): string {
-    return this.changeInPrice != 'null' ? `${this.changeInPrice}${this.getPercent(this.token.priceChangePercentage24h)}` : '0'
+    return this.changeInPrice != 'null' ? `${this.changeInPrice}${this.getPercent(this.token.priceChange24h)}` : '0'
   }
 
   get tokenChangeClass(): string {

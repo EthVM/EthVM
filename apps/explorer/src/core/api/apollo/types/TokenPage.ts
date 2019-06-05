@@ -14,6 +14,7 @@ export interface TokenPage_items {
   decimals: number | null;
   balance: any | null;
   currentPrice: any | null;
+  priceChange24h: any | null;
 }
 
 export interface TokenPage {
