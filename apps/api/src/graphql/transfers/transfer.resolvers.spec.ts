@@ -8,6 +8,7 @@ import { TransferPageDto } from './dto/transfer-page.dto'
 import { BalancesPageDto } from './dto/balances-page.dto'
 import { BalanceDto } from './dto/balance.dto'
 import { FungibleBalanceDeltaEntity } from '../../orm/entities/fungible-balance-delta.entity'
+import { MetadataService } from '../../dao/metadata.service'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -161,7 +162,14 @@ const balanceDeltas = [
   }
 ]
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+
+const transferServiceMock = {
   async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceTransferEntity[], number]> {
     const data = transfers.filter(t => t.contractAddress === address && t.deltaType === 'TOKEN_TRANSFER')
 
@@ -281,7 +289,11 @@ describe('TransferResolvers', () => {
         EthService,
         {
           provide: TransferService,
-          useValue: mockService
+          useValue: transferServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()

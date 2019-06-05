@@ -7,6 +7,7 @@ import { BlockMetricsService } from '../../dao/block-metrics.service'
 import { BlockMetricDto } from './dto/block-metric.dto'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '../schema'
 import { AggregateBlockMetricDto } from './dto/aggregate-block-metric.dto'
+import { MetadataService } from '../../dao/metadata.service'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hashTwo = '0x0000000000000000000000000000000000000000000000000000000000000002'
@@ -198,7 +199,13 @@ const aggregateBlockMetricsDay = [
   }
 ]
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const blockMetricsServiceMock = {
   async find(offset: number = 0, limit: number = 10): Promise<[BlockMetricEntity[], number]> {
     const end = offset + limit
     const allBlockMetrics = Object.values(blockMetrics)
@@ -242,7 +249,11 @@ describe('BlockMetricResolvers', () => {
         },
         {
           provide: BlockMetricsService,
-          useValue: mockService
+          useValue: blockMetricsServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()

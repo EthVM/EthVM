@@ -9,6 +9,7 @@ import { TransactionSummaryDto } from './dto/transaction-summary.dto'
 import BigNumber from 'bignumber.js'
 import { TxDto } from './dto/tx.dto'
 import { TransactionEntity } from '../../orm/entities/transaction.entity'
+import { MetadataService } from '../../dao/metadata.service'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hashTwo = '0x0000000000000000000000000000000000000000000000000000000000000002'
@@ -118,7 +119,13 @@ const txSummaries = [
   }
 ]
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const txServiceMock = {
   async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[TransactionSummary[], number]> {
     // Apply from block filter
     let items = fromBlock ? txSummaries.filter(ts => fromBlock.isGreaterThanOrEqualTo(ts.blockNumber)) : txSummaries
@@ -224,7 +231,11 @@ describe('TxResolvers', () => {
         EthService,
         {
           provide: TxService,
-          useValue: mockService
+          useValue: txServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         },
         {
           provide: 'PUB_SUB',
