@@ -52,6 +52,7 @@ class CanonicalChainTracker(
             logger.debug { "New head notification! - Tail: $tail - Head: $head" }
 
             val reOrg: List<Long> = heads.groupingBy { it }.eachCount().filter { it.value > 1 }.map { it.key }
+
             if (reOrg.isNotEmpty()) {
               val minReOrg = reOrg.min()
               val maxReOrg = reOrg.max()

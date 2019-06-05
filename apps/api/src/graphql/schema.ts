@@ -293,7 +293,6 @@ export interface Metadata {
 }
 
 export interface IQuery {
-    accountByAddress(address: string): Account | Promise<Account>;
     blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
@@ -301,9 +300,9 @@ export interface IQuery {
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
+    metadata(): Metadata | Promise<Metadata>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
-    metadata(): Metadata | Promise<Metadata>;
     search(query: string): Search | Promise<Search>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
     addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
@@ -329,6 +328,7 @@ export interface IQuery {
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
+    accountByAddress(address: string): Account | Promise<Account>;
     temp__(): boolean | Promise<boolean>;
 }
 

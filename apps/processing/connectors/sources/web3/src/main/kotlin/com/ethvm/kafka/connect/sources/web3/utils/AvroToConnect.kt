@@ -16,6 +16,7 @@ import com.ethvm.avro.capture.UncleRecord
 import io.confluent.connect.avro.AvroData
 import org.apache.avro.Schema
 import org.apache.avro.specific.SpecificRecordBase
+import org.apache.kafka.connect.data.ConnectSchema
 import org.apache.kafka.connect.data.SchemaAndValue
 
 object AvroToConnect {
@@ -40,5 +41,22 @@ object AvroToConnect {
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)
 
-  fun toConnectSchema(schema: Schema) = avroData.toConnectSchema(schema)
+  fun toConnectSchema(schema: Schema, optional: Boolean = false): org.apache.kafka.connect.data.Schema {
+    var connectSchema = avroData.toConnectSchema(schema)
+    if(optional) {
+      connectSchema = ConnectSchema(
+        connectSchema.type(),
+        true,
+        null,
+        connectSchema.name(),
+        connectSchema.version(),
+        connectSchema.doc(),
+        connectSchema.parameters(),
+        connectSchema.fields(),
+        connectSchema.keySchema(),
+        connectSchema.valueSchema()
+      )
+    }
+    return connectSchema
+  }
 }
