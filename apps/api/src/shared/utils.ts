@@ -6,7 +6,6 @@
  * @param target
  * @param source
  */
-import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 
 export function assignClean(target: any, source: any) {
   const sourceCopy = { ...source }

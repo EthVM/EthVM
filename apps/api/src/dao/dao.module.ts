@@ -28,6 +28,8 @@ import {TraceService} from '@app/dao/trace.service'
 import {UncleService} from '@app/dao/uncle.service'
 import {TxService} from '@app/dao/tx.service'
 import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
+import { MetadataEntity } from '@app/orm/entities/metadata.entity'
+import { MetadataService } from '@app/dao/metadata.service'
 
 @Module({
   imports: [
@@ -49,6 +51,7 @@ import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
       Erc721MetadataEntity,
       CoinExchangeRateEntity,
       BlockMetricEntity,
+      MetadataEntity
     ]),
   ],
   providers: [
@@ -63,6 +66,7 @@ import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
     UncleService,
     TraceService,
     ReceiptService,
+    MetadataService
   ],
   exports: [
     AccountService,
@@ -76,6 +80,7 @@ import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
     UncleService,
     TraceService,
     ReceiptService,
+    MetadataService
   ],
 })
 export class DaoModule {

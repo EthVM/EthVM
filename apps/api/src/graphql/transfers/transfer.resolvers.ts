@@ -4,8 +4,11 @@ import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseAddressesPipe } from '@app/shared/validation/parse-addresses.pipe'
 import { TransferPageDto } from '@app/graphql/transfers/dto/transfer-page.dto'
 import { BalancesPageDto } from '@app/graphql/transfers/dto/balances-page.dto'
+import { UseInterceptors } from '@nestjs/common'
+import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 
 @Resolver('Transfer')
+@UseInterceptors(SyncingInterceptor)
 export class TransferResolvers {
 
   constructor(private readonly transferService: TransferService) {}

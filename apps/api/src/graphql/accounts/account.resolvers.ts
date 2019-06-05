@@ -2,8 +2,11 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import { AccountService } from '@app/dao/account.service'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { AccountDto } from '@app/graphql/accounts/account.dto'
+import { UseInterceptors } from '@nestjs/common'
+import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 
 @Resolver('Account')
+@UseInterceptors(SyncingInterceptor)
 export class AccountResolvers {
   constructor(private readonly accountService: AccountService) {}
 

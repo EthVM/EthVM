@@ -2,7 +2,7 @@ import { BlockService } from '@app/dao/block.service'
 import { BlockDto } from '@app/graphql/blocks/dto/block.dto'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
-import { Inject } from '@nestjs/common'
+import { Inject, UseInterceptors } from '@nestjs/common'
 import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestjs/graphql'
 import { PubSub } from 'graphql-subscriptions'
 import { BlockSummary } from '../schema'
@@ -11,8 +11,10 @@ import BigNumber from 'bignumber.js'
 import { BlockSummaryPageDto } from './dto/block-summary-page.dto'
 import retry from 'async-retry'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
+import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 
 @Resolver('Block')
+@UseInterceptors(SyncingInterceptor)
 export class BlockResolvers {
 
   constructor(

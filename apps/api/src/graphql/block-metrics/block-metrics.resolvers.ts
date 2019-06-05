@@ -4,11 +4,13 @@ import { BlockMetricField, BlockMetricPage, TimeBucket } from '@app/graphql/sche
 import { BlockMetricPageDto } from '@app/graphql/block-metrics/dto/block-metric-page.dto'
 import { BlockMetricDto } from '@app/graphql/block-metrics/dto/block-metric.dto'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
-import { Inject } from '@nestjs/common'
+import { Inject, UseInterceptors } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
 import { AggregateBlockMetricDto } from '@app/graphql/block-metrics/dto/aggregate-block-metric.dto'
+import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 
 @Resolver('BlockMetric')
+@UseInterceptors(SyncingInterceptor)
 export class BlockMetricsResolvers {
 
   constructor(private readonly blockMetricsService: BlockMetricsService,

@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { PubSub } from 'graphql-subscriptions'
 import createSubscriber from 'pg-listen'
 import { Observable, Subject } from 'rxjs'
-import { bufferTime, filter } from 'rxjs/operators'
+import { bufferTime, filter, map } from 'rxjs/operators'
 import { Logger } from 'winston'
 import { CircuitBreaker, CircuitBreakerState } from './circuit-breaker'
 import { TxService } from '@app/dao/tx.service'
@@ -39,18 +39,24 @@ export interface BlockMetricPayload {
   timestamp: number
 }
 
+export interface MetadataPayload {
+  key: string
+  value: string
+}
+
 export type PgEventPayload =
   CanonicalBlockHeaderPayload
   | TransactionPayload
   | TransactionReceiptPayload
   | TransactionTracePayload
   | BlockMetricPayload
+  | MetadataPayload
 
 export class PgEvent {
 
   public readonly table: string
   public readonly action: string
-  public readonly payload: PgEventPayload
+  public readonly payload: any
 
   constructor(data: any) {
     this.table = data.table
@@ -60,25 +66,27 @@ export class PgEvent {
 
 }
 
-function inputIsCircuitBreakerState(input: any): input is CircuitBreakerState {
-  return input instanceof CircuitBreakerState
-}
-
-// tslint:disable-next-line:no-shadowed-variable
-function isCircuitBreakerState<CircuitBreakerState>() {
-  return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsCircuitBreakerState),
-  )
-}
-
-function inputIsEvent(input: any): input is PgEvent {
+function inputIsPgEvent(input: any): input is PgEvent {
   return input instanceof PgEvent
 }
 
 // tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsEvent),
+    filter(inputIsPgEvent)
+  )
+}
+
+// tslint:disable-next-line:no-shadowed-variable
+function isMetadataEvent<PgEvent>() {
+
+  const tables = new Set<string>([
+    'metadata'
+  ])
+
+  return (source$: Observable<any>) => source$.pipe(
+    filter(inputIsPgEvent),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -89,12 +97,12 @@ function isBlockEvent<PgEvent>() {
     'canonical_block_header',
     'transaction',
     'transaction_trace',
-    'transaction_receipt',
+    'transaction_receipt'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsEvent),
-    filter(e => tables.has(e.table)),
+    filter(inputIsPgEvent),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -105,12 +113,12 @@ function isBlockMetricEvent<PgEvent>() {
     'block_metrics_header',
     'block_metrics_transaction',
     'block_metrics_transaction_trace',
-    'block_metrics_transaction_fee',
+    'block_metrics_transaction_fee'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsEvent),
-    filter(e => tables.has(e.table)),
+    filter(inputIsPgEvent),
+    filter(e => tables.has(e.table))
   )
 
 }
@@ -137,8 +145,6 @@ class BlockEvents {
 
   transactions: Map<string, TransactionPayload> = new Map()
   receipts: Map<string, TransactionReceiptPayload> = new Map()
-
-  createdAt: Date = new Date()
 
   constructor(private readonly instaMining: boolean) {
   }
@@ -173,7 +179,6 @@ class BlockEvents {
 export class PgSubscriptionService {
 
   private readonly url: string
-  private readonly maxRate = 500
 
   private blockEvents: Map<string, BlockEvents> = new Map()
   private blockMetricEvents: Map<string, BlockMetricEvents> = new Map()
@@ -184,7 +189,7 @@ export class PgSubscriptionService {
     private readonly config: ConfigService,
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
-    private readonly blockMetricsService: BlockMetricsService,
+    private readonly blockMetricsService: BlockMetricsService
   ) {
 
     this.url = config.db.url
@@ -194,7 +199,7 @@ export class PgSubscriptionService {
 
   private init() {
 
-    const { url, logger, blockService, transactionService, blockMetricsService, pubSub } = this
+    const { url, blockService, transactionService, blockMetricsService, pubSub } = this
 
     const events$ = Observable.create(
       async observer => {
@@ -219,29 +224,23 @@ export class PgSubscriptionService {
         }
       })
 
-    const circuitBreaker = new CircuitBreaker<PgEvent>(5, this.maxRate)
-
     const blockHashes$ = new Subject<string>()
     const blockMetrics$ = new Subject<string>()
 
-    events$.subscribe(
-      event => circuitBreaker.next(new PgEvent(event)),
-      err => circuitBreaker.error(err),
-    )
-
-    circuitBreaker.subject
-      .pipe(isCircuitBreakerState())
-      .subscribe(event => {
-        pubSub.publish('isSyncing', event.isOpen)
-      })
-
-    const pgEvents$ = circuitBreaker.subject
-      .pipe(isPgEvent())
+    const pgEvents$ = events$
+      .pipe(
+        map(event => new PgEvent(event)),
+        isPgEvent()
+      )
 
     //
 
     this.blockEvents = new Map()
     this.blockMetricEvents = new Map()
+
+    pgEvents$
+      .pipe(isMetadataEvent())
+      .subscribe(event => this.onMetadataEvent(event))
 
     pgEvents$
       .pipe(isBlockEvent())
@@ -254,7 +253,7 @@ export class PgSubscriptionService {
     blockHashes$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
 
@@ -279,7 +278,7 @@ export class PgSubscriptionService {
     blockMetrics$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
         const metrics = await blockMetricsService.findByBlockHash(blockHashes)
@@ -288,12 +287,16 @@ export class PgSubscriptionService {
 
   }
 
+  private onMetadataEvent(event: PgEvent) {
+      // TODO
+  }
+
   private onBlockEvent(event: PgEvent, blockHashes$: Subject<string>) {
 
     const { blockEvents, config } = this
 
     const { table, payload } = event
-    const { block_hash } = payload
+    const { block_hash } = payload as any
 
     let entry = blockEvents.get(block_hash)
 
