@@ -30,8 +30,10 @@ import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.
 
         updateQuery(previousResult, { subscriptionData }) {
           const { isSyncing } = subscriptionData.data
+          const previousIsSyncing = previousResult.metadata.isSyncing
 
-          if(previousResult.metadata.isSyncing && !isSyncing) {
+          if(isSyncing != previousIsSyncing) {
+            // TODO implement this without needing a page reload
             window.history.go()
           }
 
