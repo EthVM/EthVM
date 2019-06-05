@@ -81,7 +81,7 @@ class ParityFullBlockSource(
         }
 
       val fetchResults = futures
-        .map { it.get(10, TimeUnit.SECONDS) }
+        .map { it.get(60, TimeUnit.SECONDS) }
 
       val (blockTimestamps, blockRecordsList) = fetchResults
         .fold(Pair(sortedMapOf<BigInteger, Long>(), emptyList<BlockRecords>()), { memo, next ->
