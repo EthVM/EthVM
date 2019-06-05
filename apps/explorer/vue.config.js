@@ -52,8 +52,6 @@ if (publicUrl) {
   devServer.public = publicUrl // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
 }
 
-console.log('Dev server config', devServer)
-
 module.exports = {
   chainWebpack: config => {
     config.plugin('html').tap(args => {
