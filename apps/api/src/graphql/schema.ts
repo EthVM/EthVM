@@ -288,18 +288,22 @@ export interface ContractSupport {
     url?: string;
 }
 
+export interface Metadata {
+    isSyncing: boolean;
+}
+
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
-    blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
-    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
+    blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
+    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
-    search(query: string): Search | Promise<Search>;
+    metadata(): Metadata | Promise<Metadata>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
     addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
     addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
@@ -311,6 +315,7 @@ export interface IQuery {
     tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
     tokenExchangeRatePage(sort: TokenExchangeRateFilter, symbols: string[], offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
+    search(query: string): Search | Promise<Search>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
@@ -359,9 +364,9 @@ export interface Search {
 }
 
 export interface ISubscription {
-    newBlockMetric(): BlockMetric | Promise<BlockMetric>;
     newBlock(): BlockSummary | Promise<BlockSummary>;
     hashRate(): BigNumber | Promise<BigNumber>;
+    newBlockMetric(): BlockMetric | Promise<BlockMetric>;
     isSyncing(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
 }

@@ -288,7 +288,19 @@ export class PgSubscriptionService {
   }
 
   private onMetadataEvent(event: PgEvent) {
-      // TODO
+    const { pubSub } = this
+    const payload = event.payload as MetadataPayload
+
+    switch (payload.key) {
+      case 'sync_status':
+
+        const isSyncing = JSON.parse(payload.value)
+        console.log('Sync status update', isSyncing)
+        pubSub.publish('isSyncing', isSyncing)
+        break
+      default:
+      // Do nothing
+    }
   }
 
   private onBlockEvent(event: PgEvent, blockHashes$: Subject<string>) {

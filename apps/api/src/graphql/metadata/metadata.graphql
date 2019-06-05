@@ -1,0 +1,13 @@
+type Query {
+
+  metadata: Metadata!
+
+}
+
+type Metadata {
+  isSyncing: Boolean!
+}
+
+type Subscription {
+  isSyncing: Boolean!
+}

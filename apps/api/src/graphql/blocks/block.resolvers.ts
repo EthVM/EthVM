@@ -153,9 +153,4 @@ export class BlockResolvers {
     return this.pubSub.asyncIterator('hashRate')
   }
 
-  @Subscription()
-  isSyncing() {
-    return this.pubSub.asyncIterator('isSyncing')
-  }
-
 }
