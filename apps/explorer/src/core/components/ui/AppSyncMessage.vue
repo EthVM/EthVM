@@ -21,8 +21,8 @@ import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.
       query: syncStatus,
 
       update({ metadata }) {
-
-        return metadata.isSyncing
+        const { isSyncing } = metadata
+        return isSyncing
       },
 
       subscribeToMore: {
@@ -30,6 +30,11 @@ import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.
 
         updateQuery(previousResult, { subscriptionData }) {
           const { isSyncing } = subscriptionData.data
+
+          if(previousResult.metadata.isSyncing && !isSyncing) {
+            window.history.go()
+          }
+
           return { metadata: { __typename: 'Metadata', isSyncing }}
         }
       }
