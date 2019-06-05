@@ -215,7 +215,6 @@ class ParityFullBlockSource(
         }
       }
 
-
       return records
     } catch (ex: TimeoutException) {
 
@@ -439,7 +438,6 @@ class ParityFullBlockSource(
           }
           else -> null
         }
-
       } while (nextRange != null)
 
       return FetchResult(blockTimestamps, blockRecords)
