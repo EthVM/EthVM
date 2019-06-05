@@ -1,5 +1,5 @@
 query tokenExchangeRates($sort: TokenExchangeRateFilter!, $offset: Int, $limit: Int) {
-  tokenExchangeRatePage(sort: $sort, offset: $offset, limit: $limit) {
+  tokenExchangeRates(sort: $sort, offset: $offset, limit: $limit) {
     ...TokenExchangeRatePage
   }
 }

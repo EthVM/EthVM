@@ -156,14 +156,14 @@ import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-
           sort: this.filterValues[this.selectedFilter]
         }
       },
-      update({ tokenExchangeRatePage }) {
-        if (tokenExchangeRatePage) {
+      update({ tokenExchangeRates }) {
+        if (tokenExchangeRates) {
           this.error = '' // clear error
-          return new TokenExchangeRatePageExt(tokenExchangeRatePage)
+          return new TokenExchangeRatePageExt(tokenExchangeRates)
         } else if (!this.syncing) {
           this.error = this.error || this.$i18n.t('message.err')
         }
-        return tokenExchangeRatePage
+        return tokenExchangeRates
       },
 
       error({ graphQLErrors, networkError }) {

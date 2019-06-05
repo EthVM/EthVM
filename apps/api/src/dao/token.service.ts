@@ -146,42 +146,6 @@ export class TokenService {
     return this.tokenExchangeRateRepository.findAndCount(findOptions)
   }
 
-  async findTokenExchangeRatesPage(sort: string, limit: number = 10, offset: number = 0, symbols: string[] = []): Promise<[TokenExchangeRateEntity[], number]> {
-    let order
-    switch (sort) {
-      case 'price_high':
-        order = { currentPrice: -1 }
-        break
-      case 'price_low':
-        order = { currentPrice: 1 }
-        break
-      case 'volume_high':
-        order = { totalVolume: -1 }
-        break
-      case 'volume_low':
-        order = { totalVolume: 1 }
-        break
-      case 'market_cap_high':
-        order = { marketCap: -1 }
-        break
-      case 'market_cap_low':
-        order = { marketCap: 1 }
-        break
-      case 'market_cap_rank':
-      default:
-        order = { marketCapRank: 1 }
-        break
-    }
-    const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
-    const findOptions: FindManyOptions = {
-      where,
-      order,
-      take: limit,
-      skip: offset,
-    }
-    return this.tokenExchangeRateRepository.findAndCount(findOptions)
-  }
-
   async countTokenExchangeRates(): Promise<number> {
     return this.tokenExchangeRateRepository.count()
   }
