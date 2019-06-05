@@ -78,7 +78,8 @@
     "support": "Support",
     "type" : "Type",
     "circSupply": "Circulating Supply",
-    "total":"Total of "
+    "total":"Total of ",
+    "per": "per"
   },
 
   "address": {

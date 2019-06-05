@@ -34,47 +34,52 @@
           </v-layout>
         </v-flex>
       </v-layout>
-    </div>
-    <!--
-    =====================================================================================
-      TABLE HEADER
-    =====================================================================================
-    -->
-    <v-card color="primary" flat class="white--text pl-3 pr-1 mb-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs6 sm2>
-          <h5>{{ $t('token.symbol') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm4 md3>
-          <h5>{{ $tc('token.name', 1) }}</h5>
-        </v-flex>
-        <v-flex xs6 sm3 md4>
-          <h5>{{ $t('common.amount') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm3>
-          <h5>{{ $t('usd.value') }}</h5>
+        <!--
+        =====================================================================================
+          TABLE HEADER
+         =====================================================================================
+        -->
+        <v-layout align-center justify center>
+        <v-flex sm12 hidden-xs-only>
+          <v-card color="info" flat class="white--text pl-3 mb-1" height="40px">
+            <v-layout align-center justify-start row fill-height >
+              <v-flex sm4 >
+                <h5 class="pl-5">{{ $t('token.tokenName') }}</h5>
+              </v-flex>
+              <v-flex sm3 >
+                <h5>{{ $t('common.amount') }}</h5>
+              </v-flex>
+              <v-flex sm3>
+                <h5>{{ $t('usd.value') }}</h5>
+              </v-flex>
+              <v-flex sm2 >
+                <h5>{{ $t('token.change') }}</h5>
+              </v-flex>
+            </v-layout>
+          </v-card>
         </v-flex>
       </v-layout>
-    </v-card>
+    </div>
+
     <!--
     =====================================================================================
       TABLE BODY
     =====================================================================================
     -->
     <div v-if="loading">
-      <v-flex xs12>
+      <v-flex hidden-xs-only sm12>
         <div v-for="i in maxItems" :key="i">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-            <v-flex xs6 sm2>
+            <v-flex sm4>
               <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
-            <v-flex hidden-xs-only sm4 md3>
+            <v-flex sm3>
               <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
-            <v-flex xs6 sm3 md4>
+            <v-flex sm3>
               <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
-            <v-flex idden-xs-only sm3>
+            <v-flex sm2>
               <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
           </v-layout>
@@ -82,7 +87,7 @@
         </div>
       </v-flex>
     </div>
-    <div v-if="!loading">
+    <div v-else>
       <v-card v-if="totalCount === 0" flat>
         <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
       </v-card>
