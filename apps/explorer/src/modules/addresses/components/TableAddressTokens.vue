@@ -17,11 +17,9 @@
         Total || Loading
       =====================================================================================
       -->
-      <v-layout justify-space-between row wrap class="pa-2">
-        <v-flex v-if="loading" xs12>
-          <v-progress-linear color="blue" indeterminate />
-        </v-flex>
-        <v-flex v-else xs12 sm6>
+      <v-progress-linear v-if="loading" color="blue" indeterminate />
+      <v-layout v-else justify-space-between align-end row class="pa-2">
+        <v-flex xs12 sm6>
           <p class="info--text">
             {{ $t('token.total') }}
             <span class="black--text">{{ totalTokens }}</span>
@@ -29,6 +27,11 @@
             <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
             {{ $t('usd.value')}}
           </p>
+        </v-flex>
+        <v-flex xs12 sm6>
+           <v-layout v-if="pages > 1"  justify-end row >
+            <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
+          </v-layout>
         </v-flex>
       </v-layout>
     </div>
