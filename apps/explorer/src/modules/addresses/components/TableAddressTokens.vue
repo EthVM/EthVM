@@ -23,36 +23,36 @@
           <p class="info--text">
             {{ $t('token.total') }}
             <span class="black--text">{{ totalTokens }}</span>
-            {{tokensString}}
+            {{ tokensString }}
             <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
-            {{ $t('usd.value')}}
+            {{ $t('usd.value') }}
           </p>
         </v-flex>
         <v-flex xs12 sm6>
-           <v-layout v-if="pages > 1"  justify-end row >
+          <v-layout v-if="pages > 1" justify-end row>
             <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
           </v-layout>
         </v-flex>
       </v-layout>
-        <!--
+      <!--
         =====================================================================================
           TABLE HEADER
          =====================================================================================
         -->
-        <v-layout align-center justify center>
+      <v-layout align-center justify center>
         <v-flex sm12 hidden-xs-only>
           <v-card color="info" flat class="white--text pl-3 mb-1" height="40px">
-            <v-layout align-center justify-start row fill-height >
-              <v-flex sm4 >
+            <v-layout align-center justify-start row fill-height>
+              <v-flex sm4>
                 <h5 class="pl-5">{{ $t('token.tokenName') }}</h5>
               </v-flex>
-              <v-flex sm3 >
+              <v-flex sm3>
                 <h5>{{ $t('common.amount') }}</h5>
               </v-flex>
               <v-flex sm3>
                 <h5>{{ $t('usd.value') }}</h5>
               </v-flex>
-              <v-flex sm2 >
+              <v-flex sm2>
                 <h5>{{ $t('token.change') }}</h5>
               </v-flex>
             </v-layout>

@@ -34,7 +34,6 @@ export class TokenPageExt_items implements TokenPage_items {
     }
 
     return balanceBN.div(new BN(10).pow(decimals)).toFixed()
-
   }
 
   get balanceBN(): BN {
@@ -44,7 +43,9 @@ export class TokenPageExt_items implements TokenPage_items {
   get usdValueBN(): BN {
     const { currentPriceBN, balanceBN } = this
 
-    if (!currentPriceBN) return new BN(0.00)
+    if (!currentPriceBN) {
+      return new BN(0.0)
+    }
 
     return balanceBN.multipliedBy(currentPriceBN)
   }
@@ -67,5 +68,4 @@ export class TokenPageExt implements TokenPage {
   get totalCountBN(): BN {
     return new BN(this.totalCount)
   }
-
 }
