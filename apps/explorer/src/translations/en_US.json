@@ -77,7 +77,8 @@
     "website": "Website",
     "support": "Support",
     "type" : "Type",
-    "circSupply": "Circulating Supply"
+    "circSupply": "Circulating Supply",
+    "total":"Total of "
   },
 
   "address": {

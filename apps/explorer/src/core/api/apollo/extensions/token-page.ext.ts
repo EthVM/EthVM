@@ -38,4 +38,9 @@ export class TokenPageExt implements TokenPage {
     this.items = proto.items.map(s => new TokenPageExt_items(s as Token))
     this.totalCount = proto.totalCount
   }
+
+  get totalCountBN(): BN {
+    return new BN(this.totalCount)
+  }
+
 }
