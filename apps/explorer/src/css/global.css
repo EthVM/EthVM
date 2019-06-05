@@ -88,4 +88,6 @@ p {
 /* token images */
 .token-image {
   width: 25px;
+  min-width: 20px;
+  margin: 0.5em 1em;
 }

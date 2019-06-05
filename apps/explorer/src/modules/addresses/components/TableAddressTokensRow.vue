@@ -14,13 +14,16 @@
       =====================================================================================
       -->
         <v-flex hidden-xs-only>
-          <v-layout grid-list-lg row wrap align-center justify-start fill-height pl-3>
+          <v-layout grid-list-xs row wrap align-center justify-start fill-height >
             <v-flex sm4>
-              <v-layout grid-list-xs row align-center justify-start fill-height>
+              <v-layout grid-list-xs row align-center justify-start fill-height  pl-2 pr-2>
                 <!-- Add token image here -->
-                <!-- <v-img :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4" /> -->
+                <div class="token-image" >
+                  <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
+                  <v-img v-else :src="require('@/assets/icon-token.png')" contain />
+                </div>
                 <p class="black--text mb-0">
-                  {{ token.name }} <span class="text-uppercase">({{ token.symbol }})</span>
+                  {{ token.name }} <span class="text-uppercase caption">({{ token.symbol }})</span>
                 </p>
               </v-layout>
             </v-flex>
@@ -34,7 +37,7 @@
               </p>
             </v-flex>
             <v-flex sm2>
-              <v-layout grid-list-xs row align-center justify-start>
+              <v-layout grid-list-xs row align-center justify-start  pl-2 pr-2>
                 <p :class="tokenChangeClass">{{ tokenPriceChange }}%</p>
                 <v-img v-if="changeInPrice === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                 <v-img v-if="changeInPrice === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
@@ -114,5 +117,7 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
       }
     }
   }
+
 }
 </script>
+

@@ -5,7 +5,10 @@
         <div class="token-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-3 pr-3 pt-2 pb-2">
             <v-flex xs2 pl-1 pr-1>
-              <v-img :src="token.image" height="50px" max-width="50x" contain />
+              <div class="token-image">
+                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain/>
+                <v-img v-else :src="token.image" contain />
+              </div>
             </v-flex>
             <v-flex xs8 pr-0 pt-0>
               <v-layout row wrap align-end justify-start pl-2>
@@ -37,7 +40,8 @@
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
             <v-flex xs4>
               <v-layout grid-list-xs row align-center justify-start fill-height>
-                <v-img :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4" />
+                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" height="25px" max-width="25px" contain class="ml-4 mr-4" />
+                <v-img v-else :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4" />
                 <router-link class="black--text" :to="tokenLink">{{ token.name }}</router-link>
                 <p class="black--text text-uppercase mb-0 pl-1">({{ token.symbol }})</p>
               </v-layout>
