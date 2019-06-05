@@ -8,5 +8,5 @@ export class MetadataDto implements Metadata {
   constructor(data: any) {
     assignClean(this, data)
   }
-  
+
 }

@@ -204,12 +204,11 @@ class TableTxsMixin extends Vue {
       },
 
       update({ summaries }) {
-
         if (summaries) {
           this.error = '' // clear the error
           this.syncing = false
           return new TransactionSummaryPageExt(summaries)
-        } else if(!this.syncing) {
+        } else if (!this.syncing) {
           this.error = this.error || this.$i18n.t('message.err')
         }
 
@@ -217,21 +216,18 @@ class TableTxsMixin extends Vue {
       },
 
       error({ graphQLErrors, networkError }) {
-
         const self = this
 
-        if(graphQLErrors) {
+        if (graphQLErrors) {
           graphQLErrors.forEach(error => {
-
-            switch(error.message) {
+            switch (error.message) {
               case 'Currently syncing':
                 // TODO handle this better with custom code or something
-                self.syncing = true;
-                break;
+                self.syncing = true
+                break
               default:
-                // do nothing
+              // do nothing
             }
-
           })
         }
 

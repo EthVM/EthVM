@@ -65,18 +65,16 @@ class ChartData {
       error({ graphQLErrors, networkError }) {
         const self = this
 
-        if(graphQLErrors) {
+        if (graphQLErrors) {
           graphQLErrors.forEach(error => {
-
-            switch(error.message) {
+            switch (error.message) {
               case 'Currently syncing':
                 // TODO handle this better with custom code or something
-                self.syncing = true;
-                break;
+                self.syncing = true
+                break
               default:
                 this.error = this.$i18n.t('message.err')
             }
-
           })
         } else if (networkError) {
           this.error = this.$i18n.t('message.no-data')

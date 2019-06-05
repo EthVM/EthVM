@@ -51,7 +51,7 @@ import { MetadataService } from '@app/dao/metadata.service'
       Erc721MetadataEntity,
       CoinExchangeRateEntity,
       BlockMetricEntity,
-      MetadataEntity
+      MetadataEntity,
     ]),
   ],
   providers: [
@@ -66,7 +66,7 @@ import { MetadataService } from '@app/dao/metadata.service'
     UncleService,
     TraceService,
     ReceiptService,
-    MetadataService
+    MetadataService,
   ],
   exports: [
     AccountService,
@@ -80,7 +80,7 @@ import { MetadataService } from '@app/dao/metadata.service'
     UncleService,
     TraceService,
     ReceiptService,
-    MetadataService
+    MetadataService,
   ],
 })
 export class DaoModule {

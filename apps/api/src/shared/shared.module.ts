@@ -13,8 +13,11 @@ import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor
 
 @Global()
 @Module({
-  providers: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, ParseBigNumberPipe, ParseDatePipe, SyncingInterceptor],
-  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe, ParseBigNumberPipe, ParseDatePipe, SyncingInterceptor],
-  imports: [DaoModule]
+  providers: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe,
+    ParseBigNumberPipe, ParseDatePipe, SyncingInterceptor],
+  exports: [ConfigService, DurationService, EthService, ParseHashPipe, ParseAddressPipe, ParseLimitPipe, ParsePagePipe,
+    ParseBigNumberPipe, ParseDatePipe, SyncingInterceptor],
+  imports: [DaoModule],
 })
-export class SharedModule { }
+export class SharedModule {
+}

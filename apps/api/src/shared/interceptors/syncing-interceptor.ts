@@ -7,7 +7,7 @@ import { SyncingException } from '@app/shared/errors/syncing-exception'
 export class SyncingInterceptor implements NestInterceptor {
 
   constructor(
-    private readonly metadataService: MetadataService
+    private readonly metadataService: MetadataService,
   ) {
   }
 

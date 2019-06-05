@@ -171,27 +171,24 @@ const MAX_ITEMS = 50
           this.error = '' // clear error
           return new BlockSummaryPageExt(blockSummaries)
         } else if (!this.syncing) {
-        this.error = this.error || this.$i18n.t('message.err')
+          this.error = this.error || this.$i18n.t('message.err')
         }
         return blockSummaries
       },
 
       error({ graphQLErrors, networkError }) {
-
         const self = this
 
-        if(graphQLErrors) {
+        if (graphQLErrors) {
           graphQLErrors.forEach(error => {
-
-            switch(error.message) {
+            switch (error.message) {
               case 'Currently syncing':
                 // TODO handle this better with custom code or something
-                self.syncing = true;
-                break;
+                self.syncing = true
+                break
               default:
               // do nothing
             }
-
           })
         }
 

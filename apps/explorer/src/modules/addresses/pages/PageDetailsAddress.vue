@@ -130,18 +130,16 @@ const MAX_ITEMS = 10
       error({ graphQLErrors, networkError }) {
         const self = this
 
-        if(graphQLErrors) {
+        if (graphQLErrors) {
           graphQLErrors.forEach(error => {
-
-            switch(error.message) {
+            switch (error.message) {
               case 'Currently syncing':
                 // TODO handle this better with custom code or something
-                self.syncing = true;
-                break;
+                self.syncing = true
+                break
               default:
               // Do nothing
             }
-
           })
         }
         // TODO refine

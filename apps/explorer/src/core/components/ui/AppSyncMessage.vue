@@ -10,14 +10,13 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.graphql'
 @Component({
-  data(){
+  data() {
     return {
       syncing: undefined
     }
   },
   apollo: {
     syncing: {
-
       query: syncStatus,
 
       update({ metadata }) {
@@ -32,21 +31,18 @@ import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.
           const { isSyncing } = subscriptionData.data
           const previousIsSyncing = previousResult.metadata.isSyncing
 
-          if(isSyncing != previousIsSyncing) {
+          if (isSyncing != previousIsSyncing) {
             // TODO implement this without needing a page reload
             window.history.go()
           }
 
-          return { metadata: { __typename: 'Metadata', isSyncing }}
+          return { metadata: { __typename: 'Metadata', isSyncing } }
         }
       }
-
     }
   }
 })
 export default class AppSyncMessage extends Vue {
-
   syncing?: boolean
-
 }
 </script>
