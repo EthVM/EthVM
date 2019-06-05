@@ -41,22 +41,6 @@ object AvroToConnect {
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)
 
-  fun toConnectSchema(schema: Schema, optional: Boolean = false): org.apache.kafka.connect.data.Schema {
-    var connectSchema = avroData.toConnectSchema(schema)
-    if(optional) {
-      connectSchema = ConnectSchema(
-        connectSchema.type(),
-        true,
-        null,
-        connectSchema.name(),
-        connectSchema.version(),
-        connectSchema.doc(),
-        connectSchema.parameters(),
-        connectSchema.fields(),
-        connectSchema.keySchema(),
-        connectSchema.valueSchema()
-      )
-    }
-    return connectSchema
-  }
+  fun toConnectSchema(schema: Schema): org.apache.kafka.connect.data.Schema = avroData.toConnectSchema(schema)
+
 }

@@ -254,7 +254,7 @@ class ParityFullBlockSource(
             blocksTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`, true),
+            AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`),
             null
           )
 
@@ -267,7 +267,7 @@ class ParityFullBlockSource(
             txTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`, true),
+            AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`),
             null
           )
 
@@ -280,7 +280,7 @@ class ParityFullBlockSource(
             receiptsTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`, true),
+            AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`),
             null
           )
 
@@ -293,7 +293,7 @@ class ParityFullBlockSource(
             tracesTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`, true),
+            AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`),
             null
           )
 
@@ -306,7 +306,7 @@ class ParityFullBlockSource(
             unclesTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`, true),
+            AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`),
             null
           )
 
