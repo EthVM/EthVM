@@ -42,6 +42,11 @@ class ChartData {
   components: {
     Chart
   },
+  data() {
+    return {
+      syncing: undefined
+    }
+  },
   apollo: {
     blockPage: {
       query: latestBlocks,
@@ -55,13 +60,29 @@ class ChartData {
         if (blockSummaries) {
           this.error = '' // clear any previous error
           return new BlockSummaryPageExt(blockSummaries)
+        } else if (!this.syncing) {
+          this.error = this.$i18n.t('message.no-data')
         }
-        this.error = this.$i18n.t('message.no-data')
         return null
       },
 
       error({ graphQLErrors, networkError }) {
-        if (networkError) {
+        const self = this
+
+        if(graphQLErrors) {
+          graphQLErrors.forEach(error => {
+
+            switch(error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true;
+                break;
+              default:
+                this.error = this.$i18n.t('message.err')
+            }
+
+          })
+        } else if (networkError) {
           this.error = this.$i18n.t('message.no-data')
         } else {
           this.error = this.$i18n.t('message.err')
@@ -111,6 +132,7 @@ export default class ChartLiveTxs extends Vue {
       */
 
   error: string = ''
+  syncing?: boolean
 
   blockPage?: BlockSummaryPageExt
 
@@ -167,8 +189,8 @@ export default class ChartLiveTxs extends Vue {
       ===================================================================================
       */
 
-  get loading(): boolean {
-    return this.$apollo.queries.blockPage.loading
+  get loading(): boolean | undefined {
+    return this.$apollo.queries.blockPage.loading || this.syncing
   }
 
   get chartData() {

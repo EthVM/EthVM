@@ -11,7 +11,7 @@
     -->
     <div v-if="!isHolder">
       <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" :error="error" />
-      <app-tabs :tabs="tabsTokenDetails">
+      <app-tabs v-if="!syncing" :tabs="tabsTokenDetails">
         <!--
         =====================================================================================
           TRANSFERS
@@ -40,7 +40,7 @@
     -->
     <div v-if="isHolder">
       <holder-details-list :address-ref="addressRef" :token-details="tokenDetails" :holder-details="holderDetails" :is-loading="loading" :error="error" />
-      <app-tabs :tabs="tabsTokenHolderDetails">
+      <app-tabs v-if="!syncing" :tabs="tabsTokenHolderDetails">
         <!-- Transfers -->
         <v-tab-item slot="tabs-item" value="tab-0">
           <transfers-table :address="addressRef" :page-type="'tokenHolder'" :decimals="decimals" :holder="holderAddress" />
@@ -79,7 +79,8 @@ const MAX_ITEMS = 10
   data() {
     return {
       holderAddress: undefined,
-      holderDetails: undefined
+      holderDetails: undefined,
+      syncing: undefined
     }
   },
   apollo: {
@@ -93,12 +94,6 @@ const MAX_ITEMS = 10
         return { address: this.addressRef, holderAddress: this.holderAddress }
       },
 
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
-
       update({ tokenDetails, tokenHolder }) {
         if (tokenHolder) {
           this.holderDetails = new TokenHolderExt(tokenHolder)
@@ -106,13 +101,30 @@ const MAX_ITEMS = 10
 
         if (tokenDetails) {
           return new TokenExchangeRateDetailExt(tokenDetails)
+        } else if (!this.syncing) {
+          this.error = this.error || this.$i18n.t('message.invalid.token')
         }
 
-        this.error = this.error || this.$i18n.t('message.invalid.token')
         return null
       },
 
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if(graphQLErrors) {
+          graphQLErrors.forEach(error => {
+
+            switch(error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true;
+                break;
+              default:
+              // Do nothing
+            }
+
+          })
+        }
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -141,6 +153,7 @@ export default class PageDetailsToken extends Vue {
   address = ''
 
   error = '' // Error string pertaining to the TokenDetailsList component
+  syncing?: undefined
 
   // Holder //
   isHolder = false // Whether or not "holder" is included in query params to display view accordingly
@@ -266,8 +279,8 @@ export default class PageDetailsToken extends Vue {
   ===================================================================================
   */
 
-  get loading(): boolean {
-    return this.$apollo.loading
+  get loading(): boolean | undefined {
+    return this.$apollo.loading || this.syncing
   }
 
   get totalSupply(): BigNumber | null {

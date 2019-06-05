@@ -239,8 +239,6 @@ class TableTxsMixin extends Vue {
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
         }
-
-        console.log('On error', graphQLErrors, networkError)
       },
 
       subscribeToMore: {

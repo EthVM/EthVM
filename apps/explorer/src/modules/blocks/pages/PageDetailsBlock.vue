@@ -8,7 +8,7 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
       <v-flex xs12>
-        <app-details-list :details="blockDetails" :is-loading="$apollo.loading" class="mb-4" :error="error" :max-items="8">
+        <app-details-list :details="blockDetails" :is-loading="loading" class="mb-4" :error="error" :max-items="8">
           <template v-slot:title>
             <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncleHashes" />
             <v-divider class="lineGrey" />
@@ -50,6 +50,11 @@ const MAX_TXS = 10
     BlockDetailsTitle,
     TableTxs
   },
+  data() {
+    return {
+      syncing: undefined
+    }
+  },
   apollo: {
     blockDetail: {
       query() {
@@ -73,22 +78,33 @@ const MAX_TXS = 10
         return { blockHash }
       },
 
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
-
       update({ blockDetail, transactionsSummary }) {
         if (blockDetail) {
           return new BlockDetailExt(blockDetail, transactionsSummary)
+        } else if (!this.syncing) {
+          this.error = this.error || this.$i18n.t('message.invalid.block')
         }
 
-        this.error = this.error || this.$i18n.t('message.invalid.block')
         return null
       },
 
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if(graphQLErrors) {
+          graphQLErrors.forEach(error => {
+
+            switch(error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true;
+                break;
+              default:
+              // Do nothing
+            }
+
+          })
+        }
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -114,6 +130,7 @@ export default class PageDetailsBlock extends Vue {
 
   blockDetail?: BlockDetailExt
   error = ''
+  syncing: undefined
 
   /*
     ===================================================================================
@@ -143,6 +160,10 @@ export default class PageDetailsBlock extends Vue {
       Computed
     ===================================================================================
     */
+
+  get loading(): boolean | undefined {
+    return this.$apollo.loading || this.syncing
+  }
 
   get uncleHashes(): (string | null)[] {
     const { blockDetail } = this

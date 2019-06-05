@@ -144,7 +144,8 @@ const MAX_ITEMS = 50
     return {
       page: 0,
       fromBlock: undefined,
-      error: undefined
+      error: undefined,
+      syncing: undefined
     }
   },
   apollo: {
@@ -165,22 +166,35 @@ const MAX_ITEMS = 50
         }
       },
 
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
-
       update({ blockSummaries }) {
         if (blockSummaries) {
           this.error = '' // clear error
           return new BlockSummaryPageExt(blockSummaries)
-        }
+        } else if (!this.syncing) {
         this.error = this.error || this.$i18n.t('message.err')
+        }
         return blockSummaries
       },
 
       error({ graphQLErrors, networkError }) {
+
+        const self = this
+
+        if(graphQLErrors) {
+          graphQLErrors.forEach(error => {
+
+            switch(error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true;
+                break;
+              default:
+              // do nothing
+            }
+
+          })
+        }
+
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -242,6 +256,7 @@ export default class TableBlocks extends Vue {
   page!: number
 
   error: string = ''
+  syncing?: boolean
 
   blockPage?: BlockSummaryPageExt
   fromBlock?: BigNumber
@@ -316,8 +331,8 @@ export default class TableBlocks extends Vue {
         ===================================================================================
         */
 
-  get loading(): boolean {
-    return this.$apollo.queries.blockPage.loading
+  get loading(): boolean | undefined {
+    return this.$apollo.queries.blockPage.loading || this.syncing
   }
 
   /**
