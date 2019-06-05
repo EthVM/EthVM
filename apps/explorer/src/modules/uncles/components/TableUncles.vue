@@ -59,7 +59,7 @@
     =====================================================================================
     -->
     <v-layout column fill-height class="mb-1">
-      <v-flex xs12 v-if="!loading">
+      <v-flex xs12 v-if="!loading && !error">
         <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
         <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
@@ -120,7 +120,8 @@ import { Subscription } from 'rxjs'
     return {
       page: 0,
       fromUncle: undefined,
-      error: ''
+      error: '',
+      syncing: undefined
     }
   },
   apollo: {
@@ -141,12 +142,27 @@ import { Subscription } from 'rxjs'
         if (summaries) {
           self.error = '' // clear error
           return new UncleSummaryPageExt(summaries)
+        } else if (!this.syncing) {
+          self.error = this.error || this.$i18n.t('message.err')
         }
-        self.error = this.error || this.$i18n.t('message.err')
         return summaries
       },
 
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if (graphQLErrors) {
+          graphQLErrors.forEach(error => {
+            switch (error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true
+                break
+              default:
+              // Do nothing
+            }
+          })
+        }
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -165,14 +181,15 @@ export default class TableUncles extends Vue {
   @Prop({ type: String, default: '' }) showStyle!: string
   @Prop(Number) maxItems!: number
 
-  page!: number
-  error: string = ''
-
   /*
     ===================================================================================
       Initial Data
     ===================================================================================
     */
+
+  page!: number
+  error: string = ''
+  syncing?: boolean
 
   pageType = 'uncles'
   fromUncle?: BigNumber
@@ -247,8 +264,8 @@ export default class TableUncles extends Vue {
     return this.unclePage ? this.unclePage.items || [] : []
   }
 
-  get loading(): boolean {
-    return this.$apollo.loading
+  get loading(): boolean | undefined {
+    return this.$apollo.loading || this.syncing
   }
 
   /**

@@ -7,6 +7,7 @@ import { BlockDto } from '../blocks/dto/block.dto'
 import { UncleDto } from '../uncles/dto/uncle.dto'
 import { TxDto } from '../txs/dto/tx.dto'
 import { AccountDto } from '../accounts/account.dto'
+import { MetadataService } from '../../dao/metadata.service'
 
 const addressHashOne = '0000000000000000000000000000000000000001'
 const addressHashTwo = '0000000000000000000000000000000000000002'
@@ -56,7 +57,13 @@ const uncles = {
   }
 }
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const searchServiceMock = {
   async search(query) {
     const s = new SearchDto({ type: SearchType.None })
 
@@ -103,7 +110,11 @@ describe('SearchResolvers', () => {
         SearchResolvers,
         {
           provide: SearchService,
-          useValue: mockService
+          useValue: searchServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()

@@ -34,7 +34,8 @@ interface QueryOptions {
   },
   data() {
     return {
-      queryOptions: (this as any).calculateTimePeriod('week')
+      queryOptions: (this as any).calculateTimePeriod('week'),
+      syncing: undefined
     }
   },
   apollo: {
@@ -53,17 +54,25 @@ interface QueryOptions {
         }
       },
 
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
-
       update({ blockMetricsTimeseries }) {
         return blockMetricsTimeseries
       },
 
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if (graphQLErrors) {
+          graphQLErrors.forEach(error => {
+            switch (error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true
+                break
+              default:
+              // Do nothing
+            }
+          })
+        }
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -90,6 +99,7 @@ export default class ChartTimeseries extends Vue {
   timeseries!: any[]
 
   error = ''
+  syncing: undefined
 
   /*
     ===================================================================================
@@ -262,8 +272,8 @@ export default class ChartTimeseries extends Vue {
     }
   }
 
-  get loading(): boolean {
-    return this.$apollo.queries.timeseries.loading
+  get loading(): boolean | undefined {
+    return this.$apollo.queries.timeseries.loading || this.syncing
   }
 }
 </script>

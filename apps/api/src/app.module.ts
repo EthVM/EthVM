@@ -13,6 +13,7 @@ import { LoggerModule } from '@app/shared/logger.module'
 import { SharedModule } from '@app/shared/shared.module'
 import { Module } from '@nestjs/common'
 import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
+import { MetadataModule } from '@app/graphql/metadata/metadata.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
     LoggerModule,
     TransferModule,
     BlockMetricsModule,
+    MetadataModule,
     SubscriptionsModule,
   ],
 })

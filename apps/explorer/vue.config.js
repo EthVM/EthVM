@@ -67,6 +67,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     disableHostCheck: true,
-    noInfo: true
+    noInfo: true,
+    public: 'ethvm.lan/'
   }
 }

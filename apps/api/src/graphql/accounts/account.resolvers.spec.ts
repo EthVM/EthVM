@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing'
 import { AccountDto } from './account.dto'
 import { EthService } from '../../shared/eth.service'
 import { AccountService } from '../../dao/account.service'
+import { MetadataService } from '../../dao/metadata.service'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -18,7 +19,13 @@ const accounts = {
   }
 }
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const accountServiceMock = {
   async findAccountByAddress(address: string) {
     const data = accounts[address]
     return data ? new AccountEntity(data) : null
@@ -44,7 +51,11 @@ describe('AccountResolvers', () => {
         EthService,
         {
           provide: AccountService,
-          useValue: mockService
+          useValue: accountServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()

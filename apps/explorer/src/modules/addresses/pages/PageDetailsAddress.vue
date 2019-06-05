@@ -102,6 +102,11 @@ const MAX_ITEMS = 10
     TableTxs,
     TransfersTable
   },
+  data() {
+    return {
+      syncing: undefined
+    }
+  },
   apollo: {
     account: {
       query: addressDetail,
@@ -113,22 +118,30 @@ const MAX_ITEMS = 10
         return { address: addressRef }
       },
 
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
-
       update({ account }) {
         if (account) {
           return new AccountExt(account)
+        } else if (!this.syncing) {
+          this.error = this.error || this.$i18n.t('message.invalid.addr')
         }
-
-        this.error = this.error || this.$i18n.t('message.invalid.addr')
         return null
       },
 
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if (graphQLErrors) {
+          graphQLErrors.forEach(error => {
+            switch (error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true
+                break
+              default:
+              // Do nothing
+            }
+          })
+        }
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -154,6 +167,7 @@ export default class PageDetailsAddress extends Vue {
 
   detailsType = 'address'
   error = ''
+  syncing?: boolean
   account?: AccountExt
 
   /*
@@ -166,8 +180,8 @@ export default class PageDetailsAddress extends Vue {
     return this.error !== ''
   }
 
-  get loading(): boolean {
-    return this.$apollo.loading
+  get loading(): boolean | undefined {
+    return this.$apollo.loading || this.syncing
   }
 
   get max(): number {

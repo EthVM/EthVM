@@ -288,6 +288,10 @@ export interface ContractSupport {
     url?: string;
 }
 
+export interface Metadata {
+    isSyncing: boolean;
+}
+
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
     blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
@@ -299,6 +303,7 @@ export interface IQuery {
     blockByNumber(number: BigNumber): Block | Promise<Block>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
+    metadata(): Metadata | Promise<Metadata>;
     search(query: string): Search | Promise<Search>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
     addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;

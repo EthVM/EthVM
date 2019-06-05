@@ -142,7 +142,8 @@ import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-
     return {
       page: 0,
       error: undefined,
-      sort: 'price_high'
+      sort: 'price_high',
+      syncing: undefined
     }
   },
   apollo: {
@@ -155,21 +156,31 @@ import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-
           sort: this.filterValues[this.selectedFilter]
         }
       },
-      watchLoading(isLoading) {
-        if (isLoading) {
-          this.error = ''
-        } // clear the error on load
-      },
       update({ tokenExchangeRatePage }) {
         if (tokenExchangeRatePage) {
           this.error = '' // clear error
           return new TokenExchangeRatePageExt(tokenExchangeRatePage)
+        } else if (!this.syncing) {
+          this.error = this.error || this.$i18n.t('message.err')
         }
-        this.error = this.error || this.$i18n.t('message.err')
         return tokenExchangeRatePage
       },
 
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if (graphQLErrors) {
+          graphQLErrors.forEach(error => {
+            switch (error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true
+                break
+              default:
+              // Do nothing
+            }
+          })
+        }
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -196,6 +207,7 @@ export default class TokenTable extends Vue {
   page!: number
   error: string = ''
   filterValues = ['price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
+  syncing?: boolean
 
   tokenExchangeRatePage?: TokenExchangeRatePageExt
 
@@ -247,7 +259,7 @@ export default class TokenTable extends Vue {
   }
 
   get loading() {
-    return this.$apollo.loading
+    return this.$apollo.loading || this.syncing
   }
 
   get hasError(): boolean {

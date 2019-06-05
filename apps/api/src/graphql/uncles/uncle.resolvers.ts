@@ -4,8 +4,11 @@ import { Args, Query, Resolver } from '@nestjs/graphql'
 import BigNumber from 'bignumber.js'
 import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
 import { UnclePageDto } from '@app/graphql/uncles/dto/uncle-page.dto'
+import { UseInterceptors } from '@nestjs/common'
+import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 
 @Resolver('Uncle')
+@UseInterceptors(SyncingInterceptor)
 export class UncleResolvers {
   constructor(private readonly uncleService: UncleService) { }
 

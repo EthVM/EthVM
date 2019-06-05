@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 import { UncleEntity } from '../../orm/entities/uncle.entity'
 import { UncleDto } from './dto/uncle.dto'
 import { UnclePageDto } from './dto/uncle-page.dto'
+import { MetadataService } from '../../dao/metadata.service'
 
 const hash1 = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hash2 = '0x0000000000000000000000000000000000000000000000000000000000000002'
@@ -48,7 +49,13 @@ const uncles = [
   }
 ]
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const uncleServiceMock = {
   async findUncleByHash(hash: string) {
     const uncle = uncles.find(u => u.hash === hash)
     return uncle ? new UncleEntity(uncle) : null;
@@ -89,7 +96,11 @@ describe('UncleResolvers', () => {
         EthService,
         {
           provide: UncleService,
-          useValue: mockService
+          useValue: uncleServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()

@@ -16,6 +16,7 @@ import { TokenExchangeRateEntity } from '../../orm/entities/token-exchange-rate.
 import { TokenExchangeRatePageDto } from './dto/token-exchange-rate-page.dto'
 import { TokenExchangeRateDto } from './dto/token-exchange-rate.dto'
 import { TokenMetadataDto } from './dto/token-metadata.dto'
+import { MetadataService } from '../../dao/metadata.service'
 
 const contractAddressOne = '0000000000000000000000000000000000000001'
 const contractAddressTwo = '0000000000000000000000000000000000000002'
@@ -148,7 +149,13 @@ const tokenExchangeRates = [
   }
 ]
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const tokenServiceMock = {
   async findTokenHolders(address, limit = 10, offset = 0): Promise<[Erc20BalanceEntity[], number]>  {
 
     let items = erc20Balances.filter(t => t.contract === address)
@@ -259,7 +266,11 @@ describe('TokenResolvers', () => {
         EthService,
         {
           provide: TokenService,
-          useValue: mockService
+          useValue: tokenServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()
