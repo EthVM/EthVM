@@ -8,7 +8,7 @@ import { TokenExchangeRateFilter } from "./globalTypes";
 // GraphQL query operation: tokenExchangeRates
 // ====================================================
 
-export interface tokenExchangeRates_tokenExchangeRatePage_items {
+export interface tokenExchangeRates_tokenExchangeRates_items {
   __typename: "TokenExchangeRate";
   address: string | null;
   currentPrice: any | null;
@@ -20,14 +20,14 @@ export interface tokenExchangeRates_tokenExchangeRatePage_items {
   totalVolume: any | null;
 }
 
-export interface tokenExchangeRates_tokenExchangeRatePage {
+export interface tokenExchangeRates_tokenExchangeRates {
   __typename: "TokenExchangeRatesPage";
-  items: tokenExchangeRates_tokenExchangeRatePage_items[];
+  items: tokenExchangeRates_tokenExchangeRates_items[];
   totalCount: number;
 }
 
 export interface tokenExchangeRates {
-  tokenExchangeRatePage: tokenExchangeRates_tokenExchangeRatePage;
+  tokenExchangeRates: tokenExchangeRates_tokenExchangeRates;
 }
 
 export interface tokenExchangeRatesVariables {
