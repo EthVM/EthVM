@@ -58,5 +58,4 @@ class ParityCanonicalChainTracker(
 
     return chainTracker.nextRange(maxSize)
   }
-
 }

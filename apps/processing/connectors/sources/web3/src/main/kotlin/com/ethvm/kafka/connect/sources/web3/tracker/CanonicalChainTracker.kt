@@ -22,7 +22,7 @@ class CanonicalChainTracker(
   fun newHeads(heads: List<Long>) {
 
     // we don't process an empty list
-    if(heads.isEmpty()) {
+    if (heads.isEmpty()) {
       return
     }
 
@@ -34,7 +34,7 @@ class CanonicalChainTracker(
     val min = heads.min()!!
 
     // update head
-    if(max > currentHead) {
+    if (max > currentHead) {
       this.head = max
     }
 
@@ -54,7 +54,6 @@ class CanonicalChainTracker(
           reOrgs.add(this)
           logger.debug { "Chain re-organization detected! Re-org: $this" }
         }
-
     }
 
     // update tail
@@ -73,7 +72,7 @@ class CanonicalChainTracker(
       logger.debug { "Current tail = $currentTail" }
     } while (value < currentTail && !tail.compareAndSet(currentTail, value))
 
-    logger.debug{ "After reset attempt tail = ${tail.get()}" }
+    logger.debug { "After reset attempt tail = ${tail.get()}" }
   }
 
   fun nextRange(maxSize: Int = 4): Pair<LongRange?, List<LongRange>> {
@@ -107,5 +106,4 @@ class CanonicalChainTracker(
 
     return Pair(range, reOrgRanges)
   }
-
 }

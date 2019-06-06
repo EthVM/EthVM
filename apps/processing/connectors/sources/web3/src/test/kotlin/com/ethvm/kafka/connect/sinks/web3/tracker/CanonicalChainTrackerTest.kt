@@ -21,9 +21,7 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
           range shouldBe null
           reOrgs.isEmpty() shouldBe true
         }
-
       }
-
     }
 
     given("a tracker initialised with tail 0 and head 10") {
@@ -41,9 +39,7 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
           range.last shouldBe 4
 
           reOrgs.isEmpty() shouldBe true
-
         }
-
       }
 
       `when`("we request a second range of size 5") {
@@ -57,7 +53,6 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
           range.last shouldBe 9
 
           reOrgs.isEmpty() shouldBe true
-
         }
       }
 
@@ -72,12 +67,8 @@ class CanonicalChainTrackerTest : BehaviorSpec() {
           range.last shouldBe 10
 
           reOrgs.isEmpty() shouldBe true
-
         }
-
       }
     }
-
   }
-
 }
