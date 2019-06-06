@@ -18,7 +18,7 @@
       =====================================================================================
       -->
       <v-progress-linear v-if="loading" color="blue" indeterminate />
-      <v-layout v-else justify-space-between align-end row class="pa-2">
+      <v-layout v-else justify-space-between align-end row wrap class="pa-2">
         <v-flex xs12 sm6>
           <p class="info--text">
             {{ $t('token.total') }}
@@ -37,8 +37,8 @@
       <!--
         =====================================================================================
           TABLE HEADER
-         =====================================================================================
-        -->
+        =====================================================================================
+      -->
       <v-layout align-center justify center>
         <v-flex sm12 hidden-xs-only>
           <v-card color="info" flat class="white--text mb-1" height="40px">
