@@ -21,7 +21,6 @@ import AppSyncMessage from '@app/core/components/ui/AppSyncMessage.vue'
 import AppGreeting from '@app/core/components/ui/AppGreeting.vue'
 import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
-import { Events } from '@app/core/hub'
 import storePack from 'store'
 import { Vue, Component } from 'vue-property-decorator'
 import AppConnectionMessage from '@app/core/components/ui/AppConnectionMessage.vue'
@@ -43,10 +42,6 @@ export default class App extends Vue {
     Computed values
   ===================================================================================
   */
-
-  get isSyncing() {
-    return this.$store.getters.syncing
-  }
 
   get appGreet() {
     return !storePack.get('notFirstTimeVisit')

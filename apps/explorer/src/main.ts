@@ -2,7 +2,6 @@ import Vuetify from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
 import { VueEthvmApi } from '@app/core/plugins'
 import router from '@app/core/router'
-import store from '@app/core/store'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
 import * as Sentry from '@sentry/browser'
@@ -101,7 +100,6 @@ Vue.use(Vuetify, {
 
 new Vue({
   el: '#app',
-  store,
   router,
   i18n,
   apolloProvider,
