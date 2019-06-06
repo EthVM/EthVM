@@ -211,7 +211,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.amount'),
-          detail: `${transaction.valueEth.toEthFormatted().toString()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.valueEth.toEth().toString()} ${this.$i18n.t('common.eth')}`
         },
         this.toDetail(transaction),
         {
