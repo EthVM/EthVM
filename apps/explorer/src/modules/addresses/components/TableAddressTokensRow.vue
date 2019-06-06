@@ -13,8 +13,7 @@
               <v-flex xs2 pa-1>
                 <v-layout row align-center justify-center pa-2>
                   <div class="token-image-mobile">
-                    <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
-                    <v-img v-else :src="token.image" contain />
+                    <v-img :src="image" contain />
                   </div>
                 </v-layout>
               </v-flex>
@@ -28,9 +27,9 @@
                   </v-flex>
                   <v-flex xs2 pa-1>
                     <v-layout grid-list-xs row justify-end pr-3>
-                      <p :class="tokenChangeClass">{{ tokenPriceChange }}%</p>
-                      <v-img v-if="changeInPrice === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                      <v-img v-if="changeInPrice === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                      <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
+                      <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                      <v-img v-if="token.priceChangeSymbol === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                     </v-layout>
                   </v-flex>
                   <v-flex xs12 pa-1>
@@ -59,8 +58,7 @@
             <v-flex sm4>
               <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-2>
                 <div class="token-image">
-                  <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
-                  <v-img v-else :src="require('@/assets/icon-token.png')" contain />
+                  <v-img :src="image" contain />
                 </div>
                 <p class="black--text">
                   {{ token.name }} <span class="text-uppercase caption">({{ token.symbol }})</span>
@@ -78,9 +76,9 @@
             </v-flex>
             <v-flex sm2>
               <v-layout grid-list-xs row align-center justify-start pl-2 pr-2>
-                <p :class="tokenChangeClass">{{ tokenPriceChange }}%</p>
-                <v-img v-if="changeInPrice === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                <v-img v-if="changeInPrice === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
+                <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -114,6 +112,10 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
+  get image(): string {
+    return this.token.image || require('@/assets/icon-token.png')
+  }
+
   get balance(): string {
     return this.token.formattedBalance
   }
@@ -128,33 +130,6 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
 
   get usdValue(): string {
     return this.getRoundNumber(this.token.usdValueBN)
-  }
-
-  get changeInPrice(): string {
-    const { priceChange24hBN } = this.token
-    if (!priceChange24hBN || priceChange24hBN.toNumber() === 0) {
-      return 'null'
-    }
-
-    return priceChange24hBN.toNumber() > 0 ? '+' : '-'
-  }
-
-  get tokenPriceChange(): string {
-    return this.changeInPrice != 'null' ? `${this.changeInPrice}${this.getPercent(this.token.priceChange24h)}` : '0'
-  }
-
-  get tokenChangeClass(): string {
-    switch (this.changeInPrice) {
-      case '+': {
-        return 'txSuccess--text'
-      }
-      case '-': {
-        return 'txFail--text'
-      }
-      default: {
-        return 'black--text'
-      }
-    }
   }
 }
 </script>

@@ -11,6 +11,7 @@ export class TokenPageExt_items implements TokenPage_items {
   name: string | null
   symbol: string | null
   priceChange24h: any | null
+  image: string | null
 
   constructor(proto: Token) {
     this.address = proto.address
@@ -20,6 +21,7 @@ export class TokenPageExt_items implements TokenPage_items {
     this.name = proto.name
     this.symbol = proto.symbol
     this.priceChange24h = proto.priceChange24h
+    this.image = proto.image
   }
 
   get currentPriceBN(): BN | null {
@@ -52,6 +54,43 @@ export class TokenPageExt_items implements TokenPage_items {
 
   get priceChange24hBN(): BN | null {
     return this.priceChange24h ? new BN(this.priceChange24h) : null
+  }
+
+  get priceChangeFormatted(): string {
+    const { priceChange24hBN } = this
+    if (!priceChange24hBN) {
+      return '0'
+    }
+
+    const percent = priceChange24hBN.dp(2)
+
+    if (percent.isNegative()) {
+      return percent.toString()
+    }
+    // Add "+" symbol
+    return `${this.priceChangeSymbol}${percent.toString()}`
+  }
+
+  get priceChangeSymbol(): string {
+    const { priceChange24hBN } = this
+    if (!priceChange24hBN || priceChange24hBN.toNumber() === 0) {
+      return 'null'
+    }
+    return priceChange24hBN.toNumber() > 0 ? '+' : '-'
+  }
+
+  get priceChangeClass(): string {
+    switch (this.priceChangeSymbol) {
+      case '+': {
+        return 'txSuccess--text'
+      }
+      case '-': {
+        return 'txFail--text'
+      }
+      default: {
+        return 'black--text'
+      }
+    }
   }
 }
 

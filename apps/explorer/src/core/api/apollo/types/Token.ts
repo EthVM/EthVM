@@ -15,4 +15,5 @@ export interface Token {
   balance: any | null;
   currentPrice: any | null;
   priceChange24h: any | null;
+  image: string | null;
 }

@@ -376,6 +376,7 @@ export interface Token {
     balance?: BigNumber;
     currentPrice?: BigNumber;
     priceChange24h?: BigNumber;
+    image?: string;
 }
 
 export interface TokenExchangeRate {

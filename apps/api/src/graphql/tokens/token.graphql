@@ -28,6 +28,7 @@ type Token {
   balance: BigNumber
   currentPrice: BigNumber
   priceChange24h: BigNumber
+  image: String
 }
 
 type TokenHolder {

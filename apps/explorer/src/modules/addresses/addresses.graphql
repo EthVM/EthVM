@@ -34,6 +34,7 @@ fragment Token on Token {
   balance
   currentPrice
   priceChange24h
+  image
 }
 
 fragment TokenPage on TokenPage {

@@ -15,6 +15,7 @@ export interface addressAllTokensOwned_tokens_items {
   balance: any | null;
   currentPrice: any | null;
   priceChange24h: any | null;
+  image: string | null;
 }
 
 export interface addressAllTokensOwned_tokens {

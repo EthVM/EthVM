@@ -12,6 +12,7 @@ export class TokenDto implements Token {
   balance?: BigNumber
   currentPrice?: BigNumber
   priceChange24h?: BigNumber
+  image?: string
 
   constructor(data: any) {
     assignClean(this, data)

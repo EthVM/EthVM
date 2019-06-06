@@ -55,7 +55,7 @@ export class TokenService {
   }
 
   async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenDto[], number]> {
-    const findOptions: FindManyOptions = { where: { address }, relations: ['tokenExchangeRate', 'metadata'], take: limit, skip: offset }
+    const findOptions: FindManyOptions = { where: { address }, relations: ['tokenExchangeRate', 'metadata', 'contractMetadata'], take: limit, skip: offset }
     const [erc20Tokens, erc20Count] = await this.erc20BalanceRepository.findAndCount(findOptions)
     const [erc721Tokens, erc721Count] = await this.erc721BalanceRepository.findAndCount(findOptions)
 
@@ -72,14 +72,18 @@ export class TokenService {
   }
 
   private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
-    const { tokenExchangeRate, metadata } = entity
+    const { tokenExchangeRate, metadata, contractMetadata } = entity
     const tokenData = metadata || ({} as any)
     if (entity instanceof Erc20BalanceEntity) {
       tokenData.balance = entity.amount
     }
+    if (contractMetadata) {
+      tokenData.image = contractMetadata.logo
+    }
     if (tokenExchangeRate) {
       tokenData.currentPrice = tokenExchangeRate.currentPrice
       tokenData.priceChange24h = tokenExchangeRate.priceChange24h
+      tokenData.image = tokenData.image || tokenExchangeRate.image
     }
     return new TokenDto(tokenData)
   }
