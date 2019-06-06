@@ -8,6 +8,7 @@ import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.streams.StreamsConfig
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -79,6 +80,7 @@ object Modules {
 
         // Allows for large messages, in our case large lists of traces primarily
         put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 62_914_560) // 60 mb
+        put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 52_428_800) // 50 mb
 
         put(StreamsConfig.STATE_DIR_CONFIG, config.kafka.streamsStateDir)
 
