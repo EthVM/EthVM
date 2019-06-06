@@ -39,7 +39,7 @@ export class Erc20BalanceEntity {
   @ManyToOne(type => ContractMetadataEntity, contractMetadata => contractMetadata.erc20Balances)
   @JoinColumn({
     name: 'contract',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   contractMetadata?: ContractMetadataEntity
 

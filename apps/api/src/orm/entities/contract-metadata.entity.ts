@@ -67,14 +67,14 @@ export class ContractMetadataEntity {
   @OneToMany(type => Erc20BalanceEntity, balance => balance.contractMetadata)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'contract'
+    referencedColumnName: 'contract',
   })
   erc20Balances?: Erc20BalanceEntity[]
 
   @OneToMany(type => Erc721BalanceEntity, balance => balance.contractMetadata)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'contract'
+    referencedColumnName: 'contract',
   })
   erc721Balances?: Erc721BalanceEntity[]
 }
