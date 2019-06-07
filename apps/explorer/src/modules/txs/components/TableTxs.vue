@@ -86,7 +86,7 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-card flat v-if="isSyncing && pending">
+    <v-card flat v-if="syncing && pending">
       <v-layout row align-center justify-center fill-height>
         <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.sync.no-pen-tx') }}</v-card-title>
       </v-layout>
@@ -173,7 +173,8 @@ class TableTxsMixin extends Vue {
     return {
       page: 0,
       fromBlock: undefined,
-      error: undefined
+      error: undefined,
+      syncing: undefined
     }
   },
   apollo: {
@@ -205,13 +206,31 @@ class TableTxsMixin extends Vue {
       update({ summaries }) {
         if (summaries) {
           this.error = '' // clear the error
+          this.syncing = false
           return new TransactionSummaryPageExt(summaries)
+        } else if (!this.syncing) {
+          this.error = this.error || this.$i18n.t('message.err')
         }
-        this.error = this.error || this.$i18n.t('message.err')
+
         return summaries
       },
 
       error({ graphQLErrors, networkError }) {
+        const self = this
+
+        if (graphQLErrors) {
+          graphQLErrors.forEach(error => {
+            switch (error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true
+                break
+              default:
+              // do nothing
+            }
+          })
+        }
+
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
@@ -280,6 +299,8 @@ export default class TableTxs extends TableTxsMixin {
   page!: number
 
   error?: string
+
+  syncing?: boolean
 
   fromBlock?: BigNumber
   txPage?: TransactionSummaryPageExt
@@ -359,11 +380,7 @@ export default class TableTxs extends TableTxsMixin {
       */
 
   get loading() {
-    return this.$apollo.loading
-  }
-
-  get isSyncing() {
-    return this.$store.getters.syncing
+    return this.$apollo.loading || this.syncing
   }
 
   get hasError(): boolean {

@@ -360,11 +360,11 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
                     .mapNotNull { transferOpt -> transferOpt.orNull() }
                     .flatMap { transfer ->
 
-                      val contractAddress =
-                        if (receipt.getTo() != null)
-                          receipt.getTo()
-                        else
-                          receipt.getContractAddress()
+                      val contractAddress = when {
+                        receipt.to != null -> receipt.to
+                        receipt.contractAddress != null -> receipt.contractAddress
+                        else -> throw IllegalStateException("Could not determine contract address")
+                      }
 
                       listOf(
                         FungibleBalanceDeltaRecord.newBuilder()

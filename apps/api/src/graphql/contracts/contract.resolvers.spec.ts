@@ -6,6 +6,7 @@ import { EthService } from '../../shared/eth.service'
 import { ContractService } from '../../dao/contract.service'
 import { ContractSummaryPageDto } from './dto/contract-summary-page.dto'
 import { ContractSummary } from '../schema'
+import { MetadataService } from '../../dao/metadata.service'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -46,7 +47,13 @@ const contracts = {
   }
 }
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const contractServiceMock = {
   async findContractByAddress(address) {
     const data = contracts[address]
     return data ? new ContractEntity(data) : null
@@ -74,7 +81,11 @@ describe('ContractResolvers', () => {
         EthService,
         {
           provide: ContractService,
-          useValue: mockService
+          useValue: contractServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()

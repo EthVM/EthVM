@@ -288,6 +288,10 @@ export interface ContractSupport {
     url?: string;
 }
 
+export interface Metadata {
+    isSyncing: boolean;
+}
+
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
     blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
@@ -299,17 +303,17 @@ export interface IQuery {
     blockByNumber(number: BigNumber): Block | Promise<Block>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
+    metadata(): Metadata | Promise<Metadata>;
     search(query: string): Search | Promise<Search>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
     addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
     addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
     coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
-    tokenExchangeRates(filter: TokenExchangeRateFilter, symbols: string[], limit?: number, page?: number): TokenExchangeRate[] | Promise<TokenExchangeRate[]>;
+    tokenExchangeRates(symbols: string[], sort?: TokenExchangeRateFilter, offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
     totalNumTokenExchangeRates(): number | Promise<number>;
     tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
-    tokenExchangeRatePage(sort: TokenExchangeRateFilter, symbols: string[], offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;

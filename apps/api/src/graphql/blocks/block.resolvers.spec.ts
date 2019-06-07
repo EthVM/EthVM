@@ -9,6 +9,7 @@ import { BlockSummaryPageDto } from './dto/block-summary-page.dto'
 import { BlockSummaryDto } from './dto/block-summary.dto'
 import { BlockHeaderEntity } from '../../orm/entities/block-header.entity'
 import { BlockDto } from './dto/block.dto'
+import { MetadataService } from '../../dao/metadata.service'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hashTwo = '0x0000000000000000000000000000000000000000000000000000000000000002'
@@ -79,7 +80,13 @@ const blockSummaries = [
   }
 ]
 
-const mockService = {
+const metadataServiceMock = {
+  async isSyncing() {
+    return false
+  }
+}
+
+const blockServiceMock = {
   async findSummaries(offset: number, limit: number, fromBlock: BigNumber): Promise<[BlockSummary[], number]> {
 
     let items = blockSummaries
@@ -142,7 +149,11 @@ describe('BlockResolvers', () => {
         },
         {
           provide: BlockService,
-          useValue: mockService
+          useValue: blockServiceMock
+        },
+        {
+          provide: MetadataService,
+          useValue: metadataServiceMock
         }
       ]
     }).compile()

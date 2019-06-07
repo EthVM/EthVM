@@ -94,6 +94,12 @@ class NonFungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
 
                       transferOpt.map { transfer ->
 
+                        val contract = when {
+                          receipt.to != null -> receipt.to
+                          receipt.contractAddress != null -> receipt.contractAddress
+                          else -> throw IllegalStateException("Could not determine contract address")
+                        }
+
                         NonFungibleBalanceDeltaRecord.newBuilder()
                           .setTokenType(NonFungibleTokenType.ERC721)
                           .setTraceLocation(
@@ -103,7 +109,7 @@ class NonFungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
                           )
                           .setFrom(transfer.from)
                           .setTo(transfer.to)
-                          .setContract(receipt.getTo())
+                          .setContract(contract)
                           .setTokenIdBI(transfer.tokenId)
                           .build()
                       }.orNull()

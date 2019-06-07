@@ -5,7 +5,7 @@ import com.ethvm.avro.capture.ParitySyncStateRecord
 import com.ethvm.common.extensions.setHeadBI
 import com.ethvm.common.extensions.setNumberBI
 import com.ethvm.kafka.connect.sources.web3.ext.JsonRpc2_0ParityExtended
-import com.ethvm.kafka.connect.sources.web3.tracker.CanonicalChainTracker
+import com.ethvm.kafka.connect.sources.web3.tracker.ParityCanonicalChainTracker
 import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import mu.KotlinLogging
 import org.apache.kafka.connect.source.SourceRecord
@@ -32,7 +32,7 @@ abstract class AbstractParityEntitySource(
     var startBlockNumber = sourcePartition.getOrDefault("blockNumber", 0L) as Long - SAFE_REORG_LENGTH
     if (startBlockNumber < 0) startBlockNumber = 0L
 
-    CanonicalChainTracker(parity, startBlockNumber)
+    ParityCanonicalChainTracker(parity, startBlockNumber)
   }
 
   @Volatile
@@ -53,16 +53,19 @@ abstract class AbstractParityEntitySource(
 
     val (range, reOrgs) = chainTracker.nextRange(batchSize)
 
-    // Returns tombstones + range
-    return range.fold({ emptyList() }, { r ->
+    logger.debug { "Range = $range, reOrgs = $reOrgs" }
 
-      val records = fetchRange(r)
+    val reorgRecords = reOrgs.map { tombstonesForRange(it) }.flatten()
 
-      when (records.isEmpty()) {
-        true -> records
-        false -> records + syncStateRecord(r)
-      }
-    })
+    val records = when {
+      range == null -> emptyList()
+      range.isEmpty() -> emptyList()
+      else -> fetchRange(range) + syncStateRecord(range)
+    }
+
+    logger.debug { "Reorg size = ${reorgRecords.size}, records size = ${records.size}" }
+
+    return reorgRecords + records
   }
 
   private fun syncStateRecord(range: LongRange): SourceRecord {
@@ -79,7 +82,7 @@ abstract class AbstractParityEntitySource(
       .setSource(source)
       .setTimestamp(System.currentTimeMillis())
       .setHeadBI(chainTracker.head.toBigInteger())
-      .setNumberBI(range.endInclusive.toBigInteger())
+      .setNumberBI(range.last.toBigInteger())
       .build()
 
     val syncStateKeySchemaAndValue = AvroToConnect.toConnectData(syncStateKey)

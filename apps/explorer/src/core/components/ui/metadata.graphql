@@ -1,0 +1,13 @@
+query syncStatus {
+
+  metadata {
+    isSyncing
+  }
+
+}
+
+subscription syncStatusUpdates {
+
+  isSyncing
+
+}

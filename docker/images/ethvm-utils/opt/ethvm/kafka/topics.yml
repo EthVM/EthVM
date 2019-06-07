@@ -324,3 +324,7 @@ topics:
     partitions: 1
     config:
       cleanup.policy: compact
+
+  - name: postgres_contract_sink_dead_letter
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 1

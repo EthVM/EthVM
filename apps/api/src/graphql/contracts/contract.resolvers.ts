@@ -3,8 +3,11 @@ import { ContractService } from '@app/dao/contract.service'
 import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { ContractDto } from '@app/graphql/contracts/dto/contract.dto'
 import { ContractSummaryPageDto } from '@app/graphql/contracts/dto/contract-summary-page.dto'
+import { UseInterceptors } from '@nestjs/common'
+import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 
 @Resolver('Contract')
+@UseInterceptors(SyncingInterceptor)
 export class ContractResolvers {
   constructor(private readonly contractService: ContractService) {
   }

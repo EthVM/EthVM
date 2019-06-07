@@ -6,13 +6,15 @@ import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestj
 import BigNumber from 'bignumber.js'
 import { TransactionSummaryPageDto } from '@app/graphql/txs/dto/transaction-summary-page.dto'
 import { PubSub } from 'graphql-subscriptions'
-import { Inject } from '@nestjs/common'
+import { Inject, UseInterceptors } from '@nestjs/common'
 import { TransactionSummaryDto } from '@app/graphql/txs/dto/transaction-summary.dto'
 import { TransactionSummary } from '@app/graphql/schema'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import retry from 'async-retry'
+import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 
 @Resolver('Transaction')
+@UseInterceptors(SyncingInterceptor)
 export class TxResolvers {
   constructor(
     private readonly txService: TxService,

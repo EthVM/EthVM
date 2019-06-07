@@ -38,6 +38,11 @@ class ChartData {
   components: {
     Chart
   },
+  data() {
+    return {
+      syncing: undefined
+    }
+  },
   apollo: {
     metricsPage: {
       query: latestBlockMetrics,
@@ -51,13 +56,27 @@ class ChartData {
         if (blockMetrics) {
           this.error = '' // clear error
           return new BlockMetricPageExt(blockMetrics)
+        } else if (!this.syncing) {
+          this.error = this.$i18n.t('message.no-data')
         }
-        this.error = this.$i18n.t('message.no-data')
         return null
       },
 
       error({ graphQLErrors, networkError }) {
-        if (networkError) {
+        const self = this
+
+        if (graphQLErrors) {
+          graphQLErrors.forEach(error => {
+            switch (error.message) {
+              case 'Currently syncing':
+                // TODO handle this better with custom code or something
+                self.syncing = true
+                break
+              default:
+                this.error = this.$i18n.t('message.err')
+            }
+          })
+        } else if (networkError) {
           this.error = this.$i18n.t('message.no-data')
         } else {
           this.error = this.$i18n.t('message.err')
@@ -108,6 +127,7 @@ export default class ChartLiveTxFees extends Vue {
 
   redraw = true
   error: string = ''
+  syncing?: boolean
   metricsPage?: BlockMetricPageExt
 
   connectedSubscription?: Subscription
@@ -162,8 +182,8 @@ export default class ChartLiveTxFees extends Vue {
     ===================================================================================
     */
 
-  get loading(): boolean {
-    return this.$apollo.queries.metricsPage.loading
+  get loading(): boolean | undefined {
+    return this.$apollo.queries.metricsPage.loading || this.syncing
   }
 
   get chartData() {
