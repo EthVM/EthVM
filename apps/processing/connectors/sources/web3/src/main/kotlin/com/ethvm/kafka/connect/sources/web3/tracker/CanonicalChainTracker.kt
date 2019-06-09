@@ -12,7 +12,7 @@ class CanonicalChainTracker(
   private val logger = KotlinLogging.logger {}
 
   @Volatile
-  public var head: Long = initialHead
+  var head: Long = initialHead
 
   // multiple readers on tail so we use AtomicLong
   private val tail = AtomicLong(initialTail)
@@ -21,8 +21,11 @@ class CanonicalChainTracker(
 
   fun newHeads(heads: List<Long>) {
 
+    logger.debug { "New heads received: $heads" }
+
     // we don't process an empty list
     if (heads.isEmpty()) {
+      logger.debug { "No heads to process" }
       return
     }
 
@@ -33,9 +36,12 @@ class CanonicalChainTracker(
     val max = heads.max()!!
     val min = heads.min()!!
 
+    logger.debug { "Current head = $currentHead, min = $min, max = $max" }
+
     // update head
     if (max > currentHead) {
       this.head = max
+      logger.debug { "Head updated. New head = ${this.head}"}
     }
 
     // determine duplicates indicating a chain re-org, sorting them into their natural order
