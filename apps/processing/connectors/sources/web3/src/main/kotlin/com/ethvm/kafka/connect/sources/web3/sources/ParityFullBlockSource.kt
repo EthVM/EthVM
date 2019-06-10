@@ -217,21 +217,15 @@ class ParityFullBlockSource(
 
       }
 
-      return records
-    } catch (ex: TimeoutException) {
-
-      // likely we overloaded parity, let's reduce for retry
-      batchSize /= 2
-
-      // parity is probably under high load
-      throw RetriableException(ex)
-    } finally {
-
       // since we use integer division it's possible we can reach 0
       if(batchSize < 1) {
         batchSize = 1
       }
 
+      return records
+    } catch (ex: TimeoutException) {
+      // parity is probably under high load
+      throw RetriableException(ex)
     }
   }
 
