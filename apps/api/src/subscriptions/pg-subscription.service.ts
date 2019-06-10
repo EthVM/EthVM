@@ -34,7 +34,12 @@ export interface TransactionTracePayload {
   root_error: string
 }
 
-export interface BlockMetricPayload {
+export interface BlockMetricsTransactionPayload {
+  block_hash: string
+  timestamp: number
+}
+
+export interface BlockMetricsTransactionFeePayload {
   block_hash: string
   timestamp: number
 }
@@ -49,7 +54,8 @@ export type PgEventPayload =
   | TransactionPayload
   | TransactionReceiptPayload
   | TransactionTracePayload
-  | BlockMetricPayload
+  | BlockMetricsTransactionPayload
+  | BlockMetricsTransactionFeePayload
   | MetadataPayload
 
 export class PgEvent {
@@ -73,7 +79,7 @@ function inputIsPgEvent(input: any): input is PgEvent {
 // tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsPgEvent),
+    filter(inputIsPgEvent)
   )
 }
 
@@ -81,12 +87,12 @@ function isPgEvent<PgEvent>() {
 function isMetadataEvent<PgEvent>() {
 
   const tables = new Set<string>([
-    'metadata',
+    'metadata'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -97,43 +103,29 @@ function isBlockEvent<PgEvent>() {
     'canonical_block_header',
     'transaction',
     'transaction_trace',
-    'transaction_receipt',
+    'transaction_receipt'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
 // tslint:disable-next-line:no-shadowed-variable
-function isBlockMetricEvent<PgEvent>() {
-
-  const tables = new Set<string>([
-    'block_metrics_header',
-    'block_metrics_transaction',
-    'block_metrics_transaction_trace',
-    'block_metrics_transaction_fee',
-  ])
-
+function isBlockMetricsTransactionEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => e.table === 'block_metrics_transaction')
   )
-
 }
 
-class BlockMetricEvents {
-
-  header = false
-  transaction = false
-  trace = false
-  fee = false
-
-  get isComplete(): boolean {
-    return this.header && this.transaction && this.trace && this.fee
-  }
-
+// tslint:disable-next-line:no-shadowed-variable
+function isBlockMetricsTransactionFeeEvent<PgEvent>() {
+  return (source$: Observable<any>) => source$.pipe(
+    filter(inputIsPgEvent),
+    filter(e => e.table === 'block_metrics_transaction_fee')
+  )
 }
 
 class BlockEvents {
@@ -181,7 +173,6 @@ export class PgSubscriptionService {
   private readonly url: string
 
   private blockEvents: Map<string, BlockEvents> = new Map()
-  private blockMetricEvents: Map<string, BlockMetricEvents> = new Map()
 
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
@@ -189,7 +180,7 @@ export class PgSubscriptionService {
     private readonly config: ConfigService,
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
-    private readonly blockMetricsService: BlockMetricsService,
+    private readonly blockMetricsService: BlockMetricsService
   ) {
 
     this.url = config.db.url
@@ -230,13 +221,12 @@ export class PgSubscriptionService {
     const pgEvents$ = events$
       .pipe(
         map(event => new PgEvent(event)),
-        isPgEvent(),
+        isPgEvent()
       )
 
     //
 
     this.blockEvents = new Map()
-    this.blockMetricEvents = new Map()
 
     pgEvents$
       .pipe(isMetadataEvent())
@@ -247,13 +237,20 @@ export class PgSubscriptionService {
       .subscribe(event => this.onBlockEvent(event, blockHashes$))
 
     pgEvents$
-      .pipe(isBlockMetricEvent())
-      .subscribe(event => this.onBlockMetricEvent(event, blockMetrics$))
+      .pipe(isBlockMetricsTransactionEvent())
+      .subscribe(event => this.onBlockMetricsTransactionEvent(event))
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionFeeEvent())
+      .subscribe(event => this.onBlockMetricsTransactionFeeEvent(event))
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionFeeEvent())
 
     blockHashes$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
 
@@ -278,7 +275,7 @@ export class PgSubscriptionService {
     blockMetrics$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
         const metrics = await blockMetricsService.findByBlockHash(blockHashes)
@@ -300,6 +297,30 @@ export class PgSubscriptionService {
       default:
       // Do nothing
     }
+  }
+
+  private async onBlockMetricsTransactionEvent(event: PgEvent) {
+    const { pubSub } = this
+    const payload = event.payload as BlockMetricsTransactionPayload
+
+    const metric = await this.blockMetricsService.findBlockMetricsTransactionByBlockHash(payload.block_hash)
+
+    if (metric) {
+      pubSub.publish('newBlockMetricsTransaction', metric)
+    }
+
+  }
+
+  private async onBlockMetricsTransactionFeeEvent(event: PgEvent) {
+    const { pubSub } = this
+    const payload = event.payload as BlockMetricsTransactionPayload
+
+    const metric = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(payload.block_hash)
+
+    if (metric) {
+      pubSub.publish('newBlockMetricsTransactionFee', metric)
+    }
+
   }
 
   private onBlockEvent(event: PgEvent, blockHashes$: Subject<string>) {
@@ -354,51 +375,6 @@ export class PgSubscriptionService {
       // remove from the map and emit an event
       blockHashes$.next(block_hash)
       blockEvents.delete(block_hash)
-    }
-
-  }
-
-  private onBlockMetricEvent(event: PgEvent, blockMetrics$: Subject<string>) {
-
-    const { blockMetricEvents } = this
-
-    const { table, payload } = event
-    const { block_hash } = payload as BlockMetricPayload
-
-    let entry = blockMetricEvents.get(block_hash)
-
-    if (!entry) {
-      entry = new BlockMetricEvents()
-      blockMetricEvents.set(block_hash, entry)
-    }
-
-    switch (table) {
-
-      case 'block_metrics_header':
-        entry.header = true
-        break
-
-      case 'block_metrics_transaction':
-        entry.transaction = true
-        break
-
-      case 'block_metrics_transaction_trace':
-        entry.trace = true
-        break
-
-      case 'block_metrics_transaction_fee':
-        entry.fee = true
-        break
-
-      default:
-        throw new Error(`Unexpected table name: ${table}`)
-
-    }
-
-    if (entry.isComplete) {
-      // remove from the map and emit an event
-      blockMetrics$.next(block_hash)
-      blockMetricEvents.delete(block_hash)
     }
 
   }

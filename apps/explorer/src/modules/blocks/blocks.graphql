@@ -43,23 +43,6 @@ subscription newBlock {
 
 }
 
-query latestBlockMetrics($limit: Int) {
-
-  blockMetrics(offset: 0, limit: $limit) {
-    ...BlockMetricPage
-  }
-
-}
-
-fragment BlockMetricPage on BlockMetricPage {
-  items {
-    ...BlockMetric
-  }
-  offset
-  limit
-  totalCount
-}
-
 subscription newBlockMetric {
 
   newBlockMetric {

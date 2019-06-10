@@ -915,6 +915,48 @@ SELECT create_hypertable('block_metrics_transaction_fee',
                          'timestamp',
                          chunk_time_interval => interval '1 day');
 
+CREATE VIEW canonical_block_metrics_header AS
+SELECT cbh.number,
+       cbh.hash AS block_hash,
+       bmh.timestamp,
+       bmh.block_time,
+       bmh.num_uncles,
+       bmh.difficulty,
+       bmh.total_difficulty
+FROM canonical_block_header AS cbh
+       LEFT JOIN block_metrics_header AS bmh ON cbh.hash = bmh.block_hash;
+
+CREATE VIEW canonical_block_metrics_transaction AS
+SELECT cbh.number,
+       cbh.hash AS block_hash,
+       bmt.timestamp,
+       COALESCE(bmt.avg_gas_price, 0) AS avg_gas_price,
+       COALESCE(bmt.total_gas_price, 0) AS total_gas_price,
+       COALESCE(bmt.avg_gas_limit, 0) AS avg_gas_limit
+FROM canonical_block_header AS cbh
+       LEFT JOIN block_metrics_transaction AS bmt ON cbh.hash = bmt.block_hash;
+
+CREATE VIEW canonical_block_metrics_transaction_trace AS
+SELECT cbh.number,
+       cbh.hash AS block_hash,
+       bmtt.timestamp,
+       COALESCE(bmtt.num_internal_txs, 0) AS num_internal_txs,
+       COALESCE(bmtt.num_failed_txs, 0) AS num_failed_txs,
+       COALESCE(bmtt.num_successful_txs, 0) AS num_successful_txs,
+       COALESCE(bmtt.total_txs, 0) AS total_txs
+FROM canonical_block_header AS cbh
+       LEFT JOIN block_metrics_transaction_trace AS bmtt ON cbh.hash = bmtt.block_hash;
+
+CREATE VIEW canonical_block_metrics_transaction_fee AS
+SELECT cbh.number,
+       cbh.hash AS block_hash,
+       bmtf.timestamp,
+       COALESCE(bmtf.avg_tx_fees, 0) AS avg_tx_fees,
+       COALESCE(bmtf.total_tx_fees, 0) AS total_tx_fees
+FROM canonical_block_header AS cbh
+       LEFT JOIN block_metrics_transaction_fee AS bmtf ON cbh.hash = bmtf.block_hash;
+
+
 CREATE VIEW canonical_block_metric AS
 SELECT bh.number,
        bh.block_hash,
