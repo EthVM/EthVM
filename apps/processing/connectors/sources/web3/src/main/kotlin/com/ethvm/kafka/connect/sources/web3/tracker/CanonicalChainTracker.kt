@@ -91,7 +91,7 @@ class CanonicalChainTracker(
         if (reOrgs.isNotEmpty()) reOrgs.drainTo(this)
       }
 
-    logger.debug { "Next range. Current tail = $currentTail, current head = $currentHead" }
+    logger.debug { "Next range. Current tail = $currentTail, current head = $currentHead, maxSize = $maxSize" }
 
     if (currentTail == currentHead + 1) {
       // we have caught up to the head and there is nothing new

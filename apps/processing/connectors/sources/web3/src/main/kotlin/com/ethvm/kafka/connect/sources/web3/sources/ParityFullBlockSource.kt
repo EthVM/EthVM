@@ -66,6 +66,11 @@ class ParityFullBlockSource(
 
     try {
 
+      // since we use integer division it's possible we can reach 0
+      if(batchSize < 1) {
+        batchSize = 1
+      }
+
       val chunkSize = when {
         batchSize < noThreads -> 1
         else -> batchSize / noThreads
@@ -214,6 +219,7 @@ class ParityFullBlockSource(
           percentageOfTargetFetchTime > 1.5 -> batchSize / 2
           else -> batchSize
         }
+
       }
 
       return records
