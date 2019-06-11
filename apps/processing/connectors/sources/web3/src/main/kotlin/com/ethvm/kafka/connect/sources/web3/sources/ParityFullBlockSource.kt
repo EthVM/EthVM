@@ -52,7 +52,7 @@ class ParityFullBlockSource(
 
   private val noThreads = 4
 
-  private var targetFetchTimeMs = 1000
+  private var targetFetchTimeMs = 3000
 
   private val maxRequestTraceCount = 1000
 
