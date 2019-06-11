@@ -59,12 +59,11 @@ abstract class StringClean<R : ConnectRecord<R>> : Transformation<R> {
             // remove control characters and other non printable characters
             val fieldValue = value.get(field) as String?
             val filteredValue = fieldValue?.replace(filterRegex, "")
-            logger.trace { "Cleaning string field. Name = $fieldName, schema = $fieldSchema, value = $fieldValue, filterValue = $filteredValue"}
+            logger.trace { "Cleaning string field. Name = $fieldName, schema = $fieldSchema, value = $fieldValue, filterValue = $filteredValue" }
             updatedValue.put(field, filteredValue)
           }
           else -> updatedValue.put(field, value.get(field))
         }
-
       }
 
     return newRecord(record, schema, updatedValue)
@@ -81,7 +80,7 @@ abstract class StringClean<R : ConnectRecord<R>> : Transformation<R> {
 
     val updatedMap = valueMap + valueMap
       .filterKeys { k -> whitelist.contains(k) }
-      .mapValues{ (_, v) -> v as String? }
+      .mapValues { (_, v) -> v as String? }
       .mapValues { (k, v) -> k to v?.replace(filterRegex, "") }
 
     return newRecord(record, null, updatedMap)

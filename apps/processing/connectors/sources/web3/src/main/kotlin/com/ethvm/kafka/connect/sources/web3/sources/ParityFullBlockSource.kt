@@ -21,7 +21,6 @@ import com.ethvm.kafka.connect.sources.web3.ext.toTransactionRecord
 import com.ethvm.kafka.connect.sources.web3.ext.toUncleRecord
 import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import mu.KotlinLogging
-import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
@@ -214,11 +213,10 @@ class ParityFullBlockSource(
           percentageOfTargetFetchTime > 1.5 -> batchSize / 2
           else -> batchSize
         }
-
       }
 
       // since we use integer division it's possible we can reach 0
-      if(batchSize < 1) {
+      if (batchSize < 1) {
         batchSize = 1
       }
 

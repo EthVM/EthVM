@@ -1,36 +1,6 @@
 package com.ethvm.kafka.connect.sinks.web3.tracker
 
-import arrow.core.None
-import com.ethvm.common.extensions.hexToBI
-import com.ethvm.common.extensions.toHex
-import com.ethvm.kafka.connect.sinks.web3.test.AbstractParity
-import com.ethvm.kafka.connect.sources.web3.tracker.ParityCanonicalChainTracker
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
-import io.kotlintest.specs.BehaviorSpec
-import io.mockk.every
-import io.mockk.mockk
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.FlowableTransformer
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
-import mu.KotlinLogging
-import org.reactivestreams.Publisher
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
-import org.web3j.protocol.ObjectMapperFactory
-import org.web3j.protocol.Web3jService
-import org.web3j.protocol.core.Request
-import org.web3j.protocol.core.methods.response.EthBlockNumber
-import org.web3j.protocol.websocket.events.NewHeadsNotification
-import java.math.BigInteger
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
-
-//class ParityCanonicalChainTrackerTest : BehaviorSpec() {
+// class ParityCanonicalChainTrackerTest : BehaviorSpec() {
 //
 //  init {
 //
@@ -61,13 +31,13 @@ import java.util.concurrent.atomic.AtomicReference
 //      }
 //    }
 //  }
-//}
+// }
 //
-//class FakeParity(
+// class FakeParity(
 //  private val newHeadsInterval: Long = INTERVAL_PERIOD_OF_100,
 //  private val bufferHeads: Int = 8,
 //  private val reOrgOf: Int = 0
-//) : AbstractParity() {
+// ) : AbstractParity() {
 //
 //  private val mapper = ObjectMapperFactory.getObjectMapper()
 //  private val web3Service = mockk<Web3jService>()
@@ -135,12 +105,12 @@ import java.util.concurrent.atomic.AtomicReference
 //  companion object {
 //    const val INTERVAL_PERIOD_OF_100 = 100L
 //  }
-//}
+// }
 //
-//private class FakeReOrgTransformer<T>(
+// private class FakeReOrgTransformer<T>(
 //  private val each: Int = 8,
 //  private val take: Int = 0
-//) : FlowableTransformer<T, List<T>> {
+// ) : FlowableTransformer<T, List<T>> {
 //
 //  override fun apply(upstream: Flowable<T>): Publisher<List<T>> = Publisher { s -> upstream.subscribe(ReOrgSubscriber(s)) }
 //
@@ -205,4 +175,4 @@ import java.util.concurrent.atomic.AtomicReference
 //      buffer.set(ArrayList())
 //    }
 //  }
-//}
+// }
