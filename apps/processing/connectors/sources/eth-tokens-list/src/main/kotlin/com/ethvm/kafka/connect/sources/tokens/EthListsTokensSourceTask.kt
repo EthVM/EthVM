@@ -38,7 +38,7 @@ class EthListsTokensSourceTask : SourceTask() {
   override fun poll(): List<SourceRecord> {
 
     if (!shouldSync()) {
-      Thread.sleep(60000) // wake up once a minute
+      Thread.sleep(5000) // wake up every 5 seconds
       return emptyList()
     }
 
