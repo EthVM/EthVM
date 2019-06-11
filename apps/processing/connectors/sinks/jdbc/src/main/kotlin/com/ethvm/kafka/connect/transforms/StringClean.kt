@@ -15,10 +15,9 @@ abstract class StringClean<R : ConnectRecord<R>> : Transformation<R> {
 
   private val logger = KotlinLogging.logger {}
 
-  private val filterRegex = Regex("[\\p{C}\\p{Z}]")
+  private val filterRegex = Regex("\\p{C}")
 
   var whitelist = emptyList<String>()
-
 
   override fun config() = ConfigDef().apply {
     define(WHITELIST, ConfigDef.Type.LIST, emptyList<String>(), ConfigDef.Importance.HIGH, "Fields to cleanup")
@@ -33,6 +32,7 @@ abstract class StringClean<R : ConnectRecord<R>> : Transformation<R> {
   }
 
   override fun apply(record: R): R {
+
     return when {
       operatingSchema(record) != null -> applyWithSchema(record)
       else -> applySchemaless(record)
@@ -40,6 +40,7 @@ abstract class StringClean<R : ConnectRecord<R>> : Transformation<R> {
   }
 
   private fun applyWithSchema(record: R): R {
+
     val value = operatingValue(record)
     require(value is Struct) { "Value must be a struct" }
 
@@ -54,10 +55,12 @@ abstract class StringClean<R : ConnectRecord<R>> : Transformation<R> {
         val fieldSchema = field.schema()
 
         when {
-          whitelist.contains(fieldName) && (fieldSchema == Schema.STRING_SCHEMA || fieldSchema == Schema.OPTIONAL_STRING_SCHEMA) -> {
+          (fieldSchema.type() == Schema.Type.STRING && (whitelist.isEmpty() || whitelist.contains(fieldName))) -> {
             // remove control characters and other non printable characters
             val fieldValue = value.get(field) as String?
-            updatedValue.put(field, fieldValue?.replace(filterRegex, ""))
+            val filteredValue = fieldValue?.replace(filterRegex, "")
+            logger.trace { "Cleaning string field. Name = $fieldName, schema = $fieldSchema, value = $fieldValue, filterValue = $filteredValue"}
+            updatedValue.put(field, filteredValue)
           }
           else -> updatedValue.put(field, value.get(field))
         }

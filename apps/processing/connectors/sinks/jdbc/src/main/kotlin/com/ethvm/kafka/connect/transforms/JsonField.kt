@@ -117,7 +117,7 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
           false -> builder.field(field.name(), field.schema())
           true -> {
 
-            logger.info { "Converting field: $field " }
+            logger.trace { "Converting field: $field " }
 
             builder.field(
               field.name(),
