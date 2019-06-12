@@ -313,7 +313,7 @@ export class TxService {
         }
 
         const txs = await entityManager.find(TransactionEntity, {
-          select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value'],
+          select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful'],
           where,
           order: {
             blockNumber: 'DESC',
@@ -363,7 +363,7 @@ export class TxService {
 
     const txs = await manager
       .find(TransactionEntity, {
-        select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value'],
+        select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful'],
         where: { hash: In(hashes) },
         order: {
           blockNumber: 'DESC',
@@ -394,26 +394,17 @@ export class TxService {
 
     if (!txs.length) return [[], 0]
 
-    const {traceService, contractService} = this
+    const {contractService} = this
 
-    const txHashes: string[] = []
     const contractAddresses: string[] = []
 
     txs.forEach(tx => {
-      txHashes.push(tx.hash)
       if (tx.creates && tx.creates !== '') contractAddresses.push(tx.creates)
     })
 
-    const txStatusesPromise = traceService.findTxStatusByTxHash(entityManager, txHashes)
     const contractsPromise = contractService.findAllByAddress(entityManager, contractAddresses)
 
-    const txStatuses = await txStatusesPromise
     const contracts = await contractsPromise
-
-    const txStatusByHash = txStatuses.reduce((memo, next) => {
-      memo.set(next.transactionHash, next)
-      return memo
-    }, new Map<string, TransactionStatus>())
 
     const contractsByAddress = contracts.reduce((memo, next) => {
       memo.set(next.address, next)
@@ -434,16 +425,9 @@ export class TxService {
         (contract && contract.erc20Metadata && contract.erc20Metadata.symbol) ||
         (contract && contract.erc721Metadata && contract.erc721Metadata.symbol)
 
-      // Partial read checks
-
-      const txStatus = txStatusByHash.get(tx.hash)
+      // Partial read check for receipt
       const {receipt} = tx
 
-      // Root trace
-      if (!txStatus) {
-        throw new PartialReadException(`Root trace missing, tx hash = ${tx.hash}`)
-      }
-      // Receipt
       if (!receipt) {
         throw new PartialReadException(`Receipt missing, tx hash = ${tx.hash}`)
       }
@@ -459,7 +443,7 @@ export class TxService {
         contractSymbol,
         value: tx.value,
         fee: tx.gasPrice.multipliedBy(receipt.gasUsed),
-        successful: txStatus.successful,
+        successful: tx.successful,
         timestamp: tx.timestamp,
       } as TransactionSummary
     })

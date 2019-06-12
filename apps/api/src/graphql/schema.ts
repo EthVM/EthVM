@@ -84,7 +84,8 @@ export enum TxSortField {
     timestamp = "timestamp",
     value = "value",
     to = "to",
-    from = "from"
+    from = "from",
+    successful = "successful"
 }
 
 export interface Account {
