@@ -109,7 +109,7 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: canonical_transaction_feetransaction_fees
+  - name: canonical_transaction_fees
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
