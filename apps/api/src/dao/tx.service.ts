@@ -313,7 +313,7 @@ export class TxService {
         }
 
         const txs = await entityManager.find(TransactionEntity, {
-          select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful'],
+          select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
           where,
           order: {
             blockNumber: 'DESC',
@@ -324,20 +324,7 @@ export class TxService {
           cache: true,
         })
 
-        const receipts = await this.receiptService
-          .findByTxHash(entityManager, txs.map(tx => tx.hash), ['transactionHash', 'gasUsed'])
-
-        const receiptsByTxHash = receipts
-          .reduceRight(
-            (memo, next) => memo.set(next.transactionHash, next),
-            new Map<string, TransactionReceiptEntity>(),
-          )
-
-        const txsWithReceipts = txs.map(tx => {
-          const receipt = receiptsByTxHash.get(tx.hash)
-          return new TransactionEntity({...tx, receipt})
-        })
-        return this.summarise(entityManager, txsWithReceipts, totalCount)
+        return this.summarise(entityManager, txs, totalCount)
       },
     )
 
@@ -355,7 +342,7 @@ export class TxService {
     const manager = entityManager || this.entityManager
 
     const orderObject = sortField ?
-      { [sortField]: order.toUpperCase() } :
+      {[sortField]: order.toUpperCase()} :
       {
         blockNumber: 'DESC',
         transactionIndex: 'DESC',
@@ -363,7 +350,7 @@ export class TxService {
 
     const txs = await manager
       .find(TransactionEntity, {
-        select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful'],
+        select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
         where: { hash: In(hashes) },
         order: {
           blockNumber: 'DESC',
@@ -372,21 +359,7 @@ export class TxService {
         cache: true,
       })
 
-    const receipts = await this.receiptService
-      .findByTxHash(manager, txs.map(tx => tx.hash), ['transactionHash', 'gasUsed'])
-
-    const receiptsByTxHash = receipts
-      .reduceRight(
-        (memo, next) => memo.set(next.transactionHash, next),
-        new Map<string, TransactionReceiptEntity>(),
-      )
-
-    const txsWithReceipts = txs.map(tx => {
-      const receipt = receiptsByTxHash.get(tx.hash)
-      return new TransactionEntity({...tx, receipt})
-    })
-
-    const [summaries, count] = await this.summarise(manager, txsWithReceipts, txsWithReceipts.length)
+    const [summaries, count] = await this.summarise(manager, txs, txs.length)
     return summaries
   }
 
@@ -425,11 +398,16 @@ export class TxService {
         (contract && contract.erc20Metadata && contract.erc20Metadata.symbol) ||
         (contract && contract.erc721Metadata && contract.erc721Metadata.symbol)
 
-      // Partial read check for receipt
-      const {receipt} = tx
+      // Partial read checks
 
-      if (!receipt) {
-        throw new PartialReadException(`Receipt missing, tx hash = ${tx.hash}`)
+      // Fee
+      if (!tx.fee) {
+        throw new PartialReadException(`Fee missing, tx hash = ${tx.fee}`)
+      }
+
+      // Status
+      if (tx.successful === null) {
+        throw new PartialReadException(`Status missing, tx hash = ${tx.successful}`)
       }
 
       return {
@@ -442,7 +420,7 @@ export class TxService {
         contractName,
         contractSymbol,
         value: tx.value,
-        fee: tx.gasPrice.multipliedBy(receipt.gasUsed),
+        fee: tx.fee,
         successful: tx.successful,
         timestamp: tx.timestamp,
       } as TransactionSummary

@@ -84,5 +84,5 @@ enum Order {
 }
 
 enum TxSortField {
-  timestamp, value, to, from, successful
+  timestamp, value, to, from, successful, fee
 }
