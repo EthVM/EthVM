@@ -55,7 +55,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .map { _, v ->
         KeyValue(
           TransactionKeyRecord.newBuilder()
-            .setHash(v.getHash())
+            .setTransactionHash(v.getHash())
             .build(),
           v
         )
@@ -171,7 +171,7 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       .map { _, v ->
         KeyValue(
           TransactionKeyRecord.newBuilder()
-            .setHash(v.transactionHash)
+            .setTransactionHash(v.transactionHash)
             .build(),
           v
         )

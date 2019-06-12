@@ -32,7 +32,7 @@ protocol Processing {
   }
 
   record TransactionKeyRecord {
-    string hash;
+    string transactionHash;
   }
 
   record TransactionReceiptKeyRecord {
