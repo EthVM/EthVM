@@ -65,6 +65,9 @@ export class TransactionEntity {
   @Column({ type: 'bigint', readonly: true })
   chainId?: string
 
+  @Column({ type: 'boolean', readonly: true })
+  successful!: boolean
+
   @ManyToOne(type => BlockHeaderEntity, block => block.txs)
   @JoinColumn({
     name: 'blockHash',
