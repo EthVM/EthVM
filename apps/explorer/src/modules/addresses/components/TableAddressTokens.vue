@@ -76,7 +76,7 @@
     </div>
     <div v-else>
       <v-card v-if="totalCount === 0" flat>
-        <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
+        <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-tokens-for-address') }}</v-card-text>
       </v-card>
       <div v-else v-for="(token, index) in tokens" :key="index">
         <table-address-tokens-row :token="token" :holder="address" />
@@ -232,8 +232,8 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     return !!this.error && this.error !== ''
   }
 
-  get totalCount(): BN {
-    return this.tokensPage ? this.tokensPage.totalCountBN : new BN(0)
+  get totalCount(): number {
+    return this.tokensPage ? this.tokensPage.totalCountBN.toNumber() : 0
   }
 
   /**
@@ -265,7 +265,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get tokensString(): string {
-    return this.totalCount.isGreaterThan(1) ? this.$i18n.tc('token.name', 2) : this.$i18n.tc('token.name', 1)
+    return new BN(this.totalCount).isGreaterThan(1) ? this.$i18n.tc('token.name', 2) : this.$i18n.tc('token.name', 1)
   }
 }
 </script>
