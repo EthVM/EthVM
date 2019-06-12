@@ -174,8 +174,32 @@ export interface BlockMetric {
     avgTxFees: BigNumber;
 }
 
-export interface BlockMetricPage {
-    items: BlockMetric[];
+export interface BlockMetricsTransaction {
+    number: BigNumber;
+    blockHash: string;
+    timestamp: Date;
+    totalGasPrice: BigNumber;
+    avgGasLimit: BigNumber;
+    avgGasPrice: BigNumber;
+}
+
+export interface BlockMetricsTransactionFee {
+    number: BigNumber;
+    blockHash: string;
+    timestamp: Date;
+    totalTxFees: BigNumber;
+    avgTxFees: BigNumber;
+}
+
+export interface BlockMetricsTransactionFeePage {
+    items: BlockMetricsTransactionFee[];
+    offset: number;
+    limit: number;
+    totalCount: number;
+}
+
+export interface BlockMetricsTransactionPage {
+    items: BlockMetricsTransaction[];
     offset: number;
     limit: number;
     totalCount: number;
@@ -294,13 +318,14 @@ export interface Metadata {
 
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
+    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
+    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
+    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
-    blockMetrics(offset?: number, limit?: number): BlockMetricPage | Promise<BlockMetricPage>;
-    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     metadata(): Metadata | Promise<Metadata>;
@@ -363,9 +388,11 @@ export interface Search {
 }
 
 export interface ISubscription {
+    newBlockMetric(): BlockMetric | Promise<BlockMetric>;
+    newBlockMetricsTransaction(): BlockMetricsTransaction | Promise<BlockMetricsTransaction>;
+    newBlockMetricsTransactionFee(): BlockMetricsTransactionFee | Promise<BlockMetricsTransactionFee>;
     newBlock(): BlockSummary | Promise<BlockSummary>;
     hashRate(): BigNumber | Promise<BigNumber>;
-    newBlockMetric(): BlockMetric | Promise<BlockMetric>;
     isSyncing(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
 }

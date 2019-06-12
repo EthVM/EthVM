@@ -51,7 +51,7 @@ class ParityFullBlockSource(
 
   private val noThreads = 4
 
-  private var targetFetchTimeMs = 1000
+  private var targetFetchTimeMs = 3000
 
   private val maxRequestTraceCount = 1000
 
@@ -215,12 +215,13 @@ class ParityFullBlockSource(
         }
       }
 
+      // since we use integer division it's possible we can reach 0
+      if (batchSize < 1) {
+        batchSize = 1
+      }
+
       return records
     } catch (ex: TimeoutException) {
-
-      // likely we overloaded parity, let's reduce for retry
-      batchSize /= 2
-
       // parity is probably under high load
       throw RetriableException(ex)
     }
@@ -254,7 +255,7 @@ class ParityFullBlockSource(
             blocksTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`),
+            AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`, true),
             null
           )
 
@@ -267,7 +268,7 @@ class ParityFullBlockSource(
             txTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`),
+            AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`, true),
             null
           )
 
@@ -280,7 +281,7 @@ class ParityFullBlockSource(
             receiptsTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`),
+            AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`, true),
             null
           )
 
@@ -293,7 +294,7 @@ class ParityFullBlockSource(
             tracesTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`),
+            AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`, true),
             null
           )
 
@@ -306,7 +307,7 @@ class ParityFullBlockSource(
             unclesTopic,
             keySchemaAndValue.schema(),
             keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`),
+            AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`, true),
             null
           )
 
@@ -343,9 +344,11 @@ class ParityFullBlockSource(
 
       val blockTimestamps = sortedMapOf<BigInteger, Long>()
 
+      logger.debug { "Fetching range: $range" }
+
       do {
 
-        logger.debug { "Fetching range: $range. Next = $nextRange" }
+        logger.debug { "Next = $nextRange" }
 
         val first = nextRange!!.first
 
@@ -359,8 +362,6 @@ class ParityFullBlockSource(
           last.toBigInteger(),
           maxTraceCount
         ).send()
-
-        logger.debug { "Parity request: $first, $last, $maxTraceCount" }
 
         blockRecords = blockRecords + resp.fullBlocks.map { fullBlock ->
 
@@ -439,6 +440,8 @@ class ParityFullBlockSource(
           else -> null
         }
       } while (nextRange != null)
+
+      logger.debug { "Finished fetching range: $range" }
 
       return FetchResult(blockTimestamps, blockRecords)
     }

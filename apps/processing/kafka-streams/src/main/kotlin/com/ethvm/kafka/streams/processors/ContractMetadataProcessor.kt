@@ -34,8 +34,6 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
 
   private val zeroAddress = "0x0000000000000000000000000000000000000000"
 
-  private val nonUtf8Regex = Regex("[^\\u0000-\\uFFFF]")
-
   override val kafkaProps: Properties = Properties()
     .apply {
       putAll(baseKafkaProps.toMap())
@@ -106,11 +104,8 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     ).sendAsync()
       .thenApply { call ->
         val output = FunctionReturnDecoder.decode(call.value, function.outputParameters)
-        val result = output
+        output
           .firstOrNull()?.value as String?
-
-        // Some values can have non-four-byte-UTF-8 characters
-        result?.replace(nonUtf8Regex, "")
       }.handle { result, ex ->
         when (ex) {
           null -> result

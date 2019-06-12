@@ -67,9 +67,13 @@ register_sinks() {
 
 register() {
 
-  echo "===> Registering ${1} ..."
-  ensure_kafka_connect
-  curl_register ${KAFKA_CONNECT_DIR}/${1}
+  echo "===> Elems to register: $@"
+
+  for elem in $@; do
+    echo "===> Registering ${elem} ..."
+    ensure_kafka_connect
+    curl_register ${KAFKA_CONNECT_DIR}/${elem}
+  done
 
 } >&2
 

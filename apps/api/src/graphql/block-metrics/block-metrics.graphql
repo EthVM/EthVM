@@ -14,22 +14,57 @@ enum BlockMetricField {
 
 type Query {
 
-  blockMetrics(offset: Int = 0, limit: Int = 20): BlockMetricPage!
+  blockMetricsTransaction(offset: Int = 0, limit: Int = 20): BlockMetricsTransactionPage!
+  blockMetricsTransactionFee(offset: Int = 0, limit: Int = 20): BlockMetricsTransactionFeePage!
+
   blockMetricsTimeseries(start: Date!, end: Date!, bucket: TimeBucket!, fields: [BlockMetricField!]!): [AggregateBlockMetric!]!
 
 }
 
 type Subscription {
   newBlockMetric: BlockMetric!
+  newBlockMetricsTransaction: BlockMetricsTransaction!
+  newBlockMetricsTransactionFee: BlockMetricsTransactionFee!
 }
 
-type BlockMetricPage {
+type BlockMetricsTransactionPage {
 
-  items: [BlockMetric!]!
+  items: [BlockMetricsTransaction!]!
 
   offset: Int!
   limit: Int!
   totalCount: Int!
+
+}
+
+type BlockMetricsTransactionFeePage {
+
+  items: [BlockMetricsTransactionFee!]!
+
+  offset: Int!
+  limit: Int!
+  totalCount: Int!
+
+}
+
+type BlockMetricsTransaction {
+
+  number: BigNumber!
+  blockHash: String!
+  timestamp: Date!
+  totalGasPrice: BigNumber!
+  avgGasLimit: BigNumber!
+  avgGasPrice: BigNumber!
+
+}
+
+type BlockMetricsTransactionFee {
+
+  number: BigNumber!
+  blockHash: String!
+  timestamp: Date!
+  totalTxFees: BigNumber!
+  avgTxFees: BigNumber!
 
 }
 
