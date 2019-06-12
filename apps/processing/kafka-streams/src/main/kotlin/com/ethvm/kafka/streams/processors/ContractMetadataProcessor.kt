@@ -93,11 +93,11 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
 
   private fun fetchName(contractAddress: String) =
     fetchString(contractAddress, "name")
-      .thenApply { str -> str?.substring(0, 127) } // truncate to 64 characters
+      .thenApply { str -> str?.substring(0, Math.min(str.length, 128)) } // truncate to 64 characters
 
   private fun fetchSymbol(contractAddress: String) =
     fetchString(contractAddress, "symbol")
-      .thenApply { str -> str?.substring(0, 127) } // truncate to 64 characters
+      .thenApply { str -> str?.substring(0, Math.min(str.length, 128)) } // truncate to 64 characters
 
   private fun fetchString(contractAddress: String, method: String): CompletableFuture<String?> {
     val function = AbiFunction(method, emptyList(), listOf(object : TypeReference<Utf8String>() {}))
