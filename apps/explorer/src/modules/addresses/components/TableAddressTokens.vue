@@ -70,9 +70,9 @@
     =====================================================================================
     -->
     <div v-if="loading">
-        <div v-for="i in maxItems" :key="i">
-            <table-address-tokens-row-loading />
-        </div>
+      <div v-for="i in maxItems" :key="i">
+        <table-address-tokens-row-loading />
+      </div>
     </div>
     <div v-else>
       <v-card v-if="totalCount === 0" flat>
@@ -225,7 +225,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get loading() {
-   return this.$apollo.loading
+    return this.$apollo.loading
   }
 
   get hasError(): boolean {

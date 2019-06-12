@@ -9,7 +9,7 @@
       <v-flex xs12 hidden-sm-and-up>
         <div class="token-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height pa-1>
-           <v-flex xs2>
+            <v-flex xs2>
               <v-layout row align-center justify-center pa-2>
                 <div class="token-image-mobile">
                   <v-img :src="require('@/assets/icon-token.png')" contain />
@@ -19,7 +19,7 @@
             <v-flex>
               <v-layout row wrap align-center justify-start pr-2>
                 <v-flex xs10 pa-1>
-                   <div class="table-row-loading"></div>
+                  <div class="table-row-loading"></div>
                 </v-flex>
                 <v-flex xs2 pa-1>
                   <div class="table-row-loading"></div>
@@ -28,7 +28,7 @@
                   <div class="table-row-loading"></div>
                   <div class="table-row-loading"></div>
                 </v-flex>
-               </v-layout>
+              </v-layout>
             </v-flex>
           </v-layout>
         </div>
@@ -41,13 +41,13 @@
       <v-flex hidden-xs-only sm12>
         <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
           <v-flex sm4>
-              <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-2>
-                <div class="token-image">
-                  <v-img :src="require('@/assets/icon-token.png')" contain />
-                </div>
-                <v-flex class="table-row-loading"/>
-              </v-layout>
-            </v-flex>
+            <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-2>
+              <div class="token-image">
+                <v-img :src="require('@/assets/icon-token.png')" contain />
+              </div>
+              <v-flex class="table-row-loading" />
+            </v-layout>
+          </v-flex>
           <v-flex sm3>
             <div class="table-row-loading"></div>
           </v-flex>
