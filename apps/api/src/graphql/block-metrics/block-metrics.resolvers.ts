@@ -4,7 +4,7 @@ import {
   BlockMetricField,
   BlockMetricsTransactionFeePage,
   BlockMetricsTransactionPage,
-  TimeBucket
+  TimeBucket,
 } from '@app/graphql/schema'
 import { BlockMetricDto } from '@app/graphql/block-metrics/dto/block-metric.dto'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
@@ -30,7 +30,7 @@ export class BlockMetricsResolvers {
   @Query()
   async blockMetricsTransaction(
     @Args('offset') offset: number,
-    @Args('limit') limit: number
+    @Args('limit') limit: number,
   ): Promise<BlockMetricsTransactionPage> {
     const [items, count] = await this.blockMetricsService.findBlockMetricsTransaction(offset, limit)
     return new BlockMetricsTransactionPageDto(offset, limit, items, count)
@@ -39,7 +39,7 @@ export class BlockMetricsResolvers {
   @Query()
   async blockMetricsTransactionFee(
     @Args('offset') offset: number,
-    @Args('limit') limit: number
+    @Args('limit') limit: number,
   ): Promise<BlockMetricsTransactionFeePage> {
     const [items, count] = await this.blockMetricsService.findBlockMetricsTransactionFee(offset, limit)
     return new BlockMetricsTransactionFeePageDto(offset, limit, items, count)
@@ -50,7 +50,7 @@ export class BlockMetricsResolvers {
     @Args('start') start: Date,
     @Args('end') end: Date,
     @Args('bucket') bucket: TimeBucket,
-    @Args({ name: 'fields', type: () => [BlockMetricField] }) fields: BlockMetricField[]
+    @Args({ name: 'fields', type: () => [BlockMetricField] }) fields: BlockMetricField[],
   ): Promise<AggregateBlockMetricDto[]> {
     const entities = await this.blockMetricsService.timeseries(start, end, bucket, fields)
     return entities.map(e => new AggregateBlockMetricDto(e))
@@ -58,7 +58,7 @@ export class BlockMetricsResolvers {
 
   @Subscription(
     'newBlockMetric', {
-      resolve: (summary: BlockMetricEntity) => new BlockMetricDto(summary)
+      resolve: (summary: BlockMetricEntity) => new BlockMetricDto(summary),
     } as SubscriptionOptions)
   newBlockMetric() {
     return this.pubSub.asyncIterator('newBlockMetric')
@@ -66,7 +66,7 @@ export class BlockMetricsResolvers {
 
   @Subscription(
     'newBlockMetricsTransaction', {
-      resolve: (summary: BlockMetricsTransactionEntity) => new BlockMetricsTransactionDto(summary)
+      resolve: (summary: BlockMetricsTransactionEntity) => new BlockMetricsTransactionDto(summary),
     } as SubscriptionOptions)
   newBlockMetricsTransaction() {
     return this.pubSub.asyncIterator('newBlockMetricsTransaction')
@@ -74,7 +74,7 @@ export class BlockMetricsResolvers {
 
   @Subscription(
     'newBlockMetricsTransactionFee', {
-      resolve: (summary: BlockMetricsTransactionFeeEntity) => new BlockMetricsTransactionFeeDto(summary)
+      resolve: (summary: BlockMetricsTransactionFeeEntity) => new BlockMetricsTransactionFeeDto(summary),
     } as SubscriptionOptions)
   newBlockMetricsTransactionFee() {
     return this.pubSub.asyncIterator('newBlockMetricsTransactionFee')

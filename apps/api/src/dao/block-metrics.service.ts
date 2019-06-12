@@ -19,8 +19,8 @@ export class BlockMetricsService {
     return this.entityManager
       .find(BlockMetricEntity, {
         where: {
-          blockHash: In(blockHashes)
-        }
+          blockHash: In(blockHashes),
+        },
       })
   }
 
@@ -35,14 +35,14 @@ export class BlockMetricsService {
         const [{ count }] = await txn.find(RowCount, {
           select: ['count'],
           where: {
-            relation: 'canonical_block_header'
-          }
+            relation: 'canonical_block_header',
+          },
         })
 
         const entities = await txn.find(BlockMetricsTransactionEntity, {
           order: { number: 'DESC' },
           skip: offset,
-          take: limit
+          take: limit,
         })
 
         return [entities, count]
@@ -52,7 +52,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionByBlockHash(blockHash: string): Promise<BlockMetricsTransactionEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionEntity, {
-      where: { blockHash }
+      where: { blockHash },
     })
   }
 
@@ -67,14 +67,14 @@ export class BlockMetricsService {
         const [{ count }] = await txn.find(RowCount, {
           select: ['count'],
           where: {
-            relation: 'canonical_block_header'
-          }
+            relation: 'canonical_block_header',
+          },
         })
 
         const entities = await txn.find(BlockMetricsTransactionFeeEntity, {
           order: { number: 'DESC' },
           skip: offset,
-          take: limit
+          take: limit,
         })
 
         return [entities, count]
@@ -84,7 +84,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionFeeByBlockHash(blockHash: string): Promise<BlockMetricsTransactionFeeEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionFeeEntity, {
-      where: { blockHash }
+      where: { blockHash },
     })
   }
 
@@ -121,7 +121,7 @@ export class BlockMetricsService {
     start: Date,
     end: Date,
     bucket: TimeBucket,
-    fields: BlockMetricField[]
+    fields: BlockMetricField[],
   ): Promise<AggregateBlockMetric[]> {
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
@@ -219,7 +219,7 @@ export class BlockMetricsService {
         avgNumFailedTxs: item.avg_num_failed_txs,
         avgNumInternalTxs: item.avg_num_internal_txs,
         avgTxFees: item.avg_tx_fees,
-        avgTotalTxFees: item.avg_total_tx_fees
+        avgTotalTxFees: item.avg_total_tx_fees,
       } as AggregateBlockMetric
 
     })
