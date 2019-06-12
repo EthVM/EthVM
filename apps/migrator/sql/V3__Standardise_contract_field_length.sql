@@ -1,0 +1,14 @@
+ALTER TABLE eth_list_contract_metadata
+  ALTER COLUMN "symbol" TYPE VARCHAR(128),
+  ALTER COLUMN "symbol" TYPE VARCHAR(128);
+
+ALTER TABLE token_exchange_rates
+  ALTER COLUMN "symbol" TYPE VARCHAR(128),
+  ALTER COLUMN "symbol" TYPE VARCHAR(128);
+
+ALTER TABLE erc20_metadata
+  ALTER COLUMN "symbol" TYPE VARCHAR(128);
+
+ALTER TABLE erc721_metadata
+  ALTER COLUMN "symbol" TYPE VARCHAR(128);
+
