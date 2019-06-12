@@ -27,7 +27,7 @@ export class TxService {
     private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectEntityManager(DbConnection.Principal)
     private readonly entityManager: EntityManager,
-    private readonly ethService: EthService
+    private readonly ethService: EthService,
   ) {
   }
 
@@ -147,7 +147,7 @@ export class TxService {
     sortField: TxSortField = TxSortField.timestamp,
     order: Order = Order.desc,
     offset: number = 0,
-    limit: number = 20
+    limit: number = 20,
   ): Promise<[TransactionSummary[], number]> {
 
     return this.entityManager.transaction(
@@ -347,7 +347,7 @@ export class TxService {
     hashes: string[],
     entityManager: EntityManager = this.entityManager,
     sortField?: TxSortField,
-    order: Order = Order.desc
+    order: Order = Order.desc,
   ): Promise<TransactionSummary[]> {
 
     if (!(hashes && hashes.length)) return []
