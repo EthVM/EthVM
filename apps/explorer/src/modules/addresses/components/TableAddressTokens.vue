@@ -28,7 +28,7 @@
             {{ $t('usd.value') }}
           </p>
         </v-flex>
-        <v-flex xs12 sm6>
+        <v-flex xs12 sm6 pt-0 pb-0>
           <v-layout v-if="pages > 1" justify-end row>
             <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
           </v-layout>
