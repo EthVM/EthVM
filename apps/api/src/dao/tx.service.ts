@@ -11,6 +11,7 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { EthService } from '@app/shared/eth.service'
 
 @Injectable()
 export class TxService {
@@ -24,6 +25,7 @@ export class TxService {
     private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectEntityManager()
     private readonly entityManager: EntityManager,
+    private readonly ethService: EthService
   ) {
   }
 
@@ -121,7 +123,7 @@ export class TxService {
   async findSummariesByAddress(
     address: string,
     filter?: FilterEnum,
-    counterpartAddress?: string,
+    searchHash?: string,
     sortField: TxSortField = TxSortField.timestamp,
     order: Order = Order.desc,
     offset: number = 0,
@@ -133,12 +135,18 @@ export class TxService {
     let countQuery = 'select count(hash) from transaction'
     let countArgs: any[] = []
 
+    const counterpartAddress = !!searchHash && this.ethService.isValidAddress(searchHash) ? searchHash : null
+
     switch (filter) {
       case FilterEnum.in:
         if (counterpartAddress) {
           where = {to: address, from: counterpartAddress}
           countQuery = `${countQuery} where ("to" = $1 AND "from" = $2)`
           countArgs = [address, counterpartAddress]
+        } else if (searchHash) {
+          where = {to: address, hash: searchHash}
+          countQuery = `${countQuery} where ("to" = $1 AND "hash" = $2)`
+          countArgs = [address, searchHash]
         } else {
           where = {to: address}
           countQuery = `${countQuery} where ("to" = $1)`
@@ -150,6 +158,10 @@ export class TxService {
           where = {from: address, to: counterpartAddress}
           countQuery = `${countQuery} where ("from" = $1 AND "to" = $2)`
           countArgs = [address, counterpartAddress]
+        } else if (searchHash) {
+          where = {from: address, hash: searchHash}
+          countQuery = `${countQuery} where ("from" = $1 AND "hash" = $2)`
+          countArgs = [address, searchHash]
         } else {
           where = {from: address}
           countQuery = `${countQuery} where ("from" = $1)`
@@ -161,6 +173,10 @@ export class TxService {
           where = [{from: address, to: counterpartAddress}, {to: address, from: counterpartAddress}]
           countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
           countArgs = [address, counterpartAddress, address, counterpartAddress]
+        } else if (searchHash) {
+          where = [{from: address, hash: searchHash}, {to: address, hash: searchHash}]
+          countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
+          countArgs = [address, searchHash, address, searchHash]
         } else {
           where = [{from: address}, {to: address}]
           countQuery = `${countQuery} where "from" = $1 OR "to" = $2`

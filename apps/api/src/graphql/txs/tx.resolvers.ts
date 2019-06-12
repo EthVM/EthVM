@@ -109,7 +109,7 @@ export class TxResolvers {
   async transactionSummariesForAddress(
     @Args('address', ParseAddressPipe) address: string,
     @Args({name: 'filter', type: () => FilterEnum}) filter?: FilterEnum,
-    @Args('counterpartAddress', ParseAddressPipe) counterpartAddress?: string,
+    @Args('searchHash') searchHash?: string,
     @Args({ name: 'sortField', type: () => TxSortField }) sortField?: TxSortField,
     @Args({ name: 'order', type: () => Order}) order?: Order,
     @Args('offset') offset?: number,
@@ -118,7 +118,7 @@ export class TxResolvers {
     return retry(async bail => {
 
       try {
-        const [summaries, count] = await this.txService.findSummariesByAddress(address, filter, counterpartAddress, sortField, order, offset, limit)
+        const [summaries, count] = await this.txService.findSummariesByAddress(address, filter, searchHash, sortField, order, offset, limit)
         return new TransactionSummaryPageDto(summaries, count)
       } catch (err) {
 
