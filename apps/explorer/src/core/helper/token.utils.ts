@@ -3,7 +3,6 @@ import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/
 import BN from 'bignumber.js'
 
 export class TokenUtils {
-
   static currentPriceBN(token: TokenPageExt_items | TokenExchangeRatePageExt_items): BN | null {
     return token.currentPrice ? new BN(token.currentPrice) : null
   }
@@ -13,7 +12,6 @@ export class TokenUtils {
   }
 
   static priceChangeFormatted(token: TokenPageExt_items | TokenExchangeRatePageExt_items): string {
-
     const { priceChangePercentage24hBN } = token
 
     if (!priceChangePercentage24hBN || priceChangePercentage24hBN.isZero()) {
@@ -48,5 +46,4 @@ export class TokenUtils {
       }
     }
   }
-
 }

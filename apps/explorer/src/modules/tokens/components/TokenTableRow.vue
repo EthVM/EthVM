@@ -76,7 +76,7 @@
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { TokenExchangeRatePageExt_items } from "@app/core/api/apollo/extensions/token-exchange-rate-page.ext";
+import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
 
 @Component
 export default class TokenTableRow extends Mixins(StringConcatMixin) {
