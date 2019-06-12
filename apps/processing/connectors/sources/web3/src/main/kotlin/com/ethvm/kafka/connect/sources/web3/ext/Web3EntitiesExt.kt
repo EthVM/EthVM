@@ -80,7 +80,7 @@ fun EthBlock.Block.toUncleRecord(builder: UncleRecord.Builder): UncleRecord.Buil
 fun Transaction.toTransactionRecord(builder: TransactionRecord.Builder): TransactionRecord.Builder {
   builder
     .setBlockHash(blockHash)
-    .setHash(hash)
+    .setTransactionHash(hash)
     .setTransactionIndex(transactionIndex.intValueExact())
     .setBlockNumberBI(blockNumber)
     .setNonceBI(nonce)

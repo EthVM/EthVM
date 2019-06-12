@@ -67,7 +67,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
                       TransactionGasPriceRecord.newBuilder()
                         .setBlockNumber(tx.getBlockNumber())
                         .setBlockHash(tx.getBlockHash())
-                        .setTransactionHash(tx.getHash())
+                        .setTransactionHash(tx.transactionHash)
                         .setTransactionPosition(tx.getTransactionIndex())
                         .setAddress(tx.getFrom())
                         .setGasPrice(tx.getGasPrice())
