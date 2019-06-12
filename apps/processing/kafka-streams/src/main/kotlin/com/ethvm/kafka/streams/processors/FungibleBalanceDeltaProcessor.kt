@@ -161,16 +161,21 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
 
         val blockNumber = k.getNumberBI()
 
+        val deltas = netConfig
+          .chainConfigForBlock(blockNumber)
+          .hardForkFungibleDeltas(blockNumber)
+
+        Pair(header, deltas)
+      }
+      .filter { _, (_, deltas) -> deltas.isNotEmpty() }
+      .mapValues { _, (header, deltas) ->
+
         val timestamp = DateTime(header!!.getTimestamp())
 
         FungibleBalanceDeltaListRecord.newBuilder()
           .setTimestamp(timestamp)
           .setBlockHash(header.getHash())
-          .setDeltas(
-            netConfig
-              .chainConfigForBlock(blockNumber)
-              .hardForkFungibleDeltas(blockNumber)
-          )
+          .setDeltas(deltas)
           .build()
       }
 
