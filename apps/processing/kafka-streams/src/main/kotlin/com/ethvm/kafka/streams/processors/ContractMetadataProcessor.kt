@@ -34,8 +34,6 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
 
   private val zeroAddress = "0x0000000000000000000000000000000000000000"
 
-  private val nonUtf8Regex = Regex("[^\\u0000-\\uFFFF]")
-
   override val kafkaProps: Properties = Properties()
     .apply {
       putAll(baseKafkaProps.toMap())
@@ -93,9 +91,13 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     return builder.build()
   }
 
-  private fun fetchName(contractAddress: String) = fetchString(contractAddress, "name")
+  private fun fetchName(contractAddress: String) =
+    fetchString(contractAddress, "name")
+      .thenApply { str -> str?.substring(0, Math.min(str.length, 128)) } // truncate to 64 characters
 
-  private fun fetchSymbol(contractAddress: String) = fetchString(contractAddress, "symbol")
+  private fun fetchSymbol(contractAddress: String) =
+    fetchString(contractAddress, "symbol")
+      .thenApply { str -> str?.substring(0, Math.min(str.length, 128)) } // truncate to 64 characters
 
   private fun fetchString(contractAddress: String, method: String): CompletableFuture<String?> {
     val function = AbiFunction(method, emptyList(), listOf(object : TypeReference<Utf8String>() {}))
@@ -106,11 +108,8 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     ).sendAsync()
       .thenApply { call ->
         val output = FunctionReturnDecoder.decode(call.value, function.outputParameters)
-        val result = output
+        output
           .firstOrNull()?.value as String?
-
-        // Some values can have non-four-byte-UTF-8 characters
-        result?.replace(nonUtf8Regex, "")
       }.handle { result, ex ->
         when (ex) {
           null -> result

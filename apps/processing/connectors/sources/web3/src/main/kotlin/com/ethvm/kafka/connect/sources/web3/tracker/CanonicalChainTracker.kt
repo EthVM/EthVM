@@ -41,7 +41,7 @@ class CanonicalChainTracker(
     // update head
     if (max > currentHead) {
       this.head = max
-      logger.debug { "Head updated. New head = ${this.head}"}
+      logger.debug { "Head updated. New head = ${this.head}" }
     }
 
     // determine duplicates indicating a chain re-org, sorting them into their natural order

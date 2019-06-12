@@ -67,6 +67,6 @@ class ExchangeRatesSourceTask(
 
   companion object {
 
-    val SLEEP = TimeUnit.MINUTES.toMillis(1)
+    val SLEEP = TimeUnit.SECONDS.toMillis(5)
   }
 }

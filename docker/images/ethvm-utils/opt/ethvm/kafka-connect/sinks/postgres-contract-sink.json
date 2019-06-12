@@ -6,11 +6,12 @@
     "topics": "contract,eth_list_contract_metadata,erc20_metadata,erc721_metadata,token_exchange_rates",
     "errors.tolerance": "all",
     "errors.deadletterqueue.topic.name": "postgres_contract_sink_dead_letter",
+    "errors.deadletterqueue.topic.replication.factor": "1",
     "insert.mode": "upsert",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",
     "connection.password": "{{ .Env.POSTGRES_PASSWORD }}",
-    "transforms": "snakeCaseKey,snakeCaseValue,dropFields,toJsonKey,toJsonValue,flattenValue,convertTimestamp",
+    "transforms": "snakeCaseKey,snakeCaseValue,dropFields,toJsonKey,toJsonValue,flattenValue,convertTimestamp,stringClean",
     "transforms.flattenValue.type": "com.ethvm.kafka.connect.transforms.Flatten$Value",
     "transforms.flattenValue.delimiter": "_",
     "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
@@ -24,6 +25,8 @@
     "pk.mode": "record_key",
     "transforms.convertTimestamp.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
     "transforms.convertTimestamp.target.type": "Timestamp",
-    "transforms.convertTimestamp.field": "timestamp"
+    "transforms.convertTimestamp.field": "timestamp",
+    "transforms.stringClean.type": "com.ethvm.kafka.connect.transforms.StringClean$Value",
+    "transforms.stringClean.whitelist": "name,symbol"
   }
 }

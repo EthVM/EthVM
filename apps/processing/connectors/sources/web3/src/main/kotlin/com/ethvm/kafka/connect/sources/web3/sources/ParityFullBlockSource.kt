@@ -21,7 +21,6 @@ import com.ethvm.kafka.connect.sources.web3.ext.toTransactionRecord
 import com.ethvm.kafka.connect.sources.web3.ext.toUncleRecord
 import com.ethvm.kafka.connect.sources.web3.utils.AvroToConnect
 import mu.KotlinLogging
-import org.apache.kafka.connect.data.Schema
 import org.apache.kafka.connect.errors.RetriableException
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
@@ -52,7 +51,7 @@ class ParityFullBlockSource(
 
   private val noThreads = 4
 
-  private var targetFetchTimeMs = 1000
+  private var targetFetchTimeMs = 3000
 
   private val maxRequestTraceCount = 1000
 
@@ -214,11 +213,10 @@ class ParityFullBlockSource(
           percentageOfTargetFetchTime > 1.5 -> batchSize / 2
           else -> batchSize
         }
-
       }
 
       // since we use integer division it's possible we can reach 0
-      if(batchSize < 1) {
+      if (batchSize < 1) {
         batchSize = 1
       }
 
@@ -237,85 +235,88 @@ class ParityFullBlockSource(
     }
   }
 
-  override fun tombstonesForRange(range: LongRange): List<SourceRecord> =
-    range
-      .map { blockNumber ->
+  override fun tombstone(number: Long): List<SourceRecord> {
 
-        val blockNumberBI = blockNumber.toBigInteger()
-        val partitionOffset = mapOf("blockNumber" to blockNumber)
+    val numberBI = number.toBigInteger()
+    val partitionOffset = mapOf("blockNumber" to number)
 
-        val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
-          .setNumberBI(blockNumberBI)
-          .build()
+    val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
+      .setNumberBI(numberBI)
+      .build()
 
-        val keySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
+    val keySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
 
-        val headerSourceRecord =
-          SourceRecord(
-            partitionKey,
-            partitionOffset,
-            blocksTopic,
-            keySchemaAndValue.schema(),
-            keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`, true),
-            null
-          )
+    val headerSourceRecord =
+      SourceRecord(
+        partitionKey,
+        partitionOffset,
+        blocksTopic,
+        keySchemaAndValue.schema(),
+        keySchemaAndValue.value(),
+        AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`, true),
+        null
+      )
 
-        // transactions
+    // transactions
 
-        val txsSourceRecord =
-          SourceRecord(
-            partitionKey,
-            partitionOffset,
-            txTopic,
-            keySchemaAndValue.schema(),
-            keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`, true),
-            null
-          )
+    val txsSourceRecord =
+      SourceRecord(
+        partitionKey,
+        partitionOffset,
+        txTopic,
+        keySchemaAndValue.schema(),
+        keySchemaAndValue.value(),
+        AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`, true),
+        null
+      )
 
-        // receipts
+    // receipts
 
-        val receiptsSourceRecord =
-          SourceRecord(
-            partitionKey,
-            partitionOffset,
-            receiptsTopic,
-            keySchemaAndValue.schema(),
-            keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`, true),
-            null
-          )
+    val receiptsSourceRecord =
+      SourceRecord(
+        partitionKey,
+        partitionOffset,
+        receiptsTopic,
+        keySchemaAndValue.schema(),
+        keySchemaAndValue.value(),
+        AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`, true),
+        null
+      )
 
-        // traces
+    // traces
 
-        val tracesSourceRecord =
-          SourceRecord(
-            partitionKey,
-            partitionOffset,
-            tracesTopic,
-            keySchemaAndValue.schema(),
-            keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`, true),
-            null
-          )
+    val tracesSourceRecord =
+      SourceRecord(
+        partitionKey,
+        partitionOffset,
+        tracesTopic,
+        keySchemaAndValue.schema(),
+        keySchemaAndValue.value(),
+        AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`, true),
+        null
+      )
 
-        // uncles
+    // uncles
 
-        val unclesSourceRecord =
-          SourceRecord(
-            partitionKey,
-            partitionOffset,
-            unclesTopic,
-            keySchemaAndValue.schema(),
-            keySchemaAndValue.value(),
-            AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`, true),
-            null
-          )
+    val unclesSourceRecord =
+      SourceRecord(
+        partitionKey,
+        partitionOffset,
+        unclesTopic,
+        keySchemaAndValue.schema(),
+        keySchemaAndValue.value(),
+        AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`, true),
+        null
+      )
 
-        listOf(headerSourceRecord, txsSourceRecord, receiptsSourceRecord, tracesSourceRecord, unclesSourceRecord)
-      }
-      .flatten()
+    return listOf(
+      headerSourceRecord,
+      txsSourceRecord,
+      receiptsSourceRecord,
+      tracesSourceRecord,
+      unclesSourceRecord
+    )
+  }
 
   data class BlockRecords(
     val key: CanonicalKeyRecord,

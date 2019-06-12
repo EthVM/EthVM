@@ -284,8 +284,9 @@ export default class ChartLiveTxFees extends Vue {
 
       numbersDesc.forEach(number => {
 
-        const avgGasPrice = gasPricesByNumber.get(number) || 0
-        const avgTxFee = txFeesByNumber.get(number) || 0
+        // for some reasons number is a string
+        const avgGasPrice = gasPricesByNumber.get(+number) || 0
+        const avgTxFee = txFeesByNumber.get(+number) || 0
 
         labels.push(numberLabel + number.toString())
         avgPrice.push(avgGasPrice)

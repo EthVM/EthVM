@@ -134,7 +134,7 @@ services:
     # Just uncomment below line:
     command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
     #command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    #command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+#    command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -201,6 +201,7 @@ services:
       KAFKA_COMPRESSION_TYPE: "zstd"
       KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
       KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS: 120000
       KAFKA_MESSAGE_MAX_BYTES: 52428800
       KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
@@ -277,6 +278,7 @@ services:
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      CONNECT_MAX_POLL_INTERVAL_MS: 120000
       KAFKA_JMX_PORT: 9588
 
   # ///////////////////////////////////////////////////////
