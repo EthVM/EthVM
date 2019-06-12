@@ -67,6 +67,12 @@ topics:
     config:
       retention.ms: 604800000
 
+  - name: transaction_fee
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      retention.ms: 604800000
+
   - name: canonical_block_author
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
@@ -91,7 +97,7 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: canonical_transaction_fees
+  - name: canonical_transaction_feetransaction_fees
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:

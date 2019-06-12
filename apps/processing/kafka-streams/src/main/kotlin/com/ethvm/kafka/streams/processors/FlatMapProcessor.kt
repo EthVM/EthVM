@@ -5,12 +5,14 @@ import com.ethvm.avro.capture.TransactionReceiptRecord
 import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.capture.UncleRecord
 import com.ethvm.avro.processing.TraceKeyRecord
+import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
 import com.ethvm.avro.processing.TransactionReceiptKeyRecord
 import com.ethvm.avro.processing.UncleKeyRecord
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
+import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
 import com.ethvm.kafka.streams.config.Topics.CanonicalUncles
 import com.ethvm.kafka.streams.utils.toTopic
@@ -155,6 +157,26 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
         )
       }
       .toTopic(Topics.Uncle)
+
+    CanonicalTransactionFees.stream(builder)
+      .filter { _, v -> v != null }
+      .flatMapValues { _, v ->
+        v!!.getTransactionFees()
+          .map {
+            TransactionFeeRecord.newBuilder(it)
+              .setTimestamp(v.getTimestamp())
+              .build()
+          }
+      }
+      .map { _, v ->
+        KeyValue(
+          TransactionKeyRecord.newBuilder()
+            .setHash(v.transactionHash)
+            .build(),
+          v
+        )
+      }
+      .toTopic(Topics.TransactionFee)
 
     return builder.build()
   }

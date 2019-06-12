@@ -35,6 +35,7 @@ import com.ethvm.avro.processing.TransactionCountDeltaListRecord
 import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.avro.processing.TransactionCountRecord
 import com.ethvm.avro.processing.TransactionFeeListRecord
+import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionGasPriceListRecord
 import com.ethvm.avro.processing.TransactionGasUsedListRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
@@ -153,6 +154,10 @@ object Serdes : KoinComponent {
   }
 
   fun TransactionFeeList() = SpecificAvroSerde<TransactionFeeListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun TransactionFee() = SpecificAvroSerde<TransactionFeeRecord>(registryClient).apply {
     configure(config, false)
   }
 

@@ -32,6 +32,7 @@ import com.ethvm.avro.processing.TraceKeyRecord
 import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.avro.processing.TransactionCountRecord
 import com.ethvm.avro.processing.TransactionFeeListRecord
+import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.avro.processing.TransactionGasPriceListRecord
 import com.ethvm.avro.processing.TransactionGasUsedListRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
@@ -71,6 +72,7 @@ import com.ethvm.kafka.streams.Serdes.TransactionList
 import com.ethvm.kafka.streams.Serdes.TransactionReceipt
 import com.ethvm.kafka.streams.Serdes.TransactionReceiptKey
 import com.ethvm.kafka.streams.Serdes.TransactionCount
+import com.ethvm.kafka.streams.Serdes.TransactionFee
 import com.ethvm.kafka.streams.Serdes.Uncle
 import com.ethvm.kafka.streams.Serdes.UncleKey
 import com.ethvm.kafka.streams.Serdes.UncleList
@@ -156,6 +158,8 @@ object Topics {
   val CanonicalGasPrices = KafkaTopic<CanonicalKeyRecord, TransactionGasPriceListRecord?>("canonical_gas_prices", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasPriceListRecord.`SCHEMA$`, TransactionGasPriceList())
   val CanonicalGasUsed = KafkaTopic<CanonicalKeyRecord, TransactionGasUsedListRecord?>("canonical_gas_used", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionGasUsedListRecord.`SCHEMA$`, TransactionGasUsedList())
   val CanonicalTransactionFees = KafkaTopic<CanonicalKeyRecord, TransactionFeeListRecord?>("canonical_transaction_fees", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionFeeListRecord.`SCHEMA$`, TransactionFeeList())
+
+  val TransactionFee = KafkaTopic<TransactionKeyRecord, TransactionFeeRecord?>("transaction_fee", CanonicalKeyRecord.`SCHEMA$`, TransactionKey(), TransactionFeeRecord.`SCHEMA$`, TransactionFee())
 
   val CanonicalBlockAuthor = KafkaTopic<CanonicalKeyRecord, BlockAuthorRecord?>("canonical_block_author", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockAuthorRecord.`SCHEMA$`, BlockAuthor())
 
