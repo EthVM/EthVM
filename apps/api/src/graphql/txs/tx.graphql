@@ -4,7 +4,7 @@ type Query {
 
   transactionSummariesForBlockNumber(number: BigNumber!, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
   transactionSummariesForBlockHash(hash: String!, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
-  transactionSummariesForAddress(address: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
+  transactionSummariesForAddress(address: String!, filter: FilterEnum = all, sortField: TxSortField, order: Order, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
 
   tx(hash: String!): Transaction
 }
@@ -81,4 +81,8 @@ type Trace {
 
 enum Order {
   asc, desc
+}
+
+enum TxSortField {
+  timestamp, value, to, from
 }

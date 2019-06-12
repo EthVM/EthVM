@@ -80,6 +80,13 @@ export enum TokenExchangeRateFilter {
     market_cap_rank = "market_cap_rank"
 }
 
+export enum TxSortField {
+    timestamp = "timestamp",
+    value = "value",
+    to = "to",
+    from = "from"
+}
+
 export interface Account {
     address: string;
     balance: BigNumber;
@@ -349,7 +356,7 @@ export interface IQuery {
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForAddress(address: string, filter?: FilterEnum, sortField?: TxSortField, order?: Order, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     tx(hash: string): Transaction | Promise<Transaction>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;

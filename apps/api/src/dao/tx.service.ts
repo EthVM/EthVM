@@ -2,10 +2,10 @@ import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
+import { EntityManager, FindManyOptions, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
 import { ReceiptService } from './receipt.service'
 import { TraceService, TransactionStatus } from './trace.service'
-import { TransactionSummary } from '@app/graphql/schema'
+import { Order, TransactionSummary, TxSortField } from '@app/graphql/schema'
 import { ContractService } from '@app/dao/contract.service'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
@@ -66,7 +66,7 @@ export class TxService {
       'READ COMMITTED',
       async (txn): Promise<[TransactionSummary[], number]> => {
 
-        const where = { blockNumber: number }
+        const where = {blockNumber: number}
 
         const { count } = await txn
           .createQueryBuilder()
@@ -79,13 +79,19 @@ export class TxService {
 
         if (count === 0) return [[], count]
 
-        const txs = await txn.find(TransactionEntity, {
+        const findOptions: FindManyOptions = {
           select: ['hash'],
           where,
+          order: {
+            blockNumber: 'DESC',
+            transactionIndex: 'DESC',
+          },
           skip: offset,
           take: limit,
           cache: true,
-        })
+        }
+
+        const txs = await txn.find(TransactionEntity, findOptions)
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
@@ -100,7 +106,7 @@ export class TxService {
       'READ COMMITTED',
       async (txn): Promise<[TransactionSummary[], number]> => {
 
-        const where = { blockHash: hash }
+        const where = {blockHash: hash}
 
         const { count } = await txn
           .createQueryBuilder()
@@ -118,6 +124,10 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          order: {
+            blockNumber: 'DESC',
+            transactionIndex: 'DESC',
+          },
           cache: true,
         })
 
@@ -128,7 +138,14 @@ export class TxService {
 
   }
 
-  async findSummariesByAddress(address: string, filter?: string, offset: number = 0, limit: number = 20): Promise<[TransactionSummary[], number]> {
+  async findSummariesByAddress(
+    address: string,
+    filter?: string,
+    sortField: TxSortField = TxSortField.timestamp,
+    order: Order = Order.desc,
+    offset: number = 0,
+    limit: number = 20
+  ): Promise<[TransactionSummary[], number]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
@@ -177,6 +194,7 @@ export class TxService {
           skip: offset,
           take: limit,
           cache: true,
+          order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'}
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
@@ -188,7 +206,7 @@ export class TxService {
 
   async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[TransactionSummary[], number]> {
 
-    const where = fromBlock ? { blockNumber: LessThanOrEqual(fromBlock) } : {}
+    const where = fromBlock ? {blockNumber: LessThanOrEqual(fromBlock)} : {}
 
     return this.entityManager.transaction(
       'READ COMMITTED',
@@ -241,7 +259,7 @@ export class TxService {
 
         const txsWithReceipts = txs.map(tx => {
           const receipt = receiptsByTxHash.get(tx.hash)
-          return new TransactionEntity({ ...tx, receipt })
+          return new TransactionEntity({...tx, receipt})
         })
         return this.summarise(entityManager, txsWithReceipts, totalCount)
       },
@@ -249,11 +267,23 @@ export class TxService {
 
   }
 
-  async findSummariesByHash(hashes: string[], entityManager: EntityManager = this.entityManager): Promise<TransactionSummary[]> {
+  async findSummariesByHash(
+    hashes: string[],
+    entityManager: EntityManager = this.entityManager,
+    sortField?: TxSortField,
+    order: Order = Order.desc
+  ): Promise<TransactionSummary[]> {
 
     if (!(hashes && hashes.length)) return []
 
     const manager = entityManager || this.entityManager
+
+    const orderObject = sortField ?
+      { [sortField]: order.toUpperCase() } :
+      {
+        blockNumber: 'DESC',
+        transactionIndex: 'DESC',
+      }
 
     const txs = await manager
       .find(TransactionEntity, {
@@ -277,7 +307,7 @@ export class TxService {
 
     const txsWithReceipts = txs.map(tx => {
       const receipt = receiptsByTxHash.get(tx.hash)
-      return new TransactionEntity({ ...tx, receipt })
+      return new TransactionEntity({...tx, receipt})
     })
 
     const [summaries, count] = await this.summarise(manager, txsWithReceipts, txsWithReceipts.length)
@@ -288,7 +318,7 @@ export class TxService {
 
     if (!txs.length) return [[], 0]
 
-    const { traceService, contractService } = this
+    const {traceService, contractService} = this
 
     const txHashes: string[] = []
     const contractAddresses: string[] = []
@@ -331,7 +361,7 @@ export class TxService {
       // Partial read checks
 
       const txStatus = txStatusByHash.get(tx.hash)
-      const { receipt } = tx
+      const {receipt} = tx
 
       // Root trace
       if (!txStatus) {
