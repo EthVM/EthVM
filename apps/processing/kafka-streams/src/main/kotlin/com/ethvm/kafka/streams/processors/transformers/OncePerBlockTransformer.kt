@@ -56,12 +56,20 @@ class OncePerBlockTransformer(
       return null
     }
 
-    val currentRecord = canonicalStore.get(key)
+    if (value == null) {
+      logger.debug("Tombstone received, ignoring")
+      return null
+    }
 
-    return if (currentRecord == null) {
-      canonicalStore.put(key, "")
-      KeyValue(key, value)
-    } else null
+    return when (canonicalStore.get(key) != null) {
+      true -> null  // do not forward
+      false -> {
+        // store and forward
+        canonicalStore.put(key, "")
+        KeyValue(key, value)
+      }
+    }
+
   }
 
   override fun close() {
