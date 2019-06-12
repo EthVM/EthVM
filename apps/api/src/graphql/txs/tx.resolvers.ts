@@ -8,7 +8,7 @@ import { TransactionSummaryPageDto } from '@app/graphql/txs/dto/transaction-summ
 import { PubSub } from 'graphql-subscriptions'
 import { Inject, UseInterceptors } from '@nestjs/common'
 import { TransactionSummaryDto } from '@app/graphql/txs/dto/transaction-summary.dto'
-import { TransactionSummary } from '@app/graphql/schema'
+import { Order, TransactionSummary, TxSortField } from '@app/graphql/schema'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import retry from 'async-retry'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
@@ -109,13 +109,15 @@ export class TxResolvers {
   async transactionSummariesForAddress(
     @Args('address', ParseAddressPipe) address: string,
     @Args('filter') filter: string,
+    @Args({ name: 'sortField', type: () => TxSortField }) sortField: TxSortField,
+    @Args({ name: 'order', type: () => Order}) order: Order,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<TransactionSummaryPageDto | undefined> {
     return retry(async bail => {
 
       try {
-        const [summaries, count] = await this.txService.findSummariesByAddress(address, filter, offset, limit)
+        const [summaries, count] = await this.txService.findSummariesByAddress(address, filter, sortField, order, offset, limit)
         return new TransactionSummaryPageDto(summaries, count)
       } catch (err) {
 

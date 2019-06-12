@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
-import { EntityManager, In, Repository } from 'typeorm'
+import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
 import { TxService } from '@app/dao/tx.service'
 import { ContractSummary, TransactionSummary } from '@app/graphql/schema'
 
@@ -40,12 +40,14 @@ export class ContractService {
 
         const count = await txn.count(ContractEntity, { where })
 
-        const contracts = await txn.find(ContractEntity, {
+        const findOptions: FindManyOptions = {
           select: ['address', 'creator', 'traceCreatedAtBlockNumber', 'traceCreatedAtTransactionHash'],
           where,
           skip: offset,
           take: limit,
-        })
+        }
+
+        const contracts = await txn.find(ContractEntity, findOptions)
 
         // Get tx summaries
         const txSummaries = await this.txService
