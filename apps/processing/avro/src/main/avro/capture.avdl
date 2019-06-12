@@ -120,7 +120,7 @@ protocol Capture {
 
   record TransactionRecord {
 
-    string hash;                                        // hash of the transaction.
+    string transactionHash;                            // hash of the transaction.
     decimal(80, 0) nonce;                               // integer the number of transactions made by the sender prior to this one.
 
     union { null, string } blockHash = null;            // hash of the block where this transaction was in
