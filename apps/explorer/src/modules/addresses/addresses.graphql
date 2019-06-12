@@ -33,7 +33,7 @@ fragment Token on Token {
   decimals
   balance
   currentPrice
-  priceChange24h
+  priceChangePercentage24h
   image
 }
 

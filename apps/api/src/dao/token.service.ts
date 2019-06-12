@@ -82,7 +82,7 @@ export class TokenService {
     }
     if (tokenExchangeRate) {
       tokenData.currentPrice = tokenExchangeRate.currentPrice
-      tokenData.priceChange24h = tokenExchangeRate.priceChange24h
+      tokenData.priceChangePercentage24h = tokenExchangeRate.priceChangePercentage24h
       tokenData.image = tokenData.image || tokenExchangeRate.image
     }
     return new TokenDto(tokenData)

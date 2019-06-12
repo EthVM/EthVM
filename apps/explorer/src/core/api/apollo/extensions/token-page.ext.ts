@@ -1,6 +1,7 @@
 import BN from 'bignumber.js'
 import { TokenPage, TokenPage_items } from '@app/core/api/apollo/types/TokenPage'
 import { Token } from '@app/core/api/apollo/types/Token'
+import { TokenUtils } from '@app/core/helper/token.utils'
 
 export class TokenPageExt_items implements TokenPage_items {
   __typename!: 'Token'
@@ -10,7 +11,7 @@ export class TokenPageExt_items implements TokenPage_items {
   decimals: number | null
   name: string | null
   symbol: string | null
-  priceChange24h: any | null
+  priceChangePercentage24h: any | null
   image: string | null
 
   constructor(proto: Token) {
@@ -20,12 +21,12 @@ export class TokenPageExt_items implements TokenPage_items {
     this.decimals = proto.decimals
     this.name = proto.name
     this.symbol = proto.symbol
-    this.priceChange24h = proto.priceChange24h
+    this.priceChangePercentage24h = proto.priceChangePercentage24h
     this.image = proto.image
   }
 
   get currentPriceBN(): BN | null {
-    return this.currentPrice ? new BN(this.currentPrice) : null
+    return TokenUtils.currentPriceBN(this)
   }
 
   get formattedBalance(): string {
@@ -52,45 +53,20 @@ export class TokenPageExt_items implements TokenPage_items {
     return balanceBN.multipliedBy(currentPriceBN)
   }
 
-  get priceChange24hBN(): BN | null {
-    return this.priceChange24h ? new BN(this.priceChange24h) : null
+  get priceChangePercentage24hBN(): BN | null {
+    return TokenUtils.priceChangePercentage24hBN(this)
   }
 
   get priceChangeFormatted(): string {
-    const { priceChange24hBN } = this
-    if (!priceChange24hBN) {
-      return '0'
-    }
-
-    const percent = priceChange24hBN.dp(2)
-
-    if (percent.isNegative()) {
-      return percent.toString()
-    }
-    // Add "+" symbol
-    return `${this.priceChangeSymbol}${percent.toString()}`
+    return TokenUtils.priceChangeFormatted(this)
   }
 
   get priceChangeSymbol(): string {
-    const { priceChange24hBN } = this
-    if (!priceChange24hBN || priceChange24hBN.toNumber() === 0) {
-      return 'null'
-    }
-    return priceChange24hBN.toNumber() > 0 ? '+' : '-'
+    return TokenUtils.priceChangeSymbol(this)
   }
 
   get priceChangeClass(): string {
-    switch (this.priceChangeSymbol) {
-      case '+': {
-        return 'txSuccess--text'
-      }
-      case '-': {
-        return 'txFail--text'
-      }
-      default: {
-        return 'black--text'
-      }
-    }
+    return TokenUtils.priceChangeClass(this)
   }
 }
 

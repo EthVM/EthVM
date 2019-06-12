@@ -11,7 +11,7 @@ export class TokenDto implements Token {
   decimals?: number
   balance?: BigNumber
   currentPrice?: BigNumber
-  priceChange24h?: BigNumber
+  priceChangePercentage24h?: BigNumber
   image?: string
 
   constructor(data: any) {

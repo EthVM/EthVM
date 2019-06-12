@@ -14,6 +14,6 @@ export interface Token {
   decimals: number | null;
   balance: any | null;
   currentPrice: any | null;
-  priceChange24h: any | null;
+  priceChangePercentage24h: any | null;
   image: string | null;
 }
