@@ -143,7 +143,7 @@ EXECUTE PROCEDURE adjust_count();
 /* All transactions including possible transactions from old forks */
 CREATE TABLE "transaction"
 (
-  hash              CHAR(66) PRIMARY KEY,
+  transaction_hash  CHAR(66) PRIMARY KEY,
   nonce             NUMERIC   NOT NULL,
   block_hash        CHAR(66)  NOT NULL,
   block_number      NUMERIC   NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE "transaction"
   chain_id          BIGINT    NULL
 );
 
-CREATE INDEX idx_transaction_hash ON TRANSACTION (hash);
+CREATE INDEX idx_transaction_hash ON TRANSACTION (transaction_hash);
 CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
@@ -193,7 +193,7 @@ BEGIN
   payload = json_build_object(
     'table', 'transaction',
     'action', TG_OP,
-    'payload', json_build_object('transaction_hash', record.hash, 'block_hash', record.block_hash)
+    'payload', json_build_object('transaction_hash', record.transaction_hash, 'block_hash', record.block_hash)
     );
 
   PERFORM pg_notify('events', payload::text);
@@ -214,7 +214,7 @@ SELECT t.*
 FROM "transaction" AS t
        RIGHT JOIN canonical_block_header AS cb ON t.block_hash = cb.hash
 WHERE cb.number IS NOT NULL
-  AND t.hash IS NOT NULL;
+  AND t.transaction_hash IS NOT NULL;
 
 /* All receipts including possible receipts from old forks */
 CREATE TABLE transaction_receipt

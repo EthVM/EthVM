@@ -14,7 +14,8 @@ run() {
   local action="${2}"
 
   local datasets_dir="${ROOT_DIR}/datasets"
-  local filename="ethvm_dev.sql.gz"
+  local branch=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
+  local filename="ethvm_dev-${branch}.sql.gz"
   local filepath="${datasets_dir}/${filename}"
 
   case "${command}" in
