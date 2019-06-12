@@ -55,7 +55,20 @@ abstract class AbstractParityEntitySource(
 
     logger.debug { "Range = $range, reOrgs = $reOrgs" }
 
-    val reorgRecords = reOrgs.map { tombstonesForRange(it) }.flatten()
+    // filter re-orgs to only those keys which affect the keys we will publish
+
+    val keysToPublish = range?.toSet() ?: emptySet()
+
+    val reOrgRecords = reOrgs
+      .asSequence()
+      .map { it.toList() }
+      .flatten()
+      .filter { keysToPublish.contains(it) }
+      .map { tombstone(it) }
+      .flatten()
+      .toList()
+
+    //
 
     val records = when {
       range == null -> emptyList()
@@ -63,9 +76,9 @@ abstract class AbstractParityEntitySource(
       else -> fetchRange(range) + syncStateRecord(range)
     }
 
-    logger.debug { "Reorg size = ${reorgRecords.size}, records size = ${records.size}" }
+    logger.debug { "Re-org size = ${reOrgRecords.size}, records size = ${records.size}" }
 
-    return reorgRecords + records
+    return reOrgRecords + records
   }
 
   private fun syncStateRecord(range: LongRange): SourceRecord {
@@ -101,7 +114,7 @@ abstract class AbstractParityEntitySource(
 
   abstract fun fetchRange(range: LongRange): List<SourceRecord>
 
-  abstract fun tombstonesForRange(range: LongRange): List<SourceRecord>
+  abstract fun tombstone(number: Long): List<SourceRecord>
 
   companion object {
     const val SAFE_REORG_LENGTH = 200L
