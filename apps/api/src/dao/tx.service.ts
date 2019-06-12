@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js'
 import { EntityManager, FindManyOptions, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
 import { ReceiptService } from './receipt.service'
 import { TraceService, TransactionStatus } from './trace.service'
-import { Order, TransactionSummary, TxSortField } from '@app/graphql/schema'
+import { FilterEnum, Order, TransactionSummary, TxSortField } from '@app/graphql/schema'
 import { ContractService } from '@app/dao/contract.service'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
@@ -120,7 +120,8 @@ export class TxService {
 
   async findSummariesByAddress(
     address: string,
-    filter?: string,
+    filter?: FilterEnum,
+    counterpartAddress?: string,
     sortField: TxSortField = TxSortField.timestamp,
     order: Order = Order.desc,
     offset: number = 0,
@@ -133,21 +134,48 @@ export class TxService {
     let countArgs: any[] = []
 
     switch (filter) {
-      case 'in':
-        where = {to: address}
-        countQuery = `${countQuery} where "to" = $1`
-        countArgs = [address]
+      case FilterEnum.in:
+        if (counterpartAddress) {
+          where = {to: address, from: counterpartAddress}
+          countQuery = `${countQuery} where ("to" = $1 AND "from" = $2)`
+          countArgs = [address, counterpartAddress]
+        } else {
+          where = {to: address}
+          countQuery = `${countQuery} where ("to" = $1)`
+          countArgs = [address]
+        }
         break
-      case 'out':
-        where = {from: address}
-        countQuery = `${countQuery} where "from" = $1`
-        countArgs = [address]
+      case FilterEnum.out:
+        if (counterpartAddress) {
+          where = {from: address, to: counterpartAddress}
+          countQuery = `${countQuery} where ("from" = $1 AND "to" = $2)`
+          countArgs = [address, counterpartAddress]
+        } else {
+          where = {from: address}
+          countQuery = `${countQuery} where ("from" = $1)`
+          countArgs = [address]
+        }
         break
       default:
-        where = [{from: address}, {to: address}]
-        countQuery = `${countQuery} where "from" = $1 and "to" = $2`
-        countArgs = [address, address]
+        if (counterpartAddress) {
+          where = [{from: address, to: counterpartAddress}, {to: address, from: counterpartAddress}]
+          countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
+          countArgs = [address, counterpartAddress, address, counterpartAddress]
+        } else {
+          where = [{from: address}, {to: address}]
+          countQuery = `${countQuery} where "from" = $1 OR "to" = $2`
+          countArgs = [address, address]
+        }
+
         break
+    }
+
+    const findOptions: FindManyOptions = {
+      select: ['hash'],
+      where,
+      skip: offset,
+      take: limit,
+      order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'}
     }
 
     return this.entityManager.transaction(
@@ -157,14 +185,6 @@ export class TxService {
         const [{count}] = await txn.query(countQuery, countArgs) as [{ count: number }]
 
         if (count === 0) return [[], count]
-
-        const findOptions: FindManyOptions = {
-          select: ['hash'],
-          where,
-          skip: offset,
-          take: limit,
-          order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'}
-        }
 
         const txs = await txn.find(TransactionEntity, findOptions)
 
