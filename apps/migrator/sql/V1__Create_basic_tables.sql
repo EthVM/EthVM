@@ -420,8 +420,8 @@ WHERE cb.number IS NOT NULL
 CREATE TABLE eth_list_contract_metadata
 (
   address     CHAR(42) PRIMARY KEY,
-  name        VARCHAR(64)  NULL,
-  symbol      VARCHAR(64)  NULL,
+  name        VARCHAR(128)  NULL,
+  symbol      VARCHAR(128)  NULL,
   decimals    INT          NULL,
   ens_address VARCHAR(256) NULL,
   type        VARCHAR(32)  NULL,
@@ -710,7 +710,7 @@ CREATE TABLE erc20_metadata
 (
   "address"      CHAR(42) PRIMARY KEY,
   "name"         VARCHAR(128) NULL,
-  "symbol"       VARCHAR(512) NULL,
+  "symbol"       VARCHAR(128) NULL,
   "decimals"     INT          NULL,
   "total_supply" NUMERIC      NULL,
   "timestamp"    TIMESTAMP    NOT NULL
@@ -723,7 +723,7 @@ CREATE TABLE erc721_metadata
 (
   "address"   CHAR(42) PRIMARY KEY,
   "name"      VARCHAR(128) NULL,
-  "symbol"    VARCHAR(512) NULL,
+  "symbol"    VARCHAR(128) NULL,
   "timestamp" TIMESTAMP    NOT NULL
 );
 
@@ -763,8 +763,8 @@ ORDER BY cb.number DESC;
 CREATE TABLE token_exchange_rates
 (
   address                         CHAR(42) PRIMARY KEY,
-  symbol                          VARCHAR(64) NULL,
-  name                            VARCHAR(64) NULL,
+  symbol                          VARCHAR(128) NULL,
+  name                            VARCHAR(128) NULL,
   image                           TEXT        NULL,
   current_price                   NUMERIC     NULL,
   market_cap                      NUMERIC     NULL,
