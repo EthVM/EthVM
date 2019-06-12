@@ -225,8 +225,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get loading() {
-    // return this.$apollo.loading
-    return true
+   return this.$apollo.loading
   }
 
   get hasError(): boolean {
