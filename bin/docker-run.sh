@@ -8,7 +8,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${SCRIPT_DIR}/env.sh
 
 # Define variables
-DATASET="ethvm_dev.sql.gz"
+BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
+DATASET="ethvm_dev-${BRANCH}.sql.gz"
 
 # docker_usage - prints docker subcommand usage
 docker_usage() {
