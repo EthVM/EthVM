@@ -62,14 +62,13 @@ class OncePerBlockTransformer(
     }
 
     return when (canonicalStore.get(key) != null) {
-      true -> null  // do not forward
+      true -> null // do not forward
       false -> {
         // store and forward
         canonicalStore.put(key, "")
         KeyValue(key, value)
       }
     }
-
   }
 
   override fun close() {

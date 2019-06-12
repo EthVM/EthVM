@@ -55,7 +55,7 @@ abstract class AbstractParityEntitySource(
 
     logger.debug { "Range = $range, reOrgs = $reOrgs" }
 
-    // filter re-orgs to only those keys which affect the keys we will publish
+    // filter re-orgs to only those keys which affect the keys we will publish or have published
 
     val keysToPublish = range?.toSet() ?: emptySet()
 
