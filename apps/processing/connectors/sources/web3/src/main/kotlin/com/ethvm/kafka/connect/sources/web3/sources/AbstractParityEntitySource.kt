@@ -63,7 +63,7 @@ abstract class AbstractParityEntitySource(
       .asSequence()
       .map { it.toList() }
       .flatten()
-      .filter { keysToPublish.contains(it) }
+      .filter { keysToPublish.contains(it) || it < (range?.first ?: it) }
       .map { tombstone(it) }
       .flatten()
       .toList()
