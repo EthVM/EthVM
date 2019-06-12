@@ -21,6 +21,8 @@
       Latest Blocks
     =====================================================================================
     -->
+    <last-blocks :max-blocks="true" :show-style="tableStyle" :max-items="maxItems" page-type="home" />
+
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
         <table-blocks :max-blocks="true" :show-style="tableStyle" :max-items="maxItems" page-type="home" />
@@ -45,6 +47,7 @@ import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+import LastBlocks from '@app/modules/blocks/components/TableBlocks/TableBlocks.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Vue } from 'vue-property-decorator'
 
@@ -52,12 +55,13 @@ const MAX_ITEMS = 50
 
 @Component({
   components: {
-    AppBreadCrumbs,
-    AppCardStatsGroup,
-    ChartLiveTxFees,
-    ChartLiveTxs,
-    TableBlocks,
-    TableTxs
+    'app-bread-crumbs': AppBreadCrumbs,
+    'app-card-stats-group': AppCardStatsGroup,
+    'chart-live-tx-fees': ChartLiveTxFees,
+    'chart-live-txs': ChartLiveTxs,
+    'table-blocks': TableBlocks,
+    'last-blocks': LastBlocks,
+    'table-txs': TableTxs
   }
 })
 export default class PageHome extends Vue {

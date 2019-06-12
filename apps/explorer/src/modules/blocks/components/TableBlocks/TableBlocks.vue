@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat class="pt-3 mt-0">
+  <div class="tablet-blocks-container">
     <notice-new-block @reload="resetFromBlock" />
 
     <!--
@@ -7,6 +7,7 @@
       TITLE
     =====================================================================================
     -->
+    <title-last-blocks />
     <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
@@ -112,10 +113,11 @@
         :has-last="!simplePagination"
       />
     </v-layout>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
+import TitleLastBlocks from './TitleLastBlocks.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
@@ -138,7 +140,8 @@ const MAX_ITEMS = 50
     AppInfoLoad,
     AppPaginate,
     TableBlocksRow,
-    NoticeNewBlock
+    NoticeNewBlock,
+    TitleLastBlocks
   },
   data() {
     return {
@@ -237,10 +240,10 @@ const MAX_ITEMS = 50
 })
 export default class TableBlocks extends Vue {
   /*
-        ===================================================================================
-          Props
-        ===================================================================================
-        */
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
 
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
@@ -261,10 +264,10 @@ export default class TableBlocks extends Vue {
   connectedSubscription?: Subscription
 
   /*
-    ===================================================================================
-      Lifecycle
-    ===================================================================================
-    */
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
 
   created() {
     if (this.pageType === 'home') {
@@ -287,10 +290,10 @@ export default class TableBlocks extends Vue {
   }
 
   /*
-        ===================================================================================
-          Methods
-        ===================================================================================
-        */
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
 
   resetFromBlock() {
     this.setPage(0, true)
@@ -323,10 +326,10 @@ export default class TableBlocks extends Vue {
   }
 
   /*
-        ===================================================================================
-          Computed Values
-        ===================================================================================
-        */
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
 
   get loading(): boolean | undefined {
     return this.$apollo.queries.blockPage.loading || this.syncing
@@ -362,15 +365,5 @@ export default class TableBlocks extends Vue {
 </script>
 
 <style scoped lang="less">
-.title-live {
-  min-height: 60px;
-}
-
-.table-blocks-header-card {
-  margin-right: 1px;
-
-  div {
-    font-size: 20px;
-  }
-}
+@import 'TableBlocks.less';
 </style>

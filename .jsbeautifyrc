@@ -1,0 +1,20 @@
+{
+    // The plugin looks for a .jsbeautifyrc file in the same directory as the
+    // source file you're prettifying (or any directory above if it doesn't exist,
+    // or in your home folder if everything else fails) and uses those options
+    // along the default ones.
+
+    // Details: https://github.com/victorporof/Sublime-HTMLPrettify#using-your-own-jsbeautifyrc-options
+    // Documentation: https://github.com/einars/js-beautify/
+    "css": {
+        "allowed_file_extensions": ["css", "scss", "sass", "less"],
+        "end_with_newline": true, // End output with newline
+        "indent_char": " ", // Indentation character
+        "indent_size": 2, // Indentation size
+        "newline_between_rules": true, // Add a new line after every css rule
+        "selector_separator": " ",
+        "selector_separator_newline": true, // Separate selectors with newline or not (e.g. "a,\nbr" or "a, br")
+        "preserve_newlines": false,
+        "max_preserve_newlines": 10
+    }
+}
