@@ -70,25 +70,9 @@
     =====================================================================================
     -->
     <div v-if="loading">
-      <v-flex hidden-xs-only sm12>
         <div v-for="i in maxItems" :key="i">
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-            <v-flex sm4>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex sm3>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex sm3>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex sm2>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-          </v-layout>
-          <v-divider class="mb-2 mt-2" />
+            <table-address-tokens-row-loading />
         </div>
-      </v-flex>
     </div>
     <div v-else>
       <v-card v-if="totalCount === 0" flat>
@@ -109,6 +93,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
+import TableAddressTokensRowLoading from '@app/modules/addresses/components/TableAddressTokensRowLoading.vue'
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
@@ -122,7 +107,8 @@ const MAX_ITEMS = 10
     AppError,
     AppInfoLoad,
     AppPaginate,
-    TableAddressTokensRow
+    TableAddressTokensRow,
+    TableAddressTokensRowLoading
   },
   data() {
     return {
@@ -239,7 +225,8 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get loading() {
-    return this.$apollo.loading
+    // return this.$apollo.loading
+    return true
   }
 
   get hasError(): boolean {
