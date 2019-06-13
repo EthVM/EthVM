@@ -3,7 +3,7 @@ version: '3.7'
 networks:
 
   web:
-    external: true
+    external: false
 
   back:
     driver: bridge
@@ -201,8 +201,10 @@ services:
       KAFKA_COMPRESSION_TYPE: "zstd"
       KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
       KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS: 120000
       KAFKA_MESSAGE_MAX_BYTES: 52428800
       KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
+      KAFKA_TOPIC_DELETE_ENABLE: 'true'
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
       CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
@@ -277,48 +279,39 @@ services:
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      CONNECT_MAX_POLL_INTERVAL_MS: 120000
       KAFKA_JMX_PORT: 9588
 
   # ///////////////////////////////////////////////////////
   # Extra Tools (Useful for debugging and helping in dev)
   # ///////////////////////////////////////////////////////
 
-  lenses:
-    image: landoop/lenses:2.1
+  kafka-manager:
+    image: ethvm/kafka-manager:2.0.0.2
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka-1
     networks:
       - back
     ports:
-      - 9991:9991
-      - 9102:9102
+      - 9000:9000
     environment:
-      LICENSE_URL: "${LENSES_LICENSE_URL}"
-      LENSES_PORT: 9991
-      LENSES_KAFKA_BROKERS: "PLAINTEXT://kafka-1:9091"
-      LENSES_ZOOKEEPER_HOSTS: |
-        [ { url:"zookeeper:2181", jmx:"zookeeper:9585" } ]
-      LENSES_SCHEMA_REGISTRY_URLS: |
-        [ { url:"http://kafka-schema-registry:8081", jmx:"kafka-schema-registry:9587" } ]
-      LENSES_CONNECT_CLUSTERS: |
-        [
-          {
-            name:"ethvm",
-            urls: [ {url:"http://kafka-connect:8083", jmx:"kafka-connect:9588"} ],
-            statuses:"ethvm-storage-topic",
-            configs:"ethvm-storage-config",
-            offsets:"ethvm-storage-offsets"
-          }
-        ]
-      LENSES_SECURITY_MODE: BASIC
-      LENSES_SECURITY_GROUPS: |
-        [
-          { "name": "adminGroup", "roles": ["Admin"] },
-          { "name": "readGroup",  "roles": ["Read"] }
-        ]
-      LENSES_SECURITY_USERS: |
-        [
-          { "username": "admin", "password": "admin", "displayname": "Lenses Admin", "groups": ["adminGroup"] },
-          { "username": "read", "password": "read", "displayname": "Read Only", "groups": ["readGroup"] }
-        ]
+      ZK_HOSTS: zookeeper:2181
+
+  burrow:
+    image: solsson/burrow
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka-1
+    networks:
+      - back
+    ports:
+      - 8000:8000
+    volumes:
+      - ${PWD}/docker/images/burrow:/etc/burrow/
+      - ${PWD}/tmp:/var/tmp/burrow
 
   pgweb:
     image: sosedoff/pgweb:0.11.2

@@ -41,7 +41,7 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
   override fun close() {
   }
 
-  override fun apply(record: R): R {
+  override fun apply(record: R): R? {
     return when {
       operatingSchema(record) != null -> applyWithSchema(record)
       else -> applySchemaless(record)
@@ -86,8 +86,11 @@ abstract class JsonField<R : ConnectRecord<R>> : Transformation<R> {
   }
 
   @Suppress("UNCHECKED_CAST")
-  private fun applySchemaless(record: R): R {
-    val value = operatingValue(record)
+  private fun applySchemaless(record: R): R? {
+
+    // if value is null we are processing a tombstone so just forward it on
+    val value = operatingValue(record) ?: return null
+
     require(value is Map<*, *>) { "Only map objects are supported when there is no schema" }
 
     val valueMap = value as Map<String, *>
