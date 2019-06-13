@@ -44,11 +44,10 @@ class ChartData {
     return {
       syncing: undefined,
       avgGasPrices: undefined,
-      avgTxFees: undefined,
+      avgTxFees: undefined
     }
   },
   apollo: {
-
     avgGasPrices: {
       query: latestAvgGasPrices,
 
@@ -89,11 +88,9 @@ class ChartData {
       },
 
       subscribeToMore: {
-
         document: newAvgGasPrice,
 
         updateQuery: (previousResult, { subscriptionData }) => {
-
           const { blockMetricsTransaction } = previousResult
           const { newBlockMetricsTransaction } = subscriptionData.data
 
@@ -103,9 +100,9 @@ class ChartData {
 
           items.unshift(newBlockMetricsTransaction)
 
-            if (items.length > MAX_ITEMS) {
-              items.pop()
-            }
+          if (items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           // ensure order by block number desc
           items.sort((a, b) => {
@@ -165,11 +162,9 @@ class ChartData {
       },
 
       subscribeToMore: {
-
         document: newAvgTxFee,
 
         updateQuery: (previousResult, { subscriptionData }) => {
-
           const { blockMetricsTransactionFee } = previousResult
           const { newBlockMetricsTransactionFee } = subscriptionData.data
 
@@ -248,42 +243,41 @@ export default class ChartLiveTxFees extends Vue {
     */
 
   toChartData(avgGasPrices?: latestAvgGasPrices_blockMetricsTransaction, avgTxFees?: latestAvgTxFees_blockMetricsTransactionFee) {
-
     const numberLabel = this.$i18n.t('block.number')
 
     const labels: string[] = []
     const avgFees: number[] = []
     const avgPrice: number[] = []
 
-    if(!(avgGasPrices && avgTxFees)) return new ChartData(labels, avgFees, avgPrice)
+    if (!(avgGasPrices && avgTxFees)) {
+      return new ChartData(labels, avgFees, avgPrice)
+    }
 
-    if(!(avgGasPrices!.items.length && avgTxFees!.items.length)) return new ChartData(labels, avgFees, avgPrice)
+    if (!(avgGasPrices!.items.length && avgTxFees!.items.length)) {
+      return new ChartData(labels, avgFees, avgPrice)
+    }
 
     const gasPriceItems = avgGasPrices!.items
     const txFeeItems = avgTxFees!.items
 
-    if(gasPriceItems.length && txFeeItems.length) {
-
+    if (gasPriceItems.length && txFeeItems.length) {
       const numbers = new Set<number>()
       gasPriceItems.forEach(item => numbers.add(item.number))
       txFeeItems.forEach(item => numbers.add(item.number))
 
       const numbersDesc = Array.from(numbers).sort((a, b) => b - a)
 
-      const gasPricesByNumber = gasPriceItems
-        .reduce((memo, next) => {
-          memo.set(parseInt(next.number)!, new EthValue(next.avgGasPrice!).toGWei())
-          return memo
-        }, new Map<number, number>())
+      const gasPricesByNumber = gasPriceItems.reduce((memo, next) => {
+        memo.set(parseInt(next.number)!, new EthValue(next.avgGasPrice!).toGWei())
+        return memo
+      }, new Map<number, number>())
 
-      const txFeesByNumber = txFeeItems
-        .reduce((memo, next) => {
-          memo.set(parseInt(next.number), new EthValue(next.avgTxFees!).toGWei())
-          return memo
-        }, new Map<number, number>())
+      const txFeesByNumber = txFeeItems.reduce((memo, next) => {
+        memo.set(parseInt(next.number), new EthValue(next.avgTxFees!).toGWei())
+        return memo
+      }, new Map<number, number>())
 
       numbersDesc.forEach(number => {
-
         // for some reasons number is a string
         const avgGasPrice = gasPricesByNumber.get(+number) || 0
         const avgTxFee = txFeesByNumber.get(+number) || 0
@@ -291,9 +285,7 @@ export default class ChartLiveTxFees extends Vue {
         labels.push(numberLabel + number.toString())
         avgPrice.push(avgGasPrice)
         avgFees.push(avgTxFee)
-
       })
-
     }
 
     return new ChartData(labels, avgFees, avgPrice)
@@ -310,7 +302,6 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   get chartData() {
-
     const data = this.toChartData(this.avgGasPrices, this.avgTxFees)
 
     return {
