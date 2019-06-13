@@ -15,7 +15,7 @@ export class TransactionEntity {
   }
 
   @PrimaryColumn({ type: 'character', length: 66, readonly: true })
-  hash!: string
+  transactionHash!: string
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   nonce!: BigNumber
@@ -80,21 +80,21 @@ export class TransactionEntity {
 
   @OneToOne(type => TransactionReceiptEntity, receipt => receipt.tx)
   @JoinColumn({
-    name: 'hash',
+    name: 'transactionHash',
     referencedColumnName: 'transactionHash',
   })
   receipt?: TransactionReceiptEntity
 
   @OneToOne(type => TransactionTraceEntity, trace => trace.tx)
   @JoinColumn({
-    name: 'hash',
+    name: 'transactionHash',
     referencedColumnName: 'transactionHash',
   })
   trace?: TransactionTraceEntity
 
   @OneToMany(type => ContractEntity, contract => contract.createdAtTx)
   @JoinColumn({
-    name: 'hash',
+    name: 'transactionHash',
     referencedColumnName: 'traceCreatedAtTransactionHash',
   })
   contracts?: ContractEntity[]

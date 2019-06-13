@@ -484,7 +484,7 @@ export interface Trace {
 }
 
 export interface Transaction {
-    hash: string;
+    transactionHash: string;
     nonce: BigNumber;
     blockHash: string;
     blockNumber: BigNumber;
@@ -507,7 +507,7 @@ export interface Transaction {
 }
 
 export interface TransactionSummary {
-    hash: string;
+    transactionHash: string;
     blockNumber: BigNumber;
     transactionIndex: number;
     from: string;

@@ -25,7 +25,7 @@ query transactionSummariesByAddress($address: String!, $filter: FilterEnum = all
 }
 
 fragment TransactionSummary on TransactionSummary {
-  hash
+  hash: transactionHash
   blockNumber
   transactionIndex
   from
@@ -66,7 +66,7 @@ fragment TransactionDetail on Transaction {
   from
   gas
   gasPrice
-  hash
+  hash: transactionHash
   input
   nonce
   timestamp

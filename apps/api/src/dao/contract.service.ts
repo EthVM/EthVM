@@ -62,7 +62,7 @@ export class ContractService {
         // Map summaries to contracts
         const summariesByHash = new Map<string, TransactionSummary>()
         txSummaries.forEach(tx => {
-          summariesByHash.set(tx.hash, tx)
+          summariesByHash.set(tx.transactionHash, tx)
         })
 
         const contractSummaries = contracts.map(c => {

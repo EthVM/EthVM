@@ -50,7 +50,7 @@ export class FungibleBalanceDeltaEntity {
   @OneToOne(type => TransactionEntity)
   @JoinColumn({
     name: 'traceLocationTransactionHash',
-    referencedColumnName: 'hash',
+    referencedColumnName: 'transactionHash',
   })
   transaction?: TransactionEntity
 
