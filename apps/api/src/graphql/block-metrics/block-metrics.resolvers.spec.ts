@@ -8,6 +8,12 @@ import { BlockMetricDto } from './dto/block-metric.dto'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '../schema'
 import { AggregateBlockMetricDto } from './dto/aggregate-block-metric.dto'
 import { MetadataService } from '../../dao/metadata.service'
+import { BlockMetricsTransactionEntity } from '../../orm/entities/block-metrics-transaction.entity'
+import { BlockMetricsTransactionDto } from './dto/block-metrics-transaction.dto'
+import { BlockMetricsTransactionPageDto } from './dto/block-metrics-transaction-page.dto'
+import { BlockMetricsTransactionFeeEntity } from '../../orm/entities/block-metrics-transaction-fee.entity'
+import { BlockMetricsTransactionFeePageDto } from './dto/block-metrics-transaction-fee-page.dto'
+import { BlockMetricsTransactionFeeDto } from './dto/block-metrics-transaction-fee.dto'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hashTwo = '0x0000000000000000000000000000000000000000000000000000000000000002'
@@ -20,17 +26,17 @@ const hashEight = '0x00000000000000000000000000000000000000000000000000000000000
 const hashNine = '0x0000000000000000000000000000000000000000000000000000000000000009'
 const hashTen = '0x00000000000000000000000000000000000000000000000000000000000000010'
 
-const blockMetrics = [
-  { id: 1, hash: hashOne },
-  { id: 2, hash: hashTwo },
-  { id: 3, hash: hashThree },
-  { id: 4, hash: hashFour },
-  { id: 5, hash: hashFive },
-  { id: 6, hash: hashSix },
-  { id: 7, hash: hashSeven },
-  { id: 8, hash: hashEight },
-  { id: 9, hash: hashNine },
-  { id: 10, hash: hashTen }
+const blockMetricsTransactions = [
+  { number: 1, blockHash: hashOne, timestamp: '2016-11-23T00:03:21Z' },
+  { number: 2, blockHash: hashTwo, timestamp: '2016-11-23T00:03:22Z' },
+  { number: 3, blockHash: hashThree,timestamp: '2016-11-23T00:03:23Z' },
+  { number: 4, blockHash: hashFour, timestamp: '2016-11-23T00:03:24Z' },
+  { number: 5, blockHash: hashFive, timestamp: '2016-11-23T00:03:25Z' },
+  { number: 6, blockHash: hashSix, timestamp: '2016-11-23T00:03:26Z' },
+  { number: 7, blockHash: hashSeven, timestamp: '2016-11-23T00:03:27Z' },
+  { number: 8, blockHash: hashEight, timestamp: '2016-11-23T00:03:28Z' },
+  { number: 9, blockHash: hashNine, timestamp: '2016-11-23T00:03:29Z' },
+  { number: 10, blockHash: hashTen, timestamp: '2016-11-23T00:03:30Z' }
 ]
 
 const aggregateBlockMetricsHour = [
@@ -206,11 +212,18 @@ const metadataServiceMock = {
 }
 
 const blockMetricsServiceMock = {
-  async find(offset: number = 0, limit: number = 10): Promise<[BlockMetricEntity[], number]> {
-    const end = offset + limit
-    const allBlockMetrics = Object.values(blockMetrics)
-    const items = allBlockMetrics.slice(offset, end)
-    return [items.map(i => new BlockMetricEntity(i)), allBlockMetrics.length]
+  async findBlockMetricsTransaction(offset: number, limit: number): Promise<[BlockMetricsTransactionEntity[], number]> {
+
+    const totalCount = blockMetricsTransactions.length
+    const data = blockMetricsTransactions.sort((a,b) => b.number - a.number).slice(offset, offset + limit)
+
+    return [data.map(b => new BlockMetricsTransactionEntity(b)), totalCount]
+  },
+  async findBlockMetricsTransactionFee(offset: number, limit: number): Promise<[BlockMetricsTransactionFeeEntity[], number]> {
+    const totalCount = blockMetricsTransactions.length
+    const data = blockMetricsTransactions.sort((a,b) => b.number - a.number).slice(offset, offset + limit)
+
+    return [data.map(b => new BlockMetricsTransactionFeeEntity(b)), totalCount]
   },
   async timeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[],): Promise<AggregateBlockMetric[]> {
 
@@ -263,54 +276,117 @@ describe('BlockMetricResolvers', () => {
     blockMetricResolvers = module.get<BlockMetricsResolvers>(BlockMetricsResolvers)
   })
 
-  describe('blockMetrics', () => {
-    it('should return a page of BlockMetricsDto instances, respecting given offset and limit parameters, with total count', async () => {
-      const blockMetricsPageOne = await blockMetricResolvers.blockMetrics(0, 5)
+  describe('blockMetricsTransaction', () => {
+    it('should return a BlockMetricsTransactionPageDto instance, with array of items respecting given offset and limit parameters and total count', async () => {
+      const blockMetricsPageOne = await blockMetricResolvers.blockMetricsTransaction(0, 5)
 
       expect(blockMetricsPageOne).not.toBeNull()
+      expect(blockMetricsPageOne).toBeInstanceOf(BlockMetricsTransactionPageDto)
       const {items, totalCount} = blockMetricsPageOne
 
       expect(items).toHaveLength(5)
-      expect(items[0]).toHaveProperty('id', 1)
-      expect(items[4]).toHaveProperty('id', 5)
+      expect(items[0]).toHaveProperty('number', 10)
+      expect(items[4]).toHaveProperty('number', 6)
       expect(totalCount).toBe(10)
 
-      const blockMetricsPageTwo = await blockMetricResolvers.blockMetrics(5, 5)
+      const blockMetricsPageTwo = await blockMetricResolvers.blockMetricsTransaction(5, 5)
       expect(blockMetricsPageTwo).not.toBeNull()
+      expect(blockMetricsPageTwo).toBeInstanceOf(BlockMetricsTransactionPageDto)
       const itemsTwo = blockMetricsPageTwo.items
       const totalCountTwo = blockMetricsPageTwo.totalCount
       expect(itemsTwo).toHaveLength(5)
-      expect(itemsTwo[0]).toHaveProperty('id', 6)
-      expect(itemsTwo[4]).toHaveProperty('id', 10)
+      expect(itemsTwo[0]).toHaveProperty('number', 5)
+      expect(itemsTwo[4]).toHaveProperty('number', 1)
       expect(totalCountTwo).toBe(10)
 
+      expect(blockMetricsPageOne).not.toEqual(blockMetricsPageTwo)
+
       // Check an empty array is returned if no items available for requested page
-      const blockMetricsPageThree = await blockMetricResolvers.blockMetrics(10, 10)
+      const blockMetricsPageThree = await blockMetricResolvers.blockMetricsTransaction(10, 10)
       expect(blockMetricsPageThree).not.toBeNull()
+      expect(blockMetricsPageThree).toBeInstanceOf(BlockMetricsTransactionPageDto)
       const itemsThree = blockMetricsPageThree.items
       const totalCountThree = blockMetricsPageThree.totalCount
       expect(itemsThree).toHaveLength(0)
       expect(totalCountThree).toBe(10)
     })
 
-    it('should convert an array of BlockMetricEntity instances to an array of BlockMetricsDto instances', async () => {
-      const blockMetricsPage = await blockMetricResolvers.blockMetrics(0, 10)
+    it('should convert an array of BlockMetricsTransactionEntity instances to an array of BlockMetricsTransactionDto instances', async () => {
+      const blockMetricsPage = await blockMetricResolvers.blockMetricsTransaction(0, 2)
 
       expect(blockMetricsPage).not.toBeNull()
+      expect(blockMetricsPage).toHaveProperty('items')
+      expect(blockMetricsPage.items).toHaveLength(2)
+      expect(blockMetricsPage.items[0]).toBeInstanceOf(BlockMetricsTransactionDto)
+      expect(blockMetricsPage.items[1]).toBeInstanceOf(BlockMetricsTransactionDto)
+    })
 
-      const expected = [
-        new BlockMetricDto({id: 1, hash: hashOne}),
-        new BlockMetricDto({id: 2, hash: hashTwo}),
-        new BlockMetricDto({id: 3, hash: hashThree}),
-        new BlockMetricDto({id: 4, hash: hashFour}),
-        new BlockMetricDto({id: 5, hash: hashFive}),
-        new BlockMetricDto({id: 6, hash: hashSix}),
-        new BlockMetricDto({id: 7, hash: hashSeven}),
-        new BlockMetricDto({id: 8, hash: hashEight}),
-        new BlockMetricDto({id: 9, hash: hashNine}),
-        new BlockMetricDto({id: 10, hash: hashTen})
-      ]
-      expect(blockMetricsPage.items).toEqual(expect.arrayContaining(expected))
+    it('should order BlockMetricsTransactionEntities by number DESC', async () => {
+      const blockMetricsPage = await blockMetricResolvers.blockMetricsTransaction(0, 5)
+      expect(blockMetricsPage.items).toHaveLength(5)
+      expect(blockMetricsPage.items[0]).toHaveProperty('number', 10)
+      expect(blockMetricsPage.items[1]).toHaveProperty('number', 9)
+      expect(blockMetricsPage.items[2]).toHaveProperty('number', 8)
+      expect(blockMetricsPage.items[3]).toHaveProperty('number', 7)
+      expect(blockMetricsPage.items[4]).toHaveProperty('number', 6)
+    })
+  })
+
+  describe('blockMetricsTransactionFee', () => {
+    it('should return a BlockMetricsTransactionFeePageDto instance, with array of items respecting given offset and limit parameters and total count', async () => {
+      const blockMetricsPageOne = await blockMetricResolvers.blockMetricsTransactionFee(0, 5)
+
+      expect(blockMetricsPageOne).not.toBeNull()
+      expect(blockMetricsPageOne).toBeInstanceOf(BlockMetricsTransactionFeePageDto)
+      const {items, totalCount} = blockMetricsPageOne
+
+      expect(items).toHaveLength(5)
+      expect(items[0]).toHaveProperty('number', 10)
+      expect(items[4]).toHaveProperty('number', 6)
+      expect(totalCount).toBe(10)
+
+      const blockMetricsPageTwo = await blockMetricResolvers.blockMetricsTransactionFee(5, 5)
+      expect(blockMetricsPageTwo).not.toBeNull()
+      expect(blockMetricsPageTwo).toBeInstanceOf(BlockMetricsTransactionFeePageDto)
+
+      const itemsTwo = blockMetricsPageTwo.items
+      const totalCountTwo = blockMetricsPageTwo.totalCount
+      expect(itemsTwo).toHaveLength(5)
+      expect(itemsTwo[0]).toHaveProperty('number', 5)
+      expect(itemsTwo[4]).toHaveProperty('number', 1)
+      expect(totalCountTwo).toBe(10)
+
+      expect(blockMetricsPageOne).not.toEqual(blockMetricsPageTwo)
+
+      // Check an empty array is returned if no items available for requested page
+      const blockMetricsPageThree = await blockMetricResolvers.blockMetricsTransactionFee(10, 10)
+      expect(blockMetricsPageThree).not.toBeNull()
+      expect(blockMetricsPageThree).toBeInstanceOf(BlockMetricsTransactionFeePageDto)
+
+      const itemsThree = blockMetricsPageThree.items
+      const totalCountThree = blockMetricsPageThree.totalCount
+      expect(itemsThree).toHaveLength(0)
+      expect(totalCountThree).toBe(10)
+    })
+
+    it('should convert an array of BlockMetricsTransactionEntity instances to an array of BlockMetricsTransactionDto instances', async () => {
+      const blockMetricsPage = await blockMetricResolvers.blockMetricsTransactionFee(0, 2)
+
+      expect(blockMetricsPage).not.toBeNull()
+      expect(blockMetricsPage).toHaveProperty('items')
+      expect(blockMetricsPage.items).toHaveLength(2)
+      expect(blockMetricsPage.items[0]).toBeInstanceOf(BlockMetricsTransactionFeeDto)
+      expect(blockMetricsPage.items[1]).toBeInstanceOf(BlockMetricsTransactionFeeDto)
+    })
+
+    it('should order BlockMetricsTransactionEntities by number DESC', async () => {
+      const blockMetricsPage = await blockMetricResolvers.blockMetricsTransactionFee(0, 5)
+      expect(blockMetricsPage.items).toHaveLength(5)
+      expect(blockMetricsPage.items[0]).toHaveProperty('number', 10)
+      expect(blockMetricsPage.items[1]).toHaveProperty('number', 9)
+      expect(blockMetricsPage.items[2]).toHaveProperty('number', 8)
+      expect(blockMetricsPage.items[3]).toHaveProperty('number', 7)
+      expect(blockMetricsPage.items[4]).toHaveProperty('number', 6)
     })
   })
 
