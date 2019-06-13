@@ -77,8 +77,8 @@ up_default() {
   echo -e "Ensuring parity mount point exists and has correct permissions...\n"
   mkdir -p ${PARITY_VOLUME_MOUNTPOINT}
 
-  echo -e "Starting parity and lenses...\n"
-  docker-compose up -d parity lenses
+  echo -e "Starting parity and kafka-manager...\n"
+  docker-compose up -d parity kafka-manager
 }
 
 # up - spins up a dev environment with a fixed dataset ready to be used on frontend

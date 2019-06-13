@@ -5,6 +5,7 @@
     "tasks.max": 1,
     "topics": "transaction_count",
     "insert.mode": "upsert",
+    "batch.size": 1000,
     "pk.mode": "record_key",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",
