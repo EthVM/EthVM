@@ -57,21 +57,6 @@ services:
       TRAEFIK_DASHBOARD_ENABLED: 'true'
       TRAEFIK_PING_ENABLED: 'false'
 
-  grafana:
-    image: grafana/grafana:6.1.6
-    networks:
-      - back
-    environment:
-      GF_SERVER_ROOT_URL: 'http://grafana.ethvm.lan'
-      GF_SECURITY_ADMIN_PASSWORD: 'admin'
-      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
-      - 'traefik.backend=grafana'
-      - 'traefik.port=3000'
-
   explorer:
     build:
       context: ./apps/explorer
@@ -133,8 +118,8 @@ services:
     # If you want, also there's the option to use ropsten or even mainnet to test with real networks.
     # Just uncomment below line:
     command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    #command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-#    command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    # command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    # command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -238,7 +223,6 @@ services:
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       SCHEMA_REGISTRY_JMX_PORT: 9587
 
-
   kafka-connect:
     build:
       context: apps/processing/connectors
@@ -285,6 +269,21 @@ services:
   # Extra Tools (Useful for debugging and helping in dev)
   # ///////////////////////////////////////////////////////
 
+  grafana:
+    image: grafana/grafana:6.1.6
+    networks:
+      - back
+    environment:
+      GF_SERVER_ROOT_URL: 'http://grafana.${DOMAIN}'
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
+      - 'traefik.backend=grafana'
+      - 'traefik.port=3000'
+
   kafka-manager:
     image: ethvm/kafka-manager:2.0.0.2
     restart: unless-stopped
@@ -311,6 +310,14 @@ services:
     volumes:
       - ${PWD}/docker/images/burrow:/etc/burrow/
       - ${PWD}/tmp:/var/tmp/burrow
+
+  burrow-exporter:
+    image: simenduev/burrow-exporter
+    restart: unless-stopped
+    depends_on:
+      - burrow
+    networks:
+      - back
 
   pgweb:
     image: sosedoff/pgweb:0.11.2
