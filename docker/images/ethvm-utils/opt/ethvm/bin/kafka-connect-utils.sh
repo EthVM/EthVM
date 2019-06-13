@@ -77,6 +77,34 @@ register() {
 
 } >&2
 
+reset_sink_offsets() {
+
+  # change pwd
+  cd ${ROOT_DIR}
+
+  local topics_file=${KAFKA_CONNECT_DIR}/sink-topics.json
+
+  local connectors=$(jq '. | keys[]' ${topics_file} | sed -e 's/\"//g')
+
+  for connector in ${connectors}; do
+
+    echo "Resetting offsets for connector: ${connector}"
+
+    local topics=$(jq ".[\"${connector}\"] | values[]" ${topics_file} | tr '\n' ','  | sed -e 's/\"//g' | sed -e 's/,$//')
+
+    kafka-streams-application-reset.sh  \
+      --zookeeper ${KAFKA_ZOOKEEPER_CONNECT} \
+      --bootstrap-servers ${KAFKA_BOOTSTRAP_SERVERS} \
+      --application-id "connect-${connector}" \
+      --input-topics ${topics}
+
+    echo "Connector offsets reset: ${connector}"
+
+  done
+
+} >&2
+
+
 init() {
 
   register_sinks
@@ -94,6 +122,7 @@ run() {
     ensure-sinks)         register_sinks "$@"      ;;
     ensure-sources)       register_sources "$@"    ;;
     register)             register "$@"            ;;
+    reset-sink-offsets)   reset_sink_offsets "$@"  ;;
     init)                 init "$@"                ;;
   esac
 } >&2
