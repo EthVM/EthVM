@@ -33,8 +33,8 @@
     "prettier": "prettier --write 'src/**/*.ts'"
   },
   "dependencies": {
-    "@nestjs/common": "~6.1.1",
-    "@nestjs/core": "~6.1.1",
+    "@nestjs/common": "^6.3.1",
+    "@nestjs/core": "^6.3.1",
     "@nestjs/graphql": "~6.0.5",
     "@nestjs/jwt": "~6.0.0",
     "@nestjs/passport": "~6.0.0",
@@ -57,7 +57,7 @@
     "graphql-type-json": "~0.2.1",
     "helmet": "^3.16.0",
     "moment": "^2.24.0",
-    "nest-winston": "~1.0.2",
+    "nest-winston": "^1.0.4",
     "passport": "~0.4.0",
     "passport-jwt": "~4.0.0",
     "pg": "^7.9.0",
