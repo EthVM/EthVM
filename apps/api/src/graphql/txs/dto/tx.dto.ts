@@ -7,7 +7,7 @@ import zlib from 'zlib'
 
 export class TxDto implements Transaction {
 
-  hash!: string;
+  transactionHash!: string;
   nonce!: BigNumber;
   blockHash!: string;
   blockNumber!: BigNumber;

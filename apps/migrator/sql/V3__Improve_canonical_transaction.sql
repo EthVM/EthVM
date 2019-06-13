@@ -27,6 +27,6 @@ SELECT t.*,
 FROM "transaction" AS t
        RIGHT JOIN canonical_block_header AS cb ON t.block_hash = cb.hash
        LEFT JOIN canonical_transaction_trace AS tt ON t.transaction_hash = tt.transaction_hash
-       LEFT JOIN transaction_fee AS tf ON t.hash = tf.transaction_hash
+       LEFT JOIN transaction_fee AS tf ON t.transaction_hash = tf.transaction_hash
 WHERE cb.number IS NOT NULL
   AND t.transaction_hash IS NOT NULL;

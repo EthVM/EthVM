@@ -4,11 +4,10 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import { EntityManager, FindManyOptions, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
 import { ReceiptService } from './receipt.service'
-import { TraceService, TransactionStatus } from './trace.service'
+import { TraceService } from './trace.service'
 import { FilterEnum, Order, TransactionSummary, TxSortField } from '@app/graphql/schema'
 import { ContractService } from '@app/dao/contract.service'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
-import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { RowCount } from '@app/orm/entities/row-counts.entity'
 import { EthService } from '@app/shared/eth.service'
@@ -40,19 +39,19 @@ export class TxService {
 
     // Receipt
     if (!tx.receipt) {
-      throw new PartialReadException(`Receipt not found, tx hash = ${tx.hash}`)
+      throw new PartialReadException(`Receipt not found, tx hash = ${tx.transactionHash}`)
     }
 
     // Partial read check
     if (!tx.trace) {
-      throw new PartialReadException(`Traces not found, tx hash = ${tx.hash}`)
+      throw new PartialReadException(`Traces not found, tx hash = ${tx.transactionHash}`)
     }
 
     return tx
   }
 
   async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
-    const txs = await this.transactionRepository.find({where: {hash: In(hashes)}, relations: ['receipt']})
+    const txs = await this.transactionRepository.find({where: {transactionHash: In(hashes)}, relations: ['receipt']})
     return this.findAndMapTraces(txs)
   }
 
@@ -65,12 +64,12 @@ export class TxService {
         const where = {blockNumber: number}
 
         const [{count}] = await txn
-          .query('select count(hash) from transaction where block_number = $1', [number.toNumber()]) as [{ count: number }]
+          .query('select count(transaction_hash) from transaction where block_number = $1', [number.toNumber()]) as [{ count: number }]
 
         if (count === 0) return [[], count]
 
         const findOptions: FindManyOptions = {
-          select: ['hash'],
+          select: ['transactionHash'],
           where,
           order: {
             blockNumber: 'DESC',
@@ -82,7 +81,7 @@ export class TxService {
 
         const txs = await txn.find(TransactionEntity, findOptions)
 
-        const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
+        const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn)
         return [summaries, count]
       },
     )
@@ -98,12 +97,12 @@ export class TxService {
         const where = {blockHash: hash}
 
         const [{count}] = await txn
-          .query('select count(hash) from transaction where block_hash = $1', [hash]) as [{ count: number }]
+          .query('select count(transaction_hash) from transaction where block_hash = $1', [hash]) as [{ count: number }]
 
         if (count === 0) return [[], count]
 
         const txs = await txn.find(TransactionEntity, {
-          select: ['hash'],
+          select: ['transactionHash'],
           where,
           skip: offset,
           take: limit,
@@ -111,9 +110,9 @@ export class TxService {
             blockNumber: 'DESC',
             transactionIndex: 'DESC',
           },
-        })
+        } as FindManyOptions)
 
-        const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
+        const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn)
         return [summaries, count]
       },
     )
@@ -132,7 +131,7 @@ export class TxService {
 
     let where
 
-    let countQuery = 'select count(hash) from transaction'
+    let countQuery = 'select count(transaction_hash) from transaction'
     let countArgs: any[] = []
 
     const counterpartAddress = !!searchHash && this.ethService.isValidAddress(searchHash) ? searchHash : null
@@ -144,8 +143,8 @@ export class TxService {
           countQuery = `${countQuery} where ("to" = $1 AND "from" = $2)`
           countArgs = [address, counterpartAddress]
         } else if (searchHash) {
-          where = {to: address, hash: searchHash}
-          countQuery = `${countQuery} where ("to" = $1 AND "hash" = $2)`
+          where = {to: address, transactionHash: searchHash}
+          countQuery = `${countQuery} where ("to" = $1 AND "transaction_hash" = $2)`
           countArgs = [address, searchHash]
         } else {
           where = {to: address}
@@ -159,8 +158,8 @@ export class TxService {
           countQuery = `${countQuery} where ("from" = $1 AND "to" = $2)`
           countArgs = [address, counterpartAddress]
         } else if (searchHash) {
-          where = {from: address, hash: searchHash}
-          countQuery = `${countQuery} where ("from" = $1 AND "hash" = $2)`
+          where = {from: address, transactionHash: searchHash}
+          countQuery = `${countQuery} where ("from" = $1 AND "transaction_hash" = $2)`
           countArgs = [address, searchHash]
         } else {
           where = {from: address}
@@ -174,8 +173,8 @@ export class TxService {
           countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
           countArgs = [address, counterpartAddress, address, counterpartAddress]
         } else if (searchHash) {
-          where = [{from: address, hash: searchHash}, {to: address, hash: searchHash}]
-          countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
+          where = [{from: address, transactionHash: searchHash}, {to: address, transactionHash: searchHash}]
+          countQuery = `${countQuery} where ("from" = $1 AND "transaction_hash" = $2) OR ("to" = $3 AND "transaction_hash" = $4)`
           countArgs = [address, searchHash, address, searchHash]
         } else {
           where = [{from: address}, {to: address}]
@@ -187,7 +186,7 @@ export class TxService {
     }
 
     const findOptions: FindManyOptions = {
-      select: ['hash'],
+      select: ['transactionHash'],
       where,
       skip: offset,
       take: limit,
@@ -204,7 +203,7 @@ export class TxService {
 
         const txs = await txn.find(TransactionEntity, findOptions)
 
-        const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn, sortField, order)
+        const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn, sortField, order)
         return [summaries, count]
       },
     )
@@ -241,7 +240,7 @@ export class TxService {
         }
 
         const txs = await entityManager.find(TransactionEntity, {
-          select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
+          select: ['blockNumber', 'blockHash', 'transactionHash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
           where,
           order: {
             blockNumber: 'DESC',
@@ -249,7 +248,7 @@ export class TxService {
           },
           skip: offset,
           take: limit,
-        })
+        } as FindManyOptions)
 
         return this.summarise(entityManager, txs, totalCount)
       },
@@ -277,8 +276,8 @@ export class TxService {
 
     const txs = await manager
       .find(TransactionEntity, {
-        select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
-        where: {hash: In(hashes)},
+        select: ['blockNumber', 'blockHash', 'transactionHash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
+        where: {transactionHash: In(hashes)},
         order: orderObject,
       } as FindManyOptions)
 
@@ -325,16 +324,16 @@ export class TxService {
 
       // Fee
       if (!tx.fee) {
-        throw new PartialReadException(`Fee missing, tx hash = ${tx.fee}`)
+        throw new PartialReadException(`Fee missing, tx hash = ${tx.transactionHash}`)
       }
 
       // Status
       if (tx.successful === null) {
-        throw new PartialReadException(`Status missing, tx hash = ${tx.successful}`)
+        throw new PartialReadException(`Status missing, tx hash = ${tx.transactionHash}`)
       }
 
       return {
-        hash: tx.hash,
+        transactionHash: tx.transactionHash,
         blockNumber: tx.blockNumber,
         transactionIndex: tx.transactionIndex,
         from: tx.from,
@@ -354,10 +353,10 @@ export class TxService {
 
   private async findAndMapTraces(txs: TransactionEntity[]): Promise<TransactionEntity[]> {
 
-    const traces = await this.traceService.findByTxHash(txs.map(tx => tx.hash))
+    const traces = await this.traceService.findByTxHash(txs.map(tx => tx.transactionHash))
 
     const txsByHash = txs.reduce((memo, next) => {
-      memo.set(next.hash, next)
+      memo.set(next.transactionHash, next)
       return memo
     }, new Map<string, TransactionEntity>())
 

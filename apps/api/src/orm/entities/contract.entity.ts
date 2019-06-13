@@ -105,7 +105,7 @@ export class ContractEntity {
   @ManyToOne(type => TransactionEntity, tx => tx.contracts)
   @JoinColumn({
     name: 'traceCreatedAtTransactionHash',
-    referencedColumnName: 'hash',
+    referencedColumnName: 'transactionHash',
   })
   createdAtTx?: TransactionEntity
 

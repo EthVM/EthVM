@@ -27,7 +27,7 @@ export class TransactionTraceEntity {
   @OneToOne(type => TransactionEntity, tx => tx.trace)
   @JoinColumn({
     name: 'transactionHash',
-    referencedColumnName: 'hash',
+    referencedColumnName: 'transactionHash',
   })
   tx!: TransactionEntity
 

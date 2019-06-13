@@ -14,7 +14,7 @@ type Subscription {
 }
 
 type TransactionSummary {
-  hash: String!
+  transactionHash: String!
   blockNumber: BigNumber!
   transactionIndex: Int!
   from: String!
@@ -34,7 +34,7 @@ type TransactionSummaryPage {
 }
 
 type Transaction {
-  hash: String!
+  transactionHash: String!
   nonce: BigNumber!
   blockHash: String!
   blockNumber: BigNumber!

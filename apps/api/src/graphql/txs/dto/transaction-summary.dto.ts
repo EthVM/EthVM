@@ -3,7 +3,7 @@ import { assignClean } from '@app/shared/utils'
 
 export class TransactionSummaryDto implements TransactionSummary {
 
-  hash!: string
+  transactionHash!: string
   blockNumber!: BigNumber
   transactionIndex!: number
   from!: string

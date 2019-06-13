@@ -53,7 +53,7 @@ export class TransactionReceiptEntity {
   @OneToOne(type => TransactionEntity, tx => tx.receipt)
   @JoinColumn({
     name: 'transactionHash',
-    referencedColumnName: 'hash',
+    referencedColumnName: 'transactionHash',
   })
   tx!: TransactionEntity
 
