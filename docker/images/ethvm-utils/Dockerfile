@@ -19,7 +19,7 @@ LABEL name="kafka" version=${KAFKA_VERSION}
 
 # Install dependencies
 
-RUN apk add --no-cache openjdk8-jre bash coreutils su-exec openssl jq curl git tini && \
+RUN apk add --no-cache openjdk8-jre bash coreutils su-exec openssl jq curl git postgresql-client tini && \
     wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz

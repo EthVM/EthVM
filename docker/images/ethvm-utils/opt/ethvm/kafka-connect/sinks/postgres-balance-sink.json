@@ -5,6 +5,7 @@
     "tasks.max": 1,
     "topics": "fungible_balance,non_fungible_balance",
     "insert.mode": "upsert",
+    "batch.size": 1000,
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",
     "connection.password": "{{ .Env.POSTGRES_PASSWORD }}",

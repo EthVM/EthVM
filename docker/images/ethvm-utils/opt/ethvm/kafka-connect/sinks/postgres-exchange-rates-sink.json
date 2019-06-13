@@ -5,6 +5,7 @@
     "tasks.max": 1,
     "topics": "token_exchange_rates,coin_exchange_rates",
     "pk.mode": "record_key",
+    "batch.size": 1000,
     "insert.mode": "upsert",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",
