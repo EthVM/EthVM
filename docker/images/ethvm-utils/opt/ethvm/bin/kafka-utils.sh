@@ -36,7 +36,6 @@ ensure_kafka() {
     ${MIN_EXPECTED_BROKERS} ${TIMEOUT_MS}
 } >&2
 
-
 ensure_topics() {
 
   # change pwd
@@ -56,6 +55,61 @@ ensure_topics() {
 
 } >&2
 
+delete_topics() {
+
+  topics_to_preserve=${1:-''}
+
+   # change pwd
+  cd ${ROOT_DIR}
+
+  local topics=$(cat ${KAFKA_DIR}/topics.yml | grep 'name:' | sed -e 's/.*name: \(.*\)/\1/g')
+
+  for topic in ${topics}; do
+
+    if [[ ${topics_to_preserve} == *"${topic}"* ]]; then
+      echo "Preserving topic: ${topic}"
+    else
+      echo "Deleting topic: ${topic}"
+
+      kafka-topics.sh \
+        --delete \
+        --zookeeper ${KAFKA_ZOOKEEPER_CONNECT} \
+        --topic ${topic}
+
+      echo "Topic deleted: ${topic}"
+
+    fi
+
+  done
+
+} >&2
+
+reset_processor_offsets() {
+
+  # change pwd
+  cd ${ROOT_DIR}
+
+  local topics_file=${KAFKA_DIR}/processor-topics.json
+
+  local processors=$(jq '. | keys[]' ${topics_file} | sed -e 's/\"//g')
+
+  for processor in ${processors}; do
+    local topics=$(jq ".[\"${processor}\"] | values[]" ${topics_file} | tr '\n' ','  | sed -e 's/\"//g' | sed -e 's/,$//')
+
+    echo "Resetting offsets for processor: ${processor}"
+
+    kafka-streams-application-reset.sh  \
+      --zookeeper ${KAFKA_ZOOKEEPER_CONNECT} \
+      --bootstrap-servers ${KAFKA_BOOTSTRAP_SERVERS} \
+      --application-id ${processor} \
+      --input-topics ${topics}
+
+    echo "Processor offsets reset: ${processor}"
+
+  done
+
+} >&2
+
 init() {
 
   ensure_topics true
@@ -68,10 +122,12 @@ run() {
   shift
 
   case ${command} in
-    ensure-zookeeper) ensure_zookeeper "$@";;
-    ensure-kafka)     ensure_kafka "$@";;
-    ensure-topics)    ensure_topics "$@";;
-    init)             init "$@";;
+    ensure-zookeeper)             ensure_zookeeper "$@";;
+    ensure-kafka)                 ensure_kafka "$@";;
+    ensure-topics)                ensure_topics "$@";;
+    delete-topics)                delete_topics "$@";;
+    reset-processor-offsets)      reset_processor_offsets "$@";;
+    init)                         init "$@";;
   esac
 }
 
