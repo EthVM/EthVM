@@ -240,7 +240,20 @@ export class TxService {
         }
 
         const txs = await entityManager.find(TransactionEntity, {
-          select: ['blockNumber', 'blockHash', 'transactionHash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
+          select: [
+            'blockNumber',
+            'blockHash',
+            'transactionHash',
+            'transactionIndex',
+            'timestamp',
+            'gasPrice',
+            'from',
+            'to',
+            'creates',
+            'value',
+            'successful',
+            'fee',
+          ],
           where,
           order: {
             blockNumber: 'DESC',
@@ -276,7 +289,20 @@ export class TxService {
 
     const txs = await manager
       .find(TransactionEntity, {
-        select: ['blockNumber', 'blockHash', 'transactionHash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
+        select: [
+          'blockNumber',
+          'blockHash',
+          'transactionHash',
+          'transactionIndex',
+          'timestamp',
+          'gasPrice',
+          'from',
+          'to',
+          'creates',
+          'value',
+          'successful',
+          'fee',
+        ],
         where: {transactionHash: In(hashes)},
         order: orderObject,
       } as FindManyOptions)
