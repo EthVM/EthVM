@@ -47,7 +47,7 @@ import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import LastBlocks from '@app/modules/blocks/components/TableBlocks/TableBlocks.vue'
+import LastBlocks from '@app/modules/blocks/components/BlockTable/BlockTable.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Vue } from 'vue-property-decorator'
 

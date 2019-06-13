@@ -1,5 +1,5 @@
 <template>
-  <div class="tablet-blocks-container">
+  <div class="block-table-container">
     <notice-new-block @reload="resetFromBlock" />
 
     <!--
@@ -7,16 +7,11 @@
       TITLE
     =====================================================================================
     -->
-    <title-last-blocks />
-    <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
-      <v-flex xs12 sm5 md4 class="title-live" pb-0>
-        <v-layout align-end justify-start row fill-height>
-          <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
-        </v-layout>
-      </v-flex>
-      <v-spacer />
-      <v-flex xs12 sm7 md5 v-if="pages > 1 && !hasError">
-        <v-layout justify-end row class="pb-2 pr-2 pl-2">
+    <div>
+      <!-- Title with [pagination] for dedicated [Blocks page] -->
+      <title-last-blocks v-if="pageType != 'home'" :title="getTitle">
+        <div v-if="pages > 1 && !hasError">
+          <!-- Inserting [pagination] component into title -->
           <app-paginate
             :total="pages"
             @newPage="setPage"
@@ -25,20 +20,19 @@
             :has-first="!simplePagination"
             :has-last="!simplePagination"
           />
-        </v-layout>
-      </v-flex>
-    </v-layout>
-    <v-layout v-else row wrap align-center pb-1 pr-2 pl-2>
-      <v-flex xs8 md7>
-        <v-card-title class="title font-weight-bold pl-0">{{ $t('block.last') }}</v-card-title>
-      </v-flex>
-      <v-spacer />
-      <v-flex xs4 md1>
-        <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('btn.view-all') }}</v-btn>
-        </v-layout>
-      </v-flex>
-    </v-layout>
+        </div>
+      </title-last-blocks>
+
+      <!-- Title with [View All button] for [Home page] -->
+      <title-last-blocks v-else :title="$t('block.last')" :button-text="$t('btn.view-all')" button-link="/blocks" />
+    </div>
+    <!--
+    =====================================================================================
+      TABLE CONTENT
+    =====================================================================================
+    -->
+    <block-row v-if="!hasError && !loading" :page-type="pageType" :blocks="blocks" />
+    <div v-if="loading">loading...</div>
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -46,29 +40,7 @@
     -->
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
     <app-error :has-error="hasError" :message="error" class="mb-4" />
-    <!--
-    =====================================================================================
-      TABLE HEADER
-    =====================================================================================
-    -->
-    <v-layout pl-2 pr-2>
-      <v-flex hidden-xs-only sm12>
-        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1 table-blocks-header-card" height="40px">
-          <v-layout align-center justify-start row fill-height pr-3>
-            <v-flex sm2>
-              <h5>{{ $t('block.number') }}</h5>
-            </v-flex>
-            <v-spacer />
-            <v-flex sm2>
-              <h5>{{ $tc('tx.name', 2) }}</h5>
-            </v-flex>
-            <v-flex sm1 xl2>
-              <h5>{{ $t('miner.reward-short') }}</h5>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-    </v-layout>
+
     <!--
     =====================================================================================
       TABLE BODY
@@ -117,12 +89,13 @@
 </template>
 
 <script lang="ts">
-import TitleLastBlocks from './TitleLastBlocks.vue'
+import TitleLastBlocks from '@app/modules/blocks/components/BlockTitle/BlockTitle.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
+import BlockRow from '@app/modules/blocks/components/BlockRow/BlockRow.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
@@ -141,7 +114,8 @@ const MAX_ITEMS = 50
     AppPaginate,
     TableBlocksRow,
     NoticeNewBlock,
-    TitleLastBlocks
+    TitleLastBlocks,
+    BlockRow
   },
   data() {
     return {
@@ -365,5 +339,5 @@ export default class TableBlocks extends Vue {
 </script>
 
 <style scoped lang="less">
-@import 'TableBlocks.less';
+@import 'BlockTable.less';
 </style>
