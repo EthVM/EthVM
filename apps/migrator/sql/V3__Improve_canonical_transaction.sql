@@ -30,3 +30,8 @@ FROM "transaction" AS t
        LEFT JOIN transaction_fee AS tf ON t.transaction_hash = tf.transaction_hash
 WHERE cb.number IS NOT NULL
   AND t.transaction_hash IS NOT NULL;
+
+/* create indexes for sorting canonical_transaction view */
+CREATE INDEX idx_transaction__value ON "transaction"("value");
+CREATE INDEX idx_transaction__timestamp ON "transaction"("timestamp");
+CREATE INDEX idx_transaction_trace__root_error ON transaction_trace(root_error);
