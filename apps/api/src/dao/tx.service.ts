@@ -87,7 +87,7 @@ export class TxService {
           },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         }
 
         const txs = await txn.find(TransactionEntity, findOptions)
@@ -303,7 +303,7 @@ export class TxService {
           },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         } as FindManyOptions)
 
         return this.summarise(entityManager, txs, totalCount)
