@@ -2,7 +2,7 @@ import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, FindManyOptions, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
+import { Brackets, EntityManager, FindManyOptions, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
 import { ReceiptService } from './receipt.service'
 import { TraceService } from './trace.service'
 import { FilterEnum, Order, TransactionSummary, TxSortField } from '@app/graphql/schema'
@@ -54,7 +54,7 @@ export class TxService {
 
   async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
     const txs = await this.transactionRepository.find({
-      where: { transactionHash: In(hashes) },
+      where: {transactionHash: In(hashes)},
       relations: ['receipt'],
       cache: true,
     })
@@ -69,13 +69,13 @@ export class TxService {
 
         const where = {blockNumber: number}
 
-        const { count } = await txn
+        const {count} = await txn
           .createQueryBuilder()
           .select('COUNT(transaction_hash)', 'count')
           .from(TransactionEntity, 't')
           .where(`block_number = ${number.toString()}`)
           .cache(true)
-          .setParameters({ number })
+          .setParameters({number})
           .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
@@ -109,13 +109,13 @@ export class TxService {
 
         const where = {blockHash: hash}
 
-        const { count } = await txn
+        const {count} = await txn
           .createQueryBuilder()
           .select('COUNT(transaction_hash)', 'count')
           .from(TransactionEntity, 't')
           .where('block_hash = :hash')
           .cache(true)
-          .setParameters({ hash })
+          .setParameters({hash})
           .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
@@ -301,10 +301,10 @@ export class TxService {
           // we count all txs in blocks greater than the from block and deduct from total
           // this is much faster way of determining the count
 
-          const { count: filterCount } = await entityManager.createQueryBuilder()
+          const {count: filterCount} = await entityManager.createQueryBuilder()
             .select('count(hash)', 'count')
             .from(TransactionEntity, 't')
-            .where({ blockNumber: MoreThan(fromBlock) })
+            .where({blockNumber: MoreThan(fromBlock)})
             .cache(true)
             .getRawOne() as { count: number }
 
