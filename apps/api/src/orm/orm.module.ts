@@ -13,7 +13,7 @@ import { SnakeCaseNamingStrategy } from '@app/orm/config'
         synchronize: false,
         namingStrategy: new SnakeCaseNamingStrategy(),
         entities: ['src/**/**.entity{.ts,.js}'],
-        logging: 'all',
+        logging: ['error'],
         maxQueryExecutionTime: 1000,
         cache: {
           type: 'redis',

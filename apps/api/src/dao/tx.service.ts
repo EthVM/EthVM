@@ -2,7 +2,7 @@ import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, FindManyOptions, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
+import { Brackets, EntityManager, FindManyOptions, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
 import { ReceiptService } from './receipt.service'
 import { TraceService } from './trace.service'
 import { FilterEnum, Order, TransactionSummary, TxSortField } from '@app/graphql/schema'
@@ -11,7 +11,6 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { RowCount } from '@app/orm/entities/row-counts.entity'
 import { EthService } from '@app/shared/eth.service'
-import { search } from '../../../explorer/src/core/api/apollo/types/search'
 
 @Injectable()
 export class TxService {
@@ -53,7 +52,7 @@ export class TxService {
 
   async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
     const txs = await this.transactionRepository.find({
-      where: { transactionHash: In(hashes) },
+      where: {transactionHash: In(hashes)},
       relations: ['receipt'],
       cache: true,
     })
@@ -68,13 +67,13 @@ export class TxService {
 
         const where = {blockNumber: number}
 
-        const { count } = await txn
+        const {count} = await txn
           .createQueryBuilder()
           .select('COUNT(transaction_hash)', 'count')
           .from(TransactionEntity, 't')
           .where('block_number = :number')
           .cache(true)
-          .setParameters({ number })
+          .setParameters({number})
           .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
@@ -108,13 +107,13 @@ export class TxService {
 
         const where = {blockHash: hash}
 
-        const { count } = await txn
+        const {count} = await txn
           .createQueryBuilder()
           .select('COUNT(transaction_hash)', 'count')
           .from(TransactionEntity, 't')
           .where('block_hash = :hash')
           .cache(true)
-          .setParameters({ hash })
+          .setParameters({hash})
           .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
@@ -160,105 +159,77 @@ export class TxService {
 
         const counterpartAddress = !!searchHash && this.ethService.isValidAddress(searchHash) ? searchHash : null
 
-    switch (filter) {
-      case FilterEnum.in:
-        const to = address;
+        switch (filter) {
+          case FilterEnum.in:
+            const to = address
+            countQueryBuilder.where('"to" = :to')
+            where = {to}
 
-        if (counterpartAddress) {
-          const from = counterpartAddress
-          where = { to, from }
+            if (counterpartAddress) {
+              where = {...where, from: counterpartAddress}
+              countQueryBuilder.andWhere('"from" = :from')
 
-          countQueryBuilder
-            .where('"to" = :to')
-            .andWhere('"from" = :from')
-            .setParameters({ to, from })
+            } else if (searchHash) {
+              where = {...where, transactionHash: searchHash}
+              countQueryBuilder.andWhere('"transaction_hash" = :transactionHash')
+            }
+            countQueryBuilder.setParameters(where)
+            break
 
-        } else if (searchHash) {
-          const transactionHash = searchHash
-          where = { to, transactionHash }
+          case FilterEnum.out:
+            const from = address
+            countQueryBuilder.where('"from" = :from')
+            where = {from}
 
-          countQueryBuilder
-            .where('"to" = :to')
-            .andWhere('"transaction_hash" = :transactionHash')
-            .setParameters({ to, transactionHash })
+            if (counterpartAddress) {
+              where = {...where, to: counterpartAddress}
+              countQueryBuilder.andWhere('"to" = :to')
 
-        } else {
-          where = {to: address}
+            } else if (searchHash) {
+              where = {...where, transactionHash: searchHash}
+              countQueryBuilder.andWhere('"transaction_hash" = :transactionHash')
+            }
+            countQueryBuilder.setParameters(where)
+            break
+          default:
 
-          countQueryBuilder
-            .where('"to" = :to')
-            .setParameters({ to })
+            if (counterpartAddress) {
+              where = [{from: address, to: counterpartAddress}, {to: address, from: counterpartAddress}]
+
+              countQueryBuilder
+                .where(new Brackets(qb => {
+                  qb.where('"from" = :address')
+                  qb.andWhere('"to" = :counterpartAddress')
+                }))
+                .orWhere(new Brackets(qb => {
+                  qb.where('"from" = :counterpartAddress')
+                  qb.andWhere('"to" = :address')
+                }))
+                .setParameters({address, counterpartAddress})
+            } else if (searchHash) {
+              where = [{from: address, transactionHash: searchHash}, {to: address, transactionHash: searchHash}]
+
+              countQueryBuilder
+                .where(new Brackets(qb => {
+                  qb.where('"from" = :address')
+                  qb.andWhere('"transaction_hash" = :transactionHash')
+                }))
+                .orWhere(new Brackets(qb => {
+                  qb.where('"transaction_hash" = :transactionHash')
+                  qb.andWhere('"to" = :address')
+                }))
+                .setParameters({address, transactionHash: searchHash})
+            } else {
+              where = [{from: address}, {to: address}]
+
+              countQueryBuilder
+                .where('"from" = :address')
+                .orWhere('"to" = :address')
+                .setParameters({address})
+            }
         }
-        break
 
-      case FilterEnum.out:
-        const from = address
-
-        if (counterpartAddress) {
-          const to = counterpartAddress
-          where = { from, to }
-
-          countQueryBuilder
-            .where('"from" = :from')
-            .andWhere('"to" = :to')
-            .setParameters({ from, to })
-
-        } else if (searchHash) {
-          const transactionHash = searchHash
-          where = { from, transactionHash }
-
-          countQueryBuilder
-            .where('"from" = :from')
-            .andWhere('"transactionHash" = :transactionHash')
-            .setParameters({ from, transactionHash })
-
-        } else {
-          where = { from }
-          countQueryBuilder
-            .where('"from" = :from')
-            .setParameters({ from })
-        }
-        break
-      default:
-
-        if (counterpartAddress) {
-          where = [{from: address, to: counterpartAddress}, {to: address, from: counterpartAddress}]
-
-          countQueryBuilder
-            .where(new Brackets(qb => {
-              qb.where('"from" = :address')
-              qb.andWhere('"to" = :counterpartAddress')
-            }))
-            .orWhere(new Brackets(qb => {
-              qb.where('"from" = :counterpartAddress')
-              qb.andWhere('"to" = :address')
-            }))
-            .setParameters({ address, counterpartAddress })
-        } else if (searchHash) {
-          where = [{from: address, transactionHash: searchHash}, {to: address, transactionHash: searchHash}]
-
-          countQueryBuilder
-            .where(new Brackets(qb => {
-              qb.where('"from" = :address')
-              qb.andWhere('"transaction_hash" = :transactionHash')
-            }))
-            .orWhere(new Brackets(qb => {
-              qb.where('"transaction_hash" = :transactionHash')
-              qb.andWhere('"to" = :address')
-            }))
-            .setParameters({ address, transactionHash: searchHash })
-        } else {
-          where = [{from: address}, {to: address}]
-
-          countQueryBuilder
-            .where('"from" = :address')
-            .orWhere('"to" = :address')
-            .setParameters({ address })
-        }
-        break
-    }
-
-        const { count } = await countQueryBuilder.cache(true).getRawOne() as { count: number }
+        const {count} = await countQueryBuilder.cache(true).getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -299,10 +270,10 @@ export class TxService {
           // we count all txs in blocks greater than the from block and deduct from total
           // this is much faster way of determining the count
 
-          const { count: filterCount } = await entityManager.createQueryBuilder()
+          const {count: filterCount} = await entityManager.createQueryBuilder()
             .select('count(hash)', 'count')
             .from(TransactionEntity, 't')
-            .where({ blockNumber: MoreThan(fromBlock) })
+            .where({blockNumber: MoreThan(fromBlock)})
             .cache(true)
             .getRawOne() as { count: number }
 
