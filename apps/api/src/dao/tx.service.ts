@@ -11,6 +11,7 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { add } from 'winston'
 
 @Injectable()
 export class TxService {
@@ -23,7 +24,7 @@ export class TxService {
     @InjectRepository(TransactionEntity)
     private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectEntityManager()
-    private readonly entityManager: EntityManager,
+    private readonly entityManager: EntityManager
   ) {
   }
 
@@ -50,7 +51,11 @@ export class TxService {
   }
 
   async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
-    const txs = await this.transactionRepository.find({ where: { hash: In(hashes) }, relations: ['receipt'] })
+    const txs = await this.transactionRepository.find({
+      where: { hash: In(hashes) },
+      relations: ['receipt'],
+      cache: true
+    })
     return this.findAndMapTraces(txs)
   }
 
@@ -62,8 +67,14 @@ export class TxService {
 
         const where = { blockNumber: number }
 
-        const [{ count }] = await txn
-          .query('select count(hash) from transaction where block_number = $1', [number.toNumber()]) as [{ count: number }]
+        const { count } = await txn
+          .createQueryBuilder()
+          .select('COUNT(hash)', 'count')
+          .from(TransactionEntity, 't')
+          .where('block_number = :number')
+          .cache(true)
+          .setParameters({ number })
+          .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -72,11 +83,12 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          cache: true
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      },
+      }
     )
 
   }
@@ -89,8 +101,14 @@ export class TxService {
 
         const where = { blockHash: hash }
 
-        const [{ count }] = await txn
-          .query('select count(hash) from transaction where block_hash = $1', [hash]) as [{ count: number }]
+        const { count } = await txn
+          .createQueryBuilder()
+          .select('COUNT(hash)', 'count')
+          .from(TransactionEntity, 't')
+          .where('block_hash = :hash')
+          .cache(true)
+          .setParameters({ hash })
+          .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -99,45 +117,57 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          cache: true
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      },
+      }
     )
 
   }
 
   async findSummariesByAddress(address: string, filter?: string, offset: number = 0, limit: number = 20): Promise<[TransactionSummary[], number]> {
 
-    let where
-
-    let countQuery = 'select count(hash) from transaction'
-    let countArgs: any[] = []
-
-    switch (filter) {
-      case 'in':
-        where = { to: address }
-        countQuery = `${countQuery} where "to" = $1`
-        countArgs = [address]
-        break
-      case 'out':
-        where = { from: address }
-        countQuery = `${countQuery} where "from" = $1`
-        countArgs = [address]
-        break
-      default:
-        where = [{ from: address }, { to: address }]
-        countQuery = `${countQuery} where "from" = $1 and "to" = $2`
-        countArgs = [address, address]
-        break
-    }
-
     return this.entityManager.transaction(
       'READ COMMITTED',
       async (txn): Promise<[TransactionSummary[], number]> => {
 
-        const [{ count }] = await txn.query(countQuery, countArgs) as [{ count: number }]
+        const countQueryBuilder = txn.createQueryBuilder()
+          .select('count(hash)', 'count')
+          .from(TransactionEntity, 't')
+
+        let where
+
+        switch (filter) {
+          case 'in':
+            where = { to: address }
+
+            countQueryBuilder
+              .where('"to" = :to')
+              .setParameter('to', address)
+
+            break
+          case 'out':
+            where = { from: address }
+
+            countQueryBuilder
+              .where('"from" = :from')
+              .setParameter('from', address)
+
+            break
+          default:
+            where = [{ from: address }, { to: address }]
+
+            countQueryBuilder
+              .where('"to" = :to or "from" = :from')
+              .setParameters({ to: address, from: address })
+
+            break
+        }
+
+
+        const { count } = await countQueryBuilder.cache(true).getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -146,11 +176,12 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          cache: true
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      },
+      }
     )
 
   }
@@ -166,8 +197,9 @@ export class TxService {
         let [{ count: totalCount }] = await entityManager.find(RowCount, {
           select: ['count'],
           where: {
-            relation: 'transaction',
+            relation: 'transaction'
           },
+          cache: true
         })
 
         if (totalCount === 0) return [[], totalCount]
@@ -175,13 +207,16 @@ export class TxService {
         if (fromBlock) {
           // we count all txs in blocks greater than the from block and deduct from total
           // this is much faster way of determining the count
-          const filterCount = await entityManager.count(TransactionEntity, {
-            where: {
-              blockNumber: MoreThan(fromBlock),
-            },
-          })
+
+          const { count: filterCount } = await entityManager.createQueryBuilder()
+            .select('count(hash)', 'count')
+            .from(TransactionEntity, 't')
+            .where({ blockNumber: MoreThan(fromBlock) })
+            .cache(true)
+            .getRawOne() as { count: number }
 
           totalCount = totalCount - filterCount
+
         }
 
         const txs = await entityManager.find(TransactionEntity, {
@@ -189,10 +224,11 @@ export class TxService {
           where,
           order: {
             blockNumber: 'DESC',
-            transactionIndex: 'DESC',
+            transactionIndex: 'DESC'
           },
           skip: offset,
           take: limit,
+          cache: true
         })
 
         const receipts = await this.receiptService
@@ -201,7 +237,7 @@ export class TxService {
         const receiptsByTxHash = receipts
           .reduceRight(
             (memo, next) => memo.set(next.transactionHash, next),
-            new Map<string, TransactionReceiptEntity>(),
+            new Map<string, TransactionReceiptEntity>()
           )
 
         const txsWithReceipts = txs.map(tx => {
@@ -209,7 +245,7 @@ export class TxService {
           return new TransactionEntity({ ...tx, receipt })
         })
         return this.summarise(entityManager, txsWithReceipts, totalCount)
-      },
+      }
     )
 
   }
@@ -226,8 +262,9 @@ export class TxService {
         where: { hash: In(hashes) },
         order: {
           blockNumber: 'DESC',
-          transactionIndex: 'DESC',
+          transactionIndex: 'DESC'
         },
+        cache: true
       })
 
     const receipts = await this.receiptService
@@ -236,7 +273,7 @@ export class TxService {
     const receiptsByTxHash = receipts
       .reduceRight(
         (memo, next) => memo.set(next.transactionHash, next),
-        new Map<string, TransactionReceiptEntity>(),
+        new Map<string, TransactionReceiptEntity>()
       )
 
     const txsWithReceipts = txs.map(tx => {
@@ -318,7 +355,7 @@ export class TxService {
         value: tx.value,
         fee: tx.gasPrice.multipliedBy(receipt.gasUsed),
         successful: txStatus.successful,
-        timestamp: tx.timestamp,
+        timestamp: tx.timestamp
       } as TransactionSummary
     })
 

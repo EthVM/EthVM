@@ -8,12 +8,17 @@ export class MetadataService {
 
   constructor(
     @InjectRepository(MetadataEntity)
-    private readonly metadataRepository: Repository<MetadataEntity>,
+    private readonly metadataRepository: Repository<MetadataEntity>
   ) {
   }
 
   async isSyncing(): Promise<boolean | undefined> {
-    const entry = await this.metadataRepository.findOne('sync_status')
+    const entry = await this.metadataRepository.findOne({
+      where: {
+        key: 'sync_status'
+      },
+      cache: true
+    })
     return entry ? JSON.parse(entry.value) : undefined
   }
 

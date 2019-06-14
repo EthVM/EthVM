@@ -22,7 +22,7 @@ export class BlockService {
     @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
     @InjectEntityManager() private readonly entityManager: EntityManager,
     private readonly traceService: TraceService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
   }
 
@@ -34,6 +34,7 @@ export class BlockService {
         select: ['number', 'difficulty', 'blockTime'],
         order: { number: 'DESC' },
         take: 20,
+        cache: true
       })
 
     if (blocks.length === 0) return null
@@ -60,8 +61,9 @@ export class BlockService {
           const [{ count }] = await txn.find(RowCount, {
             select: ['count'],
             where: {
-              relation: 'canonical_block_header',
+              relation: 'canonical_block_header'
             },
+            cache: true
           })
 
           const headersWithRewards = await txn.find(BlockHeaderEntity, {
@@ -71,11 +73,12 @@ export class BlockService {
             order: { number: 'DESC' },
             skip: offset,
             take: limit,
+            cache: true
           })
 
           return [
             await this.summarise(txn, headersWithRewards),
-            count,
+            count
           ]
 
         })
@@ -92,13 +95,14 @@ export class BlockService {
         order: { number: 'DESC' },
         skip: offset,
         take: limit,
+        cache: true
       })
 
     if (count === 0) return [[], count]
 
     return [
       await this.summarise(this.entityManager, headersWithRewards),
-      count,
+      count
     ]
 
   }
@@ -110,6 +114,7 @@ export class BlockService {
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
       order: { number: 'DESC' },
+      cache: true
     })
 
     return this.summarise(this.entityManager, headersWithRewards)
@@ -181,7 +186,7 @@ export class BlockService {
         numTxs: transactionHashes.length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
-        reward: rewardsByBlock.get(hash) || 0,
+        reward: rewardsByBlock.get(hash) || 0
       } as BlockSummary
 
     })
@@ -190,7 +195,7 @@ export class BlockService {
 
   async findOne(where: FindConditions<BlockHeaderEntity>[] | FindConditions<BlockHeaderEntity> | ObjectLiteral): Promise<BlockHeaderEntity | undefined> {
     const { instaMining } = this.configService
-    const blockHeader = await this.blockHeaderRepository.findOne({ where, relations: ['uncles', 'rewards'] })
+    const blockHeader = await this.blockHeaderRepository.findOne({ where, relations: ['uncles', 'rewards'], cache: true })
 
     if (!blockHeader) return undefined
 

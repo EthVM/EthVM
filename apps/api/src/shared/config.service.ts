@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import convict from 'convict'
-import {join} from 'path'
+import { join } from 'path'
 
 /* tslint:disable:max-line-length */
 const schema = {
@@ -8,59 +8,72 @@ const schema = {
     doc: 'The application environment.',
     format: ['production', 'development', 'staging', 'test'],
     default: 'development',
-    env: 'NODE_ENV',
+    env: 'NODE_ENV'
   },
   host: {
     doc: 'The IP address to bind.',
     format: 'ipaddress',
     default: '0.0.0.0',
-    env: 'IP_ADDRESS',
+    env: 'IP_ADDRESS'
   },
   port: {
     doc: 'The port to bind.',
     format: 'port',
     default: 3000,
-    env: 'PORT',
+    env: 'PORT'
   },
   logging: {
     level: {
       doc: 'Log level',
       env: 'LOG_LEVEL',
-      default: 'info',
-    },
+      default: 'info'
+    }
   },
   instaMining: {
     doc: 'Indicates if we are running a private development chain which can impact subscriptions',
     env: 'INSTA_MINING',
     format: 'Boolean',
-    default: false,
+    default: false
   },
   db: {
     url: {
       doc: 'Timescale connection URL',
       env: 'TIMESCALE_URL',
-      default: 'postgres://postgres:1234@timescale/ethvm_dev',
+      default: 'postgres://postgres:1234@timescale/ethvm_dev'
+    }
+  },
+  redis: {
+    host: {
+      doc: 'Redis cluster host',
+      env: 'REDIS_HOST',
+      default: 'redis'
     },
+    port: {
+      doc: 'Redis cluster port',
+      env: 'REDIS_PORT',
+      format: 'port',
+      default: 6379
+    }
   },
   graphql: {
     playground: {
       doc: 'Whether to enable to disable the graphql playground',
       env: 'GRAPHQL_PLAYGROUND',
-      default: true,
-    },
+      default: true
+    }
   },
   expressRateLimit: {
     windowMs: {
       doc: 'Express Rate Limit window(ms)',
       env: 'EXPRESS_RATE_LIMIT_WINDOW_MS',
-      default: 15 * 1000,
+      default: 15 * 1000
     },
     max: {
       doc: 'Express Rate Limit max requests per window(ms)',
       env: 'EXPRESS_RATE_LIMIT_MAX',
-      default: 100,
-    },
-  },
+      default: 100
+    }
+  }
 }
 
 export interface GraphqlConfig {
@@ -90,6 +103,11 @@ export interface DbConfig {
   url: string
 }
 
+export interface RedisConfig {
+  host: string
+  port: number
+}
+
 @Injectable()
 export class ConfigService {
   public config: convict.Config<any>
@@ -98,7 +116,7 @@ export class ConfigService {
     const config = (this.config = convict(schema))
 
     config.loadFile(join(process.cwd(), `src/config/${this.env}.json`))
-    config.validate({allowed: 'strict'})
+    config.validate({ allowed: 'strict' })
   }
 
   get env(): string {
@@ -123,6 +141,10 @@ export class ConfigService {
 
   get db(): DbConfig {
     return this.config.get('db')
+  }
+
+  get redis(): RedisConfig {
+    return this.config.get('redis')
   }
 
   get coinGecko(): CoinGeckoConfig {
