@@ -84,9 +84,9 @@
   "contract": {
     "name": "Контракт | Контракты",
     "creator": "Создатель Контракта",
-    "hash": "Contract #",
-    "created": "Created at",
-    "total": "Total"
+    "hash": "Контракт #",
+    "created": "Время создания",
+    "total": "Всего"
   },
   "gas": {
     "name": "Газ",
@@ -168,11 +168,11 @@
     },
     "not-found": "Страница не найдена :(",
     "welcome": {
-      "title": "Welcome to EthVM Beta!",
-      "text1": "We are now on Ethereum mainnet, so have a look around and let us know about any bugs or feature requests at ",
-      "text2": ", or go to ",
-      "text3": "for updates and to contribute. ",
-      "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",
+      "title": "Добро пожаловать в EthVM Beta!",
+      "text1": "Теперь мы на Ethereum mainnet, поэтому посмотрите и сообщите нам о любых ошибках или оставьте запросы о других функциях ",
+      "text2": "или посетите ",
+      "text3": "что бы узнать больше об обновлениях или внести свои вклад в систему EthVM",
+      "text4": "Команда EthVM с нетерпением ожидает создания полезных инструментов блокчейна вместе с нашим сообществом!",
       "btn": "Вперед!"
     },
     "ropsten-no-token": "EthVM все еще находится в тестировании, поэтому в настоящее время мы показываем данные из тест-нета Ropsten ETH. В тест-нете Ropsten нет токенов которые имеют ценность. Балансы всех ценных токенов появятся здесь, когда мы подключим Mainnet.",
@@ -183,7 +183,7 @@
     },
     "sec": "сек.",
     "uncle": {
-      "no-uncles": "There are no uncles"
+      "no-uncles": "Нет Uncle Блоков"
     },
     "token": {
       "no-tokens": "There are no supported tokens",
