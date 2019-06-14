@@ -34,7 +34,7 @@ export class BlockService {
         select: ['number', 'difficulty', 'blockTime'],
         order: { number: 'DESC' },
         take: 20,
-        cache: true
+        cache: true,
       })
 
     if (blocks.length === 0) return null
@@ -63,7 +63,7 @@ export class BlockService {
             where: {
               entity: 'block_header',
             },
-            cache: true
+            cache: true,
           })
 
           const headersWithRewards = await txn.find(BlockHeaderEntity, {
@@ -73,7 +73,7 @@ export class BlockService {
             order: { number: 'DESC' },
             skip: offset,
             take: limit,
-            cache: true
+            cache: true,
           })
 
           return [
@@ -95,7 +95,7 @@ export class BlockService {
         order: { number: 'DESC' },
         skip: offset,
         take: limit,
-        cache: true
+        cache: true,
       })
 
     if (count === 0) return [[], count]
@@ -114,7 +114,7 @@ export class BlockService {
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
       order: { number: 'DESC' },
-      cache: true
+      cache: true,
     })
 
     return this.summarise(this.entityManager, headersWithRewards)

@@ -34,7 +34,7 @@ export class TraceService {
         where: {
           transactionHash: In(txHashes),
         },
-        cache: true
+        cache: true,
       })
 
     return entities.map(e => {
@@ -55,7 +55,7 @@ export class TraceService {
       where: {
         blockHash: In(blockHashes),
       },
-      cache: true
+      cache: true,
     })
 
     return entities.map(e => {

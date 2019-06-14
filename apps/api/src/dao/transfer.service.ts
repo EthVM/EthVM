@@ -21,7 +21,7 @@ export class TransferService {
       skip: offset,
       take: limit,
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
-      cache: true
+      cache: true,
     }
     return this.transferRepository.findAndCount(findOptions)
   }

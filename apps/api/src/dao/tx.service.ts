@@ -53,7 +53,7 @@ export class TxService {
     const txs = await this.transactionRepository.find({
       where: { hash: In(hashes) },
       relations: ['receipt'],
-      cache: true
+      cache: true,
     })
     return this.findAndMapTraces(txs)
   }
@@ -82,7 +82,7 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
@@ -116,7 +116,7 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
@@ -165,7 +165,6 @@ export class TxService {
             break
         }
 
-
         const { count } = await countQueryBuilder.cache(true).getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
@@ -175,12 +174,12 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      }
+      },
     )
 
   }
@@ -198,7 +197,7 @@ export class TxService {
           where: {
             entity: 'transaction',
           },
-          cache: true
+          cache: true,
         })
 
         if (totalCount === 0) return [[], totalCount]
@@ -226,7 +225,7 @@ export class TxService {
           },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const receipts = await this.receiptService
@@ -262,7 +261,7 @@ export class TxService {
           blockNumber: 'DESC',
           transactionIndex: 'DESC',
         },
-        cache: true
+        cache: true,
       })
 
     const receipts = await this.receiptService

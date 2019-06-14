@@ -29,7 +29,7 @@ export class TokenService {
     @InjectRepository(ContractEntity)
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity)
-    private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>
+    private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
   ) {
   }
 
@@ -38,7 +38,7 @@ export class TokenService {
       where: { contract: address },
       take: limit,
       skip: offset,
-      cache: true
+      cache: true,
     }
     const findOptionsErc20: FindManyOptions = { ...findOptions, select: ['address', 'amount'] }
     const erc20Balances = await this.erc20BalanceRepository.findAndCount(findOptionsErc20)
@@ -62,7 +62,7 @@ export class TokenService {
       relations: ['tokenExchangeRate', 'metadata', 'contractMetadata'],
       take: limit,
       skip: offset,
-      cache: true
+      cache: true,
     }
 
     const [erc20Tokens, erc20Count] = await this.erc20BalanceRepository.findAndCount(findOptions)
@@ -120,7 +120,7 @@ export class TokenService {
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
     const findOptions: FindOneOptions = {
       where: { id: pair },
-      cache: true
+      cache: true,
     }
     return this.coinExchangeRateRepository.findOne(findOptions)
   }
@@ -157,7 +157,7 @@ export class TokenService {
       order,
       take: limit,
       skip: offset,
-      cache: true
+      cache: true,
     }
     return this.tokenExchangeRateRepository.findAndCount(findOptions)
   }
@@ -174,7 +174,7 @@ export class TokenService {
     return this.tokenExchangeRateRepository.findOne({
       where: { address },
       relations: ['contract', 'contract.metadata'],
-      cache: true
+      cache: true,
     })
   }
 
@@ -211,7 +211,7 @@ export class TokenService {
     const findOptions = {
       where,
       relations: ['contractMetadata'],
-      cache: true
+      cache: true,
     }
     const erc20Tokens = await this.erc20MetadataRepository.find(findOptions)
     const erc721Tokens = await this.erc721MetadataRepository.find(findOptions)

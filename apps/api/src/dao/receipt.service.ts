@@ -7,7 +7,7 @@ import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
 export class ReceiptService {
 
   constructor(
-    @InjectRepository(TransactionReceiptEntity) private readonly receiptRepository: Repository<TransactionReceiptEntity>
+    @InjectRepository(TransactionReceiptEntity) private readonly receiptRepository: Repository<TransactionReceiptEntity>,
   ) {
   }
 
@@ -19,7 +19,7 @@ export class ReceiptService {
 
     const options: FindManyOptions = {
       where: { transactionHash: In(txHashes) },
-      cache: true
+      cache: true,
     }
 
     if (select.length > 0) {
