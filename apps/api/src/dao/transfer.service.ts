@@ -21,6 +21,7 @@ export class TransferService {
       skip: offset,
       take: limit,
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
+      cache: true
     }
     return this.transferRepository.findAndCount(findOptions)
   }
@@ -58,6 +59,7 @@ export class TransferService {
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(offset)
       .take(limit)
+      .cache(true)
       .getManyAndCount()
 
   }
@@ -76,6 +78,7 @@ export class TransferService {
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(offset)
       .limit(limit)
+      .cache(true)
       .getManyAndCount()
 
   }
@@ -134,6 +137,7 @@ export class TransferService {
       .orderBy('t.timestamp', 'DESC')
       .offset(skip)
       .take(take)
+      .cache(true)
       .getManyAndCount()
 
   }
@@ -155,6 +159,7 @@ export class TransferService {
       .addSelect('*, SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance')
       .where('t.contract_address = :address')
       .andWhere('t.address = :holder')
+      .cache(true)
 
     const items = await builder
       .setParameters({ address, holder, timestampFrom, timestampTo })

@@ -104,8 +104,8 @@ services:
     # If you want, also there's the option to use ropsten or even mainnet to test with real networks.
     # Just uncomment below line:
     command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    # command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-#    command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    #command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    #command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -125,6 +125,11 @@ services:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
       POSTGRES_DB:
+
+  redis:
+    image: redis:5.0-alpine
+    networks:
+      - back
 
   # ///////////////////////////////////////////////////////
   # Processing
@@ -249,9 +254,6 @@ services:
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
-      CONNECT_CONSUMER_MAX_POLL_RECORDS: 5000
-      CONNECT_CONSUMER_FETCH_MIN_BYTES: 1000000
-      CONNECT_CONSUMER_FETCH_WAIT_MAX_MS: 1000
       CONNECT_MAX_POLL_INTERVAL_MS: 120000
       KAFKA_JMX_PORT: 9588
 
@@ -295,6 +297,20 @@ services:
       - 9000:9000
     environment:
       ZK_HOSTS: zookeeper:2181
+
+  burrow:
+    image: solsson/burrow
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka-1
+    networks:
+      - back
+    ports:
+      - 8000:8000
+    volumes:
+      - ${PWD}/docker/images/burrow:/etc/burrow/
+      - ${PWD}/tmp:/var/tmp/burrow
 
   pgweb:
     image: sosedoff/pgweb:0.11.2

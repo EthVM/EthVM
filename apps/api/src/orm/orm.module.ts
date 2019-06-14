@@ -13,11 +13,18 @@ import { SnakeCaseNamingStrategy } from '@app/orm/config'
         synchronize: false,
         namingStrategy: new SnakeCaseNamingStrategy(),
         entities: ['src/**/**.entity{.ts,.js}'],
-        logging: ['error'],
+        logging: 'all',
         maxQueryExecutionTime: 1000,
+        cache: {
+          type: 'redis',
+          options: configService.redis,
+          // global cache strategy of 15 seconds
+          duration: 60000
+        }
       }),
-      inject: [ConfigService],
-    }),
-  ],
+      inject: [ConfigService]
+    })
+  ]
 })
-export class OrmModule {}
+export class OrmModule {
+}
