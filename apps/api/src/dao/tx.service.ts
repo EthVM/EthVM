@@ -134,7 +134,7 @@ export class TxService {
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn)
         return [summaries, count]
-      }
+      },
     )
 
   }

@@ -42,9 +42,9 @@ import { DbConnection, SnakeCaseNamingStrategy } from '@app/orm/config'
           duration: 60000,
         },
       }),
-      inject: [ConfigService]
-    })
-  ]
+      inject: [ConfigService],
+    }),
+  ],
 })
 export class OrmModule {
 }
