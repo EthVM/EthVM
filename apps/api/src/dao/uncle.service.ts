@@ -3,9 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import { EntityManager, FindManyOptions, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
-import { TransactionSummary } from '@app/graphql/schema'
 import { RowCount } from '@app/orm/entities/row-counts.entity'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 
 @Injectable()
 export class UncleService {
@@ -16,7 +14,7 @@ export class UncleService {
   }
 
   async findUncleByHash(hash: string): Promise<UncleEntity | undefined> {
-    return this.uncleRepository.findOne({ where: { hash } })
+    return this.uncleRepository.findOne({ where: { hash }, cache: true })
   }
 
   async findUncles(offset: number = 0, limit: number = 20, fromUncle?: BigNumber): Promise<[UncleEntity[], number]> {
@@ -30,18 +28,21 @@ export class UncleService {
           where: {
             relation: 'uncle',
           },
+          cache: true,
         })
 
         if (totalCount === 0) return [[], totalCount]
 
         if (fromUncle) {
-          // we count all uncles greater than the from uncle and deduct from total
+          // we count all uncles greater than the from uncle and deduct from totalcache: true
           // this is much faster way of determining the count
-          const filterCount = await entityManager.count(UncleEntity, {
-            where: {
-              number: MoreThan(fromUncle),
-            },
-          })
+
+          const { count: filterCount } = await entityManager.createQueryBuilder()
+            .select('count(hash)', 'count')
+            .from(UncleEntity, 't')
+            .where({ number: MoreThan(fromUncle) })
+            .cache(true)
+            .getRawOne() as { count: number }
 
           totalCount = totalCount - filterCount
         }
@@ -53,6 +54,7 @@ export class UncleService {
           order: { nephewNumber: 'DESC', number: 'DESC' },
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         return [uncles, totalCount]
@@ -62,7 +64,7 @@ export class UncleService {
   }
 
   async findLatestUncleBlockNumber(): Promise<BigNumber> {
-    const findOptions: FindManyOptions = { order: { nephewNumber: 'DESC', number: 'DESC' }, take: 1 }
+    const findOptions: FindManyOptions = { order: { nephewNumber: 'DESC', number: 'DESC' }, take: 1, cache: true }
     const latest = await this.uncleRepository.find(findOptions)
     return latest && latest.length ? latest[0].height : new BigNumber('0')
   }

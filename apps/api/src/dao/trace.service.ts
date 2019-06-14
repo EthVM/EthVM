@@ -18,14 +18,6 @@ export class TraceService {
   ) {
   }
 
-  async findByBlockNumber(blockNumbers: string[]): Promise<TransactionTraceEntity[]> {
-    return this.traceRepository.find({ where: { blockNumber: In(blockNumbers) } })
-  }
-
-  async findByBlockHash(blockHashes: string[]): Promise<TransactionTraceEntity[]> {
-    return this.traceRepository.find({ where: { blockHash: In(blockHashes) } })
-  }
-
   async findByTxHash(txHashes: string[]): Promise<TransactionTraceEntity[]> {
     return this.traceRepository.find({ where: { transactionHash: In(txHashes) } })
   }
@@ -42,6 +34,7 @@ export class TraceService {
         where: {
           transactionHash: In(txHashes),
         },
+        cache: true,
       })
 
     return entities.map(e => {
@@ -62,6 +55,7 @@ export class TraceService {
       where: {
         blockHash: In(blockHashes),
       },
+      cache: true,
     })
 
     return entities.map(e => {

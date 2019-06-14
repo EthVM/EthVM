@@ -21,6 +21,7 @@ export class BlockMetricsService {
         where: {
           blockHash: In(blockHashes),
         },
+        cache: true,
       })
   }
 
@@ -37,12 +38,14 @@ export class BlockMetricsService {
           where: {
             relation: 'canonical_block_header',
           },
+          cache: true,
         })
 
         const entities = await txn.find(BlockMetricsTransactionEntity, {
           order: { number: 'DESC' },
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         return [entities, count]
@@ -52,7 +55,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionByBlockHash(blockHash: string): Promise<BlockMetricsTransactionEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionEntity, {
-      where: { blockHash },
+      where: { blockHash }, cache: true,
     })
   }
 
@@ -69,12 +72,14 @@ export class BlockMetricsService {
           where: {
             relation: 'canonical_block_header',
           },
+          cache: true,
         })
 
         const entities = await txn.find(BlockMetricsTransactionFeeEntity, {
           order: { number: 'DESC' },
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         return [entities, count]
@@ -84,7 +89,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionFeeByBlockHash(blockHash: string): Promise<BlockMetricsTransactionFeeEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionFeeEntity, {
-      where: { blockHash },
+      where: { blockHash }, cache: true,
     })
   }
 
@@ -202,6 +207,7 @@ export class BlockMetricsService {
       .groupBy('time')
       .orderBy({ time: 'DESC' })
       .setParameters({ start, end })
+      .cache(true)
       .getRawMany()
 
     return items.map(item => {

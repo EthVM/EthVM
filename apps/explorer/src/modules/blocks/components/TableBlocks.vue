@@ -305,7 +305,7 @@ export default class TableBlocks extends Vue {
     } else {
       const { totalCountBN } = blockPage!
       if (!this.fromBlock) {
-        this.fromBlock = totalCountBN.minus(1)
+        this.fromBlock = totalCountBN
       }
     }
 

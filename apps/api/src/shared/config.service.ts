@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import convict from 'convict'
-import {join} from 'path'
+import { join } from 'path'
 
 /* tslint:disable:max-line-length */
 const schema = {
@@ -40,6 +40,19 @@ const schema = {
       doc: 'Timescale connection URL',
       env: 'TIMESCALE_URL',
       default: 'postgres://postgres:1234@timescale/ethvm_dev',
+    },
+  },
+  redis: {
+    host: {
+      doc: 'Redis cluster host',
+      env: 'REDIS_HOST',
+      default: 'redis',
+    },
+    port: {
+      doc: 'Redis cluster port',
+      env: 'REDIS_PORT',
+      format: 'port',
+      default: 6379,
     },
   },
   graphql: {
@@ -90,6 +103,11 @@ export interface DbConfig {
   url: string
 }
 
+export interface RedisConfig {
+  host: string
+  port: number
+}
+
 @Injectable()
 export class ConfigService {
   public config: convict.Config<any>
@@ -98,7 +116,7 @@ export class ConfigService {
     const config = (this.config = convict(schema))
 
     config.loadFile(join(process.cwd(), `src/config/${this.env}.json`))
-    config.validate({allowed: 'strict'})
+    config.validate({ allowed: 'strict' })
   }
 
   get env(): string {
@@ -123,6 +141,10 @@ export class ConfigService {
 
   get db(): DbConfig {
     return this.config.get('db')
+  }
+
+  get redis(): RedisConfig {
+    return this.config.get('redis')
   }
 
   get coinGecko(): CoinGeckoConfig {

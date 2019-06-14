@@ -11,6 +11,7 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { RowCount } from '@app/orm/entities/row-counts.entity'
 import { EthService } from '@app/shared/eth.service'
+import { search } from '../../../explorer/src/core/api/apollo/types/search'
 
 @Injectable()
 export class TxService {
@@ -51,7 +52,11 @@ export class TxService {
   }
 
   async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
-    const txs = await this.transactionRepository.find({where: {transactionHash: In(hashes)}, relations: ['receipt']})
+    const txs = await this.transactionRepository.find({
+      where: { transactionHash: In(hashes) },
+      relations: ['receipt'],
+      cache: true,
+    })
     return this.findAndMapTraces(txs)
   }
 
@@ -63,8 +68,14 @@ export class TxService {
 
         const where = {blockNumber: number}
 
-        const [{count}] = await txn
-          .query('select count(transaction_hash) from transaction where block_number = $1', [number.toNumber()]) as [{ count: number }]
+        const { count } = await txn
+          .createQueryBuilder()
+          .select('COUNT(transaction_hash)', 'count')
+          .from(TransactionEntity, 't')
+          .where('block_number = :number')
+          .cache(true)
+          .setParameters({ number })
+          .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -77,6 +88,7 @@ export class TxService {
           },
           skip: offset,
           take: limit,
+          cache: true
         }
 
         const txs = await txn.find(TransactionEntity, findOptions)
@@ -96,8 +108,14 @@ export class TxService {
 
         const where = {blockHash: hash}
 
-        const [{count}] = await txn
-          .query('select count(transaction_hash) from transaction where block_hash = $1', [hash]) as [{ count: number }]
+        const { count } = await txn
+          .createQueryBuilder()
+          .select('COUNT(transaction_hash)', 'count')
+          .from(TransactionEntity, 't')
+          .where('block_hash = :hash')
+          .cache(true)
+          .setParameters({ hash })
+          .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -110,6 +128,7 @@ export class TxService {
             blockNumber: 'DESC',
             transactionIndex: 'DESC',
           },
+          cache: true,
         } as FindManyOptions)
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn)
@@ -129,79 +148,127 @@ export class TxService {
     limit: number = 20,
   ): Promise<[TransactionSummary[], number]> {
 
-    let where
-
-    let countQuery = 'select count(transaction_hash) from transaction'
-    let countArgs: any[] = []
-
-    const counterpartAddress = !!searchHash && this.ethService.isValidAddress(searchHash) ? searchHash : null
-
-    switch (filter) {
-      case FilterEnum.in:
-        if (counterpartAddress) {
-          where = {to: address, from: counterpartAddress}
-          countQuery = `${countQuery} where ("to" = $1 AND "from" = $2)`
-          countArgs = [address, counterpartAddress]
-        } else if (searchHash) {
-          where = {to: address, transactionHash: searchHash}
-          countQuery = `${countQuery} where ("to" = $1 AND "transaction_hash" = $2)`
-          countArgs = [address, searchHash]
-        } else {
-          where = {to: address}
-          countQuery = `${countQuery} where ("to" = $1)`
-          countArgs = [address]
-        }
-        break
-      case FilterEnum.out:
-        if (counterpartAddress) {
-          where = {from: address, to: counterpartAddress}
-          countQuery = `${countQuery} where ("from" = $1 AND "to" = $2)`
-          countArgs = [address, counterpartAddress]
-        } else if (searchHash) {
-          where = {from: address, transactionHash: searchHash}
-          countQuery = `${countQuery} where ("from" = $1 AND "transaction_hash" = $2)`
-          countArgs = [address, searchHash]
-        } else {
-          where = {from: address}
-          countQuery = `${countQuery} where ("from" = $1)`
-          countArgs = [address]
-        }
-        break
-      default:
-        if (counterpartAddress) {
-          where = [{from: address, to: counterpartAddress}, {to: address, from: counterpartAddress}]
-          countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
-          countArgs = [address, counterpartAddress, address, counterpartAddress]
-        } else if (searchHash) {
-          where = [{from: address, transactionHash: searchHash}, {to: address, transactionHash: searchHash}]
-          countQuery = `${countQuery} where ("from" = $1 AND "transaction_hash" = $2) OR ("to" = $3 AND "transaction_hash" = $4)`
-          countArgs = [address, searchHash, address, searchHash]
-        } else {
-          where = [{from: address}, {to: address}]
-          countQuery = `${countQuery} where "from" = $1 OR "to" = $2`
-          countArgs = [address, address]
-        }
-
-        break
-    }
-
-    const findOptions: FindManyOptions = {
-      select: ['transactionHash'],
-      where,
-      skip: offset,
-      take: limit,
-      order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'},
-    }
-
     return this.entityManager.transaction(
       'READ COMMITTED',
       async (txn): Promise<[TransactionSummary[], number]> => {
 
-        const [{count}] = await txn.query(countQuery, countArgs) as [{ count: number }]
+        const countQueryBuilder = txn.createQueryBuilder()
+          .select('count(transaction_hash)', 'count')
+          .from(TransactionEntity, 't')
+
+        let where
+
+        const counterpartAddress = !!searchHash && this.ethService.isValidAddress(searchHash) ? searchHash : null
+
+    switch (filter) {
+      case FilterEnum.in:
+        const to = address;
+
+        if (counterpartAddress) {
+          const from = counterpartAddress
+          where = { to, from }
+
+          countQueryBuilder
+            .where('"to" = :to')
+            .andWhere('"from" = :from')
+            .setParameters({ to, from })
+
+        } else if (searchHash) {
+          const transactionHash = searchHash
+          where = { to, transactionHash }
+
+          countQueryBuilder
+            .where('"to" = :to')
+            .andWhere('"transaction_hash" = :transactionHash')
+            .setParameters({ to, transactionHash })
+
+        } else {
+          where = {to: address}
+
+          countQueryBuilder
+            .where('"to" = :to')
+            .setParameters({ to })
+        }
+        break
+
+      case FilterEnum.out:
+        const from = address
+
+        if (counterpartAddress) {
+          const to = counterpartAddress
+          where = { from, to }
+
+          countQueryBuilder
+            .where('"from" = :from')
+            .andWhere('"to" = :to')
+            .setParameters({ from, to })
+
+        } else if (searchHash) {
+          const transactionHash = searchHash
+          where = { from, transactionHash }
+
+          countQueryBuilder
+            .where('"from" = :from')
+            .andWhere('"transactionHash" = :transactionHash')
+            .setParameters({ from, transactionHash })
+
+        } else {
+          where = { from }
+          countQueryBuilder
+            .where('"from" = :from')
+            .setParameters({ from })
+        }
+        break
+      default:
+
+        if (counterpartAddress) {
+          where = [{from: address, to: counterpartAddress}, {to: address, from: counterpartAddress}]
+
+          countQueryBuilder
+            .where(new Brackets(qb => {
+              qb.where('"from" = :address')
+              qb.andWhere('"to" = :counterpartAddress')
+            }))
+            .orWhere(new Brackets(qb => {
+              qb.where('"from" = :counterpartAddress')
+              qb.andWhere('"to" = :address')
+            }))
+            .setParameters({ address, counterpartAddress })
+        } else if (searchHash) {
+          where = [{from: address, transactionHash: searchHash}, {to: address, transactionHash: searchHash}]
+
+          countQueryBuilder
+            .where(new Brackets(qb => {
+              qb.where('"from" = :address')
+              qb.andWhere('"transaction_hash" = :transactionHash')
+            }))
+            .orWhere(new Brackets(qb => {
+              qb.where('"transaction_hash" = :transactionHash')
+              qb.andWhere('"to" = :address')
+            }))
+            .setParameters({ address, transactionHash: searchHash })
+        } else {
+          where = [{from: address}, {to: address}]
+
+          countQueryBuilder
+            .where('"from" = :address')
+            .orWhere('"to" = :address')
+            .setParameters({ address })
+        }
+        break
+    }
+
+        const { count } = await countQueryBuilder.cache(true).getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
-        const txs = await txn.find(TransactionEntity, findOptions)
+        const txs = await txn.find(TransactionEntity, {
+          select: ['transactionHash'],
+          where,
+          skip: offset,
+          take: limit,
+          cache: true,
+        })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn, sortField, order)
         return [summaries, count]
@@ -223,6 +290,7 @@ export class TxService {
           where: {
             relation: 'transaction',
           },
+          cache: true,
         })
 
         if (totalCount === 0) return [[], totalCount]
@@ -230,13 +298,16 @@ export class TxService {
         if (fromBlock) {
           // we count all txs in blocks greater than the from block and deduct from total
           // this is much faster way of determining the count
-          const filterCount = await entityManager.count(TransactionEntity, {
-            where: {
-              blockNumber: MoreThan(fromBlock),
-            },
-          })
+
+          const { count: filterCount } = await entityManager.createQueryBuilder()
+            .select('count(hash)', 'count')
+            .from(TransactionEntity, 't')
+            .where({ blockNumber: MoreThan(fromBlock) })
+            .cache(true)
+            .getRawOne() as { count: number }
 
           totalCount = totalCount - filterCount
+
         }
 
         const txs = await entityManager.find(TransactionEntity, {
@@ -261,6 +332,7 @@ export class TxService {
           },
           skip: offset,
           take: limit,
+          cache: true
         } as FindManyOptions)
 
         return this.summarise(entityManager, txs, totalCount)
@@ -305,6 +377,7 @@ export class TxService {
         ],
         where: {transactionHash: In(hashes)},
         order: orderObject,
+        cache: true,
       } as FindManyOptions)
 
     const [summaries, count] = await this.summarise(manager, txs, txs.length)

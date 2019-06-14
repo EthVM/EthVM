@@ -56,8 +56,8 @@ up_default() {
   echo -e "Building containers..."
   docker-compose build
 
-  echo -e "Starting up containers: traefik, api, explorer, timescale, zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb \n"
-  docker-compose up -d traefik api explorer timescale zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb
+  echo -e "Starting up containers: traefik, api, explorer, timescale, zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis \n"
+  docker-compose up -d traefik api explorer timescale zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis
 
   echo -e "Initialising kafka...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
@@ -88,9 +88,9 @@ up_simple() {
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
   ${SCRIPT_DIR}/docker-build.sh build migrator
 
-  echo "Starting up containers: traefik, timescale, explorer, api and pgweb \n"
+  echo "Starting up containers: traefik, timescale, explorer, api, pgweb and redis \n"
   docker-compose build explorer api
-  docker-compose up -d traefik timescale explorer api pgweb
+  docker-compose up -d traefik timescale explorer api pgweb redis
 
   # Give time to breathe
   sleep 10
