@@ -21,7 +21,7 @@ export class BlockMetricsService {
         where: {
           blockHash: In(blockHashes),
         },
-        cache: true
+        cache: true,
       })
   }
 
@@ -38,14 +38,14 @@ export class BlockMetricsService {
           where: {
             relation: 'canonical_block_header',
           },
-          cache: true
+          cache: true,
         })
 
         const entities = await txn.find(BlockMetricsTransactionEntity, {
           order: { number: 'DESC' },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         return [entities, count]
@@ -72,14 +72,14 @@ export class BlockMetricsService {
           where: {
             relation: 'canonical_block_header',
           },
-          cache: true
+          cache: true,
         })
 
         const entities = await txn.find(BlockMetricsTransactionFeeEntity, {
           order: { number: 'DESC' },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         return [entities, count]

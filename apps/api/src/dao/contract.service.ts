@@ -26,8 +26,8 @@ export class ContractService {
     return entityManager.find(ContractEntity, {
         where: { address: In(addresses) },
         relations: ['metadata', 'erc20Metadata', 'erc721Metadata'],
-        cache: true
-      }
+        cache: true,
+      },
     )
   }
 
@@ -46,14 +46,14 @@ export class ContractService {
           where,
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         // Get tx summaries
         const txSummaries = await this.txService
           .findSummariesByHash(
             contracts.map(c => c.traceCreatedAtTransactionHash),
-            txn
+            txn,
           )
 
         // Map summaries to contracts
@@ -70,12 +70,12 @@ export class ContractService {
             txFee: txSummary!.fee,
             timestamp: txSummary!.timestamp,
             blockNumber: c.traceCreatedAtBlockNumber,
-            txHash: c.traceCreatedAtTransactionHash
+            txHash: c.traceCreatedAtTransactionHash,
           } as ContractSummary
         })
 
         return [contractSummaries, count]
-      }
+      },
     )
   }
 }

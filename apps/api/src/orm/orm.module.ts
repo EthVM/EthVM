@@ -19,12 +19,12 @@ import { SnakeCaseNamingStrategy } from '@app/orm/config'
           type: 'redis',
           options: configService.redis,
           // global cache strategy of 15 seconds
-          duration: 60000
-        }
+          duration: 60000,
+        },
       }),
-      inject: [ConfigService]
-    })
-  ]
+      inject: [ConfigService],
+    }),
+  ],
 })
 export class OrmModule {
 }

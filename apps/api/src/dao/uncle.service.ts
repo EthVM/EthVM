@@ -28,7 +28,7 @@ export class UncleService {
           where: {
             relation: 'uncle',
           },
-          cache: true
+          cache: true,
         })
 
         if (totalCount === 0) return [[], totalCount]
@@ -54,7 +54,7 @@ export class UncleService {
           order: { nephewNumber: 'DESC', number: 'DESC' },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         return [uncles, totalCount]

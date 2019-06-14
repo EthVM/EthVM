@@ -28,7 +28,7 @@ export class AccountService {
       where: {
         author: address,
       },
-      cache: true
+      cache: true,
     })
 
     return !!header
@@ -41,7 +41,7 @@ export class AccountService {
       where: {
         creator: address,
       },
-      cache: true
+      cache: true,
     })
 
     return !!contract
