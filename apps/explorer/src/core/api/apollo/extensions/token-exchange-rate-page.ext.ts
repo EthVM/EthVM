@@ -1,5 +1,7 @@
 import { TokenExchangeRate } from '@app/core/api/apollo/types/TokenExchangeRate'
 import { TokenExchangeRatePage, TokenExchangeRatePage_items } from '@app/core/api/apollo/types/TokenExchangeRatePage'
+import { TokenUtils } from '@app/core/helper/token.utils'
+import BN from 'bignumber.js'
 
 export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_items {
   __typename!: 'TokenExchangeRate'
@@ -21,6 +23,26 @@ export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_ite
     this.priceChangePercentage24h = proto.priceChangePercentage24h
     this.symbol = proto.symbol
     this.totalVolume = proto.totalVolume
+  }
+
+  get currentPriceBN(): BN | null {
+    return TokenUtils.currentPriceBN(this)
+  }
+
+  get priceChangePercentage24hBN(): BN | null {
+    return TokenUtils.priceChangePercentage24hBN(this)
+  }
+
+  get priceChangeFormatted(): string {
+    return TokenUtils.priceChangeFormatted(this)
+  }
+
+  get priceChangeSymbol(): string {
+    return TokenUtils.priceChangeSymbol(this)
+  }
+
+  get priceChangeClass(): string {
+    return TokenUtils.priceChangeClass(this)
   }
 }
 

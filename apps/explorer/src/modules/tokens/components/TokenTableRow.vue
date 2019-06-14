@@ -5,7 +5,10 @@
         <div class="token-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-3 pr-3 pt-2 pb-2">
             <v-flex xs2 pl-1 pr-1>
-              <v-img :src="token.image" height="50px" max-width="50x" contain />
+              <div class="token-image">
+                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
+                <v-img v-else :src="token.image" contain />
+              </div>
             </v-flex>
             <v-flex xs8 pr-0 pt-0>
               <v-layout row wrap align-end justify-start pl-2>
@@ -14,10 +17,12 @@
               </v-layout>
               <v-layout row align-end justify-start pl-2>
                 <p class="black--text text-truncate mb-0 pr-1">${{ price }}</p>
-                <p v-if="changeInPrice != 'null'" :class="tokenChangeClass">( {{ tokenPriceChange }}%</p>
-                <v-img v-if="changeInPrice === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                <v-img v-if="changeInPrice === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
-                <p v-if="changeInPrice != 'null'" :class="tokenChangeClass">)</p>
+                <template v-if="token.priceChangeSymbol !== 'null'">
+                  <p :class="token.priceChangeClass">( {{ token.priceChangeFormatted }}%</p>
+                  <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                  <v-img v-if="token.priceChangeSymbol === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                  <p :class="token.priceChangeClass">)</p>
+                </template>
               </v-layout>
               <v-layout row align-center justify-start pl-2>
                 <p class="black--text mb-0 pr-1">${{ marketCap }}</p>
@@ -37,7 +42,8 @@
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
             <v-flex xs4>
               <v-layout grid-list-xs row align-center justify-start fill-height>
-                <v-img :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4" />
+                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" height="25px" max-width="25px" contain class="ml-4 mr-4" />
+                <v-img v-else :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4" />
                 <router-link class="black--text" :to="tokenLink">{{ token.name }}</router-link>
                 <p class="black--text text-uppercase mb-0 pl-1">({{ token.symbol }})</p>
               </v-layout>
@@ -47,9 +53,9 @@
             </v-flex>
             <v-flex xs2>
               <v-layout grid-list-xs row align-center justify-start>
-                <p :class="tokenChangeClass">{{ tokenPriceChange }}%</p>
-                <v-img v-if="changeInPrice === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                <v-img v-if="changeInPrice === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
+                <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
               </v-layout>
             </v-flex>
             <v-flex xs2>
@@ -70,6 +76,7 @@
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
+import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
 
 @Component
 export default class TokenTableRow extends Mixins(StringConcatMixin) {
@@ -79,19 +86,16 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Object) token: any
+  @Prop(Object) token!: TokenExchangeRatePageExt_items
 
   /*
   ===================================================================================
     Computed
   ===================================================================================
   */
-  get price(): string {
-    return this.token.currentPrice ? this.getRoundNumber(this.token.currentPrice) : '0.00'
-  }
 
-  get tokenPriceChange(): string {
-    return this.changeInPrice != 'null' ? `${this.changeInPrice}${this.getPercent(this.token.priceChangePercentage24h)}` : '0'
+  get price(): string {
+    return this.token.currentPriceBN ? this.getRoundNumber(this.token.currentPriceBN) : '0.00'
   }
 
   get volume(): string {
@@ -100,31 +104,6 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
 
   get marketCap(): string {
     return this.token.marketCap ? this.getInt(this.token.marketCap) : '0.00'
-  }
-
-  get tokenChangeClass(): string {
-    switch (this.changeInPrice) {
-      case '+': {
-        return 'txSuccess--text mb-0'
-      }
-      case '': {
-        return 'txFail--text mb-0'
-      }
-      default: {
-        return 'black--text mb-0'
-      }
-    }
-  }
-
-  get changeInPrice(): string {
-    if (!this.token.priceChangePercentage24h) {
-      return 'null'
-    }
-    const priceChangeAsBN = new BN(this.token.priceChangePercentage24h)
-    if (priceChangeAsBN.toNumber() === 0) {
-      return 'null'
-    }
-    return priceChangeAsBN.toNumber() > 0 ? '+' : ''
   }
 
   get tokenLink(): string {
