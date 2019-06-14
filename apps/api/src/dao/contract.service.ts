@@ -56,7 +56,7 @@ export class ContractService {
         const txSummaries = await this.txService
           .findSummariesByHash(
             contracts.map(c => c.traceCreatedAtTransactionHash),
-            txn,
+            txn
           )
 
         // Map summaries to contracts
@@ -73,12 +73,12 @@ export class ContractService {
             txFee: txSummary!.fee,
             timestamp: txSummary!.timestamp,
             blockNumber: c.traceCreatedAtBlockNumber,
-            txHash: c.traceCreatedAtTransactionHash,
+            txHash: c.traceCreatedAtTransactionHash
           } as ContractSummary
         })
 
         return [contractSummaries, count]
-      },
+      }
     )
   }
 }

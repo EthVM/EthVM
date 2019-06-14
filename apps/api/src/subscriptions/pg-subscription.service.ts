@@ -81,7 +81,7 @@ function inputIsPgEvent(input: any): input is PgEvent {
 // tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsPgEvent),
+    filter(inputIsPgEvent)
   )
 }
 
@@ -89,12 +89,12 @@ function isPgEvent<PgEvent>() {
 function isMetadataEvent<PgEvent>() {
 
   const tables = new Set<string>([
-    'metadata',
+    'metadata'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -105,12 +105,12 @@ function isBlockEvent<PgEvent>() {
     'canonical_block_header',
     'transaction',
     'transaction_trace',
-    'transaction_receipt',
+    'transaction_receipt'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -118,7 +118,7 @@ function isBlockEvent<PgEvent>() {
 function isBlockMetricsTransactionEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction'),
+    filter(e => e.table === 'block_metrics_transaction')
   )
 }
 
@@ -126,7 +126,7 @@ function isBlockMetricsTransactionEvent<PgEvent>() {
 function isBlockMetricsTransactionFeeEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction_fee'),
+    filter(e => e.table === 'block_metrics_transaction_fee')
   )
 }
 
@@ -226,7 +226,7 @@ export class PgSubscriptionService {
     const pgEvents$ = events$
       .pipe(
         map(event => new PgEvent(event)),
-        isPgEvent(),
+        isPgEvent()
       )
 
     //
@@ -244,7 +244,7 @@ export class PgSubscriptionService {
     blockHashes$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
 
@@ -327,7 +327,7 @@ export class PgSubscriptionService {
     blockMetrics$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
         const metrics = await blockMetricsService.findByBlockHash(blockHashes)

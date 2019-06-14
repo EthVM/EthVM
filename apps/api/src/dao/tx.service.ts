@@ -134,7 +134,7 @@ export class TxService {
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn)
         return [summaries, count]
-      },
+      }
     )
 
   }
@@ -309,6 +309,7 @@ export class TxService {
             .getRawOne() as { count: number }
 
           totalCount = totalCount - filterCount
+
         }
 
         const txs = await entityManager.find(TransactionEntity, {

@@ -8,32 +8,32 @@ const schema = {
     doc: 'The application environment.',
     format: ['production', 'development', 'staging', 'test'],
     default: 'development',
-    env: 'NODE_ENV',
+    env: 'NODE_ENV'
   },
   host: {
     doc: 'The IP address to bind.',
     format: 'ipaddress',
     default: '0.0.0.0',
-    env: 'IP_ADDRESS',
+    env: 'IP_ADDRESS'
   },
   port: {
     doc: 'The port to bind.',
     format: 'port',
     default: 3000,
-    env: 'PORT',
+    env: 'PORT'
   },
   logging: {
     level: {
       doc: 'Log level',
       env: 'LOG_LEVEL',
-      default: 'info',
-    },
+      default: 'info'
+    }
   },
   instaMining: {
     doc: 'Indicates if we are running a private development chain which can impact subscriptions',
     env: 'INSTA_MINING',
     format: 'Boolean',
-    default: false,
+    default: false
   },
   dbPrincipal: {
     url: {
@@ -61,26 +61,32 @@ const schema = {
       format: 'port',
       default: 6379,
     },
+    port: {
+      doc: 'Redis cluster port',
+      env: 'REDIS_PORT',
+      format: 'port',
+      default: 6379
+    }
   },
   graphql: {
     playground: {
       doc: 'Whether to enable to disable the graphql playground',
       env: 'GRAPHQL_PLAYGROUND',
-      default: true,
-    },
+      default: true
+    }
   },
   expressRateLimit: {
     windowMs: {
       doc: 'Express Rate Limit window(ms)',
       env: 'EXPRESS_RATE_LIMIT_WINDOW_MS',
-      default: 15 * 1000,
+      default: 15 * 1000
     },
     max: {
       doc: 'Express Rate Limit max requests per window(ms)',
       env: 'EXPRESS_RATE_LIMIT_MAX',
-      default: 100,
-    },
-  },
+      default: 100
+    }
+  }
 }
 
 export interface GraphqlConfig {
@@ -152,6 +158,10 @@ export class ConfigService {
 
   get dbMetrics(): DbConfig {
     return this.config.get('dbMetrics')
+  }
+
+  get redis(): RedisConfig {
+    return this.config.get('redis')
   }
 
   get redis(): RedisConfig {

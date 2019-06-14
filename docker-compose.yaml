@@ -48,6 +48,21 @@ services:
       TRAEFIK_DASHBOARD_ENABLED: 'true'
       TRAEFIK_PING_ENABLED: 'false'
 
+  grafana:
+    image: grafana/grafana:6.1.6
+    networks:
+      - back
+    environment:
+      GF_SERVER_ROOT_URL: 'http://grafana.ethvm.lan'
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
+      - 'traefik.backend=grafana'
+      - 'traefik.port=3000'
+
   explorer:
     build:
       context: ./apps/explorer
@@ -151,6 +166,11 @@ services:
     networks:
       - net
 
+  redis:
+    image: redis:5.0-alpine
+    networks:
+      - back
+
   # ///////////////////////////////////////////////////////
   # Processing
   # ///////////////////////////////////////////////////////
@@ -235,6 +255,7 @@ services:
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       SCHEMA_REGISTRY_JMX_PORT: 9587
 
+
   kafka-connect:
     build:
       context: apps/processing/connectors
@@ -305,21 +326,6 @@ services:
       - prometheus:/prometheus
       - ./prometheus:/config
     command: --config.file=/config/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention=168h
-
-  grafana:
-    image: grafana/grafana:6.1.6
-    networks:
-      - net
-    environment:
-      GF_SERVER_ROOT_URL: 'http://grafana.${DOMAIN}'
-      GF_SECURITY_ADMIN_PASSWORD: 'admin'
-      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
-      - 'traefik.backend=grafana'
-      - 'traefik.port=3000'
 
   kafka-connect-ui:
     image: landoop/kafka-connect-ui

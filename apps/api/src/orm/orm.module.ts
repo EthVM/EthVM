@@ -14,7 +14,7 @@ import { DbConnection, SnakeCaseNamingStrategy } from '@app/orm/config'
         synchronize: false,
         namingStrategy: new SnakeCaseNamingStrategy(),
         entities: ['src/**/**.entity{.ts,.js}'],
-        logging: ['error'],
+        logging: 'all',
         maxQueryExecutionTime: 1000,
         cache: {
           type: 'redis',
@@ -42,9 +42,9 @@ import { DbConnection, SnakeCaseNamingStrategy } from '@app/orm/config'
           duration: 60000,
         },
       }),
-      inject: [ConfigService],
-    }),
-  ],
+      inject: [ConfigService]
+    })
+  ]
 })
 export class OrmModule {
 }

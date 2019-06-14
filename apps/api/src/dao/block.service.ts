@@ -23,7 +23,7 @@ export class BlockService {
     @InjectRepository(UncleEntity, DbConnection.Principal) private readonly uncleRepository: Repository<UncleEntity>,
     @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
     private readonly traceService: TraceService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
   }
 
@@ -79,7 +79,7 @@ export class BlockService {
 
           return [
             await this.summarise(txn, headersWithRewards),
-            count,
+            count
           ]
 
         })
@@ -196,7 +196,7 @@ export class BlockService {
         numTxs: transactionHashes.length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
-        reward: rewardsByBlock.get(hash) || 0,
+        reward: rewardsByBlock.get(hash) || 0
       } as BlockSummary
 
     })
