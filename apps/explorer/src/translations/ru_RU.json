@@ -73,10 +73,10 @@
     "links": "Ссылки",
     "website": "Сайт",
     "support": "Поддержка",
-    "type": "Type",
-    "circSupply": "Circulating Supply",
-    "total": "Total of ",
-    "per": "per"
+    "type": "Тип",
+    "circSupply": "Циркулирующее предложение",
+    "total": "Всего ",
+    "per": "за"
   },
   "address": {
     "name": "Адрес | Адреса"
@@ -540,10 +540,10 @@
     }
   },
   "transfer": {
-    "internal": "Internal Transfers",
+    "internal": "Внутренний переводы",
     "INTERNAL_TX": "call",
-    "CONTRACT_CREATION": "create",
-    "CONTRACT_DESTRUCTION": "destroy",
-    "empty": "No transfers"
+    "CONTRACT_CREATION": "создано",
+    "CONTRACT_DESTRUCTION": "уничтожить",
+    "empty": "Нет переводов"
   }
 }
