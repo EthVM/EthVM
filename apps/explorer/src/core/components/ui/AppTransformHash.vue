@@ -62,15 +62,13 @@ export default class AppTransformHash extends Vue {
 }
 </script>
 
-<style scoped lang="css">
-
-.concat{
+<style scoped lang="less">
+.concat {
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 .transform-hash-container {
- overflow: hidden;
+  overflow: hidden;
 }
 .hash-container {
   min-width: 80px;
