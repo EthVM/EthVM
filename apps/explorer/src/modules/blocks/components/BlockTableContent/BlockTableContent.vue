@@ -2,20 +2,20 @@
   <div class="table-content">
     <!--
       =====================================================================================
-        TABLE HEADER
+        [DESKTOP] TABLE HEADER
       =====================================================================================
       -->
     <div class="grid-table-container table-header">
       <div class="grid-block">
         <div>{{ $t('block.number') }}</div>
         <div>Hash & Miner</div>
-        <div>{{ $tc('tx.name', 2) }}</div>
+        <div>Txn</div>
         <div>{{ $t('miner.reward-short') }}</div>
       </div>
     </div>
     <!--
       =====================================================================================
-        TABLE BODY
+        [DESKTOP] TABLE BODY
       =====================================================================================
       -->
     <div class="grid-table-container table-body">
@@ -104,5 +104,5 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
 </script>
 
 <style scoped lang="less">
-@import 'BlockRow';
+@import 'BlockTableContent';
 </style>

@@ -1,3 +1,23 @@
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 a {
   margin: 0;
   padding: 0;
@@ -6,16 +26,21 @@ a {
 
 .grid-table-container {
   .grid-block {
-    padding: 15px;
     display: grid;
     align-items: center;
-    grid-template-columns: 70px calc(100% - 270px) 80px 80px;
-    grid-gap: 20px;
+    grid-template-columns: 90px calc(100% - 260px) 80px 90px;
     border-bottom: 1px solid rgba(152, 152, 152, 0.2);
+
+    @media only screen and (min-width: 601px) {}
+
+    >div {
+      padding: 10px;
+    }
   }
 }
 
 .table-header {
+  padding-right: 3px;
   background-color: #8391a8;
   color: white;
   font-weight: 600;
@@ -34,8 +59,6 @@ a {
 .hash {
   margin-bottom: 5px;
 }
-
-.miner {}
 
 .uncle-block {
   width: 100%;
@@ -62,7 +85,6 @@ a {
   border: 1px solid #8391a8;
   padding: 5px 10px;
 
-  //display: inline-block;
   &::after {
     content: '';
     position: absolute;

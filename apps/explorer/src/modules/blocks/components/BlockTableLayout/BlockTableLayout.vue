@@ -1,5 +1,5 @@
 <template>
-  <div class="block-table-container">
+  <div class="block-table-layout">
     <notice-new-block @reload="resetFromBlock" />
 
     <!--
@@ -31,8 +31,8 @@
       TABLE CONTENT
     =====================================================================================
     -->
-    <block-row v-if="!hasError && !loading" :page-type="pageType" :blocks="blocks" />
-    <div v-if="loading">loading...</div>
+    <block-table-content v-if="!hasError && !loading" :page-type="pageType" :blocks="blocks" />
+
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -46,15 +46,9 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-container v-if="!hasError" flat :style="getStyle" class="scroll-y pa-2">
+    <v-container v-if="!hasError && loading" flat :style="getStyle" class="scroll-y pa-2">
       <v-layout column class="mb-1">
-        <v-flex v-if="!loading">
-          <div v-for="(block, index) in blocks" :key="index">
-            <table-blocks-row :block="block" :page-type="pageType" />
-          </div>
-        </v-flex>
-
-        <div xs12 v-if="loading">
+        <div xs12>
           <div v-for="i in maxItems" :key="i">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
               <v-flex xs6 sm2 order-xs1>
@@ -95,7 +89,7 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import BlockRow from '@app/modules/blocks/components/BlockRow/BlockRow.vue'
+import BlockTableContent from '@app/modules/blocks/components/BlockTableContent/BlockTableContent.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
@@ -115,7 +109,7 @@ const MAX_ITEMS = 50
     TableBlocksRow,
     NoticeNewBlock,
     TitleLastBlocks,
-    BlockRow
+    BlockTableContent
   },
   data() {
     return {
@@ -339,5 +333,5 @@ export default class TableBlocks extends Vue {
 </script>
 
 <style scoped lang="less">
-@import 'BlockTable.less';
+@import 'BlockTableLayout.less';
 </style>
