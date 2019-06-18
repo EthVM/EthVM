@@ -50,7 +50,8 @@
     "status": "Status",
     "input": "Input Data",
     "func": "Function",
-    "method": "Method ID"
+    "method": "Method ID",
+    "self": "Self Sent"
   },
   "token": {
     "name": "Token | Tokens",
@@ -71,14 +72,21 @@
     "transfers": "Transfers",
     "links": "Links",
     "website": "Website",
-    "support": "Support"
+    "support": "Support",
+    "type": "Type",
+    "circSupply": "Circulating Supply",
+    "total": "Total of ",
+    "per": "per"
   },
   "address": {
     "name": "Address"
   },
   "contract": {
     "name": "Contract | Contracts",
-    "creator": "Contract Creator"
+    "creator": "Contract Creator",
+    "hash": "Contract #",
+    "created": "Created at",
+    "total": "Total"
   },
   "gas": {
     "name": "Gas",
@@ -143,7 +151,6 @@
       "not-exist": "This transaction does not exist",
       "no-pending": "There are no pending transactions"
     },
-    "no-tokens": "Address does not hold any supported tokens",
     "load": "Loading",
     "load-block-tx": "Loading block transactions",
     "not-mined": "This block has not been mined yet",
@@ -161,9 +168,11 @@
     },
     "not-found": "Oops! Page Not Found :(",
     "welcome": {
-      "title": "Welcome to EthVM!",
-      "text1": "We're still in our Alpha stage, so some features may not work to their full potential. Reach out to us with any bugs you find at ",
-      "text2": ", so we can continue to make EthVM even better!",
+      "title": "Welcome to EthVM Beta!",
+      "text1": "We are now on Ethereum mainnet, so have a look around and let us know about any bugs or feature requests at ",
+      "text2": ", or go to ",
+      "text3": "for updates and to contribute. ",
+      "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",
       "btn": "Onward!"
     },
     "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
@@ -172,7 +181,16 @@
       "tx": "new tx | new txs",
       "block": "new block | new blocks"
     },
-    "sec": "sec"
+    "sec": "sec",
+    "uncle": {
+      "no-uncles": "There are no uncles"
+    },
+    "token": {
+      "no-tokens": "There are no supported tokens",
+      "no-tokens-for-address": "Address does not hold any supported tokens",
+      "no-holders": "There are no holders of this token"
+    },
+    "coming-soon": "Coming soon"
   },
   "charts": {
     "name": "Charts",
@@ -249,7 +267,8 @@
     },
     "captions": {
       "all": " in the Ethereum blockchain since the begining ",
-      "other": " in the Ethereum blockchain in last "
+      "other": " in the Ethereum blockchain in last ",
+      "description": " in the Ethereum blockchain"
     }
   },
   "btn": {
@@ -259,7 +278,8 @@
     "first": "First",
     "last": "Last",
     "back-home": "Go Back Home",
-    "report": "Report Issue"
+    "report": "Report Issue",
+    "details": "View Details"
   },
   "search": {
     "name": "Search",
@@ -518,5 +538,12 @@
       "title": "Changes to Privacy Policy",
       "p1": "We may modify this Policy from time to time. If we make any changes, we will change the Last Updated date above. We also may provide additional notice, as applicable, depending on the type of change. If you object to any changes, you may stop using the Services. Your continued use of the Services after we publish or otherwise provide notice about our changes to the Policy means that you are consenting to the updated Policy."
     }
+  },
+  "transfer": {
+    "internal": "Internal Transfers",
+    "INTERNAL_TX": "call",
+    "CONTRACT_CREATION": "create",
+    "CONTRACT_DESTRUCTION": "destroy",
+    "empty": "No transfers"
   }
 }
