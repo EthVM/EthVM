@@ -12,6 +12,11 @@ CREATE TABLE transaction_fee
 CREATE INDEX idx_transaction_fee__address ON transaction_fee(address);
 CREATE INDEX idx_transaction_fee__transaction_fee ON transaction_fee(transaction_fee);
 
+/* create indexes for sorting canonical_transaction view */
+CREATE INDEX idx_transaction__value ON "transaction"("value");
+CREATE INDEX idx_transaction__timestamp ON "transaction"("timestamp");
+CREATE INDEX idx_transaction_trace__root_error ON transaction_trace(root_error);
+
 DROP VIEW canonical_transaction;
 
 /* recreate canonical_transaction view with "successful" field to represent trace status */
@@ -31,10 +36,10 @@ FROM "transaction" AS t
 WHERE cb.number IS NOT NULL
   AND t.transaction_hash IS NOT NULL;
 
-/* create indexes for sorting canonical_transaction view */
-CREATE INDEX idx_transaction__value ON "transaction"("value");
-CREATE INDEX idx_transaction__timestamp ON "transaction"("timestamp");
-CREATE INDEX idx_transaction_trace__root_error ON transaction_trace(root_error);
+/* add indexes for sorting token_search_results */
+CREATE INDEX idx_token_exchange_rates__current_price ON token_exchange_rates(current_price);
+CREATE INDEX idx_eth_list_contract_metadata__website ON eth_list_contract_metadata(website);
+CREATE INDEX idx_eth_list_contract_metadata__logo ON eth_list_contract_metadata(logo);
 
 /* create token_search_result view for sorting erc20 and erc721 tokens matching a query string */
 CREATE VIEW token_search_result AS
