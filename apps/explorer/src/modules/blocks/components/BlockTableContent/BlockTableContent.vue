@@ -1,29 +1,76 @@
 <template>
   <div class="table-content">
-    <!--
-      =====================================================================================
-        [DESKTOP] TABLE HEADER
-      =====================================================================================
-      -->
-    <div class="grid-table-container table-header">
-      <div class="grid-block">
-        <div>{{ $t('block.number') }}</div>
-        <div>Hash & Miner</div>
-        <div>Txn</div>
-        <div>{{ $t('miner.reward-short') }}</div>
+    <div class="desktop-content">
+      <!--
+        =====================================================================================
+          [DESKTOP] TABLE HEADER
+        =====================================================================================
+        -->
+      <div class="grid-table-container table-header">
+        <div class="grid-block">
+          <div>{{ $t('block.number') }}</div>
+          <div>Hash & Miner</div>
+          <div>Txn</div>
+          <div>{{ $t('miner.reward-short') }}</div>
+        </div>
+      </div>
+      <!--
+        =====================================================================================
+          [DESKTOP] TABLE BODY
+        =====================================================================================
+        -->
+      <div class="grid-table-container table-body">
+        <div class="grid-block" v-for="(block, index) in blocks" :key="index">
+          <div>
+            <router-link :to="`/block/${block.hash}`">{{ block.numberBN }}</router-link>
+          </div>
+          <div>
+            <div class="flax-row hash-block hash">
+              <p class="value-name">{{ $t('common.hash') }}:</p>
+              <app-transform-hash :hash="block.hash" :link="`/block/${block.hash}`" />
+            </div>
+            <div class="flax-row hash-block miner">
+              <p class="value-name">{{ $t('miner.name') }}:</p>
+              <app-transform-hash :hash="block.author" :italic="true" :link="`/address/${block.author}`" />
+            </div>
+            <div v-if="block.uncleHashes.length" class="uncle-block hash-block">
+              <div>{{ $tc('uncle.name', 2) }}:</div>
+              <div v-for="(uncle, index) in block.uncleHashes" :key="index" class="flax-row">
+                <p class="value-name">{{ $t('common.hash') }}:</p>
+                <app-transform-hash :hash="uncle" :link="`/uncle/${uncle}`" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="transactions">
+              <p>{{ block.numSuccessfulTxsBN }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
+              <p v-if="block.numFailedTxsBN > 0" class="tx-failed">{{ block.numFailedTxsBN }} {{ $tc('tx.failed', failedTranslate()) }}</p>
+            </div>
+          </div>
+          <div>
+            <p class="">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
+          </div>
+        </div>
       </div>
     </div>
-    <!--
-      =====================================================================================
-        [DESKTOP] TABLE BODY
-      =====================================================================================
-      -->
-    <div class="grid-table-container table-body">
-      <div class="grid-block" v-for="(block, index) in blocks" :key="index">
-        <div>
-          <router-link :to="`/block/${block.hash}`">{{ block.numberBN }}</router-link>
-        </div>
-        <div>
+    <!-- DESKTOP CONTENT -->
+    <div class="mobile-content">
+      <!--
+        =====================================================================================
+          [MOBILE] TABLE BODY
+        =====================================================================================
+        -->
+      <div class="table-body">
+        <div class="table-item" v-for="(block, index) in blocks" :key="index">
+          <div class="block-tx">
+            <div class="block-number">
+              <router-link :to="`/block/${block.hash}`">Block# {{ block.numberBN }}</router-link>
+            </div>
+            <div class="transactions">
+              <p v-if="block.numFailedTxsBN > 0" class="tx-failed">{{ block.numFailedTxsBN }} {{ $tc('tx.failed', failedTranslate()) }}</p>
+              <p>{{ block.numSuccessfulTxsBN }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
+            </div>
+          </div>
           <div class="flax-row hash-block hash">
             <p class="value-name">{{ $t('common.hash') }}:</p>
             <app-transform-hash :hash="block.hash" :link="`/block/${block.hash}`" />
@@ -32,25 +79,14 @@
             <p class="value-name">{{ $t('miner.name') }}:</p>
             <app-transform-hash :hash="block.author" :italic="true" :link="`/address/${block.author}`" />
           </div>
-          <div v-if="block.uncleHashes.length" class="uncle-block hash-block">
-            <div>{{ $tc('uncle.name', 2) }}:</div>
-            <div v-for="(uncle, index) in block.uncleHashes" :key="index" class="flax-row">
-              <p class="value-name">{{ $t('common.hash') }}:</p>
-              <app-transform-hash :hash="uncle" :link="`/uncle/${uncle}`" />
-            </div>
+          <div class="flax-row reward-block">
+            <p class="value-name">Reward:</p>
+            <p>{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
           </div>
-        </div>
-        <div>
-          <div class="transactions">
-            <p>{{ block.numSuccessfulTxsBN }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
-            <p v-if="block.numFailedTxsBN > 0" class="tx-failed">{{ block.numFailedTxsBN }} {{ $tc('tx.failed', failedTranslate()) }}</p>
-          </div>
-        </div>
-        <div>
-          <p class="">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
         </div>
       </div>
     </div>
+    <!-- MOBILE CONTENT -->
   </div>
 </template>
 

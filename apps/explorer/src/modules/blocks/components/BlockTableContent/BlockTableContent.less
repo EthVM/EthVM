@@ -1,3 +1,8 @@
+/*
+=====================================================================================
+  custom scroll bar
+=====================================================================================
+*/
 /* width */
 ::-webkit-scrollbar {
   width: 3px;
@@ -18,37 +23,15 @@
   background: #555;
 }
 
+/*
+=====================================================================================
+  other styles
+=====================================================================================
+*/
 a {
   margin: 0;
   padding: 0;
   line-height: initial;
-}
-
-.grid-table-container {
-  .grid-block {
-    display: grid;
-    align-items: center;
-    grid-template-columns: 90px calc(100% - 260px) 80px 90px;
-    border-bottom: 1px solid rgba(152, 152, 152, 0.2);
-
-    @media only screen and (min-width: 601px) {}
-
-    >div {
-      padding: 10px;
-    }
-  }
-}
-
-.table-header {
-  padding-right: 3px;
-  background-color: #8391a8;
-  color: white;
-  font-weight: 600;
-}
-
-.table-body {
-  max-height: 500px;
-  overflow-y: auto;
 }
 
 .flax-row {
@@ -56,49 +39,147 @@ a {
   align-items: center;
 }
 
-.hash {
-  margin-bottom: 5px;
+.table-body {
+  max-height: 500px;
+  overflow-y: auto;
 }
 
-.uncle-block {
-  width: 100%;
+.mobile-content {
+  display: none;
 }
 
-.transactions {
-  p {
-    line-height: 17px;
+@media only screen and (max-width: 599px) {
+  .desktop-content {
+    display: none;
   }
 
-  .tx-failed {
-    font-size: 10px;
-    font-weight: 400;
-    border: 1px solid black;
-    display: inline-block;
-    padding: 0px 3px;
-    line-height: 15px;
+  .mobile-content {
+    display: block;
   }
 }
 
-.uncle-block {
-  margin-top: 10px;
-  position: relative;
-  border: 1px solid #8391a8;
-  padding: 5px 10px;
+/*
+=====================================================================================
+  desktop content
+=====================================================================================
+*/
+.desktop-content {
+  .grid-table-container {
+    .grid-block {
+      display: grid;
+      align-items: center;
+      grid-template-columns: 90px calc(100% - 260px) 80px 90px;
+      border-bottom: 1px solid rgba(152, 152, 152, 0.2);
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: -69px;
-    height: 17px;
-    width: 69px;
-    border-bottom: 1px solid #8391a8;
-    border-left: 1px solid #8391a8;
-    border-radius: 0 0 0 2px;
+      >div {
+        padding: 10px;
+      }
+    }
+  }
+
+  .table-header {
+    padding-right: 3px;
+    background-color: #8391a8;
+    color: white;
+    font-weight: 600;
+  }
+
+  .hash {
+    margin-bottom: 5px;
+  }
+
+  .uncle-block {
+    width: 100%;
+  }
+
+  .transactions {
+    p {
+      line-height: 17px;
+    }
+
+    .tx-failed {
+      font-size: 10px;
+      font-weight: 400;
+      border: 1px solid black;
+      display: inline-block;
+      padding: 0px 3px;
+      line-height: 15px;
+    }
+  }
+
+  .uncle-block {
+    margin-top: 10px;
+    position: relative;
+    border: 1px solid #8391a8;
+    padding: 5px 10px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: -69px;
+      height: 17px;
+      width: 69px;
+      border-bottom: 1px solid #8391a8;
+      border-left: 1px solid #8391a8;
+      border-radius: 0 0 0 2px;
+    }
+  }
+
+  .value-name {
+    color: #8391a8;
+    min-width: 45px;
   }
 }
 
-.value-name {
-  color: #8391a8;
-  min-width: 45px;
+/*
+=====================================================================================
+  mobile content
+=====================================================================================
+*/
+.mobile-content {
+  .table-item {
+    border: 1px solid rgba(152, 152, 152, 0.5);
+    padding: 10px 15px;
+    margin: 0px 0px 10px 0;
+
+    >div {
+      margin: 5px 0;
+    }
+  }
+
+  .transactions {
+    p {
+      line-height: 17px;
+    }
+
+    .tx-failed {
+      font-size: 10px;
+      font-weight: 400;
+      border: 1px solid black;
+      display: inline-block;
+      padding: 0px 3px;
+      line-height: 15px;
+    }
+  }
+
+  .block-tx {
+    display: flex;
+    align-items: center;
+
+    .transactions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+
+      .tx-failed {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .value-name {
+    color: #8391a8;
+    min-width: 65px;
+  }
 }
