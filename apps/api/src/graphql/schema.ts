@@ -101,11 +101,6 @@ export interface Account {
     isContract: boolean;
 }
 
-export interface AddressBalance {
-    address: string;
-    balance: BigNumber;
-}
-
 export interface AggregateBlockMetric {
     timestamp: Date;
     avgBlockTime?: number;
@@ -391,7 +386,7 @@ export interface Reward {
 
 export interface Search {
     type: SearchType;
-    address?: AddressBalance;
+    address?: Account;
     block?: Block;
     uncle?: Uncle;
     tx?: Transaction;

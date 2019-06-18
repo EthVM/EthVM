@@ -23,49 +23,73 @@ export class SearchService {
   }
 
   async search(query: string = ''): Promise<SearchDto | null> {
-    const s: SearchDto = { type: SearchType.None }
+    const s: SearchDto = {type: SearchType.None}
     if (query.substring(0, 2) !== '0x') {
       query = `0x${query}`
     }
 
     // Check Accounts
     if (this.ethService.isValidAddress(query)) {
-      const account = await this.accountService.findAccountByAddress(query)
-      if (account != null) {
-
-        const isMiner = await this.accountService.findIsMiner(account.address)
-        const isContractCreator = await this.accountService.findIsContractCreator(account.address)
-
-        s.address = new AccountDto({ ...account, isMiner, isContractCreator })
-        s.type = SearchType.Address
-        return s
-      }
+      const accountResult = await this.searchForAccount(query)
+      if (accountResult) { return accountResult }
     }
 
     // Check Block, Uncle or Tx
     if (this.ethService.isValidHash(query)) {
-      const block = await this.blockService.findOne({ hash: query })
-      if (block != null) {
-        s.block = new BlockDto(block)
-        s.type = SearchType.Block
-        return s
-      }
+      const blockResult = await this.searchForBlock(query)
+      if (blockResult) { return blockResult }
 
-      const uncle = await this.uncleService.findUncleByHash(query)
-      if (uncle != null) {
-        s.uncle = new UncleDto(uncle)
-        s.type = SearchType.Uncle
-        return s
-      }
+      const uncleResult = await this.searchForUncle(query)
+      if (uncleResult) { return uncleResult }
 
-      const tx = await this.txService.findOneByHash(query)
-      if (tx != null) {
-        s.tx = new TxDto(tx)
-        s.type = SearchType.Tx
-        return s
-      }
+      const txResult = await this.searchForTx(query)
+      if (txResult) { return txResult }
     }
 
     return s
   }
+
+  private async searchForAccount(query: string): Promise<SearchDto | undefined> {
+
+    const account = await this.accountService.findAccountByAddress(query)
+
+    if (!account) return undefined
+
+    const isMiner = await this.accountService.findIsMiner(account.address)
+    const isContractCreator = await this.accountService.findIsContractCreator(account.address)
+
+    return new SearchDto({ account: new AccountDto({...account, isMiner, isContractCreator}), type: SearchType.Address })
+
+  }
+
+  private async searchForBlock(query: string): Promise<SearchDto | undefined> {
+
+    const block = await this.blockService.findOne({hash: query})
+
+    if (!block) return undefined
+
+    return new SearchDto({ block: new BlockDto(block), type: SearchType.Block })
+
+  }
+
+  private async searchForUncle(query: string): Promise<SearchDto | undefined> {
+
+    const uncle = await this.uncleService.findUncleByHash(query)
+
+    if (!uncle) return undefined
+
+    return new SearchDto({ uncle: new UncleDto(uncle), type: SearchType.Uncle })
+
+  }
+
+  private async searchForTx(query: string): Promise<SearchDto | undefined> {
+
+    const tx = await this.txService.findOneByHash(query)
+
+    if (!tx) return undefined
+
+    return new SearchDto({ tx: new TxDto(tx), type: SearchType.Tx })
+
+  }
+
 }

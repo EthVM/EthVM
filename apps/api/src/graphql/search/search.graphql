@@ -4,7 +4,7 @@ type Query {
 
 type Search {
   type: SearchType!
-  address: AddressBalance
+  address: Account
   block: Block
   uncle: Uncle
   tx: Transaction
@@ -18,11 +18,6 @@ enum SearchType {
   Tx,
   Token,
   None
-}
-
-type AddressBalance {
-  address: String!
-  balance: BigNumber!
 }
 
 type TokenSearchResult {
