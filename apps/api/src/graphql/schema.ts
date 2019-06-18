@@ -471,7 +471,7 @@ export interface TokenSearchResult {
     symbol?: string;
     name?: string;
     currentPrice?: BigNumber;
-    image?: string;
+    logo?: string;
     website?: string;
 }
 

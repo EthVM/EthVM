@@ -6,7 +6,7 @@ export class TokenSearchResultDto implements TokenSearchResult {
 
   contractAddress!: string
   currentPrice?: BigNumber
-  image?: string
+  logo?: string
   name?: string
   symbol?: string
   website?: string

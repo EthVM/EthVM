@@ -10,6 +10,7 @@ import { UncleService } from '@app/dao/uncle.service'
 import { AccountService } from '@app/dao/account.service'
 import { AccountDto } from '@app/graphql/accounts/account.dto'
 import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
+import { TokenService } from '@app/dao/token.service'
 
 @Injectable()
 export class SearchService {
@@ -19,34 +20,46 @@ export class SearchService {
     private readonly uncleService: UncleService,
     private readonly txService: TxService,
     private readonly ethService: EthService,
+    private readonly tokenService: TokenService,
   ) {
   }
 
   async search(query: string = ''): Promise<SearchDto | null> {
-    const s: SearchDto = {type: SearchType.None}
-    if (query.substring(0, 2) !== '0x') {
-      query = `0x${query}`
-    }
 
     // Check Accounts
     if (this.ethService.isValidAddress(query)) {
-      const accountResult = await this.searchForAccount(query)
+      const accountResult = await this.searchForAccount(this.convertToHex(query))
       if (accountResult) { return accountResult }
     }
 
     // Check Block, Uncle or Tx
     if (this.ethService.isValidHash(query)) {
-      const blockResult = await this.searchForBlock(query)
+      const q = this.convertToHex(query)
+      const blockResult = await this.searchForBlock(q)
       if (blockResult) { return blockResult }
 
-      const uncleResult = await this.searchForUncle(query)
+      const uncleResult = await this.searchForUncle(q)
       if (uncleResult) { return uncleResult }
 
-      const txResult = await this.searchForTx(query)
+      const txResult = await this.searchForTx(q)
       if (txResult) { return txResult }
     }
 
-    return s
+    // Check Tokens
+    const tokenResult = await this.searchForTokens(query)
+    if (tokenResult) { return tokenResult }
+
+    return {type: SearchType.None}
+  }
+
+  private convertToHex(query: string): string {
+
+    // Add "0x" to query string if not present
+    if (query.substring(0, 2) !== '0x') {
+      query = `0x${query}`
+    }
+
+    return query
   }
 
   private async searchForAccount(query: string): Promise<SearchDto | undefined> {
@@ -58,8 +71,7 @@ export class SearchService {
     const isMiner = await this.accountService.findIsMiner(account.address)
     const isContractCreator = await this.accountService.findIsContractCreator(account.address)
 
-    return new SearchDto({ account: new AccountDto({...account, isMiner, isContractCreator}), type: SearchType.Address })
-
+    return new SearchDto({ address: new AccountDto({...account, isMiner, isContractCreator}), type: SearchType.Address })
   }
 
   private async searchForBlock(query: string): Promise<SearchDto | undefined> {
@@ -89,6 +101,16 @@ export class SearchService {
     if (!tx) return undefined
 
     return new SearchDto({ tx: new TxDto(tx), type: SearchType.Tx })
+
+  }
+
+  private async searchForTokens(query: string): Promise<SearchDto | undefined> {
+
+    const tokens = await this.tokenService.findByNameOrSymbol(query)
+
+    if (!tokens.length) return undefined
+
+    return new SearchDto({ tokens, type: SearchType.Token })
 
   }
 

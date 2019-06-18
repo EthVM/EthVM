@@ -5,6 +5,7 @@ import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer'
 import BigNumber from 'bignumber.js'
 import {ContractMetadataEntity} from '@app/orm/entities/contract-metadata.entity'
+import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 
 @Entity('erc20_metadata')
 export class Erc20MetadataEntity {
@@ -48,5 +49,12 @@ export class Erc20MetadataEntity {
     referencedColumnName: 'address',
   })
   contractMetadata?: ContractMetadataEntity
+
+  @OneToOne(type => TokenExchangeRateEntity, exchangeRate => exchangeRate.erc20Metadata)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'address'
+  })
+  tokenExchangeRate?: TokenExchangeRateEntity
 
 }

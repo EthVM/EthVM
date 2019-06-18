@@ -25,6 +25,6 @@ type TokenSearchResult {
   symbol: String
   name: String
   currentPrice: BigNumber
-  image: String
+  logo: String
   website: String
 }
