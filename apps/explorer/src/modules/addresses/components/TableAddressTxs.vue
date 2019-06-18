@@ -11,27 +11,18 @@
           <v-flex>
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
-                <v-btn
-                  class="tx-filter-select-container text-capitalize ma-0"
-                  flat
-                  v-on="on"
-                >
-                <v-layout row justify-space-between text-xs-left pa-3>
-                  <p class="text-xs-left">{{optionString}} </p>
-                  <!-- Add Icon change/animation on activation -->
-                  <v-icon class="theme--light text-xs-right primary--text" >arrow_drop_down</v-icon>
-                </v-layout>
+                <v-btn class="tx-filter-select-container text-capitalize ma-0" flat v-on="on">
+                  <v-layout row justify-space-between text-xs-left pa-3>
+                    <p class="text-xs-left">{{ optionString }}</p>
+                    <!-- Add Icon change/animation on activation -->
+                    <v-icon class="theme--light text-xs-right primary--text">arrow_drop_down</v-icon>
+                  </v-layout>
                 </v-btn>
               </template>
               <v-list flat>
-                <v-list-tile
-                  v-for="(option, index) in options"
-                  :key="index"
-                  :value="option.value"
-                  @click="filter=option.value"
-                >
-                <!-- Add Class for active choice -->
-                  <v-list-tile-title >{{ option.text }}</v-list-tile-title>
+                <v-list-tile v-for="(option, index) in options" :key="index" :value="option.value" @click="filter = option.value">
+                  <!-- Add Class for active choice -->
+                  <v-list-tile-title>{{ option.text }}</v-list-tile-title>
                 </v-list-tile>
               </v-list>
             </v-menu>
@@ -51,11 +42,11 @@
     -->
 
     <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-      <app-paginate :total="pages" @newPage="setPage" :current-page="page"/>
+      <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
     </v-layout>
 
-    <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0"/>
-    <app-error :has-error="hasError" :message="error" class="mb-4"/>
+    <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
+    <app-error :has-error="hasError" :message="error" class="mb-4" />
 
     <!--
     =====================================================================================
@@ -64,16 +55,10 @@
     -->
     <v-layout>
       <v-flex hidden-sm-and-up pt-0 pb-0 pl-3>
-        <app-footnotes :footnotes="footnotes" pl-2 pr-2/>
+        <app-footnotes :footnotes="footnotes" pl-2 pr-2 />
       </v-flex>
       <v-flex hidden-xs-only sm12>
-        <v-card
-          v-if="!hasError"
-          :color="headerColor"
-          flat
-          class="white--text pl-3 pr-1"
-          height="40px"
-        >
+        <v-card v-if="!hasError" :color="headerColor" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex xs4 sm3 md1 pl-3>
               <h5>{{ $t('block.number') }}</h5>
@@ -113,15 +98,10 @@
         <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
-              <table-txs-row :tx="tx" :is-pending="pending"/>
+              <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
-            <v-layout
-              v-if="pageType !== 'home' && pages > 1"
-              justify-end
-              row
-              class="pb-1 pr-2 pl-2"
-            >
-              <app-paginate :total="pages" @newPage="setPage" :current-page="page"/>
+            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+              <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
             </v-layout>
             <v-card v-if="!transactions.length" flat>
               <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
@@ -129,15 +109,7 @@
           </v-flex>
           <v-flex xs12 v-if="loading">
             <div v-for="i in maxItems" :key="i">
-              <v-layout
-                grid-list-xs
-                row
-                wrap
-                align-center
-                justify-start
-                fill-height
-                class="pl-2 pr-2 pt-2"
-              >
+              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
                 <v-flex xs3 sm3 md1 pl-3>
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
@@ -157,7 +129,7 @@
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
               </v-layout>
-              <v-divider class="mb-2 mt-2"/>
+              <v-divider class="mb-2 mt-2" />
             </div>
           </v-flex>
         </v-layout>
@@ -527,4 +499,3 @@ export default class TableTxs extends TableTxsMixin {
   width: 120px;
 }
 </style>
-
