@@ -237,9 +237,9 @@ export class TokenService {
       .orderBy('has_current_price', 'DESC')
       .addOrderBy('has_logo', 'DESC')
       .addOrderBy('has_website', 'DESC')
-      .addOrderBy('name', 'ASC')
-      .addOrderBy('symbol', 'ASC')
-      .addOrderBy('address', 'ASC')
+      .addOrderBy('UPPER(name)', 'ASC', 'NULLS LAST')
+      .addOrderBy('UPPER(symbol)', 'ASC', 'NULLS LAST')
+      .addOrderBy('UPPER(address)', 'ASC', 'NULLS LAST')
       .take(20)
       .getMany()
 
