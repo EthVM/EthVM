@@ -53,7 +53,7 @@ export class Erc20MetadataEntity {
   @OneToOne(type => TokenExchangeRateEntity, exchangeRate => exchangeRate.erc20Metadata)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   tokenExchangeRate?: TokenExchangeRateEntity
 
