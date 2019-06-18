@@ -25,7 +25,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-0">
-        <table-txs :address="addressRef" :page-type="'address'" :max-items="max"></table-txs>
+        <table-address-txs :address="addressRef" :page-type="'address'" :max-items="max"></table-address-txs>
       </v-tab-item>
       <!--
       =====================================================================================
@@ -82,7 +82,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import TableAddressContracts from '@app/modules/addresses/components/TableAddressContracts.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import TableAddressTxs from '@app/modules/addresses/components/TableAddressTxs.vue'
 import { addressDetail } from '@app/modules/addresses/addresses.graphql'
 import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
 import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
@@ -99,7 +99,7 @@ const MAX_ITEMS = 10
     TableBlocks,
     TableAddressTokens,
     TableAddressContracts,
-    TableTxs,
+    TableAddressTxs,
     TransfersTable
   },
   data() {
