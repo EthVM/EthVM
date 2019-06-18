@@ -7,13 +7,12 @@ import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FindManyOptions, Repository, FindOneOptions, Any, Like } from 'typeorm'
-import {TokenDto} from '@app/graphql/tokens/dto/token.dto'
-import {TokenMetadataDto} from '@app/graphql/tokens/dto/token-metadata.dto'
-import { Token } from '@app/graphql/schema'
+import { Any, FindManyOptions, FindOneOptions, Like, Repository } from 'typeorm'
+import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
+import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
 import BigNumber from 'bignumber.js'
 import { TokenSearchResultDto } from '@app/graphql/search/dto/token-search-result.dto'
-import { sort } from 'semver'
+import { TokenSearchResultEntity } from '@app/orm/entities/token-search-result.entity'
 
 @Injectable()
 export class TokenService {
@@ -32,6 +31,8 @@ export class TokenService {
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
+    @InjectRepository(TokenSearchResultEntity)
+    private readonly tokenSearchResultRepository: Repository<TokenSearchResultEntity>,
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
@@ -111,25 +112,6 @@ export class TokenService {
     }
 
     return new TokenMetadataDto(data)
-  }
-
-  private constructTokenSearchResultDto(entity: Erc20MetadataEntity | Erc721MetadataEntity): TokenSearchResultDto {
-
-    const { contractMetadata } = entity
-    const logo = contractMetadata ? contractMetadata.logo : undefined
-    const tokenExchangeRate = entity instanceof Erc20MetadataEntity ? entity.tokenExchangeRate : undefined
-
-    const data: TokenSearchResultDto = {
-      name: entity.name,
-      contractAddress: entity.address,
-      symbol: entity.symbol,
-      website: contractMetadata ? contractMetadata.website : undefined,
-      logo: logo ? JSON.parse(logo).src : undefined,
-      currentPrice: tokenExchangeRate ? tokenExchangeRate.currentPrice : undefined
-    }
-
-    return new TokenSearchResultDto(data)
-
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
@@ -247,81 +229,25 @@ export class TokenService {
   async findByNameOrSymbol(query: string): Promise<TokenSearchResultDto[]> {
 
     query = `%${query}%`
-    const findOptions = {
-      where: [
-        { name: Like(query) },
-        { symbol: Like(query) }
-      ],
-      order: { name: 'ASC' },
-      take: 20
-    }
 
-    // Search for erc20 and erc721 tokens by name/symbol
-    const erc20Tokens = await this.erc20MetadataRepository.find({ ...findOptions, relations: ['tokenExchangeRate', 'contractMetadata'] } as FindManyOptions)
-    const erc721Tokens = await this.erc721MetadataRepository.find({ ...findOptions, relations: ['contractMetadata'] } as FindManyOptions)
+    // Search for tokens by name/symbol
+    const entities = await this.tokenSearchResultRepository.createQueryBuilder('tsr')
+      .where('tsr.name ILIKE :query', { query })
+      .orWhere('tsr.symbol ILIKE :query', { query })
+      .orderBy('has_current_price', 'DESC')
+      .addOrderBy('has_logo', 'DESC')
+      .addOrderBy('has_website', 'DESC')
+      .addOrderBy('name', 'ASC')
+      .addOrderBy('symbol', 'ASC')
+      .addOrderBy('address', 'ASC')
+      .take(20)
+      .getMany()
 
-    // Construct dtos
-    const tokenSearchResults: TokenSearchResultDto[] = []
-    erc20Tokens.forEach(token => tokenSearchResults.push(this.constructTokenSearchResultDto(token)))
-    erc721Tokens.forEach(token => tokenSearchResults.push(this.constructTokenSearchResultDto(token)))
-
-    if (!tokenSearchResults.length) {
+    if (!entities.length) {
       return []
     }
 
-    // Sort/limit results
-    const sortedResults: TokenSearchResultDto[] = []
-
-    const resultsWithCurrentPrice = tokenSearchResults.filter(t => !!t.currentPrice).sort(this.compareTokenSearchResultsAlphabetically)
-    sortedResults.push(...resultsWithCurrentPrice)
-
-    if (sortedResults.length >= 20) {
-      return sortedResults.slice(0, 19)
-    }
-
-      const resultsWithIcon = tokenSearchResults.filter(t => !t.currentPrice && !!t.logo).sort(this.compareTokenSearchResultsAlphabetically)
-      sortedResults.push(...resultsWithIcon)
-
-    if (sortedResults.length >= 20) {
-      return sortedResults.slice(0, 19)
-    }
-
-      const resultsWithWebsite = tokenSearchResults
-        .filter(t => !t.currentPrice && !t.logo && !!t.website)
-        .sort(this.compareTokenSearchResultsAlphabetically)
-      sortedResults.push(...resultsWithWebsite)
-
-    if (sortedResults.length >= 20) {
-      return sortedResults.slice(0, 19)
-    }
-
-    const remainingResults = tokenSearchResults.filter(t => !t.currentPrice && !t.logo && !t.website)
-    sortedResults.push(...remainingResults)
-
-    return sortedResults.slice(0, 19)
+    return entities.map(e => new TokenSearchResultDto(e))
   }
 
-  private compareTokenSearchResultsAlphabetically(a: TokenSearchResultDto, b: TokenSearchResultDto): number {
-
-    // Sort by name if set
-    if (a.name && b.name) {
-      return a.name < b.name ? 1 : -1
-    } else if (!a.name) {
-      return -1
-    } else if (!b.name) {
-      return 1
-    }
-
-    // Sort by symbol if set
-    if (a.symbol && b.symbol) {
-      return a.symbol < b.symbol ? 1 : -1
-    } else if (!a.symbol) {
-      return -1
-    } else if (!b.symbol) {
-      return 1
-    }
-
-    // Sort by contractAddress
-    return a.contractAddress < b.contractAddress ? 1 : -1
-  }
 }

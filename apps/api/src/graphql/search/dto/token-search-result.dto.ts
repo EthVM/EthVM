@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 
 export class TokenSearchResultDto implements TokenSearchResult {
 
-  contractAddress!: string
+  address!: string
   currentPrice?: BigNumber
   logo?: string
   name?: string

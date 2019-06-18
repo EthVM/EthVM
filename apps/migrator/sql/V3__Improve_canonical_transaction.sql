@@ -45,43 +45,38 @@ SELECT  e20.name AS name,
         elcm.website AS website,
         elcm.logo AS logo,
           CASE
-            WHEN current_price IS NULL THEN false
-            ELSE true
+            WHEN current_price IS NULL THEN FALSE
+            ELSE TRUE
           END
         AS has_current_price,
           CASE
-            WHEN logo IS NULL THEN false
-            ELSE true
+            WHEN logo IS NULL THEN FALSE
+            ELSE TRUE
           END
         AS has_logo,
           CASE
-            WHEN website IS NULL THEN false
-            ELSE true
+            WHEN website IS NULL THEN FALSE
+            ELSE TRUE
           END
         AS has_website
 FROM erc20_metadata AS e20
-        LEFT JOIN canonical_token_exchange_rate AS ter ON ter.address = e20.address
+        LEFT JOIN token_exchange_rates AS ter ON ter.address = e20.address
         LEFT JOIN eth_list_contract_metadata AS elcm ON elcm.address = e20.address
 UNION ALL
-SELECT  e721.name AS name,
-        e721.symbol AS symbol,
-        e721.address AS address
-        elcm.website AS website,
-        elcm.logo AS logo
-          CASE
-            WHEN current_price IS NULL THEN false
-            ELSE true
-          END
-        AS has_current_price,
-          CASE
-            WHEN logo IS NULL THEN false
-            ELSE true
-          END
-        AS has_logo,
-          CASE
-            WHEN website IS NULL THEN false
-            ELSE true
-          END
-        AS has_website,
-FROM erc721_metdata AS e721
-        LEFT JOIN eth_list_contract_metadata AS elcm ON elcm.address = e721.address;
+SELECT  e721.name,
+        e721.symbol,
+        e721.address,
+        NULL,
+        elcm2.website,
+        elcm2.logo,
+        FALSE,
+        CASE
+          WHEN logo IS NULL THEN FALSE
+          ELSE TRUE
+        END,
+        CASE
+          WHEN website IS NULL THEN FALSE
+          ELSE TRUE
+        END
+FROM erc721_metadata AS e721
+        LEFT JOIN eth_list_contract_metadata AS elcm2 ON elcm2.address = e721.address;

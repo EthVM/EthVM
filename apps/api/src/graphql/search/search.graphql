@@ -21,7 +21,7 @@ enum SearchType {
 }
 
 type TokenSearchResult {
-  contractAddress: String!
+  address: String!
   symbol: String
   name: String
   currentPrice: BigNumber
