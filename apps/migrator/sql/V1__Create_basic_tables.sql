@@ -11,23 +11,8 @@ VALUES ('canonical_block_header', 0),
        ('transaction', 0),
        ('transaction_trace', 0),
        ('transaction_receipt', 0),
-       ('uncle', 0);
-
-CREATE FUNCTION adjust_count()
-  RETURNS TRIGGER AS
-$$
-DECLARE
-BEGIN
-  IF TG_OP = 'INSERT' THEN
-    EXECUTE 'UPDATE row_count set count=count +1 where relation = ''' || TG_RELNAME || '''';
-    RETURN NEW;
-  ELSIF TG_OP = 'DELETE' THEN
-    EXECUTE 'UPDATE row_count set count=count -1 where relation = ''' || TG_RELNAME || '''';
-    RETURN OLD;
-  END IF;
-END;
-$$
-  LANGUAGE 'plpgsql';
+       ('uncle', 0),
+       ('contract', 0);
 
 /* Canonical blocks table which is updated on fork */
 
@@ -61,12 +46,6 @@ CREATE INDEX idx_block_header_number ON canonical_block_header (number DESC);
 CREATE INDEX idx_block_header_hash ON canonical_block_header (hash);
 CREATE INDEX idx_block_header_parent_hash ON canonical_block_header (parent_hash);
 CREATE INDEX idx_block_header_author ON canonical_block_header (author);
-
-CREATE TRIGGER canonical_block_header_count
-  BEFORE INSERT OR DELETE
-  ON canonical_block_header
-  FOR EACH ROW
-EXECUTE PROCEDURE adjust_count();
 
 CREATE FUNCTION notify_canonical_block_header() RETURNS TRIGGER AS
 $body$
@@ -133,13 +112,6 @@ CREATE INDEX idx_uncle_nephew_hash ON uncle (nephew_hash);
 CREATE INDEX idx_uncle_number ON uncle (number);
 CREATE INDEX idx_uncle_height ON uncle (height);
 
-CREATE TRIGGER uncle_count
-  BEFORE INSERT OR DELETE
-  ON uncle
-  FOR EACH ROW
-EXECUTE PROCEDURE adjust_count();
-
-
 /* All transactions including possible transactions from old forks */
 CREATE TABLE "transaction"
 (
@@ -169,13 +141,6 @@ CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
 CREATE INDEX idx_transaction_transaction_index ON transaction (transaction_index DESC);
 CREATE INDEX idx_transaction_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
-
-CREATE TRIGGER transaction_count
-  BEFORE INSERT OR DELETE
-  ON transaction
-  FOR EACH ROW
-EXECUTE PROCEDURE adjust_count();
-
 
 CREATE FUNCTION notify_transaction() RETURNS TRIGGER AS
 $body$
@@ -241,13 +206,6 @@ CREATE INDEX idx_transaction_receipt_to ON transaction_receipt ("to");
 CREATE INDEX idx_transaction_receipt_from_to ON transaction_receipt ("from", "to");
 CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("contract_address");
 
-CREATE TRIGGER transaction_receipt_count
-  BEFORE INSERT OR DELETE
-  ON transaction_receipt
-  FOR EACH ROW
-EXECUTE PROCEDURE adjust_count();
-
-
 CREATE FUNCTION notify_transaction_receipt() RETURNS TRIGGER AS
 $body$
 DECLARE
@@ -301,13 +259,6 @@ CREATE TABLE transaction_trace
 
 CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
 CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
-
-CREATE TRIGGER transaction_trace_count
-  BEFORE INSERT OR DELETE
-  ON transaction_trace
-  FOR EACH ROW
-EXECUTE PROCEDURE adjust_count();
-
 
 CREATE FUNCTION notify_transaction_trace() RETURNS TRIGGER AS
 $body$
@@ -402,13 +353,6 @@ CREATE TABLE contract
 CREATE INDEX idx_contract_creator ON contract (creator);
 CREATE INDEX idx_contract_contract_type ON contract (contract_type);
 CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
-
-CREATE TRIGGER contract_count
-  BEFORE INSERT OR DELETE
-  ON contract
-  FOR EACH ROW
-EXECUTE PROCEDURE adjust_count();
-
 
 CREATE VIEW canonical_contract AS
 SELECT c.*
