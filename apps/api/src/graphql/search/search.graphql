@@ -8,6 +8,7 @@ type Search {
   block: Block
   uncle: Uncle
   tx: Transaction
+  tokens: [TokenSearchResult]
 }
 
 enum SearchType {
@@ -15,10 +16,20 @@ enum SearchType {
   Block,
   Uncle,
   Tx,
+  Token,
   None
 }
 
 type AddressBalance {
   address: String!
   balance: BigNumber!
+}
+
+type TokenSearchResult {
+  contractAddress: String!
+  symbol: String
+  name: String
+  currentPrice: BigNumber
+  image: String
+  website: String
 }

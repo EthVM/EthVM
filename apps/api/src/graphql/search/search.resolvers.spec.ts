@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing'
 import { SearchResolvers } from './search.resolvers'
-import { SearchDto } from './search.dto'
+import { SearchDto } from './dto/search.dto'
 import { SearchType } from '../schema'
 import { SearchService } from '../../dao/search.service'
 import { BlockDto } from '../blocks/dto/block.dto'

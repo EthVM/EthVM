@@ -59,6 +59,7 @@ export enum SearchType {
     Block = "Block",
     Uncle = "Uncle",
     Tx = "Tx",
+    Token = "Token",
     None = "None"
 }
 
@@ -394,6 +395,7 @@ export interface Search {
     block?: Block;
     uncle?: Uncle;
     tx?: Transaction;
+    tokens?: TokenSearchResult[];
 }
 
 export interface ISubscription {
@@ -467,6 +469,15 @@ export interface TokenMetadata {
 export interface TokenPage {
     items: Token[];
     totalCount: number;
+}
+
+export interface TokenSearchResult {
+    contractAddress: string;
+    symbol?: string;
+    name?: string;
+    currentPrice?: BigNumber;
+    image?: string;
+    website?: string;
 }
 
 export interface Trace {

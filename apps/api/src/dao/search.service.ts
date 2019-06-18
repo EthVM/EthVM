@@ -1,6 +1,6 @@
 import { SearchType } from '@app/graphql/schema'
 import { BlockService } from '@app/dao/block.service'
-import { SearchDto } from '@app/graphql/search/search.dto'
+import { SearchDto } from '@app/graphql/search/dto/search.dto'
 import { TxService } from '@app/dao/tx.service'
 import { EthService } from '@app/shared/eth.service'
 import { Injectable } from '@nestjs/common'
