@@ -35,3 +35,53 @@ WHERE cb.number IS NOT NULL
 CREATE INDEX idx_transaction__value ON "transaction"("value");
 CREATE INDEX idx_transaction__timestamp ON "transaction"("timestamp");
 CREATE INDEX idx_transaction_trace__root_error ON transaction_trace(root_error);
+
+/* create token_search_result view for sorting erc20 and erc721 tokens matching a query string */
+CREATE VIEW token_search_result AS
+SELECT  e20.name AS name,
+        e20.symbol AS symbol,
+        e20.address AS address,
+        ter.current_price AS current_price,
+        elcm.website AS website,
+        elcm.logo AS logo,
+          CASE
+            WHEN current_price IS NULL THEN false
+            ELSE true
+          END
+        AS has_current_price,
+          CASE
+            WHEN logo IS NULL THEN false
+            ELSE true
+          END
+        AS has_logo,
+          CASE
+            WHEN website IS NULL THEN false
+            ELSE true
+          END
+        AS has_website
+FROM erc20_metadata AS e20
+        LEFT JOIN canonical_token_exchange_rate AS ter ON ter.address = e20.address
+        LEFT JOIN eth_list_contract_metadata AS elcm ON elcm.address = e20.address
+UNION ALL
+SELECT  e721.name AS name,
+        e721.symbol AS symbol,
+        e721.address AS address
+        elcm.website AS website,
+        elcm.logo AS logo
+          CASE
+            WHEN current_price IS NULL THEN false
+            ELSE true
+          END
+        AS has_current_price,
+          CASE
+            WHEN logo IS NULL THEN false
+            ELSE true
+          END
+        AS has_logo,
+          CASE
+            WHEN website IS NULL THEN false
+            ELSE true
+          END
+        AS has_website,
+FROM erc721_metdata AS e721
+        LEFT JOIN eth_list_contract_metadata AS elcm ON elcm.address = e721.address;
