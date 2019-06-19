@@ -8,6 +8,7 @@ import { UncleDto } from '../uncles/dto/uncle.dto'
 import { TxDto } from '../txs/dto/tx.dto'
 import { AccountDto } from '../accounts/account.dto'
 import { MetadataService } from '../../dao/metadata.service'
+import { TokenSearchResultDto } from './dto/token-search-result.dto'
 
 const addressHashOne = '0000000000000000000000000000000000000001'
 const addressHashTwo = '0000000000000000000000000000000000000002'
@@ -57,6 +58,35 @@ const uncles = {
   }
 }
 
+const contractAddressHash1 = '0x0000000000000001'
+const contractAddressHash2 = '0x0000000000000002'
+const contractAddressHash3 = '0x0000000000000003'
+const contractAddressHash4 = '0x0000000000000004'
+const tokensData = [
+  {
+    name: 'TokenA',
+    symbol: 'A',
+    address: contractAddressHash1,
+    currentPrice: 1
+  },
+  {
+    name: 'Token B',
+    symbol: 'B',
+    address: contractAddressHash2,
+    currentPrice: 2
+  },
+  {
+    name: 'Token C',
+    symbol: 'C',
+    address: contractAddressHash3
+  },
+  {
+    name: 'test',
+    symbol: 'T',
+    address: contractAddressHash4
+  }
+]
+
 const metadataServiceMock = {
   async isSyncing() {
     return false
@@ -95,6 +125,11 @@ const searchServiceMock = {
       return s
     }
 
+    const tokens = tokensData.filter(t => t.name.toLowerCase().includes(query.toLowerCase()) ||  t.symbol.toLowerCase().includes(query.toLowerCase()))
+    if (tokens.length) {
+      s.type = SearchType.Token
+      s.tokens = tokens.map(t => new TokenSearchResultDto(t))
+    }
     return s
   }
 }
@@ -142,6 +177,7 @@ describe('SearchResolvers', () => {
       expect(balanceTwo).toHaveProperty('address', { address: addressHashTwo, inTxCount: 0, outTxCount: 0, totalTxCount: 0 })
 
       expect(balanceOne).not.toEqual(balanceTwo)
+
     })
 
     it('should return an instance of SearchDto with Type = SearchType.block and block field set when query matches a block', async () => {
@@ -213,11 +249,36 @@ describe('SearchResolvers', () => {
       expect(uncleOne).not.toEqual(uncleTwo)
     })
 
-    it('should return a SearchDto entity with type None and address/block/tx/uncle fields not set when query does not match any of these types', async () => {
+    it('should should return an instance of SearchDto with Type = SearchType.Token and tokens field set when query matches one or more tokens', async () => {
+      const tokensOne = await searchResolvers.search('token')
+      const tokensTwo = await searchResolvers.search('A')
+
+      expect(tokensOne).not.toBeNull()
+      expect(tokensOne).toBeInstanceOf(SearchDto)
+      expect(tokensOne).toHaveProperty('type', SearchType.Token)
+      expect(tokensOne).toHaveProperty('tokens')
+      if (tokensOne) {
+        expect(tokensOne.tokens).toHaveLength(3)
+      }
+
+      expect(tokensTwo).not.toBeNull()
+      expect(tokensTwo).toBeInstanceOf(SearchDto)
+      expect(tokensTwo).toHaveProperty('type', SearchType.Token)
+      expect(tokensTwo).toHaveProperty('tokens')
+      if (tokensTwo) {
+        expect(tokensTwo.tokens).toHaveLength(1)
+      }
+
+      expect(tokensOne).not.toEqual(tokensTwo)
+
+    })
+
+    it('should return a SearchDto entity with type None and address/block/tx/uncle/tokens fields not set when query does not match any of these types', async () => {
       const balanceThree = await searchResolvers.search(addressHashThreee)
       const blockThree = await searchResolvers.search(blockHashThree)
       const txThree = await searchResolvers.search(txHashThree)
       const uncleThree = await searchResolvers.search(uncleHashThree)
+      const tokensThree = await searchResolvers.search('foo')
 
       expect(balanceThree).not.toBeNull()
       expect(balanceThree).toBeInstanceOf(SearchDto)
@@ -238,6 +299,11 @@ describe('SearchResolvers', () => {
       expect(uncleThree).toBeInstanceOf(SearchDto)
       expect(uncleThree).toHaveProperty('type', SearchType.None)
       expect(uncleThree).not.toHaveProperty('uncle')
+
+      expect(tokensThree).not.toBeNull()
+      expect(tokensThree).toBeInstanceOf(SearchDto)
+      expect(tokensThree).toHaveProperty('type', SearchType.None)
+      expect(tokensThree).not.toHaveProperty('tokens')
     })
   })
 })
