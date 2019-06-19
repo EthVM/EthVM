@@ -19,7 +19,7 @@
           [DESKTOP] TABLE BODY
         =====================================================================================
         -->
-      <div class="grid-table-container table-body">
+      <div class="grid-table-container table-body" :class="pageType != 'home' ? '' : 'scroll'">
         <div class="grid-block" v-for="(block, index) in blocks" :key="index">
           <div>
             <router-link :to="`/block/${block.hash}`">{{ block.numberBN }}</router-link>
@@ -110,7 +110,7 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop({ type: String, default: 'home' }) pageType!: string
+  @Prop({ type: String, default: '' }) pageType!: string
   @Prop(Object) block!: BlockSummaryPageExt_items
   @Prop(Object) blocks!: BlockSummaryPageExt_items
 

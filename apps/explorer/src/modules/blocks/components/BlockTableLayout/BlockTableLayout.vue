@@ -7,10 +7,10 @@
       TITLE
     =====================================================================================
     -->
-    <div>
+    <div class="block-table-title-container">
       <!-- Title with [pagination] for dedicated [Blocks page] -->
       <title-last-blocks v-if="pageType != 'home'" :title="getTitle">
-        <div v-if="pages > 1 && !hasError">
+        <div class="pagination-container" v-if="pages > 1 && !hasError">
           <!-- Inserting [pagination] component into title -->
           <app-paginate
             :total="pages"
@@ -43,7 +43,7 @@
 
     <!--
     =====================================================================================
-      TABLE BODY
+      LOADING
     =====================================================================================
     -->
     <v-container v-if="!hasError && loading" flat :style="getStyle" class="scroll-y pa-2">
@@ -69,7 +69,13 @@
         </div>
       </v-layout>
     </v-container>
-    <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+
+    <!--
+    =====================================================================================
+      BOTTOM PAGINATION
+    =====================================================================================
+    -->
+    <div v-if="pageType != 'home' && pages > 1" class="bottom-pagination-container">
       <app-paginate
         :total="pages"
         @newPage="setPage"
@@ -78,7 +84,7 @@
         :has-first="!simplePagination"
         :has-last="!simplePagination"
       />
-    </v-layout>
+    </div>
   </div>
 </template>
 

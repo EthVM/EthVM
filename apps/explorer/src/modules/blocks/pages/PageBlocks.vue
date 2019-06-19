@@ -4,7 +4,7 @@
     <app-card-stats-group />
     <v-layout row wrap justify-center mb-4>
       <v-flex xs12>
-        <table-blocks :max-items="max" />
+        <last-blocks :max-items="max" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -14,6 +14,7 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+import LastBlocks from '@app/modules/blocks/components/BlockTableLayout/BlockTableLayout.vue'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
 
@@ -23,7 +24,8 @@ const MAX_ITEMS = 50
   components: {
     AppBreadCrumbs,
     AppCardStatsGroup,
-    TableBlocks
+    TableBlocks,
+    LastBlocks
   }
 })
 export default class PageBlocks extends Vue {
