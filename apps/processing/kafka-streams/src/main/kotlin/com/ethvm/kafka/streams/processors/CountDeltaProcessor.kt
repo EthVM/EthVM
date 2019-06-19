@@ -1,12 +1,10 @@
 package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.processing.AccountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
-import com.ethvm.avro.processing.TraceKeyRecord
 import com.ethvm.avro.processing.TransactionCountDeltaListRecord
 import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.common.extensions.reverse
@@ -81,7 +79,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
             )
         }
       }.toTopic(CanonicalCountDelta)
-
   }
 
   private fun canonicalUnclesCountDeltas(builder: StreamsBuilder) {
@@ -102,14 +99,12 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
             )
         }
       }.toTopic(CanonicalCountDelta)
-
   }
 
   private fun canonicalTransactionTraceCountDeltas(builder: StreamsBuilder) {
 
     CanonicalTraces.stream(builder)
       .map { k, v ->
-
 
         when (v) {
           null -> null
@@ -141,11 +136,9 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
                 .setCount(count)
                 .build()
             )
-
           }
         }
       }.toTopic(CanonicalCountDelta)
-
   }
 
   private fun canonicalTransactionReceiptCountDeltas(builder: StreamsBuilder) {
@@ -166,7 +159,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
             )
         }
       }.toTopic(CanonicalCountDelta)
-
   }
 
   private fun canonicalTransactionCountDeltas(canonicalTransactions: KStream<CanonicalKeyRecord, TransactionListRecord?>) {
@@ -188,7 +180,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
         }
       }
       .toTopic(CanonicalCountDelta)
-
   }
 
   private fun addressTransactionCountDeltas(canonicalTransactions: KStream<CanonicalKeyRecord, TransactionListRecord?>) {

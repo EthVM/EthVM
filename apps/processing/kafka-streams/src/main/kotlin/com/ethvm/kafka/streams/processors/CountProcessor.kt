@@ -21,7 +21,6 @@ import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.Materialized
 import org.joda.time.DateTime
 import java.util.Properties
-import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
 class CountProcessor : AbstractKafkaProcessor() {
 
@@ -85,7 +84,6 @@ class CountProcessor : AbstractKafkaProcessor() {
       )
       .toStream()
       .toTopic(CanonicalCount)
-
   }
 
   private fun aggregateTransactionCounts(builder: StreamsBuilder) {
