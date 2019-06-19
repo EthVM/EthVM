@@ -317,5 +317,14 @@ protocol Processing {
     long totalOut = 0;
   }
 
+  record CanonicalCountKeyRecord {
+    string entity;
+    union { null, decimal(80, 0) } number = null;
+  }
+
+  record CanonicalCountRecord {
+    long count;
+  }
+
 }
 

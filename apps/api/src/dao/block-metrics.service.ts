@@ -4,7 +4,7 @@ import { EntityManager, In } from 'typeorm'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
 import { unitOfTime } from 'moment'
-import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metrics-transaction-fee.entity'
 import { BlockMetricsTransactionEntity } from '@app/orm/entities/block-metrics-transaction.entity'
 import moment = require('moment')
@@ -32,10 +32,10 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{ count }] = await txn.find(RowCount, {
+        const [{ count }] = await txn.find(CanonicalCount, {
           select: ['count'],
           where: {
-            relation: 'canonical_block_header',
+            entity: 'block_header',
           },
         })
 
@@ -64,10 +64,10 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{ count }] = await txn.find(RowCount, {
+        const [{ count }] = await txn.find(CanonicalCount, {
           select: ['count'],
           where: {
-            relation: 'canonical_block_header',
+            entity: 'block_header',
           },
         })
 
