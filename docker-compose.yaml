@@ -120,7 +120,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: ethvm/parity:experiment
+    image: ethvm/parity:stable-ethvm
     networks:
       - back
     volumes:
@@ -203,7 +203,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      KAFKA_COMPRESSION_TYPE: "zstd"
+#      KAFKA_COMPRESSION_TYPE: "zstd"
       KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
       KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS: 120000
