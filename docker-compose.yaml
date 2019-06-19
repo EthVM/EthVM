@@ -105,7 +105,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: ethvm/parity:ethvm-stable
+    image: ethvm/parity:stable-ethvm
     networks:
       - back
     volumes:
