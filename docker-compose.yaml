@@ -307,28 +307,6 @@ services:
     environment:
       ZK_HOSTS: zookeeper:2181
 
-  burrow:
-    image: solsson/burrow
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
-      - kafka-1
-    networks:
-      - back
-    ports:
-      - 8000:8000
-    volumes:
-      - ${PWD}/docker/images/burrow:/etc/burrow/
-      - ${PWD}/tmp:/var/tmp/burrow
-
-  burrow-exporter:
-    image: simenduev/burrow-exporter
-    restart: unless-stopped
-    depends_on:
-      - burrow
-    networks:
-      - back
-
   pgweb:
     image: sosedoff/pgweb:0.11.2
     restart: unless-stopped
