@@ -11,7 +11,7 @@
           <v-flex>
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
-                <v-btn class="tx-filter-select-container text-capitalize ma-0" flat v-on="on">
+                <v-btn class="tx-filter-select-container box-border text-capitalize ma-0" flat v-on="on">
                   <v-layout row justify-space-between text-xs-left pa-3>
                     <p class="text-xs-left">{{ optionString }}</p>
                     <!-- Add Icon change/animation on activation -->
@@ -31,6 +31,18 @@
       </v-flex>
       <!-- Sort (MObile Only)-->
       <!-- Search -->
+      <v-flex>
+        <div class="box-border">
+          <v-layout row align-center justify-start pa-2>
+            <v-icon class="info--text search pl-1">search </v-icon>
+            <v-flex grow>
+              <input v-model="searchInput" :placeholder="$t('search.address-tx')" class="search-tx-input" />
+            </v-flex>
+            <v-btn flat transparent class="primary--text text-capitalize ma-0">Search</v-btn>
+          </v-layout>
+        </div>
+
+      </v-flex>
       <!-- Pagination -->
     </v-layout>
     <!-- End Tx Input Filter -->
@@ -495,7 +507,14 @@ export default class TableTxs extends TableTxsMixin {
 </script>
 <style scoped lang="css">
 .tx-filter-select-container {
-  border: solid 1px #b4bfd2;
   width: 120px;
+}
+
+.box-border{
+  border: solid 1px #b4bfd2;
+}
+
+.search-tx-input{
+  width:100%;
 }
 </style>

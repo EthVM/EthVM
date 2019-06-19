@@ -79,6 +79,7 @@ Vue.use(Vuetify, {
     txPen: '#eea66b',
     lineGrey: '#efefef',
     tableGrey: '#fbfcfe',
+    lightGrey: '#d4d4d4',
     tabActive: '#3844b8',
     uncleGrey: '#eff1f6',
     sync: '#ffe7d6',
