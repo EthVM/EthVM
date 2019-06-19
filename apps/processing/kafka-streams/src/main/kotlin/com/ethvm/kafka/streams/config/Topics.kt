@@ -20,6 +20,8 @@ import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
+import com.ethvm.avro.processing.CanonicalCountKeyRecord
+import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
@@ -45,6 +47,8 @@ import com.ethvm.kafka.streams.Serdes.BlockMetricsHeader
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransaction
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionFee
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionTrace
+import com.ethvm.kafka.streams.Serdes.CanonicalCount
+import com.ethvm.kafka.streams.Serdes.CanonicalCountKey
 import com.ethvm.kafka.streams.Serdes.CanonicalKey
 import com.ethvm.kafka.streams.Serdes.Contract
 import com.ethvm.kafka.streams.Serdes.ContractKey
@@ -113,6 +117,9 @@ object Topics {
   val CanonicalReceipts = KafkaTopic<CanonicalKeyRecord, TransactionReceiptListRecord?>("canonical_receipts", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionReceiptListRecord.`SCHEMA$`, ReceiptList())
   val CanonicalTraces = KafkaTopic<CanonicalKeyRecord, TraceListRecord?>("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())
   val CanonicalUncles = KafkaTopic<CanonicalKeyRecord, UncleListRecord?>("canonical_uncles", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), UncleListRecord.`SCHEMA$`, UncleList())
+
+  val CanonicalCountDelta = KafkaTopic<CanonicalCountKeyRecord, CanonicalCountRecord>("canonical_count_delta", CanonicalCountKeyRecord.`SCHEMA$`, CanonicalCountKey(), CanonicalCountRecord.`SCHEMA$`, CanonicalCount())
+  val CanonicalCount = KafkaTopic<CanonicalCountKeyRecord, CanonicalCountRecord>("canonical_count", CanonicalCountKeyRecord.`SCHEMA$`, CanonicalCountKey(), CanonicalCountRecord.`SCHEMA$`, CanonicalCount())
 
   val Transaction = KafkaTopic("transaction", TransactionKeyRecord.`SCHEMA$`, TransactionKey(), TransactionRecord.`SCHEMA$`, Transaction())
   val TransactionReceipt = KafkaTopic("transaction_receipt", TransactionReceiptKeyRecord.`SCHEMA$`, TransactionReceiptKey(), TransactionReceiptRecord.`SCHEMA$`, TransactionReceipt())

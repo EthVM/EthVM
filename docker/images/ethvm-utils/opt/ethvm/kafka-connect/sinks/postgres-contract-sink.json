@@ -10,7 +10,7 @@
     "insert.mode": "upsert",
     "batch.size": 1000,
     "consumer.max.poll.records": 5000,
-    "consumer.fetch.min.bytes": 900000,
+    "consumer.fetch.min.bytes": 100000,
     "consumer.fetch.wait.max.ms": 1000,
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",
