@@ -297,7 +297,7 @@
   "search": {
     "name": "Search",
     "default": "Search Block / Address / Tx",
-    "address-tx": "Tx Hash/Address"
+    "address-tx": "Tx Hash / Address"
   },
 
   "filter": {
