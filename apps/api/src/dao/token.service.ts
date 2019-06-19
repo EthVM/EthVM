@@ -7,12 +7,12 @@ import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Any, FindManyOptions, FindOneOptions, Like, Repository } from 'typeorm'
+import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
 import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
 import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
 import BigNumber from 'bignumber.js'
-import { TokenSearchResultDto } from '@app/graphql/search/dto/token-search-result.dto'
-import { TokenSearchResultEntity } from '@app/orm/entities/token-search-result.entity'
+import { TokenSearchEntity } from '@app/orm/entities/token-search.entity'
+import { TokenSearchDto } from '@app/graphql/search/dto/token-search.dto'
 
 @Injectable()
 export class TokenService {
@@ -31,8 +31,8 @@ export class TokenService {
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
-    @InjectRepository(TokenSearchResultEntity)
-    private readonly tokenSearchResultRepository: Repository<TokenSearchResultEntity>,
+    @InjectRepository(TokenSearchEntity)
+    private readonly tokenSearchRepository: Repository<TokenSearchEntity>,
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
@@ -226,12 +226,12 @@ export class TokenService {
     return tokenMetadataDtos
   }
 
-  async findByNameOrSymbol(query: string): Promise<TokenSearchResultDto[]> {
+  async findByNameOrSymbol(query: string): Promise<TokenSearchDto[]> {
 
     query = `%${query}%`
 
     // Search for tokens by name/symbol
-    const entities = await this.tokenSearchResultRepository.createQueryBuilder('tsr')
+    const entities = await this.tokenSearchRepository.createQueryBuilder('tsr')
       .where('tsr.name ILIKE :query', { query })
       .orWhere('tsr.symbol ILIKE :query', { query })
       .orderBy('has_current_price', 'DESC')
@@ -247,7 +247,7 @@ export class TokenService {
       return []
     }
 
-    return entities.map(e => new TokenSearchResultDto(e))
+    return entities.map(e => new TokenSearchDto(e))
   }
 
 }

@@ -1,4 +1,4 @@
-import { Block, Search, SearchType, Transaction, Uncle, Account, TokenSearchResult } from '@app/graphql/schema'
+import { Block, Search, SearchType, Transaction, Uncle, Account, TokenSearch } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 
 export class SearchDto implements Search {
@@ -8,7 +8,7 @@ export class SearchDto implements Search {
   block?: Block
   uncle?: Uncle
   tx?: Transaction
-  tokens?: TokenSearchResult[]
+  tokens?: TokenSearch[]
 
   constructor(data: any) {
     assignClean(this, data)

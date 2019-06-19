@@ -3,8 +3,8 @@ import { assignClean } from '@app/shared/utils'
 import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
 import BigNumber from 'bignumber.js'
 
-@Entity('token_search_result')
-export class TokenSearchResultEntity {
+@Entity('token_search')
+export class TokenSearchEntity {
 
   constructor(data: any) {
     assignClean(this, data);

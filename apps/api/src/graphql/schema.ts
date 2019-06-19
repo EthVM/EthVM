@@ -390,7 +390,7 @@ export interface Search {
     block?: Block;
     uncle?: Uncle;
     tx?: Transaction;
-    tokens?: TokenSearchResult[];
+    tokens?: TokenSearch[];
 }
 
 export interface ISubscription {
@@ -466,7 +466,7 @@ export interface TokenPage {
     totalCount: number;
 }
 
-export interface TokenSearchResult {
+export interface TokenSearch {
     address: string;
     symbol?: string;
     name?: string;

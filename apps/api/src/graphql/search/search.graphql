@@ -8,7 +8,7 @@ type Search {
   block: Block
   uncle: Uncle
   tx: Transaction
-  tokens: [TokenSearchResult]
+  tokens: [TokenSearch]
 }
 
 enum SearchType {
@@ -20,7 +20,7 @@ enum SearchType {
   None
 }
 
-type TokenSearchResult {
+type TokenSearch {
   address: String!
   symbol: String
   name: String

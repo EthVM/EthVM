@@ -8,7 +8,7 @@ import { UncleDto } from '../uncles/dto/uncle.dto'
 import { TxDto } from '../txs/dto/tx.dto'
 import { AccountDto } from '../accounts/account.dto'
 import { MetadataService } from '../../dao/metadata.service'
-import { TokenSearchResultDto } from './dto/token-search-result.dto'
+import { TokenSearchDto } from './dto/token-search.dto'
 
 const addressHashOne = '0000000000000000000000000000000000000001'
 const addressHashTwo = '0000000000000000000000000000000000000002'
@@ -128,7 +128,7 @@ const searchServiceMock = {
     const tokens = tokensData.filter(t => t.name.toLowerCase().includes(query.toLowerCase()) ||  t.symbol.toLowerCase().includes(query.toLowerCase()))
     if (tokens.length) {
       s.type = SearchType.Token
-      s.tokens = tokens.map(t => new TokenSearchResultDto(t))
+      s.tokens = tokens.map(t => new TokenSearchDto(t))
     }
     return s
   }
