@@ -285,6 +285,15 @@ services:
       - 'traefik.backend=grafana'
       - 'traefik.port=3000'
 
+  kafka-connect-ui:
+    image: landoop/kafka-connect-ui
+    networks:
+      - back
+    ports:
+      - 8000:8000
+    environment:
+      CONNECT_URL: http://kafka-connect:8083
+
   kafka-manager:
     image: ethvm/kafka-manager:2.0.0.2
     restart: unless-stopped
