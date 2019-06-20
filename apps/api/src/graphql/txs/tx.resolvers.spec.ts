@@ -10,7 +10,6 @@ import BigNumber from 'bignumber.js'
 import { TxDto } from './dto/tx.dto'
 import { TransactionEntity } from '../../orm/entities/transaction.entity'
 import { MetadataService } from '../../dao/metadata.service'
-import { search } from '../../../../explorer/src/core/api/apollo/types/search'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hashTwo = '0x0000000000000000000000000000000000000000000000000000000000000002'
