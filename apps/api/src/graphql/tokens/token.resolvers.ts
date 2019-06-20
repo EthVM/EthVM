@@ -96,8 +96,14 @@ export class TokenResolvers {
   }
 
   @Query()
-  async tokensMetadata(@Args({name: 'symbols', type: () => [String]}) symbols: string[]): Promise<TokenMetadataDto[]> {
-    const entities = await this.tokenService.findTokensMetadata(symbols)
+  async tokensMetadata(
+    @Args({ name: 'symbols', type: () => [String] }) symbols: string[],
+    @Args({ name: 'names', type: () => [String] }) names: string[],
+    @Args({ name: 'addresses', type: () => [String] }) addresses: string[],
+    @Args('offset') offset: number,
+    @Args('limit') limit: number,
+  ): Promise<TokenMetadataDto[]> {
+    const entities = await this.tokenService.findTokensMetadata(symbols, names, addresses, offset, limit)
     return entities.map(e => new TokenMetadataDto(e))
   }
 }
