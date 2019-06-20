@@ -96,7 +96,7 @@ export class TokenService {
   }
 
   async findTokenExchangeRates(
-    sort: string,
+    sort: string = 'market_cap_rank',
     limit: number = 10,
     offset: number = 0,
     symbols: string[] = [],
