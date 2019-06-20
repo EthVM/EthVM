@@ -205,8 +205,29 @@ export class TokenService {
 
   }
 
-  async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataEntity[]> {
-    const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
-    return await this.tokenMetadataRepository.find({ where, cache: true, })
+  async findTokensMetadata(
+    symbols: string[] = [],
+    names: string[] = [],
+    addresses: string[] = [],
+    offset: number = 0,
+    limit: number = 20
+  ): Promise<TokenMetadataEntity[]> {
+    let where: any[] = []
+    if (symbols.length) {
+      where.push({ symbol: Any(symbols) })
+    }
+    if (names.length) {
+      where.push({ name: Any(names) })
+    }
+    if (addresses.length) {
+      where.push({ address: Any(addresses) })
+    }
+    const findOptions = {
+      where,
+      take: limit,
+      skip: offset,
+      cache: true,
+    }
+    return await this.tokenMetadataRepository.find(findOptions)
   }
 }
