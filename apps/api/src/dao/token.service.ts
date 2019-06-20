@@ -211,7 +211,7 @@ export class TokenService {
     addresses: string[] = [],
     offset: number = 0,
     limit: number = 20,
-  ): Promise<TokenMetadataEntity[]> {
+  ): Promise<[TokenMetadataEntity[], number]> {
     const where: any[] = []
     if (symbols.length) {
       where.push({ symbol: Any(symbols) })
@@ -228,6 +228,6 @@ export class TokenService {
       skip: offset,
       cache: true,
     }
-    return await this.tokenMetadataRepository.find(findOptions)
+    return await this.tokenMetadataRepository.findAndCount(findOptions)
   }
 }
