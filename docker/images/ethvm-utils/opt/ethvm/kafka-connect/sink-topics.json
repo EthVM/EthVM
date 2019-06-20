@@ -15,7 +15,9 @@
   ],
   "postgres-block-sink": [
     "canonical_block_header",
-    "uncle",
+    "uncle"
+  ],
+  "postgres-transaction-sink": [
     "transaction",
     "transaction_receipt"
   ],

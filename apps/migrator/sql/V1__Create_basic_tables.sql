@@ -1,9 +1,52 @@
+create table metadata
+(
+  "key"   VARCHAR(64) PRIMARY KEY,
+  "value" VARCHAR(256) NULL
+);
+
+INSERT INTO metadata
+VALUES ('sync_status', 'true');
+
+CREATE FUNCTION notify_metadata() RETURNS TRIGGER AS
+$body$
+DECLARE
+  record  RECORD;
+  payload JSON;
+BEGIN
+
+  IF (TG_OP = 'DELETE') THEN
+    record := OLD;
+  ELSE
+    record := NEW;
+  END IF;
+
+  payload := json_build_object(
+    'table', 'metadata',
+    'action', TG_OP,
+    'payload', json_build_object(
+      'key', record.key,
+      'value', record.value
+      )
+    );
+
+  PERFORM pg_notify('events', payload::text);
+
+  RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_metadata
+  AFTER INSERT OR UPDATE OR DELETE
+  ON metadata
+  FOR EACH ROW
+EXECUTE PROCEDURE notify_metadata();
+
 /* Count table to speed up count queries */
 
 CREATE TABLE canonical_count
 (
   entity VARCHAR(128) PRIMARY KEY,
-  count    BIGINT
+  count  BIGINT
 );
 
 INSERT INTO canonical_count
@@ -53,25 +96,30 @@ DECLARE
   payload JSON;
 BEGIN
 
-  IF (TG_OP = 'DELETE') THEN
-    record := OLD;
-  ELSE
-    record := NEW;
+  IF 'false' = (SELECT "value" FROM "metadata" WHERE "key" = 'sync_status')
+  THEN
+
+    IF (TG_OP = 'DELETE') THEN
+      record := OLD;
+    ELSE
+      record := NEW;
+    END IF;
+
+    payload := json_build_object(
+      'table', 'canonical_block_header',
+      'action', TG_OP,
+      'payload', json_build_object(
+        'block_hash', record.hash,
+        'number', record.number,
+        'transaction_count', record.transaction_count,
+        'uncle_count', record.uncle_count,
+        'author', record.author
+        )
+      );
+
+    PERFORM pg_notify('events', payload::text);
+
   END IF;
-
-  payload := json_build_object(
-    'table', 'canonical_block_header',
-    'action', TG_OP,
-    'payload', json_build_object(
-      'block_hash', record.hash,
-      'number', record.number,
-      'transaction_count', record.transaction_count,
-      'uncle_count', record.uncle_count,
-      'author', record.author
-      )
-    );
-
-  PERFORM pg_notify('events', payload::text);
 
   RETURN NULL;
 END;
@@ -148,19 +196,24 @@ DECLARE
   payload JSON;
 BEGIN
 
-  IF (TG_OP = 'DELETE') THEN
-    record := OLD;
-  ELSE
-    record := NEW;
+  IF 'false' = (SELECT "value" FROM "metadata" WHERE "key" = 'sync_status')
+  THEN
+
+    IF (TG_OP = 'DELETE') THEN
+      record := OLD;
+    ELSE
+      record := NEW;
+    END IF;
+
+    payload = json_build_object(
+      'table', 'transaction',
+      'action', TG_OP,
+      'payload', json_build_object('transaction_hash', record.hash, 'block_hash', record.block_hash)
+      );
+
+    PERFORM pg_notify('events', payload::text);
+
   END IF;
-
-  payload = json_build_object(
-    'table', 'transaction',
-    'action', TG_OP,
-    'payload', json_build_object('transaction_hash', record.hash, 'block_hash', record.block_hash)
-    );
-
-  PERFORM pg_notify('events', payload::text);
 
   RETURN NULL;
 END;
@@ -212,19 +265,24 @@ DECLARE
   payload JSON;
 BEGIN
 
-  IF (TG_OP = 'DELETE') THEN
-    record := OLD;
-  ELSE
-    record := NEW;
+  IF 'false' = (SELECT "value" FROM "metadata" WHERE "key" = 'sync_status')
+  THEN
+
+    IF (TG_OP = 'DELETE') THEN
+      record := OLD;
+    ELSE
+      record := NEW;
+    END IF;
+
+    payload := json_build_object(
+      'table', 'transaction_receipt',
+      'action', TG_OP,
+      'payload', json_build_object('block_hash', record.block_hash, 'transaction_hash', record.transaction_hash)
+      );
+
+    PERFORM pg_notify('events', payload::text);
+
   END IF;
-
-  payload := json_build_object(
-    'table', 'transaction_receipt',
-    'action', TG_OP,
-    'payload', json_build_object('block_hash', record.block_hash, 'transaction_hash', record.transaction_hash)
-    );
-
-  PERFORM pg_notify('events', payload::text);
 
   RETURN NULL;
 END;
@@ -266,41 +324,46 @@ DECLARE
   payload JSON;
 BEGIN
 
-  IF (TG_OP = 'DELETE') THEN
-    record := OLD;
-  ELSE
-    record := NEW;
-  END IF;
+  IF 'false' = (SELECT "value" FROM "metadata" WHERE "key" = 'sync_status')
+  THEN
+
+    IF (TG_OP = 'DELETE') THEN
+      record := OLD;
+    ELSE
+      record := NEW;
+    END IF;
 
 /* we only want notified about top level calls and rewards */
 
-  IF (record.transaction_hash IS NULL) THEN
-    /* block or uncle reward trace */
+    IF (record.transaction_hash IS NULL) THEN
+      /* block or uncle reward trace */
 
-    payload := json_build_object(
-      'table', 'transaction_trace',
-      'action', TG_OP,
-      'payload', json_build_object(
-        'block_hash', record.block_hash
-        )
-      );
+      payload := json_build_object(
+        'table', 'transaction_trace',
+        'action', TG_OP,
+        'payload', json_build_object(
+          'block_hash', record.block_hash
+          )
+        );
 
-    PERFORM pg_notify('events', payload::text);
+      PERFORM pg_notify('events', payload::text);
 
-  ELSE
-    /* root call trace */
+    ELSE
+      /* root call trace */
 
-    payload := json_build_object(
-      'table', 'transaction_trace',
-      'action', TG_OP,
-      'payload', json_build_object(
-        'block_hash', record.block_hash,
-        'transaction_hash', record.transaction_hash,
-        'root_error', record.root_error
-        )
-      );
+      payload := json_build_object(
+        'table', 'transaction_trace',
+        'action', TG_OP,
+        'payload', json_build_object(
+          'block_hash', record.block_hash,
+          'transaction_hash', record.transaction_hash,
+          'root_error', record.root_error
+          )
+        );
 
-    PERFORM pg_notify('events', payload::text);
+      PERFORM pg_notify('events', payload::text);
+
+    END IF;
 
   END IF;
 
@@ -363,8 +426,8 @@ WHERE cb.number IS NOT NULL
 CREATE TABLE eth_list_contract_metadata
 (
   address     CHAR(42) PRIMARY KEY,
-  name        VARCHAR(128)  NULL,
-  symbol      VARCHAR(128)  NULL,
+  name        VARCHAR(128) NULL,
+  symbol      VARCHAR(128) NULL,
   decimals    INT          NULL,
   ens_address VARCHAR(256) NULL,
   type        VARCHAR(32)  NULL,
@@ -708,20 +771,20 @@ CREATE TABLE token_exchange_rates
   address                         CHAR(42) PRIMARY KEY,
   symbol                          VARCHAR(128) NULL,
   name                            VARCHAR(128) NULL,
-  image                           TEXT        NULL,
-  current_price                   NUMERIC     NULL,
-  market_cap                      NUMERIC     NULL,
-  market_cap_rank                 INT         NULL,
-  total_volume                    NUMERIC     NULL,
-  high24h                         NUMERIC     NULL,
-  low24h                          NUMERIC     NULL,
-  price_change24h                 NUMERIC     NULL,
-  price_change_percentage24h      NUMERIC     NULL,
-  market_cap_change24h            NUMERIC     NULL,
-  market_cap_change_percentage24h NUMERIC     NULL,
-  circulating_supply              NUMERIC     NULL,
-  total_supply                    NUMERIC     NULL,
-  last_updated                    BIGINT      NULL
+  image                           TEXT         NULL,
+  current_price                   NUMERIC      NULL,
+  market_cap                      NUMERIC      NULL,
+  market_cap_rank                 INT          NULL,
+  total_volume                    NUMERIC      NULL,
+  high24h                         NUMERIC      NULL,
+  low24h                          NUMERIC      NULL,
+  price_change24h                 NUMERIC      NULL,
+  price_change_percentage24h      NUMERIC      NULL,
+  market_cap_change24h            NUMERIC      NULL,
+  market_cap_change_percentage24h NUMERIC      NULL,
+  circulating_supply              NUMERIC      NULL,
+  total_supply                    NUMERIC      NULL,
+  last_updated                    BIGINT       NULL
 );
 
 CREATE VIEW canonical_token_exchange_rates AS
@@ -795,22 +858,27 @@ DECLARE
   payload JSON;
 BEGIN
 
-  IF (TG_OP = 'DELETE') THEN
-    record := OLD;
-  ELSE
-    record := NEW;
+  IF 'false' = (SELECT "value" FROM "metadata" WHERE "key" = 'sync_status')
+  THEN
+
+    IF (TG_OP = 'DELETE') THEN
+      record := OLD;
+    ELSE
+      record := NEW;
+    END IF;
+
+    payload := json_build_object(
+      'table', TG_ARGV[0],
+      'action', TG_OP,
+      'payload', json_build_object(
+        'block_hash', record.block_hash,
+        'timestamp', record.timestamp
+        )
+      );
+
+    PERFORM pg_notify('events', payload::text);
+
   END IF;
-
-  payload := json_build_object(
-    'table', TG_ARGV[0],
-    'action', TG_OP,
-    'payload', json_build_object(
-      'block_hash', record.block_hash,
-      'timestamp', record.timestamp
-      )
-    );
-
-  PERFORM pg_notify('events', payload::text);
 
   RETURN NULL;
 END;
@@ -871,30 +939,30 @@ FROM canonical_block_header AS cbh
 
 CREATE VIEW canonical_block_metrics_transaction AS
 SELECT cbh.number,
-       cbh.hash AS block_hash,
+       cbh.hash                         AS block_hash,
        bmt.timestamp,
-       COALESCE(bmt.avg_gas_price, 0) AS avg_gas_price,
+       COALESCE(bmt.avg_gas_price, 0)   AS avg_gas_price,
        COALESCE(bmt.total_gas_price, 0) AS total_gas_price,
-       COALESCE(bmt.avg_gas_limit, 0) AS avg_gas_limit
+       COALESCE(bmt.avg_gas_limit, 0)   AS avg_gas_limit
 FROM canonical_block_header AS cbh
        LEFT JOIN block_metrics_transaction AS bmt ON cbh.hash = bmt.block_hash;
 
 CREATE VIEW canonical_block_metrics_transaction_trace AS
 SELECT cbh.number,
-       cbh.hash AS block_hash,
+       cbh.hash                             AS block_hash,
        bmtt.timestamp,
-       COALESCE(bmtt.num_internal_txs, 0) AS num_internal_txs,
-       COALESCE(bmtt.num_failed_txs, 0) AS num_failed_txs,
+       COALESCE(bmtt.num_internal_txs, 0)   AS num_internal_txs,
+       COALESCE(bmtt.num_failed_txs, 0)     AS num_failed_txs,
        COALESCE(bmtt.num_successful_txs, 0) AS num_successful_txs,
-       COALESCE(bmtt.total_txs, 0) AS total_txs
+       COALESCE(bmtt.total_txs, 0)          AS total_txs
 FROM canonical_block_header AS cbh
        LEFT JOIN block_metrics_transaction_trace AS bmtt ON cbh.hash = bmtt.block_hash;
 
 CREATE VIEW canonical_block_metrics_transaction_fee AS
 SELECT cbh.number,
-       cbh.hash AS block_hash,
+       cbh.hash                        AS block_hash,
        bmtf.timestamp,
-       COALESCE(bmtf.avg_tx_fees, 0) AS avg_tx_fees,
+       COALESCE(bmtf.avg_tx_fees, 0)   AS avg_tx_fees,
        COALESCE(bmtf.total_tx_fees, 0) AS total_tx_fees
 FROM canonical_block_header AS cbh
        LEFT JOIN block_metrics_transaction_fee AS bmtf ON cbh.hash = bmtf.block_hash;
