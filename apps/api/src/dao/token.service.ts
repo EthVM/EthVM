@@ -101,7 +101,7 @@ export class TokenService {
     offset: number = 0,
     symbols: string[] = [],
     names: string[] = [],
-    addresses: string[] = []
+    addresses: string[] = [],
   ): Promise<[TokenExchangeRateEntity[], number]> {
     let order
     switch (sort) {
@@ -129,7 +129,7 @@ export class TokenService {
         break
     }
 
-    let where = [] as any[]
+    const where = [] as any[]
     if (symbols.length) {
       where.push({symbol: Any(symbols)})
     }
@@ -190,9 +190,9 @@ export class TokenService {
     names: string[] = [],
     addresses: string[] = [],
     offset: number = 0,
-    limit: number = 20
+    limit: number = 20,
   ): Promise<TokenMetadataEntity[]> {
-    let where: any[] = []
+    const where: any[] = []
     if (symbols.length) {
       where.push({ symbol: Any(symbols) })
     }
@@ -205,7 +205,7 @@ export class TokenService {
     const findOptions = {
       where,
       take: limit,
-      skip: offset
+      skip: offset,
     }
     return await this.tokenMetadataRepository.find(findOptions)
   }
