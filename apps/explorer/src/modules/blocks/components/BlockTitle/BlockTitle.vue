@@ -1,11 +1,12 @@
 <template>
   <div class="block-title">
-    <div class="wrap">
-      <div class="the-title">{{ title }}</div>
-      <a v-if="buttonText" class="button-link" :href="buttonLink"
-        ><button>{{ buttonText }}</button></a
+    <div class="wrap" :class="pageType != 'home' ? 'pagination' : ''">
+      <div v-if="pageType == 'home'" class="the-title">{{ $t('block.last') }}</div>
+      <div v-else class="the-title">{{ title }}</div>
+      <a v-if="pageType == 'home'" class="button-link" href="/blocks"
+        ><button>{{ $t('btn.view-all') }}</button></a
       >
-      <slot></slot>
+      <slot v-if="pageType != 'home'"></slot>
     </div>
   </div>
 </template>
@@ -17,11 +18,7 @@ export default {
       type: String,
       default: ''
     },
-    buttonText: {
-      type: String,
-      default: ''
-    },
-    buttonLink: {
+    pageType: {
       type: String,
       default: ''
     }

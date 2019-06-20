@@ -9,7 +9,7 @@
     -->
     <div class="block-table-title-container">
       <!-- Title with [pagination] for dedicated [Blocks page] -->
-      <title-last-blocks v-if="pageType != 'home'" :title="getTitle">
+      <title-last-blocks :title="getTitle" :page-type="pageType">
         <div class="pagination-container" v-if="pages > 1 && !hasError">
           <!-- Inserting [pagination] component into title -->
           <app-paginate
@@ -22,9 +22,6 @@
           />
         </div>
       </title-last-blocks>
-
-      <!-- Title with [View All button] for [Home page] -->
-      <title-last-blocks v-else :title="$t('block.last')" :button-text="$t('btn.view-all')" button-link="/blocks" />
     </div>
     <!--
     =====================================================================================
