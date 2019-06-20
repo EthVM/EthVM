@@ -17,6 +17,7 @@ import { TokenExchangeRatePageDto } from './dto/token-exchange-rate-page.dto'
 import { TokenExchangeRateDto } from './dto/token-exchange-rate.dto'
 import { TokenMetadataDto } from './dto/token-metadata.dto'
 import { MetadataService } from '../../dao/metadata.service'
+import { TokenMetadataEntity } from '../../orm/entities/token-metadata.entity'
 
 const contractAddressOne = '0000000000000000000000000000000000000001'
 const contractAddressTwo = '0000000000000000000000000000000000000002'
@@ -268,14 +269,16 @@ const tokenServiceMock = {
     addresses: string[] = [],
     offset: number = 0,
     limit: number = 20,
-  ): Promise<TokenMetadataDto[]> {
+  ): Promise<[TokenMetadataEntity[], number]> {
     let items = symbols.length || names.length || addresses.length ?
       tokenMetadata.filter(t => symbols.includes(t.symbol) || names.includes(t.name) || addresses.includes(t.address)) :
       tokenMetadata
 
+    const totalCount = items.length
+
     items = items.slice(offset, offset + limit)
 
-    return items.map(i => new TokenMetadataDto(i))
+    return [items.map(i => new TokenMetadataEntity(i)), totalCount]
   }
 }
 
@@ -795,77 +798,106 @@ describe('TokenResolvers', () => {
   })
 
   describe('tokensMetadata', () => {
-    it('should return an array of TokenMetadataDto', async () => {
+    it('should return an instance of TokenMetadataPageDto with an array of items and totalCount', async () => {
       const metadata = await tokenResolvers.tokensMetadata([])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(3)
-      expect(metadata[0]).toBeInstanceOf(TokenMetadataDto)
+      expect(metadata).toHaveProperty('totalCount', 3)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(3)
+      expect(metadata.items[0]).toBeInstanceOf(TokenMetadataDto)
     })
 
     it('should return TokenMetadataDtos matching the symbols provided', async () => {
       const metadata = await tokenResolvers.tokensMetadata(['T1', 'T2'])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(2)
-      expect(metadata[0]).toHaveProperty('symbol', 'T1')
-      expect(metadata[1]).toHaveProperty('symbol', 'T2')
+      expect(metadata).toHaveProperty('totalCount', 2)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(2)
+      expect(metadata.items[0]).toHaveProperty('symbol', 'T1')
+      expect(metadata.items[1]).toHaveProperty('symbol', 'T2')
 
       const metadataTwo = await tokenResolvers.tokensMetadata(['T3'])
       expect(metadataTwo).not.toBeNull()
-      expect(metadataTwo).toHaveLength(1)
-      expect(metadataTwo[0]).toHaveProperty('symbol', 'T3')
+      expect(metadataTwo).toHaveProperty('totalCount', 1)
+      expect(metadataTwo).toHaveProperty('items')
+      expect(metadataTwo.items).toHaveLength(1)
+      expect(metadataTwo.items[0]).toHaveProperty('symbol', 'T3')
 
       expect(metadata).not.toEqual(metadataTwo)
 
       // Check an empty array is returned if no tokens match name provided
       const metadataThree = await tokenResolvers.tokensMetadata(['Test'])
       expect(metadataThree).not.toBeNull()
-      expect(metadataThree).toHaveLength(0)
+      expect(metadataThree).toHaveProperty('totalCount', 0)
+      expect(metadataThree).toHaveProperty('items')
+      expect(metadataThree.items).toHaveLength(0)
     })
 
     it('should return TokenMetadataDtos matching the names provided', async () => {
       const metadata = await tokenResolvers.tokensMetadata([], ['Token 2', 'Token 3'])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(2)
-      expect(metadata[0]).toHaveProperty('name', 'Token 2')
-      expect(metadata[1]).toHaveProperty('name', 'Token 3')
+      expect(metadata).toHaveProperty('totalCount', 2)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(2)
+      expect(metadata.items[0]).toHaveProperty('name', 'Token 2')
+      expect(metadata.items[1]).toHaveProperty('name', 'Token 3')
 
       const metadataTwo = await tokenResolvers.tokensMetadata([], ['Token 1'])
       expect(metadataTwo).not.toBeNull()
-      expect(metadataTwo).toHaveLength(1)
-      expect(metadataTwo[0]).toHaveProperty('name', 'Token 1')
+      expect(metadataTwo).toHaveProperty('totalCount', 1)
+      expect(metadataTwo).toHaveProperty('items')
+      expect(metadataTwo.items).toHaveLength(1)
+      expect(metadataTwo.items[0]).toHaveProperty('name', 'Token 1')
 
       expect(metadata).not.toEqual(metadataTwo)
 
       // Check an empty array is returned if no tokens match name provided
       const metadataThree = await tokenResolvers.tokensMetadata([], ['Token 4'])
       expect(metadataThree).not.toBeNull()
-      expect(metadataThree).toHaveLength(0)
+      expect(metadataThree).toHaveProperty('totalCount', 0)
+      expect(metadataThree).toHaveProperty('items')
+      expect(metadataThree.items).toHaveLength(0)
     })
 
     it('should return TokenMetadataDtos matching the addresses provided', async () => {
       const metadata = await tokenResolvers.tokensMetadata([], [], [contractAddressOne, contractAddressTwo])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(2)
-      expect(metadata[0]).toHaveProperty('address', contractAddressOne)
-      expect(metadata[1]).toHaveProperty('address', contractAddressTwo)
+      expect(metadata).toHaveProperty('totalCount', 2)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(2)
+      expect(metadata.items[0]).toHaveProperty('address', contractAddressOne)
+      expect(metadata.items[1]).toHaveProperty('address', contractAddressTwo)
 
       const metadataTwo = await tokenResolvers.tokensMetadata([], [], [contractAddressThree])
       expect(metadataTwo).not.toBeNull()
-      expect(metadataTwo).toHaveLength(1)
-      expect(metadataTwo[0]).toHaveProperty('address', contractAddressThree)
+      expect(metadataTwo).toHaveProperty('totalCount', 1)
+      expect(metadataTwo).toHaveProperty('items')
+      expect(metadataTwo.items).toHaveLength(1)
+      expect(metadataTwo.items[0]).toHaveProperty('address', contractAddressThree)
 
       expect(metadata).not.toEqual(metadataTwo)
 
-      // Check an empty array is returned if no tokens match name provided
+      // Check an empty array is returned if no tokens match address provided
       const metadataThree = await tokenResolvers.tokensMetadata([], [], [contractAddressFive])
       expect(metadataThree).not.toBeNull()
-      expect(metadataThree).toHaveLength(0)
+      expect(metadataThree).toHaveProperty('totalCount', 0)
+      expect(metadataThree).toHaveProperty('items')
+      expect(metadataThree.items).toHaveLength(0)
     })
+    it('should respect limit and offset parameters', async () => {
+      const pageOne = await tokenResolvers.tokensMetadata([], [], [], 0, 2)
+      expect(pageOne).not.toBeNull()
+      expect(pageOne).toHaveProperty('totalCount', 3)
+      expect(pageOne).toHaveProperty('items')
+      expect(pageOne.items).toHaveLength(2)
 
-    it('should return an empty array if no metadata is found matching symbols provided', async () => {
-      const metadata = await tokenResolvers.tokensMetadata(['T5'])
-      expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(0)
+      const pageTwo = await tokenResolvers.tokensMetadata([], [], [], 2, 2)
+      expect(pageTwo).not.toBeNull()
+      expect(pageTwo).toHaveProperty('totalCount', 3)
+      expect(pageTwo).toHaveProperty('items')
+      expect(pageTwo.items).toHaveLength(1)
+
+      expect(pageOne).not.toEqual(pageTwo)
     })
   })
 

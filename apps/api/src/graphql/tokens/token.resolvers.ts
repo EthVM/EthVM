@@ -11,6 +11,7 @@ import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange
 import { CoinExchangeRateDto } from '@app/graphql/tokens/dto/coin-exchange-rate.dto'
 import { UseInterceptors } from '@nestjs/common'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
+import { TokenMetadataPageDto } from '@app/graphql/tokens/dto/token-metadata-page.dto'
 
 @Resolver('Token')
 @UseInterceptors(SyncingInterceptor)
@@ -102,8 +103,8 @@ export class TokenResolvers {
     @Args({ name: 'addresses', type: () => [String], nullable: true }) addresses?: string[],
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
-  ): Promise<TokenMetadataDto[]> {
-    const entities = await this.tokenService.findTokensMetadata(symbols, names, addresses, offset, limit)
-    return entities.map(e => new TokenMetadataDto(e))
+  ): Promise<TokenMetadataPageDto> {
+    const [items, totalCount] = await this.tokenService.findTokensMetadata(symbols, names, addresses, offset, limit)
+    return new TokenMetadataPageDto({ items, totalCount })
   }
 }
