@@ -7,10 +7,10 @@ import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
-import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
-import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
+import { FindManyOptions, Repository, FindOneOptions, Any } from 'typeorm'
+import {TokenDto} from '@app/graphql/tokens/dto/token.dto'
 import BigNumber from 'bignumber.js'
+import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 import { TokenSearchEntity } from '@app/orm/entities/token-search.entity'
 import { TokenSearchDto } from '@app/graphql/search/dto/token-search.dto'
 
@@ -31,6 +31,8 @@ export class TokenService {
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
+    @InjectRepository(TokenMetadataEntity)
+    private readonly tokenMetadataRepository: Repository<TokenMetadataEntity>,
     @InjectRepository(TokenSearchEntity)
     private readonly tokenSearchRepository: Repository<TokenSearchEntity>,
   ) {}
@@ -61,7 +63,7 @@ export class TokenService {
 
     const findOptions: FindManyOptions = {
       where: { address },
-      relations: ['tokenExchangeRate', 'metadata'],
+      relations: ['tokenExchangeRate', 'metadata', 'contractMetadata'],
       take: limit,
       skip: offset,
       cache: true,
@@ -83,35 +85,20 @@ export class TokenService {
   }
 
   private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
-    const { tokenExchangeRate, metadata } = entity
+    const { tokenExchangeRate, metadata, contractMetadata } = entity
     const tokenData = metadata || ({} as any)
     if (entity instanceof Erc20BalanceEntity) {
       tokenData.balance = entity.amount
     }
+    if (contractMetadata) {
+      tokenData.image = contractMetadata.logo
+    }
     if (tokenExchangeRate) {
       tokenData.currentPrice = tokenExchangeRate.currentPrice
+      tokenData.priceChangePercentage24h = tokenExchangeRate.priceChangePercentage24h
+      tokenData.image = tokenData.image || tokenExchangeRate.image
     }
     return new TokenDto(tokenData)
-  }
-
-  private constructTokenMetadataDto(entity: Erc20MetadataEntity | Erc721MetadataEntity): TokenMetadataDto {
-
-    const decimals = entity instanceof Erc20MetadataEntity ? entity.decimals : null
-    const { contractMetadata } = entity
-    const support = contractMetadata ? contractMetadata.support : null
-    const logo = contractMetadata ? contractMetadata.logo : null
-
-    const data = {
-      name: entity.name,
-      address: entity.address,
-      symbol: entity.symbol,
-      decimals,
-      website: contractMetadata ? contractMetadata.website : null,
-      email: support ? JSON.parse(support).email : null,
-      logo: logo ? JSON.parse(logo).src : null,
-    }
-
-    return new TokenMetadataDto(data)
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
@@ -122,7 +109,14 @@ export class TokenService {
     return this.coinExchangeRateRepository.findOne(findOptions)
   }
 
-  async findTokenExchangeRates(sort: string, limit: number = 10, offset: number = 0, symbols: string[] = []): Promise<[TokenExchangeRateEntity[], number]> {
+  async findTokenExchangeRates(
+    sort: string = 'market_cap_rank',
+    limit: number = 10,
+    offset: number = 0,
+    symbols: string[] = [],
+    names: string[] = [],
+    addresses: string[] = [],
+  ): Promise<[TokenExchangeRateEntity[], number]> {
     let order
     switch (sort) {
       case 'price_high':
@@ -148,7 +142,18 @@ export class TokenService {
         order = { marketCapRank: 1 }
         break
     }
-    const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
+
+    const where = [] as any[]
+    if (symbols.length) {
+      where.push({symbol: Any(symbols)})
+    }
+    if (names.length) {
+      where.push({name: Any(names)})
+    }
+    if (addresses.length) {
+      where.push({address: Any(addresses)})
+    }
+
     const findOptions: FindManyOptions = {
       where,
       order,
@@ -175,10 +180,6 @@ export class TokenService {
     })
   }
 
-  async findContractInfoForToken(address: string): Promise<ContractEntity | undefined> {
-    return this.contractRepository.findOne({ where: { address }, select: ['address', 'creator'], cache: true })
-  }
-
   async countTokenHolders(address: string): Promise<number> {
     let numHolders = await this.erc20BalanceRepository.count({ where: { contract: address }, cache: true })
     if (!numHolders || numHolders === 0) {
@@ -203,27 +204,31 @@ export class TokenService {
 
   }
 
-  async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataDto[]> {
-    const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
+  async findTokensMetadata(
+    symbols: string[] = [],
+    names: string[] = [],
+    addresses: string[] = [],
+    offset: number = 0,
+    limit: number = 20,
+  ): Promise<[TokenMetadataEntity[], number]> {
+    const where: any[] = []
+    if (symbols.length) {
+      where.push({ symbol: Any(symbols) })
+    }
+    if (names.length) {
+      where.push({ name: Any(names) })
+    }
+    if (addresses.length) {
+      where.push({ address: Any(addresses) })
+    }
     const findOptions = {
       where,
       relations: ['contractMetadata'],
       cache: true,
+      take: limit,
+      skip: offset,
     }
-    const erc20Tokens = await this.erc20MetadataRepository.find(findOptions)
-    const erc721Tokens = await this.erc721MetadataRepository.find(findOptions)
-
-    const tokenMetadataDtos: TokenMetadataDto[] = []
-
-    erc20Tokens.forEach(entity => {
-      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
-    })
-
-    erc721Tokens.forEach(entity => {
-      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
-    })
-
-    return tokenMetadataDtos
+    return await this.tokenMetadataRepository.findAndCount(findOptions)
   }
 
   async findByNameOrSymbol(query: string): Promise<TokenSearchDto[]> {

@@ -11,7 +11,7 @@ import { TraceService } from './trace.service'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { setEquals } from '@app/shared/utils'
 import { ConfigService } from '@app/shared/config.service'
-import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 
 @Injectable()
 export class BlockService {
@@ -58,10 +58,10 @@ export class BlockService {
 
           const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
 
-          const [{ count }] = await txn.find(RowCount, {
+          const [{ count }] = await txn.find(CanonicalCount, {
             select: ['count'],
             where: {
-              relation: 'canonical_block_header',
+              entity: 'block_header',
             },
             cache: true,
           })

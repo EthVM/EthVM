@@ -9,8 +9,8 @@ import { FilterEnum, Order, TransactionSummary, TxSortField } from '@app/graphql
 import { ContractService } from '@app/dao/contract.service'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
-import { RowCount } from '@app/orm/entities/row-counts.entity'
 import { EthService } from '@app/shared/eth.service'
+import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 
 @Injectable()
 export class TxService {
@@ -256,10 +256,10 @@ export class TxService {
       'READ COMMITTED',
       async (entityManager): Promise<[TransactionSummary[], number]> => {
 
-        let [{count: totalCount}] = await entityManager.find(RowCount, {
+        let [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
           select: ['count'],
           where: {
-            relation: 'transaction',
+            entity: 'transaction',
           },
           cache: true,
         })

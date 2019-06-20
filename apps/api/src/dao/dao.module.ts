@@ -31,6 +31,7 @@ import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 import { MetadataEntity } from '@app/orm/entities/metadata.entity'
 import { MetadataService } from '@app/dao/metadata.service'
 import { TokenSearchEntity } from '@app/orm/entities/token-search.entity'
+import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 
 @Module({
   imports: [
@@ -53,7 +54,8 @@ import { TokenSearchEntity } from '@app/orm/entities/token-search.entity'
       CoinExchangeRateEntity,
       BlockMetricEntity,
       MetadataEntity,
-      TokenSearchEntity
+      TokenSearchEntity,
+      TokenMetadataEntity,
     ]),
   ],
   providers: [

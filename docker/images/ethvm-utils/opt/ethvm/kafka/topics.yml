@@ -42,6 +42,18 @@ topics:
     config:
       cleanup.policy: compact
 
+  - name: canonical_count_delta
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 1
+    config:
+      retention.ms: -1
+
+  - name: canonical_count
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 1
+    config:
+      cleanup.policy: compact
+
   - name: uncle
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12

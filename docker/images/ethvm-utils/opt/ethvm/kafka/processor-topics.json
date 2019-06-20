@@ -17,9 +17,14 @@
     "contract"
   ],
   "count-delta-processor": [
-    "canonical_transactions"
+    "canonical_block_header",
+    "canonical_transactions",
+    "canonical_transaction_receipts",
+    "canonical_transaction_traces",
+    "canonical_uncles"
   ],
   "count-processor": [
+    "canonical_count_delta",
     "transaction_count_delta"
   ],
   "flat-map-processor": [

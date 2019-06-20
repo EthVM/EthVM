@@ -19,20 +19,6 @@ volumes:
 
   zookeeper-volume:
 
-  parity-volume:
-    # Note:
-    #
-    # If you're on Linux, use local-persist instead of a regular docker volume
-    # This allows to persist downloaded blockchain data.
-    # More info: https://github.com/CWSpear/local-persist
-    #
-    # If you're on Mac, make sure you comment the following lines
-    # and leave it as a regular docker volume
-    # driver: local-persist
-    # driver_opts:
-    #  name: "paritydb"
-    #  mountpoint: "${PARITY_VOLUME_MOUNTPOINT}"
-
 services:
 
   # ///////////////////////////////////////////////////////
@@ -56,21 +42,6 @@ services:
       SWARM_MODE: 'false'
       TRAEFIK_DASHBOARD_ENABLED: 'true'
       TRAEFIK_PING_ENABLED: 'false'
-
-  grafana:
-    image: grafana/grafana:6.1.6
-    networks:
-      - back
-    environment:
-      GF_SERVER_ROOT_URL: 'http://grafana.ethvm.lan'
-      GF_SECURITY_ADMIN_PASSWORD: 'admin'
-      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
-      - 'traefik.backend=grafana'
-      - 'traefik.port=3000'
 
   explorer:
     build:
@@ -203,7 +174,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-#      KAFKA_COMPRESSION_TYPE: "zstd"
+      KAFKA_COMPRESSION_TYPE: "zstd"
       KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
       KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS: 120000
@@ -244,7 +215,6 @@ services:
       SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       SCHEMA_REGISTRY_JMX_PORT: 9587
 
-
   kafka-connect:
     build:
       context: apps/processing/connectors
@@ -280,16 +250,43 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.confluent.connect.jdbc=DEBUG,com.ethvm.kafka.connect=WARN,org.web3j.protocol.websocket.WebSocketService=WARN"
       CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      CONNECT_CONSUMER_MAX_POLL_RECORDS: 5000
+      CONNECT_CONSUMER_FETCH_MIN_BYTES: 1000000
+      CONNECT_CONSUMER_FETCH_WAIT_MAX_MS: 1000
       CONNECT_MAX_POLL_INTERVAL_MS: 120000
       KAFKA_JMX_PORT: 9588
 
   # ///////////////////////////////////////////////////////
   # Extra Tools (Useful for debugging and helping in dev)
   # ///////////////////////////////////////////////////////
+
+  grafana:
+    image: grafana/grafana:6.1.6
+    networks:
+      - back
+    environment:
+      GF_SERVER_ROOT_URL: 'http://grafana.${DOMAIN}'
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
+      - 'traefik.backend=grafana'
+      - 'traefik.port=3000'
+
+  kafka-connect-ui:
+    image: landoop/kafka-connect-ui
+    networks:
+      - back
+    ports:
+      - 8000:8000
+    environment:
+      CONNECT_URL: http://kafka-connect:8083
 
   kafka-manager:
     image: ethvm/kafka-manager:2.0.0.2
@@ -303,20 +300,6 @@ services:
       - 9000:9000
     environment:
       ZK_HOSTS: zookeeper:2181
-
-  burrow:
-    image: solsson/burrow
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
-      - kafka-1
-    networks:
-      - back
-    ports:
-      - 8000:8000
-    volumes:
-      - ${PWD}/docker/images/burrow:/etc/burrow/
-      - ${PWD}/tmp:/var/tmp/burrow
 
   pgweb:
     image: sosedoff/pgweb:0.11.2
