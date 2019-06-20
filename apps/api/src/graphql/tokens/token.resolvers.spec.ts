@@ -17,6 +17,7 @@ import { TokenExchangeRatePageDto } from './dto/token-exchange-rate-page.dto'
 import { TokenExchangeRateDto } from './dto/token-exchange-rate.dto'
 import { TokenMetadataDto } from './dto/token-metadata.dto'
 import { MetadataService } from '../../dao/metadata.service'
+import { TokenMetadataEntity } from '../../orm/entities/token-metadata.entity'
 
 const contractAddressOne = '0000000000000000000000000000000000000001'
 const contractAddressTwo = '0000000000000000000000000000000000000002'
@@ -49,7 +50,7 @@ const tokenMetadataThree = {
   currentPrice: 3
 }
 
-const erc20Metadata = [
+const tokenMetadata = [
   tokenMetadataOne,
   tokenMetadataTwo,
   tokenMetadataThree
@@ -121,7 +122,8 @@ const tokenExchangeRates = [
     totalVolume: 1000,
     marketCap: 10,
     marketCapRank: 1,
-    symbol: 'T1'
+    symbol: 'T1',
+    name: 'Token 1'
   },
   {
     address: contractAddressTwo,
@@ -129,7 +131,8 @@ const tokenExchangeRates = [
     totalVolume: 2000,
     marketCap: 9,
     marketCapRank: 2,
-    symbol: 'T2'
+    symbol: 'T2',
+    name: 'Token 2'
   },
   {
     address: contractAddressThree,
@@ -137,7 +140,8 @@ const tokenExchangeRates = [
     totalVolume: 3000,
     marketCap: 8,
     marketCapRank: 3,
-    symbol: 'T3'
+    symbol: 'T3',
+    name: 'Token 3'
   },
   {
     address: contractAddressFour,
@@ -145,7 +149,8 @@ const tokenExchangeRates = [
     totalVolume: 4000,
     marketCap: 7,
     marketCapRank: 4,
-    symbol: 'T4'
+    symbol: 'T4',
+    name: 'Token 4'
   }
 ]
 
@@ -195,10 +200,19 @@ const tokenServiceMock = {
     const item = coinExchangeRates.find(c => c.id === pair)
     return item ? new CoinExchangeRateEntity(item) : undefined
   },
-  async findTokenExchangeRates(sort: string, limit: number = 10, offset: number = 0, symbols: string[] = []): Promise<[TokenExchangeRateEntity[], number]> {
+  async findTokenExchangeRates(
+    sort: string = 'market_cap_rank',
+    limit: number = 10,
+    offset: number = 0,
+    symbols: string[] = [],
+    names: string[] = [],
+    addresses: string[] = [],
+  ): Promise<[TokenExchangeRateEntity[], number]> {
 
     // Filter by symbol if set
-    let items = symbols && symbols.length ? tokenExchangeRates.filter(t => symbols.includes(t.symbol)) : tokenExchangeRates
+    let items = symbols.length || names.length || addresses.length ?
+      tokenExchangeRates.filter(t => symbols.includes(t.symbol) || names.includes(t.name) || addresses.includes(t.address)) :
+      tokenExchangeRates
 
     // Total count
     const totalCount = items.length
@@ -249,9 +263,22 @@ const tokenServiceMock = {
   async countTokenHolders(address: string): Promise<number> {
     return erc20Balances.filter(e => e.contract === address).length
   },
-  async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataDto[]> {
-    const items = erc20Metadata.filter(e => symbols.includes(e.symbol))
-    return items.map(i => new TokenMetadataDto(i))
+  async findTokensMetadata(
+    symbols: string[] = [],
+    names: string[] = [],
+    addresses: string[] = [],
+    offset: number = 0,
+    limit: number = 20,
+  ): Promise<[TokenMetadataEntity[], number]> {
+    let items = symbols.length || names.length || addresses.length ?
+      tokenMetadata.filter(t => symbols.includes(t.symbol) || names.includes(t.name) || addresses.includes(t.address)) :
+      tokenMetadata
+
+    const totalCount = items.length
+
+    items = items.slice(offset, offset + limit)
+
+    return [items.map(i => new TokenMetadataEntity(i)), totalCount]
   }
 }
 
@@ -502,7 +529,7 @@ describe('TokenResolvers', () => {
   describe('tokenExchangeRates', () => {
     it('should return an instance of TokenExchangeRatePageDto with items and totalCount', async () => {
 
-      const tokenExchangeRatesPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_high, 10, 0)
+      const tokenExchangeRatesPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.price_high, 10, 0)
 
       expect(tokenExchangeRatesPage).not.toBeNull()
       expect(tokenExchangeRatesPage).toBeInstanceOf(TokenExchangeRatePageDto)
@@ -515,7 +542,7 @@ describe('TokenResolvers', () => {
 
     it('should respect given offset and limit parameters', async () => {
 
-      const pageOne = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_high, 2, 0)
+      const pageOne = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.price_high, 2, 0)
 
       expect(pageOne).not.toBeNull()
       expect(pageOne).toBeInstanceOf(TokenExchangeRatePageDto)
@@ -528,7 +555,7 @@ describe('TokenResolvers', () => {
       expect(pageOne.items[1]).toHaveProperty('address', contractAddressThree)
       expect(pageOne.items[1]).toHaveProperty('currentPrice', 3)
 
-      const pageTwo = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_high, 2, 2)
+      const pageTwo = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.price_high, 2, 2)
 
       expect(pageTwo).not.toBeNull()
       expect(pageTwo).toBeInstanceOf(TokenExchangeRatePageDto)
@@ -546,7 +573,7 @@ describe('TokenResolvers', () => {
 
       // Check an empty array is returned if offset >= totalCount
 
-      const pageThree = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_high, 2, 4)
+      const pageThree = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.price_high, 2, 4)
 
       expect(pageThree).not.toBeNull()
       expect(pageThree).toBeInstanceOf(TokenExchangeRatePageDto)
@@ -557,7 +584,7 @@ describe('TokenResolvers', () => {
 
     it('should filter by provided symbols array', async () => {
 
-      const pageOne = await tokenResolvers.tokenExchangeRates(['T1', 'T2'], TokenExchangeRateFilter.price_high, 10, 0)
+      const pageOne = await tokenResolvers.tokenExchangeRates(['T1', 'T2'], [], [], TokenExchangeRateFilter.price_high, 10, 0)
       expect(pageOne).not.toBeNull()
       expect(pageOne).toBeInstanceOf(TokenExchangeRatePageDto)
       expect(pageOne).toHaveProperty('items')
@@ -566,7 +593,7 @@ describe('TokenResolvers', () => {
       expect(pageOne.items[0]).toHaveProperty('symbol', 'T2')
       expect(pageOne.items[1]).toHaveProperty('symbol', 'T1')
 
-      const pageTwo = await tokenResolvers.tokenExchangeRates(['T3'], TokenExchangeRateFilter.price_high, 10, 0)
+      const pageTwo = await tokenResolvers.tokenExchangeRates(['T3'], [], [], TokenExchangeRateFilter.price_high, 10, 0)
       expect(pageTwo).not.toBeNull()
       expect(pageTwo).toBeInstanceOf(TokenExchangeRatePageDto)
       expect(pageTwo).toHaveProperty('items')
@@ -578,7 +605,71 @@ describe('TokenResolvers', () => {
 
       // Ensure page with no items is returned for symbol not matching data
 
-      const pageThree = await tokenResolvers.tokenExchangeRates(['T5'], TokenExchangeRateFilter.price_high, 10, 0)
+      const pageThree = await tokenResolvers.tokenExchangeRates(['T5'], [], [], TokenExchangeRateFilter.price_high, 10, 0)
+      expect(pageThree).not.toBeNull()
+      expect(pageThree).toBeInstanceOf(TokenExchangeRatePageDto)
+      expect(pageThree).toHaveProperty('items')
+      expect(pageThree).toHaveProperty('totalCount', 0)
+      expect(pageThree.items).toHaveLength(0)
+
+    })
+
+    it('should filter by provided names array', async () => {
+
+      const pageOne = await tokenResolvers.tokenExchangeRates([], ['Token 3', 'Token 4'], [], TokenExchangeRateFilter.price_high, 10, 0)
+      expect(pageOne).not.toBeNull()
+      expect(pageOne).toBeInstanceOf(TokenExchangeRatePageDto)
+      expect(pageOne).toHaveProperty('items')
+      expect(pageOne).toHaveProperty('totalCount', 2)
+      expect(pageOne.items).toHaveLength(2)
+      expect(pageOne.items[0]).toHaveProperty('name', 'Token 4')
+      expect(pageOne.items[1]).toHaveProperty('name', 'Token 3')
+
+      const pageTwo = await tokenResolvers.tokenExchangeRates([], ['Token 1'], [], TokenExchangeRateFilter.price_high, 10, 0)
+      expect(pageTwo).not.toBeNull()
+      expect(pageTwo).toBeInstanceOf(TokenExchangeRatePageDto)
+      expect(pageTwo).toHaveProperty('items')
+      expect(pageTwo).toHaveProperty('totalCount', 1)
+      expect(pageTwo.items).toHaveLength(1)
+      expect(pageTwo.items[0]).toHaveProperty('name', 'Token 1')
+
+      expect(pageOne).not.toEqual(pageTwo)
+
+      // Ensure page with no items is returned for symbol not matching data
+
+      const pageThree = await tokenResolvers.tokenExchangeRates([], ['Token 5'], [], TokenExchangeRateFilter.price_high, 10, 0)
+      expect(pageThree).not.toBeNull()
+      expect(pageThree).toBeInstanceOf(TokenExchangeRatePageDto)
+      expect(pageThree).toHaveProperty('items')
+      expect(pageThree).toHaveProperty('totalCount', 0)
+      expect(pageThree.items).toHaveLength(0)
+
+    })
+
+    it('should filter by provided addresses array', async () => {
+
+      const pageOne = await tokenResolvers.tokenExchangeRates([], [], [contractAddressOne, contractAddressTwo], TokenExchangeRateFilter.price_high, 10, 0)
+      expect(pageOne).not.toBeNull()
+      expect(pageOne).toBeInstanceOf(TokenExchangeRatePageDto)
+      expect(pageOne).toHaveProperty('items')
+      expect(pageOne).toHaveProperty('totalCount', 2)
+      expect(pageOne.items).toHaveLength(2)
+      expect(pageOne.items[0]).toHaveProperty('address', contractAddressTwo)
+      expect(pageOne.items[1]).toHaveProperty('address', contractAddressOne)
+
+      const pageTwo = await tokenResolvers.tokenExchangeRates([], [], [contractAddressFour], TokenExchangeRateFilter.price_high, 10, 0)
+      expect(pageTwo).not.toBeNull()
+      expect(pageTwo).toBeInstanceOf(TokenExchangeRatePageDto)
+      expect(pageTwo).toHaveProperty('items')
+      expect(pageTwo).toHaveProperty('totalCount', 1)
+      expect(pageTwo.items).toHaveLength(1)
+      expect(pageTwo.items[0]).toHaveProperty('address', contractAddressFour)
+
+      expect(pageOne).not.toEqual(pageTwo)
+
+      // Ensure page with no items is returned for symbol not matching data
+
+      const pageThree = await tokenResolvers.tokenExchangeRates([], [], [contractAddressFive], TokenExchangeRateFilter.price_high, 10, 0)
       expect(pageThree).not.toBeNull()
       expect(pageThree).toBeInstanceOf(TokenExchangeRatePageDto)
       expect(pageThree).toHaveProperty('items')
@@ -589,7 +680,7 @@ describe('TokenResolvers', () => {
 
     it('should sort items array by the given sort parameter', async () => {
 
-      const priceHighPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_high, 2, 0)
+      const priceHighPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.price_high, 2, 0)
       expect(priceHighPage).not.toBeNull()
       expect(priceHighPage).toHaveProperty('items')
       expect(priceHighPage).toHaveProperty('totalCount', 4)
@@ -597,7 +688,7 @@ describe('TokenResolvers', () => {
       expect(priceHighPage.items[0]).toHaveProperty('currentPrice', 4)
       expect(priceHighPage.items[1]).toHaveProperty('currentPrice', 3)
 
-      const priceLowPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_low, 2, 0)
+      const priceLowPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.price_low, 2, 0)
       expect(priceLowPage).not.toBeNull()
       expect(priceLowPage).toHaveProperty('items')
       expect(priceLowPage).toHaveProperty('totalCount', 4)
@@ -605,7 +696,7 @@ describe('TokenResolvers', () => {
       expect(priceLowPage.items[0]).toHaveProperty('currentPrice', 1)
       expect(priceLowPage.items[1]).toHaveProperty('currentPrice', 2)
 
-      const volumeHighPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.volume_high, 2, 0)
+      const volumeHighPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.volume_high, 2, 0)
       expect(volumeHighPage).not.toBeNull()
       expect(volumeHighPage).toHaveProperty('items')
       expect(volumeHighPage).toHaveProperty('totalCount', 4)
@@ -613,7 +704,7 @@ describe('TokenResolvers', () => {
       expect(volumeHighPage.items[0]).toHaveProperty('totalVolume', 4000)
       expect(volumeHighPage.items[1]).toHaveProperty('totalVolume', 3000)
 
-      const volumeLowPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.volume_low, 2, 0)
+      const volumeLowPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.volume_low, 2, 0)
       expect(volumeLowPage).not.toBeNull()
       expect(volumeLowPage).toHaveProperty('items')
       expect(volumeLowPage).toHaveProperty('totalCount', 4)
@@ -621,7 +712,7 @@ describe('TokenResolvers', () => {
       expect(volumeLowPage.items[0]).toHaveProperty('totalVolume', 1000)
       expect(volumeLowPage.items[1]).toHaveProperty('totalVolume', 2000)
 
-      const marketCapHighPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.market_cap_high, 2, 0)
+      const marketCapHighPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.market_cap_high, 2, 0)
       expect(marketCapHighPage).not.toBeNull()
       expect(marketCapHighPage).toHaveProperty('items')
       expect(marketCapHighPage).toHaveProperty('totalCount', 4)
@@ -629,7 +720,7 @@ describe('TokenResolvers', () => {
       expect(marketCapHighPage.items[0]).toHaveProperty('marketCap', 10)
       expect(marketCapHighPage.items[1]).toHaveProperty('marketCap', 9)
 
-      const marketCapLowPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.market_cap_low, 2, 0)
+      const marketCapLowPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.market_cap_low, 2, 0)
       expect(marketCapLowPage).not.toBeNull()
       expect(marketCapLowPage).toHaveProperty('items')
       expect(marketCapLowPage).toHaveProperty('totalCount', 4)
@@ -637,7 +728,7 @@ describe('TokenResolvers', () => {
       expect(marketCapLowPage.items[0]).toHaveProperty('marketCap', 7)
       expect(marketCapLowPage.items[1]).toHaveProperty('marketCap', 8)
 
-      const marketCapRankPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.market_cap_rank, 2, 0)
+      const marketCapRankPage = await tokenResolvers.tokenExchangeRates([], [], [], TokenExchangeRateFilter.market_cap_rank, 2, 0)
       expect(marketCapRankPage).not.toBeNull()
       expect(marketCapRankPage).toHaveProperty('items')
       expect(marketCapRankPage).toHaveProperty('totalCount', 4)
@@ -707,32 +798,106 @@ describe('TokenResolvers', () => {
   })
 
   describe('tokensMetadata', () => {
-    it('should return an array of TokenMetadataDto', async () => {
-      const metadata = await tokenResolvers.tokensMetadata(['T1', 'T2', 'T3'])
+    it('should return an instance of TokenMetadataPageDto with an array of items and totalCount', async () => {
+      const metadata = await tokenResolvers.tokensMetadata([])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(3)
-      expect(metadata[0]).toBeInstanceOf(TokenMetadataDto)
+      expect(metadata).toHaveProperty('totalCount', 3)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(3)
+      expect(metadata.items[0]).toBeInstanceOf(TokenMetadataDto)
     })
 
     it('should return TokenMetadataDtos matching the symbols provided', async () => {
       const metadata = await tokenResolvers.tokensMetadata(['T1', 'T2'])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(2)
-      expect(metadata[0]).toHaveProperty('symbol', 'T1')
-      expect(metadata[1]).toHaveProperty('symbol', 'T2')
+      expect(metadata).toHaveProperty('totalCount', 2)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(2)
+      expect(metadata.items[0]).toHaveProperty('symbol', 'T1')
+      expect(metadata.items[1]).toHaveProperty('symbol', 'T2')
 
       const metadataTwo = await tokenResolvers.tokensMetadata(['T3'])
       expect(metadataTwo).not.toBeNull()
-      expect(metadataTwo).toHaveLength(1)
-      expect(metadataTwo[0]).toHaveProperty('symbol', 'T3')
+      expect(metadataTwo).toHaveProperty('totalCount', 1)
+      expect(metadataTwo).toHaveProperty('items')
+      expect(metadataTwo.items).toHaveLength(1)
+      expect(metadataTwo.items[0]).toHaveProperty('symbol', 'T3')
 
       expect(metadata).not.toEqual(metadataTwo)
+
+      // Check an empty array is returned if no tokens match name provided
+      const metadataThree = await tokenResolvers.tokensMetadata(['Test'])
+      expect(metadataThree).not.toBeNull()
+      expect(metadataThree).toHaveProperty('totalCount', 0)
+      expect(metadataThree).toHaveProperty('items')
+      expect(metadataThree.items).toHaveLength(0)
     })
 
-    it('should return an empty array if no metadata is found matching symbols provided', async () => {
-      const metadata = await tokenResolvers.tokensMetadata(['T5'])
+    it('should return TokenMetadataDtos matching the names provided', async () => {
+      const metadata = await tokenResolvers.tokensMetadata([], ['Token 2', 'Token 3'])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(0)
+      expect(metadata).toHaveProperty('totalCount', 2)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(2)
+      expect(metadata.items[0]).toHaveProperty('name', 'Token 2')
+      expect(metadata.items[1]).toHaveProperty('name', 'Token 3')
+
+      const metadataTwo = await tokenResolvers.tokensMetadata([], ['Token 1'])
+      expect(metadataTwo).not.toBeNull()
+      expect(metadataTwo).toHaveProperty('totalCount', 1)
+      expect(metadataTwo).toHaveProperty('items')
+      expect(metadataTwo.items).toHaveLength(1)
+      expect(metadataTwo.items[0]).toHaveProperty('name', 'Token 1')
+
+      expect(metadata).not.toEqual(metadataTwo)
+
+      // Check an empty array is returned if no tokens match name provided
+      const metadataThree = await tokenResolvers.tokensMetadata([], ['Token 4'])
+      expect(metadataThree).not.toBeNull()
+      expect(metadataThree).toHaveProperty('totalCount', 0)
+      expect(metadataThree).toHaveProperty('items')
+      expect(metadataThree.items).toHaveLength(0)
+    })
+
+    it('should return TokenMetadataDtos matching the addresses provided', async () => {
+      const metadata = await tokenResolvers.tokensMetadata([], [], [contractAddressOne, contractAddressTwo])
+      expect(metadata).not.toBeNull()
+      expect(metadata).toHaveProperty('totalCount', 2)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(2)
+      expect(metadata.items[0]).toHaveProperty('address', contractAddressOne)
+      expect(metadata.items[1]).toHaveProperty('address', contractAddressTwo)
+
+      const metadataTwo = await tokenResolvers.tokensMetadata([], [], [contractAddressThree])
+      expect(metadataTwo).not.toBeNull()
+      expect(metadataTwo).toHaveProperty('totalCount', 1)
+      expect(metadataTwo).toHaveProperty('items')
+      expect(metadataTwo.items).toHaveLength(1)
+      expect(metadataTwo.items[0]).toHaveProperty('address', contractAddressThree)
+
+      expect(metadata).not.toEqual(metadataTwo)
+
+      // Check an empty array is returned if no tokens match address provided
+      const metadataThree = await tokenResolvers.tokensMetadata([], [], [contractAddressFive])
+      expect(metadataThree).not.toBeNull()
+      expect(metadataThree).toHaveProperty('totalCount', 0)
+      expect(metadataThree).toHaveProperty('items')
+      expect(metadataThree.items).toHaveLength(0)
+    })
+    it('should respect limit and offset parameters', async () => {
+      const pageOne = await tokenResolvers.tokensMetadata([], [], [], 0, 2)
+      expect(pageOne).not.toBeNull()
+      expect(pageOne).toHaveProperty('totalCount', 3)
+      expect(pageOne).toHaveProperty('items')
+      expect(pageOne.items).toHaveLength(2)
+
+      const pageTwo = await tokenResolvers.tokensMetadata([], [], [], 2, 2)
+      expect(pageTwo).not.toBeNull()
+      expect(pageTwo).toHaveProperty('totalCount', 3)
+      expect(pageTwo).toHaveProperty('items')
+      expect(pageTwo.items).toHaveLength(1)
+
+      expect(pageOne).not.toEqual(pageTwo)
     })
   })
 
