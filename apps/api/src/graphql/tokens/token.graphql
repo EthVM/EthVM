@@ -3,7 +3,7 @@ type Query {
   addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10): TokenPage!
   addressTotalTokenValueUSD(address: String!): BigNumber
   coinExchangeRate(pair: ExchangeRatePair!): CoinExchangeRate
-  tokenExchangeRates(symbols: [String!], sort: TokenExchangeRateFilter, offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
+  tokenExchangeRates(symbols: [String], names: [String], addresses: [String], sort: TokenExchangeRateFilter, offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
