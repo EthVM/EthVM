@@ -1,0 +1,44 @@
+{
+  "postgres-balance-delta-sink": [
+    "fungible_balance_delta",
+    "non_fungible_balance_delta"
+  ],
+  "postgres-balance-sink": [
+    "fungible_balance",
+    "non_fungible_balance"
+  ],
+  "postgres-block-metrics-sink": [
+    "block_metrics_header",
+    "block_metrics_transaction",
+    "block_metrics_transaction_trace",
+    "block_metrics_transaction_fee"
+  ],
+  "postgres-block-sink": [
+    "canonical_block_header",
+    "uncle"
+  ],
+  "postgres-transaction-sink": [
+    "transaction",
+    "transaction_receipt"
+  ],
+  "postgres-contract-sink": [
+    "contract",
+    "eth_list_contract_metadata",
+    "erc20_metadata",
+    "erc721_metadata",
+    "token_exchange_rates"
+  ],
+  "postgres-count-sink": [
+    "transaction_count"
+  ],
+  "postgres-exchange-rates-sink": [
+    "token_exchange_rates",
+    "coin_exchange_rates"
+  ],
+  "postgres-parity-sync-state-log": [
+    "parity_sync_state"
+  ],
+  "postgres-trace-sink": [
+    "transaction_trace"
+  ]
+}

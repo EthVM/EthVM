@@ -4,6 +4,7 @@ import { assignClean } from '@app/shared/utils';
 import BigNumber from 'bignumber.js';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import { ContractMetadataEntity } from '@app/orm/entities/contract-metadata.entity'
 
 @Entity('canonical_erc721_balance')
 export class Erc721BalanceEntity {
@@ -52,5 +53,12 @@ export class Erc721BalanceEntity {
     referencedColumnName: 'address',
   })
   metadata?: Erc721MetadataEntity
+
+  @ManyToOne(type => ContractMetadataEntity, contractMetadata => contractMetadata.erc721Balances)
+  @JoinColumn({
+    name: 'contract',
+    referencedColumnName: 'address',
+  })
+  contractMetadata?: ContractMetadataEntity
 
 }

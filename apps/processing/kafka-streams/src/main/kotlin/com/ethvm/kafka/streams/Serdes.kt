@@ -20,6 +20,8 @@ import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
+import com.ethvm.avro.processing.CanonicalCountKeyRecord
+import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
@@ -77,6 +79,14 @@ object Serdes : KoinComponent {
   }
 
   fun TransactionCountDelta() = SpecificAvroSerde<TransactionCountDeltaRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun CanonicalCountKey() = SpecificAvroSerde<CanonicalCountKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun CanonicalCount() = SpecificAvroSerde<CanonicalCountRecord>(registryClient).apply {
     configure(config, false)
   }
 
