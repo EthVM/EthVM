@@ -1,4 +1,3 @@
-
 import { CoinExchangeRateEntity } from '@app/orm/entities/coin-exchange-rate.entity'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
@@ -8,11 +7,10 @@ import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FindManyOptions, Repository, FindOneOptions, Any } from 'typeorm'
-import {TokenDto} from '@app/graphql/tokens/dto/token.dto'
-import {TokenMetadataDto} from '@app/graphql/tokens/dto/token-metadata.dto'
-import { Token } from '@app/graphql/schema'
+import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
+import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
 import BigNumber from 'bignumber.js'
+import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 
 @Injectable()
 export class TokenService {
@@ -31,6 +29,8 @@ export class TokenService {
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
+    @InjectRepository(TokenMetadataEntity)
+    private readonly tokenMetadataRepository: Repository<TokenMetadataEntity>,
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
@@ -86,26 +86,6 @@ export class TokenService {
       tokenData.image = tokenData.image || tokenExchangeRate.image
     }
     return new TokenDto(tokenData)
-  }
-
-  private constructTokenMetadataDto(entity: Erc20MetadataEntity | Erc721MetadataEntity): TokenMetadataDto {
-
-    const decimals = entity instanceof Erc20MetadataEntity ? entity.decimals : null
-    const { contractMetadata } = entity
-    const support = contractMetadata ? contractMetadata.support : null
-    const logo = contractMetadata ? contractMetadata.logo : null
-
-    const data = {
-      name: entity.name,
-      address: entity.address,
-      symbol: entity.symbol,
-      decimals,
-      website: contractMetadata ? contractMetadata.website : null,
-      email: support ? JSON.parse(support).email : null,
-      logo: logo ? JSON.parse(logo).src : null,
-    }
-
-    return new TokenMetadataDto(data)
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
@@ -181,10 +161,6 @@ export class TokenService {
     return this.tokenExchangeRateRepository.findOne({ where: { address }, relations: ['contract', 'contract.metadata'] })
   }
 
-  async findContractInfoForToken(address: string): Promise<ContractEntity | undefined> {
-    return this.contractRepository.findOne({ where: { address }, select: ['address', 'creator'] })
-  }
-
   async countTokenHolders(address: string): Promise<number> {
     let numHolders = await this.erc20BalanceRepository.count({ where: { contract: address } })
     if (!numHolders || numHolders === 0) {
@@ -209,25 +185,8 @@ export class TokenService {
 
   }
 
-  async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataDto[]> {
+  async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataEntity[]> {
     const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
-    const findOptions = {
-      where,
-      relations: ['contractMetadata'],
-    }
-    const erc20Tokens = await this.erc20MetadataRepository.find(findOptions)
-    const erc721Tokens = await this.erc721MetadataRepository.find(findOptions)
-
-    const tokenMetadataDtos: TokenMetadataDto[] = []
-
-    erc20Tokens.forEach(entity => {
-      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
-    })
-
-    erc721Tokens.forEach(entity => {
-      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
-    })
-
-    return tokenMetadataDtos
+    return await this.tokenMetadataRepository.find({ where })
   }
 }
