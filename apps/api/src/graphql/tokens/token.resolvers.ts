@@ -65,12 +65,12 @@ export class TokenResolvers {
 
   @Query()
   async tokenExchangeRates(
-    @Args({ name: 'symbols', type: () => [String] }) symbols: string[],
-    @Args({ name: 'names', type: () => [String] }) names: string[],
-    @Args({ name: 'addresses', type: () => [String] }) addresses: string[],
-    @Args('sort') sort: string,
-    @Args('limit') limit: number,
-    @Args('offset') offset: number,
+    @Args({ name: 'symbols', type: () => [String], nullable: true }) symbols?: string[],
+    @Args({ name: 'names', type: () => [String], nullable: true }) names?: string[],
+    @Args({ name: 'addresses', type: () => [String], nullable: true }) addresses?: string[],
+    @Args('sort') sort?: string,
+    @Args('limit') limit?: number,
+    @Args('offset') offset?: number,
   ): Promise<TokenExchangeRatePageDto> {
     const [items, totalCount] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, symbols, names, addresses)
     return new TokenExchangeRatePageDto({ items, totalCount })
@@ -97,11 +97,11 @@ export class TokenResolvers {
 
   @Query()
   async tokensMetadata(
-    @Args({ name: 'symbols', type: () => [String] }) symbols: string[],
-    @Args({ name: 'names', type: () => [String] }) names: string[],
-    @Args({ name: 'addresses', type: () => [String] }) addresses: string[],
-    @Args('offset') offset: number,
-    @Args('limit') limit: number,
+    @Args({ name: 'symbols', type: () => [String], nullable: true }) symbols?: string[],
+    @Args({ name: 'names', type: () => [String], nullable: true }) names?: string[],
+    @Args({ name: 'addresses', type: () => [String], nullable: true }) addresses?: string[],
+    @Args('offset') offset?: number,
+    @Args('limit') limit?: number,
   ): Promise<TokenMetadataDto[]> {
     const entities = await this.tokenService.findTokensMetadata(symbols, names, addresses, offset, limit)
     return entities.map(e => new TokenMetadataDto(e))
