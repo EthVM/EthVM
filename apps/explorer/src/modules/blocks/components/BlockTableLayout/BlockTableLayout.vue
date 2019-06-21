@@ -1,5 +1,5 @@
 <template>
-  <div class="block-table-layout">
+  <div class="table-layout">
     <notice-new-block @reload="resetFromBlock" />
 
     <!--
@@ -7,7 +7,7 @@
       TITLE
     =====================================================================================
     -->
-    <div class="block-table-title-container">
+    <div class="table-title-container">
       <!-- Title with [pagination] for dedicated [Blocks page] -->
       <title-last-blocks :title="getTitle" :page-type="pageType">
         <div class="pagination-container" v-if="pages > 1 && !hasError">

@@ -13,7 +13,6 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppCardStatsGroup from '@app/core/components/ui/AppCardStatsGroup.vue'
-import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import LastBlocks from '@app/modules/blocks/components/BlockTableLayout/BlockTableLayout.vue'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
@@ -24,7 +23,6 @@ const MAX_ITEMS = 50
   components: {
     AppBreadCrumbs,
     AppCardStatsGroup,
-    TableBlocks,
     LastBlocks
   }
 })
