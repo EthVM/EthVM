@@ -6,7 +6,7 @@
         <v-icon :class="searchClass" @click="startSearch()">search</v-icon>
       </v-btn>
       </div>
-      <input v-model="searchInput" :placeholder="searchPlaceholder" class="search-tx-input">
+      <input v-model="searchInput" :placeholder="searchPlaceholder" class="search-tx-input" @keyup.enter="startSearch()">
 
       <div class="clear-icon" >
         <v-btn v-if="focus || !isValid" icon small>
@@ -75,6 +75,7 @@ export default class AppSearchInput extends Vue {
   }
 
   startSearch(): void {
+    console.log("emiting search")
     if (this.isValid) {
       this.$emit('search', this.searchID, this.searchInput)
     }
@@ -102,7 +103,6 @@ export default class AppSearchInput extends Vue {
   }
 
   get searchPlaceholder(): TranslateResult {
-    console.log(this.searchID)
     return this.$t(`search.${this.searchID}`)
   }
 }
