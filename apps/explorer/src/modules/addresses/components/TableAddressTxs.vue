@@ -32,8 +32,7 @@
       <!-- Sort (MObile Only)-->
       <!-- Search -->
       <v-flex>
-        <app-search-input :isValid="true" :searchID="SearchType.adrTx"/>
-
+        <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
       </v-flex>
       <!-- Pagination -->
     </v-layout>
@@ -340,7 +339,6 @@ export default class TableTxs extends TableTxsMixin {
         }
       })
     }
-    console.log(this.SearchType)
   }
 
   destroyed() {

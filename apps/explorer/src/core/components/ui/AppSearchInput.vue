@@ -3,15 +3,15 @@
     <div class="search-container">
       <div class="search-icon">
         <v-tooltip v-model="showError" top>
-          <template v-slot:activator="{showError}">
+          <template v-slot:activator="{ showError }">
             <v-btn icon small :disabled="canSearch">
               <v-icon :class="searchClass" @click="startSearch()">search</v-icon>
             </v-btn>
           </template>
-          <span>{{errorMessage}}</span>
+          <span>{{ errorMessage }}</span>
         </v-tooltip>
       </div>
-      <input v-model="searchInput" :placeholder="searchPlaceholder">
+      <input v-model="searchInput" :placeholder="searchPlaceholder" />
       <div class="clear-icon">
         <v-btn v-if="focus || !isValid" icon small>
           <v-icon :class="searchClass" @click="clear()" small>clear</v-icon>
@@ -24,7 +24,7 @@
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 import { TranslateResult } from 'vue-i18n'
-import { setTimeout } from 'timers';
+import { setTimeout } from 'timers'
 
 @Component
 export default class AppSearchInput extends Vue {
@@ -64,12 +64,12 @@ export default class AppSearchInput extends Vue {
 
   // Open/close error message if !isValid
   @Watch('isValid')
-  onIsValidChange(): void{
-    if( !this.isValid){
+  onIsValidChange(): void {
+    if (!this.isValid) {
       this.showError = true
-      setTimeout(()=>{
+      setTimeout(() => {
         this.showError = false
-      },10000)
+      }, 10000)
     }
   }
 
@@ -119,7 +119,6 @@ export default class AppSearchInput extends Vue {
     return !this.focus || !this.isValid
   }
 
-
   // Returns placeholder text acccordign to the searchId
   get searchPlaceholder(): TranslateResult {
     return this.$t(`search.${this.searchID}.text`)
@@ -127,11 +126,10 @@ export default class AppSearchInput extends Vue {
 
   // Returns error text acccordign to the searchId
   get errorMessage(): TranslateResult {
-     return this.$t(`search.${this.searchID}.error`)
+    return this.$t(`search.${this.searchID}.error`)
   }
 }
 </script>
-
 
 <style scoped lang="css">
 .search-container {
