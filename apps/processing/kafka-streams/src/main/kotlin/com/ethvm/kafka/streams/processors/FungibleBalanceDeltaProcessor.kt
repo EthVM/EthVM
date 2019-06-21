@@ -267,7 +267,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
               .build()
           }
         },
-        JoinWindows.of(Duration.ofHours(2)),
+        JoinWindows.of(Duration.ofHours(24)),
         Joined.with(Serdes.CanonicalKey(), Serdes.BlockAuthor(), Serdes.TransactionFeeList())
       ).toTopic(CanonicalMinerFeesEtherDeltas)
 
