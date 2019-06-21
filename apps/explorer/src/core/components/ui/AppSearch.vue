@@ -87,7 +87,6 @@ export default class AppSearch extends Vue {
   searchInput = ''
   phText = 'default'
   isValid = true
-
   query?: string
 
   /*

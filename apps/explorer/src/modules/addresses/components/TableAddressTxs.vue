@@ -3,7 +3,7 @@
     <!-- Txs Filter/Sort/Search/Pagination -->
     <v-layout row align-bottom justify spacebetween>
       <!-- Filter -->
-      <v-flex>
+      <v-flex shrink>
         <v-layout row align-center justify-start>
           <v-flex shrink>
             <p class="info--text">{{ $t('filter.name') }}</p>
@@ -32,15 +32,7 @@
       <!-- Sort (MObile Only)-->
       <!-- Search -->
       <v-flex>
-        <div class="box-border">
-          <v-layout row align-center justify-start pa-2>
-            <v-icon class="info--text search pl-1">search </v-icon>
-            <v-flex grow>
-              <input v-model="searchInput" :placeholder="$t('search.address-tx')" class="search-tx-input" />
-            </v-flex>
-            <v-btn flat transparent class="primary--text text-capitalize ma-0">Search</v-btn>
-          </v-layout>
-        </div>
+        <app-search-input :isValid="true" :searchID="SearchType.adrTx"/>
 
       </v-flex>
       <!-- Pagination -->
@@ -154,6 +146,7 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppSearchInput from '@app/core/components/ui/AppSearchInput.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
@@ -169,6 +162,7 @@ import BigNumber from 'bignumber.js'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { Subscription } from 'rxjs'
 import { TranslateResult } from 'vue-i18n'
+import { searchTypes } from '@app/core/helper'
 
 const MAX_ITEMS = 50
 
@@ -181,6 +175,7 @@ class TableTxsMixin extends Vue {
     AppError,
     AppFootnotes,
     AppPaginate,
+    AppSearchInput,
     TableTxsRow,
     NoticeNewBlock
   },
@@ -326,6 +321,13 @@ export default class TableTxs extends TableTxsMixin {
 
   /*
     ===================================================================================
+     Initial Data
+    ===================================================================================
+    */
+  SearchType = searchTypes
+
+  /*
+    ===================================================================================
       Lifecycle
     ===================================================================================
     */
@@ -338,6 +340,7 @@ export default class TableTxs extends TableTxsMixin {
         }
       })
     }
+    console.log(this.SearchType)
   }
 
   destroyed() {
