@@ -22,6 +22,8 @@ import com.ethvm.kafka.streams.processors.KafkaProcessor
 import com.ethvm.kafka.streams.processors.NonFungibleBalanceDeltaProcessor
 import com.ethvm.kafka.streams.processors.NonFungibleBalanceProcessor
 import com.ethvm.kafka.streams.processors.CountProcessor
+import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaReceiptProcessor
+import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaTraceProcessor
 import com.ethvm.kafka.streams.processors.TransactionFeesProcessor
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -104,6 +106,8 @@ class Cli : CliktCommand() {
     listOf<KafkaProcessor>(
       TransactionFeesProcessor(),
       FungibleBalanceDeltaProcessor(),
+      FungibleBalanceDeltaReceiptProcessor(),
+      FungibleBalanceDeltaTraceProcessor(),
       NonFungibleBalanceDeltaProcessor(),
       FungibleBalanceProcessor(),
       NonFungibleBalanceProcessor(),

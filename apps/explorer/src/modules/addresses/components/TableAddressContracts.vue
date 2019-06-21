@@ -236,7 +236,7 @@ export default class TableAddressContracts extends Vue {
   }
 
   get contractString(): string {
-    return this.totalCount.isGreaterThan(1) ? this.$i18n.tc('contract.name', 2) : this.$i18n.tc('contract.name', 2)
+    return this.totalCount.isGreaterThan(1) ? this.$i18n.tc('contract.name', 2) : this.$i18n.tc('contract.name', 1)
   }
 
   /**

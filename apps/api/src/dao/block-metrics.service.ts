@@ -4,7 +4,7 @@ import { EntityManager, In } from 'typeorm'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
 import { unitOfTime } from 'moment'
-import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metrics-transaction-fee.entity'
 import { BlockMetricsTransactionEntity } from '@app/orm/entities/block-metrics-transaction.entity'
 import moment = require('moment')
@@ -19,8 +19,8 @@ export class BlockMetricsService {
     return this.entityManager
       .find(BlockMetricEntity, {
         where: {
-          blockHash: In(blockHashes)
-        }
+          blockHash: In(blockHashes),
+        },
       })
   }
 
@@ -32,17 +32,17 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{ count }] = await txn.find(RowCount, {
+        const [{ count }] = await txn.find(CanonicalCount, {
           select: ['count'],
           where: {
-            relation: 'canonical_block_header'
-          }
+            entity: 'block_header',
+          },
         })
 
         const entities = await txn.find(BlockMetricsTransactionEntity, {
           order: { number: 'DESC' },
           skip: offset,
-          take: limit
+          take: limit,
         })
 
         return [entities, count]
@@ -52,7 +52,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionByBlockHash(blockHash: string): Promise<BlockMetricsTransactionEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionEntity, {
-      where: { blockHash }
+      where: { blockHash },
     })
   }
 
@@ -64,17 +64,17 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{ count }] = await txn.find(RowCount, {
+        const [{ count }] = await txn.find(CanonicalCount, {
           select: ['count'],
           where: {
-            relation: 'canonical_block_header'
-          }
+            entity: 'block_header',
+          },
         })
 
         const entities = await txn.find(BlockMetricsTransactionFeeEntity, {
           order: { number: 'DESC' },
           skip: offset,
-          take: limit
+          take: limit,
         })
 
         return [entities, count]
@@ -84,7 +84,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionFeeByBlockHash(blockHash: string): Promise<BlockMetricsTransactionFeeEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionFeeEntity, {
-      where: { blockHash }
+      where: { blockHash },
     })
   }
 
@@ -121,7 +121,7 @@ export class BlockMetricsService {
     start: Date,
     end: Date,
     bucket: TimeBucket,
-    fields: BlockMetricField[]
+    fields: BlockMetricField[],
   ): Promise<AggregateBlockMetric[]> {
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
@@ -219,7 +219,7 @@ export class BlockMetricsService {
         avgNumFailedTxs: item.avg_num_failed_txs,
         avgNumInternalTxs: item.avg_num_internal_txs,
         avgTxFees: item.avg_tx_fees,
-        avgTotalTxFees: item.avg_total_tx_fees
+        avgTotalTxFees: item.avg_total_tx_fees,
       } as AggregateBlockMetric
 
     })

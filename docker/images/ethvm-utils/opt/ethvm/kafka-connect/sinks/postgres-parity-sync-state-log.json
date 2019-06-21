@@ -6,6 +6,7 @@
     "topics": "parity_sync_state",
     "insert.mode": "insert",
     "pk.mode": "none",
+    "batch.size": 1000,
     "table.name.format": "${topic}_log",
     "connection.url": "{{ .Env.POSTGRES_JDBC_URL }}",
     "connection.user": "{{ .Env.POSTGRES_USER }}",

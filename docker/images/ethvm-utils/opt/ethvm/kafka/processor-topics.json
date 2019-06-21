@@ -1,0 +1,61 @@
+{
+  "block-author-processor": [
+    "canonical_block_header"
+  ],
+  "block-metrics-processor": [
+    "canonical_block_header",
+    "canonical_traces",
+    "canonical_transactions",
+    "canonical_transaction_fees"
+  ],
+  "contract-lifecycle-processor": [
+    "canonical_traces",
+    "canonical_contract_lifecycle",
+    "contract_lifecycle_events"
+  ],
+  "contract-metadata-processor": [
+    "contract"
+  ],
+  "count-delta-processor": [
+    "canonical_block_header",
+    "canonical_transactions",
+    "canonical_transaction_receipts",
+    "canonical_transaction_traces",
+    "canonical_uncles"
+  ],
+  "count-processor": [
+    "canonical_count_delta",
+    "transaction_count_delta"
+  ],
+  "flat-map-processor": [
+    "canonical_transactions",
+    "canonical_receipts",
+    "canonical_traces",
+    "canonical_uncles"
+  ],
+  "fungible-balance-delta-processor": [
+    "canonical_block_header",
+    "canonical_traces",
+    "canonical_transaction_fees",
+    "canonical_block_author",
+    "canonical_miner_fees_ether_deltas",
+    "canonical_receipts"
+  ],
+  "fungible-balance-processor": [
+    "premine_balance_delta",
+    "hard_fork_balance_delta",
+    "transaction_balance_delta",
+    "transaction_fee_balance_delta",
+    "miner_fee_balance_delta",
+    "erc20_balance_delta"
+  ],
+  "non-fungible-balance-delta-processor": [
+    "erc721_balance_delta"
+  ],
+  "transaction-fees-processor": [
+    "canonical_transactions",
+    "canonical_receipts",
+    "canonical_gas_prices",
+    "canonical_gas_used"
+  ]
+}
