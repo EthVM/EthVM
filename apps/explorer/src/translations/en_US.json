@@ -297,7 +297,10 @@
   "search": {
     "name": "Search",
     "default": "Search Block / Address / Tx",
-    "address-tx": "Tx Hash / Address"
+    "address-tx": {
+      "text": "Tx Hash / Address",
+      "error": "This is not a valid Tx/Address hash"
+    }
   },
 
   "filter": {
