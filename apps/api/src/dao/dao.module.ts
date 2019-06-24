@@ -31,6 +31,7 @@ import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 import { MetadataEntity } from '@app/orm/entities/metadata.entity'
 import { MetadataService } from '@app/dao/metadata.service'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
+import { TokenHolderEntity } from '@app/orm/entities/token-holder.entity'
 
 @Module({
   imports: [
@@ -48,12 +49,11 @@ import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
       TransactionEntity,
       TransactionReceiptEntity,
       TransactionTraceEntity,
-      Erc20MetadataEntity,
-      Erc721MetadataEntity,
       CoinExchangeRateEntity,
       BlockMetricEntity,
       MetadataEntity,
       TokenMetadataEntity,
+      TokenHolderEntity,
     ]),
   ],
   providers: [

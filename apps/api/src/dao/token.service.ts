@@ -2,8 +2,6 @@ import { CoinExchangeRateEntity } from '@app/orm/entities/coin-exchange-rate.ent
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
-import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
-import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -11,6 +9,7 @@ import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
 import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
 import BigNumber from 'bignumber.js'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
+import { TokenHolderEntity } from '@app/orm/entities/token-holder.entity'
 
 @Injectable()
 export class TokenService {
@@ -19,10 +18,6 @@ export class TokenService {
     private readonly erc20BalanceRepository: Repository<Erc20BalanceEntity>,
     @InjectRepository(Erc721BalanceEntity)
     private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
-    @InjectRepository(Erc20MetadataEntity)
-    private readonly erc20MetadataRepository: Repository<Erc20MetadataEntity>,
-    @InjectRepository(Erc721MetadataEntity)
-    private readonly erc721MetadataRepository: Repository<Erc721MetadataEntity>,
     @InjectRepository(TokenExchangeRateEntity)
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
     @InjectRepository(ContractEntity)
@@ -31,27 +26,20 @@ export class TokenService {
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
     @InjectRepository(TokenMetadataEntity)
     private readonly tokenMetadataRepository: Repository<TokenMetadataEntity>,
+    @InjectRepository(TokenHolderEntity)
+    private readonly tokenHolderRepository: Repository<TokenHolderEntity>,
   ) {}
 
-  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
-    const findOptions: FindManyOptions = {
+  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[TokenHolderEntity[], number]> {
+    return await this.tokenHolderRepository.findAndCount({
       where: { contract: address },
       take: limit,
-      skip: offset,
-    }
-    const findOptionsErc20: FindManyOptions = {...findOptions, select: ['address', 'amount']}
-    const erc20Balances = await this.erc20BalanceRepository.findAndCount(findOptionsErc20)
-    if (erc20Balances[1] > 0) {
-      return erc20Balances
-    }
-    return await this.erc721BalanceRepository.findAndCount(findOptions)
+      skip: offset
+    });
   }
 
-  async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<Erc20BalanceEntity | Erc721BalanceEntity | undefined> {
-    const where = { contract: tokenAddress, address: holderAddress }
-    const erc20Balance = await this.erc20BalanceRepository.findOne({ where })
-    if (erc20Balance) return erc20Balance
-    return this.erc721BalanceRepository.findOne({ where })
+  async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<TokenHolderEntity | undefined> {
+    return this.tokenHolderRepository.findOne({ contract: tokenAddress, address: holderAddress })
   }
 
   async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenDto[], number]> {

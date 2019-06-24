@@ -24,3 +24,19 @@ SELECT  e721.name,
         'erc721' AS type
 FROM erc721_metadata AS e721
         LEFT JOIN eth_list_contract_metadata AS elcm2 ON elcm2.address = e721.address;
+
+/* create token_holder view to show holders and balances for erc20 and erc721 tokens */
+CREATE VIEW token_holder AS
+  SELECT
+    e20.contract as contract,
+    e20.address as address,
+    e20.amount as balance,
+    'erc20' as type
+  FROM canonical_erc20_balance AS e20
+UNION ALL
+  SELECT
+    e721.contract,
+    e721.address,
+    null,
+    'erc721' as type
+  FROM canonical_erc721_balance AS e721;
