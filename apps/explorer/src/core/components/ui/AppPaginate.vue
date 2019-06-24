@@ -6,7 +6,7 @@
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small :disabled="currentPage === 0"
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
-        <div v-if="hasInput" class="page-input">
+        <div v-if="hasInput" :class="pageInputWidth">
           <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />
         </div>
         <p v-else class="info--text pr-1">{{ pageDisplay }}</p>
@@ -163,6 +163,28 @@ export default class AppPaginate extends Vue {
     }
     return mask
   }
+
+  get pageInputWidth(): string {
+    switch(true) {
+      case (this.total <=9): {
+        console.log('page-input-xs')
+        return 'page-input-xs'
+      }
+      case (this.total >=10 && this.total <= 999): {
+        console.log('page-input-sm')
+        return 'page-input-sm'
+      }
+      case (this.total >= 1000 && this.total < 100000): {
+        console.log('page-input-md')
+        return 'page-input-md'
+      }
+      default: {
+        console.log('page-input-lg')
+        return 'page-input-lg'
+      }
+
+    }
+  }
 }
 </script>
 
@@ -173,8 +195,17 @@ export default class AppPaginate extends Vue {
   margin: 5px;
 }
 
-.page-input{
-  width: 80px;
+.page-input-xs {
+  width: 1em;
+}
+.page-input-sm {
+  width: 2em;
+}
+.page-input-md {
+  width: 3em;
+}
+.page-input-lg {
+  width: 4em
 }
 
 p {
