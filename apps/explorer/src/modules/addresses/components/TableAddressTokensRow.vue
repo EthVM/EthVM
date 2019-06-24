@@ -93,7 +93,7 @@
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { TokenPageExt_items } from '@app/core/api/apollo/extensions/token-page.ext'
+import { TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 
 @Component
 export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
@@ -103,7 +103,7 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  @Prop(Object) token!: TokenPageExt_items
+  @Prop(Object) token!: TokenBalancePageExt_items
   @Prop(String) holder!: string
 
   /*

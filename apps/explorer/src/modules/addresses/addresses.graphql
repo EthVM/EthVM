@@ -22,11 +22,11 @@ fragment ContractSummaryPage on ContractSummaryPage {
 
 query addressAllTokensOwned($address: String!, $offset: Int, $limit: Int) {
   tokens: addressAllTokensOwned(address: $address, offset: $offset, limit: $limit) {
-    ...TokenPage
+    ...TokenBalancePage
   }
 }
 
-fragment Token on Token {
+fragment TokenBalance on TokenBalance {
   name
   symbol
   address
@@ -37,9 +37,9 @@ fragment Token on Token {
   image
 }
 
-fragment TokenPage on TokenPage {
+fragment TokenBalancePage on TokenBalancePage {
   items {
-    ...Token
+    ...TokenBalance
   }
   totalCount
 }
