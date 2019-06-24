@@ -32,7 +32,7 @@ export class TokenService {
     return await this.tokenHolderRepository.findAndCount({
       where: {contract: address},
       take: limit,
-      skip: offset
+      skip: offset,
     })
   }
 
