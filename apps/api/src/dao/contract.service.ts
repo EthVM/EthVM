@@ -25,7 +25,7 @@ export class ContractService {
 
     return entityManager.find(ContractEntity, {
         where: { address: In(addresses) },
-        relations: ['metadata', 'erc20Metadata', 'erc721Metadata'],
+        relations: ['metadata', 'tokenMetadata'],
       },
     )
   }

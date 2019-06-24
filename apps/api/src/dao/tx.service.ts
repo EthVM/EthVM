@@ -284,13 +284,11 @@ export class TxService {
 
       const contractName =
         (contract && contract.metadata && contract.metadata.name) ||
-        (contract && contract.erc20Metadata && contract.erc20Metadata.name) ||
-        (contract && contract.erc721Metadata && contract.erc721Metadata.name)
+        (contract && contract.tokenMetadata && contract.tokenMetadata.name)
 
       const contractSymbol =
         (contract && contract.metadata && contract.metadata.symbol) ||
-        (contract && contract.erc20Metadata && contract.erc20Metadata.symbol) ||
-        (contract && contract.erc721Metadata && contract.erc721Metadata.symbol)
+        (contract && contract.tokenMetadata && contract.tokenMetadata.symbol)
 
       // Partial read checks
 

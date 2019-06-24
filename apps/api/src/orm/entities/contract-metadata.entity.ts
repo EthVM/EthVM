@@ -2,9 +2,7 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from '
 import { assignClean } from '@app/shared/utils'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
-import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
-import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 
 @Entity('eth_list_contract_metadata')
 export class ContractMetadataEntity {
@@ -57,24 +55,10 @@ export class ContractMetadataEntity {
   })
   erc20Metadata?: Erc20MetadataEntity
 
-  @OneToOne(type => Erc721MetadataEntity, erc721 => erc721.contractMetadata)
-  @JoinColumn({
-    name: 'address',
-    referencedColumnName: 'address',
-  })
-  erc721Metadata?: Erc721MetadataEntity
-
   @OneToMany(type => Erc20BalanceEntity, balance => balance.contractMetadata)
   @JoinColumn({
     name: 'address',
     referencedColumnName: 'contract',
   })
   erc20Balances?: Erc20BalanceEntity[]
-
-  @OneToMany(type => Erc721BalanceEntity, balance => balance.contractMetadata)
-  @JoinColumn({
-    name: 'address',
-    referencedColumnName: 'contract',
-  })
-  erc721Balances?: Erc721BalanceEntity[]
 }

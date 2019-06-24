@@ -1,12 +1,12 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
-import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { ContractMetadataEntity } from '@app/orm/entities/contract-metadata.entity'
 import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
 import BigNumber from 'bignumber.js'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
+import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 
 @Entity('canonical_contract')
 export class ContractEntity {
@@ -88,12 +88,12 @@ export class ContractEntity {
   })
   erc20Metadata?: Erc20MetadataEntity
 
-  @OneToOne(type => Erc721MetadataEntity, metadata => metadata.contract)
+  @OneToOne(type => TokenMetadataEntity, tm => tm.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address',
+    referencedColumnName: 'address'
   })
-  erc721Metadata?: Erc721MetadataEntity
+  tokenMetadata?: TokenMetadataEntity
 
   @OneToOne(type => ContractMetadataEntity, metadata => metadata.contract)
   @JoinColumn({

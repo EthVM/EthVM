@@ -1,5 +1,4 @@
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity';
-import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity';
 import { assignClean } from '@app/shared/utils';
 import BigNumber from 'bignumber.js';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
@@ -78,13 +77,6 @@ export class TokenExchangeRateEntity {
     referencedColumnName: 'contract',
   })
   erc20Balances?: Erc20BalanceEntity[]
-
-  @OneToMany(type => Erc721BalanceEntity, erc721 => erc721.tokenExchangeRate)
-  @JoinColumn({
-    name: 'address',
-    referencedColumnName: 'contract',
-  })
-  erc721Balances?: Erc721BalanceEntity[]
 
   @OneToOne(type => ContractEntity, c => c.tokenExchangeRate)
   @JoinColumn({
