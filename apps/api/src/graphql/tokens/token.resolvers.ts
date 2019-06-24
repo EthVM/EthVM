@@ -4,13 +4,13 @@ import { TokenService } from '@app/dao/token.service'
 import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
 import { TokenExchangeRateDto } from '@app/graphql/tokens/dto/token-exchange-rate.dto'
 import { TokenHoldersPageDto } from '@app/graphql/tokens/dto/token-holders-page.dto'
-import { TokenPageDto } from '@app/graphql/tokens/dto/token-page.dto'
 import BigNumber from 'bignumber.js'
 import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange-rate-page.dto'
 import { CoinExchangeRateDto } from '@app/graphql/tokens/dto/coin-exchange-rate.dto'
 import { UseInterceptors } from '@nestjs/common'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 import { TokenMetadataPageDto } from '@app/graphql/tokens/dto/token-metadata-page.dto'
+import { TokenBalancePageDto } from '@app/graphql/tokens/dto/token-balance-page.dto'
 
 @Resolver('Token')
 @UseInterceptors(SyncingInterceptor)
@@ -45,9 +45,9 @@ export class TokenResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TokenPageDto> {
+  ): Promise<TokenBalancePageDto> {
     const [tokens, totalCount] = await this.tokenService.findAddressAllTokensOwned(address, offset, limit)
-    return new TokenPageDto({items: tokens, totalCount})
+    return new TokenBalancePageDto({items: tokens, totalCount})
   }
 
   @Query()

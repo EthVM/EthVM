@@ -331,7 +331,7 @@ export interface IQuery {
     metadata(): Metadata | Promise<Metadata>;
     search(query: string): Search | Promise<Search>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
-    addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
+    addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenBalancePage | Promise<TokenBalancePage>;
     addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
     coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
     tokenExchangeRates(symbols?: string[], names?: string[], addresses?: string[], sort?: TokenExchangeRateFilter, offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
@@ -397,7 +397,7 @@ export interface ISubscription {
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
 }
 
-export interface Token {
+export interface TokenBalance {
     name?: string;
     website?: string;
     email?: string;
@@ -408,6 +408,11 @@ export interface Token {
     currentPrice?: BigNumber;
     priceChangePercentage24h?: BigNumber;
     image?: string;
+}
+
+export interface TokenBalancePage {
+    items: TokenBalance[];
+    totalCount: number;
 }
 
 export interface TokenExchangeRate {
@@ -459,11 +464,6 @@ export interface TokenMetadata {
 
 export interface TokenMetadataPage {
     items: TokenMetadata[];
-    totalCount: number;
-}
-
-export interface TokenPage {
-    items: Token[];
     totalCount: number;
 }
 

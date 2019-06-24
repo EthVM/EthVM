@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
 import { BigNumberTransformer } from '../transformers/big-number.transformer';
 import { ContractEntity } from '@app/orm/entities/contract.entity'
+import { TokenHolderEntity } from '@app/orm/entities/token-holder.entity'
 
 @Entity('canonical_token_exchange_rates')
 export class TokenExchangeRateEntity {
@@ -63,6 +64,13 @@ export class TokenExchangeRateEntity {
 
   @Column({ type: 'bigint', readonly: true })
   lastUpdated?: string
+
+  @OneToMany(type => TokenHolderEntity, th => th.tokenExchangeRate)
+  @JoinColumn({
+    name: 'address',
+    referencedColumnName: 'contract',
+  })
+  tokenHolders?: TokenHolderEntity[]
 
   @OneToMany(type => Erc20BalanceEntity, erc20 => erc20.tokenExchangeRate)
   @JoinColumn({

@@ -1,6 +1,6 @@
 type Query {
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
-  addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10): TokenPage!
+  addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10): TokenBalancePage!
   addressTotalTokenValueUSD(address: String!): BigNumber
   coinExchangeRate(pair: ExchangeRatePair!): CoinExchangeRate
   tokenExchangeRates(symbols: [String], names: [String], addresses: [String], sort: TokenExchangeRateFilter, offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
@@ -11,12 +11,7 @@ type Query {
   tokenHolders(address: String!, offset: Int = 0, limit: Int = 20): TokenHoldersPage!
 }
 
-type TokenPage {
-  items: [Token!]!
-  totalCount: Int!
-}
-
-type Token {
+type TokenBalance {
   name: String
   website: String
   email: String
@@ -27,6 +22,11 @@ type Token {
   currentPrice: BigNumber
   priceChangePercentage24h: BigNumber
   image: String
+}
+
+type TokenBalancePage {
+  items: [TokenBalance!]
+  totalCount: Int!
 }
 
 type TokenHolder {
