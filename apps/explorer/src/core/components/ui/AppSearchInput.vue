@@ -35,7 +35,7 @@ export default class AppSearchInput extends Vue {
   */
 
   @Prop(Boolean) isValid!: boolean
-  @Prop(String) searchID!: string
+  @Prop(String) searchId!: string
 
   /*
   ===================================================================================
@@ -95,7 +95,7 @@ export default class AppSearchInput extends Vue {
   // Initiate search
   startSearch(): void {
     if (this.isValid) {
-      this.$emit('search', this.searchID, this.searchInput)
+      this.$emit('search', this.searchId, this.searchInput)
     }
   }
 
@@ -121,12 +121,12 @@ export default class AppSearchInput extends Vue {
 
   // Returns placeholder text acccordign to the searchId
   get searchPlaceholder(): TranslateResult {
-    return this.$t(`search.${this.searchID}.text`)
+    return this.$t(`search.${this.searchId}.text`)
   }
 
   // Returns error text acccordign to the searchId
   get errorMessage(): TranslateResult {
-    return this.$t(`search.${this.searchID}.error`)
+    return this.$t(`search.${this.searchId}.error`)
   }
 }
 </script>
