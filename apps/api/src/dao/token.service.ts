@@ -1,7 +1,6 @@
 import { CoinExchangeRateEntity } from '@app/orm/entities/coin-exchange-rate.entity'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
-import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -16,8 +15,6 @@ export class TokenService {
   constructor(
     @InjectRepository(Erc20BalanceEntity)
     private readonly erc20BalanceRepository: Repository<Erc20BalanceEntity>,
-    @InjectRepository(Erc721BalanceEntity)
-    private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
     @InjectRepository(TokenExchangeRateEntity)
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
     @InjectRepository(ContractEntity)
@@ -144,11 +141,7 @@ export class TokenService {
   }
 
   async countTokenHolders(address: string): Promise<number> {
-    let numHolders = await this.erc20BalanceRepository.count({where: {contract: address}})
-    if (!numHolders || numHolders === 0) {
-      numHolders = await this.erc721BalanceRepository.count({where: {contract: address}})
-    }
-    return numHolders
+    return await this.tokenHolderRepository.count({where: {contract: address}})
   }
 
   async totalValueUSDByAddress(address: string): Promise<BigNumber | undefined> {
