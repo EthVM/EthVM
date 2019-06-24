@@ -29,7 +29,7 @@
           </v-flex>
         </v-layout>
       </v-flex>
-      <!-- Sort (MObile Only)-->
+      <!-- Sort (Mobile Only)-->
       <!-- Search -->
       <v-flex>
         <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
@@ -57,29 +57,58 @@
     =====================================================================================
     -->
     <v-layout>
-      <v-flex hidden-sm-and-up pt-0 pb-0 pl-3>
-        <app-footnotes :footnotes="footnotes" pl-2 pr-2 />
-      </v-flex>
       <v-flex hidden-xs-only sm12>
-        <v-card v-if="!hasError" :color="headerColor" flat class="white--text pl-3 pr-1" height="40px">
-          <v-layout align-center justify-start row fill-height pr-3>
-            <v-flex xs4 sm3 md1 pl-3>
-              <h5>{{ $t('block.number') }}</h5>
+        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
+          <v-layout row align-center justify-start >
+            <v-flex sm4>
+              <h5>{{ $tc('tx.hash', 2) }}</h5>
             </v-flex>
-            <v-flex xs6 sm6 md6>
-              <h5>{{ $tc('tx.hash', 1) }}</h5>
+            <v-flex sm2>
+               <v-layout align-center justify-start row pl-1>
+                <h5 class="pr-2">{{ $t('common.eth') }}</h5>
+                <v-flex>
+                  <v-layout align-start justify-center column>
+                    <v-btn flat icon @click="selectSort(0)">
+                      <v-icon :class="[isActiveSort(0) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                    </v-btn>
+                    <v-btn flat icon @click="selectSort(1)">
+                      <v-icon :class="[isActiveSort(1) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                    </v-btn>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
             </v-flex>
-            <v-flex hidden-xs-only sm2 md1>
-              <h5>{{ $t('common.eth') }}</h5>
+            <v-flex sm2>
+              <v-layout align-center justify-start row pl-1>
+                <h5 class="pr-2">{{ $tc('tx.fee', 1) }}</h5>
+                <v-flex>
+                  <v-layout align-start justify-center column>
+                    <v-btn flat icon @click="selectSort(2)">
+                      <v-icon :class="[isActiveSort(2) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                    </v-btn>
+                    <v-btn flat icon @click="selectSort(3)">
+                      <v-icon :class="[isActiveSort(3) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                    </v-btn>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
             </v-flex>
-            <v-flex hidden-sm-and-down md2>
-              <h5>{{ $t('common.age') }}</h5>
+            <v-flex  sm2>
+              <v-layout align-center justify-start row pl-1>
+                <h5 class="pr-2">{{ $t('common.age') }}</h5>
+                <v-flex>
+                  <v-layout align-start justify-center column>
+                    <v-btn flat icon @click="selectSort(4)">
+                      <v-icon :class="[isActiveSort(4) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                    </v-btn>
+                    <v-btn flat icon @click="selectSort(5)">
+                      <v-icon :class="[isActiveSort(5) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                    </v-btn>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
             </v-flex>
-            <v-flex hidden-sm-and-down md1>
-              <h5>{{ $tc('tx.fee', 1) }}</h5>
-            </v-flex>
-
-            <v-flex hidden-xs-only sm1>
+            <v-flex  sm2>
               <h5>{{ $t('tx.status') }}</h5>
             </v-flex>
           </v-layout>
@@ -162,6 +191,7 @@ import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { Subscription } from 'rxjs'
 import { TranslateResult } from 'vue-i18n'
 import { searchTypes } from '@app/core/helper'
+import { SearchType } from '../../../core/api/apollo/types/globalTypes';
 
 const MAX_ITEMS = 50
 
@@ -305,6 +335,12 @@ export default class TableTxs extends TableTxsMixin {
 
   @Prop(String) address?: string
 
+    /*
+    ===================================================================================
+     Initial Data
+    ===================================================================================
+    */
+
   page!: number
 
   error?: string
@@ -318,11 +354,11 @@ export default class TableTxs extends TableTxsMixin {
 
   connectedSubscription?: Subscription
 
-  /*
-    ===================================================================================
-     Initial Data
-    ===================================================================================
-    */
+  //Sorting:
+  selectedSort = 0
+  sortValues = ['eth_high', 'eth_low', 'fee_high', 'fee_low', 'age_high', 'age_low']
+
+  //Search:
   SearchType = searchTypes
 
   /*
@@ -332,6 +368,7 @@ export default class TableTxs extends TableTxsMixin {
     */
 
   created() {
+    console.log(this.SearchType.adrTx)
     if (this.pageType === 'home') {
       this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
         if (state === 'reconnected') {
@@ -356,6 +393,16 @@ export default class TableTxs extends TableTxsMixin {
         Methods
       ===================================================================================
       */
+
+  //Sorting:
+  selectSort(_value: number): void {
+    this.selectedSort = _value
+    this.page = 0
+  }
+  isActiveSort(_value: number): boolean {
+    return this.selectedSort === _value
+  }
+
 
   setPage(page: number, resetFrom: boolean = false): void {
     const { txPage } = this
@@ -419,51 +466,6 @@ export default class TableTxs extends TableTxsMixin {
     return this.txPage ? Math.ceil(this.txPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
   }
 
-  get footnotes(): Footnote[] {
-    if (this.isAddressDetail) {
-      return [
-        {
-          color: 'success',
-          text: this.$i18n.t('filter.in'),
-          icon: 'fa fa-circle'
-        },
-        {
-          color: 'error',
-          text: this.$i18n.t('filter.out'),
-          icon: 'fa fa-circle'
-        }
-      ]
-    }
-
-    return [
-      {
-        color: 'txSuccess',
-        text: this.$i18n.t('common.success'),
-        icon: 'fa fa-circle'
-      },
-      {
-        color: 'txFail',
-        text: this.$i18n.t('common.fail'),
-        icon: 'fa fa-circle'
-      }
-    ]
-  }
-
-  get footnoteMobile(): Footnote[] {
-    return [
-      {
-        color: 'txSuccess',
-        text: this.$i18n.t('common.success'),
-        icon: 'fa fa-circle'
-      },
-      {
-        color: 'txFail',
-        text: this.$i18n.t('common.fail'),
-        icon: 'fa fa-circle'
-      }
-    ]
-  }
-
   get options() {
     return [
       {
@@ -506,6 +508,7 @@ export default class TableTxs extends TableTxsMixin {
   }
 }
 </script>
+
 <style scoped lang="css">
 .tx-filter-select-container {
   width: 120px;
@@ -517,5 +520,15 @@ export default class TableTxs extends TableTxsMixin {
 
 .search-tx-input{
   width:100%;
+}.v-btn.v-btn--flat.v-btn--icon {
+  height: 12px;
+  width: 12px;
+  margin: 0;
+}
+
+.v-btn.v-btn--flat.v-btn--icon {
+  height: 12px;
+  width: 12px;
+  margin: 0;
 }
 </style>
