@@ -91,7 +91,7 @@ export class ContractEntity {
   @OneToOne(type => TokenMetadataEntity, tm => tm.contract)
   @JoinColumn({
     name: 'address',
-    referencedColumnName: 'address'
+    referencedColumnName: 'address',
   })
   tokenMetadata?: TokenMetadataEntity
 
