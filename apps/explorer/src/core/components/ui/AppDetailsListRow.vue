@@ -7,7 +7,7 @@
       =====================================================================================
       -->
       <v-flex xs4 sm3 md2>
-        <div class="info--text font-weight-medium" v-html="detail.title" />
+        <div class="font-weight-medium" v-html="detail.title" />
       </v-flex>
       <!--
       =====================================================================================
@@ -23,7 +23,7 @@
             <router-link v-if="detail.link" :to="detail.link">
               <div class="text-truncate secondary--text" v-html="detail.detail"></div>
             </router-link>
-            <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
+            <div v-else class="" v-html="detail.detail"></div>
           </div>
           <div v-else>
             <app-transform-hash v-if="detail.link" :hash="detail.detail" :link="detail.link" />
