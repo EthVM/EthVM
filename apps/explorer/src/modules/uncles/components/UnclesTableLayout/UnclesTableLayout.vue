@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import TitleLastBlocks from '@app/modules/blocks/components/BlockTableTitle/BlockTableTitle.vue'
+import TitleLastBlocks from '@app/modules/blocks/components/BlockTitle/BlockTitle.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
