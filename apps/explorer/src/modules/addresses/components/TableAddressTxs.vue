@@ -1,7 +1,7 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
+  <v-card color="white" flat class="pt-0 pr-2 pl-2 pb-2">
     <!-- Txs Filter/Sort/Search/Pagination -->
-    <v-layout row align-bottom justify spacebetween>
+    <v-layout row align-center justify-space-between>
       <!-- Filter -->
       <v-flex shrink>
         <v-layout row align-center justify-start>
@@ -9,20 +9,20 @@
             <p class="info--text">{{ $t('filter.name') }}</p>
           </v-flex>
           <v-flex>
-            <v-menu offset-y>
+            <v-menu offset-y v-model="activeFilter">
               <template v-slot:activator="{ on }">
-                <v-btn class="tx-filter-select-container box-border text-capitalize ma-0" flat v-on="on">
-                  <v-layout row justify-space-between text-xs-left pa-3>
+                <v-btn class="tx-filter-btn box-border text-capitalize ma-0 pa-1" flat v-on="on" >
+                  <div class="tx-filter-btn-content" >
                     <p class="text-xs-left">{{ optionString }}</p>
                     <!-- Add Icon change/animation on activation -->
-                    <v-icon class="theme--light text-xs-right primary--text">arrow_drop_down</v-icon>
-                  </v-layout>
+                    <v-icon  class="theme--light text-xs-right primary--text">{{filterBtn}}</v-icon>
+                  </div>
                 </v-btn>
               </template>
               <v-list flat>
                 <v-list-tile v-for="(option, index) in options" :key="index" :value="option.value" @click="filter = option.value">
                   <!-- Add Class for active choice -->
-                  <v-list-tile-title>{{ option.text }}</v-list-tile-title>
+                  <v-list-tile-title  :class="[ optionString === option.text? 'primary--text' : 'black--text']">{{ option.text }}</v-list-tile-title>
                 </v-list-tile>
               </v-list>
             </v-menu>
@@ -35,6 +35,9 @@
         <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
       </v-flex>
       <!-- Pagination -->
+      <v-flex shrink pt-0 pb-0>
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      </v-flex>
     </v-layout>
     <!-- End Tx Input Filter -->
 
@@ -43,10 +46,6 @@
       TITLE
     =====================================================================================
     -->
-
-    <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-      <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
-    </v-layout>
 
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
     <app-error :has-error="hasError" :message="error" class="mb-4" />
@@ -350,7 +349,9 @@ export default class TableTxs extends TableTxsMixin {
   fromBlock?: BigNumber
   txPage?: TransactionSummaryPageExt
 
+  //Filter:
   filter: string = 'all'
+  activeFilter:boolean = false
 
   connectedSubscription?: Subscription
 
@@ -466,6 +467,7 @@ export default class TableTxs extends TableTxsMixin {
     return this.txPage ? Math.ceil(this.txPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
   }
 
+  //Filter:
   get options() {
     return [
       {
@@ -487,10 +489,12 @@ export default class TableTxs extends TableTxsMixin {
     return this.options.filter(item => item.value === this.filter)[0].text
   }
 
-  get headerColor() {
-    return this.isAddressDetail ? 'primary' : 'info'
+  get filterBtn():string {
+    return this.activeFilter? 'arrow_drop_up' : 'arrow_drop_down'
   }
 
+
+  //Get Empty Table Message
   get text(): string {
     if (this.isAddressDetail) {
       const messages = {
@@ -510,25 +514,19 @@ export default class TableTxs extends TableTxsMixin {
 </script>
 
 <style scoped lang="css">
-.tx-filter-select-container {
+.tx-filter-btn {
   width: 120px;
+  height: 30px;
+
+}
+.tx-filter-btn-content {
+  display: grid;
+  width:80%;
+  grid-template-columns: 90% 10%;
 }
 
 .box-border{
   border: solid 1px #b4bfd2;
 }
 
-.search-tx-input{
-  width:100%;
-}.v-btn.v-btn--flat.v-btn--icon {
-  height: 12px;
-  width: 12px;
-  margin: 0;
-}
-
-.v-btn.v-btn--flat.v-btn--icon {
-  height: 12px;
-  width: 12px;
-  margin: 0;
-}
 </style>

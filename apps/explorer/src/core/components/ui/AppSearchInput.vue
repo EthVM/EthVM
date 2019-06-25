@@ -4,7 +4,7 @@
       <div class="search-icon">
         <v-tooltip v-model="showError" top>
           <template v-slot:activator="{ showError }">
-            <v-btn icon small :disabled="canSearch">
+            <v-btn icon small :disabled="canSearch" class="mt-0 mb-0">
               <v-icon :class="searchClass" @click="startSearch()">search</v-icon>
             </v-btn>
           </template>
@@ -13,7 +13,7 @@
       </div>
       <input v-model="searchInput" :placeholder="searchPlaceholder" />
       <div class="clear-icon">
-        <v-btn v-if="focus || !isValid" icon small>
+        <v-btn v-if="focus || !isValid" icon small height class="mt-0 mb-0">
           <v-icon :class="searchClass" @click="clear()" small>clear</v-icon>
         </v-btn>
       </div>
@@ -136,14 +136,18 @@ export default class AppSearchInput extends Vue {
   display: grid;
   grid-template-columns: 40px auto 40px;
   border: solid 1px #b4bfd2;
+  height: 30px;
 }
 .search-tx-input {
   width: 100%;
   padding: 0px 0.5em;
+  height: 30px;
 }
 input {
   border: 0;
   outline: 0;
+  height: 30px;
+
 }
 input:focus {
   outline: none !important;
