@@ -4,14 +4,15 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { EntityManager, In, Repository } from 'typeorm'
 import { TxService } from '@app/dao/tx.service'
 import { ContractSummary, TransactionSummary } from '@app/graphql/schema'
+import { CONNECTION } from '@app/orm/config'
 
 @Injectable()
 export class ContractService {
-  constructor(@InjectRepository(ContractEntity)
+  constructor(@InjectRepository(ContractEntity, CONNECTION.PRINCIPAL)
               private readonly contractRepository: Repository<ContractEntity>,
               @Inject(forwardRef(() => TxService))
               private readonly txService: TxService,
-              @InjectEntityManager()
+              @InjectEntityManager(CONNECTION.PRINCIPAL)
               private readonly entityManager: EntityManager) {
   }
 

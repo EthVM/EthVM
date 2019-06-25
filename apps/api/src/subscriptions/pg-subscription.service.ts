@@ -185,7 +185,8 @@ export class PgSubscriptionService {
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {
 
-    this.url = config.db.url
+    // TODO use both DBs
+    this.url = config.dbPrincipal.url
 
     this.init()
   }
