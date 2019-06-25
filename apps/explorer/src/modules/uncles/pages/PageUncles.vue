@@ -11,7 +11,8 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import TableUncles from '@app/modules/uncles/components/TableUncles.vue'
+//import TableUncles from '@app/modules/uncles/components/TableUncles.vue'
+import TableUncles from '@app/modules/uncles/components/UnclesTableLayout/UnclesTableLayout.vue'
 import { Crumb } from '@app/core/components/props'
 import { Component, Vue } from 'vue-property-decorator'
 

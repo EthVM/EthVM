@@ -1,6 +1,6 @@
 <template>
   <div class="table-layout">
-    <notice-new-block @reload="resetFromBlock" />
+    <notice-new-block @reload="resetFromUncle" />
 
     <!--
     =====================================================================================
@@ -9,27 +9,13 @@
     -->
     <div class="table-title-container">
       <!-- Title with [pagination] for dedicated [Blocks page] -->
-      <title-last-blocks :title="getTitle" :page-type="pageType">
-        <div class="pagination-container" v-if="pages > 1 && !hasError">
+      <title-uncles :title="$tc('uncle.name', 2)">
+        <div class="pagination-container" v-if="pages > 1">
           <!-- Inserting [pagination] component into title -->
-          <app-paginate
-            :total="pages"
-            @newPage="setPage"
-            :current-page="page"
-            :has-input="!simplePagination"
-            :has-first="!simplePagination"
-            :has-last="!simplePagination"
-          />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </div>
-      </title-last-blocks>
+      </title-uncles>
     </div>
-    <!--
-    =====================================================================================
-      TABLE CONTENT
-    =====================================================================================
-    -->
-    <block-table-content v-if="!hasError && !loading" :page-type="pageType" :blocks="blocks" />
-
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -37,117 +23,130 @@
     -->
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
     <app-error :has-error="hasError" :message="error" class="mb-4" />
-
     <!--
     =====================================================================================
-      LOADING
+      TABLE HEADER
     =====================================================================================
     -->
-    <v-container v-if="!hasError && loading" flat :style="getStyle" class="scroll-y pa-2">
-      <v-layout column class="mb-1">
-        <div xs12>
-          <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm2 order-xs1>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex xs12 sm7 md6>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex hidden-sm-and-down md2 order-xs4 order-sm3>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-            </v-layout>
-            <v-divider class="mb-2 mt-2" />
-          </div>
+    <v-layout>
+      <v-flex hidden-xs-only sm12>
+        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
+          <v-layout align-center justify-start row fill-height pr-3>
+            <v-flex xs6 sm2 md2>
+              <h5>{{ $t('block.block') }}</h5>
+            </v-flex>
+            <v-flex xs6 sm2 md2>
+              <h5>{{ $t('uncle.number') }}</h5>
+            </v-flex>
+            <v-flex sm5 md5 hidden-sm-and-down>
+              <h5>{{ $t('uncle.detail') }}</h5>
+            </v-flex>
+            <v-spacer />
+            <v-flex hidden-sm-and-down md1>
+              <h5>{{ $t('uncle.position') }}</h5>
+            </v-flex>
+            <v-flex xs6 sm3 md2>
+              <h5>{{ $t('miner.reward-short') }}</h5>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <!--
+    =====================================================================================
+      TABLE BODY
+    =====================================================================================
+    -->
+    <v-layout column fill-height class="mb-1">
+      <v-flex xs12 v-if="!loading && !error">
+        <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
+        <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
+          <table-uncles-row :uncle="uncle" :page-type="pageType" />
+        </v-card>
+      </v-flex>
+      <v-flex xs12 v-if="loading">
+        <div v-for="i in maxItems" :key="i">
+          <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+            <v-flex xs3 sm2 order-xs1>
+              <v-flex xs12 class="table-row-loading"></v-flex>
+            </v-flex>
+            <v-flex xs3 sm2 order-xs1>
+              <v-flex xs12 class="table-row-loading"></v-flex>
+            </v-flex>
+            <v-flex xs12 sm5 md5 class="pr-0" order-xs3 order-sm2>
+              <v-flex xs12 class="table-row-loading"></v-flex>
+            </v-flex>
+            <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
+              <v-flex xs12 class="table-row-loading"></v-flex>
+            </v-flex>
+            <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
+              <v-flex xs12 class="table-row-loading"></v-flex>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mb-2 mt-2" />
         </div>
-      </v-layout>
-    </v-container>
-
-    <!--
-    =====================================================================================
-      BOTTOM PAGINATION
-    =====================================================================================
-    -->
-    <div v-if="pageType != 'home' && pages > 1" class="bottom-pagination-container">
-      <app-paginate
-        :total="pages"
-        @newPage="setPage"
-        :current-page="page"
-        :has-input="!simplePagination"
-        :has-first="!simplePagination"
-        :has-last="!simplePagination"
-      />
-    </div>
+      </v-flex>
+      <v-flex xs12>
+        <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2">
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+        </v-layout>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
 <script lang="ts">
-import TitleLastBlocks from '@app/modules/blocks/components/BlockTitle/BlockTitle.vue'
+import TitleUncles from '@app/modules/uncles/components/UnclesTableTitle/UnclesTableTitle.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import BlockTableContent from '@app/modules/blocks/components/BlockTableContent/BlockTableContent.vue'
-import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
+import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
+import { uncleSummaries } from '@app/modules/uncles/uncles.graphql'
 import BigNumber from 'bignumber.js'
-import { Subscription } from 'rxjs'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
-import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
-
-const MAX_ITEMS = 50
+import { Subscription } from 'rxjs'
 
 @Component({
   components: {
     AppError,
-    AppFootnotes,
     AppInfoLoad,
     AppPaginate,
-    TableBlocksRow,
+    TableUnclesRow,
     NoticeNewBlock,
-    TitleLastBlocks,
-    BlockTableContent
+    TitleUncles
   },
   data() {
     return {
       page: 0,
-      fromBlock: undefined,
-      error: undefined,
+      fromUncle: undefined,
+      error: '',
       syncing: undefined
     }
   },
   apollo: {
-    blockPage: {
-      query() {
-        const self = this as any
-
-        return self.author ? blocksByAuthor : latestBlocks
-      },
-
-      fetchPolicy: 'cache-and-network',
+    unclePage: {
+      query: uncleSummaries,
 
       variables() {
+        const self = this as any
         return {
           offset: 0,
-          limit: this.maxItems,
-          author: this.author
+          limit: self.maxItems
         }
       },
 
-      update({ blockSummaries }) {
-        if (blockSummaries) {
-          this.error = '' // clear error
-          return new BlockSummaryPageExt(blockSummaries)
+      update({ summaries }) {
+        const self = this as any
+
+        if (summaries) {
+          self.error = '' // clear error
+          return new UncleSummaryPageExt(summaries)
         } else if (!this.syncing) {
-          this.error = this.error || this.$i18n.t('message.err')
+          self.error = this.error || this.$i18n.t('message.err')
         }
-        return blockSummaries
+        return summaries
       },
 
       error({ graphQLErrors, networkError }) {
@@ -161,93 +160,57 @@ const MAX_ITEMS = 50
                 self.syncing = true
                 break
               default:
-              // do nothing
+              // Do nothing
             }
           })
         }
-
         // TODO refine
         if (networkError) {
           this.error = this.$i18n.t('message.no-data')
-        }
-      },
-
-      subscribeToMore: {
-        document: newBlock,
-
-        updateQuery: (previousResult, { subscriptionData }) => {
-          const { blockSummaries } = previousResult
-          const { newBlock } = subscriptionData.data
-
-          const items = Object.assign([], blockSummaries.items)
-          items.unshift(newBlock)
-
-          if (items.length > MAX_ITEMS) {
-            items.pop()
-          }
-
-          // ensure order by block number desc
-          items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number) : new BigNumber(0)
-            return numberB.minus(numberA).toNumber()
-          })
-
-          return {
-            ...previousResult,
-            blockSummaries: {
-              ...blockSummaries,
-              items
-            }
-          }
-        },
-
-        skip() {
-          return (this as any).pageType !== 'home'
         }
       }
     }
   }
 })
-export default class TableBlocks extends Vue {
+export default class TableUncles extends Vue {
   /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
-  @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
+  @Prop(Number) maxItems!: number
 
-  @Prop({ type: Number, default: 20 }) maxItems!: number
-  @Prop({ type: Boolean, default: false }) simplePagination!: boolean
-
-  @Prop({ type: String }) author?: string
+  /*
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
   page!: number
-
   error: string = ''
   syncing?: boolean
 
-  blockPage?: BlockSummaryPageExt
-  fromBlock?: BigNumber
+  pageType = 'uncles'
+  fromUncle?: BigNumber
+
+  unclePage?: UncleSummaryPageExt
 
   connectedSubscription?: Subscription
 
   /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
+      ===================================================================================
+        Lifecycle
+      ===================================================================================
+      */
 
   created() {
-    if (this.pageType === 'home') {
-      this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
-        if (state === 'reconnected') {
-          this.$apollo.queries.blockPage.refetch()
-        }
-      })
-    }
+    this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
+      if (state === 'reconnected') {
+        this.$apollo.queries.unclePage.refetch()
+      }
+    })
   }
 
   destroyed() {
@@ -256,37 +219,33 @@ export default class TableBlocks extends Vue {
     }
   }
 
-  get blocks(): (BlockSummaryPage_items | null)[] {
-    return this.blockPage ? this.blockPage.items || [] : []
-  }
-
   /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
-  resetFromBlock() {
+  resetFromUncle() {
     this.setPage(0, true)
   }
 
   setPage(page: number, resetFrom: boolean = false): void {
-    const { blockPage } = this
-    const { blockPage: query } = this.$apollo.queries
+    const { unclePage } = this
+    const { unclePage: query } = this.$apollo.queries
 
     if (resetFrom) {
-      this.fromBlock = undefined
+      this.fromUncle = undefined
     } else {
-      const { totalCountBN } = blockPage!
-      if (!this.fromBlock) {
-        this.fromBlock = totalCountBN.minus(1)
+      const { items } = unclePage!
+      if (!this.fromUncle && items.length) {
+        this.fromUncle = items[0].number
       }
     }
 
     query.fetchMore({
       variables: {
-        fromBlock: this.fromBlock ? this.fromBlock.toString(10) : undefined,
-        offset: page * this.maxItems,
+        fromUncle: this.fromUncle ? this.fromUncle.toString(10) : undefined,
+        offset: page * 50,
         limit: this.maxItems
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -297,13 +256,17 @@ export default class TableBlocks extends Vue {
   }
 
   /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
+
+  get uncles() {
+    return this.unclePage ? this.unclePage.items || [] : []
+  }
 
   get loading(): boolean | undefined {
-    return this.$apollo.queries.blockPage.loading || this.syncing
+    return this.$apollo.loading || this.syncing
   }
 
   /**
@@ -313,28 +276,20 @@ export default class TableBlocks extends Vue {
    * @return {Boolean} - Whether or not error exists
    */
   get hasError(): boolean {
-    return !!this.error && this.error !== ''
+    return this.error !== ''
   }
 
-  get getStyle(): string {
+  get style(): string {
     return this.showStyle
   }
 
-  get getTitle(): string {
-    const titles = {
-      blocks: this.$i18n.t('block.last'),
-      address: this.$i18n.t('block.mined')
-    }
-    return titles[this.pageType]
-  }
-
   get pages(): number {
-    const { blockPage, maxItems } = this
-    return blockPage ? Math.ceil(blockPage.totalCountBN.div(maxItems).toNumber()) : 0
+    const { unclePage, maxItems } = this
+    return unclePage ? Math.ceil(unclePage.totalCountBN.div(maxItems).toNumber()) : 0
   }
 }
 </script>
 
 <style scoped lang="less">
-@import 'BlockTableLayout.less';
+@import 'UnclesTableLayout.less';
 </style>

@@ -1,12 +1,8 @@
 <template>
   <div class="block-title">
-    <div class="wrap" :class="pageType != 'home' ? 'pagination' : ''">
-      <div v-if="pageType == 'home'" class="the-title">{{ $t('block.last') }}</div>
-      <div v-else class="the-title">{{ title }}</div>
-      <a v-if="pageType == 'home'" class="button-link" href="/blocks"
-        ><button>{{ $t('btn.view-all') }}</button></a
-      >
-      <slot v-if="pageType != 'home'"></slot>
+    <div class="wrap pagination">
+      <div class="the-title">{{ title }}</div>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -15,10 +11,6 @@
 export default {
   props: {
     title: {
-      type: String,
-      default: ''
-    },
-    pageType: {
       type: String,
       default: ''
     }
@@ -30,5 +22,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import 'BlockTitle.less';
+@import 'UnclesTableTitle.less';
 </style>
