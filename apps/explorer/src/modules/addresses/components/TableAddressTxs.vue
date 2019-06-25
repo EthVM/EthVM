@@ -6,10 +6,10 @@
       <v-flex shrink xs12 md3 >
         <v-layout row align-center >
           <!-- Filter:  -->
-          <v-flex shrink>
+          <v-flex shrink pr-0>
             <p class="info--text">{{ $t('filter.name') }}</p>
           </v-flex>
-          <v-flex shrink>
+          <v-flex shrink pr-0>
             <v-menu offset-y v-model="activeFilter">
               <template v-slot:activator="{ on }">
                 <v-btn class="tx-filter-btn box-border text-capitalize ma-0 pa-1" flat v-on="on" >
@@ -29,7 +29,7 @@
             </v-menu>
           </v-flex>
            <!-- Sort present on xs-sm -->
-          <v-flex hidden-md-and-up shrink>
+          <v-flex hidden-md-and-up shrink pr-0>
             <p class="info--text">{{ $t('common.sort') }}</p>
           </v-flex>
           <v-flex hidden-md-and-up shrink>
