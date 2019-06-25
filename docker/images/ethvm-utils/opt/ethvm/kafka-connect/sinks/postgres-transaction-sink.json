@@ -5,7 +5,7 @@
     "tasks.max": 3,
     "topics": "transaction,transaction_receipt",
     "insert.mode": "upsert",
-    "batch.size": 500,
+    "batch.size": 2000,
     "consumer.max.poll.records": 5000,
     "consumer.fetch.min.bytes": 1000000,
     "consumer.fetch.wait.max.ms": 1000,
