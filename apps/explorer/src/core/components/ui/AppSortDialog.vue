@@ -2,6 +2,7 @@
   <v-dialog v-model="dialog" full-width>
 
     <template v-slot:activator="{on}">
+
       <v-btn flat class="box-border sort-btn text-capitalize ma-0 pa-1" v-on="on">
         <div class="sort-btn-content ">
           <p class="text-xs-left">{{btnText}}</p>
