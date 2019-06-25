@@ -73,3 +73,7 @@ export default class PageHome extends Vue {
   }
 }
 </script>
+
+<style scoped lang="less">
+@import 'PageHome';
+</style>
