@@ -13,7 +13,9 @@ networks:
 
 volumes:
 
-  timescale-volume:
+  db-principal-volume:
+
+  db-metrics-volume:
 
   kafka-volume-1:
 
@@ -67,7 +69,8 @@ services:
     volumes:
       - ./apps/api:/var/www/api
     depends_on:
-      - timescale
+      - db-principal
+      - db-metrics
     networks:
       - back
     ports:
@@ -84,6 +87,7 @@ services:
     environment:
       GRAPHQL_PLAYGROUND: 'true'
       INSTA_MINING: '${PARITY_INSTA_MINING}'
+      NO_TS_TUNE: 'true'
     command: bash -c "yarn && yarn start:dev"
 
   # ///////////////////////////////////////////////////////
@@ -111,20 +115,31 @@ services:
   # Storage
   # ///////////////////////////////////////////////////////
 
-  timescale:
+  db-principal:
+    image: postgres:10
+    restart: unless-stopped
+    shm_size: 1g
+    volumes:
+      - db-principal-volume:/var/lib/postgresql/data
+    networks:
+      - back
+    environment:
+      POSTGRES_USER: '${PRINCIPAL_USER}'
+      POSTGRES_PASSWORD: '${PRINCIPAL_PASSWORD}'
+      POSTGRES_DB: '${PRINCIPAL_DB}'
+
+  db-metrics:
     image: timescale/timescaledb:${TIMESCALE_VERSION}
     restart: unless-stopped
     shm_size: 1g
     volumes:
-      - timescale-volume:/var/lib/postgresql/data
+      - db-metrics-volume:/var/lib/postgresql/data
     networks:
       - back
-    ports:
-      - 5432:5432
     environment:
-      POSTGRES_USER:
-      POSTGRES_PASSWORD:
-      POSTGRES_DB:
+      POSTGRES_USER: '${METRICS_USER}'
+      POSTGRES_PASSWORD: '${METRICS_PASSWORD}'
+      POSTGRES_DB: '${METRICS_DB}'
 
   redis:
     image: redis:5.0-alpine
@@ -255,7 +270,14 @@ services:
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       CONNECT_MAX_POLL_INTERVAL_MS: 120000
+      KAFKA_HEAP_OPTS: "-Xms2G -Xmx4G -XX:MaxDirectMemorySize=512M"
       KAFKA_JMX_PORT: 9588
+      PRINCIPAL_BALANCE_DELTA_SINK_TASKS_MAX:
+      PRINCIPAL_BALANCE_SINK_TASKS_MAX:
+      PRINCIPAL_CONTRACT_SINK_TASKS_MAX:
+      PRINCIPAL_RECEIPT_SINK_TASKS_MAX:
+      PRINCIPAL_TRACE_SINK_TASKS_MAX:
+      METRICS_BLOCK_METRICS_SINK_TASKS_MAX:
 
   # ///////////////////////////////////////////////////////
   # Extra Tools (Useful for debugging and helping in dev)
@@ -316,9 +338,10 @@ services:
     image: sosedoff/pgweb:0.11.2
     restart: unless-stopped
     depends_on:
-      - timescale
+      - db-principal
+      - db-metrics
     networks:
       - back
     ports:
       - 8082:8082
-    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082 --url postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@timescale:5432/${POSTGRES_DB}?sslmode=disable"
+    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082"

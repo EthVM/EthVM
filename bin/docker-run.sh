@@ -55,14 +55,17 @@ up_default() {
   echo -e "Building containers..."
   docker-compose build
 
-  echo -e "Starting up containers: traefik, api, explorer, timescale, zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis \n"
-  docker-compose up -d traefik api explorer timescale zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis
+  echo -e "Starting up containers: traefik, api, explorer, db-principal, db-metrics, zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis\n"
+  docker-compose up -d traefik api explorer db-principal db-metrics zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis
 
   echo -e "Initialising kafka...\n"
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
 
-  echo -e "Initialising timescale..\n"
-  ${SCRIPT_DIR}/migrator.sh migrate
+  echo -e "Initialising principal db...\n"
+  ${SCRIPT_DIR}/migrator.sh principal all migrate
+
+  echo -e "Initialising metrics db...\n"
+  ${SCRIPT_DIR}/migrator.sh metrics all migrate
 
   echo -e "Re-building avro models...\n"
   ${SCRIPT_DIR}/avro.sh build
