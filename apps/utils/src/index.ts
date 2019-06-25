@@ -1,4 +1,4 @@
-import { Erc20Balances, EtherBalances, EthTokensToCoingecko } from '@app/commands'
+import { Erc20Balances, EtherBalances, EthTokensToCoingecko, CanonicalTopicsSequenceChecker } from '@app/commands'
 import { Config } from '@app/config'
 import program from 'commander'
 
@@ -19,5 +19,9 @@ program
 program
   .command('eth-tokens-to-coingecko-ids')
   .action(async () => EthTokensToCoingecko(config.tokens))
+
+program
+  .command('canonical-topics-sequence-checker')
+  .action(async () => CanonicalTopicsSequenceChecker(config))
 
 program.parse(process.argv)

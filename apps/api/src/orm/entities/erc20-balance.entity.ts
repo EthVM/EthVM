@@ -2,8 +2,9 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
-import BigNumber from 'bignumber.js';
-import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import BigNumber from 'bignumber.js'
+import { BigNumberTransformer } from '../transformers/big-number.transformer'
+import { ContractMetadataEntity } from '@app/orm/entities/contract-metadata.entity'
 
 @Entity('canonical_erc20_balance')
 export class Erc20BalanceEntity {
@@ -34,5 +35,12 @@ export class Erc20BalanceEntity {
     referencedColumnName: 'address',
   })
   metadata?: Erc20MetadataEntity
+
+  @ManyToOne(type => ContractMetadataEntity, contractMetadata => contractMetadata.erc20Balances)
+  @JoinColumn({
+    name: 'contract',
+    referencedColumnName: 'address',
+  })
+  contractMetadata?: ContractMetadataEntity
 
 }

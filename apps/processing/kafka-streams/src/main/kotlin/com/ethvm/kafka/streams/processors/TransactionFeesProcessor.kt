@@ -155,7 +155,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
               ).build()
           }
         },
-        JoinWindows.of(Duration.ofHours(2)),
+        JoinWindows.of(Duration.ofHours(24)),
         Joined.with(Serdes.CanonicalKey(), Serdes.TransactionGasPriceList(), Serdes.TransactionGasUsedList())
       ).toTopic(CanonicalTransactionFees)
 

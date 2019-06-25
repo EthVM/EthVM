@@ -14,6 +14,8 @@ export interface addressAllTokensOwned_tokens_items {
   decimals: number | null;
   balance: any | null;
   currentPrice: any | null;
+  priceChangePercentage24h: any | null;
+  image: string | null;
 }
 
 export interface addressAllTokensOwned_tokens {

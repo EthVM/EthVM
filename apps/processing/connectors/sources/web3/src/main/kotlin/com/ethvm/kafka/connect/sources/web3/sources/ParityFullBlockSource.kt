@@ -354,11 +354,7 @@ class ParityFullBlockSource(
         logger.debug { "Next = $nextRange" }
 
         val first = nextRange!!.first
-
-        val last = when {
-          nextRange.last == 0L -> 1L
-          else -> nextRange.last
-        }
+        val last = nextRange.last
 
         val resp = parity.ethvmGetBlocksByNumber(
           first.toBigInteger(),

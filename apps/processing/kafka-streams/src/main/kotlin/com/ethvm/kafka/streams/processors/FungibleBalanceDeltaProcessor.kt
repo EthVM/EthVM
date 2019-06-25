@@ -2,10 +2,10 @@ package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.common.TraceLocationRecord
+import com.ethvm.avro.processing.BlockAuthorRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
-import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleTokenType
 import com.ethvm.common.extensions.getNumberBI
 import com.ethvm.common.extensions.getTransactionFeeBI
@@ -17,7 +17,6 @@ import com.ethvm.common.extensions.toEtherBalanceDeltas
 import com.ethvm.common.extensions.toFungibleBalanceDeltas
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
-import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
@@ -32,11 +31,9 @@ import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
-import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.KStream
@@ -47,7 +44,7 @@ import java.math.BigInteger
 import java.time.Duration
 import java.util.Properties
 
-class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
+class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
   override val id: String = "fungible-balance-delta-processor"
 
@@ -55,7 +52,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -66,11 +63,13 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
       addStateStore(OncePerBlockTransformer.canonicalRecordsStore(appConfig.unitTesting))
     }
 
-    val (premineDeltas, hardForkDeltas) = syntheticEtherDeltas(builder)
+    val canonicalBlockAuthor = CanonicalBlockAuthor.stream(builder)
+
+    val (premineDeltas, hardForkDeltas) = syntheticEtherDeltas(canonicalBlockAuthor)
 
     val txDeltas = etherDeltasForTraces(builder)
 
-    val (txFeeDeltas, minerFeeDeltas) = etherDeltasForFees(builder)
+    val (txFeeDeltas, minerFeeDeltas) = etherDeltasForFees(builder, canonicalBlockAuthor)
 
     val erc20Deltas = erc20DeltasForReceipts(builder)
 
@@ -85,34 +84,11 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
     return builder.build()
   }
 
-  private fun toAccountDeltas(deltaStream: KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>) =
-    deltaStream
-      .flatMap { _, v ->
-
-        // we should not receive any null values, this is just an artifact of the type system
-
-        if (v!!.getApply()) {
-
-          (v.getDeltas() + v.getReversals())
-            .map { delta ->
-              KeyValue(
-                FungibleBalanceKeyRecord.newBuilder()
-                  .setAddress(delta.getAddress())
-                  .setContract(delta.getContractAddress())
-                  .build(),
-                delta
-              )
-            }
-        } else {
-          emptyList()
-        }
-      }
-
-  private fun syntheticEtherDeltas(builder: StreamsBuilder): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>> {
+  private fun syntheticEtherDeltas(canonicalBlockAuthor: KStream<CanonicalKeyRecord, BlockAuthorRecord?>): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>> {
 
     // add a transformer to guarantee we only emit once per block number so we don't re-introduce synthetic events in the event of a fork
 
-    val canonicalBlocks = CanonicalBlockHeader.stream(builder)
+    val canonicalBlocks = canonicalBlockAuthor
       .transform(
         TransformerSupplier { OncePerBlockTransformer(appConfig.unitTesting) },
         *OncePerBlockTransformer.STORE_NAMES
@@ -121,14 +97,14 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
     // premine balances
 
     val premineStream = canonicalBlocks
-      .filter { k, _ -> k.getNumberBI() == BigInteger.ONE }
+      .filter { k, _ -> k.getNumberBI() == BigInteger.ZERO }
       .mapValues { _, header ->
 
         val timestamp = DateTime(0)
 
         FungibleBalanceDeltaListRecord.newBuilder()
           .setTimestamp(timestamp)
-          .setBlockHash(header!!.getParentHash())
+          .setBlockHash(header!!.blockHash)
           .setDeltas(
             netConfig.genesis
               .accounts
@@ -175,7 +151,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
 
         FungibleBalanceDeltaListRecord.newBuilder()
           .setTimestamp(timestamp)
-          .setBlockHash(header.getHash())
+          .setBlockHash(header.blockHash)
           .setDeltas(deltas)
           .build()
       }
@@ -215,7 +191,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
         }
     )
 
-  private fun etherDeltasForFees(builder: StreamsBuilder): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>> {
+  private fun etherDeltasForFees(builder: StreamsBuilder, canonicalBlockAuthor: KStream<CanonicalKeyRecord, BlockAuthorRecord?>): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>> {
 
     val txFeesStream = CanonicalTransactionFees.stream(builder)
 
@@ -234,7 +210,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
         }
       }
 
-    CanonicalBlockAuthor.stream(builder)
+    canonicalBlockAuthor
       .join(
         txFeesStream,
         { left, right ->
@@ -267,7 +243,7 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
               .build()
           }
         },
-        JoinWindows.of(Duration.ofHours(2)),
+        JoinWindows.of(Duration.ofHours(24)),
         Joined.with(Serdes.CanonicalKey(), Serdes.BlockAuthor(), Serdes.TransactionFeeList())
       ).toTopic(CanonicalMinerFeesEtherDeltas)
 
@@ -405,44 +381,4 @@ class FungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
         }
     )
 
-  private fun withReversals(stream: KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>) =
-    stream
-      .groupByKey(Grouped.with(Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList()))
-      .reduce(
-        { agg, next ->
-
-          // null values does not trigger this reduce, so in the case of a reorg we will only trigger
-          // when the updated value is available
-
-          if (next!!.getBlockHash() == agg!!.getBlockHash()) {
-
-            // an update has been published for a previously seen block
-            // we assume no material change and therefore emit an event which will have no impact on the balances
-
-            logger.warn { "Update received. Agg = $agg, next = $next" }
-
-            FungibleBalanceDeltaListRecord.newBuilder(agg)
-              .setTimestamp(next.getTimestamp())
-              .setApply(false)
-              .build()
-          } else {
-
-            // reverse previous deltas
-
-            FungibleBalanceDeltaListRecord.newBuilder()
-              .setTimestamp(next.getTimestamp())
-              .setBlockHash(next.getBlockHash())
-              .setDeltas(next.getDeltas())
-              .setReversals(agg.getDeltas().map { it.reverse() })
-              .build()
-          }
-        },
-        Materialized.with(Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
-      )
-      .toStream()
-
-  override fun start(cleanUp: Boolean) {
-    logger.info { "Starting ${this.javaClass.simpleName}..." }
-    super.start(cleanUp)
-  }
 }

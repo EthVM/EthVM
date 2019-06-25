@@ -30,6 +30,7 @@ import {TxService} from '@app/dao/tx.service'
 import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 import { MetadataEntity } from '@app/orm/entities/metadata.entity'
 import { MetadataService } from '@app/dao/metadata.service'
+import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { MetadataService } from '@app/dao/metadata.service'
       CoinExchangeRateEntity,
       BlockMetricEntity,
       MetadataEntity,
+      TokenMetadataEntity,
     ]),
   ],
   providers: [

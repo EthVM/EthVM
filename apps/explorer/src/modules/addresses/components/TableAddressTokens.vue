@@ -2,85 +2,81 @@
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-0">
     <!--
     =====================================================================================
-      LOADING / ERROR
+      hasError
     =====================================================================================
     -->
-    <v-progress-linear color="blue" indeterminate v-if="loading" class="mt-0" />
-    <app-error :has-error="hasError" :message="error" />
+    <app-error v-if="hasError" :has-error="hasError" :message="error" />
     <!--
     =====================================================================================
-      INFO BOXES
+      Display Data
     =====================================================================================
     -->
-    <v-layout row wrap justify-space-between mb-3>
-      <v-flex xs12 sm6>
-        <v-card class="primary white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
-          <v-card-title class="headline text-truncate">{{ totalTokens }}</v-card-title>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 sm6>
-        <v-card class="success white--text pl-2" flat>
-          <v-card-text class="pb-0">{{ $t('usd.total') }}</v-card-text>
-          <v-card-title class="headline text-truncate">${{ getTotalMonetaryValue }}</v-card-title>
-        </v-card>
-      </v-flex>
-      <v-flex xs12>
-        <v-layout justify-end row class="pr-2 pl-2" v-if="pages > 1">
-          <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
-        </v-layout>
-      </v-flex>
-    </v-layout>
-    <!--
-    =====================================================================================
-      TABLE HEADER
-    =====================================================================================
-    -->
-    <v-card color="primary" flat class="white--text pl-3 pr-1 mb-1" height="40px">
-      <v-layout align-center justify-start row fill-height pr-3>
-        <v-flex xs6 sm2>
-          <h5>{{ $t('token.symbol') }}</h5>
+    <div v-else>
+      <!--
+      =====================================================================================
+        Total || Loading
+      =====================================================================================
+      -->
+      <v-progress-linear v-if="loading" color="blue" indeterminate />
+      <v-layout v-else justify-space-between align-end row wrap class="pa-2">
+        <v-flex xs12 sm6>
+          <p class="info--text">
+            {{ $t('token.total') }}
+            <span class="black--text">{{ totalTokens }}</span>
+            {{ tokensString }}
+            <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
+            {{ $t('usd.value') }}
+          </p>
         </v-flex>
-        <v-flex hidden-xs-only sm4 md3>
-          <h5>{{ $tc('token.name', 1) }}</h5>
-        </v-flex>
-        <v-flex xs6 sm3 md4>
-          <h5>{{ $t('common.amount') }}</h5>
-        </v-flex>
-        <v-flex hidden-xs-only sm3>
-          <h5>{{ $t('usd.value') }}</h5>
+        <v-flex xs12 sm6 pt-0 pb-0>
+          <v-layout v-if="pages > 1" justify-end row>
+            <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
+          </v-layout>
         </v-flex>
       </v-layout>
-    </v-card>
+      <!--
+        =====================================================================================
+          TABLE HEADER
+        =====================================================================================
+      -->
+      <v-layout align-center justify center>
+        <v-flex sm12 hidden-xs-only>
+          <v-card color="info" flat class="white--text mb-1" height="40px">
+            <v-layout align-center justify-start row fill-height pl-2 pr-2>
+              <v-flex sm4>
+                <v-layout grid-list-xs row align-center justify-start fill-height>
+                  <div class="token-image" />
+                  <h5>{{ $t('token.tokenName') }}</h5>
+                </v-layout>
+              </v-flex>
+              <v-flex sm3>
+                <h5>{{ $t('common.amount') }}</h5>
+              </v-flex>
+              <v-flex sm3>
+                <h5>{{ $t('usd.value') }}</h5>
+              </v-flex>
+              <v-flex sm2>
+                <h5>{{ $t('token.change') }}</h5>
+              </v-flex>
+            </v-layout>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </div>
+
     <!--
     =====================================================================================
       TABLE BODY
     =====================================================================================
     -->
     <div v-if="loading">
-      <v-flex xs12>
-        <div v-for="i in maxItems" :key="i">
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-            <v-flex xs6 sm2>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex hidden-xs-only sm4 md3>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex xs6 sm3 md4>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex idden-xs-only sm3>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-          </v-layout>
-          <v-divider class="mb-2 mt-2" />
-        </div>
-      </v-flex>
+      <div v-for="i in maxItems" :key="i">
+        <table-address-tokens-row-loading />
+      </div>
     </div>
-    <div v-if="!loading">
+    <div v-else>
       <v-card v-if="totalCount === 0" flat>
-        <v-card-text class="text-xs-center secondary--text">{{ $t('token.empty') }}</v-card-text>
+        <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-tokens-for-address') }}</v-card-text>
       </v-card>
       <div v-else v-for="(token, index) in tokens" :key="index">
         <table-address-tokens-row :token="token" :holder="address" />
@@ -97,6 +93,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
+import TableAddressTokensRowLoading from '@app/modules/addresses/components/TableAddressTokensRowLoading.vue'
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
@@ -110,7 +107,8 @@ const MAX_ITEMS = 10
     AppError,
     AppInfoLoad,
     AppPaginate,
-    TableAddressTokensRow
+    TableAddressTokensRow,
+    TableAddressTokensRowLoading
   },
   data() {
     return {
@@ -235,7 +233,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get totalCount(): number {
-    return this.tokensPage ? this.tokensPage.totalCount : 0
+    return this.tokensPage ? this.tokensPage.totalCountBN.toNumber() : 0
   }
 
   /**
@@ -256,7 +254,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     if (this.loading) {
       return this.$i18n.t('message.load').toString()
     }
-    return this.totalTokensValue ? this.totalTokensValue.toFormat(2).toString() : '0'
+    return this.totalTokensValue ? this.totalTokensValue.toFormat(2).toString() : '0.00'
   }
 
   get totalTokens(): string {
@@ -264,6 +262,10 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
       return this.$i18n.t('message.load').toString()
     }
     return this.totalCount.toString()
+  }
+
+  get tokensString(): string {
+    return new BN(this.totalCount).isGreaterThan(1) ? this.$i18n.tc('token.name', 2) : this.$i18n.tc('token.name', 1)
   }
 }
 </script>

@@ -3,7 +3,9 @@ import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import { EntityManager, FindManyOptions, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
-import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { TransactionSummary } from '@app/graphql/schema'
+import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 
 @Injectable()
 export class UncleService {
@@ -23,10 +25,10 @@ export class UncleService {
       'READ COMMITTED',
       async (entityManager): Promise<[UncleEntity[], number]> => {
 
-        let [{ count: totalCount }] = await entityManager.find(RowCount, {
+        let [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
           select: ['count'],
           where: {
-            relation: 'uncle',
+            entity: 'uncle',
           },
           cache: true,
         })
