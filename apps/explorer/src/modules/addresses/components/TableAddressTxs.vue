@@ -1,14 +1,15 @@
 <template>
   <v-card color="white" flat class="pt-0 pr-2 pl-2 pb-2">
     <!-- Txs Filter/Sort/Search/Pagination -->
-    <v-layout row align-center justify-space-between>
-      <!-- Filter -->
-      <v-flex shrink>
-        <v-layout row align-center justify-start>
+    <v-layout row wrap align-center justify-space-between>
+      <!-- Filter & Sorting -->
+      <v-flex shrink xs12 md3 >
+        <v-layout row align-center >
+          <!-- Filter:  -->
           <v-flex shrink>
             <p class="info--text">{{ $t('filter.name') }}</p>
           </v-flex>
-          <v-flex>
+          <v-flex shrink>
             <v-menu offset-y v-model="activeFilter">
               <template v-slot:activator="{ on }">
                 <v-btn class="tx-filter-btn box-border text-capitalize ma-0 pa-1" flat v-on="on" >
@@ -27,15 +28,21 @@
               </v-list>
             </v-menu>
           </v-flex>
+           <!-- Sort present on xs-sm -->
+          <v-flex hidden-md-and-up shrink>
+            <p class="info--text">{{ $t('common.sort') }}</p>
+          </v-flex>
+          <v-flex hidden-md-and-up shrink>
+            <app-sort-dialog :items="sortValues" :selected="selectedSort" @setSort="selectSort"/>
+          </v-flex>
         </v-layout>
       </v-flex>
-      <!-- Sort (Mobile Only)-->
       <!-- Search -->
-      <v-flex>
+      <v-flex grow xs12 sm6  >
         <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
       </v-flex>
       <!-- Pagination -->
-      <v-flex shrink pt-0 pb-0>
+      <v-flex shrink xs12 sm6 md3 pt-0 pb-0>
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
     </v-layout>
@@ -125,7 +132,7 @@
       </v-layout>
     </v-card>
     <div v-else>
-      <v-card flat v-if="!hasError" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+      <v-card flat v-if="!hasError" class="scroll-y" style="overflow-x: hidden">
         <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
@@ -174,6 +181,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppSearchInput from '@app/core/components/ui/AppSearchInput.vue'
+import AppSortDialog from '@app/core/components/ui/AppSortDialog.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
@@ -191,6 +199,7 @@ import { Subscription } from 'rxjs'
 import { TranslateResult } from 'vue-i18n'
 import { searchTypes } from '@app/core/helper'
 import { SearchType } from '../../../core/api/apollo/types/globalTypes';
+import { SortItem } from '@app/core/components/props'
 
 const MAX_ITEMS = 50
 
@@ -204,6 +213,7 @@ class TableTxsMixin extends Vue {
     AppFootnotes,
     AppPaginate,
     AppSearchInput,
+    AppSortDialog,
     TableTxsRow,
     NoticeNewBlock
   },
@@ -356,8 +366,8 @@ export default class TableTxs extends TableTxsMixin {
   connectedSubscription?: Subscription
 
   //Sorting:
-  selectedSort = 0
-  sortValues = ['eth_high', 'eth_low', 'fee_high', 'fee_low', 'age_high', 'age_low']
+  selectedSort: number = 0
+  openSortDialog: boolean = false
 
   //Search:
   SearchType = searchTypes
@@ -493,6 +503,35 @@ export default class TableTxs extends TableTxsMixin {
     return this.activeFilter? 'arrow_drop_up' : 'arrow_drop_down'
   }
 
+  //Sort
+  get  sortValues(): SortItem[] {
+    return [
+      { id: 0,
+        text: this.$t('common.value') ,
+        value: 'eth_high'
+      },
+      { id: 1,
+        text:  this.$t('common.value'),
+        value: 'eth_low'
+      },
+      { id: 2,
+        text:  this.$tc('tx.fee', 1),
+        value: 'fee_high'
+      },
+      { id: 3,
+        text:  this.$tc('tx.fee', 1),
+        value: 'fee_low'
+      },
+      { id: 4,
+        text:  this.$t('common.age'),
+        value: 'age_high'
+      },
+      { id: 4,
+        text:  this.$t('common.age'),
+        value: 'age_high'
+      }
+    ]
+  }
 
   //Get Empty Table Message
   get text(): string {
@@ -515,7 +554,7 @@ export default class TableTxs extends TableTxsMixin {
 
 <style scoped lang="css">
 .tx-filter-btn {
-  width: 120px;
+  width: 100px;
   height: 30px;
 
 }
@@ -523,6 +562,11 @@ export default class TableTxs extends TableTxsMixin {
   display: grid;
   width:80%;
   grid-template-columns: 90% 10%;
+}
+
+.tx-sort-btn {
+  width: 80px;
+  height: 30px;
 }
 
 .box-border{

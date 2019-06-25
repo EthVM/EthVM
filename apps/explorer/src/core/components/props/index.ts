@@ -50,3 +50,9 @@ export interface Crumb {
   }
   plural?: number
 }
+
+export interface SortItem {
+  id: number,
+  text: TranslateResult,
+  value: string
+}

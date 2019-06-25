@@ -138,7 +138,9 @@
     "quantity": "Quantity",
     "percentage": "Percentage",
     "eth-balance": "Ether Balance",
-    "balance": "Balance"
+    "balance": "Balance",
+    "sort": "Sort by",
+    "value": "Value"
   },
 
   "usd": {
