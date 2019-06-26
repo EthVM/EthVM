@@ -179,6 +179,7 @@ export default class AppPaginate extends Vue {
 .app-paginate-container {
   display: flex;
   align-items: center;
+  margin: 0 -5px;
 
   @media screen and (max-width: 340px) {
     display: block;
