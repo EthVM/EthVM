@@ -1,17 +1,30 @@
 <template>
-  <div>
+  <div class="app-paginate-container">
     <div>
-      <div>
-        <button v-if="hasFirst" @click="setPageOnClick('first')">{{ $t('btn.first') }}</button>
-        <button @click="setPageOnClick('prev')" :disabled="currentPage === 0"><v-icon class="secondary--text" small>fas fa-angle-left</v-icon></button>
-        <div v-if="hasInput">
-          <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />
-        </div>
-        <p v-else class="info--text pr-1">{{ pageDisplay }}</p>
-        <p class="info--text">out of {{ total }}</p>
-        <button @click="setPageOnClick('next')" :disabled="currentPage === lastPage"><v-icon class="secondary--text" small>fas fa-angle-right</v-icon></button>
-        <button v-if="hasLast" @click="setPageOnClick('last')">{{ $t('btn.last') }}</button>
+      <v-btn v-if="hasFirst" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('first')" small>{{ $t('btn.first') }}</v-btn>
+      <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small :disabled="currentPage === 0"
+        ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
+      </v-btn>
+    </div>
+    <div>
+      <div v-if="hasInput" class="page-input">
+        <v-text-field
+          v-model="pageDisplay"
+          :mask="inputMask"
+          :placeholder="pageDisplay"
+          :error="!isValidPageDisplay"
+          :class="validClass"
+          :hide-details="true"
+        />
       </div>
+      <p v-else class="info--text pr-1">{{ pageDisplay }}</p>
+      <p class="info--text">out of {{ total }}</p>
+    </div>
+    <div>
+      <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small :disabled="currentPage === lastPage"
+        ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
+      </v-btn>
+      <v-btn v-if="hasLast" flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('btn.last') }}</v-btn>
     </div>
   </div>
 </template>
@@ -163,12 +176,38 @@ export default class AppPaginate extends Vue {
 </script>
 
 <style scoped lang="less">
+.app-paginate-container {
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 340px) {
+    display: block;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.page-input {
+  max-width: 120px;
+}
+
 .v-btn {
   height: 30px;
   min-width: 20px;
   margin: 5px;
 }
 
+.v-text-field__details {
+  display: none;
+}
+
+.v-text-field {
+  padding-top: 0px;
+  margin-top: 0px;
+}
 .page-input {
   width: 80px;
 }
@@ -176,5 +215,6 @@ export default class AppPaginate extends Vue {
 p {
   margin: 0;
   padding: 0;
+  line-height: 15px;
 }
 </style>
