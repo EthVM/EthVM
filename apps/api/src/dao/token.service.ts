@@ -12,24 +12,24 @@ import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
 import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
 import { Token } from '@app/graphql/schema'
 import BigNumber from 'bignumber.js'
-import { CONNECTION } from '@app/orm/config'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class TokenService {
   constructor(
-    @InjectRepository(Erc20BalanceEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(Erc20BalanceEntity, DbConnection.Principal)
     private readonly erc20BalanceRepository: Repository<Erc20BalanceEntity>,
-    @InjectRepository(Erc721BalanceEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(Erc721BalanceEntity, DbConnection.Principal)
     private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
-    @InjectRepository(Erc20MetadataEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(Erc20MetadataEntity, DbConnection.Principal)
     private readonly erc20MetadataRepository: Repository<Erc20MetadataEntity>,
-    @InjectRepository(Erc721MetadataEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(Erc721MetadataEntity, DbConnection.Principal)
     private readonly erc721MetadataRepository: Repository<Erc721MetadataEntity>,
-    @InjectRepository(TokenExchangeRateEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(TokenExchangeRateEntity, DbConnection.Principal)
     private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
-    @InjectRepository(ContractEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(ContractEntity, DbConnection.Principal)
     private readonly contractRepository: Repository<ContractEntity>,
-    @InjectRepository(CoinExchangeRateEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(CoinExchangeRateEntity, DbConnection.Principal)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
   ) {
   }

@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigService } from '@app/shared/config.service'
 import { ConnectionOptions } from 'typeorm'
-import { CONNECTION, SnakeCaseNamingStrategy } from '@app/orm/config'
+import { DbConnection, SnakeCaseNamingStrategy } from '@app/orm/config'
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      name: CONNECTION.PRINCIPAL,
+      name: DbConnection.Principal,
       useFactory: async (configService: ConfigService): Promise<ConnectionOptions> => ({
         type: 'postgres',
         url: configService.dbPrincipal.url,
@@ -20,7 +20,7 @@ import { CONNECTION, SnakeCaseNamingStrategy } from '@app/orm/config'
       inject: [ConfigService],
     }),
     TypeOrmModule.forRootAsync({
-      name: CONNECTION.METRICS,
+      name: DbConnection.Metrics,
       useFactory: async (configService: ConfigService): Promise<ConnectionOptions> => ({
         type: 'postgres',
         url: configService.dbMetrics.url,

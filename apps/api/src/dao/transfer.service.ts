@@ -3,15 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Brackets, FindManyOptions, Repository } from 'typeorm'
 import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
 import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
-import { CONNECTION } from '@app/orm/config'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class TransferService {
 
   constructor(
-    @InjectRepository(FungibleBalanceTransferEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(FungibleBalanceTransferEntity, DbConnection.Principal)
     private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
-    @InjectRepository(FungibleBalanceDeltaEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(FungibleBalanceDeltaEntity, DbConnection.Principal)
     private readonly deltaRepository: Repository<FungibleBalanceDeltaEntity>,
   ) {
   }

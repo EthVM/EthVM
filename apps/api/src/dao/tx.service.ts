@@ -11,7 +11,7 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
-import { CONNECTION } from '@app/orm/config'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class TxService {
@@ -21,9 +21,9 @@ export class TxService {
     private readonly traceService: TraceService,
     @Inject(forwardRef(() => ContractService))
     private readonly contractService: ContractService,
-    @InjectRepository(TransactionEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(TransactionEntity, DbConnection.Principal)
     private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectEntityManager(CONNECTION.PRINCIPAL)
+    @InjectEntityManager(DbConnection.Principal)
     private readonly entityManager: EntityManager,
   ) {
   }

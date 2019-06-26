@@ -4,13 +4,13 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import { EntityManager, FindManyOptions, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
-import { CONNECTION } from '@app/orm/config'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class UncleService {
-  constructor(@InjectRepository(UncleEntity, CONNECTION.PRINCIPAL)
+  constructor(@InjectRepository(UncleEntity, DbConnection.Principal)
               private readonly uncleRepository: Repository<UncleEntity>,
-              @InjectEntityManager(CONNECTION.PRINCIPAL)
+              @InjectEntityManager(DbConnection.Principal)
               private readonly entityManager: EntityManager) {
   }
 

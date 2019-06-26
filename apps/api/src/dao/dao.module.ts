@@ -30,7 +30,7 @@ import {TxService} from '@app/dao/tx.service'
 import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 import { MetadataEntity } from '@app/orm/entities/metadata.entity'
 import { MetadataService } from '@app/dao/metadata.service'
-import { CONNECTION } from '@app/orm/config'
+import { DbConnection } from '@app/orm/config'
 
 @Module({
   imports: [
@@ -53,7 +53,7 @@ import { CONNECTION } from '@app/orm/config'
       CoinExchangeRateEntity,
       BlockMetricEntity,
       MetadataEntity,
-    ], CONNECTION.PRINCIPAL),
+    ], DbConnection.Principal),
     TypeOrmModule.forFeature([
       AccountEntity,
       BlockHeaderEntity,
@@ -73,7 +73,7 @@ import { CONNECTION } from '@app/orm/config'
       CoinExchangeRateEntity,
       BlockMetricEntity,
       MetadataEntity,
-    ], CONNECTION.METRICS),
+    ], DbConnection.Metrics),
   ],
   providers: [
     AccountService,

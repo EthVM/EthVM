@@ -2,13 +2,13 @@ import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
-import { CONNECTION } from '@app/orm/config'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class ReceiptService {
 
   constructor(
-    @InjectRepository(TransactionReceiptEntity, CONNECTION.PRINCIPAL) private readonly receiptRepository: Repository<TransactionReceiptEntity>,
+    @InjectRepository(TransactionReceiptEntity, DbConnection.Principal) private readonly receiptRepository: Repository<TransactionReceiptEntity>,
   ) {
   }
 

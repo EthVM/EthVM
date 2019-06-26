@@ -1,4 +1,4 @@
-export enum CONNECTION {
-  PRINCIPAL = 'principal',
-  METRICS = 'metrics',
+export enum DbConnection {
+  Principal = 'principal',
+  Metrics = 'metrics',
 }

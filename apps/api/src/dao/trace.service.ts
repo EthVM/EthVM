@@ -2,7 +2,7 @@ import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.enti
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { EntityManager, In, Repository } from 'typeorm'
-import { CONNECTION } from '@app/orm/config'
+import { DbConnection } from '@app/orm/config'
 
 export interface TransactionStatus {
   blockHash: string
@@ -14,7 +14,7 @@ export interface TransactionStatus {
 export class TraceService {
 
   constructor(
-    @InjectRepository(TransactionTraceEntity, CONNECTION.PRINCIPAL)
+    @InjectRepository(TransactionTraceEntity, DbConnection.Principal)
     private readonly traceRepository: Repository<TransactionTraceEntity>,
   ) {
   }
