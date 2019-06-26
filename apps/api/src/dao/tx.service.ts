@@ -238,6 +238,7 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          order: {[sortField]: order.toUpperCase()},
           cache: true,
         })
 
