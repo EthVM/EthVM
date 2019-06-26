@@ -268,6 +268,7 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          order: {[sortField]: order.toUpperCase()},
           cache: true,
           order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'}
         })
