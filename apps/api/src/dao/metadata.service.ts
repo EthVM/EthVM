@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { MetadataEntity } from '@app/orm/entities/metadata.entity'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class MetadataService {
 
   constructor(
-    @InjectRepository(MetadataEntity)
+    @InjectRepository(MetadataEntity, DbConnection.Principal)
     private readonly metadataRepository: Repository<MetadataEntity>,
   ) {
   }

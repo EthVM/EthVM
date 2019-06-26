@@ -8,11 +8,12 @@ import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metrics-transaction-fee.entity'
 import { BlockMetricsTransactionEntity } from '@app/orm/entities/block-metrics-transaction.entity'
 import moment = require('moment')
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class BlockMetricsService {
 
-  constructor(@InjectEntityManager() private readonly entityManager: EntityManager) {
+  constructor(@InjectEntityManager(DbConnection.Metrics) private readonly entityManager: EntityManager) {
   }
 
   async findByBlockHash(blockHashes: string[]): Promise<BlockMetricEntity[]> {

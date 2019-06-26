@@ -9,8 +9,6 @@ ENV DOCKERIZE_VERSION v0.6.1
 ENV FLYWAY_EDITION community
 ENV FLYWAY_CONNECT_RETRIES 30
 
-ENV POSTGRES_JDBC_URL jdbc:postgresql://timescale:5432/ethvm_dev?user=postgres&password=1234&ssl=false
-
 # Install dockerize
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -23,7 +21,7 @@ COPY ./flyway/flyway.tmpl.conf /flyway/conf/flyway.tmpl
 COPY ./drivers/ /flyway/drivers/
 
 # Copy SQL migrations
-COPY ./sql/ /flyway/sql/
+COPY migrations /flyway/migrations/
 
 # Restore original user back
 USER flyway

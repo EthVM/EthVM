@@ -15,19 +15,33 @@ run() {
 
   local datasets_dir="${ROOT_DIR}/datasets"
   local branch=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
-  local filename="ethvm_dev-${branch}.sql.gz"
-  local filepath="${datasets_dir}/${filename}"
+  local filenames=("principal-${branch}.sql.gz" "metrics-${branch}.sql.gz")
 
   case "${command}" in
 
     dump)
-      docker-compose exec -u postgres timescale pg_dump ethvm_dev | gzip > ${filepath}
-      cd ${datasets_dir} && md5sum ${filename} > ${filename}.md5 # to avoid full path in md5 sum file
+
+      for filename in "${filenames[@]}"; do
+
+        local filepath="${datasets_dir}/${filename}"
+        docker-compose exec -u postgres db-principal pg_dump ethvm_dev | gzip > ${filepath}
+        cd ${datasets_dir} && md5sum ${filename} > ${filename}.md5 # to avoid full path in md5 sum file
+
+      done
+
       ;;
 
     upload-dump)
-      aws s3 cp ${filepath}.md5 s3://ethvm/datasets/ --profile ethvm --acl public-read
-      aws s3 cp ${filepath} s3://ethvm/datasets/ --profile ethvm --acl public-read
+
+      for filename in "${filenames[@]}"; do
+
+        local filepath="${datasets_dir}/${filename}"
+        aws s3 cp ${filepath}.md5 s3://ethvm/datasets/ --profile ethvm --acl public-read
+        aws s3 cp ${filepath} s3://ethvm/datasets/ --profile ethvm --acl public-read
+
+      done
+
+
       ;;
 
   esac

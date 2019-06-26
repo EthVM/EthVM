@@ -4,15 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { AccountEntity } from '@app/orm/entities/account.entity'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class AccountService {
   constructor(
-    @InjectRepository(AccountEntity)
+    @InjectRepository(AccountEntity, DbConnection.Principal)
     private readonly accountRepository: Repository<AccountEntity>,
-    @InjectRepository(BlockHeaderEntity)
+    @InjectRepository(BlockHeaderEntity, DbConnection.Principal)
     private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
-    @InjectRepository(ContractEntity)
+    @InjectRepository(ContractEntity, DbConnection.Principal)
     private readonly contractRepository: Repository<ContractEntity>,
   ) {
   }

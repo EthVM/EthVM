@@ -171,7 +171,8 @@ class BlockEvents {
 @Injectable()
 export class PgSubscriptionService {
 
-  private readonly url: string
+  private readonly principalUrl: string
+  private readonly metricsUrl: string
 
   private blockEvents: Map<string, BlockEvents> = new Map()
 
@@ -185,19 +186,21 @@ export class PgSubscriptionService {
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {
 
-    this.url = config.db.url
+    this.principalUrl = config.dbPrincipal.url
+    this.metricsUrl = config.dbMetrics.url
 
-    this.init()
+    this.initPrincipal()
+    this.initMetrics()
   }
 
-  private init() {
+  private initPrincipal() {
 
-    const { url, blockService, transactionService, blockMetricsService, pubSub, entityManager } = this
+    const { principalUrl, blockService, transactionService, blockMetricsService, pubSub, entityManager } = this
 
     const events$ = Observable.create(
       async observer => {
         try {
-          const subscriber = createSubscriber({ connectionString: url })
+          const subscriber = createSubscriber({ connectionString: principalUrl })
 
           subscriber.notifications.on('events', e => observer.next(e))
           subscriber.events.on('error', err => {
@@ -218,7 +221,6 @@ export class PgSubscriptionService {
       })
 
     const blockHashes$ = new Subject<string>()
-    const blockMetrics$ = new Subject<string>()
 
     const pgEvents$ = events$
       .pipe(
@@ -237,17 +239,6 @@ export class PgSubscriptionService {
     pgEvents$
       .pipe(isBlockEvent())
       .subscribe(event => this.onBlockEvent(event, blockHashes$))
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionEvent())
-      .subscribe(event => this.onBlockMetricsTransactionEvent(event))
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionFeeEvent())
-      .subscribe(event => this.onBlockMetricsTransactionFeeEvent(event))
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionFeeEvent())
 
     blockHashes$
       .pipe(
@@ -279,6 +270,58 @@ export class PgSubscriptionService {
         })
 
       })
+
+  }
+
+  private initMetrics() {
+
+    const { blockService, transactionService, blockMetricsService, pubSub } = this
+
+    const events$ = Observable.create(
+      async observer => {
+        try {
+          const subscriber = createSubscriber({ connectionString: this.metricsUrl })
+
+          subscriber.notifications.on('events', e => observer.next(e))
+          subscriber.events.on('error', err => {
+            console.error('pg sub error', err)
+            observer.error(err)
+          })
+
+          await subscriber.connect()
+          await subscriber.listenTo('events')
+
+          return () => {
+            subscriber.close()
+          }
+        } catch (err) {
+          console.error('Pg sub error', err)
+          observer.error(err)
+        }
+      })
+
+    const blockMetrics$ = new Subject<string>()
+
+    const pgEvents$ = events$
+      .pipe(
+        map(event => new PgEvent(event)),
+        isPgEvent(),
+      )
+
+    //
+
+    this.blockEvents = new Map()
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionEvent())
+      .subscribe(event => this.onBlockMetricsTransactionEvent(event))
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionFeeEvent())
+      .subscribe(event => this.onBlockMetricsTransactionFeeEvent(event))
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionFeeEvent())
 
     blockMetrics$
       .pipe(
