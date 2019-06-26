@@ -18,7 +18,12 @@
 }
 
 .bottom-pagination-container {
+  display: flex;
   margin-top: 20px;
+
+  @media screen and (max-width: 1263px) {
+    margin-top: 10px;
+  }
 
   >* {
     margin-left: auto;
