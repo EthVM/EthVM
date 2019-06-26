@@ -4,7 +4,7 @@
     <v-layout row wrap align-center justify-space-between>
       <!-- Filter & Sorting -->
       <v-flex shrink xs12 md3 >
-        <v-layout row align-center >
+        <v-layout row wrap align-center >
           <!-- Filter:  -->
           <v-flex shrink pr-0>
             <p class="info--text">{{ $t('filter.name') }}</p>
@@ -65,7 +65,7 @@
     <v-layout>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
-          <v-layout row align-center justify-start >
+          <v-layout row align-center justify-start>
             <v-flex sm4>
               <h5>{{ $tc('tx.hash', 2) }}</h5>
             </v-flex>
@@ -74,10 +74,10 @@
                 <h5 class="pr-2">{{ $t('common.eth') }}</h5>
                 <v-flex>
                   <v-layout align-start justify-center column>
-                    <v-btn flat icon @click="selectSort(0)">
+                    <v-btn flat icon @click="selectSort(0)" class="sort-icon-btn">
                       <v-icon :class="[isActiveSort(0) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
-                    <v-btn flat icon @click="selectSort(1)">
+                    <v-btn flat icon @click="selectSort(1)" class="sort-icon-btn">
                       <v-icon :class="[isActiveSort(1) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
@@ -89,10 +89,10 @@
                 <h5 class="pr-2">{{ $tc('tx.fee', 1) }}</h5>
                 <v-flex>
                   <v-layout align-start justify-center column>
-                    <v-btn flat icon @click="selectSort(2)">
+                    <v-btn flat icon @click="selectSort(2)" class="sort-icon-btn">
                       <v-icon :class="[isActiveSort(2) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
-                    <v-btn flat icon @click="selectSort(3)">
+                    <v-btn flat icon @click="selectSort(3)" class="sort-icon-btn">
                       <v-icon :class="[isActiveSort(3) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
@@ -103,11 +103,11 @@
               <v-layout align-center justify-start row pl-1>
                 <h5 class="pr-2">{{ $t('common.age') }}</h5>
                 <v-flex>
-                  <v-layout align-start justify-center column>
-                    <v-btn flat icon @click="selectSort(4)">
+                  <v-layout align-start justify-center column >
+                    <v-btn flat icon @click="selectSort(4)" class="sort-icon-btn">
                       <v-icon :class="[isActiveSort(4) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
-                    <v-btn flat icon @click="selectSort(5)">
+                    <v-btn flat icon @click="selectSort(5)" class="sort-icon-btn">
                       <v-icon :class="[isActiveSort(5) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
@@ -344,11 +344,11 @@ export default class TableTxs extends TableTxsMixin {
 
   @Prop(String) address?: string
 
-    /*
-    ===================================================================================
+  /*
+  ===================================================================================
      Initial Data
-    ===================================================================================
-    */
+  ===================================================================================
+  */
 
   page!: number
 
@@ -571,6 +571,12 @@ export default class TableTxs extends TableTxsMixin {
 
 .box-border{
   border: solid 1px #b4bfd2;
+}
+
+.sort-icon-btn {
+  height: 12px;
+  width: 12px;
+  margin: 0px;
 }
 
 </style>
