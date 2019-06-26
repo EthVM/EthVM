@@ -18,8 +18,8 @@ query transactionSummariesByBlockHash($hash: String!, $offset: Int, $limit: Int)
   }
 }
 
-query transactionSummariesByAddress($address: String!, $filter: FilterEnum = all, $offset: Int, $limit: Int) {
-  summaries: transactionSummariesForAddress(address: $address, filter: $filter, offset: $offset, limit: $limit) {
+query transactionSummariesByAddress($address: String!, $filter: FilterEnum = all, $searchHash: String, $sortField: TxSortField, $order: Order, $offset: Int, $limit: Int) {
+  summaries: transactionSummariesForAddress(address: $address, filter: $filter, searchHash: $searchHash, sortField: $sortField, order: $order, offset: $offset, limit: $limit) {
     ...TransactionSummaryPage
   }
 }

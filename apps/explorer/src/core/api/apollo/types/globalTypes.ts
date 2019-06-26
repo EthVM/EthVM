@@ -23,6 +23,11 @@ export enum FilterEnum {
   out = "out",
 }
 
+export enum Order {
+  asc = "asc",
+  desc = "desc",
+}
+
 export enum SearchType {
   Address = "Address",
   Block = "Block",
@@ -47,6 +52,15 @@ export enum TokenExchangeRateFilter {
   price_low = "price_low",
   volume_high = "volume_high",
   volume_low = "volume_low",
+}
+
+export enum TxSortField {
+  fee = "fee",
+  from = "from",
+  successful = "successful",
+  timestamp = "timestamp",
+  to = "to",
+  value = "value",
 }
 
 //==============================================================
