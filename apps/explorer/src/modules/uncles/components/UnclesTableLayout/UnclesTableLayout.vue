@@ -92,7 +92,7 @@
           <v-divider class="mb-2 mt-2" />
         </div>
       </v-flex>
-      <v-flex xs12>
+      <v-flex xs12 class="bottom-pagination-container">
         <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
@@ -105,7 +105,7 @@
 import TitleUncles from '@app/modules/uncles/components/UnclesTableTitle/UnclesTableTitle.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate/AppPaginate.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
