@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { FilterEnum } from "./globalTypes";
+import { FilterEnum, TxSortField, Order } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: transactionSummariesByAddress
@@ -37,6 +37,9 @@ export interface transactionSummariesByAddress {
 export interface transactionSummariesByAddressVariables {
   address: string;
   filter?: FilterEnum | null;
+  searchHash?: string | null;
+  sortField?: TxSortField | null;
+  order?: Order | null;
   offset?: number | null;
   limit?: number | null;
 }
