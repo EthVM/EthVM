@@ -10,6 +10,8 @@ source ${SCRIPT_DIR}/env.sh
 # Define variables
 DATASET="ethvm_dev.sql.gz"
 
+BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
+
 # docker_usage - prints docker subcommand usage
 docker_usage() {
   echo ""
@@ -90,9 +92,9 @@ up_simple() {
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
   ${SCRIPT_DIR}/docker-build.sh build migrator
 
-  echo "Starting up containers: traefik, timescale, explorer, api, pgweb and redis \n"
+  echo "Starting up containers: traefik, db-principal, db-metrics, explorer, api, pgweb and redis \n"
   docker-compose build explorer api
-  docker-compose up -d traefik timescale explorer api pgweb redis
+  docker-compose up -d traefik db-principal db-metrics explorer api pgweb redis
 
   # Give time to breathe
   sleep 10
@@ -100,15 +102,26 @@ up_simple() {
   echo -e "Checking current dataset...\n"
   mkdir -p ${ROOT_DIR}/datasets
   set +o errexit
-  [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${DATASET}.md5 &>/dev/null)
-  [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo -e "You're using latest dataset version! \n"
-  set -o errexit
 
-  echo -e "Importing dataset to TimeScale \n"
+  DATASETS=("principal-${BRANCH}.sql.gz" "metrics-${BRANCH}.sql.gz")
 
-  docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}" --quiet -c "ALTER DATABASE "${POSTGRES_DB}" SET timescaledb.restoring='on';"
-  gunzip < ${ROOT_DIR}/datasets/${DATASET} | docker-compose exec -T timescale psql --quiet --username "${POSTGRES_USER}" "${POSTGRES_DB}"
-  docker-compose exec -T timescale psql --username "${POSTGRES_USER}" "${POSTGRES_DB}" --quiet -c "ALTER DATABASE "${POSTGRES_DB}" SET timescaledb.restoring='off';"
+  for DATASET in "${DATASETS[@]}"; do
+
+    [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${DATASET}.md5 &>/dev/null)
+    [[ $? -ne 0 ]] && (echo "Downloading dataset... \n" && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || echo -e "You're using latest dataset version! \n"
+    set -o errexit
+
+  done
+
+  echo -e "Importing principal dataset \n"
+  gunzip < ${ROOT_DIR}/datasets/${DATASETS[0]} | docker-compose exec -T db-principal psql --quiet --username "${PRINCIPAL_USER}" "${PRINCIPAL_DB}"
+
+  echo -e "Importing metrics dataset \n"
+
+  docker-compose exec -T db-metrics psql --username "${METRICS_USER}" "${METRICS_DB}" --quiet -c "ALTER DATABASE "${METRICS_DB}" SET timescaledb.restoring='on';"
+  gunzip < ${ROOT_DIR}/datasets/${DATASETS[1]} | docker-compose exec -T db-metrics psql --quiet --username "${METRICS_USER}" "${METRICS_DB}"
+  docker-compose exec -T db-metrics psql --username "${METRICS_USER}" "${METRICS_DB}" --quiet -c "ALTER DATABASE "${METRICS_DB}" SET timescaledb.restoring='off';"
+
 }
 
 # down - stops all running docker containers, volumes, images and related stuff
