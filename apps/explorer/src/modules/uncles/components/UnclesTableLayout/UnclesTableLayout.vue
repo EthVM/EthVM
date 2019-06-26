@@ -39,7 +39,7 @@
         <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex xs6 sm2 md2>
-              <h5>{{ $t('block.block') }}</h5>
+              <h5>{{ $t('block.number') }}</h5>
             </v-flex>
             <v-flex xs6 sm2 md2>
               <h5>{{ $t('uncle.number') }}</h5>
