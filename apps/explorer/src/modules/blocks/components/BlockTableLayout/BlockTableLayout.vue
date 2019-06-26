@@ -90,7 +90,7 @@ import TitleLastBlocks from '@app/modules/blocks/components/BlockTableTitle/Bloc
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate/AppPaginate.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import BlockTableContent from '@app/modules/blocks/components/BlockTableContent/BlockTableContent.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
