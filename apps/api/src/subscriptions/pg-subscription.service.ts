@@ -80,7 +80,7 @@ function inputIsPgEvent(input: any): input is PgEvent {
 // tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsPgEvent),
+    filter(inputIsPgEvent)
   )
 }
 
@@ -88,12 +88,12 @@ function isPgEvent<PgEvent>() {
 function isMetadataEvent<PgEvent>() {
 
   const tables = new Set<string>([
-    'metadata',
+    'metadata'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -104,12 +104,12 @@ function isBlockEvent<PgEvent>() {
     'canonical_block_header',
     'transaction',
     'transaction_trace',
-    'transaction_receipt',
+    'transaction_receipt'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -117,7 +117,7 @@ function isBlockEvent<PgEvent>() {
 function isBlockMetricsTransactionEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction'),
+    filter(e => e.table === 'block_metrics_transaction')
   )
 }
 
@@ -125,7 +125,7 @@ function isBlockMetricsTransactionEvent<PgEvent>() {
 function isBlockMetricsTransactionFeeEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction_fee'),
+    filter(e => e.table === 'block_metrics_transaction_fee')
   )
 }
 
@@ -171,7 +171,8 @@ class BlockEvents {
 @Injectable()
 export class PgSubscriptionService {
 
-  private readonly url: string
+  private readonly principalUrl: string
+  private readonly metricsUrl: string
 
   private blockEvents: Map<string, BlockEvents> = new Map()
 
@@ -185,20 +186,21 @@ export class PgSubscriptionService {
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {
 
-    // TODO use both DBs
-    this.url = config.dbPrincipal.url
+    this.principalUrl = config.dbPrincipal.url
+    this.metricsUrl = config.dbMetrics.url
 
-    this.init()
+    this.initPrincipal()
+    this.initMetrics()
   }
 
-  private init() {
+  private initPrincipal() {
 
-    const { url, blockService, transactionService, blockMetricsService, pubSub, entityManager } = this
+    const { principalUrl, blockService, transactionService, blockMetricsService, pubSub, entityManager } = this
 
     const events$ = Observable.create(
       async observer => {
         try {
-          const subscriber = createSubscriber({ connectionString: url })
+          const subscriber = createSubscriber({ connectionString: principalUrl })
 
           subscriber.notifications.on('events', e => observer.next(e))
           subscriber.events.on('error', err => {
@@ -219,12 +221,11 @@ export class PgSubscriptionService {
       })
 
     const blockHashes$ = new Subject<string>()
-    const blockMetrics$ = new Subject<string>()
 
     const pgEvents$ = events$
       .pipe(
         map(event => new PgEvent(event)),
-        isPgEvent(),
+        isPgEvent()
       )
 
     //
@@ -239,21 +240,10 @@ export class PgSubscriptionService {
       .pipe(isBlockEvent())
       .subscribe(event => this.onBlockEvent(event, blockHashes$))
 
-    pgEvents$
-      .pipe(isBlockMetricsTransactionEvent())
-      .subscribe(event => this.onBlockMetricsTransactionEvent(event))
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionFeeEvent())
-      .subscribe(event => this.onBlockMetricsTransactionFeeEvent(event))
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionFeeEvent())
-
     blockHashes$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
 
@@ -281,10 +271,62 @@ export class PgSubscriptionService {
 
       })
 
+  }
+
+  private initMetrics() {
+
+    const { blockService, transactionService, blockMetricsService, pubSub } = this
+
+    const events$ = Observable.create(
+      async observer => {
+        try {
+          const subscriber = createSubscriber({ connectionString: this.metricsUrl })
+
+          subscriber.notifications.on('events', e => observer.next(e))
+          subscriber.events.on('error', err => {
+            console.error('pg sub error', err)
+            observer.error(err)
+          })
+
+          await subscriber.connect()
+          await subscriber.listenTo('events')
+
+          return () => {
+            subscriber.close()
+          }
+        } catch (err) {
+          console.error('Pg sub error', err)
+          observer.error(err)
+        }
+      })
+
+    const blockMetrics$ = new Subject<string>()
+
+    const pgEvents$ = events$
+      .pipe(
+        map(event => new PgEvent(event)),
+        isPgEvent()
+      )
+
+    //
+
+    this.blockEvents = new Map()
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionEvent())
+      .subscribe(event => this.onBlockMetricsTransactionEvent(event))
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionFeeEvent())
+      .subscribe(event => this.onBlockMetricsTransactionFeeEvent(event))
+
+    pgEvents$
+      .pipe(isBlockMetricsTransactionFeeEvent())
+
     blockMetrics$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
         const metrics = await blockMetricsService.findByBlockHash(blockHashes)
