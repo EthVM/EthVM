@@ -58,7 +58,7 @@ export class TxResolvers {
     return retry(async bail => {
 
       try {
-        const [summaries, count] = await this.txService.findSummariesByBlockNumber(number, offset, limit)
+        const [summaries, count] = await this.txService.findSummariesByBlockNumber(new BigNumber(number), offset, limit)
         return new TransactionSummaryPageDto(summaries, count)
       } catch (err) {
 

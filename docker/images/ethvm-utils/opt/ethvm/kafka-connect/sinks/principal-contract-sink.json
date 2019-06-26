@@ -2,7 +2,7 @@
   "name": "principal-contract-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "tasks.max": {{ default .Env.PRINCIPAL_CONTRACT_SINK_TASKS_MAX "1" }},
+    "tasks.max": {{ default .Env.PRINCIPAL_CONTRACT_SINK_TASKS_MAX "2" }},
     "topics": "contract,eth_list_contract_metadata,erc20_metadata,erc721_metadata,token_exchange_rates",
     "errors.tolerance": "all",
     "errors.deadletterqueue.topic.name": "postgres_contract_sink_dead_letter",

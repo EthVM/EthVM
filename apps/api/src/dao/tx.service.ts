@@ -71,7 +71,7 @@ export class TxService {
           .createQueryBuilder()
           .select('COUNT(hash)', 'count')
           .from(TransactionEntity, 't')
-          .where('block_number = :number')
+          .where(`block_number = ${number.toString()}`)
           .cache(true)
           .setParameters({ number })
           .getRawOne() as { count: number }

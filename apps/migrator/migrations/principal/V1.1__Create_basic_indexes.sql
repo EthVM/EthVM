@@ -9,14 +9,13 @@ CREATE INDEX idx_uncle_nephew_hash ON uncle (nephew_hash);
 CREATE INDEX idx_uncle_number ON uncle (number);
 CREATE INDEX idx_uncle_height ON uncle (height);
 
-CREATE INDEX idx_uncle_nephew_number__number ON uncle(nephew_number DESC, number DESC);
-
 CREATE INDEX idx_transaction_hash ON TRANSACTION (hash);
 CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
 CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
 CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
 
 CREATE INDEX idx_transaction_transaction_index ON transaction (transaction_index DESC);
+CREATE INDEX idx_transaction_block_number ON transaction (block_number DESC);
 CREATE INDEX idx_transaction_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
 
 CREATE INDEX idx_transaction_receipt_block_hash ON transaction_receipt (block_hash);
@@ -39,6 +38,10 @@ CREATE INDEX idx_fungible_balance_delta_token_type ON fungible_balance_delta (to
 CREATE INDEX idx_fungible_balance_delta_delta_type ON fungible_balance_delta (delta_type);
 CREATE INDEX idx_fungible_balance_delta_trace_location_block_hash ON fungible_balance_delta (trace_location_block_hash);
 CREATE INDEX idx_fungible_balance_delta_amount ON fungible_balance_delta (amount);
+
+CREATE INDEX idx_fungible_balance_address ON fungible_balance (address);
+CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
+CREATE INDEX idx_fungible_balance_contract_address ON fungible_balance (contract, address);
 
 CREATE INDEX idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX idx_non_fungible_balance_contract ON non_fungible_balance (contract);

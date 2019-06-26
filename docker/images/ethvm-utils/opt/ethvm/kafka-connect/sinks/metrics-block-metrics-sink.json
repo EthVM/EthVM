@@ -2,7 +2,7 @@
   "name": "metrics-block-metrics-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "tasks.max": {{ default .Env.METRICS_BLOCK_METRICS_SINK_TASKS_MAX "1" }},
+    "tasks.max": {{ default .Env.METRICS_BLOCK_METRICS_SINK_TASKS_MAX "2" }},
     "topics": "block_metrics_header,block_metrics_transaction,block_metrics_transaction_trace,block_metrics_transaction_fee",
     "insert.mode": "upsert",
     "batch.size": 5000,

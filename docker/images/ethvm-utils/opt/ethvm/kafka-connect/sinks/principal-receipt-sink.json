@@ -2,7 +2,7 @@
   "name": "principal-receipt-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "tasks.max": {{ default .Env.PRINCIPAL_RECEIPT_SINK_TASKS_MAX "1" }},
+    "tasks.max": {{ default .Env.PRINCIPAL_RECEIPT_SINK_TASKS_MAX "2" }},
     "topics": "transaction_receipt",
     "insert.mode": "upsert",
     "batch.size": 3000,

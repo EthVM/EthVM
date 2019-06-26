@@ -10,6 +10,7 @@ import { TxService } from '@app/dao/tx.service'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
+import { DbConnection } from '@app/orm/config'
 
 export interface CanonicalBlockHeaderPayload {
   block_hash: string
@@ -183,7 +184,7 @@ export class PgSubscriptionService {
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
     private readonly blockMetricsService: BlockMetricsService,
-    @InjectEntityManager() private readonly entityManager: EntityManager,
+    @InjectEntityManager(DbConnection.Principal) private readonly principalEntityManager: EntityManager,
   ) {
 
     this.principalUrl = config.dbPrincipal.url
@@ -195,7 +196,7 @@ export class PgSubscriptionService {
 
   private initPrincipal() {
 
-    const { principalUrl, blockService, transactionService, blockMetricsService, pubSub, entityManager } = this
+    const { principalUrl, blockService, transactionService, blockMetricsService, pubSub, principalEntityManager } = this
 
     const events$ = Observable.create(
       async observer => {
@@ -248,7 +249,7 @@ export class PgSubscriptionService {
       .subscribe(async blockHashes => {
 
         // clear query cache
-        await entityManager.connection.queryResultCache!.clear()
+        await principalEntityManager.connection.queryResultCache!.clear()
 
         const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes)
 
@@ -336,14 +337,14 @@ export class PgSubscriptionService {
   }
 
   private async onMetadataEvent(event: PgEvent) {
-    const { pubSub, entityManager } = this
+    const { pubSub, principalEntityManager } = this
     const payload = event.payload as MetadataPayload
 
     switch (payload.key) {
       case 'sync_status':
 
         // clear query cache
-        await entityManager.connection.queryResultCache!.clear()
+        await principalEntityManager.connection.queryResultCache!.clear()
 
         const isSyncing = JSON.parse(payload.value)
         pubSub.publish('isSyncing', isSyncing)

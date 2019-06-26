@@ -101,7 +101,7 @@ import { DbConnection } from '@app/orm/config'
     UncleService,
     TraceService,
     ReceiptService,
-    MetadataService,
+    MetadataService
   ],
 })
 export class DaoModule {

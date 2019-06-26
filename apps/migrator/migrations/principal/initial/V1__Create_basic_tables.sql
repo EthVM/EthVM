@@ -211,9 +211,6 @@ CREATE TABLE fungible_balance
   PRIMARY KEY (address, contract)
 );
 
-CREATE INDEX idx_fungible_balance_contract ON fungible_balance (contract);
-
-
 CREATE TABLE transaction_count
 (
   address   CHAR(42) PRIMARY KEY,
@@ -400,25 +397,19 @@ FROM block_reward AS br
 WHERE cb.number IS NOT NULL
   AND br.amount IS NOT NULL;
 
-CREATE VIEW canonical_uncle_reward AS
-SELECT ur.*
-FROM uncle_reward AS ur
-       RIGHT JOIN canonical_block_header AS cb ON ur.block_hash = cb.hash
-WHERE cb.number IS NOT NULL
-  AND ur.amount IS NOT NULL;
-
 CREATE VIEW canonical_uncle AS
 SELECT
        cb.number as nephew_number,
        u.*,
-       ur.amount AS reward_amount
+       fbd.amount as reward_amount
 FROM
     uncle AS u
     RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
-    LEFT JOIN uncle_reward AS ur ON u.author = ur.address
+    LEFT JOIN fungible_balance_delta AS fbd ON u.author = fbd.address AND u.nephew_hash = fbd.trace_location_block_hash
 WHERE
-  u.hash IS NOT NULL
-ORDER BY cb.number DESC;
+  u.hash IS NOT NULL AND
+  cb.number IS NOT NULL AND
+  fbd.delta_type = 'UNCLE_REWARD';
 
 
 
