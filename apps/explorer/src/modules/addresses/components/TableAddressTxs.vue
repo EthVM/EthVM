@@ -126,25 +126,18 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-card flat v-if="syncing && pending">
-      <v-layout row align-center justify-center fill-height>
-        <v-card-title class="text-xs-center pt-5 pb-5">{{ $t('message.sync.no-pen-tx') }}</v-card-title>
-      </v-layout>
-    </v-card>
-    <div v-else>
       <v-card flat v-if="!hasError" class="scroll-y" style="overflow-x: hidden">
         <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
-              <table-txs-row :tx="tx" :is-pending="pending" />
+              <table-txs-row :tx="tx"/>
             </v-card>
-            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-              <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
-            </v-layout>
+            <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
             <v-card v-if="!transactions.length" flat>
               <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
             </v-card>
           </v-flex>
+          <!--Note Create Separate File for mobile and desktop loading -->
           <v-flex xs12 v-if="loading">
             <div v-for="i in maxItems" :key="i">
               <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
@@ -172,7 +165,7 @@
           </v-flex>
         </v-layout>
       </v-card>
-    </div>
+
   </v-card>
 </template>
 
@@ -335,8 +328,8 @@ export default class TableTxs extends TableTxsMixin {
       ===================================================================================
       */
 
-  @Prop(String) pageType!: string
-  @Prop(String) showStyle!: string
+
+
   @Prop(Number) maxItems!: number
 
   @Prop(String) blockHash?: string
@@ -455,10 +448,6 @@ export default class TableTxs extends TableTxsMixin {
 
   get hasError(): boolean {
     return !!this.error && this.error !== ''
-  }
-
-  get pending(): boolean {
-    return this.pageType == 'pending'
   }
 
   get isBlockDetail(): boolean {
