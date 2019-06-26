@@ -52,7 +52,7 @@ export class UncleService {
 
         const uncles = await entityManager.find(UncleEntity, {
           where,
-          order: { nephewNumber: 'DESC', number: 'DESC' },
+          order: { nephewNumber: 'DESC' },
           skip: offset,
           take: limit,
           cache: true,
@@ -65,7 +65,7 @@ export class UncleService {
   }
 
   async findLatestUncleBlockNumber(): Promise<BigNumber> {
-    const findOptions: FindManyOptions = { order: { nephewNumber: 'DESC', number: 'DESC' }, take: 1, cache: true }
+    const findOptions: FindManyOptions = { order: { nephewNumber: 'DESC' }, take: 1, cache: true }
     const latest = await this.uncleRepository.find(findOptions)
     return latest && latest.length ? latest[0].height : new BigNumber('0')
   }

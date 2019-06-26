@@ -3,9 +3,13 @@ CREATE INDEX idx_block_header_hash ON canonical_block_header (hash);
 CREATE INDEX idx_block_header_parent_hash ON canonical_block_header (parent_hash);
 CREATE INDEX idx_block_header_author ON canonical_block_header (author);
 
+CREATE INDEX idx_uncle_hash ON uncle (hash);
+CREATE INDEX idx_uncle_author on uncle (author);
 CREATE INDEX idx_uncle_nephew_hash ON uncle (nephew_hash);
 CREATE INDEX idx_uncle_number ON uncle (number);
 CREATE INDEX idx_uncle_height ON uncle (height);
+
+CREATE INDEX idx_uncle_nephew_number__number ON uncle(nephew_number DESC, number DESC);
 
 CREATE INDEX idx_transaction_hash ON TRANSACTION (hash);
 CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
@@ -32,7 +36,7 @@ CREATE INDEX idx_fungible_balance_delta_address ON fungible_balance_delta (addre
 CREATE INDEX idx_fungible_balance_delta_contract_address ON fungible_balance_delta (contract_address);
 CREATE INDEX idx_fungible_balance_delta_counterpart_address ON fungible_balance_delta (counterpart_address);
 CREATE INDEX idx_fungible_balance_delta_token_type ON fungible_balance_delta (token_type);
-CREATE INDEX idx_fungible_balance_delta_delta_type ON fungible_balance_delta (token_type);
+CREATE INDEX idx_fungible_balance_delta_delta_type ON fungible_balance_delta (delta_type);
 CREATE INDEX idx_fungible_balance_delta_trace_location_block_hash ON fungible_balance_delta (trace_location_block_hash);
 CREATE INDEX idx_fungible_balance_delta_amount ON fungible_balance_delta (amount);
 

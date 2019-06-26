@@ -379,10 +379,18 @@ CREATE TABLE erc721_metadata
 CREATE VIEW block_reward AS
 SELECT address,
        trace_location_block_hash as block_hash,
-       delta_type,
-       amount
+       amount,
+       delta_type
 FROM fungible_balance_delta
 WHERE delta_type IN ('BLOCK_REWARD', 'UNCLE_REWARD')
+  AND amount > 0;
+
+CREATE VIEW uncle_reward AS
+SELECT address,
+       trace_location_block_hash as block_hash,
+       amount
+FROM fungible_balance_delta
+WHERE delta_type = 'UNCLE_REWARD'
   AND amount > 0;
 
 CREATE VIEW canonical_block_reward AS
@@ -392,18 +400,27 @@ FROM block_reward AS br
 WHERE cb.number IS NOT NULL
   AND br.amount IS NOT NULL;
 
-CREATE VIEW canonical_uncle AS
-SELECT cb.number as nephew_number,
-       u.*,
-       br.amount AS reward_amount
-FROM uncle AS u
-       RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
-       LEFT JOIN block_reward AS br ON u.nephew_hash = br.block_hash
+CREATE VIEW canonical_uncle_reward AS
+SELECT ur.*
+FROM uncle_reward AS ur
+       RIGHT JOIN canonical_block_header AS cb ON ur.block_hash = cb.hash
 WHERE cb.number IS NOT NULL
-  AND u.hash IS NOT NULL
-  AND br.delta_type = 'UNCLE_REWARD'
-  AND u.author = br.address
+  AND ur.amount IS NOT NULL;
+
+CREATE VIEW canonical_uncle AS
+SELECT
+       cb.number as nephew_number,
+       u.*,
+       ur.amount AS reward_amount
+FROM
+    uncle AS u
+    RIGHT JOIN canonical_block_header AS cb ON u.nephew_hash = cb.hash
+    LEFT JOIN uncle_reward AS ur ON u.author = ur.address
+WHERE
+  u.hash IS NOT NULL
 ORDER BY cb.number DESC;
+
+
 
 /* Token exchange rates table */
 CREATE TABLE token_exchange_rates
