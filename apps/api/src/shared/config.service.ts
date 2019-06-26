@@ -35,11 +35,18 @@ const schema = {
     format: 'Boolean',
     default: false,
   },
-  db: {
+  dbPrincipal: {
     url: {
-      doc: 'Timescale connection URL',
-      env: 'TIMESCALE_URL',
-      default: 'postgres://postgres:1234@timescale/ethvm_dev',
+      doc: 'DB Principal connection URL',
+      env: 'PRINCIPAL_URL',
+      default: 'postgres://postgres:1234@db-principal/ethvm_dev',
+    },
+  },
+  dbMetrics: {
+    url: {
+      doc: 'DB Metrics connection URL',
+      env: 'METRICS_URL',
+      default: 'postgres://postgres:1234@db-metrics/ethvm_dev',
     },
   },
   redis: {
@@ -139,8 +146,12 @@ export class ConfigService {
     return this.config.get('instaMining')
   }
 
-  get db(): DbConfig {
-    return this.config.get('db')
+  get dbPrincipal(): DbConfig {
+    return this.config.get('dbPrincipal')
+  }
+
+  get dbMetrics(): DbConfig {
+    return this.config.get('dbMetrics')
   }
 
   get redis(): RedisConfig {

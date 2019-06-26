@@ -3,15 +3,14 @@ import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import { EntityManager, FindManyOptions, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
-import { TransactionSummary } from '@app/graphql/schema'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { CONNECTION } from '@app/orm/config'
 
 @Injectable()
 export class UncleService {
-  constructor(@InjectRepository(UncleEntity)
+  constructor(@InjectRepository(UncleEntity, CONNECTION.PRINCIPAL)
               private readonly uncleRepository: Repository<UncleEntity>,
-              @InjectEntityManager()
+              @InjectEntityManager(CONNECTION.PRINCIPAL)
               private readonly entityManager: EntityManager) {
   }
 

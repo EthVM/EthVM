@@ -12,15 +12,16 @@ import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { setEquals } from '@app/shared/utils'
 import { ConfigService } from '@app/shared/config.service'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
+import { CONNECTION } from '@app/orm/config'
 
 @Injectable()
 export class BlockService {
   constructor(
-    @InjectRepository(BlockHeaderEntity) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
-    @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
-    @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
-    @InjectEntityManager() private readonly entityManager: EntityManager,
+    @InjectRepository(BlockHeaderEntity, CONNECTION.PRINCIPAL) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
+    @InjectRepository(TransactionEntity, CONNECTION.PRINCIPAL) private readonly transactionRepository: Repository<TransactionEntity>,
+    @InjectRepository(TransactionTraceEntity, CONNECTION.PRINCIPAL) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
+    @InjectRepository(UncleEntity, CONNECTION.PRINCIPAL) private readonly uncleRepository: Repository<UncleEntity>,
+    @InjectEntityManager(CONNECTION.PRINCIPAL) private readonly entityManager: EntityManager,
     private readonly traceService: TraceService,
     private readonly configService: ConfigService,
   ) {
