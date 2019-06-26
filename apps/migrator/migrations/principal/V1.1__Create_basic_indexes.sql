@@ -33,10 +33,12 @@ CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created
 
 CREATE INDEX idx_fungible_balance_delta_address ON fungible_balance_delta (address);
 CREATE INDEX idx_fungible_balance_delta_contract_address ON fungible_balance_delta (contract_address);
+CREATE INDEX idx_fungible_balance_delta_delta_type__contract_address ON fungible_balance_delta (contract_address, delta_type);
 CREATE INDEX idx_fungible_balance_delta_counterpart_address ON fungible_balance_delta (counterpart_address);
 CREATE INDEX idx_fungible_balance_delta_token_type ON fungible_balance_delta (token_type);
 CREATE INDEX idx_fungible_balance_delta_delta_type ON fungible_balance_delta (delta_type);
 CREATE INDEX idx_fungible_balance_delta_trace_location_block_hash ON fungible_balance_delta (trace_location_block_hash);
+CREATE INDEX idx_fungible_balance_delta_trace_location_tx_index__trace_location_block_number ON fungible_balance_delta (trace_location_transaction_index DESC, trace_location_block_number DESC);
 CREATE INDEX idx_fungible_balance_delta_amount ON fungible_balance_delta (amount);
 
 CREATE INDEX idx_fungible_balance_address ON fungible_balance (address);
