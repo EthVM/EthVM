@@ -1,6 +1,6 @@
-import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity'
-import {Injectable} from '@nestjs/common'
-import {InjectRepository} from '@nestjs/typeorm'
+import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
 
 @Injectable()
@@ -11,14 +11,6 @@ export class ReceiptService {
   ) {
   }
 
-  async findByBlockNumber(...blockNumbers: string[]): Promise<TransactionReceiptEntity[]> {
-    return this.receiptRepository.find({where: {blockNumber: In(blockNumbers)}})
-  }
-
-  async findByBlockHash(...blockHashes: string[]): Promise<TransactionReceiptEntity[]> {
-    return this.receiptRepository.find({where: {blockHash: In(blockHashes)}})
-  }
-
   async findByTxHash(entityManager: EntityManager, txHashes: string[], select: string[] = []): Promise<TransactionReceiptEntity[]> {
 
     if (!(txHashes && txHashes.length)) {
@@ -26,7 +18,8 @@ export class ReceiptService {
     }
 
     const options: FindManyOptions = {
-      where: {transactionHash: In(txHashes)},
+      where: { transactionHash: In(txHashes) },
+      cache: true,
     }
 
     if (select.length > 0) {

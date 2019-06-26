@@ -6,9 +6,10 @@ import createSubscriber from 'pg-listen'
 import { Observable, Subject } from 'rxjs'
 import { bufferTime, filter, map } from 'rxjs/operators'
 import { Logger } from 'winston'
-import { CircuitBreaker, CircuitBreakerState } from './circuit-breaker'
 import { TxService } from '@app/dao/tx.service'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
+import { InjectEntityManager } from '@nestjs/typeorm'
+import { EntityManager } from 'typeorm'
 
 export interface CanonicalBlockHeaderPayload {
   block_hash: string
@@ -181,6 +182,7 @@ export class PgSubscriptionService {
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
     private readonly blockMetricsService: BlockMetricsService,
+    @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {
 
     this.url = config.db.url
@@ -190,7 +192,7 @@ export class PgSubscriptionService {
 
   private init() {
 
-    const { url, blockService, transactionService, blockMetricsService, pubSub } = this
+    const { url, blockService, transactionService, blockMetricsService, pubSub, entityManager } = this
 
     const events$ = Observable.create(
       async observer => {
@@ -254,19 +256,25 @@ export class PgSubscriptionService {
       )
       .subscribe(async blockHashes => {
 
+        // clear query cache
+        await entityManager.connection.queryResultCache!.clear()
+
         const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes)
 
         blockSummaries.forEach(async blockSummary => {
 
-          pubSub.publish('newBlock', blockSummary)
-
+          // get data
           const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
+          const hashRate = await blockService.calculateHashRate()
+
+          // publish events
+
+          pubSub.publish('newBlock', blockSummary)
 
           txSummaries.forEach(txSummary => {
             pubSub.publish('newTransaction', txSummary)
           })
 
-          const hashRate = await blockService.calculateHashRate()
           pubSub.publish('hashRate', hashRate)
         })
 
@@ -284,16 +292,21 @@ export class PgSubscriptionService {
 
   }
 
-  private onMetadataEvent(event: PgEvent) {
-    const { pubSub } = this
+  private async onMetadataEvent(event: PgEvent) {
+    const { pubSub, entityManager } = this
     const payload = event.payload as MetadataPayload
 
     switch (payload.key) {
       case 'sync_status':
 
+        // clear query cache
+        await entityManager.connection.queryResultCache!.clear()
+
         const isSyncing = JSON.parse(payload.value)
         pubSub.publish('isSyncing', isSyncing)
+
         break
+
       default:
       // Do nothing
     }

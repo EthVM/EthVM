@@ -26,6 +26,7 @@ export class ContractService {
     return entityManager.find(ContractEntity, {
         where: { address: In(addresses) },
         relations: ['metadata', 'erc20Metadata', 'erc721Metadata'],
+        cache: true,
       },
     )
   }
@@ -38,13 +39,14 @@ export class ContractService {
 
         const where = { creator }
 
-        const count = await txn.count(ContractEntity, { where })
+        const count = await txn.count(ContractEntity, { where, cache: true })
 
         const contracts = await txn.find(ContractEntity, {
           select: ['address', 'creator', 'traceCreatedAtBlockNumber', 'traceCreatedAtTransactionHash'],
           where,
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         // Get tx summaries

@@ -18,7 +18,7 @@ export class AccountService {
   }
 
   async findAccountByAddress(address: string): Promise<AccountEntity | undefined> {
-    return this.accountRepository.findOne({ where: { address } })
+    return this.accountRepository.findOne({ where: { address }, cache: true })
   }
 
   async findIsMiner(address: string): Promise<boolean> {
@@ -28,6 +28,7 @@ export class AccountService {
       where: {
         author: address,
       },
+      cache: true,
     })
 
     return !!header
@@ -40,6 +41,7 @@ export class AccountService {
       where: {
         creator: address,
       },
+      cache: true,
     })
 
     return !!contract

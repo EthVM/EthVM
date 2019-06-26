@@ -68,5 +68,4 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
           }
         }
     )
-
 }
