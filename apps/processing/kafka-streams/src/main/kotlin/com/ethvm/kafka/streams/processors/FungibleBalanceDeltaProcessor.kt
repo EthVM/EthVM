@@ -21,11 +21,9 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
-import com.ethvm.kafka.streams.config.Topics.Erc20BalanceDelta
 import com.ethvm.kafka.streams.config.Topics.HardForkBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.MinerFeeBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.PremineBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.TransactionBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.ERC20Abi
@@ -67,18 +65,12 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
     val (premineDeltas, hardForkDeltas) = syntheticEtherDeltas(canonicalBlockAuthor)
 
-    val txDeltas = etherDeltasForTraces(builder)
-
     val (txFeeDeltas, minerFeeDeltas) = etherDeltasForFees(builder, canonicalBlockAuthor)
-
-    val erc20Deltas = erc20DeltasForReceipts(builder)
 
     toAccountDeltas(premineDeltas).toTopic(PremineBalanceDelta)
     toAccountDeltas(hardForkDeltas).toTopic(HardForkBalanceDelta)
-    toAccountDeltas(txDeltas).toTopic(TransactionBalanceDelta)
     toAccountDeltas(txFeeDeltas).toTopic(TransactionFeeBalanceDelta)
     toAccountDeltas(minerFeeDeltas).toTopic(MinerFeeBalanceDelta)
-    toAccountDeltas(erc20Deltas).toTopic(Erc20BalanceDelta)
 
     // Generate the topology
     return builder.build()
@@ -158,38 +150,6 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
     return Pair(withReversals(premineStream), withReversals(hardForkStream))
   }
-
-  /**
-   *
-   */
-  private fun etherDeltasForTraces(builder: StreamsBuilder) =
-    withReversals(
-      CanonicalTraces.stream(builder)
-        .mapValues { _, tracesList ->
-
-          if (tracesList == null) {
-            // pass through the tombstone
-            null
-          } else {
-
-            val blockHash = tracesList.getTraces().firstOrNull()?.getBlockHash()
-
-            when (tracesList) {
-              null -> null
-              else -> {
-
-                val timestamp = DateTime(tracesList.getTimestamp())
-
-                FungibleBalanceDeltaListRecord.newBuilder()
-                  .setTimestamp(timestamp)
-                  .setBlockHash(blockHash)
-                  .setDeltas(tracesList.toFungibleBalanceDeltas())
-                  .build()
-              }
-            }
-          }
-        }
-    )
 
   private fun etherDeltasForFees(builder: StreamsBuilder, canonicalBlockAuthor: KStream<CanonicalKeyRecord, BlockAuthorRecord?>): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>> {
 
@@ -297,87 +257,4 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
     return Pair(withReversals(txFeeDeltas), withReversals(minerFeeDeltas))
   }
 
-  private fun erc20DeltasForReceipts(builder: StreamsBuilder) =
-    withReversals(
-
-      CanonicalReceipts.stream(builder)
-        .mapValues { _, v ->
-
-          when (v) {
-            null -> null
-            else -> {
-
-              // filter out receipts with ERC20 related logs
-
-              val blockHash = v.getReceipts().firstOrNull()?.getBlockHash()
-
-              val receiptsWithErc20Logs = v.getReceipts()
-                .filter { receipt ->
-
-                  val logs = receipt.getLogs()
-
-                  when (logs.isEmpty()) {
-                    true -> false
-                    else ->
-                      logs
-                        .map { log -> ERC20Abi.matchEventHex(log.getTopics()).isDefined() }
-                        .reduce { a, b -> a || b }
-                  }
-                }
-
-              val timestamp = DateTime(v.getTimestamp())
-
-              val deltas = receiptsWithErc20Logs
-                .flatMap { receipt ->
-
-                  val traceLocation = TraceLocationRecord.newBuilder()
-                    .setBlockNumber(receipt.getBlockNumber())
-                    .setBlockHash(receipt.getBlockHash())
-                    .setTransactionHash(receipt.getTransactionHash())
-                    .setTimestamp(timestamp)
-                    .build()
-
-                  receipt.getLogs()
-                    .map { log -> ERC20Abi.decodeTransferEventHex(log.getData(), log.getTopics()) }
-                    .mapNotNull { transferOpt -> transferOpt.orNull() }
-                    .flatMap { transfer ->
-
-                      val contractAddress = when {
-                        receipt.to != null -> receipt.to
-                        receipt.contractAddress != null -> receipt.contractAddress
-                        else -> throw IllegalStateException("Could not determine contract address")
-                      }
-
-                      listOf(
-                        FungibleBalanceDeltaRecord.newBuilder()
-                          .setTokenType(FungibleTokenType.ERC20)
-                          .setDeltaType(FungibleBalanceDeltaType.TOKEN_TRANSFER)
-                          .setTraceLocation(traceLocation)
-                          .setAddress(transfer.from)
-                          .setContractAddress(contractAddress)
-                          .setCounterpartAddress(transfer.to)
-                          .setAmountBI(transfer.amount.negate())
-                          .build(),
-                        FungibleBalanceDeltaRecord.newBuilder()
-                          .setTokenType(FungibleTokenType.ERC20)
-                          .setDeltaType(FungibleBalanceDeltaType.TOKEN_TRANSFER)
-                          .setTraceLocation(traceLocation)
-                          .setAddress(transfer.to)
-                          .setCounterpartAddress(transfer.from)
-                          .setContractAddress(contractAddress)
-                          .setAmountBI(transfer.amount)
-                          .build()
-                      )
-                    }
-                }
-
-              FungibleBalanceDeltaListRecord.newBuilder()
-                .setTimestamp(timestamp)
-                .setBlockHash(blockHash)
-                .setDeltas(deltas)
-                .build()
-            }
-          }
-        }
-    )
 }

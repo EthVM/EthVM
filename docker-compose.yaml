@@ -123,6 +123,8 @@ services:
       - db-principal-volume:/var/lib/postgresql/data
     networks:
       - back
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_USER: '${PRINCIPAL_USER}'
       POSTGRES_PASSWORD: '${PRINCIPAL_PASSWORD}'
