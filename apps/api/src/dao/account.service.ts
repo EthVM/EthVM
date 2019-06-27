@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { AccountEntity } from '@app/orm/entities/account.entity'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { DbConnection } from '@app/orm/config'
+import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
 
 @Injectable()
 export class AccountService {
@@ -15,6 +16,8 @@ export class AccountService {
     private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(ContractEntity, DbConnection.Principal)
     private readonly contractRepository: Repository<ContractEntity>,
+    @InjectRepository(FungibleBalanceTransferEntity, DbConnection.Principal)
+    private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
   ) {
   }
 
@@ -46,5 +49,18 @@ export class AccountService {
     })
 
     return !!contract
+  }
+
+  async findHasInternalTransfers(address: string): Promise<boolean> {
+
+    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']
+
+    const transfer = await this.transferRepository.findOne({
+      where: [{ to: address, deltaType: In(deltaTypes) }, { from: address, deltaType: In(deltaTypes) }],
+      cache: true
+    })
+
+    return !!transfer;
+
   }
 }

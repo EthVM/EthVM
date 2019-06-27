@@ -89,6 +89,7 @@ export interface Account {
     isMiner: boolean;
     isContractCreator: boolean;
     isContract: boolean;
+    hasInternalTransfers: boolean;
 }
 
 export interface AddressBalance {
