@@ -34,14 +34,14 @@ ensure_kafka_connect() {
 
 curl_register() {
 
+  local FILE=${1}
 
   echo -e "File to register:\n\n"
 
   cat ${FILE}
 
-  echo -e "\n\n\n"
+  echo -e "\n\n"
 
-  local FILE=${1}
   curl -s -H "Content-Type: application/json" -X POST -d @${FILE} ${KAFKA_CONNECT_URL}/connectors
 
 } >&2
