@@ -213,7 +213,7 @@ export default class PageDetailsAddress extends Vue {
         id: 1,
         title: this.$i18n.tc('token.name', 2),
         isActive: false
-      },
+      }
       // {
       //   id: 2,
       //   title: this.$i18n.tc('tx.pending', 2),
@@ -222,7 +222,6 @@ export default class PageDetailsAddress extends Vue {
     ]
 
     if (!this.loading && !this.error && this.account) {
-
       if (this.account.hasInternalTransfers) {
         const newTab = {
           id: 5,

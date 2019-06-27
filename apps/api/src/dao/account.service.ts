@@ -57,7 +57,7 @@ export class AccountService {
 
     const transfer = await this.transferRepository.findOne({
       where: [{ to: address, deltaType: In(deltaTypes) }, { from: address, deltaType: In(deltaTypes) }],
-      cache: true
+      cache: true,
     })
 
     return !!transfer;
