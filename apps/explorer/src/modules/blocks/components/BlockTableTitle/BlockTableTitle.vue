@@ -12,20 +12,16 @@
 </template>
 
 <script lang="ts">
-export default {
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    pageType: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {}
-  }
+import { Vue, Prop } from 'vue-property-decorator'
+
+export default class BlockTableTitle extends Vue {
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+  @Prop({ type: String, default: '' }) title!: string
+  @Prop({ type: String, default: '' }) pageType!: string
 }
 </script>
 
