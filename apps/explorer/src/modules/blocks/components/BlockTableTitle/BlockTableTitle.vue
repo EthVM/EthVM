@@ -12,8 +12,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Prop } from 'vue-property-decorator'
+import { Vue, Prop, Component } from 'vue-property-decorator'
 
+@Component
 export default class BlockTableTitle extends Vue {
   /*
   ===================================================================================
