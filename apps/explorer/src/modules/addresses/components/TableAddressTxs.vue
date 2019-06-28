@@ -130,7 +130,7 @@
         <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
-              <table-txs-row :tx="tx"/>
+              <table-address-txs-row :tx="tx" :adrHash="address"/>
             </v-card>
             <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
             <v-card v-if="!transactions.length" flat>
@@ -175,7 +175,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppSearchInput from '@app/core/components/ui/AppSearchInput.vue'
 import AppSortDialog from '@app/core/components/ui/AppSortDialog.vue'
-import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
+import TableAddressTxsRow from '@app/modules/addresses/components/TableAddressTxsRow.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
@@ -207,7 +207,7 @@ class TableTxsMixin extends Vue {
     AppPaginate,
     AppSearchInput,
     AppSortDialog,
-    TableTxsRow,
+    TableAddressTxsRow,
     NoticeNewBlock
   },
   data() {
