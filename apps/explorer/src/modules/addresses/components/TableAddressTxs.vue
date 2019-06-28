@@ -66,7 +66,7 @@
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout row align-center justify-start>
-            <v-flex sm5>
+            <v-flex sm4 md5>
               <h5>{{ $tc('tx.hash', 2) }}</h5>
             </v-flex>
             <v-flex sm2>
@@ -114,7 +114,7 @@
                 </v-flex>
               </v-layout>
             </v-flex>
-            <v-flex  sm1>
+            <v-flex sm2 md1>
               <h5>{{ $t('tx.status') }}</h5>
             </v-flex>
           </v-layout>
