@@ -49,22 +49,18 @@
           ETH VALUE
 
           Responsive Tally:
-          SM: 2/12 (2)
+          SM: 2/12 (6)
 
           =====================================================================================
           -->
-          <v-flex d-flex sm2 md1 pr-0>
-            <p
-              v-if="$vuetify.breakpoint.xsOnly"
-              :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']"
-            >{{ $t('common.amount') }}: {{ getRoundNumber(ethValue(tx.valueBN).toEth()) }}</p>
-            <p v-else :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{
+          <v-flex sm2 pr-0 :class="getValueColor()">
+            <p  >
+              {{ `${getValueSign()} ${
               getShortValue(
               ethValue(tx.valueBN)
               .toEth()
               .toString()
-              )
+              )}`
               }}
               <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
                 <template #activator="data">
@@ -215,7 +211,19 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
     return new EthValue(number)
   }
 
-  //Determine Tx Type: in/out/self
+  getValueColor(): string{
+    return (!this.tx.successful || this.txType === 'self') ? 'grey--text' : 'black--text'
+  }
+
+  getValueSign(): string {
+    if(!this.tx.successful || this.txType === "self") {
+      return ''
+    }
+    else {
+      return this.txType === 'in'? '+' :'-'
+    }
+  }
+
 
   /*
   ===================================================================================
