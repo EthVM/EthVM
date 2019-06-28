@@ -75,12 +75,15 @@ object Modules {
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka.bootstrapServers)
         put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE)
 
+        // We can have large transactions
+        put(ProducerConfig.TRANSACTION_TIMEOUT_CONFIG, 300_000) // 5 mins
+
         //
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
 
         // Allows for large messages, in our case large lists of traces primarily
-        put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 62_914_560) // 60 mb
-        put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 52_428_800) // 50 mb
+        put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 31_457_280) // 30 mb
+        put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 20_971_520) // 20 mb
 
         put(StreamsConfig.STATE_DIR_CONFIG, config.kafka.streamsStateDir)
 

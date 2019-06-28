@@ -12,6 +12,7 @@
     </root>
 
     <logger name="org.apache.kafka" level="INFO"/>
+    <logger name="org.apache.kafka.streams.kstream.internals.KStreamReduce" level="ERROR"/>
     <logger name="com.ethvm" level="INFO"/>
 
 </configuration>
