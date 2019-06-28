@@ -3,8 +3,8 @@
     <!-- Txs Filter/Sort/Search/Pagination -->
     <v-layout row wrap align-center justify-space-between>
       <!-- Filter & Sorting -->
-      <v-flex shrink xs12 md3 >
-        <v-layout row wrap align-center >
+      <v-flex shrink xs12 md3>
+        <v-layout row wrap align-center>
           <!-- Filter:  -->
           <v-flex shrink pr-0>
             <p class="info--text">{{ $t('filter.name') }}</p>
@@ -12,38 +12,38 @@
           <v-flex shrink pr-0>
             <v-menu offset-y v-model="activeFilter">
               <template v-slot:activator="{ on }">
-                <v-btn class="tx-filter-btn box-border text-capitalize ma-0 pa-1" flat v-on="on" >
-                  <div class="tx-filter-btn-content" >
+                <v-btn class="tx-filter-btn box-border text-capitalize ma-0 pa-1" flat v-on="on">
+                  <div class="tx-filter-btn-content">
                     <p class="text-xs-left">{{ optionString }}</p>
                     <!-- Add Icon change/animation on activation -->
-                    <v-icon  class="theme--light text-xs-right primary--text">{{filterBtn}}</v-icon>
+                    <v-icon class="theme--light text-xs-right primary--text">{{ filterBtn }}</v-icon>
                   </div>
                 </v-btn>
               </template>
               <v-list flat>
                 <v-list-tile v-for="(option, index) in options" :key="index" :value="option.value" @click="filter = option.value">
                   <!-- Add Class for active choice -->
-                  <v-list-tile-title  :class="[ optionString === option.text? 'primary--text' : 'black--text']">{{ option.text }}</v-list-tile-title>
+                  <v-list-tile-title :class="[optionString === option.text ? 'primary--text' : 'black--text']">{{ option.text }}</v-list-tile-title>
                 </v-list-tile>
               </v-list>
             </v-menu>
           </v-flex>
-           <!-- Sort present on xs-sm -->
+          <!-- Sort present on xs-sm -->
           <v-flex hidden-md-and-up shrink pr-0>
             <p class="info--text">{{ $t('common.sort') }}</p>
           </v-flex>
           <v-flex hidden-md-and-up shrink>
-            <app-sort-dialog :items="sortValues" :selected="selectedSort" @setSort="selectSort"/>
+            <app-sort-dialog :items="sortValues" :selected="selectedSort" @setSort="selectSort" />
           </v-flex>
         </v-layout>
       </v-flex>
       <!-- Search -->
-      <v-flex grow xs12 sm6  >
+      <v-flex grow xs12 sm6>
         <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
       </v-flex>
       <!-- Pagination -->
       <v-flex shrink xs12 sm6 md3 pt-0 pb-0>
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
     </v-layout>
     <!-- End Tx Input Filter -->
@@ -70,7 +70,7 @@
               <h5>{{ $tc('tx.hash', 2) }}</h5>
             </v-flex>
             <v-flex sm2>
-               <v-layout align-center justify-start row pl-1>
+              <v-layout align-center justify-start row pl-1>
                 <h5 class="pr-2">{{ $t('common.eth') }}</h5>
                 <v-flex>
                   <v-layout align-start justify-center column>
@@ -99,11 +99,11 @@
                 </v-flex>
               </v-layout>
             </v-flex>
-            <v-flex  sm2>
+            <v-flex sm2>
               <v-layout align-center justify-start row pl-1>
                 <h5 class="pr-2">{{ $t('common.age') }}</h5>
                 <v-flex>
-                  <v-layout align-start justify-center column >
+                  <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectSort(4)" class="sort-icon-btn">
                       <v-icon :class="[isActiveSort(4) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
@@ -126,46 +126,45 @@
       TABLE BODY
     =====================================================================================
     -->
-      <v-card flat v-if="!hasError" class="scroll-y" style="overflow-x: hidden">
-        <v-layout column fill-height class="mb-1">
-          <v-flex xs12 v-if="!loading">
-            <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
-              <table-address-txs-row :tx="tx" :adrHash="address"/>
-            </v-card>
-            <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
-            <v-card v-if="!transactions.length" flat>
-              <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
-            </v-card>
-          </v-flex>
-          <!--Note Create Separate File for mobile and desktop loading -->
-          <v-flex xs12 v-if="loading">
-            <div v-for="i in maxItems" :key="i">
-              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-                <v-flex xs3 sm3 md1 pl-3>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex xs7 sm6 md6>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex xs2 sm2 md1>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex hidden-sm-and-down md1>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex hidden-sm-and-down md2>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex hidden-xs-only sm1>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-              </v-layout>
-              <v-divider class="mb-2 mt-2" />
-            </div>
-          </v-flex>
-        </v-layout>
-      </v-card>
-
+    <v-card flat v-if="!hasError" class="scroll-y" style="overflow-x: hidden">
+      <v-layout column fill-height class="mb-1">
+        <v-flex xs12 v-if="!loading">
+          <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
+            <table-address-txs-row :tx="tx" :adr-hash="address" />
+          </v-card>
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+          <v-card v-if="!transactions.length" flat>
+            <v-card-text class="text-xs-center secondary--text">{{ text }}</v-card-text>
+          </v-card>
+        </v-flex>
+        <!--Note Create Separate File for mobile and desktop loading -->
+        <v-flex xs12 v-if="loading">
+          <div v-for="i in maxItems" :key="i">
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
+              <v-flex xs3 sm3 md1 pl-3>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex xs7 sm6 md6>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex xs2 sm2 md1>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex hidden-sm-and-down md1>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex hidden-sm-and-down md2>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex hidden-xs-only sm1>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+            </v-layout>
+            <v-divider class="mb-2 mt-2" />
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-card>
   </v-card>
 </template>
 
@@ -191,7 +190,7 @@ import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { Subscription } from 'rxjs'
 import { TranslateResult } from 'vue-i18n'
 import { searchTypes } from '@app/core/helper'
-import { SearchType } from '../../../core/api/apollo/types/globalTypes';
+import { SearchType } from '../../../core/api/apollo/types/globalTypes'
 import { SortItem } from '@app/core/components/props'
 
 const MAX_ITEMS = 50
@@ -328,8 +327,6 @@ export default class TableTxs extends TableTxsMixin {
       ===================================================================================
       */
 
-
-
   @Prop(Number) maxItems!: number
 
   @Prop(String) blockHash?: string
@@ -354,7 +351,7 @@ export default class TableTxs extends TableTxsMixin {
 
   //Filter:
   filter: string = 'all'
-  activeFilter:boolean = false
+  activeFilter: boolean = false
 
   connectedSubscription?: Subscription
 
@@ -372,7 +369,6 @@ export default class TableTxs extends TableTxsMixin {
     */
 
   created() {
-    console.log(this.SearchType.adrTx)
     if (this.pageType === 'home') {
       this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
         if (state === 'reconnected') {
@@ -406,7 +402,6 @@ export default class TableTxs extends TableTxsMixin {
   isActiveSort(_value: number): boolean {
     return this.selectedSort === _value
   }
-
 
   setPage(page: number, resetFrom: boolean = false): void {
     const { txPage } = this
@@ -488,37 +483,19 @@ export default class TableTxs extends TableTxsMixin {
     return this.options.filter(item => item.value === this.filter)[0].text
   }
 
-  get filterBtn():string {
-    return this.activeFilter? 'arrow_drop_up' : 'arrow_drop_down'
+  get filterBtn(): string {
+    return this.activeFilter ? 'arrow_drop_up' : 'arrow_drop_down'
   }
 
   //Sort
-  get  sortValues(): SortItem[] {
+  get sortValues(): SortItem[] {
     return [
-      { id: 0,
-        text: this.$t('common.value') ,
-        value: 'eth_high'
-      },
-      { id: 1,
-        text:  this.$t('common.value'),
-        value: 'eth_low'
-      },
-      { id: 2,
-        text:  this.$tc('tx.fee', 1),
-        value: 'fee_high'
-      },
-      { id: 3,
-        text:  this.$tc('tx.fee', 1),
-        value: 'fee_low'
-      },
-      { id: 4,
-        text:  this.$t('common.age'),
-        value: 'age_high'
-      },
-      { id: 4,
-        text:  this.$t('common.age'),
-        value: 'age_high'
-      }
+      { id: 0, text: this.$t('common.value'), value: 'eth_high' },
+      { id: 1, text: this.$t('common.value'), value: 'eth_low' },
+      { id: 2, text: this.$tc('tx.fee', 1), value: 'fee_high' },
+      { id: 3, text: this.$tc('tx.fee', 1), value: 'fee_low' },
+      { id: 4, text: this.$t('common.age'), value: 'age_high' },
+      { id: 4, text: this.$t('common.age'), value: 'age_high' }
     ]
   }
 
@@ -567,5 +544,4 @@ export default class TableTxs extends TableTxsMixin {
   width: 12px;
   margin: 0px;
 }
-
 </style>
