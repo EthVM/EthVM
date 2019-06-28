@@ -24,22 +24,17 @@
             SM: 4/12 (4)
           =====================================================================================
           -->
-          <v-flex sm4 pr-3>
-            <v-layout row wrap align-center pb-1>
-              <v-flex sm12 pa-2>
+          <v-flex sm5 pr-3>
+            <v-layout row wrap align-center pb-1 pl-1 pr-5>
+              <v-flex sm12 pa-1>
                 <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`"/>
               </v-flex>
-              <v-flex sm12 pa-2>
+              <v-flex sm12 pa-1>
                 <v-layout row align-center justify-space-around fill-height pa-2>
                   <v-card flat class="tx-type-dsk white--text pa-1 mr-2" :color="txTypeColor">
                     <p class="text-xs-center">{{$t(`tx.type.${txType}`)}}</p>
                   </v-card>
-                  <app-transform-hash
-                    :hash="displayAdr"
-                    :link="linkAdr"
-                    :italic="true"
-                  />
-
+                  <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true"/>
                 </v-layout>
               </v-flex>
             </v-layout>
@@ -49,12 +44,12 @@
           ETH VALUE
 
           Responsive Tally:
-          SM: 2/12 (6)
+          SM: 6/12 (2)
 
           =====================================================================================
           -->
           <v-flex sm2 pr-0 :class="getValueColor()">
-            <p  >
+            <p>
               {{ `${getValueSign()} ${
               getShortValue(
               ethValue(tx.valueBN)
@@ -63,8 +58,8 @@
               )}`
               }}
               <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
-                <template #activator="data">
-                  <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                <template v-slot:activator="{on}">
+                  <v-icon v-on="{on}" dark small>fa fa-question-circle info--text</v-icon>
                 </template>
                 <span>{{ ethValue(tx.valueBN).toEth() }}</span>
               </v-tooltip>
@@ -72,40 +67,58 @@
           </v-flex>
           <!--
           =====================================================================================
+            Tx Fee
+            Responsive Tally:
+            SM: 8/12 (2)
+          =====================================================================================
+          -->
+          <v-flex sm2>
+            <v-tooltip v-if="txType==='in'" left>
+              <template v-slot:activator="{ on }">
+                <p
+                  class="grey--text"
+                  v-on="on"
+                >{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+              </template>
+              <span>{{ $t('tooltip.txFeeSender')}}</span>
+            </v-tooltip>
+            <p v-else class="black--text">- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth())}}</p>
+          </v-flex>
+
+          <!--
+          =====================================================================================
             Age
 
             Responsive Tally:
-            SM: 11/12 (0)
-            MD: 11/12 (2)
+            SM: 10/12 (2)
           =====================================================================================
           -->
-          <v-flex hidden-sm-and-down md2>
+          <v-flex >
             <app-time-ago :timestamp="tx.timestampDate"/>
-          </v-flex>
-          <!--
-          =====================================================================================
-            Tx Fee
-
-            Responsive Tally:
-            SM: 11/12 (0)
-            MD: 9/12 (1)
-          =====================================================================================
-          -->
-          <v-flex hidden-sm-and-down md1>
-            <p class="black--text text-truncate mb-0">{{ ethValue(tx.feeBN.toFixed()).toEth() }}</p>
           </v-flex>
           <!--
           =====================================================================================
           STATUS
 
           Responsive Tally:
-          SM: 12/12 (1)
-          MD: 12/12 (1)
+          SM: 11/12 (1)
           =====================================================================================
           -->
-          <v-flex v-if="!isPending" sm1>
-            <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
-            <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
+          <v-flex sm1>
+            <v-layout pa-3>
+              <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
+              <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
+              <v-tooltip left>
+                <template v-slot:activator="{ on }">
+                  <v-btn icon small class="more-info ml-3" v-on="on">
+                    <v-icon small>fa fa-ellipsis-h</v-icon>
+                  </v-btn>
+                </template>
+                <v-card color green>
+                  <p>Hello</p>
+                </v-card>
+              </v-tooltip>
+            </v-layout>
           </v-flex>
         </v-layout>
         <v-divider class="mb-2 mt-2"/>
@@ -149,7 +162,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   txType?: string
   linkAdr?: string
   displayAdr?: string
-  txTypeColor?:string
+  txTypeColor?: string
   /*
   ===================================================================================
     LifeCycle
@@ -164,7 +177,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
           this.displayAdr = this.adrHash
           // replace when isToContract implemented with: this.to.isToContract? `/contract/${tx.from}` : `/address/${tx.from}`
           this.linkAdr = `/address/${this.adrHash}`
-          this.txTypeColor='info'
+          this.txTypeColor = 'info'
           return
         }
         case this.tx.to === this.adrHash: {
@@ -172,7 +185,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
           this.displayAdr = this.tx.from
           // replace when isToContract implemented with: this.to.isToContract? `/contract/${tx.from}` : `/address/${tx.from}`
           this.linkAdr = `/address/${this.tx.from}`
-          this.txTypeColor = 'dakrGrey'
+          this.txTypeColor = 'darkGrey'
           return
         }
         default: {
@@ -211,19 +224,17 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
     return new EthValue(number)
   }
 
-  getValueColor(): string{
-    return (!this.tx.successful || this.txType === 'self') ? 'grey--text' : 'black--text'
+  getValueColor(): string {
+    return !this.tx.successful || this.txType === 'self' ? 'grey--text' : 'black--text'
   }
 
   getValueSign(): string {
-    if(!this.tx.successful || this.txType === "self") {
+    if (!this.tx.successful || this.txType === 'self') {
       return ''
-    }
-    else {
-      return this.txType === 'in'? '+' :'-'
+    } else {
+      return this.txType === 'in' ? '+' : '-'
     }
   }
-
 
   /*
   ===================================================================================
@@ -244,5 +255,14 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 
 .tx-type-dsk {
   width: 220px;
+}
+
+.more-info {
+  color: #6270fc;
+  margin: 0px;
+}
+.more-info:hover {
+  color: white;
+  background-color: #b4bfd2;
 }
 </style>

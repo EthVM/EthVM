@@ -211,6 +211,9 @@
     },
     "coming-soon": "Coming soon"
   },
+  "tooltip":{
+    "txFeeSender": "Paid By Sender"
+  },
   "charts": {
     "name": "Charts",
     "live": "Live Data",
