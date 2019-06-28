@@ -65,19 +65,19 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
 
     CanonicalBlockHeader.stream(builder)
       .map { k, v ->
-        when (v) {
-          null -> null
-          else ->
-            KeyValue(
-              CanonicalCountKeyRecord.newBuilder()
-                .setEntity("block_header")
-                .setNumber(k.number)
-                .build(),
+        KeyValue(
+          CanonicalCountKeyRecord.newBuilder()
+            .setEntity("block_header")
+            .setNumber(k.number)
+            .build(),
+          when (v) {
+            null -> null
+            else ->
               CanonicalCountRecord.newBuilder()
                 .setCount(1)
                 .build()
-            )
-        }
+          }
+        )
       }.toTopic(CanonicalCountDelta)
   }
 
@@ -85,19 +85,20 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
 
     CanonicalUncles.stream(builder)
       .map { k, v ->
-        when (v) {
-          null -> null
-          else ->
-            KeyValue(
-              CanonicalCountKeyRecord.newBuilder()
-                .setEntity("uncle")
-                .setNumber(k.number)
-                .build(),
+        KeyValue(
+          CanonicalCountKeyRecord.newBuilder()
+            .setEntity("uncle")
+            .setNumber(k.number)
+            .build(),
+          when (v) {
+            null -> null
+            else ->
               CanonicalCountRecord.newBuilder()
                 .setCount(v.uncles.size.toLong())
                 .build()
-            )
-        }
+          }
+        )
+
       }.toTopic(CanonicalCountDelta)
   }
 
@@ -106,38 +107,40 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
     CanonicalTraces.stream(builder)
       .map { k, v ->
 
-        when (v) {
-          null -> null
-          else -> {
+        KeyValue(
+          CanonicalCountKeyRecord.newBuilder()
+            .setEntity("transaction_trace")
+            .setNumber(k.number)
+            .build(),
+          when (v) {
+            null -> null
+            else -> {
 
-            val traces = v.getTraces()
+              val traces = v.getTraces()
 
-            val rewardTraces = traces.filter { it.transactionHash == null }
-            val txTraces = traces.filterNot { it.transactionHash == null }
+              val rewardTraces = traces.filter { it.transactionHash == null }
+              val txTraces = traces.filterNot { it.transactionHash == null }
 
-            var count = 0L
+              var count = 0L
 
-            if (rewardTraces.isNotEmpty()) {
-              count += 1
-            }
+              if (rewardTraces.isNotEmpty()) {
+                count += 1
+              }
 
-            if (txTraces.isNotEmpty()) {
-              count += txTraces
-                .groupBy { it.transactionHash }
-                .count()
-            }
+              if (txTraces.isNotEmpty()) {
+                count += txTraces
+                  .groupBy { it.transactionHash }
+                  .count()
+              }
 
-            KeyValue(
-              CanonicalCountKeyRecord.newBuilder()
-                .setEntity("transaction_trace")
-                .setNumber(k.number)
-                .build(),
               CanonicalCountRecord.newBuilder()
                 .setCount(count)
                 .build()
-            )
+            }
           }
-        }
+
+        )
+
       }.toTopic(CanonicalCountDelta)
   }
 
@@ -145,19 +148,20 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
 
     CanonicalReceipts.stream(builder)
       .map { k, v ->
-        when (v) {
-          null -> null
-          else ->
-            KeyValue(
-              CanonicalCountKeyRecord.newBuilder()
-                .setEntity("transaction_receipt")
-                .setNumber(k.number)
-                .build(),
+        KeyValue(
+          CanonicalCountKeyRecord.newBuilder()
+            .setEntity("transaction_receipt")
+            .setNumber(k.number)
+            .build(),
+          when (v) {
+            null -> null
+            else ->
               CanonicalCountRecord.newBuilder()
                 .setCount(v.receipts.size.toLong())
                 .build()
-            )
-        }
+          }
+        )
+
       }.toTopic(CanonicalCountDelta)
   }
 
@@ -165,19 +169,19 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
 
     canonicalTransactions
       .map { k, v ->
-        when (v) {
-          null -> null
-          else ->
-            KeyValue(
-              CanonicalCountKeyRecord.newBuilder()
-                .setEntity("transaction")
-                .setNumber(k.number)
-                .build(),
+        KeyValue(
+          CanonicalCountKeyRecord.newBuilder()
+            .setEntity("transaction")
+            .setNumber(k.number)
+            .build(),
+          when (v) {
+            null -> null
+            else ->
               CanonicalCountRecord.newBuilder()
                 .setCount(v.transactions.size.toLong())
                 .build()
-            )
-        }
+          }
+        )
       }
       .toTopic(CanonicalCountDelta)
   }

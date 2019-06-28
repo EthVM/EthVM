@@ -118,7 +118,7 @@ object Topics {
   val CanonicalTraces = KafkaTopic<CanonicalKeyRecord, TraceListRecord?>("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())
   val CanonicalUncles = KafkaTopic<CanonicalKeyRecord, UncleListRecord?>("canonical_uncles", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), UncleListRecord.`SCHEMA$`, UncleList())
 
-  val CanonicalCountDelta = KafkaTopic<CanonicalCountKeyRecord, CanonicalCountRecord>("canonical_count_delta", CanonicalCountKeyRecord.`SCHEMA$`, CanonicalCountKey(), CanonicalCountRecord.`SCHEMA$`, CanonicalCount())
+  val CanonicalCountDelta = KafkaTopic<CanonicalCountKeyRecord, CanonicalCountRecord?>("canonical_count_delta", CanonicalCountKeyRecord.`SCHEMA$`, CanonicalCountKey(), CanonicalCountRecord.`SCHEMA$`, CanonicalCount())
   val CanonicalCount = KafkaTopic<CanonicalCountKeyRecord, CanonicalCountRecord>("canonical_count", CanonicalCountKeyRecord.`SCHEMA$`, CanonicalCountKey(), CanonicalCountRecord.`SCHEMA$`, CanonicalCount())
 
   val Transaction = KafkaTopic("transaction", TransactionKeyRecord.`SCHEMA$`, TransactionKey(), TransactionRecord.`SCHEMA$`, Transaction())
