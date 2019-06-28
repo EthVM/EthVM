@@ -181,8 +181,4 @@ class NonFungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
       }
     }
 
-  override fun start(cleanUp: Boolean) {
-    logger.info { "Starting ${this.javaClass.simpleName}..." }
-    super.start(cleanUp)
-  }
 }
