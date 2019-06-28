@@ -165,24 +165,19 @@ export default class AppPaginate extends Vue {
   }
 
   get pageInputWidth(): string {
-    switch(true) {
-      case (this.total <=9): {
-        console.log('page-input-xs')
+    switch (true) {
+      case this.total <= 9: {
         return 'page-input-xs'
       }
-      case (this.total >=10 && this.total <= 999): {
-        console.log('page-input-sm')
+      case this.total >= 10 && this.total <= 999: {
         return 'page-input-sm'
       }
-      case (this.total >= 1000 && this.total < 100000): {
-        console.log('page-input-md')
+      case this.total >= 1000 && this.total < 100000: {
         return 'page-input-md'
       }
       default: {
-        console.log('page-input-lg')
         return 'page-input-lg'
       }
-
     }
   }
 }

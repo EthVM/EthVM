@@ -26,17 +26,24 @@
           =====================================================================================
           -->
           <v-flex sm4 md5 pr-3>
-            <v-layout row wrap align-center pb-1 pl-1 class :class="{ 'pr-1': $vuetify.breakpoint.smAndDown, 'pr-3': $vuetify.breakpoint.mdOnly, 'pr-5': $vuetify.breakpoint.lgAndUp}" >
-
+            <v-layout
+              row
+              wrap
+              align-center
+              pb-1
+              pl-1
+              class
+              :class="{ 'pr-1': $vuetify.breakpoint.smAndDown, 'pr-3': $vuetify.breakpoint.mdOnly, 'pr-5': $vuetify.breakpoint.lgAndUp }"
+            >
               <v-flex sm12 pa-1>
-                <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`"/>
+                <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`" />
               </v-flex>
               <v-flex sm12 pa-1>
                 <v-layout row align-center justify-space-around fill-height pa-2>
                   <v-card flat class="tx-type-dsk white--text pa-1 mr-2 caption" :color="txTypeColor">
-                    <p class="text-xs-center">{{$t(`tx.type.${txType}`)}}</p>
+                    <p class="text-xs-center">{{ $t(`tx.type.${txType}`) }}</p>
                   </v-card>
-                  <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true"/>
+                  <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
                 </v-layout>
               </v-flex>
             </v-layout>
@@ -52,16 +59,16 @@
           -->
           <v-flex sm2 pr-0 :class="getValueColor()">
             <p>
-              {{ `${getValueSign()} ${
-              getShortValue(
-              ethValue(tx.valueBN)
-              .toEth()
-              .toString()
-              )}`
+              {{
+                `${getValueSign()} ${getShortValue(
+                  ethValue(tx.valueBN)
+                    .toEth()
+                    .toString()
+                )}`
               }}
               <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
-                <template v-slot:activator="{on}">
-                  <v-icon v-on="{on}" dark small>fa fa-question-circle info--text</v-icon>
+                <template v-slot:activator="{ on }">
+                  <v-icon v-on="{ on }" dark small>fa fa-question-circle info--text</v-icon>
                 </template>
                 <span>{{ ethValue(tx.valueBN).toEth() }}</span>
               </v-tooltip>
@@ -75,16 +82,13 @@
           =====================================================================================
           -->
           <v-flex sm2>
-            <v-tooltip v-if="txType==='in'" left>
+            <v-tooltip v-if="txType === 'in'" left>
               <template v-slot:activator="{ on }">
-                <p
-                  class="grey--text text-truncate"
-                  v-on="on"
-                >{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+                <p class="grey--text text-truncate" v-on="on">{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
               </template>
-              <span>{{ $t('tooltip.txFeeSender')}}</span>
+              <span>{{ $t('tooltip.txFeeSender') }}</span>
             </v-tooltip>
-            <p v-else class="black--text text-truncate">- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth())}}</p>
+            <p v-else class="black--text text-truncate">- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
           </v-flex>
 
           <!--
@@ -96,7 +100,7 @@
           =====================================================================================
           -->
           <v-flex sm2>
-            <app-time-ago :timestamp="tx.timestampDate"/>
+            <app-time-ago :timestamp="tx.timestampDate" />
           </v-flex>
           <!--
           =====================================================================================
@@ -124,7 +128,7 @@
             </v-layout>
           </v-flex>
         </v-layout>
-        <v-divider class="mb-2 mt-2"/>
+        <v-divider class="mb-2 mt-2" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -193,13 +197,10 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
         }
         default: {
           this.txType = 'out'
-          if (this.tx.to) {
-            this.displayAdr = this.tx.to
-            // replace when isToContract implemented with: this.to.isToContract? `/contract/${tx.to}` : `/address/${tx.to}`
-            this.linkAdr = `/address/${this.tx.to}`
-            this.txTypeColor = 'error'
-          } else {
-          }
+          this.displayAdr = this.tx.to
+          // replace when isToContract implemented with: this.to.isToContract? `/contract/${tx.to}` : `/address/${tx.to}`
+          this.linkAdr = `/address/${this.tx.to}`
+          this.txTypeColor = 'error'
         }
       }
     } else if (!this.tx.to && this.tx.isContractCreation) {
@@ -233,9 +234,8 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   getValueSign(): string {
     if (!this.tx.successful || this.txType === 'self') {
       return ''
-    } else {
-      return this.txType === 'in' ? '+' : '-'
     }
+    return this.txType === 'in' ? '+' : '-'
   }
 
   /*
@@ -267,5 +267,4 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   color: white;
   background-color: #b4bfd2;
 }
-
 </style>

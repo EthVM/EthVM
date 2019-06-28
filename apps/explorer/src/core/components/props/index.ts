@@ -52,7 +52,7 @@ export interface Crumb {
 }
 
 export interface SortItem {
-  id: number,
-  text: TranslateResult,
+  id: number
+  text: TranslateResult
   value: string
 }
