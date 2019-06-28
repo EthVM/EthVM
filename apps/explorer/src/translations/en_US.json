@@ -53,7 +53,12 @@
     "input": "Input Data",
     "func": "Function",
     "method": "Method ID",
-    "self": "Self Sent"
+    "type": {
+      "in": "Incoming from",
+      "out": "Outgoing to",
+      "self": "Self",
+      "ctrCreate": "Contract creation"
+    }
   },
 
   "token": {

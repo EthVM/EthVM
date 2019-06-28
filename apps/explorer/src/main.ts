@@ -86,7 +86,8 @@ Vue.use(Vuetify, {
     bttnGrey: '#dee5f0',
     bttnToken: '#b4bfd2',
     bttnReport: '#1EEEA6',
-    linkBlue: '#3965e8'
+    linkBlue: '#3965e8',
+    darkGrey: '#2a3643'
 
     // used -->
     // background: String(colors.grey.darken3)
