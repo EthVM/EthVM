@@ -81,10 +81,6 @@ object Modules {
         //
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
 
-        // Allows for large messages, in our case large lists of traces primarily
-        put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 31_457_280) // 30 mb
-        put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 20_971_520) // 20 mb
-
         put(StreamsConfig.STATE_DIR_CONFIG, config.kafka.streamsStateDir)
 
         // Serdes - Defaults

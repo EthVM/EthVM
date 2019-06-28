@@ -16,6 +16,8 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalUncles
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
@@ -31,6 +33,9 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
+      // Allows for large messages, in our case large lists of traces primarily
+      put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 20_971_520) // 20 mb
+
     }
 
   override val logger: KLogger = KotlinLogging.logger {}
