@@ -21,17 +21,19 @@
             TRANSACTION # / Address HASH
 
             Responsive Tally:
-            SM: 4/12 (4)
+            md: 5/12 (5)
+            sm: 4/12 (5)
           =====================================================================================
           -->
-          <v-flex sm5 pr-3>
-            <v-layout row wrap align-center pb-1 pl-1 pr-5>
+          <v-flex sm4 md5 pr-3>
+            <v-layout row wrap align-center pb-1 pl-1 class :class="{ 'pr-1': $vuetify.breakpoint.smAndDown, 'pr-3': $vuetify.breakpoint.mdOnly, 'pr-5': $vuetify.breakpoint.lgAndUp}" >
+
               <v-flex sm12 pa-1>
                 <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`"/>
               </v-flex>
               <v-flex sm12 pa-1>
                 <v-layout row align-center justify-space-around fill-height pa-2>
-                  <v-card flat class="tx-type-dsk white--text pa-1 mr-2" :color="txTypeColor">
+                  <v-card flat class="tx-type-dsk white--text pa-1 mr-2 caption" :color="txTypeColor">
                     <p class="text-xs-center">{{$t(`tx.type.${txType}`)}}</p>
                   </v-card>
                   <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true"/>
@@ -76,13 +78,13 @@
             <v-tooltip v-if="txType==='in'" left>
               <template v-slot:activator="{ on }">
                 <p
-                  class="grey--text"
+                  class="grey--text text-truncate"
                   v-on="on"
                 >{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
               </template>
               <span>{{ $t('tooltip.txFeeSender')}}</span>
             </v-tooltip>
-            <p v-else class="black--text">- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth())}}</p>
+            <p v-else class="black--text text-truncate">- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth())}}</p>
           </v-flex>
 
           <!--
@@ -93,7 +95,7 @@
             SM: 10/12 (2)
           =====================================================================================
           -->
-          <v-flex >
+          <v-flex sm2>
             <app-time-ago :timestamp="tx.timestampDate"/>
           </v-flex>
           <!--
@@ -101,16 +103,17 @@
           STATUS
 
           Responsive Tally:
-          SM: 11/12 (1)
+          lg: 12/12 (1)
+          md: 12/12 (2)
           =====================================================================================
           -->
-          <v-flex sm1>
-            <v-layout pa-3>
+          <v-flex sm2 md1>
+            <v-layout pa-1 row justify-space-around>
               <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
               <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
               <v-tooltip left>
                 <template v-slot:activator="{ on }">
-                  <v-btn icon small class="more-info ml-3" v-on="on">
+                  <v-btn icon small class="more-info " v-on="on">
                     <v-icon small>fa fa-ellipsis-h</v-icon>
                   </v-btn>
                 </template>
@@ -189,7 +192,6 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
           return
         }
         default: {
-          console.log(this.tx)
           this.txType = 'out'
           if (this.tx.to) {
             this.displayAdr = this.tx.to
@@ -254,7 +256,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 }
 
 .tx-type-dsk {
-  width: 220px;
+  width: 160px;
 }
 
 .more-info {
@@ -265,4 +267,5 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   color: white;
   background-color: #b4bfd2;
 }
+
 </style>
