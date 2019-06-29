@@ -1,15 +1,20 @@
 package com.ethvm.kafka.streams.processors
 
+import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
+import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.toFungibleBalanceDeltas
+import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.TransactionBalanceDelta
+import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.joda.time.DateTime
+import java.lang.IllegalStateException
 import java.util.Properties
 
 class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor() {
@@ -25,9 +30,13 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
 
   override val logger = KotlinLogging.logger {}
 
+  private val traceReduceStoreName = "canonical-trace-reduce"
+
   override fun buildTopology(): Topology {
 
-    val builder = StreamsBuilder()
+    val builder = StreamsBuilder().apply {
+      addStateStore(CanonicalKStreamReducer.store(traceReduceStoreName, Serdes.TraceList(), appConfig.unitTesting))
+    }
 
     val txDeltas = etherDeltasForTraces(builder)
 
@@ -41,31 +50,42 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
    *
    */
   private fun etherDeltasForTraces(builder: StreamsBuilder) =
-    withReversals(
-      CanonicalTraces.stream(builder)
-        .mapValues { _, tracesList ->
 
-          if (tracesList == null) {
-            // pass through the tombstone
-            null
-          } else {
+    CanonicalTraces.stream(builder)
+      .transform(
+        CanonicalKStreamReducer(traceReduceStoreName), traceReduceStoreName
+      ).filter { _, v -> v.newValue == v.oldValue }
+      .mapValues { _, change ->
 
-            val blockHash = tracesList.getTraces().firstOrNull()?.getBlockHash()
-
-            when (tracesList) {
-              null -> null
-              else -> {
-
-                val timestamp = DateTime(tracesList.getTimestamp())
-
-                FungibleBalanceDeltaListRecord.newBuilder()
-                  .setTimestamp(timestamp)
-                  .setBlockHash(blockHash)
-                  .setDeltas(tracesList.toFungibleBalanceDeltas())
-                  .build()
-              }
-            }
-          }
+        when {
+          change.newValue != null && change.oldValue == null ->
+            toDeltaList(change.newValue, false)
+          change.newValue == null && change.oldValue != null ->
+            toDeltaList(change.oldValue, true)
+          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
-    )
+
+      }
+
+  private fun toDeltaList(traceList: TraceListRecord, reverse: Boolean): FungibleBalanceDeltaListRecord{
+
+    val blockHash = traceList.getTraces().firstOrNull()?.getBlockHash()
+
+    var deltas = traceList.toFungibleBalanceDeltas()
+
+    if (reverse) {
+      deltas = deltas.map { it.reverse() }
+    }
+
+    val timestamp = DateTime(traceList.getTimestamp())
+
+    return FungibleBalanceDeltaListRecord.newBuilder()
+      .setTimestamp(timestamp)
+      .setBlockHash(blockHash)
+      .setDeltas(deltas)
+      .build()
+
+  }
+
+
 }
