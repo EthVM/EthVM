@@ -14,19 +14,16 @@ import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.common.extensions.setBlockNumberBI
 import com.ethvm.common.extensions.toEtherBalanceDeltas
-import com.ethvm.common.extensions.toFungibleBalanceDeltas
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
-import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
-import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
 import com.ethvm.kafka.streams.config.Topics.HardForkBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.MinerFeeBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.PremineBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
+import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
-import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder
@@ -35,9 +32,9 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.JoinWindows
 import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.joda.time.DateTime
+import java.lang.IllegalStateException
 import java.math.BigInteger
 import java.time.Duration
 import java.util.Properties
@@ -63,7 +60,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
     val canonicalBlockAuthor = CanonicalBlockAuthor.stream(builder)
 
-    val (premineDeltas, hardForkDeltas) = syntheticEtherDeltas(canonicalBlockAuthor)
+    val (premineDeltas, hardForkDeltas) = syntheticEtherDeltas(builder, canonicalBlockAuthor)
 
     val (txFeeDeltas, minerFeeDeltas) = etherDeltasForFees(builder, canonicalBlockAuthor)
 
@@ -76,7 +73,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
     return builder.build()
   }
 
-  private fun syntheticEtherDeltas(canonicalBlockAuthor: KStream<CanonicalKeyRecord, BlockAuthorRecord?>): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>> {
+  private fun syntheticEtherDeltas(builder: StreamsBuilder, canonicalBlockAuthor: KStream<CanonicalKeyRecord, BlockAuthorRecord?>): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord>> {
 
     // add a transformer to guarantee we only emit once per block number so we don't re-introduce synthetic events in the event of a fork
 
@@ -87,6 +84,9 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
       )
 
     // premine balances
+
+    val premineReduceStateStoreName = "canonical-premine-deltas-reduce"
+    builder.addStateStore(CanonicalKStreamReducer.store(premineReduceStateStoreName, Serdes.FungibleBalanceDeltaList(), appConfig.unitTesting))
 
     val premineStream = canonicalBlocks
       .filter { k, _ -> k.getNumberBI() == BigInteger.ZERO }
@@ -121,8 +121,27 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           )
           .build()
       }
+      .transform(CanonicalKStreamReducer(premineReduceStateStoreName), premineReduceStateStoreName)
+      .filter { _, v -> v.newValue != v.oldValue }
+      .mapValues { _, change ->
+
+        when {
+          change.newValue != null && change.oldValue == null ->
+            change.newValue
+          change.newValue == null && change.oldValue != null ->
+            FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
+              .setDeltas(change.oldValue.deltas.map { it.reverse() })
+              .build()
+          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+        }
+
+      }
+
 
     // hard fork
+
+    val hardForkReduceStateStoreName = "canonical-hard-fork-deltas-reduce"
+    builder.addStateStore(CanonicalKStreamReducer.store(hardForkReduceStateStoreName, Serdes.FungibleBalanceDeltaList(), appConfig.unitTesting))
 
     val hardForkStream = canonicalBlocks
       .filter { _, v -> v != null } // short term fix until we can update staging
@@ -147,27 +166,54 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           .setDeltas(deltas)
           .build()
       }
+      .transform(CanonicalKStreamReducer(hardForkReduceStateStoreName), hardForkReduceStateStoreName)
+      .filter { _, v -> v.newValue != v.oldValue }
+      .mapValues { _, change ->
 
-    return Pair(withReversals(premineStream), withReversals(hardForkStream))
+        when {
+          change.newValue != null && change.oldValue == null ->
+            change.newValue
+          change.newValue == null && change.oldValue != null ->
+            FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
+              .setDeltas(change.oldValue.deltas.map { it.reverse() })
+              .build()
+          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+        }
+
+      }
+
+    return Pair(premineStream, hardForkStream)
   }
 
-  private fun etherDeltasForFees(builder: StreamsBuilder, canonicalBlockAuthor: KStream<CanonicalKeyRecord, BlockAuthorRecord?>): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord?>> {
+  private fun etherDeltasForFees(builder: StreamsBuilder, canonicalBlockAuthor: KStream<CanonicalKeyRecord, BlockAuthorRecord?>): Pair<KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord>, KStream<CanonicalKeyRecord, FungibleBalanceDeltaListRecord>> {
 
     val txFeesStream = CanonicalTransactionFees.stream(builder)
 
-    val txFeeDeltas = txFeesStream
-      .mapValues { _, feeList ->
+    val txFeesDeltaReduceStoreName = "canonical-tx-fees-delta-reduce"
+    builder.addStateStore(CanonicalKStreamReducer.store(txFeesDeltaReduceStoreName, Serdes.TransactionFeeList(), appConfig.unitTesting))
 
-        if (feeList == null) {
-          // pass through the tombstone
-          null
-        } else {
-          FungibleBalanceDeltaListRecord.newBuilder()
-            .setTimestamp(feeList.getTimestamp())
-            .setBlockHash(feeList.getBlockHash())
-            .setDeltas(feeList.toEtherBalanceDeltas())
-            .build()
-        }
+    val txFeeDeltas = txFeesStream
+      .transform(CanonicalKStreamReducer(txFeesDeltaReduceStoreName), txFeesDeltaReduceStoreName)
+      .filter { _, v -> v.newValue != v.oldValue }
+      .mapValues { _, change ->
+
+        val (feeList, reverse) =
+          when {
+            change.newValue != null && change.oldValue == null ->
+              Pair(change.newValue, false)
+            change.newValue == null && change.oldValue != null ->
+              Pair(change.oldValue, true)
+            else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+          }
+
+        val deltas = feeList.toEtherBalanceDeltas()
+
+        FungibleBalanceDeltaListRecord.newBuilder()
+          .setTimestamp(feeList.getTimestamp())
+          .setBlockHash(feeList.getBlockHash())
+          .setDeltas(if (reverse) deltas.map { it.reverse() } else deltas)
+          .build()
+
       }
 
     canonicalBlockAuthor
@@ -207,54 +253,31 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
         Joined.with(Serdes.CanonicalKey(), Serdes.BlockAuthor(), Serdes.TransactionFeeList())
       ).toTopic(CanonicalMinerFeesEtherDeltas)
 
+    val minerFeesDeltaReduceStoreName = "canonical-miner-fees-delta-reduce"
+    builder.addStateStore(CanonicalKStreamReducer.store(minerFeesDeltaReduceStoreName, Serdes.FungibleBalanceDelta(), appConfig.unitTesting))
+
     val minerFeeDeltas = CanonicalMinerFeesEtherDeltas.stream(builder)
-      .mapValues { v ->
+      .transform(CanonicalKStreamReducer(minerFeesDeltaReduceStoreName), minerFeesDeltaReduceStoreName)
+      .filter { _, v -> v.newValue != v.oldValue }
+      .mapValues { change ->
 
-        if (v == null) {
-          // pass through tombstone
-          null
-        } else {
-          FungibleBalanceDeltaListRecord.newBuilder()
-            .setTimestamp(v.getTraceLocation().getTimestamp())
-            .setBlockHash(v.getTraceLocation().getBlockHash())
-            .setDeltas(listOf(v))
-            .build()
+        val delta = when {
+          change.newValue != null && change.oldValue == null ->
+            change.newValue
+          change.newValue == null && change.oldValue != null ->
+            change.oldValue.reverse()
+          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
+
+        FungibleBalanceDeltaListRecord.newBuilder()
+          .setTimestamp(delta.getTraceLocation().getTimestamp())
+          .setBlockHash(delta.getTraceLocation().getBlockHash())
+          .setDeltas(listOf(delta))
+          .build()
+
       }
-      .groupByKey()
-      .reduce(
-        { agg, next ->
 
-          // null values are ignored so in a re-org scenario this reduce will only be triggered
-          // when the replacement value arrives
-
-          if (next!!.getBlockHash() == agg!!.getBlockHash()) {
-
-            // an update has been published for a previously seen block
-            // we assume no material change and therefore emit an event which will have no impact on the balances
-
-            FungibleBalanceDeltaListRecord.newBuilder(agg)
-              .setTimestamp(next.getTimestamp())
-              .setApply(false)
-              .build()
-          } else {
-
-            // reverse previous deltas
-
-            FungibleBalanceDeltaListRecord.newBuilder()
-              .setTimestamp(next.getTimestamp())
-              .setBlockHash(next.getBlockHash())
-              .setApply(true)
-              .setDeltas(next.getDeltas())
-              .setReversals(agg.getDeltas().map { it.reverse() })
-              .build()
-          }
-        },
-        Materialized.with(Serdes.CanonicalKey(), Serdes.FungibleBalanceDeltaList())
-      )
-      .toStream()
-
-    return Pair(withReversals(txFeeDeltas), withReversals(minerFeeDeltas))
+    return Pair(txFeeDeltas, minerFeeDeltas)
   }
 
 }

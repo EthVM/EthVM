@@ -52,9 +52,8 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
   private fun etherDeltasForTraces(builder: StreamsBuilder) =
 
     CanonicalTraces.stream(builder)
-      .transform(
-        CanonicalKStreamReducer(traceReduceStoreName), traceReduceStoreName
-      ).filter { _, v -> v.newValue == v.oldValue }
+      .transform(CanonicalKStreamReducer(traceReduceStoreName), traceReduceStoreName)
+      .filter { _, v -> v.newValue != v.oldValue }
       .mapValues { _, change ->
 
         when {

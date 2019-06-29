@@ -20,14 +20,14 @@ import java.math.BigInteger
 class CanonicalKStreamReducer<V>(
   private val storeName: String,
   private val cacheSize: Int = 192
-) : TransformerSupplier<CanonicalKeyRecord?, V?, KeyValue<CanonicalKeyRecord, Change<V>>> {
+) : TransformerSupplier<CanonicalKeyRecord?, V?, KeyValue<CanonicalKeyRecord, Change<V>>?> {
 
   val logger: KLogger = KotlinLogging.logger {}
 
-  override fun get(): Transformer<CanonicalKeyRecord?, V?, KeyValue<CanonicalKeyRecord, Change<V>>> =
+  override fun get(): Transformer<CanonicalKeyRecord?, V?, KeyValue<CanonicalKeyRecord, Change<V>>?> =
     CanonicalKStreamReduceTransformer()
 
-  private inner class CanonicalKStreamReduceTransformer : Transformer<CanonicalKeyRecord?, V?, KeyValue<CanonicalKeyRecord, Change<V>>> {
+  private inner class CanonicalKStreamReduceTransformer : Transformer<CanonicalKeyRecord?, V?, KeyValue<CanonicalKeyRecord, Change<V>>?> {
 
     private lateinit var context: ProcessorContext
     private lateinit var store: KeyValueStore<CanonicalKeyRecord, V?>
@@ -45,16 +45,16 @@ class CanonicalKStreamReducer<V>(
 
       val oldValue = store.get(key)
 
-      val change = Change(value, oldValue)
+      val change = Change<V>(value, oldValue)
 
       store.put(key, change.newValue)
 
       cleanStore(key)
 
-      if (!(change.newValue == null || change.oldValue == null)) {
-        return KeyValue(key!!, change)
-      } else {
+      if (change.newValue == null && change.oldValue == null) {
         return null
+      } else {
+        return KeyValue(key!!, change)
       }
 
     }

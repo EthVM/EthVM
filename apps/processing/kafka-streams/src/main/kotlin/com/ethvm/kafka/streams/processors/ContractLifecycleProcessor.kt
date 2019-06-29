@@ -12,6 +12,7 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalContractLifecycle
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.ContractLifecycleEvents
 import com.ethvm.kafka.streams.config.Topics.Contract
+import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.StandardTokenDetector
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
@@ -80,61 +81,38 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
         }
       }.toTopic(CanonicalContractLifecycle)
 
+    val reduceStoreName = "canonical-contract-lifecycle-reduce"
+    builder.addStateStore(CanonicalKStreamReducer.store(reduceStoreName, Serdes.ContractLifecycleList(), appConfig.unitTesting))
+
     CanonicalContractLifecycle.stream(builder)
-      .groupByKey()
-      .reduce(
-        { agg, next ->
+      .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
+      .filter { _, v -> v.newValue != v.oldValue }
+      .flatMapValues { _, change ->
 
-          if (agg.getBlockHash() == next.getBlockHash()) {
+        when {
 
-            // an update has been published for a previously seen block
-            // we assume no material change and therefore emit an event which will have no impact
+          change.newValue != null && change.oldValue == null ->
+            change.newValue.deltas
 
-            logger.warn { "Update received. Agg = $agg, next = $next" }
-
-            ContractLifecycleListRecord.newBuilder(agg)
-              .setTimestamp(next.getTimestamp())
-              .setApply(false)
-              .build()
-          } else {
-
-            ContractLifecycleListRecord.newBuilder()
-              .setTimestamp(next.getTimestamp())
-              .setBlockHash(next.getBlockHash())
-              .setDeltas(next.getDeltas())
-              .setReversals(agg.getDeltas())
-              .build()
-          }
-        },
-        Materialized.with(Serdes.CanonicalKey(), Serdes.ContractLifecycleList())
-      ).toStream()
-      .flatMap { _, v ->
-
-        val reversals = v.getReversals()
-          .map { event ->
-
-            KeyValue(
-              ContractKeyRecord.newBuilder()
-                .setAddress(event.getAddress())
-                .build(),
-              ContractLifecycleRecord.newBuilder(event)
+          change.newValue == null && change.oldValue != null ->
+            change.oldValue.deltas.map {
+              ContractLifecycleRecord.newBuilder(it)
                 .setReverse(true)
                 .build()
-            )
-          }
+            }
 
-        val deltas = v.getDeltas()
-          .map { event ->
+          else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
+        }
 
-            KeyValue(
-              ContractKeyRecord.newBuilder()
-                .setAddress(event.getAddress())
-                .build(),
-              event
-            )
-          }
-
-        reversals + deltas
+      }
+      // re-key by contract key
+      .map{ _, v ->
+        KeyValue(
+          ContractKeyRecord.newBuilder()
+            .setAddress(v.address)
+            .build(),
+          v
+        )
       }.toTopic(ContractLifecycleEvents)
 
     ContractLifecycleEvents.stream(builder)
