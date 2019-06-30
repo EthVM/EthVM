@@ -94,5 +94,4 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
       ).toStream()
-
 }

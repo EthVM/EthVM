@@ -104,5 +104,4 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
     return agg.toStream()
   }
-
 }

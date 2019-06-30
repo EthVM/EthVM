@@ -29,6 +29,8 @@ abstract class AbstractParityEntitySource(
       .offsetStorageReader()
       .offset(partitionKey) ?: emptyMap()
 
+    logger.info { "Initialising parity entity source. Partition key = $partitionKey, sourcePartition = $sourcePartition" }
+
     var startBlockNumber = sourcePartition.getOrDefault("blockNumber", 0L) as Long - SAFE_REORG_LENGTH
     if (startBlockNumber < 0) startBlockNumber = 0L
 

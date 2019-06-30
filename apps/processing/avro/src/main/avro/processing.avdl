@@ -93,9 +93,7 @@ protocol Processing {
 
   record FungibleBalanceDeltaListRecord {
     timestamp_ms timestamp = 0;
-    boolean apply = true;
     array<FungibleBalanceDeltaRecord> deltas = [];
-    array<FungibleBalanceDeltaRecord> reversals = [];
     union { null, string } blockHash = null;
   }
 
@@ -136,9 +134,7 @@ protocol Processing {
 
   record NonFungibleBalanceDeltaListRecord {
     timestamp_ms timestamp = 0;
-    boolean apply = true;
     array<NonFungibleBalanceDeltaRecord> deltas = [];
-    array<NonFungibleBalanceDeltaRecord> reversals = [];
     union { null, string } blockHash = null;
   }
 
@@ -304,11 +300,9 @@ protocol Processing {
   }
 
   record TransactionCountDeltaListRecord {
-    boolean apply = true;
     string blockHash;
     timestamp_ms timestamp;
     array<TransactionCountDeltaRecord> counts;
-    array<TransactionCountDeltaRecord> reversals = [];
   }
 
   record TransactionCountRecord {
