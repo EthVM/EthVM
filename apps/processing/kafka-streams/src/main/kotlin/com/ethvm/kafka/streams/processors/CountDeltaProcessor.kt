@@ -7,6 +7,7 @@ import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.TransactionCountDeltaListRecord
 import com.ethvm.avro.processing.TransactionCountDeltaRecord
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.Serdes.CanonicalKey
@@ -233,15 +234,17 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
     val deltasWithReversals = deltas
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { _, change ->
+      .mapValues { k, change ->
 
         when {
           change.newValue != null && change.oldValue == null ->
             change.newValue
-          change.newValue == null && change.oldValue != null ->
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             TransactionCountDeltaListRecord.newBuilder(change.oldValue)
               .setCounts(change.oldValue.counts.map { it.reverse() })
               .build()
+          }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
 

@@ -6,6 +6,7 @@ import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleTokenType
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.kafka.streams.Serdes
@@ -54,13 +55,15 @@ class FungibleBalanceDeltaReceiptProcessor : AbstractFungibleBalanceDeltaProcess
     CanonicalReceipts.stream(builder)
       .transform(CanonicalKStreamReducer(receiptReduceStoreName), receiptReduceStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { _, change ->
+      .mapValues { k, change ->
 
         when {
           change.newValue != null && change.oldValue == null ->
             toDeltaList(change.newValue, false)
-          change.newValue == null && change.oldValue != null ->
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             toDeltaList(change.oldValue, true)
+          }
           else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
         }
 

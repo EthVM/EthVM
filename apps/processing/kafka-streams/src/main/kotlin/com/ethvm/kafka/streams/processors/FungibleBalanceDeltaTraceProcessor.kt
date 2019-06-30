@@ -2,6 +2,7 @@ package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.toFungibleBalanceDeltas
 import com.ethvm.kafka.streams.Serdes
@@ -54,13 +55,16 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
     CanonicalTraces.stream(builder)
       .transform(CanonicalKStreamReducer(traceReduceStoreName), traceReduceStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { _, change ->
+      .mapValues { k, change ->
 
         when {
-          change.newValue != null && change.oldValue == null ->
+          change.newValue != null && change.oldValue == null -> {
             toDeltaList(change.newValue, false)
-          change.newValue == null && change.oldValue != null ->
+          }
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             toDeltaList(change.oldValue, true)
+          }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
 

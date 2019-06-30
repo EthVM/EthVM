@@ -6,6 +6,7 @@ import com.ethvm.avro.processing.NonFungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleTokenType
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setTokenIdBI
 import com.ethvm.kafka.streams.Serdes
@@ -130,15 +131,17 @@ class NonFungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
       }
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { _, change ->
+      .mapValues { k, change ->
 
         when {
           change.newValue != null && change.oldValue == null ->
             change.newValue
-          change.newValue == null && change.oldValue != null ->
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             NonFungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
+          }
           else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
         }
 

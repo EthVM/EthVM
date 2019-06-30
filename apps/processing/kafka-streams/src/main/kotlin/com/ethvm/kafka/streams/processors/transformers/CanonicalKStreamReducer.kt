@@ -19,7 +19,7 @@ import java.math.BigInteger
 
 class CanonicalKStreamReducer<V>(
   private val storeName: String,
-  private val cacheSize: Int = 192
+  private val cacheSize: Int = 10_000
 ) : TransformerSupplier<CanonicalKeyRecord?, V?, KeyValue<CanonicalKeyRecord, Change<V>>?> {
 
   val logger: KLogger = KotlinLogging.logger {}
@@ -44,10 +44,9 @@ class CanonicalKStreamReducer<V>(
       }
 
       val oldValue = store.get(key)
+      store.put(key, value)
 
       val change = Change<V>(value, oldValue)
-
-      store.put(key, change.newValue)
 
       cleanStore(key)
 
@@ -63,7 +62,9 @@ class CanonicalKStreamReducer<V>(
 
       if (key == null) return // do nothing
 
-      var oldNumber = key.number.bigInteger().minus(cacheSize.toBigInteger())
+      val startNumber = key.number.bigInteger().minus(cacheSize.toBigInteger())
+
+      var oldNumber = startNumber
       var oldValue: V?
 
       var removed = 0
@@ -83,7 +84,7 @@ class CanonicalKStreamReducer<V>(
       } while (oldValue != null)
 
       if (removed > 0) {
-        logger.debug { "Cleaned store. Removed ${removed} entries before and including number = $oldNumber" }
+        logger.debug { "[${context.topic()}] Cleaned store. Removed $removed entries before and including $startNumber" }
       }
 
     }

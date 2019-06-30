@@ -7,6 +7,7 @@ import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleTokenType
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.getNumberBI
 import com.ethvm.common.extensions.getTransactionFeeBI
 import com.ethvm.common.extensions.hexToBI
@@ -123,15 +124,17 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
       }
       .transform(CanonicalKStreamReducer(premineReduceStateStoreName), premineReduceStateStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { _, change ->
+      .mapValues { k, change ->
 
         when {
           change.newValue != null && change.oldValue == null ->
             change.newValue
-          change.newValue == null && change.oldValue != null ->
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
+          }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
 
@@ -168,15 +171,17 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
       }
       .transform(CanonicalKStreamReducer(hardForkReduceStateStoreName), hardForkReduceStateStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { _, change ->
+      .mapValues { k, change ->
 
         when {
           change.newValue != null && change.oldValue == null ->
             change.newValue
-          change.newValue == null && change.oldValue != null ->
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
+          }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
 
@@ -195,14 +200,16 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
     val txFeeDeltas = txFeesStream
       .transform(CanonicalKStreamReducer(txFeesDeltaReduceStoreName), txFeesDeltaReduceStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { _, change ->
+      .mapValues { k, change ->
 
         val (feeList, reverse) =
           when {
             change.newValue != null && change.oldValue == null ->
               Pair(change.newValue, false)
-            change.newValue == null && change.oldValue != null ->
+            change.newValue == null && change.oldValue != null -> {
+              logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
               Pair(change.oldValue, true)
+            }
             else -> throw IllegalStateException("New and old values cannot be unique non null values.")
           }
 
@@ -259,13 +266,15 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
     val minerFeeDeltas = CanonicalMinerFeesEtherDeltas.stream(builder)
       .transform(CanonicalKStreamReducer(minerFeesDeltaReduceStoreName), minerFeesDeltaReduceStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { change ->
+      .mapValues { k, change ->
 
         val delta = when {
           change.newValue != null && change.oldValue == null ->
             change.newValue
-          change.newValue == null && change.oldValue != null ->
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             change.oldValue.reverse()
+          }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
 

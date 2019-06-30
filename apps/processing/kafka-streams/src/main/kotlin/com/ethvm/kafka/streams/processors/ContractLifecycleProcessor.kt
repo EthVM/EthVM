@@ -5,6 +5,7 @@ import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractLifecyleType
 import com.ethvm.avro.capture.ContractRecord
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.hexBuffer
 import com.ethvm.common.extensions.toContractLifecycleRecord
 import com.ethvm.kafka.streams.Serdes
@@ -87,19 +88,21 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
     CanonicalContractLifecycle.stream(builder)
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
       .filter { _, v -> v.newValue != v.oldValue }
-      .flatMapValues { _, change ->
+      .flatMapValues { k, change ->
 
         when {
 
           change.newValue != null && change.oldValue == null ->
             change.newValue.deltas
 
-          change.newValue == null && change.oldValue != null ->
+          change.newValue == null && change.oldValue != null -> {
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
             change.oldValue.deltas.map {
               ContractLifecycleRecord.newBuilder(it)
                 .setReverse(true)
                 .build()
             }
+          }
 
           else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
         }
