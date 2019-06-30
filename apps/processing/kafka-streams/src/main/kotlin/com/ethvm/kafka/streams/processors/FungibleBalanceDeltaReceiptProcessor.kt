@@ -61,12 +61,11 @@ class FungibleBalanceDeltaReceiptProcessor : AbstractFungibleBalanceDeltaProcess
           change.newValue != null && change.oldValue == null ->
             toDeltaList(change.newValue, false)
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             toDeltaList(change.oldValue, true)
           }
           else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
         }
-
       }
 
   private fun toDeltaList(receiptList: TransactionReceiptListRecord, reverse: Boolean): FungibleBalanceDeltaListRecord {
@@ -140,6 +139,5 @@ class FungibleBalanceDeltaReceiptProcessor : AbstractFungibleBalanceDeltaProcess
       .setBlockHash(blockHash)
       .setDeltas(if (reverse) deltas.map { it.reverse() } else deltas)
       .build()
-
   }
 }

@@ -55,7 +55,6 @@ class CanonicalKStreamReducer<V>(
       } else {
         return KeyValue(key!!, change)
       }
-
     }
 
     private fun cleanStore(key: CanonicalKeyRecord?) {
@@ -86,13 +85,11 @@ class CanonicalKStreamReducer<V>(
       if (removed > 0) {
         logger.debug { "[${context.topic()}] Cleaned store. Removed $removed entries before and including $startNumber" }
       }
-
     }
 
     override fun close() {
       // Do nothing
     }
-
   }
 
   companion object {
@@ -109,6 +106,5 @@ class CanonicalKStreamReducer<V>(
       val store = Stores.keyValueStoreBuilder(supplier, keySerde, valueSerde)
       return if (unitTesting) store.withLoggingDisabled() else store
     }
-
   }
 }

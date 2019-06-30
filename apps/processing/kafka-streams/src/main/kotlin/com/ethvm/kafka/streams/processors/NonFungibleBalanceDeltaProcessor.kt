@@ -20,9 +20,7 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.Materialized
 import org.joda.time.DateTime
 import java.util.Properties
 
@@ -137,14 +135,13 @@ class NonFungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
           change.newValue != null && change.oldValue == null ->
             change.newValue
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             NonFungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
           }
           else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
         }
-
       }
   }
 
@@ -161,5 +158,4 @@ class NonFungibleBalanceDeltaProcessor : AbstractKafkaProcessor() {
           )
         }
     }
-
 }

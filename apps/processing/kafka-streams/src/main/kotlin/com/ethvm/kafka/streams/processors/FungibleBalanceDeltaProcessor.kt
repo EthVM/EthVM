@@ -130,16 +130,14 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           change.newValue != null && change.oldValue == null ->
             change.newValue
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
           }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
-
       }
-
 
     // hard fork
 
@@ -177,14 +175,13 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           change.newValue != null && change.oldValue == null ->
             change.newValue
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
           }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
-
       }
 
     return Pair(premineStream, hardForkStream)
@@ -207,7 +204,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
             change.newValue != null && change.oldValue == null ->
               Pair(change.newValue, false)
             change.newValue == null && change.oldValue != null -> {
-              logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+              logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
               Pair(change.oldValue, true)
             }
             else -> throw IllegalStateException("New and old values cannot be unique non null values.")
@@ -220,7 +217,6 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           .setBlockHash(feeList.getBlockHash())
           .setDeltas(if (reverse) deltas.map { it.reverse() } else deltas)
           .build()
-
       }
 
     canonicalBlockAuthor
@@ -272,7 +268,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           change.newValue != null && change.oldValue == null ->
             change.newValue
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             change.oldValue.reverse()
           }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
@@ -283,10 +279,8 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           .setBlockHash(delta.getTraceLocation().getBlockHash())
           .setDeltas(listOf(delta))
           .build()
-
       }
 
     return Pair(txFeeDeltas, minerFeeDeltas)
   }
-
 }

@@ -96,7 +96,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
             change.newValue.deltas
 
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             change.oldValue.deltas.map {
               ContractLifecycleRecord.newBuilder(it)
                 .setReverse(true)
@@ -106,10 +106,9 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
 
           else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
         }
-
       }
       // re-key by contract key
-      .map{ _, v ->
+      .map { _, v ->
         KeyValue(
           ContractKeyRecord.newBuilder()
             .setAddress(v.address)

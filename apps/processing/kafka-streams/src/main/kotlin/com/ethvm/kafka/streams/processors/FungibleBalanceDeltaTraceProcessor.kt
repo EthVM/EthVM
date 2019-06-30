@@ -62,15 +62,14 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
             toDeltaList(change.newValue, false)
           }
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             toDeltaList(change.oldValue, true)
           }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
-
       }
 
-  private fun toDeltaList(traceList: TraceListRecord, reverse: Boolean): FungibleBalanceDeltaListRecord{
+  private fun toDeltaList(traceList: TraceListRecord, reverse: Boolean): FungibleBalanceDeltaListRecord {
 
     val blockHash = traceList.getTraces().firstOrNull()?.getBlockHash()
 
@@ -87,8 +86,5 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
       .setBlockHash(blockHash)
       .setDeltas(deltas)
       .build()
-
   }
-
-
 }

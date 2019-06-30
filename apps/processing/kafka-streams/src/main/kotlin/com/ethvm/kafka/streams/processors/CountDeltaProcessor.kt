@@ -10,7 +10,6 @@ import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.kafka.streams.Serdes
-import com.ethvm.kafka.streams.Serdes.CanonicalKey
 import com.ethvm.kafka.streams.Serdes.TransactionCountDeltaList
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalCountDelta
@@ -27,9 +26,7 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.Materialized
 import org.joda.time.DateTime
 import java.lang.IllegalStateException
 import java.util.Properties
@@ -102,7 +99,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
                 .build()
           }
         )
-
       }.toTopic(CanonicalCountDelta)
   }
 
@@ -144,7 +140,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
           }
 
         )
-
       }.toTopic(CanonicalCountDelta)
   }
 
@@ -165,7 +160,6 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
                 .build()
           }
         )
-
       }.toTopic(CanonicalCountDelta)
   }
 
@@ -240,14 +234,13 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
           change.newValue != null && change.oldValue == null ->
             change.newValue
           change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}"}
+            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
             TransactionCountDeltaListRecord.newBuilder(change.oldValue)
               .setCounts(change.oldValue.counts.map { it.reverse() })
               .build()
           }
           else -> throw IllegalStateException("New and old values cannot be unique non null values.")
         }
-
       }
 
     val deltasForAddress = deltasWithReversals
