@@ -21,13 +21,13 @@ run() {
 
     dump)
 
-      for filename in "${filenames[@]}"; do
-
-        local filepath="${datasets_dir}/${filename}"
+        local filepath="${datasets_dir}/${filenames[0]}"
         docker-compose exec -u postgres db-principal pg_dump ethvm_dev | gzip > ${filepath}
-        cd ${datasets_dir} && md5sum ${filename} > ${filename}.md5 # to avoid full path in md5 sum file
+        cd ${datasets_dir} && md5sum ${filenames[0]} > ${filenames[0]}.md5 # to avoid full path in md5 sum file
 
-      done
+        local filepath="${datasets_dir}/${filenames[1]}"
+        docker-compose exec -u postgres db-metrics pg_dump ethvm_dev | gzip > ${filepath}
+        cd ${datasets_dir} && md5sum ${filenames[1]} > ${filenames[1]}.md5 # to avoid full path in md5 sum file
 
       ;;
 
