@@ -114,18 +114,12 @@ const blockServiceMock = {
 
     return [items as BlockSummary[], count]
   },
-  async findOne(where): Promise<BlockHeaderEntity | undefined> {
-
-    let item
-
-    if (where.hash) {
-      item = blockSummaries.find(bs => bs.hash === where.hash)
-    }
-
-    if (where.number) {
-      item = blockSummaries.find(bs => where.number.isEqualTo(bs.number))
-    }
-
+  async findByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
+    const item = blockSummaries.find(bs => number.isEqualTo(bs.number))
+    return item ? new BlockHeaderEntity(item) : undefined
+  },
+  async findByHash(hash: string) {
+    const item = blockSummaries.find(bs => bs.hash === hash)
     return item ? new BlockHeaderEntity(item) : undefined
   },
   async calculateHashRate() {
