@@ -139,11 +139,6 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
     return new EthValue(number)
   }
 
-  hasUncles(block) {
-    return false
-    // return block.getUncles().length > 0
-  }
-
   sucessTransalate(): number {
     return this.block && this.block.numSuccessfulTxsBN!.toNumber() > 1 ? 2 : 1
   }
