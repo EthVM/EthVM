@@ -32,8 +32,6 @@ class FlatMapProcessor : AbstractKafkaProcessor() {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
       put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
-      // Allows for large messages, in our case large lists of traces primarily
-      put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 20_971_520) // 20 mb
     }
 
   override val logger: KLogger = KotlinLogging.logger {}

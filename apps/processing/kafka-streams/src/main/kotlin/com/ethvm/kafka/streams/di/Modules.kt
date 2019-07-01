@@ -78,6 +78,9 @@ object Modules {
         // We can have large transactions
         put(ProducerConfig.TRANSACTION_TIMEOUT_CONFIG, 300_000) // 5 mins
 
+        // Allows for large messages, in our case large lists of traces primarily
+        put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 52428800) // 50 mb
+
         //
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, config.kafka.startingOffset)
 
