@@ -134,9 +134,7 @@ describe('UncleResolvers', () => {
     it('should convert an UncleEntity to an UncleDto', async () => {
       const uncle = await uncleResolvers.uncleByHash(hash3)
 
-      expect(uncle).toEqual(
-        new UncleDto({ nephewNumber: 2, number: 3, hash: hash3 })
-      )
+      expect(uncle).toBeInstanceOf(UncleDto)
     })
 
   })
