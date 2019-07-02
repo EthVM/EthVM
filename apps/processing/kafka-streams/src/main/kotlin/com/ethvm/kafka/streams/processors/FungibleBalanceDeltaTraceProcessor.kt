@@ -2,7 +2,6 @@ package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.toFungibleBalanceDeltas
 import com.ethvm.kafka.streams.Serdes
@@ -15,7 +14,6 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.joda.time.DateTime
-import java.lang.IllegalStateException
 import java.util.Properties
 
 class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor() {
@@ -54,18 +52,21 @@ class FungibleBalanceDeltaTraceProcessor : AbstractFungibleBalanceDeltaProcessor
 
     CanonicalTraces.stream(builder)
       .transform(CanonicalKStreamReducer(traceReduceStoreName), traceReduceStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { k, change ->
+      .filter { _, change -> change.newValue != change.oldValue }
+      .mapValues { _, change ->
 
-        when {
-          change.newValue != null && change.oldValue == null -> {
-            toDeltaList(change.newValue, false)
-          }
-          change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
-            toDeltaList(change.oldValue, true)
-          }
-          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
+
+        if (change.oldValue == null) {
+          toDeltaList(change.newValue, false)
+        } else {
+
+          val delta = toDeltaList(change.newValue, false)
+          val reversal = toDeltaList(change.oldValue, true)
+
+          FungibleBalanceDeltaListRecord.newBuilder(delta)
+            .setDeltas(reversal.deltas + delta.deltas)
+            .build()
         }
       }
 

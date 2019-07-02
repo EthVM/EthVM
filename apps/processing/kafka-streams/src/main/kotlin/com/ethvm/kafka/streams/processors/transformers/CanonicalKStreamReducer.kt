@@ -50,11 +50,7 @@ class CanonicalKStreamReducer<V>(
 
       cleanStore(key)
 
-      if (change.newValue == null && change.oldValue == null) {
-        return null
-      } else {
-        return KeyValue(key!!, change)
-      }
+      return KeyValue(key!!, change)
     }
 
     private fun cleanStore(key: CanonicalKeyRecord?) {

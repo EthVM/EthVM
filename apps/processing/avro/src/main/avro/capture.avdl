@@ -294,13 +294,9 @@ protocol Capture {
   }
 
   record ContractLifecycleListRecord {
-
-    boolean apply = true;
     timestamp_ms timestamp = 0;
     array<ContractLifecycleRecord> deltas = [];
-    array<ContractLifecycleRecord> reversals = [];
     union { null, string } blockHash = null;
-
   }
 
   record ContractRecord {

@@ -3,8 +3,8 @@
   "config": {
     "connector.class": "com.ethvm.kafka.connect.sources.web3.ParitySourceConnector",
     "tasks.max": 1,
-    "offset.flush.interval.ms": "5000",
-    "offset.flush.timeout.ms": "30000",
+    "offset.flush.interval.ms": 5000,
+    "offset.flush.timeout.ms": 30000,
     "ws.url": "{{ .Env.PARITY_WS_URL }}",
     "schema.registry.url": "{{ .Env.KAFKA_SCHEMA_REGISTRY_URL }}",
     "producer.max.request.size": 52428800

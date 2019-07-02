@@ -5,7 +5,6 @@ import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractLifecyleType
 import com.ethvm.avro.capture.ContractRecord
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.hexBuffer
 import com.ethvm.common.extensions.toContractLifecycleRecord
 import com.ethvm.kafka.streams.Serdes
@@ -87,25 +86,20 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
 
     CanonicalContractLifecycle.stream(builder)
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
-      .flatMapValues { k, change ->
+      .filter { _, change -> change.newValue != change.oldValue }
+      .flatMapValues { _, change ->
 
-        when {
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
 
-          change.newValue != null && change.oldValue == null ->
-            change.newValue.deltas
+        val deltas = change.newValue.deltas!!
 
-          change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
-            change.oldValue.deltas.map {
-              ContractLifecycleRecord.newBuilder(it)
-                .setReverse(true)
-                .build()
-            }
-          }
+        val reversals = change.oldValue?.deltas?.map {
+          ContractLifecycleRecord.newBuilder(it)
+            .setReverse(true)
+            .build()
+        } ?: emptyList<ContractLifecycleRecord>()
 
-          else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
-        }
+        reversals + deltas
       }
       // re-key by contract key
       .map { _, v ->

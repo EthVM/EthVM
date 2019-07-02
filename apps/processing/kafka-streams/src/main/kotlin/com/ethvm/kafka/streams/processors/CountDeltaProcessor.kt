@@ -7,7 +7,6 @@ import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.TransactionCountDeltaListRecord
 import com.ethvm.avro.processing.TransactionCountDeltaRecord
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.Serdes.TransactionCountDeltaList
@@ -28,7 +27,6 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.KStream
 import org.joda.time.DateTime
-import java.lang.IllegalStateException
 import java.util.Properties
 
 class CountDeltaProcessor : AbstractKafkaProcessor() {
@@ -227,20 +225,24 @@ class CountDeltaProcessor : AbstractKafkaProcessor() {
 
     val deltasWithReversals = deltas
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { k, change ->
+      .filter { _, change -> change.newValue != change.oldValue }
+      .flatMapValues { _, change ->
 
-        when {
-          change.newValue != null && change.oldValue == null ->
-            change.newValue
-          change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
+
+        val delta = listOf(change.newValue)
+
+        val reversal = if (change.oldValue != null) {
+          listOf(
             TransactionCountDeltaListRecord.newBuilder(change.oldValue)
               .setCounts(change.oldValue.counts.map { it.reverse() })
               .build()
-          }
-          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+          )
+        } else {
+          emptyList()
         }
+
+        reversal + delta
       }
 
     val deltasForAddress = deltasWithReversals

@@ -6,7 +6,6 @@ import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleTokenType
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.kafka.streams.Serdes
@@ -54,17 +53,21 @@ class FungibleBalanceDeltaReceiptProcessor : AbstractFungibleBalanceDeltaProcess
   private fun erc20DeltasForReceipts(builder: StreamsBuilder) =
     CanonicalReceipts.stream(builder)
       .transform(CanonicalKStreamReducer(receiptReduceStoreName), receiptReduceStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
+      .filter { _, change -> change.newValue != change.oldValue }
       .mapValues { k, change ->
 
-        when {
-          change.newValue != null && change.oldValue == null ->
-            toDeltaList(change.newValue, false)
-          change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
-            toDeltaList(change.oldValue, true)
-          }
-          else -> throw java.lang.IllegalStateException("New and old values cannot be unique non null values.")
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
+
+        if (change.oldValue == null) {
+          toDeltaList(change.newValue, false)
+        } else {
+
+          val delta = toDeltaList(change.newValue, false)
+          val reversal = toDeltaList(change.oldValue, true)
+
+          FungibleBalanceDeltaListRecord.newBuilder(delta)
+            .setDeltas(reversal.deltas + delta.deltas)
+            .build()
         }
       }
 

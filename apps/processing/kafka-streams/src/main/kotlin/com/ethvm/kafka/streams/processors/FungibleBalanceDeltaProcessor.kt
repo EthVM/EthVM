@@ -7,7 +7,6 @@ import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleTokenType
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.getNumberBI
 import com.ethvm.common.extensions.getTransactionFeeBI
 import com.ethvm.common.extensions.hexToBI
@@ -35,7 +34,6 @@ import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.joda.time.DateTime
-import java.lang.IllegalStateException
 import java.math.BigInteger
 import java.time.Duration
 import java.util.Properties
@@ -123,20 +121,23 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           .build()
       }
       .transform(CanonicalKStreamReducer(premineReduceStateStoreName), premineReduceStateStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { k, change ->
+      .filter { _, change -> change.newValue != change.oldValue }
+      .flatMapValues { _, change ->
 
-        when {
-          change.newValue != null && change.oldValue == null ->
-            change.newValue
-          change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
+
+        val deltas = listOf(change.newValue)
+        val reversals = if (change.oldValue != null) {
+          listOf(
             FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
-          }
-          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+          )
+        } else {
+          emptyList()
         }
+
+        reversals + deltas
       }
 
     // hard fork
@@ -168,20 +169,23 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           .build()
       }
       .transform(CanonicalKStreamReducer(hardForkReduceStateStoreName), hardForkReduceStateStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { k, change ->
+      .filter { _, change -> change.newValue != change.oldValue }
+      .flatMapValues { _, change ->
 
-        when {
-          change.newValue != null && change.oldValue == null ->
-            change.newValue
-          change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
+
+        val deltas = listOf(change.newValue)
+        val reversals = if (change.oldValue != null) {
+          listOf(
             FungibleBalanceDeltaListRecord.newBuilder(change.oldValue)
               .setDeltas(change.oldValue.deltas.map { it.reverse() })
               .build()
-          }
-          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+          )
+        } else {
+          emptyList()
         }
+
+        reversals + deltas
       }
 
     return Pair(premineStream, hardForkStream)
@@ -196,26 +200,18 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
     val txFeeDeltas = txFeesStream
       .transform(CanonicalKStreamReducer(txFeesDeltaReduceStoreName), txFeesDeltaReduceStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { k, change ->
+      .filter { _, change -> change.newValue != change.oldValue }
+      .mapValues { _, change ->
 
-        val (feeList, reverse) =
-          when {
-            change.newValue != null && change.oldValue == null ->
-              Pair(change.newValue, false)
-            change.newValue == null && change.oldValue != null -> {
-              logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
-              Pair(change.oldValue, true)
-            }
-            else -> throw IllegalStateException("New and old values cannot be unique non null values.")
-          }
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
 
-        val deltas = feeList.toEtherBalanceDeltas()
+        val deltas = change.newValue.toEtherBalanceDeltas()
+        val reversals = change.oldValue?.toEtherBalanceDeltas()?.map { it.reverse() } ?: emptyList()
 
         FungibleBalanceDeltaListRecord.newBuilder()
-          .setTimestamp(feeList.getTimestamp())
-          .setBlockHash(feeList.getBlockHash())
-          .setDeltas(if (reverse) deltas.map { it.reverse() } else deltas)
+          .setTimestamp(change.newValue.getTimestamp())
+          .setBlockHash(change.newValue.getBlockHash())
+          .setDeltas(reversals + deltas)
           .build()
       }
 
@@ -261,23 +257,23 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
     val minerFeeDeltas = CanonicalMinerFeesEtherDeltas.stream(builder)
       .transform(CanonicalKStreamReducer(minerFeesDeltaReduceStoreName), minerFeesDeltaReduceStoreName)
-      .filter { _, v -> v.newValue != v.oldValue }
-      .mapValues { k, change ->
+      .filter { _, change -> change.newValue != change.oldValue }
+      .mapValues { _, change ->
 
-        val delta = when {
-          change.newValue != null && change.oldValue == null ->
-            change.newValue
-          change.newValue == null && change.oldValue != null -> {
-            logger.info { "Tombstone received. Reversing key = ${k.number.bigInteger()}" }
-            change.oldValue.reverse()
-          }
-          else -> throw IllegalStateException("New and old values cannot be unique non null values.")
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
+
+        val deltas = listOf(change.newValue)
+
+        val reversals = if (change.oldValue != null) {
+          listOf(change.oldValue.reverse())
+        } else {
+          emptyList()
         }
 
         FungibleBalanceDeltaListRecord.newBuilder()
-          .setTimestamp(delta.getTraceLocation().getTimestamp())
-          .setBlockHash(delta.getTraceLocation().getBlockHash())
-          .setDeltas(listOf(delta))
+          .setTimestamp(change.newValue.getTraceLocation().getTimestamp())
+          .setBlockHash(change.newValue.getTraceLocation().getBlockHash())
+          .setDeltas(reversals + deltas)
           .build()
       }
 

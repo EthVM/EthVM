@@ -16,7 +16,6 @@ import com.ethvm.kafka.streams.config.Topics.CanonicalUncles
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
-import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
