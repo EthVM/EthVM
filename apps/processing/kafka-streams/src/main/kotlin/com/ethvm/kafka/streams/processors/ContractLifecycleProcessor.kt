@@ -1,19 +1,14 @@
 package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.capture.ContractKeyRecord
-import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
 import com.ethvm.avro.capture.ContractLifecyleType
 import com.ethvm.avro.capture.ContractRecord
-import com.ethvm.common.extensions.hexBuffer
-import com.ethvm.common.extensions.toContractLifecycleRecord
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalContractLifecycle
-import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
-import com.ethvm.kafka.streams.config.Topics.ContractLifecycleEvents
 import com.ethvm.kafka.streams.config.Topics.Contract
+import com.ethvm.kafka.streams.config.Topics.ContractLifecycleEvents
 import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
-import com.ethvm.kafka.streams.utils.StandardTokenDetector
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -22,7 +17,6 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Materialized
-import org.joda.time.DateTime
 import java.util.Properties
 
 class ContractLifecycleProcessor : AbstractKafkaProcessor() {
@@ -33,7 +27,7 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
     }
 
   override val logger: KLogger = KotlinLogging.logger {}
@@ -42,44 +36,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
 
     // Create stream builder
     val builder = StreamsBuilder()
-
-    val contractTypes = setOf("create", "suicide")
-
-    CanonicalTraces.stream(builder)
-      .mapValues { _, v ->
-
-        when (v) {
-          null -> null
-          else -> {
-
-            val blockHash = v.getTraces().firstOrNull()?.getBlockHash()
-
-            val timestamp = DateTime(v.getTimestamp())
-
-            // we only want contract related traces
-            ContractLifecycleListRecord.newBuilder()
-              .setTimestamp(timestamp)
-              .setBlockHash(blockHash)
-              .setDeltas(
-                v.getTraces()
-                  .filter { trace -> contractTypes.contains(trace.getType()) }
-                  .mapNotNull { it.toContractLifecycleRecord(timestamp) }
-                  .map { record ->
-                    when (record.type) {
-
-                      ContractLifecyleType.DESTROY -> record
-
-                      ContractLifecyleType.CREATE ->
-                        // identify the contract type
-                        ContractLifecycleRecord.newBuilder(record)
-                          .setContractType(StandardTokenDetector.detect(record.code.hexBuffer()!!).first)
-                          .build()
-                    }
-                  }
-              ).build()
-          }
-        }
-      }.toTopic(CanonicalContractLifecycle)
 
     val reduceStoreName = "canonical-contract-lifecycle-reduce"
     builder.addStateStore(CanonicalKStreamReducer.store(reduceStoreName, Serdes.ContractLifecycleList(), appConfig.unitTesting))
