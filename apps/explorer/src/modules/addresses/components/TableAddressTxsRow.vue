@@ -115,14 +115,31 @@
             <v-layout pa-1 row justify-space-around>
               <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
               <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-              <v-tooltip left>
+               <v-btn icon small class="more-info-btn " @click="info = !info">
+                    <v-icon small>fa fa-ellipsis-h</v-icon>
+                  </v-btn>
+              <v-tooltip top content-class="more-info-tooltip" v-model="info">
                 <template v-slot:activator="{ on }">
-                  <v-btn icon small class="more-info " v-on="on">
+                  <v-btn icon small class="more-info-btn " v-on="on" @click="info = !info">
                     <v-icon small>fa fa-ellipsis-h</v-icon>
                   </v-btn>
                 </template>
-                <v-card color green>
-                  <p>Hello</p>
+                <v-card color="white" flat>
+                  <v-card-title  v-if="tx.successful" class="txSuccess--text"> Transaction Failed </v-card-title>
+                  <v-card-title v-else class="txFail--text" > Transaction Failed </v-card-title>
+                  <v-card-text> Previos Balance:
+                    <span class="text-xs-right"> 1000 Eth</span>
+                  </v-card-text>
+                  <v-card-text> Tx Fee:
+                    <span class="text-xs-right"> -1 Eth</span>
+                  </v-card-text>
+                  <v-card-text> Actual Value sent
+                    <span class="text-xs-right"> -10 Eth</span>
+                  </v-card-text>
+                  <v-divider class="mb-2 mt-2" />
+                  <v-card-text> Balance After:
+                    <span class="text-xs-right"> 989 Eth</span>
+                  </v-card-text>
                 </v-card>
               </v-tooltip>
             </v-layout>
@@ -170,6 +187,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   linkAdr?: string
   displayAdr?: string
   txTypeColor?: string
+  info=  false
   /*
   ===================================================================================
     LifeCycle
@@ -182,7 +200,6 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
         case this.tx.from === this.tx.to: {
           this.txType = 'self'
           this.displayAdr = this.adrHash
-          // replace when isToContract implemented with: this.to.isToContract? `/contract/${tx.from}` : `/address/${tx.from}`
           this.linkAdr = `/address/${this.adrHash}`
           this.txTypeColor = 'info'
           return
@@ -190,7 +207,6 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
         case this.tx.to === this.adrHash: {
           this.txType = 'in'
           this.displayAdr = this.tx.from
-          // replace when isToContract implemented with: this.to.isToContract? `/contract/${tx.from}` : `/address/${tx.from}`
           this.linkAdr = `/address/${this.tx.from}`
           this.txTypeColor = 'darkGrey'
           return
@@ -198,7 +214,6 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
         default: {
           this.txType = 'out'
           this.displayAdr = this.tx.to
-          // replace when isToContract implemented with: this.to.isToContract? `/contract/${tx.to}` : `/address/${tx.to}`
           this.linkAdr = `/address/${this.tx.to}`
           this.txTypeColor = 'error'
         }
@@ -207,7 +222,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
       this.txType = 'ctrCreate'
       if (this.tx.creates) {
         this.displayAdr = this.tx.creates
-        this.linkAdr = `/contract/${this.tx.creates}`
+        this.linkAdr = `/address/${this.tx.creates}`
         this.txTypeColor = 'warning'
       } else {
         throw new Error(this.tx.hash + ' Tx is a contract creation and missing contract string ')
@@ -259,12 +274,19 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   width: 160px;
 }
 
-.more-info {
+.more-info-btn {
   color: #6270fc;
   margin: 0px;
 }
-.more-info:hover {
+.more-info-btn:hover {
   color: white;
   background-color: #b4bfd2;
+}
+
+.more-info-tooltip {
+  background-color: white;
+  border: 1px solid #b4bfd2;
+  opacity: 1 !important;
+  width: 200px
 }
 </style>
