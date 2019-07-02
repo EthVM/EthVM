@@ -149,7 +149,6 @@ class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
                   }
               ).build()
         }
-
       }.toTopic(Topics.CanonicalGasPrices)
 
     return builder.build()

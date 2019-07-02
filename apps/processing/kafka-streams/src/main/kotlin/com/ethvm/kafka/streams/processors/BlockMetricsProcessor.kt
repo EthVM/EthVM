@@ -1,31 +1,12 @@
 package com.ethvm.kafka.streams.processors
 
-import com.ethvm.avro.capture.TraceCallActionRecord
-import com.ethvm.avro.capture.TraceCreateActionRecord
-import com.ethvm.avro.capture.TraceDestroyActionRecord
 import com.ethvm.avro.processing.BlockMetricKeyRecord
-import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
-import com.ethvm.avro.processing.BlockMetricsTransactionRecord
-import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
-import com.ethvm.common.extensions.getBalanceBI
-import com.ethvm.common.extensions.getGasBI
-import com.ethvm.common.extensions.getGasPriceBI
 import com.ethvm.common.extensions.getTransactionFeeBI
-import com.ethvm.common.extensions.getValueBI
-import com.ethvm.common.extensions.setAvgGasLimitBI
-import com.ethvm.common.extensions.setAvgGasPriceBI
 import com.ethvm.common.extensions.setAvgTxFeesBI
-import com.ethvm.common.extensions.setTotalGasPriceBI
 import com.ethvm.common.extensions.setTotalTxFeesBI
-import com.ethvm.kafka.streams.config.Topics.BlockMetricsHeader
-import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransaction
 import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionFee
-import com.ethvm.kafka.streams.config.Topics.BlockMetricsTransactionTrace
-import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
-import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
-import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -33,7 +14,6 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
-import org.joda.time.DateTime
 import java.math.BigInteger
 import java.util.Properties
 
@@ -54,8 +34,6 @@ class BlockMetricsProcessor : AbstractKafkaProcessor() {
 
     // Create stream builder
     val builder = StreamsBuilder().apply {}
-
-
 
     CanonicalTransactionFees.stream(builder)
       // we don't want to process tombstones or genesis block

@@ -148,7 +148,6 @@ class CanonicalReceiptsProcessor : AbstractKafkaProcessor() {
                   .build()
               }
           ).build()
-
       }.toTopic(Topics.CanonicalGasUsed)
 
     return builder.build()
@@ -323,7 +322,7 @@ class CanonicalReceiptsProcessor : AbstractKafkaProcessor() {
       }
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
       .filter { _, change -> change.newValue != change.oldValue }
-      .filter { _, change -> change.newValue != null }  // short term transitionary fix
+      .filter { _, change -> change.newValue != null } // short term transitionary fix
       .mapValues { _, change ->
 
         require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }

@@ -134,7 +134,6 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
             .setNumInternalTxs(internalTxs)
             .build()
         )
-
       }
       .toTopic(Topics.BlockMetricsTransactionTrace)
 
@@ -202,7 +201,6 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
             .setCount(count)
             .build()
         )
-
       }.toTopic(Topics.CanonicalCountDelta)
 
     // Flat Map
