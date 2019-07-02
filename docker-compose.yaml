@@ -21,6 +21,8 @@ volumes:
 
   zookeeper-volume:
 
+  prometheus-volume:
+
 services:
 
   # ///////////////////////////////////////////////////////
@@ -284,6 +286,25 @@ services:
   # Extra Tools (Useful for debugging and helping in dev)
   # ///////////////////////////////////////////////////////
 
+  kafka-exporter:
+    image: danielqsj/kafka-exporter
+    networks:
+      - back
+    ports:
+      - 9308:9308
+    command: "--kafka.server=kafka-1:9091"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - back
+    volumes:
+      - prometheus-volume:/prometheus
+      - ./prometheus:/config
+    command: --config.file=/config/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention=168h
+
   grafana:
     image: grafana/grafana:6.1.6
     networks:
@@ -321,19 +342,7 @@ services:
     environment:
       ZK_HOSTS: zookeeper:2181
 
-  burrow:
-    image: solsson/burrow
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
-      - kafka-1
-    networks:
-      - back
-    ports:
-      - 8000:8000
-    volumes:
-      - ${PWD}/docker/images/burrow:/etc/burrow/
-      - ${PWD}/tmp:/var/tmp/burrow
+
 
   pgweb:
     image: sosedoff/pgweb:0.11.2
