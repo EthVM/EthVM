@@ -250,79 +250,73 @@ class CanonicalReceiptsProcessor : AbstractKafkaProcessor() {
     return canonicalReceipts
       .mapValues { _, v ->
 
-        when (v) {
-          null -> null
-          else -> {
+        // filter out receipts with ERC20 related logs
 
-            // filter out receipts with ERC20 related logs
+        val blockHash = v.getReceipts().firstOrNull()?.getBlockHash()
 
-            val blockHash = v.getReceipts().firstOrNull()?.getBlockHash()
+        val receiptsWithErc721Logs = v.getReceipts()
+          .filter { receipt ->
 
-            val receiptsWithErc721Logs = v.getReceipts()
-              .filter { receipt ->
+            val logs = receipt.getLogs()
 
-                val logs = receipt.getLogs()
-
-                when (logs.isEmpty()) {
-                  true -> false
-                  else ->
-                    logs
-                      .map { log -> ERC721Abi.matchEventHex(log.getTopics()).isDefined() }
-                      .reduce { a, b -> a || b }
-                }
-              }
-
-            val timestamp = DateTime(v.getTimestamp())
-
-            val deltas = receiptsWithErc721Logs
-              .flatMap { receipt ->
-
-                val traceLocation = TraceLocationRecord.newBuilder()
-                  .setTimestamp(timestamp)
-                  .setBlockNumber(receipt.getBlockNumber())
-                  .setBlockHash(receipt.getBlockHash())
-                  .setTransactionHash(receipt.getTransactionHash())
-                  .setTransactionIndex(receipt.getTransactionIndex())
-
-                receipt.getLogs()
-                  .map { log -> ERC721Abi.decodeTransferEventHex(log.getData(), log.getTopics()) }
-                  .mapIndexed { idx, transferOpt ->
-
-                    transferOpt.map { transfer ->
-
-                      val contract = when {
-                        receipt.to != null -> receipt.to
-                        receipt.contractAddress != null -> receipt.contractAddress
-                        else -> throw IllegalStateException("Could not determine contract address")
-                      }
-
-                      NonFungibleBalanceDeltaRecord.newBuilder()
-                        .setTokenType(NonFungibleTokenType.ERC721)
-                        .setTraceLocation(
-                          traceLocation
-                            .setLogIndex(idx)
-                            .build()
-                        )
-                        .setFrom(transfer.from)
-                        .setTo(transfer.to)
-                        .setContract(contract)
-                        .setTokenIdBI(transfer.tokenId)
-                        .build()
-                    }.orNull()
-                  }.filterNotNull()
-              }
-
-            NonFungibleBalanceDeltaListRecord.newBuilder()
-              .setTimestamp(timestamp)
-              .setBlockHash(blockHash)
-              .setDeltas(deltas)
-              .build()
+            when (logs.isEmpty()) {
+              true -> false
+              else ->
+                logs
+                  .map { log -> ERC721Abi.matchEventHex(log.getTopics()).isDefined() }
+                  .reduce { a, b -> a || b }
+            }
           }
-        }
+
+        val timestamp = DateTime(v.getTimestamp())
+
+        val deltas = receiptsWithErc721Logs
+          .flatMap { receipt ->
+
+            val traceLocation = TraceLocationRecord.newBuilder()
+              .setTimestamp(timestamp)
+              .setBlockNumber(receipt.getBlockNumber())
+              .setBlockHash(receipt.getBlockHash())
+              .setTransactionHash(receipt.getTransactionHash())
+              .setTransactionIndex(receipt.getTransactionIndex())
+
+            receipt.getLogs()
+              .map { log -> ERC721Abi.decodeTransferEventHex(log.getData(), log.getTopics()) }
+              .mapIndexed { idx, transferOpt ->
+
+                transferOpt.map { transfer ->
+
+                  val contract = when {
+                    receipt.to != null -> receipt.to
+                    receipt.contractAddress != null -> receipt.contractAddress
+                    else -> throw IllegalStateException("Could not determine contract address")
+                  }
+
+                  NonFungibleBalanceDeltaRecord.newBuilder()
+                    .setTokenType(NonFungibleTokenType.ERC721)
+                    .setTraceLocation(
+                      traceLocation
+                        .setLogIndex(idx)
+                        .build()
+                    )
+                    .setFrom(transfer.from)
+                    .setTo(transfer.to)
+                    .setContract(contract)
+                    .setTokenIdBI(transfer.tokenId)
+                    .build()
+                }.orNull()
+              }.filterNotNull()
+          }
+
+        NonFungibleBalanceDeltaListRecord.newBuilder()
+          .setTimestamp(timestamp)
+          .setBlockHash(blockHash)
+          .setDeltas(deltas)
+          .build()
+
       }
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
       .filter { _, change -> change.newValue != change.oldValue }
-      .filter { _, change -> change.newValue != null } // short term transitionary fix
       .mapValues { _, change ->
 
         require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }

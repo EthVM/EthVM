@@ -25,7 +25,6 @@ scrape_configs:
       type: 'A'
       port: 9308
 
-
 #  - job_name: 'kafka_exporter'
 #    dns_sd_configs:
 #      names:

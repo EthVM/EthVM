@@ -146,7 +146,6 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
     builder.addStateStore(CanonicalKStreamReducer.store(hardForkReduceStateStoreName, Serdes.FungibleBalanceDeltaList(), appConfig.unitTesting))
 
     val hardForkStream = canonicalBlocks
-      .filter { _, v -> v != null } // short term fix until we can update staging
       .mapValues { k, header ->
 
         val blockNumber = k.getNumberBI()

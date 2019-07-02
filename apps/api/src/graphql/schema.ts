@@ -329,7 +329,6 @@ export interface IQuery {
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     metadata(): Metadata | Promise<Metadata>;
-    search(query: string): Search | Promise<Search>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
     addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
     addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
@@ -340,6 +339,7 @@ export interface IQuery {
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
+    search(query: string): Search | Promise<Search>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
