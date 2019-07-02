@@ -112,11 +112,11 @@ data class KafkaTopic<K, V>(
 
 object Topics {
 
-  val CanonicalBlockHeader = KafkaTopic<CanonicalKeyRecord, BlockHeaderRecord?>("canonical_block_header", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockHeaderRecord.`SCHEMA$`, BlockHeader())
-  val CanonicalTransactions = KafkaTopic<CanonicalKeyRecord, TransactionListRecord?>("canonical_transactions", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionListRecord.`SCHEMA$`, TransactionList())
-  val CanonicalReceipts = KafkaTopic<CanonicalKeyRecord, TransactionReceiptListRecord?>("canonical_receipts", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionReceiptListRecord.`SCHEMA$`, ReceiptList())
-  val CanonicalTraces = KafkaTopic<CanonicalKeyRecord, TraceListRecord?>("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())
-  val CanonicalUncles = KafkaTopic<CanonicalKeyRecord, UncleListRecord?>("canonical_uncles", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), UncleListRecord.`SCHEMA$`, UncleList())
+  val CanonicalBlockHeader = KafkaTopic<CanonicalKeyRecord, BlockHeaderRecord>("canonical_block_header", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockHeaderRecord.`SCHEMA$`, BlockHeader())
+  val CanonicalTransactions = KafkaTopic<CanonicalKeyRecord, TransactionListRecord>("canonical_transactions", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionListRecord.`SCHEMA$`, TransactionList())
+  val CanonicalReceipts = KafkaTopic<CanonicalKeyRecord, TransactionReceiptListRecord>("canonical_receipts", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionReceiptListRecord.`SCHEMA$`, ReceiptList())
+  val CanonicalTraces = KafkaTopic<CanonicalKeyRecord, TraceListRecord>("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())
+  val CanonicalUncles = KafkaTopic<CanonicalKeyRecord, UncleListRecord>("canonical_uncles", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), UncleListRecord.`SCHEMA$`, UncleList())
 
   val CanonicalCountDelta = KafkaTopic<CanonicalCountKeyRecord, CanonicalCountRecord?>("canonical_count_delta", CanonicalCountKeyRecord.`SCHEMA$`, CanonicalCountKey(), CanonicalCountRecord.`SCHEMA$`, CanonicalCount())
   val CanonicalCount = KafkaTopic<CanonicalCountKeyRecord, CanonicalCountRecord>("canonical_count", CanonicalCountKeyRecord.`SCHEMA$`, CanonicalCountKey(), CanonicalCountRecord.`SCHEMA$`, CanonicalCount())
