@@ -22,10 +22,10 @@
 
             Responsive Tally:
             md: 5/12 (5)
-            sm: 4/12 (5)
+            sm: 4/12 (4)
           =====================================================================================
           -->
-          <v-flex sm4 md5 pr-3>
+          <v-flex sm5 md4 pr-3>
             <v-layout
               row
               wrap
@@ -33,13 +33,13 @@
               pb-1
               pl-1
               class
-              :class="{ 'pr-1': $vuetify.breakpoint.smAndDown, 'pr-3': $vuetify.breakpoint.mdOnly, 'pr-5': $vuetify.breakpoint.lgAndUp }"
+              :class="{ 'pr-1': $vuetify.breakpoint.smAndDown, 'pr-3': $vuetify.breakpoint.mdOnly, 'pr-4': $vuetify.breakpoint.lgAndUp }"
             >
               <v-flex sm12 pa-1>
                 <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`" />
               </v-flex>
               <v-flex sm12 pa-1>
-                <v-layout row align-center justify-space-around fill-height pa-2>
+                <v-layout row align-center fill-height pa-2>
                   <v-card
                     flat
                     class="tx-type-dsk white--text pa-1 mr-2 caption"
@@ -57,7 +57,8 @@
           ETH VALUE
 
           Responsive Tally:
-          SM: 6/12 (2)
+          SM: 7/12 (2)
+          MD: 6/12 (2)
 
           =====================================================================================
           -->
@@ -82,10 +83,11 @@
           =====================================================================================
             Tx Fee
             Responsive Tally:
-            SM: 8/12 (2)
+            SM: 9/12 (2)
+            MD: 8/12 (2)
           =====================================================================================
           -->
-          <v-flex sm2>
+          <v-flex sm2 >
             <v-tooltip v-if="txType === 'in'" left>
               <template v-slot:activator="{ on }">
                 <p
@@ -106,7 +108,8 @@
             Age
 
             Responsive Tally:
-            SM: 10/12 (2)
+            SM: 11/12 (1)
+            MD: 10/12(2)
           =====================================================================================
           -->
           <v-flex sm2>
@@ -121,7 +124,7 @@
           md: 12/12 (2)
           =====================================================================================
           -->
-          <v-flex sm2 md1>
+          <v-flex sm1 md2>
             <v-layout pa-1 row justify-space-around>
               <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
               <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
@@ -255,7 +258,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
       if (this.tx.creates) {
         this.displayAdr = this.tx.creates
         this.linkAdr = `/address/${this.tx.creates}`
-        this.txTypeColor = 'warning'
+        this.txTypeColor = '#b3d4fc'
       } else {
         throw new Error(this.tx.hash + ' Tx is a contract creation and missing contract string ')
       }
@@ -312,7 +315,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 }
 
 .tx-type-dsk {
-  width: 160px;
+  min-width: 100px;
 }
 
 .more-info-btn {
