@@ -7,7 +7,125 @@
       =====================================================================================
       -->
       <v-flex xs12 hidden-sm-and-up>
-        <div :class="txStatusClass"></div>
+        <div class="table-row-mobile">
+          <v-layout column fill-height wrap class="pa-3">
+            <!-- Value, Age, Status -->
+            <v-flex d-flex xs12>
+              <v-layout row>
+                <v-flex>
+                  <p>
+                    {{
+                    `${getValueSign()} ${getShortValue(
+                    ethValue(tx.valueBN)
+                    .toEth()
+                    .toString()
+                    )}`
+                    }} {{$t('common.eth')}}
+                  </p>
+                </v-flex>
+                <v-spacer />
+                <v-flex shrink>
+                  <app-time-ago :timestamp="tx.timestampDate" class="info--text" />
+                </v-flex>
+                <v-flex shrink>
+                  <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
+                  <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+            <!-- Tx Hash -->
+            <v-flex d-flex xs12>
+              <v-layout row align-center justify-start class="pl-2">
+                <v-flex grow>
+                  <p class="info--text">{{$tc('tx.hash', 1)}}:</p>
+                </v-flex>
+                <v-flex d-flex xs10>
+                  <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
+                </v-flex>
+              </v-layout>
+            </v-flex>
+            <!-- TxType and address Hash -->
+            <v-flex d-flex xs12>
+              <v-layout row align-center justify-start>
+                <v-flex d-flex xs10>
+                  <v-layout row align-center fill-height class="pl-2">
+                    <v-card
+                      flat
+                      class="tx-type-dsk white--text pa-1 mr-2 caption"
+                      :color="txTypeColor"
+                    >
+                      <p class="text-xs-center">{{ $t(`tx.type.${txType}`) }}</p>
+                    </v-card>
+                    <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
+                  </v-layout>
+                </v-flex>
+                <v-spacer />
+                <v-flex shrink>
+                  <v-tooltip top content-class="more-info-tooltip" v-model="info">
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon small class="more-info-btn" v-on="on" @click="info = !info">
+                        <v-icon small>fa fa-ellipsis-h</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-card color="white" flat>
+                      <v-card-title
+                        v-if="tx.successful"
+                        class="txSuccess--text pa-1 body-2"
+                      >{{ $t('tx.success-long') }}</v-card-title>
+                      <v-card-title
+                        v-else
+                        class="txFail--text pa-1 body-2"
+                      >{{ $t('tx.failed-long') }}</v-card-title>
+                      <!-- Before Balance -->
+                      <v-layout row align-center>
+                        <v-flex grow pa-1>
+                          <p>{{ $t('common.balance-before') }}</p>
+                        </v-flex>
+                        <v-flex shrink pa-1>
+                          <p class="text-xs-right">1000.00 {{ $t('common.eth') }}</p>
+                        </v-flex>
+                      </v-layout>
+                      <!-- Value Sent -->
+                      <v-layout row align-center>
+                        <v-flex grow pa-1>
+                          <p>{{ getTooltipValueString() }}:</p>
+                        </v-flex>
+                        <v-flex shrink pa-1>
+                          <p
+                            v-if="tx.successful"
+                            class="text-xs-right"
+                          >{{ getValueSign() }} {{ formatStr(ethValue(tx.valueBN).toEth()) }} {{ $t('common.eth') }}</p>
+                          <p v-else class="text-xs-right info--text">0 {{ $t('common.eth') }}</p>
+                        </v-flex>
+                      </v-layout>
+                      <!-- Tx Fee -->
+                      <v-layout v-if="txType != 'in'" row align-center>
+                        <v-flex grow pa-1>
+                          <p>{{ $tc('tx.fee', 1) }}:</p>
+                        </v-flex>
+                        <v-flex shrink pa-1>
+                          <p
+                            class="text-xs-right"
+                          >- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth()) }} {{ $t('common.eth') }}</p>
+                        </v-flex>
+                      </v-layout>
+                      <v-divider class="mb-2 mt-2" />
+                      <!-- Balance After -->
+                      <v-layout row align-center>
+                        <v-flex grow pa-1>
+                          <p>{{ $t('common.balance-after') }}</p>
+                        </v-flex>
+                        <v-flex shrink pa-1>
+                          <p class="text-xs-right">909.114665 {{ $t('common.eth') }}</p>
+                        </v-flex>
+                      </v-layout>
+                    </v-card>
+                  </v-tooltip>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </div>
       </v-flex>
       <!--
       =====================================================================================
@@ -40,7 +158,11 @@
               </v-flex>
               <v-flex sm12 pa-1>
                 <v-layout row align-center fill-height pa-2>
-                  <v-card flat class="tx-type-dsk white--text pa-1 mr-2 caption" :color="txTypeColor">
+                  <v-card
+                    flat
+                    class="tx-type-dsk white--text pa-1 mr-2 caption"
+                    :color="txTypeColor"
+                  >
                     <p class="text-xs-center">{{ $t(`tx.type.${txType}`) }}</p>
                   </v-card>
                   <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
@@ -61,11 +183,11 @@
           <v-flex sm2 pr-0 :class="getValueColor()">
             <p>
               {{
-                `${getValueSign()} ${getShortValue(
-                  ethValue(tx.valueBN)
-                    .toEth()
-                    .toString()
-                )}`
+              `${getValueSign()} ${getShortValue(
+              ethValue(tx.valueBN)
+              .toEth()
+              .toString()
+              )}`
               }}
             </p>
           </v-flex>
@@ -80,11 +202,17 @@
           <v-flex sm2>
             <v-tooltip v-if="txType === 'in'" left>
               <template v-slot:activator="{ on }">
-                <p class="grey--text text-truncate" v-on="on">{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+                <p
+                  class="grey--text text-truncate"
+                  v-on="on"
+                >{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
               </template>
               <span>{{ $t('tooltip.txFeeSender') }}</span>
             </v-tooltip>
-            <p v-else class="black--text text-truncate">- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+            <p
+              v-else
+              class="black--text text-truncate"
+            >- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
           </v-flex>
 
           <!--
@@ -119,7 +247,10 @@
                   </v-btn>
                 </template>
                 <v-card color="white" flat>
-                  <v-card-title v-if="tx.successful" class="txSuccess--text pa-1 body-2">{{ $t('tx.success-long') }}</v-card-title>
+                  <v-card-title
+                    v-if="tx.successful"
+                    class="txSuccess--text pa-1 body-2"
+                  >{{ $t('tx.success-long') }}</v-card-title>
                   <v-card-title v-else class="txFail--text pa-1 body-2">{{ $t('tx.failed-long') }}</v-card-title>
                   <!-- Before Balance -->
                   <v-layout row align-center>
@@ -136,9 +267,10 @@
                       <p>{{ getTooltipValueString() }}:</p>
                     </v-flex>
                     <v-flex shrink pa-1>
-                      <p v-if="tx.successful" class="text-xs-right">
-                        {{ getValueSign() }} {{ formatStr(ethValue(tx.valueBN).toEth()) }} {{ $t('common.eth') }}
-                      </p>
+                      <p
+                        v-if="tx.successful"
+                        class="text-xs-right"
+                      >{{ getValueSign() }} {{ formatStr(ethValue(tx.valueBN).toEth()) }} {{ $t('common.eth') }}</p>
                       <p v-else class="text-xs-right info--text">0 {{ $t('common.eth') }}</p>
                     </v-flex>
                   </v-layout>
@@ -148,7 +280,9 @@
                       <p>{{ $tc('tx.fee', 1) }}:</p>
                     </v-flex>
                     <v-flex shrink pa-1>
-                      <p class="text-xs-right">- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth()) }} {{ $t('common.eth') }}</p>
+                      <p
+                        class="text-xs-right"
+                      >- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth()) }} {{ $t('common.eth') }}</p>
                     </v-flex>
                   </v-layout>
                   <v-divider class="mb-2 mt-2" />
