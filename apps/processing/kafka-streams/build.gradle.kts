@@ -8,7 +8,7 @@ val test by tasks.getting(Test::class) { useJUnitPlatform {} }
 
 application {
   mainClassName = "com.ethvm.kafka.streams.MainKt"
-  applicationDefaultJvmArgs = listOf("-Dxms=2g", "-Dxmx=2g")
+  applicationDefaultJvmArgs = listOf("-Xms2g", "-Xmx8g")
 }
 
 project.java.sourceSets["main"].java {
