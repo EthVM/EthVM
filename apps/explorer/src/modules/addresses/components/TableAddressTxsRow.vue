@@ -40,11 +40,7 @@
               </v-flex>
               <v-flex sm12 pa-1>
                 <v-layout row align-center fill-height pa-2>
-                  <v-card
-                    flat
-                    class="tx-type-dsk white--text pa-1 mr-2 caption"
-                    :color="txTypeColor"
-                  >
+                  <v-card flat class="tx-type-dsk white--text pa-1 mr-2 caption" :color="txTypeColor">
                     <p class="text-xs-center">{{ $t(`tx.type.${txType}`) }}</p>
                   </v-card>
                   <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
@@ -65,11 +61,11 @@
           <v-flex sm2 pr-0 :class="getValueColor()">
             <p>
               {{
-              `${getValueSign()} ${getShortValue(
-              ethValue(tx.valueBN)
-              .toEth()
-              .toString()
-              )}`
+                `${getValueSign()} ${getShortValue(
+                  ethValue(tx.valueBN)
+                    .toEth()
+                    .toString()
+                )}`
               }}
             </p>
           </v-flex>
@@ -81,20 +77,14 @@
             MD: 8/12 (2)
           =====================================================================================
           -->
-          <v-flex sm2 >
+          <v-flex sm2>
             <v-tooltip v-if="txType === 'in'" left>
               <template v-slot:activator="{ on }">
-                <p
-                  class="grey--text text-truncate"
-                  v-on="on"
-                >{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+                <p class="grey--text text-truncate" v-on="on">{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
               </template>
               <span>{{ $t('tooltip.txFeeSender') }}</span>
             </v-tooltip>
-            <p
-              v-else
-              class="black--text text-truncate"
-            >- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+            <p v-else class="black--text text-truncate">- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
           </v-flex>
 
           <!--
@@ -129,44 +119,46 @@
                   </v-btn>
                 </template>
                 <v-card color="white" flat>
-                  <v-card-title v-if="tx.successful" class="txSuccess--text pa-1 body-2">{{$t('tx.success-long')}}</v-card-title>
-                  <v-card-title v-else class="txFail--text pa-1 body-2">{{$t('tx.failed-long')}}</v-card-title>
+                  <v-card-title v-if="tx.successful" class="txSuccess--text pa-1 body-2">{{ $t('tx.success-long') }}</v-card-title>
+                  <v-card-title v-else class="txFail--text pa-1 body-2">{{ $t('tx.failed-long') }}</v-card-title>
                   <!-- Before Balance -->
                   <v-layout row align-center>
                     <v-flex grow pa-1>
-                      <p>{{$t('common.balance-before')}}</p>
+                      <p>{{ $t('common.balance-before') }}</p>
                     </v-flex>
                     <v-flex shrink pa-1>
-                      <p class="text-xs-right">1000.00 {{$t('common.eth')}}</p>
+                      <p class="text-xs-right">1000.00 {{ $t('common.eth') }}</p>
                     </v-flex>
                   </v-layout>
                   <!-- Value Sent -->
                   <v-layout row align-center>
                     <v-flex grow pa-1>
-                      <p>{{ getTooltipValueString()}}:</p>
+                      <p>{{ getTooltipValueString() }}:</p>
                     </v-flex>
                     <v-flex shrink pa-1>
-                      <p v-if="tx.successful" class="text-xs-right">{{getValueSign()}} {{  formatStr(ethValue(tx.valueBN).toEth()) }} {{$t('common.eth')}}</p>
-                      <p v-else class="text-xs-right info--text">0 {{$t('common.eth')}}</p>
+                      <p v-if="tx.successful" class="text-xs-right">
+                        {{ getValueSign() }} {{ formatStr(ethValue(tx.valueBN).toEth()) }} {{ $t('common.eth') }}
+                      </p>
+                      <p v-else class="text-xs-right info--text">0 {{ $t('common.eth') }}</p>
                     </v-flex>
                   </v-layout>
                   <!-- Tx Fee -->
                   <v-layout v-if="txType != 'in'" row align-center>
                     <v-flex grow pa-1>
-                      <p>{{$tc('tx.fee', 1)}}:</p>
+                      <p>{{ $tc('tx.fee', 1) }}:</p>
                     </v-flex>
                     <v-flex shrink pa-1>
-                      <p class="text-xs-right">- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth())}} {{$t('common.eth')}}</p>
+                      <p class="text-xs-right">- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth()) }} {{ $t('common.eth') }}</p>
                     </v-flex>
                   </v-layout>
                   <v-divider class="mb-2 mt-2" />
                   <!-- Balance After -->
                   <v-layout row align-center>
                     <v-flex grow pa-1>
-                      <p>{{$t('common.balance-after')}}</p>
+                      <p>{{ $t('common.balance-after') }}</p>
                     </v-flex>
                     <v-flex shrink pa-1>
-                      <p class="text-xs-right">909.114665 {{$t('common.eth')}}</p>
+                      <p class="text-xs-right">909.114665 {{ $t('common.eth') }}</p>
                     </v-flex>
                   </v-layout>
                 </v-card>
@@ -188,7 +180,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import BigNumber from 'bignumber.js'
 import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
-import { TranslateResult } from 'vue-i18n';
+import { TranslateResult } from 'vue-i18n'
 
 @Component({
   components: {
@@ -287,9 +279,8 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
     if (this.tx.successful) {
       return this.txType === 'in' ? this.$tc('tooltip.value-recieved', 1) : this.$tc('tooltip.value-sent', 1)
     }
-    else {
-      return this.txType === 'in' ? this.$tc('tooltip.value-recieved', 2) : this.$tc('tooltip.value-sent', 2)
-    }
+
+    return this.txType === 'in' ? this.$tc('tooltip.value-recieved', 2) : this.$tc('tooltip.value-sent', 2)
   }
 
   /*
