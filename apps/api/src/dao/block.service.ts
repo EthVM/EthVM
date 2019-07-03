@@ -94,7 +94,7 @@ export class BlockService {
         async (txn): Promise<[BlockSummary[], number]> => {
 
           const count = await txn.count(BlockHeaderEntity, {
-            where: { author }
+            where: { author },
           })
 
           if (count === 0) return [[], count]
