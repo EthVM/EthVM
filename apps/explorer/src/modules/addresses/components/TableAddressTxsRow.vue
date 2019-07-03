@@ -71,12 +71,6 @@
               .toString()
               )}`
               }}
-              <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
-                <template v-slot:activator="{ on }">
-                  <v-icon v-on="{ on }" dark small>fa fa-question-circle info--text</v-icon>
-                </template>
-                <span>{{  formatStr(ethValue(tx.valueBN).toEth()) }}</span>
-              </v-tooltip>
             </p>
           </v-flex>
           <!--
@@ -135,12 +129,12 @@
                   </v-btn>
                 </template>
                 <v-card color="white" flat>
-                  <v-card-title v-if="tx.successful" class="txSuccess--text pa-1 body-2">Transaction successful</v-card-title>
-                  <v-card-title v-else class="txFail--text pa-1 body-2">Transaction Failed</v-card-title>
+                  <v-card-title v-if="tx.successful" class="txSuccess--text pa-1 body-2">{{$t('tx.success-long')}}</v-card-title>
+                  <v-card-title v-else class="txFail--text pa-1 body-2">{{$t('tx.failed-long')}}</v-card-title>
                   <!-- Before Balance -->
                   <v-layout row align-center>
                     <v-flex grow pa-1>
-                      <p>Balance Before:</p>
+                      <p>{{$t('common.balance-before')}}</p>
                     </v-flex>
                     <v-flex shrink pa-1>
                       <p class="text-xs-right">1000.00 {{$t('common.eth')}}</p>
@@ -159,17 +153,17 @@
                   <!-- Tx Fee -->
                   <v-layout v-if="txType != 'in'" row align-center>
                     <v-flex grow pa-1>
-                      <p>Tx Fee:</p>
+                      <p>{{$tc('tx.fee', 1)}}:</p>
                     </v-flex>
                     <v-flex shrink pa-1>
                       <p class="text-xs-right">- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth())}} {{$t('common.eth')}}</p>
                     </v-flex>
                   </v-layout>
                   <v-divider class="mb-2 mt-2" />
-                  <!-- Before After -->
+                  <!-- Balance After -->
                   <v-layout row align-center>
                     <v-flex grow pa-1>
-                      <p>Balance After:</p>
+                      <p>{{$t('common.balance-after')}}</p>
                     </v-flex>
                     <v-flex shrink pa-1>
                       <p class="text-xs-right">909.114665 {{$t('common.eth')}}</p>
@@ -194,6 +188,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import BigNumber from 'bignumber.js'
 import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
+import { TranslateResult } from 'vue-i18n';
 
 @Component({
   components: {
@@ -288,12 +283,12 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
     return this.txType === 'in' ? '+' : '-'
   }
 
-  getTooltipValueString(): string {
+  getTooltipValueString(): TranslateResult {
     if (this.tx.successful) {
-      return this.txType === 'in' ? 'Value recived' : 'Value Sent'
+      return this.txType === 'in' ? this.$tc('tooltip.value-recieved', 1) : this.$tc('tooltip.value-sent', 1)
     }
     else {
-      return this.txType === 'in' ? 'Actual Value recieved': "Actual Value Sent"
+      return this.txType === 'in' ? this.$tc('tooltip.value-recieved', 2) : this.$tc('tooltip.value-sent', 2)
     }
   }
 

@@ -43,7 +43,9 @@
     "history": "Transactions History",
     "total": "Total Txs",
     "success": "Successful Tx | Successful Txs",
-    "failed": "Failed Tx | Failed Txs",
+    "success-long": "Transaction Successfull",
+    "failed": "Failed Tx | Failed Txs ",
+    "failed-long": "Transaction Failed",
     "for-tx": "For Tx",
     "cost": "Tx Cost",
     "root": "Transactions Root",
@@ -144,9 +146,12 @@
     "percentage": "Percentage",
     "eth-balance": "Ether Balance",
     "balance": "Balance",
+    "balance-after": "Balance after",
+    "balance-before": "Balance before",
     "sort": "Sort by",
     "value": "Value"
   },
+
 
   "usd": {
     "name": "USD",
@@ -212,7 +217,9 @@
     "coming-soon": "Coming soon"
   },
   "tooltip":{
-    "txFeeSender": "Paid By Sender"
+    "txFeeSender": "Paid By Sender",
+    "value-sent" : "Value Sent | Actual Value Sent",
+    "value-recieved": "Value Recieved | Actual Value Recieved"
   },
   "charts": {
     "name": "Charts",
