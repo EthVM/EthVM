@@ -88,23 +88,32 @@ export class BlockService {
 
   async findSummariesByAuthor(author: string, offset: number = 0, limit: number = 20): Promise<[BlockSummary[], number]> {
 
-    const [headersWithRewards, count] = await this.blockHeaderRepository
-      .findAndCount({
-        select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
-        where: { author },
-        relations: ['rewards'],
-        order: { number: 'DESC' },
-        skip: offset,
-        take: limit,
-        cache: true,
-      })
+    return this.entityManager
+      .transaction(
+        'READ COMMITTED',
+        async (txn): Promise<[BlockSummary[], number]> => {
 
-    if (count === 0) return [[], count]
+          const count = await txn.count(BlockHeaderEntity, {
+            where: { author }
+          })
 
-    return [
-      await this.summarise(this.entityManager, headersWithRewards),
-      count,
-    ]
+          if (count === 0) return [[], count]
+
+          const headersWithRewards = await txn.find(BlockHeaderEntity, {
+              select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
+              where: { author },
+              relations: ['rewards'],
+              order: { number: 'DESC' },
+              skip: offset,
+              take: limit,
+              cache: true,
+            })
+
+          return [
+            await this.summarise(txn, headersWithRewards),
+            count,
+          ]
+        })
 
   }
 
