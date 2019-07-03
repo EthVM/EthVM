@@ -55,7 +55,6 @@ import { DbConnection } from '@app/orm/config'
       BlockMetricEntity,
       MetadataEntity,
       TokenMetadataEntity,
-    ]),
     ], DbConnection.Principal),
     TypeOrmModule.forFeature([
       AccountEntity,

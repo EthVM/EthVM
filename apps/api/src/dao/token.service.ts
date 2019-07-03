@@ -30,7 +30,7 @@ export class TokenService {
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity, DbConnection.Principal)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
-    @InjectRepository(TokenMetadataEntity)
+    @InjectRepository(TokenMetadataEntity, DbConnection.Principal)
     private readonly tokenMetadataRepository: Repository<TokenMetadataEntity>,
   ) {}
 
