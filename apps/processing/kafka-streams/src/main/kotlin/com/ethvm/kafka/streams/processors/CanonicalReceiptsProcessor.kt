@@ -313,7 +313,6 @@ class CanonicalReceiptsProcessor : AbstractKafkaProcessor() {
           .setBlockHash(blockHash)
           .setDeltas(deltas)
           .build()
-
       }
       .transform(CanonicalKStreamReducer(reduceStoreName), reduceStoreName)
       .filter { _, change -> change.newValue != change.oldValue }

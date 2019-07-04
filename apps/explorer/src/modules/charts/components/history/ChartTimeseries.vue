@@ -183,13 +183,13 @@ export default class ChartTimeseries extends Vue {
 
     switch (value) {
       case 0:
-        period = 'all'
-        break
-      case 1:
         period = 'week'
         break
-      case 2:
+      case 1:
         period = 'month'
+        break
+      case 2:
+        period = 'all'
         break
       case 3:
         period = 'year'

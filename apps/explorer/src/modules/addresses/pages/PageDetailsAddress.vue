@@ -48,7 +48,7 @@
         INTERNAL TRANSFERS TAB
       =====================================================================================
       -->
-      <v-tab-item slot="tabs-item" value="tab-5">
+      <v-tab-item v-if="account.hasInternalTransfers" slot="tabs-item" value="tab-5">
         <transfers-table :address="addressRef" :page-type="'internal'" />
       </v-tab-item>
       <!--
@@ -213,20 +213,24 @@ export default class PageDetailsAddress extends Vue {
         id: 1,
         title: this.$i18n.tc('token.name', 2),
         isActive: false
-      },
+      }
       // {
       //   id: 2,
       //   title: this.$i18n.tc('tx.pending', 2),
       //   isActive: false
-      // },
-      {
-        id: 5,
-        title: this.$i18n.tc('transfer.internal', 2),
-        isActive: false
-      }
+      // }
     ]
 
     if (!this.loading && !this.error && this.account) {
+      if (this.account.hasInternalTransfers) {
+        const newTab = {
+          id: 5,
+          title: this.$i18n.tc('transfer.internal', 2),
+          isActive: false
+        }
+        tabs.push(newTab)
+      }
+
       if (this.account.isMiner) {
         const newTab = {
           id: 3,

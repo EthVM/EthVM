@@ -15,7 +15,8 @@ export class AccountResolvers {
     const account = await this.accountService.findAccountByAddress(address)
     const isMiner = await this.accountService.findIsMiner(address)
     const isContractCreator = await this.accountService.findIsContractCreator(address)
-    return account ? new AccountDto({ ...account, isMiner, isContractCreator }) : null
+    const hasInternalTransfers = await this.accountService.findHasInternalTransfers(address)
+    return account ? new AccountDto({ ...account, isMiner, isContractCreator, hasInternalTransfers }) : null
   }
 
 }

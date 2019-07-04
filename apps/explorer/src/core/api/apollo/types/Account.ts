@@ -16,4 +16,5 @@ export interface Account {
   isMiner: boolean;
   isContractCreator: boolean;
   isContract: boolean;
+  hasInternalTransfers: boolean;
 }
