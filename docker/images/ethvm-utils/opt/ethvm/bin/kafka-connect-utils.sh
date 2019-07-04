@@ -22,7 +22,6 @@ ensure_kafka_connect() {
 
   echo "Ensuring kafka-connect on URL: ${KAFKA_CONNECT_URL}"
 
-  # Wait until mongo logs that it's ready (or timeout after 60s)
   COUNTER=0
   while !(nc -z ${HOST} 8083) && [[ ${COUNTER} -lt ${TIMEOUT} ]] ; do
       sleep 2
