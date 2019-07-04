@@ -13,15 +13,20 @@ networks:
 
 volumes:
 
-  db-principal-volume:
+  db-principal:
+    external: false
 
-  db-metrics-volume:
+  db-metrics:
+    external: false
 
-  kafka-volume-1:
+  kafka-1:
+    external: false
 
-  zookeeper-volume:
+  zookeeper:
+    external: false
 
-  prometheus-volume:
+  prometheus:
+    external: false
 
 services:
 
@@ -97,7 +102,9 @@ services:
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: ethvm/parity:stable-ethvm
+    build:
+      context: ./docker/images/parity
+      dockerfile: Dockerfile
     networks:
       - back
     volumes:
@@ -106,12 +113,10 @@ services:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    # By default we have enabled a private ethereum network (amarok) to be used in development
-    # If you want, also there's the option to use ropsten or even mainnet to test with real networks.
-    # Just uncomment below line:
-    command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    #command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    #command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    environment:
+      - PARITY_CHAIN
+      - PARITY_MIN_PEERS
+      - PARITY_MAX_PEERS
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -122,7 +127,7 @@ services:
     restart: unless-stopped
     shm_size: 1g
     volumes:
-      - db-principal-volume:/var/lib/postgresql/data
+      - db-principal:/var/lib/postgresql/data
     networks:
       - back
     ports:
@@ -133,11 +138,11 @@ services:
       POSTGRES_DB: '${PRINCIPAL_DB}'
 
   db-metrics:
-    image: timescale/timescaledb:${TIMESCALE_VERSION}
+    image: timescale/timescaledb:1.2.2-pg11-oss
     restart: unless-stopped
     shm_size: 1g
     volumes:
-      - db-metrics-volume:/var/lib/postgresql/data
+      - db-metrics:/var/lib/postgresql/data
     networks:
       - back
     environment:
@@ -157,7 +162,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
     volumes:
-      - zookeeper-volume:/var/lib/zookeeper
+      - zookeeper:/var/lib/zookeeper
     networks:
       back:
         ipv4_address: 172.25.0.103
@@ -176,7 +181,7 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      - kafka-volume-1:/var/lib/kafka
+      - kafka-1:/var/lib/kafka
     networks:
       back:
         ipv4_address: 172.25.0.104
@@ -301,7 +306,7 @@ services:
     networks:
       - back
     volumes:
-      - prometheus-volume:/prometheus
+      - prometheus:/prometheus
       - ./prometheus:/config
     command: --config.file=/config/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention=168h
 
@@ -341,8 +346,6 @@ services:
       - 9000:9000
     environment:
       ZK_HOSTS: zookeeper:2181
-
-
 
   pgweb:
     image: sosedoff/pgweb:0.11.2

@@ -41,9 +41,10 @@ run() {
 
       done
 
-
       ;;
 
   esac
+
 }
+
 run "$@"

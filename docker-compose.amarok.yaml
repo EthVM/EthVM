@@ -1,0 +1,52 @@
+version: '3.7'
+
+volumes:
+
+  ethvm-kafka-processing:
+    external: false
+
+services:
+
+  # ///////////////////////////////////////////////////////
+  # Front Services
+  # ///////////////////////////////////////////////////////
+
+  mew:
+    image: mew/mew:5.0.15
+    networks:
+      - back
+    ports:
+      - 8087:80
+
+  # ///////////////////////////////////////////////////////
+  # Ethereum Client
+  # ///////////////////////////////////////////////////////
+
+  parity:
+    environment:
+      PARITY_CHAIN: private
+      PARITY_MIN_PEERS: $PARITY_MIN_PEERS
+      PARITY_MAX_PEERS: $PARITY_MAX_PEERS
+
+  # ///////////////////////////////////////////////////////
+  # Processing
+  # ///////////////////////////////////////////////////////
+
+  ethvm-kafka-processing:
+    build:
+      context: ./apps/processing
+      dockerfile: ./kafka-streams/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - kafka-1
+      - zookeeper
+      - kafka-schema-registry
+    networks:
+      - back
+    volumes:
+      - ethvm-kafka-processing:/var/lib/kafka-streams
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka-1:9091
+      KAFKA_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
+      WEB3_WS_URL: ws://parity:8546
+      KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
