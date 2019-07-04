@@ -7,9 +7,9 @@
       </v-flex>
       <v-flex xs12 sm3 v-if="!liveChart">
         <v-layout align-center justify-end pa-3>
-          <button flat :class="classAll" @click="toggleData = 0" small>{{ $tc('charts.states.all', 2) }}</button>
-          <button flat :class="classWeek" @click="toggleData = 1" small>{{ $tc('charts.states.week', 2) }}</button>
-          <button flat :class="classMonth" @click="toggleData = 2" small>{{ $tc('charts.states.month', 2) }}</button>
+          <button flat :class="classWeek" @click="toggleData = 0" small>{{ $tc('charts.states.week', 2) }}</button>
+          <button flat :class="classMonth" @click="toggleData = 1" small>{{ $tc('charts.states.month', 2) }}</button>
+          <button flat :class="classAll" @click="toggleData = 2" small>{{ $tc('charts.states.all', 2) }}</button>
           <!-- <button flat :class="classMonth" small>1Y</button> -->
         </v-layout>
       </v-flex>
@@ -134,15 +134,15 @@ export default class AppChart extends Vue {
     Computed
   ===================================================================================
   */
-  get classAll(): string {
+  get classWeek(): string {
     return this.toggleData === 0 ? 'active-button' : 'button'
   }
 
-  get classWeek(): string {
+  get classMonth(): string {
     return this.toggleData === 1 ? 'active-button' : 'button'
   }
 
-  get classMonth(): string {
+  get classAll(): string {
     return this.toggleData === 2 ? 'active-button' : 'button'
   }
 

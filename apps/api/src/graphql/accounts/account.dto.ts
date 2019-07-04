@@ -12,6 +12,7 @@ export class AccountDto implements Account {
   outTxCount!: BigNumber
   totalTxCount!: BigNumber
   isContract!: boolean
+  hasInternalTransfers!: boolean
 
   constructor(data: any) {
     assignClean(this, data)

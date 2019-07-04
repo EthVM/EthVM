@@ -35,6 +35,9 @@ const accountServiceMock = {
   },
   async findIsContractCreator(address: string) {
     return false
+  },
+  async findHasInternalTransfers(address: string) {
+    return false
   }
 }
 
@@ -95,7 +98,8 @@ describe('AccountResolvers', () => {
         new AccountDto({
           address: address1,
           isContractCreator: false,
-          isMiner: false
+          isMiner: false,
+          hasInternalTransfers: false
         })
       )
     })

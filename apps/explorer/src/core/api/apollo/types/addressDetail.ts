@@ -16,6 +16,7 @@ export interface addressDetail_account {
   isMiner: boolean;
   isContractCreator: boolean;
   isContract: boolean;
+  hasInternalTransfers: boolean;
 }
 
 export interface addressDetail {
