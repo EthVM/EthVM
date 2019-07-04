@@ -12,6 +12,7 @@ import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 import { DbConnection } from '@app/orm/config'
+import { TransactionCountEntity } from '@app/orm/entities/transaction-count.entity'
 
 @Injectable()
 export class TxService {
@@ -133,42 +134,42 @@ export class TxService {
       'READ COMMITTED',
       async (txn): Promise<[TransactionSummary[], number]> => {
 
-        const countQueryBuilder = txn.createQueryBuilder()
-          .select('count(hash)', 'count')
-          .from(TransactionEntity, 't')
+        // Use transaction_count table to retrieve count as far more efficient than performing count against canonical_transaction
+
+        const transactionCount = await txn.findOne(TransactionCountEntity, { where: { address }, cache: true })
+
+        if (!transactionCount) {
+          return [[], 0]
+        }
+
+        let totalCount
+
+        switch (filter) {
+          case 'in':
+            totalCount = transactionCount.totalIn
+            break
+          case 'out':
+            totalCount = transactionCount.totalOut
+            break
+          default:
+            totalCount = transactionCount.totalIn + transactionCount.totalOut
+        }
+
+        if (totalCount === 0) return [[], totalCount]
 
         let where
 
         switch (filter) {
           case 'in':
             where = { to: address }
-
-            countQueryBuilder
-              .where('"to" = :to')
-              .setParameter('to', address)
-
             break
           case 'out':
             where = { from: address }
-
-            countQueryBuilder
-              .where('"from" = :from')
-              .setParameter('from', address)
-
             break
           default:
             where = [{ from: address }, { to: address }]
-
-            countQueryBuilder
-              .where('"to" = :to or "from" = :from')
-              .setParameters({ to: address, from: address })
-
             break
         }
-
-        const { count } = await countQueryBuilder.cache(true).getRawOne() as { count: number }
-
-        if (count === 0) return [[], count]
 
         const txs = await txn.find(TransactionEntity, {
           select: ['hash'],
@@ -179,7 +180,7 @@ export class TxService {
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
-        return [summaries, count]
+        return [summaries, totalCount]
       },
     )
 
