@@ -46,7 +46,7 @@ export class InternalTransferEntity {
   @Column({type: 'integer', readonly: true})
   traceLocationLogIndex?: number
 
-  @Column({type: 'text', length: 64, readonly: true})
+  @Column({type: 'character varying', length: 64, readonly: true})
   traceLocationTraceAddress!: string
 
   @Column({type: 'timestamp', readonly: true})
