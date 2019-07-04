@@ -14,7 +14,7 @@ export class TransferService {
     private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
     @InjectRepository(FungibleBalanceDeltaEntity, DbConnection.Principal)
     private readonly deltaRepository: Repository<FungibleBalanceDeltaEntity>,
-    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager
+    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
   ) {
   }
 
@@ -75,7 +75,7 @@ export class TransferService {
 
         const where = [
           { to: address },
-          { from: address }
+          { from: address },
         ]
 
         const count = await txn.count(InternalTransferEntity, { where, cache: true })
@@ -84,16 +84,16 @@ export class TransferService {
           where,
           order: {
             traceLocationBlockNumber: 'DESC',
-            traceLocationTransactionIndex: 'DESC'
+            traceLocationTransactionIndex: 'DESC',
           },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         return [items, count]
 
-      }
+      },
     )
 
   }
