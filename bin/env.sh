@@ -17,58 +17,6 @@ APPS_PATH="${ROOT_DIR}/apps"
 DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
 META_PATH="${SCRIPT_DIR}/meta.json"
 
-# ensure checks that we have corresponding utilities installed
-ensure() {
-
-  if ! [ -x "$(command -v jq)" ]; then
-    >&2 echo "jq is necessary to be installed to run this script!"
-    >&2 echo "For installation instructions, please visit: https://stedolan.github.io/jq/download/"
-    exit 1
-  fi
-
-  if ! [ -x "$(command -v docker)" ]; then
-    >&2 echo "docker is necessary to be installed to run this script!"
-    >&2 echo "For installation instructions, please visit: https://docs.docker.com/install/"
-    exit 1
-  fi
-
-  if ! [ -x "$(command -v docker-compose)" ]; then
-    >&2 echo "docker-compose is necessary to be installed to run this script!"
-    >&2 echo "For installation instructions, please visit: https://docs.docker.com/compose/install/"
-    exit 1
-  fi
-
-  if ! [ -x "$(command -v yarn)" ]; then
-    >&2 echo "yarn is not installed on the system! Although not completely necessary, it's recommended its installation."
-    >&2 echo "For installation instructions, please visit: https://yarnpkg.com/lang/en/docs/install/"
-  fi
-
-  if ! [ -x "$(command -v curl)" ]; then
-    >&2 echo "curl is necessary to be installed to run this script!"
-    >&2 echo "For installation instructions, please visit: https://curl.haxx.se/"
-    exit 1
-  fi
-
-  if ! [ -x "$(command -v grep)" ]; then
-    >&2 echo "grep is necessary to be installed to run this script!"
-    >&2 echo "For installation instructions, please use your OS package manager"
-    exit 1
-  fi
-
-  if ! [ -x "$(command -v md5sum)" ]; then
-    >&2 echo "md5sum is necessary to be installed to run this script!"
-    >&2 echo "For installation instructions, please use your OS package manager"
-    exit 1
-  fi
-
-}
-
-# let's check if required programs are installed
-ensure
-
-# source docker compose env variables
-source ${ROOT_DIR}/.env
-
 # ---------------------------------------------------------
 #   Helper Functions
 # ---------------------------------------------------------
@@ -147,3 +95,57 @@ info() {
   >&2 echo -e "${green}${bold}INFO:${reset} ${1}"
 
 }
+
+# ---------------------------------------------------------
+#   Checks
+# ---------------------------------------------------------
+
+# ensure checks that we have corresponding utilities installed
+ensure() {
+
+  if ! [ -x "$(command -v jq)" ]; then
+    >&2 invalid "jq is necessary to be installed to run this script!\n\tFor installation instructions, please visit: https://stedolan.github.io/jq/download/"
+    exit 1
+  fi
+
+  if ! [ -x "$(command -v docker)" ]; then
+    >&2 invalid "docker is necessary to be installed to run this script!\n\tFor installation instructions, please visit: https://docs.docker.com/install/"
+    exit 1
+  fi
+
+  if ! [ -x "$(command -v docker-compose)" ]; then
+    >&2 invalid "docker-compose is necessary to be installed to run this script!\n\tFor installation instructions, please visit: https://docs.docker.com/compose/install/"
+    exit 1
+  fi
+
+  if ! [ -x "$(command -v javac)" ]; then
+    >&2 invalid "JAVA is necessary to be installed to run this script!\n\tFor installation instructions, please use your OS package manager"
+    exit 1
+  else
+    local version=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*"/\1\2/p;')
+    [[ $version != "18" ]] && >&2 warning "It looks like your JAVA version is not 1.8.\n\tWe recommend you to switch to version 1.8 in order to avoid issues while executing some Kafka commands!"
+  fi
+
+  if ! [ -x "$(command -v yarn)" ]; then
+    >&2 warning "yarn is not installed on the system! Although not completely necessary, it's recommended its installation.\n\tFor installation instructions, please visit: https://yarnpkg.com/lang/en/docs/install/"
+  fi
+
+  if ! [ -x "$(command -v curl)" ]; then
+    >&2 invalid "curl is necessary to be installed to run this script!\n\tFor installation instructions, please visit: https://curl.haxx.se/"
+    exit 1
+  fi
+
+  if ! [ -x "$(command -v grep)" ]; then
+    >&2 invalid "grep is necessary to be installed to run this script!\n\tFor installation instructions, please use your OS package manager"
+    exit 1
+  fi
+
+  if ! [ -x "$(command -v md5sum)" ]; then
+    >&2 invalid "md5sum is necessary to be installed to run this script!\n\tFor installation instructions, please use your OS package manager"
+    exit 1
+  fi
+
+}
+
+# source docker compose env variables
+source ${ROOT_DIR}/.env

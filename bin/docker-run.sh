@@ -5,6 +5,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # import utils
 source ${SCRIPT_DIR}/env.sh
 
+# verify we have required utilities installed
+ensure
+
 # Define variables
 DATASET="ethvm_dev.sql.gz"
 

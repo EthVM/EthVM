@@ -5,6 +5,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # source env to get platform specific docker compose command
 source ${SCRIPT_DIR}/env.sh
 
+# verify we have required utilities installed
+ensure
+
 version=$(read_version migrator)
 
 DB=${1}
