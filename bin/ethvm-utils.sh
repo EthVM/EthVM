@@ -8,7 +8,7 @@ source ${SCRIPT_DIR}/env.sh
 version=$(read_version ethvm-utils)
 
 docker run --rm \
-  --network ethvm_back \
+  --network ethvm_net \
   -e KAFKA_ZOOKEEPER_CONNECT=${KAFKA_ZOOKEEPER_CONNECT} \
   -e KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS} \
   -e KAFKA_SCHEMA_REGISTRY_URL=${KAFKA_SCHEMA_REGISTRY_URL} \

@@ -59,7 +59,7 @@ delete_topics() {
 
   topics_to_preserve=${1:-''}
 
-   # change pwd
+  # change pwd
   cd ${ROOT_DIR}
 
   local topics=$(cat ${KAFKA_DIR}/topics.yml | grep 'name:' | sed -e 's/.*name: \(.*\)/\1/g')
@@ -122,13 +122,14 @@ run() {
   shift
 
   case ${command} in
-    ensure-zookeeper)             ensure_zookeeper "$@";;
-    ensure-kafka)                 ensure_kafka "$@";;
-    ensure-topics)                ensure_topics "$@";;
-    delete-topics)                delete_topics "$@";;
-    reset-processor-offsets)      reset_processor_offsets "$@";;
-    init)                         init "$@";;
+    init)                    init "$@";;
+    ensure-zookeeper)        ensure_zookeeper "$@";;
+    ensure-kafka)            ensure_kafka "$@";;
+    ensure-topics)           ensure_topics "$@";;
+    delete-topics)           delete_topics "$@";;
+    reset-processor-offsets) reset_processor_offsets "$@";;
   esac
+
 }
 
 run "$@"

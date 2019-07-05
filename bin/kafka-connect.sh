@@ -26,6 +26,7 @@ kafka_connect_usage() {
 
 # build_connector - builds the Kafka connector
 build_connector() {
+
   local processing_dir=$(cd ${ROOT_DIR}/apps/processing; pwd)
   local kafka_connect_dir=$(cd ${processing_dir}/connectors; pwd)
   local connectors=('sinks/jdbc' 'sources/eth-tokens-list' 'sources/exchanges' 'sources/web3' 'sources/kafka-admin')
@@ -40,19 +41,25 @@ build_connector() {
 
   echo "Restarting kafka connect (if running)..."
   (cd ${ROOT_DIR}; docker-compose restart kafka-connect)
+
 }
 
 read_version() {
-  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $PROJECTS_PATH)
+
+  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $META_PATH)
   local version_path=$(eval "echo -e ${raw_version_path}")
   echo $(to_version "${version_path}")
+
 }
 
 reset() {
+
   docker-compose exec kafka-1 sh -c "kafka-consumer-groups --bootstrap-server kafka-1:9091 --execute --reset-offsets --group connect-enkryptio-mongo-sink --to-earliest --all-topics"
+
 }
 
 run() {
+
   local command="${1:-false}"
 
   case "${command}" in
@@ -60,5 +67,7 @@ run() {
     reset)             reset                       ;;
     help|*)            kafka_connect_usage; exit 0 ;;
   esac
+
 }
+
 run "$@"

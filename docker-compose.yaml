@@ -2,10 +2,7 @@ version: '3.7'
 
 networks:
 
-  web:
-    external: false
-
-  back:
+  net:
     driver: bridge
     ipam:
       config:
@@ -13,15 +10,20 @@ networks:
 
 volumes:
 
-  db-principal-volume:
+  db-principal:
+    external: false
 
-  db-metrics-volume:
+  db-metrics:
+    external: false
 
-  kafka-volume-1:
+  kafka-1:
+    external: false
 
-  zookeeper-volume:
+  zookeeper:
+    external: false
 
-  prometheus-volume:
+  prometheus:
+    external: false
 
 services:
 
@@ -35,8 +37,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - web
-      - back
+      - net
     ports:
       - 80:80
       - 8080:8080
@@ -55,7 +56,7 @@ services:
     volumes:
       - ./apps/explorer:/var/explorer
     networks:
-      - back
+      - net
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
@@ -74,7 +75,7 @@ services:
       - db-principal
       - db-metrics
     networks:
-      - back
+      - net
     ports:
       - 3000:3000
     labels:
@@ -97,21 +98,21 @@ services:
   # ///////////////////////////////////////////////////////
 
   parity:
-    image: ethvm/parity:stable-ethvm
+    build:
+      context: ./docker/images/parity
+      dockerfile: Dockerfile
     networks:
-      - back
+      - net
     volumes:
-      - ${PARITY_VOLUME_MOUNTPOINT}:/home/parity/.local/share/io.parity.ethereum/
+      - ${PARITY_BIND_MOUNTPOINT}:/home/parity/.local/share/io.parity.ethereum/
     ports:
       - 8545:8545
       - 8546:8546
       - 30303:30303
-    # By default we have enabled a private ethereum network (amarok) to be used in development
-    # If you want, also there's the option to use ropsten or even mainnet to test with real networks.
-    # Just uncomment below line:
-    command: --chain ${PARITY_CHAIN} --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    #command: --config /home/parity/amarok-config.toml --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --ws-port 8546 --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
-    #command: --config dev-insecure --reseal-min-period 10000 -lminer=trace --ws-apis all --tracing on --pruning archive --ws-interface 0.0.0.0 --ws-origins * --ws-hosts * --jsonrpc-interface 0.0.0.0 --min-peers=${PARITY_MIN_PEERS} --max-peers ${PARITY_MAX_PEERS}
+    environment:
+      - PARITY_CHAIN
+      - PARITY_MIN_PEERS
+      - PARITY_MAX_PEERS
 
   # ///////////////////////////////////////////////////////
   # Storage
@@ -122,9 +123,9 @@ services:
     restart: unless-stopped
     shm_size: 1g
     volumes:
-      - db-principal-volume:/var/lib/postgresql/data
+      - db-principal:/var/lib/postgresql/data
     networks:
-      - back
+      - net
     ports:
       - 5432:5432
     environment:
@@ -133,13 +134,13 @@ services:
       POSTGRES_DB: '${PRINCIPAL_DB}'
 
   db-metrics:
-    image: timescale/timescaledb:${TIMESCALE_VERSION}
+    image: timescale/timescaledb:1.2.2-pg11-oss
     restart: unless-stopped
     shm_size: 1g
     volumes:
-      - db-metrics-volume:/var/lib/postgresql/data
+      - db-metrics:/var/lib/postgresql/data
     networks:
-      - back
+      - net
     environment:
       POSTGRES_USER: '${METRICS_USER}'
       POSTGRES_PASSWORD: '${METRICS_PASSWORD}'
@@ -148,7 +149,7 @@ services:
   redis:
     image: redis:5.0-alpine
     networks:
-      - back
+      - net
 
   # ///////////////////////////////////////////////////////
   # Processing
@@ -157,9 +158,9 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_VERSION}
     volumes:
-      - zookeeper-volume:/var/lib/zookeeper
+      - zookeeper:/var/lib/zookeeper
     networks:
-      back:
+      net:
         ipv4_address: 172.25.0.103
     ports:
       - 2181:2181
@@ -176,9 +177,9 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      - kafka-volume-1:/var/lib/kafka
+      - kafka-1:/var/lib/kafka
     networks:
-      back:
+      net:
         ipv4_address: 172.25.0.104
     ports:
       - 9091:9091
@@ -214,7 +215,7 @@ services:
       - zookeeper
       - kafka-1
     networks:
-      back:
+      net:
         ipv4_address: 172.25.0.107
     ports:
       - 8081:8081
@@ -244,7 +245,7 @@ services:
       - kafka-1
       - kafka-schema-registry
     networks:
-      - back
+      - net
     ports:
       - 8083:8083
       - 9588:9588
@@ -289,7 +290,7 @@ services:
   kafka-exporter:
     image: danielqsj/kafka-exporter
     networks:
-      - back
+      - net
     ports:
       - 9308:9308
     command: "--kafka.server=kafka-1:9091"
@@ -299,16 +300,16 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - back
+      - net
     volumes:
-      - prometheus-volume:/prometheus
+      - prometheus:/prometheus
       - ./prometheus:/config
     command: --config.file=/config/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention=168h
 
   grafana:
     image: grafana/grafana:6.1.6
     networks:
-      - back
+      - net
     environment:
       GF_SERVER_ROOT_URL: 'http://grafana.${DOMAIN}'
       GF_SECURITY_ADMIN_PASSWORD: 'admin'
@@ -323,7 +324,7 @@ services:
   kafka-connect-ui:
     image: landoop/kafka-connect-ui
     networks:
-      - back
+      - net
     ports:
       - 8000:8000
     environment:
@@ -336,13 +337,11 @@ services:
       - zookeeper
       - kafka-1
     networks:
-      - back
+      - net
     ports:
       - 9000:9000
     environment:
       ZK_HOSTS: zookeeper:2181
-
-
 
   pgweb:
     image: sosedoff/pgweb:0.11.2
@@ -351,7 +350,7 @@ services:
       - db-principal
       - db-metrics
     networks:
-      - back
+      - net
     ports:
       - 8082:8082
     command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082"

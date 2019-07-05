@@ -18,7 +18,7 @@ run() {
   shift
 
   case ${command} in
-    kafka-streams)    kafka_streams "$@";;    
+    kafka-streams) kafka_streams "$@" ;;
   esac
 
 } >&2
