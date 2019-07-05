@@ -24,6 +24,10 @@ services:
       - 'traefik.backend=mew'
       - 'traefik.port=8087'
 
+  api:
+    environment:
+      INSTA_MINING: 'true'
+
   # ///////////////////////////////////////////////////////
   # Ethereum Client
   # ///////////////////////////////////////////////////////
