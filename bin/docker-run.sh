@@ -22,10 +22,10 @@ docker_usage() {
   echo -e "  docker-run [COMMAND] [ARGS...]"
   echo -e ""
   echo -e "Commands:"
-  echo -e "  up           [simple|default]   Create and start docker containers."
-  echo -e "  down                            Stop and remove docker containers, networks, images, and volumes."
-  echo -e "  logs                            View output from containers."
-  echo -e "  help                            Print the help information and exit."
+  echo -e "  up      -m | --mode [simple|dev|amarok]   Create and start docker containers."
+  echo -e "  down                                      Stop and remove docker containers, networks, images, and volumes."
+  echo -e "  logs                                      View output from containers."
+  echo -e "  help                                      Print the help information and exit."
   echo -e ""
 
 }
@@ -152,7 +152,7 @@ up_dev() {
   ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
 
   section "Ensuring parity docker mount point exists..."
-  mkdir -p ${PARITY_VOLUME_MOUNTPOINT}
+  mkdir -p ${PARITY_BIND_MOUNTPOINT}
 
   section "Starting following docker containers: \n\t - parity \n\t - kafka-manager"
   docker-compose ${compose_files} up -d parity kafka-manager

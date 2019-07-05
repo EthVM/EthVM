@@ -36,7 +36,7 @@ read_version() {
 create_topics() {
 
   local version=$(read_version)
-  docker run --rm --network ethvm_back \
+  docker run --rm --network ethvm_net \
     -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_BOOTSTRAP_SERVERS=kafka-1:9091 \
     ethvm/ethvm-utils:${version} ensure-topics

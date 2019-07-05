@@ -12,11 +12,17 @@ services:
   # ///////////////////////////////////////////////////////
 
   mew:
-    image: mew/mew:5.0.15
+    image: ethvm/mew:5.0.15
     networks:
-      - back
+      - net
     ports:
       - 8087:80
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:mew.${DOMAIN}'
+      - 'traefik.backend=mew'
+      - 'traefik.port=8087'
 
   # ///////////////////////////////////////////////////////
   # Ethereum Client
@@ -42,7 +48,7 @@ services:
       - zookeeper
       - kafka-schema-registry
     networks:
-      - back
+      - net
     volumes:
       - ethvm-kafka-processing:/var/lib/kafka-streams
     environment:

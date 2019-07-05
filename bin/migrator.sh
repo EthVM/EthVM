@@ -47,7 +47,7 @@ case ${LOCATION} in
 esac
 
 docker run --rm \
-  --network ethvm_back \
+  --network ethvm_net \
   -e FLYWAY_URL=${FLYWAY_URL} \
   -e FLYWAY_LOCATIONS=${FLYWAY_LOCATIONS} \
   ethvm/migrator:${version} "$@"

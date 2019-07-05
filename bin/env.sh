@@ -63,9 +63,11 @@ ensure() {
 
 }
 
-# source the docker compose env variables
-source ${ROOT_DIR}/.env
+# let's check if required programs are installed
 ensure
+
+# source docker compose env variables
+source ${ROOT_DIR}/.env
 
 # ---------------------------------------------------------
 #   Helper Functions
