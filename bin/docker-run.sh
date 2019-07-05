@@ -22,7 +22,7 @@ docker_usage() {
   echo -e "  docker-run [COMMAND] [ARGS...]"
   echo -e ""
   echo -e "Commands:"
-  echo -e "  up      -m | --mode [simple|dev|amarok]   Create and start docker containers."
+  echo -e "  up      -m | --mode [simple|dev|amarok]   Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
   echo -e "  down                                      Stop and remove docker containers, networks, images, and volumes."
   echo -e "  logs                                      View output from containers."
   echo -e "  help                                      Print the help information and exit."
