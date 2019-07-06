@@ -5,7 +5,10 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # import utils
 source ${SCRIPT_DIR}/env.sh
 
-NETWORK=${NETWORK:-ethvm_back}
+# verify we have required utilities installed
+ensure
+
+NETWORK=${NETWORK:-ethvm_net}
 
 version=$(read_version ethvm-utils)
 

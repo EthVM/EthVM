@@ -12,6 +12,7 @@ export class AccountExt implements Account {
   isMiner: boolean
   outTxCount: any
   totalTxCount: any
+  hasInternalTransfers: boolean
 
   constructor(proto: Account) {
     this.address = proto.address
@@ -22,6 +23,7 @@ export class AccountExt implements Account {
     this.isMiner = proto.isMiner
     this.outTxCount = proto.outTxCount
     this.totalTxCount = proto.totalTxCount
+    this.hasInternalTransfers = proto.hasInternalTransfers
   }
 
   get balanceBN(): BigNumber {

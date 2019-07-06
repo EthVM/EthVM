@@ -24,17 +24,23 @@ avro_usage() {
 
 # create_topics - create EthVM Kafka topics
 build_avro() {
-  echo "Generating avro schemas"
+
+  info "Generating avro schemas"
   local avro_dir=$(cd ${ROOT_DIR}/apps/processing; pwd)
   (cd ${avro_dir}; ./gradlew avro:generateAvroJava && ./gradlew avro:publishToMavenLocal)
+
 }
 
+# run - main function
 run() {
+
   local command="${1:-false}"
 
   case "${command}" in
     build)  build_avro         ;;
     help|*) avro_usage; exit 0 ;;
   esac
+
 }
+
 run "$@"

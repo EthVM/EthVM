@@ -43,5 +43,19 @@
       "context": "${APPS_PATH}/migrator/",
       "version": "${APPS_PATH}/migrator/version.properties"
     }
-  ]
+  ],
+  "docker": {
+    "compose": [
+      "docker-compose.amarok.yaml"
+    ],
+    "containers": [
+      {
+        "id": "amarok",
+        "value": [
+          "mew",
+          "ethvm-kafka-processing"
+        ]
+      }
+    ]
+  }
 }

@@ -89,6 +89,7 @@ export interface Account {
     isMiner: boolean;
     isContractCreator: boolean;
     isContract: boolean;
+    hasInternalTransfers: boolean;
 }
 
 export interface AddressBalance {
@@ -318,17 +319,18 @@ export interface Metadata {
 
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
+    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
+    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
+    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
-    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
-    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
-    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     metadata(): Metadata | Promise<Metadata>;
+    search(query: string): Search | Promise<Search>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
     addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
     addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
@@ -339,7 +341,6 @@ export interface IQuery {
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
-    search(query: string): Search | Promise<Search>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
@@ -388,11 +389,11 @@ export interface Search {
 }
 
 export interface ISubscription {
-    newBlock(): BlockSummary | Promise<BlockSummary>;
-    hashRate(): BigNumber | Promise<BigNumber>;
     newBlockMetric(): BlockMetric | Promise<BlockMetric>;
     newBlockMetricsTransaction(): BlockMetricsTransaction | Promise<BlockMetricsTransaction>;
     newBlockMetricsTransactionFee(): BlockMetricsTransactionFee | Promise<BlockMetricsTransactionFee>;
+    newBlock(): BlockSummary | Promise<BlockSummary>;
+    hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
 }
