@@ -55,7 +55,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     // erc20
     contractStream
       // we only want creations
-      .filter { _, v -> v.contractType == ContractType.ERC20 && v.traceDestroyedAt == null }
+      .filter { _, v -> v != null && v.contractType == ContractType.ERC20 && v.traceDestroyedAt == null }
       .mapValues { k, v ->
 
         val name = fetchName(k.address)
@@ -75,7 +75,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     // erc721
     contractStream
       // we only want creations
-      .filter { _, v -> v.contractType == ContractType.ERC721 && v.traceDestroyedAt == null }
+      .filter { _, v -> v != null && v.contractType == ContractType.ERC721 && v.traceDestroyedAt == null }
       .mapValues { k, v ->
 
         val name = fetchName(k.address)

@@ -46,7 +46,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -247,7 +247,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
               .build()
           }
         },
-        JoinWindows.of(Duration.ofHours(24)),
+        JoinWindows.of(Duration.ofDays(7)),
         Joined.with(Serdes.CanonicalKey(), Serdes.BlockAuthor(), Serdes.TransactionFeeList())
       ).toTopic(CanonicalMinerFeesEtherDeltas)
 

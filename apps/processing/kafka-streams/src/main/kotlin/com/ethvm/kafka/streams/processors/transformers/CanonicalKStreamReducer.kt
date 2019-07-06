@@ -99,7 +99,10 @@ class CanonicalKStreamReducer<V>(
       else
         Stores.persistentKeyValueStore(name)
 
-      val store = Stores.keyValueStoreBuilder(supplier, keySerde, valueSerde)
+      val store = Stores
+        .keyValueStoreBuilder(supplier, keySerde, valueSerde)
+        .withCachingEnabled()
+
       return if (unitTesting) store.withLoggingDisabled() else store
     }
   }

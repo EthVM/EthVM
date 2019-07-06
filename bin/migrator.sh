@@ -9,6 +9,7 @@ version=$(read_version migrator)
 
 DB=${1}
 LOCATION=${2}
+NETWORK=${NETWORK:-ethvm_back}
 
 shift 2
 
@@ -47,7 +48,7 @@ case ${LOCATION} in
 esac
 
 docker run --rm \
-  --network ethvm_back \
+  --network ${NETWORK} \
   -e FLYWAY_URL=${FLYWAY_URL} \
   -e FLYWAY_LOCATIONS=${FLYWAY_LOCATIONS} \
   ethvm/migrator:${version} "$@"

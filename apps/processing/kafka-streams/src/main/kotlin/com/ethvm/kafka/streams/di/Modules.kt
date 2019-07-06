@@ -86,6 +86,8 @@ object Modules {
 
         put(StreamsConfig.STATE_DIR_CONFIG, config.kafka.streamsStateDir)
 
+        put(StreamsConfig.METRICS_RECORDING_LEVEL_CONFIG, "DEBUG")
+
         // Serdes - Defaults
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, KafkaSerdes.String().javaClass.name)
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, KafkaSerdes.ByteArray().javaClass.name)
