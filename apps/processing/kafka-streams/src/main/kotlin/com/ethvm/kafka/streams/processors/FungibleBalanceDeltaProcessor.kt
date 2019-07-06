@@ -202,14 +202,15 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
       .filter { _, change -> change.newValue != change.oldValue }
       .mapValues { _, change ->
 
-        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
-
-        val deltas = change.newValue.toEtherBalanceDeltas()
+        val deltas = change.newValue?.toEtherBalanceDeltas() ?: emptyList()
         val reversals = change.oldValue?.toEtherBalanceDeltas()?.map { it.reverse() } ?: emptyList()
 
+        val timestamp = change.newValue?.timestamp ?: change.oldValue?.timestamp
+        val blockHash = change.newValue?.blockHash ?: change.oldValue?.blockHash
+
         FungibleBalanceDeltaListRecord.newBuilder()
-          .setTimestamp(change.newValue.getTimestamp())
-          .setBlockHash(change.newValue.getBlockHash())
+          .setTimestamp(timestamp)
+          .setBlockHash(blockHash)
           .setDeltas(reversals + deltas)
           .build()
       }
@@ -259,9 +260,10 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
       .filter { _, change -> change.newValue != change.oldValue }
       .mapValues { _, change ->
 
-        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
-
-        val deltas = listOf(change.newValue)
+        val deltas = if(change.newValue != null)
+          listOf(change.newValue)
+        else
+          emptyList()
 
         val reversals = if (change.oldValue != null) {
           listOf(change.oldValue.reverse())
@@ -269,9 +271,12 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           emptyList()
         }
 
+        val timestamp = change.newValue?.traceLocation?.timestamp ?: change.oldValue?.traceLocation?.timestamp
+        val blockHash = change.newValue?.traceLocation?.blockHash ?: change.oldValue?.traceLocation?.blockHash
+
         FungibleBalanceDeltaListRecord.newBuilder()
-          .setTimestamp(change.newValue.getTraceLocation().getTimestamp())
-          .setBlockHash(change.newValue.getTraceLocation().getBlockHash())
+          .setTimestamp(timestamp)
+          .setBlockHash(blockHash)
           .setDeltas(reversals + deltas)
           .build()
       }
