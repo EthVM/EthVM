@@ -9,6 +9,8 @@ import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metric
 import { BlockMetricsTransactionEntity } from '@app/orm/entities/block-metrics-transaction.entity'
 import moment = require('moment')
 import { DbConnection } from '@app/orm/config'
+import { BlockMetricsHeaderEntity } from '@app/orm/entities/block-metrics-header.entity'
+import { BlockMetricsTransactionTraceEntity } from '@app/orm/entities/block-metrics-transaction-trace.entity'
 
 @Injectable()
 export class BlockMetricsService {
@@ -127,7 +129,7 @@ export class BlockMetricsService {
     start: Date,
     end: Date,
     bucket: TimeBucket,
-    fields: BlockMetricField[],
+    field: BlockMetricField,
   ): Promise<AggregateBlockMetric[]> {
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
@@ -137,6 +139,7 @@ export class BlockMetricsService {
     }
 
     const select: string[] = []
+    let queryBuilder;
 
     switch (bucket) {
       case TimeBucket.ONE_HOUR:
@@ -158,8 +161,7 @@ export class BlockMetricsService {
         throw new Error(`Unexpected bucket value: ${bucket}`)
     }
 
-    fields.forEach(m => {
-      switch (m) {
+      switch (field) {
         case BlockMetricField.AVG_BLOCK_TIME:
           select.push('round(avg(block_time)) as avg_block_time')
           break
@@ -197,12 +199,37 @@ export class BlockMetricsService {
           select.push('round(avg(total_tx_fees)) as avg_total_tx_fees')
           break
         default:
-          throw new Error(`Unexpected metric: ${m}`)
+          throw new Error(`Unexpected metric: ${field}`)
       }
-    })
 
-    const items = await this.entityManager
-      .createQueryBuilder(BlockMetricEntity, 'bm')
+    const headerFields = [
+      BlockMetricField.AVG_BLOCK_TIME,
+      BlockMetricField.AVG_DIFFICULTY,
+      BlockMetricField.AVG_TOTAL_DIFFICULTY,
+      BlockMetricField.AVG_NUM_UNCLES,
+    ]
+    const txFields = [BlockMetricField.AVG_GAS_LIMIT, BlockMetricField.AVG_GAS_PRICE]
+    const txTraceFields = [
+      BlockMetricField.AVG_NUM_TXS,
+      BlockMetricField.AVG_NUM_SUCCESSFUL_TXS,
+      BlockMetricField.AVG_NUM_FAILED_TXS,
+      BlockMetricField.AVG_NUM_INTERNAL_TXS,
+    ]
+    const txFeeFields = [BlockMetricField.AVG_TX_FEES, BlockMetricField.AVG_TOTAL_TX_FEES]
+
+    if (headerFields.indexOf(field) > -1) {
+      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsHeaderEntity, 'bm')
+    } else if (txFields.indexOf(field) > -1) {
+      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionEntity, 'bm')
+    } else if (txTraceFields.indexOf(field) > -1) {
+      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionTraceEntity, 'bm')
+    } else if (txFeeFields.indexOf(field) > -1) {
+      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionFeeEntity, 'bm')
+    } else {
+      throw new Error(`Unexpected metric: ${field}`)
+    }
+
+    const items = await queryBuilder
       .select(select)
       .where('timestamp between :end and :start')
       .groupBy('time')
