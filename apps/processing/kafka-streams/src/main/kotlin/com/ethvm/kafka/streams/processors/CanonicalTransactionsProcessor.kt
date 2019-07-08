@@ -115,7 +115,7 @@ class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
       .map { _, v ->
         KeyValue(
           TransactionKeyRecord.newBuilder()
-            .setHash(v.getHash())
+            .setTransactionHash(v.getTransactionHash())
             .build(),
           v
         )
@@ -141,7 +141,7 @@ class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
                     TransactionGasPriceRecord.newBuilder()
                       .setBlockNumber(tx.getBlockNumber())
                       .setBlockHash(tx.getBlockHash())
-                      .setTransactionHash(tx.getHash())
+                      .setTransactionHash(tx.getTransactionHash())
                       .setTransactionPosition(tx.getTransactionIndex())
                       .setAddress(tx.getFrom())
                       .setGasPrice(tx.getGasPrice())
