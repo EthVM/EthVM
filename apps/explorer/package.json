@@ -13,6 +13,7 @@
     "build:development-ci": "vue-cli-service --mode development-ci build",
     "build:staging": "vue-cli-service --mode staging build",
     "build:staging-ropsten": "vue-cli-service --mode staging-ropsten build",
+    "build:brian": "vue-cli-service --mode brian build",
     "clean": "rm -rf dist/",
     "lint": "vue-cli-service lint --no-fix",
     "lint:fix": "vue-cli-service lint",

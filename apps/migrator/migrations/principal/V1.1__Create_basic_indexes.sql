@@ -9,10 +9,10 @@ CREATE INDEX idx_uncle_nephew_hash ON uncle (nephew_hash);
 CREATE INDEX idx_uncle_number ON uncle (number);
 CREATE INDEX idx_uncle_height ON uncle (height);
 
-CREATE INDEX idx_transaction_hash ON TRANSACTION (hash);
-CREATE INDEX idx_transaction_block_hash ON TRANSACTION (block_hash);
-CREATE INDEX idx_transaction_from ON TRANSACTION ("from");
-CREATE INDEX idx_transaction_to ON TRANSACTION ("to");
+CREATE INDEX idx_transaction_hash ON transaction (hash);
+CREATE INDEX idx_transaction_block_hash ON transaction (block_hash);
+CREATE INDEX idx_transaction_from ON transaction ("from");
+CREATE INDEX idx_transaction_to ON transaction ("to");
 
 CREATE INDEX idx_transaction_transaction_index ON transaction (transaction_index DESC);
 CREATE INDEX idx_transaction_block_number ON transaction (block_number DESC);
