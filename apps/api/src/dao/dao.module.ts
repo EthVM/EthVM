@@ -31,6 +31,7 @@ import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 import { MetadataEntity } from '@app/orm/entities/metadata.entity'
 import { MetadataService } from '@app/dao/metadata.service'
 import { DbConnection } from '@app/orm/config'
+import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { DbConnection } from '@app/orm/config'
       CoinExchangeRateEntity,
       BlockMetricEntity,
       MetadataEntity,
+      InternalTransferEntity,
     ], DbConnection.Principal),
     TypeOrmModule.forFeature([
       AccountEntity,
