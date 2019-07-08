@@ -19,3 +19,5 @@ WHERE cb.number IS NOT NULL
   AND fbd.address IS NOT NULL
   AND fbd.amount > 0
   AND fbd.delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION');
+
+CREATE INDEX idx_fungible_balance_delta_internal_transfer ON fungible_balance_delta (address, counterpart_address, amount, delta_type);
