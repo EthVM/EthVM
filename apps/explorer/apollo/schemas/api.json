@@ -161,23 +161,15 @@
                 "defaultValue": null
               },
               {
-                "name": "fields",
+                "name": "field",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "ENUM",
-                        "name": "BlockMetricField",
-                        "ofType": null
-                      }
-                    }
+                    "kind": "ENUM",
+                    "name": "BlockMetricField",
+                    "ofType": null
                   }
                 },
                 "defaultValue": null
