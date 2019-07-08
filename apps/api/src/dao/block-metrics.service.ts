@@ -161,7 +161,7 @@ export class BlockMetricsService {
         throw new Error(`Unexpected bucket value: ${bucket}`)
     }
 
-      switch (field) {
+    switch (field) {
         case BlockMetricField.AVG_BLOCK_TIME:
           select.push('round(avg(block_time)) as avg_block_time')
           break
