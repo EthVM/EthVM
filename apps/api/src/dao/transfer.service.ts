@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Brackets, FindManyOptions, Repository } from 'typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { Brackets, EntityManager, FindManyOptions, Repository } from 'typeorm'
 import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
 import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 import { DbConnection } from '@app/orm/config'
+import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
 
 @Injectable()
 export class TransferService {
@@ -13,6 +14,7 @@ export class TransferService {
     private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
     @InjectRepository(FungibleBalanceDeltaEntity, DbConnection.Principal)
     private readonly deltaRepository: Repository<FungibleBalanceDeltaEntity>,
+    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
   ) {
   }
 
@@ -65,22 +67,34 @@ export class TransferService {
 
   }
 
-  async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceTransferEntity[], number]> {
-    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']
+  async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10): Promise<[InternalTransferEntity[], number]> {
 
-    return this.transferRepository.createQueryBuilder('t')
-      .where('t.delta_type IN (:...deltaTypes)')
-      .andWhere(new Brackets(sqb => {
-        sqb.where('t.from = :address')
-        sqb.orWhere('t.to = :address')
-      }))
-      .setParameters({ deltaTypes, address })
-      .orderBy('t.traceLocationBlockNumber', 'DESC')
-      .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
-      .offset(offset)
-      .limit(limit)
-      .cache(true)
-      .getManyAndCount()
+    return this.entityManager.transaction(
+      'READ COMMITTED',
+      async (txn): Promise<[InternalTransferEntity[], number]> => {
+
+        const where = [
+          { to: address },
+          { from: address },
+        ]
+
+        const count = await txn.count(InternalTransferEntity, { where, cache: true })
+
+        const items = await txn.find(InternalTransferEntity, {
+          where,
+          order: {
+            traceLocationBlockNumber: 'DESC',
+            traceLocationTransactionIndex: 'DESC',
+          },
+          skip: offset,
+          take: limit,
+          cache: true,
+        })
+
+        return [items, count]
+
+      },
+    )
 
   }
 
