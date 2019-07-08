@@ -5,7 +5,7 @@ import { AccountEntity } from '@app/orm/entities/account.entity'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { DbConnection } from '@app/orm/config'
-import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
+import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
 
 @Injectable()
 export class AccountService {
@@ -16,8 +16,8 @@ export class AccountService {
     private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(ContractEntity, DbConnection.Principal)
     private readonly contractRepository: Repository<ContractEntity>,
-    @InjectRepository(FungibleBalanceTransferEntity, DbConnection.Principal)
-    private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
+    @InjectRepository(InternalTransferEntity, DbConnection.Principal)
+    private readonly internalTransferRepository: Repository<InternalTransferEntity>,
   ) {
   }
 
@@ -53,10 +53,8 @@ export class AccountService {
 
   async findHasInternalTransfers(address: string): Promise<boolean> {
 
-    const deltaTypes = ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']
-
-    const transfer = await this.transferRepository.findOne({
-      where: [{ to: address, deltaType: In(deltaTypes) }, { from: address, deltaType: In(deltaTypes) }],
+    const transfer = await this.internalTransferRepository.findOne({
+      where: [{ to: address }, { from: address }],
       cache: true,
     })
 
