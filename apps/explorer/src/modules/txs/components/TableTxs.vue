@@ -193,13 +193,14 @@ class TableTxsMixin extends Vue {
       },
 
       variables() {
-        const { blockHash: hash, blockNumber, address, filter } = this
+        const { blockHash: hash, blockNumber, address, filter, maxItems } = this
 
         return {
           number: blockNumber,
           hash,
           address,
-          filter
+          filter,
+          limit: maxItems
         }
       },
 
