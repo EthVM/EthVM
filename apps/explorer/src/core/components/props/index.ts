@@ -56,3 +56,12 @@ export interface SortItem {
   text: TranslateResult
   value: string
 }
+
+export interface AdrTxBalance {
+  type?: string
+  status: boolean
+  value: string
+  fee: string
+  balBefore: number
+  balAfter: number
+}

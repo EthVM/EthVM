@@ -17,7 +17,7 @@ export class ContractService {
   }
 
   async findContractByAddress(address: string): Promise<ContractEntity | undefined> {
-    return this.contractRepository.findOne({ where: { address }, relations: ['metadata', 'erc20Metadata'] })
+    return this.contractRepository.findOne({where: {address}, relations: ['metadata', 'erc20Metadata']})
   }
 
   async findAllByAddress(entityManager: EntityManager, addresses: string[]): Promise<ContractEntity[]> {
@@ -25,7 +25,7 @@ export class ContractService {
     if (!addresses.length) return []
 
     return entityManager.find(ContractEntity, {
-        where: { address: In(addresses) },
+        where: {address: In(addresses)},
         relations: ['metadata', 'erc20Metadata', 'erc721Metadata'],
         cache: true,
       },
@@ -38,7 +38,7 @@ export class ContractService {
       'READ COMMITTED',
       async (txn): Promise<[ContractSummary[], number]> => {
 
-        const where = { creator }
+        const where = {creator}
 
         const count = await txn.count(ContractEntity, { where, cache: true })
 

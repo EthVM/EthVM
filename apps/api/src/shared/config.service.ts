@@ -61,12 +61,6 @@ const schema = {
       format: 'port',
       default: 6379,
     },
-    port: {
-      doc: 'Redis cluster port',
-      env: 'REDIS_PORT',
-      format: 'port',
-      default: 6379,
-    },
   },
   graphql: {
     playground: {
@@ -158,10 +152,6 @@ export class ConfigService {
 
   get dbMetrics(): DbConfig {
     return this.config.get('dbMetrics')
-  }
-
-  get redis(): RedisConfig {
-    return this.config.get('redis')
   }
 
   get redis(): RedisConfig {

@@ -9,8 +9,7 @@ source ${SCRIPT_DIR}/env.sh
 ensure
 
 # Define variables
-BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
-DATASET="ethvm_dev-${BRANCH}.sql.gz"
+DATASET="ethvm_dev.sql.gz"
 
 BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
 

@@ -268,10 +268,9 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
-          order: {[sortField]: order.toUpperCase()},
           cache: true,
           order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'}
-        })
+        } as FindManyOptions)
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, totalCount]
@@ -368,7 +367,7 @@ export class TxService {
         where: { transactionHash: In(hashes) },
         order: orderObject,
         cache: true,
-      })
+      } as FindManyOptions)
 
     const [summaries, count] = await this.summarise(manager, txs, txs.length)
     return summaries
