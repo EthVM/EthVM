@@ -84,7 +84,7 @@
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm2 order-xs1>
+              <v-flex xs6 sm2 order-xs1 class="order-gt-xs-0">
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
               <v-flex xs12 sm7 md6>
@@ -368,4 +368,9 @@ export default class TableBlocks extends Vue {
   .table-blocks-header-card {
     margin-right: 1px
   }
+@media all and (min-width: 600px) {
+  .order-gt-xs-0 {
+    order: 0;
+  }
+}
 </style>
