@@ -182,7 +182,7 @@ export class TxService {
     let countQuery = 'select count(transaction_hash) from transaction'
     let countArgs: any[] = []
 
-          switch (filter) {
+    switch (filter) {
             case FilterEnum.in:
               if (counterpartAddress) {
                 countQuery = `${countQuery} where ("to" = $1 AND "from" = $2)`
@@ -222,9 +222,9 @@ export class TxService {
               break
           }
 
-          const [{count}] = await txn.query(countQuery, countArgs) as [{ count: number }]
+    const [{count}] = await txn.query(countQuery, countArgs) as [{ count: number }]
 
-          totalCount = count;
+    totalCount = count;
 
         }
 
@@ -269,7 +269,7 @@ export class TxService {
           skip: offset,
           take: limit,
           cache: true,
-          order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'}
+          order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'},
         } as FindManyOptions)
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn)
@@ -363,7 +363,20 @@ export class TxService {
 
     const txs = await manager
       .find(TransactionEntity, {
-        select: ['blockNumber', 'blockHash', 'transactionHash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value', 'successful', 'fee'],
+        select: [
+          'blockNumber',
+          'blockHash',
+          'transactionHash',
+          'transactionIndex',
+          'timestamp',
+          'gasPrice',
+          'from',
+          'to',
+          'creates',
+          'value',
+          'successful',
+          'fee',
+        ],
         where: { transactionHash: In(hashes) },
         order: orderObject,
         cache: true,

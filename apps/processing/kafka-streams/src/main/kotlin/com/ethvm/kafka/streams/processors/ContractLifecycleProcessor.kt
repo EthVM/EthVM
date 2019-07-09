@@ -84,7 +84,6 @@ class ContractLifecycleProcessor : AbstractKafkaProcessor() {
 
               if (next.getReverse()) {
                 null
-
               } else {
                 record
                   .setAddress(next.getAddress())

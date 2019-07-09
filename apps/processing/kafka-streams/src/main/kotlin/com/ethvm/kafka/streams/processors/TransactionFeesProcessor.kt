@@ -110,7 +110,6 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
             fee
           )
         }
-
       }
       .toTopic(TransactionFee)
 

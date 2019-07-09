@@ -260,7 +260,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
       .filter { _, change -> change.newValue != change.oldValue }
       .mapValues { _, change ->
 
-        val deltas = if(change.newValue != null)
+        val deltas = if (change.newValue != null)
           listOf(change.newValue)
         else
           emptyList()
