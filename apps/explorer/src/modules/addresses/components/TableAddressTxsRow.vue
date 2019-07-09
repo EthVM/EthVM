@@ -36,12 +36,10 @@
             <!-- Tx Hash -->
             <v-flex d-flex xs12>
               <v-layout row align-center justify-start class="pl-2">
-                <v-flex grow>
+                <div class="tx-hash-label">
                   <p class="info--text">{{$tc('tx.hash', 1)}}:</p>
-                </v-flex>
-                <v-flex d-flex xs10>
+                </div>
                   <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
-                </v-flex>
               </v-layout>
             </v-flex>
             <!-- TxType and address Hash -->
@@ -269,7 +267,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
         this.linkAdr = `/address/${this.tx.creates}`
         this.txTypeColor = '#b3d4fc'
       } else {
-        throw new Error(this.tx.hash + ' Tx is a contract creation and missing contract string ')
+        throw new Error(`${this.tx.hash} Tx is a contract creation and missing contract string`)
       }
     } else {
       throw new Error('Tx is missing <To> parameter')
@@ -323,6 +321,9 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 
 .tx-type-dsk {
   min-width: 100px;
+}
+.tx-hash-label {
+  min-width: 3em;
 }
 
 </style>
