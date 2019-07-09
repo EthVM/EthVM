@@ -138,7 +138,7 @@
                 </v-flex>
               </v-layout>
             </v-flex>
-            <v-flex sm1 md2 :class="[vuetify.breakpoint.name === 'sm' ? 'pl-0' : '']">
+            <v-flex sm1 md2 :class="[$vuetify.breakpoint.name === 'sm' ? 'pl-0' : '']">
               <h5>{{ $t('tx.status') }}</h5>
             </v-flex>
           </v-layout>
