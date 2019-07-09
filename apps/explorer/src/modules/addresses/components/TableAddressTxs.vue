@@ -1,9 +1,29 @@
 <template>
   <v-card color="white" flat class="pt-0 pr-2 pl-2 pb-2">
     <!-- Txs Filter/Sort/Search/Pagination -->
-    <v-layout row wrap align-center justify-space-between>
-      <!-- Filter & Sorting -->
-      <v-flex shrink xs12 md3>
+    <v-layout row wrap align-center justify-start>
+      <!--
+          =====================================================================================
+            Search
+            Responsive Tally:
+            md: 9/12 (6) order-2
+            sm: 18/12 (12), order-1
+            xs: 24/12 (12), order-1
+          =====================================================================================
+      -->
+      <v-flex xs12 xs order-md2>
+        <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
+      </v-flex>
+      <!--
+          =====================================================================================
+            Filter & Sorting
+            Responsive Tally:
+            md: 3/12 (3) order-1
+            sm: 6/12 (6), order-1
+            xs: 12/12 (12), order-2
+          =====================================================================================
+      -->
+      <v-flex shrink order-md1>
         <v-layout row wrap align-center>
           <!-- Filter:  -->
           <v-flex shrink pr-0>
@@ -28,25 +48,29 @@
               </v-list>
             </v-menu>
           </v-flex>
-          <!-- Sort present on xs-sm -->
-          <v-flex hidden-md-and-up shrink pr-0>
+          <!-- Sort present on xsOnly -->
+          <v-flex hidden-sm-and-up shrink pr-0>
             <p class="info--text">{{ $t('common.sort') }}</p>
           </v-flex>
-          <v-flex hidden-md-and-up shrink>
+          <v-flex hidden-sm-and-up shrink>
             <app-sort-dialog :items="sortValues" :selected="selectedSort" @setSort="selectSort" />
           </v-flex>
         </v-layout>
       </v-flex>
-      <!-- Search -->
-      <v-flex grow xs12 sm6>
-        <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
-      </v-flex>
-      <!-- Pagination -->
-      <v-flex shrink xs12 sm6 md3 pt-0 pb-0>
+      <!--
+          =====================================================================================
+            Pagination
+            Responsive Tally:
+            md: 12/12 (4) order-3
+            sm: 12/12 (4), order-3
+            xs: 24/12 (12), order-3
+          =====================================================================================
+      -->
+      <v-flex pt-0 pb-0 order-xs3>
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
     </v-layout>
-    <!-- End Tx Input Filter -->
+    <!-- End Filter / Search / Pagination -->
 
     <!--
     =====================================================================================
@@ -100,7 +124,7 @@
               </v-layout>
             </v-flex>
             <v-flex sm2>
-              <v-layout align-center justify-start row pl-1>
+              <v-layout align-center justify-start row class="pl-1 pr-0">
                 <h5 class="pr-2">{{ $t('common.age') }}</h5>
                 <v-flex>
                   <v-layout align-start justify-center column>
@@ -114,8 +138,8 @@
                 </v-flex>
               </v-layout>
             </v-flex>
-            <v-flex sm1 md2>
-              <h5 class="pl-3">{{ $t('tx.status') }}</h5>
+            <v-flex sm1 md2 :class="[vuetify.breakpoint.name === 'sm' ? 'pl-0': '']">
+              <h5 >{{ $t('tx.status') }}</h5>
             </v-flex>
           </v-layout>
         </v-card>

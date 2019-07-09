@@ -176,10 +176,14 @@
           =====================================================================================
           -->
           <v-flex sm1 md2>
-            <v-layout pa-1 row justify-space-around>
-              <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
-              <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
+            <v-layout row wrap align-center justify-start>
+              <v-flex shrink class="text-xs-center pl-3">
+                <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
+                <v-icon v-else small class="txFail--text ">fa fa-times-circle</v-icon>
+              </v-flex>
+              <v-flex>
               <address-tx-balance :tooltipInfo="balanceTooltip" />
+              </v-flex>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -322,6 +326,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 .tx-type-dsk {
   min-width: 100px;
 }
+
 .tx-hash-label {
   min-width: 3em;
 }
