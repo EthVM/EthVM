@@ -61,66 +61,7 @@
                 </v-flex>
                 <v-spacer />
                 <v-flex shrink>
-                  <v-tooltip top content-class="more-info-tooltip" v-model="info">
-                    <template v-slot:activator="{ on }">
-                      <v-btn icon small class="more-info-btn" v-on="on" @click="info = !info">
-                        <v-icon small>fa fa-ellipsis-h</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-card color="white" flat>
-                      <v-card-title
-                        v-if="tx.successful"
-                        class="txSuccess--text pa-1 body-2"
-                      >{{ $t('tx.success-long') }}</v-card-title>
-                      <v-card-title
-                        v-else
-                        class="txFail--text pa-1 body-2"
-                      >{{ $t('tx.failed-long') }}</v-card-title>
-                      <!-- Before Balance -->
-                      <v-layout row align-center>
-                        <v-flex grow pa-1>
-                          <p>{{ $t('common.balance-before') }}</p>
-                        </v-flex>
-                        <v-flex shrink pa-1>
-                          <p class="text-xs-right">1000.00 {{ $t('common.eth') }}</p>
-                        </v-flex>
-                      </v-layout>
-                      <!-- Value Sent -->
-                      <v-layout row align-center>
-                        <v-flex grow pa-1>
-                          <p>{{ getTooltipValueString() }}:</p>
-                        </v-flex>
-                        <v-flex shrink pa-1>
-                          <p
-                            v-if="tx.successful"
-                            class="text-xs-right"
-                          >{{ getValueSign() }} {{ formatStr(ethValue(tx.valueBN).toEth()) }} {{ $t('common.eth') }}</p>
-                          <p v-else class="text-xs-right info--text">0 {{ $t('common.eth') }}</p>
-                        </v-flex>
-                      </v-layout>
-                      <!-- Tx Fee -->
-                      <v-layout v-if="txType != 'in'" row align-center>
-                        <v-flex grow pa-1>
-                          <p>{{ $tc('tx.fee', 1) }}:</p>
-                        </v-flex>
-                        <v-flex shrink pa-1>
-                          <p
-                            class="text-xs-right"
-                          >- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth()) }} {{ $t('common.eth') }}</p>
-                        </v-flex>
-                      </v-layout>
-                      <v-divider class="mb-2 mt-2" />
-                      <!-- Balance After -->
-                      <v-layout row align-center>
-                        <v-flex grow pa-1>
-                          <p>{{ $t('common.balance-after') }}</p>
-                        </v-flex>
-                        <v-flex shrink pa-1>
-                          <p class="text-xs-right">909.114665 {{ $t('common.eth') }}</p>
-                        </v-flex>
-                      </v-layout>
-                    </v-card>
-                  </v-tooltip>
+                  <address-tx-balance :tooltipInfo="balanceTooltip" />
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -205,14 +146,14 @@
                 <p
                   class="grey--text text-truncate"
                   v-on="on"
-                >{{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+                >{{ getShortValue(ethValue(tx.feeBN).toEth()) }}</p>
               </template>
               <span>{{ $t('tooltip.txFeeSender') }}</span>
             </v-tooltip>
             <p
               v-else
               class="black--text text-truncate"
-            >- {{ getShortValue(ethValue(tx.feeBN.toFixed()).toEth()) }}</p>
+            >- {{ getShortValue(ethValue(tx.feeBN).toEth()) }}</p>
           </v-flex>
 
           <!--
@@ -240,63 +181,7 @@
             <v-layout pa-1 row justify-space-around>
               <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
               <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-              <v-tooltip top content-class="more-info-tooltip" v-model="info">
-                <template v-slot:activator="{ on }">
-                  <v-btn icon small class="more-info-btn" v-on="on" @click="info = !info">
-                    <v-icon small>fa fa-ellipsis-h</v-icon>
-                  </v-btn>
-                </template>
-                <v-card color="white" flat>
-                  <v-card-title
-                    v-if="tx.successful"
-                    class="txSuccess--text pa-1 body-2"
-                  >{{ $t('tx.success-long') }}</v-card-title>
-                  <v-card-title v-else class="txFail--text pa-1 body-2">{{ $t('tx.failed-long') }}</v-card-title>
-                  <!-- Before Balance -->
-                  <v-layout row align-center>
-                    <v-flex grow pa-1>
-                      <p>{{ $t('common.balance-before') }}</p>
-                    </v-flex>
-                    <v-flex shrink pa-1>
-                      <p class="text-xs-right">1000.00 {{ $t('common.eth') }}</p>
-                    </v-flex>
-                  </v-layout>
-                  <!-- Value Sent -->
-                  <v-layout row align-center>
-                    <v-flex grow pa-1>
-                      <p>{{ getTooltipValueString() }}:</p>
-                    </v-flex>
-                    <v-flex shrink pa-1>
-                      <p
-                        v-if="tx.successful"
-                        class="text-xs-right"
-                      >{{ getValueSign() }} {{ formatStr(ethValue(tx.valueBN).toEth()) }} {{ $t('common.eth') }}</p>
-                      <p v-else class="text-xs-right info--text">0 {{ $t('common.eth') }}</p>
-                    </v-flex>
-                  </v-layout>
-                  <!-- Tx Fee -->
-                  <v-layout v-if="txType != 'in'" row align-center>
-                    <v-flex grow pa-1>
-                      <p>{{ $tc('tx.fee', 1) }}:</p>
-                    </v-flex>
-                    <v-flex shrink pa-1>
-                      <p
-                        class="text-xs-right"
-                      >- {{ formatStr(ethValue(tx.feeBN.toFixed()).toEth()) }} {{ $t('common.eth') }}</p>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="mb-2 mt-2" />
-                  <!-- Balance After -->
-                  <v-layout row align-center>
-                    <v-flex grow pa-1>
-                      <p>{{ $t('common.balance-after') }}</p>
-                    </v-flex>
-                    <v-flex shrink pa-1>
-                      <p class="text-xs-right">909.114665 {{ $t('common.eth') }}</p>
-                    </v-flex>
-                  </v-layout>
-                </v-card>
-              </v-tooltip>
+              <address-tx-balance :tooltipInfo="balanceTooltip" />
             </v-layout>
           </v-flex>
         </v-layout>
@@ -315,11 +200,14 @@ import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import BigNumber from 'bignumber.js'
 import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
 import { TranslateResult } from 'vue-i18n'
+import { AdrTxBalance } from '@app/core/components/props'
+import AddressTxBalance from '@app/modules/addresses/components/AddressTxBalance.vue'
 
 @Component({
   components: {
     AppTimeAgo,
-    AppTransformHash
+    AppTransformHash,
+    AddressTxBalance
   }
 })
 export default class TableTxsRow extends Mixins(StringConcatMixin) {
@@ -343,7 +231,7 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   linkAdr?: string
   displayAdr?: string
   txTypeColor?: string
-  info = false
+
   /*
   ===================================================================================
     LifeCycle
@@ -409,22 +297,21 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
     return this.txType === 'in' ? '+' : '-'
   }
 
-  getTooltipValueString(): TranslateResult {
-    if (this.tx.successful) {
-      return this.txType === 'in' ? this.$tc('tooltip.value-recieved', 1) : this.$tc('tooltip.value-sent', 1)
-    }
-
-    return this.txType === 'in' ? this.$tc('tooltip.value-recieved', 2) : this.$tc('tooltip.value-sent', 2)
-  }
-
   /*
   ===================================================================================
    Computed
   ===================================================================================
   */
-
-  get txStatusClass(): string {
-    return this.tx.successful ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+  get balanceTooltip(): AdrTxBalance {
+    return {
+      type: this.txType,
+      status: this.tx.successful,
+      value: `${this.getValueSign()} ${this.formatStr(this.ethValue(this.tx.valueBN).toEth())}`,
+      fee: this.formatStr(this.ethValue(this.tx.feeBN).toEth()),
+      //Temp Value, to be changed on the implementation
+      balBefore: 10000,
+      balAfter: 23432
+    }
   }
 }
 </script>
@@ -438,19 +325,4 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
   min-width: 100px;
 }
 
-.more-info-btn {
-  color: #6270fc;
-  margin: 0px;
-}
-.more-info-btn:hover {
-  color: white;
-  background-color: #b4bfd2;
-}
-
-.more-info-tooltip {
-  background-color: white;
-  border: 1px solid #b4bfd2;
-  opacity: 1 !important;
-  min-width: 280px;
-}
 </style>
