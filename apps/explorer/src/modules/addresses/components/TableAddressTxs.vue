@@ -10,33 +10,41 @@
             xs: order-2
           =====================================================================================
       -->
-      <v-flex shrink order-xs2 order-sm1>
-        <v-layout row wrap align-center>
+      <v-flex :shrink="!($vuetify.breakpoint.name === 'xs')" order-xs2 order-sm1>
+        <v-layout row align-center>
           <!-- Filter:  -->
-          <v-flex shrink pr-0>
-            <p class="info--text">{{ $t('filter.name') }}</p>
+          <v-flex shrink>
+            <v-layout row wrap align-center justify-center class="pr-2 pl-2">
+              <p class="info--text">{{ $t('filter.name') }}:</p>
+              <v-menu offset-y v-model="activeFilter">
+                <template v-slot:activator="{ on }">
+                  <v-btn :class="filterClass" flat v-on="on">
+                    <div class="tx-filter-btn-content">
+                      <p class="text-xs-left ">{{ optionString }}</p>
+                      <!-- Add Icon change/animation on activation -->
+                      <v-icon class="theme--light text-xs-right primary--text">{{ filterBtn }}</v-icon>
+                    </div>
+                  </v-btn>
+                </template>
+                <v-list flat>
+                  <v-list-tile
+                    v-for="(option, index) in options"
+                    :key="index"
+                    :value="option.value"
+                    @click="filter = option.value"
+                  >
+                    <!-- Add Class for active choice -->
+                    <v-list-tile-title
+                      :class="[optionString === option.text ? 'primary--text' : 'black--text']"
+                    >{{ option.text }}</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </v-layout>
           </v-flex>
-          <v-flex shrink >
-            <v-menu offset-y v-model="activeFilter">
-              <template v-slot:activator="{ on }">
-                <v-btn class="tx-filter-btn box-border text-capitalize ma-0 pa-1" flat v-on="on">
-                  <div class="tx-filter-btn-content">
-                    <p class="text-xs-left">{{ optionString }}</p>
-                    <!-- Add Icon change/animation on activation -->
-                    <v-icon class="theme--light text-xs-right primary--text">{{ filterBtn }}</v-icon>
-                  </div>
-                </v-btn>
-              </template>
-              <v-list flat>
-                <v-list-tile v-for="(option, index) in options" :key="index" :value="option.value" @click="filter = option.value">
-                  <!-- Add Class for active choice -->
-                  <v-list-tile-title :class="[optionString === option.text ? 'primary--text' : 'black--text']">{{ option.text }}</v-list-tile-title>
-                </v-list-tile>
-              </v-list>
-            </v-menu>
-          </v-flex>
+          <v-spacer hidden-sm-an-up />
           <!-- Sort present on xsOnly -->
-          <v-flex hidden-sm-and-up shrink>
+          <v-flex shrink hidden-sm-and-up>
             <app-sort-dialog :items="sortValues" :selected="selectedSort" @setSort="selectSort" />
           </v-flex>
         </v-layout>
@@ -59,7 +67,7 @@
             xs: order-3
           =====================================================================================
       -->
-      <v-flex shrink order-xs3 class="pt-0 pb-0" >
+      <v-flex shrink order-xs3 class="pt-0 pb-0">
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
     </v-layout>
@@ -92,10 +100,16 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectSort(0)" class="sort-icon-btn">
-                      <v-icon :class="[isActiveSort(0) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon
+                        :class="[isActiveSort(0) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectSort(1)" class="sort-icon-btn">
-                      <v-icon :class="[isActiveSort(1) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon
+                        :class="[isActiveSort(1) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -107,10 +121,16 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectSort(2)" class="sort-icon-btn">
-                      <v-icon :class="[isActiveSort(2) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon
+                        :class="[isActiveSort(2) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectSort(3)" class="sort-icon-btn">
-                      <v-icon :class="[isActiveSort(3) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon
+                        :class="[isActiveSort(3) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -122,10 +142,16 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectSort(4)" class="sort-icon-btn">
-                      <v-icon :class="[isActiveSort(4) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon
+                        :class="[isActiveSort(4) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectSort(5)" class="sort-icon-btn">
-                      <v-icon :class="[isActiveSort(5) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon
+                        :class="[isActiveSort(5) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -157,7 +183,15 @@
         <!--Note Create Separate File for mobile and desktop loading -->
         <v-flex xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
+            <v-layout
+              grid-list-xs
+              row
+              wrap
+              align-center
+              justify-start
+              fill-height
+              class="pl-2 pr-2 pt-2"
+            >
               <v-flex xs3 sm3 md1 pl-3>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
@@ -504,6 +538,11 @@ export default class TableTxs extends TableTxsMixin {
     return this.activeFilter ? 'arrow_drop_up' : 'arrow_drop_down'
   }
 
+  get filterClass(): string {
+    const filter='tx-filter-btn box-border text-capitalize ma-1 pa-1'
+    return this.$vuetify.breakpoint.name === 'xs' ? `${filter} filter-mobile`: filter
+  }
+
   //Sort
   get sortValues(): SortItem[] {
     return [
@@ -539,12 +578,12 @@ export default class TableTxs extends TableTxsMixin {
 .tx-filter-btn {
   width: 100px;
   height: 30px;
-
 }
 .tx-filter-btn-content {
   display: grid;
-  width:80%;
+  width: 80%;
   grid-template-columns: 90% 10%;
+ align-items: center;
 }
 
 .tx-sort-btn {
@@ -552,7 +591,7 @@ export default class TableTxs extends TableTxsMixin {
   height: 30px;
 }
 
-.box-border{
+.box-border {
   border: solid 1px #b4bfd2;
 }
 
@@ -560,5 +599,11 @@ export default class TableTxs extends TableTxsMixin {
   height: 12px;
   width: 12px;
   margin: 0px;
+}
+
+.filter-mobile  {
+  height: 40px;
+  border-radius: 20px;
+
 }
 </style>
