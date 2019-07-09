@@ -1,3 +1,9 @@
+DROP VIEW canonical_transaction;
+DROP INDEX idx_transaction_hash;
+
+ALTER TABLE "transaction"
+RENAME COLUMN hash TO transaction_hash;
+
 CREATE TABLE transaction_fee
 (
     transaction_hash CHAR(66) PRIMARY KEY,
@@ -11,8 +17,6 @@ CREATE TABLE transaction_fee
 
 CREATE INDEX idx_transaction_fee__address ON transaction_fee(address);
 CREATE INDEX idx_transaction_fee__transaction_fee ON transaction_fee(transaction_fee);
-
-DROP VIEW canonical_transaction;
 
 /* recreate canonical_transaction view with "successful" field to represent trace status */
 CREATE VIEW canonical_transaction AS
@@ -31,6 +35,7 @@ FROM "transaction" AS t
 WHERE cb.number IS NOT NULL
   AND t.transaction_hash IS NOT NULL;
 
+CREATE INDEX idx_transaction_transaction_hash ON TRANSACTION (transaction_hash);
 /* create indexes for sorting canonical_transaction view */
 CREATE INDEX idx_transaction__value ON "transaction"("value");
 CREATE INDEX idx_transaction__timestamp ON "transaction"("timestamp");
