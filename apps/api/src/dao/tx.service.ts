@@ -188,7 +188,7 @@ export class TxService {
                 countQuery = `${countQuery} where ("to" = $1 AND "from" = $2)`
                 countArgs = [address, counterpartAddress]
               } else if (searchHash) {
-                countQuery = `${countQuery} where ("to" = $1 AND "hash" = $2)`
+                countQuery = `${countQuery} where ("to" = $1 AND "transaction_hash" = $2)`
                 countArgs = [address, searchHash]
               } else {
                 countQuery = `${countQuery} where ("to" = $1)`
@@ -200,7 +200,7 @@ export class TxService {
                 countQuery = `${countQuery} where ("from" = $1 AND "to" = $2)`
                 countArgs = [address, counterpartAddress]
               } else if (searchHash) {
-                countQuery = `${countQuery} where ("from" = $1 AND "hash" = $2)`
+                countQuery = `${countQuery} where ("from" = $1 AND "transaction_hash" = $2)`
                 countArgs = [address, searchHash]
               } else {
                 countQuery = `${countQuery} where ("from" = $1)`
@@ -212,7 +212,7 @@ export class TxService {
                 countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
                 countArgs = [address, counterpartAddress, address, counterpartAddress]
               } else if (searchHash) {
-                countQuery = `${countQuery} where ("from" = $1 AND "to" = $2) OR ("to" = $3 AND "from" = $4)`
+                countQuery = `${countQuery} where ("from" = $1 AND "transaction_hash" = $2) OR ("to" = $3 AND "transaction_hash" = $4)`
                 countArgs = [address, searchHash, address, searchHash]
               } else {
                 countQuery = `${countQuery} where "from" = $1 OR "to" = $2`
@@ -264,7 +264,7 @@ export class TxService {
         }
 
         const txs = await txn.find(TransactionEntity, {
-          select: ['hash'],
+          select: ['transactionHash'],
           where,
           skip: offset,
           take: limit,
@@ -272,7 +272,7 @@ export class TxService {
           order: {[sortField]: order.toUpperCase() as 'ASC' | 'DESC'}
         } as FindManyOptions)
 
-        const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
+        const summaries = await this.findSummariesByHash(txs.map(t => t.transactionHash), txn)
         return [summaries, totalCount]
       },
     )
