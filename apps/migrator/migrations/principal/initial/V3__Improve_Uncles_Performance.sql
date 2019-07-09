@@ -1,3 +1,4 @@
+DROP VIEW IF EXISTS canonical_block_reward;
 DROP VIEW IF EXISTS canonical_uncle;
 DROP VIEW IF EXISTS block_reward;
 DROP VIEW IF EXISTS uncle_reward;
@@ -29,3 +30,10 @@ FROM
 WHERE
   u.hash IS NOT NULL AND
   cb.number IS NOT NULL;
+
+CREATE VIEW canonical_block_reward AS
+SELECT br.*
+FROM block_reward AS br
+       RIGHT JOIN canonical_block_header AS cb ON br.block_hash = cb.hash
+WHERE cb.number IS NOT NULL
+  AND br.amount IS NOT NULL;
