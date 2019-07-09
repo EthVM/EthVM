@@ -15,12 +15,13 @@
                 <v-flex>
                   <p>
                     {{
-                    `${getValueSign()} ${getShortValue(
-                    ethValue(tx.valueBN)
-                    .toEth()
-                    .toString()
-                    )}`
-                    }} {{$t('common.eth')}}
+                      `${getValueSign()} ${getShortValue(
+                        ethValue(tx.valueBN)
+                          .toEth()
+                          .toString()
+                      )}`
+                    }}
+                    {{ $t('common.eth') }}
                   </p>
                 </v-flex>
                 <v-spacer />
@@ -37,9 +38,9 @@
             <v-flex d-flex xs12>
               <v-layout row align-center justify-start class="pl-2">
                 <div class="tx-hash-label">
-                  <p class="info--text">{{$tc('tx.hash', 1)}}:</p>
+                  <p class="info--text">{{ $tc('tx.hash', 1) }}:</p>
                 </div>
-                  <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
+                <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
               </v-layout>
             </v-flex>
             <!-- TxType and address Hash -->
@@ -47,11 +48,7 @@
               <v-layout row align-center justify-start>
                 <v-flex d-flex xs10>
                   <v-layout row align-center fill-height class="pl-2">
-                    <v-card
-                      flat
-                      class="tx-type-dsk white--text pa-1 mr-2 caption"
-                      :color="txTypeColor"
-                    >
+                    <v-card flat class="tx-type-dsk white--text pa-1 mr-2 caption" :color="txTypeColor">
                       <p class="text-xs-center">{{ $t(`tx.type.${txType}`) }}</p>
                     </v-card>
                     <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
@@ -59,7 +56,7 @@
                 </v-flex>
                 <v-spacer />
                 <v-flex shrink>
-                  <address-tx-balance :tooltipInfo="balanceTooltip" />
+                  <address-tx-balance :tooltip-info="balanceTooltip" />
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -97,11 +94,7 @@
               </v-flex>
               <v-flex sm12 pa-1>
                 <v-layout row align-center fill-height pa-2>
-                  <v-card
-                    flat
-                    class="tx-type-dsk white--text pa-1 mr-2 caption"
-                    :color="txTypeColor"
-                  >
+                  <v-card flat class="tx-type-dsk white--text pa-1 mr-2 caption" :color="txTypeColor">
                     <p class="text-xs-center">{{ $t(`tx.type.${txType}`) }}</p>
                   </v-card>
                   <app-transform-hash :hash="displayAdr" :link="linkAdr" :italic="true" />
@@ -122,11 +115,11 @@
           <v-flex sm2 pr-0 :class="getValueColor()">
             <p>
               {{
-              `${getValueSign()} ${getShortValue(
-              ethValue(tx.valueBN)
-              .toEth()
-              .toString()
-              )}`
+                `${getValueSign()} ${getShortValue(
+                  ethValue(tx.valueBN)
+                    .toEth()
+                    .toString()
+                )}`
               }}
             </p>
           </v-flex>
@@ -141,17 +134,11 @@
           <v-flex sm2>
             <v-tooltip v-if="txType === 'in'" left>
               <template v-slot:activator="{ on }">
-                <p
-                  class="grey--text text-truncate"
-                  v-on="on"
-                >{{ getShortValue(ethValue(tx.feeBN).toEth()) }}</p>
+                <p class="grey--text text-truncate" v-on="on">{{ getShortValue(ethValue(tx.feeBN).toEth()) }}</p>
               </template>
               <span>{{ $t('tooltip.txFeeSender') }}</span>
             </v-tooltip>
-            <p
-              v-else
-              class="black--text text-truncate"
-            >- {{ getShortValue(ethValue(tx.feeBN).toEth()) }}</p>
+            <p v-else class="black--text text-truncate">- {{ getShortValue(ethValue(tx.feeBN).toEth()) }}</p>
           </v-flex>
 
           <!--
@@ -182,7 +169,7 @@
                 <v-icon v-else small class="txFail--text ">fa fa-times-circle</v-icon>
               </v-flex>
               <v-flex>
-              <address-tx-balance :tooltipInfo="balanceTooltip" />
+                <address-tx-balance :tooltip-info="balanceTooltip" />
               </v-flex>
             </v-layout>
           </v-flex>
@@ -330,5 +317,4 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 .tx-hash-label {
   min-width: 3em;
 }
-
 </style>

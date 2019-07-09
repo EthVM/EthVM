@@ -6,10 +6,7 @@
       </v-btn>
     </template>
     <v-card color="white" flat>
-      <v-card-title
-        v-if="tooltipInfo.status"
-        class="txSuccess--text pa-1 body-2"
-      >{{ $t('tx.success-long') }}</v-card-title>
+      <v-card-title v-if="tooltipInfo.status" class="txSuccess--text pa-1 body-2">{{ $t('tx.success-long') }}</v-card-title>
       <v-card-title v-else class="txFail--text pa-1 body-2">{{ $t('tx.failed-long') }}</v-card-title>
       <!-- Before Balance -->
       <v-layout row align-center>
@@ -17,7 +14,7 @@
           <p>{{ $t('common.balance-before') }}</p>
         </v-flex>
         <v-flex shrink pa-1>
-          <p class="text-xs-right">{{tooltipInfo.balBefore}} {{ $t('common.eth') }}</p>
+          <p class="text-xs-right">{{ tooltipInfo.balBefore }} {{ $t('common.eth') }}</p>
         </v-flex>
       </v-layout>
       <!-- Value Sent -->
@@ -26,10 +23,7 @@
           <p>{{ getTooltipValueString() }}:</p>
         </v-flex>
         <v-flex shrink pa-1>
-          <p
-            v-if="tooltipInfo.status"
-            class="text-xs-right"
-          >{{tooltipInfo.value}} {{ $t('common.eth') }}</p>
+          <p v-if="tooltipInfo.status" class="text-xs-right">{{ tooltipInfo.value }} {{ $t('common.eth') }}</p>
           <p v-else class="text-xs-right info--text">0 {{ $t('common.eth') }}</p>
         </v-flex>
       </v-layout>
@@ -39,9 +33,7 @@
           <p>{{ $tc('tx.fee', 1) }}:</p>
         </v-flex>
         <v-flex shrink pa-1>
-          <p
-            class="text-xs-right"
-          >- {{tooltipInfo.fee}} {{ $t('common.eth') }}</p>
+          <p class="text-xs-right">- {{ tooltipInfo.fee }} {{ $t('common.eth') }}</p>
         </v-flex>
       </v-layout>
       <v-divider class="mb-2 mt-2" />
@@ -51,13 +43,12 @@
           <p>{{ $t('common.balance-after') }}</p>
         </v-flex>
         <v-flex shrink pa-1>
-          <p class="text-xs-right">{{tooltipInfo.balAfter}} {{ $t('common.eth') }}</p>
+          <p class="text-xs-right">{{ tooltipInfo.balAfter }} {{ $t('common.eth') }}</p>
         </v-flex>
       </v-layout>
     </v-card>
   </v-tooltip>
 </template>
-
 
 <script lang="ts">
 import { StringConcatMixin } from '@app/core/components/mixins'
@@ -93,7 +84,6 @@ export default class AddressTxBalance extends Vue {
     return !this.tooltipInfo.status || this.tooltipInfo.type === 'self' ? 'grey--text' : 'black--text'
   }
 
-
   getTooltipValueString(): TranslateResult {
     if (this.tooltipInfo.status) {
       return this.tooltipInfo.type === 'in' ? this.$tc('tooltip.value-recieved', 1) : this.$tc('tooltip.value-sent', 1)
@@ -101,10 +91,8 @@ export default class AddressTxBalance extends Vue {
 
     return this.tooltipInfo.type === 'in' ? this.$tc('tooltip.value-recieved', 2) : this.$tc('tooltip.value-sent', 2)
   }
-
 }
 </script>
-
 
 <style scoped lang="css">
 .table-row-mobile {

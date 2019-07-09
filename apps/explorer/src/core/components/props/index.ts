@@ -60,8 +60,8 @@ export interface SortItem {
 export interface AdrTxBalance {
   type?: string
   status: boolean
-  value: string,
-  fee: string,
-  balBefore: number,
+  value: string
+  fee: string
+  balBefore: number
   balAfter: number
 }
