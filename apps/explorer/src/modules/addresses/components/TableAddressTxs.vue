@@ -1,19 +1,7 @@
 <template>
   <v-card color="white" flat class="pt-0 pr-2 pl-2 pb-2">
     <!-- Txs Filter/Sort/Search/Pagination -->
-    <v-layout row wrap align-center justify-start>
-      <!--
-          =====================================================================================
-            Search
-            Responsive Tally:
-            md: 9/12 (6) order-2
-            sm: 18/12 (12), order-1
-            xs: 24/12 (12), order-1
-          =====================================================================================
-      -->
-      <v-flex xs12 xs order-md2>
-        <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
-      </v-flex>
+    <v-layout row wrap align-center justify-space-around>
       <!--
           =====================================================================================
             Filter & Sorting
@@ -23,13 +11,13 @@
             xs: 12/12 (12), order-2
           =====================================================================================
       -->
-      <v-flex shrink order-md1>
+      <v-flex shrink order-xs2 order-sm1>
         <v-layout row wrap align-center>
           <!-- Filter:  -->
           <v-flex shrink pr-0>
             <p class="info--text">{{ $t('filter.name') }}</p>
           </v-flex>
-          <v-flex shrink pr-0>
+          <v-flex shrink >
             <v-menu offset-y v-model="activeFilter">
               <template v-slot:activator="{ on }">
                 <v-btn class="tx-filter-btn box-border text-capitalize ma-0 pa-1" flat v-on="on">
@@ -59,6 +47,18 @@
       </v-flex>
       <!--
           =====================================================================================
+            Search
+            Responsive Tally:
+            md: 9/12 (6) order-2
+            sm: 18/12 (12), order-1
+            xs: 24/12 (12), order-1
+          =====================================================================================
+      -->
+      <v-flex grow order-xs1 order-sm2>
+        <app-search-input :is-valid="true" :search-id="SearchType.adrTx" />
+      </v-flex>
+      <!--
+          =====================================================================================
             Pagination
             Responsive Tally:
             md: 12/12 (4) order-3
@@ -66,7 +66,7 @@
             xs: 24/12 (12), order-3
           =====================================================================================
       -->
-      <v-flex pt-0 pb-0 order-xs3>
+      <v-flex shrink order-xs3 class="pt-0 pb-0" >
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
     </v-layout>
