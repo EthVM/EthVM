@@ -1,6 +1,8 @@
 <template>
-<v-layout row wrap align-center justify-center >
+<v-layout row wrap align-center justify-center pl-2 pr-2>
+
    <p class="info--text">{{ $t('common.sort') }}:</p>
+
   <v-dialog v-model="dialog" full-width>
     <template v-slot:activator="{ on }">
       <v-btn flat class="box-border sort-btn text-capitalize ma-1 pa-1" v-on="on">
@@ -40,6 +42,7 @@
       </v-list>
     </v-card>
   </v-dialog>
+
 </v-layout>
 </template>
 
@@ -109,7 +112,7 @@ export default class AppSortDialog extends Vue {
 }
 </script>
 
-<style lang="css">
+<style scoped lang="css">
 
 .sort-btn {
   width: auto;
