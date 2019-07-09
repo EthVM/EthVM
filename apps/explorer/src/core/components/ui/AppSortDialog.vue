@@ -1,7 +1,9 @@
 <template>
+<v-layout row wrap align-center justify-center >
+   <p class="info--text">{{ $t('common.sort') }}:</p>
   <v-dialog v-model="dialog" full-width>
     <template v-slot:activator="{ on }">
-      <v-btn flat class="box-border sort-btn text-capitalize ma-0 pa-1" v-on="on">
+      <v-btn flat class="box-border sort-btn text-capitalize ma-1 pa-1" v-on="on">
         <div class="sort-btn-content ">
           <p class="text-xs-left">{{ btnText }}</p>
           <v-icon class="primary--text" small>{{ btnIcon }}</v-icon>
@@ -38,6 +40,7 @@
       </v-list>
     </v-card>
   </v-dialog>
+</v-layout>
 </template>
 
 <script lang="ts">
@@ -108,8 +111,6 @@ export default class AppSortDialog extends Vue {
 
 <style lang="css">
 
-
-
 .sort-btn {
   width: auto;
   height: 30px;
@@ -122,5 +123,7 @@ export default class AppSortDialog extends Vue {
 
 .box-border{
   border: solid 1px #b4bfd2;
+  border-radius: 20px;
+  height: 40px;
 }
 </style>

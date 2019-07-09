@@ -36,9 +36,6 @@
             </v-menu>
           </v-flex>
           <!-- Sort present on xsOnly -->
-          <v-flex hidden-sm-and-up shrink pr-0>
-            <p class="info--text">{{ $t('common.sort') }}</p>
-          </v-flex>
           <v-flex hidden-sm-and-up shrink>
             <app-sort-dialog :items="sortValues" :selected="selectedSort" @setSort="selectSort" />
           </v-flex>
