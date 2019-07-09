@@ -17,25 +17,35 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
   const limit = 200
   let progress = 0
 
-  let [balances, count] = [[], 0]
-
+  let balances = []
   let matched = 0
+  const hasSpaces = []
   const failures = []
 
   do {
-    [balances, count] = await fetchBalances(connection, offset, limit)
+    balances = await fetchBalances(connection, offset, limit)
 
     const comparisons = balances.map(async actual => {
       const { address, amount } = actual
-      const expected = await web3.eth.getBalance(actual.address, blockNumber ? blockNumber : undefined)
 
-      if (expected === amount) {
-        matched += 1
+      const trimmedAddress = actual.address.trim()
+
+      if(trimmedAddress.length !== actual.address.length) {
+        hasSpaces.push(`Address '${actual.address}' has spaces`)
       } else {
-        failures.push(`${address}: \texpected = ${expected} \tactual = ${amount}`)
+
+        const expected = await web3.eth.getBalance(actual.address, blockNumber ? blockNumber : undefined)
+
+        if (expected === amount) {
+          matched += 1
+        } else {
+          failures.push(`${address}: \texpected = ${expected} \tactual = ${amount}`)
+        }
+
+        return expected
+
       }
 
-      return expected
     })
 
     await Promise.all(comparisons)
@@ -43,14 +53,14 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
     offset += limit
     progress += comparisons.length
 
-    spinner.text = `Checking ether balances: matched = ${matched}, failed = ${failures.length}`
+    spinner.text = `Checking ether balances: matched = ${matched}, failed = ${failures.length}, has spaces = ${hasSpaces.length}`
 
-  } while (offset < count)
+  } while (balances.length)
 
   if(failures.length > 0) {
-    spinner.fail(`${failures.length} discrepancies found`)
     failures.forEach(failure => spinner.fail(failure))
-    spinner.succeed(`${matched} matches`)
+    hasSpaces.forEach(failure => spinner.fail(failure))
+    spinner.fail(`${matched} matches, ${failures.length} discrepancies found, ${hasSpaces.length} addresses had spaces`)
     process.exit(1)
   } else {
     spinner.succeed('No discrepancies found')
@@ -59,12 +69,11 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
 
 }
 
-async function fetchBalances(connection: Connection, offset: number = 0, limit: number = 20): Promise<[EtherBalanceView[], number]> {
+async function fetchBalances(connection: Connection, offset: number = 0, limit: number = 20): Promise<EtherBalanceView[]> {
   return connection
     .getRepository(EtherBalanceView)
     .createQueryBuilder('balance')
-    .orderBy('amount', 'DESC')
     .skip(offset)
     .take(limit)
-    .getManyAndCount()
+    .getMany()
 }
