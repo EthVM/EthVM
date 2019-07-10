@@ -54,6 +54,15 @@ subscription newTransaction {
 
 }
 
+subscription newTransactions {
+
+  newTransactions {
+    ...TransactionSummary
+  }
+
+}
+
+
 query transactionDetailQuery($hash: String!) {
   transaction: tx(hash: $hash) {
     ...TransactionDetail

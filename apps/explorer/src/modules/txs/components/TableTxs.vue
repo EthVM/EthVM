@@ -146,7 +146,7 @@ import { Footnote } from '@app/core/components/props'
 import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
 import {
   latestTransactionSummaries,
-  newTransaction,
+  newTransactions,
   transactionSummariesByBlockHash,
   transactionSummariesByBlockNumber,
   transactionSummariesByAddress
@@ -239,18 +239,15 @@ class TableTxsMixin extends Vue {
       },
 
       subscribeToMore: {
-        document: newTransaction,
+        document: newTransactions,
 
         updateQuery: (previousResult, { subscriptionData }) => {
           const { summaries } = previousResult
-          const { newTransaction } = subscriptionData.data
+          const { newTransactions } = subscriptionData.data
 
           const items = Object.assign([], summaries.items)
-          items.unshift(newTransaction)
 
-          if (items.length > MAX_ITEMS) {
-            items.pop()
-          }
+          newTransactions.forEach(newTx => items.unshift(newTx))
 
           // ensure order by block number desc and transaction index desc
           items.sort((a, b) => {
@@ -264,6 +261,10 @@ class TableTxsMixin extends Vue {
 
             return b.transactionIndex - a.transactionIndex
           })
+
+          while (items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           return {
             ...previousResult,

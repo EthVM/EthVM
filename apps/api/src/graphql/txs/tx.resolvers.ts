@@ -165,4 +165,12 @@ export class TxResolvers {
   newTransaction() {
     return this.pubSub.asyncIterator('newTransaction')
   }
+
+  @Subscription(
+    'newTransactions', {
+      resolve: (summaries: TransactionSummary[]) => summaries.map(s => new TransactionSummaryDto(s)),
+    } as SubscriptionOptions)
+  newTransactions() {
+    return this.pubSub.asyncIterator('newTransactions')
+  }
 }

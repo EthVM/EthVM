@@ -396,6 +396,7 @@ export interface ISubscription {
     hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
+    newTransactions(): TransactionSummary[] | Promise<TransactionSummary[]>;
 }
 
 export interface Token {

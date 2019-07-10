@@ -303,6 +303,8 @@ export class PgSubscriptionService {
 
           pubSub.publish('newBlock', blockSummary)
 
+          pubSub.publish('newTransactions', txSummaries)
+
           txSummaries.forEach(txSummary => {
             pubSub.publish('newTransaction', txSummary)
           })
