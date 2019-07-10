@@ -1,6 +1,6 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
-    <notice-new-block @reload="resetFromBlock" />
+    <notice-new-block v-if="isPageTxs" @reload="resetFromBlock" />
 
     <!-- Tx Input Filter -->
     <v-layout row>
@@ -415,6 +415,10 @@ export default class TableTxs extends TableTxsMixin {
 
   get isHome(): boolean {
     return this.pageType === 'home'
+  }
+
+  get isPageTxs(): boolean {
+    return this.pageType === 'tx'
   }
 
   get pages(): number {
