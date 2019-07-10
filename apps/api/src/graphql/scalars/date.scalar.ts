@@ -11,7 +11,13 @@ export class DateScalar {
   }
 
   serialize(value) {
-    return value.getTime() // value sent to the client
+    try {
+      return value.getTime() // value sent to the client
+    } catch (e) {
+      console.log('Error', value)
+      return 'Error'
+    }
+
   }
 
   parseLiteral(ast) {
