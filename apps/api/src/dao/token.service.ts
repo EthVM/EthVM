@@ -144,14 +144,19 @@ export class TokenService {
     return this.coinExchangeRateRepository.findOne(findOptions)
   }
 
-  async findTokenExchangeRates(sort: TokenExchangeRateFilter, limit: number = 10, offset: number = 0, symbols: string[] = []): Promise<[TokenExchangeRateEntity[], number]> {
+  async findTokenExchangeRates(
+    sort: TokenExchangeRateFilter,
+    limit: number = 10,
+    offset: number = 0,
+    symbols: string[] = [],
+  ): Promise<[TokenExchangeRateEntity[], number]> {
 
     const queryBuilder = this.tokenExchangeRateRepository.createQueryBuilder('ter')
 
     if (symbols.length) {
       // convert symbols to lowercase to match case-insensitive
       symbols = symbols.map(s => s.toLowerCase())
-      queryBuilder.where("LOWER(symbol) IN (:...symbols)", { symbols })
+      queryBuilder.where('LOWER(symbol) IN (:...symbols)', { symbols })
     }
 
     switch (sort) {
