@@ -204,7 +204,7 @@ export default class ChartLiveTxFees extends Vue {
     ===================================================================================
     */
 
-  redraw = true
+  redraw = false
   error: string = ''
   syncing?: boolean
 

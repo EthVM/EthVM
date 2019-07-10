@@ -5,7 +5,7 @@
     :options="chartOptions"
     :chart-title="newTitle"
     :chart-description="newDescription"
-    :redraw="true"
+    :redraw="false"
     :footnotes="footnote"
     :live-chart="true"
     :error="error"

@@ -175,8 +175,10 @@ export default class AppChart extends Vue {
     } else {
       if (!this.chart) {
         this.createChart()
+      } else {
+        this.chart.data = this.data
+        this.chart.update()
       }
-      this.chart.update()
     }
   }
 
