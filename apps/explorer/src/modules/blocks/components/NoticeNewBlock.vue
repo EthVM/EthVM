@@ -1,10 +1,11 @@
 <template>
-  <v-btn flat class="new-block-alert" @click="onReload"> {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon> </v-btn>
+  <v-btn flat class="new-block-alert text-capitalize" @click="onReload"> {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon> </v-btn>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { newBlock } from '@app/modules/blocks/blocks.graphql'
+import { TranslateResult } from 'vue-i18n';
 
 @Component({
   apollo: {
@@ -28,8 +29,8 @@ export default class NoticeNewBlock extends Vue {
     this.display = false
   }
 
-  get buttonText(): string {
-    return this.message || 'New block'
+  get buttonText(): TranslateResult{
+    return this.message || this.$tc('message.update.block',1)
   }
 }
 </script>
@@ -39,6 +40,5 @@ export default class NoticeNewBlock extends Vue {
   height: 44px;
   border: solid 1px #ffb647;
   background-color: rgba(254, 217, 161, 0.25) !important;
-  text-transform: none !important;
 }
 </style>
