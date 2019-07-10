@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="new-block-alert" @click="onReload" v-if="display"> {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon> </v-btn>
+  <v-btn flat class="new-block-alert" @click="onReload"> {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon> </v-btn>
 </template>
 
 <script lang="ts">
@@ -36,7 +36,6 @@ export default class NoticeNewBlock extends Vue {
 
 <style scoped lang="css">
 .new-block-alert {
-  width: 202px;
   height: 44px;
   border: solid 1px #ffb647;
   background-color: rgba(254, 217, 161, 0.25) !important;
