@@ -12,6 +12,8 @@ import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager } from 'typeorm'
 import { DbConnection } from '@app/orm/config'
 
+import { strict as assert } from 'assert'
+
 export interface CanonicalBlockHeaderPayload {
   block_hash: string
   number: string
@@ -81,7 +83,7 @@ function inputIsPgEvent(input: any): input is PgEvent {
 // tslint:disable-next-line:no-shadowed-variable
 function isPgEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsPgEvent),
+    filter(inputIsPgEvent)
   )
 }
 
@@ -89,12 +91,12 @@ function isPgEvent<PgEvent>() {
 function isMetadataEvent<PgEvent>() {
 
   const tables = new Set<string>([
-    'metadata',
+    'metadata'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -105,12 +107,12 @@ function isBlockEvent<PgEvent>() {
     'canonical_block_header',
     'transaction',
     'transaction_trace',
-    'transaction_receipt',
+    'transaction_receipt'
   ])
 
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => tables.has(e.table))
   )
 }
 
@@ -118,7 +120,7 @@ function isBlockEvent<PgEvent>() {
 function isBlockMetricsTransactionEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction'),
+    filter(e => e.table === 'block_metrics_transaction')
   )
 }
 
@@ -126,7 +128,7 @@ function isBlockMetricsTransactionEvent<PgEvent>() {
 function isBlockMetricsTransactionFeeEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction_fee'),
+    filter(e => e.table === 'block_metrics_transaction_fee')
   )
 }
 
@@ -135,19 +137,49 @@ class BlockEvents {
   header?: CanonicalBlockHeaderPayload
 
   rewardsTrace?: TransactionTracePayload
-  txTrace?: TransactionTracePayload
 
   transactions: Map<string, TransactionPayload> = new Map()
-  receipts: Map<string, TransactionReceiptPayload> = new Map()
+  transactionTraces: Map<string, TransactionTracePayload> = new Map()
+  transactionReceipts: Map<string, TransactionReceiptPayload> = new Map()
 
-  constructor(private readonly instaMining: boolean) {
+  constructor(private readonly blockHash: string,
+              private readonly instaMining: boolean) {
+  }
+
+  addHeader(header: CanonicalBlockHeaderPayload) {
+    assert.equal(header.block_hash, this.blockHash, `Block header block hash does not match: Expected = ${this.blockHash}, received = ${header}`)
+    this.header = header
+  }
+
+  addRewardsTrace(rewardsTrace: TransactionTracePayload) {
+    const { blockHash } = this
+    assert.equal(rewardsTrace.block_hash, blockHash, `Rewards trace block hash does not match: Expected = ${blockHash}, received = ${rewardsTrace}`)
+    this.rewardsTrace = rewardsTrace
+  }
+
+  addTransaction(transaction: TransactionPayload) {
+    const { blockHash } = this
+    assert.equal(transaction.block_hash, blockHash, `Transaction block hash does not match: Expected = ${blockHash}, received = ${transaction}`)
+    this.transactions.set(transaction.transaction_hash, transaction)
+  }
+
+  addTransactionTrace(transactionTrace: TransactionTracePayload) {
+    const { blockHash } = this
+    assert.equal(transactionTrace.block_hash, blockHash, `Transaction trace block hash does not match: Expected = ${blockHash}, received = ${transactionTrace}`)
+    this.transactionTraces.set(transactionTrace.transaction_hash!!, transactionTrace)
+  }
+
+  addTransactionReceipt(transactionReceipt: TransactionReceiptPayload) {
+    const { blockHash } = this
+    assert.equal(transactionReceipt.block_hash, blockHash, `Transaction receipt block hash does not match: Expected = ${blockHash}, received = ${transactionReceipt}`)
+    this.transactionReceipts.set(transactionReceipt.transaction_hash, transactionReceipt)
   }
 
   get isComplete(): boolean {
 
-    const { header, transactions, receipts, rewardsTrace, txTrace, instaMining } = this
+    const { header, transactions, transactionReceipts, rewardsTrace, transactionTraces, instaMining } = this
 
-    if (header === undefined || rewardsTrace || txTrace === undefined) return false
+    if (!header) return false
 
     const { transaction_count } = header
 
@@ -157,7 +189,11 @@ class BlockEvents {
 
     // check receipts
 
-    if (receipts.size !== transaction_count) return false
+    if (transactionReceipts.size !== transaction_count) return false
+
+    // check traces
+
+    if (transactionTraces.size !== transaction_count) return false
 
     // check rewards
 
@@ -184,7 +220,7 @@ export class PgSubscriptionService {
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
     private readonly blockMetricsService: BlockMetricsService,
-    @InjectEntityManager(DbConnection.Principal) private readonly principalEntityManager: EntityManager,
+    @InjectEntityManager(DbConnection.Principal) private readonly principalEntityManager: EntityManager
   ) {
 
     this.principalUrl = config.dbPrincipal.url
@@ -226,7 +262,7 @@ export class PgSubscriptionService {
     const pgEvents$ = events$
       .pipe(
         map(event => new PgEvent(event)),
-        isPgEvent(),
+        isPgEvent()
       )
 
     //
@@ -244,7 +280,7 @@ export class PgSubscriptionService {
     blockHashes$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
 
@@ -306,7 +342,7 @@ export class PgSubscriptionService {
     const pgEvents$ = events$
       .pipe(
         map(event => new PgEvent(event)),
-        isPgEvent(),
+        isPgEvent()
       )
 
     //
@@ -327,7 +363,7 @@ export class PgSubscriptionService {
     blockMetrics$
       .pipe(
         bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
+        filter(blockHashes => blockHashes.length > 0)
       )
       .subscribe(async blockHashes => {
         const metrics = await blockMetricsService.findByBlockHash(blockHashes)
@@ -390,7 +426,7 @@ export class PgSubscriptionService {
     let entry = blockEvents.get(block_hash)
 
     if (!entry) {
-      entry = new BlockEvents(config.instaMining)
+      entry = new BlockEvents(block_hash, config.instaMining)
       blockEvents.set(block_hash, entry)
     }
 
@@ -398,17 +434,17 @@ export class PgSubscriptionService {
 
       case 'canonical_block_header':
         const header = payload as CanonicalBlockHeaderPayload
-        entry.header = header
+        entry.addHeader(header)
         break
 
       case 'transaction':
         const tx = payload as TransactionPayload
-        entry.transactions.set(tx.transaction_hash, tx)
+        entry.addTransaction(tx)
         break
 
       case 'transaction_receipt':
         const receipt = payload as TransactionReceiptPayload
-        entry.receipts.set(receipt.transaction_hash, receipt)
+        entry.addTransactionReceipt(receipt)
         break
 
       case 'transaction_trace':
@@ -416,9 +452,9 @@ export class PgSubscriptionService {
         const trace = payload as TransactionTracePayload
 
         if (trace.transaction_hash == null) {
-          entry.rewardsTrace = trace
+          entry.addRewardsTrace(trace)
         } else {
-          entry.txTrace = trace
+          entry.addTransactionTrace(trace)
         }
 
         break
