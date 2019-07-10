@@ -180,7 +180,9 @@ export class BlockService {
       const retrievedTxHashes = txHashesByBlock.get(hash) || new Set<string>()
 
       if (!setEquals(expectedTxHashes, retrievedTxHashes)) {
-        throw new PartialReadException(`Transactions did not match, block hash = ${header.hash}, expected = ${expectedTxHashes}, retrieved = ${retrievedTxHashes}`)
+        const expected = [...expectedTxHashes].join(',')
+        const retrieved = [...retrievedTxHashes].join(',')
+        throw new PartialReadException(`Transactions did not match, block hash = ${header.hash}, expected = ${expected}, retrieved = ${retrieved}`)
       }
 
       const rewardsByBlock = new Map<string, BigNumber>()
