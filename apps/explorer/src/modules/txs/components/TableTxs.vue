@@ -1,6 +1,5 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
-
     <!-- Tx Input Filter -->
     <v-layout row>
       <v-flex v-if="isAddressDetail" d-flex xs12 sm4 md3>
