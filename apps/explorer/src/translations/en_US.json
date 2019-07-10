@@ -187,7 +187,7 @@
       "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",
       "btn": "Onward!"
     },
-    "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
+    "ropsten-no-token": "You are viewing Ropsten testnet which has no tokens of actual monetary value. To view token values please switch to the Ethereum mainnet.",
     "report": "Find any bugs or have suggestions?",
     "update": {
       "tx": "new tx | new txs",
