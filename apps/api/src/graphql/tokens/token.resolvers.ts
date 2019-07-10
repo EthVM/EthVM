@@ -11,6 +11,7 @@ import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange
 import { CoinExchangeRateDto } from '@app/graphql/tokens/dto/coin-exchange-rate.dto'
 import { UseInterceptors } from '@nestjs/common'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
+import { TokenExchangeRateFilter } from '@app/graphql/schema'
 
 @Resolver('Token')
 @UseInterceptors(SyncingInterceptor)
@@ -66,7 +67,7 @@ export class TokenResolvers {
   @Query()
   async tokenExchangeRates(
     @Args({ name: 'symbols', type: () => [String] }) symbols: string[],
-    @Args('sort') sort: string,
+    @Args('sort') sort: TokenExchangeRateFilter,
     @Args('limit') limit: number,
     @Args('offset') offset: number,
   ): Promise<TokenExchangeRatePageDto> {
