@@ -5,7 +5,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { newBlock } from '@app/modules/blocks/blocks.graphql'
-import { TranslateResult } from 'vue-i18n';
+import { TranslateResult } from 'vue-i18n'
 
 @Component({
   apollo: {
@@ -29,8 +29,8 @@ export default class NoticeNewBlock extends Vue {
     this.display = false
   }
 
-  get buttonText(): TranslateResult{
-    return this.message || this.$tc('message.update.block',1)
+  get buttonText(): TranslateResult {
+    return this.message || this.$tc('message.update.block', 1)
   }
 }
 </script>

@@ -27,7 +27,7 @@
         <v-layout v-if="isAddressDetail" justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnotes"/></v-layout>
         <v-layout v-else align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
-          <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx',2 )" @reload="resetFromBlock" />
+          <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
         </v-layout>
       </v-flex>
       <v-flex xs5 md6 lg7 xl8 v-if="pageType == 'home'">

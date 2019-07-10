@@ -65,28 +65,14 @@
     -->
     <v-layout column fill-height class="mb-1">
       <v-flex xs12 v-if="!loading && !error">
-        <v-card-text
-          v-if="!uncles.length"
-          class="text-xs-center secondary--text"
-        >{{ $t('message.uncle.no-uncles') }}</v-card-text>
+        <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
         <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
         </v-card>
       </v-flex>
       <v-flex xs12 v-if="loading">
         <div v-for="i in maxItems" :key="i">
-          <v-layout
-            grid-list-xs
-            row
-            wrap
-            align-center
-            justify-start
-            fill-height
-            pl-3
-            pr-2
-            pt-2
-            pb-1
-          >
+          <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
             <v-flex xs3 sm2 order-xs1>
               <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
