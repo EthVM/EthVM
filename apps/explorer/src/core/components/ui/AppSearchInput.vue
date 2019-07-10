@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="search-container">
+    <div :class="containerClass">
       <div class="search-icon">
         <v-tooltip v-model="showError" top>
           <template v-slot:activator="{ showError }">
@@ -17,6 +17,9 @@
           <v-icon :class="searchClass" @click="clear()" small>clear</v-icon>
         </v-btn>
       </div>
+       <v-btn flat class="hidden-sm-and-up search-mobile-btn" @click="startSearch()">
+          <p class="primary--text text-capitalize">{{ $t('search.name')}}</p>
+        </v-btn>
     </div>
   </div>
 </template>
@@ -128,27 +131,40 @@ export default class AppSearchInput extends Vue {
   get errorMessage(): TranslateResult {
     return this.$t(`search.${this.searchId}.error`)
   }
+
+  get containerClass(): string {
+    return this.$vuetify.breakpoint.name === 'xs' ? 'search-container-mobile' : 'search-container-desktop'
+  }
 }
 </script>
 
 <style scoped lang="css">
-.search-container {
+.search-container-desktop {
   display: grid;
   grid-template-columns: 40px auto 40px;
   border: solid 1px #b4bfd2;
   height: 30px;
 }
+.search-container-mobile {
+  display: grid;
+  grid-template-columns: 40px auto 20px 60px;
+  border: solid 1px #b4bfd2;
+  height: 60px;
+  align-items: center;
+}
 .search-tx-input {
   width: 100%;
   padding: 0px 0.5em;
-  height: 30px;
 }
 input {
   border: 0;
   outline: 0;
   height: 30px;
-
 }
+input::placeholder {
+  color: #b4bfd2;
+}
+
 input:focus {
   outline: none !important;
 }
@@ -158,6 +174,11 @@ input:focus {
 }
 .clear-icon {
   justify-self: end;
+}
+.search-mobile-btn {
+  width: 50px;
+  margin: 0px;
+  min-width: 50px;
 }
 
 .v-tooltip__content {
