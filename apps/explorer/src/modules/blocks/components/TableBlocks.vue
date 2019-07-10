@@ -1,13 +1,13 @@
 <template>
   <v-card color="white" flat class="pt-3 mt-0">
-    <notice-new-block @reload="resetFromBlock" />
+    <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
 
     <!--
     =====================================================================================
       TITLE
     =====================================================================================
     -->
-    <v-layout v-if="pageType != 'home'" align-end justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
+    <v-layout v-if="!isPageHome" align-end justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
@@ -330,6 +330,18 @@ export default class TableBlocks extends Vue {
 
   get loading(): boolean | undefined {
     return this.$apollo.queries.blockPage.loading || this.syncing
+  }
+
+  get isPageHome(): boolean {
+    return this.pageType === 'home'
+  }
+
+  get isPageBlocks(): boolean {
+    return this.pageType === 'blocks'
+  }
+
+  get isPageDetailsAddress(): boolean {
+    return this.pageType === 'address'
   }
 
   /**
