@@ -1,5 +1,5 @@
 import { TokenMetadata } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
+import { assignClean, extractFromJson } from '@app/shared/utils'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 
 export class TokenMetadataDto implements TokenMetadata {
@@ -14,8 +14,8 @@ export class TokenMetadataDto implements TokenMetadata {
 
   constructor(data: TokenMetadataEntity) {
     assignClean(this, data)
-    this.email = data.support ? JSON.parse(data.support).email : null
-    this.logo = data.logo ? JSON.parse(data.logo).src : null
+    this.email = extractFromJson('email', data.support)
+    this.logo = extractFromJson('src', data.logo)
   }
 
 }

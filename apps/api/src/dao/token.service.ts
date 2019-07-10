@@ -102,24 +102,6 @@ export class TokenService {
     return new TokenDto(tokenData)
   }
 
-  private extractFromJson(field: string, json?: string | null): string | undefined {
-
-    if (!json) {
-      return undefined
-    }
-
-    let extracted
-
-    try {
-      extracted = JSON.parse(json)[field]
-    } catch (e) {
-      return 'Invalid JSON'
-    }
-
-    return extracted
-
-  }
-
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
     const findOptions: FindOneOptions = {
       where: { id: pair },
