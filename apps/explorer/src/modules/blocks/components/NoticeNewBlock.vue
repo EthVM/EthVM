@@ -1,8 +1,7 @@
 <template>
-  <v-layout wrap row justify-space-between fill-height v-if="display">
-    <h2>New Block!</h2>
-    <v-btn color="info" @click="onReload">Reload</v-btn>
-  </v-layout>
+  <v-btn class="new-block-alert" @click="onReload" v-if="display">
+    New block <v-icon class="ml-1 secondary--text">autorenew</v-icon>
+  </v-btn>
 </template>
 
 <script lang="ts">
@@ -16,7 +15,7 @@ import { newBlock } from '@app/modules/blocks/blocks.graphql'
         query: newBlock,
 
         result({ data }) {
-          ;(this as any).display = true
+          (this as any).display = true
         }
       }
     }
@@ -31,3 +30,13 @@ export default class NoticeNewBlock extends Vue {
   }
 }
 </script>
+
+<style scoped lang="css">
+  .new-block-alert {
+    width: 202px;
+    height: 44px;
+    border: solid 1px #ffb647;
+    background-color: rgba(254, 217, 161, 0.25) !important;
+    text-transform: none !important;
+  }
+</style>
