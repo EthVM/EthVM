@@ -45,7 +45,7 @@ export class TraceService {
 
   }
 
-  async findTxStatusByBlockHash(tx: EntityManager, blockHashes: string[]): Promise<TransactionStatus[]> {
+  async findTxStatusByBlockHash(tx: EntityManager, blockHashes: string[], cache: boolean = true): Promise<TransactionStatus[]> {
 
     if (blockHashes.length === 0) return []
 
@@ -56,7 +56,7 @@ export class TraceService {
       where: {
         blockHash: In(blockHashes),
       },
-      cache: true,
+      cache,
     })
 
     return entities.map(e => {

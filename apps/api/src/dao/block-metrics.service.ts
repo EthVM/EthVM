@@ -56,9 +56,9 @@ export class BlockMetricsService {
 
   }
 
-  async findBlockMetricsTransactionByBlockHash(blockHash: string): Promise<BlockMetricsTransactionEntity | undefined> {
+  async findBlockMetricsTransactionByBlockHash(blockHash: string, cache: boolean = true): Promise<BlockMetricsTransactionEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionEntity, {
-      where: { blockHash }, cache: true,
+      where: { blockHash }, cache,
     })
   }
 
@@ -90,9 +90,9 @@ export class BlockMetricsService {
 
   }
 
-  async findBlockMetricsTransactionFeeByBlockHash(blockHash: string): Promise<BlockMetricsTransactionFeeEntity | undefined> {
+  async findBlockMetricsTransactionFeeByBlockHash(blockHash: string, cache: boolean = true): Promise<BlockMetricsTransactionFeeEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionFeeEntity, {
-      where: { blockHash }, cache: true,
+      where: { blockHash }, cache,
     })
   }
 

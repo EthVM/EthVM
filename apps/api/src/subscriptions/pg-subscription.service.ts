@@ -251,7 +251,7 @@ export class PgSubscriptionService {
         // clear query cache
         await principalEntityManager.connection.queryResultCache!.clear()
 
-        const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes)
+        const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes, false)
 
         blockSummaries.forEach(async blockSummary => {
 
@@ -360,7 +360,7 @@ export class PgSubscriptionService {
     const { pubSub } = this
     const payload = event.payload as BlockMetricsTransactionPayload
 
-    const metric = await this.blockMetricsService.findBlockMetricsTransactionByBlockHash(payload.block_hash)
+    const metric = await this.blockMetricsService.findBlockMetricsTransactionByBlockHash(payload.block_hash, false)
 
     if (metric) {
       pubSub.publish('newBlockMetricsTransaction', metric)
@@ -372,7 +372,7 @@ export class PgSubscriptionService {
     const { pubSub } = this
     const payload = event.payload as BlockMetricsTransactionPayload
 
-    const metric = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(payload.block_hash)
+    const metric = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(payload.block_hash, false)
 
     if (metric) {
       pubSub.publish('newBlockMetricsTransactionFee', metric)

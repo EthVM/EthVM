@@ -117,24 +117,24 @@ export class BlockService {
 
   }
 
-  async findSummariesByBlockHash(blockHashes: string[]): Promise<BlockSummary[]> {
+  async findSummariesByBlockHash(blockHashes: string[], cache: boolean = true): Promise<BlockSummary[]> {
 
     const headersWithRewards = await this.blockHeaderRepository.find({
       select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
       order: { number: 'DESC' },
-      cache: true,
+      cache,
     })
 
     return this.summarise(this.entityManager, headersWithRewards)
 
   }
 
-  private async summarise(tx: EntityManager, headersWithRewards: BlockHeaderEntity[]): Promise<BlockSummary[]> {
+  private async summarise(tx: EntityManager, headersWithRewards: BlockHeaderEntity[], cache: boolean = true): Promise<BlockSummary[]> {
 
     const blockHashes = headersWithRewards.map(h => h.hash)
-    const txStatuses = await this.traceService.findTxStatusByBlockHash(tx, blockHashes)
+    const txStatuses = await this.traceService.findTxStatusByBlockHash(tx, blockHashes, cache)
 
     const successfulCountByBlock = new Map<string, number>()
     const failedCountByBlock = new Map<string, number>()
@@ -180,7 +180,7 @@ export class BlockService {
       const retrievedTxHashes = txHashesByBlock.get(hash) || new Set<string>()
 
       if (!setEquals(expectedTxHashes, retrievedTxHashes)) {
-        throw new PartialReadException(`Transactions did not match, block hash = ${header.hash}`)
+        throw new PartialReadException(`Transactions did not match, block hash = ${header.hash}, expected = ${expectedTxHashes}, retrieved = ${retrievedTxHashes}`)
       }
 
       const rewardsByBlock = new Map<string, BigNumber>()
