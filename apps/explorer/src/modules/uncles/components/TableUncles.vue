@@ -1,17 +1,22 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 mt-0">
-    <notice-new-block @reload="resetFromUncle" />
-
     <!--
     =====================================================================================
       TITLE
     =====================================================================================
     -->
     <v-layout align-end justify-space-between row wrap fill-height pb-1>
-      <v-flex xs6>
-        <v-card-title class="title font-weight-bold pb-1">{{ $tc('uncle.name', 2) }}</v-card-title>
+      <v-flex xs12 sm6>
+        <v-layout row wrap align-center justify-center>
+          <v-flex shrink>
+            <v-card-title class="title font-weight-bold">{{ $tc('uncle.name', 2) }}</v-card-title>
+          </v-flex>
+          <v-flex>
+            <notice-new-block @reload="resetFromUncle" />
+          </v-flex>
+        </v-layout>
       </v-flex>
-      <v-flex xs6 v-if="pages > 1">
+      <v-flex xs12 sm6 v-if="pages > 1">
         <v-layout justify-end class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
@@ -60,14 +65,28 @@
     -->
     <v-layout column fill-height class="mb-1">
       <v-flex xs12 v-if="!loading && !error">
-        <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
+        <v-card-text
+          v-if="!uncles.length"
+          class="text-xs-center secondary--text"
+        >{{ $t('message.uncle.no-uncles') }}</v-card-text>
         <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
         </v-card>
       </v-flex>
       <v-flex xs12 v-if="loading">
         <div v-for="i in maxItems" :key="i">
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+          <v-layout
+            grid-list-xs
+            row
+            wrap
+            align-center
+            justify-start
+            fill-height
+            pl-3
+            pr-2
+            pt-2
+            pb-1
+          >
             <v-flex xs3 sm2 order-xs1>
               <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
