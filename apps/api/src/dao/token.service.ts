@@ -7,10 +7,9 @@ import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FindManyOptions, Repository, FindOneOptions, Any } from 'typeorm'
+import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
 import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
 import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
-import { Token } from '@app/graphql/schema'
 import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
 
@@ -111,11 +110,29 @@ export class TokenService {
       symbol: entity.symbol,
       decimals,
       website: contractMetadata ? contractMetadata.website : null,
-      email: support ? JSON.parse(support).email : null,
-      logo: logo ? JSON.parse(logo).src : null,
+      email: this.extractFromJson('email', support),
+      logo: this.extractFromJson('src', logo),
     }
 
     return new TokenMetadataDto(data)
+  }
+
+  private extractFromJson(field: string, json?: string | null): string | undefined {
+
+    if (!json) {
+      return undefined
+    }
+
+    let extracted
+
+    try {
+      extracted = JSON.parse(json)[field]
+    } catch (e) {
+      return 'Invalid JSON'
+    }
+
+    return extracted
+
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
@@ -177,10 +194,6 @@ export class TokenService {
       relations: ['contract', 'contract.metadata'],
       cache: true,
     })
-  }
-
-  async findContractInfoForToken(address: string): Promise<ContractEntity | undefined> {
-    return this.contractRepository.findOne({ where: { address }, select: ['address', 'creator'], cache: true })
   }
 
   async countTokenHolders(address: string): Promise<number> {
