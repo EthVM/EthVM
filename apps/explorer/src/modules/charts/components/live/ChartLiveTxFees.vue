@@ -1,17 +1,18 @@
 <template>
-  <chart
-    type="line"
-    :data="chartData"
-    :options="chartOptions"
-    :redraw="redraw"
-    :chart-title="newTitle"
-    :chart-description="newDescription"
-    unfilled="true"
-    :footnotes="footnote"
-    :live-chart="true"
-    :error="error"
-    :data-loading="loading"
-  />
+  <div></div>
+<!--  <chart-->
+<!--    type="line"-->
+<!--    :data="chartData"-->
+<!--    :options="chartOptions"-->
+<!--    :redraw="redraw"-->
+<!--    :chart-title="newTitle"-->
+<!--    :chart-description="newDescription"-->
+<!--    unfilled="true"-->
+<!--    :footnotes="footnote"-->
+<!--    :live-chart="true"-->
+<!--    :error="error"-->
+<!--    :data-loading="loading"-->
+<!--  />-->
 </template>
 
 <script lang="ts">

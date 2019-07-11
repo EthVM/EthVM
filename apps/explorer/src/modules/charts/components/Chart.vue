@@ -87,7 +87,8 @@ export default class AppChart extends Vue {
 
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data!: ChartConfig
+  @Prop({ type: Object, required: true }) config!: ChartConfig
+  @Prop({ type: Array, required: true }) initialData!: ChartData[]
   @Prop({ type: Boolean }) redraw!: boolean
   @Prop({ type: Object }) options!: object
   @Prop({ type: String }) chartTitle!: string
@@ -120,7 +121,8 @@ export default class AppChart extends Vue {
   }
 
   mounted() {
-    if (this.data && this.data.datasets && this.data.datasets[0].data.length !== 0) {
+    if (this.config && this.initialData && this.initialData.length) {
+      console.log('Mounted')
       this.createChart()
     }
   }
@@ -166,20 +168,10 @@ export default class AppChart extends Vue {
   ===================================================================================
   */
 
-  @Watch('data')
-  onDataChanged(): void {
-    if (this.redraw) {
-      if (this.chart) {
-        this.chart.destroy()
-      }
+  @Watch('initialData')
+  onInitialDataChanged(): void {
+    if (!this.chart && this.config && this.initialData && this.initialData.length) {
       this.createChart()
-    } else {
-      if (!this.chart) {
-        this.createChart()
-      } else {
-        this.chart.data = this.data
-        this.chart.update()
-      }
     }
   }
 
@@ -189,17 +181,14 @@ export default class AppChart extends Vue {
   }
 
   @Watch('newData')
-  onNewItem(newData): void {
-
-    newData.forEach(value => {
-      this.updateChartData(value)
-      if (!this.redraw) { // Trigger update animation for each change
-        this.chart.update()
-      }
-    })
+  onNewItem(newData: ChartData): void {
+    if (!newData) return
 
     if (this.redraw) {
+      this.updateInitialData(newData)
       this.redrawChart()
+    } else {
+      this.updateChartData(newData)
     }
   }
 
@@ -210,9 +199,20 @@ export default class AppChart extends Vue {
   */
 
   createChart() {
+
+    const { config, initialData } = this
+
+    initialData.forEach(item => {
+      config.labels.push(item.label)
+      config.datasets.forEach((dataset, index) => {
+        if (!dataset.data) dataset.data = []
+        dataset.data.push(item.data[index])
+      })
+    })
+
     this.chart = new ChartJs(this.$refs.chart, {
       type: this.type,
-      data: this.data,
+      data: config,
       options: this.options
     })
   }
@@ -227,19 +227,32 @@ export default class AppChart extends Vue {
   updateChartData(newVal) {
 
     // Remove last item
-    if (this.data!.datasets[0].data.length >= this.maxItems) {
+    if (this.chart.data.datasets[0].data.length >= this.maxItems) {
       this.chart.data.labels.pop()
       this.chart.data.datasets.forEach((dataset) => {
-        dataset.data.pop();
-      });
-      // TODO trigger update here too?
+        dataset.data.pop()
+      })
     }
 
+
     // Add new item
-    this.chart.data.labels.push(newVal.label);
+    this.chart.data.labels.unshift(newVal.label)
     this.chart.data.datasets.forEach((dataset, index) => {
-      dataset.data.push(newVal.data[index]);
-    });
+      dataset.data.unshift(newVal.data[index])
+    })
+
+    this.chart.update()
+  }
+
+  updateInitialData(newVal) {
+
+    console.log('Update initial data', newVal)
+
+    if (this.initialData && this.initialData.length >= this.maxItems) {
+      this.initialData.pop()
+    }
+    this.initialData.unshift(newVal)
+
   }
 }
 </script>

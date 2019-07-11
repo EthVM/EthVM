@@ -1,7 +1,9 @@
 <template>
   <chart
     type="bar"
-    :data="chartData"
+    :config="chartConfig"
+    :initialData="chartData"
+    :newData="toChartDataItem(latestBlock)"
     :options="chartOptions"
     :chart-title="newTitle"
     :chart-description="newDescription"
@@ -14,368 +16,304 @@
 </template>
 
 <script lang="ts">
-import Chart from '@app/modules/charts/components/Chart.vue'
-import { Vue, Component } from 'vue-property-decorator'
-import { Footnote } from '@app/core/components/props'
-import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
-import BigNumber from 'bignumber.js'
-import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
-import { Subscription } from 'rxjs'
-import { ChartConfig, ChartData } from '@app/modules/charts/props'
+  import Chart from '@app/modules/charts/components/Chart.vue'
+  import { Vue, Component } from 'vue-property-decorator'
+  import { Footnote } from '@app/core/components/props'
+  import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
+  import BigNumber from 'bignumber.js'
+  import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+  import { Subscription } from 'rxjs'
+  import { ChartConfig, ChartData } from '@app/modules/charts/props'
 
-const MAX_ITEMS = 10
+  const MAX_ITEMS = 10
 
-@Component({
-  components: {
-    Chart
-  },
-  data() {
-    return {
-      syncing: undefined
-    }
-  },
-  apollo: {
-    blockPage: {
-      query: latestBlocks,
+  @Component({
+    components: {
+      Chart
+    },
+    data() {
+      return {
+        syncing: undefined,
+        latestBlock: undefined
+      }
+    },
+    apollo: {
+      blockPage: {
+        query: latestBlocks,
 
-      variables: {
-        offset: 0,
-        limit: MAX_ITEMS
-      },
+        variables: {
+          offset: 0,
+          limit: MAX_ITEMS
+        },
 
-      update({ blockSummaries }) {
-        if (blockSummaries) {
-          this.error = '' // clear any previous error
-          return new BlockSummaryPageExt(blockSummaries)
-        } else if (!this.syncing) {
-          this.error = this.$i18n.t('message.no-data')
-        }
-        return null
-      },
-
-      error({ graphQLErrors, networkError }) {
-        const self = this
-
-        if (graphQLErrors) {
-          graphQLErrors.forEach(error => {
-            switch (error.message) {
-              case 'Currently syncing':
-                // TODO handle this better with custom code or something
-                self.syncing = true
-                break
-              default:
-                this.error = this.$i18n.t('message.err')
-            }
-          })
-        } else if (networkError) {
-          this.error = this.$i18n.t('message.no-data')
-        } else {
-          this.error = this.$i18n.t('message.err')
-        }
-      },
-
-      subscribeToMore: {
-        document: newBlock,
-
-        updateQuery: (previousResult, { subscriptionData }) => {
-          const { blockSummaries } = previousResult
-          const { newBlock } = subscriptionData.data
-
-          console.log('New block recieved', newBlock)
-
-          const items = Object.assign([], blockSummaries.items)
-
-          // add to the beginning of the array
-          items.unshift(newBlock)
-
-          if (items.length > MAX_ITEMS) {
-            items.pop()
+        update({blockSummaries}) {
+          if (blockSummaries) {
+            this.error = '' // clear any previous error
+            return new BlockSummaryPageExt(blockSummaries)
+          } else if (!this.syncing) {
+            this.error = this.$i18n.t('message.no-data')
           }
-
-          // ensure order by block number desc
-          items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number) : new BigNumber(0)
-            return numberB.minus(numberA).toNumber()
-          })
-
-          return {
-            ...previousResult,
-            blockSummaries: {
-              ...blockSummaries,
-              items
-            }
-          }
-        }
-      }
-    }
-  }
-})
-export default class ChartLiveTxs extends Vue {
-  /*
-      ===================================================================================
-        Initial Data
-      ===================================================================================
-      */
-
-  error: string = ''
-  syncing?: boolean
-
-  blockPage?: BlockSummaryPageExt
-
-  newBlock?: BlockSummaryPageExt_items
-
-  connectedSubscription?: Subscription
-
-  /*
-      ===================================================================================
-        Lifecycle
-      ===================================================================================
-      */
-
-  created() {
-    this.connectedSubscription = this.$subscriptionState.subscribe(state => {
-      if (state === 'reconnected') {
-        this.$apollo.queries.blockPage.refetch()
-      }
-    })
-  }
-
-  destroyed() {
-    if (this.connectedSubscription) {
-      this.connectedSubscription.unsubscribe()
-    }
-  }
-
-  /*
-      ===================================================================================
-        Methods
-      ===================================================================================
-      */
-
-  toChartDataItem(raw: BlockSummaryPageExt_items): ChartData {
-    const numberLabel = this.$i18n.t('block.number')
-
-    const data = [] as any[]
-    data.push(raw.numSuccessfulTxsBN!.toNumber())
-    data.push(raw.numFailedTxsBN!.toNumber())
-    // TODO add pending or remove
-    data.push(0)
-
-    return {
-      label: `${numberLabel} ${raw!.numberBN!.toString()}`,
-      data
-    }
-  }
-
-  // toChartData(items: (BlockSummaryPageExt_items)[]) {
-  //   const numberLabel = this.$i18n.t('block.number')
-  //
-  //   const labels: string[] = []
-  //   const sTxs: number[] = []
-  //   const fTxs: number[] = []
-  //   const pTxs: number[] = []
-  //
-  //   items.forEach(item => {
-  //     labels.push(numberLabel + item!.numberBN!.toString())
-  //     sTxs.push(item!.numSuccessfulTxsBN!.toNumber())
-  //     fTxs.push(item!.numFailedTxsBN!.toNumber())
-  //     // TODO add pending txs
-  //     pTxs.push(0)
-  //   })
-  //
-  //   return new ChartData(labels, sTxs, fTxs, pTxs)
-  // }
-
-  /*
-      ===================================================================================
-        Computed Values
-      ===================================================================================
-      */
-
-  get loading(): boolean | undefined {
-    return this.$apollo.queries.blockPage.loading || this.syncing
-  }
-
-  get chartConfig(): ChartConfig {
-
-    return {
-      labels: [],
-      datasets: [
-        {
-          label: 'Pending',
-          backgroundColor: '#eea66b',
-          borderColor: '#eea66b',
-          data: [],
-          type: 'line',
-          fill: false,
-          yAxisID: 'y-axis-2'
+          return null
         },
-        {
-          label: this.$i18n.t('common.success').toString(),
-          backgroundColor: '#40ce9c',
-          data: [],
-          yAxisID: 'y-axis-1'
-        },
-        {
-          label: this.$i18n.t('common.fail').toString(),
-          backgroundColor: '#fe136c',
-          data: [],
-          yAxisID: 'y-axis-1'
-        }
-      ]
-    }
 
-  }
+        error({graphQLErrors, networkError}) {
+          const self = this
 
-  get chartData() {
-    const items = this.blockPage ? this.blockPage.items : []
-    const data = this.toChartData(items)
-
-    return {
-      labels: data.labels,
-      datasets: [
-        {
-          label: 'Pending',
-          backgroundColor: '#eea66b',
-          borderColor: '#eea66b',
-          data: data.pTxs,
-          type: 'line',
-          fill: false,
-          yAxisID: 'y-axis-2'
-        },
-        {
-          label: this.$i18n.t('common.success'),
-          backgroundColor: '#40ce9c',
-          data: data.sTxs,
-          yAxisID: 'y-axis-1'
-        },
-        {
-          label: this.$i18n.t('common.fail'),
-          backgroundColor: '#fe136c',
-          data: data.fTxs,
-          yAxisID: 'y-axis-1'
-        }
-      ]
-    }
-  }
-
-  get footnote(): Footnote[] {
-    return [
-      {
-        color: 'txSuccess',
-        text: this.$i18n.t('common.success'),
-        icon: 'fa fa-circle'
-      },
-      {
-        color: 'txFail',
-        text: this.$i18n.t('common.fail'),
-        icon: 'fa fa-circle'
-      },
-      {
-        color: 'txPen',
-        text: this.$i18n.t('common.pending'),
-        icon: 'fa fa-circle'
-      }
-    ]
-  }
-
-  get newTitle() {
-    return this.$i18n.t('charts.tx-summary.title')
-  }
-
-  get newDescription() {
-    return this.$i18n.t('charts.tx-summary.description')
-  }
-
-  get chartOptions() {
-    return {
-      title: {
-        text: this.$i18n.t('charts.tx-summary.title')
-      },
-      responsive: true,
-      scales: {
-        yAxes: [
-          {
-            id: 'y-axis-1',
-            stacked: false,
-            ticks: {
-              beginAtZero: true,
-              callback: function(value) {
-                const ranges = [
-                  { divider: 1e9, suffix: 'B' },
-                  { divider: 1e6, suffix: 'M' },
-                  {
-                    divider: 1e3,
-                    suffix: 'k'
-                  }
-                ]
-
-                function formatNumber(n) {
-                  for (let i = 0; i < ranges.length; i++) {
-                    if (n >= ranges[i].divider) {
-                      return (n / ranges[i].divider).toString() + ranges[i].suffix
-                    }
-                  }
-                  return n
-                }
-
-                return formatNumber(value)
+          if (graphQLErrors) {
+            graphQLErrors.forEach(error => {
+              switch (error.message) {
+                case 'Currently syncing':
+                  // TODO handle this better with custom code or something
+                  self.syncing = true
+                  break
+                default:
+                  this.error = this.$i18n.t('message.err')
               }
-            },
-            gridLines: {
-              color: 'rgba(0, 0, 0, 0)'
-            },
-            scaleLabel: {
-              display: true,
-              labelString: this.$i18n.t('charts.tx-summary.label.success-fail')
-            }
+            })
+          } else if (networkError) {
+            this.error = this.$i18n.t('message.no-data')
+          } else {
+            this.error = this.$i18n.t('message.err')
+          }
+        },
+      },
+      $subscribe: {
+
+        latestBlock: {
+          query: newBlock,
+          result({ data }) {
+            const self = this as any
+            self.latestBlock = new BlockSummaryPageExt_items(data.newBlock)
+          }
+
+        }
+      }
+    }
+  })
+  export default class ChartLiveTxs extends Vue {
+    /*
+        ===================================================================================
+          Initial Data
+        ===================================================================================
+        */
+
+    error: string = ''
+    syncing?: boolean
+
+    blockPage?: BlockSummaryPageExt
+
+    newBlock?: BlockSummaryPageExt_items
+
+    latestBlock?: ChartData
+
+    connectedSubscription?: Subscription
+
+    /*
+        ===================================================================================
+          Lifecycle
+        ===================================================================================
+        */
+
+    created() {
+      this.connectedSubscription = this.$subscriptionState.subscribe(state => {
+        if (state === 'reconnected') {
+          this.$apollo.queries.blockPage.refetch()
+        }
+      })
+    }
+
+    destroyed() {
+      if (this.connectedSubscription) {
+        this.connectedSubscription.unsubscribe()
+      }
+    }
+
+    /*
+        ===================================================================================
+          Methods
+        ===================================================================================
+        */
+
+    toChartDataItem(raw?: BlockSummaryPageExt_items): ChartData | undefined {
+
+      if (!raw) return undefined
+
+      const numberLabel = this.$i18n.t('block.number')
+
+      const data = [] as any[]
+      data.push(raw.numSuccessfulTxsBN!.toNumber())
+      data.push(raw.numFailedTxsBN!.toNumber())
+      // TODO add pending or remove
+      data.push(0)
+
+      return {
+        label: `${numberLabel} ${raw!.numberBN!.toString()}`,
+        data
+      }
+    }
+
+    /*
+        ===================================================================================
+          Computed Values
+        ===================================================================================
+        */
+
+    get loading(): boolean | undefined {
+      return this.$apollo.queries.blockPage.loading || this.syncing
+    }
+
+    get chartConfig(): ChartConfig {
+
+      return {
+        labels: [],
+        datasets: [
+          {
+            label: this.$i18n.t('common.success').toString(),
+            backgroundColor: '#40ce9c',
+            data: [],
+            yAxisID: 'y-axis-1'
           },
           {
-            id: 'y-axis-2',
-            position: 'right',
-            stacked: false,
-            ticks: {
-              beginAtZero: true,
-              callback: function(value) {
-                const ranges = [
-                  { divider: 1e9, suffix: 'B' },
-                  { divider: 1e6, suffix: 'M' },
-                  {
-                    divider: 1e3,
-                    suffix: 'k'
-                  }
-                ]
+            label: this.$i18n.t('common.fail').toString(),
+            backgroundColor: '#fe136c',
+            data: [],
+            yAxisID: 'y-axis-1'
+          },
+          {
+            label: 'Pending',
+            backgroundColor: '#eea66b',
+            borderColor: '#eea66b',
+            data: [],
+            type: 'line',
+            fill: false,
+            yAxisID: 'y-axis-2'
+          },
+        ]
+      }
 
-                function formatNumber(n) {
-                  for (let i = 0; i < ranges.length; i++) {
-                    if (n >= ranges[i].divider) {
-                      return (n / ranges[i].divider).toString() + ranges[i].suffix
+    }
+
+    get chartData(): ChartData[] {
+      const items = this.blockPage ? this.blockPage.items : []
+      return items.map(item => this.toChartDataItem(item)!)
+    }
+
+    get footnote(): Footnote[] {
+      return [
+        {
+          color: 'txSuccess',
+          text: this.$i18n.t('common.success'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'txFail',
+          text: this.$i18n.t('common.fail'),
+          icon: 'fa fa-circle'
+        },
+        {
+          color: 'txPen',
+          text: this.$i18n.t('common.pending'),
+          icon: 'fa fa-circle'
+        }
+      ]
+    }
+
+    get newTitle() {
+      return this.$i18n.t('charts.tx-summary.title')
+    }
+
+    get newDescription() {
+      return this.$i18n.t('charts.tx-summary.description')
+    }
+
+    get chartOptions() {
+      return {
+        title: {
+          text: this.$i18n.t('charts.tx-summary.title')
+        },
+        responsive: true,
+        scales: {
+          yAxes: [
+            {
+              id: 'y-axis-1',
+              stacked: false,
+              ticks: {
+                beginAtZero: true,
+                callback: function (value) {
+                  const ranges = [
+                    {divider: 1e9, suffix: 'B'},
+                    {divider: 1e6, suffix: 'M'},
+                    {
+                      divider: 1e3,
+                      suffix: 'k'
                     }
-                  }
-                  return n
-                }
+                  ]
 
-                return formatNumber(value)
+                  function formatNumber(n) {
+                    for (let i = 0; i < ranges.length; i++) {
+                      if (n >= ranges[i].divider) {
+                        return (n / ranges[i].divider).toString() + ranges[i].suffix
+                      }
+                    }
+                    return n
+                  }
+
+                  return formatNumber(value)
+                }
+              },
+              gridLines: {
+                color: 'rgba(0, 0, 0, 0)'
+              },
+              scaleLabel: {
+                display: true,
+                labelString: this.$i18n.t('charts.tx-summary.label.success-fail')
               }
             },
-            gridLines: {
-              color: 'rgba(0, 0, 0, 0)'
-            },
-            scaleLabel: {
-              display: true,
-              labelString: this.$t('charts.tx-summary.label.pen')
+            {
+              id: 'y-axis-2',
+              position: 'right',
+              stacked: false,
+              ticks: {
+                beginAtZero: true,
+                callback: function (value) {
+                  const ranges = [
+                    {divider: 1e9, suffix: 'B'},
+                    {divider: 1e6, suffix: 'M'},
+                    {
+                      divider: 1e3,
+                      suffix: 'k'
+                    }
+                  ]
+
+                  function formatNumber(n) {
+                    for (let i = 0; i < ranges.length; i++) {
+                      if (n >= ranges[i].divider) {
+                        return (n / ranges[i].divider).toString() + ranges[i].suffix
+                      }
+                    }
+                    return n
+                  }
+
+                  return formatNumber(value)
+                }
+              },
+              gridLines: {
+                color: 'rgba(0, 0, 0, 0)'
+              },
+              scaleLabel: {
+                display: true,
+                labelString: this.$t('charts.tx-summary.label.pen')
+              }
             }
-          }
-        ],
-        xAxes: [
-          {
-            stacked: false,
-            display: false
-          }
-        ]
+          ],
+          xAxes: [
+            {
+              stacked: false,
+              display: false
+            }
+          ]
+        }
       }
     }
   }
-}
 </script>
