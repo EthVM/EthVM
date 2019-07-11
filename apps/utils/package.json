@@ -19,6 +19,7 @@
     "node-rdkafka": "~2.5.1",
     "ora": "^3.4.0",
     "pg": "^7.9.0",
+    "pg-cursor": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "retry-axios": "^0.5.0",
     "rxjs": "~6.4.0",

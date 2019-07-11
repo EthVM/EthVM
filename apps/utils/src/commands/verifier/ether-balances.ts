@@ -1,49 +1,68 @@
 import { Config } from '@app/config'
-import { ConnectionFactory } from '@app/db'
 import { EtherBalanceView } from '@app/db/entities/ether-balance.view'
-import ora from 'ora'
-import { Connection } from 'typeorm'
 import Web3 from 'web3'
 import { WebsocketProvider } from 'web3-providers'
 
+import { Pool } from 'pg'
+import Cursor from 'pg-cursor'
+
 export async function EtherBalances(config: Config, blockNumber?: number) {
 
-  const spinner = ora('Checking ether balances').start();
+  // const spinner = ora('Checking ether balances').start();
 
   const web3 = new Web3(new WebsocketProvider(config.web3.wsUrl))
-  const connection = await ConnectionFactory(config)
+
+  const { host, port, username: user, password, database } = config.postgres
+
+  const pool = new Pool({
+    host,
+    port,
+    user,
+    password,
+    database,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000
+  })
+
+  const client = await pool.connect()
 
   let offset = 0
-  const limit = 200
+  const limit = 1024
   let progress = 0
 
   let balances = []
   let matched = 0
+  let failed = 0
   const hasSpaces = []
   const failures = []
 
+  const cursor = client.query(new Cursor('SELECT address, amount FROM canonical_ether_balance', []))
+
   do {
-    balances = await fetchBalances(connection, offset, limit)
 
-    const comparisons = balances.map(async actual => {
-      const { address, amount } = actual
+    balances = await fetchBalances(cursor, limit)
 
-      const trimmedAddress = actual.address.trim()
+    const comparisons = balances.map(async ethvmBalance => {
 
-      if(trimmedAddress.length !== actual.address.length) {
-        hasSpaces.push(`Address '${actual.address}' has spaces`)
+      const { address, amount: ethvmAmount } = ethvmBalance
+
+      const trimmedAddress = ethvmBalance.address.trim()
+
+      if(trimmedAddress.length !== ethvmBalance.address.length) {
+        console.error(`Address '${ethvmBalance.address}' has spaces`)
       } else {
 
-        const expected = await web3.eth.getBalance(actual.address, blockNumber ? blockNumber : undefined)
+        const parityAmount = await web3.eth.getBalance(ethvmBalance.address, blockNumber ? blockNumber : undefined)
 
-        if (expected === amount) {
+        if (parityAmount === ethvmAmount) {
           matched += 1
         } else {
-          failures.push(`${address}: \texpected = ${expected} \tactual = ${amount}`)
+          console.error(`Failure => ${address}, \tparity = ${parityAmount} \tethvm = ${ethvmAmount}`)
+          failed += 1
         }
 
-        return expected
-
+        return parityAmount
       }
 
     })
@@ -53,27 +72,39 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
     offset += limit
     progress += comparisons.length
 
-    spinner.text = `Checking ether balances: matched = ${matched}, failed = ${failures.length}, has spaces = ${hasSpaces.length}`
+    console.log(`Checking ether balances: matched = ${matched}, failed = ${failed}, has spaces = ${hasSpaces.length}`)
 
   } while (balances.length)
 
   if(failures.length > 0) {
-    failures.forEach(failure => spinner.fail(failure))
-    hasSpaces.forEach(failure => spinner.fail(failure))
-    spinner.fail(`${matched} matches, ${failures.length} discrepancies found, ${hasSpaces.length} addresses had spaces`)
+    console.error(`${matched} matches, ${failed} discrepancies found, ${hasSpaces.length} addresses had spaces`)
     process.exit(1)
   } else {
-    spinner.succeed('No discrepancies found')
+    console.log(`No discrepancies found, ${matched} matches in total`)
     process.exit(0)
   }
 
 }
 
-async function fetchBalances(connection: Connection, offset: number = 0, limit: number = 20): Promise<EtherBalanceView[]> {
-  return connection
-    .getRepository(EtherBalanceView)
-    .createQueryBuilder('balance')
-    .skip(offset)
-    .take(limit)
-    .getMany()
+async function fetchBalances(cursor: Cursor, size: number): Promise<EtherBalanceView[]> {
+
+  return new Promise((resolve, error) => {
+
+    cursor.read(size, (err, rows) => {
+
+      if(err) return error(err)
+
+      const entities = rows.map(r => {
+        const result = new EtherBalanceView()
+        result.address = r.address
+        result.amount = r.amount
+        return result
+      })
+
+      return resolve(entities)
+
+    })
+
+  })
+
 }
