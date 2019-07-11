@@ -59,7 +59,6 @@
         </v-card>
         <v-card v-else color="white" v-for="(transfer, index) in transfers" class="transparent" flat :key="index">
           <transfers-table-row :transfer="transfer" :is-internal="isInternal" :decimals="decimals" />
-          <v-divider class="mb-2 mt-2" />
         </v-card>
         <!-- End Rows -->
         <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
