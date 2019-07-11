@@ -122,7 +122,6 @@ export default class AppChart extends Vue {
 
   mounted() {
     if (this.config && this.initialData && this.initialData.length) {
-      console.log('Mounted')
       this.createChart()
     }
   }
