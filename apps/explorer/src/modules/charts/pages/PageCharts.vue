@@ -76,16 +76,16 @@
         MINING TAB
       =====================================================================================
       -->
-      <v-tab-item slot="tabs-item" value="tab-3">
-        <v-layout row wrap justify-center :class="contentClass">
-          <v-flex xs12 md6>
-            <chart-link :title="$t('charts.hash-rate.title')" :text="$t('charts.hash-rate.description')" :chart-id="ChartType.hashRate" />
-          </v-flex>
-          <v-flex xs12 md6>
-            <!--  -->
-          </v-flex>
-        </v-layout>
-      </v-tab-item>
+<!--      <v-tab-item slot="tabs-item" value="tab-3">-->
+<!--        <v-layout row wrap justify-center :class="contentClass">-->
+<!--          <v-flex xs12 md6>-->
+<!--            <chart-link :title="$t('charts.hash-rate.title')" :text="$t('charts.hash-rate.description')" :chart-id="ChartType.hashRate" />-->
+<!--          </v-flex>-->
+<!--          <v-flex xs12 md6>-->
+<!--            &lt;!&ndash;  &ndash;&gt;-->
+<!--          </v-flex>-->
+<!--        </v-layout>-->
+<!--      </v-tab-item>-->
     </app-tabs>
   </v-container>
 </template>
@@ -151,11 +151,11 @@ export default class PageCharts extends Vue {
         title: this.$i18n.tc('block.name', 2),
         isActive: false
       },
-      {
-        id: 3,
-        title: this.$i18n.t('miner.history'),
-        isActive: false
-      }
+      // {
+      //   id: 3,
+      //   title: this.$i18n.t('miner.history'),
+      //   isActive: false
+      // }
     ]
   }
 
