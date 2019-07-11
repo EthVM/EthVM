@@ -16,7 +16,7 @@ import { TranslateResult } from 'vue-i18n'
         query: newBlock,
 
         result({ data }) {
-          (this as any).display = true
+          ;(this as any).display = true
         }
       }
     }
