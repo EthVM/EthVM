@@ -4,7 +4,7 @@
     <v-flex xs12 md6>
       <v-flex d-flex xs12 pa-2>
         <v-layout row align-center justift-start pa-1>
-          <v-flex shrink pl-0 pt-1>
+          <v-flex shrink pl-0 pr-0 pt-1 pb-1>
             <p class="info--text pb-0 pl-0">{{ $tc('tx.hash', 1) }}:</p>
           </v-flex>
           <v-flex sm10 lg11 pa-1>
