@@ -27,7 +27,7 @@ export class BlockService {
   ) {
   }
 
-  async calculateHashRate(): Promise<BigNumber | null> {
+  async calculateHashRate(cache: boolean = true): Promise<BigNumber | null> {
 
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
     const blocks = await this.blockHeaderRepository
@@ -35,7 +35,7 @@ export class BlockService {
         select: ['number', 'difficulty', 'blockTime'],
         order: { number: 'DESC' },
         take: 20,
-        cache: true,
+        cache,
       })
 
     if (blocks.length === 0) return null

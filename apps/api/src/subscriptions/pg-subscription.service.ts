@@ -297,7 +297,7 @@ export class PgSubscriptionService {
 
           // get data
           const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
-          const hashRate = await blockService.calculateHashRate()
+          const hashRate = await blockService.calculateHashRate(false)
 
           // publish events
 
@@ -318,7 +318,7 @@ export class PgSubscriptionService {
 
   private initMetrics() {
 
-    const { blockService, transactionService, blockMetricsService, pubSub } = this
+    const { blockMetricsService, pubSub } = this
 
     const events$ = Observable.create(
       async observer => {
