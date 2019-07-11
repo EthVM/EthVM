@@ -4,7 +4,7 @@
     :chart-title="title"
     :chart-description="description"
     :config="chartConfig"
-    :initialData="chartData"
+    :initial-data="chartData"
     :options="chartOptions"
     :redraw="true"
     :data-loading="loading"
@@ -235,7 +235,6 @@ export default class ChartTimeseries extends Vue {
   }
 
   toChartDataItem(raw): ChartData {
-
     const data = [] as any[]
     data.push(this.parseValue(raw.value))
 
@@ -257,7 +256,6 @@ export default class ChartTimeseries extends Vue {
   }
 
   get chartConfig(): ChartConfig {
-
     const { description } = this
 
     return {
@@ -273,7 +271,6 @@ export default class ChartTimeseries extends Vue {
         }
       ]
     }
-
   }
 
   get chartData(): ChartData[] {

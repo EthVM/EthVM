@@ -9,7 +9,7 @@ export interface ChartDatasetConfig {
   yAxisID: string
   borderColor?: string
   backgroundColor?: string
-  fill?: boolean,
+  fill?: boolean
   type?: string
 }
 
@@ -20,6 +20,6 @@ export interface ChartPoints {
 }
 
 export interface ChartData {
-  label: string,
+  label: string
   data: any[] // One array item for each dataset
 }

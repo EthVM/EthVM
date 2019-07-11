@@ -2,8 +2,8 @@
   <chart
     type="line"
     :config="chartConfig"
-    :initialData="chartData"
-    :newData="latestData"
+    :initial-data="chartData"
+    :new-data="latestData"
     :options="chartOptions"
     :redraw="redraw"
     :chart-title="newTitle"
@@ -27,8 +27,8 @@ import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 import { latestAvgGasPrices_blockMetricsTransaction, latestAvgGasPrices_blockMetricsTransaction_items } from '@app/core/api/apollo/types/latestAvgGasPrices'
 import { latestAvgTxFees_blockMetricsTransactionFee, latestAvgTxFees_blockMetricsTransactionFee_items } from '@app/core/api/apollo/types/latestAvgTxFees'
-import { newAvgGasPrice_newBlockMetricsTransaction } from "@app/core/api/apollo/types/newAvgGasPrice";
-import { newAvgTxFee_newBlockMetricsTransactionFee } from "@app/core/api/apollo/types/newAvgTxFee";
+import { newAvgGasPrice_newBlockMetricsTransaction } from '@app/core/api/apollo/types/newAvgGasPrice'
+import { newAvgTxFee_newBlockMetricsTransactionFee } from '@app/core/api/apollo/types/newAvgTxFee'
 import { ChartConfig, ChartData } from '@app/modules/charts/props'
 
 const MAX_ITEMS = 10
@@ -85,7 +85,7 @@ const MAX_ITEMS = 10
         } else {
           this.error = this.$i18n.t('message.err')
         }
-      },
+      }
     },
 
     avgTxFees: {
@@ -125,11 +125,10 @@ const MAX_ITEMS = 10
         } else {
           this.error = this.$i18n.t('message.err')
         }
-      },
+      }
     },
 
     $subscribe: {
-
       newAvgGasPrice: {
         query: newAvgGasPrice,
         result({ data }) {
@@ -146,7 +145,7 @@ const MAX_ITEMS = 10
           self.latestAvgTxFee = data.newBlockMetricsTransactionFee
           self.updateLatestData()
         }
-      },
+      }
     }
   }
 })
@@ -199,7 +198,6 @@ export default class ChartLiveTxFees extends Vue {
     */
 
   toChartDataItem(gasPrice: newAvgGasPrice_newBlockMetricsTransaction, txFee: newAvgTxFee_newBlockMetricsTransactionFee): ChartData {
-
     const numberLabel = this.$i18n.t('block.number')
 
     const data = [] as any[]
@@ -213,12 +211,15 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   updateLatestData() {
-
     const { latestAvgGasPrice, latestAvgTxFee } = this
 
-    if (!(latestAvgGasPrice && latestAvgTxFee)) return
+    if (!(latestAvgGasPrice && latestAvgTxFee)) {
+      return
+    }
 
-    if (latestAvgGasPrice.number !== latestAvgTxFee.number) return
+    if (latestAvgGasPrice.number !== latestAvgTxFee.number) {
+      return
+    }
 
     this.latestData = this.toChartDataItem(latestAvgGasPrice, latestAvgTxFee)
   }
@@ -234,7 +235,6 @@ export default class ChartLiveTxFees extends Vue {
   }
 
   get chartConfig(): ChartConfig {
-
     return {
       labels: [],
       datasets: [
@@ -253,14 +253,12 @@ export default class ChartLiveTxFees extends Vue {
           data: [],
           yAxisID: 'y-axis-1',
           fill: false
-        },
+        }
       ]
     }
-
   }
 
   get chartData(): ChartData[] {
-
     const { avgGasPrices, avgTxFees } = this
 
     if (!(avgGasPrices && avgTxFees)) {
