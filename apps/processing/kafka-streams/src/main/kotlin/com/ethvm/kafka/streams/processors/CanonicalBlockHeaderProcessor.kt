@@ -3,11 +3,14 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.avro.processing.BlockAuthorRecord
 import com.ethvm.avro.processing.BlockMetricKeyRecord
 import com.ethvm.avro.processing.BlockMetricsHeaderRecord
+import com.ethvm.avro.processing.BlockTimeRecord
 import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
+import com.ethvm.kafka.streams.config.Topics.CanonicalBlockTime
+import com.ethvm.kafka.streams.processors.transformers.BlockTimeTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -15,6 +18,7 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
+import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.joda.time.DateTime
 import java.util.Properties
 
@@ -34,9 +38,22 @@ class CanonicalBlockHeaderProcessor : AbstractKafkaProcessor() {
   override fun buildTopology(): Topology {
 
     // Create stream builder
-    val builder = StreamsBuilder()
+    val builder = StreamsBuilder().apply {
+      addStateStore(BlockTimeTransformer.blockHeaderStore(appConfig.unitTesting))
+    }
 
     val blockHeader = CanonicalBlockHeader.stream(builder)
+
+    blockHeader
+      // calculate block time first
+      .transform(TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting)}, *BlockTimeTransformer.STORE_NAMES)
+      .mapValues { _, v ->
+        BlockTimeRecord.newBuilder()
+          .setTimestamp(v.timestamp)
+          .setBlockTime(v.blockTime)
+          .build()
+      }
+      .toTopic(CanonicalBlockTime)
 
     // Canonical Block Author
 

@@ -20,6 +20,7 @@ import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
+import com.ethvm.avro.processing.BlockTimeRecord
 import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
@@ -47,6 +48,7 @@ import com.ethvm.kafka.streams.Serdes.BlockMetricsHeader
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransaction
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionFee
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionTrace
+import com.ethvm.kafka.streams.Serdes.BlockTime
 import com.ethvm.kafka.streams.Serdes.CanonicalCount
 import com.ethvm.kafka.streams.Serdes.CanonicalCountKey
 import com.ethvm.kafka.streams.Serdes.CanonicalKey
@@ -113,6 +115,7 @@ data class KafkaTopic<K, V>(
 object Topics {
 
   val CanonicalBlockHeader = KafkaTopic<CanonicalKeyRecord, BlockHeaderRecord>("canonical_block_header", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockHeaderRecord.`SCHEMA$`, BlockHeader())
+  val CanonicalBlockTime = KafkaTopic<CanonicalKeyRecord, BlockTimeRecord>("canonical_block_time", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockTimeRecord.`SCHEMA$`, BlockTime())
   val CanonicalTransactions = KafkaTopic<CanonicalKeyRecord, TransactionListRecord>("canonical_transactions", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionListRecord.`SCHEMA$`, TransactionList())
   val CanonicalReceipts = KafkaTopic<CanonicalKeyRecord, TransactionReceiptListRecord>("canonical_receipts", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionReceiptListRecord.`SCHEMA$`, ReceiptList())
   val CanonicalTraces = KafkaTopic<CanonicalKeyRecord, TraceListRecord>("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())

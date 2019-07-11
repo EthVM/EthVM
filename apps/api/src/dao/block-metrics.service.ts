@@ -11,6 +11,8 @@ import moment = require('moment')
 import { DbConnection } from '@app/orm/config'
 import { BlockMetricsHeaderEntity } from '@app/orm/entities/block-metrics-header.entity'
 import { BlockMetricsTransactionTraceEntity } from '@app/orm/entities/block-metrics-transaction-trace.entity'
+import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
+import { query } from 'winston'
 
 @Injectable()
 export class BlockMetricsService {
@@ -143,19 +145,19 @@ export class BlockMetricsService {
 
     switch (bucket) {
       case TimeBucket.ONE_HOUR:
-        select.push('time_bucket(\'1 hour\', timestamp) as time')
+        select.push('time_bucket(\'1 hour\', bm.timestamp) as time')
         break
       case TimeBucket.ONE_DAY:
-        select.push('time_bucket(\'1 day\', timestamp) as time')
+        select.push('time_bucket(\'1 day\', bm.timestamp) as time')
         break
       case TimeBucket.ONE_WEEK:
-        select.push('time_bucket(\'1 week\', timestamp) as time')
+        select.push('time_bucket(\'1 week\', bm.timestamp) as time')
         break
       case TimeBucket.ONE_MONTH:
-        select.push('time_bucket(\'1 month\', timestamp) as time')
+        select.push('time_bucket(\'1 month\', bm.timestamp) as time')
         break
       case TimeBucket.ONE_YEAR:
-        select.push('time_bucket(\'1 year\', timestamp) as time')
+        select.push('time_bucket(\'1 year\', bm.timestamp) as time')
         break
       default:
         throw new Error(`Unexpected bucket value: ${bucket}`)
@@ -163,7 +165,7 @@ export class BlockMetricsService {
 
     switch (field) {
         case BlockMetricField.AVG_BLOCK_TIME:
-          select.push('round(avg(block_time)) as avg_block_time')
+          select.push('round(avg(bt.block_time)) as avg_block_time')
           break
         case BlockMetricField.AVG_NUM_UNCLES:
           select.push('round(avg(num_uncles)) as avg_num_uncles')
@@ -219,6 +221,13 @@ export class BlockMetricsService {
 
     if (headerFields.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsHeaderEntity, 'bm')
+
+      if (field === BlockMetricField.AVG_BLOCK_TIME) {
+        queryBuilder = queryBuilder
+          .leftJoin(BlockTimeEntity, 'bt', 'bt.timestamp = bm.timestamp')
+          .where('bt.block_time IS NOT NULL')
+      }
+
     } else if (txFields.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionEntity, 'bm')
     } else if (txTraceFields.indexOf(field) > -1) {
@@ -231,7 +240,7 @@ export class BlockMetricsService {
 
     const items = await queryBuilder
       .select(select)
-      .where('timestamp between :end and :start')
+      .where('bm.timestamp between :end and :start')
       .groupBy('time')
       .orderBy({ time: 'DESC' })
       .setParameters({ start, end })
