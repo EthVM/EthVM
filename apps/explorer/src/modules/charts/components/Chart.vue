@@ -9,10 +9,16 @@
         <v-layout row wrap align-center justify-end pa-3>
           <button flat :class="[this.toggleData === 0 ? 'active-button' : 'button']" @click="toggleData = 0" small>{{ $tc('charts.states.day', 2) }}</button>
           <button flat :class="[this.toggleData === 1 ? 'active-button' : 'button']" @click="toggleData = 1" small>{{ $tc('charts.states.week', 2) }}</button>
-          <button flat :class="[this.toggleData === 2 ? 'active-button' : 'button']" @click="toggleData = 2" small>{{ $tc('charts.states.week-two', 2) }}</button>
+          <button flat :class="[this.toggleData === 2 ? 'active-button' : 'button']" @click="toggleData = 2" small>
+            {{ $tc('charts.states.week-two', 2) }}
+          </button>
           <button flat :class="[this.toggleData === 3 ? 'active-button' : 'button']" @click="toggleData = 3" small>{{ $tc('charts.states.month', 2) }}</button>
-          <button flat :class="[this.toggleData === 4 ? 'active-button' : 'button']" @click="toggleData = 4" small>{{ $tc('charts.states.month-three', 2) }}</button>
-          <button flat :class="[this.toggleData === 5 ? 'active-button' : 'button']" @click="toggleData = 5" small>{{ $tc('charts.states.month-six', 2) }}</button>
+          <button flat :class="[this.toggleData === 4 ? 'active-button' : 'button']" @click="toggleData = 4" small>
+            {{ $tc('charts.states.month-three', 2) }}
+          </button>
+          <button flat :class="[this.toggleData === 5 ? 'active-button' : 'button']" @click="toggleData = 5" small>
+            {{ $tc('charts.states.month-six', 2) }}
+          </button>
           <button flat :class="[this.toggleData === 6 ? 'active-button' : 'button']" @click="toggleData = 6" small>{{ $tc('charts.states.year', 2) }}</button>
           <button flat :class="[this.toggleData === 7 ? 'active-button' : 'button']" @click="toggleData = 7" small>{{ $tc('charts.states.all', 2) }}</button>
         </v-layout>
@@ -111,7 +117,6 @@ export default class AppChart extends Vue {
 
   toggleData = 0
   chart: ChartJs | null = null
-
 
   /*
   ===================================================================================
