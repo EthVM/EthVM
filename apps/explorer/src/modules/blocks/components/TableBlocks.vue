@@ -336,8 +336,7 @@ export default class TableBlocks extends Vue {
         */
 
   get loading(): boolean | undefined {
-    // return this.$apollo.queries.blockPage.loading || this.syncing
-    return true
+    return this.$apollo.queries.blockPage.loading || this.syncing
   }
 
   /**
