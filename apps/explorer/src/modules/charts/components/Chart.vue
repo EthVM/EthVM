@@ -30,7 +30,7 @@ import ChartJs from 'chart.js'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Footnote } from '@app/core/components/props'
-import { ChartData } from '@app/modules/charts/props'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import AppError from '@app/core/components/ui/AppError.vue'
 
@@ -87,7 +87,7 @@ export default class AppChart extends Vue {
 
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data!: ChartData
+  @Prop({ type: Object, required: true }) data!: ChartConfig
   @Prop({ type: Boolean }) redraw!: boolean
   @Prop({ type: Object }) options!: object
   @Prop({ type: String }) chartTitle!: string
@@ -95,6 +95,8 @@ export default class AppChart extends Vue {
   @Prop({ type: Array }) footnotes?: Footnote[]
   @Prop({ type: Boolean }) dataLoading?: boolean
   @Prop({ type: String }) error!: string
+  @Prop({ type: Number, default: 10 }) maxItems!: number
+  @Prop({ type: Object }) newData!: ChartData
 
   /*
   ===================================================================================
@@ -103,7 +105,6 @@ export default class AppChart extends Vue {
   */
 
   toggleData = 0
-  updateChart = false
   chart: ChartJs | null = null
 
   /*
@@ -187,6 +188,21 @@ export default class AppChart extends Vue {
     this.$emit('timeFrame', newVal)
   }
 
+  @Watch('newData')
+  onNewItem(newData): void {
+
+    newData.forEach(value => {
+      this.updateChartData(value)
+      if (!this.redraw) { // Trigger update animation for each change
+        this.chart.update()
+      }
+    })
+
+    if (this.redraw) {
+      this.redrawChart()
+    }
+  }
+
   /*
   ===================================================================================
     Methods
@@ -199,6 +215,31 @@ export default class AppChart extends Vue {
       data: this.data,
       options: this.options
     })
+  }
+
+  redrawChart() {
+    if (this.chart) {
+      this.chart.destroy()
+    }
+    this.createChart()
+  }
+
+  updateChartData(newVal) {
+
+    // Remove last item
+    if (this.data!.datasets[0].data.length >= this.maxItems) {
+      this.chart.data.labels.pop()
+      this.chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+      });
+      // TODO trigger update here too?
+    }
+
+    // Add new item
+    this.chart.data.labels.push(newVal.label);
+    this.chart.data.datasets.forEach((dataset, index) => {
+      dataset.data.push(newVal.data[index]);
+    });
   }
 }
 </script>

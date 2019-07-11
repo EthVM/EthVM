@@ -18,7 +18,7 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { TimeBucket } from '@app/core/api/apollo/types/globalTypes'
 import moment from 'moment'
-import { ChartData } from '@app/modules/charts/props'
+import { ChartConfig } from '@app/modules/charts/props'
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
 
@@ -244,7 +244,7 @@ export default class ChartTimeseries extends Vue {
     return brkPoint !== 'xs'
   }
 
-  get chartData(): ChartData {
+  get chartData(): ChartConfig {
     const { timeseries, description } = this
 
     const labels: any[] = []

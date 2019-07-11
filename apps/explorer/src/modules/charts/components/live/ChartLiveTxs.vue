@@ -21,22 +21,9 @@ import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import BigNumber from 'bignumber.js'
 import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { Subscription } from 'rxjs'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 
 const MAX_ITEMS = 10
-
-class ChartData {
-  constructor(
-    public readonly labels: string[] = [],
-    public readonly sTxs: number[] = [],
-    public readonly fTxs: number[] = [],
-    public readonly pTxs: number[] = []
-  ) {
-    this.labels = labels
-    this.sTxs = sTxs
-    this.fTxs = fTxs
-    this.pTxs = pTxs
-  }
-}
 
 @Component({
   components: {
@@ -94,6 +81,8 @@ class ChartData {
           const { blockSummaries } = previousResult
           const { newBlock } = subscriptionData.data
 
+          console.log('New block recieved', newBlock)
+
           const items = Object.assign([], blockSummaries.items)
 
           // add to the beginning of the array
@@ -134,6 +123,8 @@ export default class ChartLiveTxs extends Vue {
 
   blockPage?: BlockSummaryPageExt
 
+  newBlock?: BlockSummaryPageExt_items
+
   connectedSubscription?: Subscription
 
   /*
@@ -162,24 +153,39 @@ export default class ChartLiveTxs extends Vue {
       ===================================================================================
       */
 
-  toChartData(items: (BlockSummaryPageExt_items)[]) {
+  toChartDataItem(raw: BlockSummaryPageExt_items): ChartData {
     const numberLabel = this.$i18n.t('block.number')
 
-    const labels: string[] = []
-    const sTxs: number[] = []
-    const fTxs: number[] = []
-    const pTxs: number[] = []
+    const data = [] as any[]
+    data.push(raw.numSuccessfulTxsBN!.toNumber())
+    data.push(raw.numFailedTxsBN!.toNumber())
+    // TODO add pending or remove
+    data.push(0)
 
-    items.forEach(item => {
-      labels.push(numberLabel + item!.numberBN!.toString())
-      sTxs.push(item!.numSuccessfulTxsBN!.toNumber())
-      fTxs.push(item!.numFailedTxsBN!.toNumber())
-      // TODO add pending txs
-      pTxs.push(0)
-    })
-
-    return new ChartData(labels, sTxs, fTxs, pTxs)
+    return {
+      label: `${numberLabel} ${raw!.numberBN!.toString()}`,
+      data
+    }
   }
+
+  // toChartData(items: (BlockSummaryPageExt_items)[]) {
+  //   const numberLabel = this.$i18n.t('block.number')
+  //
+  //   const labels: string[] = []
+  //   const sTxs: number[] = []
+  //   const fTxs: number[] = []
+  //   const pTxs: number[] = []
+  //
+  //   items.forEach(item => {
+  //     labels.push(numberLabel + item!.numberBN!.toString())
+  //     sTxs.push(item!.numSuccessfulTxsBN!.toNumber())
+  //     fTxs.push(item!.numFailedTxsBN!.toNumber())
+  //     // TODO add pending txs
+  //     pTxs.push(0)
+  //   })
+  //
+  //   return new ChartData(labels, sTxs, fTxs, pTxs)
+  // }
 
   /*
       ===================================================================================
@@ -189,6 +195,37 @@ export default class ChartLiveTxs extends Vue {
 
   get loading(): boolean | undefined {
     return this.$apollo.queries.blockPage.loading || this.syncing
+  }
+
+  get chartConfig(): ChartConfig {
+
+    return {
+      labels: [],
+      datasets: [
+        {
+          label: 'Pending',
+          backgroundColor: '#eea66b',
+          borderColor: '#eea66b',
+          data: [],
+          type: 'line',
+          fill: false,
+          yAxisID: 'y-axis-2'
+        },
+        {
+          label: this.$i18n.t('common.success').toString(),
+          backgroundColor: '#40ce9c',
+          data: [],
+          yAxisID: 'y-axis-1'
+        },
+        {
+          label: this.$i18n.t('common.fail').toString(),
+          backgroundColor: '#fe136c',
+          data: [],
+          yAxisID: 'y-axis-1'
+        }
+      ]
+    }
+
   }
 
   get chartData() {
