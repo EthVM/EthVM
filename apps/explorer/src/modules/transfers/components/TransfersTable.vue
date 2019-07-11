@@ -58,59 +58,7 @@
           <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
         </v-card>
         <v-card v-else color="white" v-for="(transfer, index) in transfers" class="transparent" flat :key="index">
-          <v-layout align-center justify-start row fill-height pr-3>
-            <!-- Column 1 -->
-            <v-flex xs12 md6>
-              <v-flex d-flex xs12 pb-2>
-                <router-link class="primary--text text-truncate font-italic psmall" :to="`/tx/${transfer.transactionHash}`">
-                  {{ transfer.transactionHash }}
-                </router-link>
-              </v-flex>
-              <v-flex xs12 pt-0>
-                <v-layout row pl-2>
-                  <p class="text-truncate info--text mb-0">
-                    {{ $t('tx.from') }}:
-                    <router-link :to="`/address/${transfer.from}`" class="secondary--text font-italic font-weight-regular">
-                      {{ transfer.from }}
-                    </router-link>
-                  </p>
-                  <v-icon class="fas fa-arrow-right primary--text pl-1 pr-2 pb-1" small></v-icon>
-                  <!-- TODO transfer.contract -->
-                  <p class="text-truncate info--text font-weight-thin mb-0" v-if="transfer.contract">
-                    {{ $tc('contract.name', 1) }}:
-                    <router-link class="secondary--text font-italic font-weight-regular" :to="`/address/${transfer.address}`">
-                      {{ transfer.address }}
-                    </router-link>
-                  </p>
-                  <p class="text-truncate info--text font-weight-thin mb-0" v-else>
-                    <strong>{{ $t('tx.to') }}:</strong>
-                    <router-link class="secondary--text font-italic font-weight-regular" :to="`/address/${transfer.to}`">
-                      {{ transfer.to }}
-                    </router-link>
-                  </p>
-                </v-layout>
-              </v-flex>
-            </v-flex>
-            <!-- End Column 1 -->
-
-            <!-- Column 2 -->
-            <v-flex hidden-sm-and-down md2>
-              <app-time-ago :timestamp="transfer.timestampDate" />
-            </v-flex>
-            <!-- End Column 2 -->
-
-            <!-- Column 3 -->
-            <v-flex hidden-sm-and-down md2>
-              <p>{{ calculateTransferValue(transfer.value) }}</p>
-            </v-flex>
-            <!-- End Column 3 -->
-
-            <!-- Column 4 -->
-            <v-flex v-if="isInternal" hidden-sm-and-down md2>
-              <p>{{ $t('transfer.' + transfer.deltaType) }}</p>
-            </v-flex>
-            <!-- End Column 4 -->
-          </v-layout>
+          <transfers-table-row :transfer="transfer" :isInternal="isInternal" :decimals="decimals" />
           <v-divider class="mb-2 mt-2" />
         </v-card>
         <!-- End Rows -->
@@ -124,10 +72,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import BN from 'bignumber.js'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import { EthValue } from '@app/core/models'
 import {
   internalTransactionsByAddress,
   tokenTransfersByContractAddress,
@@ -136,6 +82,7 @@ import {
 import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
 import BigNumber from 'bignumber.js'
 import AppError from '@app/core/components/ui/AppError.vue'
+import TransfersTableRow from '@app/modules/transfers/components/TransfersTableRow.vue';
 
 const MAX_ITEMS = 10
 
@@ -143,7 +90,8 @@ const MAX_ITEMS = 10
   components: {
     AppTimeAgo,
     AppPaginate,
-    AppError
+    AppError,
+    TransfersTableRow
   },
   data() {
     return {
@@ -237,19 +185,6 @@ export default class TransfersTable extends Vue {
         return fetchMoreResult
       }
     })
-  }
-
-  calculateTransferValue(value: string) {
-    if (this.isInternal) {
-      return new EthValue(value).toEthFormatted().toString()
-    }
-
-    let n = new BN(value)
-
-    if (this.decimals) {
-      n = n.div(new BN(10).pow(this.decimals))
-    }
-    return n.toFormat(2).toString()
   }
 
   /*
