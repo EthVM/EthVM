@@ -58,7 +58,7 @@
           <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
         </v-card>
         <v-card v-else color="white" v-for="(transfer, index) in transfers" class="transparent" flat :key="index">
-          <transfers-table-row :transfer="transfer" :isInternal="isInternal" :decimals="decimals" />
+          <transfers-table-row :transfer="transfer" :is-internal="isInternal" :decimals="decimals" />
           <v-divider class="mb-2 mt-2" />
         </v-card>
         <!-- End Rows -->
@@ -82,7 +82,7 @@ import {
 import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
 import BigNumber from 'bignumber.js'
 import AppError from '@app/core/components/ui/AppError.vue'
-import TransfersTableRow from '@app/modules/transfers/components/TransfersTableRow.vue';
+import TransfersTableRow from '@app/modules/transfers/components/TransfersTableRow.vue'
 
 const MAX_ITEMS = 10
 

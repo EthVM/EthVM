@@ -47,49 +47,46 @@
 </template>
 
 <script lang="ts">
-  import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue';
-  import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue';
-  import { Vue, Component, Prop } from 'vue-property-decorator'
-  import { TransferPageExt_items } from "@app/core/api/apollo/extensions/transfer-page.ext";
-  import { EthValue } from '@app/core/models';
-  import BigNumber from 'bignumber.js';
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { TransferPageExt_items } from '@app/core/api/apollo/extensions/transfer-page.ext'
+import { EthValue } from '@app/core/models'
+import BigNumber from 'bignumber.js'
 
-  @Component({
-    components: {
-      AppTimeAgo,
-      AppTransformHash
-    }
-  })
-  export default class TransfersTableRow extends Vue {
-
-    /*
+@Component({
+  components: {
+    AppTimeAgo,
+    AppTransformHash
+  }
+})
+export default class TransfersTableRow extends Vue {
+  /*
    ===================================================================================
      Props
    ===================================================================================
    */
-    @Prop(TransferPageExt_items) transfer!: TransferPageExt_items
-    @Prop(Boolean) isInternal?: boolean
-    @Prop(Number) decimals?: number
+  @Prop(TransferPageExt_items) transfer!: TransferPageExt_items
+  @Prop(Boolean) isInternal?: boolean
+  @Prop(Number) decimals?: number
 
-
-    /*
+  /*
     ===================================================================================
       Methods
     ===================================================================================
     */
 
-    calculateTransferValue(value: string) {
-      if (this.isInternal) {
-        return new EthValue(value).toEthFormatted().toString()
-      }
-
-      let n = new BigNumber(value)
-
-      if (this.decimals) {
-        n = n.div(new BigNumber(10).pow(this.decimals))
-      }
-      return n.toFormat(2).toString()
+  calculateTransferValue(value: string) {
+    if (this.isInternal) {
+      return new EthValue(value).toEthFormatted().toString()
     }
 
+    let n = new BigNumber(value)
+
+    if (this.decimals) {
+      n = n.div(new BigNumber(10).pow(this.decimals))
+    }
+    return n.toFormat(2).toString()
   }
+}
 </script>
