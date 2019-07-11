@@ -1,7 +1,5 @@
 <template>
   <v-card color="white" flat class="pt-3 mt-0">
-    <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
-
     <!--
     =====================================================================================
       TITLE
@@ -11,6 +9,7 @@
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
+          <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
         </v-layout>
       </v-flex>
       <v-spacer />
