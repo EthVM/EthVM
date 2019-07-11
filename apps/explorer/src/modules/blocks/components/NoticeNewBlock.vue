@@ -1,5 +1,7 @@
 <template>
-  <v-btn flat class="new-block-alert text-capitalize" @click="onReload"> {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon> </v-btn>
+  <v-btn flat class="new-block-alert text-capitalize" @click="onReload" v-if="display">
+    {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon>
+  </v-btn>
 </template>
 
 <script lang="ts">
@@ -14,7 +16,7 @@ import { TranslateResult } from 'vue-i18n'
         query: newBlock,
 
         result({ data }) {
-          ;(this as any).display = true
+          (this as any).display = true
         }
       }
     }
