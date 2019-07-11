@@ -169,8 +169,14 @@ export default class AppChart extends Vue {
 
   @Watch('initialData')
   onInitialDataChanged(): void {
-    if (!this.chart && this.config && this.initialData && this.initialData.length) {
+    if (this.redraw) {
+      if (this.chart) {
+        this.chart.destroy()
+      }
       this.createChart()
+
+    } else if (!this.chart && this.config && this.initialData && this.initialData.length) {
+      this.createChart() // Create chart if not created in mounted hook
     }
   }
 
@@ -201,10 +207,16 @@ export default class AppChart extends Vue {
 
     const { config, initialData } = this
 
+    // clear previous state
+    config.labels = []
+    config.datasets.forEach(dataset => {
+      dataset.data = []
+    })
+
+    // Add new data
     initialData.forEach(item => {
       config.labels.push(item.label)
       config.datasets.forEach((dataset, index) => {
-        if (!dataset.data) dataset.data = []
         dataset.data.push(item.data[index])
       })
     })
@@ -244,8 +256,6 @@ export default class AppChart extends Vue {
   }
 
   updateInitialData(newVal) {
-
-    console.log('Update initial data', newVal)
 
     if (this.initialData && this.initialData.length >= this.maxItems) {
       this.initialData.pop()
