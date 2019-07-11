@@ -273,7 +273,7 @@ export default class ChartLiveTxFees extends Vue {
       }, new Map<number, number>())
 
       const txFeesByNumber = txFeeItems.reduce((memo, next) => {
-        memo.set(parseInt(next.number), new EthValue(next.avgTxFees!).toGWei())
+        memo.set(parseInt(next.number), new EthValue(next.avgTxFees!).toEth())
         return memo
       }, new Map<number, number>())
 
