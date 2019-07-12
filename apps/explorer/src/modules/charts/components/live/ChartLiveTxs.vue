@@ -174,7 +174,7 @@ export default class ChartLiveTxs extends Vue {
           backgroundColor: '#fe136c',
           data: [],
           yAxisID: 'y-axis-2'
-        },
+        }
         // {
         //   label: 'Pending',
         //   backgroundColor: '#eea66b',
@@ -204,7 +204,7 @@ export default class ChartLiveTxs extends Vue {
         color: 'txFail',
         text: this.$i18n.t('common.fail'),
         icon: 'fa fa-circle'
-      },
+      }
       // {
       //   color: 'txPen',
       //   text: this.$i18n.t('common.pending'),
