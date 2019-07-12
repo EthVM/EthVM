@@ -235,7 +235,19 @@ export default class AppChart extends Vue {
     this.createChart()
   }
 
-  updateChartData(newVal) {
+  updateChartData(newVal: ChartData) {
+
+    // Check for fork by comparing labels to see if this chart point already exists in the chart
+    const prevIdx = this.chart.data.labels.indexOf(newVal.label)
+    if (prevIdx > -1) {
+      // Swap this item for the previous one
+      this.chart.data.labels[prevIdx] = newVal.label
+      this.chart.data.datasets.forEach((dataset, index) => {
+        dataset.data[prevIdx] = newVal.data[index]
+      })
+      return
+    }
+
     // Remove last item
     if (this.chart.data.datasets[0].data.length >= this.maxItems) {
       this.chart.data.labels.pop()
@@ -254,6 +266,14 @@ export default class AppChart extends Vue {
   }
 
   updateInitialData(newVal) {
+
+    // Check for fork and update data in place if necessary
+    const prevIdx = this.initialData.findIndex(initial => initial.label === newVal.label)
+    if (prevIdx > -1) {
+      this.initialData[prevIdx] = newVal
+      return
+    }
+
     if (this.initialData && this.initialData.length >= this.maxItems) {
       this.initialData.pop()
     }
