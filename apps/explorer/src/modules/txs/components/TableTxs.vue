@@ -1,22 +1,5 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
-    <!-- Tx Input Filter -->
-    <v-layout row>
-      <v-flex v-if="isAddressDetail" d-flex xs12 sm4 md3>
-        <v-layout row align-center justify-start fill-height height="40px">
-          <v-flex>
-            <p class="pr-2 ma-0">{{ $t('filter.view') }}:</p>
-          </v-flex>
-          <v-flex>
-            <v-card flat class="tx-filter-select-container pl-2" height="36px">
-              <v-select solo flat hide-details v-model="filter" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" />
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-flex>
-    </v-layout>
-    <!-- End Tx Input Filter -->
-
     <!--
     =====================================================================================
       TITLE
@@ -24,7 +7,18 @@
     -->
     <v-layout row wrap align-end>
       <v-flex xs7 md6 lg5 xl4 pr-0>
-        <v-layout v-if="isAddressDetail" justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnotes"/></v-layout>
+        <!-- Tx Input Filter -->
+        <v-layout v-if="isAddressDetail" row align-center justify-start fill-height height="40px">
+          <v-flex shrink>
+            <p class="pr-2 pl-2 ma-0">{{ $t('filter.view') }}:</p>
+          </v-flex>
+          <v-flex>
+            <v-card flat class="tx-filter-select-container pl-2" height="36px">
+              <v-select solo flat hide-details v-model="filter" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" />
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <!-- End Tx Input Filter -->
         <v-layout v-else align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
           <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
