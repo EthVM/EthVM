@@ -14,14 +14,14 @@
           </v-flex>
           <v-flex>
             <v-card flat class="tx-filter-select-container pl-2" height="36px">
-              <v-select solo flat hide-details v-model="filter" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px"/>
+              <v-select solo flat hide-details v-model="filter" class="primary body-1" :items="options" item-text="text" item-value="value" height="32px" />
             </v-card>
           </v-flex>
         </v-layout>
         <!-- End Tx Input Filter -->
         <v-layout v-else align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
-          <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock"/>
+          <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
         </v-layout>
       </v-flex>
       <v-flex xs5 md6 lg7 xl8 v-if="pageType == 'home'">
@@ -31,7 +31,7 @@
       </v-flex>
       <v-flex v-else xs5 md6 lg7 xl8>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page"/>
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
