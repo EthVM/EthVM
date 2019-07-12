@@ -5,7 +5,7 @@
         <v-card-title class="title font-weight-bold pb-1">{{ chartTitle }}</v-card-title>
         <v-card-text class="pt-0 pb-0 info--text caption">{{ chartDescription }}</v-card-text>
       </v-flex>
-      <v-flex xs12 sm3 v-if="!liveChart">
+      <v-flex grow v-if="!liveChart">
         <v-layout row wrap align-center justify-end pa-3>
           <button flat :class="[this.toggleData === 0 ? 'active-button' : 'button']" @click="toggleData = 0" small>{{ $tc('charts.states.day', 2) }}</button>
           <button flat :class="[this.toggleData === 1 ? 'active-button' : 'button']" @click="toggleData = 1" small>{{ $tc('charts.states.week', 2) }}</button>
