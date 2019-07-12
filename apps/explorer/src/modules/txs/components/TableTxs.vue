@@ -6,7 +6,7 @@
     =====================================================================================
     -->
     <v-layout row wrap align-end>
-      <v-flex xs7 md6 lg5 xl4 pr-0>
+      <v-flex xs12 md6 lg5 xl4 pr-0>
         <!-- Tx Input Filter -->
         <v-layout v-if="isAddressDetail" row align-center justify-start fill-height height="40px">
           <v-flex shrink>
@@ -29,7 +29,7 @@
           <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('btn.view-all') }}</v-btn>
         </v-layout>
       </v-flex>
-      <v-flex v-else xs5 md6 lg7 xl8>
+      <v-flex v-else xs12 md6 lg7 xl8>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
@@ -45,9 +45,6 @@
     =====================================================================================
     -->
     <v-layout>
-      <v-flex hidden-sm-and-up pt-0 pb-0 pl-3>
-        <app-footnotes :footnotes="footnotes" pl-2 pr-2 />
-      </v-flex>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" :color="headerColor" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
