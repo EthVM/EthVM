@@ -234,7 +234,6 @@ export default class AppChart extends Vue {
   }
 
   updateChartData(newVal: ChartData) {
-
     // Check for fork by comparing labels to see if this chart point already exists in the chart
     const prevIdx = this.chart.data.labels.indexOf(newVal.label)
     if (prevIdx > -1) {
@@ -264,7 +263,6 @@ export default class AppChart extends Vue {
   }
 
   updateInitialData(newVal) {
-
     // Check for fork and update data in place if necessary
     const prevIdx = this.initialData.findIndex(initial => initial.label === newVal.label)
     if (prevIdx > -1) {

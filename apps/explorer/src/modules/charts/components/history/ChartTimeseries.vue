@@ -191,7 +191,6 @@ export default class ChartTimeseries extends Vue {
   }
 
   setTimeFrame(value: number): void {
-
     const period = TimePeriod[value]
 
     if (!period) {
