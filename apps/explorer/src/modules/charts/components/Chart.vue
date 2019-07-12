@@ -30,7 +30,7 @@ import ChartJs from 'chart.js'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Footnote } from '@app/core/components/props'
-import { ChartData } from '@app/modules/charts/props'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import AppError from '@app/core/components/ui/AppError.vue'
 
@@ -87,7 +87,8 @@ export default class AppChart extends Vue {
 
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data!: ChartData
+  @Prop({ type: Object, required: true }) config!: ChartConfig
+  @Prop({ type: Array, required: true }) initialData!: ChartData[]
   @Prop({ type: Boolean }) redraw!: boolean
   @Prop({ type: Object }) options!: object
   @Prop({ type: String }) chartTitle!: string
@@ -95,6 +96,8 @@ export default class AppChart extends Vue {
   @Prop({ type: Array }) footnotes?: Footnote[]
   @Prop({ type: Boolean }) dataLoading?: boolean
   @Prop({ type: String }) error!: string
+  @Prop({ type: Number, default: 10 }) maxItems!: number
+  @Prop({ type: Object }) newData!: ChartData
 
   /*
   ===================================================================================
@@ -103,7 +106,6 @@ export default class AppChart extends Vue {
   */
 
   toggleData = 0
-  updateChart = false
   chart: ChartJs | null = null
 
   /*
@@ -119,7 +121,7 @@ export default class AppChart extends Vue {
   }
 
   mounted() {
-    if (this.data && this.data.datasets && this.data.datasets[0].data.length !== 0) {
+    if (this.config && this.initialData && this.initialData.length) {
       this.createChart()
     }
   }
@@ -165,26 +167,35 @@ export default class AppChart extends Vue {
   ===================================================================================
   */
 
-  @Watch('data')
-  onDataChanged(): void {
+  @Watch('initialData')
+  onInitialDataChanged(): void {
     if (this.redraw) {
       if (this.chart) {
         this.chart.destroy()
       }
       this.createChart()
-    } else {
-      if (!this.chart) {
-        this.createChart()
-      } else {
-        this.chart.data = this.data
-        this.chart.update()
-      }
+    } else if (!this.chart && this.config && this.initialData && this.initialData.length) {
+      this.createChart() // Create chart if not created in mounted hook
     }
   }
 
   @Watch('toggleData')
   onTogleDataChanged(newVal: number, oldVal: number): void {
     this.$emit('timeFrame', newVal)
+  }
+
+  @Watch('newData')
+  onNewItem(newData: ChartData): void {
+    if (!newData) {
+      return
+    }
+
+    if (this.redraw) {
+      this.updateInitialData(newData)
+      this.redrawChart()
+    } else {
+      this.updateChartData(newData)
+    }
   }
 
   /*
@@ -194,11 +205,79 @@ export default class AppChart extends Vue {
   */
 
   createChart() {
+    const { config, initialData } = this
+
+    // clear previous state
+    config.labels = []
+    config.datasets.forEach(dataset => {
+      dataset.data = []
+    })
+
+    // Add new data
+    initialData.forEach(item => {
+      config.labels.push(item.label)
+      config.datasets.forEach((dataset, index) => {
+        dataset.data.push(item.data[index])
+      })
+    })
+
     this.chart = new ChartJs(this.$refs.chart, {
       type: this.type,
-      data: this.data,
+      data: config,
       options: this.options
     })
+  }
+
+  redrawChart() {
+    if (this.chart) {
+      this.chart.destroy()
+    }
+    this.createChart()
+  }
+
+  updateChartData(newVal: ChartData) {
+
+    // Check for fork by comparing labels to see if this chart point already exists in the chart
+    const prevIdx = this.chart.data.labels.indexOf(newVal.label)
+    if (prevIdx > -1) {
+      // Swap this item for the previous one
+      this.chart.data.labels[prevIdx] = newVal.label
+      this.chart.data.datasets.forEach((dataset, index) => {
+        dataset.data[prevIdx] = newVal.data[index]
+      })
+      return
+    }
+
+    // Remove last item
+    if (this.chart.data.datasets[0].data.length >= this.maxItems) {
+      this.chart.data.labels.pop()
+      this.chart.data.datasets.forEach(dataset => {
+        dataset.data.pop()
+      })
+    }
+
+    // Add new item
+    this.chart.data.labels.unshift(newVal.label)
+    this.chart.data.datasets.forEach((dataset, index) => {
+      dataset.data.unshift(newVal.data[index])
+    })
+
+    this.chart.update()
+  }
+
+  updateInitialData(newVal) {
+
+    // Check for fork and update data in place if necessary
+    const prevIdx = this.initialData.findIndex(initial => initial.label === newVal.label)
+    if (prevIdx > -1) {
+      this.initialData[prevIdx] = newVal
+      return
+    }
+
+    if (this.initialData && this.initialData.length >= this.maxItems) {
+      this.initialData.pop()
+    }
+    this.initialData.unshift(newVal)
   }
 }
 </script>

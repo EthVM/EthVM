@@ -3,7 +3,8 @@
     type="line"
     :chart-title="title"
     :chart-description="description"
-    :data="chartData"
+    :config="chartConfig"
+    :initial-data="chartData"
     :options="chartOptions"
     :redraw="true"
     :data-loading="loading"
@@ -18,7 +19,7 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { TimeBucket } from '@app/core/api/apollo/types/globalTypes'
 import moment from 'moment'
-import { ChartData } from '@app/modules/charts/props'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
 
@@ -233,6 +234,16 @@ export default class ChartTimeseries extends Vue {
     return { start, end, bucket }
   }
 
+  toChartDataItem(raw): ChartData {
+    const data = [] as any[]
+    data.push(this.parseValue(raw.value))
+
+    return {
+      label: new Date(raw.timestamp).toString(),
+      data
+    }
+  }
+
   /*
     ===================================================================================
       Computed Values
@@ -244,32 +255,27 @@ export default class ChartTimeseries extends Vue {
     return brkPoint !== 'xs'
   }
 
-  get chartData(): ChartData {
-    const { timeseries, description } = this
-
-    const labels: any[] = []
-    const data: any[] = []
-
-    if (timeseries) {
-      timeseries.forEach(t => {
-        labels.push(new Date(t.timestamp))
-        data.push(this.parseValue(t.value))
-      })
-    }
+  get chartConfig(): ChartConfig {
+    const { description } = this
 
     return {
-      labels: labels,
+      labels: [],
       datasets: [
         {
           label: description,
           borderColor: '#20c0c7',
           backgroundColor: '#20c0c7',
-          data,
+          data: [],
           yAxisID: 'y-axis-1',
           fill: false
         }
       ]
     }
+  }
+
+  get chartData(): ChartData[] {
+    const items = this.timeseries || []
+    return items.map(item => this.toChartDataItem(item))
   }
 
   get loading(): boolean | undefined {
