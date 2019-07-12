@@ -231,7 +231,7 @@ export default class PageDetailsToken extends Vue {
       },
       {
         text: this.tokenLabel,
-        disabled: true,
+        disabled: true
       }
     ]
   }
