@@ -230,12 +230,8 @@ export default class PageDetailsToken extends Vue {
         plural: 2
       },
       {
-        text: 'token.name',
+        text: this.tokenLabel,
         disabled: true,
-        plural: 1,
-        label: {
-          name: this.tokenLabel
-        }
       }
     ]
   }
@@ -254,10 +250,7 @@ export default class PageDetailsToken extends Vue {
         plural: 2
       },
       {
-        text: '',
-        label: {
-          name: this.tokenLabel
-        },
+        text: this.tokenLabel,
         link: `/token/${this.addressRef}`,
         disabled: false
       },
@@ -286,7 +279,23 @@ export default class PageDetailsToken extends Vue {
   }
 
   get tokenLabel(): string {
-    return this.tokenDetails && this.tokenDetails.symbol ? this.tokenDetails.symbol!.toUpperCase() : this.addressRef
+    const { tokenDetails } = this
+    if (!tokenDetails) {
+      return this.tokenLabelDefault
+    }
+
+    const { symbol, name } = tokenDetails
+
+    if (symbol) {
+      return symbol.toUpperCase()
+    } else if (name) {
+      return name.toUpperCase()
+    }
+    return this.tokenLabelDefault
+  }
+
+  get tokenLabelDefault(): string {
+    return `${this.$i18n.tc('token.name', 1)}: ${this.addressRef}`
   }
 
   get decimals(): number | null {
