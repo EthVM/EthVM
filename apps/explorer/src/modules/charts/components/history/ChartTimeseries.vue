@@ -29,13 +29,24 @@ interface QueryOptions {
   bucket: TimeBucket
 }
 
+enum TimePeriod {
+  day,
+  week,
+  twoWeeks,
+  month,
+  threeMonths,
+  sixMonths,
+  year,
+  all
+}
+
 @Component({
   components: {
     Chart
   },
   data() {
     return {
-      queryOptions: (this as any).calculateTimePeriod('week'),
+      queryOptions: (this as any).calculateTimePeriod(0),
       syncing: undefined
     }
   },
@@ -180,50 +191,50 @@ export default class ChartTimeseries extends Vue {
   }
 
   setTimeFrame(value: number): void {
-    let period
 
-    switch (value) {
-      case 0:
-        period = 'week'
-        break
-      case 1:
-        period = 'month'
-        break
-      case 2:
-        period = 'all'
-        break
-      case 3:
-        period = 'year'
-        break
-      default:
-        throw new Error(`Unexpected timeframe: ${value}`)
+    const period = TimePeriod[value]
+
+    if (!period) {
+      throw new Error(`Unexpected timeframe: ${value}`)
     }
 
-    this.queryOptions = this.calculateTimePeriod(period)
+    this.queryOptions = this.calculateTimePeriod(value)
   }
 
-  calculateTimePeriod(period: 'day' | 'week' | 'month' | 'year' | 'all'): QueryOptions {
+  calculateTimePeriod(period: number): QueryOptions {
     const start: moment.Moment = moment()
     let end: moment.Moment, bucket
 
     switch (period) {
-      case 'day':
+      case TimePeriod.day:
         bucket = TimeBucket.ONE_HOUR
         end = moment(start).subtract(1, 'day')
         break
-      case 'week':
+      case TimePeriod.week:
         bucket = TimeBucket.ONE_HOUR
         end = moment(start).subtract(1, 'week')
         break
-      case 'month':
+      case TimePeriod.twoWeeks:
+        bucket = TimeBucket.ONE_HOUR
+        end = moment(start).subtract(2, 'week')
+        break
+      case TimePeriod.month:
         bucket = TimeBucket.ONE_DAY
         end = moment(start).subtract(1, 'month')
         break
-      case 'year':
+      case TimePeriod.threeMonths:
+        bucket = TimeBucket.ONE_DAY
+        end = moment(start).subtract(3, 'month')
+        break
+      case TimePeriod.sixMonths:
+        bucket = TimeBucket.ONE_WEEK
+        end = moment(start).subtract(6, 'month')
+        break
+      case TimePeriod.year:
         bucket = TimeBucket.ONE_WEEK
         end = moment(start).subtract(1, 'year')
         break
-      case 'all':
+      case TimePeriod.all:
         bucket = TimeBucket.ONE_WEEK
         end = moment('2000-01-01T00:00:00.000Z')
         break
