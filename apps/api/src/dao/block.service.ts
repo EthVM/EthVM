@@ -36,7 +36,7 @@ export class BlockService {
         relations: ['blockTime'],
         order: { number: 'DESC' },
         take: 20,
-        cache
+        cache,
       })
 
     if (blocks.length === 0) return null

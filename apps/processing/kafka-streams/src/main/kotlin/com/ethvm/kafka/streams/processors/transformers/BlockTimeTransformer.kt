@@ -3,7 +3,6 @@ package com.ethvm.kafka.streams.processors.transformers
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.common.extensions.bigInteger
-import com.ethvm.common.extensions.byteBuffer
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.streams.KeyValue
@@ -69,9 +68,9 @@ class BlockTimeTransformer(
           .setTimestamp(value.timestamp)
           .setBlockTime(null)
           .build()
-      )   // we cannot calculate block time so we just pass it through. this should only be for genesis block
+      ) // we cannot calculate block time so we just pass it through. this should only be for genesis block
     } else {
-      val blockTime = (value.timestamp - previousTimestamp) / 1000  // ms to seconds
+      val blockTime = (value.timestamp - previousTimestamp) / 1000 // ms to seconds
       KeyValue(
         key,
         BlockHeaderRecord.newBuilder(value)
@@ -106,13 +105,11 @@ class BlockTimeTransformer(
       }
 
       oldNumber -= 1L
-
     } while (oldValue != null)
 
     if (removed > 0) {
       logger.debug { "[${context.topic()}] Cleaned store. Removed $removed entries before and including $startNumber" }
     }
-
   }
 
   override fun close() {

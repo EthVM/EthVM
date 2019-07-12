@@ -46,7 +46,7 @@ class CanonicalBlockHeaderProcessor : AbstractKafkaProcessor() {
 
     blockHeader
       // calculate block time first
-      .transform(TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting)}, *BlockTimeTransformer.STORE_NAMES)
+      .transform(TransformerSupplier { BlockTimeTransformer(appConfig.unitTesting) }, *BlockTimeTransformer.STORE_NAMES)
       .mapValues { _, v ->
         BlockTimeRecord.newBuilder()
           .setTimestamp(v.timestamp)
