@@ -38,3 +38,26 @@ export function isGzip(buffer: Buffer): boolean {
 
   return buffer[0] === 0x1F && buffer[1] === 0x8B && buffer[2] === 0x08;
 }
+
+/**
+ * Handles errors when extracting a field from an incorrectly formatted JSON object
+ * @param field - name of field to extract
+ * @param json - JSON object to extract field from (can be null or undefined)
+ */
+export function extractFromJson(field: string, json?: string | null): string | undefined {
+
+  if (!json) {
+    return undefined
+  }
+
+  let extracted
+
+  try {
+    extracted = JSON.parse(json)[field]
+  } catch (e) {
+    return 'Invalid JSON'
+  }
+
+  return extracted
+
+}

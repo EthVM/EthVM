@@ -23,50 +23,43 @@ fragment TokenExchangeRatePage on TokenExchangeRatesPage {
 }
 
 query tokenDetails($address: String!) {
-  tokenDetails: tokenExchangeRateByAddress(address: $address) {
-    ...TokenExchangeRateDetail
+  tokenDetails: tokenDetailByAddress(address: $address) {
+    ...TokenDetail
   }
 }
 
-fragment TokenExchangeRateDetail on TokenExchangeRate {
+fragment TokenDetail on TokenDetail {
   address
-  circulatingSupply
-  currentPrice
-  image
-  marketCap
+  owner: creator
+  contractType
   name
-  priceChangePercentage24h
   symbol
+  decimals
+  logo
+  email
+  social {
+    blog
+    chat
+    facebook
+    forum
+    github
+    gitter
+    instagram
+    linkedin
+    reddit
+    slack
+    telegram
+    twitter
+    youtube
+  }
+  website
+  currentPrice
+  circulatingSupply
   totalSupply
+  marketCap
+  priceChangePercentage24h
   totalVolume
   holdersCount
-  contract {
-    creator
-    metadata {
-      type
-      decimals
-      website
-      support {
-        email
-        url
-      }
-      social {
-        blog
-        chat
-        facebook
-        forum
-        github
-        gitter
-        instagram
-        linkedin
-        reddit
-        slack
-        telegram
-        twitter
-        youtube
-      }
-    }
-  }
 }
 
 query tokenHolders($address: String!, $limit: Int, $offset: Int) {
@@ -91,7 +84,7 @@ query tokenHolderDetails($address: String! $holderAddress: String!) {
   tokenHolder(address: $address, holderAddress: $holderAddress) {
     ...TokenHolder
   }
-  tokenDetails: tokenExchangeRateByAddress(address: $address) {
-    ...TokenExchangeRateDetail
+  tokenDetails: tokenDetailByAddress(address: $address) {
+    ...TokenDetail
   }
 }

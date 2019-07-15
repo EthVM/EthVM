@@ -274,7 +274,10 @@
     "states": {
       "all": "All",
       "week": "week | 1W",
+      "week-two": "2 weeks | 2W",
       "month": "month | 1M",
+      "month-three": "3 Months | 3M",
+      "month-six": "6 Month | 6M",
       "day": "day | 1D",
       "year": "year | 1Y"
     },

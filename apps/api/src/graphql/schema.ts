@@ -341,6 +341,7 @@ export interface IQuery {
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
+    tokenDetailByAddress(address: string): TokenDetail | Promise<TokenDetail>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
@@ -410,6 +411,26 @@ export interface Token {
     currentPrice?: BigNumber;
     priceChangePercentage24h?: BigNumber;
     image?: string;
+}
+
+export interface TokenDetail {
+    address: string;
+    creator?: string;
+    contractType?: string;
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+    logo?: string;
+    email?: string;
+    social?: ContractSocial;
+    website?: string;
+    currentPrice?: BigNumber;
+    circulatingSupply?: BigNumber;
+    totalSupply?: BigNumber;
+    marketCap?: BigNumber;
+    priceChangePercentage24h?: BigNumber;
+    totalVolume?: BigNumber;
+    holdersCount?: number;
 }
 
 export interface TokenExchangeRate {

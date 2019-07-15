@@ -1,7 +1,9 @@
 <template>
   <chart
     type="bar"
-    :data="chartData"
+    :config="chartConfig"
+    :initial-data="chartData"
+    :new-data="toChartDataItem(latestBlock)"
     :options="chartOptions"
     :chart-title="newTitle"
     :chart-description="newDescription"
@@ -21,22 +23,9 @@ import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
 import BigNumber from 'bignumber.js'
 import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { Subscription } from 'rxjs'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 
 const MAX_ITEMS = 10
-
-class ChartData {
-  constructor(
-    public readonly labels: string[] = [],
-    public readonly sTxs: number[] = [],
-    public readonly fTxs: number[] = [],
-    public readonly pTxs: number[] = []
-  ) {
-    this.labels = labels
-    this.sTxs = sTxs
-    this.fTxs = fTxs
-    this.pTxs = pTxs
-  }
-}
 
 @Component({
   components: {
@@ -44,7 +33,8 @@ class ChartData {
   },
   data() {
     return {
-      syncing: undefined
+      syncing: undefined,
+      latestBlock: undefined
     }
   },
   apollo: {
@@ -85,38 +75,14 @@ class ChartData {
         } else {
           this.error = this.$i18n.t('message.err')
         }
-      },
-
-      subscribeToMore: {
-        document: newBlock,
-
-        updateQuery: (previousResult, { subscriptionData }) => {
-          const { blockSummaries } = previousResult
-          const { newBlock } = subscriptionData.data
-
-          const items = Object.assign([], blockSummaries.items)
-
-          // add to the beginning of the array
-          items.unshift(newBlock)
-
-          if (items.length > MAX_ITEMS) {
-            items.pop()
-          }
-
-          // ensure order by block number desc
-          items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number) : new BigNumber(0)
-            return numberB.minus(numberA).toNumber()
-          })
-
-          return {
-            ...previousResult,
-            blockSummaries: {
-              ...blockSummaries,
-              items
-            }
-          }
+      }
+    },
+    $subscribe: {
+      latestBlock: {
+        query: newBlock,
+        result({ data }) {
+          const self = this as any
+          self.latestBlock = new BlockSummaryPageExt_items(data.newBlock)
         }
       }
     }
@@ -124,23 +90,27 @@ class ChartData {
 })
 export default class ChartLiveTxs extends Vue {
   /*
-      ===================================================================================
-        Initial Data
-      ===================================================================================
-      */
+        ===================================================================================
+          Initial Data
+        ===================================================================================
+        */
 
   error: string = ''
   syncing?: boolean
 
   blockPage?: BlockSummaryPageExt
 
+  newBlock?: BlockSummaryPageExt_items
+
+  latestBlock?: ChartData
+
   connectedSubscription?: Subscription
 
   /*
-      ===================================================================================
-        Lifecycle
-      ===================================================================================
-      */
+        ===================================================================================
+          Lifecycle
+        ===================================================================================
+        */
 
   created() {
     this.connectedSubscription = this.$subscriptionState.subscribe(state => {
@@ -157,70 +127,72 @@ export default class ChartLiveTxs extends Vue {
   }
 
   /*
-      ===================================================================================
-        Methods
-      ===================================================================================
-      */
+        ===================================================================================
+          Methods
+        ===================================================================================
+        */
 
-  toChartData(items: (BlockSummaryPageExt_items)[]) {
+  toChartDataItem(raw?: BlockSummaryPageExt_items): ChartData | undefined {
+    if (!raw) {
+      return undefined
+    }
+
     const numberLabel = this.$i18n.t('block.number')
 
-    const labels: string[] = []
-    const sTxs: number[] = []
-    const fTxs: number[] = []
-    const pTxs: number[] = []
+    const data = [] as any[]
+    data.push(raw.numSuccessfulTxsBN!.toNumber())
+    data.push(raw.numFailedTxsBN!.toNumber())
+    // TODO add pending or remove
+    data.push(0)
 
-    items.forEach(item => {
-      labels.push(numberLabel + item!.numberBN!.toString())
-      sTxs.push(item!.numSuccessfulTxsBN!.toNumber())
-      fTxs.push(item!.numFailedTxsBN!.toNumber())
-      // TODO add pending txs
-      pTxs.push(0)
-    })
-
-    return new ChartData(labels, sTxs, fTxs, pTxs)
+    return {
+      label: `${numberLabel} ${raw!.numberBN!.toString()}`,
+      data
+    }
   }
 
   /*
-      ===================================================================================
-        Computed Values
-      ===================================================================================
-      */
+        ===================================================================================
+          Computed Values
+        ===================================================================================
+        */
 
   get loading(): boolean | undefined {
     return this.$apollo.queries.blockPage.loading || this.syncing
   }
 
-  get chartData() {
-    const items = this.blockPage ? this.blockPage.items : []
-    const data = this.toChartData(items)
-
+  get chartConfig(): ChartConfig {
     return {
-      labels: data.labels,
+      labels: [],
       datasets: [
+        {
+          label: this.$i18n.t('common.success').toString(),
+          backgroundColor: '#40ce9c',
+          data: [],
+          yAxisID: 'y-axis-1'
+        },
+        {
+          label: this.$i18n.t('common.fail').toString(),
+          backgroundColor: '#fe136c',
+          data: [],
+          yAxisID: 'y-axis-1'
+        },
         {
           label: 'Pending',
           backgroundColor: '#eea66b',
           borderColor: '#eea66b',
-          data: data.pTxs,
+          data: [],
           type: 'line',
           fill: false,
           yAxisID: 'y-axis-2'
-        },
-        {
-          label: this.$i18n.t('common.success'),
-          backgroundColor: '#40ce9c',
-          data: data.sTxs,
-          yAxisID: 'y-axis-1'
-        },
-        {
-          label: this.$i18n.t('common.fail'),
-          backgroundColor: '#fe136c',
-          data: data.fTxs,
-          yAxisID: 'y-axis-1'
         }
       ]
     }
+  }
+
+  get chartData(): ChartData[] {
+    const items = this.blockPage ? this.blockPage.items : []
+    return items.map(item => this.toChartDataItem(item)!)
   }
 
   get footnote(): Footnote[] {

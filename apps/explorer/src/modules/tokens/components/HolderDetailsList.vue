@@ -10,8 +10,8 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import BN from 'bignumber.js'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
 import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
+import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
 
 @Component({
   components: {
@@ -26,7 +26,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
   */
 
   @Prop(String) addressRef!: string // Token contract address
-  @Prop(Object) tokenDetails!: TokenExchangeRateDetailExt
+  @Prop(Object) tokenDetails!: TokenDetailExt
   @Prop(Object) holderDetails!: TokenHolderExt
   @Prop(Boolean) isLoading!: boolean
   @Prop(String) error!: string
@@ -46,9 +46,8 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
     if (this.isLoading) {
       return ''
     }
-    return `<img src="${this.tokenDetails.image}" class="mr-2 token-image" />  ${
-      this.tokenDetails.name
-    } (${this.tokenDetails.symbol!.toUpperCase()}) - Filtered by Holder`
+    const logoSrc = this.tokenDetails && this.tokenDetails.logo ? this.tokenDetails.logo : require('@/assets/not-found.png')
+    return `<img src="${logoSrc}" class="mr-2 token-image" />  ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()}) - Filtered by Holder`
   }
 
   /**
@@ -112,29 +111,37 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         {
           title: this.$i18n.t('common.balance').toString(),
           detail: this.holderDetails && this.holderDetails.balance ? `${this.balance} (${this.tokenDetails.symbol!.toUpperCase()})` : 'N/A'
-        },
-        {
-          title: this.$i18n.t('usd.total'),
-          detail: this.balanceUsd
-        },
-        {
-          title: this.$i18n.t('token.market').toString(),
-          detail: `$${this.getRoundNumber(this.tokenDetails.currentPrice)}`,
-          priceChange: this.getPriceChange()
         }
       ]
 
-      if (this.tokenDetails.contract && this.tokenDetails.contract.metadata) {
+      const { decimals, currentPrice } = this.tokenDetails
+
+      if (currentPrice) {
+        details.push({
+          title: this.$i18n.t('token.market').toString(),
+          detail: `$${this.getRoundNumber(currentPrice)}`,
+          priceChange: this.getPriceChange()
+        })
+      }
+
+      if (this.balanceUsd) {
+        details.push({
+          title: this.$i18n.t('usd.total'),
+          detail: this.balanceUsd
+        })
+      }
+
+      if (decimals) {
         details.push({
           title: this.$i18n.t('token.decimals'),
-          detail: this.tokenDetails.contract.metadata.decimals || undefined
+          detail: decimals || undefined
         })
       }
     }
     return details
   }
 
-  get balanceUsd(): string {
+  get balanceUsd(): string | undefined {
     if (!this.holderDetails) {
       return ''
     }
@@ -146,7 +153,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
       n = n.div(new BN(10).pow(decimals))
     }
 
-    return this.holderDetails.balance ? `$${this.getRoundNumber(n.multipliedBy(this.tokenDetails.currentPrice))}` : 'N/A'
+    return this.holderDetails.balance && this.tokenDetails.currentPrice ? `$${this.getRoundNumber(n.multipliedBy(this.tokenDetails.currentPrice))}` : undefined
   }
 
   get balance(): string {

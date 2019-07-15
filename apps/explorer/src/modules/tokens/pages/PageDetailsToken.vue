@@ -58,12 +58,12 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import { tokenDetails, tokenHolderDetails } from '@app/modules/tokens/tokens.graphql'
-import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
 import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
 import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
+import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
 
 const MAX_ITEMS = 10
 
@@ -100,7 +100,7 @@ const MAX_ITEMS = 10
         }
 
         if (tokenDetails) {
-          return new TokenExchangeRateDetailExt(tokenDetails)
+          return new TokenDetailExt(tokenDetails)
         } else if (!this.syncing) {
           this.error = this.error || this.$i18n.t('message.invalid.token')
         }
@@ -146,7 +146,7 @@ export default class PageDetailsToken extends Vue {
   ===================================================================================
   */
 
-  tokenDetails?: TokenExchangeRateDetailExt
+  tokenDetails?: TokenDetailExt
   holderDetails?: TokenHolderExt
   address = ''
 
@@ -230,12 +230,8 @@ export default class PageDetailsToken extends Vue {
         plural: 2
       },
       {
-        text: 'token.name',
-        disabled: true,
-        plural: 1,
-        label: {
-          name: this.tokenLabel
-        }
+        text: this.tokenLabel,
+        disabled: true
       }
     ]
   }
@@ -254,10 +250,7 @@ export default class PageDetailsToken extends Vue {
         plural: 2
       },
       {
-        text: '',
-        label: {
-          name: this.tokenLabel
-        },
+        text: this.tokenLabel,
         link: `/token/${this.addressRef}`,
         disabled: false
       },
@@ -265,7 +258,7 @@ export default class PageDetailsToken extends Vue {
         text: 'token.holder',
         disabled: true,
         label: {
-          name: `: ${this.holderAddress}`
+          name: `${this.holderAddress}`
         }
       }
     ]
@@ -286,7 +279,23 @@ export default class PageDetailsToken extends Vue {
   }
 
   get tokenLabel(): string {
-    return this.tokenDetails && this.tokenDetails.symbol ? this.tokenDetails.symbol!.toUpperCase() : this.addressRef
+    const { tokenDetails } = this
+    if (!tokenDetails) {
+      return this.tokenLabelDefault
+    }
+
+    const { symbol, name } = tokenDetails
+
+    if (symbol) {
+      return symbol.toUpperCase()
+    } else if (name) {
+      return name.toUpperCase()
+    }
+    return this.tokenLabelDefault
+  }
+
+  get tokenLabelDefault(): string {
+    return `${this.$i18n.tc('token.name', 1)}: ${this.addressRef}`
   }
 
   get decimals(): number | null {
