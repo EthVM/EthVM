@@ -24,15 +24,10 @@ import { Detail } from '@app/core/components/props'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
-<<<<<<< HEAD
-import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
-import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
-import { TranslateResult } from 'vue-i18n'
-import { defaultCoreCipherList } from 'constants';
-=======
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
->>>>>>> develop
+import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
+
 
 @Component({
   components: {
@@ -50,8 +45,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   @Prop(Object) tokenDetails!: TokenDetailExt
   @Prop(Boolean) isLoading!: boolean
   @Prop(String) error!: string
-  @Prop({ type: Boolean, default: false }) hasHolder!: boolean
-
+  @Prop(Object) holderDetails!: TokenHolderExt
   /*
   ===================================================================================
     Initial Values
@@ -93,27 +87,22 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       name = this.tokenDetails.name === null ? name : this.$tc('token.name', 1)
       symbol = this.tokenDetails.symbol === null ? symbol : `(${this.tokenDetails.symbol.toUpperCase()}) `
     }
-<<<<<<< HEAD
-    if (this.hasHolder) {
+    if (this.holderDetails && this.holderDetails.address) {
       holder = `- ${this.$t('token.filtered')}`
     }
 
     return `${name} ${symbol} ${holder}`
-=======
-    const logoSrc = this.tokenDetails && this.tokenDetails.logo ? this.tokenDetails.logo : require('@/assets/not-found.png')
-    return `<img src="${logoSrc}" class="mr-2 token-image" /> ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()})`
->>>>>>> develop
+
   }
 
   get image(): string {
-    return !(this.tokenDetails && this.tokenDetails.image) ? require('@/assets/icon-token.png') : this.tokenDetails.image
+    return !(this.tokenDetails && this.tokenDetails.logo) ? require('@/assets/icon-token.png') : this.tokenDetails.logo
   }
   /**
    * Properly format the Details[] array for the details table.
    * If the data hasn't been loaded yet, then only include the titles in the details.
    */
   get details(): Detail[] {
-<<<<<<< HEAD
     let holderFields: Detail[] = [
       {
         title: this.$t('token.holder')
@@ -169,104 +158,6 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       },
       {
         title: this.$i18n.t('token.holder-total')
-=======
-    const icons = {
-      blog: 'fab fa-ethereum',
-      chat: 'fab fa-ethereum',
-      facebook: 'fab fa-facebook',
-      forum: 'fas fa-comments',
-      github: 'fab fa-github',
-      gitter: 'fab fa-gitter',
-      instagram: 'fab fa-instagram',
-      linkedin: 'fab fa-linkedin',
-      reddit: 'fab fa-reddit',
-      slack: 'fab fa-slack',
-      telegram: 'fab fa-telegram',
-      twitter: 'fab fa-twitter',
-      youtube: 'fab fa-youtube'
-    }
-    let details: Detail[]
-    if (this.isLoading) {
-      details = [
-        {
-          title: this.$i18n.tc('contract.name', 1)
-        },
-        {
-          title: this.$i18n.t('token.owner')
-        },
-        {
-          title: this.$i18n.t('token.supply')
-        },
-        {
-          title: this.$i18n.tc('price.name', 2)
-        },
-        {
-          title: this.$i18n.t('token.market')
-        },
-        {
-          title: this.$i18n.t('token.holder-total')
-        },
-        {
-          title: this.$i18n.t('token.decimals')
-        },
-        {
-          title: this.$i18n.t('token.website')
-        },
-        {
-          title: this.$i18n.t('token.support')
-        },
-        {
-          title: this.$i18n.t('token.links')
-        }
-      ]
-    } else {
-      const { address, holdersCount, owner, decimals, website, email, contractType, social, totalVolume } = this.tokenDetails
-      const { totalSupplyBN, circulatingSupplyBN, currentPriceBN, marketCapBN } = this.tokenDetails
-
-      details = [
-        {
-          title: this.$i18n.tc('contract.name', 1),
-          detail: new Hex(address!).toString(),
-          link: this.tokenDetails ? `/address/${new Hex(address!).toString()}` : ''
-        }
-      ]
-
-      if (owner) {
-        details.push({
-          title: this.$i18n.t('token.owner'),
-          detail: owner,
-          link: `/address/${owner}`
-        })
-      }
-
-      if (totalSupplyBN) {
-        details.push({
-          title: this.$i18n.t('token.supply'),
-          detail: this.formatStr(totalSupplyBN.toString())
-        })
-      }
-
-      if (circulatingSupplyBN) {
-        details.push({
-          title: this.$i18n.t('token.circSupply').toString(),
-          detail: this.formatStr(circulatingSupplyBN.toString())
-        })
-      }
-
-      if (currentPriceBN) {
-        details.push({
-          title: this.$i18n.tc('price.name', 2),
-          detail: `$${currentPriceBN}`,
-          priceChange: this.getPriceChange()
-        })
-      }
-
-      if (marketCapBN) {
-        details.push({
-          title: this.$i18n.t('token.market'),
-          detail: `$${this.getRoundNumber(marketCapBN)}`
-        })
->>>>>>> develop
       }
     ]
     console.log(this.tokenDetails)
@@ -279,41 +170,39 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
           copy: true
         })
       }
-      if (this.tokenDetails.contract && this.tokenDetails.contract.creator) {
+      if (this.tokenDetails.owner) {
         Object.assign(detailsContract[1], {
-          detail: this.tokenDetails.contract.creator,
-          link: `/address/${this.tokenDetails.contract.creator}`,
+          detail: this.tokenDetails.owner,
+          link: `/address/${this.tokenDetails.owner}`,
           copy: true
         })
       }
-<<<<<<< HEAD
-      if (this.tokenDetails.contract && this.tokenDetails.contract.metadata) {
-        let metadata = this.tokenDetails.contract.metadata
-        if (metadata.decimals) {
+
+        if (this.tokenDetails.decimals) {
           Object.assign(detailsContract[2], {
-            detail: metadata.decimals,
+            detail: this.tokenDetails.decimals,
           })
         }
 
-        if (metadata.type) {
+        if (this.tokenDetails.contractType) {
           Object.assign(detailsContract[3],{
-            detail: metadata.type
+            detail: this.tokenDetails.contractType
           })
         }
-        if(metadata.website) {
+        if(this.tokenDetails.website) {
           Object.assign(detailsContract[4], {
-            detail: metadata.website,
-            link: `${metadata.website}`
+            detail: this.tokenDetails.website,
+            link: `${this.tokenDetails.website}`
           })
         }
-        if(metadata.support){
+        if(this.tokenDetails.email){
           Object.assign(detailsContract[5], {
-            detail:`<a href="mailto:${metadata.support.email}" target="_BLANK">${metadata.support.email}</a>`
+            detail:`<a href="mailto:${this.tokenDetails.email}" target="_BLANK">${this.tokenDetails.email}</a>`
           })
         }
-        if(metadata.social) {
+        if(this.tokenDetails.social) {
           Object.assign(detailsContract[6], {
-             detail: Object.entries(metadata.social)
+             detail: Object.entries(this.tokenDetails.social)
               .map(obj => {
                 const name = obj[0]
                 const url = obj[1]
@@ -329,56 +218,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
               })
           })
         }
-=======
 
-      if (decimals) {
-        details.push({
-          title: this.$i18n.t('token.decimals'),
-          detail: decimals
-        })
-      }
-
-      if (website) {
-        details.push({
-          title: this.$i18n.t('token.website'),
-          detail: `<a href="${website}" target="_BLANK">${website}</a>`
-        })
-      }
-
-      if (email) {
-        details.push({
-          title: this.$i18n.t('token.support'),
-          detail: `<a href="mailto:${email}" target="_BLANK">${email}</a>`
-        })
-      }
-
-      if (contractType) {
-        details.push({
-          title: this.$i18n.t('token.type').toString(),
-          detail: contractType
-        })
-      }
-
-      if (social) {
-        details.push({
-          title: this.$i18n.t('token.links'),
-          detail: Object.entries(social)
-            .map(obj => {
-              const name = obj[0]
-              const url = obj[1]
-              if (url === null || url === '') {
-                return ''
-              }
-              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
-                icons[name]
-              } pr-2 material-icons theme--light"></i></a>`
-            })
-            .reduce((a, b) => {
-              return `${a}${b}`
-            })
-        })
->>>>>>> develop
-      }
     }
 
     //   // if (this.tokensDetails.)
