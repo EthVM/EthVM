@@ -20,7 +20,7 @@ SELECT c.address,
        e20m.name AS e20_name,
        e20m.symbol AS e20_symbol,
        e20m.decimals AS e20_decimals,
-       e20m.total_supply AS e20m_total_supply,
+       e20m.total_supply AS e20_total_supply,
        e721m.name AS e721_name,
        e721m.symbol AS e721_symbol
 FROM contract AS c

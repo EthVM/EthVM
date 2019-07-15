@@ -16,6 +16,9 @@ export class TokenDetailEntity {
   @Column({ type: 'character', length: 42, readonly: true })
   creator?: string
 
+  @Column({ type: 'varchar', length: 32, readonly: true })
+  contractType?: string
+
   @Column({type: 'character varying', length: 64, readonly: true})
   name?: string
 

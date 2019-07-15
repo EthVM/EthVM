@@ -87,17 +87,23 @@ type TokenMetadata {
 }
 
 type TokenDetail {
-  address: String
-  totalSupply: BigNumber
-  circulatingSupply: BigNumber
-  currentPrice: BigNumber
-  image: String
-  marketCap: BigNumber
+  address: String!
+  creator: String
+  contractType: String
   name: String
-  priceChangePercentage24h: BigNumber
   symbol: String
+  decimals: Int
+  logo: ContractLogo
+  support: ContractSupport
+  social: ContractSocial
+  website: String
+  currentPrice: BigNumber
+  circulatingSupply: BigNumber
+  totalSupply: BigNumber
+  marketCap: BigNumber
+  priceChangePercentage24h: BigNumber
+  image: String
   holdersCount: Int
-  contract: Contract
 }
 
 enum ExchangeRatePair {

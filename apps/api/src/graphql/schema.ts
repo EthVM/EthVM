@@ -414,17 +414,23 @@ export interface Token {
 }
 
 export interface TokenDetail {
-    address?: string;
-    totalSupply?: BigNumber;
-    circulatingSupply?: BigNumber;
-    currentPrice?: BigNumber;
-    image?: string;
-    marketCap?: BigNumber;
+    address: string;
+    creator?: string;
+    contractType?: string;
     name?: string;
-    priceChangePercentage24h?: BigNumber;
     symbol?: string;
+    decimals?: number;
+    logo?: ContractLogo;
+    support?: ContractSupport;
+    social?: ContractSocial;
+    website?: string;
+    currentPrice?: BigNumber;
+    circulatingSupply?: BigNumber;
+    totalSupply?: BigNumber;
+    marketCap?: BigNumber;
+    priceChangePercentage24h?: BigNumber;
+    image?: string;
     holdersCount?: number;
-    contract?: Contract;
 }
 
 export interface TokenExchangeRate {

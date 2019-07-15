@@ -12,6 +12,7 @@ import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
 import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
 import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
+import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
 
 @Injectable()
 export class TokenService {
@@ -30,6 +31,8 @@ export class TokenService {
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity, DbConnection.Principal)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
+    @InjectRepository(TokenDetailEntity, DbConnection.Principal)
+    private readonly tokenDetailRepository: Repository<TokenDetailEntity>,
   ) {
   }
 
@@ -241,5 +244,9 @@ export class TokenService {
     })
 
     return tokenMetadataDtos
+  }
+
+  async findDetailByAddress(address: string): Promise<TokenDetailEntity | undefined> {
+    return this.tokenDetailRepository.findOne({ where: { address }, cache: true })
   }
 }
