@@ -93,8 +93,8 @@ type TokenDetail {
   name: String
   symbol: String
   decimals: Int
-  logo: ContractLogo
-  support: ContractSupport
+  logo: String
+  email: String
   social: ContractSocial
   website: String
   currentPrice: BigNumber
@@ -102,7 +102,6 @@ type TokenDetail {
   totalSupply: BigNumber
   marketCap: BigNumber
   priceChangePercentage24h: BigNumber
-  image: String
   holdersCount: Int
 }
 

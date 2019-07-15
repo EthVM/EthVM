@@ -420,8 +420,8 @@ export interface TokenDetail {
     name?: string;
     symbol?: string;
     decimals?: number;
-    logo?: ContractLogo;
-    support?: ContractSupport;
+    logo?: string;
+    email?: string;
     social?: ContractSocial;
     website?: string;
     currentPrice?: BigNumber;
@@ -429,7 +429,6 @@ export interface TokenDetail {
     totalSupply?: BigNumber;
     marketCap?: BigNumber;
     priceChangePercentage24h?: BigNumber;
-    image?: string;
     holdersCount?: number;
 }
 
