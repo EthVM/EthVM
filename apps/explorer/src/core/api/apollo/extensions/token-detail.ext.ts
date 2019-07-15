@@ -2,7 +2,7 @@ import { TokenDetail, TokenDetail_social } from '@app/core/api/apollo/types/Toke
 import BigNumber from 'bignumber.js'
 
 export class TokenDetailExt implements TokenDetail {
-  __typename!: "TokenDetail"
+  __typename!: 'TokenDetail'
   address!: string
   circulatingSupply: any | null
   contractType: string | null
@@ -60,5 +60,4 @@ export class TokenDetailExt implements TokenDetail {
   get totalVolumeBN(): BigNumber | undefined {
     return this.totalVolume ? new BigNumber(this.totalVolume) : undefined
   }
-
 }

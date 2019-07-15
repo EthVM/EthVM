@@ -11,7 +11,7 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import BN from 'bignumber.js'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
-import { TokenDetailExt } from "@app/core/api/apollo/extensions/token-detail.ext";
+import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
 
 @Component({
   components: {
@@ -47,9 +47,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
       return ''
     }
     const logoSrc = this.tokenDetails && this.tokenDetails.logo ? this.tokenDetails.logo : require('@/assets/not-found.png')
-    return `<img src="${logoSrc}" class="mr-2 token-image" />  ${
-      this.tokenDetails.name
-    } (${this.tokenDetails.symbol!.toUpperCase()}) - Filtered by Holder`
+    return `<img src="${logoSrc}" class="mr-2 token-image" />  ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()}) - Filtered by Holder`
   }
 
   /**
