@@ -39,8 +39,20 @@ export class TokenDetailExt implements TokenDetail {
     this.website = proto.website
   }
 
-  get totalSupplyBN(): BigNumber {
-    return new BigNumber(this.totalSupply || 0)
+  get totalSupplyBN(): BigNumber | undefined {
+    return this.totalSupply ? new BigNumber(this.totalSupply) : undefined
+  }
+
+  get circulatingSupplyBN(): BigNumber | undefined {
+    return this.circulatingSupply ? new BigNumber(this.circulatingSupply) : undefined
+  }
+
+  get currentPriceBN(): BigNumber | undefined {
+    return this.currentPrice ? new BigNumber(this.currentPrice) : undefined
+  }
+
+  get marketCapBN(): BigNumber | undefined {
+    return this.marketCap ? new BigNumber(this.marketCap) : undefined
   }
 
 }
