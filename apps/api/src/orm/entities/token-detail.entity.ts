@@ -55,6 +55,9 @@ export class TokenDetailEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   priceChangePercentage24h?: BigNumber
 
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  totalVolume?: BigNumber
+
   @Column({ type: 'character varying', length: 64, readonly: true })
   terSymbol?: string
 

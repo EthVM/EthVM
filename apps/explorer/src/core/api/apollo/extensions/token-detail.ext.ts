@@ -18,6 +18,7 @@ export class TokenDetailExt implements TokenDetail {
   social: TokenDetail_social | null
   symbol: string | null
   totalSupply: any | null
+  totalVolume: any | null
   website: string | null
 
   constructor(proto: TokenDetail) {
@@ -36,6 +37,7 @@ export class TokenDetailExt implements TokenDetail {
     this.social = proto.social
     this.symbol = proto.symbol
     this.totalSupply = proto.totalSupply
+    this.totalVolume = proto.totalVolume
     this.website = proto.website
   }
 
@@ -53,6 +55,10 @@ export class TokenDetailExt implements TokenDetail {
 
   get marketCapBN(): BigNumber | undefined {
     return this.marketCap ? new BigNumber(this.marketCap) : undefined
+  }
+
+  get totalVolumeBN(): BigNumber | undefined {
+    return this.totalVolume ? new BigNumber(this.totalVolume) : undefined
   }
 
 }

@@ -58,6 +58,7 @@ fragment TokenDetail on TokenDetail {
   totalSupply
   marketCap
   priceChangePercentage24h
+  totalVolume
   holdersCount
 }
 

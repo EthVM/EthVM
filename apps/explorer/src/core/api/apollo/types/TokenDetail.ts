@@ -40,5 +40,6 @@ export interface TokenDetail {
   totalSupply: any | null;
   marketCap: any | null;
   priceChangePercentage24h: any | null;
+  totalVolume: any | null;
   holdersCount: number | null;
 }

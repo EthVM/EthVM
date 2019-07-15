@@ -6382,6 +6382,18 @@
             "deprecationReason": null
           },
           {
+            "name": "totalVolume",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigNumber",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "holdersCount",
             "description": null,
             "args": [],

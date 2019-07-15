@@ -21,6 +21,7 @@ export class TokenDetailDto implements TokenDetail {
   email?: string
   symbol?: string
   totalSupply?: BigNumber
+  totalVolume?: BigNumber
   website?: string
 
   constructor(data: TokenDetailEntity) {

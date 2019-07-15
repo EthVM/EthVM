@@ -103,7 +103,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         }
       ]
     } else {
-      const { address, holdersCount, owner, decimals, website, email, contractType, social } = this.tokenDetails
+      const { address, holdersCount, owner, decimals, website, email, contractType, social, totalVolume } = this.tokenDetails
       const { totalSupplyBN, circulatingSupplyBN, currentPriceBN, marketCapBN } = this.tokenDetails
 
       details = [
@@ -151,12 +151,12 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
       }
 
-      // if (totalVolume) {
-      //   details.push({
-      //     title: this.$i18n.t('token.volume').toString(),
-      //     detail: `$${this.getInt(totalVolume)}`
-      //   })
-      // }
+      if (totalVolume) {
+        details.push({
+          title: this.$i18n.t('token.volume').toString(),
+          detail: `$${this.getInt(totalVolume)}`
+        })
+      }
 
       if (holdersCount) {
         details.push({

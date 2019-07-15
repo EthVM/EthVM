@@ -429,6 +429,7 @@ export interface TokenDetail {
     totalSupply?: BigNumber;
     marketCap?: BigNumber;
     priceChangePercentage24h?: BigNumber;
+    totalVolume?: BigNumber;
     holdersCount?: number;
 }
 

@@ -40,6 +40,7 @@ export interface tokenDetails_tokenDetails {
   totalSupply: any | null;
   marketCap: any | null;
   priceChangePercentage24h: any | null;
+  totalVolume: any | null;
   holdersCount: number | null;
 }
 
