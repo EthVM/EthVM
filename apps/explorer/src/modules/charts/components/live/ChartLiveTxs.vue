@@ -48,7 +48,7 @@ const MAX_ITEMS = 10
       update({ blockSummaries }) {
         if (blockSummaries) {
           this.error = '' // clear any previous error
-          blockSummaries.items.sort((a,b) => a.number - b.number)
+          blockSummaries.items.sort((a, b) => a.number - b.number)
           return new BlockSummaryPageExt(blockSummaries)
         } else if (!this.syncing) {
           this.error = this.$i18n.t('message.no-data')
