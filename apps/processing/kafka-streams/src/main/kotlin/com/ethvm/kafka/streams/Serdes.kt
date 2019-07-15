@@ -2,6 +2,9 @@ package com.ethvm.kafka.streams
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
+import com.ethvm.avro.capture.ContractEventCreatedRecord
+import com.ethvm.avro.capture.ContractEventDestroyedRecord
+import com.ethvm.avro.capture.ContractEventListRecord
 import com.ethvm.avro.capture.ContractKeyRecord
 import com.ethvm.avro.capture.ContractLifecycleListRecord
 import com.ethvm.avro.capture.ContractLifecycleRecord
@@ -142,6 +145,10 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
+  fun ContractEventList() = SpecificAvroSerde<ContractEventListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
   fun TraceList() = SpecificAvroSerde<TraceListRecord>(registryClient).apply {
     configure(config, false)
   }
@@ -175,6 +182,13 @@ object Serdes : KoinComponent {
   }
 
   fun ContractLifecycleList() = SpecificAvroSerde<ContractLifecycleListRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun ContractEventCreated() = SpecificAvroSerde<ContractEventCreatedRecord>(registryClient).apply {
+    configure(config, false)
+  }
+  fun ContractEventDestroyed() = SpecificAvroSerde<ContractEventDestroyedRecord>(registryClient).apply {
     configure(config, false)
   }
 

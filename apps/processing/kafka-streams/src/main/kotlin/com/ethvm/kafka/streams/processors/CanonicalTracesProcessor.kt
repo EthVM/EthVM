@@ -1,13 +1,17 @@
 package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.capture.ContractLifecycleListRecord
-import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractLifecyleType
+import com.ethvm.avro.capture.ContractEventCreatedRecord
+import com.ethvm.avro.capture.ContractEventDestroyedRecord
+import com.ethvm.avro.capture.ContractEventListRecord
+import com.ethvm.avro.capture.ContractEventRecord
+import com.ethvm.avro.capture.ContractEventType
+import com.ethvm.avro.capture.ContractKeyRecord
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
 import com.ethvm.avro.capture.TraceDestroyActionRecord
 import com.ethvm.avro.capture.TraceListRecord
+import com.ethvm.avro.common.TraceLocationRecord
 import com.ethvm.avro.processing.BlockMetricKeyRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
 import com.ethvm.avro.processing.CanonicalCountKeyRecord
@@ -19,11 +23,13 @@ import com.ethvm.common.extensions.getBalanceBI
 import com.ethvm.common.extensions.getValueBI
 import com.ethvm.common.extensions.hexBuffer
 import com.ethvm.common.extensions.reverse
-import com.ethvm.common.extensions.toContractLifecycleRecord
+import com.ethvm.common.extensions.toContractEventRecord
 import com.ethvm.common.extensions.toFungibleBalanceDeltas
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
+import com.ethvm.kafka.streams.config.Topics.ContractCreated
+import com.ethvm.kafka.streams.config.Topics.ContractDestroyed
 import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.StandardTokenDetector
 import com.ethvm.kafka.streams.utils.toTopic
@@ -139,36 +145,120 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
 
     // Canonical Contract Lifecycle
 
+    val contractReduceStoreName = "canonical-contract-reduce"
+
+    builder.addStateStore(CanonicalKStreamReducer.store(contractReduceStoreName, Serdes.TraceList(), appConfig.unitTesting))
+
     val contractTypes = setOf("create", "suicide")
 
-    canonicalTraces
+    val contractEvents = canonicalTraces
       .mapValues { _, v ->
-        val blockHash = v.getTraces().firstOrNull()?.getBlockHash()
 
         val timestamp = DateTime(v.getTimestamp())
 
         // we only want contract related traces
-        ContractLifecycleListRecord.newBuilder()
-          .setTimestamp(timestamp)
-          .setBlockHash(blockHash)
+        ContractEventListRecord.newBuilder()
           .setDeltas(
             v.getTraces()
               .filter { trace -> contractTypes.contains(trace.getType()) }
-              .mapNotNull { it.toContractLifecycleRecord(timestamp) }
+              .mapNotNull { it.toContractEventRecord(timestamp) }
               .map { record ->
                 when (record.type) {
 
-                  ContractLifecyleType.DESTROY -> record
+                  ContractEventType.DESTROY -> record
 
-                  ContractLifecyleType.CREATE ->
+                  ContractEventType.CREATE -> {
+
+                    val created = record.event as ContractEventCreatedRecord
+
                     // identify the contract type
-                    ContractLifecycleRecord.newBuilder(record)
-                      .setContractType(StandardTokenDetector.detect(record.code.hexBuffer()!!).first)
-                      .build()
+                    ContractEventRecord.newBuilder(record)
+                      .setEvent(
+                        ContractEventCreatedRecord.newBuilder(created)
+                          .setContractType(StandardTokenDetector.detect(created.code.hexBuffer()!!).first)
+                          .build()
+                      ).build()
+
+                  }
                 }
               }
           ).build()
-      }.toTopic(Topics.CanonicalContractLifecycle)
+
+      }
+      .transform(CanonicalKStreamReducer(contractReduceStoreName), contractReduceStoreName)
+      .filter { _, change -> change.newValue != change.oldValue }
+      .flatMap { _, change ->
+
+        require(change.newValue != null) { "Change newValue cannot be null. A tombstone has been received" }
+
+        val deltas = change.newValue.deltas
+
+        val reversals = change.oldValue
+          ?.deltas?.map { delta ->
+
+          // we nullify the trace location fields for reversed events
+
+          when (delta.type) {
+
+            ContractEventType.CREATE -> {
+
+              val event = delta.event as ContractEventCreatedRecord
+
+              ContractEventRecord
+                .newBuilder(delta)
+                .setEvent(
+                  ContractEventCreatedRecord.newBuilder(event)
+                    .setTraceLocation(
+                      TraceLocationRecord.newBuilder()
+                        .setTimestamp(event.traceLocation.timestamp)
+                        .build()
+                    ).build()
+                ).build()
+
+            }
+
+            ContractEventType.DESTROY -> {
+
+              val event = delta.event as ContractEventDestroyedRecord
+
+              ContractEventRecord
+                .newBuilder(delta)
+                .setEvent(
+                  ContractEventDestroyedRecord.newBuilder(event)
+                    .setTraceLocation(
+                      TraceLocationRecord.newBuilder()
+                        .setTimestamp(event.traceLocation.timestamp)
+                        .build()
+                    ).build()
+                ).build()
+
+            }
+          }
+
+        } ?: emptyList()
+
+        (reversals + deltas)
+          .map { delta ->
+            KeyValue(
+              ContractKeyRecord.newBuilder()
+                .setAddress(delta.address)
+                .build(),
+              delta
+            )
+          }
+
+      }
+
+    contractEvents
+      .filter{ _, v -> v.type == ContractEventType.CREATE }
+      .mapValues { _, v -> v.event as ContractEventCreatedRecord }
+      .toTopic(ContractCreated)
+
+    contractEvents
+      .filter{ _, v -> v.type == ContractEventType.DESTROY }
+      .mapValues { _, v -> v.event as ContractEventDestroyedRecord }
+      .toTopic(ContractDestroyed)
+
 
     // Traces count
 

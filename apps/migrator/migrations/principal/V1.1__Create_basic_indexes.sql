@@ -27,10 +27,6 @@ CREATE INDEX idx_transaction_receipt_contract_address ON transaction_receipt ("c
 CREATE INDEX idx_transaction_trace_block_hash ON transaction_trace (block_hash);
 CREATE INDEX idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
 
-CREATE INDEX idx_contract_creator ON contract (creator);
-CREATE INDEX idx_contract_contract_type ON contract (contract_type);
-CREATE INDEX idx_contract_trace_created_at_block_hash ON contract (trace_created_at_block_hash);
-
 CREATE INDEX idx_fungible_balance_delta_address ON fungible_balance_delta (address);
 CREATE INDEX idx_fungible_balance_delta_contract_address ON fungible_balance_delta (contract_address);
 CREATE INDEX idx_fungible_balance_delta_delta_type__contract_address ON fungible_balance_delta (contract_address, delta_type);
