@@ -102,6 +102,8 @@ export class TokenResolvers {
   @Query()
   async tokenDetailByAddress(@Args('address', ParseAddressPipe) address: string): Promise<TokenDetailDto | undefined> {
     const entity = await this.tokenService.findDetailByAddress(address)
-    return entity ? new TokenDetailDto(entity) : undefined
+    if (!entity) return undefined
+    const holdersCount = await this.tokenService.countTokenHolders(address)
+    return new TokenDetailDto({...entity, holdersCount})
   }
 }

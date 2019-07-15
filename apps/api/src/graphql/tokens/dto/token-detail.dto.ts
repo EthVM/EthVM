@@ -24,7 +24,7 @@ export class TokenDetailDto implements TokenDetail {
   totalVolume?: BigNumber
   website?: string
 
-  constructor(data: TokenDetailEntity) {
+  constructor(data: any) {
 
     assignClean(this, data)
 
