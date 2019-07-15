@@ -58,12 +58,12 @@ import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import { tokenDetails, tokenHolderDetails } from '@app/modules/tokens/tokens.graphql'
-import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
 import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
 import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
+import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
 
 const MAX_ITEMS = 10
 
@@ -100,7 +100,7 @@ const MAX_ITEMS = 10
         }
 
         if (tokenDetails) {
-          return new TokenExchangeRateDetailExt(tokenDetails)
+          return new TokenDetailExt(tokenDetails)
         } else if (!this.syncing) {
           this.error = this.error || this.$i18n.t('message.invalid.token')
         }
@@ -146,7 +146,7 @@ export default class PageDetailsToken extends Vue {
   ===================================================================================
   */
 
-  tokenDetails?: TokenExchangeRateDetailExt
+  tokenDetails?: TokenDetailExt
   holderDetails?: TokenHolderExt
   address = ''
 
