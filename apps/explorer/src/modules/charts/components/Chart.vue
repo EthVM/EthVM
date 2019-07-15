@@ -108,6 +108,7 @@ export default class AppChart extends Vue {
   @Prop({ type: String }) error!: string
   @Prop({ type: Number, default: 10 }) maxItems!: number
   @Prop({ type: Object }) newData!: ChartData
+  @Prop({ type: String, default: 'leftToRight' }) direction!: 'leftToRight' | 'rightToLeft'
 
   /*
   ===================================================================================
@@ -245,18 +246,20 @@ export default class AppChart extends Vue {
       return
     }
 
+    const reverse = this.direction === 'rightToLeft'
+
     // Remove last item
     if (this.chart.data.datasets[0].data.length >= this.maxItems) {
-      this.chart.data.labels.pop()
+      reverse ? this.chart.data.labels.pop() : this.chart.data.labels.shift()
       this.chart.data.datasets.forEach(dataset => {
-        dataset.data.pop()
+        reverse ? dataset.data.pop() : dataset.data.shift()
       })
     }
 
     // Add new item
-    this.chart.data.labels.unshift(newVal.label)
+    reverse ? this.chart.data.labels.unshift(newVal.label) : this.chart.data.labels.push(newVal.label)
     this.chart.data.datasets.forEach((dataset, index) => {
-      dataset.data.unshift(newVal.data[index])
+      reverse ? dataset.data.unshift(newVal.data[index]) : dataset.data.push(newVal.data[index])
     })
 
     this.chart.update()
