@@ -1,6 +1,3 @@
-CREATE INDEX idx_token_exchange_rates_name ON token_exchange_rates (name);
-CREATE INDEX idx_token_exchange_rates_symbol ON token_exchange_rates (symbol);
-
 /* create token_search_result view for sorting erc20 and erc721 tokens matching a query string */
 CREATE VIEW token_metadata AS
 SELECT  e20.name AS name,
