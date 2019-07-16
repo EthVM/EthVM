@@ -20,7 +20,6 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { latestBlocks, newBlock } from '@app/modules/blocks/blocks.graphql'
-import BigNumber from 'bignumber.js'
 import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { Subscription } from 'rxjs'
 import { ChartConfig, ChartData } from '@app/modules/charts/props'
@@ -49,6 +48,7 @@ const MAX_ITEMS = 10
       update({ blockSummaries }) {
         if (blockSummaries) {
           this.error = '' // clear any previous error
+          blockSummaries.items.sort((a, b) => a.number - b.number)
           return new BlockSummaryPageExt(blockSummaries)
         } else if (!this.syncing) {
           this.error = this.$i18n.t('message.no-data')

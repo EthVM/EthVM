@@ -18,12 +18,9 @@
 
 <script lang="ts">
 import Chart from '@app/modules/charts/components/Chart.vue'
-import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
-import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/blocks.graphql'
 import { latestAvgGasPrices, latestAvgTxFees, newAvgGasPrice, newAvgTxFee } from '@app/modules/charts/charts.graphql'
-import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 import { latestAvgGasPrices_blockMetricsTransaction, latestAvgGasPrices_blockMetricsTransaction_items } from '@app/core/api/apollo/types/latestAvgGasPrices'
 import { latestAvgTxFees_blockMetricsTransactionFee, latestAvgTxFees_blockMetricsTransactionFee_items } from '@app/core/api/apollo/types/latestAvgTxFees'
@@ -279,7 +276,7 @@ export default class ChartLiveTxFees extends Vue {
       gasPriceItems.forEach(item => numbers.add(item.number))
       txFeeItems.forEach(item => numbers.add(item.number))
 
-      const numbersDesc = Array.from(numbers).sort((a, b) => b - a)
+      const numbersAsc = Array.from(numbers).sort((a, b) => a - b)
 
       const gasPricesByNumber = gasPriceItems.reduce((memo, next) => {
         memo.set(parseInt(next.number)!, next)
@@ -291,7 +288,7 @@ export default class ChartLiveTxFees extends Vue {
         return memo
       }, new Map<number, latestAvgTxFees_blockMetricsTransactionFee_items>())
 
-      numbersDesc.forEach(number => {
+      numbersAsc.forEach(number => {
         // for some reasons number is a string
         const avgGasPrice = gasPricesByNumber.get(+number) || 0
         const avgTxFee = txFeesByNumber.get(+number) || 0
