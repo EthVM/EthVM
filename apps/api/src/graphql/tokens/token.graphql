@@ -9,6 +9,7 @@ type Query {
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
   tokensMetadata(symbols: [String]): [TokenMetadata!]!
   tokenHolders(address: String!, offset: Int = 0, limit: Int = 20): TokenHoldersPage!
+  tokenDetailByAddress(address: String!): TokenDetail
 }
 
 type TokenPage {
@@ -83,6 +84,26 @@ type TokenMetadata {
   address: String
   decimals: Int
   logo: String
+}
+
+type TokenDetail {
+  address: String!
+  creator: String
+  contractType: String
+  name: String
+  symbol: String
+  decimals: Int
+  logo: String
+  email: String
+  social: ContractSocial
+  website: String
+  currentPrice: BigNumber
+  circulatingSupply: BigNumber
+  totalSupply: BigNumber
+  marketCap: BigNumber
+  priceChangePercentage24h: BigNumber
+  totalVolume: BigNumber
+  holdersCount: Int
 }
 
 enum ExchangeRatePair {
