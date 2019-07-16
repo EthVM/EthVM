@@ -39,7 +39,7 @@
     =====================================================================================
     -->
     <div v-if="isHolder">
-      <holder-details-list :address-ref="addressRef" :token-details="tokenDetails" :holder-details="holderDetails" :is-loading="loading" :error="error" />
+      <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :holder-details="holderDetails" :is-loading="loading" :error="error" />
       <app-tabs v-if="!syncing" :tabs="tabsTokenHolderDetails">
         <!-- Transfers -->
         <v-tab-item slot="tabs-item" value="tab-0">
@@ -54,7 +54,6 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
-import HolderDetailsList from '@app/modules/tokens/components/HolderDetailsList.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import { tokenDetails, tokenHolderDetails } from '@app/modules/tokens/tokens.graphql'
@@ -70,7 +69,6 @@ const MAX_ITEMS = 10
 @Component({
   components: {
     AppBreadCrumbs,
-    HolderDetailsList,
     TokenDetailsList,
     AppTabs,
     TokenTableHolders,
