@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
 import { BigNumber } from 'bignumber.js'
+import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
 
 @Entity('canonical_block_metrics_header')
 export class BlockMetricsHeaderEntity {
@@ -18,9 +19,6 @@ export class BlockMetricsHeaderEntity {
 
   @Column({ type: 'timestamp', readonly: true })
   timestamp!: Date
-
-  @Column({type: 'int', readonly: true})
-  blockTime!: number
 
   @Column({type: 'int', readonly: true})
   numUncles!: number

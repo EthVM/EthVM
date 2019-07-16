@@ -4,6 +4,11 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
+  record BlockTimeRecord {
+    long timestamp;
+    union{ null, int } blockTime = null;
+  }
+
   record KafkaOffsetInfoKeyRecord {
     long timestamp;
     string consumerGroupId;

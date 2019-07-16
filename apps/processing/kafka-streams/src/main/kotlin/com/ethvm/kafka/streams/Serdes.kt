@@ -20,6 +20,7 @@ import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
+import com.ethvm.avro.processing.BlockTimeRecord
 import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
@@ -116,6 +117,10 @@ object Serdes : KoinComponent {
 
   fun CanonicalKey() = SpecificAvroSerde<CanonicalKeyRecord>(registryClient).apply {
     configure(config, true)
+  }
+
+  fun BlockTime() = SpecificAvroSerde<BlockTimeRecord>(registryClient).apply {
+    configure(config, false)
   }
 
   fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
