@@ -38,9 +38,9 @@ dependencies {
   implementation("org.web3j:parity:4.2.0")
 
   // Kafka
-  implementation("org.apache.kafka:kafka-streams:2.1.1")
-  implementation("io.confluent:kafka-schema-registry-client:5.1.0")
-  implementation("io.confluent:kafka-streams-avro-serde:5.1.0")
+  implementation("org.apache.kafka:kafka-streams:2.3.0")
+  implementation("io.confluent:kafka-schema-registry-client:5.2.1")
+  implementation("io.confluent:kafka-streams-avro-serde:5.2.1")
 
   // Utils
   implementation("com.github.ajalt:clikt:1.7.0")

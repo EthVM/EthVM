@@ -4,7 +4,7 @@ import com.ethvm.avro.common.ContractType
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.common.extensions.byteBuffer
-import com.ethvm.kafka.streams.config.Topics.Contract
+import com.ethvm.kafka.streams.config.Topics.ContractCreated
 import com.ethvm.kafka.streams.config.Topics.Erc20Metadata
 import com.ethvm.kafka.streams.config.Topics.Erc721Metadata
 import com.ethvm.kafka.streams.utils.toTopic
@@ -50,12 +50,12 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     // Create stream builder
     val builder = StreamsBuilder()
 
-    val contractStream = Contract.stream(builder)
+    val contractStream = ContractCreated.stream(builder)
 
     // erc20
     contractStream
       // we only want creations
-      .filter { _, v -> v != null && v.contractType == ContractType.ERC20 && v.traceDestroyedAt == null }
+      .filter { _, v -> v != null && v.contractType == ContractType.ERC20 && v.traceLocation.blockHash != null }
       .mapValues { k, v ->
 
         val name = fetchName(k.address)
@@ -64,7 +64,7 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
         val totalSupply = fetchTotalSupply(k.address)
 
         Erc20MetadataRecord.newBuilder()
-          .setTimestamp(v.getTimestamp())
+          .setTimestamp(v.traceLocation.timestamp)
           .setName(name.join())
           .setSymbol(symbol.join())
           .setDecimals(decimals.join()?.intValueExact())
@@ -75,14 +75,14 @@ class ContractMetadataProcessor : AbstractKafkaProcessor() {
     // erc721
     contractStream
       // we only want creations
-      .filter { _, v -> v != null && v.contractType == ContractType.ERC721 && v.traceDestroyedAt == null }
+      .filter { _, v -> v != null && v.contractType == ContractType.ERC721 && v.traceLocation.blockHash != null }
       .mapValues { k, v ->
 
         val name = fetchName(k.address)
         val symbol = fetchSymbol(k.address)
 
         Erc721MetadataRecord.newBuilder()
-          .setTimestamp(v.getTimestamp())
+          .setTimestamp(v.traceLocation.timestamp)
           .setName(name.join())
           .setSymbol(symbol.join())
           .build()
