@@ -27,6 +27,7 @@ import { Hex } from '@app/core/models'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
 import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
+import BN from 'bignumber.js'
 
 @Component({
   components: {
@@ -143,7 +144,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       {
         title: this.$i18n.t('token.volume')
       },
-            {
+      {
         title: this.$i18n.t('token.website')
       },
       {
@@ -212,10 +213,11 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
       }
 
-        Object.assign(detailsContract[4], {
-          detail: this.tokenDetails.currentPriceBN ? this.getRoundNumber(this.tokenDetails.currentPriceBN) : '0.00',
-          priceChange: this.getPriceChange()
-        })
+      Object.assign(detailsContract[4], {
+        detail: this.tokenDetails.currentPriceBN ? this.getRoundNumber(this.tokenDetails.currentPriceBN) : '0.00',
+        priceChange: this.getPriceChange()
+      })
+
       if (this.tokenDetails.totalSupply) {
         Object.assign(detailsContract[5], {
           detail: this.formatStr(this.tokenDetails.totalSupply.toString())
@@ -248,24 +250,46 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
 
         Object.assign(detailsHolder[1], {
-          detail: this.holderDetails.balance,
+          detail: `${this.balance} (${this.tokenDetails.symbol!.toUpperCase()})`
         })
 
-        //Missing Object
         Object.assign(detailsHolder[2], {
-          detail: '$0.00' ,
+          detail: this.balanceUsd
         })
 
         detailsContract = detailsHolder.concat(detailsContract)
-      }
-      else {
+      } else {
         detailsContract.splice(4, 0, {
           title: this.$i18n.t('token.holder-total'),
           detail: this.tokenDetails.holdersCount || 0
         })
       }
-      }
+    }
     return detailsContract
+  }
+
+  get balanceUsd(): string | undefined {
+    if (!this.holderDetails) {
+      return ''
+    }
+
+    const decimals = this.tokenDetails.decimals
+    let n = new BN(this.holderDetails.balance)
+
+    if (decimals) {
+      n = n.div(new BN(10).pow(decimals))
+    }
+
+    return this.holderDetails.balance && this.tokenDetails.currentPrice ? `$${this.getRoundNumber(n.multipliedBy(this.tokenDetails.currentPrice))}` : undefined
+  }
+
+  get balance(): string {
+    const decimals = this.tokenDetails.decimals
+    let n = new BN(this.holderDetails.balance)
+    if (decimals) {
+      n = n.div(new BN(10).pow(decimals))
+    }
+    return this.getRoundNumber(n)
   }
 
   /*
@@ -275,15 +299,13 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   */
 
   getPriceChange(): string {
-    if (this.tokenDetails.currentPrice)  {
-          return this.tokenDetails.priceChangePercentage24h > 0
-      ? `+${this.getPercent(this.tokenDetails.priceChangePercentage24h)}`
-      : this.getPercent(this.tokenDetails.priceChangePercentage24h)
-    }
-    else {
+    if (this.tokenDetails.currentPrice) {
+      return this.tokenDetails.priceChangePercentage24h > 0
+        ? `+${this.getPercent(this.tokenDetails.priceChangePercentage24h)}`
+        : this.getPercent(this.tokenDetails.priceChangePercentage24h)
+    } else {
       return ''
     }
   }
-
 }
 </script>
