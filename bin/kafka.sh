@@ -25,26 +25,32 @@ kafka_usage() {
 }
 
 read_version() {
-  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $PROJECTS_PATH)
+
+  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $META_PATH)
   local version_path=$(eval "echo -e ${raw_version_path}")
   echo $(to_version "${version_path}")
+
 }
 
 # create_topics - create EthVM Kafka topics
 create_topics() {
+
   local version=$(read_version)
-  docker run --rm --network ethvm_back \
+  docker run --rm --network ethvm_net \
     -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_BOOTSTRAP_SERVERS=kafka-1:9091 \
     ethvm/ethvm-utils:${version} ensure-topics
+
 }
 
 # list_topics - lists registered Kafka topics
 list_topics() {
+
   docker-compose exec kafka-1 sh -c "kafka-topics --list --zookeeper zookeeper:2181"
+
 }
 
-# TODO: reset_topics - reset registered Kafka topics (if any)
+# reset_streams - reset registered Kafka topics (if any)
 reset_streams() {
 
   declare -A topics=(\
@@ -65,13 +71,16 @@ reset_streams() {
 }
 
 run() {
+
   local command="${1:-false}"
 
   case "${command}" in
     ensure-topics) create_topics       ;;
     list-topics)   list_topics         ;;
-    reset-streams)  reset_streams      ;;
+    reset-streams) reset_streams       ;;
     help|*)        kafka_usage; exit 0 ;;
   esac
+
 }
+
 run "$@"

@@ -5,12 +5,22 @@
         <v-card-title class="title font-weight-bold pb-1">{{ chartTitle }}</v-card-title>
         <v-card-text class="pt-0 pb-0 info--text caption">{{ chartDescription }}</v-card-text>
       </v-flex>
-      <v-flex xs12 sm3 v-if="!liveChart">
-        <v-layout align-center justify-end pa-3>
-          <button flat :class="classAll" @click="toggleData = 0" small>{{ $tc('charts.states.all', 2) }}</button>
-          <button flat :class="classWeek" @click="toggleData = 1" small>{{ $tc('charts.states.week', 2) }}</button>
-          <button flat :class="classMonth" @click="toggleData = 2" small>{{ $tc('charts.states.month', 2) }}</button>
-          <!-- <button flat :class="classMonth" small>1Y</button> -->
+      <v-flex grow v-if="!liveChart">
+        <v-layout row wrap align-center justify-end pa-3>
+          <button flat :class="[this.toggleData === 0 ? 'active-button' : 'button']" @click="toggleData = 0" small>{{ $tc('charts.states.day', 2) }}</button>
+          <button flat :class="[this.toggleData === 1 ? 'active-button' : 'button']" @click="toggleData = 1" small>{{ $tc('charts.states.week', 2) }}</button>
+          <button flat :class="[this.toggleData === 2 ? 'active-button' : 'button']" @click="toggleData = 2" small>
+            {{ $tc('charts.states.week-two', 2) }}
+          </button>
+          <button flat :class="[this.toggleData === 3 ? 'active-button' : 'button']" @click="toggleData = 3" small>{{ $tc('charts.states.month', 2) }}</button>
+          <button flat :class="[this.toggleData === 4 ? 'active-button' : 'button']" @click="toggleData = 4" small>
+            {{ $tc('charts.states.month-three', 2) }}
+          </button>
+          <button flat :class="[this.toggleData === 5 ? 'active-button' : 'button']" @click="toggleData = 5" small>
+            {{ $tc('charts.states.month-six', 2) }}
+          </button>
+          <button flat :class="[this.toggleData === 6 ? 'active-button' : 'button']" @click="toggleData = 6" small>{{ $tc('charts.states.year', 2) }}</button>
+          <button flat :class="[this.toggleData === 7 ? 'active-button' : 'button']" @click="toggleData = 7" small>{{ $tc('charts.states.all', 2) }}</button>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -30,7 +40,7 @@ import ChartJs from 'chart.js'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Footnote } from '@app/core/components/props'
-import { ChartData } from '@app/modules/charts/props'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import AppError from '@app/core/components/ui/AppError.vue'
 
@@ -87,7 +97,8 @@ export default class AppChart extends Vue {
 
   @Prop({ type: Boolean, default: false }) liveChart!: boolean
   @Prop({ type: String, required: true }) type!: string
-  @Prop({ type: Object, required: true }) data!: ChartData
+  @Prop({ type: Object, required: true }) config!: ChartConfig
+  @Prop({ type: Array, required: true }) initialData!: ChartData[]
   @Prop({ type: Boolean }) redraw!: boolean
   @Prop({ type: Object }) options!: object
   @Prop({ type: String }) chartTitle!: string
@@ -95,6 +106,9 @@ export default class AppChart extends Vue {
   @Prop({ type: Array }) footnotes?: Footnote[]
   @Prop({ type: Boolean }) dataLoading?: boolean
   @Prop({ type: String }) error!: string
+  @Prop({ type: Number, default: 10 }) maxItems!: number
+  @Prop({ type: Object }) newData!: ChartData
+  @Prop({ type: String, default: 'leftToRight' }) direction!: 'leftToRight' | 'rightToLeft'
 
   /*
   ===================================================================================
@@ -103,7 +117,6 @@ export default class AppChart extends Vue {
   */
 
   toggleData = 0
-  updateChart = false
   chart: ChartJs | null = null
 
   /*
@@ -119,7 +132,7 @@ export default class AppChart extends Vue {
   }
 
   mounted() {
-    if (this.data && this.data.datasets && this.data.datasets[0].data.length !== 0) {
+    if (this.config && this.initialData && this.initialData.length) {
       this.createChart()
     }
   }
@@ -134,18 +147,6 @@ export default class AppChart extends Vue {
     Computed
   ===================================================================================
   */
-  get classAll(): string {
-    return this.toggleData === 0 ? 'active-button' : 'button'
-  }
-
-  get classWeek(): string {
-    return this.toggleData === 1 ? 'active-button' : 'button'
-  }
-
-  get classMonth(): string {
-    return this.toggleData === 2 ? 'active-button' : 'button'
-  }
-
   get chartClass(): string {
     const brkPoint = this.$vuetify.breakpoint.name
     switch (brkPoint) {
@@ -165,24 +166,35 @@ export default class AppChart extends Vue {
   ===================================================================================
   */
 
-  @Watch('data')
-  onDataChanged(): void {
+  @Watch('initialData')
+  onInitialDataChanged(): void {
     if (this.redraw) {
       if (this.chart) {
         this.chart.destroy()
       }
       this.createChart()
-    } else {
-      if (!this.chart) {
-        this.createChart()
-      }
-      this.chart.update()
+    } else if (!this.chart && this.config && this.initialData && this.initialData.length) {
+      this.createChart() // Create chart if not created in mounted hook
     }
   }
 
   @Watch('toggleData')
   onTogleDataChanged(newVal: number, oldVal: number): void {
     this.$emit('timeFrame', newVal)
+  }
+
+  @Watch('newData')
+  onNewItem(newData: ChartData): void {
+    if (!newData) {
+      return
+    }
+
+    if (this.redraw) {
+      this.updateInitialData(newData)
+      this.redrawChart()
+    } else {
+      this.updateChartData(newData)
+    }
   }
 
   /*
@@ -192,11 +204,79 @@ export default class AppChart extends Vue {
   */
 
   createChart() {
+    const { config, initialData } = this
+
+    // clear previous state
+    config.labels = []
+    config.datasets.forEach(dataset => {
+      dataset.data = []
+    })
+
+    // Add new data
+    initialData.forEach(item => {
+      config.labels.push(item.label)
+      config.datasets.forEach((dataset, index) => {
+        dataset.data.push(item.data[index])
+      })
+    })
+
     this.chart = new ChartJs(this.$refs.chart, {
       type: this.type,
-      data: this.data,
+      data: config,
       options: this.options
     })
+  }
+
+  redrawChart() {
+    if (this.chart) {
+      this.chart.destroy()
+    }
+    this.createChart()
+  }
+
+  updateChartData(newVal: ChartData) {
+    // Check for fork by comparing labels to see if this chart point already exists in the chart
+    const prevIdx = this.chart.data.labels.indexOf(newVal.label)
+    if (prevIdx > -1) {
+      // Swap this item for the previous one
+      this.chart.data.labels[prevIdx] = newVal.label
+      this.chart.data.datasets.forEach((dataset, index) => {
+        dataset.data[prevIdx] = newVal.data[index]
+      })
+      return
+    }
+
+    const reverse = this.direction === 'rightToLeft'
+
+    // Remove last item
+    if (this.chart.data.datasets[0].data.length >= this.maxItems) {
+      reverse ? this.chart.data.labels.pop() : this.chart.data.labels.shift()
+      this.chart.data.datasets.forEach(dataset => {
+        reverse ? dataset.data.pop() : dataset.data.shift()
+      })
+    }
+
+    // Add new item
+    reverse ? this.chart.data.labels.unshift(newVal.label) : this.chart.data.labels.push(newVal.label)
+    this.chart.data.datasets.forEach((dataset, index) => {
+      reverse ? dataset.data.unshift(newVal.data[index]) : dataset.data.push(newVal.data[index])
+    })
+
+    this.chart.update()
+  }
+
+  updateInitialData(newVal) {
+    // Check for fork and update data in place if necessary
+    const prevIdx = this.initialData.findIndex(initial => initial.label === newVal.label)
+    if (prevIdx > -1) {
+      this.initialData[prevIdx] = newVal
+      return
+    }
+
+    if (this.initialData && this.initialData.length >= this.maxItems) {
+      this.initialData.pop()
+    }
+    this.initialData.unshift(newVal)
   }
 }
 </script>

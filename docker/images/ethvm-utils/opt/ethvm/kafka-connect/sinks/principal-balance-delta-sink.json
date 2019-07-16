@@ -1,0 +1,22 @@
+{
+  "name": "principal-balance-delta-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": {{ default .Env.PRINCIPAL_BALANCE_DELTA_SINK_TASKS_MAX "3" }},
+    "topics": "fungible_balance_delta,non_fungible_balance_delta",
+    "batch.size": 5000,
+    "consumer.max.poll.records": 10000,
+    "consumer.fetch.min.bytes": 100000,
+    "consumer.fetch.wait.max.ms": 100,
+    "insert.mode": "insert",
+    "pk.mode": "none",
+    "connection.url": "{{ .Env.PRINCIPAL_JDBC_URL }}",
+    "connection.user": "{{ .Env.PRINCIPAL_USER }}",
+    "connection.password": "{{ .Env.PRINCIPAL_PASSWORD }}",
+    "transforms": "snakeCaseKey,snakeCaseValue,flattenValue",
+    "transforms.flattenValue.type": "com.ethvm.kafka.connect.transforms.Flatten$Value",
+    "transforms.flattenValue.delimiter": "_",
+    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value"
+  }
+}

@@ -2,8 +2,10 @@ package com.ethvm.common.extensions
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractLifecyleType
+import com.ethvm.avro.capture.ContractEventCreatedRecord
+import com.ethvm.avro.capture.ContractEventDestroyedRecord
+import com.ethvm.avro.capture.ContractEventRecord
+import com.ethvm.avro.capture.ContractEventType
 import com.ethvm.avro.capture.ParitySyncStateRecord
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
@@ -112,7 +114,7 @@ fun TraceRecord.hasError(): Boolean {
   return error != null && error.isNotBlank()
 }
 
-fun TraceRecord.toContractLifecycleRecord(timestamp: DateTime): ContractLifecycleRecord? {
+fun TraceRecord.toContractEventRecord(timestamp: DateTime): ContractEventRecord? {
 
   // error check first
   val error = getError()
@@ -126,39 +128,45 @@ fun TraceRecord.toContractLifecycleRecord(timestamp: DateTime): ContractLifecycl
 
     is TraceCreateActionRecord ->
 
-      ContractLifecycleRecord.newBuilder()
+      ContractEventRecord.newBuilder()
         .setAddress(getResult().getAddress())
-        .setType(ContractLifecyleType.CREATE)
-        .setCreator(action.getFrom())
-        .setInit(action.getInit())
-        .setCode(getResult().getCode())
-        .setTimestamp(timestamp)
-        .setCreatedAt(
-          TraceLocationRecord.newBuilder()
-            .setBlockNumber(getBlockNumber())
-            .setBlockHash(getBlockHash())
-            .setTransactionHash(getTransactionHash())
-            .setTraceAddress(getTraceAddress())
-            .setTimestamp(timestamp)
-            .build()
+        .setType(ContractEventType.CREATE)
+        .setEvent(
+          ContractEventCreatedRecord.newBuilder()
+            .setAddress(getResult().getAddress())
+            .setCreator(action.getFrom())
+            .setInit(action.getInit())
+            .setCode(getResult().getCode())
+            .setTraceLocation(
+              TraceLocationRecord.newBuilder()
+                .setBlockNumber(getBlockNumber())
+                .setBlockHash(getBlockHash())
+                .setTransactionHash(getTransactionHash())
+                .setTraceAddress(getTraceAddress())
+                .setTimestamp(timestamp)
+                .build()
+            ).build()
         ).build()
 
     is TraceDestroyActionRecord ->
 
-      ContractLifecycleRecord.newBuilder()
+      ContractEventRecord.newBuilder()
         .setAddress(action.getAddress())
-        .setType(ContractLifecyleType.DESTROY)
-        .setRefundAddress(action.getRefundAddress())
-        .setRefundBalance(action.getBalance())
-        .setTimestamp(timestamp)
-        .setDestroyedAt(
-          TraceLocationRecord.newBuilder()
-            .setBlockNumber(getBlockNumber())
-            .setBlockHash(getBlockHash())
-            .setTransactionHash(getTransactionHash())
-            .setTraceAddress(getTraceAddress())
-            .setTimestamp(timestamp)
-            .build()
+        .setType(ContractEventType.DESTROY)
+        .setEvent(
+          ContractEventDestroyedRecord.newBuilder()
+            .setAddress(action.getAddress())
+            .setRefundAddress(action.getRefundAddress())
+            .setRefundBalance(action.getBalance())
+            .setTraceLocation(
+              TraceLocationRecord.newBuilder()
+                .setBlockNumber(getBlockNumber())
+                .setBlockHash(getBlockHash())
+                .setTransactionHash(getTransactionHash())
+                .setTraceAddress(getTraceAddress())
+                .setTimestamp(timestamp)
+                .build()
+            ).build()
         ).build()
 
     else -> throw IllegalArgumentException("Unexpected action type: $action")

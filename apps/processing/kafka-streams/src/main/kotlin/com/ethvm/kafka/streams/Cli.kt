@@ -1,28 +1,28 @@
 package com.ethvm.kafka.streams
 
-import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.options.default
-import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.types.int
 import com.ethvm.common.config.NetConfig
 import com.ethvm.kafka.streams.config.AppConfig
 import com.ethvm.kafka.streams.config.KafkaConfig
 import com.ethvm.kafka.streams.config.Web3Config
 import com.ethvm.kafka.streams.di.Modules.kafkaStreams
 import com.ethvm.kafka.streams.di.Modules.web3
-import com.ethvm.kafka.streams.processors.BlockAuthorProcessor
-import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaProcessor
-import com.ethvm.kafka.streams.processors.CountDeltaProcessor
 import com.ethvm.kafka.streams.processors.BlockMetricsProcessor
-import com.ethvm.kafka.streams.processors.ContractLifecycleProcessor
+import com.ethvm.kafka.streams.processors.CanonicalBlockHeaderProcessor
+import com.ethvm.kafka.streams.processors.CanonicalReceiptsProcessor
+import com.ethvm.kafka.streams.processors.CanonicalTracesProcessor
+import com.ethvm.kafka.streams.processors.CanonicalTransactionsProcessor
+import com.ethvm.kafka.streams.processors.CanonicalUnclesProcessor
 import com.ethvm.kafka.streams.processors.ContractMetadataProcessor
-import com.ethvm.kafka.streams.processors.FlatMapProcessor
+import com.ethvm.kafka.streams.processors.CountProcessor
+import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaProcessor
 import com.ethvm.kafka.streams.processors.FungibleBalanceProcessor
 import com.ethvm.kafka.streams.processors.KafkaProcessor
-import com.ethvm.kafka.streams.processors.NonFungibleBalanceDeltaProcessor
 import com.ethvm.kafka.streams.processors.NonFungibleBalanceProcessor
-import com.ethvm.kafka.streams.processors.CountProcessor
 import com.ethvm.kafka.streams.processors.TransactionFeesProcessor
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.int
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -102,17 +102,17 @@ class Cli : CliktCommand() {
     }
 
     listOf<KafkaProcessor>(
+      CanonicalBlockHeaderProcessor(),
+      CanonicalTransactionsProcessor(),
+      CanonicalReceiptsProcessor(),
+      CanonicalTracesProcessor(),
+      CanonicalUnclesProcessor(),
       TransactionFeesProcessor(),
       FungibleBalanceDeltaProcessor(),
-      NonFungibleBalanceDeltaProcessor(),
       FungibleBalanceProcessor(),
       NonFungibleBalanceProcessor(),
-      BlockAuthorProcessor(),
-      CountDeltaProcessor(),
       CountProcessor(),
       BlockMetricsProcessor(),
-      ContractLifecycleProcessor(),
-      FlatMapProcessor(),
       ContractMetadataProcessor()
     ).forEach {
       it.buildTopology()

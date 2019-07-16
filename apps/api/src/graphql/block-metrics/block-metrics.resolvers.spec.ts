@@ -1,10 +1,8 @@
 import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
 import { BlockMetricsResolvers } from './block-metrics.resolvers'
-import { BlockMetricEntity } from '../../orm/entities/block-metric.entity'
 import { PubSub } from 'graphql-subscriptions'
 import { BlockMetricsService } from '../../dao/block-metrics.service'
-import { BlockMetricDto } from './dto/block-metric.dto'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '../schema'
 import { AggregateBlockMetricDto } from './dto/aggregate-block-metric.dto'
 import { MetadataService } from '../../dao/metadata.service'
@@ -225,7 +223,7 @@ const blockMetricsServiceMock = {
 
     return [data.map(b => new BlockMetricsTransactionFeeEntity(b)), totalCount]
   },
-  async timeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[],): Promise<AggregateBlockMetric[]> {
+  async timeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): Promise<AggregateBlockMetric[]> {
 
     // Default to "ONE_DAY" if no "ONE_HOUR" for purpose of testing
     const collection = bucket === TimeBucket.ONE_HOUR ? aggregateBlockMetricsHour : aggregateBlockMetricsDay
@@ -234,10 +232,10 @@ const blockMetricsServiceMock = {
 
     return items.map(i => {
       const res = { timestamp: i.time } as AggregateBlockMetric
-      if (fields.includes(BlockMetricField.AVG_BLOCK_TIME)) {
+      if (field === BlockMetricField.AVG_BLOCK_TIME) {
         res.avgBlockTime = i.avg_block_time
       }
-      if (fields.includes(BlockMetricField.AVG_DIFFICULTY)) {
+      if (field === BlockMetricField.AVG_DIFFICULTY) {
         res.avgDifficulty = i.avg_difficulty
       }
       return res
@@ -398,7 +396,7 @@ describe('BlockMetricResolvers', () => {
         new Date(1556668800000),
         new Date(1556708400000),
         TimeBucket.ONE_HOUR,
-        [BlockMetricField.AVG_BLOCK_TIME])
+        BlockMetricField.AVG_BLOCK_TIME)
 
       expect(aggregateBlockMetrics).not.toBeNull()
       expect(aggregateBlockMetrics).toHaveLength(12)
@@ -422,7 +420,7 @@ describe('BlockMetricResolvers', () => {
         new Date(1556668800000),
         new Date(1557014400000),
         TimeBucket.ONE_DAY,
-        [BlockMetricField.AVG_BLOCK_TIME]
+        BlockMetricField.AVG_BLOCK_TIME
       )
 
       expect(aggregateBlockMetrics).not.toBeNull()
@@ -439,15 +437,15 @@ describe('BlockMetricResolvers', () => {
         new Date(1556668800000),
         new Date(1557014400000),
         TimeBucket.ONE_DAY,
-        [BlockMetricField.AVG_BLOCK_TIME, BlockMetricField.AVG_DIFFICULTY]
+        BlockMetricField.AVG_DIFFICULTY
       )
 
       expect(aggregateBlockMetricsTwo).not.toBeNull()
       expect(aggregateBlockMetricsTwo).toHaveLength(5)
 
       expect(aggregateBlockMetricsTwo[0]).toHaveProperty('timestamp')
-      expect(aggregateBlockMetricsTwo[0]).toHaveProperty('avgBlockTime')
       expect(aggregateBlockMetricsTwo[0]).toHaveProperty('avgDifficulty')
+      expect(aggregateBlockMetricsTwo[0]).not.toHaveProperty('avgBlockTime')
       expect(aggregateBlockMetricsTwo[0]).not.toHaveProperty('avgNumUncles')
       expect(aggregateBlockMetricsTwo[0]).not.toHaveProperty('avgTotalDifficulty')
       expect(aggregateBlockMetricsTwo[0]).not.toHaveProperty('avgGasLimit')
@@ -460,7 +458,7 @@ describe('BlockMetricResolvers', () => {
         new Date(1556668800000),
         new Date(1557014400000),
         TimeBucket.ONE_DAY,
-        [BlockMetricField.AVG_BLOCK_TIME]
+        BlockMetricField.AVG_BLOCK_TIME
       )
 
       expect(aggregateBlockMetrics).not.toBeNull()
@@ -482,7 +480,7 @@ describe('BlockMetricResolvers', () => {
         new Date(1546300800000),
         new Date(1546819200000),
         TimeBucket.ONE_DAY,
-        [BlockMetricField.AVG_BLOCK_TIME]
+        BlockMetricField.AVG_BLOCK_TIME
       )
 
       expect(aggregateBlockMetrics).not.toBeNull()

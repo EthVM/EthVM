@@ -67,7 +67,7 @@ class ParitySourceTask : SourceTask() {
 
       if (sourceRecords.isEmpty()) {
         // sleep 1 second to avoid spinning
-        Thread.sleep(1000)
+        Thread.sleep(100)
       }
 
       return sourceRecords.toMutableList()

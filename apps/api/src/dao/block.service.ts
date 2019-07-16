@@ -11,35 +11,38 @@ import { TraceService } from './trace.service'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { setEquals } from '@app/shared/utils'
 import { ConfigService } from '@app/shared/config.service'
-import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class BlockService {
   constructor(
-    @InjectRepository(BlockHeaderEntity) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
-    @InjectRepository(TransactionEntity) private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectRepository(TransactionTraceEntity) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
-    @InjectRepository(UncleEntity) private readonly uncleRepository: Repository<UncleEntity>,
-    @InjectEntityManager() private readonly entityManager: EntityManager,
+    @InjectRepository(BlockHeaderEntity, DbConnection.Principal) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
+    @InjectRepository(TransactionEntity, DbConnection.Principal) private readonly transactionRepository: Repository<TransactionEntity>,
+    @InjectRepository(TransactionTraceEntity, DbConnection.Principal) private readonly transactionTraceRepository: Repository<TransactionTraceEntity>,
+    @InjectRepository(UncleEntity, DbConnection.Principal) private readonly uncleRepository: Repository<UncleEntity>,
+    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
     private readonly traceService: TraceService,
     private readonly configService: ConfigService,
   ) {
   }
 
-  async calculateHashRate(): Promise<BigNumber | null> {
+  async calculateHashRate(cache: boolean = true): Promise<BigNumber | null> {
 
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
     const blocks = await this.blockHeaderRepository
       .find({
         select: ['number', 'difficulty', 'blockTime'],
+        relations: ['blockTime'],
         order: { number: 'DESC' },
         take: 20,
+        cache,
       })
 
     if (blocks.length === 0) return null
 
     const avgBlockTime = blocks
-      .map(b => b.blockTime)
+      .map(b => b.blockTime!!.blockTime)
       .reduceRight((memo, next) => memo.plus(next || 0), new BigNumber(0))
       .dividedBy(blocks.length)
 
@@ -57,11 +60,12 @@ export class BlockService {
 
           const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
 
-          const [{ count }] = await txn.find(RowCount, {
+          const [{ count }] = await txn.find(CanonicalCount, {
             select: ['count'],
             where: {
-              relation: 'canonical_block_header',
+              entity: 'block_header',
             },
+            cache: true,
           })
 
           const headersWithRewards = await txn.find(BlockHeaderEntity, {
@@ -71,6 +75,7 @@ export class BlockService {
             order: { number: 'DESC' },
             skip: offset,
             take: limit,
+            cache: true,
           })
 
           return [
@@ -84,42 +89,53 @@ export class BlockService {
 
   async findSummariesByAuthor(author: string, offset: number = 0, limit: number = 20): Promise<[BlockSummary[], number]> {
 
-    const [headersWithRewards, count] = await this.blockHeaderRepository
-      .findAndCount({
-        select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
-        where: { author },
-        relations: ['rewards'],
-        order: { number: 'DESC' },
-        skip: offset,
-        take: limit,
-      })
+    return this.entityManager
+      .transaction(
+        'READ COMMITTED',
+        async (txn): Promise<[BlockSummary[], number]> => {
 
-    if (count === 0) return [[], count]
+          const count = await txn.count(BlockHeaderEntity, {
+            where: { author },
+          })
 
-    return [
-      await this.summarise(this.entityManager, headersWithRewards),
-      count,
-    ]
+          if (count === 0) return [[], count]
+
+          const headersWithRewards = await txn.find(BlockHeaderEntity, {
+              select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
+              where: { author },
+              relations: ['rewards'],
+              order: { number: 'DESC' },
+              skip: offset,
+              take: limit,
+              cache: true,
+            })
+
+          return [
+            await this.summarise(txn, headersWithRewards),
+            count,
+          ]
+        })
 
   }
 
-  async findSummariesByBlockHash(blockHashes: string[]): Promise<BlockSummary[]> {
+  async findSummariesByBlockHash(blockHashes: string[], cache: boolean = true): Promise<BlockSummary[]> {
 
     const headersWithRewards = await this.blockHeaderRepository.find({
       select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
       where: { hash: In(blockHashes) },
       relations: ['rewards'],
       order: { number: 'DESC' },
+      cache,
     })
 
     return this.summarise(this.entityManager, headersWithRewards)
 
   }
 
-  private async summarise(tx: EntityManager, headersWithRewards: BlockHeaderEntity[]): Promise<BlockSummary[]> {
+  private async summarise(tx: EntityManager, headersWithRewards: BlockHeaderEntity[], cache: boolean = true): Promise<BlockSummary[]> {
 
     const blockHashes = headersWithRewards.map(h => h.hash)
-    const txStatuses = await this.traceService.findTxStatusByBlockHash(tx, blockHashes)
+    const txStatuses = await this.traceService.findTxStatusByBlockHash(tx, blockHashes, cache)
 
     const successfulCountByBlock = new Map<string, number>()
     const failedCountByBlock = new Map<string, number>()
@@ -165,7 +181,9 @@ export class BlockService {
       const retrievedTxHashes = txHashesByBlock.get(hash) || new Set<string>()
 
       if (!setEquals(expectedTxHashes, retrievedTxHashes)) {
-        throw new PartialReadException(`Transactions did not match, block hash = ${header.hash}`)
+        const expected = [...expectedTxHashes].join(',')
+        const retrieved = [...retrievedTxHashes].join(',')
+        throw new PartialReadException(`Transactions did not match, block hash = ${header.hash}, expected = ${expected}, retrieved = ${retrieved}`)
       }
 
       const rewardsByBlock = new Map<string, BigNumber>()
@@ -188,9 +206,15 @@ export class BlockService {
 
   }
 
-  async findOne(where: FindConditions<BlockHeaderEntity>[] | FindConditions<BlockHeaderEntity> | ObjectLiteral): Promise<BlockHeaderEntity | undefined> {
+  async findByHash(hash: string): Promise<BlockHeaderEntity | undefined> {
+
     const { instaMining } = this.configService
-    const blockHeader = await this.blockHeaderRepository.findOne({ where, relations: ['uncles', 'rewards'] })
+
+    const blockHeader = await this.blockHeaderRepository.findOne({
+      where: { hash },
+      relations: ['uncles', 'rewards', 'blockTime'],
+      cache: true,
+    })
 
     if (!blockHeader) return undefined
 
@@ -212,4 +236,18 @@ export class BlockService {
     return blockHeader
   }
 
+  async findByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
+
+    const lookup = await this.blockHeaderRepository
+      .findOne({
+        select: ['hash'],
+        where: { number },
+      })
+
+    if (lookup) {
+      return this.findByHash(lookup.hash)
+    } else {
+      return undefined
+    }
+  }
 }

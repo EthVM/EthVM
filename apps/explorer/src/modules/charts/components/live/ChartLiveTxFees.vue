@@ -1,7 +1,9 @@
 <template>
   <chart
     type="line"
-    :data="chartData"
+    :config="chartConfig"
+    :initial-data="chartData"
+    :new-data="latestData"
     :options="chartOptions"
     :redraw="redraw"
     :chart-title="newTitle"
@@ -16,25 +18,17 @@
 
 <script lang="ts">
 import Chart from '@app/modules/charts/components/Chart.vue'
-import { EthValue } from '@app/core/models'
 import { Footnote } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
-import { latestBlockMetrics, newBlockMetric } from '@app/modules/blocks/blocks.graphql'
 import { latestAvgGasPrices, latestAvgTxFees, newAvgGasPrice, newAvgTxFee } from '@app/modules/charts/charts.graphql'
-import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
-import { latestAvgGasPrices_blockMetricsTransaction } from '@app/core/api/apollo/types/latestAvgGasPrices'
-import { latestAvgTxFees_blockMetricsTransactionFee } from '@app/core/api/apollo/types/latestAvgTxFees'
+import { latestAvgGasPrices_blockMetricsTransaction, latestAvgGasPrices_blockMetricsTransaction_items } from '@app/core/api/apollo/types/latestAvgGasPrices'
+import { latestAvgTxFees_blockMetricsTransactionFee, latestAvgTxFees_blockMetricsTransactionFee_items } from '@app/core/api/apollo/types/latestAvgTxFees'
+import { newAvgGasPrice_newBlockMetricsTransaction } from '@app/core/api/apollo/types/newAvgGasPrice'
+import { newAvgTxFee_newBlockMetricsTransactionFee } from '@app/core/api/apollo/types/newAvgTxFee'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 
 const MAX_ITEMS = 10
-
-class ChartData {
-  constructor(public readonly labels: string[] = [], public readonly avgFees: number[] = [], public readonly avgPrice: number[] = []) {
-    this.labels = labels
-    this.avgFees = avgFees
-    this.avgPrice = avgPrice
-  }
-}
 
 @Component({
   components: {
@@ -44,7 +38,10 @@ class ChartData {
     return {
       syncing: undefined,
       avgGasPrices: undefined,
-      avgTxFees: undefined
+      avgTxFees: undefined,
+      latestAvgGasPrice: undefined,
+      latestAvgTxFee: undefined,
+      latestData: undefined
     }
   },
   apollo: {
@@ -84,40 +81,6 @@ class ChartData {
           this.error = this.$i18n.t('message.no-data')
         } else {
           this.error = this.$i18n.t('message.err')
-        }
-      },
-
-      subscribeToMore: {
-        document: newAvgGasPrice,
-
-        updateQuery: (previousResult, { subscriptionData }) => {
-          const { blockMetricsTransaction } = previousResult
-          const { newBlockMetricsTransaction } = subscriptionData.data
-
-          const items = Object.assign([], blockMetricsTransaction.items)
-
-          // add one to the beginning and pop one from the end
-
-          items.unshift(newBlockMetricsTransaction)
-
-          if (items.length > MAX_ITEMS) {
-            items.pop()
-          }
-
-          // ensure order by block number desc
-          items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number, 10) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number, 10) : new BigNumber(0)
-            return numberB.minus(numberA).toNumber()
-          })
-
-          return {
-            ...previousResult,
-            blockMetricsTransaction: {
-              ...blockMetricsTransaction,
-              items
-            }
-          }
         }
       }
     },
@@ -159,39 +122,25 @@ class ChartData {
         } else {
           this.error = this.$i18n.t('message.err')
         }
+      }
+    },
+
+    $subscribe: {
+      newAvgGasPrice: {
+        query: newAvgGasPrice,
+        result({ data }) {
+          const self = this as any
+          self.latestAvgGasPrice = data.newBlockMetricsTransaction
+          self.updateLatestData()
+        }
       },
 
-      subscribeToMore: {
-        document: newAvgTxFee,
-
-        updateQuery: (previousResult, { subscriptionData }) => {
-          const { blockMetricsTransactionFee } = previousResult
-          const { newBlockMetricsTransactionFee } = subscriptionData.data
-
-          const items = Object.assign([], blockMetricsTransactionFee.items)
-
-          // add one to the beginning and pop one from the end
-
-          items.unshift(newBlockMetricsTransactionFee)
-
-          if (items.length > MAX_ITEMS) {
-            items.pop()
-          }
-
-          // ensure order by block number desc
-          items.sort((a, b) => {
-            const numberA = a.number ? new BigNumber(a.number, 10) : new BigNumber(0)
-            const numberB = b.number ? new BigNumber(b.number, 10) : new BigNumber(0)
-            return numberB.minus(numberA).toNumber()
-          })
-
-          return {
-            ...previousResult,
-            blockMetricsTransactionFee: {
-              ...blockMetricsTransactionFee,
-              items
-            }
-          }
+      newAvgTxFee: {
+        query: newAvgTxFee,
+        result({ data }) {
+          const self = this as any
+          self.latestAvgTxFee = data.newBlockMetricsTransactionFee
+          self.updateLatestData()
         }
       }
     }
@@ -204,12 +153,15 @@ export default class ChartLiveTxFees extends Vue {
     ===================================================================================
     */
 
-  redraw = true
+  redraw = false
   error: string = ''
   syncing?: boolean
 
   avgGasPrices?: latestAvgGasPrices_blockMetricsTransaction
   avgTxFees?: latestAvgTxFees_blockMetricsTransactionFee
+  latestAvgGasPrice?: newAvgGasPrice_newBlockMetricsTransaction
+  latestAvgTxFee?: newAvgTxFee_newBlockMetricsTransactionFee
+  latestData?: ChartData
 
   connectedSubscription?: Subscription
 
@@ -242,53 +194,31 @@ export default class ChartLiveTxFees extends Vue {
     ===================================================================================
     */
 
-  toChartData(avgGasPrices?: latestAvgGasPrices_blockMetricsTransaction, avgTxFees?: latestAvgTxFees_blockMetricsTransactionFee) {
+  toChartDataItem(gasPrice: newAvgGasPrice_newBlockMetricsTransaction, txFee: newAvgTxFee_newBlockMetricsTransactionFee): ChartData {
     const numberLabel = this.$i18n.t('block.number')
 
-    const labels: string[] = []
-    const avgFees: number[] = []
-    const avgPrice: number[] = []
+    const data = [] as any[]
+    data.push(gasPrice.avgGasPrice)
+    data.push(txFee.avgTxFees)
 
-    if (!(avgGasPrices && avgTxFees)) {
-      return new ChartData(labels, avgFees, avgPrice)
+    return {
+      label: `${numberLabel} ${gasPrice.number}`,
+      data
+    }
+  }
+
+  updateLatestData() {
+    const { latestAvgGasPrice, latestAvgTxFee } = this
+
+    if (!(latestAvgGasPrice && latestAvgTxFee)) {
+      return
     }
 
-    if (!(avgGasPrices!.items.length && avgTxFees!.items.length)) {
-      return new ChartData(labels, avgFees, avgPrice)
+    if (latestAvgGasPrice.number !== latestAvgTxFee.number) {
+      return
     }
 
-    const gasPriceItems = avgGasPrices!.items
-    const txFeeItems = avgTxFees!.items
-
-    if (gasPriceItems.length && txFeeItems.length) {
-      const numbers = new Set<number>()
-      gasPriceItems.forEach(item => numbers.add(item.number))
-      txFeeItems.forEach(item => numbers.add(item.number))
-
-      const numbersDesc = Array.from(numbers).sort((a, b) => b - a)
-
-      const gasPricesByNumber = gasPriceItems.reduce((memo, next) => {
-        memo.set(parseInt(next.number)!, new EthValue(next.avgGasPrice!).toGWei())
-        return memo
-      }, new Map<number, number>())
-
-      const txFeesByNumber = txFeeItems.reduce((memo, next) => {
-        memo.set(parseInt(next.number), new EthValue(next.avgTxFees!).toGWei())
-        return memo
-      }, new Map<number, number>())
-
-      numbersDesc.forEach(number => {
-        // for some reasons number is a string
-        const avgGasPrice = gasPricesByNumber.get(+number) || 0
-        const avgTxFee = txFeesByNumber.get(+number) || 0
-
-        labels.push(numberLabel + number.toString())
-        avgPrice.push(avgGasPrice)
-        avgFees.push(avgTxFee)
-      })
-    }
-
-    return new ChartData(labels, avgFees, avgPrice)
+    this.latestData = this.toChartDataItem(latestAvgGasPrice, latestAvgTxFee)
   }
 
   /*
@@ -301,30 +231,72 @@ export default class ChartLiveTxFees extends Vue {
     return this.$apollo.queries.avgGasPrices.loading || this.$apollo.queries.avgTxFees.loading || this.syncing
   }
 
-  get chartData() {
-    const data = this.toChartData(this.avgGasPrices, this.avgTxFees)
-
+  get chartConfig(): ChartConfig {
     return {
-      labels: data.labels,
+      labels: [],
       datasets: [
+        {
+          label: this.$i18n.t('gas.price').toString(),
+          borderColor: '#eea66b',
+          backgroundColor: '#eea56b',
+          data: [],
+          yAxisID: 'y-axis-2',
+          fill: false
+        },
         {
           label: this.$i18n.tc('tx.fee', 2),
           borderColor: '#40ce9c',
           backgroundColor: '#40ce9c',
-          data: data.avgFees,
+          data: [],
           yAxisID: 'y-axis-1',
-          fill: false
-        },
-        {
-          label: this.$i18n.t('gas.price'),
-          borderColor: '#eea66b',
-          backgroundColor: '#eea56b',
-          data: data.avgPrice,
-          yAxisID: 'y-axis-2',
           fill: false
         }
       ]
     }
+  }
+
+  get chartData(): ChartData[] {
+    const { avgGasPrices, avgTxFees } = this
+
+    if (!(avgGasPrices && avgTxFees)) {
+      return []
+    }
+
+    if (!(avgGasPrices!.items.length && avgTxFees!.items.length)) {
+      return []
+    }
+
+    const gasPriceItems = avgGasPrices!.items
+    const txFeeItems = avgTxFees!.items
+
+    const sortedItems: any[] = []
+
+    if (gasPriceItems.length && txFeeItems.length) {
+      const numbers = new Set<number>()
+      gasPriceItems.forEach(item => numbers.add(item.number))
+      txFeeItems.forEach(item => numbers.add(item.number))
+
+      const numbersAsc = Array.from(numbers).sort((a, b) => a - b)
+
+      const gasPricesByNumber = gasPriceItems.reduce((memo, next) => {
+        memo.set(parseInt(next.number)!, next)
+        return memo
+      }, new Map<number, latestAvgGasPrices_blockMetricsTransaction_items>())
+
+      const txFeesByNumber = txFeeItems.reduce((memo, next) => {
+        memo.set(parseInt(next.number), next)
+        return memo
+      }, new Map<number, latestAvgTxFees_blockMetricsTransactionFee_items>())
+
+      numbersAsc.forEach(number => {
+        // for some reasons number is a string
+        const avgGasPrice = gasPricesByNumber.get(+number) || 0
+        const avgTxFee = txFeesByNumber.get(+number) || 0
+
+        sortedItems.push({ avgGasPrice, avgTxFee })
+      })
+    }
+    return sortedItems.map(item => this.toChartDataItem(item.avgGasPrice, item.avgTxFee))
   }
 
   get chartOptions() {

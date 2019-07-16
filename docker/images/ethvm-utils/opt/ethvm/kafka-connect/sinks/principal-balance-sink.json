@@ -1,0 +1,28 @@
+{
+  "name": "principal-balance-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": {{ default .Env.PRINCIPAL_BALANCE_SINK_TASKS_MAX "2" }},
+    "topics": "fungible_balance,non_fungible_balance",
+    "insert.mode": "upsert",
+    "batch.size": 3000,
+    "consumer.max.poll.records": 6000,
+    "consumer.fetch.min.bytes": 100000,
+    "consumer.fetch.wait.max.ms": 100,
+    "connection.url": "{{ .Env.PRINCIPAL_JDBC_URL }}",
+    "connection.user": "{{ .Env.PRINCIPAL_USER }}",
+    "connection.password": "{{ .Env.PRINCIPAL_PASSWORD }}",
+    "transforms": "snakeCaseKey,snakeCaseValue,dropFields,toJsonKey,toJsonValue,flattenValue",
+    "transforms.flattenValue.type": "com.ethvm.kafka.connect.transforms.Flatten$Value",
+    "transforms.flattenValue.delimiter": "_",
+    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value",
+    "transforms.dropFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+    "transforms.dropFields.blacklist": "uncles",
+    "transforms.toJsonKey.type": "com.ethvm.kafka.connect.transforms.JsonField$Key",
+    "transforms.toJsonKey.whitelist": "logs,action,result,trace_address",
+    "transforms.toJsonValue.type": "com.ethvm.kafka.connect.transforms.JsonField$Value",
+    "transforms.toJsonValue.whitelist": "logs,action,result,trace_address,uncle_hashes,transaction_hashes,init,code,logo,support,social",
+    "pk.mode": "record_key"
+  }
+}

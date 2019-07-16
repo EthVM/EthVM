@@ -11,6 +11,7 @@ type Query {
 
 type Subscription {
   newTransaction: TransactionSummary!
+  newTransactions: [TransactionSummary!]!
 }
 
 type TransactionSummary {

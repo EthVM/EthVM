@@ -3,7 +3,8 @@
     type="line"
     :chart-title="title"
     :chart-description="description"
-    :data="chartData"
+    :config="chartConfig"
+    :initial-data="chartData"
     :options="chartOptions"
     :redraw="true"
     :data-loading="loading"
@@ -18,7 +19,7 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { TimeBucket } from '@app/core/api/apollo/types/globalTypes'
 import moment from 'moment'
-import { ChartData } from '@app/modules/charts/props'
+import { ChartConfig, ChartData } from '@app/modules/charts/props'
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
 
@@ -28,13 +29,24 @@ interface QueryOptions {
   bucket: TimeBucket
 }
 
+enum TimePeriod {
+  day,
+  week,
+  twoWeeks,
+  month,
+  threeMonths,
+  sixMonths,
+  year,
+  all
+}
+
 @Component({
   components: {
     Chart
   },
   data() {
     return {
-      queryOptions: (this as any).calculateTimePeriod('week'),
+      queryOptions: (this as any).calculateTimePeriod(0),
       syncing: undefined
     }
   },
@@ -179,50 +191,49 @@ export default class ChartTimeseries extends Vue {
   }
 
   setTimeFrame(value: number): void {
-    let period
+    const period = TimePeriod[value]
 
-    switch (value) {
-      case 0:
-        period = 'all'
-        break
-      case 1:
-        period = 'week'
-        break
-      case 2:
-        period = 'month'
-        break
-      case 3:
-        period = 'year'
-        break
-      default:
-        throw new Error(`Unexpected timeframe: ${value}`)
+    if (!period) {
+      throw new Error(`Unexpected timeframe: ${value}`)
     }
 
-    this.queryOptions = this.calculateTimePeriod(period)
+    this.queryOptions = this.calculateTimePeriod(value)
   }
 
-  calculateTimePeriod(period: 'day' | 'week' | 'month' | 'year' | 'all'): QueryOptions {
+  calculateTimePeriod(period: number): QueryOptions {
     const start: moment.Moment = moment()
     let end: moment.Moment, bucket
 
     switch (period) {
-      case 'day':
+      case TimePeriod.day:
         bucket = TimeBucket.ONE_HOUR
         end = moment(start).subtract(1, 'day')
         break
-      case 'week':
+      case TimePeriod.week:
         bucket = TimeBucket.ONE_HOUR
         end = moment(start).subtract(1, 'week')
         break
-      case 'month':
+      case TimePeriod.twoWeeks:
+        bucket = TimeBucket.ONE_HOUR
+        end = moment(start).subtract(2, 'week')
+        break
+      case TimePeriod.month:
         bucket = TimeBucket.ONE_DAY
         end = moment(start).subtract(1, 'month')
         break
-      case 'year':
+      case TimePeriod.threeMonths:
+        bucket = TimeBucket.ONE_DAY
+        end = moment(start).subtract(3, 'month')
+        break
+      case TimePeriod.sixMonths:
+        bucket = TimeBucket.ONE_WEEK
+        end = moment(start).subtract(6, 'month')
+        break
+      case TimePeriod.year:
         bucket = TimeBucket.ONE_WEEK
         end = moment(start).subtract(1, 'year')
         break
-      case 'all':
+      case TimePeriod.all:
         bucket = TimeBucket.ONE_WEEK
         end = moment('2000-01-01T00:00:00.000Z')
         break
@@ -231,6 +242,16 @@ export default class ChartTimeseries extends Vue {
     }
 
     return { start, end, bucket }
+  }
+
+  toChartDataItem(raw): ChartData {
+    const data = [] as any[]
+    data.push(this.parseValue(raw.value))
+
+    return {
+      label: new Date(raw.timestamp).toString(),
+      data
+    }
   }
 
   /*
@@ -244,32 +265,27 @@ export default class ChartTimeseries extends Vue {
     return brkPoint !== 'xs'
   }
 
-  get chartData(): ChartData {
-    const { timeseries, description } = this
-
-    const labels: any[] = []
-    const data: any[] = []
-
-    if (timeseries) {
-      timeseries.forEach(t => {
-        labels.push(new Date(t.timestamp))
-        data.push(this.parseValue(t.value))
-      })
-    }
+  get chartConfig(): ChartConfig {
+    const { description } = this
 
     return {
-      labels: labels,
+      labels: [],
       datasets: [
         {
           label: description,
           borderColor: '#20c0c7',
           backgroundColor: '#20c0c7',
-          data,
+          data: [],
           yAxisID: 'y-axis-1',
           fill: false
         }
       ]
     }
+  }
+
+  get chartData(): ChartData[] {
+    const items = this.timeseries || []
+    return items.map(item => this.toChartDataItem(item))
   }
 
   get loading(): boolean | undefined {

@@ -1,13 +1,16 @@
 <template>
   <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
-    <notice-new-block @reload="resetFromBlock" />
-
-    <!-- Tx Input Filter -->
-    <v-layout row>
-      <v-flex v-if="isAddressDetail" d-flex xs12 sm4 md3>
-        <v-layout row align-center justify-start fill-height height="40px">
-          <v-flex>
-            <p class="pr-2 ma-0">{{ $t('filter.view') }}:</p>
+    <!--
+    =====================================================================================
+      TITLE
+    =====================================================================================
+    -->
+    <v-layout row wrap align-end>
+      <v-flex xs12 md6 lg5 xl4 pr-0>
+        <!-- Tx Input Filter -->
+        <v-layout v-if="isAddressDetail" row align-center justify-start fill-height height="40px">
+          <v-flex shrink>
+            <p class="pr-2 pl-2 ma-0">{{ $t('filter.view') }}:</p>
           </v-flex>
           <v-flex>
             <v-card flat class="tx-filter-select-container pl-2" height="36px">
@@ -15,20 +18,10 @@
             </v-card>
           </v-flex>
         </v-layout>
-      </v-flex>
-    </v-layout>
-    <!-- End Tx Input Filter -->
-
-    <!--
-    =====================================================================================
-      TITLE
-    =====================================================================================
-    -->
-    <v-layout row wrap align-end>
-      <v-flex xs7 md6 lg5 xl4 pr-0 pb-0>
-        <v-layout v-if="isAddressDetail" justify-start row class="pl-3 pb-1"><app-footnotes :footnotes="footnotes"/></v-layout>
+        <!-- End Tx Input Filter -->
         <v-layout v-else align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
+          <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
         </v-layout>
       </v-flex>
       <v-flex xs5 md6 lg7 xl8 v-if="pageType == 'home'">
@@ -36,7 +29,7 @@
           <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('btn.view-all') }}</v-btn>
         </v-layout>
       </v-flex>
-      <v-flex v-else xs5 md6 lg7 xl8>
+      <v-flex v-else xs12 md6 lg7 xl8>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
@@ -52,9 +45,6 @@
     =====================================================================================
     -->
     <v-layout>
-      <v-flex hidden-sm-and-up pt-0 pb-0 pl-3>
-        <app-footnotes :footnotes="footnotes" pl-2 pr-2 />
-      </v-flex>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" :color="headerColor" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
@@ -146,7 +136,7 @@ import { Footnote } from '@app/core/components/props'
 import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
 import {
   latestTransactionSummaries,
-  newTransaction,
+  newTransactions,
   transactionSummariesByBlockHash,
   transactionSummariesByBlockNumber,
   transactionSummariesByAddress
@@ -193,13 +183,14 @@ class TableTxsMixin extends Vue {
       },
 
       variables() {
-        const { blockHash: hash, blockNumber, address, filter } = this
+        const { blockHash: hash, blockNumber, address, filter, maxItems } = this
 
         return {
           number: blockNumber,
           hash,
           address,
-          filter
+          filter,
+          limit: maxItems
         }
       },
 
@@ -238,18 +229,15 @@ class TableTxsMixin extends Vue {
       },
 
       subscribeToMore: {
-        document: newTransaction,
+        document: newTransactions,
 
         updateQuery: (previousResult, { subscriptionData }) => {
           const { summaries } = previousResult
-          const { newTransaction } = subscriptionData.data
+          const { newTransactions } = subscriptionData.data
 
           const items = Object.assign([], summaries.items)
-          items.unshift(newTransaction)
 
-          if (items.length > MAX_ITEMS) {
-            items.pop()
-          }
+          newTransactions.forEach(newTx => items.unshift(newTx))
 
           // ensure order by block number desc and transaction index desc
           items.sort((a, b) => {
@@ -263,6 +251,10 @@ class TableTxsMixin extends Vue {
 
             return b.transactionIndex - a.transactionIndex
           })
+
+          while (items.length > MAX_ITEMS) {
+            items.pop()
+          }
 
           return {
             ...previousResult,
@@ -414,6 +406,10 @@ export default class TableTxs extends TableTxsMixin {
 
   get isHome(): boolean {
     return this.pageType === 'home'
+  }
+
+  get isPageTxs(): boolean {
+    return this.pageType === 'tx'
   }
 
   get pages(): number {

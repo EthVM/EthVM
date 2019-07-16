@@ -1,0 +1,61 @@
+{
+  "projects": [
+    {
+      "id": "api",
+      "dockerfile": "${APPS_PATH}/api/Dockerfile",
+      "context": "${APPS_PATH}/api",
+      "version": "${APPS_PATH}/api/package.json"
+    },
+    {
+      "id": "explorer",
+      "dockerfile": "${APPS_PATH}/explorer/Dockerfile",
+      "context": "${APPS_PATH}/explorer",
+      "version": "${APPS_PATH}/explorer/package.json",
+      "targets": ["development-ci", "staging", "staging-ropsten", "production", "brian"]
+    },
+    {
+      "id": "ethvm-utils",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/ethvm-utils/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/ethvm-utils",
+      "version": "${DOCKER_IMAGES_PATH}/ethvm-utils/version.properties"
+    },
+    {
+      "id": "kafka-streams",
+      "dockerfile": "${APPS_PATH}/processing/kafka-streams/Dockerfile",
+      "context": "${APPS_PATH}/processing",
+      "version": "${APPS_PATH}/processing/version.properties"
+    },
+    {
+      "id": "kafka-connect",
+      "dockerfile": "${APPS_PATH}/processing/connectors/Dockerfile",
+      "context": "${APPS_PATH}/processing/",
+      "version": "${APPS_PATH}/processing/connectors/version.properties"
+    },
+    {
+      "id": "traefik",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/traefik/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/traefik/",
+      "version": "${DOCKER_IMAGES_PATH}/traefik/version.properties"
+    },
+    {
+      "id": "migrator",
+      "dockerfile": "${APPS_PATH}/migrator/Dockerfile",
+      "context": "${APPS_PATH}/migrator/",
+      "version": "${APPS_PATH}/migrator/version.properties"
+    }
+  ],
+  "docker": {
+    "compose": [
+      "docker-compose.amarok.yaml"
+    ],
+    "containers": [
+      {
+        "id": "amarok",
+        "value": [
+          "mew",
+          "ethvm-kafka-processing"
+        ]
+      }
+    ]
+  }
+}

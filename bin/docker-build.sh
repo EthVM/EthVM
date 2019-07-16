@@ -10,12 +10,15 @@ ensure
 
 # invalid - prints invalid message
 invalid() {
+
   >&2 echo "Invalid argument passed!"
   >&2 echo ""
+
 }
 
 # usage - prints the help for this command
 usage() {
+
   echo ""
   echo "Builds different docker images easily for EthVM project."
   echo ""
@@ -28,11 +31,13 @@ usage() {
   echo "    help           Print version information and exit."
   echo ""
   echo "Images:"
-  echo "    $(jq -r '[.projects[].id] | join(", ")' $PROJECTS_PATH)"
+  echo "    $(jq -r '[.projects[].id] | join(", ")' $META_PATH)"
+
 }
 
 # build - builds docker images
 build() {
+
   local image="$1"
   local target="${2:-}"
 
@@ -63,6 +68,7 @@ build() {
 
 # push - sends the built docker image to the registered registry
 push() {
+
   local image="$1"
   local target="${2:-}"
 
@@ -91,6 +97,7 @@ push() {
 }
 
 process_subcommand() {
+
   local action=$1
   local image=$2
   shift 2
@@ -106,7 +113,7 @@ process_subcommand() {
 
       # Iterate our projects
       local builds=false
-      for project in $(jq -car '.projects[]' $PROJECTS_PATH); do
+      for project in $(jq -car '.projects[]' $META_PATH); do
         local id=$(jq -r '.id' <<< "$project")
         if [[ $image == "all" || $image == $id ]]; then
           $action "$project" "$@"
@@ -124,10 +131,12 @@ process_subcommand() {
       fi
     ;;
   esac
+
 }
 
 # run - executes main script
 run() {
+
   local command="${1:-""}"
   local image="${2:-false}"
   shift
@@ -138,5 +147,7 @@ run() {
     push)   process_subcommand "push"  $image $@ ;;
     help|*) usage; exit 0                        ;;
   esac
+
 }
+
 run "$@"

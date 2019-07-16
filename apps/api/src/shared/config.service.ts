@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import convict from 'convict'
-import {join} from 'path'
+import { join } from 'path'
 
 /* tslint:disable:max-line-length */
 const schema = {
@@ -35,11 +35,31 @@ const schema = {
     format: 'Boolean',
     default: false,
   },
-  db: {
+  dbPrincipal: {
     url: {
-      doc: 'Timescale connection URL',
-      env: 'TIMESCALE_URL',
-      default: 'postgres://postgres:1234@timescale/ethvm_dev',
+      doc: 'DB Principal connection URL',
+      env: 'PRINCIPAL_URL',
+      default: 'postgres://postgres:1234@db-principal/ethvm_dev',
+    },
+  },
+  dbMetrics: {
+    url: {
+      doc: 'DB Metrics connection URL',
+      env: 'METRICS_URL',
+      default: 'postgres://postgres:1234@db-metrics/ethvm_dev',
+    },
+  },
+  redis: {
+    host: {
+      doc: 'Redis cluster host',
+      env: 'REDIS_HOST',
+      default: 'redis',
+    },
+    port: {
+      doc: 'Redis cluster port',
+      env: 'REDIS_PORT',
+      format: 'port',
+      default: 6379,
     },
   },
   graphql: {
@@ -90,6 +110,11 @@ export interface DbConfig {
   url: string
 }
 
+export interface RedisConfig {
+  host: string
+  port: number
+}
+
 @Injectable()
 export class ConfigService {
   public config: convict.Config<any>
@@ -98,7 +123,7 @@ export class ConfigService {
     const config = (this.config = convict(schema))
 
     config.loadFile(join(process.cwd(), `src/config/${this.env}.json`))
-    config.validate({allowed: 'strict'})
+    config.validate({ allowed: 'strict' })
   }
 
   get env(): string {
@@ -121,8 +146,16 @@ export class ConfigService {
     return this.config.get('instaMining')
   }
 
-  get db(): DbConfig {
-    return this.config.get('db')
+  get dbPrincipal(): DbConfig {
+    return this.config.get('dbPrincipal')
+  }
+
+  get dbMetrics(): DbConfig {
+    return this.config.get('dbMetrics')
+  }
+
+  get redis(): RedisConfig {
+    return this.config.get('redis')
   }
 
   get coinGecko(): CoinGeckoConfig {

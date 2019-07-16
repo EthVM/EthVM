@@ -10,7 +10,9 @@ import { ContractService } from '@app/dao/contract.service'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
-import { RowCount } from '@app/orm/entities/row-counts.entity'
+import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
+import { DbConnection } from '@app/orm/config'
+import { TransactionCountEntity } from '@app/orm/entities/transaction-count.entity'
 
 @Injectable()
 export class TxService {
@@ -20,9 +22,9 @@ export class TxService {
     private readonly traceService: TraceService,
     @Inject(forwardRef(() => ContractService))
     private readonly contractService: ContractService,
-    @InjectRepository(TransactionEntity)
+    @InjectRepository(TransactionEntity, DbConnection.Principal)
     private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectEntityManager()
+    @InjectEntityManager(DbConnection.Principal)
     private readonly entityManager: EntityManager,
   ) {
   }
@@ -50,7 +52,11 @@ export class TxService {
   }
 
   async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
-    const txs = await this.transactionRepository.find({ where: { hash: In(hashes) }, relations: ['receipt'] })
+    const txs = await this.transactionRepository.find({
+      where: { hash: In(hashes) },
+      relations: ['receipt'],
+      cache: true,
+    })
     return this.findAndMapTraces(txs)
   }
 
@@ -62,8 +68,14 @@ export class TxService {
 
         const where = { blockNumber: number }
 
-        const [{ count }] = await txn
-          .query('select count(hash) from transaction where block_number = $1', [number.toNumber()]) as [{ count: number }]
+        const { count } = await txn
+          .createQueryBuilder()
+          .select('COUNT(hash)', 'count')
+          .from(TransactionEntity, 't')
+          .where(`block_number = ${number.toString()}`)
+          .cache(true)
+          .setParameters({ number })
+          .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -72,6 +84,7 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
@@ -89,8 +102,14 @@ export class TxService {
 
         const where = { blockHash: hash }
 
-        const [{ count }] = await txn
-          .query('select count(hash) from transaction where block_hash = $1', [hash]) as [{ count: number }]
+        const { count } = await txn
+          .createQueryBuilder()
+          .select('COUNT(hash)', 'count')
+          .from(TransactionEntity, 't')
+          .where('block_hash = :hash')
+          .cache(true)
+          .setParameters({ hash })
+          .getRawOne() as { count: number }
 
         if (count === 0) return [[], count]
 
@@ -99,6 +118,7 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
@@ -110,46 +130,57 @@ export class TxService {
 
   async findSummariesByAddress(address: string, filter?: string, offset: number = 0, limit: number = 20): Promise<[TransactionSummary[], number]> {
 
-    let where
-
-    let countQuery = 'select count(hash) from transaction'
-    let countArgs: any[] = []
-
-    switch (filter) {
-      case 'in':
-        where = { to: address }
-        countQuery = `${countQuery} where "to" = $1`
-        countArgs = [address]
-        break
-      case 'out':
-        where = { from: address }
-        countQuery = `${countQuery} where "from" = $1`
-        countArgs = [address]
-        break
-      default:
-        where = [{ from: address }, { to: address }]
-        countQuery = `${countQuery} where "from" = $1 and "to" = $2`
-        countArgs = [address, address]
-        break
-    }
-
     return this.entityManager.transaction(
       'READ COMMITTED',
       async (txn): Promise<[TransactionSummary[], number]> => {
 
-        const [{ count }] = await txn.query(countQuery, countArgs) as [{ count: number }]
+        // Use transaction_count table to retrieve count as far more efficient than performing count against canonical_transaction
 
-        if (count === 0) return [[], count]
+        const transactionCount = await txn.findOne(TransactionCountEntity, { where: { address }, cache: true })
+
+        if (!transactionCount) {
+          return [[], 0]
+        }
+
+        let totalCount
+
+        switch (filter) {
+          case 'in':
+            totalCount = transactionCount.totalIn
+            break
+          case 'out':
+            totalCount = transactionCount.totalOut
+            break
+          default:
+            totalCount = transactionCount.totalIn + transactionCount.totalOut
+        }
+
+        if (totalCount === 0) return [[], totalCount]
+
+        let where
+
+        switch (filter) {
+          case 'in':
+            where = { to: address }
+            break
+          case 'out':
+            where = { from: address }
+            break
+          default:
+            where = [{ from: address }, { to: address }]
+            break
+        }
 
         const txs = await txn.find(TransactionEntity, {
           select: ['hash'],
           where,
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
-        return [summaries, count]
+        return [summaries, totalCount]
       },
     )
 
@@ -163,11 +194,12 @@ export class TxService {
       'READ COMMITTED',
       async (entityManager): Promise<[TransactionSummary[], number]> => {
 
-        let [{ count: totalCount }] = await entityManager.find(RowCount, {
+        let [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
           select: ['count'],
           where: {
-            relation: 'transaction',
+            entity: 'transaction',
           },
+          cache: true,
         })
 
         if (totalCount === 0) return [[], totalCount]
@@ -175,11 +207,13 @@ export class TxService {
         if (fromBlock) {
           // we count all txs in blocks greater than the from block and deduct from total
           // this is much faster way of determining the count
-          const filterCount = await entityManager.count(TransactionEntity, {
-            where: {
-              blockNumber: MoreThan(fromBlock),
-            },
-          })
+
+          const { count: filterCount } = await entityManager.createQueryBuilder()
+            .select('count(hash)', 'count')
+            .from(TransactionEntity, 't')
+            .where({ blockNumber: MoreThan(fromBlock) })
+            .cache(true)
+            .getRawOne() as { count: number }
 
           totalCount = totalCount - filterCount
         }
@@ -193,6 +227,7 @@ export class TxService {
           },
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         const receipts = await this.receiptService
@@ -228,6 +263,7 @@ export class TxService {
           blockNumber: 'DESC',
           transactionIndex: 'DESC',
         },
+        cache: true,
       })
 
     const receipts = await this.receiptService

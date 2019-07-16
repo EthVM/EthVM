@@ -29,6 +29,8 @@ abstract class AbstractParityEntitySource(
       .offsetStorageReader()
       .offset(partitionKey) ?: emptyMap()
 
+    logger.info { "Initialising parity entity source. Partition key = $partitionKey, sourcePartition = $sourcePartition" }
+
     var startBlockNumber = sourcePartition.getOrDefault("blockNumber", 0L) as Long - SAFE_REORG_LENGTH
     if (startBlockNumber < 0) startBlockNumber = 0L
 
@@ -53,20 +55,7 @@ abstract class AbstractParityEntitySource(
 
     val (range, reOrgs) = chainTracker.nextRange(batchSize)
 
-    logger.debug { "Range = $range, reOrgs = $reOrgs" }
-
-    // filter re-orgs to only those keys which affect the keys we will publish or have published
-
-    val keysToPublish = range?.toSet() ?: emptySet()
-
-    val reOrgRecords = reOrgs
-      .asSequence()
-      .map { it.toList() }
-      .flatten()
-      .filter { keysToPublish.contains(it) || it < (range?.first ?: it) }
-      .map { tombstone(it) }
-      .flatten()
-      .toList()
+    logger.debug { "Polling range = $range, reOrgs = $reOrgs" }
 
     //
 
@@ -76,9 +65,9 @@ abstract class AbstractParityEntitySource(
       else -> fetchRange(range) + syncStateRecord(range)
     }
 
-    logger.debug { "Re-org size = ${reOrgRecords.size}, records size = ${records.size}" }
+    logger.debug { "Records size = ${records.size}" }
 
-    return reOrgRecords + records
+    return records
   }
 
   private fun syncStateRecord(range: LongRange): SourceRecord {
@@ -113,8 +102,6 @@ abstract class AbstractParityEntitySource(
   }
 
   abstract fun fetchRange(range: LongRange): List<SourceRecord>
-
-  abstract fun tombstone(number: Long): List<SourceRecord>
 
   companion object {
     const val SAFE_REORG_LENGTH = 200L

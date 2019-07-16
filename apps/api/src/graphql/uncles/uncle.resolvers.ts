@@ -25,6 +25,7 @@ export class UncleResolvers {
     @Args('fromUncle') fromUncle?: BigNumber,
   ) {
     const [entities, count] = await this.uncleService.findUncles(offset, limit, fromUncle)
+    // console.log('Uncles', entities)
     return new UnclePageDto(entities, count)
   }
 

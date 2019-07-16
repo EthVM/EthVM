@@ -28,7 +28,7 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -94,9 +94,4 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
         },
         Materialized.with(Serdes.NonFungibleBalanceKey(), Serdes.NonFungibleBalance())
       ).toStream()
-
-  override fun start(cleanUp: Boolean) {
-    logger.info { "Starting ${this.javaClass.simpleName}..." }
-    super.start(cleanUp)
-  }
 }

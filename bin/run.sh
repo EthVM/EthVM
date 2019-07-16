@@ -5,6 +5,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # import utils
 source ${SCRIPT_DIR}/env.sh
 
+# verify we have required utilities installed
+ensure
+
 kafka_streams() {
 
   cd ${APPS_PATH}/processing
@@ -18,7 +21,7 @@ run() {
   shift
 
   case ${command} in
-    kafka-streams)    kafka_streams "$@";;    
+    kafka-streams) kafka_streams "$@" ;;
   esac
 
 } >&2

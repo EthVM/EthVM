@@ -87,7 +87,7 @@ export class BlockResolvers {
     return retry(async bail => {
 
       try {
-        const entity = await this.blockService.findOne({ hash })
+        const entity = await this.blockService.findByHash(hash)
         return entity ? new BlockDto(entity) : null
       } catch (err) {
 
@@ -111,7 +111,7 @@ export class BlockResolvers {
     return retry(async bail => {
 
       try {
-        const entity = await this.blockService.findOne({ number })
+        const entity = await this.blockService.findByNumber(number)
         return entity ? new BlockDto(entity) : null
       } catch (err) {
 

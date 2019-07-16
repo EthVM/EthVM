@@ -6,9 +6,13 @@ import createSubscriber from 'pg-listen'
 import { Observable, Subject } from 'rxjs'
 import { bufferTime, filter, map } from 'rxjs/operators'
 import { Logger } from 'winston'
-import { CircuitBreaker, CircuitBreakerState } from './circuit-breaker'
 import { TxService } from '@app/dao/tx.service'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
+import { InjectEntityManager } from '@nestjs/typeorm'
+import { EntityManager } from 'typeorm'
+import { DbConnection } from '@app/orm/config'
+
+import { strict as assert } from 'assert'
 
 export interface CanonicalBlockHeaderPayload {
   block_hash: string
@@ -133,19 +137,53 @@ class BlockEvents {
   header?: CanonicalBlockHeaderPayload
 
   rewardsTrace?: TransactionTracePayload
-  txTrace?: TransactionTracePayload
 
   transactions: Map<string, TransactionPayload> = new Map()
-  receipts: Map<string, TransactionReceiptPayload> = new Map()
+  transactionTraces: Map<string, TransactionTracePayload> = new Map()
+  transactionReceipts: Map<string, TransactionReceiptPayload> = new Map()
 
-  constructor(private readonly instaMining: boolean) {
+  constructor(private readonly blockHash: string,
+              private readonly instaMining: boolean) {
+  }
+
+  addHeader(header: CanonicalBlockHeaderPayload) {
+    assert.equal(header.block_hash, this.blockHash, `Block header block hash does not match: Expected = ${this.blockHash}, received = ${header}`)
+    this.header = header
+  }
+
+  addRewardsTrace(rewardsTrace: TransactionTracePayload) {
+    const { blockHash } = this
+    assert.equal(rewardsTrace.block_hash, blockHash, `Rewards trace block hash does not match: Expected = ${blockHash}, received = ${rewardsTrace}`)
+    this.rewardsTrace = rewardsTrace
+  }
+
+  addTransaction(transaction: TransactionPayload) {
+    const { blockHash } = this
+    assert.equal(transaction.block_hash, blockHash, `Transaction block hash does not match: Expected = ${blockHash}, received = ${transaction}`)
+    this.transactions.set(transaction.transaction_hash, transaction)
+  }
+
+  addTransactionTrace(transactionTrace: TransactionTracePayload) {
+    const { blockHash } = this
+    assert.equal(transactionTrace.block_hash, blockHash, `Transaction trace block hash does not match: Expected = ${blockHash}, received = ${transactionTrace}`)
+    this.transactionTraces.set(transactionTrace.transaction_hash!!, transactionTrace)
+  }
+
+  addTransactionReceipt(transactionReceipt: TransactionReceiptPayload) {
+    const { blockHash } = this
+    assert.equal(
+      transactionReceipt.block_hash,
+      blockHash,
+      `Transaction receipt block hash does not match: Expected = ${blockHash}, received = ${transactionReceipt}`,
+    )
+    this.transactionReceipts.set(transactionReceipt.transaction_hash, transactionReceipt)
   }
 
   get isComplete(): boolean {
 
-    const { header, transactions, receipts, rewardsTrace, txTrace, instaMining } = this
+    const { header, transactions, transactionReceipts, rewardsTrace, transactionTraces, instaMining } = this
 
-    if (header === undefined || rewardsTrace || txTrace === undefined) return false
+    if (!header) return false
 
     const { transaction_count } = header
 
@@ -155,7 +193,11 @@ class BlockEvents {
 
     // check receipts
 
-    if (receipts.size !== transaction_count) return false
+    if (transactionReceipts.size !== transaction_count) return false
+
+    // check traces
+
+    if (transactionTraces.size !== transaction_count) return false
 
     // check rewards
 
@@ -170,7 +212,8 @@ class BlockEvents {
 @Injectable()
 export class PgSubscriptionService {
 
-  private readonly url: string
+  private readonly principalUrl: string
+  private readonly metricsUrl: string
 
   private blockEvents: Map<string, BlockEvents> = new Map()
 
@@ -181,21 +224,24 @@ export class PgSubscriptionService {
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
     private readonly blockMetricsService: BlockMetricsService,
+    @InjectEntityManager(DbConnection.Principal) private readonly principalEntityManager: EntityManager,
   ) {
 
-    this.url = config.db.url
+    this.principalUrl = config.dbPrincipal.url
+    this.metricsUrl = config.dbMetrics.url
 
-    this.init()
+    this.initPrincipal()
+    this.initMetrics()
   }
 
-  private init() {
+  private initPrincipal() {
 
-    const { url, blockService, transactionService, blockMetricsService, pubSub } = this
+    const { principalUrl, blockService, transactionService, blockMetricsService, pubSub, principalEntityManager } = this
 
     const events$ = Observable.create(
       async observer => {
         try {
-          const subscriber = createSubscriber({ connectionString: url })
+          const subscriber = createSubscriber({ connectionString: principalUrl })
 
           subscriber.notifications.on('events', e => observer.next(e))
           subscriber.events.on('error', err => {
@@ -216,7 +262,6 @@ export class PgSubscriptionService {
       })
 
     const blockHashes$ = new Subject<string>()
-    const blockMetrics$ = new Subject<string>()
 
     const pgEvents$ = events$
       .pipe(
@@ -236,6 +281,80 @@ export class PgSubscriptionService {
       .pipe(isBlockEvent())
       .subscribe(event => this.onBlockEvent(event, blockHashes$))
 
+    blockHashes$
+      .pipe(
+        bufferTime(100),
+        filter(blockHashes => blockHashes.length > 0),
+      )
+      .subscribe(async blockHashes => {
+
+        // clear query cache
+        await principalEntityManager.connection.queryResultCache!.clear()
+
+        const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes, false)
+
+        blockSummaries.forEach(async blockSummary => {
+
+          // get data
+          const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
+          const hashRate = await blockService.calculateHashRate(false)
+
+          // publish events
+
+          pubSub.publish('newBlock', blockSummary)
+
+          pubSub.publish('newTransactions', txSummaries)
+
+          txSummaries.forEach(txSummary => {
+            pubSub.publish('newTransaction', txSummary)
+          })
+
+          pubSub.publish('hashRate', hashRate)
+        })
+
+      })
+
+  }
+
+  private initMetrics() {
+
+    const { blockMetricsService, pubSub } = this
+
+    const events$ = Observable.create(
+      async observer => {
+        try {
+          const subscriber = createSubscriber({ connectionString: this.metricsUrl })
+
+          subscriber.notifications.on('events', e => observer.next(e))
+          subscriber.events.on('error', err => {
+            console.error('pg sub error', err)
+            observer.error(err)
+          })
+
+          await subscriber.connect()
+          await subscriber.listenTo('events')
+
+          return () => {
+            subscriber.close()
+          }
+        } catch (err) {
+          console.error('Pg sub error', err)
+          observer.error(err)
+        }
+      })
+
+    const blockMetrics$ = new Subject<string>()
+
+    const pgEvents$ = events$
+      .pipe(
+        map(event => new PgEvent(event)),
+        isPgEvent(),
+      )
+
+    //
+
+    this.blockEvents = new Map()
+
     pgEvents$
       .pipe(isBlockMetricsTransactionEvent())
       .subscribe(event => this.onBlockMetricsTransactionEvent(event))
@@ -246,31 +365,6 @@ export class PgSubscriptionService {
 
     pgEvents$
       .pipe(isBlockMetricsTransactionFeeEvent())
-
-    blockHashes$
-      .pipe(
-        bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
-      )
-      .subscribe(async blockHashes => {
-
-        const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes)
-
-        blockSummaries.forEach(async blockSummary => {
-
-          pubSub.publish('newBlock', blockSummary)
-
-          const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
-
-          txSummaries.forEach(txSummary => {
-            pubSub.publish('newTransaction', txSummary)
-          })
-
-          const hashRate = await blockService.calculateHashRate()
-          pubSub.publish('hashRate', hashRate)
-        })
-
-      })
 
     blockMetrics$
       .pipe(
@@ -284,16 +378,21 @@ export class PgSubscriptionService {
 
   }
 
-  private onMetadataEvent(event: PgEvent) {
-    const { pubSub } = this
+  private async onMetadataEvent(event: PgEvent) {
+    const { pubSub, principalEntityManager } = this
     const payload = event.payload as MetadataPayload
 
     switch (payload.key) {
       case 'sync_status':
 
+        // clear query cache
+        await principalEntityManager.connection.queryResultCache!.clear()
+
         const isSyncing = JSON.parse(payload.value)
         pubSub.publish('isSyncing', isSyncing)
+
         break
+
       default:
       // Do nothing
     }
@@ -303,7 +402,7 @@ export class PgSubscriptionService {
     const { pubSub } = this
     const payload = event.payload as BlockMetricsTransactionPayload
 
-    const metric = await this.blockMetricsService.findBlockMetricsTransactionByBlockHash(payload.block_hash)
+    const metric = await this.blockMetricsService.findBlockMetricsTransactionByBlockHash(payload.block_hash, false)
 
     if (metric) {
       pubSub.publish('newBlockMetricsTransaction', metric)
@@ -315,7 +414,7 @@ export class PgSubscriptionService {
     const { pubSub } = this
     const payload = event.payload as BlockMetricsTransactionPayload
 
-    const metric = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(payload.block_hash)
+    const metric = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(payload.block_hash, false)
 
     if (metric) {
       pubSub.publish('newBlockMetricsTransactionFee', metric)
@@ -333,7 +432,7 @@ export class PgSubscriptionService {
     let entry = blockEvents.get(block_hash)
 
     if (!entry) {
-      entry = new BlockEvents(config.instaMining)
+      entry = new BlockEvents(block_hash, config.instaMining)
       blockEvents.set(block_hash, entry)
     }
 
@@ -341,17 +440,17 @@ export class PgSubscriptionService {
 
       case 'canonical_block_header':
         const header = payload as CanonicalBlockHeaderPayload
-        entry.header = header
+        entry.addHeader(header)
         break
 
       case 'transaction':
         const tx = payload as TransactionPayload
-        entry.transactions.set(tx.transaction_hash, tx)
+        entry.addTransaction(tx)
         break
 
       case 'transaction_receipt':
         const receipt = payload as TransactionReceiptPayload
-        entry.receipts.set(receipt.transaction_hash, receipt)
+        entry.addTransactionReceipt(receipt)
         break
 
       case 'transaction_trace':
@@ -359,9 +458,9 @@ export class PgSubscriptionService {
         const trace = payload as TransactionTracePayload
 
         if (trace.transaction_hash == null) {
-          entry.rewardsTrace = trace
+          entry.addRewardsTrace(trace)
         } else {
-          entry.txTrace = trace
+          entry.addTransactionTrace(trace)
         }
 
         break

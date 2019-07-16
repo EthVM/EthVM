@@ -59,6 +59,7 @@ fragment Account on Account {
   isMiner
   isContractCreator
   isContract
+  hasInternalTransfers
 }
 
 query exchangeRate {

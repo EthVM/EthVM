@@ -1,0 +1,25 @@
+{
+  "name": "principal-trace-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": {{ default .Env.PRINCIPAL_TRACE_SINK_TASKS_MAX "3" }},
+    "topics": "transaction_trace",
+    "insert.mode": "upsert",
+    "batch.size": 1000,
+    "consumer.max.poll.records": 2000,
+    "consumer.fetch.min.bytes": 1000000,
+    "consumer.fetch.wait.max.ms": 100,
+    "connection.url": "{{ .Env.PRINCIPAL_JDBC_URL }}",
+    "connection.user": "{{ .Env.PRINCIPAL_USER }}",
+    "connection.password": "{{ .Env.PRINCIPAL_PASSWORD }}",
+    "transforms": "snakeCaseKey,snakeCaseValue,toJsonValue,convertTimestamp",
+    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value",
+    "transforms.toJsonValue.type": "com.ethvm.kafka.connect.transforms.JsonField$Value",
+    "transforms.toJsonValue.whitelist": "traces",
+    "pk.mode": "record_key",
+    "transforms.convertTimestamp.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.convertTimestamp.target.type": "Timestamp",
+    "transforms.convertTimestamp.field": "timestamp"
+  }
+}

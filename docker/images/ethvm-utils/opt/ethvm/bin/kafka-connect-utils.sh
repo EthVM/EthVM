@@ -22,7 +22,6 @@ ensure_kafka_connect() {
 
   echo "Ensuring kafka-connect on URL: ${KAFKA_CONNECT_URL}"
 
-  # Wait until mongo logs that it's ready (or timeout after 60s)
   COUNTER=0
   while !(nc -z ${HOST} 8083) && [[ ${COUNTER} -lt ${TIMEOUT} ]] ; do
       sleep 2
@@ -35,6 +34,13 @@ ensure_kafka_connect() {
 curl_register() {
 
   local FILE=${1}
+
+  echo -e "File to register:\n\n"
+
+  cat ${FILE}
+
+  echo -e "\n\n"
+
   curl -s -H "Content-Type: application/json" -X POST -d @${FILE} ${KAFKA_CONNECT_URL}/connectors
 
 } >&2

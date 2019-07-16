@@ -13,10 +13,17 @@
     "block_metrics_transaction_trace",
     "block_metrics_transaction_fee"
   ],
-  "postgres-block-sink": [
-    "canonical_block_header",
-    "uncle",
+  "postgres-block-header-sink": [
+    "canonical_block_header"
+  ],
+  "postgres-uncle-sink": [
+    "uncle"
+  ],
+  "postgres-transaction-sink": [
     "transaction",
+    "transaction_receipt"
+  ],
+  "postgres-receipt-sink": [
     "transaction_receipt"
   ],
   "postgres-contract-sink": [
@@ -27,7 +34,8 @@
     "token_exchange_rates"
   ],
   "postgres-count-sink": [
-    "transaction_count"
+    "transaction_count",
+    "canonical_count"
   ],
   "postgres-exchange-rates-sink": [
     "token_exchange_rates",

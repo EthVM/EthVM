@@ -4,14 +4,15 @@ import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { EntityManager, In, Repository } from 'typeorm'
 import { TxService } from '@app/dao/tx.service'
 import { ContractSummary, TransactionSummary } from '@app/graphql/schema'
+import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class ContractService {
-  constructor(@InjectRepository(ContractEntity)
+  constructor(@InjectRepository(ContractEntity, DbConnection.Principal)
               private readonly contractRepository: Repository<ContractEntity>,
               @Inject(forwardRef(() => TxService))
               private readonly txService: TxService,
-              @InjectEntityManager()
+              @InjectEntityManager(DbConnection.Principal)
               private readonly entityManager: EntityManager) {
   }
 
@@ -26,6 +27,7 @@ export class ContractService {
     return entityManager.find(ContractEntity, {
         where: { address: In(addresses) },
         relations: ['metadata', 'erc20Metadata', 'erc721Metadata'],
+        cache: true,
       },
     )
   }
@@ -38,13 +40,14 @@ export class ContractService {
 
         const where = { creator }
 
-        const count = await txn.count(ContractEntity, { where })
+        const count = await txn.count(ContractEntity, { where, cache: true })
 
         const contracts = await txn.find(ContractEntity, {
           select: ['address', 'creator', 'traceCreatedAtBlockNumber', 'traceCreatedAtTransactionHash'],
           where,
           skip: offset,
           take: limit,
+          cache: true,
         })
 
         // Get tx summaries

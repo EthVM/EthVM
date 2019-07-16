@@ -58,7 +58,7 @@ export class TxResolvers {
     return retry(async bail => {
 
       try {
-        const [summaries, count] = await this.txService.findSummariesByBlockNumber(number, offset, limit)
+        const [summaries, count] = await this.txService.findSummariesByBlockNumber(new BigNumber(number), offset, limit)
         return new TransactionSummaryPageDto(summaries, count)
       } catch (err) {
 
@@ -164,5 +164,13 @@ export class TxResolvers {
     } as SubscriptionOptions)
   newTransaction() {
     return this.pubSub.asyncIterator('newTransaction')
+  }
+
+  @Subscription(
+    'newTransactions', {
+      resolve: (summaries: TransactionSummary[]) => summaries.map(s => new TransactionSummaryDto(s)),
+    } as SubscriptionOptions)
+  newTransactions() {
+    return this.pubSub.asyncIterator('newTransactions')
   }
 }

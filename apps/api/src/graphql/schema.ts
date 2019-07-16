@@ -89,6 +89,7 @@ export interface Account {
     isMiner: boolean;
     isContractCreator: boolean;
     isContract: boolean;
+    hasInternalTransfers: boolean;
 }
 
 export interface AddressBalance {
@@ -320,7 +321,7 @@ export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
     blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
     blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
-    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, fields: BlockMetricField[]): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
+    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
@@ -340,6 +341,7 @@ export interface IQuery {
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
+    tokenDetailByAddress(address: string): TokenDetail | Promise<TokenDetail>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
@@ -395,6 +397,7 @@ export interface ISubscription {
     hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
+    newTransactions(): TransactionSummary[] | Promise<TransactionSummary[]>;
 }
 
 export interface Token {
@@ -408,6 +411,26 @@ export interface Token {
     currentPrice?: BigNumber;
     priceChangePercentage24h?: BigNumber;
     image?: string;
+}
+
+export interface TokenDetail {
+    address: string;
+    creator?: string;
+    contractType?: string;
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+    logo?: string;
+    email?: string;
+    social?: ContractSocial;
+    website?: string;
+    currentPrice?: BigNumber;
+    circulatingSupply?: BigNumber;
+    totalSupply?: BigNumber;
+    marketCap?: BigNumber;
+    priceChangePercentage24h?: BigNumber;
+    totalVolume?: BigNumber;
+    holdersCount?: number;
 }
 
 export interface TokenExchangeRate {

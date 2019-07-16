@@ -2,10 +2,10 @@ package com.ethvm.kafka.streams
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
+import com.ethvm.avro.capture.ContractEventCreatedRecord
+import com.ethvm.avro.capture.ContractEventDestroyedRecord
+import com.ethvm.avro.capture.ContractEventListRecord
 import com.ethvm.avro.capture.ContractKeyRecord
-import com.ethvm.avro.capture.ContractLifecycleListRecord
-import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
@@ -20,6 +20,9 @@ import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
+import com.ethvm.avro.processing.BlockTimeRecord
+import com.ethvm.avro.processing.CanonicalCountKeyRecord
+import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
 import com.ethvm.avro.processing.Erc721MetadataRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
@@ -80,6 +83,14 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
+  fun CanonicalCountKey() = SpecificAvroSerde<CanonicalCountKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun CanonicalCount() = SpecificAvroSerde<CanonicalCountRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
   fun AccountKey() = SpecificAvroSerde<AccountKeyRecord>(registryClient).apply {
     configure(config, true)
   }
@@ -106,6 +117,10 @@ object Serdes : KoinComponent {
 
   fun CanonicalKey() = SpecificAvroSerde<CanonicalKeyRecord>(registryClient).apply {
     configure(config, true)
+  }
+
+  fun BlockTime() = SpecificAvroSerde<BlockTimeRecord>(registryClient).apply {
+    configure(config, false)
   }
 
   fun TransactionKey() = SpecificAvroSerde<TransactionKeyRecord>(registryClient).apply {
@@ -160,20 +175,20 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun ContractLifecycle() = SpecificAvroSerde<ContractLifecycleRecord>(registryClient).apply {
+  fun ContractEventList() = SpecificAvroSerde<ContractEventListRecord>(registryClient).apply {
     configure(config, false)
   }
 
-  fun ContractLifecycleList() = SpecificAvroSerde<ContractLifecycleListRecord>(registryClient).apply {
+  fun ContractEventCreated() = SpecificAvroSerde<ContractEventCreatedRecord>(registryClient).apply {
+    configure(config, false)
+  }
+
+  fun ContractEventDestroyed() = SpecificAvroSerde<ContractEventDestroyedRecord>(registryClient).apply {
     configure(config, false)
   }
 
   fun ContractKey() = SpecificAvroSerde<ContractKeyRecord>(registryClient).apply {
     configure(config, true)
-  }
-
-  fun Contract() = SpecificAvroSerde<ContractRecord>(registryClient).apply {
-    configure(config, false)
   }
 
   fun Erc20Metadata() = SpecificAvroSerde<Erc20MetadataRecord>(registryClient).apply {

@@ -1,4 +1,4 @@
-import { ChartData, ChartPoints } from '@app/modules/charts/props'
+import { ChartConfig, ChartPoints } from '@app/modules/charts/props'
 import { EthValue } from '@app/core/models'
 import { Component, Vue } from 'vue-property-decorator'
 
@@ -136,7 +136,7 @@ export class ChartMixin extends Vue {
     const brkPoint = this.$vuetify.breakpoint.name
     return brkPoint === 'xs' ? false : true
   }
-  get chartData(): ChartData {
+  get chartData(): ChartConfig {
     return {
       labels: this.data[this.timeFrame].labels,
       datasets: [

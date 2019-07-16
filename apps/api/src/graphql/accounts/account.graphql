@@ -11,4 +11,5 @@ type Account {
   isMiner: Boolean!
   isContractCreator: Boolean!
   isContract: Boolean!
+  hasInternalTransfers: Boolean!
 }

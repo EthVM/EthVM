@@ -1,0 +1,22 @@
+{
+  "name": "metrics-count-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": 1,
+    "topics": "canonical_count",
+    "insert.mode": "upsert",
+    "batch.size": 5000,
+    "consumer.max.poll.records": 10000,
+    "consumer.fetch.min.bytes": 100000,
+    "consumer.fetch.wait.max.ms": 100,
+    "pk.mode": "record_key",
+    "connection.url": "{{ .Env.METRICS_JDBC_URL }}",
+    "connection.user": "{{ .Env.METRICS_USER }}",
+    "connection.password": "{{ .Env.METRICS_PASSWORD }}",
+    "transforms": "snakeCaseKey,snakeCaseValue,dropField",
+    "transforms.snakeCaseKey.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Key",
+    "transforms.snakeCaseValue.type": "com.ethvm.kafka.connect.transforms.SnakeCase$Value",
+    "transforms.dropField.type": "org.apache.kafka.connect.transforms.ReplaceField$Key",
+    "transforms.dropField.blacklist": "number"
+  }
+}

@@ -26,7 +26,6 @@ import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTaskContext
 import org.web3j.protocol.core.methods.response.Transaction
 import java.math.BigInteger
-import java.util.SortedMap
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -82,38 +81,21 @@ class ParityFullBlockSource(
 
       val fetchResults = futures
         .map { it.get(60, TimeUnit.SECONDS) }
-
-      val (blockTimestamps, blockRecordsList) = fetchResults
-        .fold(Pair(sortedMapOf<BigInteger, Long>(), emptyList<BlockRecords>()), { memo, next ->
-          Pair(
-            (memo.first + next.blockTimestamps).toSortedMap(),
-            memo.second + next.blockRecords
-          )
-        })
+        .flatten()
 
       var totalTraceCount = 0
       var totalTxCount = 0
 
-      val records = blockRecordsList.map { blockRecords ->
+      val records = fetchResults.map { blockRecords ->
 
         val (key, header, txList, receiptList, traceList, uncleList) = blockRecords
 
         val blockNumber = header.getNumberBI()
 
-        val blockTime = when (val prevTimestamp = blockTimestamps[blockNumber.minus(BigInteger.ONE)]) {
-          null -> 0 // should only occur for genesis block
-          else -> header.timestamp - prevTimestamp
-        }
-
         val partitionOffset = mapOf("blockNumber" to blockNumber.toLong())
 
-        val blockWithTimestamp = BlockHeaderRecord
-          .newBuilder(header)
-          .setBlockTime((blockTime / 1000).toInt()) // seconds
-          .build()
-
         val keySchemaAndValue = AvroToConnect.toConnectData(key)
-        val valueSchemaAndValue = AvroToConnect.toConnectData(blockWithTimestamp)
+        val valueSchemaAndValue = AvroToConnect.toConnectData(header)
 
         val headerSourceRecord =
           SourceRecord(
@@ -235,89 +217,6 @@ class ParityFullBlockSource(
     }
   }
 
-  override fun tombstone(number: Long): List<SourceRecord> {
-
-    val numberBI = number.toBigInteger()
-    val partitionOffset = mapOf("blockNumber" to number)
-
-    val canonicalKeyRecord = CanonicalKeyRecord.newBuilder()
-      .setNumberBI(numberBI)
-      .build()
-
-    val keySchemaAndValue = AvroToConnect.toConnectData(canonicalKeyRecord)
-
-    val headerSourceRecord =
-      SourceRecord(
-        partitionKey,
-        partitionOffset,
-        blocksTopic,
-        keySchemaAndValue.schema(),
-        keySchemaAndValue.value(),
-        AvroToConnect.toConnectSchema(BlockHeaderRecord.`SCHEMA$`, true),
-        null
-      )
-
-    // transactions
-
-    val txsSourceRecord =
-      SourceRecord(
-        partitionKey,
-        partitionOffset,
-        txTopic,
-        keySchemaAndValue.schema(),
-        keySchemaAndValue.value(),
-        AvroToConnect.toConnectSchema(TransactionListRecord.`SCHEMA$`, true),
-        null
-      )
-
-    // receipts
-
-    val receiptsSourceRecord =
-      SourceRecord(
-        partitionKey,
-        partitionOffset,
-        receiptsTopic,
-        keySchemaAndValue.schema(),
-        keySchemaAndValue.value(),
-        AvroToConnect.toConnectSchema(TransactionReceiptListRecord.`SCHEMA$`, true),
-        null
-      )
-
-    // traces
-
-    val tracesSourceRecord =
-      SourceRecord(
-        partitionKey,
-        partitionOffset,
-        tracesTopic,
-        keySchemaAndValue.schema(),
-        keySchemaAndValue.value(),
-        AvroToConnect.toConnectSchema(TraceListRecord.`SCHEMA$`, true),
-        null
-      )
-
-    // uncles
-
-    val unclesSourceRecord =
-      SourceRecord(
-        partitionKey,
-        partitionOffset,
-        unclesTopic,
-        keySchemaAndValue.schema(),
-        keySchemaAndValue.value(),
-        AvroToConnect.toConnectSchema(UncleListRecord.`SCHEMA$`, true),
-        null
-      )
-
-    return listOf(
-      headerSourceRecord,
-      txsSourceRecord,
-      receiptsSourceRecord,
-      tracesSourceRecord,
-      unclesSourceRecord
-    )
-  }
-
   data class BlockRecords(
     val key: CanonicalKeyRecord,
     val blockHeader: BlockHeaderRecord,
@@ -327,20 +226,15 @@ class ParityFullBlockSource(
     val uncleList: UncleListRecord
   )
 
-  data class FetchResult(
-    val blockTimestamps: SortedMap<BigInteger, Long>,
-    val blockRecords: List<BlockRecords>
-  )
-
   class FetchTask(
     val range: LongRange,
     val parity: JsonRpc2_0ParityExtended,
     val maxTraceCount: Int
-  ) : Callable<FetchResult> {
+  ) : Callable<List<BlockRecords>> {
 
     protected val logger = KotlinLogging.logger {}
 
-    override fun call(): FetchResult {
+    override fun call(): List<BlockRecords> {
 
       var nextRange: LongRange? = range
       var blockRecords = emptyList<BlockRecords>()
@@ -442,7 +336,7 @@ class ParityFullBlockSource(
 
       logger.debug { "Finished fetching range: $range" }
 
-      return FetchResult(blockTimestamps, blockRecords)
+      return blockRecords
     }
   }
 }

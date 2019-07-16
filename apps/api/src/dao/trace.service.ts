@@ -2,6 +2,7 @@ import { TransactionTraceEntity } from '@app/orm/entities/transaction-trace.enti
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { EntityManager, In, Repository } from 'typeorm'
+import { DbConnection } from '@app/orm/config'
 
 export interface TransactionStatus {
   blockHash: string
@@ -13,17 +14,9 @@ export interface TransactionStatus {
 export class TraceService {
 
   constructor(
-    @InjectRepository(TransactionTraceEntity)
+    @InjectRepository(TransactionTraceEntity, DbConnection.Principal)
     private readonly traceRepository: Repository<TransactionTraceEntity>,
   ) {
-  }
-
-  async findByBlockNumber(blockNumbers: string[]): Promise<TransactionTraceEntity[]> {
-    return this.traceRepository.find({ where: { blockNumber: In(blockNumbers) } })
-  }
-
-  async findByBlockHash(blockHashes: string[]): Promise<TransactionTraceEntity[]> {
-    return this.traceRepository.find({ where: { blockHash: In(blockHashes) } })
   }
 
   async findByTxHash(txHashes: string[]): Promise<TransactionTraceEntity[]> {
@@ -42,6 +35,7 @@ export class TraceService {
         where: {
           transactionHash: In(txHashes),
         },
+        cache: true,
       })
 
     return entities.map(e => {
@@ -51,7 +45,7 @@ export class TraceService {
 
   }
 
-  async findTxStatusByBlockHash(tx: EntityManager, blockHashes: string[]): Promise<TransactionStatus[]> {
+  async findTxStatusByBlockHash(tx: EntityManager, blockHashes: string[], cache: boolean = true): Promise<TransactionStatus[]> {
 
     if (blockHashes.length === 0) return []
 
@@ -62,6 +56,7 @@ export class TraceService {
       where: {
         blockHash: In(blockHashes),
       },
+      cache,
     })
 
     return entities.map(e => {

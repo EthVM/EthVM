@@ -1,3 +1,12 @@
-FROM parity/parity:v2.3.3
+FROM ethvm/parity:stable-ethvm
 
-COPY chains/ /home/parity/
+USER root
+
+COPY ./entrypoint.sh /home/parity/entrypoint.sh
+
+RUN chown parity /home/parity/entrypoint.sh && \
+    chmod +x /home/parity/entrypoint.sh
+
+USER parity
+
+ENTRYPOINT [ "/home/parity/entrypoint.sh" ]
