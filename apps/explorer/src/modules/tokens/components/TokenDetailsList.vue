@@ -1,18 +1,12 @@
 <template>
   <div>
-    <app-details-list
-      :title="title"
-      :details="details"
-      :is-loading="isLoading"
-      :error="error"
-      class="mb-4"
-    >
+    <app-details-list :title="title" :details="details" :is-loading="isLoading" :error="error" class="mb-4">
       <template v-slot:title>
         <v-layout grid-list-xs row align-center justify-start fill-height pa-4>
           <div class="token-image">
             <v-img :src="image" contain />
           </div>
-          <v-card-title class="title font-weight-bold pl-1">{{title}}</v-card-title>
+          <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
         </v-layout>
       </template>
     </app-details-list>
@@ -102,7 +96,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
    * If the data hasn't been loaded yet, then only include the titles in the details.
    */
   get details(): Detail[] {
-    let detailsHolder: Detail[] = [
+    const detailsHolder: Detail[] = [
       {
         title: this.$t('token.holder')
       },
@@ -154,7 +148,6 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         title: this.$i18n.t('token.links')
       }
     ]
-    console.log(this.tokenDetails)
 
     if (!this.isLoading && this.tokenDetails) {
       if (this.tokenDetails.address) {
@@ -303,9 +296,8 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       return this.tokenDetails.priceChangePercentage24h > 0
         ? `+${this.getPercent(this.tokenDetails.priceChangePercentage24h)}`
         : this.getPercent(this.tokenDetails.priceChangePercentage24h)
-    } else {
-      return ''
     }
+    return ''
   }
 }
 </script>
