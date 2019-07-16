@@ -198,6 +198,7 @@
     "tx-summary": {
       "title": "Сводка Tx",
       "description": "Успешные, неудачные и ожидающие транзакции в последних 10 блоках.",
+      "description-no-pending": "Successful and failed transactions in the last 10 blocks.",
       "label": {
         "pen": "Ожидающие Txs",
         "success-fail": "Успешные и Неудачные Тxs"
