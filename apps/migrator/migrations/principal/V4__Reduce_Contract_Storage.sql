@@ -62,8 +62,7 @@ FROM
      contract_created AS cc
       LEFT JOIN contract_destroyed AS cd ON cc.address = cd.address
 WHERE
-  cc.trace_location_block_hash IS NOT NULL AND
-  cd.trace_location_block_hash IS NOT NULL;
+  cc.trace_location_block_hash IS NOT NULL;
 
 
 CREATE VIEW canonical_erc20_balance AS
