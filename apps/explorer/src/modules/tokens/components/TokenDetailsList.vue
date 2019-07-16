@@ -28,7 +28,6 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
 import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
 
-
 @Component({
   components: {
     AppDetailsList
@@ -92,7 +91,6 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     }
 
     return `${name} ${symbol} ${holder}`
-
   }
 
   get image(): string {
@@ -103,7 +101,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
    * If the data hasn't been loaded yet, then only include the titles in the details.
    */
   get details(): Detail[] {
-    let holderFields: Detail[] = [
+    let detailsHolder: Detail[] = [
       {
         title: this.$t('token.holder')
       },
@@ -131,17 +129,6 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         title: this.$tc('token.type', 1)
       },
       {
-        title: this.$i18n.t('token.website')
-      },
-      {
-        title: this.$i18n.t('token.support')
-      },
-      {
-        title: this.$i18n.t('token.links')
-      }
-    ]
-    let marketFields: Detail[] = [
-      {
         title: this.$i18n.tc('price.name', 1)
       },
       {
@@ -156,8 +143,14 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       {
         title: this.$i18n.t('token.volume')
       },
+            {
+        title: this.$i18n.t('token.website')
+      },
       {
-        title: this.$i18n.t('token.holder-total')
+        title: this.$i18n.t('token.support')
+      },
+      {
+        title: this.$i18n.t('token.links')
       }
     ]
     console.log(this.tokenDetails)
@@ -178,150 +171,100 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
       }
 
-        if (this.tokenDetails.decimals) {
-          Object.assign(detailsContract[2], {
-            detail: this.tokenDetails.decimals,
-          })
-        }
+      if (this.tokenDetails.decimals) {
+        Object.assign(detailsContract[2], {
+          detail: this.tokenDetails.decimals
+        })
+      }
 
-        if (this.tokenDetails.contractType) {
-          Object.assign(detailsContract[3],{
-            detail: this.tokenDetails.contractType
-          })
-        }
-        if(this.tokenDetails.website) {
-          Object.assign(detailsContract[4], {
-            detail: this.tokenDetails.website,
-            link: `${this.tokenDetails.website}`
-          })
-        }
-        if(this.tokenDetails.email){
-          Object.assign(detailsContract[5], {
-            detail:`<a href="mailto:${this.tokenDetails.email}" target="_BLANK">${this.tokenDetails.email}</a>`
-          })
-        }
-        if(this.tokenDetails.social) {
-          Object.assign(detailsContract[6], {
-             detail: Object.entries(this.tokenDetails.social)
-              .map(obj => {
-                const name = obj[0]
-                const url = obj[1]
-                if (url === null || url === '') {
-                  return ''
-                }
-                return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
-                  this.icons[name]
-                } pr-2 material-icons theme--light"></i></a>`
-              })
-              .reduce((a, b) => {
-                return `${a}${b}`
-              })
-          })
-        }
+      if (this.tokenDetails.contractType) {
+        Object.assign(detailsContract[3], {
+          detail: this.tokenDetails.contractType
+        })
+      }
+      if (this.tokenDetails.website) {
+        Object.assign(detailsContract[9], {
+          detail: this.tokenDetails.website,
+          link: `${this.tokenDetails.website}`
+        })
+      }
+      if (this.tokenDetails.email) {
+        Object.assign(detailsContract[10], {
+          detail: `<a href="mailto:${this.tokenDetails.email}" target="_BLANK">${this.tokenDetails.email}</a>`
+        })
+      }
+      if (this.tokenDetails.social) {
+        Object.assign(detailsContract[11], {
+          detail: Object.entries(this.tokenDetails.social)
+            .map(obj => {
+              const name = obj[0]
+              const url = obj[1]
+              if (url === null || url === '') {
+                return ''
+              }
+              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
+                this.icons[name]
+              } pr-2 material-icons theme--light"></i></a>`
+            })
+            .reduce((a, b) => {
+              return `${a}${b}`
+            })
+        })
+      }
 
-    }
+        Object.assign(detailsContract[4], {
+          detail: this.tokenDetails.currentPriceBN ? this.getRoundNumber(this.tokenDetails.currentPriceBN) : '0.00',
+          priceChange: this.getPriceChange()
+        })
+      if (this.tokenDetails.totalSupply) {
+        Object.assign(detailsContract[5], {
+          detail: this.formatStr(this.tokenDetails.totalSupply.toString())
+        })
+      }
 
-    //   // if (this.tokensDetails.)
-    //   console.log(this.tokenDetails)
+      if (this.tokenDetails.circulatingSupply) {
+        Object.assign(detailsContract[6], {
+          detail: this.formatStr(this.tokenDetails.circulatingSupply.toString())
+        })
+      }
 
-    //     if (this.hasHolder) {
+      if (this.tokenDetails.marketCap) {
+        Object.assign(detailsContract[7], {
+          detail: `$${this.getRoundNumber(this.tokenDetails.marketCap)}`
+        })
+      }
 
-    //     }
+      if (this.tokenDetails.totalVolume) {
+        Object.assign(detailsContract[8], {
+          detail: `$${this.getInt(this.tokenDetails.totalVolume)}`
+        })
+      }
 
-    //   const { address, contract, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount } = this.tokenDetails
-    //   const owner = contract ? contract.creator : ''
+      if (this.holderDetails && this.holderDetails.address) {
+        Object.assign(detailsHolder[0], {
+          detail: this.holderDetails.address,
+          link: `/address/${this.holderDetails.address}`,
+          copy: true
+        })
 
-    //   if (owner) {
-    //     details.push({
-    //       title: this.$i18n.t('token.owner'),
-    //       detail: owner,
-    //       link: `/address/${owner}`
-    //     })
-    //   }
+        Object.assign(detailsHolder[1], {
+          detail: this.holderDetails.balance,
+        })
 
-    //   if (totalSupply) {
-    //     details.push({
-    //       title: this.$i18n.t('token.supply'),
-    //       detail: this.formatStr(totalSupply.toString())
-    //     })
-    //   }
+        //Missing Object
+        Object.assign(detailsHolder[2], {
+          detail: '$0.00' ,
+        })
 
-    //   if (circulatingSupply) {
-    //     details.push({
-    //       title: this.$i18n.t('token.circSupply').toString(),
-    //       detail: this.formatStr(circulatingSupply.toString())
-    //     })
-    //   }
-
-    //   if (currentPrice) {
-    //     details.push({
-    //       title: this.$i18n.tc('price.name', 1),
-    //       detail: `$${currentPrice}`,
-    //       priceChange: this.getPriceChange()
-    //     })
-    //   }
-
-    //   if (marketCap) {
-    //     details.push({
-    //       title: this.$i18n.t('token.market'),
-    //       detail: `$${this.getRoundNumber(marketCap)}`
-    //     })
-    //   }
-
-    //   if (totalVolume) {
-    //     details.push({
-    //       title: this.$i18n.t('token.volume').toString(),
-    //       detail: `$${this.getInt(totalVolume)}`
-    //     })
-    //   }
-
-    //   if (holdersCount) {
-    //     details.push({
-    //       title: this.$i18n.t('token.holder-total'),
-    //       detail: holdersCount
-    //     })
-    //   }
-
-    //   const { metadata } = contract!
-
-    //   if (metadata) {
-
-    //     }
-
-    //     if (metadata.support) {
-    //       details.push({
-    //         title: this.$i18n.t('token.support'),
-    //         detail: `<a href="mailto:${metadata.support.email}" target="_BLANK">${metadata.support.email}</a>`
-    //       })
-    //     }
-    //     if (metadata.type) {
-    //       details.push({
-    //         title: this.$i18n.t('token.type').toString(),
-    //         detail: metadata.type
-    //       })
-    //     }
-
-    //     if (metadata.social) {
-    //       details.push({
-    //         title: this.$i18n.t('token.links'),
-    //         detail: Object.entries(metadata.social)
-    //           .map(obj => {
-    //             const name = obj[0]
-    //             const url = obj[1]
-    //             if (url === null || url === '') {
-    //               return ''
-    //             }
-    //             return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
-    //               icons[name]
-    //             } pr-2 material-icons theme--light"></i></a>`
-    //           })
-    //           .reduce((a, b) => {
-    //             return `${a}${b}`
-    //           })
-    //       })
-    //     }
-    //   }
-    // }
+        detailsContract = detailsHolder.concat(detailsContract)
+      }
+      else {
+        detailsContract.splice(4, 0, {
+          title: this.$i18n.t('token.holder-total'),
+          detail: this.tokenDetails.holdersCount || 0
+        })
+      }
+      }
     return detailsContract
   }
 
@@ -332,9 +275,15 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   */
 
   getPriceChange(): string {
-    return this.tokenDetails.priceChangePercentage24h > 0
+    if (this.tokenDetails.currentPrice)  {
+          return this.tokenDetails.priceChangePercentage24h > 0
       ? `+${this.getPercent(this.tokenDetails.priceChangePercentage24h)}`
       : this.getPercent(this.tokenDetails.priceChangePercentage24h)
+    }
+    else {
+      return ''
+    }
   }
+
 }
 </script>
