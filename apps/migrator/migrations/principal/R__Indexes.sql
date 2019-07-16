@@ -88,3 +88,7 @@ CREATE INDEX IF NOT EXISTS idx_contract_created_creator ON contract_created (cre
 CREATE INDEX IF NOT EXISTS idx_contract_created_contract_type ON contract_created (contract_type);
 CREATE INDEX IF NOT EXISTS idx_contract_created_trace_location_block_hash ON contract_created (trace_location_block_hash);
 CREATE INDEX IF NOT EXISTS idx_contract_destroyed_trace_location_block_hash ON contract_created (trace_location_block_hash);
+
+/* Token */
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_name ON token_exchange_rates (name);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rates (symbol);

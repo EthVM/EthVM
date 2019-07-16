@@ -30,6 +30,7 @@ import {TxService} from '@app/dao/tx.service'
 import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 import { MetadataEntity } from '@app/orm/entities/metadata.entity'
 import { MetadataService } from '@app/dao/metadata.service'
+import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 import { DbConnection } from '@app/orm/config'
 import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
@@ -56,6 +57,7 @@ import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
       BlockMetricEntity,
       MetadataEntity,
       InternalTransferEntity,
+      TokenMetadataEntity,
       TokenDetailEntity,
     ], DbConnection.Principal),
     TypeOrmModule.forFeature([
