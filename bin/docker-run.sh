@@ -140,10 +140,10 @@ up_dev() {
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
 
   section "Initialising principal db..."
-  ${SCRIPT_DIR}/migrator.sh principal all migrate
+  ${SCRIPT_DIR}/migrator.sh principal migrate
 
   section "Initialising metrics db..."
-  ${SCRIPT_DIR}/migrator.sh metrics all migrate
+  ${SCRIPT_DIR}/migrator.sh metrics migrate
 
   section "Building avro models..."
   ${SCRIPT_DIR}/avro.sh build

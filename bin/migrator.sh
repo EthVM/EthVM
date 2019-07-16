@@ -11,10 +11,28 @@ ensure
 version=$(read_version migrator)
 
 DB=${1}
-LOCATION=${2}
+INDEXES_AND_TRIGGERS=${INDEXES_AND_TRIGGERS:-false}
 NETWORK=${NETWORK:-ethvm_net}
 
-shift 2
+shift 1
+
+case ${INDEXES_AND_TRIGGERS} in
+
+  true)
+    FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX="R"
+    ;;
+
+  false)
+    # Causes flyway to ignore our index and trigger migrations
+    FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX="RR"
+    ;;
+
+  *)
+    echo "INDEXES_AND_TRIGGERS option not recognized: ${INDEXES_AND_TRIGGERS}. Must be one of: true, false"
+    exit 1
+    ;;
+
+esac
 
 case ${DB} in
 
@@ -31,22 +49,7 @@ case ${DB} in
   *)
     echo "DB name not recognized: ${DB}. Must be one of: principal, metrics"
     exit 1
-  ;;
-
-esac
-
-case ${LOCATION} in
-
-  all)
     ;;
-
-  initial)
-    FLYWAY_LOCATIONS="${FLYWAY_LOCATIONS}/initial"
-    ;;
-
-  *)
-    echo "LOCATION not recognized: ${LOCATION}. Must be on of: default, indexes, triggers"
-    exit 1
 
 esac
 
@@ -54,4 +57,5 @@ docker run --rm \
   --network ${NETWORK} \
   -e FLYWAY_URL=${FLYWAY_URL} \
   -e FLYWAY_LOCATIONS=${FLYWAY_LOCATIONS} \
+  -e FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX=${FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX} \
   ethvm/migrator:${version} "$@"
