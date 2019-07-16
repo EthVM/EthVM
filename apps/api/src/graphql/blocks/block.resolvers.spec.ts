@@ -31,74 +31,47 @@ const blockSummaries = [
   {
     hash: hashOne,
     author: authorOne,
-    number: 1,
-    blockTime: {
-      blockTime: 1
-    }
+    number: 1
   },
   {
     hash: hashTwo,
     author: authorOne,
-    number: 2,
-    blockTime: {
-      blockTime: 2
-    }
+    number: 2
   },
   {
     hash: hashThree,
     author: authorTwo,
-    number: 3,
-    blockTime: {
-      blockTime: 3
-    }
+    number: 3
   },
   {
     hash: hashFour,
     author: authorOne,
-    number: 4,
-    blockTime: {
-      blockTime: 4
-    }
+    number: 4
   },
   {
     hash: hashFive,
     author: authorOne,
-    number: 5,
-    blockTime: {
-      blockTime: 5
-    }
+    number: 5
   },
   {
     hash: hashSix,
     author: authorTwo,
-    number: 6,
-    blockTime: {
-      blockTime: 6
-    }
+    number: 6
   },
   {
     hash: hashSeven,
     author: authorOne,
-    number: 7,
-    blockTime: {
-      blockTime: 7
-    }
+    number: 7
   },
   {
     hash: hashEight,
     author: authorOne,
-    number: 8,
-    blockTime: {
-      blockTime: 8
-    }
+    number: 8
   },
   {
     hash: hashNine,
     author: authorTwo,
-    number: 9,
-    blockTime: {
-      blockTime: 9
-    }
+    number: 9
   },
   {
     hash: hashTen,
