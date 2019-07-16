@@ -299,23 +299,6 @@ protocol Capture {
     array<ContractEventRecord> deltas = [];
   }
 
-  record ContractRecord {
-
-    union{ null, string } address = null;
-    union { null, string } creator = null;
-    union { null, string } init = null;
-    union { null, string } code = null;
-    union { null, com.ethvm.avro.common.ContractType } contractType = null;
-    union { null, string } refundAddress = null;
-    union { null, decimal(80, 0) } refundBalance = null;
-
-    union { null, com.ethvm.avro.common.TraceLocationRecord } traceCreatedAt = null;
-    union { null, com.ethvm.avro.common.TraceLocationRecord } traceDestroyedAt = null;
-
-    timestamp_ms timestamp = 0;
-
-  }
-
   record ContractKeyRecord {
     string address;
   }

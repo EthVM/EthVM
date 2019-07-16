@@ -6,9 +6,6 @@ import com.ethvm.avro.capture.ContractEventCreatedRecord
 import com.ethvm.avro.capture.ContractEventDestroyedRecord
 import com.ethvm.avro.capture.ContractEventListRecord
 import com.ethvm.avro.capture.ContractKeyRecord
-import com.ethvm.avro.capture.ContractLifecycleListRecord
-import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
@@ -145,10 +142,6 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun ContractEventList() = SpecificAvroSerde<ContractEventListRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
   fun TraceList() = SpecificAvroSerde<TraceListRecord>(registryClient).apply {
     configure(config, false)
   }
@@ -177,27 +170,20 @@ object Serdes : KoinComponent {
     configure(config, false)
   }
 
-  fun ContractLifecycle() = SpecificAvroSerde<ContractLifecycleRecord>(registryClient).apply {
-    configure(config, false)
-  }
-
-  fun ContractLifecycleList() = SpecificAvroSerde<ContractLifecycleListRecord>(registryClient).apply {
+  fun ContractEventList() = SpecificAvroSerde<ContractEventListRecord>(registryClient).apply {
     configure(config, false)
   }
 
   fun ContractEventCreated() = SpecificAvroSerde<ContractEventCreatedRecord>(registryClient).apply {
     configure(config, false)
   }
+
   fun ContractEventDestroyed() = SpecificAvroSerde<ContractEventDestroyedRecord>(registryClient).apply {
     configure(config, false)
   }
 
   fun ContractKey() = SpecificAvroSerde<ContractKeyRecord>(registryClient).apply {
     configure(config, true)
-  }
-
-  fun Contract() = SpecificAvroSerde<ContractRecord>(registryClient).apply {
-    configure(config, false)
   }
 
   fun Erc20Metadata() = SpecificAvroSerde<Erc20MetadataRecord>(registryClient).apply {

@@ -147,7 +147,7 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
 
     val contractReduceStoreName = "canonical-contract-reduce"
 
-    builder.addStateStore(CanonicalKStreamReducer.store(contractReduceStoreName, Serdes.TraceList(), appConfig.unitTesting))
+    builder.addStateStore(CanonicalKStreamReducer.store(contractReduceStoreName, Serdes.ContractEventList(), appConfig.unitTesting))
 
     val contractTypes = setOf("create", "suicide")
 

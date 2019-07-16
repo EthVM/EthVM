@@ -6,8 +6,6 @@ import com.ethvm.avro.capture.ContractEventCreatedRecord
 import com.ethvm.avro.capture.ContractEventDestroyedRecord
 import com.ethvm.avro.capture.ContractEventRecord
 import com.ethvm.avro.capture.ContractEventType
-import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractLifecyleType
 import com.ethvm.avro.capture.ParitySyncStateRecord
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
