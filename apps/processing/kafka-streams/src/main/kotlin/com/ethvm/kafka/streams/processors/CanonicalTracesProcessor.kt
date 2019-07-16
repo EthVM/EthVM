@@ -178,12 +178,10 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
                           .setContractType(StandardTokenDetector.detect(created.code.hexBuffer()!!).first)
                           .build()
                       ).build()
-
                   }
                 }
               }
           ).build()
-
       }
       .transform(CanonicalKStreamReducer(contractReduceStoreName), contractReduceStoreName)
       .filter { _, change -> change.newValue != change.oldValue }
@@ -214,7 +212,6 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
                         .build()
                     ).build()
                 ).build()
-
             }
 
             ContractEventType.DESTROY -> {
@@ -231,10 +228,8 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
                         .build()
                     ).build()
                 ).build()
-
             }
           }
-
         } ?: emptyList()
 
         (reversals + deltas)
@@ -246,19 +241,17 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
               delta
             )
           }
-
       }
 
     contractEvents
-      .filter{ _, v -> v.type == ContractEventType.CREATE }
+      .filter { _, v -> v.type == ContractEventType.CREATE }
       .mapValues { _, v -> v.event as ContractEventCreatedRecord }
       .toTopic(ContractCreated)
 
     contractEvents
-      .filter{ _, v -> v.type == ContractEventType.DESTROY }
+      .filter { _, v -> v.type == ContractEventType.DESTROY }
       .mapValues { _, v -> v.event as ContractEventDestroyedRecord }
       .toTopic(ContractDestroyed)
-
 
     // Traces count
 
