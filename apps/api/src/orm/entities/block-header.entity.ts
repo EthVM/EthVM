@@ -5,6 +5,7 @@ import { assignClean } from '@app/shared/utils'
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 import { BigNumber } from 'bignumber.js'
 import { BigNumberTransformer } from '../transformers/big-number.transformer'
+import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
 
 @Entity('canonical_block_header')
 export class BlockHeaderEntity {
@@ -70,8 +71,12 @@ export class BlockHeaderEntity {
   @Column({ type: 'int', readonly: true })
   size!: number
 
-  @Column({ type: 'int', readonly: true })
-  blockTime?: number
+  @OneToMany(type => BlockTimeEntity, bt => bt.number)
+  @JoinColumn({
+    name: 'number',
+    referencedColumnName: 'number',
+  })
+  blockTime?: BlockTimeEntity
 
   @OneToMany(type => TransactionEntity, tx => tx.blockHeader)
   @JoinColumn({

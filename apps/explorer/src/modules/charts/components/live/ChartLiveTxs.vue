@@ -142,8 +142,6 @@ export default class ChartLiveTxs extends Vue {
     const data = [] as any[]
     data.push(raw.numSuccessfulTxsBN!.toNumber())
     data.push(raw.numFailedTxsBN!.toNumber())
-    // TODO add pending or remove
-    data.push(0)
 
     return {
       label: `${numberLabel} ${raw!.numberBN!.toString()}`,
@@ -175,17 +173,17 @@ export default class ChartLiveTxs extends Vue {
           label: this.$i18n.t('common.fail').toString(),
           backgroundColor: '#fe136c',
           data: [],
-          yAxisID: 'y-axis-1'
-        },
-        {
-          label: 'Pending',
-          backgroundColor: '#eea66b',
-          borderColor: '#eea66b',
-          data: [],
-          type: 'line',
-          fill: false,
           yAxisID: 'y-axis-2'
         }
+        // {
+        //   label: 'Pending',
+        //   backgroundColor: '#eea66b',
+        //   borderColor: '#eea66b',
+        //   data: [],
+        //   type: 'line',
+        //   fill: false,
+        //   yAxisID: 'y-axis-2'
+        // }
       ]
     }
   }
@@ -206,12 +204,12 @@ export default class ChartLiveTxs extends Vue {
         color: 'txFail',
         text: this.$i18n.t('common.fail'),
         icon: 'fa fa-circle'
-      },
-      {
-        color: 'txPen',
-        text: this.$i18n.t('common.pending'),
-        icon: 'fa fa-circle'
       }
+      // {
+      //   color: 'txPen',
+      //   text: this.$i18n.t('common.pending'),
+      //   icon: 'fa fa-circle'
+      // }
     ]
   }
 
@@ -220,7 +218,7 @@ export default class ChartLiveTxs extends Vue {
   }
 
   get newDescription() {
-    return this.$i18n.t('charts.tx-summary.description')
+    return this.$i18n.t('charts.tx-summary.description-no-pending')
   }
 
   get chartOptions() {
@@ -263,7 +261,7 @@ export default class ChartLiveTxs extends Vue {
             },
             scaleLabel: {
               display: true,
-              labelString: this.$i18n.t('charts.tx-summary.label.success-fail')
+              labelString: this.$i18n.t('charts.tx-success.title')
             }
           },
           {
@@ -299,7 +297,7 @@ export default class ChartLiveTxs extends Vue {
             },
             scaleLabel: {
               display: true,
-              labelString: this.$t('charts.tx-summary.label.pen')
+              labelString: this.$t('charts.tx-fail.title')
             }
           }
         ],
