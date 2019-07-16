@@ -9,8 +9,8 @@ import { Detail } from '@app/core/components/props'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
-import { Component, Vue, Prop, Mixins } from 'vue-property-decorator'
-import { TokenExchangeRateDetailExt } from '@app/core/api/apollo/extensions/token-exchange-rate-detail.ext'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
 
 @Component({
   components: {
@@ -25,7 +25,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   */
 
   @Prop(String) addressRef!: string // Token contract address
-  @Prop(Object) tokenDetails!: TokenExchangeRateDetailExt
+  @Prop(Object) tokenDetails!: TokenDetailExt
   @Prop(Boolean) isLoading!: boolean
   @Prop(String) error!: string
 
@@ -44,7 +44,8 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     if (this.isLoading || this.error !== '') {
       return ''
     }
-    return `<img src="${this.tokenDetails.image}" class="mr-2 token-image" /> ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()})`
+    const logoSrc = this.tokenDetails && this.tokenDetails.logo ? this.tokenDetails.logo : require('@/assets/not-found.png')
+    return `<img src="${logoSrc}" class="mr-2 token-image" /> ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()})`
   }
 
   /**
@@ -102,8 +103,8 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         }
       ]
     } else {
-      const { address, contract, totalSupply, circulatingSupply, currentPrice, marketCap, totalVolume, holdersCount } = this.tokenDetails
-      const owner = contract ? contract.creator : ''
+      const { address, holdersCount, owner, decimals, website, email, contractType, social, totalVolume } = this.tokenDetails
+      const { totalSupplyBN, circulatingSupplyBN, currentPriceBN, marketCapBN } = this.tokenDetails
 
       details = [
         {
@@ -121,32 +122,32 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
       }
 
-      if (totalSupply) {
+      if (totalSupplyBN) {
         details.push({
           title: this.$i18n.t('token.supply'),
-          detail: this.formatStr(totalSupply.toString())
+          detail: this.formatStr(totalSupplyBN.toString())
         })
       }
 
-      if (circulatingSupply) {
+      if (circulatingSupplyBN) {
         details.push({
           title: this.$i18n.t('token.circSupply').toString(),
-          detail: this.formatStr(circulatingSupply.toString())
+          detail: this.formatStr(circulatingSupplyBN.toString())
         })
       }
 
-      if (currentPrice) {
+      if (currentPriceBN) {
         details.push({
           title: this.$i18n.tc('price.name', 2),
-          detail: `$${currentPrice}`,
+          detail: `$${currentPriceBN}`,
           priceChange: this.getPriceChange()
         })
       }
 
-      if (marketCap) {
+      if (marketCapBN) {
         details.push({
           title: this.$i18n.t('token.market'),
-          detail: `$${this.getRoundNumber(marketCap)}`
+          detail: `$${this.getRoundNumber(marketCapBN)}`
         })
       }
 
@@ -164,53 +165,52 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
       }
 
-      const { metadata } = contract!
+      if (decimals) {
+        details.push({
+          title: this.$i18n.t('token.decimals'),
+          detail: decimals
+        })
+      }
 
-      if (metadata) {
-        if (metadata.decimals) {
-          details.push({
-            title: this.$i18n.t('token.decimals'),
-            detail: metadata.decimals
-          })
-        }
-        if (metadata.website) {
-          details.push({
-            title: this.$i18n.t('token.website'),
-            detail: `<a href="${metadata.website}" target="_BLANK">${metadata.website}</a>`
-          })
-        }
-        if (metadata.support) {
-          details.push({
-            title: this.$i18n.t('token.support'),
-            detail: `<a href="mailto:${metadata.support.email}" target="_BLANK">${metadata.support.email}</a>`
-          })
-        }
-        if (metadata.type) {
-          details.push({
-            title: this.$i18n.t('token.type').toString(),
-            detail: metadata.type
-          })
-        }
+      if (website) {
+        details.push({
+          title: this.$i18n.t('token.website'),
+          detail: `<a href="${website}" target="_BLANK">${website}</a>`
+        })
+      }
 
-        if (metadata.social) {
-          details.push({
-            title: this.$i18n.t('token.links'),
-            detail: Object.entries(metadata.social)
-              .map(obj => {
-                const name = obj[0]
-                const url = obj[1]
-                if (url === null || url === '') {
-                  return ''
-                }
-                return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
-                  icons[name]
-                } pr-2 material-icons theme--light"></i></a>`
-              })
-              .reduce((a, b) => {
-                return `${a}${b}`
-              })
-          })
-        }
+      if (email) {
+        details.push({
+          title: this.$i18n.t('token.support'),
+          detail: `<a href="mailto:${email}" target="_BLANK">${email}</a>`
+        })
+      }
+
+      if (contractType) {
+        details.push({
+          title: this.$i18n.t('token.type').toString(),
+          detail: contractType
+        })
+      }
+
+      if (social) {
+        details.push({
+          title: this.$i18n.t('token.links'),
+          detail: Object.entries(social)
+            .map(obj => {
+              const name = obj[0]
+              const url = obj[1]
+              if (url === null || url === '') {
+                return ''
+              }
+              return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${
+                icons[name]
+              } pr-2 material-icons theme--light"></i></a>`
+            })
+            .reduce((a, b) => {
+              return `${a}${b}`
+            })
+        })
       }
     }
     return details

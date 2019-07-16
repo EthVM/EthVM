@@ -12,7 +12,6 @@ import com.ethvm.kafka.streams.processors.CanonicalReceiptsProcessor
 import com.ethvm.kafka.streams.processors.CanonicalTracesProcessor
 import com.ethvm.kafka.streams.processors.CanonicalTransactionsProcessor
 import com.ethvm.kafka.streams.processors.CanonicalUnclesProcessor
-import com.ethvm.kafka.streams.processors.ContractLifecycleProcessor
 import com.ethvm.kafka.streams.processors.ContractMetadataProcessor
 import com.ethvm.kafka.streams.processors.CountProcessor
 import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaProcessor
@@ -114,7 +113,6 @@ class Cli : CliktCommand() {
       NonFungibleBalanceProcessor(),
       CountProcessor(),
       BlockMetricsProcessor(),
-      ContractLifecycleProcessor(),
       ContractMetadataProcessor()
     ).forEach {
       it.buildTopology()

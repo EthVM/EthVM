@@ -271,19 +271,13 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: canonical_contract_lifecycle
+  - name: contract_created
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
       cleanup.policy: compact
 
-  - name: contract_lifecycle_events
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: contract
+  - name: contract_destroyed
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:

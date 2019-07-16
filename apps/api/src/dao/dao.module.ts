@@ -32,6 +32,7 @@ import { MetadataEntity } from '@app/orm/entities/metadata.entity'
 import { MetadataService } from '@app/dao/metadata.service'
 import { DbConnection } from '@app/orm/config'
 import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
+import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.enti
       BlockMetricEntity,
       MetadataEntity,
       InternalTransferEntity,
+      TokenDetailEntity,
     ], DbConnection.Principal),
     TypeOrmModule.forFeature([
       AccountEntity,

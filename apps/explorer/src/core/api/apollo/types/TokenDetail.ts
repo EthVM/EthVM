@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: tokenDetails
+// GraphQL fragment: TokenDetail
 // ====================================================
 
-export interface tokenDetails_tokenDetails_social {
+export interface TokenDetail_social {
   __typename: "ContractSocial";
   blog: string | null;
   chat: string | null;
@@ -23,7 +23,7 @@ export interface tokenDetails_tokenDetails_social {
   youtube: string | null;
 }
 
-export interface tokenDetails_tokenDetails {
+export interface TokenDetail {
   __typename: "TokenDetail";
   address: string;
   owner: string | null;
@@ -33,7 +33,7 @@ export interface tokenDetails_tokenDetails {
   decimals: number | null;
   logo: string | null;
   email: string | null;
-  social: tokenDetails_tokenDetails_social | null;
+  social: TokenDetail_social | null;
   website: string | null;
   currentPrice: any | null;
   circulatingSupply: any | null;
@@ -42,12 +42,4 @@ export interface tokenDetails_tokenDetails {
   priceChangePercentage24h: any | null;
   totalVolume: any | null;
   holdersCount: number | null;
-}
-
-export interface tokenDetails {
-  tokenDetails: tokenDetails_tokenDetails | null;
-}
-
-export interface tokenDetailsVariables {
-  address: string;
 }
