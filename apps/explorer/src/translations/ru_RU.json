@@ -198,6 +198,7 @@
     "tx-summary": {
       "title": "Сводка Tx",
       "description": "Успешные, неудачные и ожидающие транзакции в последних 10 блоках.",
+      "description-no-pending": "Successful and failed transactions in the last 10 blocks.",
       "label": {
         "pen": "Ожидающие Txs",
         "success-fail": "Успешные и Неудачные Тxs"
@@ -261,7 +262,10 @@
     "states": {
       "all": "Все",
       "week": "неделя | 1Н",
+      "week-two": "2 weeks | 2W",
       "month": "месяц | 1M",
+      "month-three": "3 Months | 3M",
+      "month-six": "6 Month | 6M",
       "day": "день | 1Д",
       "year": "год | 1Г"
     },
