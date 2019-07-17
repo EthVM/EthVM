@@ -80,6 +80,89 @@ const blockSummaries = [
   }
 ]
 
+const blocks = [
+  {
+    hash: hashOne,
+    author: authorOne,
+    number: 1,
+    blockTime: {
+      blockTime: 10
+    }
+  },
+  {
+    hash: hashTwo,
+    author: authorOne,
+    number: 2,
+    blockTime: {
+      blockTime: 5
+    }
+  },
+  {
+    hash: hashThree,
+    author: authorTwo,
+    number: 3,
+    blockTime: {
+      blockTime: 9
+    }
+  },
+  {
+    hash: hashFour,
+    author: authorOne,
+    number: 4,
+    blockTime: {
+      blockTime: 10
+    }
+  },
+  {
+    hash: hashFive,
+    author: authorOne,
+    number: 5,
+    blockTime: {
+      blockTime: 12
+    }
+  },
+  {
+    hash: hashSix,
+    author: authorTwo,
+    number: 6,
+    blockTime: {
+      blockTime: 5
+    }
+  },
+  {
+    hash: hashSeven,
+    author: authorOne,
+    number: 7,
+    blockTime: {
+      blockTime: 10
+    }
+  },
+  {
+    hash: hashEight,
+    author: authorOne,
+    number: 8,
+    blockTime: {
+      blockTime: 11
+    }
+  },
+  {
+    hash: hashNine,
+    author: authorTwo,
+    number: 9,
+    blockTime: {
+      blockTime: 2
+    }
+  },
+  {
+    hash: hashTen,
+    author: authorOne,
+    number: 10,
+    blockTime: {
+      blockTime: 10
+    }
+  }
+]
+
 const metadataServiceMock = {
   async isSyncing() {
     return false
@@ -115,11 +198,11 @@ const blockServiceMock = {
     return [items as BlockSummary[], count]
   },
   async findByNumber(number: BigNumber): Promise<BlockHeaderEntity | undefined> {
-    const item = blockSummaries.find(bs => number.isEqualTo(bs.number))
+    const item = blocks.find(bs => number.isEqualTo(bs.number))
     return item ? new BlockHeaderEntity(item) : undefined
   },
   async findByHash(hash: string) {
-    const item = blockSummaries.find(bs => bs.hash === hash)
+    const item = blocks.find(bs => bs.hash === hash)
     return item ? new BlockHeaderEntity(item) : undefined
   },
   async calculateHashRate() {
