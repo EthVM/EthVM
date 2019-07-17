@@ -577,7 +577,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TokenPage",
+                "name": "TokenBalancePage",
                 "ofType": null
               }
             },
@@ -5473,7 +5473,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TokenPage",
+        "name": "TokenBalancePage",
         "description": null,
         "fields": [
           {
@@ -5491,7 +5491,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "Token",
+                    "name": "TokenBalance",
                     "ofType": null
                   }
                 }
@@ -5524,7 +5524,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "Token",
+        "name": "TokenBalance",
         "description": null,
         "fields": [
           {

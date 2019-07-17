@@ -1,10 +1,10 @@
 import BN from 'bignumber.js'
-import { TokenPage, TokenPage_items } from '@app/core/api/apollo/types/TokenPage'
-import { Token } from '@app/core/api/apollo/types/Token'
 import { TokenUtils } from '@app/core/helper/token.utils'
+import { TokenBalancePage, TokenBalancePage_items } from '@app/core/api/apollo/types/TokenBalancePage'
+import { TokenBalance } from '@app/core/api/apollo/types/TokenBalance'
 
-export class TokenPageExt_items implements TokenPage_items {
-  __typename!: 'Token'
+export class TokenBalancePageExt_items implements TokenBalancePage_items {
+  __typename!: 'TokenBalance'
   address: string | null
   balance: any | null
   currentPrice: any | null
@@ -14,7 +14,7 @@ export class TokenPageExt_items implements TokenPage_items {
   priceChangePercentage24h: any | null
   image: string | null
 
-  constructor(proto: Token) {
+  constructor(proto: TokenBalance) {
     this.address = proto.address
     this.balance = proto.balance
     this.currentPrice = proto.currentPrice
@@ -70,13 +70,13 @@ export class TokenPageExt_items implements TokenPage_items {
   }
 }
 
-export class TokenPageExt implements TokenPage {
-  __typename!: 'TokenPage'
-  items: (TokenPageExt_items)[]
+export class TokenBalancePageExt implements TokenBalancePage {
+  __typename!: 'TokenBalancePage'
+  items: (TokenBalancePageExt_items)[]
   totalCount: number
 
-  constructor(proto: TokenPage) {
-    this.items = proto.items.map(s => new TokenPageExt_items(s as Token))
+  constructor(proto: TokenBalancePage) {
+    this.items = proto.items.map(s => new TokenBalancePageExt_items(s as TokenBalance))
     this.totalCount = proto.totalCount
   }
 
