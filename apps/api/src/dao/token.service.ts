@@ -61,14 +61,6 @@ export class TokenService {
 
   async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], number]> {
 
-    const findOptions: FindManyOptions = {
-      where: { address, amount: Not(0) },
-      relations: ['tokenExchangeRate', 'metadata', 'contractMetadata'],
-      take: limit,
-      skip: offset,
-      cache: true,
-    }
-
     return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], number]> => {
 
       const queryBuilder = txn.createQueryBuilder(Erc20BalanceEntity, 'b')
