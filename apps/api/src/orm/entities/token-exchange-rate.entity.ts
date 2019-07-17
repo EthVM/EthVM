@@ -29,7 +29,7 @@ export class TokenExchangeRateEntity {
   currentPrice?: BigNumber
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
-  marketCap?: string
+  marketCap?: BigNumber
 
   @Column({ type: 'integer', readonly: true })
   marketCapRank?: number

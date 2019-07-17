@@ -3,11 +3,11 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: TokenPage
+// GraphQL fragment: TokenBalance
 // ====================================================
 
-export interface TokenPage_items {
-  __typename: "Token";
+export interface TokenBalance {
+  __typename: "TokenBalance";
   name: string | null;
   symbol: string | null;
   address: string | null;
@@ -16,10 +16,4 @@ export interface TokenPage_items {
   currentPrice: any | null;
   priceChangePercentage24h: any | null;
   image: string | null;
-}
-
-export interface TokenPage {
-  __typename: "TokenPage";
-  items: TokenPage_items[];
-  totalCount: number;
 }
