@@ -21,12 +21,19 @@
         :value="latestHashRate"
         color-type="warning"
         back-type="hash-rate"
-        metrics="Th/s"
+        :metrics="latestHashUnits"
       />
       <app-info-card v-else :title="$tc('tx.failed', 2)" :value="latestBlockFailedTxs" color-type="error" back-type="failed-txs" />
     </v-flex>
     <v-flex xs12 sm6 md3>
-      <app-info-card v-if="type === 'generic'" :title="$t('diff.name')" :value="latestDifficulty" color-type="error" back-type="difficulty" metrics="Th" />
+      <app-info-card
+        v-if="type === 'generic'"
+        :title="$t('diff.name')"
+        :value="latestDifficulty"
+        color-type="error"
+        back-type="difficulty"
+        :metrics="latestDifficultyUnits"
+      />
       <app-info-card v-else :title="$tc('tx.pending-short', 2)" :value="latestBlockPendingTxs" color-type="success" back-type="time-since" />
     </v-flex>
   </v-layout>
@@ -39,6 +46,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+
+const BIG_NUMBER_ONE = new BigNumber(1)
 
 @Component({
   components: {
@@ -172,6 +181,38 @@ export default class AppInfoCardGroup extends Vue {
     }, 1000)
   }
 
+  calculateUnits(value: BigNumber): string {
+
+    const { calculateValue } = this
+
+    // Determine the lowest unit that will show value as 1 or greater
+
+    if (calculateValue(value, 'Th/s') >= BIG_NUMBER_ONE) {
+      return 'Th/s'
+    }
+
+    if (calculateValue(value, 'Gh/s') >= BIG_NUMBER_ONE) {
+      return 'Gh/s'
+    }
+
+    return 'Mh/s' // Default to megahash
+  }
+
+  calculateValue(value: BigNumber, units: string): BigNumber {
+
+    switch (units) {
+      case 'Th/s':
+        return value.div(1e12)
+      case 'Gh/s':
+        return value.div(1e8)
+      case 'Mh/s':
+        return value.div(1e4)
+      default:
+        throw new Error(`Invalid unit: ${units}`)
+    }
+
+  }
+
   /*
     ===================================================================================
       Computed Values
@@ -196,23 +237,35 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestHashRate(): string {
-    const { loading, loadingMessage, hashRate } = this
+    const { loading, loadingMessage, hashRate, calculateValue, calculateUnits } = this
     return !loading && hashRate
-      ? hashRate
-          .div('1e12')
+      ? calculateValue(hashRate, calculateUnits(hashRate))
           .decimalPlaces(4)
           .toString()
       : loadingMessage
   }
 
+  get latestHashUnits(): string {
+    const { loading, hashRate, calculateUnits } = this
+    return !loading && hashRate
+      ? calculateUnits(hashRate)
+      : 'Th/s'
+  }
+
   get latestDifficulty(): string {
-    const { loading, loadingMessage, blockSummary } = this
+    const { loading, loadingMessage, blockSummary, calculateValue, calculateUnits } = this
     return !loading && blockSummary
-      ? blockSummary
-          .difficultyBN!.div('1e12')
+      ? calculateValue(blockSummary.difficultyBN, calculateUnits(blockSummary.difficultyBN))
           .decimalPlaces(4)
           .toString()
       : loadingMessage
+  }
+
+  get latestDifficultyUnits(): string {
+    const { loading, blockSummary, calculateUnits } = this
+    return !loading && blockSummary
+      ? calculateUnits(blockSummary.difficultyBN)
+      : 'Th/s'
   }
 
   get latestBlockSuccessTxs(): string {
