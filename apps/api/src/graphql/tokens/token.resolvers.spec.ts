@@ -270,14 +270,12 @@ const tokenServiceMock = {
     return erc20Balances.filter(e => e.contract === address).length
   },
   async findTokensMetadata(
-    symbols: string[] = [],
-    names: string[] = [],
     addresses: string[] = [],
     offset: number = 0,
     limit: number = 20,
   ): Promise<[TokenMetadataEntity[], number]> {
-    let items = symbols.length || names.length || addresses.length ?
-      tokenMetadata.filter(t => symbols.includes(t.symbol!) || names.includes(t.name!) || addresses.includes(t.address)) :
+    let items = addresses.length ?
+      tokenMetadata.filter(t => addresses.includes(t.address)) :
       tokenMetadata
 
     const totalCount = items.length
