@@ -8,12 +8,11 @@ import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.e
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
-import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
 import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
-import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
+import { TokenBalanceDto } from '@app/graphql/tokens/dto/token-balance.dto'
 
 @Injectable()
 export class TokenService {
@@ -60,7 +59,7 @@ export class TokenService {
     return this.erc721BalanceRepository.findOne({ where })
   }
 
-  async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenDto[], number]> {
+  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], number]> {
 
     const findOptions: FindManyOptions = {
       where: { address },
@@ -70,36 +69,7 @@ export class TokenService {
       cache: true,
     }
 
-    const [erc20Tokens, erc20Count] = await this.erc20BalanceRepository.findAndCount(findOptions)
-    const [erc721Tokens, erc721Count] = await this.erc721BalanceRepository.findAndCount(findOptions)
-
-    const tokenDtos: TokenDto[] = []
-
-    erc20Tokens.forEach(entity => {
-      tokenDtos.push(this.constructTokenDto(entity))
-    })
-    erc721Tokens.forEach(entity => {
-      tokenDtos.push(this.constructTokenDto(entity))
-    })
-
-    return [tokenDtos, (erc20Count + erc721Count)]
-  }
-
-  private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
-    const { tokenExchangeRate, metadata, contractMetadata } = entity
-    const tokenData = metadata || ({} as any)
-    if (entity instanceof Erc20BalanceEntity) {
-      tokenData.balance = entity.amount
-    }
-    if (contractMetadata) {
-      tokenData.image = contractMetadata.logo
-    }
-    if (tokenExchangeRate) {
-      tokenData.currentPrice = tokenExchangeRate.currentPrice
-      tokenData.priceChangePercentage24h = tokenExchangeRate.priceChangePercentage24h
-      tokenData.image = tokenData.image || tokenExchangeRate.image
-    }
-    return new TokenDto(tokenData)
+    return this.erc20BalanceRepository.findAndCount(findOptions)
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {

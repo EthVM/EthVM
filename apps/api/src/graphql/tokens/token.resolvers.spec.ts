@@ -6,8 +6,8 @@ import { Erc721BalanceEntity } from '../../orm/entities/erc721-balance.entity'
 import { TokenResolvers } from './token.resolvers'
 import { TokenService } from '../../dao/token.service'
 import { TokenHolderDto } from './dto/token-holder.dto'
-import { TokenDto } from './dto/token.dto'
-import { TokenPageDto } from './dto/token-page.dto'
+import { TokenBalanceDto } from './dto/token-balance.dto'
+import { TokenBalancePageDto } from './dto/token-balance-page.dto'
 import BigNumber from 'bignumber.js'
 import { CoinExchangeRateEntity } from '../../orm/entities/coin-exchange-rate.entity'
 import { ExchangeRatePair, TokenExchangeRateFilter } from '../schema'
@@ -176,14 +176,14 @@ const tokenServiceMock = {
 
     return item ? new Erc20BalanceEntity(item) : undefined
   },
-  async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenDto[], number]> {
+  async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenBalanceDto[], number]> {
 
     let items = erc20Balances.filter(e => e.address === address)
     const totalCount = items.length
 
     items = items.slice(offset, offset + limit)
 
-    return [items.map(i => new TokenDto(i.metadata)), totalCount]
+    return [items.map(i => new TokenBalanceDto(i.metadata)), totalCount]
   },
   async totalValueUSDByAddress(address: string): Promise<BigNumber | undefined> {
 
@@ -405,15 +405,15 @@ describe('TokenResolvers', () => {
       const tokenPage = await tokenResolvers.addressAllTokensOwned(holderOne, 0, 10)
 
       expect(tokenPage).not.toBeNull()
-      expect(tokenPage).toBeInstanceOf(TokenPageDto)
+      expect(tokenPage).toBeInstanceOf(TokenBalancePageDto)
       expect(tokenPage).toHaveProperty('items')
       expect(tokenPage).toHaveProperty('totalCount', 3)
       expect(tokenPage.items).toHaveLength(3)
-      expect(tokenPage.items[0]).toBeInstanceOf(TokenDto)
+      expect(tokenPage.items[0]).toBeInstanceOf(TokenBalanceDto)
       expect(tokenPage.items[0]).toHaveProperty('address', contractAddressOne)
-      expect(tokenPage.items[1]).toBeInstanceOf(TokenDto)
+      expect(tokenPage.items[1]).toBeInstanceOf(TokenBalanceDto)
       expect(tokenPage.items[1]).toHaveProperty('address', contractAddressTwo)
-      expect(tokenPage.items[2]).toBeInstanceOf(TokenDto)
+      expect(tokenPage.items[2]).toBeInstanceOf(TokenBalanceDto)
       expect(tokenPage.items[2]).toHaveProperty('address', contractAddressThree)
     })
 
@@ -422,23 +422,23 @@ describe('TokenResolvers', () => {
       const tokensPageOne = await tokenResolvers.addressAllTokensOwned(holderOne, 0, 2)
 
       expect(tokensPageOne).not.toBeNull()
-      expect(tokensPageOne).toBeInstanceOf(TokenPageDto)
+      expect(tokensPageOne).toBeInstanceOf(TokenBalancePageDto)
       expect(tokensPageOne).toHaveProperty('items')
       expect(tokensPageOne).toHaveProperty('totalCount', 3)
       expect(tokensPageOne.items).toHaveLength(2)
-      expect(tokensPageOne.items[0]).toBeInstanceOf(TokenDto)
+      expect(tokensPageOne.items[0]).toBeInstanceOf(TokenBalanceDto)
       expect(tokensPageOne.items[0]).toHaveProperty('address', contractAddressOne)
-      expect(tokensPageOne.items[1]).toBeInstanceOf(TokenDto)
+      expect(tokensPageOne.items[1]).toBeInstanceOf(TokenBalanceDto)
       expect(tokensPageOne.items[1]).toHaveProperty('address', contractAddressTwo)
 
       const tokensPageTwo = await tokenResolvers.addressAllTokensOwned(holderOne, 2, 2)
 
       expect(tokensPageTwo).not.toBeNull()
-      expect(tokensPageTwo).toBeInstanceOf(TokenPageDto)
+      expect(tokensPageTwo).toBeInstanceOf(TokenBalancePageDto)
       expect(tokensPageTwo).toHaveProperty('items')
       expect(tokensPageTwo).toHaveProperty('totalCount', 3)
       expect(tokensPageTwo.items).toHaveLength(1)
-      expect(tokensPageTwo.items[0]).toBeInstanceOf(TokenDto)
+      expect(tokensPageTwo.items[0]).toBeInstanceOf(TokenBalanceDto)
       expect(tokensPageTwo.items[0]).toHaveProperty('address', contractAddressThree)
 
       expect(tokensPageOne).not.toEqual(tokensPageTwo)
@@ -447,7 +447,7 @@ describe('TokenResolvers', () => {
       const tokenPageThree = await tokenResolvers.addressAllTokensOwned(holderOne, 4, 2)
 
       expect(tokenPageThree).not.toBeNull()
-      expect(tokenPageThree).toBeInstanceOf(TokenPageDto)
+      expect(tokenPageThree).toBeInstanceOf(TokenBalancePageDto)
       expect(tokenPageThree).toHaveProperty('items')
       expect(tokenPageThree).toHaveProperty('totalCount', 3)
       expect(tokenPageThree.items).toHaveLength(0)
@@ -459,7 +459,7 @@ describe('TokenResolvers', () => {
       const tokenPage = await tokenResolvers.addressAllTokensOwned(holderFive, 0, 10)
 
       expect(tokenPage).not.toBeNull()
-      expect(tokenPage).toBeInstanceOf(TokenPageDto)
+      expect(tokenPage).toBeInstanceOf(TokenBalancePageDto)
       expect(tokenPage).toHaveProperty('items')
       expect(tokenPage).toHaveProperty('totalCount', 0)
       expect(tokenPage.items).toHaveLength(0)
