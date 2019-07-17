@@ -6,13 +6,12 @@ import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
 import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { Any, EntityManager, FindManyOptions, FindOneOptions, Not, Repository } from 'typeorm'
 import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
-import { TokenBalanceDto } from '@app/graphql/tokens/dto/token-balance.dto'
 
 @Injectable()
 export class TokenService {
@@ -35,6 +34,7 @@ export class TokenService {
     private readonly tokenMetadataRepository: Repository<TokenMetadataEntity>,
     @InjectRepository(TokenDetailEntity, DbConnection.Principal)
     private readonly tokenDetailRepository: Repository<TokenDetailEntity>,
+    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
   ) {}
 
   async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
@@ -62,14 +62,34 @@ export class TokenService {
   async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], number]> {
 
     const findOptions: FindManyOptions = {
-      where: { address },
+      where: { address, amount: Not(0) },
       relations: ['tokenExchangeRate', 'metadata', 'contractMetadata'],
       take: limit,
       skip: offset,
       cache: true,
     }
 
-    return this.erc20BalanceRepository.findAndCount(findOptions)
+    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], number]> => {
+
+      const queryBuilder = txn.createQueryBuilder(Erc20BalanceEntity, 'b')
+        .where('b.address = :address')
+        .andWhere('b.amount != :amount')
+        .setParameters({ address, amount: 0 })
+        .cache(true)
+
+      const count = await queryBuilder.getCount()
+
+      const entities = await queryBuilder
+        .leftJoinAndSelect('b.tokenExchangeRate', 'ter')
+        .leftJoinAndSelect('b.metadata', 'm')
+        .leftJoinAndSelect('b.contractMetadata', 'cm')
+        .offset(offset)
+        .limit(limit)
+        .getMany()
+
+      return [entities, count]
+
+    })
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
