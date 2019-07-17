@@ -5,7 +5,7 @@
       <v-layout column fill-height>
         <app-greeting v-if="appGreet" :greet="appGreet" />
         <app-sync-message />
-        <app-connection-message />
+<!--        <app-connection-message />-->
         <v-flex>
           <router-view :key="$route.path" />
         </v-flex>
