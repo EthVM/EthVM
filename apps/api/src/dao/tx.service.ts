@@ -27,7 +27,7 @@ export class TxService {
     @InjectRepository(TransactionEntity, DbConnection.Principal)
     private readonly transactionRepository: Repository<TransactionEntity>,
     @InjectEntityManager(DbConnection.Principal)
-    private readonly entityManager: EntityManager
+    private readonly entityManager: EntityManager,
   ) {
   }
 
@@ -60,7 +60,7 @@ export class TxService {
     const txs = await this.transactionRepository.find({
       where: { hash: In(hashes) },
       relations: ['receipt'],
-      cache: true
+      cache: true,
     })
     return this.findAndMapTraces(txs)
   }
@@ -89,12 +89,12 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      }
+      },
     )
 
   }
@@ -123,12 +123,12 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, count]
-      }
+      },
     )
 
   }
@@ -181,12 +181,12 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, totalCount]
-      }
+      },
     )
 
   }
@@ -202,9 +202,9 @@ export class TxService {
         let [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
           select: ['count'],
           where: {
-            entity: 'transaction'
+            entity: 'transaction',
           },
-          cache: true
+          cache: true,
         })
 
         if (totalCount === 0) return [[], totalCount]
@@ -228,11 +228,11 @@ export class TxService {
           where,
           order: {
             blockNumber: 'DESC',
-            transactionIndex: 'DESC'
+            transactionIndex: 'DESC',
           },
           skip: offset,
           take: limit,
-          cache: true
+          cache: true,
         })
 
         const receipts = await this.receiptService
@@ -241,7 +241,7 @@ export class TxService {
         const receiptsByTxHash = receipts
           .reduceRight(
             (memo, next) => memo.set(next.transactionHash, next),
-            new Map<string, TransactionReceiptEntity>()
+            new Map<string, TransactionReceiptEntity>(),
           )
 
         const txsWithReceipts = txs.map(tx => {
@@ -249,7 +249,7 @@ export class TxService {
           return new TransactionEntity({ ...tx, receipt })
         })
         return this.summarise(entityManager, txsWithReceipts, totalCount)
-      }
+      },
     )
 
   }
@@ -266,9 +266,9 @@ export class TxService {
         where: { hash: In(hashes) },
         order: {
           blockNumber: 'DESC',
-          transactionIndex: 'DESC'
+          transactionIndex: 'DESC',
         },
-        cache: true
+        cache: true,
       })
 
     const receipts = await this.receiptService
@@ -277,7 +277,7 @@ export class TxService {
     const receiptsByTxHash = receipts
       .reduceRight(
         (memo, next) => memo.set(next.transactionHash, next),
-        new Map<string, TransactionReceiptEntity>()
+        new Map<string, TransactionReceiptEntity>(),
       )
 
     const txsWithReceipts = txs.map(tx => {
@@ -369,8 +369,8 @@ export class TxService {
         contractSymbol,
         value: tx.value,
         fee: tx.gasPrice.multipliedBy(gasUsed),
-        successful: successful,
-        timestamp: tx.timestamp
+        successful,
+        timestamp: tx.timestamp,
       } as TransactionSummary
     })
 

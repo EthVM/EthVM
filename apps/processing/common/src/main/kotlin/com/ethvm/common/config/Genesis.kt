@@ -30,8 +30,6 @@ data class GenesisFile(
   val allocations: Map<String, PremineAccount>
 ) {
 
-
   val gasLimitBI = BigInteger(gasLimit.substring(2), 16)
   val difficultyBI = BigInteger(difficulty.substring(2), 16)
-
 }

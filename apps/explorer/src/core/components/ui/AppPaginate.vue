@@ -6,15 +6,15 @@
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('prev')" small :disabled="currentPage === 0"
           ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
         </v-btn>
-<!--        <div v-if="hasInput" class="page-input">-->
-<!--          <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />-->
-<!--        </div>-->
+        <!--        <div v-if="hasInput" class="page-input">-->
+        <!--          <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />-->
+        <!--        </div>-->
         <p class="info--text pr-1">{{ pageDisplay }}</p>
         <p class="info--text">out of {{ total }}</p>
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small :disabled="currentPage === lastPage"
           ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
         </v-btn>
-<!--        <v-btn v-if="hasLast" flat class="bttnGrey info&#45;&#45;text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('btn.last') }}</v-btn>-->
+        <!--        <v-btn v-if="hasLast" flat class="bttnGrey info&#45;&#45;text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('btn.last') }}</v-btn>-->
       </v-layout>
     </v-container>
   </v-card>

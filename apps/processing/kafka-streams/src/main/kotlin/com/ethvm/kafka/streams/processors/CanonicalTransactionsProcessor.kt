@@ -173,7 +173,7 @@ class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
         *OncePerBlockTransformer.STORE_NAMES
       )
       // only for the genesis block
-      .filter{ k, _ -> k.number.bigInteger() == BigInteger.ZERO}
+      .filter { k, _ -> k.number.bigInteger() == BigInteger.ZERO }
       .mapValues { _, _ ->
 
         val genesis = netConfig.genesis
@@ -206,7 +206,6 @@ class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
               .setGasPrice(zeroBI)
               .setNonce(zeroBI)
               .build()
-
           }
 
         TransactionListRecord.newBuilder()
@@ -214,10 +213,8 @@ class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
           .setTimestamp(genesis.timestamp)
           .setTransactions(transactions)
           .build()
-
       }
       .toTopic(CanonicalTransactions)
-
   }
 
   private fun canonicalTransactionCountDeltas(canonicalTransactions: KStream<CanonicalKeyRecord, TransactionListRecord>) {
