@@ -9,7 +9,7 @@ export class EthService {
   }
 
   isValidHash(hash: string): boolean {
-    return /^(0x)?([A-Fa-f0-9]{64})$/.test(hash)
+    return /^0x[0-9a-fA-F]{64}|0xGENESIS\_{17}[0-9a-fA-F]{40}$/.test(hash)
   }
 
   isBuffer(item: any, length: number = 0): boolean {

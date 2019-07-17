@@ -16,6 +16,9 @@ import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class BlockService {
+
+  private zeroBI = new BigNumber(0)
+
   constructor(
     @InjectRepository(BlockHeaderEntity, DbConnection.Principal) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(TransactionEntity, DbConnection.Principal) private readonly transactionRepository: Repository<TransactionEntity>,
@@ -221,7 +224,7 @@ export class BlockService {
     // partial read checks
 
     // look for block reward
-    if (!instaMining && !(blockHeader.rewards && blockHeader.rewards.length)) {
+    if (blockHeader.number > this.zeroBI && !instaMining && !(blockHeader.rewards && blockHeader.rewards.length)) {
       throw new PartialReadException(`Rewards missing, block hash = ${blockHeader.hash}`)
     }
 
