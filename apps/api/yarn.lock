@@ -6076,10 +6076,10 @@ pg-int8@1.0.1:
   resolved "https://registry.yarnpkg.com/pg-int8/-/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
   integrity sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==
 
-pg-listen@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/pg-listen/-/pg-listen-1.2.0.tgz#8219c3974ad70aa73c703c36ee5ed3df58ad8cdd"
-  integrity sha512-9NwwGEvFeEzhGopn8SCtw28NQl5rxNGB3Y7tjbYuMURFg6bVwykhF7tEZ6PVrxuFUbnTTadfm1jslsrlk2fGLA==
+pg-listen@~1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/pg-listen/-/pg-listen-1.3.1.tgz#42ea8122dd118879f65df3a176155a8494b2202a"
+  integrity sha512-wApDWmiRoRhlruR/Bi4WIPQjJQqWnePl1uJLwtrzaFRNdKIrhkO6nVaZyr2cUkpR7zf9F6iEpoOA6pVpvtpKdA==
   dependencies:
     debug "^4.1.1"
     pg-format "^1.0.4"
