@@ -26,11 +26,7 @@ export class BlockHeaderDto implements BlockHeader {
 
   constructor(data: BlockHeaderEntity) {
     assignClean(this, data)
-
-    if (data.blockTime) {
-      this.blockTime = data.blockTime!!.blockTime
-    }
-
+    this.blockTime = data.blockTime!!.blockTime
   }
 
 }

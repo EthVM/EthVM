@@ -17,7 +17,7 @@ export class BlockTimeEntity {
   @Column({type: 'int', readonly: true})
   blockTime!: number
 
-  @ManyToOne(type => BlockHeaderEntity, block => block.txs)
+  @ManyToOne(type => BlockHeaderEntity, block => block.blockTime)
   @JoinColumn({
     name: 'number',
     referencedColumnName: 'number',

@@ -153,7 +153,7 @@ export interface BlockHeader {
     gasUsed: BigNumber;
     timestamp: Date;
     size: number;
-    blockTime: number;
+    blockTime?: number;
 }
 
 export interface BlockMetric {

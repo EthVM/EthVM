@@ -71,7 +71,7 @@ export class BlockHeaderEntity {
   @Column({ type: 'int', readonly: true })
   size!: number
 
-  @OneToMany(type => BlockTimeEntity, bt => bt.number)
+  @OneToMany(type => BlockTimeEntity, bt => bt.blockHeader)
   @JoinColumn({
     name: 'number',
     referencedColumnName: 'number',
