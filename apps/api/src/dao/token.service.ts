@@ -7,7 +7,7 @@ import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { Any, EntityManager, FindManyOptions, FindOneOptions, Not, Repository } from 'typeorm'
+import { Any, EntityManager, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
 import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
@@ -179,28 +179,21 @@ export class TokenService {
   }
 
   async findTokensMetadata(
-    symbols: string[] = [],
-    names: string[] = [],
     addresses: string[] = [],
     offset: number = 0,
     limit: number = 20,
   ): Promise<[TokenMetadataEntity[], number]> {
-    const where: any[] = []
-    if (symbols.length) {
-      where.push({ symbol: Any(symbols) })
-    }
-    if (names.length) {
-      where.push({ name: Any(names) })
-    }
-    if (addresses.length) {
-      where.push({ address: Any(addresses) })
-    }
-    const findOptions = {
-      where,
+
+    const findOptions: FindManyOptions = {
       take: limit,
       skip: offset,
       cache: true,
     }
+
+    if (addresses.length) {
+      findOptions.where = { address: Any(addresses) }
+    }
+
     return await this.tokenMetadataRepository.findAndCount(findOptions)
   }
 

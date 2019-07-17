@@ -96,13 +96,11 @@ export class TokenResolvers {
 
   @Query()
   async tokensMetadata(
-    @Args({ name: 'symbols', type: () => [String], nullable: true }) symbols?: string[],
-    @Args({ name: 'names', type: () => [String], nullable: true }) names?: string[],
     @Args({ name: 'addresses', type: () => [String], nullable: true }) addresses?: string[],
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<TokenMetadataPageDto> {
-    const [items, totalCount] = await this.tokenService.findTokensMetadata(symbols, names, addresses, offset, limit)
+    const [items, totalCount] = await this.tokenService.findTokensMetadata(addresses, offset, limit)
     return new TokenMetadataPageDto({ items, totalCount })
   }
 
