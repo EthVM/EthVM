@@ -66,14 +66,12 @@ export class TokenResolvers {
 
   @Query()
   async tokenExchangeRates(
-    @Args({ name: 'symbols', type: () => [String], nullable: true }) symbols?: string[],
-    @Args({ name: 'names', type: () => [String], nullable: true }) names?: string[],
     @Args({ name: 'addresses', type: () => [String], nullable: true }) addresses?: string[],
     @Args('sort') sort?: string,
     @Args('limit') limit?: number,
     @Args('offset') offset?: number,
   ): Promise<TokenExchangeRatePageDto> {
-    const [items, totalCount] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, symbols, names, addresses)
+    const [items, totalCount] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, addresses)
     return new TokenExchangeRatePageDto({ items, totalCount })
   }
 

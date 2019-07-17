@@ -96,8 +96,6 @@ export class TokenService {
     sort: string = 'market_cap_rank',
     limit: number = 10,
     offset: number = 0,
-    symbols: string[] = [],
-    names: string[] = [],
     addresses: string[] = [],
   ): Promise<[TokenExchangeRateEntity[], number]> {
     let order
@@ -126,24 +124,17 @@ export class TokenService {
         break
     }
 
-    const where = [] as any[]
-    if (symbols.length) {
-      where.push({symbol: Any(symbols)})
-    }
-    if (names.length) {
-      where.push({name: Any(names)})
-    }
-    if (addresses.length) {
-      where.push({address: Any(addresses)})
-    }
-
     const findOptions: FindManyOptions = {
-      where,
       order,
       take: limit,
       skip: offset,
       cache: true,
     }
+
+    if (addresses.length) {
+      findOptions.where = {address: Any(addresses)}
+    }
+
     return this.tokenExchangeRateRepository.findAndCount(findOptions)
   }
 
