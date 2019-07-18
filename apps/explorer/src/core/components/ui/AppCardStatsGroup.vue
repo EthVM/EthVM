@@ -48,7 +48,11 @@ import { Subscription } from 'rxjs'
 import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
 const BIG_NUMBER_ONE = new BigNumber(1)
-enum HashUnits {
+interface HashUnit {
+  unit: HashUnitLabel,
+  divisor: number
+}
+enum HashUnitLabel {
   th = 'Th/s',
   gh = 'Gh/s',
   mh = 'Mh/s'
@@ -131,6 +135,12 @@ export default class AppInfoCardGroup extends Vue {
 
   disconnected: boolean = false
 
+  hashUnits: HashUnit[] = [
+    { unit: HashUnitLabel.mh, divisor: 1e4 },
+    { unit: HashUnitLabel.gh, divisor: 1e8 },
+    { unit: HashUnitLabel.th, divisor: 1e12 }
+    ]
+
   /*
     ===================================================================================
       Lifecycle
@@ -186,36 +196,38 @@ export default class AppInfoCardGroup extends Vue {
     }, 1000)
   }
 
-  calculateHashUnits(value: BigNumber): HashUnits {
+  calculateHashValueAndLabel(value?: BigNumber): [BigNumber | undefined, HashUnitLabel] {
 
-    const { adjustValueForHashUnits } = this
+    const { hashUnits } = this
+
+    if (!value) {
+      return [undefined, HashUnitLabel.th] // Default label to Th/s
+    }
 
     // Determine the smallest unit that will show value as 1 or greater
 
-    if (adjustValueForHashUnits(value, HashUnits.th) >= BIG_NUMBER_ONE) {
-      return HashUnits.th
+    let result
+    let hashUnit
+
+    for (const unit of hashUnits) {
+
+      result = value.div(unit.divisor)
+
+      if (result.isLessThan(1000)) {
+        hashUnit = unit.unit
+        break;
+      }
     }
 
-    if (adjustValueForHashUnits(value, HashUnits.gh) >= BIG_NUMBER_ONE) {
-      return HashUnits.gh
+    // Default to smallest
+
+    if (!hashUnit) {
+      const smallestUnit = hashUnits[0]
+      hashUnit = smallestUnit.unit
+      result = value.div(smallestUnit.divisor)
     }
 
-    return HashUnits.mh // Default to megahash
-  }
-
-  adjustValueForHashUnits(value: BigNumber, units: HashUnits): BigNumber {
-
-    switch (units) {
-      case HashUnits.th:
-        return value.div(1e12)
-      case HashUnits.gh:
-        return value.div(1e8)
-      case HashUnits.mh:
-        return value.div(1e4)
-      default:
-        throw new Error(`Invalid unit: ${units}`)
-    }
-
+    return [result, hashUnit]
   }
 
   /*
@@ -241,36 +253,36 @@ export default class AppInfoCardGroup extends Vue {
     return !loading && !!blockSummary ? blockSummary.numberBN.toString() : loadingMessage
   }
 
-  get latestHashRate(): string {
-    const { loading, loadingMessage, hashRate, adjustValueForHashUnits, calculateHashUnits } = this
-    return !loading && hashRate
-      ? adjustValueForHashUnits(hashRate, calculateHashUnits(hashRate))
-          .decimalPlaces(4)
-          .toString()
-      : loadingMessage
+  get latestHashRateValueAndLabel(): [BigNumber | undefined, HashUnitLabel] {
+    const { hashRate, calculateHashValueAndLabel } = this
+    return calculateHashValueAndLabel(hashRate)
   }
 
-  get latestHashUnits(): HashUnits {
-    const { loading, hashRate, calculateHashUnits } = this
-    return !loading && hashRate
-      ? calculateHashUnits(hashRate)
-      : HashUnits.th
+  get latestHashRate(): string {
+    const { loadingMessage, latestHashRateValueAndLabel } = this
+    const hashRate = latestHashRateValueAndLabel[0]
+    return hashRate ? hashRate.decimalPlaces(4).toString() : loadingMessage
+  }
+
+  get latestHashUnits(): HashUnitLabel {
+    const { latestHashRateValueAndLabel } = this
+    return latestHashRateValueAndLabel[1]
+  }
+
+  get latestDifficultyValueAndLabel(): [BigNumber | undefined, HashUnitLabel] {
+    const { blockSummary, calculateHashValueAndLabel } = this
+    return calculateHashValueAndLabel(blockSummary ? blockSummary.difficultyBN : undefined)
   }
 
   get latestDifficulty(): string {
-    const { loading, loadingMessage, blockSummary, adjustValueForHashUnits, calculateHashUnits } = this
-    return !loading && blockSummary
-      ? adjustValueForHashUnits(blockSummary.difficultyBN, calculateHashUnits(blockSummary.difficultyBN))
-          .decimalPlaces(4)
-          .toString()
-      : loadingMessage
+    const { loadingMessage, latestDifficultyValueAndLabel } = this
+    const difficulty = latestDifficultyValueAndLabel[0]
+    return difficulty ? difficulty.decimalPlaces(4).toString() : loadingMessage
   }
 
-  get latestDifficultyUnits(): HashUnits {
-    const { loading, blockSummary, calculateHashUnits } = this
-    return !loading && blockSummary
-      ? calculateHashUnits(blockSummary.difficultyBN)
-      : HashUnits.th
+  get latestDifficultyUnits(): HashUnitLabel {
+    const { latestDifficultyValueAndLabel } = this
+    return latestDifficultyValueAndLabel[1]
   }
 
   get latestBlockSuccessTxs(): string {
