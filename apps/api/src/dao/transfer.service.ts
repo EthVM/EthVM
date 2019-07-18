@@ -174,7 +174,7 @@ export class TransferService {
       .addSelect('*, SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance')
       .where('t.contract_address = :address')
       .andWhere('t.address = :holder')
-      // .cache(true)
+      .cache(true)
 
     const items = await builder
       .setParameters({ address, holder, timestampFrom, timestampTo })
