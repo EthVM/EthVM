@@ -5,7 +5,17 @@
       TITLE
     =====================================================================================
     -->
-    <v-layout v-if="!isPageHome" align-end justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
+    <v-layout
+      v-if="!isPageHome"
+      align-end
+      justify-space-between
+      row
+      wrap
+      fill-height
+      pb-1
+      pr-2
+      pl-2
+    >
       <v-flex xs12 sm5 md4 class="title-live" pb-0>
         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
@@ -33,7 +43,12 @@
       <v-spacer />
       <v-flex xs4 md1>
         <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('btn.view-all') }}</v-btn>
+          <v-btn
+            outline
+            color="secondary"
+            class="text-capitalize"
+            to="/blocks"
+          >{{ $t('btn.view-all') }}</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -51,7 +66,13 @@
     -->
     <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
-        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1 table-blocks-header-card" height="40px">
+        <v-card
+          v-if="!hasError"
+          color="info"
+          flat
+          class="white--text pl-3 pr-1 table-blocks-header-card"
+          height="40px"
+        >
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex sm2>
               <h5>{{ $t('block.number') }}</h5>
@@ -78,12 +99,29 @@
           <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
+          <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pt-2 pr-2 pl-2">
+            <app-paginate
+              :total="pages"
+              @newPage="setPage"
+              :current-page="page"
+              :has-input="!simplePagination"
+              :has-first="!simplePagination"
+              :has-last="!simplePagination"
+            />
+          </v-layout>
         </v-flex>
-
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
             <div :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile ma-2' : '']">
-              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-4 pr-4 pt-2">
+              <v-layout
+                grid-list-xs
+                row
+                wrap
+                align-center
+                justify-start
+                fill-height
+                class="pl-4 pr-4 pt-2"
+              >
                 <v-flex xs4 sm2>
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
@@ -108,16 +146,6 @@
         </div>
       </v-layout>
     </v-container>
-    <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-      <app-paginate
-        :total="pages"
-        @newPage="setPage"
-        :current-page="page"
-        :has-input="!simplePagination"
-        :has-first="!simplePagination"
-        :has-last="!simplePagination"
-      />
-    </v-layout>
   </v-card>
 </template>
 
