@@ -35,7 +35,7 @@ export class BlockService {
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
     const blocks = await this.blockHeaderRepository
       .find({
-        select: ['number', 'difficulty', 'blockTime'],
+        select: ['number', 'difficulty'],
         relations: ['blockTime'],
         order: { number: 'DESC' },
         take: 20,
