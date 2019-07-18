@@ -30,7 +30,7 @@ export class SearchService {
 
     // Check Accounts
     if (this.ethService.isValidAddress(query)) {
-      const account = await this.accountService.findAccountByAddress(query)
+      const account = await this.accountService.findAccountByAddress(query.toLowerCase())
       if (account != null) {
 
         const isMiner = await this.accountService.findIsMiner(account.address)
@@ -44,6 +44,9 @@ export class SearchService {
 
     // Check Block, Uncle or Tx
     if (this.ethService.isValidHash(query)) {
+
+      query = query.toLowerCase() // Ensure query string is sanitized to lowercase before querying DB
+
       const block = await this.blockService.findByHash(query)
       if (block != null) {
         s.block = new BlockDto(block)

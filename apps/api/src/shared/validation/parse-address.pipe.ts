@@ -12,6 +12,6 @@ export class ParseAddressPipe implements PipeTransform<string, string> {
     if (value.substring(0, 2) !== '0x') {
       value = `0x${value}`
     }
-    return value
+    return value.toLowerCase()
   }
 }
