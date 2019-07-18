@@ -2,7 +2,7 @@ import { BlockRewardEntity } from '@app/orm/entities/block-reward.entity'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { UncleEntity } from '@app/orm/entities/uncle.entity'
 import { assignClean } from '@app/shared/utils'
-import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
 import { BigNumber } from 'bignumber.js'
 import { BigNumberTransformer } from '../transformers/big-number.transformer'
 import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
@@ -71,12 +71,12 @@ export class BlockHeaderEntity {
   @Column({ type: 'int', readonly: true })
   size!: number
 
-  @OneToMany(type => BlockTimeEntity, bt => bt.blockHeader)
+  @OneToOne(type => BlockTimeEntity, bt => bt.blockHeader)
   @JoinColumn({
     name: 'number',
     referencedColumnName: 'number',
   })
-  blockTime?: BlockTimeEntity
+  blockTime!: BlockTimeEntity
 
   @OneToMany(type => TransactionEntity, tx => tx.blockHeader)
   @JoinColumn({
