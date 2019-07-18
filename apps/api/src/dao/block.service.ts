@@ -45,7 +45,7 @@ export class BlockService {
     if (blocks.length === 0) return null
 
     const avgBlockTime = blocks
-      .map(b => b.blockTime!!.blockTime)
+      .map(b => b.blockTime.blockTime)
       .reduceRight((memo, next) => memo.plus(next || 0), new BigNumber(0))
       .dividedBy(blocks.length)
 
