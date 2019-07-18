@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat class="pt-3 mt-0">
+  <v-card color="white" flat class="pt-3 pb-2 mt-0">
     <!--
     =====================================================================================
       TITLE
@@ -26,17 +26,8 @@
         </v-layout>
       </v-flex>
     </v-layout>
-    <v-layout v-else row wrap align-center pb-1 pr-2 pl-2>
-      <v-flex xs8 md7>
-        <v-card-title class="title font-weight-bold pl-0">{{ $t('block.last') }}</v-card-title>
-      </v-flex>
-      <v-spacer />
-      <v-flex xs4 md1>
-        <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('btn.view-all') }}</v-btn>
-        </v-layout>
-      </v-flex>
-    </v-layout>
+    <app-table-title v-else  :title="$t('block.last')" pageLink="/blocks" />
+
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -126,6 +117,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -143,6 +135,7 @@ const MAX_ITEMS = 50
     AppFootnotes,
     AppInfoLoad,
     AppPaginate,
+    AppTableTitle,
     TableBlocksRow,
     NoticeNewBlock
   },

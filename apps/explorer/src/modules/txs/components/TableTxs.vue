@@ -1,14 +1,16 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
+  <v-card color="white" flat class="pt-3 pb-2">
     <!--
     =====================================================================================
       TITLE
     =====================================================================================
     -->
-    <v-layout row wrap align-end>
-      <v-flex xs12 md6 lg5 xl4 pr-0>
+    <app-table-title v-if="pageType == 'home'" :title="getTitle" page-link="/txs" />
+    <v-layout v-else row wrap align-end>
+      <!-- Address Page -->
+      <v-flex v-if="isAddressDetail" xs12 md6 lg5 xl4 pr-0>
         <!-- Tx Input Filter -->
-        <v-layout v-if="isAddressDetail" row align-center justify-start fill-height height="40px">
+        <v-layout  row align-center justify-start fill-height height="40px">
           <v-flex shrink>
             <p class="pr-2 pl-2 ma-0">{{ $t('filter.view') }}:</p>
           </v-flex>
@@ -19,23 +21,20 @@
           </v-flex>
         </v-layout>
         <!-- End Tx Input Filter -->
-        <v-layout v-else align-end justify-start row fill-height>
+      </v-flex>
+      <!-- Txs Page -->
+      <v-flex v-else xs12 md6 lg5 xl4 pr-0>
+         <v-layout align-end justify-start row fill-height>
           <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
           <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
         </v-layout>
       </v-flex>
-      <v-flex xs5 md6 lg7 xl8 v-if="pageType == 'home'">
-        <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('btn.view-all') }}</v-btn>
-        </v-layout>
-      </v-flex>
-      <v-flex v-else xs12 md6 lg7 xl8>
+      <v-flex>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
-
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
     <app-error :has-error="hasError" :message="error" class="mb-4" />
 
@@ -44,7 +43,7 @@
       TABLE HEADER
     =====================================================================================
     -->
-    <v-layout>
+    <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" :color="headerColor" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
@@ -82,7 +81,7 @@
       </v-layout>
     </v-card>
     <div v-else>
-      <v-card flat v-if="!hasError" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+      <v-card flat v-if="!hasError" :style="getStyle" class="scroll-y pa-2" style="overflow-x: hidden">
         <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
@@ -130,6 +129,7 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
@@ -156,8 +156,9 @@ class TableTxsMixin extends Vue {
     AppError,
     AppFootnotes,
     AppPaginate,
+    AppTableTitle,
     TableTxsRow,
-    NoticeNewBlock
+    NoticeNewBlock,
   },
   data() {
     return {
