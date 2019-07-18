@@ -13,14 +13,18 @@ export class DateScalar {
   serialize(value) {
     if (value instanceof Date) {
       return value.getTime() // value sent to the client
+    } else {
+      throw new GraphQLError(`Value should be Date. Type = ${typeof value}, value = ${value}`)
     }
-    return new GraphQLError(`Value should be Date: ${typeof value}`)
+
   }
 
   parseLiteral(ast) {
     if (ast.kind === Kind.INT) {
       return parseInt(ast.value, 10) // ast value is always in string format
+    } else {
+      throw new GraphQLError(`Value should be INT. Type = ${typeof ast.value}, value = ${ast.value}`)
     }
-    return new GraphQLError('Should be INT')
+
   }
 }

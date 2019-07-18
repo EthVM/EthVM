@@ -319,14 +319,14 @@ export interface Metadata {
 
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
-    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
-    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
-    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
+    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
+    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
+    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     metadata(): Metadata | Promise<Metadata>;
@@ -342,16 +342,16 @@ export interface IQuery {
     tokensMetadata(symbols?: string[], names?: string[], addresses?: string[], offset?: number, limit?: number): TokenMetadataPage | Promise<TokenMetadataPage>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
     tokenDetailByAddress(address: string): TokenDetail | Promise<TokenDetail>;
-    transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    tx(hash: string): Transaction | Promise<Transaction>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
     tokenTransfersByContractAddress(contractAddress: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
+    transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    tx(hash: string): Transaction | Promise<Transaction>;
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
@@ -390,11 +390,11 @@ export interface Search {
 }
 
 export interface ISubscription {
+    newBlock(): BlockSummary | Promise<BlockSummary>;
+    hashRate(): BigNumber | Promise<BigNumber>;
     newBlockMetric(): BlockMetric | Promise<BlockMetric>;
     newBlockMetricsTransaction(): BlockMetricsTransaction | Promise<BlockMetricsTransaction>;
     newBlockMetricsTransactionFee(): BlockMetricsTransactionFee | Promise<BlockMetricsTransactionFee>;
-    newBlock(): BlockSummary | Promise<BlockSummary>;
-    hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
     newTransactions(): TransactionSummary[] | Promise<TransactionSummary[]>;
