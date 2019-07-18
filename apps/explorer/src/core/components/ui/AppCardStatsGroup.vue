@@ -48,6 +48,11 @@ import { Subscription } from 'rxjs'
 import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
 const BIG_NUMBER_ONE = new BigNumber(1)
+enum HashUnits {
+  th = 'Th/s',
+  gh = 'Gh/s',
+  mh = 'Mh/s'
+}
 
 @Component({
   components: {
@@ -181,31 +186,31 @@ export default class AppInfoCardGroup extends Vue {
     }, 1000)
   }
 
-  calculateUnits(value: BigNumber): string {
+  calculateHashUnits(value: BigNumber): HashUnits {
 
-    const { calculateValue } = this
+    const { adjustValueForHashUnits } = this
 
-    // Determine the lowest unit that will show value as 1 or greater
+    // Determine the smallest unit that will show value as 1 or greater
 
-    if (calculateValue(value, 'Th/s') >= BIG_NUMBER_ONE) {
-      return 'Th/s'
+    if (adjustValueForHashUnits(value, HashUnits.th) >= BIG_NUMBER_ONE) {
+      return HashUnits.th
     }
 
-    if (calculateValue(value, 'Gh/s') >= BIG_NUMBER_ONE) {
-      return 'Gh/s'
+    if (adjustValueForHashUnits(value, HashUnits.gh) >= BIG_NUMBER_ONE) {
+      return HashUnits.gh
     }
 
-    return 'Mh/s' // Default to megahash
+    return HashUnits.mh // Default to megahash
   }
 
-  calculateValue(value: BigNumber, units: string): BigNumber {
+  adjustValueForHashUnits(value: BigNumber, units: HashUnits): BigNumber {
 
     switch (units) {
-      case 'Th/s':
+      case HashUnits.th:
         return value.div(1e12)
-      case 'Gh/s':
+      case HashUnits.gh:
         return value.div(1e8)
-      case 'Mh/s':
+      case HashUnits.mh:
         return value.div(1e4)
       default:
         throw new Error(`Invalid unit: ${units}`)
@@ -237,35 +242,35 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get latestHashRate(): string {
-    const { loading, loadingMessage, hashRate, calculateValue, calculateUnits } = this
+    const { loading, loadingMessage, hashRate, adjustValueForHashUnits, calculateHashUnits } = this
     return !loading && hashRate
-      ? calculateValue(hashRate, calculateUnits(hashRate))
+      ? adjustValueForHashUnits(hashRate, calculateHashUnits(hashRate))
           .decimalPlaces(4)
           .toString()
       : loadingMessage
   }
 
-  get latestHashUnits(): string {
-    const { loading, hashRate, calculateUnits } = this
+  get latestHashUnits(): HashUnits {
+    const { loading, hashRate, calculateHashUnits } = this
     return !loading && hashRate
-      ? calculateUnits(hashRate)
-      : 'Th/s'
+      ? calculateHashUnits(hashRate)
+      : HashUnits.th
   }
 
   get latestDifficulty(): string {
-    const { loading, loadingMessage, blockSummary, calculateValue, calculateUnits } = this
+    const { loading, loadingMessage, blockSummary, adjustValueForHashUnits, calculateHashUnits } = this
     return !loading && blockSummary
-      ? calculateValue(blockSummary.difficultyBN, calculateUnits(blockSummary.difficultyBN))
+      ? adjustValueForHashUnits(blockSummary.difficultyBN, calculateHashUnits(blockSummary.difficultyBN))
           .decimalPlaces(4)
           .toString()
       : loadingMessage
   }
 
-  get latestDifficultyUnits(): string {
-    const { loading, blockSummary, calculateUnits } = this
+  get latestDifficultyUnits(): HashUnits {
+    const { loading, blockSummary, calculateHashUnits } = this
     return !loading && blockSummary
-      ? calculateUnits(blockSummary.difficultyBN)
-      : 'Th/s'
+      ? calculateHashUnits(blockSummary.difficultyBN)
+      : HashUnits.th
   }
 
   get latestBlockSuccessTxs(): string {
