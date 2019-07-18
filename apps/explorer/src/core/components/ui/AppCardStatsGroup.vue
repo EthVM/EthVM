@@ -48,7 +48,7 @@ import { Subscription } from 'rxjs'
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
 interface HashUnit {
-  unit: HashUnitLabel,
+  unit: HashUnitLabel
   divisor: number
 }
 enum HashUnitLabel {
@@ -134,11 +134,7 @@ export default class AppInfoCardGroup extends Vue {
 
   disconnected: boolean = false
 
-  hashUnits: HashUnit[] = [
-    { unit: HashUnitLabel.th, divisor: 1e12 },
-    { unit: HashUnitLabel.gh, divisor: 1e9 },
-    { unit: HashUnitLabel.mh, divisor: 1e6 }
-    ]
+  hashUnits: HashUnit[] = [{ unit: HashUnitLabel.th, divisor: 1e12 }, { unit: HashUnitLabel.gh, divisor: 1e9 }, { unit: HashUnitLabel.mh, divisor: 1e6 }]
 
   /*
     ===================================================================================
@@ -196,7 +192,6 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   calculateHashValueAndLabel(value?: BigNumber): [BigNumber | undefined, HashUnitLabel] {
-
     const { hashUnits } = this
 
     if (!value) {
@@ -209,7 +204,6 @@ export default class AppInfoCardGroup extends Vue {
     let hashUnit
 
     for (const unit of hashUnits) {
-
       result = value.div(unit.divisor)
 
       if (result.isGreaterThan(1)) {
