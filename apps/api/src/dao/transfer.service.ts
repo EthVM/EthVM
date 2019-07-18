@@ -171,7 +171,6 @@ export class TransferService {
     // https://dba.stackexchange.com/questions/192553/calculate-running-sum-of-each-row-from-start-even-when-filtering-records
     const builder = this.deltaRepository.createQueryBuilder('t')
       .leftJoinAndSelect('t.transaction', 'transaction')
-      .select()
       .addSelect('*, SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance')
       .where('t.contract_address = :address')
       .andWhere('t.address = :holder')
