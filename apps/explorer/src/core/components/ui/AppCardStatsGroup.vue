@@ -45,9 +45,8 @@ import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@a
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
-import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 
-const BIG_NUMBER_ONE = new BigNumber(1)
 interface HashUnit {
   unit: HashUnitLabel,
   divisor: number
@@ -136,9 +135,9 @@ export default class AppInfoCardGroup extends Vue {
   disconnected: boolean = false
 
   hashUnits: HashUnit[] = [
-    { unit: HashUnitLabel.mh, divisor: 1e4 },
-    { unit: HashUnitLabel.gh, divisor: 1e8 },
-    { unit: HashUnitLabel.th, divisor: 1e12 }
+    { unit: HashUnitLabel.th, divisor: 1e12 },
+    { unit: HashUnitLabel.gh, divisor: 1e9 },
+    { unit: HashUnitLabel.mh, divisor: 1e6 }
     ]
 
   /*
@@ -213,16 +212,16 @@ export default class AppInfoCardGroup extends Vue {
 
       result = value.div(unit.divisor)
 
-      if (result.isLessThan(1000)) {
+      if (result.isGreaterThan(1)) {
         hashUnit = unit.unit
-        break;
+        break
       }
     }
 
     // Default to smallest
 
     if (!hashUnit) {
-      const smallestUnit = hashUnits[0]
+      const smallestUnit = hashUnits[hashUnits.length - 1]
       hashUnit = smallestUnit.unit
       result = value.div(smallestUnit.divisor)
     }
@@ -261,7 +260,7 @@ export default class AppInfoCardGroup extends Vue {
   get latestHashRate(): string {
     const { loadingMessage, latestHashRateValueAndLabel } = this
     const hashRate = latestHashRateValueAndLabel[0]
-    return hashRate ? hashRate.decimalPlaces(4).toString() : loadingMessage
+    return hashRate ? hashRate.decimalPlaces(2).toString() : loadingMessage
   }
 
   get latestHashUnits(): HashUnitLabel {
@@ -277,7 +276,7 @@ export default class AppInfoCardGroup extends Vue {
   get latestDifficulty(): string {
     const { loadingMessage, latestDifficultyValueAndLabel } = this
     const difficulty = latestDifficultyValueAndLabel[0]
-    return difficulty ? difficulty.decimalPlaces(4).toString() : loadingMessage
+    return difficulty ? difficulty.decimalPlaces(2).toString() : loadingMessage
   }
 
   get latestDifficultyUnits(): HashUnitLabel {

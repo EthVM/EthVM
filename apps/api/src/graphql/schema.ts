@@ -319,14 +319,14 @@ export interface Metadata {
 
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
+    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
+    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
+    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
-    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
-    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
-    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     contractByAddress(address: string): Contract | Promise<Contract>;
     contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
     metadata(): Metadata | Promise<Metadata>;
@@ -390,11 +390,11 @@ export interface Search {
 }
 
 export interface ISubscription {
-    newBlock(): BlockSummary | Promise<BlockSummary>;
-    hashRate(): BigNumber | Promise<BigNumber>;
     newBlockMetric(): BlockMetric | Promise<BlockMetric>;
     newBlockMetricsTransaction(): BlockMetricsTransaction | Promise<BlockMetricsTransaction>;
     newBlockMetricsTransactionFee(): BlockMetricsTransactionFee | Promise<BlockMetricsTransactionFee>;
+    newBlock(): BlockSummary | Promise<BlockSummary>;
+    hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
     newTransactions(): TransactionSummary[] | Promise<TransactionSummary[]>;
