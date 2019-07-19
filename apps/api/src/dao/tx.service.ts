@@ -181,6 +181,7 @@ export class TxService {
           where,
           skip: offset,
           take: limit,
+          order: {blockNumber: 'DESC', transactionIndex: 'DESC'},
           cache: true,
         })
 
