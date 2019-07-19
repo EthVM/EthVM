@@ -5,11 +5,7 @@
       TITLE
     =====================================================================================
     -->
-    <app-table-title
-      :page-type="pageType"
-      :title="getTitle"
-      page-link="/blocks"
-    >
+    <app-table-title :page-type="pageType" :title="getTitle" page-link="/blocks">
       <template v-slot:update>
         <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
       </template>
@@ -39,13 +35,7 @@
     -->
     <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
-        <v-card
-          v-if="!hasError"
-          color="info"
-          flat
-          class="white--text pl-3 pr-1 table-blocks-header-card"
-          height="40px"
-        >
+        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1 table-blocks-header-card" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex sm2>
               <h5>{{ $t('block.number') }}</h5>
@@ -77,15 +67,7 @@
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
             <div :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile ma-2' : '']">
-              <v-layout
-                grid-list-xs
-                row
-                wrap
-                align-center
-                justify-start
-                fill-height
-                class="pl-4 pr-4 pt-2"
-              >
+              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-4 pr-4 pt-2">
                 <v-flex xs4 sm2>
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>

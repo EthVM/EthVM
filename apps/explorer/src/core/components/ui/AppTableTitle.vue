@@ -6,12 +6,7 @@
       </v-flex>
       <v-spacer />
       <v-flex shrink>
-        <v-btn
-          outline
-          color="secondary"
-          class="text-capitalize ma-0"
-          :to="pageLink"
-        >{{ $t('btn.view-all') }}</v-btn>
+        <v-btn outline color="secondary" class="text-capitalize ma-0" :to="pageLink">{{ $t('btn.view-all') }}</v-btn>
       </v-flex>
     </v-layout>
     <v-layout v-else align-center row wrap fill-height pa-2>
@@ -23,14 +18,11 @@
       </v-flex>
       <v-spacer />
       <v-flex shrink hidden-xs-only>
-
         <slot name="pagination" />
-
       </v-flex>
       <v-flex xs12 hidden-sm-and-up>
         <v-layout align-center justify-center pa-2>
-
-        <slot name="pagination" />
+          <slot name="pagination" />
         </v-layout>
       </v-flex>
     </v-layout>
@@ -58,9 +50,7 @@ export default class AppTableTitle extends Vue {
   */
 
   get isHome(): boolean {
-    console.log(this.pageType)
     return this.pageType === 'home'
   }
 }
 </script>
-

@@ -29,7 +29,6 @@ export default class NoticeNewBlock extends Vue {
   onReload() {
     this.$emit('reload')
     this.display = false
-    console.log(this.display)
   }
 
   get buttonText(): TranslateResult {

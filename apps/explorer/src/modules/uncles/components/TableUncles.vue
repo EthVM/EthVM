@@ -5,15 +5,12 @@
       TITLE
     =====================================================================================
     -->
-    <app-table-title
-      :page-type="pageType"
-      :title="$tc('uncle.name', 2)"
-    >
+    <app-table-title :page-type="pageType" :title="$tc('uncle.name', 2)">
       <template v-slot:update>
-            <notice-new-block @reload="resetFromUncle" />
+        <notice-new-block @reload="resetFromUncle" />
       </template>
       <template v-slot:pagination v-if="pages > 1 && !hasError">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </template>
     </app-table-title>
     <!--
