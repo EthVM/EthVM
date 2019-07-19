@@ -34,9 +34,9 @@
       <v-flex shrink hidden-sm-and-down>
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
-      <v-flex xs12 hidden-md-and-up >
-          <v-layout align-center justify-center pa-2>
-        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      <v-flex xs12 hidden-md-and-up>
+        <v-layout align-center justify-center pa-2>
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
