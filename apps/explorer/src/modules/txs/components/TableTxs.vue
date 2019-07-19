@@ -5,12 +5,22 @@
       TITLE
     =====================================================================================
     -->
-    <app-table-title v-if="pageType == 'home'" :title="getTitle" page-link="/txs" />
-    <v-layout v-else row wrap align-end>
-      <!-- Address Page -->
+
+    <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs" >
+      <template v-slot:update>
+                    <notice-new-block :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
+
+      </template>
+      <template v-slot:pagination v-if="pages > 1 && !hasError" >
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      </template>
+    </app-table-title>
+    <!-- Address Page -->
+    <v-layout v-else row wrap align-center>
+
       <v-flex v-if="isAddressDetail" xs12 md6 lg5 xl4 pr-0>
         <!-- Tx Input Filter -->
-        <v-layout  row align-center justify-start fill-height height="40px">
+        <v-layout row align-center justify-start fill-height height="40px">
           <v-flex shrink>
             <p class="pr-2 pl-2 ma-0">{{ $t('filter.view') }}:</p>
           </v-flex>
@@ -22,14 +32,7 @@
         </v-layout>
         <!-- End Tx Input Filter -->
       </v-flex>
-      <!-- Txs Page -->
-      <v-flex v-else xs12 md6 lg5 xl4 pr-0>
-         <v-layout align-end justify-start row fill-height>
-          <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
-          <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
-        </v-layout>
-      </v-flex>
-      <v-flex>
+      <v-flex shrink>
         <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>

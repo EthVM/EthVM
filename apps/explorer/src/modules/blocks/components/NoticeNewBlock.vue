@@ -1,5 +1,5 @@
 <template>
-  <v-btn flat class="new-block-alert text-capitalize" @click="onReload" v-if="display">
+  <v-btn flat class="new-block-alert text-capitalize  ma-0" @click="onReload" v-if="display">
     {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon>
   </v-btn>
 </template>
@@ -29,6 +29,7 @@ export default class NoticeNewBlock extends Vue {
   onReload() {
     this.$emit('reload')
     this.display = false
+    console.log(this.display)
   }
 
   get buttonText(): TranslateResult {

@@ -1,17 +1,37 @@
 <template>
   <div>
-    <v-layout align-center justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
+    <v-layout v-if="isHome" align-center justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
       <v-flex xs6>
         <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
       </v-flex>
       <v-spacer />
       <v-flex shrink>
-          <v-btn
-            outline
-            color="secondary"
-            class="text-capitalize ma-0"
-            :to="pageLink"
-          >{{ $t('btn.view-all') }}</v-btn>
+        <v-btn
+          outline
+          color="secondary"
+          class="text-capitalize ma-0"
+          :to="pageLink"
+        >{{ $t('btn.view-all') }}</v-btn>
+      </v-flex>
+    </v-layout>
+    <v-layout v-else align-center row wrap fill-height pa-2>
+      <v-flex grow class="title-live">
+        <v-layout align-center justify-start row wrap pa-2>
+          <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
+          <slot name="update" />
+        </v-layout>
+      </v-flex>
+      <v-spacer />
+      <v-flex shrink hidden-xs-only>
+
+        <slot name="pagination" />
+
+      </v-flex>
+      <v-flex xs12 hidden-sm-and-up>
+        <v-layout align-center justify-center pa-2>
+
+        <slot name="pagination" />
+        </v-layout>
       </v-flex>
     </v-layout>
   </div>
@@ -29,7 +49,18 @@ export default class AppTableTitle extends Vue {
 
   @Prop(String) title?: string
   @Prop(String) pageLink?: string
+  @Prop({ type: String, default: 'home' }) pageType!: string
 
+  /*
+    ===================================================================================
+      Computed
+    ==================================================================================
+  */
+
+  get isHome(): boolean {
+    console.log(this.pageType)
+    return this.pageType === 'home'
+  }
 }
 </script>
 
