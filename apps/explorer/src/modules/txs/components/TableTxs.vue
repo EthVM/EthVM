@@ -88,7 +88,7 @@
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
-            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
+            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pt-2 pr-2 pl-2">
               <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
             </v-layout>
             <v-card v-if="!transactions.length" flat>
