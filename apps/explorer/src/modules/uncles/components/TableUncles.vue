@@ -5,23 +5,17 @@
       TITLE
     =====================================================================================
     -->
-    <v-layout align-end justify-space-between row wrap fill-height pb-1>
-      <v-flex xs12 sm6>
-        <v-layout row wrap align-center justify-center>
-          <v-flex shrink>
-            <v-card-title class="title font-weight-bold">{{ $tc('uncle.name', 2) }}</v-card-title>
-          </v-flex>
-          <v-flex>
+    <app-table-title
+      :page-type="pageType"
+      :title="$tc('uncle.name', 2)"
+    >
+      <template v-slot:update>
             <notice-new-block @reload="resetFromUncle" />
-          </v-flex>
-        </v-layout>
-      </v-flex>
-      <v-flex xs12 sm6 v-if="pages > 1">
-        <v-layout justify-end class="pb-1 pr-2 pl-2">
+      </template>
+      <template v-slot:pagination v-if="pages > 1 && !hasError">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
-        </v-layout>
-      </v-flex>
-    </v-layout>
+      </template>
+    </app-table-title>
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -105,6 +99,7 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
@@ -118,6 +113,7 @@ import { Subscription } from 'rxjs'
     AppError,
     AppInfoLoad,
     AppPaginate,
+    AppTableTitle,
     TableUnclesRow,
     NoticeNewBlock
   },

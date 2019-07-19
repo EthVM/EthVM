@@ -5,28 +5,25 @@
       TITLE
     =====================================================================================
     -->
-    <v-layout v-if="!isPageHome" align-end justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
-      <v-flex xs12 sm5 md4 class="title-live" pb-0>
-        <v-layout align-end justify-start row fill-height>
-          <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
-          <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
-        </v-layout>
-      </v-flex>
-      <v-spacer />
-      <v-flex xs12 sm7 md5 v-if="pages > 1 && !hasError">
-        <v-layout justify-end row class="pb-2 pr-2 pl-2">
-          <app-paginate
-            :total="pages"
-            @newPage="setPage"
-            :current-page="page"
-            :has-input="!simplePagination"
-            :has-first="!simplePagination"
-            :has-last="!simplePagination"
-          />
-        </v-layout>
-      </v-flex>
-    </v-layout>
-    <app-table-title v-else  :title="$t('block.last')" pageLink="/blocks" />
+    <app-table-title
+      :page-type="pageType"
+      :title="getTitle"
+      page-link="/blocks"
+    >
+      <template v-slot:update>
+        <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
+      </template>
+      <template v-slot:pagination v-if="pages > 1 && !hasError">
+        <app-paginate
+          :total="pages"
+          @newPage="setPage"
+          :current-page="page"
+          :has-input="!simplePagination"
+          :has-first="!simplePagination"
+          :has-last="!simplePagination"
+        />
+      </template>
+    </app-table-title>
 
     <!--
     =====================================================================================
@@ -42,7 +39,13 @@
     -->
     <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
-        <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1 table-blocks-header-card" height="40px">
+        <v-card
+          v-if="!hasError"
+          color="info"
+          flat
+          class="white--text pl-3 pr-1 table-blocks-header-card"
+          height="40px"
+        >
           <v-layout align-center justify-start row fill-height pr-3>
             <v-flex sm2>
               <h5>{{ $t('block.number') }}</h5>
@@ -74,7 +77,15 @@
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
             <div :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile ma-2' : '']">
-              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-4 pr-4 pt-2">
+              <v-layout
+                grid-list-xs
+                row
+                wrap
+                align-center
+                justify-start
+                fill-height
+                class="pl-4 pr-4 pt-2"
+              >
                 <v-flex xs4 sm2>
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
