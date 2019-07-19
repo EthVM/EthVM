@@ -17,8 +17,6 @@ import { TransactionCountEntity } from '@app/orm/entities/transaction-count.enti
 @Injectable()
 export class TxService {
 
-  private zeroBN = new BigNumber(0)
-
   constructor(
     private readonly receiptService: ReceiptService,
     private readonly traceService: TraceService,
@@ -39,7 +37,7 @@ export class TxService {
     const tx = txs[0]
 
     // Partial read checks
-    if (tx.blockNumber > this.zeroBN) {
+    if (tx.blockNumber.isGreaterThan(0)) {
 
       // genesis block has no receipt or traces
 
@@ -338,7 +336,7 @@ export class TxService {
       const txStatus = txStatusByHash.get(tx.hash)
       const { receipt } = tx
 
-      if (tx.blockNumber > this.zeroBN) {
+      if (tx.blockNumber.isGreaterThan(0)) {
 
         // genesis block has no trace or receipt
 
