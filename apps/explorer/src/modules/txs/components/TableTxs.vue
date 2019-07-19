@@ -15,10 +15,10 @@
       </template>
     </app-table-title>
     <!-- Address Page -->
-    <v-layout v-else row wrap align-center>
+    <v-layout v-else row wrap align-center justify space-between pr-2 pl-2>
       <v-flex v-if="isAddressDetail" xs12 md6 lg5 xl4 pr-0>
         <!-- Tx Input Filter -->
-        <v-layout row align-center justify-start fill-height height="40px">
+        <v-layout row align-center justify-start fill-height height="40px" pr-2>
           <v-flex shrink>
             <p class="pr-2 pl-2 ma-0">{{ $t('filter.view') }}:</p>
           </v-flex>
@@ -30,9 +30,13 @@
         </v-layout>
         <!-- End Tx Input Filter -->
       </v-flex>
-      <v-flex shrink>
-        <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      <v-spacer />
+      <v-flex shrink hidden-sm-and-down>
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      </v-flex>
+      <v-flex xs12 hidden-md-and-up >
+          <v-layout align-center justify-center pa-2>
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
