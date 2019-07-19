@@ -275,6 +275,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
         .setTraceLocation(traceLocation)
         .setAddress(action.getAddress())
+        .setCounterpartAddress(action.getRefundAddress())
         .setAmountBI(action.getBalanceBI().negate())
         .build(),
 
