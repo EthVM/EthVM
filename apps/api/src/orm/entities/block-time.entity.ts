@@ -1,8 +1,8 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryColumn} from 'typeorm'
-import {assignClean} from '@app/shared/utils';
-import {BigNumber} from 'bignumber.js';
-import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer';
-import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm'
+import { assignClean } from '@app/shared/utils'
+import { BigNumber } from 'bignumber.js'
+import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
+import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 
 @Entity('canonical_block_time')
 export class BlockTimeEntity {
@@ -15,9 +15,9 @@ export class BlockTimeEntity {
   number!: BigNumber
 
   @Column({type: 'int', readonly: true})
-  blockTime!: number
+  blockTime?: number
 
-  @ManyToOne(type => BlockHeaderEntity, block => block.blockTime)
+  @OneToOne(type => BlockHeaderEntity, block => block.blockTime)
   @JoinColumn({
     name: 'number',
     referencedColumnName: 'number',

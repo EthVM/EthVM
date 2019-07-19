@@ -35,7 +35,7 @@ export class BlockService {
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
     const blocks = await this.blockHeaderRepository
       .find({
-        select: ['number', 'difficulty', 'blockTime'],
+        select: ['number', 'difficulty'],
         relations: ['blockTime'],
         order: { number: 'DESC' },
         take: 20,
@@ -45,7 +45,7 @@ export class BlockService {
     if (blocks.length === 0) return null
 
     const avgBlockTime = blocks
-      .map(b => b.blockTime!!.blockTime)
+      .map(b => b.blockTime.blockTime)
       .reduceRight((memo, next) => memo.plus(next || 0), new BigNumber(0))
       .dividedBy(blocks.length)
 
