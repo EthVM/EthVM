@@ -6,6 +6,7 @@ import {TransactionTraceEntity} from '@app/orm/entities/transaction-trace.entity
 import BigNumber from 'bignumber.js'
 import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer'
 import {ContractEntity} from '@app/orm/entities/contract.entity'
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('canonical_transaction')
 export class TransactionEntity {
@@ -56,7 +57,7 @@ export class TransactionEntity {
   @Column({ type: 'character', length: 78, readonly: true })
   s!: string
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 
   @Column({ type: 'character', length: 66, readonly: true })

@@ -6,6 +6,7 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from '
 import { BigNumber } from 'bignumber.js'
 import { BigNumberTransformer } from '../transformers/big-number.transformer'
 import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('canonical_block_header')
 export class BlockHeaderEntity {
@@ -59,7 +60,7 @@ export class BlockHeaderEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   gasUsed!: BigNumber
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 
   @Column({ type: 'text', readonly: true })
