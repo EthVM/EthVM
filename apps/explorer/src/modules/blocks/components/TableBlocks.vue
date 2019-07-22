@@ -235,17 +235,13 @@ export default class TableBlocks extends Vue {
 
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
-
   @Prop({ type: Number, default: 20 }) maxItems!: number
   @Prop({ type: Boolean, default: false }) simplePagination!: boolean
-
   @Prop({ type: String }) author?: string
 
   page!: number
-
   error: string = ''
   syncing?: boolean
-
   blockPage?: BlockSummaryPageExt
   fromBlock?: BigNumber
 
@@ -352,7 +348,8 @@ export default class TableBlocks extends Vue {
   get getTitle(): string {
     const titles = {
       blocks: this.$i18n.t('block.last'),
-      address: this.$i18n.t('block.mined')
+      address: this.$i18n.t('block.mined'),
+      home: this.$i18n.t('block.last')
     }
     return titles[this.pageType]
   }
