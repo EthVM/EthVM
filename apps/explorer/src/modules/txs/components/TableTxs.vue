@@ -6,7 +6,7 @@
     =====================================================================================
     -->
 
-    <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs" :hasPagination="hasPagination">
+    <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs" :has-pagination="hasPagination">
       <template v-slot:update>
         <notice-new-block :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
       </template>
@@ -423,7 +423,7 @@ export default class TableTxs extends TableTxsMixin {
   }
 
   get hasPagination(): boolean {
-    return (this.pageType !== 'home' && this.pages > 1 && !this.hasError)
+    return this.pageType !== 'home' && this.pages > 1 && !this.hasError
   }
 
   get footnotes(): Footnote[] {

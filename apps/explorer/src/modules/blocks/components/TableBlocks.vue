@@ -5,7 +5,7 @@
       TITLE
     =====================================================================================
     -->
-    <app-table-title :page-type="pageType" :title="getTitle" page-link="/blocks" :hasPagination="hasPagination">
+    <app-table-title :page-type="pageType" :title="getTitle" page-link="/blocks" :has-pagination="hasPagination">
       <template v-slot:update>
         <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
       </template>
@@ -360,7 +360,7 @@ export default class TableBlocks extends Vue {
   }
 
   get hasPagination(): boolean {
-    return (this.pageType !== 'home' && this.pages > 1 && !this.hasError)
+    return this.pageType !== 'home' && this.pages > 1 && !this.hasError
   }
 }
 </script>

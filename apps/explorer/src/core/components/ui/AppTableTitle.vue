@@ -12,9 +12,8 @@
     <v-layout v-else align-center row wrap fill-height pa-2>
       <v-flex grow class="title-live">
         <v-layout align-center justify-start row wrap pa-2>
-          <v-card-title class="title font-weight-bold pl-1 ">{{ title }}
-          </v-card-title>
-           <p v-if="hasCaption" class="info--text pl-1"> {{titleCaption}} </p>
+          <v-card-title class="title font-weight-bold pl-1 ">{{ title }} </v-card-title>
+          <p v-if="hasCaption" class="info--text pl-1">{{ titleCaption }}</p>
           <slot name="update" />
         </v-layout>
       </v-flex>
@@ -44,8 +43,8 @@ export default class AppTableTitle extends Vue {
   @Prop(String) title?: string
   @Prop(String) pageLink?: string
   @Prop({ type: String, default: 'home' }) pageType!: string
-  @Prop({type: String, default: ''}) titleCaption!: string
-  @Prop({type: Boolean, default: false}) hasPagination!: boolean
+  @Prop({ type: String, default: '' }) titleCaption!: string
+  @Prop({ type: Boolean, default: false }) hasPagination!: boolean
 
   /*
     ===================================================================================

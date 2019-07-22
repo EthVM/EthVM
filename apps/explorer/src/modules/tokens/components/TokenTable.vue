@@ -5,7 +5,12 @@
           TITLE
         =====================================================================================
     -->
-    <app-table-title page-type="tokens" :title=" $tc('token.name', 2) " :title-caption="`(Total: ${totalCount } ${$tc('token.name', 2) })`" :hasPagination="hasPagination">
+    <app-table-title
+      page-type="tokens"
+      :title="$tc('token.name', 2)"
+      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"
+      :has-pagination="hasPagination"
+    >
       <template v-slot:pagination v-if="hasPagination">
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </template>
@@ -35,16 +40,10 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(0)">
-                      <v-icon
-                        :class="[isActive(0) ? 'white--text' : 'bttnToken--text']"
-                        small
-                      >fas fa-caret-up</v-icon>
+                      <v-icon :class="[isActive(0) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(1)">
-                      <v-icon
-                        :class="[isActive(1) ? 'white--text' : 'bttnToken--text']"
-                        small
-                      >fas fa-caret-down</v-icon>
+                      <v-icon :class="[isActive(1) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -59,16 +58,10 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(2)">
-                      <v-icon
-                        :class="[isActive(2) ? 'white--text' : 'bttnToken--text']"
-                        small
-                      >fas fa-caret-up</v-icon>
+                      <v-icon :class="[isActive(2) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(3)">
-                      <v-icon
-                        :class="[isActive(3) ? 'white--text' : 'bttnToken--text']"
-                        small
-                      >fas fa-caret-down</v-icon>
+                      <v-icon :class="[isActive(3) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -80,16 +73,10 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(4)">
-                      <v-icon
-                        :class="[isActive(4) ? 'white--text' : 'bttnToken--text']"
-                        small
-                      >fas fa-caret-up</v-icon>
+                      <v-icon :class="[isActive(4) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(5)">
-                      <v-icon
-                        :class="[isActive(5) ? 'white--text' : 'bttnToken--text']"
-                        small
-                      >fas fa-caret-down</v-icon>
+                      <v-icon :class="[isActive(5) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -110,11 +97,8 @@
 
     <v-card flat v-if="!hasError">
       <v-layout column fill-height class="mb-1 pl-2 pr-2">
-        <v-flex xs12 v-if="!loading" >
-          <v-card-text
-            v-if="!tokens.length"
-            class="text-xs-center secondary--text"
-          >{{ $t('message.token.no-tokens') }}</v-card-text>
+        <v-flex xs12 v-if="!loading">
+          <v-card-text v-if="!tokens.length" class="text-xs-center secondary--text">{{ $t('message.token.no-tokens') }}</v-card-text>
           <div v-else v-for="token in tokens" class="transparent" flat :key="token._id">
             <token-table-row :token="token" />
           </div>
@@ -288,7 +272,7 @@ export default class TokenTable extends Vue {
     return this.tokenExchangeRatePage ? Math.ceil(this.tokenExchangeRatePage!.totalCount / this.maxItems) : 0
   }
   get hasPagination(): boolean {
-    return ( this.pages > 1 && !this.hasError)
+    return this.pages > 1 && !this.hasError
   }
 }
 </script>
@@ -299,5 +283,4 @@ export default class TokenTable extends Vue {
   width: 12px;
   margin: 0;
 }
-
 </style>
