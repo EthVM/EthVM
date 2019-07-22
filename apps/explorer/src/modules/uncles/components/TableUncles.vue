@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2 mt-0">
+  <v-card color="white" flat class="pt-3 pb-2 mt-0">
     <!--
     =====================================================================================
       TITLE
@@ -25,7 +25,7 @@
       TABLE HEADER
     =====================================================================================
     -->
-    <v-layout>
+    <v-layout class="pl-2 pr-2">
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
@@ -54,7 +54,7 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-layout column fill-height class="pb-2">
+    <v-layout column fill-height class="pa-2">
       <v-flex xs12 v-if="!loading && !error">
         <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
         <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
