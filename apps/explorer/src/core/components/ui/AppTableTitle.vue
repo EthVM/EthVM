@@ -14,6 +14,7 @@
         <v-layout align-center justify-start row wrap pa-2>
           <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
           <slot name="update" />
+          <slot name="title-caption" />
         </v-layout>
       </v-flex>
       <v-spacer />

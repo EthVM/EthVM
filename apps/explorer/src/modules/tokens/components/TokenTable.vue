@@ -1,36 +1,30 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
+  <v-card color="white" flat class="pt-3 pb-2 mt-0">
     <!--
         =====================================================================================
           TITLE
         =====================================================================================
-        -->
-    <v-layout row wrap align-center pb-1>
-      <v-flex xs12 sm4 md6>
-        <v-layout row align-end justify-start>
-          <v-card-title class="title font-weight-bold">{{ $tc('token.name', 2) }}</v-card-title>
-          <v-card-title class="info--text">(Total: {{ totalCount }} {{ $tc('token.name', 2) }})</v-card-title>
-        </v-layout>
-      </v-flex>
-      <v-spacer />
-      <v-flex xs12 v-if="pages > 1 && !hasError" sm7 md6>
-        <v-layout justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
-        </v-layout>
-      </v-flex>
-    </v-layout>
+    -->
+    <app-table-title page-type="tokens" :title=" $tc('token.name', 2) ">
+      <template v-slot:title-caption>
+        <v-card-title class="info--text">(Total: {{ totalCount }} {{ $tc('token.name', 2) }})</v-card-title>
+      </template>
+      <template v-slot:pagination v-if="pages > 1 && !hasError">
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      </template>
+    </app-table-title>
     <!--
         =====================================================================================
           LOADING / ERROR
         =====================================================================================
-        -->
+    -->
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
     <!-- <app-error v-if="hasError" :has-error="hasError" :message="error" class="mb-4" /> -->
     <!--
         =====================================================================================
           TABLE HEADER
         =====================================================================================
-        -->
+    -->
     <v-layout>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-4 pr-1" height="40px">
@@ -44,10 +38,16 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(0)">
-                      <v-icon :class="[isActive(0) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon
+                        :class="[isActive(0) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(1)">
-                      <v-icon :class="[isActive(1) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon
+                        :class="[isActive(1) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -62,10 +62,16 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(2)">
-                      <v-icon :class="[isActive(2) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon
+                        :class="[isActive(2) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(3)">
-                      <v-icon :class="[isActive(3) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon
+                        :class="[isActive(3) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -77,10 +83,16 @@
                 <v-flex>
                   <v-layout align-start justify-center column>
                     <v-btn flat icon @click="selectFilter(4)">
-                      <v-icon :class="[isActive(4) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-up</v-icon>
+                      <v-icon
+                        :class="[isActive(4) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-up</v-icon>
                     </v-btn>
                     <v-btn flat icon @click="selectFilter(5)">
-                      <v-icon :class="[isActive(5) ? 'white--text' : 'bttnToken--text']" small>fas fa-caret-down</v-icon>
+                      <v-icon
+                        :class="[isActive(5) ? 'white--text' : 'bttnToken--text']"
+                        small
+                      >fas fa-caret-down</v-icon>
                     </v-btn>
                   </v-layout>
                 </v-flex>
@@ -97,12 +109,15 @@
         =====================================================================================
           TABLE BODY
         =====================================================================================
-        -->
+    -->
 
     <v-card flat v-if="!hasError">
       <v-layout column fill-height class="mb-1">
         <v-flex xs12 v-if="!loading">
-          <v-card-text v-if="!tokens.length" class="text-xs-center secondary--text">{{ $t('message.token.no-tokens') }}</v-card-text>
+          <v-card-text
+            v-if="!tokens.length"
+            class="text-xs-center secondary--text"
+          >{{ $t('message.token.no-tokens') }}</v-card-text>
           <div v-else v-for="token in tokens" class="transparent" flat :key="token._id">
             <token-table-row :token="token" />
           </div>
@@ -123,6 +138,7 @@
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
 import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
 import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
@@ -134,6 +150,7 @@ import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-
   components: {
     AppError,
     AppPaginate,
+    AppTableTitle,
     TokenFilter,
     TokenTableRow,
     TokenTableRowLoading
@@ -198,10 +215,10 @@ export default class TokenTable extends Vue {
   @Prop(Number!) maxItems!: number
 
   /*
-      ===================================================================================
-        Initial Data
-      ===================================================================================
-      */
+  ===================================================================================
+    Initial Data
+  ===================================================================================
+  */
 
   selectedFilter = 0
   page!: number
@@ -212,10 +229,10 @@ export default class TokenTable extends Vue {
   tokenExchangeRatePage?: TokenExchangeRatePageExt
 
   /*
-      ===================================================================================
-        Methods
-      ===================================================================================
-      */
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
 
   selectFilter(_value: number): void {
     this.selectedFilter = _value
@@ -249,10 +266,10 @@ export default class TokenTable extends Vue {
   }
 
   /*
-      ===================================================================================
-        Computed Values
-      ===================================================================================
-      */
+  ===================================================================================
+    Computed Values
+  ===================================================================================
+  */
 
   get tokens() {
     return this.tokenExchangeRatePage ? this.tokenExchangeRatePage.items || [] : []
