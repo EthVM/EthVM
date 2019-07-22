@@ -5,10 +5,7 @@
           TITLE
         =====================================================================================
     -->
-    <app-table-title page-type="tokens" :title=" $tc('token.name', 2) ">
-      <template v-slot:title-caption>
-        <v-card-title class="info--text">(Total: {{ totalCount }} {{ $tc('token.name', 2) }})</v-card-title>
-      </template>
+    <app-table-title page-type="tokens" :title=" $tc('token.name', 2) " :title-caption="`(Total: ${totalCount } ${$tc('token.name', 2) })`">
       <template v-slot:pagination v-if="pages > 1 && !hasError">
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </template>
