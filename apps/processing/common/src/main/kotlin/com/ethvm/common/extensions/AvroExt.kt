@@ -474,7 +474,6 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
         // dealing with block and uncle rewards
         deltas + traces.map { it.toFungibleBalanceDeltas(timestamp) }.flatten()
-
       } else {
 
         // all other traces
@@ -489,7 +488,6 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
           .filter { isTraceValid(it.traceAddress, errorTraceAddresses) }
           .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
           .flatten()
-
       }
 
       deltas
@@ -502,12 +500,11 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
       delta.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
         delta.address == delta.counterpartAddress
-
     }
 
 fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {
 
-  if(traceAddress.size - target.size == 0) return true
+  if (traceAddress.size - target.size == 0) return true
 
   return if (!errorTraceAddresses.contains(target)) {
     isTraceValid(traceAddress, errorTraceAddresses, traceAddress.subList(0, target.size + 1))
@@ -515,7 +512,6 @@ fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, t
     false
   }
 }
-
 
 // ------------------------------------------------------------
 // TransactionCountDeltaRecord
