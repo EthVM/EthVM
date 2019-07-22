@@ -346,6 +346,8 @@ services:
   pgweb:
     image: sosedoff/pgweb:0.11.2
     restart: unless-stopped
+    networks:
+      - net
     depends_on:
       - db-principal
       - db-metrics
