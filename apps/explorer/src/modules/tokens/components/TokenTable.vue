@@ -22,7 +22,7 @@
           TABLE HEADER
         =====================================================================================
     -->
-    <v-layout>
+    <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-4 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
@@ -109,8 +109,8 @@
     -->
 
     <v-card flat v-if="!hasError">
-      <v-layout column fill-height class="mb-1">
-        <v-flex xs12 v-if="!loading">
+      <v-layout column fill-height class="mb-1 pl-2 pr-2">
+        <v-flex xs12 v-if="!loading" >
           <v-card-text
             v-if="!tokens.length"
             class="text-xs-center secondary--text"
@@ -299,4 +299,5 @@ export default class TokenTable extends Vue {
   width: 12px;
   margin: 0;
 }
+
 </style>
