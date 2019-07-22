@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js'
 import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer'
 import {ContractEntity} from '@app/orm/entities/contract.entity'
 import { DateTransformer } from '@app/orm/transformers/date.transformer'
+import { BufferTransformer } from '@app/orm/transformers/buffer.transformer'
 
 @Entity('canonical_transaction')
 export class TransactionEntity {
@@ -45,7 +46,7 @@ export class TransactionEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   gas!: BigNumber
 
-  @Column({ type: 'bytea', readonly: true })
+  @Column({ type: 'bytea', readonly: true, transformer: new BufferTransformer() })
   input?: Buffer
 
   @Column({ type: 'bigint', readonly: true })
