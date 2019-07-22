@@ -5,11 +5,11 @@
       TITLE
     =====================================================================================
     -->
-    <app-table-title :page-type="pageType" :title="getTitle" page-link="/blocks">
+    <app-table-title :page-type="pageType" :title="getTitle" page-link="/blocks" :hasPagination="hasPagination">
       <template v-slot:update>
         <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
       </template>
-      <template v-slot:pagination v-if="pages > 1 && !hasError">
+      <template v-slot:pagination v-if="hasPagination">
         <app-paginate
           :total="pages"
           @newPage="setPage"
@@ -62,7 +62,7 @@
           <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
-          <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pt-2 pr-2 pl-2">
+          <v-layout v-if="hasPagination" justify-end row class="pb-1 pt-2 pr-2 pl-2">
             <app-paginate
               :total="pages"
               @newPage="setPage"
@@ -357,6 +357,10 @@ export default class TableBlocks extends Vue {
   get pages(): number {
     const { blockPage, maxItems } = this
     return blockPage ? Math.ceil(blockPage.totalCountBN.div(maxItems).toNumber()) : 0
+  }
+
+  get hasPagination(): boolean {
+    return (this.pageType !== 'home' && this.pages > 1 && !this.hasError)
   }
 }
 </script>

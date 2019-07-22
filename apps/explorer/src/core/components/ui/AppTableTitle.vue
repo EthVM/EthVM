@@ -45,6 +45,7 @@ export default class AppTableTitle extends Vue {
   @Prop(String) pageLink?: string
   @Prop({ type: String, default: 'home' }) pageType!: string
   @Prop({type: String, default: ''}) titleCaption!: string
+  @Prop({type: Boolean, default: false}) hasPagination!: boolean
 
   /*
     ===================================================================================
@@ -54,9 +55,6 @@ export default class AppTableTitle extends Vue {
 
   get isHome(): boolean {
     return this.pageType === 'home'
-  }
-  get hasPagination(): boolean {
-    return this.$slots.pagination ? true : false
   }
 
   get hasCaption(): boolean {

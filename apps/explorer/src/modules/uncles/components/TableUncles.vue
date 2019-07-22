@@ -5,11 +5,11 @@
       TITLE
     =====================================================================================
     -->
-    <app-table-title :page-type="pageType" :title="$tc('uncle.name', 2)">
+    <app-table-title :page-type="pageType" :title="$tc('uncle.name', 2)" :hasPagination="hasPagination">
       <template v-slot:update>
         <notice-new-block @reload="resetFromUncle" />
       </template>
-      <template v-slot:pagination v-if="pages > 1 && !hasError">
+      <template v-slot:pagination v-if="hasPagination">
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </template>
     </app-table-title>
@@ -60,7 +60,7 @@
         <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
         </v-card>
-        <v-layout justify-end v-if="pages > 1" class="pb-1 pt-2 pr-2 pl-2">
+        <v-layout justify-end v-if="hasPagination" class="pb-1 pt-2 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
@@ -281,6 +281,9 @@ export default class TableUncles extends Vue {
   get pages(): number {
     const { unclePage, maxItems } = this
     return unclePage ? Math.ceil(unclePage.totalCountBN.div(maxItems).toNumber()) : 0
+  }
+  get hasPagination(): boolean {
+    return ( this.pages > 1 && !this.hasError)
   }
 }
 </script>

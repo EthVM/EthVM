@@ -6,11 +6,11 @@
     =====================================================================================
     -->
 
-    <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs">
+    <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs" :hasPagination="hasPagination">
       <template v-slot:update>
         <notice-new-block :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
       </template>
-      <template v-slot:pagination v-if="pages > 1 && !hasError">
+      <template v-slot:pagination v-if="hasPagination">
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </template>
     </app-table-title>
@@ -31,11 +31,11 @@
         <!-- End Tx Input Filter -->
       </v-flex>
       <v-spacer />
-      <v-flex shrink hidden-sm-and-down>
+      <v-flex v-if="hasPagination" shrink hidden-sm-and-down>
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
       <v-flex xs12 hidden-md-and-up>
-        <v-layout align-center justify-center pa-2>
+        <v-layout v-if="hasPagination" align-center justify-center pa-2>
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
@@ -92,7 +92,7 @@
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
-            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pt-2 pr-2 pl-2">
+            <v-layout v-if="hasPagination" justify-end row class="pb-1 pt-2 pr-2 pl-2">
               <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
             </v-layout>
             <v-card v-if="!transactions.length" flat>
@@ -420,6 +420,10 @@ export default class TableTxs extends TableTxsMixin {
 
   get pages(): number {
     return this.txPage ? Math.ceil(this.txPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  }
+
+  get hasPagination(): boolean {
+    return (this.pageType !== 'home' && this.pages > 1 && !this.hasError)
   }
 
   get footnotes(): Footnote[] {
