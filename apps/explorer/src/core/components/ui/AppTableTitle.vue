@@ -18,10 +18,10 @@
         </v-layout>
       </v-flex>
       <v-spacer />
-      <v-flex shrink hidden-xs-only>
+      <v-flex v-if="hasPagination" shrink hidden-xs-only>
         <slot name="pagination" />
       </v-flex>
-      <v-flex xs12 hidden-sm-and-up>
+      <v-flex v-if="hasPagination" xs12 hidden-sm-and-up>
         <v-layout align-center justify-center pa-2>
           <slot name="pagination" />
         </v-layout>
@@ -51,7 +51,11 @@ export default class AppTableTitle extends Vue {
   */
 
   get isHome(): boolean {
+    console.log (this.$slots)
     return this.pageType === 'home'
+  }
+  get hasPagination(): boolean {
+    return this.$slots.pagination ? true : false
   }
 }
 </script>
