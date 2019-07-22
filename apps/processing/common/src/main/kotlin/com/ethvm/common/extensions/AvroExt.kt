@@ -471,24 +471,47 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
       val timestamp = DateTime(getTimestamp())
 
       deltas = if (key.second == null) {
+
         // dealing with block and uncle rewards
         deltas + traces.map { it.toFungibleBalanceDeltas(timestamp) }.flatten()
       } else {
 
         // all other traces
-        val root = traces.first { it.traceAddress.isEmpty() }
 
-        deltas + when (root.hasError()) {
-          true -> emptyList()
-          false -> traces
-            .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
-            .flatten()
-        }
+        val errorTraceAddresses = traces
+          .filter { it.hasError() }
+          .map { it.traceAddress }
+          .toSet()
+
+        deltas + traces
+          .filterNot { it.hasError() }
+          .filter { isTraceValid(it.traceAddress, errorTraceAddresses) }
+          .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
+          .flatten()
       }
 
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null }
+    .filterNot { delta ->
+
+      // when a contract self destructs and the refund address is itself we must filter
+      // NOTE this is the only way to destroy ether!!
+
+      delta.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
+        delta.address == delta.counterpartAddress
+    }
+
+fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {
+
+  if (traceAddress.size - target.size == 0) return true
+
+  return if (!errorTraceAddresses.contains(target)) {
+    isTraceValid(traceAddress, errorTraceAddresses, traceAddress.subList(0, target.size + 1))
+  } else {
+    false
+  }
+}
 
 // ------------------------------------------------------------
 // TransactionCountDeltaRecord

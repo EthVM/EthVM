@@ -318,10 +318,10 @@ export interface Metadata {
 }
 
 export interface IQuery {
-    accountByAddress(address: string): Account | Promise<Account>;
     blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
     blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
+    accountByAddress(address: string): Account | Promise<Account>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
