@@ -27,7 +27,7 @@ export interface blockByHash_blockDetail_header {
   gasUsed: any;
   timestamp: any;
   size: number;
-  blockTime: number;
+  blockTime: number | null;
 }
 
 export interface blockByHash_blockDetail_rewards {

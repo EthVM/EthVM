@@ -6,8 +6,8 @@ import { Erc721BalanceEntity } from '../../orm/entities/erc721-balance.entity'
 import { TokenResolvers } from './token.resolvers'
 import { TokenService } from '../../dao/token.service'
 import { TokenHolderDto } from './dto/token-holder.dto'
-import { TokenDto } from './dto/token.dto'
-import { TokenPageDto } from './dto/token-page.dto'
+import { TokenBalanceDto } from './dto/token-balance.dto'
+import { TokenBalancePageDto } from './dto/token-balance-page.dto'
 import BigNumber from 'bignumber.js'
 import { CoinExchangeRateEntity } from '../../orm/entities/coin-exchange-rate.entity'
 import { ExchangeRatePair, TokenExchangeRateFilter } from '../schema'
@@ -17,6 +17,8 @@ import { TokenExchangeRatePageDto } from './dto/token-exchange-rate-page.dto'
 import { TokenExchangeRateDto } from './dto/token-exchange-rate.dto'
 import { TokenMetadataDto } from './dto/token-metadata.dto'
 import { MetadataService } from '../../dao/metadata.service'
+import { TokenMetadataEntity } from '../../orm/entities/token-metadata.entity'
+import { Erc20MetadataEntity } from '../../orm/entities/erc20-metadata.entity'
 
 const contractAddressOne = '0000000000000000000000000000000000000001'
 const contractAddressTwo = '0000000000000000000000000000000000000002'
@@ -30,74 +32,116 @@ const holderThree = '0x000000000000000000000000000000000000003'
 const holderFour = '0x000000000000000000000000000000000000004'
 const holderFive = '0x000000000000000000000000000000000000005'
 
-const tokenMetadataOne =  {
+const tokenMetadataOne: Erc20MetadataEntity =  {
   name: 'Token 1',
   symbol: 'T1',
-  address: contractAddressOne,
-  currentPrice: 1
+  address: contractAddressOne
 }
-const tokenMetadataTwo = {
+const tokenMetadataTwo: Erc20MetadataEntity = {
   name: 'Token 2',
   symbol: 'T2',
-  address: contractAddressTwo,
-  currentPrice: 2
+  address: contractAddressTwo
 }
-const tokenMetadataThree = {
+const tokenMetadataThree: Erc20MetadataEntity = {
   name: 'Token 3',
   symbol: 'T3',
-  address: contractAddressThree,
-  currentPrice: 3
+  address: contractAddressThree
 }
 
-const erc20Metadata = [
+const tokenMetadata = [
   tokenMetadataOne,
   tokenMetadataTwo,
   tokenMetadataThree
 ]
 
+const tokenExchangeRates: TokenExchangeRateEntity[] = [
+  {
+    address: contractAddressOne,
+    currentPrice: new BigNumber(1),
+    totalVolume: new BigNumber(1000),
+    marketCap: new BigNumber(10),
+    marketCapRank: 1,
+    symbol: 'T1',
+    name: 'Token 1'
+  },
+  {
+    address: contractAddressTwo,
+    currentPrice: new BigNumber(2),
+    totalVolume: new BigNumber(2000),
+    marketCap: new BigNumber(9),
+    marketCapRank: 2,
+    symbol: 'T2',
+    name: 'Token 2'
+  },
+  {
+    address: contractAddressThree,
+    currentPrice: new BigNumber(3),
+    totalVolume: new BigNumber(3000),
+    marketCap: new BigNumber(8),
+    marketCapRank: 3,
+    symbol: 'T3',
+    name: 'Token 3'
+  },
+  {
+    address: contractAddressFour,
+    currentPrice: new BigNumber(4),
+    totalVolume: new BigNumber(4000),
+    marketCap: new BigNumber(7),
+    marketCapRank: 4,
+    symbol: 'T4',
+    name: 'Token 4'
+  }
+]
 
-const erc20Balances = [
+const erc20Balances: Erc20BalanceEntity[] = [
   {
     address: holderOne,
-    amount: 100,
+    amount: new BigNumber(100),
     contract: contractAddressOne,
-    metadata: tokenMetadataOne
+    metadata: tokenMetadataOne,
+    tokenExchangeRate: tokenExchangeRates[0]
   },
   {
     address: holderTwo,
-    amount: 200,
+    amount: new BigNumber(200),
     contract: contractAddressOne,
-    metadata: tokenMetadataOne
+    metadata: tokenMetadataOne,
+    tokenExchangeRate: tokenExchangeRates[0]
   },
   {
     address: holderOne,
-    amount: 300,
+    amount: new BigNumber(300),
     contract: contractAddressTwo,
-    metadata: tokenMetadataTwo
+    metadata: tokenMetadataTwo,
+    tokenExchangeRate: tokenExchangeRates[1]
   },
   {
     address: holderTwo,
-    amount: 100,
+    amount: new BigNumber(100),
     contract: contractAddressTwo,
-    metadata: tokenMetadataTwo
+    metadata: tokenMetadataTwo,
+    tokenExchangeRate: tokenExchangeRates[1]
     },
   {
     address: holderThree,
-    amount: 500,
+    amount: new BigNumber(400),
     contract: contractAddressTwo,
-    metadata: tokenMetadataTwo
+    metadata: tokenMetadataTwo,
+    tokenExchangeRate: tokenExchangeRates[1]
   },
   {
     address: holderFour,
-    amount: 300,
+    amount: new BigNumber(300),
     contract: contractAddressTwo,
-    metadata: tokenMetadataTwo
+    metadata: tokenMetadataTwo,
+    tokenExchangeRate: tokenExchangeRates[1]
     },
   {
     address: holderOne,
-    amount: 500,
+    amount: new BigNumber(500),
     contract: contractAddressThree,
-    metadata: tokenMetadataThree
+    metadata: tokenMetadataThree,
+    tokenExchangeRate: tokenExchangeRates[2]
   },
 ]
 
@@ -111,41 +155,6 @@ const coinExchangeRates = [
     id: 'bitcoin_usd',
     currency: 'usd',
     price: 8000
-  }
-]
-
-const tokenExchangeRates = [
-  {
-    address: contractAddressOne,
-    currentPrice: 1,
-    totalVolume: 1000,
-    marketCap: 10,
-    marketCapRank: 1,
-    symbol: 'T1'
-  },
-  {
-    address: contractAddressTwo,
-    currentPrice: 2,
-    totalVolume: 2000,
-    marketCap: 9,
-    marketCapRank: 2,
-    symbol: 'T2'
-  },
-  {
-    address: contractAddressThree,
-    currentPrice: 3,
-    totalVolume: 3000,
-    marketCap: 8,
-    marketCapRank: 3,
-    symbol: 'T3'
-  },
-  {
-    address: contractAddressFour,
-    currentPrice: 4,
-    totalVolume: 4000,
-    marketCap: 7,
-    marketCapRank: 4,
-    symbol: 'T4'
   }
 ]
 
@@ -171,21 +180,25 @@ const tokenServiceMock = {
 
     return item ? new Erc20BalanceEntity(item) : undefined
   },
-  async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenDto[], number]> {
+  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], number]> {
 
     let items = erc20Balances.filter(e => e.address === address)
     const totalCount = items.length
 
     items = items.slice(offset, offset + limit)
 
-    return [items.map(i => new TokenDto(i.metadata)), totalCount]
+    return [items, totalCount]
   },
   async totalValueUSDByAddress(address: string): Promise<BigNumber | undefined> {
 
     const items = erc20Balances.filter(e => e.address === address)
 
     if (items.length) {
-      const sum = items.reduce((memo, next) => memo += (next.amount * next.metadata.currentPrice), 0)
+      const sum = items.reduce((memo, next) => {
+        const { tokenExchangeRate } = next
+        memo += (next.amount.multipliedBy(tokenExchangeRate!.currentPrice!).toNumber())
+        return memo
+      }, 0)
       return new BigNumber(sum)
     }
 
@@ -195,10 +208,17 @@ const tokenServiceMock = {
     const item = coinExchangeRates.find(c => c.id === pair)
     return item ? new CoinExchangeRateEntity(item) : undefined
   },
-  async findTokenExchangeRates(sort: string, limit: number = 10, offset: number = 0, symbols: string[] = []): Promise<[TokenExchangeRateEntity[], number]> {
+  async findTokenExchangeRates(
+    sort: string = 'market_cap_rank',
+    limit: number = 10,
+    offset: number = 0,
+    addresses: string[] = [],
+  ): Promise<[TokenExchangeRateEntity[], number]> {
 
     // Filter by symbol if set
-    let items = symbols && symbols.length ? tokenExchangeRates.filter(t => symbols.includes(t.symbol)) : tokenExchangeRates
+    let items = addresses.length ?
+      tokenExchangeRates.filter(t => addresses.includes(t.address)) :
+      tokenExchangeRates
 
     // Total count
     const totalCount = items.length
@@ -207,26 +227,26 @@ const tokenServiceMock = {
 
     switch (sort) {
       case 'price_high':
-        items = items.sort((a,b) => b.currentPrice - a.currentPrice)
+        items = items.sort((a,b) => b.currentPrice!.minus(a.currentPrice!).toNumber())
         break
       case 'price_low':
-        items = items.sort((a,b) => a.currentPrice - b.currentPrice)
+        items = items.sort((a,b) => a.currentPrice!.minus(b.currentPrice!).toNumber())
         break
       case 'volume_high':
-        items = items.sort((a,b) => b.totalVolume - a.totalVolume)
+        items = items.sort((a,b) => b.totalVolume!.minus(a.totalVolume!).toNumber())
         break
       case 'volume_low':
-        items = items.sort((a,b) => a.totalVolume - b.totalVolume)
+        items = items.sort((a,b) => a.totalVolume!.minus(b.totalVolume!).toNumber())
         break
       case 'market_cap_high':
-        items = items.sort((a,b) => b.marketCap - a.marketCap)
+        items = items.sort((a,b) => b.marketCap!.minus(a.marketCap!).toNumber())
         break
       case 'market_cap_low':
-        items = items.sort((a,b) => a.marketCap - b.marketCap)
+        items = items.sort((a,b) => a.marketCap!.minus(b.marketCap!).toNumber())
         break
       case 'market_cap_rank':
       default:
-        items = items.sort((a,b) => a.marketCapRank - b.marketCapRank)
+        items = items.sort((a,b) => a.marketCapRank! - b.marketCapRank!)
         break
     }
 
@@ -249,9 +269,20 @@ const tokenServiceMock = {
   async countTokenHolders(address: string): Promise<number> {
     return erc20Balances.filter(e => e.contract === address).length
   },
-  async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataDto[]> {
-    const items = erc20Metadata.filter(e => symbols.includes(e.symbol))
-    return items.map(i => new TokenMetadataDto(i))
+  async findTokensMetadata(
+    addresses: string[] = [],
+    offset: number = 0,
+    limit: number = 20,
+  ): Promise<[TokenMetadataEntity[], number]> {
+    let items = addresses.length ?
+      tokenMetadata.filter(t => addresses.includes(t.address)) :
+      tokenMetadata
+
+    const totalCount = items.length
+
+    items = items.slice(offset, offset + limit)
+
+    return [items.map(i => new TokenMetadataEntity(i)), totalCount]
   }
 }
 
@@ -378,16 +409,19 @@ describe('TokenResolvers', () => {
       const tokenPage = await tokenResolvers.addressAllTokensOwned(holderOne, 0, 10)
 
       expect(tokenPage).not.toBeNull()
-      expect(tokenPage).toBeInstanceOf(TokenPageDto)
+      expect(tokenPage).toBeInstanceOf(TokenBalancePageDto)
       expect(tokenPage).toHaveProperty('items')
       expect(tokenPage).toHaveProperty('totalCount', 3)
       expect(tokenPage.items).toHaveLength(3)
-      expect(tokenPage.items[0]).toBeInstanceOf(TokenDto)
-      expect(tokenPage.items[0]).toHaveProperty('address', contractAddressOne)
-      expect(tokenPage.items[1]).toBeInstanceOf(TokenDto)
-      expect(tokenPage.items[1]).toHaveProperty('address', contractAddressTwo)
-      expect(tokenPage.items[2]).toBeInstanceOf(TokenDto)
-      expect(tokenPage.items[2]).toHaveProperty('address', contractAddressThree)
+      expect(tokenPage.items[0]).toBeInstanceOf(TokenBalanceDto)
+      expect(tokenPage.items[0]).toHaveProperty('address', holderOne)
+      expect(tokenPage.items[0]).toHaveProperty('contract', contractAddressOne)
+      expect(tokenPage.items[1]).toBeInstanceOf(TokenBalanceDto)
+      expect(tokenPage.items[1]).toHaveProperty('address', holderOne)
+      expect(tokenPage.items[1]).toHaveProperty('contract', contractAddressTwo)
+      expect(tokenPage.items[2]).toBeInstanceOf(TokenBalanceDto)
+      expect(tokenPage.items[2]).toHaveProperty('address', holderOne)
+      expect(tokenPage.items[2]).toHaveProperty('contract', contractAddressThree)
     })
 
     it('should respect the given offset and limit parameters', async () => {
@@ -395,24 +429,24 @@ describe('TokenResolvers', () => {
       const tokensPageOne = await tokenResolvers.addressAllTokensOwned(holderOne, 0, 2)
 
       expect(tokensPageOne).not.toBeNull()
-      expect(tokensPageOne).toBeInstanceOf(TokenPageDto)
+      expect(tokensPageOne).toBeInstanceOf(TokenBalancePageDto)
       expect(tokensPageOne).toHaveProperty('items')
       expect(tokensPageOne).toHaveProperty('totalCount', 3)
       expect(tokensPageOne.items).toHaveLength(2)
-      expect(tokensPageOne.items[0]).toBeInstanceOf(TokenDto)
-      expect(tokensPageOne.items[0]).toHaveProperty('address', contractAddressOne)
-      expect(tokensPageOne.items[1]).toBeInstanceOf(TokenDto)
-      expect(tokensPageOne.items[1]).toHaveProperty('address', contractAddressTwo)
+      expect(tokensPageOne.items[0]).toBeInstanceOf(TokenBalanceDto)
+      expect(tokensPageOne.items[0]).toHaveProperty('contract', contractAddressOne)
+      expect(tokensPageOne.items[1]).toBeInstanceOf(TokenBalanceDto)
+      expect(tokensPageOne.items[1]).toHaveProperty('contract', contractAddressTwo)
 
       const tokensPageTwo = await tokenResolvers.addressAllTokensOwned(holderOne, 2, 2)
 
       expect(tokensPageTwo).not.toBeNull()
-      expect(tokensPageTwo).toBeInstanceOf(TokenPageDto)
+      expect(tokensPageTwo).toBeInstanceOf(TokenBalancePageDto)
       expect(tokensPageTwo).toHaveProperty('items')
       expect(tokensPageTwo).toHaveProperty('totalCount', 3)
       expect(tokensPageTwo.items).toHaveLength(1)
-      expect(tokensPageTwo.items[0]).toBeInstanceOf(TokenDto)
-      expect(tokensPageTwo.items[0]).toHaveProperty('address', contractAddressThree)
+      expect(tokensPageTwo.items[0]).toBeInstanceOf(TokenBalanceDto)
+      expect(tokensPageTwo.items[0]).toHaveProperty('contract', contractAddressThree)
 
       expect(tokensPageOne).not.toEqual(tokensPageTwo)
 
@@ -420,7 +454,7 @@ describe('TokenResolvers', () => {
       const tokenPageThree = await tokenResolvers.addressAllTokensOwned(holderOne, 4, 2)
 
       expect(tokenPageThree).not.toBeNull()
-      expect(tokenPageThree).toBeInstanceOf(TokenPageDto)
+      expect(tokenPageThree).toBeInstanceOf(TokenBalancePageDto)
       expect(tokenPageThree).toHaveProperty('items')
       expect(tokenPageThree).toHaveProperty('totalCount', 3)
       expect(tokenPageThree.items).toHaveLength(0)
@@ -432,7 +466,7 @@ describe('TokenResolvers', () => {
       const tokenPage = await tokenResolvers.addressAllTokensOwned(holderFive, 0, 10)
 
       expect(tokenPage).not.toBeNull()
-      expect(tokenPage).toBeInstanceOf(TokenPageDto)
+      expect(tokenPage).toBeInstanceOf(TokenBalancePageDto)
       expect(tokenPage).toHaveProperty('items')
       expect(tokenPage).toHaveProperty('totalCount', 0)
       expect(tokenPage.items).toHaveLength(0)
@@ -466,7 +500,7 @@ describe('TokenResolvers', () => {
       const totalValue = await tokenResolvers.addressTotalTokenValueUSD(holderOne)
       const expectedValue = erc20Balances
         .filter(e => e.address === holderOne)
-        .reduce((memo, next) => memo += (next.amount * next.metadata.currentPrice), 0)
+        .reduce((memo, next) => memo += (next.amount.multipliedBy(next.tokenExchangeRate!.currentPrice!).toNumber()), 0)
 
       expect(totalValue).not.toBeNull()
       expect(totalValue).toEqual(new BigNumber(expectedValue))
@@ -524,9 +558,9 @@ describe('TokenResolvers', () => {
 
       expect(pageOne.items).toHaveLength(2)
       expect(pageOne.items[0]).toHaveProperty('address', contractAddressFour)
-      expect(pageOne.items[0]).toHaveProperty('currentPrice', 4)
+      expect(pageOne.items[0]).toHaveProperty('currentPrice', new BigNumber(4))
       expect(pageOne.items[1]).toHaveProperty('address', contractAddressThree)
-      expect(pageOne.items[1]).toHaveProperty('currentPrice', 3)
+      expect(pageOne.items[1]).toHaveProperty('currentPrice', new BigNumber(3))
 
       const pageTwo = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_high, 2, 2)
 
@@ -537,9 +571,9 @@ describe('TokenResolvers', () => {
 
       expect(pageTwo.items).toHaveLength(2)
       expect(pageTwo.items[0]).toHaveProperty('address', contractAddressTwo)
-      expect(pageTwo.items[0]).toHaveProperty('currentPrice', 2)
+      expect(pageTwo.items[0]).toHaveProperty('currentPrice', new BigNumber(2))
       expect(pageTwo.items[1]).toHaveProperty('address', contractAddressOne)
-      expect(pageTwo.items[1]).toHaveProperty('currentPrice', 1)
+      expect(pageTwo.items[1]).toHaveProperty('currentPrice', new BigNumber(1))
 
       // Ensure pages returned are distinct
       expect(pageOne).not.toEqual(pageTwo)
@@ -555,30 +589,30 @@ describe('TokenResolvers', () => {
       expect(pageThree.items).toHaveLength(0)
     })
 
-    it('should filter by provided symbols array', async () => {
+    it('should filter by provided addresses array', async () => {
 
-      const pageOne = await tokenResolvers.tokenExchangeRates(['T1', 'T2'], TokenExchangeRateFilter.price_high, 10, 0)
+      const pageOne = await tokenResolvers.tokenExchangeRates([contractAddressOne, contractAddressTwo], TokenExchangeRateFilter.price_high, 10, 0)
       expect(pageOne).not.toBeNull()
       expect(pageOne).toBeInstanceOf(TokenExchangeRatePageDto)
       expect(pageOne).toHaveProperty('items')
       expect(pageOne).toHaveProperty('totalCount', 2)
       expect(pageOne.items).toHaveLength(2)
-      expect(pageOne.items[0]).toHaveProperty('symbol', 'T2')
-      expect(pageOne.items[1]).toHaveProperty('symbol', 'T1')
+      expect(pageOne.items[0]).toHaveProperty('address', contractAddressTwo)
+      expect(pageOne.items[1]).toHaveProperty('address', contractAddressOne)
 
-      const pageTwo = await tokenResolvers.tokenExchangeRates(['T3'], TokenExchangeRateFilter.price_high, 10, 0)
+      const pageTwo = await tokenResolvers.tokenExchangeRates([contractAddressFour], TokenExchangeRateFilter.price_high, 10, 0)
       expect(pageTwo).not.toBeNull()
       expect(pageTwo).toBeInstanceOf(TokenExchangeRatePageDto)
       expect(pageTwo).toHaveProperty('items')
       expect(pageTwo).toHaveProperty('totalCount', 1)
       expect(pageTwo.items).toHaveLength(1)
-      expect(pageTwo.items[0]).toHaveProperty('symbol', 'T3')
+      expect(pageTwo.items[0]).toHaveProperty('address', contractAddressFour)
 
       expect(pageOne).not.toEqual(pageTwo)
 
       // Ensure page with no items is returned for symbol not matching data
 
-      const pageThree = await tokenResolvers.tokenExchangeRates(['T5'], TokenExchangeRateFilter.price_high, 10, 0)
+      const pageThree = await tokenResolvers.tokenExchangeRates([contractAddressFive], TokenExchangeRateFilter.price_high, 10, 0)
       expect(pageThree).not.toBeNull()
       expect(pageThree).toBeInstanceOf(TokenExchangeRatePageDto)
       expect(pageThree).toHaveProperty('items')
@@ -594,48 +628,48 @@ describe('TokenResolvers', () => {
       expect(priceHighPage).toHaveProperty('items')
       expect(priceHighPage).toHaveProperty('totalCount', 4)
       expect(priceHighPage.items).toHaveLength(2)
-      expect(priceHighPage.items[0]).toHaveProperty('currentPrice', 4)
-      expect(priceHighPage.items[1]).toHaveProperty('currentPrice', 3)
+      expect(priceHighPage.items[0]).toHaveProperty('currentPrice', new BigNumber(4))
+      expect(priceHighPage.items[1]).toHaveProperty('currentPrice', new BigNumber(3))
 
       const priceLowPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.price_low, 2, 0)
       expect(priceLowPage).not.toBeNull()
       expect(priceLowPage).toHaveProperty('items')
       expect(priceLowPage).toHaveProperty('totalCount', 4)
       expect(priceLowPage.items).toHaveLength(2)
-      expect(priceLowPage.items[0]).toHaveProperty('currentPrice', 1)
-      expect(priceLowPage.items[1]).toHaveProperty('currentPrice', 2)
+      expect(priceLowPage.items[0]).toHaveProperty('currentPrice', new BigNumber(1))
+      expect(priceLowPage.items[1]).toHaveProperty('currentPrice', new BigNumber(2))
 
       const volumeHighPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.volume_high, 2, 0)
       expect(volumeHighPage).not.toBeNull()
       expect(volumeHighPage).toHaveProperty('items')
       expect(volumeHighPage).toHaveProperty('totalCount', 4)
       expect(volumeHighPage.items).toHaveLength(2)
-      expect(volumeHighPage.items[0]).toHaveProperty('totalVolume', 4000)
-      expect(volumeHighPage.items[1]).toHaveProperty('totalVolume', 3000)
+      expect(volumeHighPage.items[0]).toHaveProperty('totalVolume', new BigNumber(4000))
+      expect(volumeHighPage.items[1]).toHaveProperty('totalVolume', new BigNumber(3000))
 
       const volumeLowPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.volume_low, 2, 0)
       expect(volumeLowPage).not.toBeNull()
       expect(volumeLowPage).toHaveProperty('items')
       expect(volumeLowPage).toHaveProperty('totalCount', 4)
       expect(volumeLowPage.items).toHaveLength(2)
-      expect(volumeLowPage.items[0]).toHaveProperty('totalVolume', 1000)
-      expect(volumeLowPage.items[1]).toHaveProperty('totalVolume', 2000)
+      expect(volumeLowPage.items[0]).toHaveProperty('totalVolume', new BigNumber(1000))
+      expect(volumeLowPage.items[1]).toHaveProperty('totalVolume', new BigNumber(2000))
 
       const marketCapHighPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.market_cap_high, 2, 0)
       expect(marketCapHighPage).not.toBeNull()
       expect(marketCapHighPage).toHaveProperty('items')
       expect(marketCapHighPage).toHaveProperty('totalCount', 4)
       expect(marketCapHighPage.items).toHaveLength(2)
-      expect(marketCapHighPage.items[0]).toHaveProperty('marketCap', 10)
-      expect(marketCapHighPage.items[1]).toHaveProperty('marketCap', 9)
+      expect(marketCapHighPage.items[0]).toHaveProperty('marketCap', new BigNumber(10))
+      expect(marketCapHighPage.items[1]).toHaveProperty('marketCap', new BigNumber(9))
 
       const marketCapLowPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.market_cap_low, 2, 0)
       expect(marketCapLowPage).not.toBeNull()
       expect(marketCapLowPage).toHaveProperty('items')
       expect(marketCapLowPage).toHaveProperty('totalCount', 4)
       expect(marketCapLowPage.items).toHaveLength(2)
-      expect(marketCapLowPage.items[0]).toHaveProperty('marketCap', 7)
-      expect(marketCapLowPage.items[1]).toHaveProperty('marketCap', 8)
+      expect(marketCapLowPage.items[0]).toHaveProperty('marketCap', new BigNumber(7))
+      expect(marketCapLowPage.items[1]).toHaveProperty('marketCap', new BigNumber(8))
 
       const marketCapRankPage = await tokenResolvers.tokenExchangeRates([], TokenExchangeRateFilter.market_cap_rank, 2, 0)
       expect(marketCapRankPage).not.toBeNull()
@@ -707,32 +741,54 @@ describe('TokenResolvers', () => {
   })
 
   describe('tokensMetadata', () => {
-    it('should return an array of TokenMetadataDto', async () => {
-      const metadata = await tokenResolvers.tokensMetadata(['T1', 'T2', 'T3'])
+    it('should return an instance of TokenMetadataPageDto with an array of items and totalCount', async () => {
+      const metadata = await tokenResolvers.tokensMetadata([])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(3)
-      expect(metadata[0]).toBeInstanceOf(TokenMetadataDto)
+      expect(metadata).toHaveProperty('totalCount', 3)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(3)
+      expect(metadata.items[0]).toBeInstanceOf(TokenMetadataDto)
     })
 
-    it('should return TokenMetadataDtos matching the symbols provided', async () => {
-      const metadata = await tokenResolvers.tokensMetadata(['T1', 'T2'])
+    it('should return TokenMetadataDtos matching the addresses provided', async () => {
+      const metadata = await tokenResolvers.tokensMetadata([contractAddressOne, contractAddressTwo])
       expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(2)
-      expect(metadata[0]).toHaveProperty('symbol', 'T1')
-      expect(metadata[1]).toHaveProperty('symbol', 'T2')
+      expect(metadata).toHaveProperty('totalCount', 2)
+      expect(metadata).toHaveProperty('items')
+      expect(metadata.items).toHaveLength(2)
+      expect(metadata.items[0]).toHaveProperty('address', contractAddressOne)
+      expect(metadata.items[1]).toHaveProperty('address', contractAddressTwo)
 
-      const metadataTwo = await tokenResolvers.tokensMetadata(['T3'])
+      const metadataTwo = await tokenResolvers.tokensMetadata([contractAddressThree])
       expect(metadataTwo).not.toBeNull()
-      expect(metadataTwo).toHaveLength(1)
-      expect(metadataTwo[0]).toHaveProperty('symbol', 'T3')
+      expect(metadataTwo).toHaveProperty('totalCount', 1)
+      expect(metadataTwo).toHaveProperty('items')
+      expect(metadataTwo.items).toHaveLength(1)
+      expect(metadataTwo.items[0]).toHaveProperty('address', contractAddressThree)
 
       expect(metadata).not.toEqual(metadataTwo)
-    })
 
-    it('should return an empty array if no metadata is found matching symbols provided', async () => {
-      const metadata = await tokenResolvers.tokensMetadata(['T5'])
-      expect(metadata).not.toBeNull()
-      expect(metadata).toHaveLength(0)
+      // Check an empty array is returned if no tokens match address provided
+      const metadataThree = await tokenResolvers.tokensMetadata([contractAddressFive])
+      expect(metadataThree).not.toBeNull()
+      expect(metadataThree).toHaveProperty('totalCount', 0)
+      expect(metadataThree).toHaveProperty('items')
+      expect(metadataThree.items).toHaveLength(0)
+    })
+    it('should respect limit and offset parameters', async () => {
+      const pageOne = await tokenResolvers.tokensMetadata([], 0, 2)
+      expect(pageOne).not.toBeNull()
+      expect(pageOne).toHaveProperty('totalCount', 3)
+      expect(pageOne).toHaveProperty('items')
+      expect(pageOne.items).toHaveLength(2)
+
+      const pageTwo = await tokenResolvers.tokensMetadata([], 2, 2)
+      expect(pageTwo).not.toBeNull()
+      expect(pageTwo).toHaveProperty('totalCount', 3)
+      expect(pageTwo).toHaveProperty('items')
+      expect(pageTwo.items).toHaveLength(1)
+
+      expect(pageOne).not.toEqual(pageTwo)
     })
   })
 

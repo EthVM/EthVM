@@ -3,15 +3,15 @@ import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
 import { TokenService } from '@app/dao/token.service'
 import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
 import { TokenExchangeRateDto } from '@app/graphql/tokens/dto/token-exchange-rate.dto'
-import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
 import { TokenHoldersPageDto } from '@app/graphql/tokens/dto/token-holders-page.dto'
-import { TokenPageDto } from '@app/graphql/tokens/dto/token-page.dto'
 import BigNumber from 'bignumber.js'
 import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange-rate-page.dto'
 import { CoinExchangeRateDto } from '@app/graphql/tokens/dto/coin-exchange-rate.dto'
 import { UseInterceptors } from '@nestjs/common'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
+import { TokenMetadataPageDto } from '@app/graphql/tokens/dto/token-metadata-page.dto'
 import { TokenDetailDto } from '@app/graphql/tokens/dto/token-detail.dto'
+import { TokenBalancePageDto } from '@app/graphql/tokens/dto/token-balance-page.dto'
 
 @Resolver('Token')
 @UseInterceptors(SyncingInterceptor)
@@ -46,9 +46,9 @@ export class TokenResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TokenPageDto> {
-    const [tokens, totalCount] = await this.tokenService.findAddressAllTokensOwned(address, offset, limit)
-    return new TokenPageDto({items: tokens, totalCount})
+  ): Promise<TokenBalancePageDto> {
+    const [tokens, totalCount] = await this.tokenService.findAddressAllErc20TokensOwned(address, offset, limit)
+    return new TokenBalancePageDto({items: tokens, totalCount})
   }
 
   @Query()
@@ -66,12 +66,12 @@ export class TokenResolvers {
 
   @Query()
   async tokenExchangeRates(
-    @Args({ name: 'symbols', type: () => [String] }) symbols: string[],
-    @Args('sort') sort: string,
-    @Args('limit') limit: number,
-    @Args('offset') offset: number,
+    @Args({ name: 'addresses', type: () => [String], nullable: true }) addresses?: string[],
+    @Args('sort') sort?: string,
+    @Args('limit') limit?: number,
+    @Args('offset') offset?: number,
   ): Promise<TokenExchangeRatePageDto> {
-    const [items, totalCount] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, symbols)
+    const [items, totalCount] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, addresses)
     return new TokenExchangeRatePageDto({ items, totalCount })
   }
 
@@ -95,8 +95,13 @@ export class TokenResolvers {
   }
 
   @Query()
-  async tokensMetadata(@Args({name: 'symbols', type: () => [String]}) symbols: string[]): Promise<TokenMetadataDto[]> {
-    return await this.tokenService.findTokensMetadata(symbols)
+  async tokensMetadata(
+    @Args({ name: 'addresses', type: () => [String], nullable: true }) addresses?: string[],
+    @Args('offset') offset?: number,
+    @Args('limit') limit?: number,
+  ): Promise<TokenMetadataPageDto> {
+    const [items, totalCount] = await this.tokenService.findTokensMetadata(addresses, offset, limit)
+    return new TokenMetadataPageDto({ items, totalCount })
   }
 
   @Query()

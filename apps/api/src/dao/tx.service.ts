@@ -17,6 +17,8 @@ import { TransactionCountEntity } from '@app/orm/entities/transaction-count.enti
 @Injectable()
 export class TxService {
 
+  private zeroBN = new BigNumber(0)
+
   constructor(
     private readonly receiptService: ReceiptService,
     private readonly traceService: TraceService,
@@ -37,15 +39,18 @@ export class TxService {
     const tx = txs[0]
 
     // Partial read checks
+    if (tx.blockNumber > this.zeroBN) {
 
-    // Receipt
-    if (!tx.receipt) {
-      throw new PartialReadException(`Receipt not found, tx hash = ${tx.hash}`)
-    }
+      // genesis block has no receipt or traces
 
-    // Partial read check
-    if (!tx.trace) {
-      throw new PartialReadException(`Traces not found, tx hash = ${tx.hash}`)
+      if (!tx.receipt) {
+        throw new PartialReadException(`Receipt not found, tx hash = ${tx.hash}`)
+      }
+
+      if (!tx.trace) {
+        throw new PartialReadException(`Traces not found, tx hash = ${tx.hash}`)
+      }
+
     }
 
     return tx
@@ -333,14 +338,25 @@ export class TxService {
       const txStatus = txStatusByHash.get(tx.hash)
       const { receipt } = tx
 
-      // Root trace
-      if (!txStatus) {
-        throw new PartialReadException(`Root trace missing, tx hash = ${tx.hash}`)
+      if (tx.blockNumber > this.zeroBN) {
+
+        // genesis block has no trace or receipt
+
+        // Root trace
+        if (!txStatus) {
+          throw new PartialReadException(`Root trace missing, tx hash = ${tx.hash}`)
+        }
+        // Receipt
+        if (!receipt) {
+          throw new PartialReadException(`Receipt missing, tx hash = ${tx.hash}`)
+        }
+
       }
-      // Receipt
-      if (!receipt) {
-        throw new PartialReadException(`Receipt missing, tx hash = ${tx.hash}`)
-      }
+
+      // default for genesis block
+
+      const successful = txStatus ? txStatus.successful : true
+      const gasUsed = receipt ? receipt.gasUsed : new BigNumber(0)
 
       return {
         hash: tx.hash,
@@ -352,8 +368,8 @@ export class TxService {
         contractName,
         contractSymbol,
         value: tx.value,
-        fee: tx.gasPrice.multipliedBy(receipt.gasUsed),
-        successful: txStatus.successful,
+        fee: tx.gasPrice.multipliedBy(gasUsed),
+        successful,
         timestamp: tx.timestamp,
       } as TransactionSummary
     })

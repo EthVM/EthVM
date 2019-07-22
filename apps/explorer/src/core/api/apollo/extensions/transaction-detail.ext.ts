@@ -83,6 +83,11 @@ export class TransactionDetailExt implements TransactionDetail {
   }
 
   get feeEth(): EthValue {
+    if (this.blockNumber == new BigNumber(0)) {
+      // for genesis block we have no receipt
+      return new EthValue(new BigNumber(0))
+    }
+
     const gasUsed = this.receipt!.gasUsedBN
     return new EthValue(this.gasPriceBN.multipliedBy(gasUsed))
   }

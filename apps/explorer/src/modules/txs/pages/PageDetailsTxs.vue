@@ -239,7 +239,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: receipt.gasUsedBN.toString()
+          detail: receipt ? receipt.gasUsedBN.toString() : '0' // genesis block txs can have no receipt
         },
         {
           title: this.$i18n.t('gas.price'),

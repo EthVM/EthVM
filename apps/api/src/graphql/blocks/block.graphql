@@ -60,7 +60,7 @@ type BlockHeader {
   gasUsed: BigNumber!
   timestamp: Date!
   size: Int!
-  blockTime: Int!
+  blockTime: Int
 }
 
 type Reward {

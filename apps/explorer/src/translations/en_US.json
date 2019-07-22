@@ -211,6 +211,7 @@
     "tx-summary": {
       "title": "Tx Summary",
       "description": "Successful, failed, and pending transactions in the last 10 blocks.",
+      "description-no-pending": "Successful and failed transactions in the last 10 blocks.",
       "label":{
         "pen": "Pending Txs",
         "success-fail": "Successful and Failed Txs"

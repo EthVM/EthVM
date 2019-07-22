@@ -16,6 +16,9 @@ import { DbConnection } from '@app/orm/config'
 
 @Injectable()
 export class BlockService {
+
+  private zeroBI = new BigNumber(0)
+
   constructor(
     @InjectRepository(BlockHeaderEntity, DbConnection.Principal) private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(TransactionEntity, DbConnection.Principal) private readonly transactionRepository: Repository<TransactionEntity>,
@@ -32,7 +35,8 @@ export class BlockService {
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
     const blocks = await this.blockHeaderRepository
       .find({
-        select: ['number', 'difficulty', 'blockTime'],
+        select: ['number', 'difficulty'],
+        relations: ['blockTime'],
         order: { number: 'DESC' },
         take: 20,
         cache,
@@ -41,7 +45,7 @@ export class BlockService {
     if (blocks.length === 0) return null
 
     const avgBlockTime = blocks
-      .map(b => b.blockTime)
+      .map(b => b.blockTime.blockTime)
       .reduceRight((memo, next) => memo.plus(next || 0), new BigNumber(0))
       .dividedBy(blocks.length)
 
@@ -211,7 +215,7 @@ export class BlockService {
 
     const blockHeader = await this.blockHeaderRepository.findOne({
       where: { hash },
-      relations: ['uncles', 'rewards'],
+      relations: ['uncles', 'rewards', 'blockTime'],
       cache: true,
     })
 
@@ -220,7 +224,7 @@ export class BlockService {
     // partial read checks
 
     // look for block reward
-    if (!instaMining && !(blockHeader.rewards && blockHeader.rewards.length)) {
+    if (blockHeader.number > this.zeroBI && !instaMining && !(blockHeader.rewards && blockHeader.rewards.length)) {
       throw new PartialReadException(`Rewards missing, block hash = ${blockHeader.hash}`)
     }
 

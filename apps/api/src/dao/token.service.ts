@@ -6,12 +6,11 @@ import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
 import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Any, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
-import { TokenDto } from '@app/graphql/tokens/dto/token.dto'
-import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { Any, EntityManager, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
 import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
+import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
 
 @Injectable()
@@ -31,10 +30,12 @@ export class TokenService {
     private readonly contractRepository: Repository<ContractEntity>,
     @InjectRepository(CoinExchangeRateEntity, DbConnection.Principal)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
+    @InjectRepository(TokenMetadataEntity, DbConnection.Principal)
+    private readonly tokenMetadataRepository: Repository<TokenMetadataEntity>,
     @InjectRepository(TokenDetailEntity, DbConnection.Principal)
     private readonly tokenDetailRepository: Repository<TokenDetailEntity>,
-  ) {
-  }
+    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
+  ) {}
 
   async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
     const findOptions: FindManyOptions = {
@@ -58,84 +59,29 @@ export class TokenService {
     return this.erc721BalanceRepository.findOne({ where })
   }
 
-  async findAddressAllTokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[TokenDto[], number]> {
+  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], number]> {
 
-    const findOptions: FindManyOptions = {
-      where: { address },
-      relations: ['tokenExchangeRate', 'metadata', 'contractMetadata'],
-      take: limit,
-      skip: offset,
-      cache: true,
-    }
+    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], number]> => {
 
-    const [erc20Tokens, erc20Count] = await this.erc20BalanceRepository.findAndCount(findOptions)
-    const [erc721Tokens, erc721Count] = await this.erc721BalanceRepository.findAndCount(findOptions)
+      const queryBuilder = txn.createQueryBuilder(Erc20BalanceEntity, 'b')
+        .where('b.address = :address')
+        .andWhere('b.amount != :amount')
+        .setParameters({ address, amount: 0 })
+        .cache(true)
 
-    const tokenDtos: TokenDto[] = []
+      const count = await queryBuilder.getCount()
 
-    erc20Tokens.forEach(entity => {
-      tokenDtos.push(this.constructTokenDto(entity))
+      const entities = await queryBuilder
+        .leftJoinAndSelect('b.tokenExchangeRate', 'ter')
+        .leftJoinAndSelect('b.metadata', 'm')
+        .leftJoinAndSelect('b.contractMetadata', 'cm')
+        .offset(offset)
+        .limit(limit)
+        .getMany()
+
+      return [entities, count]
+
     })
-    erc721Tokens.forEach(entity => {
-      tokenDtos.push(this.constructTokenDto(entity))
-    })
-
-    return [tokenDtos, (erc20Count + erc721Count)]
-  }
-
-  private constructTokenDto(entity: Erc20BalanceEntity | Erc721BalanceEntity): TokenDto {
-    const { tokenExchangeRate, metadata, contractMetadata } = entity
-    const tokenData = metadata || ({} as any)
-    if (entity instanceof Erc20BalanceEntity) {
-      tokenData.balance = entity.amount
-    }
-    if (contractMetadata) {
-      tokenData.image = contractMetadata.logo
-    }
-    if (tokenExchangeRate) {
-      tokenData.currentPrice = tokenExchangeRate.currentPrice
-      tokenData.priceChangePercentage24h = tokenExchangeRate.priceChangePercentage24h
-      tokenData.image = tokenData.image || tokenExchangeRate.image
-    }
-    return new TokenDto(tokenData)
-  }
-
-  private constructTokenMetadataDto(entity: Erc20MetadataEntity | Erc721MetadataEntity): TokenMetadataDto {
-
-    const decimals = entity instanceof Erc20MetadataEntity ? entity.decimals : null
-    const { contractMetadata } = entity
-    const support = contractMetadata ? contractMetadata.support : null
-    const logo = contractMetadata ? contractMetadata.logo : null
-
-    const data = {
-      name: entity.name,
-      address: entity.address,
-      symbol: entity.symbol,
-      decimals,
-      website: contractMetadata ? contractMetadata.website : null,
-      email: this.extractFromJson('email', support),
-      logo: this.extractFromJson('src', logo),
-    }
-
-    return new TokenMetadataDto(data)
-  }
-
-  private extractFromJson(field: string, json?: string | null): string | undefined {
-
-    if (!json) {
-      return undefined
-    }
-
-    let extracted
-
-    try {
-      extracted = JSON.parse(json)[field]
-    } catch (e) {
-      return 'Invalid JSON'
-    }
-
-    return extracted
-
   }
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
@@ -146,7 +92,12 @@ export class TokenService {
     return this.coinExchangeRateRepository.findOne(findOptions)
   }
 
-  async findTokenExchangeRates(sort: string, limit: number = 10, offset: number = 0, symbols: string[] = []): Promise<[TokenExchangeRateEntity[], number]> {
+  async findTokenExchangeRates(
+    sort: string = 'market_cap_rank',
+    limit: number = 10,
+    offset: number = 0,
+    addresses: string[] = [],
+  ): Promise<[TokenExchangeRateEntity[], number]> {
     let order
     switch (sort) {
       case 'price_high':
@@ -172,14 +123,18 @@ export class TokenService {
         order = { marketCapRank: 1 }
         break
     }
-    const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
+
     const findOptions: FindManyOptions = {
-      where,
       order,
       take: limit,
       skip: offset,
       cache: true,
     }
+
+    if (addresses.length) {
+      findOptions.where = {address: Any(addresses)}
+    }
+
     return this.tokenExchangeRateRepository.findAndCount(findOptions)
   }
 
@@ -223,27 +178,23 @@ export class TokenService {
 
   }
 
-  async findTokensMetadata(symbols: string[] = []): Promise<TokenMetadataDto[]> {
-    const where = symbols.length > 0 ? { symbol: Any(symbols) } : {}
-    const findOptions = {
-      where,
-      relations: ['contractMetadata'],
+  async findTokensMetadata(
+    addresses: string[] = [],
+    offset: number = 0,
+    limit: number = 20,
+  ): Promise<[TokenMetadataEntity[], number]> {
+
+    const findOptions: FindManyOptions = {
+      take: limit,
+      skip: offset,
       cache: true,
     }
-    const erc20Tokens = await this.erc20MetadataRepository.find(findOptions)
-    const erc721Tokens = await this.erc721MetadataRepository.find(findOptions)
 
-    const tokenMetadataDtos: TokenMetadataDto[] = []
+    if (addresses.length) {
+      findOptions.where = { address: Any(addresses) }
+    }
 
-    erc20Tokens.forEach(entity => {
-      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
-    })
-
-    erc721Tokens.forEach(entity => {
-      tokenMetadataDtos.push(this.constructTokenMetadataDto(entity))
-    })
-
-    return tokenMetadataDtos
+    return await this.tokenMetadataRepository.findAndCount(findOptions)
   }
 
   async findDetailByAddress(address: string): Promise<TokenDetailEntity | undefined> {

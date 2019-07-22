@@ -78,8 +78,17 @@
           <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
+          <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pt-2 pr-2 pl-2">
+            <app-paginate
+              :total="pages"
+              @newPage="setPage"
+              :current-page="page"
+              :has-input="!simplePagination"
+              :has-first="!simplePagination"
+              :has-last="!simplePagination"
+            />
+          </v-layout>
         </v-flex>
-
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
             <div :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile ma-2' : '']">
@@ -108,16 +117,6 @@
         </div>
       </v-layout>
     </v-container>
-    <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-      <app-paginate
-        :total="pages"
-        @newPage="setPage"
-        :current-page="page"
-        :has-input="!simplePagination"
-        :has-first="!simplePagination"
-        :has-last="!simplePagination"
-      />
-    </v-layout>
   </v-card>
 </template>
 

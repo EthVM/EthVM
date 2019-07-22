@@ -2,8 +2,10 @@ package com.ethvm.common.extensions
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractLifecyleType
+import com.ethvm.avro.capture.ContractEventCreatedRecord
+import com.ethvm.avro.capture.ContractEventDestroyedRecord
+import com.ethvm.avro.capture.ContractEventRecord
+import com.ethvm.avro.capture.ContractEventType
 import com.ethvm.avro.capture.ParitySyncStateRecord
 import com.ethvm.avro.capture.TraceCallActionRecord
 import com.ethvm.avro.capture.TraceCreateActionRecord
@@ -112,7 +114,7 @@ fun TraceRecord.hasError(): Boolean {
   return error != null && error.isNotBlank()
 }
 
-fun TraceRecord.toContractLifecycleRecord(timestamp: DateTime): ContractLifecycleRecord? {
+fun TraceRecord.toContractEventRecord(timestamp: DateTime): ContractEventRecord? {
 
   // error check first
   val error = getError()
@@ -126,39 +128,45 @@ fun TraceRecord.toContractLifecycleRecord(timestamp: DateTime): ContractLifecycl
 
     is TraceCreateActionRecord ->
 
-      ContractLifecycleRecord.newBuilder()
+      ContractEventRecord.newBuilder()
         .setAddress(getResult().getAddress())
-        .setType(ContractLifecyleType.CREATE)
-        .setCreator(action.getFrom())
-        .setInit(action.getInit())
-        .setCode(getResult().getCode())
-        .setTimestamp(timestamp)
-        .setCreatedAt(
-          TraceLocationRecord.newBuilder()
-            .setBlockNumber(getBlockNumber())
-            .setBlockHash(getBlockHash())
-            .setTransactionHash(getTransactionHash())
-            .setTraceAddress(getTraceAddress())
-            .setTimestamp(timestamp)
-            .build()
+        .setType(ContractEventType.CREATE)
+        .setEvent(
+          ContractEventCreatedRecord.newBuilder()
+            .setAddress(getResult().getAddress())
+            .setCreator(action.getFrom())
+            .setInit(action.getInit())
+            .setCode(getResult().getCode())
+            .setTraceLocation(
+              TraceLocationRecord.newBuilder()
+                .setBlockNumber(getBlockNumber())
+                .setBlockHash(getBlockHash())
+                .setTransactionHash(getTransactionHash())
+                .setTraceAddress(getTraceAddress())
+                .setTimestamp(timestamp)
+                .build()
+            ).build()
         ).build()
 
     is TraceDestroyActionRecord ->
 
-      ContractLifecycleRecord.newBuilder()
+      ContractEventRecord.newBuilder()
         .setAddress(action.getAddress())
-        .setType(ContractLifecyleType.DESTROY)
-        .setRefundAddress(action.getRefundAddress())
-        .setRefundBalance(action.getBalance())
-        .setTimestamp(timestamp)
-        .setDestroyedAt(
-          TraceLocationRecord.newBuilder()
-            .setBlockNumber(getBlockNumber())
-            .setBlockHash(getBlockHash())
-            .setTransactionHash(getTransactionHash())
-            .setTraceAddress(getTraceAddress())
-            .setTimestamp(timestamp)
-            .build()
+        .setType(ContractEventType.DESTROY)
+        .setEvent(
+          ContractEventDestroyedRecord.newBuilder()
+            .setAddress(action.getAddress())
+            .setRefundAddress(action.getRefundAddress())
+            .setRefundBalance(action.getBalance())
+            .setTraceLocation(
+              TraceLocationRecord.newBuilder()
+                .setBlockNumber(getBlockNumber())
+                .setBlockHash(getBlockHash())
+                .setTransactionHash(getTransactionHash())
+                .setTraceAddress(getTraceAddress())
+                .setTimestamp(timestamp)
+                .build()
+            ).build()
         ).build()
 
     else -> throw IllegalArgumentException("Unexpected action type: $action")
@@ -267,6 +275,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
         .setTraceLocation(traceLocation)
         .setAddress(action.getAddress())
+        .setCounterpartAddress(action.getRefundAddress())
         .setAmountBI(action.getBalanceBI().negate())
         .build(),
 
@@ -462,24 +471,47 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
       val timestamp = DateTime(getTimestamp())
 
       deltas = if (key.second == null) {
+
         // dealing with block and uncle rewards
         deltas + traces.map { it.toFungibleBalanceDeltas(timestamp) }.flatten()
       } else {
 
         // all other traces
-        val root = traces.first { it.traceAddress.isEmpty() }
 
-        deltas + when (root.hasError()) {
-          true -> emptyList()
-          false -> traces
-            .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
-            .flatten()
-        }
+        val errorTraceAddresses = traces
+          .filter { it.hasError() }
+          .map { it.traceAddress }
+          .toSet()
+
+        deltas + traces
+          .filterNot { it.hasError() }
+          .filter { isTraceValid(it.traceAddress, errorTraceAddresses) }
+          .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
+          .flatten()
       }
 
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null }
+    .filterNot { delta ->
+
+      // when a contract self destructs and the refund address is itself we must filter
+      // NOTE this is the only way to destroy ether!!
+
+      delta.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
+        delta.address == delta.counterpartAddress
+    }
+
+fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {
+
+  if (traceAddress.size - target.size == 0) return true
+
+  return if (!errorTraceAddresses.contains(target)) {
+    isTraceValid(traceAddress, errorTraceAddresses, traceAddress.subList(0, target.size + 1))
+  } else {
+    false
+  }
+}
 
 // ------------------------------------------------------------
 // TransactionCountDeltaRecord

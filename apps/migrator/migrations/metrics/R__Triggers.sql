@@ -1,4 +1,7 @@
-CREATE FUNCTION notify_block_metric() RETURNS TRIGGER AS
+
+/* Block Metric */
+
+CREATE OR REPLACE FUNCTION notify_block_metric() RETURNS TRIGGER AS
 $body$
 DECLARE
   record  RECORD;
@@ -26,6 +29,7 @@ BEGIN
 END;
 $body$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS notify_block_metrics_header ON block_metrics_header;
 
 CREATE TRIGGER notify_block_metrics_header
   AFTER INSERT OR UPDATE OR DELETE
@@ -33,17 +37,23 @@ CREATE TRIGGER notify_block_metrics_header
   FOR EACH ROW
 EXECUTE PROCEDURE notify_block_metric('block_metrics_header');
 
+DROP TRIGGER IF EXISTS notify_block_metrics_transaction ON block_metrics_transaction;
+
 CREATE TRIGGER notify_block_metrics_transaction
   AFTER INSERT OR UPDATE OR DELETE
   ON block_metrics_transaction
   FOR EACH ROW
 EXECUTE PROCEDURE notify_block_metric('block_metrics_transaction');
 
+DROP TRIGGER IF EXISTS notify_block_metrics_transaction_trace ON block_metrics_transaction_trace;
+
 CREATE TRIGGER notify_block_metrics_transaction_trace
   AFTER INSERT OR UPDATE OR DELETE
   ON block_metrics_transaction_trace
   FOR EACH ROW
 EXECUTE PROCEDURE notify_block_metric('block_metrics_transaction_trace');
+
+DROP TRIGGER IF EXISTS notify_block_metrics_transaction_fee ON block_metrics_transaction_fee;
 
 CREATE TRIGGER notify_block_metrics_transaction_fee
   AFTER INSERT OR UPDATE OR DELETE

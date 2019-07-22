@@ -269,51 +269,34 @@ protocol Capture {
 
   }
 
-  enum ContractLifecyleType {
+  enum ContractEventType {
     CREATE, DESTROY
   }
 
-  record ContractLifecycleRecord {
-
+  record ContractEventCreatedRecord {
     string address;
-    ContractLifecyleType type;
-
-    boolean reverse = false;
-
-    union { null, string } creator = null;
-    union { null, string } init = null;
-    union { null, string } code = null;
-    union { null, com.ethvm.avro.common.ContractType } contractType = null;
-    union { null, com.ethvm.avro.common.TraceLocationRecord } createdAt = null;
-
-    union { null, string } refundAddress = null;
-    union { null, decimal(80, 0) } refundBalance = null;
-    union { null, com.ethvm.avro.common.TraceLocationRecord } destroyedAt = null;
-
-    timestamp_ms timestamp = 0;
+    string creator;
+    string init;
+    string code;
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
+    union{ null, com.ethvm.avro.common.ContractType } contractType = null;
   }
 
-  record ContractLifecycleListRecord {
-    timestamp_ms timestamp = 0;
-    array<ContractLifecycleRecord> deltas = [];
-    union { null, string } blockHash = null;
+  record ContractEventDestroyedRecord {
+    string address;
+    string refundAddress;
+    decimal(80, 0) refundBalance;
+    com.ethvm.avro.common.TraceLocationRecord traceLocation;
   }
 
-  record ContractRecord {
+  record ContractEventRecord {
+    string address;
+    ContractEventType type;
+    union { ContractEventCreatedRecord, ContractEventDestroyedRecord } `event`;
+  }
 
-    union{ null, string } address = null;
-    union { null, string } creator = null;
-    union { null, string } init = null;
-    union { null, string } code = null;
-    union { null, com.ethvm.avro.common.ContractType } contractType = null;
-    union { null, string } refundAddress = null;
-    union { null, decimal(80, 0) } refundBalance = null;
-
-    union { null, com.ethvm.avro.common.TraceLocationRecord } traceCreatedAt = null;
-    union { null, com.ethvm.avro.common.TraceLocationRecord } traceDestroyedAt = null;
-
-    timestamp_ms timestamp = 0;
-
+  record ContractEventListRecord {
+    array<ContractEventRecord> deltas = [];
   }
 
   record ContractKeyRecord {

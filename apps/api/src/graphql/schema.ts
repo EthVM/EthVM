@@ -153,7 +153,7 @@ export interface BlockHeader {
     gasUsed: BigNumber;
     timestamp: Date;
     size: number;
-    blockTime: number;
+    blockTime?: number;
 }
 
 export interface BlockMetric {
@@ -318,10 +318,10 @@ export interface Metadata {
 }
 
 export interface IQuery {
-    accountByAddress(address: string): Account | Promise<Account>;
     blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
     blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
     blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
+    accountByAddress(address: string): Account | Promise<Account>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
@@ -332,14 +332,14 @@ export interface IQuery {
     metadata(): Metadata | Promise<Metadata>;
     search(query: string): Search | Promise<Search>;
     tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
-    addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenPage | Promise<TokenPage>;
+    addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenBalancePage | Promise<TokenBalancePage>;
     addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
     coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
-    tokenExchangeRates(symbols: string[], sort?: TokenExchangeRateFilter, offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
+    tokenExchangeRates(addresses?: string[], sort?: TokenExchangeRateFilter, offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
     totalNumTokenExchangeRates(): number | Promise<number>;
     tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
-    tokensMetadata(symbols?: string[]): TokenMetadata[] | Promise<TokenMetadata[]>;
+    tokensMetadata(addresses?: string[], offset?: number, limit?: number): TokenMetadataPage | Promise<TokenMetadataPage>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
     tokenDetailByAddress(address: string): TokenDetail | Promise<TokenDetail>;
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
@@ -400,7 +400,7 @@ export interface ISubscription {
     newTransactions(): TransactionSummary[] | Promise<TransactionSummary[]>;
 }
 
-export interface Token {
+export interface TokenBalance {
     name?: string;
     website?: string;
     email?: string;
@@ -411,6 +411,11 @@ export interface Token {
     currentPrice?: BigNumber;
     priceChangePercentage24h?: BigNumber;
     image?: string;
+}
+
+export interface TokenBalancePage {
+    items: TokenBalance[];
+    totalCount: number;
 }
 
 export interface TokenDetail {
@@ -480,8 +485,8 @@ export interface TokenMetadata {
     logo?: string;
 }
 
-export interface TokenPage {
-    items: Token[];
+export interface TokenMetadataPage {
+    items: TokenMetadata[];
     totalCount: number;
 }
 

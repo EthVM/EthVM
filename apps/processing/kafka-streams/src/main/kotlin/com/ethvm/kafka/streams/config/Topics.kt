@@ -2,10 +2,9 @@ package com.ethvm.kafka.streams.config
 
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
+import com.ethvm.avro.capture.ContractEventCreatedRecord
+import com.ethvm.avro.capture.ContractEventDestroyedRecord
 import com.ethvm.avro.capture.ContractKeyRecord
-import com.ethvm.avro.capture.ContractLifecycleListRecord
-import com.ethvm.avro.capture.ContractLifecycleRecord
-import com.ethvm.avro.capture.ContractRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
@@ -20,6 +19,7 @@ import com.ethvm.avro.processing.BlockMetricsHeaderRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionFeeRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionRecord
 import com.ethvm.avro.processing.BlockMetricsTransactionTraceRecord
+import com.ethvm.avro.processing.BlockTimeRecord
 import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
 import com.ethvm.avro.processing.Erc20MetadataRecord
@@ -47,18 +47,18 @@ import com.ethvm.kafka.streams.Serdes.BlockMetricsHeader
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransaction
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionFee
 import com.ethvm.kafka.streams.Serdes.BlockMetricsTransactionTrace
+import com.ethvm.kafka.streams.Serdes.BlockTime
 import com.ethvm.kafka.streams.Serdes.CanonicalCount
 import com.ethvm.kafka.streams.Serdes.CanonicalCountKey
 import com.ethvm.kafka.streams.Serdes.CanonicalKey
-import com.ethvm.kafka.streams.Serdes.Contract
 import com.ethvm.kafka.streams.Serdes.ContractKey
-import com.ethvm.kafka.streams.Serdes.ContractLifecycle
-import com.ethvm.kafka.streams.Serdes.ContractLifecycleList
 import com.ethvm.kafka.streams.Serdes.Erc20Metadata
 import com.ethvm.kafka.streams.Serdes.Erc721Metadata
 import com.ethvm.kafka.streams.Serdes.FungibleBalance
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceDelta
 import com.ethvm.kafka.streams.Serdes.FungibleBalanceKey
+import com.ethvm.kafka.streams.Serdes.ContractEventCreated
+import com.ethvm.kafka.streams.Serdes.ContractEventDestroyed
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalance
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceKey
@@ -113,6 +113,7 @@ data class KafkaTopic<K, V>(
 object Topics {
 
   val CanonicalBlockHeader = KafkaTopic<CanonicalKeyRecord, BlockHeaderRecord>("canonical_block_header", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockHeaderRecord.`SCHEMA$`, BlockHeader())
+  val CanonicalBlockTime = KafkaTopic<CanonicalKeyRecord, BlockTimeRecord>("canonical_block_time", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockTimeRecord.`SCHEMA$`, BlockTime())
   val CanonicalTransactions = KafkaTopic<CanonicalKeyRecord, TransactionListRecord>("canonical_transactions", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionListRecord.`SCHEMA$`, TransactionList())
   val CanonicalReceipts = KafkaTopic<CanonicalKeyRecord, TransactionReceiptListRecord>("canonical_receipts", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TransactionReceiptListRecord.`SCHEMA$`, ReceiptList())
   val CanonicalTraces = KafkaTopic<CanonicalKeyRecord, TraceListRecord>("canonical_traces", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), TraceListRecord.`SCHEMA$`, TraceList())
@@ -166,9 +167,8 @@ object Topics {
 
   val CanonicalBlockAuthor = KafkaTopic<CanonicalKeyRecord, BlockAuthorRecord?>("canonical_block_author", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockAuthorRecord.`SCHEMA$`, BlockAuthor())
 
-  val CanonicalContractLifecycle = KafkaTopic("canonical_contract_lifecycle", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), ContractLifecycleListRecord.`SCHEMA$`, ContractLifecycleList())
-  val ContractLifecycleEvents = KafkaTopic("contract_lifecycle_events", ContractKeyRecord.`SCHEMA$`, ContractKey(), ContractLifecycleRecord.`SCHEMA$`, ContractLifecycle())
-  val Contract = KafkaTopic("contract", ContractKeyRecord.`SCHEMA$`, ContractKey(), ContractRecord.`SCHEMA$`, Contract())
+  val ContractCreated = KafkaTopic("contract_created", ContractKeyRecord.`SCHEMA$`, ContractKey(), ContractEventCreatedRecord.`SCHEMA$`, ContractEventCreated())
+  val ContractDestroyed = KafkaTopic("contract_destroyed", ContractKeyRecord.`SCHEMA$`, ContractKey(), ContractEventDestroyedRecord.`SCHEMA$`, ContractEventDestroyed())
 
   val Erc20Metadata = KafkaTopic("erc20_metadata", ContractKeyRecord.`SCHEMA$`, ContractKey(), Erc20MetadataRecord.`SCHEMA$`, Erc20Metadata())
   val Erc721Metadata = KafkaTopic("erc721_metadata", ContractKeyRecord.`SCHEMA$`, ContractKey(), Erc721MetadataRecord.`SCHEMA$`, Erc721Metadata())
@@ -197,9 +197,8 @@ object Topics {
       CanonicalGasUsed,
       CanonicalTransactionFees,
       CanonicalBlockAuthor,
-      CanonicalContractLifecycle,
-      ContractLifecycleEvents,
-      Contract,
+      ContractCreated,
+      ContractDestroyed,
       Erc20Metadata,
       Erc721Metadata
     )

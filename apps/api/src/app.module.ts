@@ -31,7 +31,7 @@ import { MetadataModule } from '@app/graphql/metadata/metadata.module'
     TransferModule,
     BlockMetricsModule,
     MetadataModule,
-    SubscriptionsModule,
+    // SubscriptionsModule,
   ],
 })
 export class AppModule { }

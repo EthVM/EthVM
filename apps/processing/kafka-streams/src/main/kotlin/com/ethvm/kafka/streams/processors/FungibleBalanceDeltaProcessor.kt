@@ -78,7 +78,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
     val canonicalBlocks = canonicalBlockAuthor
       .transform(
-        TransformerSupplier { OncePerBlockTransformer(appConfig.unitTesting) },
+        TransformerSupplier { OncePerBlockTransformer<BlockAuthorRecord>(appConfig.unitTesting) },
         *OncePerBlockTransformer.STORE_NAMES
       )
 
@@ -98,7 +98,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
           .setBlockHash(header!!.blockHash)
           .setDeltas(
             netConfig.genesis
-              .accounts
+              .allocations
               .entries
               .map { (address, premine) ->
 

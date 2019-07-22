@@ -1,7 +1,6 @@
 package com.ethvm.kafka.streams.processors.transformers
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.processing.BlockAuthorRecord
 import com.ethvm.kafka.streams.Serdes
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serde
@@ -13,9 +12,9 @@ import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 
-class OncePerBlockTransformer(
+class OncePerBlockTransformer<T>(
   private val unitTesting: Boolean = false
-) : Transformer<CanonicalKeyRecord?, BlockAuthorRecord?, KeyValue<CanonicalKeyRecord, BlockAuthorRecord?>> {
+) : Transformer<CanonicalKeyRecord?, T?, KeyValue<CanonicalKeyRecord, T?>> {
 
   companion object {
 
@@ -49,7 +48,7 @@ class OncePerBlockTransformer(
     this.canonicalStore = context.getStateStore(STORE_NAME_ONCE_PER_BLOCK) as KeyValueStore<CanonicalKeyRecord, String?>
   }
 
-  override fun transform(key: CanonicalKeyRecord?, value: BlockAuthorRecord?): KeyValue<CanonicalKeyRecord, BlockAuthorRecord?>? {
+  override fun transform(key: CanonicalKeyRecord?, value: T?): KeyValue<CanonicalKeyRecord, T?>? {
 
     if (key == null) {
       logger.warn("Null key received, ignoring")

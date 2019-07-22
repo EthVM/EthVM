@@ -97,7 +97,7 @@ import TableAddressTokensRowLoading from '@app/modules/addresses/components/Tabl
 import BN from 'bignumber.js'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { TokenPageExt } from '@app/core/api/apollo/extensions/token-page.ext'
+import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
 
 const MAX_ITEMS = 10
@@ -133,7 +133,7 @@ const MAX_ITEMS = 10
       update({ tokens }) {
         if (tokens) {
           this.error = '' // clear the error
-          return new TokenPageExt(tokens)
+          return new TokenBalancePageExt(tokens)
         }
         this.error = this.error || this.$i18n.t('message.err')
         return tokens
@@ -178,7 +178,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  tokensPage?: TokenPageExt
+  tokensPage?: TokenBalancePageExt
   error?: string
   page?: number
   totalTokensValue?: BN

@@ -7,7 +7,7 @@
 // ====================================================
 
 export interface addressAllTokensOwned_tokens_items {
-  __typename: "Token";
+  __typename: "TokenBalance";
   name: string | null;
   symbol: string | null;
   address: string | null;
@@ -19,7 +19,7 @@ export interface addressAllTokensOwned_tokens_items {
 }
 
 export interface addressAllTokensOwned_tokens {
-  __typename: "TokenPage";
+  __typename: "TokenBalancePage";
   items: addressAllTokensOwned_tokens_items[];
   totalCount: number;
 }

@@ -1,23 +1,23 @@
 type Query {
   tokenHolder(address: String!, holderAddress: String!): TokenHolder
-  addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10): TokenPage!
+  addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10): TokenBalancePage!
   addressTotalTokenValueUSD(address: String!): BigNumber
   coinExchangeRate(pair: ExchangeRatePair!): CoinExchangeRate
-  tokenExchangeRates(symbols: [String!], sort: TokenExchangeRateFilter, offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
+  tokenExchangeRates(addresses: [String], sort: TokenExchangeRateFilter, offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
-  tokensMetadata(symbols: [String]): [TokenMetadata!]!
+  tokensMetadata(addresses: [String], offset: Int = 0, limit: Int = 20): TokenMetadataPage!
   tokenHolders(address: String!, offset: Int = 0, limit: Int = 20): TokenHoldersPage!
   tokenDetailByAddress(address: String!): TokenDetail
 }
 
-type TokenPage {
-  items: [Token!]!
+type TokenBalancePage {
+  items: [TokenBalance!]!
   totalCount: Int!
 }
 
-type Token {
+type TokenBalance {
   name: String
   website: String
   email: String
@@ -84,6 +84,11 @@ type TokenMetadata {
   address: String
   decimals: Int
   logo: String
+}
+
+type TokenMetadataPage {
+  items: [TokenMetadata!]!
+  totalCount: Int!
 }
 
 type TokenDetail {

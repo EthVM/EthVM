@@ -346,11 +346,11 @@ services:
   pgweb:
     image: sosedoff/pgweb:0.11.2
     restart: unless-stopped
+    networks:
+      - net
     depends_on:
       - db-principal
       - db-metrics
-    networks:
-      - net
     ports:
       - 8082:8082
     command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082"

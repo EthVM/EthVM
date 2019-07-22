@@ -13,6 +13,8 @@ import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.avro.processing.TransactionGasPriceListRecord
 import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionKeyRecord
+import com.ethvm.common.extensions.bigInteger
+import com.ethvm.common.extensions.byteBuffer
 import com.ethvm.common.extensions.getGasBI
 import com.ethvm.common.extensions.getGasPriceBI
 import com.ethvm.common.extensions.reverse
@@ -23,6 +25,7 @@ import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
 import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
+import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging
@@ -31,8 +34,10 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.KStream
+import org.apache.kafka.streams.kstream.TransformerSupplier
 import org.joda.time.DateTime
 import java.math.BigInteger
+import java.nio.ByteBuffer
 import java.util.Properties
 
 class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
@@ -151,7 +156,65 @@ class CanonicalTransactionsProcessor : AbstractKafkaProcessor() {
         }
       }.toTopic(Topics.CanonicalGasPrices)
 
+    // synthetic transactions for genesis block
+
+    syntheticTransactionsForGenesis(builder, canonicalTransactions)
+
     return builder.build()
+  }
+
+  private fun syntheticTransactionsForGenesis(builder: StreamsBuilder, canonicalTransactions: KStream<CanonicalKeyRecord, TransactionListRecord>) {
+
+    builder.addStateStore(OncePerBlockTransformer.canonicalRecordsStore(appConfig.unitTesting))
+
+    canonicalTransactions
+      .transform(
+        TransformerSupplier { OncePerBlockTransformer<TransactionListRecord>(appConfig.unitTesting) },
+        *OncePerBlockTransformer.STORE_NAMES
+      )
+      // only for the genesis block
+      .filter { k, _ -> k.number.bigInteger() == BigInteger.ZERO }
+      .mapValues { _, _ ->
+
+        val genesis = netConfig.genesis
+
+        var idx = 0
+        val zeroBI = BigInteger.ZERO.byteBuffer()
+
+        val transactions = genesis
+          .allocations
+          .map { (account, info) ->
+
+            val balance = info.balance
+
+            TransactionRecord.newBuilder()
+              .setTimestamp(genesis.timestamp)
+              .setBlockNumber(zeroBI)
+              .setBlockHash(genesis.hash)
+              .setChainId(genesis.chainId)
+              // we prefix the account hash and use that as our tx hash. We need to make it fill out 66 characters
+              .setHash("0xGENESIS_________________${account.substring(2)}")
+              .setTransactionIndex(idx++)
+              .setFrom(genesis.coinbase)
+              .setTo(account)
+              .setValue(balance.byteBuffer())
+              .setInput(ByteBuffer.allocate(0))
+              .setV(0)
+              .setR("0x0")
+              .setS("0x0")
+              .setGas(zeroBI)
+              .setGasPrice(zeroBI)
+              .setNonce(zeroBI)
+              .build()
+          }
+
+        TransactionListRecord.newBuilder()
+          .setBlockHash(genesis.hash)
+          .setTimestamp(genesis.timestamp)
+          .setTransactions(transactions)
+          .build()
+      }
+      .toTopic(CanonicalTransactions)
   }
 
   private fun canonicalTransactionCountDeltas(canonicalTransactions: KStream<CanonicalKeyRecord, TransactionListRecord>) {
