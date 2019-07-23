@@ -48,3 +48,17 @@ CREATE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata USING 
 
 /* findContractsCreatedBy */
 CREATE INDEX IF NOT EXISTS idx_contract_created_creator ON contract_created USING hash (creator);
+
+/* Receipt service */
+CREATE INDEX IF NOT EXISTS idx_transaction_trace_transaction_hash ON transaction_trace USING hash (transaction_hash);
+
+/* tokenHolders */
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_contract ON fungible_balance (contract); /* can be replaced by contract, adddress */
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_contract ON non_fungible_balance (contract);
+
+/* tokenHolder */
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_contract__address ON non_fungible_balance (contract, address);
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_contract__address ON fungible_balance (contract, address);
+
+/* tokenExchangeRates */
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_market_cap_rank ON token_exchange_rates (market_cap_rank ASC);
