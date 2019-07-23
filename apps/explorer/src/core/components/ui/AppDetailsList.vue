@@ -15,7 +15,7 @@
       <v-card-title class="title font-weight-bold pl-4">
         <div class="details-list-title-loading"></div>
       </v-card-title>
-       <v-divider class="lineGrey mt-1 mb-1" />
+      <v-divider class="lineGrey mt-1 mb-1" />
     </div>
     <div v-else class="pb-1 pt-1">
       <slot name="title">
@@ -23,9 +23,8 @@
           <v-card-title class="title font-weight-bold pl-4" v-html="title"></v-card-title>
         </div>
       </slot>
-       <v-divider class="lineGrey mt-1 mb-1" />
+      <v-divider class="lineGrey mt-1 mb-1" />
     </div>
-
 
     <!--
     =====================================================================================

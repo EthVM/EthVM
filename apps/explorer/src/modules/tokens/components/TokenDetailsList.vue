@@ -74,7 +74,6 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
    * @return {String} - Title for details list
    */
   get title(): string {
-    console.log(this.tokenDetails)
     let name = this.$tc('token.name', 1)
     let symbol = ''
     let holder = ''
@@ -86,7 +85,6 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       holder = `- ${this.$t('token.filtered')}`
     }
     return `${name} ${symbol} ${holder}`
-
   }
 
   get image(): string {
@@ -236,7 +234,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       }
 
       if (this.holderDetails && this.holderDetails.address) {
-        let symbol = this.tokenDetails.symbol === null ? '': ` ${this.tokenDetails.symbol.toUpperCase()}`
+        const symbol = this.tokenDetails.symbol === null ? '' : ` ${this.tokenDetails.symbol.toUpperCase()}`
 
         Object.assign(detailsHolder[0], {
           detail: this.holderDetails.address,
