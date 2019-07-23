@@ -237,11 +237,12 @@ export class BlockService {
 
     const { instaMining } = this.configService
 
-    const blockHeader = await this.blockHeaderRepository.findOne({
-      where: { hash },
-      relations: ['uncles', 'rewards', 'blockTime'],
-      cache: true,
-    })
+    const blockHeader = await this.blockHeaderRepository.createQueryBuilder('b')
+      .leftJoinAndSelect('b.rewards', 'br')
+      .leftJoinAndSelect('b.blockTime', 'bt')
+      .where('b.hash = :hash', { hash })
+      .cache(true)
+      .getOne()
 
     if (!blockHeader) return undefined
 
