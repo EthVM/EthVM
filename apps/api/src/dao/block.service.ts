@@ -60,8 +60,6 @@ export class BlockService {
         'READ COMMITTED',
         async (txn): Promise<[BlockSummary[], number]> => {
 
-          const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
-
           const [{ count }] = await txn.find(CanonicalCount, {
             select: ['count'],
             where: {
@@ -70,15 +68,31 @@ export class BlockService {
             cache: true,
           })
 
-          const headersWithRewards = await txn.find(BlockHeaderEntity, {
-            select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
-            where,
-            relations: ['rewards'],
-            order: { number: 'DESC' },
-            skip: offset,
-            take: limit,
-            cache: true,
-          })
+          const queryBuilder = txn.createQueryBuilder(BlockHeaderEntity, 'b')
+            .leftJoinAndSelect('b.rewards', 'br')
+
+          if (fromBlock) {
+            queryBuilder.where('b.number <= :fromBlock', { fromBlock })
+          }
+
+          const headersWithRewards = await queryBuilder
+            .select([
+              'b.number',
+              'b.hash',
+              'b.author',
+              'b.transactionHashes',
+              'b.uncleHashes',
+              'b.difficulty',
+              'b.timestamp',
+              'br.deltaType',
+              'br.blockHash',
+              'br.amount'
+            ])
+            .orderBy('b.number', 'DESC')
+            .offset(offset)
+            .limit(limit)
+            .cache(true)
+            .getMany()
 
           return [
             await this.summarise(txn, headersWithRewards),
