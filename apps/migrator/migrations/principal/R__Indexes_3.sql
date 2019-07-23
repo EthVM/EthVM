@@ -30,11 +30,21 @@ CREATE INDEX IF NOT EXISTS idx_block_header_hash ON canonical_block_header USING
 /* findUncleByHash */
 CREATE INDEX IF NOT EXISTS idx_uncle_hash__nephew_hash__author ON uncle (hash, nephew_hash, author);
 
-/* findUncles */
+/* findUncles, findLatestUncleBlockNumber */
 CREATE INDEX IF NOT EXISTS  idx_uncle_number__nephew_hash__author ON uncle (number DESC, nephew_hash, author);
 CREATE INDEX IF NOT EXISTS idx_uncle_hash ON uncle USING hash (hash);
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_address__tl_block_hash ON fungible_balance_delta (address, trace_location_block_hash)
 WHERE delta_type = 'UNCLE_REWARD';
-
-/* findLatestUncleBlockNumber */
 CREATE INDEX IF NOT EXISTS idx_uncle_height ON uncle (height DESC);
+
+/* findContractByAddress */
+CREATE INDEX IF NOT EXISTS idx_contract_created_address ON contract_created USING hash (address);
+CREATE INDEX IF NOT EXISTS idx_contract_destroyed_address ON public.contract_destroyed USING hash (address);
+CREATE INDEX IF NOT EXISTS idx_eth_list_contract_metadata_address ON eth_list_contract_metadata USING hash (address);
+CREATE INDEX IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata USING hash (address);
+
+/* ContractService.findAllByAddress */
+CREATE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata USING hash (address);
+
+/* findContractsCreatedBy */
+CREATE INDEX IF NOT EXISTS idx_contract_created_creator ON contract_created USING hash (creator);
