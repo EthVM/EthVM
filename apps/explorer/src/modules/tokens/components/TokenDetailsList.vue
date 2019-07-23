@@ -44,8 +44,10 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     if (this.isLoading || this.error !== '') {
       return ''
     }
-    const logoSrc = this.tokenDetails && this.tokenDetails.logo ? this.tokenDetails.logo : require('@/assets/not-found.png')
-    return `<img src="${logoSrc}" class="mr-2 token-image" /> ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()})`
+    const { tokenDetails } = this
+    const logoSrc = tokenDetails && tokenDetails.logo ? tokenDetails.logo : require('@/assets/not-found.png')
+    const tokenLabel = tokenDetails.symbol ? `${tokenDetails.name} (${tokenDetails.symbol!.toUpperCase()})` : `${tokenDetails.name}`
+    return `<img src="${logoSrc}" class="mr-2 token-image" /> ${tokenLabel}`
   }
 
   /**

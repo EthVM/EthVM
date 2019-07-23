@@ -8,7 +8,8 @@ export class TokenBalanceDto implements TokenBalance {
   website?: string
   email?: string
   symbol?: string
-  address?: string
+  contractAddress?: string
+  holderAddress?: string
   decimals?: number
   balance?: BigNumber
   currentPrice?: BigNumber
@@ -19,6 +20,8 @@ export class TokenBalanceDto implements TokenBalance {
     assignClean(this, data)
 
     this.balance = data.amount
+    this.contractAddress = data.contract
+    this.holderAddress = data.address
 
     const { tokenExchangeRate, metadata, contractMetadata } = data
 
