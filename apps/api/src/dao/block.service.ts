@@ -33,14 +33,13 @@ export class BlockService {
   async calculateHashRate(cache: boolean = true): Promise<BigNumber | null> {
 
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
-    const blocks = await this.blockHeaderRepository
-      .find({
-        select: ['number', 'difficulty'],
-        relations: ['blockTime'],
-        order: { number: 'DESC' },
-        take: 20,
-        cache,
-      })
+    const blocks = await this.blockHeaderRepository.createQueryBuilder('b')
+      .leftJoinAndSelect('b.blockTime', 'bt')
+      .select(['b.number', 'b.difficulty', 'bt.blockTime'])
+      .orderBy('b.number', 'DESC')
+      .limit(20)
+      .cache(cache)
+      .getMany()
 
     if (blocks.length === 0) return null
 
