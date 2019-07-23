@@ -52,7 +52,7 @@ export class UncleService {
 
         const uncles = await entityManager.find(UncleEntity, {
           where,
-          order: { nephewNumber: 'DESC' },
+          order: { height: 'DESC' },
           skip: offset,
           take: limit,
           cache: true,

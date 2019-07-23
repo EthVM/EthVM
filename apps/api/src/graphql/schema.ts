@@ -566,10 +566,9 @@ export interface TransferPage {
 export interface Uncle {
     hash: string;
     index: number;
-    nephewNumber: BigNumber;
     nephewHash: string;
     number: BigNumber;
-    height: string;
+    height: BigNumber;
     parentHash: string;
     nonce?: BigNumber;
     sha3Uncles: string;

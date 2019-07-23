@@ -19,9 +19,6 @@ export class UncleEntity {
   @Column({ type: 'integer', readonly: true })
   index!: number
 
-  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
-  nephewNumber!: BigNumber
-
   @Column({ type: 'character', length: 66, readonly: true })
   nephewHash!: string
 

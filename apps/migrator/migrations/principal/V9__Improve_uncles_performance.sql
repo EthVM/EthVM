@@ -2,7 +2,6 @@ DROP VIEW canonical_uncle;
 
 CREATE VIEW canonical_uncle AS
 SELECT
-  cb.number as nephew_number,
   u.*,
   fbd.amount as reward_amount
 FROM

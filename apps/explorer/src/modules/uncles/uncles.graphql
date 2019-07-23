@@ -22,7 +22,7 @@ fragment UncleSummary on Uncle {
   number
   hash
   number
-  nephewNumber
+  nephewNumber: height
   uncleIndex: index
   uncleReward: rewardAmount
 }
@@ -37,6 +37,6 @@ fragment UncleDetail on Uncle {
   parentHash
   sha3Uncles
   timestamp
-  nephewNumber
+  nephewNumber: height
   uncleIndex: index
 }
