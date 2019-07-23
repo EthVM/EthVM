@@ -17,7 +17,14 @@ export class ContractService {
   }
 
   async findContractByAddress(address: string): Promise<ContractEntity | undefined> {
-    return this.contractRepository.findOne({ where: { address }, relations: ['metadata', 'erc20Metadata'] })
+
+    return this.contractRepository.createQueryBuilder('c')
+      .leftJoinAndSelect('c.metadata', 'm')
+      .leftJoinAndSelect('c.erc20Metadata', 'em')
+      .where('c.address = :address', { address })
+      .getOne()
+
+    // return this.contractRepository.findOne({ where: { address }, relations: ['metadata', 'erc20Metadata'] })
   }
 
   async findAllByAddress(entityManager: EntityManager, addresses: string[]): Promise<ContractEntity[]> {
