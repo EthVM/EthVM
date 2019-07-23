@@ -119,7 +119,7 @@ services:
   # ///////////////////////////////////////////////////////
 
   db-principal:
-    image: postgres:10
+    image: postgres:11
     restart: unless-stopped
     shm_size: 1g
     volumes:

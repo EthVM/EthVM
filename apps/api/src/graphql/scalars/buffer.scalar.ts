@@ -9,7 +9,10 @@ export class BufferScalar {
   }
 
   serialize(value: Buffer) {
-    return value.toString('hex')
+    if (value && value instanceof Buffer && Array.from(value.entries()).length) {
+      return value.toString('hex')
+    }
+    return ''
   }
 
   parseLiteral(ast) {

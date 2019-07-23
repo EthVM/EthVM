@@ -84,8 +84,8 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     if (this.holderDetails && this.holderDetails.address) {
       holder = `- ${this.$t('token.filtered')}`
     }
-
     return `${name} ${symbol} ${holder}`
+
   }
 
   get image(): string {
