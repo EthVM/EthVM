@@ -274,8 +274,8 @@ export default class PageDetailsToken extends Vue {
     return this.$apollo.loading || this.syncing
   }
 
-  get totalSupply(): BigNumber | null {
-    return this.tokenDetails ? this.tokenDetails.totalSupplyBN : null
+  get totalSupply(): BigNumber | undefined {
+    return this.tokenDetails ? this.tokenDetails.totalSupplyBN : undefined
   }
 
   get tokenLabel(): string {
