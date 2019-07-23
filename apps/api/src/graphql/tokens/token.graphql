@@ -22,7 +22,8 @@ type TokenBalance {
   website: String
   email: String
   symbol: String
-  address: String
+  contractAddress: String
+  holderAddress: String
   decimals: Int
   balance: BigNumber
   currentPrice: BigNumber
