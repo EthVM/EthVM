@@ -491,16 +491,14 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
       }
 
       deltas
-
     }.flatten()
-    .filterNot { delta -> delta.getAmount() == null }
+    .filter { delta -> delta.getAmount() != null }
     .filterNot { delta ->
 
       // when a contract self destructs and the refund address is itself we must filter
       // NOTE this is the only way to destroy ether!!
 
       delta.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
-        delta.tokenType == FungibleTokenType.ETHER &&
         delta.address == delta.counterpartAddress
     }
 
