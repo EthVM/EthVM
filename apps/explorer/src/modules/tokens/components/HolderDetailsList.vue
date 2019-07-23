@@ -48,9 +48,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
     }
     const { tokenDetails } = this
     const logoSrc = tokenDetails && tokenDetails.logo ? tokenDetails.logo : require('@/assets/not-found.png')
-    const tokenLabel = tokenDetails.symbol
-      ? `${tokenDetails.name} (${tokenDetails.symbol!.toUpperCase()})`
-      : `${tokenDetails.name}`
+    const tokenLabel = tokenDetails.symbol ? `${tokenDetails.name} (${tokenDetails.symbol!.toUpperCase()})` : `${tokenDetails.name}`
     return `<img src="${logoSrc}" class="mr-2 token-image" />  ${tokenLabel} - Filtered by Holder`
   }
 
@@ -99,7 +97,6 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         }
       ]
     } else {
-
       let balanceLabel = this.holderDetails && this.holderDetails.balance ? `${this.balance}` : 'N/A'
       if (this.tokenDetails.symbol) {
         balanceLabel += ` (${this.tokenDetails.symbol!.toUpperCase()})`
