@@ -240,6 +240,7 @@ export default class PageDetailsToken extends Vue {
    * @return {Array} - Breadcrumb entry. See description.
    */
   get crumbsHolder(): Crumb[] {
+
     return [
       {
         text: 'token.name',
@@ -256,7 +257,8 @@ export default class PageDetailsToken extends Vue {
         text: 'token.holder',
         disabled: true,
         label: {
-          name: `${this.holderAddress}`
+          name: `${this.holderAddress}`,
+          hash: true
         }
       }
     ]
