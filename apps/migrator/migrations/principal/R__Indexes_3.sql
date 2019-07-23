@@ -27,3 +27,14 @@ CREATE INDEX IF NOT EXISTS idx_block_header_number__hash__author ON canonical_bl
 /* BlockService.findByHash */
 CREATE INDEX IF NOT EXISTS idx_block_header_hash ON canonical_block_header USING hash (hash);
 
+/* findUncleByHash */
+CREATE INDEX IF NOT EXISTS idx_uncle_hash__nephew_hash__author ON uncle (hash, nephew_hash, author);
+
+/* findUncles */
+CREATE INDEX IF NOT EXISTS  idx_uncle_number__nephew_hash__author ON uncle (number DESC, nephew_hash, author);
+CREATE INDEX IF NOT EXISTS idx_uncle_hash ON uncle USING hash (hash);
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_address__tl_block_hash ON fungible_balance_delta (address, trace_location_block_hash)
+WHERE delta_type = 'UNCLE_REWARD';
+
+/* findLatestUncleBlockNumber */
+CREATE INDEX IF NOT EXISTS idx_uncle_height ON uncle (height DESC);
