@@ -29,7 +29,7 @@ query addressAllTokensOwned($address: String!, $offset: Int, $limit: Int) {
 fragment TokenBalance on TokenBalance {
   name
   symbol
-  address
+  address: contractAddress
   decimals
   balance
   currentPrice
