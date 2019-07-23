@@ -74,11 +74,12 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
    * @return {String} - Title for details list
    */
   get title(): string {
+    console.log(this.tokenDetails)
     let name = this.$tc('token.name', 1)
     let symbol = ''
     let holder = ''
     if (this.tokenDetails && !this.isLoading) {
-      name = this.tokenDetails.name === null ? name : this.$tc('token.name', 1)
+      name = this.tokenDetails.name === null ? name : this.tokenDetails.name
       symbol = this.tokenDetails.symbol === null ? symbol : `(${this.tokenDetails.symbol.toUpperCase()}) `
     }
     if (this.holderDetails && this.holderDetails.address) {
@@ -164,8 +165,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
           copy: true
         })
       }
-
-      if (this.tokenDetails.decimals) {
+      if (this.tokenDetails.decimals !== null) {
         Object.assign(detailsContract[2], {
           detail: this.tokenDetails.decimals
         })
@@ -236,6 +236,8 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
       }
 
       if (this.holderDetails && this.holderDetails.address) {
+        let symbol = this.tokenDetails.symbol === null ? '': ` ${this.tokenDetails.symbol.toUpperCase()}`
+
         Object.assign(detailsHolder[0], {
           detail: this.holderDetails.address,
           link: `/address/${this.holderDetails.address}`,
@@ -243,7 +245,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
         })
 
         Object.assign(detailsHolder[1], {
-          detail: `${this.balance} (${this.tokenDetails.symbol!.toUpperCase()})`
+          detail: `${this.balance}${symbol}`
         })
 
         Object.assign(detailsHolder[2], {
