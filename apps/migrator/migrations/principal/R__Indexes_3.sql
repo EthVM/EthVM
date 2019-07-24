@@ -71,3 +71,29 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume_desc ON token_e
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rates (address);
 CREATE INDEX IF NOT EXISTS idx_contract_created_contract_type__tl_block_hash__address ON contract_created (contract_type, trace_location_block_hash, address)
 WHERE contract_type = 'ERC20';
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rates (symbol);
+
+/* totalUSDValue */
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_current_price ON token_exchange_rates (current_price);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rates USING hash (address);
+
+/* tokensMetadata */
+CREATE INDEX IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
+CREATE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
+
+/* tokenDetail */
+CREATE INDEX IF NOT EXISTS idx_contract_created_contract_type__tl_block_hash__address ON contract_created (contract_type, trace_location_block_hash, address);
+
+/* transactionTraces */
+CREATE INDEX IF NOT EXISTS idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
+
+/* transfers */
+/* findTokenTransfersByContractAddress */
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_block_number__tl_transaction_index ON fungible_balance_delta (trace_location_block_number DESC, trace_location_transaction_index DESC);
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_delta_type__contract_address__amount ON fungible_balance_delta (delta_type, contract_address, amount);
+
+/* findTokenTransfersByContractAddressForHolder */
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_address__delta_type__amount ON public.fungible_balance_delta USING btree (address, delta_type, amount)
+WHERE amount > 0 and delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION');
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_counterpart_address__delta_type__amount ON public.fungible_balance_delta USING btree (counterpart_address, delta_type, amount);
+WHERE amount > 0 and delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION');
