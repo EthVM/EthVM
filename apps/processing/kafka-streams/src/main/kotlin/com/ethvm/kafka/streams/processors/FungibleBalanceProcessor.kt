@@ -1,8 +1,10 @@
 package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
+import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
+import com.ethvm.avro.processing.FungibleTokenType
 import com.ethvm.common.extensions.getAmountBI
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.kafka.streams.Serdes
@@ -53,7 +55,21 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
 
     val premineDeltas = PremineBalanceDelta.stream(builder)
     val hardForkDeltas = HardForkBalanceDelta.stream(builder)
+
     val transactionDeltas = TransactionBalanceDelta.stream(builder)
+      .filterNot { k, v ->
+
+        // when a contract self destructs and the refund address is itself we must filter the addition side only
+        // NOTE this is the only way to destroy ether!!
+
+        v.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
+          v.tokenType == FungibleTokenType.ETHER &&
+          k.address == v.counterpartAddress &&
+          v.getAmountBI() > BigInteger.ZERO
+
+
+      }
+
     val transactionFeeDeltas = TransactionFeeBalanceDelta.stream(builder)
     val minerFeeDeltas = MinerFeeBalanceDelta.stream(builder)
     val erc20Deltas = Erc20BalanceDelta.stream(builder)

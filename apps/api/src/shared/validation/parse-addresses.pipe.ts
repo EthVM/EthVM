@@ -14,6 +14,6 @@ export class ParseAddressesPipe implements PipeTransform<string[], string[]> {
         val = `0x${val}`
       }
     })
-    return value
+    return value.map(val => val.toLowerCase())
   }
 }

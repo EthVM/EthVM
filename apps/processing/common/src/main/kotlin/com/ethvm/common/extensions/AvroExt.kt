@@ -254,7 +254,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
         .setTraceLocation(traceLocation)
         .setAddress(action.getFrom())
-        .setCounterpartAddress(result.getAddress())
+        .setCounterpartAddress(getResult().getAddress())
         .setAmountBI(action.getValueBI().negate())
         .build(),
 
@@ -263,7 +263,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
         .setTraceLocation(traceLocation)
         .setAddress(getResult().getAddress())
-        .setCounterpartAddress(result.getAddress())
+        .setCounterpartAddress(action.getFrom())
         .setAmount(action.getValue())
         .build()
     )
@@ -275,6 +275,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
         .setTraceLocation(traceLocation)
         .setAddress(action.getAddress())
+        .setCounterpartAddress(action.getRefundAddress())
         .setAmountBI(action.getBalanceBI().negate())
         .build(),
 
@@ -470,24 +471,39 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
       val timestamp = DateTime(getTimestamp())
 
       deltas = if (key.second == null) {
+
         // dealing with block and uncle rewards
         deltas + traces.map { it.toFungibleBalanceDeltas(timestamp) }.flatten()
       } else {
 
         // all other traces
-        val root = traces.first { it.traceAddress.isEmpty() }
 
-        deltas + when (root.hasError()) {
-          true -> emptyList()
-          false -> traces
-            .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
-            .flatten()
-        }
+        val errorTraceAddresses = traces
+          .filter { it.hasError() }
+          .map { it.traceAddress }
+          .toSet()
+
+        deltas + traces
+          .filterNot { it.hasError() }
+          .filter { isTraceValid(it.traceAddress, errorTraceAddresses) }
+          .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
+          .flatten()
       }
 
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null }
+
+fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {
+
+  if (traceAddress.size - target.size == 0) return true
+
+  return if (!errorTraceAddresses.contains(target)) {
+    isTraceValid(traceAddress, errorTraceAddresses, traceAddress.subList(0, target.size + 1))
+  } else {
+    false
+  }
+}
 
 // ------------------------------------------------------------
 // TransactionCountDeltaRecord

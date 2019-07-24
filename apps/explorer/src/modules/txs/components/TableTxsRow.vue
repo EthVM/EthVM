@@ -78,7 +78,7 @@
                   <v-flex shrink pa-1>
                     <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
                   </v-flex>
-                  <v-flex sm10 lg11 pa-1>
+                  <v-flex sm10 pa-1>
                     <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`" />
                   </v-flex>
                 </v-layout>

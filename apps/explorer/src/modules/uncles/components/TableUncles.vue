@@ -63,12 +63,15 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-layout column fill-height class="mb-1">
+    <v-layout column fill-height class="pb-2">
       <v-flex xs12 v-if="!loading && !error">
         <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
         <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
         </v-card>
+        <v-layout justify-end v-if="pages > 1" class="pb-1 pt-2 pr-2 pl-2">
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+        </v-layout>
       </v-flex>
       <v-flex xs12 v-if="loading">
         <div v-for="i in maxItems" :key="i">
@@ -91,11 +94,6 @@
           </v-layout>
           <v-divider class="mb-2 mt-2" />
         </div>
-      </v-flex>
-      <v-flex xs12>
-        <v-layout justify-end v-if="pages > 1" class="pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
-        </v-layout>
       </v-flex>
     </v-layout>
   </v-card>

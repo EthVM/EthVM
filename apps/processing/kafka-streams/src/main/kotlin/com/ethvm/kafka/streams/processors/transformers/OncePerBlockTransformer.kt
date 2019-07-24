@@ -1,7 +1,6 @@
 package com.ethvm.kafka.streams.processors.transformers
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.processing.BlockAuthorRecord
 import com.ethvm.kafka.streams.Serdes
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Serde

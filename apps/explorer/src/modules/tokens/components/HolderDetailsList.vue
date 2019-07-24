@@ -46,8 +46,10 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
     if (this.isLoading) {
       return ''
     }
-    const logoSrc = this.tokenDetails && this.tokenDetails.logo ? this.tokenDetails.logo : require('@/assets/not-found.png')
-    return `<img src="${logoSrc}" class="mr-2 token-image" />  ${this.tokenDetails.name} (${this.tokenDetails.symbol!.toUpperCase()}) - Filtered by Holder`
+    const { tokenDetails } = this
+    const logoSrc = tokenDetails && tokenDetails.logo ? tokenDetails.logo : require('@/assets/not-found.png')
+    const tokenLabel = tokenDetails.symbol ? `${tokenDetails.name} (${tokenDetails.symbol!.toUpperCase()})` : `${tokenDetails.name}`
+    return `<img src="${logoSrc}" class="mr-2 token-image" />  ${tokenLabel} - Filtered by Holder`
   }
 
   /**
@@ -95,6 +97,11 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         }
       ]
     } else {
+      let balanceLabel = this.holderDetails && this.holderDetails.balance ? `${this.balance}` : 'N/A'
+      if (this.tokenDetails.symbol) {
+        balanceLabel += ` (${this.tokenDetails.symbol!.toUpperCase()})`
+      }
+
       details = [
         {
           title: this.$i18n.t('token.holder').toString(),
@@ -110,7 +117,7 @@ export default class HolderDetailsList extends Mixins(StringConcatMixin) {
         },
         {
           title: this.$i18n.t('common.balance').toString(),
-          detail: this.holderDetails && this.holderDetails.balance ? `${this.balance} (${this.tokenDetails.symbol!.toUpperCase()})` : 'N/A'
+          detail: balanceLabel
         }
       ]
 

@@ -83,8 +83,7 @@ export class TransactionDetailExt implements TransactionDetail {
   }
 
   get feeEth(): EthValue {
-
-    if(this.blockNumber == new BigNumber(0)) {
+    if (this.blockNumber == new BigNumber(0)) {
       // for genesis block we have no receipt
       return new EthValue(new BigNumber(0))
     }

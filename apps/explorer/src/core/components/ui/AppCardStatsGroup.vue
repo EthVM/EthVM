@@ -21,12 +21,19 @@
         :value="latestHashRate"
         color-type="warning"
         back-type="hash-rate"
-        metrics="Th/s"
+        :metrics="latestHashUnits"
       />
       <app-info-card v-else :title="$tc('tx.failed', 2)" :value="latestBlockFailedTxs" color-type="error" back-type="failed-txs" />
     </v-flex>
     <v-flex xs12 sm6 md3>
-      <app-info-card v-if="type === 'generic'" :title="$t('diff.name')" :value="latestDifficulty" color-type="error" back-type="difficulty" metrics="Th" />
+      <app-info-card
+        v-if="type === 'generic'"
+        :title="$t('diff.name')"
+        :value="latestDifficulty"
+        color-type="error"
+        back-type="difficulty"
+        :metrics="latestDifficultyUnits"
+      />
       <app-info-card v-else :title="$tc('tx.pending-short', 2)" :value="latestBlockPendingTxs" color-type="success" back-type="time-since" />
     </v-flex>
   </v-layout>
@@ -38,7 +45,17 @@ import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@a
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
-import { BlockSummaryPageExt, BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+
+interface HashUnit {
+  unit: HashUnitLabel
+  divisor: number
+}
+enum HashUnitLabel {
+  th = 'Th/s',
+  gh = 'Gh/s',
+  mh = 'Mh/s'
+}
 
 @Component({
   components: {
@@ -121,6 +138,8 @@ export default class AppInfoCardGroup extends Vue {
 
   disconnected: boolean = false
 
+  hashUnits: HashUnit[] = [{ unit: HashUnitLabel.th, divisor: 1e12 }, { unit: HashUnitLabel.gh, divisor: 1e9 }, { unit: HashUnitLabel.mh, divisor: 1e6 }]
+
   /*
     ===================================================================================
       Lifecycle
@@ -176,6 +195,38 @@ export default class AppInfoCardGroup extends Vue {
     }, 1000)
   }
 
+  calculateHashValueAndLabel(value?: BigNumber): [BigNumber | undefined, HashUnitLabel] {
+    const { hashUnits } = this
+
+    if (!value) {
+      return [undefined, HashUnitLabel.th] // Default label to Th/s
+    }
+
+    // Determine the smallest unit that will show value as 1 or greater
+
+    let result
+    let hashUnit
+
+    for (const unit of hashUnits) {
+      result = value.div(unit.divisor)
+
+      if (result.isGreaterThan(1)) {
+        hashUnit = unit.unit
+        break
+      }
+    }
+
+    // Default to smallest
+
+    if (!hashUnit) {
+      const smallestUnit = hashUnits[hashUnits.length - 1]
+      hashUnit = smallestUnit.unit
+      result = value.div(smallestUnit.divisor)
+    }
+
+    return [result, hashUnit]
+  }
+
   /*
     ===================================================================================
       Computed Values
@@ -199,24 +250,36 @@ export default class AppInfoCardGroup extends Vue {
     return !loading && !!blockSummary ? blockSummary.numberBN.toString() : loadingMessage
   }
 
+  get latestHashRateValueAndLabel(): [BigNumber | undefined, HashUnitLabel] {
+    const { hashRate, calculateHashValueAndLabel } = this
+    return calculateHashValueAndLabel(hashRate)
+  }
+
   get latestHashRate(): string {
-    const { loading, loadingMessage, hashRate } = this
-    return !loading && hashRate
-      ? hashRate
-          .div('1e12')
-          .decimalPlaces(4)
-          .toString()
-      : loadingMessage
+    const { loadingMessage, latestHashRateValueAndLabel } = this
+    const hashRate = latestHashRateValueAndLabel[0]
+    return hashRate ? hashRate.decimalPlaces(2).toString() : loadingMessage
+  }
+
+  get latestHashUnits(): HashUnitLabel {
+    const { latestHashRateValueAndLabel } = this
+    return latestHashRateValueAndLabel[1]
+  }
+
+  get latestDifficultyValueAndLabel(): [BigNumber | undefined, HashUnitLabel] {
+    const { blockSummary, calculateHashValueAndLabel } = this
+    return calculateHashValueAndLabel(blockSummary ? blockSummary.difficultyBN : undefined)
   }
 
   get latestDifficulty(): string {
-    const { loading, loadingMessage, blockSummary } = this
-    return !loading && blockSummary
-      ? blockSummary
-          .difficultyBN!.div('1e12')
-          .decimalPlaces(4)
-          .toString()
-      : loadingMessage
+    const { loadingMessage, latestDifficultyValueAndLabel } = this
+    const difficulty = latestDifficultyValueAndLabel[0]
+    return difficulty ? difficulty.decimalPlaces(2).toString() : loadingMessage
+  }
+
+  get latestDifficultyUnits(): HashUnitLabel {
+    const { latestDifficultyValueAndLabel } = this
+    return latestDifficultyValueAndLabel[1]
   }
 
   get latestBlockSuccessTxs(): string {
