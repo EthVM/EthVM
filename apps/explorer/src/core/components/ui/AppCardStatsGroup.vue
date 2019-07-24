@@ -76,7 +76,7 @@ enum HashUnitLabel {
       subscribeToMore: {
         document: newBlockStats,
 
-        updateQuery: (previousResult, { subscriptionData }) => {
+        updateQuery(previousResult, { subscriptionData }) {
           const { newBlock } = subscriptionData.data
           this.lastReceivedAt = new Date()
           return {
