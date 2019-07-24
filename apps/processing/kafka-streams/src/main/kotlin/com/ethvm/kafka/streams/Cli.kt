@@ -50,6 +50,11 @@ class Cli : CliktCommand() {
     envvar = "KAFKA_STREAMS_STATE_DIR"
   ).default(DEFAULT_STREAMS_STATE_DIR)
 
+  private val replicationFactor: Int by option(
+    help = "Replication factor for internal topics",
+    envvar = "KAFKA_REPLICATION_FACTOR"
+  ).int().default(DEFAULT_STREAMS_REPLICATION_FACTOR)
+
   private val resetStreamsState: Int by option(
     help = "Whether or not to reset local persisted streams processing state",
     envvar = "KAFKA_STREAMS_RESET"
@@ -74,7 +79,8 @@ class Cli : CliktCommand() {
         bootstrapServers,
         startingOffset,
         schemaRegistryUrl,
-        streamsStateDir
+        streamsStateDir,
+        replicationFactor
       )
     }
 
@@ -126,6 +132,7 @@ class Cli : CliktCommand() {
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
     const val DEFAULT_AUTO_OFFSET = "earliest"
     const val DEFAULT_STREAMS_RESET = 0
+    const val DEFAULT_STREAMS_REPLICATION_FACTOR = 1
     const val DEFAULT_STREAMS_STATE_DIR = "/tmp/kafka-streams"
     const val DEFAULT_WEB3_WS_URL = "ws://localhost:8546"
     const val DEFAULT_ETH_NET_CONFIG = "mainnet"

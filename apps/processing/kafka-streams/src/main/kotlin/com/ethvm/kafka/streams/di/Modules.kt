@@ -86,6 +86,8 @@ object Modules {
 
         put(StreamsConfig.STATE_DIR_CONFIG, config.kafka.streamsStateDir)
 
+        put(StreamsConfig.REPLICATION_FACTOR_CONFIG, config.kafka.replicationFactor)
+
         put(StreamsConfig.METRICS_RECORDING_LEVEL_CONFIG, "DEBUG")
 
         // Serdes - Defaults
