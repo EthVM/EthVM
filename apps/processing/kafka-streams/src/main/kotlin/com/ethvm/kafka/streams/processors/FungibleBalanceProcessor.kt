@@ -59,12 +59,14 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
     val transactionDeltas = TransactionBalanceDelta.stream(builder)
       .filterNot { k, v ->
 
-        // when a contract self destructs and the refund address is itself we must filter
+        // when a contract self destructs and the refund address is itself we must filter the addition side only
         // NOTE this is the only way to destroy ether!!
 
         v.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
           v.tokenType == FungibleTokenType.ETHER &&
-          k.address == v.address
+          k.address == v.counterpartAddress &&
+          v.getAmountBI() > BigInteger.ZERO
+
 
       }
 
