@@ -252,6 +252,8 @@ class CoinGeckoTokenExchangeProvider(
           .map { rate ->
 
             val address = chunk.first { rate.id == it.id }.address
+              // we store all hashes in lower case
+              .toLowerCase()
 
             val keyRecord = TokenExchangeRateKeyRecord.newBuilder()
               .setAddress(address)
