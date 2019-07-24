@@ -62,3 +62,12 @@ CREATE INDEX IF NOT EXISTS idx_fungible_balance_contract__address ON fungible_ba
 
 /* tokenExchangeRates */
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_market_cap_rank ON token_exchange_rates (market_cap_rank ASC);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_market_cap ON token_exchange_rates (market_cap ASC);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_market_cap_desc ON token_exchange_rates (market_cap DESC);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_current_price ON token_exchange_rates (current_price ASC);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_current_price_desc ON token_exchange_rates (current_price DESC);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume ON token_exchange_rates (total_volume ASC);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume_desc ON token_exchange_rates (total_volume DESC);
+CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rates (address);
+CREATE INDEX IF NOT EXISTS idx_contract_created_contract_type__tl_block_hash__address ON contract_created (contract_type, trace_location_block_hash, address)
+WHERE contract_type = 'ERC20';
