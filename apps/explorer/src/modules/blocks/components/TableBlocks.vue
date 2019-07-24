@@ -1,42 +1,26 @@
 <template>
-  <v-card color="white" flat class="pt-3 mt-0">
+  <v-card color="white" flat class="pt-3 pb-2 mt-0">
     <!--
     =====================================================================================
       TITLE
     =====================================================================================
     -->
-    <v-layout v-if="!isPageHome" align-end justify-space-between row wrap fill-height pb-1 pr-2 pl-2>
-      <v-flex xs12 sm5 md4 class="title-live" pb-0>
-        <v-layout align-end justify-start row fill-height>
-          <v-card-title class="title font-weight-bold pl-2">{{ getTitle }}</v-card-title>
-          <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
-        </v-layout>
-      </v-flex>
-      <v-spacer />
-      <v-flex xs12 sm7 md5 v-if="pages > 1 && !hasError">
-        <v-layout justify-end row class="pb-2 pr-2 pl-2">
-          <app-paginate
-            :total="pages"
-            @newPage="setPage"
-            :current-page="page"
-            :has-input="!simplePagination"
-            :has-first="!simplePagination"
-            :has-last="!simplePagination"
-          />
-        </v-layout>
-      </v-flex>
-    </v-layout>
-    <v-layout v-else row wrap align-center pb-1 pr-2 pl-2>
-      <v-flex xs8 md7>
-        <v-card-title class="title font-weight-bold pl-0">{{ $t('block.last') }}</v-card-title>
-      </v-flex>
-      <v-spacer />
-      <v-flex xs4 md1>
-        <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/blocks">{{ $t('btn.view-all') }}</v-btn>
-        </v-layout>
-      </v-flex>
-    </v-layout>
+    <app-table-title :page-type="pageType" :title="getTitle" page-link="/blocks" :has-pagination="hasPagination">
+      <template v-slot:update>
+        <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
+      </template>
+      <template v-slot:pagination v-if="hasPagination">
+        <app-paginate
+          :total="pages"
+          @newPage="setPage"
+          :current-page="page"
+          :has-input="!simplePagination"
+          :has-first="!simplePagination"
+          :has-last="!simplePagination"
+        />
+      </template>
+    </app-table-title>
+
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -78,7 +62,7 @@
           <div v-for="(block, index) in blocks" :key="index">
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
-          <v-layout v-if="pageType != 'home' && pages > 1" justify-end row class="pb-1 pt-2 pr-2 pl-2">
+          <v-layout v-if="hasPagination" justify-end row class="pb-1 pt-2 pr-2 pl-2">
             <app-paginate
               :total="pages"
               @newPage="setPage"
@@ -125,6 +109,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -142,6 +127,7 @@ const MAX_ITEMS = 50
     AppFootnotes,
     AppInfoLoad,
     AppPaginate,
+    AppTableTitle,
     TableBlocksRow,
     NoticeNewBlock
   },
@@ -249,17 +235,13 @@ export default class TableBlocks extends Vue {
 
   @Prop({ type: String, default: 'blocks' }) pageType!: string
   @Prop({ type: String, default: '' }) showStyle!: string
-
   @Prop({ type: Number, default: 20 }) maxItems!: number
   @Prop({ type: Boolean, default: false }) simplePagination!: boolean
-
   @Prop({ type: String }) author?: string
 
   page!: number
-
   error: string = ''
   syncing?: boolean
-
   blockPage?: BlockSummaryPageExt
   fromBlock?: BigNumber
 
@@ -366,7 +348,8 @@ export default class TableBlocks extends Vue {
   get getTitle(): string {
     const titles = {
       blocks: this.$i18n.t('block.last'),
-      address: this.$i18n.t('block.mined')
+      address: this.$i18n.t('block.mined'),
+      home: this.$i18n.t('block.last')
     }
     return titles[this.pageType]
   }
@@ -374,6 +357,10 @@ export default class TableBlocks extends Vue {
   get pages(): number {
     const { blockPage, maxItems } = this
     return blockPage ? Math.ceil(blockPage.totalCountBN.div(maxItems).toNumber()) : 0
+  }
+
+  get hasPagination(): boolean {
+    return this.pageType !== 'home' && this.pages > 1 && !this.hasError
   }
 }
 </script>

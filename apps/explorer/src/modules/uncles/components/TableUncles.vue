@@ -1,27 +1,18 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2 mt-0">
+  <v-card color="white" flat class="pt-3 pb-2 mt-0">
     <!--
     =====================================================================================
       TITLE
     =====================================================================================
     -->
-    <v-layout align-end justify-space-between row wrap fill-height pb-1>
-      <v-flex xs12 sm6>
-        <v-layout row wrap align-center justify-center>
-          <v-flex shrink>
-            <v-card-title class="title font-weight-bold">{{ $tc('uncle.name', 2) }}</v-card-title>
-          </v-flex>
-          <v-flex>
-            <notice-new-block @reload="resetFromUncle" />
-          </v-flex>
-        </v-layout>
-      </v-flex>
-      <v-flex xs12 sm6 v-if="pages > 1">
-        <v-layout justify-end class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
-        </v-layout>
-      </v-flex>
-    </v-layout>
+    <app-table-title :page-type="pageType" :title="$tc('uncle.name', 2)" :has-pagination="hasPagination">
+      <template v-slot:update>
+        <notice-new-block @reload="resetFromUncle" />
+      </template>
+      <template v-slot:pagination v-if="hasPagination">
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      </template>
+    </app-table-title>
     <!--
     =====================================================================================
       LOADING / ERROR
@@ -34,7 +25,7 @@
       TABLE HEADER
     =====================================================================================
     -->
-    <v-layout>
+    <v-layout class="pl-2 pr-2">
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" color="info" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
@@ -63,13 +54,13 @@
       TABLE BODY
     =====================================================================================
     -->
-    <v-layout column fill-height class="pb-2">
+    <v-layout column fill-height class="pa-2">
       <v-flex xs12 v-if="!loading && !error">
         <v-card-text v-if="!uncles.length" class="text-xs-center secondary--text">{{ $t('message.uncle.no-uncles') }}</v-card-text>
         <v-card v-else v-for="(uncle, index) in uncles" class="transparent" flat :key="index">
           <table-uncles-row :uncle="uncle" :page-type="pageType" />
         </v-card>
-        <v-layout justify-end v-if="pages > 1" class="pb-1 pt-2 pr-2 pl-2">
+        <v-layout justify-end v-if="hasPagination" class="pb-1 pt-2 pr-2 pl-2">
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
@@ -103,6 +94,7 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
@@ -116,6 +108,7 @@ import { Subscription } from 'rxjs'
     AppError,
     AppInfoLoad,
     AppPaginate,
+    AppTableTitle,
     TableUnclesRow,
     NoticeNewBlock
   },
@@ -288,6 +281,9 @@ export default class TableUncles extends Vue {
   get pages(): number {
     const { unclePage, maxItems } = this
     return unclePage ? Math.ceil(unclePage.totalCountBN.div(maxItems).toNumber()) : 0
+  }
+  get hasPagination(): boolean {
+    return this.pages > 1 && !this.hasError
   }
 }
 </script>
