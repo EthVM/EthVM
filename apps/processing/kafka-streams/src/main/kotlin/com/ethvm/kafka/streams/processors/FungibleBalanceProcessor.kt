@@ -66,8 +66,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
           v.tokenType == FungibleTokenType.ETHER &&
           k.address == v.counterpartAddress &&
           v.getAmountBI() > BigInteger.ZERO
-
-
       }
 
     val transactionFeeDeltas = TransactionFeeBalanceDelta.stream(builder)

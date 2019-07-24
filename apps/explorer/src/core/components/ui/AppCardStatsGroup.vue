@@ -67,6 +67,7 @@ enum HashUnitLabel {
 
       update({ blockSummaries }) {
         if (blockSummaries && blockSummaries.items.length) {
+          this.lastReceivedAt = new Date()
           return new BlockSummaryPageExt_items(blockSummaries.items[0])
         }
         return null
@@ -77,6 +78,7 @@ enum HashUnitLabel {
 
         updateQuery: (previousResult, { subscriptionData }) => {
           const { newBlock } = subscriptionData.data
+          this.lastReceivedAt = new Date()
           return {
             ...previousResult,
             blockSummaries: {
@@ -129,6 +131,8 @@ export default class AppInfoCardGroup extends Vue {
 
   seconds: number = 0
   secondsInterval?: number
+
+  lastReceivedAt?: Date
 
   connectedSubscription?: Subscription
 
@@ -185,7 +189,7 @@ export default class AppInfoCardGroup extends Vue {
   startCount(): void {
     this.secondsInterval = window.setInterval(() => {
       if (this.blockSummary) {
-        const lastTimestamp = this.blockSummary.timestampDate
+        const lastTimestamp = this.lastReceivedAt || new Date()
         this.seconds = Math.ceil((new Date().getTime() - lastTimestamp.getTime()) / 1000)
       }
     }, 1000)
