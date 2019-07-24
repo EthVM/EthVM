@@ -6,7 +6,7 @@ import { UncleEntity } from '@app/orm/entities/uncle.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, FindConditions, In, LessThanOrEqual, ObjectLiteral, Repository } from 'typeorm'
+import {EntityManager, Equal, FindConditions, In, LessThan, LessThanOrEqual, ObjectLiteral, Repository} from 'typeorm'
 import { TraceService } from './trace.service'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { setEquals } from '@app/shared/utils'
@@ -243,8 +243,8 @@ export class BlockService {
 
     const lookup = await this.blockHeaderRepository
       .findOne({
-        select: ['hash'],
-        where: { number },
+        select: ['hash', 'number'],
+        where: { number: Equal(number) },
       })
 
     if (lookup) {
