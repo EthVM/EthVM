@@ -73,25 +73,30 @@ export class TransferService {
       'READ COMMITTED',
       async (txn): Promise<[InternalTransferEntity[], number]> => {
 
-        const where = [
-          { to: address },
-          { from: address },
-        ]
+        // Much cheaper to count without using OR clause
+        const countIn = await txn.count(InternalTransferEntity, { where: { to: address }, cache: true});
+        const countOut = await txn.count(InternalTransferEntity, { where: { from: address }, cache: true});
 
-        const count = await txn.count(InternalTransferEntity, { where, cache: true })
+        const items = await txn.query(`
+          select *
+          FROM canonical_internal_transfer AS fbd
+          WHERE
+            fbd.to = $1
+            AND fbd.delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION')
+            AND fbd.amount > 0
+          UNION
+          select *
+          FROM canonical_internal_transfer AS fbd
+          WHERE
+            fbd.from = $2
+            AND fbd.delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION')
+            AND fbd.amount > 0
+            ORDER BY trace_location_block_number DESC, trace_location_transaction_index DESC
+            OFFSET $3
+            LIMIT $4;
+        `,[address, address, offset, limit]);
 
-        const items = await txn.find(InternalTransferEntity, {
-          where,
-          order: {
-            traceLocationBlockNumber: 'DESC',
-            traceLocationTransactionIndex: 'DESC',
-          },
-          skip: offset,
-          take: limit,
-          cache: true,
-        })
-
-        return [items, count]
+        return [items, (countOut + countIn)]
 
       },
     )
