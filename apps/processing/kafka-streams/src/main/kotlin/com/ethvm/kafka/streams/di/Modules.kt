@@ -88,8 +88,6 @@ object Modules {
 
         put(StreamsConfig.REPLICATION_FACTOR_CONFIG, config.kafka.replicationFactor)
 
-        put(StreamsConfig.METRICS_RECORDING_LEVEL_CONFIG, "DEBUG")
-
         // Serdes - Defaults
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, KafkaSerdes.String().javaClass.name)
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, KafkaSerdes.ByteArray().javaClass.name)
