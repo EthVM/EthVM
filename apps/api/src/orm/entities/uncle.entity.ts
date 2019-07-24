@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Column } from 'typeorm/decorator/columns/Column';
 import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('canonical_uncle')
 export class UncleEntity {
@@ -69,7 +70,7 @@ export class UncleEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   gasUsed!: BigNumber
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 
   @Column({ type: 'bigint', readonly: true })

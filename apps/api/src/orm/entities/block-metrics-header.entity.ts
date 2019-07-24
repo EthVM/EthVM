@@ -3,6 +3,7 @@ import { assignClean } from '@app/shared/utils'
 import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
 import { BigNumber } from 'bignumber.js'
 import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('canonical_block_metrics_header')
 export class BlockMetricsHeaderEntity {
@@ -17,7 +18,7 @@ export class BlockMetricsHeaderEntity {
   @Column({ type: 'character', length: 66, unique: true, readonly: true })
   blockHash!: string
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 
   @Column({type: 'int', readonly: true})
