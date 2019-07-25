@@ -52,10 +52,10 @@ export class TransactionEntity {
   @Column({ type: 'bigint', readonly: true })
   v!: string
 
-  @Column({ type: 'character', length: 78, readonly: true })
+  @Column({ type: 'varchar', length: 128, readonly: true })
   r!: string
 
-  @Column({ type: 'character', length: 78, readonly: true })
+  @Column({ type: 'varchar', length: 128, readonly: true })
   s!: string
 
   @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
