@@ -283,6 +283,7 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
           CanonicalCountRecord.newBuilder()
             .setCount(count)
             .build()
+
         )
       }.toTopic(Topics.CanonicalCountDelta)
 

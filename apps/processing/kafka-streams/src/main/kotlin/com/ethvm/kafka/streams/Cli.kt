@@ -6,19 +6,7 @@ import com.ethvm.kafka.streams.config.KafkaConfig
 import com.ethvm.kafka.streams.config.Web3Config
 import com.ethvm.kafka.streams.di.Modules.kafkaStreams
 import com.ethvm.kafka.streams.di.Modules.web3
-import com.ethvm.kafka.streams.processors.BlockMetricsProcessor
-import com.ethvm.kafka.streams.processors.CanonicalBlockHeaderProcessor
-import com.ethvm.kafka.streams.processors.CanonicalReceiptsProcessor
-import com.ethvm.kafka.streams.processors.CanonicalTracesProcessor
-import com.ethvm.kafka.streams.processors.CanonicalTransactionsProcessor
-import com.ethvm.kafka.streams.processors.CanonicalUnclesProcessor
-import com.ethvm.kafka.streams.processors.ContractMetadataProcessor
-import com.ethvm.kafka.streams.processors.CountProcessor
-import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaProcessor
-import com.ethvm.kafka.streams.processors.FungibleBalanceProcessor
-import com.ethvm.kafka.streams.processors.KafkaProcessor
-import com.ethvm.kafka.streams.processors.NonFungibleBalanceProcessor
-import com.ethvm.kafka.streams.processors.TransactionFeesProcessor
+import com.ethvm.kafka.streams.processors.*
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
@@ -113,11 +101,12 @@ class Cli : CliktCommand() {
       CanonicalReceiptsProcessor(),
       CanonicalTracesProcessor(),
       CanonicalUnclesProcessor(),
+      CanonicalCountProcessor(),
+      TransactionCountProcessor(),
       TransactionFeesProcessor(),
       FungibleBalanceDeltaProcessor(),
       FungibleBalanceProcessor(),
       NonFungibleBalanceProcessor(),
-      CountProcessor(),
       BlockMetricsProcessor(),
       ContractMetadataProcessor()
     ).forEach {
