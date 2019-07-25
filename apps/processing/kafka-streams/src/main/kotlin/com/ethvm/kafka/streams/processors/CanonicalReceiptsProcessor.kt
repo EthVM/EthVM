@@ -182,6 +182,7 @@ class CanonicalReceiptsProcessor : AbstractKafkaProcessor() {
           .setBlockNumber(receipt.getBlockNumber())
           .setBlockHash(receipt.getBlockHash())
           .setTransactionHash(receipt.getTransactionHash())
+          .setTransactionIndex(receipt.getTransactionIndex())
           .setTimestamp(timestamp)
           .build()
 

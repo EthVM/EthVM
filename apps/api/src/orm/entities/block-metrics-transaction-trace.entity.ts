@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('canonical_block_metrics_transaction_trace')
 export class BlockMetricsTransactionTraceEntity {
@@ -6,7 +7,7 @@ export class BlockMetricsTransactionTraceEntity {
   @PrimaryColumn({ type: 'character', length: 66, unique: true, readonly: true })
   blockHash!: string
 
-  @PrimaryColumn({ type: 'timestamp', readonly: true })
+  @PrimaryColumn({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 
   @Column({type: 'int', readonly: true})

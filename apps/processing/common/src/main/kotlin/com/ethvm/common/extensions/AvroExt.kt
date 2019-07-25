@@ -187,6 +187,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
     .setBlockNumber(getBlockNumber())
     .setBlockHash(getBlockHash())
     .setTransactionHash(getTransactionHash())
+    .setTransactionIndex(getTransactionPosition())
     .setTraceAddress(getTraceAddress())
     .setTimestamp(timestamp)
     .build()
@@ -254,7 +255,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
         .setTraceLocation(traceLocation)
         .setAddress(action.getFrom())
-        .setCounterpartAddress(result.getAddress())
+        .setCounterpartAddress(getResult().getAddress())
         .setAmountBI(action.getValueBI().negate())
         .build(),
 
@@ -263,7 +264,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
         .setTraceLocation(traceLocation)
         .setAddress(getResult().getAddress())
-        .setCounterpartAddress(result.getAddress())
+        .setCounterpartAddress(action.getFrom())
         .setAmount(action.getValue())
         .build()
     )
@@ -423,6 +424,7 @@ fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
         .setBlockHash(getBlockHash())
         .setBlockNumber(getBlockNumber())
         .setTransactionHash(getTransactionHash())
+        .setTransactionIndex(getTransactionPosition())
         .setTimestamp(getTimestamp())
         .build()
     )
