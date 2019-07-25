@@ -76,7 +76,8 @@
     "type": "Тип",
     "circSupply": "Циркулирующее предложение",
     "total": "Всего ",
-    "per": "за"
+    "per": "за",
+    "filtered": "Filtered by Holder"
   },
   "address": {
     "name": "Адрес | Адреса"
