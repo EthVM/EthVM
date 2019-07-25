@@ -1,3 +1,59 @@
+/* Drop old indexes */
+DROP INDEX IF EXISTS idx_block_header_number;
+DROP INDEX IF EXISTS idx_block_header_hash;
+DROP INDEX IF EXISTS idx_block_header_parent_hash;
+DROP INDEX IF EXISTS idx_block_header_author;
+DROP INDEX IF EXISTS idx_uncle_hash;
+DROP INDEX IF EXISTS idx_uncle_author;
+DROP INDEX IF EXISTS idx_uncle_nephew_hash;
+DROP INDEX IF EXISTS idx_uncle_number;
+DROP INDEX IF EXISTS idx_uncle_height;
+DROP INDEX IF EXISTS idx_transaction_hash;
+DROP INDEX IF EXISTS idx_transaction_block_hash;
+DROP INDEX IF EXISTS idx_transaction_from;
+DROP INDEX IF EXISTS idx_transaction_to;
+DROP INDEX IF EXISTS idx_transaction_transaction_index;
+DROP INDEX IF EXISTS idx_transaction_block_number;
+DROP INDEX IF EXISTS idx_transaction_block_number__transaction_index;
+DROP INDEX IF EXISTS idx_transaction_receipt_block_hash;
+DROP INDEX IF EXISTS idx_transaction_receipt_from;
+DROP INDEX IF EXISTS idx_transaction_receipt_to;
+DROP INDEX IF EXISTS idx_transaction_receipt_from_to;
+DROP INDEX IF EXISTS idx_transaction_receipt_contract_address;
+DROP INDEX IF EXISTS idx_transaction_trace_block_hash;
+DROP INDEX IF EXISTS idx_transaction_trace_transaction_hash;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_address;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_contract_address;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_delta_type__contract_address;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_counterpart_address;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_token_type;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_delta_type;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_tl_block_hash;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_tl_tx_index__tl_block_number;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_amount;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_internal_transfer;
+DROP INDEX IF EXISTS idx_fungible_balance_address;
+DROP INDEX IF EXISTS idx_fungible_balance_contract;
+DROP INDEX IF EXISTS idx_fungible_balance_contract_address;
+DROP INDEX IF EXISTS idx_non_fungible_balance_delta_contract;
+DROP INDEX IF EXISTS idx_non_fungible_balance_delta_contract_token_id;
+DROP INDEX IF EXISTS idx_non_fungible_balance_delta_from;
+DROP INDEX IF EXISTS idx_non_fungible_balance_delta_to;
+DROP INDEX IF EXISTS idx_non_fungible_balance_delta_trace_location_block_hash;
+DROP INDEX IF EXISTS idx_non_fungible_balance_address;
+DROP INDEX IF EXISTS idx_non_fungible_balance_contract;
+DROP INDEX IF EXISTS idx_non_fungible_balance_contract_address;
+DROP INDEX IF EXISTS idx_erc20_metadata_name;
+DROP INDEX IF EXISTS idx_erc20_metadata_symbol;
+DROP INDEX IF EXISTS idx_erc721_metadata_name;
+DROP INDEX IF EXISTS idx_erc721_metadata_symbol;
+DROP INDEX IF EXISTS idx_contract_created_creator;
+DROP INDEX IF EXISTS idx_contract_created_contract_type;
+DROP INDEX IF EXISTS idx_contract_created_trace_location_block_hash;
+DROP INDEX IF EXISTS idx_contract_destroyed_trace_location_block_hash;
+DROP INDEX IF EXISTS idx_token_exchange_rates_name;
+DROP INDEX IF EXISTS idx_token_exchange_rates_symbol;
+
 /* Block header */
 CREATE INDEX IF NOT EXISTS idx_block_header_hash ON canonical_block_header USING hash (hash); /* already exists as PKey */
 CREATE INDEX IF NOT EXISTS idx_block_header_number__hash__author ON canonical_block_header (number DESC, hash, author);
@@ -47,6 +103,14 @@ CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_timestamp ON fungible_b
 WHERE delta_type = 'TOKEN_TRANSFER';
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_transaction_hash ON fungible_balance_delta USING hash (trace_location_transaction_hash)
 WHERE delta_type = 'TOKEN_TRANSFER';
+
+/* Non-fungible balance deltas */
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_contract_token_id ON non_fungible_balance_delta (contract, token_id);
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_from ON non_fungible_balance_delta ("from");
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_to ON non_fungible_balance_delta ("to");
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_trace_location_block_hash ON non_fungible_balance_delta (trace_location_block_hash);
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_address ON non_fungible_balance (address);
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
 
 /* Token exchange rates */
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_market_cap_rank ON token_exchange_rates (market_cap_rank ASC);
