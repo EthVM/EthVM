@@ -1,10 +1,11 @@
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity';
 import { assignClean } from '@app/shared/utils';
 import BigNumber from 'bignumber.js';
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm'
 import { Column } from 'typeorm/decorator/columns/Column';
 import { BigNumberTransformer } from '../transformers/big-number.transformer';
 import { DateTransformer } from '@app/orm/transformers/date.transformer'
+import { UncleRewardEntity } from '@app/orm/entities/uncle-reward.entity'
 
 @Entity('canonical_uncle')
 export class UncleEntity {
@@ -73,14 +74,14 @@ export class UncleEntity {
   @Column({ type: 'bigint', readonly: true })
   size!: string
 
-  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
-  rewardAmount?: BigNumber
-
   @ManyToOne(type => BlockHeaderEntity, block => block.uncles)
   @JoinColumn({
     name: 'nephewHash',
     referencedColumnName: 'hash',
   })
   blockHeader!: BlockHeaderEntity
+
+  // Complicated join on two fields so cheaper to query separately and manually attach
+  reward?: UncleRewardEntity;
 
 }

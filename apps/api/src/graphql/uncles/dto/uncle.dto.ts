@@ -28,6 +28,9 @@ export class UncleDto implements Uncle {
 
   constructor(data: UncleEntity) {
     assignClean(this, data)
+    if (data.reward) {
+      this.rewardAmount = data.reward.amount
+    }
   }
 
 }
