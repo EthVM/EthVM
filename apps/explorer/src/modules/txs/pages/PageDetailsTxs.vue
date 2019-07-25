@@ -269,18 +269,12 @@ export default class PageDetailsTxs extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: 'tx.mined',
-        disabled: false,
+        text: this.$t('tx.mined'),
         link: '/txs'
       },
       {
-        text: 'tx.hash',
-        disabled: true,
-        plural: 1,
-        label: {
-          name: `${this.txRef} `,
-          hash: true
-        }
+        text: this.$tc('tx.hash' ,1 ),
+        hash: this.txRef,
       }
     ]
   }
