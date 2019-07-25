@@ -5,15 +5,16 @@
         <v-icon small :class="[ isHome ? 'black--text  pr-2' : 'info--text  pr-2']">fa fa-home</v-icon>
           <router-link :class="[ isHome ? 'black--text' : 'info--text']" to="/">{{ $t('home') }}</router-link>
       </v-card-title>
+      <p v-if="!isHome" class="pr-1 caption">/</p>
       <div v-if="!isHome" >
-      <v-card-title v-for="(item, i) in crumbs" :key="i" class="crumb-container">
+      <v-card-title v-for="(item, i) in newItems" :key="i" class="crumb-container">
         <p v-if="item.link">
           <router-link :class="['info--text']" :to="item.link">{{ getText(item) }}</router-link>
         </p>
         <div v-else>
           <p class="black--text">{{ getText(item) }}</p>
         </div>
-        <p v-if="i < crumbs.length - 1" class="pl-1 pr-0 caption">/</p>
+        <p v-if="i < newItems.length - 1" class="pl-1 pr-0 caption">/</p>
       </v-card-title>
       </div>
     </v-layout>
