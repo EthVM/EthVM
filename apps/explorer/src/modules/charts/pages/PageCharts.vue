@@ -128,8 +128,7 @@ export default class PageCharts extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: 'charts.name',
-        disabled: true
+        text: this.$t('charts.name'),
       }
     ]
   }
