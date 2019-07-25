@@ -50,6 +50,7 @@ CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_block_hash ON fungible_
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_tx_index__tl_block_number ON fungible_balance_delta (trace_location_transaction_index DESC, trace_location_block_number DESC);
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_amount ON fungible_balance_delta (amount);
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_internal_transfer ON fungible_balance_delta (address, counterpart_address, amount, delta_type);
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_contract_address ON fungible_balance_delta (contract_address);
 
 /* Fungible Balance */
 

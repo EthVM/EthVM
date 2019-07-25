@@ -18,14 +18,11 @@ type Transfer {
   deltaType: DeltaType!
   from: String
   contractAddress: String
-  tokenType: String
   amount: BigNumber!
   traceLocationBlockHash: String!
   traceLocationBlockNumber: BigNumber!
   traceLocationTransactionHash: String
   traceLocationTransactionIndex: Int
-  traceLocationLogIndex: Int
-  traceLocationTraceAddress: String
   timestamp: Date!
 }
 

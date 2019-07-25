@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { Brackets, EntityManager, FindManyOptions, Repository } from 'typeorm'
+import { Brackets, EntityManager, FindManyOptions, Not, Repository } from 'typeorm'
 import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
 import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 import { DbConnection } from '@app/orm/config'
@@ -75,28 +75,44 @@ export class TransferService {
 
         // Much cheaper to count without using OR clause
         const countIn = await txn.count(InternalTransferEntity, { where: { to: address }, cache: true});
-        const countOut = await txn.count(InternalTransferEntity, { where: { from: address }, cache: true});
+        const countOut = await txn.count(InternalTransferEntity, { where: { from: address, to: Not(address) }, cache: true});
 
+        // Querying the actual view with the OR condition is very expensive so better to use a union on the base table
         const items = await txn.query(`
-          select *
-          FROM canonical_internal_transfer AS fbd
+          SELECT fbd.id, fbd.counterpart_address AS "from", fbd.address AS "to", fbd.contract_address, fbd.delta_type, fbd.amount, 
+                 fbd.trace_location_block_hash, fbd.trace_location_block_number, fbd.trace_location_transaction_hash, fbd.trace_location_transaction_index, 
+                 fbd.trace_location_timestamp AS "timestamp"
+          FROM fungible_balance_delta AS fbd
           WHERE
-            fbd.to = $1
+            fbd.address = $1
             AND fbd.delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION')
             AND fbd.amount > 0
           UNION
-          select *
-          FROM canonical_internal_transfer AS fbd
+          SELECT fbd.id, fbd.counterpart_address, fbd.address, fbd.contract_address, fbd.delta_type, fbd.amount, fbd.trace_location_block_hash, 
+                 fbd.trace_location_block_number, fbd.trace_location_transaction_hash, fbd.trace_location_transaction_index, fbd.trace_location_timestamp
+          FROM fungible_balance_delta AS fbd
           WHERE
-            fbd.from = $2
+            fbd.counterpart_address = $2
             AND fbd.delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION')
             AND fbd.amount > 0
-            ORDER BY trace_location_block_number DESC, trace_location_transaction_index DESC
-            OFFSET $3
-            LIMIT $4;
+          ORDER BY trace_location_block_number DESC, trace_location_transaction_index DESC
+          OFFSET $3
+          LIMIT $4;
         `,[address, address, offset, limit]);
 
-        return [items, (countOut + countIn)]
+        const entities: InternalTransferEntity[] = items.map(i => {
+          return new InternalTransferEntity({
+            ...i,
+            contractAddress: i.contract_address,
+            deltaType: i.delta_type,
+            traceLocationBlockHash: i.trace_location_block_hash,
+            traceLocationBlockNumber: i.trace_location_block_number,
+            traceLocationTransactionHash: i.trace_location_transaction_hash,
+            traceLocationTransactionIndex: i.trace_location_transaction_index
+          })
+        });
+
+        return [entities, (countOut + countIn)]
 
       },
     )
