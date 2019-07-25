@@ -56,7 +56,7 @@ export class AccountService {
     const transferIn = await this.internalTransferRepository.findOne({
       select: ['id'],
       where: { to: address },
-      cache: true
+      cache: true,
     })
 
     if (transferIn) {
@@ -66,7 +66,7 @@ export class AccountService {
     const transferOut = await this.internalTransferRepository.findOne({
       select: ['id'],
       where: { from: address },
-      cache: true
+      cache: true,
     })
 
     return !!transferOut;

@@ -72,7 +72,7 @@ export class UncleService {
         // Cheaper to get all rewards for each block hash and filter to those matching authors manually
         const rewards = await entityManager.find(UncleRewardEntity, {
           where: { blockHash: In(uncles.map(u => u.nephewHash)) },
-          cache: true
+          cache: true,
         })
 
         // Map rewards to uncles

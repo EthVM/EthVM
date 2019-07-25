@@ -86,7 +86,7 @@ export class BlockService {
               'b.timestamp',
               'br.deltaType',
               'br.blockHash',
-              'br.amount'
+              'br.amount',
             ])
             .orderBy('b.number', 'DESC')
             .offset(offset)
@@ -129,7 +129,7 @@ export class BlockService {
               'b.timestamp',
               'br.deltaType',
               'br.blockHash',
-              'br.amount'
+              'br.amount',
             ])
             .orderBy('b.number', 'DESC')
             .offset(offset)
