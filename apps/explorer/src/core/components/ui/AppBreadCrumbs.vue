@@ -6,7 +6,7 @@
           <router-link :class="[ isHome ? 'black--text' : 'info--text']" to="/">{{ $t('home') }}</router-link>
       </v-card-title>
       <p v-if="!isHome" class="pr-1 caption">/</p>
-      <div v-if="!isHome" >
+
       <v-card-title v-for="(item, i) in newItems" :key="i" class="crumb-container">
         <p v-if="item.link">
           <router-link :class="['info--text']" :to="item.link">{{ getText(item) }}</router-link>
@@ -16,7 +16,6 @@
         </div>
         <p v-if="i < newItems.length - 1" class="pl-1 pr-0 caption">/</p>
       </v-card-title>
-      </div>
     </v-layout>
   </v-card>
 </template>
