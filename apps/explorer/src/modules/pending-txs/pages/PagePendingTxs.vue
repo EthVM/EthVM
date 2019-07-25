@@ -104,7 +104,7 @@ export default class PagePendingTxs extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$tc('tx.pending',2),
+        text: this.$tc('tx.pending', 2)
       }
     ]
   }

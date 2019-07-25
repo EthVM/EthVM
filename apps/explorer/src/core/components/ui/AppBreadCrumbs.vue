@@ -2,8 +2,8 @@
   <v-card flat color="transparent" class="mt-2 mb-4">
     <v-layout row wrap align-center justify-start pa-2>
       <v-card-title class="crumb-container">
-        <v-icon small :class="[ isHome ? 'black--text  pr-2' : 'info--text  pr-2']">fa fa-home</v-icon>
-          <router-link :class="[ isHome ? 'black--text' : 'info--text']" to="/">{{ $t('home') }}</router-link>
+        <v-icon small :class="[isHome ? 'black--text  pr-2' : 'info--text  pr-2']">fa fa-home</v-icon>
+        <router-link :class="[isHome ? 'black--text' : 'info--text']" to="/">{{ $t('home') }}</router-link>
       </v-card-title>
       <p v-if="!isHome" class="pr-1 caption">/</p>
 
@@ -40,15 +40,14 @@ export default class AppBreadCrumbs extends Vue {
   ===================================================================================
   */
 
-  getText(item: Crumb):string  {
-    return item.hash? `${item.text}: ${this.getHash(item.hash)}`: `${item.text}`
+  getText(item: Crumb): string {
+    return item.hash ? `${item.text}: ${this.getHash(item.hash)}` : `${item.text}`
   }
 
   getHash(hash: string): string {
     const n = hash.length
     return `${hash.slice(0, 4)}...${hash.slice(n - 4, n)}`
   }
-
 
   /*
   ===================================================================================
@@ -71,5 +70,4 @@ export default class AppBreadCrumbs extends Vue {
   padding: 0px 0px;
   margin-right: 0.5em;
 }
-
 </style>

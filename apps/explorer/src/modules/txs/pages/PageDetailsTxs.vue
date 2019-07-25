@@ -273,8 +273,8 @@ export default class PageDetailsTxs extends Vue {
         link: '/txs'
       },
       {
-        text: this.$tc('tx.hash' ,1 ),
-        hash: this.txRef,
+        text: this.$tc('tx.hash', 1),
+        hash: this.txRef
       }
     ]
   }

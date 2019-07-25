@@ -74,7 +74,7 @@ export default class PageAbout extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$t('about.name'),
+        text: this.$t('about.name')
       }
     ]
   }

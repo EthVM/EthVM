@@ -49,7 +49,7 @@ export default class PageKnowledgeBase extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$t('kb.name'),
+        text: this.$t('kb.name')
       }
     ]
   }

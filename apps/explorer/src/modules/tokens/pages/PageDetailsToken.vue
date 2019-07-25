@@ -225,10 +225,10 @@ export default class PageDetailsToken extends Vue {
     return [
       {
         text: this.$tc('token.name', 2),
-        link: '/tokens',
+        link: '/tokens'
       },
       {
-        text: this.tokenLabel,
+        text: this.tokenLabel
       }
     ]
   }
@@ -242,16 +242,16 @@ export default class PageDetailsToken extends Vue {
     return [
       {
         text: this.$tc('token.name', 2),
-        link: '/tokens',
+        link: '/tokens'
       },
       {
         text: this.tokenLabel,
-        link: `/token/${this.addressRef}`,
+        link: `/token/${this.addressRef}`
       },
       {
         text: this.$t('token.holder'),
         hash: this.holderAddress,
-        link: `/address/${this.holderAddress}`,
+        link: `/address/${this.holderAddress}`
       }
     ]
   }
@@ -287,7 +287,7 @@ export default class PageDetailsToken extends Vue {
   }
 
   get tokenLabelDefault(): string {
-    let n = this.addressRef.length
+    const n = this.addressRef.length
     return `${this.$i18n.tc('token.name', 1)}: ${this.addressRef.slice(0, 4)}...${this.addressRef.slice(n - 4, n)}`
   }
 

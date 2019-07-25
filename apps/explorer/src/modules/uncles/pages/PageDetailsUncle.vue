@@ -196,10 +196,10 @@ export default class PageDetailsUncle extends Vue {
     return [
       {
         text: this.$tc('uncle.name', 2),
-        link: '/uncles',
+        link: '/uncles'
       },
       {
-        text: this.$tc('uncle.name', 1 ) ,
+        text: this.$tc('uncle.name', 1),
         hash: this.uncleRef
       }
     ]

@@ -116,7 +116,7 @@ export default class PageDetailsChart extends Vue {
         link: '/charts'
       },
       {
-        text: this.$t(`charts.${this.chartId}.title`),
+        text: this.$t(`charts.${this.chartId}.title`)
       }
     ]
   }

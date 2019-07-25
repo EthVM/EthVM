@@ -400,24 +400,23 @@ export default class PageDetailsBlock extends Vue {
     const crumbs: Crumb[] = [
       {
         text: this.$tc('block.name', 2),
-        link: '/blocks',
+        link: '/blocks'
       }
     ]
     if (!eth.isValidHash(this.blockRef) && !eth.isValidBlockNumber(this.blockRef)) {
       crumbs.push({
-        text: this.$tc('block.name', 1),
+        text: this.$tc('block.name', 1)
       })
       return crumbs
     } else if (eth.isValidHash(this.blockRef)) {
       crumbs.push({
         text: this.$t('block.number'),
         hash: this.$route.params.blockRef
-
       })
       return crumbs
     }
     crumbs.push({
-      text: `${this.$t('block.number')} ${this.$route.params.blockRef}`,
+      text: `${this.$t('block.number')} ${this.$route.params.blockRef}`
     })
     return crumbs
   }

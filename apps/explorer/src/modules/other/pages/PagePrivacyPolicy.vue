@@ -110,8 +110,7 @@ export default class PagePrivacyPolicy extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$t('pp.name'),
-
+        text: this.$t('pp.name')
       }
     ]
   }

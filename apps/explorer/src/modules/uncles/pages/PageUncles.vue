@@ -33,7 +33,7 @@ export default class PageUncles extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: this.$tc('uncle.name', 2),
+        text: this.$tc('uncle.name', 2)
       }
     ]
   }
