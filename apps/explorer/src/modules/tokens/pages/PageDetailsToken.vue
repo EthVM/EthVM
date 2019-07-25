@@ -224,14 +224,11 @@ export default class PageDetailsToken extends Vue {
   get crumbsBasic(): Crumb[] {
     return [
       {
-        text: 'token.name',
+        text: this.$tc('token.name', 2),
         link: '/tokens',
-        disabled: false,
-        plural: 2
       },
       {
         text: this.tokenLabel,
-        disabled: true
       }
     ]
   }
@@ -244,22 +241,17 @@ export default class PageDetailsToken extends Vue {
   get crumbsHolder(): Crumb[] {
     return [
       {
-        text: 'token.name',
+        text: this.$tc('token.name', 2),
         link: '/tokens',
-        disabled: false,
-        plural: 2
       },
       {
         text: this.tokenLabel,
         link: `/token/${this.addressRef}`,
-        disabled: false
       },
       {
-        text: 'token.holder',
-        disabled: true,
-        label: {
-          name: `${this.holderAddress}`
-        }
+        text: this.$t('token.holder'),
+        hash: this.holderAddress,
+        link: `/address/${this.holderAddress}`,
       }
     ]
   }
@@ -295,7 +287,8 @@ export default class PageDetailsToken extends Vue {
   }
 
   get tokenLabelDefault(): string {
-    return `${this.$i18n.tc('token.name', 1)}: ${this.addressRef}`
+    let n = this.addressRef.length
+    return `${this.$i18n.tc('token.name', 1)}: ${this.addressRef.slice(0, 4)}...${this.addressRef.slice(n - 4, n)}`
   }
 
   get decimals(): number | null {

@@ -69,9 +69,7 @@ export default class PageTokens extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: 'token.name',
-        disabled: true,
-        plural: 2
+        text: this.$tc('token.name', 2),
       }
     ]
   }
