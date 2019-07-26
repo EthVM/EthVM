@@ -40,13 +40,7 @@ export interface Detail {
 }
 
 export interface Crumb {
-  text: string
-  disabled: boolean
-  icon?: string
+  text: TranslateResult | string
   link?: string
-  label?: {
-    name: string
-    hash?: boolean
-  }
-  plural?: number
+  hash?: string
 }
