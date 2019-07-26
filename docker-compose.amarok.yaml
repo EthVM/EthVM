@@ -35,6 +35,7 @@ services:
   parity:
     environment:
       PARITY_CHAIN: private
+      PARITY_INSTA_MINING: 'true'
       PARITY_MIN_PEERS: $PARITY_MIN_PEERS
       PARITY_MAX_PEERS: $PARITY_MAX_PEERS
 
