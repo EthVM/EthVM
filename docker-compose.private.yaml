@@ -37,3 +37,4 @@ services:
       KAFKA_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
       WEB3_WS_URL: ws://parity:8546
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
+      ETH_NET_CONFIG: 'ropsten'
