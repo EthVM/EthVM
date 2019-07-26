@@ -1,4 +1,8 @@
 
+/* Update sync status */
+
+UPDATE metadata set value = 'false' where key = 'sync_status';
+
 /* Block header */
 
 CREATE INDEX IF NOT EXISTS idx_block_header_number ON canonical_block_header (number DESC);
