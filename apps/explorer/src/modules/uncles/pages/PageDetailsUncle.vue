@@ -195,19 +195,12 @@ export default class PageDetailsUncle extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: 'uncle.name',
-        disabled: false,
-        link: '/uncles',
-        plural: 2
+        text: this.$tc('uncle.name', 2),
+        link: '/uncles'
       },
       {
-        text: 'uncle.name',
-        disabled: true,
-        plural: 1,
-        label: {
-          name: `${this.uncleRef}`,
-          hash: true
-        }
+        text: this.$tc('uncle.name', 1),
+        hash: this.uncleRef
       }
     ]
   }

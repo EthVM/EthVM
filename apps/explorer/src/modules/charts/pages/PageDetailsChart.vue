@@ -112,23 +112,17 @@ export default class PageDetailsChart extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: 'charts.name',
-        disabled: false,
+        text: this.$t('charts.name'),
         link: '/charts'
       },
       {
-        text: this.crumbString,
-        disabled: true
+        text: this.$t(`charts.${this.chartId}.title`)
       }
     ]
   }
 
   get chartId(): string {
     return this.$route.params.chartRef
-  }
-
-  get crumbString(): string {
-    return `charts.${this.chartId}.title`
   }
 }
 </script>

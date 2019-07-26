@@ -76,7 +76,8 @@
     "type": "Type",
     "circSupply": "Circulating Supply",
     "total": "Total of ",
-    "per": "per"
+    "per": "per",
+    "filtered": "Filtered by Holder"
   },
   "address": {
     "name": "Address"

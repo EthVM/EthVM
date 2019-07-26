@@ -191,13 +191,8 @@ export default class PageDetailsAddress extends Vue {
   get crumbs(): Crumb[] {
     return [
       {
-        text: 'address.name',
-        disabled: true,
-        label: {
-          name: `${this.addressRef}`,
-          hash: true
-        },
-        plural: 1
+        text: this.$tc('address.name', 1),
+        hash: this.addressRef
       }
     ]
   }
