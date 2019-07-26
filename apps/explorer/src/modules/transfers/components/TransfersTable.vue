@@ -15,7 +15,7 @@
     <div v-if="!hasError">
       <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-xs-only" height="40px">
         <v-layout align-center justify-start row fill-height pr-2>
-        <v-flex sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
+          <v-flex sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
             <h5>{{ $tc('tx.hash', 1) }}</h5>
           </v-flex>
           <v-flex sm2>
@@ -33,7 +33,7 @@
 
       <!-- Start Rows -->
       <div v-if="loading">
-        <v-flex sm12 >
+        <v-flex sm12>
           <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : '']">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
               <v-flex xs7 sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
@@ -247,5 +247,4 @@ export default class TransfersTable extends Vue {
 .table-row-mobile {
   border: 1px solid #b4bfd2;
 }
-
 </style>

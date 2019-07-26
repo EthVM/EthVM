@@ -9,24 +9,24 @@
       <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
         <!-- Column 1: Tx Info -->
         <v-flex sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
-            <v-layout row align-center justift-start pa-2>
-                <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
-                <app-transform-hash :hash="transfer.transactionHash" :link="`/tx/${transfer.transactionHash}`" />
-            </v-layout>
-            <v-layout row align-center justify-space-around fill-height pa-2>
-              <p class="info--text mr-1">{{ $t('tx.from') }}:</p>
-              <app-transform-hash :hash="transfer.from" :link="`/address/${transfer.from}`" :italic="true" />
-              <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-              <p class="info--text mr-1" v-if="transfer.contract">{{ $tc('contract.name', 1) }}:</p>
-              <p class="info--text mr-1" v-else>{{ $t('tx.to') }}:</p>
-              <app-transform-hash :hash="transfer.address" :link="`/address/${transfer.address}`" :italic="true" v-if="transfer.contract" />
-              <app-transform-hash :hash="transfer.to" :link="`/address/${transfer.to}`" :italic="true" v-else />
-            </v-layout>
+          <v-layout row align-center justift-start pa-2>
+            <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
+            <app-transform-hash :hash="transfer.transactionHash" :link="`/tx/${transfer.transactionHash}`" />
+          </v-layout>
+          <v-layout row align-center justify-space-around fill-height pa-2>
+            <p class="info--text mr-1">{{ $t('tx.from') }}:</p>
+            <app-transform-hash :hash="transfer.from" :link="`/address/${transfer.from}`" :italic="true" />
+            <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
+            <p class="info--text mr-1" v-if="transfer.contract">{{ $tc('contract.name', 1) }}:</p>
+            <p class="info--text mr-1" v-else>{{ $t('tx.to') }}:</p>
+            <app-transform-hash :hash="transfer.address" :link="`/address/${transfer.address}`" :italic="true" v-if="transfer.contract" />
+            <app-transform-hash :hash="transfer.to" :link="`/address/${transfer.to}`" :italic="true" v-else />
+          </v-layout>
         </v-flex>
         <!-- End Column 1 -->
 
         <!-- Column 2: Age -->
-        <v-flex sm2 >
+        <v-flex sm2>
           <app-time-ago :timestamp="transfer.timestampDate" />
         </v-flex>
         <!-- End Column 2 -->
@@ -57,10 +57,12 @@
             <app-time-ago :timestamp="transfer.timestampDate" />
           </v-flex>
           <v-flex xs5>
-              <p class="info--text text-xs-right"> {{ $t('token.type') }}: <span class="black--text">{{ $t('transfer.' + transfer.deltaType) }}</span> </p>
+            <p class="info--text text-xs-right">
+              {{ $t('token.type') }}: <span class="black--text">{{ $t('transfer.' + transfer.deltaType) }}</span>
+            </p>
           </v-flex>
-          <v-flex xs12 >
-            <v-layout row pa-2 >
+          <v-flex xs12>
+            <v-layout row pa-2>
               <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
               <app-transform-hash :hash="transfer.transactionHash" :link="`/tx/${transfer.transactionHash}`" />
             </v-layout>
@@ -74,10 +76,10 @@
               <app-transform-hash v-else :hash="transfer.to" :italic="true" :link="`/address/${transfer.to}`" />
             </v-layout>
           </v-flex>
-          <v-flex xs12 >
-              <p class="pb-0">
-                <span class="info--text">{{ $t('common.quantity') }}:</span> {{ calculateTransferValue(transfer.value) }}
-              </p>
+          <v-flex xs12>
+            <p class="pb-0">
+              <span class="info--text">{{ $t('common.quantity') }}:</span> {{ calculateTransferValue(transfer.value) }}
+            </p>
           </v-flex>
         </v-layout>
       </div>
@@ -127,7 +129,6 @@ export default class TransfersTableRow extends Vue {
     }
     return n.toFormat(2).toString()
   }
-
 }
 </script>
 <style scoped lang="css">
