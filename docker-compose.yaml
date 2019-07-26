@@ -48,6 +48,14 @@ services:
       TRAEFIK_DASHBOARD_ENABLED: 'true'
       TRAEFIK_PING_ENABLED: 'false'
 
+  # nginx:
+  #   image: ethvm/nginx:1.17.2-alpine
+  #   restart: unless-stopped
+  #   networks:
+  #     - net
+  #   ports:
+  #     - 80:80
+
   explorer:
     build:
       context: ./apps/explorer
