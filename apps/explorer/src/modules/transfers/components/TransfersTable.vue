@@ -36,16 +36,16 @@
         <v-flex sm12 hidden-xs-only>
           <div v-for="i in maxItems" :key="i">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs12 md6>
+              <v-flex xs12 sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down md2>
+              <v-flex hidden-sm-and-down sm2>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down md2>
+              <v-flex hidden-sm-and-down sm2>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex v-if="isInternal" hidden-sm-and-down md2>
+              <v-flex v-if="isInternal" sm2 md1>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
             </v-layout>
