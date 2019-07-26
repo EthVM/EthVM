@@ -258,7 +258,11 @@ services:
       - 8083:8083
       - 9588:9588
     volumes:
-      - ./out/kafka-connect/:/usr/share/ethvm
+      - ./apps/processing/connectors/sinks/jdbc/build/libs:/usr/share/ethvm/jdbc
+      - ./apps/processing/connectors/sources/eth-tokens-list/build/libs:/usr/share/ethvm/eth-tokens-list
+      - ./apps/processing/connectors/sources/exchanges/build/libs:/usr/share/ethvm/exchanges
+      - ./apps/processing/connectors/sources/kafka-admin/build/libs:/usr/share/ethvm/kafka-admin
+      - ./apps/processing/connectors/sources/web3/build/libs:/usr/share/ethvm/web3
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
@@ -278,7 +282,7 @@ services:
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.confluent.connect.jdbc=WARN,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
-      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm/jdbc,/usr/share/ethvm/eth-tokens-list,/usr/share/ethvm/exchanges,/usr/share/ethvm/kafka-admin,/usr/share/ethvm/web3
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       CONNECT_MAX_POLL_INTERVAL_MS: 120000

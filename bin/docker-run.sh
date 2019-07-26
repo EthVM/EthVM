@@ -50,6 +50,7 @@ up() {
     # By default, the default mode if no arg is specified is dev
     up_dev_mode_message
     down
+    create_env
     up_dev
   else
     # We process and parse arguments
@@ -65,6 +66,7 @@ up() {
         dev)
           up_dev_mode_message
           down
+          create_env
           up_dev
           break
           ;;
@@ -72,6 +74,7 @@ up() {
         simple)
           up_simple_mode_message
           down
+          create_env
           up_simple
           break
           ;;
@@ -89,6 +92,7 @@ up() {
           else
             up_dev_mode_message
             down
+            create_env ".env.$value"
             up_dev "$extra_compose_files"
           fi
 
@@ -102,6 +106,16 @@ up() {
       shift
     done
   fi
+}
+
+# create_env - creates a proper .env file
+create_env() {
+
+  section "Generating .env file"
+
+  local env=${1:-'.env.default'}
+  cp ${ROOT_DIR}/"$env" ${ROOT_DIR}/.env
+
 }
 
 # up_dev_mode_message - describes which mode the user has selected
