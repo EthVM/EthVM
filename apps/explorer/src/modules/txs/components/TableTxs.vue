@@ -1,14 +1,24 @@
 <template>
-  <v-card color="white" flat class="pt-3 pr-2 pl-2 pb-2">
+  <v-card color="white" flat class="pt-3 pb-2">
     <!--
     =====================================================================================
       TITLE
     =====================================================================================
     -->
-    <v-layout row wrap align-end>
-      <v-flex xs12 md6 lg5 xl4 pr-0>
+
+    <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs" :has-pagination="hasPagination">
+      <template v-slot:update>
+        <notice-new-block :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
+      </template>
+      <template v-slot:pagination v-if="hasPagination">
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+      </template>
+    </app-table-title>
+    <!-- Address Page -->
+    <v-layout v-else row wrap align-center justify space-between pr-2 pl-2>
+      <v-flex v-if="isAddressDetail" xs12 md6 lg5 xl4 pr-0>
         <!-- Tx Input Filter -->
-        <v-layout v-if="isAddressDetail" row align-center justify-start fill-height height="40px">
+        <v-layout row align-center justify-start fill-height height="40px" pr-2>
           <v-flex shrink>
             <p class="pr-2 pl-2 ma-0">{{ $t('filter.view') }}:</p>
           </v-flex>
@@ -19,23 +29,17 @@
           </v-flex>
         </v-layout>
         <!-- End Tx Input Filter -->
-        <v-layout v-else align-end justify-start row fill-height>
-          <v-card-title class="title font-weight-bold pl-2 ">{{ getTitle }}</v-card-title>
-          <notice-new-block v-if="isPageTxs" :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
-        </v-layout>
       </v-flex>
-      <v-flex xs5 md6 lg7 xl8 v-if="pageType == 'home'">
-        <v-layout justify-end>
-          <v-btn outline color="secondary" class="text-capitalize" to="/txs">{{ $t('btn.view-all') }}</v-btn>
-        </v-layout>
+      <v-spacer />
+      <v-flex v-if="hasPagination" shrink hidden-sm-and-down>
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-flex>
-      <v-flex v-else xs12 md6 lg7 xl8>
-        <v-layout v-if="pages > 1 && !hasError" justify-end row class="pb-1 pr-2 pl-2">
+      <v-flex xs12 hidden-md-and-up>
+        <v-layout v-if="hasPagination" align-center justify-center pa-2>
           <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </v-flex>
     </v-layout>
-
     <v-progress-linear color="blue" indeterminate v-if="loading && !hasError" class="mt-0" />
     <app-error :has-error="hasError" :message="error" class="mb-4" />
 
@@ -44,7 +48,7 @@
       TABLE HEADER
     =====================================================================================
     -->
-    <v-layout>
+    <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" :color="headerColor" flat class="white--text pl-3 pr-1" height="40px">
           <v-layout align-center justify-start row fill-height pr-3>
@@ -82,13 +86,13 @@
       </v-layout>
     </v-card>
     <div v-else>
-      <v-card flat v-if="!hasError" :style="getStyle" class="scroll-y" style="overflow-x: hidden">
+      <v-card flat v-if="!hasError" :style="getStyle" class="scroll-y pa-2" style="overflow-x: hidden">
         <v-layout column fill-height class="mb-1">
           <v-flex xs12 v-if="!loading">
             <v-card v-for="(tx, index) in transactions" class="transparent" flat :key="index">
               <table-txs-row :tx="tx" :is-pending="pending" />
             </v-card>
-            <v-layout v-if="pageType !== 'home' && pages > 1" justify-end row class="pb-1 pt-2 pr-2 pl-2">
+            <v-layout v-if="hasPagination" justify-end row class="pb-1 pt-2 pr-2 pl-2">
               <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
             </v-layout>
             <v-card v-if="!transactions.length" flat>
@@ -130,6 +134,7 @@
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
@@ -156,6 +161,7 @@ class TableTxsMixin extends Vue {
     AppError,
     AppFootnotes,
     AppPaginate,
+    AppTableTitle,
     TableTxsRow,
     NoticeNewBlock
   },
@@ -414,6 +420,10 @@ export default class TableTxs extends TableTxsMixin {
 
   get pages(): number {
     return this.txPage ? Math.ceil(this.txPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  }
+
+  get hasPagination(): boolean {
+    return this.pageType !== 'home' && this.pages > 1 && !this.hasError
   }
 
   get footnotes(): Footnote[] {

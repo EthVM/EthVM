@@ -48,6 +48,14 @@ services:
       TRAEFIK_DASHBOARD_ENABLED: 'true'
       TRAEFIK_PING_ENABLED: 'false'
 
+  # nginx:
+  #   image: ethvm/nginx:1.17.2-alpine
+  #   restart: unless-stopped
+  #   networks:
+  #     - net
+  #   ports:
+  #     - 80:80
+
   explorer:
     build:
       context: ./apps/explorer
@@ -344,7 +352,7 @@ services:
       ZK_HOSTS: zookeeper:2181
 
   pgweb:
-    image: sosedoff/pgweb:0.11.2
+    image: sosedoff/pgweb:0.11.3
     restart: unless-stopped
     networks:
       - net

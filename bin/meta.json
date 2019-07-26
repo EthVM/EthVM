@@ -38,6 +38,12 @@
       "version": "${DOCKER_IMAGES_PATH}/traefik/version.properties"
     },
     {
+      "id": "nginx",
+      "dockerfile": "${DOCKER_IMAGES_PATH}/nginx/Dockerfile",
+      "context": "${DOCKER_IMAGES_PATH}/nginx/",
+      "version": "${DOCKER_IMAGES_PATH}/nginx/version.properties"
+    },
+    {
       "id": "migrator",
       "dockerfile": "${APPS_PATH}/migrator/Dockerfile",
       "context": "${APPS_PATH}/migrator/",
@@ -46,13 +52,12 @@
   ],
   "docker": {
     "compose": [
-      "docker-compose.amarok.yaml"
+      "docker-compose.private.yaml"
     ],
     "containers": [
       {
-        "id": "amarok",
+        "id": "private",
         "value": [
-          "mew",
           "ethvm-kafka-processing"
         ]
       }

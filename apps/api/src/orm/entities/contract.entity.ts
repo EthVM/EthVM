@@ -7,6 +7,7 @@ import { BigNumberTransformer } from '@app/orm/transformers/big-number.transform
 import BigNumber from 'bignumber.js'
 import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('canonical_contract')
 export class ContractEntity {
@@ -54,7 +55,7 @@ export class ContractEntity {
   @Column({ type: 'character', length: 64, readonly: true })
   traceCreatedAtTraceAddress?: string
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   traceCreatedAtTimestamp?: Date
 
   @Column({ type: 'character', length: 66, readonly: true })
@@ -75,10 +76,10 @@ export class ContractEntity {
   @Column({ type: 'character', length: 64, readonly: true })
   traceDestroyedAtTraceAddress?: string
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   traceDestroyedAtTimestamp?: Date
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp?: Date
 
   @OneToOne(type => Erc20MetadataEntity, metadata => metadata.contract)

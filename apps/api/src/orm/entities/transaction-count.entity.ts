@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('transaction_count')
 export class TransactionCountEntity {
@@ -17,6 +18,6 @@ export class TransactionCountEntity {
   @Column({ type: 'integer', readonly: true })
   totalOut!: number
 
-  @Column({ type: 'timestamp', readonly: true })
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 }

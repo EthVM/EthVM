@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # import utils
 source ${SCRIPT_DIR}/env.sh
@@ -25,7 +25,7 @@ docker_usage() {
   echo -e "  docker-run [COMMAND] [ARGS...]"
   echo -e ""
   echo -e "Commands:"
-  echo -e "  up      -m | --mode [simple|dev|amarok]   Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
+  echo -e "  up      -m | --mode [simple|dev|private]  Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
   echo -e "  down                                      Stop and remove docker containers, networks, images, and volumes."
   echo -e "  logs                                      View output from containers."
   echo -e "  help                                      Print the help information and exit."
@@ -57,44 +57,44 @@ up() {
       local key="$1"
 
       case $key in
-        -m|--mode)
-          local value="$2"
-          shift
+      -m | --mode)
+        local value="$2"
+        shift
 
-          case "$value" in
-            dev)
-              up_dev_mode_message
-              down
-              up_dev
-              break
-            ;;
+        case "$value" in
+        dev)
+          up_dev_mode_message
+          down
+          up_dev
+          break
+          ;;
 
-            simple)
-              up_simple_mode_message
-              down
-              up_simple
-              break
-            ;;
+        simple)
+          up_simple_mode_message
+          down
+          up_simple
+          break
+          ;;
 
-            *)
-              local extra_compose_files=""
+        *)
+          local extra_compose_files=""
 
-              for compose in $EXTRA_DOCKER_COMPOSE_FILES; do
-                [[ $compose == *$value* ]] && extra_compose_files+=" -f ${ROOT_DIR}/$compose"
-              done
+          for compose in $EXTRA_DOCKER_COMPOSE_FILES; do
+            [[ $compose == *$value* ]] && extra_compose_files+=" -f ${ROOT_DIR}/$compose" && [[ -f ${ROOT_DIR}/.env.$value ]] && source ${ROOT_DIR}/.env.$value
+          done
 
-              if [[ ! "$extra_compose_files" ]]; then
-                invalid_argument
-                docker_usage
-              else
-                up_dev_mode_message
-                down
-                up_dev "$extra_compose_files"
-              fi
+          if [[ ! "$extra_compose_files" ]]; then
+            invalid_argument
+            docker_usage
+          else
+            up_dev_mode_message
+            down
+            up_dev "$extra_compose_files"
+          fi
 
-              break
-            ;;
-          esac
+          break
+          ;;
+        esac
 
         ;;
       esac
@@ -107,8 +107,8 @@ up() {
 # up_dev_mode_message - describes which mode the user has selected
 up_dev_mode_message() {
 
-  local bold=`tput bold`
-  local reset=`tput sgr0`
+  local bold=$(tput bold)
+  local reset=$(tput sgr0)
 
   section "DEV mode selected"
   echo "${bold}Description:${reset} This mode spins up a clean local DEV environment that allows to work with Kafka Streams"
@@ -120,11 +120,32 @@ up_dev() {
 
   local extra_compose_files="${1:-""}"
 
+  local network=${NETWORK:-ethvm_net}
+
   local compose_files="-f ${ROOT_DIR}/docker-compose.yaml"
   compose_files+=$extra_compose_files
 
   section "Selected docker compose files:"
   echo -e $compose_files
+
+  section "Loaded .env variables:"
+  info "DOMAIN: $DOMAIN"
+
+  info "PRINCIPAL_JDBC_URL: $PRINCIPAL_JDBC_URL"
+  info "PRINCIPAL_DB: $PRINCIPAL_DB"
+  info "PRINCIPAL_USER: $PRINCIPAL_USER"
+  info "PRINCIPAL_PASSWORD: $PRINCIPAL_PASSWORD"
+
+  info "METRICS_JDBC_URL: $PARITY_INSTA_MINING"
+  info "METRICS_DB: $PARITY_INSTA_MINING"
+  info "METRICS_USER: $PARITY_INSTA_MINING"
+  info "METRICS_PASSWORD: $PARITY_INSTA_MINING"
+
+  info "PARITY_CHAIN: $PARITY_CHAIN"
+  info "PARITY_BIND_MOUNTPOINT: $PARITY_BIND_MOUNTPOINT"
+  info "PARITY_INSTA_MINING: $PARITY_INSTA_MINING"
+  info "PARITY_MIN_PEERS: $PARITY_MIN_PEERS"
+  info "PARITY_MAX_PEERS: $PARITY_MAX_PEERS"
 
   section "Building utility docker images..."
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
@@ -140,10 +161,10 @@ up_dev() {
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
 
   section "Initialising principal db..."
-  ${SCRIPT_DIR}/migrator.sh principal migrate
+  INDEXES_AND_TRIGGERS=${PARITY_INSTA_MINING} ${SCRIPT_DIR}/migrator.sh principal migrate
 
   section "Initialising metrics db..."
-  ${SCRIPT_DIR}/migrator.sh metrics migrate
+  INDEXES_AND_TRIGGERS=${PARITY_INSTA_MINING} ${SCRIPT_DIR}/migrator.sh metrics migrate
 
   section "Building avro models..."
   ${SCRIPT_DIR}/avro.sh build
@@ -177,8 +198,8 @@ up_dev() {
 # up_simple_mode_message - describes which mode the user has selected
 up_simple_mode_message() {
 
-  local bold=`tput bold`
-  local reset=`tput sgr0`
+  local bold=$(tput bold)
+  local reset=$(tput sgr0)
 
   section "SIMPLE mode selected"
   echo -e "${bold}Description:${reset} This mode spins a basic environment useful to work on Explorer or API with a fixed processed dataset (processing of new blocks is disabled)"
@@ -216,11 +237,11 @@ up_simple() {
   set -o errexit
 
   section "Importing principal dataset..."
-  gunzip < ${ROOT_DIR}/datasets/${DATASETS[0]} | docker-compose exec -T db-principal psql --quiet --username "${PRINCIPAL_USER}" "${PRINCIPAL_DB}"
+  gunzip <${ROOT_DIR}/datasets/${DATASETS[0]} | docker-compose exec -T db-principal psql --quiet --username "${PRINCIPAL_USER}" "${PRINCIPAL_DB}"
 
   section "Importing metrics dataset..."
   docker-compose exec -T db-metrics psql --username "${METRICS_USER}" "${METRICS_DB}" --quiet -c "ALTER DATABASE "${METRICS_DB}" SET timescaledb.restoring='on';"
-  gunzip < ${ROOT_DIR}/datasets/${DATASETS[1]} | docker-compose exec -T db-metrics psql --quiet --username "${METRICS_USER}" "${METRICS_DB}"
+  gunzip <${ROOT_DIR}/datasets/${DATASETS[1]} | docker-compose exec -T db-metrics psql --quiet --username "${METRICS_USER}" "${METRICS_DB}"
   docker-compose exec -T db-metrics psql --username "${METRICS_USER}" "${METRICS_DB}" --quiet -c "ALTER DATABASE "${METRICS_DB}" SET timescaledb.restoring='off';"
 
 }
@@ -257,25 +278,25 @@ run() {
   local extra_args="$@"
 
   case "${command}" in
-    up)
-      up $extra_args
+  up)
+    up $extra_args
     ;;
 
-    down)
-      down $extra_args
+  down)
+    down $extra_args
     ;;
 
-    logs)
-      logs $extra_args
+  logs)
+    logs $extra_args
     ;;
 
-    help)
-      docker_usage
+  help)
+    docker_usage
     ;;
 
-    *)
-      invalid_argument
-      docker_usage
+  *)
+    invalid_argument
+    docker_usage
     ;;
   esac
 

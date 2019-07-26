@@ -10,7 +10,7 @@
     "p-hash": "Parent Hash",
     "total-reward": "Total Block Reward",
     "last-n": "Last Block #",
-    "time": "Since Last Block",
+    "time": "Since Last Update",
     "hash-rate": "Hash Rate",
     "bytes": "Bytes",
     "logs": "Logs",
@@ -79,7 +79,8 @@
     "type" : "Type",
     "circSupply": "Circulating Supply",
     "total":"Total of ",
-    "per": "per"
+    "per": "per",
+    "filtered": "Filtered by Holder"
   },
 
   "address": {

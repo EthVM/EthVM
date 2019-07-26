@@ -2,6 +2,7 @@ import {BigNumber} from 'bignumber.js'
 import {Column, Entity, PrimaryColumn} from 'typeorm'
 import {BigNumberTransformer} from '../transformers/big-number.transformer'
 import { assignClean } from '@app/shared/utils'
+import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
 @Entity('canonical_block_metric')
 export class BlockMetricEntity {
@@ -13,7 +14,7 @@ export class BlockMetricEntity {
   @PrimaryColumn({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
   number!: BigNumber
 
-  @PrimaryColumn({type: 'timestamp', readonly: true})
+  @PrimaryColumn({type: 'timestamp', readonly: true, transformer: new DateTransformer()})
   timestamp!: Date
 
   @Column({type: 'character', length: 66, unique: true, readonly: true})

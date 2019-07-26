@@ -28,7 +28,7 @@ class TransactionFeesProcessor : AbstractKafkaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
     }
 
   override val logger: KLogger = KotlinLogging.logger {}
