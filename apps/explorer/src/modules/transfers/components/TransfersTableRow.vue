@@ -51,42 +51,36 @@
     =====================================================================================
     -->
     <v-flex xs12 hidden-sm-and-up>
-      <div class="table-row-mobile">
+      <div class="table-row-mobile mb-2">
         <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
-          <v-flex xs2 pa-1 pb-2 pt-2>
-            <p class="info--text pb-0">{{ $tc('tx.hash', 1) }}:</p>
+          <v-flex xs7>
+            <app-time-ago :timestamp="transfer.timestampDate" />
           </v-flex>
-          <v-flex xs10 pa-1 pb-2 pt-2>
-            <app-transform-hash :hash="transfer.transactionHash" :link="`/tx/${transfer.transactionHash}`" />
+          <v-flex xs5>
+              <p class="info--text text-xs-right"> {{ $t('token.type') }}: <span class="black--text">{{ $t('transfer.' + transfer.deltaType) }}</span> </p>
           </v-flex>
-          <v-flex xs12 pa-1 pb-2 pt-2>
+          <v-flex xs12 >
+            <v-layout row pa-2 >
+              <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
+              <app-transform-hash :hash="transfer.transactionHash" :link="`/tx/${transfer.transactionHash}`" />
+            </v-layout>
+          </v-flex>
+          <v-flex xs12>
             <v-layout row pa-2>
-              <p class="info--text pb-0 pr-1">{{ $tc('address.name', 2) }}:</p>
+              <p class="info--text pr-1">{{ $tc('address.name', 2) }}:</p>
               <app-transform-hash :hash="transfer.from" :italic="true" :link="`/address/${transfer.from}`" />
               <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
               <app-transform-hash v-if="transfer.contract" :hash="transfer.address" :italic="true" :link="`/address/${transfer.address}`" />
               <app-transform-hash v-else :hash="transfer.to" :italic="true" :link="`/address/${transfer.to}`" />
             </v-layout>
           </v-flex>
-          <v-flex xs6 pa-0>
-            <v-flex shrink pa-1 pb-2 pt-2>
+          <v-flex xs12 >
               <p class="pb-0">
                 <span class="info--text">{{ $t('common.quantity') }}:</span> {{ calculateTransferValue(transfer.value) }}
               </p>
-            </v-flex>
-          </v-flex>
-          <v-flex xs6 pr-44>
-            <v-layout row justify-end>
-              <v-flex shrink pa-1 pb-2 pt-2>
-                <p class="pb-0">
-                  <span class="info--text">{{ $t('token.type') }}:</span> {{ $t('transfer.' + transfer.deltaType) }}
-                </p>
-              </v-flex>
-            </v-layout>
           </v-flex>
         </v-layout>
       </div>
-      <v-divider class="mb-2 mt-2" />
     </v-flex>
   </v-container>
 </template>
