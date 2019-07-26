@@ -57,7 +57,7 @@ export class AccountService {
     const transfer = await this.internalTransferRepository.findOne({
       select: ['id'],
       where: { address, amount: Not(new BigNumber(0)) },
-      cache: true
+      cache: true,
     })
 
     return !!transfer
