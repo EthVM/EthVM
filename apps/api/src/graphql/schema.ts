@@ -547,11 +547,14 @@ export interface Transfer {
     deltaType: DeltaType;
     from?: string;
     contractAddress?: string;
+    tokenType?: string;
     amount: BigNumber;
     traceLocationBlockHash: string;
     traceLocationBlockNumber: BigNumber;
     traceLocationTransactionHash?: string;
     traceLocationTransactionIndex?: number;
+    traceLocationLogIndex?: number;
+    traceLocationTraceAddress?: string;
     timestamp: Date;
 }
 

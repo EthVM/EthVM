@@ -6,6 +6,7 @@ import { TransferPageDto } from '@app/graphql/transfers/dto/transfer-page.dto'
 import { BalancesPageDto } from '@app/graphql/transfers/dto/balances-page.dto'
 import { UseInterceptors } from '@nestjs/common'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
+import { InternalTransferPageDto } from '@app/graphql/transfers/dto/internal-transfer-page.dto'
 
 @Resolver('Transfer')
 @UseInterceptors(SyncingInterceptor)
@@ -46,9 +47,9 @@ export class TransferResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TransferPageDto> {
+  ): Promise<InternalTransferPageDto> {
     const [items, totalCount] = await this.transferService.findInternalTransactionsByAddress(address, offset, limit)
-    return new TransferPageDto({ items, totalCount })
+    return new InternalTransferPageDto({ items, totalCount })
   }
 
   @Query()
