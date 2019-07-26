@@ -46,7 +46,7 @@ And also is backed by popular frameworks:
 - [VueJs](https://vuejs.org/)
 - [NestJS](https://nestjs.com/)
 
-We have choosen the above technologies to allow a wider range of people contributing to the project regardless of the programming level.
+We have choosen the above technologies to allow a wider range of people to contribute to the project regardless of the programming level.
 
 ### Why Apache Kafka?
 
@@ -79,5 +79,5 @@ We have created our `EthVM - Devs` [Telegram channel](https://t.me/ethvm), feel 
 This project is licensed under the SSPL License (a small variation of the GNU Affero License v3) - see the [LICENSE](LICENSE) file for details ([or read it here online](https://www.mongodb.com/licensing/server-side-public-license)).
 
 <div align="center">
-  <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="built with love by MyEtherWallet team" />
+  <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/powered-by-MEW.png" alt="Powered by MEW" />
 </div>
