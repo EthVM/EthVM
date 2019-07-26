@@ -79,5 +79,5 @@ We have created our `EthVM - Devs` [Telegram channel](https://t.me/ethvm), feel 
 This project is licensed under the SSPL License (a small variation of the GNU Affero License v3) - see the [LICENSE](LICENSE) file for details ([or read it here online](https://www.mongodb.com/licensing/server-side-public-license)).
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/powered-by-MEW.png" alt="Powered by MEW" />
+  <img src="https://raw.githubusercontent.com/EthVM/EthVM/develop/.github/assets/powered-by-MEW.png" alt="Powered by MEW" />
 </div>
