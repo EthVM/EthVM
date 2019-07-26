@@ -7,7 +7,7 @@
 
 # EthVM: Open Source Processing Engine and Block Explorer for Ethereum
 
-![Screenshot example](.github/assets/ethvm.png)
+![Screenshot example](.github/assets/capture-1.png)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/capture-1.png" width="100" />
@@ -42,7 +42,7 @@ Our core infrastructure is based on well known languages:
 
 And also is backed by popular frameworks:
 
-- [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Streams](https://kafka.apache.org/documentation/streams/) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html)
+- [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Streams](https://kafka.apache.org/documentation/streams/) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html) + [Avro](https://avro.apache.org/)
 - [VueJs](https://vuejs.org/)
 - [NestJS](https://nestjs.com/)
 
@@ -60,15 +60,6 @@ As the [official website](https://kafka.apache.org/) states:
 
 We believe that it fits quite nicely within the needs that a Block Explorer typically may have. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
 
-## Roadmap
-
-For now, we are focused on bringing a Beta environment. It will have the following:
-
-- [x] Migration to NestJS API to replace current SocketIO API.
-- [x] Migration from MongoDB to Postgres.
-- [x] Improvements over processing on Kafka. We want to process the chain as fast as possible and alongside with that, squash some known bugs.
-- [ ] Proper testing mechanisms on different moving parts of the system.
-
 ## Getting Started
 
 For more information on how you can setup your environment and start developing, we recommend you to visit our [Wiki](https://github.com/EthVM/ethvm/wiki/)!
@@ -81,7 +72,7 @@ We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CON
 
 ## Stay in touch!
 
-We have created our `EthVM - Devs` [Telegram channel](https://t.me/ethvm), feel free to join.
+We have created our `EthVM - Devs` [Telegram channel](https://t.me/ethvm), feel free to join and hang out!
 
 ## License
 
