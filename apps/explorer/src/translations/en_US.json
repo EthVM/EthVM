@@ -568,6 +568,7 @@
     "INTERNAL_TX": "call",
     "CONTRACT_CREATION": "create",
     "CONTRACT_DESTRUCTION": "destroy",
-    "empty": "No transfers"
+    "empty": "No transfers",
+    "TOKEN_TRANSFER": "transfer"
   }
 }
