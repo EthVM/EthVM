@@ -7,46 +7,38 @@
     -->
     <v-flex hidden-xs-only>
       <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-        <!-- Column 1 -->
-        <v-flex xs12 md6>
-          <v-flex d-flex xs12 pa-2>
-            <v-layout row align-center justift-start pa-1>
-              <v-flex shrink pl-0 pr-0 pt-1 pb-1>
-                <p class="info--text pb-0 pl-0">{{ $tc('tx.hash', 1) }}:</p>
-              </v-flex>
-              <v-flex sm10 lg11 pa-1>
+        <!-- Column 1: Tx Info -->
+        <v-flex sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
+            <v-layout row align-center justift-start pa-2>
+                <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
                 <app-transform-hash :hash="transfer.transactionHash" :link="`/tx/${transfer.transactionHash}`" />
-              </v-flex>
             </v-layout>
-          </v-flex>
-          <v-flex xs12 pa-2>
-            <v-layout row align-center justify-space-around fill-height pa-1>
-              <p class="info--text mb-0 mr-1">{{ $t('tx.from') }}:</p>
+            <v-layout row align-center justify-space-around fill-height pa-2>
+              <p class="info--text mr-1">{{ $t('tx.from') }}:</p>
               <app-transform-hash :hash="transfer.from" :link="`/address/${transfer.from}`" :italic="true" />
               <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-              <p class="info--text mb-0 mr-1" v-if="transfer.contract">{{ $tc('contract.name', 1) }}:</p>
-              <p class="info--text mb-0 mr-1" v-else>{{ $t('tx.to') }}:</p>
+              <p class="info--text mr-1" v-if="transfer.contract">{{ $tc('contract.name', 1) }}:</p>
+              <p class="info--text mr-1" v-else>{{ $t('tx.to') }}:</p>
               <app-transform-hash :hash="transfer.address" :link="`/address/${transfer.address}`" :italic="true" v-if="transfer.contract" />
               <app-transform-hash :hash="transfer.to" :link="`/address/${transfer.to}`" :italic="true" v-else />
             </v-layout>
-          </v-flex>
         </v-flex>
         <!-- End Column 1 -->
 
-        <!-- Column 2 -->
-        <v-flex hidden-sm-and-down md2>
+        <!-- Column 2: Age -->
+        <v-flex sm2 >
           <app-time-ago :timestamp="transfer.timestampDate" />
         </v-flex>
         <!-- End Column 2 -->
 
-        <!-- Column 3 -->
-        <v-flex hidden-sm-and-down md2>
+        <!-- Column 3: Quantity -->
+        <v-flex sm2>
           <p>{{ calculateTransferValue(transfer.value) }}</p>
         </v-flex>
         <!-- End Column 3 -->
 
-        <!-- Column 4 -->
-        <v-flex v-if="isInternal" hidden-sm-and-down md2>
+        <!-- Column 4: Type -->
+        <v-flex v-if="isInternal" sm2 md1>
           <p>{{ $t('transfer.' + transfer.deltaType) }}</p>
         </v-flex>
         <!-- End Column 4 -->
@@ -141,10 +133,15 @@ export default class TransfersTableRow extends Vue {
     }
     return n.toFormat(2).toString()
   }
+
 }
 </script>
 <style scoped lang="css">
 .table-row-mobile {
   border: 1px solid #b4bfd2;
+}
+
+.tx-hash {
+  min-width: 3em;
 }
 </style>

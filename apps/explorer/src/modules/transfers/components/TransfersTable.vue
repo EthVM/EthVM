@@ -14,17 +14,17 @@
     <!-- Table Header -->
     <div v-if="!hasError">
       <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2" height="40px">
-        <v-layout align-center justify-start row fill-height pr-3>
-          <v-flex xs12 md6>
+        <v-layout align-center justify-start row fill-height pr-2>
+        <v-flex sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
             <h5>{{ $tc('tx.hash', 1) }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md2>
+          <v-flex sm2>
             <h5>{{ $t('common.age') }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md2>
+          <v-flex sm2>
             <h5>{{ $t('common.quantity') }}</h5>
           </v-flex>
-          <v-flex v-if="isInternal" hidden-sm-and-down md2>
+          <v-flex v-if="isInternal" sm2 md1>
             <h5>{{ $t('token.type') }}</h5>
           </v-flex>
         </v-layout>
