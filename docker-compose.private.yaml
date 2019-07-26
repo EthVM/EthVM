@@ -11,33 +11,9 @@ services:
   # Front Services
   # ///////////////////////////////////////////////////////
 
-  mew:
-    image: ethvm/mew:5.0.15
-    networks:
-      - net
-    ports:
-      - 8087:80
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:mew.${DOMAIN}'
-      - 'traefik.backend=mew'
-      - 'traefik.port=8087'
-
   api:
     environment:
       INSTA_MINING: 'true'
-
-  # ///////////////////////////////////////////////////////
-  # Ethereum Client
-  # ///////////////////////////////////////////////////////
-
-  parity:
-    environment:
-      PARITY_CHAIN: private
-      PARITY_INSTA_MINING: 'true'
-      PARITY_MIN_PEERS: $PARITY_MIN_PEERS
-      PARITY_MAX_PEERS: $PARITY_MAX_PEERS
 
   # ///////////////////////////////////////////////////////
   # Processing

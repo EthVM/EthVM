@@ -52,13 +52,12 @@
   ],
   "docker": {
     "compose": [
-      "docker-compose.amarok.yaml"
+      "docker-compose.private.yaml"
     ],
     "containers": [
       {
-        "id": "amarok",
+        "id": "private",
         "value": [
-          "mew",
           "ethvm-kafka-processing"
         ]
       }
