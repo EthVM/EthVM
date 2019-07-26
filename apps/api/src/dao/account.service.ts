@@ -53,23 +53,13 @@ export class AccountService {
 
   async findHasInternalTransfers(address: string): Promise<boolean> {
 
-    const transferIn = await this.internalTransferRepository.findOne({
+    const transfer = await this.internalTransferRepository.findOne({
       select: ['id'],
-      where: { to: address },
-      cache: true,
+      where: { address },
+      cache: true
     })
 
-    if (transferIn) {
-      return true
-    }
-
-    const transferOut = await this.internalTransferRepository.findOne({
-      select: ['id'],
-      where: { from: address },
-      cache: true,
-    })
-
-    return !!transferOut;
+    return !!transfer
 
   }
 }

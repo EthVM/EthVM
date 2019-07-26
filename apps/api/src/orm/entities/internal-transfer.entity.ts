@@ -15,13 +15,13 @@ export class InternalTransferEntity {
   id!: string
 
   @Column({type: 'character', length: 42, readonly: true})
-  to!: string
+  address!: string
 
   @Column({type: 'character varying', length: 32, readonly: true})
   deltaType!: string
 
   @Column({type: 'character', length: 42, readonly: true})
-  from?: string
+  counterpartAddress?: string
 
   @Column({type: 'character', length: 42, readonly: true})
   contractAddress?: string
