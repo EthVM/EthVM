@@ -239,7 +239,7 @@
     },
     "gas-price": {
       "title": "Gas Price",
-      "description": "Average Gas Price (GWEI)"
+      "description": "Average Gas Price"
     },
     "hash-rate": {
       "title": "Hash Rate",
@@ -286,6 +286,9 @@
       "all": " in the Ethereum blockchain since the begining ",
       "other": " in the Ethereum blockchain in last ",
       "description": " in the Ethereum blockchain"
+    },
+    "units": {
+      "th": "Th"
     }
   },
   "btn": {
