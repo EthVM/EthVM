@@ -39,3 +39,4 @@ env_*.sh
 
 # Docker
 .env
+docker/templer/stacks
