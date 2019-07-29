@@ -10,6 +10,8 @@ import { BlockSummaryDto } from './dto/block-summary.dto'
 import { BlockHeaderEntity } from '../../orm/entities/block-header.entity'
 import { BlockDto } from './dto/block.dto'
 import { MetadataService } from '../../dao/metadata.service'
+import { BlockMetricsTransactionFeeEntity } from '../../orm/entities/block-metrics-transaction-fee.entity'
+import { BlockMetricsService } from '../../dao/block-metrics.service'
 
 const hashOne = '0x0000000000000000000000000000000000000000000000000000000000000001'
 const hashTwo = '0x0000000000000000000000000000000000000000000000000000000000000002'
@@ -163,6 +165,34 @@ const blocks = [
   }
 ]
 
+const blockMetricsTransactionFees = [
+  {
+    number: 1,
+    blockHash: hashOne,
+    totalTxFees: new BigNumber(10)
+  },
+  {
+    number: 2,
+    blockHash: hashTwo,
+    totalTxFees: new BigNumber(4)
+  },
+  {
+    number: 3,
+    blockHash: hashThree,
+    totalTxFees: new BigNumber(16)
+  },
+  {
+    number: 4,
+    blockHash: hashFour,
+    totalTxFees: new BigNumber(8)
+  },
+  {
+    number: 5,
+    blockHash: hashFive,
+    totalTxFees: new BigNumber(107)
+  },
+]
+
 const metadataServiceMock = {
   async isSyncing() {
     return false
@@ -210,8 +240,14 @@ const blockServiceMock = {
   }
 }
 
+const blockMetricsServiceMock = {
+  async findBlockMetricsTransactionFeeByBlockHash(hash: string): Promise<BlockMetricsTransactionFeeEntity | undefined> {
+    const txFees = blockMetricsTransactionFees.find(bm => bm.blockHash === hash)
+    return txFees ? new BlockMetricsTransactionFeeEntity(txFees) : undefined
+  }
+}
+
 describe('BlockResolvers', () => {
-  let blockService: BlockService
   let blockResolvers: BlockResolvers
 
   beforeEach(async () => {
@@ -231,12 +267,15 @@ describe('BlockResolvers', () => {
         {
           provide: MetadataService,
           useValue: metadataServiceMock
+        },
+        {
+          provide: BlockMetricsService,
+          useValue: blockMetricsServiceMock
         }
       ]
     }).compile()
 
     // fetch dependencies
-    blockService = module.get<BlockService>(BlockService)
     blockResolvers = module.get<BlockResolvers>(BlockResolvers)
   })
 
@@ -429,11 +468,23 @@ describe('BlockResolvers', () => {
       expect(blockOne).not.toEqual(blockTwo)
     })
 
+    it('should return a BlockDto with field "totalTxFees" matching a BlockMetricsTransactionFeesEntity with block_hash provided', async () => {
+      const blockOne = await blockResolvers.blockByHash(hashOne)
+      expect(blockOne).not.toBeUndefined()
+      expect(blockOne).toHaveProperty('totalTxFees', new BigNumber(10))
+    })
+
+    it('should return a BlockDto with field "totalTxFees" defaulted to 0 when no BlockMetricsTransactionFeesEntity is found for block_hash', async () => {
+      const blockTen = await blockResolvers.blockByHash(hashTen)
+      expect(blockTen).not.toBeUndefined()
+      expect(blockTen).toHaveProperty('totalTxFees', new BigNumber(0))
+    })
+
   })
 
   describe('blockByNumber', () => {
-    it('should return null if block does not exist for a given number', async () => {
-      expect(await blockResolvers.blockByNumber(new BigNumber(11))).toEqual(null)
+    it('should return undefined if block does not exist for a given number', async () => {
+      expect(await blockResolvers.blockByNumber(new BigNumber(11))).toBeUndefined()
     })
 
     it('should return an instance of BlockDto matching the address hash provided', async () => {
@@ -457,6 +508,18 @@ describe('BlockResolvers', () => {
       }
 
       expect(blockOne).not.toEqual(blockTwo)
+    })
+
+    it('should return a BlockDto with field "totalTxFees" matching a BlockMetricsTransactionFeesEntity with block_hash of BlockEntity', async () => {
+      const blockOne = await blockResolvers.blockByNumber(new BigNumber(1))
+      expect(blockOne).not.toBeUndefined()
+      expect(blockOne).toHaveProperty('totalTxFees', new BigNumber(10))
+    })
+
+    it('should return a BlockDto with field "totalTxFees" defaulted to 0 when no BlockMetricsTransactionFeesEntity is found for block_hash', async () => {
+      const blockTen = await blockResolvers.blockByNumber(new BigNumber(10))
+      expect(blockTen).not.toBeUndefined()
+      expect(blockTen).toHaveProperty('totalTxFees', new BigNumber(0))
     })
 
   })
