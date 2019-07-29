@@ -33,14 +33,13 @@ export class BlockService {
   async calculateHashRate(cache: boolean = true): Promise<BigNumber | null> {
 
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
-    const blocks = await this.blockHeaderRepository
-      .find({
-        select: ['number', 'difficulty'],
-        relations: ['blockTime'],
-        order: { number: 'DESC' },
-        take: 20,
-        cache,
-      })
+    const blocks = await this.blockHeaderRepository.createQueryBuilder('b')
+      .leftJoinAndSelect('b.blockTime', 'bt')
+      .select(['b.number', 'b.difficulty', 'bt.blockTime'])
+      .orderBy('b.number', 'DESC')
+      .limit(20)
+      .cache(cache)
+      .getMany()
 
     if (blocks.length === 0) return null
 
@@ -61,8 +60,6 @@ export class BlockService {
         'READ COMMITTED',
         async (txn): Promise<[BlockSummary[], number]> => {
 
-          const where = fromBlock ? { number: LessThanOrEqual(fromBlock) } : {}
-
           const [{ count }] = await txn.find(CanonicalCount, {
             select: ['count'],
             where: {
@@ -71,15 +68,31 @@ export class BlockService {
             cache: true,
           })
 
-          const headersWithRewards = await txn.find(BlockHeaderEntity, {
-            select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
-            where,
-            relations: ['rewards'],
-            order: { number: 'DESC' },
-            skip: offset,
-            take: limit,
-            cache: true,
-          })
+          const queryBuilder = txn.createQueryBuilder(BlockHeaderEntity, 'b')
+            .leftJoinAndSelect('b.rewards', 'br')
+
+          if (fromBlock) {
+            queryBuilder.where('b.number <= :fromBlock', { fromBlock })
+          }
+
+          const headersWithRewards = await queryBuilder
+            .select([
+              'b.number',
+              'b.hash',
+              'b.author',
+              'b.transactionHashes',
+              'b.uncleHashes',
+              'b.difficulty',
+              'b.timestamp',
+              'br.deltaType',
+              'br.blockHash',
+              'br.amount',
+            ])
+            .orderBy('b.number', 'DESC')
+            .offset(offset)
+            .limit(limit)
+            .cache(true)
+            .getMany()
 
           return [
             await this.summarise(txn, headersWithRewards),
@@ -103,15 +116,26 @@ export class BlockService {
 
           if (count === 0) return [[], count]
 
-          const headersWithRewards = await txn.find(BlockHeaderEntity, {
-              select: ['number', 'hash', 'author', 'transactionHashes', 'uncleHashes', 'difficulty', 'timestamp'],
-              where: { author },
-              relations: ['rewards'],
-              order: { number: 'DESC' },
-              skip: offset,
-              take: limit,
-              cache: true,
-            })
+          const headersWithRewards = await txn.createQueryBuilder(BlockHeaderEntity, 'b')
+            .leftJoinAndSelect('b.rewards', 'br')
+            .where('b.author = :author', { author })
+            .select([
+              'b.number',
+              'b.hash',
+              'b.author',
+              'b.transactionHashes',
+              'b.uncleHashes',
+              'b.difficulty',
+              'b.timestamp',
+              'br.deltaType',
+              'br.blockHash',
+              'br.amount',
+            ])
+            .orderBy('b.number', 'DESC')
+            .offset(offset)
+            .limit(limit)
+            .cache(true)
+            .getMany()
 
           return [
             await this.summarise(txn, headersWithRewards),
@@ -213,11 +237,12 @@ export class BlockService {
 
     const { instaMining } = this.configService
 
-    const blockHeader = await this.blockHeaderRepository.findOne({
-      where: { hash },
-      relations: ['uncles', 'rewards', 'blockTime'],
-      cache: true,
-    })
+    const blockHeader = await this.blockHeaderRepository.createQueryBuilder('b')
+      .leftJoinAndSelect('b.rewards', 'br')
+      .leftJoinAndSelect('b.blockTime', 'bt')
+      .where('b.hash = :hash', { hash })
+      .cache(true)
+      .getOne()
 
     if (!blockHeader) return undefined
 

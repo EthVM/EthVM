@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { Brackets, EntityManager, FindManyOptions, Repository } from 'typeorm'
+import { Brackets, EntityManager, FindManyOptions, Not, Repository } from 'typeorm'
 import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
 import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 import { DbConnection } from '@app/orm/config'
 import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
+import BigNumber from 'bignumber.js'
 
 @Injectable()
 export class TransferService {
@@ -73,23 +74,16 @@ export class TransferService {
       'READ COMMITTED',
       async (txn): Promise<[InternalTransferEntity[], number]> => {
 
-        const where = [
-          { to: address },
-          { from: address },
-        ]
+        const count = await txn.count(InternalTransferEntity, { where: { address, amount: Not(new BigNumber(0)) }, cache: true })
 
-        const count = await txn.count(InternalTransferEntity, { where, cache: true })
-
-        const items = await txn.find(InternalTransferEntity, {
-          where,
-          order: {
-            traceLocationBlockNumber: 'DESC',
-            traceLocationTransactionIndex: 'DESC',
-          },
-          skip: offset,
-          take: limit,
-          cache: true,
-        })
+        const items = await txn.createQueryBuilder(InternalTransferEntity, 'it')
+          .where('it.address = :address', { address })
+          .andWhere('it.amount != 0')
+          .orderBy('trace_location_block_number', 'DESC')
+          .addOrderBy('trace_location_transaction_index', 'DESC')
+          .offset(offset)
+          .limit(limit)
+          .getMany()
 
         return [items, count]
 

@@ -5051,22 +5051,6 @@
             "deprecationReason": null
           },
           {
-            "name": "nephewNumber",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "BigNumber",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "nephewHash",
             "description": null,
             "args": [],
@@ -5107,7 +5091,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "BigNumber",
                 "ofType": null
               }
             },

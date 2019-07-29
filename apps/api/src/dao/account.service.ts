@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common'
-import { In, Repository } from 'typeorm'
+import { In, Not, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { AccountEntity } from '@app/orm/entities/account.entity'
 import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { ContractEntity } from '@app/orm/entities/contract.entity'
 import { DbConnection } from '@app/orm/config'
 import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
+import BigNumber from 'bignumber.js'
 
 @Injectable()
 export class AccountService {
@@ -54,11 +55,12 @@ export class AccountService {
   async findHasInternalTransfers(address: string): Promise<boolean> {
 
     const transfer = await this.internalTransferRepository.findOne({
-      where: [{ to: address }, { from: address }],
+      select: ['id'],
+      where: { address, amount: Not(new BigNumber(0)) },
       cache: true,
     })
 
-    return !!transfer;
+    return !!transfer
 
   }
 }

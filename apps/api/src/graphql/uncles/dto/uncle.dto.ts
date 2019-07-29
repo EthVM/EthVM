@@ -6,10 +6,9 @@ export class UncleDto implements Uncle {
 
   hash!: string
   index!: number
-  nephewNumber!: BigNumber
   nephewHash!: string
   number!: BigNumber
-  height!: string
+  height!: BigNumber
   parentHash!: string
   nonce?: BigNumber
   sha3Uncles!: string
@@ -29,6 +28,9 @@ export class UncleDto implements Uncle {
 
   constructor(data: UncleEntity) {
     assignClean(this, data)
+    if (data.reward) {
+      this.rewardAmount = data.reward.amount
+    }
   }
 
 }

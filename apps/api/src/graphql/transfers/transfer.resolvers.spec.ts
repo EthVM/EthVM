@@ -9,6 +9,7 @@ import { BalancesPageDto } from './dto/balances-page.dto'
 import { BalanceDto } from './dto/balance.dto'
 import { FungibleBalanceDeltaEntity } from '../../orm/entities/fungible-balance-delta.entity'
 import { MetadataService } from '../../dao/metadata.service'
+import { InternalTransferPageDto } from './dto/internal-transfer-page.dto'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -521,12 +522,12 @@ describe('TransferResolvers', () => {
   })
 
   describe('internalTransactionsByAddress', () => {
-    it('should return a TransfersPageDto with items where "to" or "from" matches the address provided', async () => {
+    it('should return a InternalTransferPageDto with items where "to" or "from" matches the address provided', async () => {
 
       const transfersForAddress1 = await transferResolvers.internalTransactionsByAddress(holder3, 0, 10)
       const transfersForAddress2 = await transferResolvers.internalTransactionsByAddress(holder4, 0, 10)
 
-      expect(transfersForAddress1).toBeInstanceOf(TransferPageDto)
+      expect(transfersForAddress1).toBeInstanceOf(InternalTransferPageDto)
       expect(transfersForAddress1).toHaveProperty('items')
       expect(transfersForAddress1).toHaveProperty('totalCount', 3)
       if (transfersForAddress1.items) {
@@ -536,7 +537,7 @@ describe('TransferResolvers', () => {
         expect(transfersForAddress1.items[2]).toHaveProperty('to', holder3)
       }
 
-      expect(transfersForAddress2).toBeInstanceOf(TransferPageDto)
+      expect(transfersForAddress2).toBeInstanceOf(InternalTransferPageDto)
       expect(transfersForAddress2).toHaveProperty('items')
       expect(transfersForAddress2).toHaveProperty('totalCount', 2)
       if (transfersForAddress2.items) {

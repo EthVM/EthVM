@@ -9,10 +9,9 @@ type Query {
 type Uncle {
   hash: String!
   index: Int!
-  nephewNumber: BigNumber!
   nephewHash: String!
   number: BigNumber!
-  height: String!
+  height: BigNumber!
   parentHash: String!
   nonce: BigNumber
   sha3Uncles: String!
