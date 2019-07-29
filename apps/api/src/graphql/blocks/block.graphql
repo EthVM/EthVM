@@ -40,6 +40,7 @@ type Block {
   uncleHashes: [String!]!
   transactionHashes: [String!]!
   rewards: [Reward!]!
+  totalTxFees: BigNumber!
 }
 
 type BlockHeader {

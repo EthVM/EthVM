@@ -10,11 +10,14 @@ import { UncleService } from '@app/dao/uncle.service'
 import { AccountService } from '@app/dao/account.service'
 import { AccountDto } from '@app/graphql/accounts/account.dto'
 import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
+import { BlockMetricsService } from '@app/dao/block-metrics.service'
+import BigNumber from 'bignumber.js'
 
 @Injectable()
 export class SearchService {
   constructor(
     private readonly blockService: BlockService,
+    private readonly blockMetricsService: BlockMetricsService,
     private readonly accountService: AccountService,
     private readonly uncleService: UncleService,
     private readonly txService: TxService,
@@ -49,7 +52,8 @@ export class SearchService {
 
       const block = await this.blockService.findByHash(query)
       if (block != null) {
-        s.block = new BlockDto(block)
+        const txFees = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(query)
+        s.block = new BlockDto(block, txFees)
         s.type = SearchType.Block
         return s
       }
