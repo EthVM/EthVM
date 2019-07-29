@@ -43,22 +43,11 @@ export interface blockByNumber_blockDetail {
   uncleHashes: string[];
   transactionHashes: string[];
   rewards: blockByNumber_blockDetail_rewards[];
-}
-
-export interface blockByNumber_transactionsSummary_items {
-  __typename: "TransactionSummary";
-  fee: any;
-}
-
-export interface blockByNumber_transactionsSummary {
-  __typename: "TransactionSummaryPage";
-  items: blockByNumber_transactionsSummary_items[];
-  totalCount: number;
+  totalTxFees: any;
 }
 
 export interface blockByNumber {
   blockDetail: blockByNumber_blockDetail | null;
-  transactionsSummary: blockByNumber_transactionsSummary;
 }
 
 export interface blockByNumberVariables {

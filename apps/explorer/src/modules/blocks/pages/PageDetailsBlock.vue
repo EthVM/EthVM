@@ -78,9 +78,9 @@ const MAX_TXS = 10
         return { blockHash }
       },
 
-      update({ blockDetail, transactionsSummary }) {
+      update({ blockDetail }) {
         if (blockDetail) {
-          return new BlockDetailExt(blockDetail, transactionsSummary)
+          return new BlockDetailExt(blockDetail)
         } else if (!this.syncing) {
           this.error = this.error || this.$i18n.t('message.invalid.block')
         }
@@ -321,7 +321,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${blockDetail.totalTxFees.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.totalTxFeesEth.toEth()} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),

@@ -43,4 +43,5 @@ export interface BlockDetail {
   uncleHashes: string[];
   transactionHashes: string[];
   rewards: BlockDetail_rewards[];
+  totalTxFees: any;
 }
