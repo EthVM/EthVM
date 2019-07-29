@@ -25,7 +25,7 @@ docker_usage() {
   echo -e "  docker-run [COMMAND] [ARGS...]"
   echo -e ""
   echo -e "Commands:"
-  echo -e "  up      -m | --mode [simple|dev|amarok]   Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
+  echo -e "  up      -m | --mode [simple|dev|private]  Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
   echo -e "  down                                      Stop and remove docker containers, networks, images, and volumes."
   echo -e "  logs                                      View output from containers."
   echo -e "  help                                      Print the help information and exit."
@@ -50,6 +50,7 @@ up() {
     # By default, the default mode if no arg is specified is dev
     up_dev_mode_message
     down
+    create_env
     up_dev
   else
     # We process and parse arguments
@@ -65,6 +66,7 @@ up() {
         dev)
           up_dev_mode_message
           down
+          create_env
           up_dev
           break
           ;;
@@ -72,6 +74,7 @@ up() {
         simple)
           up_simple_mode_message
           down
+          create_env
           up_simple
           break
           ;;
@@ -80,7 +83,7 @@ up() {
           local extra_compose_files=""
 
           for compose in $EXTRA_DOCKER_COMPOSE_FILES; do
-            [[ $compose == *$value* ]] && extra_compose_files+=" -f ${ROOT_DIR}/$compose"
+            [[ $compose == *$value* ]] && extra_compose_files+=" -f ${ROOT_DIR}/$compose" && [[ -f ${ROOT_DIR}/.env.$value ]] && source ${ROOT_DIR}/.env.$value
           done
 
           if [[ ! "$extra_compose_files" ]]; then
@@ -89,6 +92,7 @@ up() {
           else
             up_dev_mode_message
             down
+            create_env ".env.$value"
             up_dev "$extra_compose_files"
           fi
 
@@ -102,6 +106,16 @@ up() {
       shift
     done
   fi
+}
+
+# create_env - creates a proper .env file
+create_env() {
+
+  section "Generating .env file"
+
+  local env=${1:-'.env.default'}
+  cp ${ROOT_DIR}/"$env" ${ROOT_DIR}/.env
+
 }
 
 # up_dev_mode_message - describes which mode the user has selected
@@ -127,6 +141,25 @@ up_dev() {
 
   section "Selected docker compose files:"
   echo -e $compose_files
+
+  section "Loaded .env variables:"
+  info "DOMAIN: $DOMAIN"
+
+  info "PRINCIPAL_JDBC_URL: $PRINCIPAL_JDBC_URL"
+  info "PRINCIPAL_DB: $PRINCIPAL_DB"
+  info "PRINCIPAL_USER: $PRINCIPAL_USER"
+  info "PRINCIPAL_PASSWORD: $PRINCIPAL_PASSWORD"
+
+  info "METRICS_JDBC_URL: $PARITY_INSTA_MINING"
+  info "METRICS_DB: $PARITY_INSTA_MINING"
+  info "METRICS_USER: $PARITY_INSTA_MINING"
+  info "METRICS_PASSWORD: $PARITY_INSTA_MINING"
+
+  info "PARITY_CHAIN: $PARITY_CHAIN"
+  info "PARITY_BIND_MOUNTPOINT: $PARITY_BIND_MOUNTPOINT"
+  info "PARITY_INSTA_MINING: $PARITY_INSTA_MINING"
+  info "PARITY_MIN_PEERS: $PARITY_MIN_PEERS"
+  info "PARITY_MAX_PEERS: $PARITY_MAX_PEERS"
 
   section "Building utility docker images..."
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils

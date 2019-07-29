@@ -11,33 +11,9 @@ services:
   # Front Services
   # ///////////////////////////////////////////////////////
 
-  mew:
-    image: ethvm/mew:5.0.15
-    networks:
-      - net
-    ports:
-      - 8087:80
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:mew.${DOMAIN}'
-      - 'traefik.backend=mew'
-      - 'traefik.port=8087'
-
   api:
     environment:
       INSTA_MINING: 'true'
-
-  # ///////////////////////////////////////////////////////
-  # Ethereum Client
-  # ///////////////////////////////////////////////////////
-
-  parity:
-    environment:
-      PARITY_CHAIN: private
-      PARITY_INSTA_MINING: 'true'
-      PARITY_MIN_PEERS: $PARITY_MIN_PEERS
-      PARITY_MAX_PEERS: $PARITY_MAX_PEERS
 
   # ///////////////////////////////////////////////////////
   # Processing
@@ -61,3 +37,4 @@ services:
       KAFKA_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
       WEB3_WS_URL: ws://parity:8546
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
+      ETH_NET_CONFIG: 'ropsten'

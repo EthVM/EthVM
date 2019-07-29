@@ -37,3 +37,5 @@ env_*.sh
 .vscode
 *.code-workspace
 
+# Docker
+.env
