@@ -1,7 +1,5 @@
 
-/* Update sync status */
 
-UPDATE metadata set value = 'false' where key = 'sync_status';
 
 /* Block header */
 
@@ -96,3 +94,7 @@ CREATE INDEX IF NOT EXISTS idx_contract_destroyed_trace_location_block_hash ON c
 /* Token */
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_name ON token_exchange_rates (name);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rates (symbol);
+
+/* Update sync status */
+
+UPDATE metadata set value = 'false' where key = 'sync_status';
