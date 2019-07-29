@@ -5,22 +5,22 @@
     <chart-timeseries
       v-if="chartId === ChartType.difficulty"
       :title="$i18n.t('charts.block-diff.title')"
-      :description="$i18n.t('charts.block-diff.description')"
-      :query="this.queries.get('avgDifficulty')"
+      :description="descriptions.get('avgDifficulty')"
+      :query="queries.get('avgDifficulty')"
       :value-type="'bignumber'"
     />
 
     <chart-timeseries
       v-if="chartId === ChartType.blockTime"
       :title="$i18n.t('charts.block-time.title')"
-      :description="$i18n.t('charts.block-time.description')"
-      :query="this.queries.get('avgBlockTime')"
+      :description="descriptions.get('avgBlockTime')"
+      :query="queries.get('avgBlockTime')"
     />
 
     <chart-timeseries
       v-if="chartId === ChartType.gasLimit"
       :title="$i18n.t('charts.gas-limit.title')"
-      :description="$i18n.t('charts.gas-limit.description')"
+      :description="descriptions.get('avgGasLimit')"
       :query="queries.get('avgGasLimit')"
       :value-type="'bignumber'"
     />
@@ -28,8 +28,8 @@
     <chart-timeseries
       v-if="chartId === ChartType.gasPrice"
       :title="$i18n.t('charts.gas-price.title')"
-      :description="$i18n.t('charts.gas-price.description')"
-      :query="this.queries.get('avgGasPrice')"
+      :description="descriptions.get('avgGasPrice')"
+      :query="queries.get('avgGasPrice')"
       :value-type="'gwei'"
     />
 
@@ -38,22 +38,22 @@
     <chart-timeseries
       v-if="chartId === ChartType.txFail"
       :title="$i18n.t('charts.tx-fail.title')"
-      :description="$i18n.t('charts.tx-fail.description')"
-      :query="this.queries.get('avgNumFailedTxs')"
+      :description="descriptions.get('avgNumFailedTxs')"
+      :query="queries.get('avgNumFailedTxs')"
     />
 
     <chart-timeseries
       v-if="chartId === ChartType.txSuccess"
       :title="$i18n.t('charts.tx-success.title')"
-      :description="$i18n.t('charts.tx-success.description')"
-      :query="this.queries.get('avgNumSuccessfulTxs')"
+      :description="descriptions.get('avgNumSuccessfulTxs')"
+      :query="queries.get('avgNumSuccessfulTxs')"
     />
 
     <chart-timeseries
       v-if="chartId === ChartType.txFees"
       :title="$i18n.t('charts.tx-fees.title')"
-      :description="$i18n.t('charts.tx-fees.description')"
-      :query="this.queries.get('avgTxFees')"
+      :description="descriptions.get('avgTxFees')"
+      :query="queries.get('avgTxFees')"
       :value-type="'eth'"
     />
   </v-container>
@@ -107,6 +107,19 @@ export default class PageDetailsChart extends Vue {
       .set('avgNumFailedTxs', avgNumFailedTxsHistory)
       .set('avgNumSuccessfulTxs', avgNumSuccessfulTxsHistory)
       .set('avgTxFees', avgTxFeesHistory)
+  }
+
+  get descriptions(): Map<string, string> {
+    const map = new Map<string, any>()
+    const { $i18n } = this
+    return map
+      .set('avgGasPrice', `${$i18n.t('charts.gas-price.description')} (${$i18n.t('common.gwei')})`)
+      .set('avgBlockTime', `${$i18n.t('charts.block-time.description')} (${$i18n.t('message.sec')})`)
+      .set('avgGasLimit', `${$i18n.t('charts.gas-limit.description')} (${$i18n.t('common.gwei')})`)
+      .set('avgDifficulty', `${$i18n.t('charts.block-diff.description')} (${$i18n.t('charts.units.th')})`)
+      .set('avgNumFailedTxs', $i18n.t('charts.tx-fail.description'))
+      .set('avgNumSuccessfulTxs', $i18n.t('charts.tx-success.description'))
+      .set('avgTxFees', `${$i18n.t('charts.tx-fees.description')} (${$i18n.t('common.eth')})`)
   }
 
   get crumbs(): Crumb[] {
