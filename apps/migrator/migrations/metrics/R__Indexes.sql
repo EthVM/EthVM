@@ -1,12 +1,18 @@
+/* Drop previous indexes */
+DROP INDEX IF EXISTS idx_block_header_number;
+DROP INDEX IF EXISTS idx_block_header_hash;
+DROP INDEX IF EXISTS idx_block_header_parent_hash;
+DROP INDEX IF EXISTS idx_block_header_author;
+DROP INDEX IF EXISTS idx_block_metrics_header_number;
+DROP INDEX IF EXISTS idx_block_metrics_header_block_hash;
 
-/* Block Header */
-
+/* Canonical block header */
 CREATE INDEX IF NOT EXISTS idx_block_header_number ON canonical_block_header (number DESC);
-CREATE INDEX IF NOT EXISTS idx_block_header_hash ON canonical_block_header (hash);
-CREATE INDEX IF NOT EXISTS idx_block_header_parent_hash ON canonical_block_header (parent_hash);
-CREATE INDEX IF NOT EXISTS idx_block_header_author ON canonical_block_header (author);
 
-/* Block Metrics Header */
-
+/* Block metrics header */
 CREATE INDEX IF NOT EXISTS idx_block_metrics_header_number ON block_metrics_header (number DESC);
-CREATE INDEX IF NOT EXISTS idx_block_metrics_header_block_hash ON block_metrics_header (block_hash);
+
+/* Canonical block time */
+CREATE INDEX IF NOT EXISTS idx_block_time_block_time ON canonical_block_time (block_time);
+CREATE INDEX IF NOT EXISTS idx_block_time_timestamp ON canonical_block_time (timestamp DESC);
+
