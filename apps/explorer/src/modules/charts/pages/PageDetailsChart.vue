@@ -110,16 +110,16 @@ export default class PageDetailsChart extends Vue {
   }
 
   get descriptions(): Map<string, string> {
-      const map = new Map<string, any>()
-      const { $i18n } = this
-      return map
-          .set('avgGasPrice', `${$i18n.t('charts.gas-price.description')} (${$i18n.t('common.gwei')})`)
-          .set('avgBlockTime', `${$i18n.t('charts.block-time.description')} (${$i18n.t('message.sec')})`)
-          .set('avgGasLimit', `${$i18n.t('charts.gas-limit.description')} (${$i18n.t('common.gwei')})`)
-          .set('avgDifficulty', `${$i18n.t('charts.block-diff.description')} (${$i18n.t('charts.units.th')})`)
-          .set('avgNumFailedTxs', $i18n.t('charts.tx-fail.description'))
-          .set('avgNumSuccessfulTxs', $i18n.t('charts.tx-success.description'))
-          .set('avgTxFees', `${$i18n.t('charts.tx-fees.description')} (${$i18n.t('common.eth')})`)
+    const map = new Map<string, any>()
+    const { $i18n } = this
+    return map
+      .set('avgGasPrice', `${$i18n.t('charts.gas-price.description')} (${$i18n.t('common.gwei')})`)
+      .set('avgBlockTime', `${$i18n.t('charts.block-time.description')} (${$i18n.t('message.sec')})`)
+      .set('avgGasLimit', `${$i18n.t('charts.gas-limit.description')} (${$i18n.t('common.gwei')})`)
+      .set('avgDifficulty', `${$i18n.t('charts.block-diff.description')} (${$i18n.t('charts.units.th')})`)
+      .set('avgNumFailedTxs', $i18n.t('charts.tx-fail.description'))
+      .set('avgNumSuccessfulTxs', $i18n.t('charts.tx-success.description'))
+      .set('avgTxFees', `${$i18n.t('charts.tx-fees.description')} (${$i18n.t('common.eth')})`)
   }
 
   get crumbs(): Crumb[] {
