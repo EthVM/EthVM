@@ -13,18 +13,18 @@
 
     <!-- Table Header -->
     <div v-if="!hasError">
-      <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2" height="40px">
-        <v-layout align-center justify-start row fill-height pr-3>
-          <v-flex xs12 md6>
+      <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-xs-only" height="40px">
+        <v-layout align-center justify-start row fill-height pr-2>
+          <v-flex sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
             <h5>{{ $tc('tx.hash', 1) }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md2>
+          <v-flex sm2>
             <h5>{{ $t('common.age') }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md2>
+          <v-flex sm2>
             <h5>{{ $t('common.quantity') }}</h5>
           </v-flex>
-          <v-flex v-if="isInternal" hidden-sm-and-down md2>
+          <v-flex v-if="isInternal" sm2 md1>
             <h5>{{ $t('token.type') }}</h5>
           </v-flex>
         </v-layout>
@@ -33,23 +33,26 @@
 
       <!-- Start Rows -->
       <div v-if="loading">
-        <v-flex sm12 hidden-xs-only>
-          <div v-for="i in maxItems" :key="i">
+        <v-flex sm12>
+          <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : '']">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs12 md6>
+              <v-flex xs7 sm6 md7 :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']">
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down md2>
+              <v-flex xs5 sm2>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down md2>
+              <v-flex xs12 sm2>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex v-if="isInternal" hidden-sm-and-down md2>
+              <v-flex xs12 hidden-sm-and-above>
+                <v-flex xs12 class="table-row-loading"></v-flex>
+              </v-flex>
+              <v-flex v-if="isInternal" xs4 sm2 md1>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
             </v-layout>
-            <v-divider class="mb-2 mt-2" />
+            <v-divider class="mb-2 mt-2 hidden-xs-only" />
           </div>
         </v-flex>
       </div>
@@ -239,3 +242,9 @@ export default class TransfersTable extends Vue {
   }
 }
 </script>
+
+<style scoped lang="css">
+.table-row-mobile {
+  border: 1px solid #b4bfd2;
+}
+</style>

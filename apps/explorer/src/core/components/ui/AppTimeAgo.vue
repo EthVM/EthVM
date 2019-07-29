@@ -1,5 +1,5 @@
 <template>
-  <p class="black--text text-truncate mb-0"><timeago :datetime="timestamp" :locale="locale" :auto-update="60"></timeago></p>
+  <p class="black--text  mb-0"><timeago :datetime="timestamp" :locale="locale" :auto-update="60"></timeago></p>
 </template>
 
 <script lang="ts">
