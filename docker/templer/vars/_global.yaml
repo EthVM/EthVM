@@ -1,0 +1,61 @@
+---
+
+# ///////////////////////////////////////////////////////
+# General
+# ///////////////////////////////////////////////////////
+
+COMPOSE_VERSION: '3.7'
+SIMPLIFIED_NETWORKING: false
+
+# ///////////////////////////////////////////////////////
+# Front Services
+# ///////////////////////////////////////////////////////
+
+DOMAIN: 'ethvm.lan'
+TRAEFIK_ENABLED: true
+NGINX_ENABLED: false
+
+# ///////////////////////////////////////////////////////
+# DB
+# ///////////////////////////////////////////////////////
+
+PRINCIPAL_DB: 'ethvm_dev'
+PRINCIPAL_USER: 'postgres'
+PRINCIPAL_PASSWORD: '1234'
+PRINCIPAL_JDBC_URL: 'jdbc:postgresql://db-principal:5432/{{ PRINCIPAL_DB }}?user={{ PRINCIPAL_USER }}&password={{ PRINCIPAL_PASSWORD }}&ssl=false'
+
+METRICS_DB: 'ethvm_dev'
+METRICS_USER: 'postgres'
+METRICS_PASSWORD: '1234'
+METRICS_JDBC_URL: 'jdbc:postgresql://db-metrics:5432/{{ METRICS_DB }}?user={{ METRICS_USER }}&password={{ METRICS_PASSWORD }}&ssl=false'
+
+# ///////////////////////////////////////////////////////
+# Parity
+# ///////////////////////////////////////////////////////
+
+PARITY_ENABLED: true
+PARITY_CHAIN: 'ropsten'
+PARITY_BIND_MOUNTPOINT: '~/.local/share/io.parity.ethereum/ropsten/'
+PARITY_INSTA_MINING: false
+PARITY_MIN_PEERS: 0
+PARITY_MAX_PEERS: 0
+
+# ///////////////////////////////////////////////////////
+# Kafka
+# ///////////////////////////////////////////////////////
+
+KAFKA_ENABLED: true
+KAFKA_ENABLE_PROCESSORS: false
+CP_VERSION: '5.2.1'
+KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+KAFKA_BOOTSTRAP_SERVERS: 'kafka-1:9091'
+KAFKA_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+KAFKA_CONNECT_URL: 'http://kafka-connect:8083'
+
+
+# ///////////////////////////////////////////////////////
+# Monitoring
+# ///////////////////////////////////////////////////////
+
+GRAFANA_MONITORING_TOOLS_ENABLED: false
+KAFKA_MONITORING_TOOLS_ENABLED: false

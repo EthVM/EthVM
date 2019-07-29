@@ -1,0 +1,425 @@
+version: '{{ COMPOSE_VERSION }}'
+
+networks:
+
+  net:
+    {% if not SIMPLIFIED_NETWORKING %}
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/24
+    {% endif %}
+
+volumes:
+
+  db-principal:
+    external: false
+
+  db-metrics:
+    external: false
+
+  {% if KAFKA_ENABLED %}
+  kafka-1:
+    external: false
+
+  zookeeper:
+    external: false
+
+  {% if KAFKA_ENABLE_PROCESSORS %}
+  ethvm-kafka-processors:
+    external: false
+  {% endif %}
+  {% endif %}
+
+  {% if GRAFANA_MONITORING_TOOLS_ENABLED %}
+  prometheus:
+    external: false
+  {% endif %}
+
+services:
+
+  # ///////////////////////////////////////////////////////
+  # Front Services
+  # ///////////////////////////////////////////////////////
+
+  {% if TRAEFIK_ENABLED %}
+  traefik:
+    image: ethvm/traefik:0.1.6
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - net
+    ports:
+      - 80:80
+      - 8080:8080
+    environment:
+      DEBUG: 'true'
+      LETS_ENCRYPT_ENABLED: 'false'
+      SWARM_MODE: 'false'
+      TRAEFIK_DASHBOARD_ENABLED: 'true'
+      TRAEFIK_PING_ENABLED: 'false'
+  {% endif %}
+
+  {% if NGINX_ENABLED %}
+  nginx:
+    image: ethvm/nginx:1.17.2-alpine
+    restart: unless-stopped
+    networks:
+      - net
+    ports:
+      - 80:80
+  {% endif %}
+
+  explorer:
+    build:
+      context: ./apps/explorer
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    volumes:
+      - ./apps/explorer:/var/explorer
+    networks:
+      - net
+    {% if TRAEFIK_ENABLED %}
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:{{ DOMAIN }}'
+      - 'traefik.backend=explorer'
+      - 'traefik.port=8080'
+    {% endif %}
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./apps/api:/var/www/api
+    depends_on:
+      - db-principal
+      - db-metrics
+    networks:
+      - net
+    ports:
+      - 3000:3000
+    {% if TRAEFIK_ENABLED %}
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:api.{{ DOMAIN }}'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://{{ DOMAIN }}||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.passHostHeader=true'
+      - 'traefik.backend=api'
+      - 'traefik.port=3000'
+      - 'traefik.frontend.entryPoints=http,https,ws,wss'
+    {% endif %}
+    environment:
+      GRAPHQL_PLAYGROUND: 'true'
+      INSTA_MINING: '{{ PARITY_INSTA_MINING }}'
+      NO_TS_TUNE: 'true'
+    command: bash -c "yarn && yarn start:dev"
+
+  {% if PARITY_ENABLED %}
+  # ///////////////////////////////////////////////////////
+  #   Ethereum Client
+  # ///////////////////////////////////////////////////////
+
+  parity:
+    build:
+      context: ./docker/images/parity
+      dockerfile: Dockerfile
+    networks:
+      - net
+    volumes:
+      - ${PARITY_BIND_MOUNTPOINT}:/home/parity/.local/share/io.parity.ethereum/
+    ports:
+      - 8545:8545
+      - 8546:8546
+      - 30303:30303
+    environment:
+      PARITY_CHAIN: {{ PARITY_CHAIN }}
+      PARITY_MIN_PEERS: {{ PARITY_MIN_PEERS }}
+      PARITY_MAX_PEERS: {{ PARITY_MAX_PEERS }}
+  {% endif %}
+
+  # ///////////////////////////////////////////////////////
+  # Storage
+  # ///////////////////////////////////////////////////////
+
+  db-principal:
+    image: postgres:11
+    restart: unless-stopped
+    shm_size: 1g
+    volumes:
+      - db-principal:/var/lib/postgresql/data
+    networks:
+      - net
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: '{{ PRINCIPAL_USER }}'
+      POSTGRES_PASSWORD: '{{ PRINCIPAL_PASSWORD }}'
+      POSTGRES_DB: '{{ PRINCIPAL_DB }}'
+
+  db-metrics:
+    image: timescale/timescaledb:1.2.2-pg11-oss
+    restart: unless-stopped
+    shm_size: 1g
+    volumes:
+      - db-metrics:/var/lib/postgresql/data
+    networks:
+      - net
+    environment:
+      POSTGRES_USER: '{{ METRICS_USER }}'
+      POSTGRES_PASSWORD: '{{ METRICS_PASSWORD }}'
+      POSTGRES_DB: '{{ METRICS_DB }}'
+
+  redis:
+    image: redis:5.0-alpine
+    networks:
+      - net
+
+  {% if KAFKA_ENABLED %}
+  # ///////////////////////////////////////////////////////
+  # Processing
+  # ///////////////////////////////////////////////////////
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:{{ CP_VERSION }}
+    volumes:
+      - zookeeper:/var/lib/zookeeper
+    networks:
+      net:
+        ipv4_address: 172.25.0.103
+    ports:
+      - 2181:2181
+      - 9585:9585
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: "server.1=zookeeper:2888:3888"
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_JMX_PORT: 9585
+
+  kafka-1:
+    image: confluentinc/cp-kafka:{{ CP_VERSION }}
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    volumes:
+      - kafka-1:/var/lib/kafka
+    networks:
+      net:
+        ipv4_address: 172.25.0.104
+    ports:
+      - 9091:9091
+      - 9586:9586
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: "kafka-1"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-1:9091"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_COMPRESSION_TYPE: "zstd"
+      KAFKA_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS: 120000
+      KAFKA_MESSAGE_MAX_BYTES: 52428800
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
+      KAFKA_TOPIC_DELETE_ENABLE: 'true'
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-1:9091
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+      KAFKA_JMX_PORT: 9586
+
+  {% if KAFKA_ENABLE_PROCESSORS %}
+  ethvm-kafka-proccessors:
+    build:
+      context: ./apps/processing
+      dockerfile: ./kafka-streams/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - kafka-1
+      - zookeeper
+      - kafka-schema-registry
+    networks:
+      - net
+    volumes:
+      - ethvm-kafka-processors:/var/lib/kafka-streams
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: {{ KAFKA_BOOTSTRAP_SERVERS }}
+      KAFKA_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
+      WEB3_WS_URL: ws://parity:8546
+      KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
+      ETH_NET_CONFIG: '{{ PARITY_CHAIN }}'
+  {% endif %}
+
+  kafka-schema-registry:
+    image: confluentinc/cp-schema-registry:{{ CP_VERSION }}
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka-1
+    networks:
+      net:
+        ipv4_address: 172.25.0.107
+    ports:
+      - 8081:8081
+      - 9587:9587
+    {% if TRAEFIK_ENABLED %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:kafka-schema-registry.{{ DOMAIN }}"
+      - "traefik.port=8081"
+      - "traefik.backend=kafka-schema-registry"
+    {% endif %}
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka-1:9091"
+      SCHEMA_REGISTRY_KAFKASTORE_TIMEOUT_MS: 10000
+      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: "INFO"
+      SCHEMA_REGISTRY_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+      SCHEMA_REGISTRY_JMX_PORT: 9587
+
+  kafka-connect:
+    build:
+      context: apps/processing/connectors
+      dockerfile: ./Dockerfile.dev
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka-1
+      - kafka-schema-registry
+    networks:
+      - net
+    ports:
+      - 8083:8083
+      - 9588:9588
+    volumes:
+      - ./apps/processing/connectors/sinks/jdbc/build/libs:/usr/share/ethvm/jdbc
+      - ./apps/processing/connectors/sources/eth-tokens-list/build/libs:/usr/share/ethvm/eth-tokens-list
+      - ./apps/processing/connectors/sources/exchanges/build/libs:/usr/share/ethvm/exchanges
+      - ./apps/processing/connectors/sources/kafka-admin/build/libs:/usr/share/ethvm/kafka-admin
+      - ./apps/processing/connectors/sources/web3/build/libs:/usr/share/ethvm/web3
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091
+      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "ethvm-kafka-connect"
+      CONNECT_STATUS_STORAGE_TOPIC: "ethvm-storage-topic"
+      CONNECT_CONFIG_STORAGE_TOPIC: "ethvm-storage-config"
+      CONNECT_OFFSET_STORAGE_TOPIC: "ethvm-storage-offsets"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
+      CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.confluent.connect.jdbc=WARN,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm/jdbc,/usr/share/ethvm/eth-tokens-list,/usr/share/ethvm/exchanges,/usr/share/ethvm/kafka-admin,/usr/share/ethvm/web3
+      CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
+      CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
+      CONNECT_MAX_POLL_INTERVAL_MS: 120000
+      KAFKA_HEAP_OPTS: "-Xms2G -Xmx4G -XX:MaxDirectMemorySize=512M"
+      KAFKA_JMX_PORT: 9588
+      PRINCIPAL_BALANCE_DELTA_SINK_TASKS_MAX:
+      PRINCIPAL_BALANCE_SINK_TASKS_MAX:
+      PRINCIPAL_CONTRACT_SINK_TASKS_MAX:
+      PRINCIPAL_RECEIPT_SINK_TASKS_MAX:
+      PRINCIPAL_TRACE_SINK_TASKS_MAX:
+      METRICS_BLOCK_METRICS_SINK_TASKS_MAX:
+  {% endif %}
+
+  # ///////////////////////////////////////////////////////
+  # Monitoring Tools
+  # ///////////////////////////////////////////////////////
+
+  pgweb:
+    image: sosedoff/pgweb:0.11.3
+    restart: unless-stopped
+    networks:
+      - net
+    depends_on:
+      - db-principal
+      - db-metrics
+    ports:
+      - 8082:8082
+    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082"
+
+  {% if GRAFANA_MONITORING_TOOLS_ENABLED %}
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - net
+    volumes:
+      - prometheus:/prometheus
+      - ./prometheus:/config
+    command: --config.file=/config/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention=168h
+
+  grafana:
+    image: grafana/grafana:6.1.6
+    networks:
+      - net
+    environment:
+      GF_SERVER_ROOT_URL: 'http://grafana.{{ DOMAIN }}'
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+    {% if TRAEFIK_ENABLED %}
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.default.protocol=http'
+      - 'traefik.frontend.rule=Host:grafana.{{ DOMAIN }}'
+      - 'traefik.backend=grafana'
+      - 'traefik.port=3000'
+    {% endif %}
+  {% endif %}
+
+  {% if KAFKA_MONITORING_TOOLS_ENABLED %}
+  # ///////////////////////////////////////////////////////
+  # Kafka Monitoring Tools
+  # ///////////////////////////////////////////////////////
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter
+    networks:
+      - net
+    ports:
+      - 9308:9308
+    command: "--kafka.server=kafka-1:9091"
+
+  kafka-connect-ui:
+    image: landoop/kafka-connect-ui
+    networks:
+      - net
+    ports:
+      - 8000:8000
+    environment:
+      CONNECT_URL: http://kafka-connect:8083
+
+  kafka-manager:
+    image: ethvm/kafka-manager:2.0.0.2
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+      - kafka-1
+    networks:
+      - net
+    ports:
+      - 9000:9000
+    environment:
+      ZK_HOSTS: zookeeper:2181
+  {% endif %}

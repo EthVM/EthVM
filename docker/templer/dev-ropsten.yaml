@@ -1,0 +1,10 @@
+---
+
+include_vars:
+  - vars/_global.yaml
+
+templates:
+  - src: templates/compose.yaml.j2
+    dest: stacks/docker-compose.yaml
+    include_vars:
+      - vars/dev-ropsten.yaml
