@@ -54,6 +54,8 @@ DROP INDEX IF EXISTS idx_contract_destroyed_trace_location_block_hash;
 DROP INDEX IF EXISTS idx_token_exchange_rates_name;
 DROP INDEX IF EXISTS idx_token_exchange_rates_symbol;
 
+
+
 /* Block header */
 CREATE INDEX IF NOT EXISTS idx_block_header_hash ON canonical_block_header USING hash (hash); /* already exists as PKey */
 CREATE INDEX IF NOT EXISTS idx_block_header_number__hash__author ON canonical_block_header (number DESC, hash, author);
@@ -126,3 +128,7 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rat
 /* Token metadata */
 CREATE INDEX IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
 CREATE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
+/* Update sync status */
+
+UPDATE metadata set value = 'false' where key = 'sync_status';
+

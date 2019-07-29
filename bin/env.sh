@@ -148,4 +148,4 @@ ensure() {
 }
 
 # source docker compose env variables
-source ${ROOT_DIR}/.env
+source ${ROOT_DIR}/.env.default
