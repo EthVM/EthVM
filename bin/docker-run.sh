@@ -13,7 +13,7 @@ DATASET="ethvm_dev.sql.gz"
 
 BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
 
-EXTRA_DOCKER_COMPOSE_FILES=$(jq -r '.docker.compose[]' $META_PATH)
+EXTRA_DOCKER_COMPOSE_FILES=$(jq -r '.docker.compose[]' $DOCKER_RUN_META_PATH)
 
 # docker_usage - prints docker subcommand usage
 docker_usage() {
@@ -142,7 +142,7 @@ up_dev() {
   if [[ $compose_files != "-f ${ROOT_DIR}/docker-compose.yaml" ]]; then
     section "Starting up extra docker containers..."
     local images=""
-    for container in $(jq -cr '.docker.containers[]' $META_PATH); do
+    for container in $(jq -cr '.docker.containers[]' $DOCKER_RUN_META_PATH); do
       local key=$(echo "$container" | jq -cr '.id')
       local value=$(echo "$container" | jq -car '.value | join(" ")')
       [[ $container == *$key* ]] && images+="$value"

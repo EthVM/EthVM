@@ -15,7 +15,7 @@ ORG="${ORG:-ethvm}"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 APPS_PATH="${ROOT_DIR}/apps"
 DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
-META_PATH="${SCRIPT_DIR}/meta.json"
+DOCKER_RUN_META_PATH="${SCRIPT_DIR}/docker-run.meta.json"
 
 # ---------------------------------------------------------
 #   Helper Functions
@@ -43,7 +43,7 @@ to_version() {
 
 read_version() {
 
-  local raw_version_path=$(jq -car ".projects[] | select(.id==\"${1}\") | .version" ${META_PATH})
+  local raw_version_path=$(jq -car ".projects[] | select(.id==\"${1}\") | .version" ${DOCKER_RUN_META_PATH})
   local version_path=$(eval "echo -e ${raw_version_path}")
   echo $(to_version "${version_path}")
 
@@ -148,4 +148,4 @@ ensure() {
 }
 
 # source docker compose env variables
-source ${ROOT_DIR}/.env.default
+# source ${ROOT_DIR}/.env.default

@@ -41,7 +41,7 @@ build_connector() {
 
 read_version() {
 
-  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $META_PATH)
+  local raw_version_path=$(jq -car '.projects[] | select(.id=="kafka-ethvm-utils") | .version' $DOCKER_RUN_META_PATH)
   local version_path=$(eval "echo -e ${raw_version_path}")
   echo $(to_version "${version_path}")
 

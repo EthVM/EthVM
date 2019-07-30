@@ -49,18 +49,5 @@
       "context": "${APPS_PATH}/migrator/",
       "version": "${APPS_PATH}/migrator/version.properties"
     }
-  ],
-  "docker": {
-    "compose": [
-      "docker-compose.private.yaml"
-    ],
-    "containers": [
-      {
-        "id": "private",
-        "value": [
-          "ethvm-kafka-proccessors"
-        ]
-      }
-    ]
-  }
+  ]
 }

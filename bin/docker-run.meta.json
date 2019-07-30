@@ -1,0 +1,15 @@
+{
+  "docker": {
+    "compose": [
+      "docker-compose.private.yaml"
+    ],
+    "containers": [
+      {
+        "id": "private",
+        "value": [
+          "ethvm-kafka-proccessors"
+        ]
+      }
+    ]
+  }
+}
