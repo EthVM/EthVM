@@ -160,7 +160,6 @@ class BlockEvents {
   }
 
   addBlockTime(blockTime: BlockTimePayload) {
-    console.log('Adding block time', blockTime)
     assert.equal(blockTime.block_hash, this.blockHash, `Block time block hash does not match: Expected = ${this.blockHash}, received = ${blockTime}`)
     this.blockTime = blockTime
   }
@@ -437,8 +436,6 @@ export class PgSubscriptionService {
   }
 
   private onBlockEvent(event: PgEvent, blockHashes$: Subject<string>) {
-
-    console.log('Block event', event);
 
     const {blockEvents, config} = this
 
