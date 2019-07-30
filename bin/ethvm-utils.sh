@@ -8,7 +8,7 @@ source ${SCRIPT_DIR}/env.sh
 # verify we have required utilities installed
 ensure
 
-NETWORK=${NETWORK:-ethvm_net}
+NETWORK=${NETWORK:-"ethvm_net"}
 
 version=$(read_version ethvm-utils)
 

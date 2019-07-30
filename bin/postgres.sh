@@ -8,9 +8,6 @@ source ${SCRIPT_DIR}/env.sh
 # verify we have required utilities installed
 ensure
 
-# verify we have required utilities installed
-ensure
-
 run() {
 
   local command="${1}"

@@ -25,10 +25,10 @@ docker_usage() {
   echo -e "  docker-run [COMMAND] [ARGS...]"
   echo -e ""
   echo -e "Commands:"
-  echo -e "  up      -m | --mode [simple|dev|private]  Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
-  echo -e "  down                                      Stop and remove docker containers, networks, images, and volumes."
-  echo -e "  logs                                      View output from containers."
-  echo -e "  help                                      Print the help information and exit."
+  echo -e "  up    -m | --mode [MODE]          Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
+  echo -e "  down                              Stop and remove docker containers, networks, images, and volumes."
+  echo -e "  logs                              View output from containers."
+  echo -e "  help                              Print the help information and exit."
   echo -e ""
 
 }
@@ -43,14 +43,13 @@ invalid_argument() {
 # up - process which option is going to be run to bring up the dev environment
 up() {
 
-  #local type="${1:-"-m default"}"
-  #shift # past argument
+  local type="${1:-"-m default"}"
+  shift # past argument
 
   if [[ $# == 0 ]]; then
     # By default, the default mode if no arg is specified is dev
     up_dev_mode_message
     down
-    create_env
     up_dev
   else
     # We process and parse arguments
@@ -66,7 +65,6 @@ up() {
         dev)
           up_dev_mode_message
           down
-          create_env
           up_dev
           break
           ;;
@@ -74,28 +72,13 @@ up() {
         simple)
           up_simple_mode_message
           down
-          create_env
           up_simple
           break
           ;;
 
         *)
-          local extra_compose_files=""
-
-          for compose in $EXTRA_DOCKER_COMPOSE_FILES; do
-            [[ $compose == *$value* ]] && extra_compose_files+=" -f ${ROOT_DIR}/$compose" && [[ -f ${ROOT_DIR}/.env.$value ]] && source ${ROOT_DIR}/.env.$value
-          done
-
-          if [[ ! "$extra_compose_files" ]]; then
-            invalid_argument
-            docker_usage
-          else
-            up_dev_mode_message
-            down
-            create_env ".env.$value"
-            up_dev "$extra_compose_files"
-          fi
-
+          invalid_argument
+          docker_usage
           break
           ;;
         esac
@@ -106,16 +89,6 @@ up() {
       shift
     done
   fi
-}
-
-# create_env - creates a proper .env file
-create_env() {
-
-  section "Generating .env file"
-
-  local env=${1:-'.env.default'}
-  cp ${ROOT_DIR}/"$env" ${ROOT_DIR}/.env
-
 }
 
 # up_dev_mode_message - describes which mode the user has selected
@@ -132,44 +105,15 @@ up_dev_mode_message() {
 # up_dev - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
 up_dev() {
 
-  local extra_compose_files="${1:-""}"
-
-  local network=${NETWORK:-ethvm_net}
-
-  local compose_files="-f ${ROOT_DIR}/docker-compose.yaml"
-  compose_files+=$extra_compose_files
-
-  section "Selected docker compose files:"
-  echo -e $compose_files
-
-  section "Loaded .env variables:"
-  info "DOMAIN: $DOMAIN"
-
-  info "PRINCIPAL_JDBC_URL: $PRINCIPAL_JDBC_URL"
-  info "PRINCIPAL_DB: $PRINCIPAL_DB"
-  info "PRINCIPAL_USER: $PRINCIPAL_USER"
-  info "PRINCIPAL_PASSWORD: $PRINCIPAL_PASSWORD"
-
-  info "METRICS_JDBC_URL: $PARITY_INSTA_MINING"
-  info "METRICS_DB: $PARITY_INSTA_MINING"
-  info "METRICS_USER: $PARITY_INSTA_MINING"
-  info "METRICS_PASSWORD: $PARITY_INSTA_MINING"
-
-  info "PARITY_CHAIN: $PARITY_CHAIN"
-  info "PARITY_BIND_MOUNTPOINT: $PARITY_BIND_MOUNTPOINT"
-  info "PARITY_INSTA_MINING: $PARITY_INSTA_MINING"
-  info "PARITY_MIN_PEERS: $PARITY_MIN_PEERS"
-  info "PARITY_MAX_PEERS: $PARITY_MAX_PEERS"
-
   section "Building utility docker images..."
   ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
   ${SCRIPT_DIR}/docker-build.sh build migrator
 
   section "Building docker containers..."
-  docker-compose ${compose_files} build
+  docker-compose build
 
   section "Starting up following docker containers: \n\t - traefik \n\t - api \n\t - explorer \n\t - db-principal \n\t - db-metrics \n\t - zookeeper \n\t - kafka-1 \n\t - kafka-schema-registry \n\t - kafka-connect \n\t - pgweb \n\t - redis"
-  docker-compose ${compose_files} up -d traefik api explorer db-principal db-metrics zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis
+  docker-compose up -d traefik api explorer db-principal db-metrics zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis
 
   section "Initialising kafka..."
   ${SCRIPT_DIR}/ethvm-utils.sh kafka init
@@ -193,7 +137,7 @@ up_dev() {
   mkdir -p ${PARITY_BIND_MOUNTPOINT}
 
   section "Starting following docker containers: \n\t - parity \n\t - kafka-manager"
-  docker-compose ${compose_files} up -d parity kafka-manager
+  docker-compose up -d parity kafka-manager
 
   if [[ $compose_files != "-f ${ROOT_DIR}/docker-compose.yaml" ]]; then
     section "Starting up extra docker containers..."
@@ -265,15 +209,7 @@ down() {
 
   section "Stopping running docker images (if applicable)..."
 
-  local extra_compose_files=""
-  for compose in $EXTRA_DOCKER_COMPOSE_FILES; do
-    extra_compose_files+=" -f ${ROOT_DIR}/$compose"
-  done
-
-  local compose_files="-f ${ROOT_DIR}/docker-compose.yaml"
-  compose_files+=$extra_compose_files
-
-  docker-compose ${compose_files} down -v --remove-orphans
+  docker-compose down -v --remove-orphans
 
 }
 

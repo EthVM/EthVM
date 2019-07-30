@@ -58,7 +58,7 @@
       {
         "id": "private",
         "value": [
-          "ethvm-kafka-processing"
+          "ethvm-kafka-proccessors"
         ]
       }
     ]
