@@ -6,7 +6,8 @@ import java.math.BigInteger
 enum class Genesis(private val filename: String) {
 
   Frontier("frontier"),
-  Ropsten("ropsten");
+  Ropsten("ropsten"),
+  Dev("dev");
 
   fun load(): GenesisFile {
     val input = javaClass.getResourceAsStream("/genesis/$filename.json")

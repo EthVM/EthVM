@@ -1,18 +1,18 @@
-import { BlockService } from '@app/dao/block.service'
-import { ConfigService } from '@app/shared/config.service'
-import { Inject, Injectable } from '@nestjs/common'
-import { PubSub } from 'graphql-subscriptions'
+import {BlockService} from '@app/dao/block.service'
+import {ConfigService} from '@app/shared/config.service'
+import {Inject, Injectable} from '@nestjs/common'
+import {PubSub} from 'graphql-subscriptions'
 import createSubscriber from 'pg-listen'
-import { Observable, Subject } from 'rxjs'
-import { bufferTime, filter, map } from 'rxjs/operators'
-import { Logger } from 'winston'
-import { TxService } from '@app/dao/tx.service'
-import { BlockMetricsService } from '@app/dao/block-metrics.service'
-import { InjectEntityManager } from '@nestjs/typeorm'
-import { EntityManager } from 'typeorm'
-import { DbConnection } from '@app/orm/config'
+import {Observable, Subject} from 'rxjs'
+import {bufferTime, filter, map} from 'rxjs/operators'
+import {Logger} from 'winston'
+import {TxService} from '@app/dao/tx.service'
+import {BlockMetricsService} from '@app/dao/block-metrics.service'
+import {InjectEntityManager} from '@nestjs/typeorm'
+import {EntityManager} from 'typeorm'
+import {DbConnection} from '@app/orm/config'
 
-import { strict as assert } from 'assert'
+import {strict as assert} from 'assert'
 
 export interface CanonicalBlockHeaderPayload {
   block_hash: string
@@ -24,6 +24,10 @@ export interface CanonicalBlockHeaderPayload {
 
 export interface TransactionPayload {
   transaction_hash: string
+  block_hash: string
+}
+
+export interface BlockTimePayload {
   block_hash: string
 }
 
@@ -55,6 +59,7 @@ export interface MetadataPayload {
 
 export type PgEventPayload =
   CanonicalBlockHeaderPayload
+  | BlockTimePayload
   | TransactionPayload
   | TransactionReceiptPayload
   | TransactionTracePayload
@@ -105,6 +110,7 @@ function isBlockEvent<PgEvent>() {
 
   const tables = new Set<string>([
     'canonical_block_header',
+    'canonical_block_time',
     'transaction',
     'transaction_trace',
     'transaction_receipt',
@@ -138,6 +144,8 @@ class BlockEvents {
 
   rewardsTrace?: TransactionTracePayload
 
+  blockTime?: BlockTimePayload
+
   transactions: Map<string, TransactionPayload> = new Map()
   transactionTraces: Map<string, TransactionTracePayload> = new Map()
   transactionReceipts: Map<string, TransactionReceiptPayload> = new Map()
@@ -151,26 +159,32 @@ class BlockEvents {
     this.header = header
   }
 
+  addBlockTime(blockTime: BlockTimePayload) {
+    console.log('Adding block time', blockTime)
+    assert.equal(blockTime.block_hash, this.blockHash, `Block time block hash does not match: Expected = ${this.blockHash}, received = ${blockTime}`)
+    this.blockTime = blockTime
+  }
+
   addRewardsTrace(rewardsTrace: TransactionTracePayload) {
-    const { blockHash } = this
+    const {blockHash} = this
     assert.equal(rewardsTrace.block_hash, blockHash, `Rewards trace block hash does not match: Expected = ${blockHash}, received = ${rewardsTrace}`)
     this.rewardsTrace = rewardsTrace
   }
 
   addTransaction(transaction: TransactionPayload) {
-    const { blockHash } = this
+    const {blockHash} = this
     assert.equal(transaction.block_hash, blockHash, `Transaction block hash does not match: Expected = ${blockHash}, received = ${transaction}`)
     this.transactions.set(transaction.transaction_hash, transaction)
   }
 
   addTransactionTrace(transactionTrace: TransactionTracePayload) {
-    const { blockHash } = this
+    const {blockHash} = this
     assert.equal(transactionTrace.block_hash, blockHash, `Transaction trace block hash does not match: Expected = ${blockHash}, received = ${transactionTrace}`)
     this.transactionTraces.set(transactionTrace.transaction_hash!!, transactionTrace)
   }
 
   addTransactionReceipt(transactionReceipt: TransactionReceiptPayload) {
-    const { blockHash } = this
+    const {blockHash} = this
     assert.equal(
       transactionReceipt.block_hash,
       blockHash,
@@ -181,11 +195,11 @@ class BlockEvents {
 
   get isComplete(): boolean {
 
-    const { header, transactions, transactionReceipts, rewardsTrace, transactionTraces, instaMining } = this
+    const {header, blockTime, transactions, transactionReceipts, rewardsTrace, transactionTraces, instaMining} = this
 
-    if (!header) return false
+    if (!(header && blockTime)) return false
 
-    const { transaction_count } = header
+    const {transaction_count} = header
 
     // check transactions
 
@@ -236,12 +250,12 @@ export class PgSubscriptionService {
 
   private initPrincipal() {
 
-    const { principalUrl, blockService, transactionService, blockMetricsService, pubSub, principalEntityManager } = this
+    const {principalUrl, blockService, transactionService, blockMetricsService, pubSub, principalEntityManager} = this
 
     const events$ = Observable.create(
       async observer => {
         try {
-          const subscriber = createSubscriber({ connectionString: principalUrl })
+          const subscriber = createSubscriber({connectionString: principalUrl})
 
           subscriber.notifications.on('events', e => observer.next(e))
           subscriber.events.on('error', err => {
@@ -318,12 +332,12 @@ export class PgSubscriptionService {
 
   private initMetrics() {
 
-    const { blockMetricsService, pubSub } = this
+    const {blockMetricsService, pubSub} = this
 
     const events$ = Observable.create(
       async observer => {
         try {
-          const subscriber = createSubscriber({ connectionString: this.metricsUrl })
+          const subscriber = createSubscriber({connectionString: this.metricsUrl})
 
           subscriber.notifications.on('events', e => observer.next(e))
           subscriber.events.on('error', err => {
@@ -379,7 +393,7 @@ export class PgSubscriptionService {
   }
 
   private async onMetadataEvent(event: PgEvent) {
-    const { pubSub, principalEntityManager } = this
+    const {pubSub, principalEntityManager} = this
     const payload = event.payload as MetadataPayload
 
     switch (payload.key) {
@@ -399,7 +413,7 @@ export class PgSubscriptionService {
   }
 
   private async onBlockMetricsTransactionEvent(event: PgEvent) {
-    const { pubSub } = this
+    const {pubSub} = this
     const payload = event.payload as BlockMetricsTransactionPayload
 
     const metric = await this.blockMetricsService.findBlockMetricsTransactionByBlockHash(payload.block_hash, false)
@@ -411,7 +425,7 @@ export class PgSubscriptionService {
   }
 
   private async onBlockMetricsTransactionFeeEvent(event: PgEvent) {
-    const { pubSub } = this
+    const {pubSub} = this
     const payload = event.payload as BlockMetricsTransactionPayload
 
     const metric = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(payload.block_hash, false)
@@ -424,10 +438,12 @@ export class PgSubscriptionService {
 
   private onBlockEvent(event: PgEvent, blockHashes$: Subject<string>) {
 
-    const { blockEvents, config } = this
+    console.log('Block event', event);
 
-    const { table, payload } = event
-    const { block_hash } = payload as any
+    const {blockEvents, config} = this
+
+    const {table, payload} = event
+    const {block_hash} = payload as any
 
     let entry = blockEvents.get(block_hash)
 
@@ -441,6 +457,11 @@ export class PgSubscriptionService {
       case 'canonical_block_header':
         const header = payload as CanonicalBlockHeaderPayload
         entry.addHeader(header)
+        break
+
+      case 'canonical_block_time':
+        const blockTime = payload as BlockTimePayload
+        entry.addBlockTime(blockTime)
         break
 
       case 'transaction':

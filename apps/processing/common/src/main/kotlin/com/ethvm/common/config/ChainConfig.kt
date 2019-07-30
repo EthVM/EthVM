@@ -149,6 +149,16 @@ open class RopstenConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
   override fun chainId(): Int = ChainId.Ropsten.number
 }
 
+open class DevConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
+
+  override fun chainId(): Int = ChainId.Dev.number
+
+  override val constants = parent.constants.copy(
+    blockReward = 0.ether()
+  )
+
+}
+
 open class ByzantiumConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
 
   override val constants = parent.constants.copy(
@@ -211,6 +221,14 @@ interface NetConfig {
         4_939_394L to RopstenConfig(PetersburgConfig(DaoHardForkConfig()))
       )
     }
+
+    val dev by lazy {
+      BaseNetConfig(
+        Genesis.Dev,
+        0L to DevConfig(PetersburgConfig(DaoHardForkConfig()))
+      )
+    }
+
   }
 }
 
