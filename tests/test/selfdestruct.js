@@ -8,12 +8,13 @@ contract("SelfDestruct", truffleAccounts => {
     return new Promise(async resolve => {
 
       const instance = await selfDestructContract.deployed()
-      const res = await instance.destroy()
+      await instance.destroy()
 
       const account = await getAccountInfo(instance.address)
-      console.log('balance:', account.balance)
 
-      return resolve(true)
+      assert.equal('0', account.balance)
+
+      resolve()
     })
   })
 
@@ -43,7 +44,7 @@ contract("SelfDestruct", truffleAccounts => {
         value: '100000000000000000'
       })
 
-      return resolve(true)
+      resolve()
     })
   })
 

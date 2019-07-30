@@ -16,6 +16,6 @@ const getAccountInfo = address => {
       address: address
     })
     .then(data => data.accountByAddress)
-};
+}
 
 export { getAccountInfo }
