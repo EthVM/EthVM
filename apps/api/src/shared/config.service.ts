@@ -83,7 +83,7 @@ const schema = {
     disable: {
       doc: 'Disable Express Rate Limit',
       env: 'DISABLE_EXPRESS_RATE_LIMIT',
-      default: false
+      default: false,
     },
   },
 }
