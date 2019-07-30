@@ -281,7 +281,8 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   get holderTransfersDetail(): Detail {
     // TODO get transfers info and add to Detail object
     return {
-      title: this.$t('token.transfers')
+      title: this.$t('token.transfers'),
+      detail: !this.isLoading && this.holderDetails && this.holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersBN.toString() : undefined
     }
   }
 

@@ -92,9 +92,9 @@ const MAX_ITEMS = 10
         return { address: this.addressRef, holderAddress: this.holderAddress }
       },
 
-      update({ tokenDetails, tokenHolder }) {
+      update({ tokenDetails, tokenHolder, totalTransfers }) {
         if (tokenHolder) {
-          this.holderDetails = new TokenHolderExt(tokenHolder)
+          this.holderDetails = new TokenHolderExt(tokenHolder, totalTransfers)
         }
 
         if (tokenDetails) {
