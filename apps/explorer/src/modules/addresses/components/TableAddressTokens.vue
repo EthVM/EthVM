@@ -24,8 +24,10 @@
             {{ $t('token.total') }}
             <span class="black--text">{{ totalTokens }}</span>
             {{ tokensString }}
-            <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
+            <span v-if="!isRopsten">
+               <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
             {{ $t('usd.value') }}
+            </span>
           </p>
         </v-flex>
         <v-flex xs12 sm6 pt-0 pb-0>
@@ -42,20 +44,21 @@
       <v-layout align-center justify center>
         <v-flex sm12 hidden-xs-only>
           <v-card color="info" flat class="white--text mb-1" height="40px">
+            <!-- Standard layout -->
             <v-layout align-center justify-start row fill-height pl-2 pr-2>
-              <v-flex sm4>
+              <v-flex sm4 :sm6="isRopsten">
                 <v-layout grid-list-xs row align-center justify-start fill-height>
                   <div class="token-image" />
                   <h5>{{ $t('token.tokenName') }}</h5>
                 </v-layout>
               </v-flex>
-              <v-flex sm3>
+              <v-flex sm3 :sm6="isRopsten">
                 <h5>{{ $t('common.amount') }}</h5>
               </v-flex>
-              <v-flex sm3>
+              <v-flex v-if="!isRopsten" sm3>
                 <h5>{{ $t('usd.value') }}</h5>
               </v-flex>
-              <v-flex sm2>
+              <v-flex v-if="!isRopsten" sm2>
                 <h5>{{ $t('token.change') }}</h5>
               </v-flex>
             </v-layout>
@@ -71,7 +74,7 @@
     -->
     <div v-if="loading">
       <div v-for="i in maxItems" :key="i">
-        <table-address-tokens-row-loading />
+        <table-address-tokens-row-loading :isRopsten="isRopsten" />
       </div>
     </div>
     <div v-else>
@@ -79,7 +82,7 @@
         <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-tokens-for-address') }}</v-card-text>
       </v-card>
       <div v-else v-for="(token, index) in tokens" :key="index">
-        <table-address-tokens-row :token="token" :holder="address" />
+        <table-address-tokens-row :token="token" :holder="address" :isRopsten="isRopsten" />
       </div>
       <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
         <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
@@ -99,6 +102,7 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
+import { ConfigHelper } from '@app/core/helper/config-helper'
 
 const MAX_ITEMS = 10
 
@@ -182,6 +186,8 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   error?: string
   page?: number
   totalTokensValue?: BN
+
+  isRopsten = ConfigHelper.isRopsten
 
   /*
   ===================================================================================
