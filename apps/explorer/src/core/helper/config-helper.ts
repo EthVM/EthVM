@@ -10,7 +10,6 @@ declare let process: {
 
 export class ConfigHelper {
   public static get isRopsten(): boolean {
-    return true
-    // return process.env.VUE_APP_ETH_NETWORK === 'ropsten'
+    return process.env.VUE_APP_ETH_NETWORK === 'ropsten'
   }
 }

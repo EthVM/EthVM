@@ -25,8 +25,8 @@
             <span class="black--text">{{ totalTokens }}</span>
             {{ tokensString }}
             <span v-if="!isRopsten">
-               <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
-            {{ $t('usd.value') }}
+              <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
+              {{ $t('usd.value') }}
             </span>
           </p>
         </v-flex>
@@ -74,7 +74,7 @@
     -->
     <div v-if="loading">
       <div v-for="i in maxItems" :key="i">
-        <table-address-tokens-row-loading :isRopsten="isRopsten" />
+        <table-address-tokens-row-loading :is-ropsten="isRopsten" />
       </div>
     </div>
     <div v-else>
@@ -82,7 +82,7 @@
         <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-tokens-for-address') }}</v-card-text>
       </v-card>
       <div v-else v-for="(token, index) in tokens" :key="index">
-        <table-address-tokens-row :token="token" :holder="address" :isRopsten="isRopsten" />
+        <table-address-tokens-row :token="token" :holder="address" :is-ropsten="isRopsten" />
       </div>
       <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
         <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
