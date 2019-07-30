@@ -80,6 +80,11 @@ const schema = {
       env: 'EXPRESS_RATE_LIMIT_MAX',
       default: 100,
     },
+    disable: {
+      doc: 'Disable Express Rate Limit',
+      env: 'DISABLE_EXPRESS_RATE_LIMIT',
+      default: false
+    },
   },
 }
 
@@ -104,6 +109,7 @@ export interface VmEngineConfig {
 export interface ExpressRateLimitConfig {
   windowMs: number
   max: number
+  disable: boolean
 }
 
 export interface DbConfig {
