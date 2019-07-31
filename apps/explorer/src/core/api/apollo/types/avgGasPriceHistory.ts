@@ -19,7 +19,7 @@ export interface avgGasPriceHistory {
 }
 
 export interface avgGasPriceHistoryVariables {
-  start: any;
-  end: any;
   bucket: TimeBucket;
+  start?: any | null;
+  end?: any | null;
 }

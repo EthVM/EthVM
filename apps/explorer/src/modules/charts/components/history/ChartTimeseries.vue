@@ -24,8 +24,8 @@ import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
 
 interface QueryOptions {
-  start: moment.Moment
-  end: moment.Moment
+  start?: moment.Moment
+  end?: moment.Moment
   bucket: TimeBucket
 }
 
@@ -60,8 +60,8 @@ enum TimePeriod {
         const { start, end, bucket } = this.queryOptions
 
         return {
-          start: start.valueOf(), // convert to milliseconds since epoch
-          end: end.valueOf(),
+          start: start ? start.valueOf() : undefined, // convert to milliseconds since epoch if set
+          end: end ? end.valueOf() : undefined,
           bucket
         }
       },
@@ -202,46 +202,46 @@ export default class ChartTimeseries extends Vue {
 
   calculateTimePeriod(period: number): QueryOptions {
     const start: moment.Moment = moment()
-    let end: moment.Moment, bucket
+    let end: moment.Moment | undefined, bucket
 
     switch (period) {
       case TimePeriod.day:
         bucket = TimeBucket.ONE_HOUR
-        end = moment(start).subtract(1, 'day')
+        end = start.subtract(1, 'day')
         break
       case TimePeriod.week:
         bucket = TimeBucket.ONE_HOUR
-        end = moment(start).subtract(1, 'week')
+        end = start.subtract(1, 'week')
         break
       case TimePeriod.twoWeeks:
         bucket = TimeBucket.ONE_HOUR
-        end = moment(start).subtract(2, 'week')
+        end = start.subtract(2, 'week')
         break
       case TimePeriod.month:
         bucket = TimeBucket.ONE_DAY
-        end = moment(start).subtract(1, 'month')
+        end = start.subtract(1, 'month')
         break
       case TimePeriod.threeMonths:
         bucket = TimeBucket.ONE_DAY
-        end = moment(start).subtract(3, 'month')
+        end = start.subtract(3, 'month')
         break
       case TimePeriod.sixMonths:
         bucket = TimeBucket.ONE_WEEK
-        end = moment(start).subtract(6, 'month')
+        end = start.subtract(6, 'month')
         break
       case TimePeriod.year:
         bucket = TimeBucket.ONE_WEEK
-        end = moment(start).subtract(1, 'year')
+        end = start.subtract(1, 'year')
         break
       case TimePeriod.all:
         bucket = TimeBucket.ONE_WEEK
-        end = moment('2000-01-01T00:00:00.000Z')
+        end = undefined
         break
       default:
         throw new Error(`Unexpected period: ${period}`)
     }
 
-    return { start, end, bucket }
+    return { end, bucket }
   }
 
   toChartDataItem(raw): ChartData {

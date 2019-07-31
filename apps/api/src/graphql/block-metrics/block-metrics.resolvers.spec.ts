@@ -223,7 +223,7 @@ const blockMetricsServiceMock = {
 
     return [data.map(b => new BlockMetricsTransactionFeeEntity(b)), totalCount]
   },
-  async timeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): Promise<AggregateBlockMetric[]> {
+  async timeseries(bucket: TimeBucket, field: BlockMetricField, start: Date, end: Date): Promise<AggregateBlockMetric[]> {
 
     // Default to "ONE_DAY" if no "ONE_HOUR" for purpose of testing
     const collection = bucket === TimeBucket.ONE_HOUR ? aggregateBlockMetricsHour : aggregateBlockMetricsDay
@@ -393,10 +393,11 @@ describe('BlockMetricResolvers', () => {
     it ('should return an array of AggregateBlockMetricDto with time between start and end parameters', async () => {
 
       const aggregateBlockMetrics = await blockMetricResolvers.blockMetricsTimeseries(
-        new Date(1556668800000),
-        new Date(1556708400000),
         TimeBucket.ONE_HOUR,
-        BlockMetricField.AVG_BLOCK_TIME)
+        BlockMetricField.AVG_BLOCK_TIME,
+        new Date(1556668800000),
+        new Date(1556708400000)
+      )
 
       expect(aggregateBlockMetrics).not.toBeNull()
       expect(aggregateBlockMetrics).toHaveLength(12)
@@ -417,10 +418,10 @@ describe('BlockMetricResolvers', () => {
     it ('should return only the fields requested and timestamp', async () => {
 
       const aggregateBlockMetrics = await blockMetricResolvers.blockMetricsTimeseries(
-        new Date(1556668800000),
-        new Date(1557014400000),
         TimeBucket.ONE_DAY,
-        BlockMetricField.AVG_BLOCK_TIME
+        BlockMetricField.AVG_BLOCK_TIME,
+        new Date(1556668800000),
+        new Date(1557014400000)
       )
 
       expect(aggregateBlockMetrics).not.toBeNull()
@@ -434,10 +435,10 @@ describe('BlockMetricResolvers', () => {
       expect(aggregateBlockMetrics[0]).not.toHaveProperty('avgGasLimit')
 
       const aggregateBlockMetricsTwo = await blockMetricResolvers.blockMetricsTimeseries(
-        new Date(1556668800000),
-        new Date(1557014400000),
         TimeBucket.ONE_DAY,
-        BlockMetricField.AVG_DIFFICULTY
+        BlockMetricField.AVG_DIFFICULTY,
+        new Date(1556668800000),
+        new Date(1557014400000)
       )
 
       expect(aggregateBlockMetricsTwo).not.toBeNull()
@@ -455,10 +456,10 @@ describe('BlockMetricResolvers', () => {
     it ('should return stats aggregated by the given Bucket parameter', async () => {
 
       const aggregateBlockMetrics = await blockMetricResolvers.blockMetricsTimeseries(
-        new Date(1556668800000),
-        new Date(1557014400000),
         TimeBucket.ONE_DAY,
-        BlockMetricField.AVG_BLOCK_TIME
+        BlockMetricField.AVG_BLOCK_TIME,
+        new Date(1556668800000),
+        new Date(1557014400000)
       )
 
       expect(aggregateBlockMetrics).not.toBeNull()
@@ -477,10 +478,10 @@ describe('BlockMetricResolvers', () => {
     it ('should return an empty array if there are no BlockMetricsEntities with time field between the start and end parameters', async () => {
 
       const aggregateBlockMetrics = await blockMetricResolvers.blockMetricsTimeseries(
+        TimeBucket.ONE_DAY,
+        BlockMetricField.AVG_BLOCK_TIME,
         new Date(1546300800000),
         new Date(1546819200000),
-        TimeBucket.ONE_DAY,
-        BlockMetricField.AVG_BLOCK_TIME
       )
 
       expect(aggregateBlockMetrics).not.toBeNull()

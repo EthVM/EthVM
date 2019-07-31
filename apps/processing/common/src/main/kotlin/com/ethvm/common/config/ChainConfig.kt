@@ -106,6 +106,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
           FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
             .setDeltaType(FungibleBalanceDeltaType.HARD_FORK)
+            .setIsReceiving(true)
             .setTraceLocation(
               TraceLocationRecord.newBuilder()
                 .setBlockNumberBI(number)
@@ -119,6 +120,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
           FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
             .setDeltaType(FungibleBalanceDeltaType.HARD_FORK)
+            .setIsReceiving(true)
             .setTraceLocation(
               TraceLocationRecord.newBuilder()
                 .setBlockNumberBI(number)
@@ -147,6 +149,15 @@ open class Eip160HardForkConfig(parent: ChainConfig) : Eip150HardForkConfig(pare
 
 open class RopstenConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
   override fun chainId(): Int = ChainId.Ropsten.number
+}
+
+open class DevConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
+
+  override fun chainId(): Int = ChainId.Dev.number
+
+  override val constants = parent.constants.copy(
+    blockReward = 0.ether()
+  )
 }
 
 open class ByzantiumConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
@@ -209,6 +220,13 @@ interface NetConfig {
         1_700_000L to RopstenConfig(ByzantiumConfig(DaoHardForkConfig())),
         4_230_000L to RopstenConfig(ConstantinopleConfig(DaoHardForkConfig())),
         4_939_394L to RopstenConfig(PetersburgConfig(DaoHardForkConfig()))
+      )
+    }
+
+    val dev by lazy {
+      BaseNetConfig(
+        Genesis.Dev,
+        0L to DevConfig(PetersburgConfig(DaoHardForkConfig()))
       )
     }
   }

@@ -47,12 +47,12 @@ export class BlockMetricsResolvers {
 
   @Query()
   async blockMetricsTimeseries(
-    @Args('start') start: Date,
-    @Args('end') end: Date,
     @Args('bucket') bucket: TimeBucket,
     @Args('field') field: BlockMetricField,
+    @Args('start') start?: Date,
+    @Args('end') end?: Date,
   ): Promise<AggregateBlockMetricDto[]> {
-    const entities = await this.blockMetricsService.timeseries(start, end, bucket, field)
+    const entities = await this.blockMetricsService.timeseries(bucket, field, start, end)
     return entities.map(e => new AggregateBlockMetricDto(e))
   }
 

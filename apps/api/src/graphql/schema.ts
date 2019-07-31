@@ -322,7 +322,7 @@ export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
     blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
     blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
-    blockMetricsTimeseries(start: Date, end: Date, bucket: TimeBucket, field: BlockMetricField): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
+    blockMetricsTimeseries(bucket: TimeBucket, field: BlockMetricField, start?: Date, end?: Date): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
     blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
@@ -348,6 +348,7 @@ export interface IQuery {
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
     tokenTransfersByContractAddress(contractAddress: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
+    totalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): BigNumber | Promise<BigNumber>;
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;

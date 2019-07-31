@@ -107,6 +107,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
                 FungibleBalanceDeltaRecord.newBuilder()
                   .setTokenType(FungibleTokenType.ETHER)
                   .setDeltaType(FungibleBalanceDeltaType.PREMINE_BALANCE)
+                  .setIsReceiving(true)
                   .setTraceLocation(
                     TraceLocationRecord.newBuilder()
                       .setTimestamp(timestamp)
@@ -236,6 +237,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
             FungibleBalanceDeltaRecord.newBuilder()
               .setTokenType(FungibleTokenType.ETHER)
               .setDeltaType(FungibleBalanceDeltaType.MINER_FEE)
+              .setIsReceiving(true)
               .setTraceLocation(
                 TraceLocationRecord.newBuilder()
                   .setTimestamp(left.getTimestamp())

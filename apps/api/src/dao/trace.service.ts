@@ -20,7 +20,7 @@ export class TraceService {
   }
 
   async findByTxHash(txHashes: string[]): Promise<TransactionTraceEntity[]> {
-    return this.traceRepository.find({ where: { transactionHash: In(txHashes) } })
+    return this.traceRepository.find({ where: { transactionHash: In(txHashes) }, cache: true })
   }
 
   async findTxStatusByTxHash(entityManager: EntityManager, txHashes: string[]): Promise<TransactionStatus[]> {

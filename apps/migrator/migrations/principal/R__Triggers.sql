@@ -78,6 +78,43 @@ CREATE TRIGGER notify_canonical_block_header
   FOR EACH ROW
 EXECUTE PROCEDURE notify_canonical_block_header();
 
+/* Block time */
+
+CREATE OR REPLACE FUNCTION notify_canonical_block_time() RETURNS TRIGGER AS
+$body$
+DECLARE
+    record  RECORD;
+    payload JSON;
+BEGIN
+
+    IF (TG_OP = 'DELETE') THEN
+        record := OLD;
+    ELSE
+        record := NEW;
+    END IF;
+
+    payload := json_build_object(
+            'table', 'canonical_block_time',
+            'action', TG_OP,
+            'payload', json_build_object(
+                    'block_hash', record.block_hash
+                )
+        );
+
+    PERFORM pg_notify('events', payload::text);
+
+    RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS notify_canonical_block_time ON canonical_block_time;
+
+CREATE TRIGGER notify_canonical_block_time
+    AFTER INSERT OR UPDATE OR DELETE
+    ON canonical_block_time
+    FOR EACH ROW
+EXECUTE PROCEDURE notify_canonical_block_time();
+
 /* Transaction */
 
 CREATE OR REPLACE FUNCTION notify_transaction() RETURNS TRIGGER AS
