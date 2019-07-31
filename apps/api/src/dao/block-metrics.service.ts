@@ -3,7 +3,7 @@ import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager, In } from 'typeorm'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
-import { now, unitOfTime } from 'moment'
+import { unitOfTime } from 'moment'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metrics-transaction-fee.entity'
 import { BlockMetricsTransactionEntity } from '@app/orm/entities/block-metrics-transaction.entity'
@@ -12,7 +12,28 @@ import { DbConnection } from '@app/orm/config'
 import { BlockMetricsHeaderEntity } from '@app/orm/entities/block-metrics-header.entity'
 import { BlockMetricsTransactionTraceEntity } from '@app/orm/entities/block-metrics-transaction-trace.entity'
 import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
-import { query } from 'winston'
+
+const HEADER_FIELDS = [
+  BlockMetricField.AVG_BLOCK_TIME,
+  BlockMetricField.AVG_DIFFICULTY,
+  BlockMetricField.AVG_TOTAL_DIFFICULTY,
+  BlockMetricField.AVG_NUM_UNCLES,
+]
+const TX_FIELDS = [
+  BlockMetricField.AVG_GAS_LIMIT,
+  BlockMetricField.AVG_GAS_PRICE
+]
+const TX_TRACE_FIELDS = [
+  BlockMetricField.AVG_NUM_TXS,
+  BlockMetricField.AVG_NUM_SUCCESSFUL_TXS,
+  BlockMetricField.AVG_NUM_FAILED_TXS,
+  BlockMetricField.AVG_NUM_INTERNAL_TXS,
+]
+const TX_FEE_FIELDS = [
+  BlockMetricField.AVG_TX_FEES,
+  BlockMetricField.AVG_TOTAL_TX_FEES
+]
+
 
 @Injectable()
 export class BlockMetricsService {
@@ -38,7 +59,7 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{ count }] = await txn.find(CanonicalCount, {
+        const [{count}] = await txn.find(CanonicalCount, {
           select: ['count'],
           where: {
             entity: 'block_header',
@@ -47,7 +68,7 @@ export class BlockMetricsService {
         })
 
         const entities = await txn.find(BlockMetricsTransactionEntity, {
-          order: { number: 'DESC' },
+          order: {number: 'DESC'},
           skip: offset,
           take: limit,
           cache: true,
@@ -60,7 +81,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionByBlockHash(blockHash: string, cache: boolean = true): Promise<BlockMetricsTransactionEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionEntity, {
-      where: { blockHash }, cache,
+      where: {blockHash}, cache,
     })
   }
 
@@ -72,7 +93,7 @@ export class BlockMetricsService {
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{ count }] = await txn.find(CanonicalCount, {
+        const [{count}] = await txn.find(CanonicalCount, {
           select: ['count'],
           where: {
             entity: 'block_header',
@@ -81,7 +102,7 @@ export class BlockMetricsService {
         })
 
         const entities = await txn.find(BlockMetricsTransactionFeeEntity, {
-          order: { number: 'DESC' },
+          order: {number: 'DESC'},
           skip: offset,
           take: limit,
           cache: true,
@@ -94,7 +115,7 @@ export class BlockMetricsService {
 
   async findBlockMetricsTransactionFeeByBlockHash(blockHash: string, cache: boolean = true): Promise<BlockMetricsTransactionFeeEntity | undefined> {
     return this.entityManager.findOne(BlockMetricsTransactionFeeEntity, {
-      where: { blockHash }, cache,
+      where: {blockHash}, cache,
     })
   }
 
@@ -134,6 +155,11 @@ export class BlockMetricsService {
     end?: Date,
   ): Promise<AggregateBlockMetric[]> {
 
+    // If start or end is set, round to nearest minute in order to take advantage of caching similar queries
+    // Start is set to end of minute as it is later in time, and vice versa, to be inclusive of time range
+    start = start ? moment(start).endOf('minute').toDate() : undefined
+    end = end ? moment(end).startOf('minute').toDate() : undefined
+
     const datapoints = this.estimateDatapoints(start, end, bucket)
 
     if (datapoints > 10000) {
@@ -141,7 +167,7 @@ export class BlockMetricsService {
     }
 
     const select: string[] = []
-    let queryBuilder;
+    let queryBuilder
 
     switch (bucket) {
       case TimeBucket.ONE_HOUR:
@@ -164,95 +190,85 @@ export class BlockMetricsService {
     }
 
     switch (field) {
-        case BlockMetricField.AVG_BLOCK_TIME:
-          select.push('round(avg(bt.block_time)) as avg_block_time')
-          break
-        case BlockMetricField.AVG_NUM_UNCLES:
-          select.push('round(avg(num_uncles)) as avg_num_uncles')
-          break
-        case BlockMetricField.AVG_DIFFICULTY:
-          select.push('round(avg(difficulty)) as avg_difficulty')
-          break
-        case BlockMetricField.AVG_TOTAL_DIFFICULTY:
-          select.push('round(avg(total_difficulty)) as avg_total_difficulty')
-          break
-        case BlockMetricField.AVG_GAS_LIMIT:
-          select.push('round(avg(avg_gas_limit)) as avg_gas_limit')
-          break
-        case BlockMetricField.AVG_GAS_PRICE:
-          select.push('round(avg(avg_gas_price)) as avg_gas_price')
-          break
-        case BlockMetricField.AVG_NUM_TXS:
-          select.push('round(avg(total_txs)) as avg_num_txs')
-          break
-        case BlockMetricField.AVG_NUM_SUCCESSFUL_TXS:
-          select.push('round(avg(num_successful_txs)) as avg_num_successful_txs')
-          break
-        case BlockMetricField.AVG_NUM_FAILED_TXS:
-          select.push('round(avg(num_failed_txs)) as avg_num_failed_txs')
-          break
-        case BlockMetricField.AVG_NUM_INTERNAL_TXS:
-          select.push('round(avg(num_internal_txs)) as avg_num_internal_txs')
-          break
-        case BlockMetricField.AVG_TX_FEES:
-          select.push('round(avg(avg_tx_fees)) as avg_tx_fees')
-          break
-        case BlockMetricField.AVG_TOTAL_TX_FEES:
-          select.push('round(avg(total_tx_fees)) as avg_total_tx_fees')
-          break
-        default:
-          throw new Error(`Unexpected metric: ${field}`)
-      }
+      case BlockMetricField.AVG_BLOCK_TIME:
+        select.push('round(avg(bt.block_time)) as avg_block_time')
+        break
+      case BlockMetricField.AVG_NUM_UNCLES:
+        select.push('round(avg(num_uncles)) as avg_num_uncles')
+        break
+      case BlockMetricField.AVG_DIFFICULTY:
+        select.push('round(avg(difficulty)) as avg_difficulty')
+        break
+      case BlockMetricField.AVG_TOTAL_DIFFICULTY:
+        select.push('round(avg(total_difficulty)) as avg_total_difficulty')
+        break
+      case BlockMetricField.AVG_GAS_LIMIT:
+        select.push('round(avg(avg_gas_limit)) as avg_gas_limit')
+        break
+      case BlockMetricField.AVG_GAS_PRICE:
+        select.push('round(avg(avg_gas_price)) as avg_gas_price')
+        break
+      case BlockMetricField.AVG_NUM_TXS:
+        select.push('round(avg(total_txs)) as avg_num_txs')
+        break
+      case BlockMetricField.AVG_NUM_SUCCESSFUL_TXS:
+        select.push('round(avg(num_successful_txs)) as avg_num_successful_txs')
+        break
+      case BlockMetricField.AVG_NUM_FAILED_TXS:
+        select.push('round(avg(num_failed_txs)) as avg_num_failed_txs')
+        break
+      case BlockMetricField.AVG_NUM_INTERNAL_TXS:
+        select.push('round(avg(num_internal_txs)) as avg_num_internal_txs')
+        break
+      case BlockMetricField.AVG_TX_FEES:
+        select.push('round(avg(avg_tx_fees)) as avg_tx_fees')
+        break
+      case BlockMetricField.AVG_TOTAL_TX_FEES:
+        select.push('round(avg(total_tx_fees)) as avg_total_tx_fees')
+        break
+      default:
+        throw new Error(`Unexpected metric: ${field}`)
+    }
 
-    const headerFields = [
-      BlockMetricField.AVG_BLOCK_TIME,
-      BlockMetricField.AVG_DIFFICULTY,
-      BlockMetricField.AVG_TOTAL_DIFFICULTY,
-      BlockMetricField.AVG_NUM_UNCLES,
-    ]
-    const txFields = [BlockMetricField.AVG_GAS_LIMIT, BlockMetricField.AVG_GAS_PRICE]
-    const txTraceFields = [
-      BlockMetricField.AVG_NUM_TXS,
-      BlockMetricField.AVG_NUM_SUCCESSFUL_TXS,
-      BlockMetricField.AVG_NUM_FAILED_TXS,
-      BlockMetricField.AVG_NUM_INTERNAL_TXS,
-    ]
-    const txFeeFields = [BlockMetricField.AVG_TX_FEES, BlockMetricField.AVG_TOTAL_TX_FEES]
+    // Create query builder for correct entity depending on field param
 
-    if (headerFields.indexOf(field) > -1) {
+    if (HEADER_FIELDS.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsHeaderEntity, 'bm')
-
+      // If field is blockTime, join with block_time entity where blockTime is now stored
       if (field === BlockMetricField.AVG_BLOCK_TIME) {
         queryBuilder = queryBuilder
           .leftJoin(BlockTimeEntity, 'bt', 'bt.timestamp = bm.timestamp')
           .where('bt.block_time IS NOT NULL')
       }
-
-    } else if (txFields.indexOf(field) > -1) {
+    } else if (TX_FIELDS.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionEntity, 'bm')
-    } else if (txTraceFields.indexOf(field) > -1) {
+    } else if (TX_TRACE_FIELDS.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionTraceEntity, 'bm')
-    } else if (txFeeFields.indexOf(field) > -1) {
+    } else if (TX_FEE_FIELDS.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionFeeEntity, 'bm')
     } else {
       throw new Error(`Unexpected metric: ${field}`)
     }
 
+    // Set where clause if start and/or end params are set
+
     if (start && end) {
-      queryBuilder.where('bm.timestamp between :end and :start', { start, end })
+      queryBuilder.where('bm.timestamp between :end and :start', {start, end})
     } else if (start) {
-      queryBuilder.where('bm.timestamp < :start', { start })
+      queryBuilder.where('bm.timestamp < :start', {start})
     } else if (end) {
-      queryBuilder.where('bm.timestamp > :end', { end })
+      queryBuilder.where('bm.timestamp > :end', {end})
     }
 
     const items = await queryBuilder
       .select(select)
       .groupBy('time')
-      .orderBy({ time: 'DESC' })
-      .setParameters({ start, end })
+      .orderBy({time: 'DESC'})
+      .setParameters({start, end})
       .cache(true)
       .getRawMany()
+
+    // Map items to AggregateBlockMetric shape before returning
 
     return items.map(item => {
 
