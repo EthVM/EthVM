@@ -243,7 +243,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: T
         val destroyedContractTraceAddress = traceListSummary.destroyedContracts[action.getTo()]
 
         if (destroyedContractTraceAddress != null) {
-          System.out.println("Trace address comparison. Trace address = ${traceAddress}, destroyedAddress = ${destroyedContractTraceAddress}, comparison = ${traceAddressComparator.compare(traceAddress, destroyedContractTraceAddress)}")
+          System.out.println("Trace address comparison. Trace address = $traceAddress, destroyedAddress = $destroyedContractTraceAddress, comparison = ${traceAddressComparator.compare(traceAddress, destroyedContractTraceAddress)}")
         }
 
         if (traceAddress.isEmpty() || destroyedContractTraceAddress == null || traceAddressComparator.compare(traceAddress, destroyedContractTraceAddress) < 0) {
@@ -259,7 +259,6 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: T
             .setCounterpartAddress(action.getFrom())
             .setAmount(action.getValue())
             .build()
-
         }
 
         result
@@ -505,7 +504,6 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
             !trace.hasError() && trace.action is TraceDestroyActionRecord -> info.addDestroyedContact((trace.action as TraceDestroyActionRecord).address, trace.traceAddress)
             else -> info
           }
-
         }
 
         if (traceListSummary.errorTraceAddresses.isNotEmpty()) {
@@ -545,15 +543,12 @@ class TraceAddressComparator : Comparator<List<Int>> {
           }
 
           idx += 1
-
         } while (result == 0 && (idx < a!!.size || idx < b!!.size))
 
         result
       }
     }
-
   }
-
 }
 
 data class TraceListSummary(
@@ -566,7 +561,6 @@ data class TraceListSummary(
 
   fun addDestroyedContact(address: String, traceAddress: List<Int>) =
     TraceListSummary(errorTraceAddresses, destroyedContracts + (address to traceAddress))
-
 }
 
 fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {
