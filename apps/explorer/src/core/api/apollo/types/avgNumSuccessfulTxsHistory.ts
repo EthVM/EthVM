@@ -19,7 +19,7 @@ export interface avgNumSuccessfulTxsHistory {
 }
 
 export interface avgNumSuccessfulTxsHistoryVariables {
-  start: any;
-  end: any;
   bucket: TimeBucket;
+  start?: any | null;
+  end?: any | null;
 }

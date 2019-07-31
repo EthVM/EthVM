@@ -19,7 +19,7 @@ export interface avgGasLimitHistory {
 }
 
 export interface avgGasLimitHistoryVariables {
-  start: any;
-  end: any;
   bucket: TimeBucket;
+  start?: any | null;
+  end?: any | null;
 }
