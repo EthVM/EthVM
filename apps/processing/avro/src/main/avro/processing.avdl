@@ -81,6 +81,9 @@ protocol Processing {
 
     FungibleTokenType tokenType;
     FungibleBalanceDeltaType deltaType;
+
+    boolean isReceiving;    // denotes the direction of the delta, sending or receiving
+
     com.ethvm.avro.common.TraceLocationRecord traceLocation;
     decimal(80, 0) amount;
 
