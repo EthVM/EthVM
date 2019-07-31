@@ -257,6 +257,8 @@ export class BlockMetricsService {
       queryBuilder.where('bm.timestamp < :start', {start})
     } else if (end) {
       queryBuilder.where('bm.timestamp > :end', {end})
+    } else {
+      queryBuilder.where('bm.timestamp IS NOT NULL') // Ensure items without timestamp are ignored
     }
 
     const items = await queryBuilder
