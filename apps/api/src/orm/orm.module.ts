@@ -18,7 +18,7 @@ import { DbConnection, SnakeCaseNamingStrategy } from '@app/orm/config'
         maxQueryExecutionTime: 1000,
         cache: {
           type: 'redis',
-          options: configService.redis,
+          options: { ...configService.redis, string_numbers: true}, // Set Redis string_numbers to true to handle numbers as Strings
           // global cache strategy of 60 seconds
           duration: 60000,
         },
@@ -37,7 +37,7 @@ import { DbConnection, SnakeCaseNamingStrategy } from '@app/orm/config'
         maxQueryExecutionTime: 1000,
         cache: {
           type: 'redis',
-          options: configService.redis,
+          options: { ...configService.redis, string_numbers: true}, // Set Redis string_numbers to true to handle numbers as Strings
           // global cache strategy of 60 seconds
           duration: 60000,
         },
