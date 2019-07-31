@@ -92,6 +92,7 @@ export class TransferService {
           .andWhere('it.amount != 0')
           .orderBy('trace_location_block_number', 'DESC')
           .addOrderBy('trace_location_transaction_index', 'DESC')
+          .addOrderBy('trace_location_trace_address', 'DESC')
           .offset(offset)
           .limit(limit)
           .getMany()
