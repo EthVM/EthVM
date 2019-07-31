@@ -11,14 +11,14 @@ export class BigNumberScalar {
     return new BigNumber(value, 10)
   }
 
-  serialize(value: BigNumber | string) {
+  serialize(value: BigNumber | string | number) {
 
     if (value instanceof BigNumber) {
       return value.toString(10)
-    } else if (typeof value === 'string') {
+    } else if (typeof value === 'string' || typeof value === 'number') {
       return value // Value may be string if from cache
     }
-    throw new GraphQLError(`Value should be BigNumber or string. Type = ${typeof value}, value = ${value}`)
+    throw new GraphQLError(`Value should be BigNumber, number or string. Type = ${typeof value}, value = ${value}`)
   }
 
   parseLiteral(ast: ValueNode) {
