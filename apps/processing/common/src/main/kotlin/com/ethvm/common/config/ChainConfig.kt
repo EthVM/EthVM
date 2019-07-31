@@ -156,7 +156,6 @@ open class DevConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
   override val constants = parent.constants.copy(
     blockReward = 0.ether()
   )
-
 }
 
 open class ByzantiumConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
@@ -228,7 +227,6 @@ interface NetConfig {
         0L to DevConfig(PetersburgConfig(DaoHardForkConfig()))
       )
     }
-
   }
 }
 
