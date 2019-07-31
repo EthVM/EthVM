@@ -5,7 +5,18 @@ volumes:
   ethvm-kafka-processing:
     external: false
 
+  parity:
+    external: false
+
 services:
+
+  # ///////////////////////////////////////////////////////
+  # Ethereum Client
+  # ///////////////////////////////////////////////////////
+
+  parity:
+    volumes:
+      - parity:/home/parity/.local/share/io.parity.ethereum/
 
   # ///////////////////////////////////////////////////////
   # Front Services
@@ -14,6 +25,7 @@ services:
   api:
     environment:
       INSTA_MINING: 'true'
+      DISABLE_EXPRESS_RATE_LIMIT: 'true'
 
   # ///////////////////////////////////////////////////////
   # Processing
@@ -38,4 +50,3 @@ services:
       WEB3_WS_URL: ws://parity:8546
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
       ETH_NET_CONFIG: 'dev'
-      DISABLE_EXPRESS_RATE_LIMIT: 'true'

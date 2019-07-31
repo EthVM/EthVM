@@ -1,4 +1,3 @@
-
 const hexCharacters = 'abcdef0123456789';
 
 export function randomAddress() {
@@ -34,4 +33,10 @@ export async function awaitableTimeout(f, timeout) {
 
   });
 
+}
+
+function sleep(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  })
 }
