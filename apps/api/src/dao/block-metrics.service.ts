@@ -3,7 +3,7 @@ import { InjectEntityManager } from '@nestjs/typeorm'
 import { EntityManager, In } from 'typeorm'
 import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
 import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
-import { unitOfTime } from 'moment'
+import { now, unitOfTime } from 'moment'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metrics-transaction-fee.entity'
 import { BlockMetricsTransactionEntity } from '@app/orm/entities/block-metrics-transaction.entity'
@@ -98,7 +98,7 @@ export class BlockMetricsService {
     })
   }
 
-  private estimateDatapoints(start: Date, end: Date, bucket: TimeBucket): number {
+  private estimateDatapoints(start: Date = new Date(), end: Date = new Date('2000-01-01T00:00:00.000Z'), bucket: TimeBucket): number {
 
     const startMoment = moment(start)
     const endMoment = moment(end)
@@ -128,10 +128,10 @@ export class BlockMetricsService {
   }
 
   async timeseries(
-    start: Date,
-    end: Date,
     bucket: TimeBucket,
     field: BlockMetricField,
+    start?: Date,
+    end?: Date,
   ): Promise<AggregateBlockMetric[]> {
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
@@ -238,9 +238,16 @@ export class BlockMetricsService {
       throw new Error(`Unexpected metric: ${field}`)
     }
 
+    if (start && end) {
+      queryBuilder.where('bm.timestamp between :end and :start', { start, end })
+    } else if (start) {
+      queryBuilder.where('bm.timestamp < :start', { start })
+    } else if (end) {
+      queryBuilder.where('bm.timestamp > :end', { end })
+    }
+
     const items = await queryBuilder
       .select(select)
-      .where('bm.timestamp between :end and :start')
       .groupBy('time')
       .orderBy({ time: 'DESC' })
       .setParameters({ start, end })
