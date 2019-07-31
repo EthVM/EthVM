@@ -244,10 +244,6 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: T
 
         val destroyedContractTraceAddress = traceListSummary.destroyedContracts[action.getTo()]
 
-        if (destroyedContractTraceAddress != null) {
-          System.out.println("Trace address comparison. Trace address = $traceAddress, destroyedAddress = $destroyedContractTraceAddress, comparison = ${traceAddressComparator.compare(traceAddress, destroyedContractTraceAddress)}")
-        }
-
         if (traceAddress.isEmpty() || destroyedContractTraceAddress == null || traceAddressComparator.compare(traceAddress, destroyedContractTraceAddress) < 0) {
 
           // we only generate the addition side of the transfer if the recipient has not been destroyed yet
@@ -512,10 +508,6 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
             !trace.hasError() && trace.action is TraceDestroyActionRecord -> info.addDestroyedContact((trace.action as TraceDestroyActionRecord).address, trace.traceAddress)
             else -> info
           }
-        }
-
-        if (traceListSummary.errorTraceAddresses.isNotEmpty()) {
-          System.out.println("Some errors")
         }
 
         deltas + traces
