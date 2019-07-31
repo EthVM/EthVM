@@ -1,0 +1,37 @@
+{
+  "name": "ethvm-tests",
+  "version": "0.0.1",
+  "description": "solidity test suite for EthVM",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "compile": "truffle compile",
+    "build": "truffle build",
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EthVM/ethvm-tests.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EthVM/ethvm-tests/issues"
+  },
+  "homepage": "https://github.com/EthVM/ethvm-tests#readme",
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "ethereumjs-util": "^6.1.0",
+    "graphql-request": "^1.8.2",
+    "truffle": "^5.0.29",
+    "truffle-hdwallet-provider": "^1.0.15"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5"
+  }
+}

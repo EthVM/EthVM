@@ -87,4 +87,5 @@ query tokenHolderDetails($address: String! $holderAddress: String!) {
   tokenDetails: tokenDetailByAddress(address: $address) {
     ...TokenDetail
   }
+  totalTransfers: totalTokenTransfersByContractAddressForHolder(contractAddress: $address, holderAddress: $holderAddress)
 }

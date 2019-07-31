@@ -19,7 +19,7 @@ export interface avgTxFeesHistory {
 }
 
 export interface avgTxFeesHistoryVariables {
-  start: any;
-  end: any;
   bucket: TimeBucket;
+  start?: any | null;
+  end?: any | null;
 }

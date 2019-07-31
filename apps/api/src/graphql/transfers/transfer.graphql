@@ -5,6 +5,8 @@ type Query {
 
   tokenTransfersByContractAddress(contractAddress: String!, offset: Int = 0, limit: Int = 20): TransferPage!
   tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20): TransferPage!
+
+  totalTokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!): BigNumber!
 }
 
 type TransferPage {

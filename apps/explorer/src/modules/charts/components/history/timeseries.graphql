@@ -1,41 +1,41 @@
 
-query avgGasPriceHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
+query avgGasPriceHistory($bucket: TimeBucket!, $start: Date, $end: Date) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, field: AVG_GAS_PRICE) {
     ...AvgGasPriceMetric
   }
 }
 
-query avgBlockTimeHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
+query avgBlockTimeHistory($bucket: TimeBucket!, $start: Date, $end: Date) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, field: AVG_BLOCK_TIME) {
     ...AvgBlockTimeMetric
   }
 }
 
-query avgGasLimitHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
+query avgGasLimitHistory($bucket: TimeBucket!, $start: Date, $end: Date) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, field: AVG_GAS_LIMIT) {
     ...AvgGasLimitMetric
   }
 }
 
-query avgDifficultyHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
+query avgDifficultyHistory($bucket: TimeBucket!, $start: Date, $end: Date) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, field: AVG_DIFFICULTY) {
     ...AvgDifficultyMetric
   }
 }
 
-query avgNumFailedTxsHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
+query avgNumFailedTxsHistory($bucket: TimeBucket!, $start: Date, $end: Date) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, field: AVG_NUM_FAILED_TXS) {
     ...AvgNumFailedTxsMetric
   }
 }
 
-query avgNumSuccessfulTxsHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
+query avgNumSuccessfulTxsHistory($bucket: TimeBucket!, $start: Date, $end: Date) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, field: AVG_NUM_SUCCESSFUL_TXS) {
     ...AvgNumSuccessfulTxsMetric
   }
 }
 
-query avgTxFeesHistory($start: Date!, $end: Date!, $bucket: TimeBucket!) {
+query avgTxFeesHistory($bucket: TimeBucket!, $start: Date, $end: Date) {
   blockMetricsTimeseries(start: $start, end: $end, bucket: $bucket, field: AVG_TX_FEES) {
     ...AvgTxFeesMetric
   }

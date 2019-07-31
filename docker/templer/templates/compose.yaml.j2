@@ -118,6 +118,7 @@ services:
       GRAPHQL_PLAYGROUND: 'true'
       INSTA_MINING: '{{ PARITY_INSTA_MINING }}'
       NO_TS_TUNE: 'true'
+      DISABLE_EXPRESS_RATE_LIMIT: 'true'
     command: bash -c "yarn && yarn start:dev"
 
   {% if PARITY_ENABLED %}

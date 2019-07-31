@@ -173,7 +173,9 @@ fun TraceRecord.toContractEventRecord(timestamp: DateTime): ContractEventRecord?
   }
 }
 
-fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalanceDeltaRecord> {
+private val traceAddressComparator = TraceAddressComparator()
+
+fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: TraceListSummary): List<FungibleBalanceDeltaRecord> {
 
   // error check first
   val error = getError()
@@ -206,6 +208,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
         FungibleBalanceDeltaRecord.newBuilder()
           .setTokenType(FungibleTokenType.ETHER)
           .setDeltaType(type)
+          .setIsReceiving(true)
           .setTraceLocation(traceLocation)
           .setAddress(action.getAuthor())
           .setAmount(action.getValue()) // need to make the value signed
@@ -225,26 +228,39 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
           else
             FungibleBalanceDeltaType.INTERNAL_TX
 
-        listOf(
+        var result = listOf(
           FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
             .setDeltaType(deltaType)
+            .setIsReceiving(false)
             .setTraceLocation(traceLocation)
             .setAddress(action.getFrom())
             .setCounterpartAddress(action.getTo())
             .setAmountBI(action.getValueBI().negate())
-            .build(),
+            .build()
+        )
 
-          FungibleBalanceDeltaRecord.newBuilder()
+        // check if the recipient is a contract which has already been destroyed
+
+        val destroyedContractTraceAddress = traceListSummary.destroyedContracts[action.getTo()]
+
+        if (traceAddress.isEmpty() || destroyedContractTraceAddress == null || traceAddressComparator.compare(traceAddress, destroyedContractTraceAddress) < 0) {
+
+          // we only generate the addition side of the transfer if the recipient has not been destroyed yet
+          // e.g. our trace address is 'less' than the contract destruction trace address
+
+          result = result + FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
             .setDeltaType(deltaType)
+            .setIsReceiving(true)
             .setTraceLocation(traceLocation)
             .setAddress(action.getTo())
             .setCounterpartAddress(action.getFrom())
             .setAmount(action.getValue())
             .build()
+        }
 
-        )
+        result
       }
     }
 
@@ -253,6 +269,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
       FungibleBalanceDeltaRecord.newBuilder()
         .setTokenType(FungibleTokenType.ETHER)
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
+        .setIsReceiving(false)
         .setTraceLocation(traceLocation)
         .setAddress(action.getFrom())
         .setCounterpartAddress(getResult().getAddress())
@@ -262,6 +279,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
       FungibleBalanceDeltaRecord.newBuilder()
         .setTokenType(FungibleTokenType.ETHER)
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_CREATION)
+        .setIsReceiving(true)
         .setTraceLocation(traceLocation)
         .setAddress(getResult().getAddress())
         .setCounterpartAddress(action.getFrom())
@@ -274,6 +292,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
       FungibleBalanceDeltaRecord.newBuilder()
         .setTokenType(FungibleTokenType.ETHER)
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
+        .setIsReceiving(false)
         .setTraceLocation(traceLocation)
         .setAddress(action.getAddress())
         .setCounterpartAddress(action.getRefundAddress())
@@ -283,6 +302,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime): List<FungibleBalan
       FungibleBalanceDeltaRecord.newBuilder()
         .setTokenType(FungibleTokenType.ETHER)
         .setDeltaType(FungibleBalanceDeltaType.CONTRACT_DESTRUCTION)
+        .setIsReceiving(true)
         .setTraceLocation(traceLocation)
         .setAddress(action.getRefundAddress())
         .setCounterpartAddress(action.getAddress())
@@ -419,6 +439,7 @@ fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
   FungibleBalanceDeltaRecord.newBuilder()
     .setTokenType(FungibleTokenType.ETHER)
     .setDeltaType(FungibleBalanceDeltaType.TX_FEE)
+    .setIsReceiving(true)
     .setTraceLocation(
       TraceLocationRecord.newBuilder()
         .setBlockHash(getBlockHash())
@@ -475,26 +496,72 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
       deltas = if (key.second == null) {
 
         // dealing with block and uncle rewards
-        deltas + traces.map { it.toFungibleBalanceDeltas(timestamp) }.flatten()
+        deltas + traces.map { it.toFungibleBalanceDeltas(timestamp, TraceListSummary()) }.flatten()
       } else {
 
         // all other traces
 
-        val errorTraceAddresses = traces
-          .filter { it.hasError() }
-          .map { it.traceAddress }
-          .toSet()
+        val traceListSummary = traces.fold(TraceListSummary()) { info, trace ->
+
+          when {
+            trace.hasError() -> info.addError(trace.traceAddress)
+            !trace.hasError() && trace.action is TraceDestroyActionRecord -> info.addDestroyedContact((trace.action as TraceDestroyActionRecord).address, trace.traceAddress)
+            else -> info
+          }
+        }
 
         deltas + traces
           .filterNot { it.hasError() }
-          .filter { isTraceValid(it.traceAddress, errorTraceAddresses) }
-          .map { trace -> trace.toFungibleBalanceDeltas(timestamp) }
+          .filter { isTraceValid(it.traceAddress, traceListSummary.errorTraceAddresses) }
+          .map { trace -> trace.toFungibleBalanceDeltas(timestamp, traceListSummary) }
           .flatten()
       }
 
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null }
+
+class TraceAddressComparator : Comparator<List<Int>> {
+
+  override fun compare(a: List<Int>?, b: List<Int>?): Int {
+
+    return when {
+      a == null && b != null -> -1
+      a != null && b == null -> 1
+      else -> {
+
+        var idx = 0
+        var result = 0
+
+        do {
+          result = when {
+
+            idx < a!!.size && idx < b!!.size -> a[idx] - b[idx]
+            idx < a.size && idx >= b!!.size -> 1
+            idx < b!!.size && idx >= a.size -> -1
+            else -> 0
+          }
+
+          idx += 1
+        } while (result == 0 && (idx < a!!.size || idx < b!!.size))
+
+        result
+      }
+    }
+  }
+}
+
+data class TraceListSummary(
+  val errorTraceAddresses: Set<List<Int>> = emptySet(),
+  val destroyedContracts: Map<String, List<Int>> = emptyMap()
+) {
+
+  fun addError(traceAddress: List<Int>): TraceListSummary =
+    TraceListSummary(errorTraceAddresses + setOf(traceAddress), destroyedContracts)
+
+  fun addDestroyedContact(address: String, traceAddress: List<Int>) =
+    TraceListSummary(errorTraceAddresses, destroyedContracts + (address to traceAddress))
+}
 
 fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {
 

@@ -68,6 +68,17 @@ export class TransferService {
 
   }
 
+  async findTotalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): Promise<BigNumber> {
+
+    return new BigNumber(await this.deltaRepository.createQueryBuilder('d')
+      .where('d.delta_type = :deltaType')
+      .andWhere('d.address = :holderAddress')
+      .andWhere('d.contract_address = :contractAddress')
+      .setParameters({ deltaType: 'TOKEN_TRANSFER', holderAddress, contractAddress })
+      .getCount())
+
+  }
+
   async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10): Promise<[InternalTransferEntity[], number]> {
 
     return this.entityManager.transaction(
@@ -81,6 +92,7 @@ export class TransferService {
           .andWhere('it.amount != 0')
           .orderBy('trace_location_block_number', 'DESC')
           .addOrderBy('trace_location_transaction_index', 'DESC')
+          .addOrderBy('trace_location_trace_address', 'DESC')
           .offset(offset)
           .limit(limit)
           .getMany()

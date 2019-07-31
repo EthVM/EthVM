@@ -12,6 +12,7 @@ import { BlockSummaryPageDto } from './dto/block-summary-page.dto'
 import retry from 'async-retry'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
+import { BlockMetricsService } from '@app/dao/block-metrics.service'
 
 @Resolver('Block')
 @UseInterceptors(SyncingInterceptor)
@@ -19,6 +20,7 @@ export class BlockResolvers {
 
   constructor(
     private readonly blockService: BlockService,
+    private readonly blockMetricsService: BlockMetricsService,
     @Inject('PUB_SUB') private pubSub: PubSub,
   ) {
   }
@@ -88,7 +90,8 @@ export class BlockResolvers {
 
       try {
         const entity = await this.blockService.findByHash(hash)
-        return entity ? new BlockDto(entity) : null
+        const txFees = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(hash, true)
+        return entity ? new BlockDto(entity, txFees) : null
       } catch (err) {
 
         if (err instanceof PartialReadException) {
@@ -112,7 +115,11 @@ export class BlockResolvers {
 
       try {
         const entity = await this.blockService.findByNumber(number)
-        return entity ? new BlockDto(entity) : null
+        if (entity) {
+          const txFees = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(entity.hash, true)
+          return new BlockDto(entity, txFees)
+        }
+        return undefined
       } catch (err) {
 
         if (err instanceof PartialReadException) {

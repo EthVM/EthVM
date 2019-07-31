@@ -97,10 +97,9 @@ CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_delta_type__amount__tl_blo
 WHERE delta_type IN ('BLOCK_REWARD', 'UNCLE_REWARD');
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_address__tl_block_hash ON fungible_balance_delta (address, trace_location_block_hash)
 WHERE delta_type = 'UNCLE_REWARD';
-CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_block_number__tl_transaction_index ON fungible_balance_delta (trace_location_block_number DESC, trace_location_transaction_index DESC)
-WHERE delta_type = 'TOKEN_TRANSFER';;
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_block_number__tx_idx__trace_address ON fungible_balance_delta (trace_location_block_number DESC, trace_location_transaction_index DESC, trace_location_trace_address DESC);
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_delta_type__contract_address__amount ON fungible_balance_delta (delta_type, contract_address, amount)
-WHERE delta_type = 'TOKEN_TRANSFER';;
+WHERE delta_type = 'TOKEN_TRANSFER';
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_timestamp ON fungible_balance_delta (trace_location_timestamp DESC)
 WHERE delta_type = 'TOKEN_TRANSFER';
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_transaction_hash ON fungible_balance_delta USING hash (trace_location_transaction_hash)

@@ -53,6 +53,7 @@ export interface tokenHolderDetails_tokenDetails {
 export interface tokenHolderDetails {
   tokenHolder: tokenHolderDetails_tokenHolder | null;
   tokenDetails: tokenHolderDetails_tokenDetails | null;
+  totalTransfers: any;
 }
 
 export interface tokenHolderDetailsVariables {

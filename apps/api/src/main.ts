@@ -11,10 +11,11 @@ async function bootstrap() {
 
   const config = app.get(ConfigService)
 
-  // add rate limiting
-  const { windowMs } = config.expressRateLimit
-  const { max } = config.expressRateLimit
-  app.use(ExpressRateLimit({ windowMs, max }))
+  // add rate limiting if not disabled
+  const { windowMs, max, disable } = config.expressRateLimit
+  if (!disable) {
+    app.use(ExpressRateLimit({ windowMs, max }))
+  }
 
   // add helmet
   app.use(helmet())
