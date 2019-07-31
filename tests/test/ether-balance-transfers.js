@@ -80,7 +80,7 @@ contract("Ether balance transfers", truffleAccounts => {
     const selfDestructContract2 = artifacts.require("SelfDestruct2");
 
     const instance = await selfDestructContract2.deployed();
-    const {address: parentAddress } = instance;
+    const {address: parentAddress} = instance;
 
     await instance.destroy();
 
@@ -92,15 +92,23 @@ contract("Ether balance transfers", truffleAccounts => {
       assert.equal(parentEthvmBalance.toString(), '0', 'Parent balance should be 0');
       assert.equal(parentEthvmBalance.toString(), parentEthBalance, 'Parent balance should match eth balance');
 
-      for(let i =1; i<=3; i++) {
+      const expectedBalances = [
+        new BigNumber(0),
+        new BigNumber(0),
+        new BigNumber(9000000000000000000)
+      ];
 
-        const childAddress = generateAddress(parentAddress, i).toString('hex');
+      for (let nonce = 1; nonce <= 3; nonce++) {
+
+        const childAddress = generateAddress(parentAddress, nonce).toString('hex');
 
         const childEthvmBalance = await getBalance(childAddress);
-        const childEthBalance = await web3.eth.getBalance(childAddress);
+        const childEthBalance = new BigNumber(await web3.eth.getBalance(childAddress), 10);
 
-        assert.equal(childEthvmBalance.toString(), '0', `Child balance should be 0. Address = ${childAddress}`);
-        assert.equal(childEthvmBalance.toString(), childEthBalance, `Child balance should match eth balance. Address = ${childAddress}`);
+        const expectedBalance = expectedBalances[nonce - 1];
+
+        assert.equal(childEthvmBalance.toString(), expectedBalance.toString(), `Child ethvm balance is incorrect. Address = ${childAddress}`);
+        assert.equal(childEthvmBalance.toString(), childEthBalance.toString(), `Child ethvm balance should match eth balance. Address = ${childAddress}`);
 
       }
 
