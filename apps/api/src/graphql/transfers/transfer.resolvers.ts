@@ -7,6 +7,7 @@ import { BalancesPageDto } from '@app/graphql/transfers/dto/balances-page.dto'
 import { UseInterceptors } from '@nestjs/common'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 import { InternalTransferPageDto } from '@app/graphql/transfers/dto/internal-transfer-page.dto'
+import BigNumber from 'bignumber.js'
 
 @Resolver('Transfer')
 @UseInterceptors(SyncingInterceptor)
@@ -40,6 +41,14 @@ export class TransferResolvers {
       items: result[0],
       totalCount: result[1],
     })
+  }
+
+  @Query()
+  async totalTokenTransfersByContractAddressForHolder(
+    @Args('contractAddress', ParseAddressPipe) contractAddress: string,
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+  ): Promise<BigNumber> {
+    return this.transferService.findTotalTokenTransfersByContractAddressForHolder(contractAddress, holderAddress)
   }
 
   @Query()
