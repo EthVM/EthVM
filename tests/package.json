@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/EthVM/ethvm-tests#readme",
   "dependencies": {
+    "bignumber.js": "^9.0.0",
     "ethereumjs-util": "^6.1.0",
     "graphql-request": "^1.8.2",
     "truffle": "^5.0.29",

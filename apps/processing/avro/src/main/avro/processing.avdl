@@ -5,6 +5,7 @@ protocol Processing {
   import idl "capture.avdl";
 
   record BlockTimeRecord {
+    string blockHash;
     long timestamp;
     union{ null, int } blockTime = null;
   }

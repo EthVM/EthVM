@@ -8,6 +8,7 @@ enum class ChainId(val number: Int) {
   Rinkleby(4),
   UbiqMainNet(8),
   UbiqTestNest(9),
+  Dev(17),
   RootStockMainNet(30),
   RootStockTestNet(31),
   Kovan(42),

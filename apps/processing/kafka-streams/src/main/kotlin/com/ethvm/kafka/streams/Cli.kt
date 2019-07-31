@@ -63,7 +63,7 @@ class Cli : CliktCommand() {
   ).int().default(DEFAULT_STREAMS_RESET)
 
   private val networkConfig: String by option(
-    help = "The network config to use, one of: mainnet, ropsten",
+    help = "The network config to use, one of: mainnet, ropsten, dev",
     envvar = "ETH_NET_CONFIG"
   ).default(DEFAULT_ETH_NET_CONFIG)
 
@@ -98,6 +98,7 @@ class Cli : CliktCommand() {
       when (networkConfig) {
         "mainnet" -> NetConfig.mainnet
         "ropsten" -> NetConfig.ropsten
+        "dev" -> NetConfig.dev
         else -> throw IllegalArgumentException("Unrecognised network config name: $networkConfig")
       }
     }
