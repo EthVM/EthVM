@@ -13,10 +13,10 @@ export class DateScalar {
   serialize(value) {
     if (value instanceof Date) {
       return value.getTime() // value sent to the client
-    } else {
-      throw new GraphQLError(`Value should be Date. Type = ${typeof value}, value = ${value}`)
+    } else if (typeof value === 'string') {
+      return value // Value may already be a string if it comes from cache
     }
-
+    throw new GraphQLError(`Value should be Date or string. Type = ${typeof value}, value = ${value}`)
   }
 
   parseLiteral(ast) {
