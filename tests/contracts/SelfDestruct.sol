@@ -4,7 +4,7 @@ contract SelfDestruct {
 
     constructor() public payable {
     }
-
+    function payableFunc() public payable {}
     function destroy() public {
         assembly {
             selfdestruct(address)
