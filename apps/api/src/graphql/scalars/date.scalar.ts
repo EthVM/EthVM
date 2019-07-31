@@ -14,7 +14,7 @@ export class DateScalar {
     if (value instanceof Date) {
       return value.getTime() // value sent to the client
     } else if (typeof value === 'string') {
-      return value // Value may already be a string if it comes from cache
+      return new Date(value).getTime() // Value may be a string if it comes from cache
     }
     throw new GraphQLError(`Value should be Date or string. Type = ${typeof value}, value = ${value}`)
   }
@@ -25,6 +25,5 @@ export class DateScalar {
     } else {
       throw new GraphQLError(`Value should be INT. Type = ${typeof ast.value}, value = ${ast.value}`)
     }
-
   }
 }
