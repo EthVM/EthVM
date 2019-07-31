@@ -1,6 +1,8 @@
 import client from "./client"
+import {BigNumber} from "bignumber.js";
 
-const getAccountInfo = address => {
+export async function getAccountInfo(address) {
+
   const query = `
     query getAccountByAddress($address: String!) {
       accountByAddress(address: $address) {
@@ -11,11 +13,12 @@ const getAccountInfo = address => {
       }
     }
   `;
-  return client
-    .request(query, {
-      address: address
-    })
-    .then(data => data.accountByAddress)
+
+  const { accountByAddress } = await client.request(query, { address });
+  return accountByAddress;
 }
 
-export { getAccountInfo }
+export async function getBalance(address) {
+  const account = await getAccountInfo(address);
+  return account ? new BigNumber(account.balance) : undefined;
+}
