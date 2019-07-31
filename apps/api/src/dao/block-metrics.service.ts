@@ -21,7 +21,7 @@ const HEADER_FIELDS = [
 ]
 const TX_FIELDS = [
   BlockMetricField.AVG_GAS_LIMIT,
-  BlockMetricField.AVG_GAS_PRICE
+  BlockMetricField.AVG_GAS_PRICE,
 ]
 const TX_TRACE_FIELDS = [
   BlockMetricField.AVG_NUM_TXS,
@@ -31,9 +31,8 @@ const TX_TRACE_FIELDS = [
 ]
 const TX_FEE_FIELDS = [
   BlockMetricField.AVG_TX_FEES,
-  BlockMetricField.AVG_TOTAL_TX_FEES
+  BlockMetricField.AVG_TOTAL_TX_FEES,
 ]
-
 
 @Injectable()
 export class BlockMetricsService {
