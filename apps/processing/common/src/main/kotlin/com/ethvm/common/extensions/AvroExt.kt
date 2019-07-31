@@ -443,6 +443,7 @@ fun TransactionFeeRecord.toFungibleBalanceDelta(): FungibleBalanceDeltaRecord =
   FungibleBalanceDeltaRecord.newBuilder()
     .setTokenType(FungibleTokenType.ETHER)
     .setDeltaType(FungibleBalanceDeltaType.TX_FEE)
+    .setIsReceiving(true)
     .setTraceLocation(
       TraceLocationRecord.newBuilder()
         .setBlockHash(getBlockHash())
