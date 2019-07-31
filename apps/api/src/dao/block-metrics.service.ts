@@ -151,13 +151,13 @@ export class BlockMetricsService {
     bucket: TimeBucket,
     field: BlockMetricField,
     start?: Date,
-    end?: Date,
+    end: Date = new Date('2000-01-01T00:00:00.000Z'),
   ): Promise<AggregateBlockMetric[]> {
 
     // If start or end is set, round to nearest minute in order to take advantage of caching similar queries
     // Start is set to end of minute as it is later in time, and vice versa, to be inclusive of time range
     start = start ? moment(start).endOf('minute').toDate() : undefined
-    end = end ? moment(end).startOf('minute').toDate() : undefined
+    end = moment(end).startOf('minute').toDate()
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
 
@@ -251,14 +251,10 @@ export class BlockMetricsService {
 
     // Set where clause if start and/or end params are set
 
-    if (start && end) {
+    if (start) {
       queryBuilder.where('bm.timestamp between :end and :start', {start, end})
-    } else if (start) {
-      queryBuilder.where('bm.timestamp < :start', {start})
-    } else if (end) {
-      queryBuilder.where('bm.timestamp > :end', {end})
     } else {
-      queryBuilder.where('bm.timestamp IS NOT NULL') // Ensure items without timestamp are ignored
+      queryBuilder.where('bm.timestamp > :end', {end})
     }
 
     const items = await queryBuilder
