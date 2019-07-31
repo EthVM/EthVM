@@ -38,4 +38,4 @@ services:
       WEB3_WS_URL: ws://parity:8546
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
       ETH_NET_CONFIG: 'dev'
-      EXPRESS_RATE_LIMIT_MAX: 10000
+      DISABLE_EXPRESS_RATE_LIMIT: 'true'
