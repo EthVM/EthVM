@@ -10,6 +10,7 @@ import { BalanceDto } from './dto/balance.dto'
 import { FungibleBalanceDeltaEntity } from '../../orm/entities/fungible-balance-delta.entity'
 import { MetadataService } from '../../dao/metadata.service'
 import { InternalTransferPageDto } from './dto/internal-transfer-page.dto'
+import BigNumber from 'bignumber.js'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -275,6 +276,12 @@ const transferServiceMock = {
       .filter(b => b.contractAddress === address && b.address === holder && b.timestamp >= timestampFrom && b.timestamp <= timestampTo)
 
     return [items.map(i => new FungibleBalanceDeltaEntity(i)), items.length]
+  },
+  async findTotalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): Promise<BigNumber> {
+    const data = transfers.filter(t => {
+      return contractAddress === t.contractAddress && (t.to === holderAddress || t.from === holderAddress) && t.deltaType === 'TOKEN_TRANSFER'
+    })
+    return new BigNumber(data.length)
   }
 }
 
@@ -860,6 +867,25 @@ describe('TransferResolvers', () => {
       expect(balances).toBeInstanceOf(BalancesPageDto)
       expect(balances).toHaveProperty('items')
       expect(balances).toHaveProperty('totalCount', 0)
+    })
+  })
+
+  describe('totalTokenTransfersByContractAddressForHolder', () => {
+    it('should return the total number of transfers (in or out) for a given holderAddress and contractAddress', async () => {
+      const totalTransfers = await transferResolvers.totalTokenTransfersByContractAddressForHolder(address1, holder1)
+      expect(totalTransfers).not.toBeUndefined()
+      expect(totalTransfers).toEqual(new BigNumber(2))
+    })
+    it('should return an instance of BigNumber', async () => {
+      const totalTransfers = await transferResolvers.totalTokenTransfersByContractAddressForHolder(address1, holder1)
+      expect(totalTransfers).not.toBeUndefined()
+      expect(totalTransfers).toBeInstanceOf(BigNumber)
+    })
+    it('should return a BigNumber with value zero when there are no transfers for the given addresses', async () => {
+      const totalTransfers = await transferResolvers.totalTokenTransfersByContractAddressForHolder(address1, holder4)
+      expect(totalTransfers).not.toBeUndefined()
+      expect(totalTransfers).toBeInstanceOf(BigNumber)
+      expect(totalTransfers).toEqual(new BigNumber(0))
     })
   })
 })
