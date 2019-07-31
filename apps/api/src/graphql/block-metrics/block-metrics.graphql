@@ -17,7 +17,7 @@ type Query {
   blockMetricsTransaction(offset: Int = 0, limit: Int = 20): BlockMetricsTransactionPage!
   blockMetricsTransactionFee(offset: Int = 0, limit: Int = 20): BlockMetricsTransactionFeePage!
 
-  blockMetricsTimeseries(start: Date!, end: Date!, bucket: TimeBucket!, field: BlockMetricField!): [AggregateBlockMetric!]!
+  blockMetricsTimeseries(bucket: TimeBucket!, field: BlockMetricField!, start: Date, end: Date): [AggregateBlockMetric!]!
 
 }
 

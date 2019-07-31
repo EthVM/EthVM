@@ -19,7 +19,7 @@ export interface avgBlockTimeHistory {
 }
 
 export interface avgBlockTimeHistoryVariables {
-  start: any;
-  end: any;
   bucket: TimeBucket;
+  start?: any | null;
+  end?: any | null;
 }
