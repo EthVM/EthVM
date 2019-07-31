@@ -13,8 +13,6 @@ DATASET="ethvm_dev.sql.gz"
 
 BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
 
-EXTRA_DOCKER_COMPOSE_FILES=$(jq -r '.docker.compose[]' $DOCKER_RUN_META_PATH)
-
 # docker_usage - prints docker subcommand usage
 docker_usage() {
 
@@ -43,124 +41,21 @@ invalid_argument() {
 # up - process which option is going to be run to bring up the dev environment
 up() {
 
-  local type="${1:-"-m default"}"
-  shift # past argument
-
-  if [[ $# == 0 ]]; then
-    # By default, the default mode if no arg is specified is dev
-    up_dev_mode_message
-    down
-    up_dev
-  else
-    # We process and parse arguments
-    while [[ $# -gt 0 ]]; do
-      local key="$1"
-
-      case $key in
-      -m | --mode)
-        local value="$2"
-        shift
-
-        case "$value" in
-        dev)
-          up_dev_mode_message
-          down
-          up_dev
-          break
-          ;;
-
-        simple)
-          up_simple_mode_message
-          down
-          up_simple
-          break
-          ;;
-
-        *)
-          invalid_argument
-          docker_usage
-          break
-          ;;
-        esac
-
-        ;;
-      esac
-
-      shift
-    done
-  fi
-}
-
-# up_dev_mode_message - describes which mode the user has selected
-up_dev_mode_message() {
-
   local bold=$(tput bold)
   local reset=$(tput sgr0)
 
-  section "DEV mode selected"
-  echo "${bold}Description:${reset} This mode spins up a clean local DEV environment that allows to work with Kafka Streams"
+  # Assign default values
+  local env="${1:-"dev_ropsten"}"
 
-}
+  section "Starting up environment: $env"
 
-# up_dev - spins up a clean dev environment (but it will not run eth client, neither kafka-streams in order to control the flow of data)
-up_dev() {
+  # Check if env exists before proceeding
+  local found=$(jq --arg env $env --raw-output '..| objects | .up//empty | has($env)' $DOCKER_RUN_META_PATH)
+  [[ "$found" != "true" ]] && invalid "Invalid mode specified! Aborting execution..." && exit 1
 
-  section "Building utility docker images..."
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
-  ${SCRIPT_DIR}/docker-build.sh build migrator
-
-  section "Building docker containers..."
-  docker-compose build
-
-  section "Starting up following docker containers: \n\t - traefik \n\t - api \n\t - explorer \n\t - db-principal \n\t - db-metrics \n\t - zookeeper \n\t - kafka-1 \n\t - kafka-schema-registry \n\t - kafka-connect \n\t - pgweb \n\t - redis"
-  docker-compose up -d traefik api explorer db-principal db-metrics zookeeper kafka-1 kafka-schema-registry kafka-connect pgweb redis
-
-  section "Initialising kafka..."
-  ${SCRIPT_DIR}/ethvm-utils.sh kafka init
-
-  section "Initialising principal db..."
-  INDEXES_AND_TRIGGERS=${PARITY_INSTA_MINING} ${SCRIPT_DIR}/migrator.sh principal migrate
-
-  section "Initialising metrics db..."
-  INDEXES_AND_TRIGGERS=${PARITY_INSTA_MINING} ${SCRIPT_DIR}/migrator.sh metrics migrate
-
-  section "Building avro models..."
-  ${SCRIPT_DIR}/avro.sh build
-
-  section "Building kafka connect connector..."
-  ${SCRIPT_DIR}/kafka-connect.sh build-connector
-
-  section "Registering sinks and sources into kafka connect..."
-  ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
-
-  section "Ensuring parity docker mount point exists..."
-  mkdir -p ${PARITY_BIND_MOUNTPOINT}
-
-  section "Starting following docker containers: \n\t - parity \n\t - kafka-manager"
-  docker-compose up -d parity kafka-manager
-
-  if [[ $compose_files != "-f ${ROOT_DIR}/docker-compose.yaml" ]]; then
-    section "Starting up extra docker containers..."
-    local images=""
-    for container in $(jq -cr '.docker.containers[]' $DOCKER_RUN_META_PATH); do
-      local key=$(echo "$container" | jq -cr '.id')
-      local value=$(echo "$container" | jq -car '.value | join(" ")')
-      [[ $container == *$key* ]] && images+="$value"
-    done
-    images=$($images | sed 's/\"//g')
-    docker-compose ${compose_files} up -d ${images}
-  fi
-
-}
-
-# up_simple_mode_message - describes which mode the user has selected
-up_simple_mode_message() {
-
-  local bold=$(tput bold)
-  local reset=$(tput sgr0)
-
-  section "SIMPLE mode selected"
-  echo -e "${bold}Description:${reset} This mode spins a basic environment useful to work on Explorer or API with a fixed processed dataset (processing of new blocks is disabled)"
+  # Iterate over instructions
+  jq --arg env $env -c '.up | objects | to_entries[] | select(.key == $env) | .value[] | tostring' $DOCKER_RUN_META_PATH \
+    | xargs -L 1 bash -c
 
 }
 

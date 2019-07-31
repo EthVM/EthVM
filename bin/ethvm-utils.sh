@@ -12,6 +12,9 @@ NETWORK=${NETWORK:-"ethvm_net"}
 
 version=$(read_version ethvm-utils)
 
+# source docker compose env variables
+source ${ROOT_DIR}/.env
+
 docker run --rm \
   --network ${NETWORK} \
   -e KAFKA_ZOOKEEPER_CONNECT=${KAFKA_ZOOKEEPER_CONNECT} \

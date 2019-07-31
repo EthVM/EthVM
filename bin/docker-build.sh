@@ -31,7 +31,7 @@ usage() {
   echo "    help           Print version information and exit."
   echo ""
   echo "Images:"
-  echo "    $(jq -r '[.projects[].id] | join(", ")' $DOCKER_RUN_META_PATH)"
+  echo "    $(jq -r '[.projects[].id] | join(", ")' $DOCKER_BUILD_META_PATH)"
 
 }
 
@@ -113,7 +113,7 @@ process_subcommand() {
 
       # Iterate our projects
       local builds=false
-      for project in $(jq -car '.projects[]' $DOCKER_RUN_META_PATH); do
+      for project in $(jq -car '.projects[]' $DOCKER_BUILD_META_PATH); do
         local id=$(jq -r '.id' <<< "$project")
         if [[ $image == "all" || $image == $id ]]; then
           $action "$project" "$@"

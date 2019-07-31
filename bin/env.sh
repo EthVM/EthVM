@@ -16,6 +16,7 @@ ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 APPS_PATH="${ROOT_DIR}/apps"
 DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
 DOCKER_RUN_META_PATH="${SCRIPT_DIR}/docker-run.meta.json"
+DOCKER_BUILD_META_PATH="${SCRIPT_DIR}/docker-build.meta.json"
 
 # ---------------------------------------------------------
 #   Helper Functions
@@ -146,6 +147,3 @@ ensure() {
   fi
 
 }
-
-# source docker compose env variables
-# source ${ROOT_DIR}/.env.default

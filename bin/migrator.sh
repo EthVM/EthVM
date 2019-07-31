@@ -8,6 +8,9 @@ source ${SCRIPT_DIR}/env.sh
 # verify we have required utilities installed
 ensure
 
+# source docker compose env variables
+source ${ROOT_DIR}/.env
+
 version=$(read_version migrator)
 
 DB=${1}
