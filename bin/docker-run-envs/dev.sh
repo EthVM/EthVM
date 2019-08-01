@@ -4,6 +4,10 @@ section "Building utility docker images..."
 ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
 ${SCRIPT_DIR}/docker-build.sh build migrator
 
+if [[ $PARITY_ENABLED == "true" ]]; then
+  [[ $PARITY_ENABLE_BIND_MOUNTPOINT == "true" ]] && section "Ensuring parity docker mount point exists..." && mkdir -p $PARITY_BIND_MOUNTPOINT
+fi
+
 section "Starting up docker containers..."
 docker-compose up -d --build
 
@@ -25,8 +29,4 @@ if [[ $KAFKA_ENABLED == "true" ]]; then
 
   section "Registering sinks and sources into kafka connect..."
   ${SCRIPT_DIR}/ethvm-utils.sh kafka-connect init
-fi
-
-if [[ $PARITY_ENABLED == "true" ]]; then
-  [[ $PARITY_ENABLE_BIND_MOUNTPOINT == "true" ]] && section "Ensuring parity docker mount point exists..." && mkdir -p $PARITY_BIND_MOUNTPOINT
 fi

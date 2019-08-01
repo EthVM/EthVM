@@ -11,8 +11,6 @@ ensure
 # Define variables
 DATASET="ethvm_dev.sql.gz"
 
-BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
-
 # docker_usage - prints docker subcommand usage
 docker_usage() {
 
@@ -55,6 +53,7 @@ up() {
   info "Selected env: $env"
   ${SCRIPT_DIR}/docker-templer.sh $env
   cp ${ROOT_DIR}/docker/templer/stacks/{.env,docker-compose.yaml} ${ROOT_DIR}/
+  source ${ROOT_DIR}/.env
 
   # Load the corresponding script and init the env
   local script=$(jq --raw-output '.script' <<< $meta)

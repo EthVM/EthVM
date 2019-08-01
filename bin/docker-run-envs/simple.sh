@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+BRANCH=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
+
 section "Building utility docker images..."
 ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
 ${SCRIPT_DIR}/docker-build.sh build migrator

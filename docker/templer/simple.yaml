@@ -8,8 +8,10 @@ templates:
     dest: stacks/docker-compose.yaml
     include_vars:
       - vars/simple.yaml
+      - vars/simple.custom.yaml
 
   - src: templates/env.j2
     dest: stacks/.env
     include_vars:
       - vars/simple.yaml
+      - vars/simple.custom.yaml
