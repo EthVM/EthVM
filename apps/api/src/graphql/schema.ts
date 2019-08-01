@@ -346,6 +346,7 @@ export interface IQuery {
     tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
+    balanceTransfersByHolderAddress(holderAddress: string, contractAddresses?: string[], limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddress(contractAddress: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     totalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): BigNumber | Promise<BigNumber>;

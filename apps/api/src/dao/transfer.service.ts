@@ -163,6 +163,56 @@ export class TransferService {
 
   }
 
+  async findBalanceTransfersByHolderAddress(
+    holder: string,
+    addresses: string[],
+    limit: number = 20,
+    page: number = 0,
+    timestampFrom: number = 0,
+    timestampTo: number = 0,
+  ): Promise<[FungibleBalanceTransferEntity[], number]> {
+    const skip = limit * page
+
+    const builder = this.transferRepository.createQueryBuilder('t')
+
+    builder.where(new Brackets(sqb => {
+      sqb.where('t.from = :holder')
+      sqb.orWhere('t.to = :holder')
+    }))
+
+    // @addresses is optional. If the array contains the holderAddress, then also include ETHER transfers //
+    if (addresses.length > 0) {
+      builder.andWhere(new Brackets(sqb => {
+        sqb.where('t.contract_address = ANY(:addresses)')
+        if (addresses.indexOf(holder) > -1) {
+          sqb.orWhere("t.token_type = 'ETHER'")
+        }
+      }))
+    }
+
+    if (timestampFrom > 0) {
+      builder.andWhere(new Brackets(sqb => {
+        sqb.where('t.timestamp > :timestampFrom')
+      }))
+    }   
+
+    if (timestampTo > 0) {
+      builder.andWhere(new Brackets(sqb => {
+        sqb.where('t.timestamp < :timestampTo')
+      }))
+    }
+
+    return builder
+      .setParameters({ addresses, holder, timestampFrom, timestampTo })
+      .orderBy('t.trace_location_block_number', 'DESC')
+      .addOrderBy('t.trace_location_transaction_index', 'DESC')
+      .offset(skip)
+      .take(limit)
+      .cache(true)
+      .getManyAndCount()
+
+  }
+
   async findTokenBalancesByContractAddressForHolder(
     address: string,
     holder: string,

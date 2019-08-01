@@ -92,4 +92,21 @@ export class TransferResolvers {
       totalCount: result[1],
     })
   }
+
+  @Query()
+  async balanceTransfersByHolderAddress(
+    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+    @Args({name: 'contractAddresses', type: () => [String]}, ParseAddressesPipe) contractAddresses: string[],
+    @Args('limit') limit: number,
+    @Args('page') page: number,
+    @Args('timestampFrom') timestampFrom: number,
+    @Args('timestampTo') timestampTo: number,
+  ): Promise<TransferPageDto> {
+    const result = await this.transferService
+      .findBalanceTransfersByHolderAddress(holderAddress, contractAddresses, limit, page, timestampFrom, timestampTo)
+    return new TransferPageDto({
+      items: result[0],
+      totalCount: result[1],
+    })
+  }
 }
