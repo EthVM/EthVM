@@ -85,11 +85,10 @@ export class TransferService {
       'READ COMMITTED',
       async (txn): Promise<[InternalTransferEntity[], number]> => {
 
-        const count = await txn.count(InternalTransferEntity, { where: { address, amount: Not(new BigNumber(0)) }, cache: true })
+        const count = await txn.count(InternalTransferEntity, { where: { address }, cache: true })
 
         const items = await txn.createQueryBuilder(InternalTransferEntity, 'it')
           .where('it.address = :address', { address })
-          .andWhere('it.amount != 0')
           .orderBy('trace_location_block_number', 'DESC')
           .addOrderBy('trace_location_transaction_index', 'DESC')
           .addOrderBy('trace_location_trace_address', 'DESC')
