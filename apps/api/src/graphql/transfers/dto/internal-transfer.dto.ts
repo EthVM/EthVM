@@ -19,14 +19,9 @@ export class InternalTransferDto implements Transfer {
   constructor(data: InternalTransferEntity) {
     assignClean(this, data)
 
-    // Use "-" symbol to determine "to" and "from" from "address" and "counterpartAddress" fields
-    if (this.amount > 0) { // Transfer is incoming
-      this.to = data.address
-      this.from = data.counterpartAddress
-    }
-    if (this.amount < 0) { // Transfer is outgoing
-      this.to = data.counterpartAddress!
-      this.from = data.address
-    }
+    // Assign "to" and "from" depending on "isReceiving" flag
+    this.to = data.isReceiving ? data.address : data.counterpartAddress!
+    this.from = data.isReceiving ? data.counterpartAddress : data.address
+
   }
 }
