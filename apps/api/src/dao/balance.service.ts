@@ -7,7 +7,7 @@ import { BalanceEntity } from '@app/orm/entities/balance.entity'
 @Injectable()
 export class BalanceService {
 
-  constructor(@InjectRepository(BalanceEntity, DbConnection.Principal) private readonly balanceRepository: Repository<BalanceEntity>,) {
+  constructor(@InjectRepository(BalanceEntity, DbConnection.Principal) private readonly balanceRepository: Repository<BalanceEntity>) {
   }
 
   async findAndCount(addresses: string[], contracts: string[] = [], offset: number = 0, limit: number = 10): Promise<[BalanceEntity[], number]> {
