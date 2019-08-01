@@ -8,10 +8,12 @@ templates:
     dest: stacks/docker-compose.yaml
     include_vars:
       - vars/dev-ropsten.yaml
-      - vars/dev-ropsten.custom.yaml
+      # - Create the file and uncomment below line if you need to customise settings
+      # - vars/dev-ropsten.custom.yaml
 
   - src: templates/env.j2
     dest: stacks/.env
     include_vars:
       - vars/dev-ropsten.yaml
-      - vars/dev-ropsten.custom.yaml
+      # - Create the file and uncomment below line if you need to customise settings
+      # - vars/dev-ropsten.custom.yaml
