@@ -44,4 +44,7 @@ export class InternalTransferEntity {
   @Column({type: 'timestamp', readonly: true, transformer: new DateTransformer()})
   timestamp!: Date
 
+  @Column({type: 'boolean', readonly: true})
+  isReceiving!: boolean
+
 }
