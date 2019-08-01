@@ -35,6 +35,7 @@ METRICS_JDBC_URL: 'jdbc:postgresql://db-metrics:5432/{{ METRICS_DB }}?user={{ ME
 
 PARITY_ENABLED: true
 PARITY_CHAIN: 'ropsten'
+PARITY_ENABLE_BIND_MOUNTPOINT: true
 PARITY_BIND_MOUNTPOINT: '~/.local/share/io.parity.ethereum/ropsten/'
 PARITY_INSTA_MINING: false
 PARITY_MIN_PEERS: 0

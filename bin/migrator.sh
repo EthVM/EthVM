@@ -15,7 +15,7 @@ version=$(read_version migrator)
 
 DB=${1}
 INDEXES_AND_TRIGGERS=${INDEXES_AND_TRIGGERS:-false}
-NETWORK=${NETWORK:-ethvm_net}
+NETWORK=${NETWORK:-"ethvm_net"}
 
 shift 1
 

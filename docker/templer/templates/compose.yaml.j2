@@ -18,6 +18,11 @@ volumes:
   db-metrics:
     external: false
 
+  {% if PARITY_ENABLED and not PARITY_ENABLE_BIND_MOUNTPOINT %}
+  parity:
+    external: false
+  {% endif %}
+
   {% if KAFKA_ENABLED %}
   kafka-1:
     external: false
@@ -123,7 +128,7 @@ services:
 
   {% if PARITY_ENABLED %}
   # ///////////////////////////////////////////////////////
-  #   Ethereum Client
+  # Ethereum Client
   # ///////////////////////////////////////////////////////
 
   parity:
@@ -133,7 +138,11 @@ services:
     networks:
       - net
     volumes:
+      {% if PARITY_ENABLE_BIND_MOUNTPOINT %}
       - ${PARITY_BIND_MOUNTPOINT}:/home/parity/.local/share/io.parity.ethereum/
+      {% else %}
+      - parity:/home/parity/.local/share/io.parity.ethereum/
+      {% endif %}
     ports:
       - 8545:8545
       - 8546:8546

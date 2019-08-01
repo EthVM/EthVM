@@ -7,7 +7,7 @@
 PARITY_ENABLED: true
 PARITY_CHAIN: 'private'
 PARITY_INSTA_MINING: true
-PARITY_BIND_MOUNTPOINT: '~/.local/share/io.parity.ethereum/private/'
+PARITY_ENABLE_BIND_MOUNTPOINT: false
 
 # ///////////////////////////////////////////////////////
 # Kafka

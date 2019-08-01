@@ -1,0 +1,8 @@
+{
+  "envs": [
+    { "id": "simple", "script": "simple.sh"},
+    { "id": "dev-ropsten", "script": "dev.sh"},
+    { "id": "dev-mainnet", "script": "dev.sh"},
+    { "id": "dev-private", "script": "dev.sh"}
+  ]
+}

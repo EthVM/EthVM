@@ -45,57 +45,20 @@ up() {
   local reset=$(tput sgr0)
 
   # Assign default values
-  local env="${1:-"dev_ropsten"}"
-
-  section "Starting up environment: $env"
+  local env="${1:-"dev-private"}"
 
   # Check if env exists before proceeding
-  local found=$(jq --arg env $env --raw-output '..| objects | .up//empty | has($env)' $DOCKER_RUN_META_PATH)
-  [[ "$found" != "true" ]] && invalid "Invalid mode specified! Aborting execution..." && exit 1
+  local meta=$(jq --arg env $env --raw-output --compact-output '..| objects | select(.id == $env)' $DOCKER_RUN_META_PATH)
+  [[ ! -n "$meta" ]] && invalid "Invalid environment specified! Aborting execution..." && exit 1
 
-  # Iterate over instructions
-  jq --arg env $env -c '.up | objects | to_entries[] | select(.key == $env) | .value[] | tostring' $DOCKER_RUN_META_PATH \
-    | xargs -L 1 bash -c
+  section "Starting up environment..."
+  info "Selected env: $env"
+  ${SCRIPT_DIR}/docker-templer.sh $env
+  cp ${ROOT_DIR}/docker/templer/stacks/{.env,docker-compose.yaml} ${ROOT_DIR}/
 
-}
-
-# up - spins up a dev environment with a fixed dataset ready to be used on frontend
-up_simple() {
-
-  section "Building utility docker images..."
-  ${SCRIPT_DIR}/docker-build.sh build ethvm-utils
-  ${SCRIPT_DIR}/docker-build.sh build migrator
-
-  section "Starting up containers: \n\t - traefik \n\t - db-principal \n\t - db-metrics \n\t - explorer \n\t - api \n\t - pgweb \n\t - redis"
-  docker-compose build explorer api
-  docker-compose up -d traefik db-principal db-metrics explorer api pgweb redis
-
-  # Give time to breathe
-  sleep 10
-
-  section "Checking current dataset..."
-  mkdir -p ${ROOT_DIR}/datasets
-
-  set +o errexit
-
-  DATASETS=("principal-${BRANCH}.sql.gz" "metrics-${BRANCH}.sql.gz")
-
-  for DATASET in "${DATASETS[@]}"; do
-
-    [[ -f ${ROOT_DIR}/datasets/${DATASET} ]] && (curl -o ${ROOT_DIR}/datasets/${DATASET}.md5 https://ethvm.s3.amazonaws.com/datasets/${DATASET}.md5 --silent 2>/dev/null && cd ${ROOT_DIR}/datasets/ && md5sum --check ${DATASET}.md5 &>/dev/null)
-    [[ $? -ne 0 ]] && (info "Downloading dataset..." && curl -o ${ROOT_DIR}/datasets/${DATASET} https://ethvm.s3.amazonaws.com/datasets/${DATASET} --progress-bar) || info "You're using latest dataset version! \n"
-
-  done
-
-  set -o errexit
-
-  section "Importing principal dataset..."
-  gunzip <${ROOT_DIR}/datasets/${DATASETS[0]} | docker-compose exec -T db-principal psql --quiet --username "${PRINCIPAL_USER}" "${PRINCIPAL_DB}"
-
-  section "Importing metrics dataset..."
-  docker-compose exec -T db-metrics psql --username "${METRICS_USER}" "${METRICS_DB}" --quiet -c "ALTER DATABASE "${METRICS_DB}" SET timescaledb.restoring='on';"
-  gunzip <${ROOT_DIR}/datasets/${DATASETS[1]} | docker-compose exec -T db-metrics psql --quiet --username "${METRICS_USER}" "${METRICS_DB}"
-  docker-compose exec -T db-metrics psql --username "${METRICS_USER}" "${METRICS_DB}" --quiet -c "ALTER DATABASE "${METRICS_DB}" SET timescaledb.restoring='off';"
+  # Load the corresponding script and init the env
+  local script=$(jq --raw-output '.script' <<< $meta)
+  source ${SCRIPT_DIR}/docker-run-envs/$script
 
 }
 
