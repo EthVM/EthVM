@@ -191,7 +191,6 @@ export default class AppInfoCardGroup extends Vue {
     */
 
   startCount(): void {
-
     this.secondsInterval = window.setInterval(() => {
       if (this.blockSummary) {
         const lastTimestamp = this.lastReceivedAt || new Date()
