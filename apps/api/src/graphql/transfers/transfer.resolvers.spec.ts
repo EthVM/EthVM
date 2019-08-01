@@ -11,6 +11,8 @@ import { FungibleBalanceDeltaEntity } from '../../orm/entities/fungible-balance-
 import { MetadataService } from '../../dao/metadata.service'
 import { InternalTransferPageDto } from './dto/internal-transfer-page.dto'
 import BigNumber from 'bignumber.js'
+import { InternalTransferDto } from './dto/internal-transfer.dto'
+import { InternalTransferEntity } from '../../orm/entities/internal-transfer.entity'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -125,6 +127,97 @@ const transfers = [
   }
 ]
 
+const internalTransfers = [
+  {
+    id: 1,
+    contractAddress: address1,
+    address: holder4,
+    counterpartAddress: holder1,
+    traceLocationBlockNumber: 8,
+    traceLocationTransactionIndex: 0,
+    deltaType: 'INTERNAL_TX',
+    timestamp: 1400000007,
+    isReceiving: false
+  },
+  {
+    id: 2,
+    contractAddress: address1,
+    address: holder1,
+    counterpartAddress: holder4,
+    traceLocationBlockNumber: 8,
+    traceLocationTransactionIndex: 0,
+    deltaType: 'INTERNAL_TX',
+    timestamp: 1400000007,
+    isReceiving: true
+  },
+  {
+    id: 3,
+    contractAddress: address4,
+    address: holder2,
+    counterpartAddress: holder3,
+    traceLocationBlockNumber: 8,
+    traceLocationTransactionIndex: 1,
+    deltaType: 'INTERNAL_TX',
+    timestamp: 1400000008,
+    isReceiving: false
+  },
+  {
+    id: 4,
+    contractAddress: address4,
+    address: holder3,
+    counterpartAddress: holder2,
+    traceLocationBlockNumber: 8,
+    traceLocationTransactionIndex: 1,
+    deltaType: 'INTERNAL_TX',
+    timestamp: 1400000008,
+    isReceiving: true
+  },
+  {
+    id: 5,
+    contractAddress: address3,
+    address: holder3,
+    counterpartAddress: holder2,
+    traceLocationBlockNumber: 10,
+    traceLocationTransactionIndex: 0,
+    deltaType: 'CONTRACT_CREATION',
+    timestamp: 1400000009,
+    isReceiving: false
+  },
+  {
+    id: 6,
+    contractAddress: address3,
+    address: holder2,
+    counterpartAddress: holder3,
+    traceLocationBlockNumber: 10,
+    traceLocationTransactionIndex: 0,
+    deltaType: 'CONTRACT_CREATION',
+    timestamp: 1400000009,
+    isReceiving: true
+  },
+  {
+    id: 7,
+    contractAddress: address1,
+    address: holder4,
+    counterpartAddress: holder3,
+    traceLocationBlockNumber: 11,
+    traceLocationTransactionIndex: 0,
+    deltaType: 'CONTRACT_DESTRUCTION',
+    timestamp: 1400000010,
+    isReceiving: false
+  },
+  {
+    id: 8,
+    contractAddress: address1,
+    address: holder3,
+    counterpartAddress: holder4,
+    traceLocationBlockNumber: 11,
+    traceLocationTransactionIndex: 0,
+    deltaType: 'CONTRACT_DESTRUCTION',
+    timestamp: 1400000010,
+    isReceiving: true
+  }
+]
+
 const balanceDeltas = [
   {
     id: 1,
@@ -180,7 +273,7 @@ const transferServiceMock = {
     const items = sorted.slice(offset, offset + limit)
     return [items, data.length]
   },
-  sortTokenTransfers(a: FungibleBalanceTransferEntity, b: FungibleBalanceTransferEntity) {
+  sortTokenTransfers(a: FungibleBalanceTransferEntity | InternalTransferEntity, b: FungibleBalanceTransferEntity | InternalTransferEntity) {
     if (a.traceLocationBlockNumber == b.traceLocationBlockNumber) {
       return (b.traceLocationTransactionIndex || 0) - (a.traceLocationTransactionIndex || 0)
     } else {
@@ -209,11 +302,9 @@ const transferServiceMock = {
   },
   async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10) {
 
-    const data = transfers.filter(t => {
-      return (t.to === address || t.from === address) && ['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION'].indexOf(t.deltaType) > -1
-    })
+    const data = internalTransfers.filter(t => t.address === address)
 
-    const sorted = data.map(t => new FungibleBalanceTransferEntity(t)).sort(this.sortTokenTransfers)
+    const sorted = data.map(t => new InternalTransferEntity(t)).sort(this.sortTokenTransfers)
 
     const items = sorted.slice(offset, offset + limit)
     return [items, data.length]
@@ -563,8 +654,8 @@ describe('TransferResolvers', () => {
       expect(transfers1).toHaveProperty('items')
       if (transfers1.items) {
         expect(transfers1.items).toHaveLength(2)
-        expect(transfers1.items[0]).toHaveProperty('id', 10)
-        expect(transfers1.items[1]).toHaveProperty('id', 9)
+        expect(transfers1.items[0]).toHaveProperty('id', 8)
+        expect(transfers1.items[1]).toHaveProperty('id', 5)
       }
 
       const transfers2 = await transferResolvers.internalTransactionsByAddress(holder3, 2, 2)
@@ -573,7 +664,7 @@ describe('TransferResolvers', () => {
       expect(transfers2).toHaveProperty('items')
       if (transfers2.items) {
         expect(transfers2.items).toHaveLength(1)
-        expect(transfers2.items[0]).toHaveProperty('id', 8)
+        expect(transfers2.items[0]).toHaveProperty('id', 4)
       }
 
       // Check an empty array is returned if no items available for requested page
@@ -583,50 +674,23 @@ describe('TransferResolvers', () => {
       expect(transfers3.items).toHaveLength(0)
     })
 
-    it('should convert an array of TransferEntity instances to an array of TransferDto instances', async () => {
+    it('should convert an array of InternalTransferEntity instances to an array of InternalTransferDto instances', async () => {
       const transfers = await transferResolvers.internalTransactionsByAddress(holder3, 0, 10)
-      const expected = [
-        new TransferDto({
-          id: 10,
-          contractAddress: address1,
-          from: holder4,
-          to: holder3,
-          traceLocationBlockNumber: 11,
-          traceLocationTransactionIndex: 0,
-          deltaType: 'CONTRACT_DESTRUCTION',
-          timestamp: 1400000010
-        }),
-        new TransferDto({
-          id: 9,
-          contractAddress: address3,
-          from: holder3,
-          to: holder2,
-          traceLocationBlockNumber: 10,
-          traceLocationTransactionIndex: 0,
-          deltaType: 'CONTRACT_CREATION',
-          timestamp: 1400000009
-        }),
-        new TransferDto({
-          id: 8,
-          contractAddress: address4,
-          from: holder2,
-          to: holder3,
-          traceLocationBlockNumber: 8,
-          traceLocationTransactionIndex: 1,
-          deltaType: 'INTERNAL_TX',
-          timestamp: 1400000008
-        }),
-      ]
-      expect(transfers.items).toEqual(expect.arrayContaining(expected))
+      expect(transfers).not.toBeUndefined()
+      expect(transfers).toHaveProperty('items')
+      expect(transfers.items).toHaveLength(3)
+      expect(transfers.items[0]).toBeInstanceOf(InternalTransferDto)
+      expect(transfers.items[1]).toBeInstanceOf(InternalTransferDto)
+      expect(transfers.items[2]).toBeInstanceOf(InternalTransferDto)
     })
 
-    it('should return Transfers ordered by "traceLocationBlockNumber" and "traceLocationTransactionIndex" decending', async () => {
+    it('should return Transfers ordered by "traceLocationBlockNumber" and "traceLocationTransactionIndex" descending', async () => {
       const transfers = await transferResolvers.internalTransactionsByAddress(holder3, 0, 10)
       expect(transfers).toHaveProperty('items')
       if (transfers.items) {
-        expect(transfers.items[0]).toHaveProperty('id', 10)
-        expect(transfers.items[1]).toHaveProperty('id', 9)
-        expect(transfers.items[2]).toHaveProperty('id', 8)
+        expect(transfers.items[0]).toHaveProperty('id', 8)
+        expect(transfers.items[1]).toHaveProperty('id', 5)
+        expect(transfers.items[2]).toHaveProperty('id', 4)
       }
     })
   })
