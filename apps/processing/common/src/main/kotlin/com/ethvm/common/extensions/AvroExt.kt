@@ -32,6 +32,7 @@ import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
 import org.joda.time.DateTime
 import java.math.BigInteger
+import java.util.*
 
 fun ParitySyncStateRecord.Builder.setHeadBI(head: BigInteger) = setHead(head.byteBuffer())
 
@@ -228,7 +229,7 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: T
           else
             FungibleBalanceDeltaType.INTERNAL_TX
 
-        var result = listOf(
+        listOf(
           FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
             .setDeltaType(deltaType)
@@ -237,19 +238,8 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: T
             .setAddress(action.getFrom())
             .setCounterpartAddress(action.getTo())
             .setAmountBI(action.getValueBI().negate())
-            .build()
-        )
-
-        // check if the recipient is a contract which has already been destroyed
-
-        val destroyedContractTraceAddress = traceListSummary.destroyedContracts[action.getTo()]
-
-        if (traceAddress.isEmpty() || destroyedContractTraceAddress == null || traceAddressComparator.compare(traceAddress, destroyedContractTraceAddress) < 0) {
-
-          // we only generate the addition side of the transfer if the recipient has not been destroyed yet
-          // e.g. our trace address is 'less' than the contract destruction trace address
-
-          result = result + FungibleBalanceDeltaRecord.newBuilder()
+            .build(),
+          FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
             .setDeltaType(deltaType)
             .setIsReceiving(true)
@@ -258,9 +248,8 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: T
             .setCounterpartAddress(action.getFrom())
             .setAmount(action.getValue())
             .build()
-        }
+        )
 
-        result
       }
     }
 
@@ -505,21 +494,61 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
           when {
             trace.hasError() -> info.addError(trace.traceAddress)
-            !trace.hasError() && trace.action is TraceDestroyActionRecord -> info.addDestroyedContact((trace.action as TraceDestroyActionRecord).address, trace.traceAddress)
+            !trace.hasError() && trace.action is TraceDestroyActionRecord -> info.addSelfDestruct((trace.action as TraceDestroyActionRecord).address, trace.traceAddress)
             else -> info
           }
         }
 
         deltas + traces
+          .asSequence()
           .filterNot { it.hasError() }
           .filter { isTraceValid(it.traceAddress, traceListSummary.errorTraceAddresses) }
           .map { trace -> trace.toFungibleBalanceDeltas(timestamp, traceListSummary) }
           .flatten()
+          .filterNot { delta ->
+
+            // we filter any addition to the balance of a contract which when self destructing uses itself as the refund address
+
+            delta.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
+              delta.isReceiving &&
+              delta.address == delta.counterpartAddress
+
+          }
+          .map { delta ->
+
+            val traceAddress = delta.traceLocation.traceAddress
+            val destroyedContracts = traceListSummary.destroyedContracts
+
+            when (delta.deltaType) {
+
+              FungibleBalanceDeltaType.INTERNAL_TX, FungibleBalanceDeltaType.CONTRACT_DESTRUCTION -> {
+
+                if(isTraceAddressGreaterThanSelfDestruct(traceAddress, destroyedContracts[delta.address] ?: sortedSetOf())) {
+
+                  // We zero out any balance modification where the receiving address has already self destructed
+                  // The reason we zero is so that we will reflect a zero balance for some addresses which may have only existed within the lifetime of a tx call stack
+
+                  FungibleBalanceDeltaRecord.newBuilder(delta)
+                    .setAmountBI(BigInteger.ZERO)
+                    .build()
+
+                } else {
+                  delta
+                }
+              }
+
+              else -> delta
+            }
+
+          }
+          .toList()
+
       }
 
       deltas
     }.flatten()
     .filter { delta -> delta.getAmount() != null }
+    .toList()
 
 class TraceAddressComparator : Comparator<List<Int>> {
 
@@ -531,7 +560,7 @@ class TraceAddressComparator : Comparator<List<Int>> {
       else -> {
 
         var idx = 0
-        var result = 0
+        var result: Int
 
         do {
           result = when {
@@ -553,14 +582,27 @@ class TraceAddressComparator : Comparator<List<Int>> {
 
 data class TraceListSummary(
   val errorTraceAddresses: Set<List<Int>> = emptySet(),
-  val destroyedContracts: Map<String, List<Int>> = emptyMap()
+  val destroyedContracts: Map<String, TreeSet<List<Int>>> = emptyMap()
 ) {
 
   fun addError(traceAddress: List<Int>): TraceListSummary =
     TraceListSummary(errorTraceAddresses + setOf(traceAddress), destroyedContracts)
 
-  fun addDestroyedContact(address: String, traceAddress: List<Int>) =
-    TraceListSummary(errorTraceAddresses, destroyedContracts + (address to traceAddress))
+  fun addSelfDestruct(address: String, traceAddress: List<Int>): TraceListSummary {
+    val traceAddresses: TreeSet<List<Int>> = destroyedContracts.getOrDefault(address, sortedSetOf(traceAddressComparator))
+    traceAddresses.add(traceAddress)
+    return TraceListSummary(
+      errorTraceAddresses,
+      destroyedContracts + (address to traceAddresses)
+    )
+  }
+
+}
+
+fun isTraceAddressGreaterThanSelfDestruct(traceAddress: List<Int>, selfDestructTraceAddresses: TreeSet<List<Int>>): Boolean {
+  // we can do this kind of check since the tree set is ordered
+  return if (selfDestructTraceAddresses.isEmpty()) false
+  else traceAddressComparator.compare(traceAddress, selfDestructTraceAddresses.first()) > 0
 }
 
 fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {

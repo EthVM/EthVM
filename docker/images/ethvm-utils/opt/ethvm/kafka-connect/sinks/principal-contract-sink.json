@@ -25,6 +25,7 @@
     "transforms.regexReplaceValue.type": "com.ethvm.kafka.connect.transforms.RegexReplace$Value",
     "transforms.regexReplaceValue.whitelist": "trace_location_trace_address",
     "transforms.regexReplaceValue.regex": "[\\[\\]]",
+    "transforms.regexReplaceValue.replacement": "",
     "transforms.toJsonKey.type": "com.ethvm.kafka.connect.transforms.JsonField$Key",
     "transforms.toJsonKey.whitelist": "logs,action,result",
     "transforms.toJsonValue.type": "com.ethvm.kafka.connect.transforms.JsonField$Value",
