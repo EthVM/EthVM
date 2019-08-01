@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { DbConnection } from '@app/orm/config'
 import { Repository } from 'typeorm'
 import { BalanceEntity } from '@app/orm/entities/balance.entity'
+import { ETH_ADDRESS } from '@app/shared/eth.service'
 
 @Injectable()
 export class BalanceService {
@@ -15,8 +16,12 @@ export class BalanceService {
     const qb = this.balanceRepository.createQueryBuilder('b')
       .where('b.address IN (:...addresses)', { addresses })
 
-    // To query ETHER balances as well as balances for given contracts, a string of 42 spaces ([\s]{42}) must be provided to the contracts array
     if (contracts.length) {
+      // Replace "EthAddress" with 42 spaces TODO change to empty string when DB updated
+      const ethAddressIdx = contracts.indexOf(ETH_ADDRESS)
+      if (ethAddressIdx > -1) {
+        contracts[ethAddressIdx] = '                                          '
+      }
       qb.andWhere('b.contract IN (:...contracts)', { contracts })
     }
 
