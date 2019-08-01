@@ -39,5 +39,10 @@ env_*.sh
 
 # Docker
 docker/templer/stacks
-docker-compose.yaml
+docker/templer/vars/dev-mainnet.custom.yaml
+docker/templer/vars/dev-ropsten.custom.yaml
+docker/templer/vars/dev-private.custom.yaml
+docker/templer/vars/simple.custom.yaml
+
 .env
+docker-compose.yaml
