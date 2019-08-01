@@ -67,7 +67,11 @@ enum HashUnitLabel {
 
       update({ blockSummaries }) {
         if (blockSummaries && blockSummaries.items.length) {
-          this.lastReceivedAt = new Date()
+          // If this is the first blockSummary received (i.e. page has just loaded), initialize "seconds" as seconds since timestamp of this block
+          if (!this.blockSummary) {
+            this.lastReceivedAt = new Date(blockSummaries.items[0].timestamp)
+            this.seconds = Math.ceil((new Date().getTime() - blockSummaries.items[0].timestamp) / 1000)
+          }
           return new BlockSummaryPageExt_items(blockSummaries.items[0])
         }
         return null
@@ -78,7 +82,7 @@ enum HashUnitLabel {
 
         updateQuery(previousResult, { subscriptionData }) {
           const { newBlock } = subscriptionData.data
-          this.lastReceivedAt = new Date()
+          this.lastReceivedAt = new Date() // Update "last update" time to moment client received the update (not to the block timestamp)
           return {
             ...previousResult,
             blockSummaries: {
@@ -187,6 +191,7 @@ export default class AppInfoCardGroup extends Vue {
     */
 
   startCount(): void {
+
     this.secondsInterval = window.setInterval(() => {
       if (this.blockSummary) {
         const lastTimestamp = this.lastReceivedAt || new Date()
