@@ -1,0 +1,17 @@
+type Query {
+  balances(addresses: [String!]!, contracts: [String], offset: Int, limit: Int): BalancePage!
+}
+
+type BalancePage {
+  totalCount: Int!,
+  items: [BalanceNew!]!
+}
+
+type BalanceNew {
+  address: String!
+  contract: String
+  amount: BigNumber
+  tokenId: BigNumber
+  timestamp: Date!
+}
+

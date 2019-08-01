@@ -123,6 +123,19 @@ export interface Balance {
     timestamp: Date;
 }
 
+export interface BalanceNew {
+    address: string;
+    contract?: string;
+    amount?: BigNumber;
+    tokenId?: BigNumber;
+    timestamp: Date;
+}
+
+export interface BalancePage {
+    totalCount: number;
+    items: BalanceNew[];
+}
+
 export interface BalancesPage {
     items: Balance[];
     totalCount: BigNumber;
@@ -320,6 +333,7 @@ export interface Metadata {
 
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
+    balances(addresses: string[], contracts?: string[], offset?: number, limit?: number): BalancePage | Promise<BalancePage>;
     blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
     blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
     blockMetricsTimeseries(bucket: TimeBucket, field: BlockMetricField, start?: Date, end?: Date): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;

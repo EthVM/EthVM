@@ -5,7 +5,7 @@ const MAX_PAGE_SIZE = 100
 @Injectable()
 export class EthService {
   isValidAddress(address: string): boolean {
-    return /^(0x)?([0-9a-fA-F]{40})$/.test(address)
+    return /^((0x)?([0-9a-fA-F]{40}))|([\s]{42})$/.test(address)
   }
 
   isValidHash(hash: string): boolean {

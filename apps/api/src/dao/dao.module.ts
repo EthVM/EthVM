@@ -34,6 +34,8 @@ import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 import { DbConnection } from '@app/orm/config'
 import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
+import { BalanceEntity } from '@app/orm/entities/balance.entity'
+import { BalanceService } from '@app/dao/balance.service'
 
 @Module({
   imports: [
@@ -59,6 +61,7 @@ import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
       InternalTransferEntity,
       TokenMetadataEntity,
       TokenDetailEntity,
+      BalanceEntity,
     ], DbConnection.Principal),
     TypeOrmModule.forFeature([
       AccountEntity,
@@ -94,6 +97,7 @@ import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
     TraceService,
     ReceiptService,
     MetadataService,
+    BalanceService,
   ],
   exports: [
     AccountService,
@@ -108,6 +112,7 @@ import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
     TraceService,
     ReceiptService,
     MetadataService,
+    BalanceService,
   ],
 })
 export class DaoModule {

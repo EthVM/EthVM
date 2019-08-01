@@ -13,3 +13,5 @@ type Account {
   isContract: Boolean!
   hasInternalTransfers: Boolean!
 }
+
+
