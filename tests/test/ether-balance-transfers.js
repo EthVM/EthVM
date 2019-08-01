@@ -6,6 +6,7 @@ import { BigNumber } from "bignumber.js";
 const NUMBER_OF_ACCOUNTS = 100;
 
 contract("Ether balance transfers", truffleAccounts => {
+
   it("should handle simple ether transactions", async () => {
     const from = truffleAccounts[0];
     const accounts = [];
@@ -70,58 +71,6 @@ contract("Ether balance transfers", truffleAccounts => {
     }, 5000);
   });
 
-  it("should handle selfdestruct with a larger call stack", async () => {
-    const selfDestructContract3 = artifacts.require("SelfDestruct3");
-
-    const instance = await selfDestructContract3.deployed();
-    const { address: parentAddress } = instance;
-
-    await instance.destroy();
-
-    await awaitableTimeout(async () => {
-      const parentEthvmBalance = await getBalance(parentAddress);
-      const parentEthBalance = await web3.eth.getBalance(parentAddress);
-
-      assert.equal(
-        parentEthvmBalance.toString(),
-        "250",
-        "Parent balance should be 250"
-      );
-      assert.equal(
-        parentEthvmBalance.toString(),
-        parentEthBalance,
-        "Parent balance should match eth balance"
-      );
-
-      const expectedBalances = [new BigNumber(0), new BigNumber(0)];
-
-      for (let nonce = 1; nonce <= 3; nonce++) {
-        const childAddress = generateAddress(parentAddress, nonce).toString(
-          "hex"
-        );
-
-        const childEthvmBalance = await getBalance(childAddress);
-        const childEthBalance = new BigNumber(
-          await web3.eth.getBalance(childAddress),
-          10
-        );
-
-        const expectedBalance = expectedBalances[nonce - 1];
-
-        assert.equal(
-          childEthvmBalance.toString(),
-          expectedBalance.toString(),
-          `Child ethvm balance is incorrect. Address = ${childAddress}`
-        );
-        assert.equal(
-          childEthvmBalance.toString(),
-          childEthBalance.toString(),
-          `Child ethvm balance should match eth balance. Address = ${childAddress}`
-        );
-      }
-    }, 5000);
-  });
-
   it("should handle sending ether to a contract after it has self destructed within the same tx", async () => {
     const selfDestructContract2 = artifacts.require("SelfDestruct2");
 
@@ -173,4 +122,55 @@ contract("Ether balance transfers", truffleAccounts => {
       }
     }, 5000);
   });
+
+  it("should handle selfdestruct with a larger call stack", async () => {
+    const selfDestructContract3 = artifacts.require("SelfDestruct3");
+
+    const instance = await selfDestructContract3.deployed();
+    const { address: parentAddress } = instance;
+
+    await instance.destroy();
+
+    await awaitableTimeout(async () => {
+      const parentEthvmBalance = await getBalance(parentAddress);
+      const parentEthBalance = await web3.eth.getBalance(parentAddress);
+
+      assert.equal(
+        parentEthvmBalance.toString(),
+        "0",
+        "Parent balance should be 250"
+      );
+      assert.equal(
+        parentEthvmBalance.toString(),
+        parentEthBalance,
+        "Parent balance should match eth balance"
+      );
+
+      const expectedBalances = [new BigNumber(0), new BigNumber(0)];
+
+      for (let nonce = 1; nonce <= 2; nonce++) {
+        const childAddress = generateAddress(parentAddress, nonce).toString('hex');
+
+        const childEthvmBalance = await getBalance(childAddress);
+        const childEthBalance = new BigNumber(
+          await web3.eth.getBalance(childAddress),
+          10
+        );
+
+        const expectedBalance = expectedBalances[nonce - 1];
+
+        assert.equal(
+          childEthvmBalance.toString(),
+          expectedBalance.toString(),
+          `Child ethvm balance is incorrect. Address = ${childAddress}`
+        );
+        assert.equal(
+          childEthvmBalance.toString(),
+          childEthBalance.toString(),
+          `Child ethvm balance should match eth balance. Address = ${childAddress}`
+        );
+      }
+    }, 5000);
+  });
+
 });
