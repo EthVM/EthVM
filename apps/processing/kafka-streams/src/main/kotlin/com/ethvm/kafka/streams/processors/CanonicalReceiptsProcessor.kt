@@ -307,6 +307,7 @@ class CanonicalReceiptsProcessor : AbstractKafkaProcessor() {
                     .setContract(contract)
                     .setTokenIdBI(transfer.tokenId)
                     .build()
+
                 }.orNull()
               }.filterNotNull()
           }

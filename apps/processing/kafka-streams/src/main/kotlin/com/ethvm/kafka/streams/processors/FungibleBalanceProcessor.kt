@@ -57,17 +57,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
     val hardForkDeltas = HardForkBalanceDelta.stream(builder)
 
     val transactionDeltas = TransactionBalanceDelta.stream(builder)
-      .filterNot { k, v ->
-
-        // when a contract self destructs and the refund address is itself we must filter the addition side only
-        // NOTE this is the only way to destroy ether!!
-
-        v.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
-          v.tokenType == FungibleTokenType.ETHER &&
-          v.isReceiving &&
-          k.address == v.counterpartAddress
-      }
-
     val transactionFeeDeltas = TransactionFeeBalanceDelta.stream(builder)
     val minerFeeDeltas = MinerFeeBalanceDelta.stream(builder)
     val erc20Deltas = Erc20BalanceDelta.stream(builder)
