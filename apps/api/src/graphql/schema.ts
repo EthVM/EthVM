@@ -362,7 +362,7 @@ export interface IQuery {
     tokenTransfersByContractAddress(contractAddress: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     totalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): BigNumber | Promise<BigNumber>;
-    balanceDeltas(addresses?: string[], contracts?: string[], filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
+    balanceDeltas(addresses?: string[], contracts?: string[], filter?: FilterEnum, timestampFrom?: number, timestampTo?: number, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;

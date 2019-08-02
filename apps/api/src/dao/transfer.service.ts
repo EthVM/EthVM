@@ -112,6 +112,8 @@ export class TransferService {
     addresses: string[],
     contracts: string[] = [],
     filter: FilterEnum = FilterEnum.all,
+    timestampTo?: number,
+    timestampFrom?: number,
     offset: number = 0,
     limit: number = 10,
   ): Promise<[BalanceDeltaEntity[], number]> {
@@ -132,6 +134,13 @@ export class TransferService {
       qb.andWhere('bd.is_receiving = TRUE')
     } else if (filter === FilterEnum.out) {
       qb.andWhere('bd.receiving === FALSE')
+    }
+
+    if (timestampTo) {
+      qb.andWhere('bd.timestamp < :timestampTo', { timestampTo: new Date(timestampTo * 1000).toISOString() })
+    }
+    if (timestampFrom) {
+      qb.andWhere('bd.timestamp > :timestampFrom', { timestampFrom: new Date(timestampFrom * 1000).toISOString() })
     }
 
     const count = await qb.getCount()

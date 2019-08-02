@@ -6,7 +6,7 @@ type Query {
   tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20): TransferPage!
   totalTokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!): BigNumber!
 
-  balanceDeltas(addresses: [String]!, contracts: [String], filter: FilterEnum = all, offset: Int = 0, limit: Int = 20): TransferPage!
+  balanceDeltas(addresses: [String]!, contracts: [String], filter: FilterEnum = all, timestampFrom: Int, timestampTo: Int, offset: Int = 0, limit: Int = 20): TransferPage!
 }
 
 type TransferPage {

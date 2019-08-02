@@ -82,10 +82,12 @@ export class TransferResolvers {
     @Args({name: 'addresses', type: () => [String]}, ParseAddressesPipe) addresses: string[],
     @Args({name: 'contracts', type: () => [String]}, ParseAddressesPipe) contracts?: string[],
     @Args('filter') filter?: FilterEnum,
+    @Args('timestampFrom') timestampFrom?: number,
+    @Args('timestampTo') timestampTo?: number,
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, totalCount] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, offset, limit)
+    const [items, totalCount] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
     return new BalanceDeltaPageDto({ items, totalCount })
   }
 }
