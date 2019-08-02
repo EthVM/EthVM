@@ -17,7 +17,7 @@ docker_usage() {
 cat << EOF
 
 NAME:
-  docker-run - Utility that wraps docker / docker-compose commands to spin up a EthVM development environment
+  docker-run - Utility that wraps docker / docker-compose commands to spin up an EthVM development environment
 
 USAGE:
   docker-run command [arguments...]
