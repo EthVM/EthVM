@@ -113,7 +113,7 @@ export class TransferService {
     contracts: string[] = [],
     filter: FilterEnum = FilterEnum.all,
     offset: number = 0,
-    limit: number = 10
+    limit: number = 10,
   ): Promise<[BalanceDeltaEntity[], number]> {
 
     const qb = this.balanceDeltaRepository.createQueryBuilder('bd')
