@@ -12,7 +12,7 @@ export class BalanceDto implements BalanceNew {
 
   constructor(data) {
     assignClean(this, data)
-    if (data.contract === '                                          ') {
+    if (data.contract === '') {
       this.contract = ETH_ADDRESS
     }
   }

@@ -20,7 +20,7 @@ export class BalanceService {
       // Replace "EthAddress" with 42 spaces TODO change to empty string when DB updated
       const ethAddressIdx = contracts.indexOf(ETH_ADDRESS)
       if (ethAddressIdx > -1) {
-        contracts[ethAddressIdx] = '                                          '
+        contracts[ethAddressIdx] = ''
       }
       qb.andWhere('b.contract IN (:...contracts)', { contracts })
     }
