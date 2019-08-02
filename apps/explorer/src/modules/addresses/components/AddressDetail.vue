@@ -68,7 +68,20 @@
           <v-flex xs12 md4>
             <v-card class="error white--text pl-2" flat>
               <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(exchangeRatePrice) }})</v-card-text>
-              <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balanceEth * exchangeRatePrice) }}</v-card-title>
+              <!-- !isShortValue -->
+              <v-card-title v-if="!isShortValue(accountBalanceUsd)" class="headline text-truncate">
+                ${{ getShortValue(accountBalanceUsd) }}
+                <v-tooltip bottom>
+                  <template #activator="data">
+                    <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+                  </template>
+                  <span>${{ formatStr(accountBalanceUsd) }}</span>
+                </v-tooltip>
+              </v-card-title>
+              <!-- isShortValue -->
+              <v-card-title v-else class="headline text-truncate">
+                ${{ getRoundNumber(accountBalanceUsd) }}
+              </v-card-title>
             </v-card>
           </v-flex>
           <!-- End USD Value -->
@@ -125,6 +138,7 @@ import Blockies from '@app/modules/addresses/components/Blockies.vue'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
 import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
+import { EthValue } from "@app/core/models";
 
 @Component({
   components: {
@@ -177,6 +191,10 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
       default:
         return 'pa-3'
     }
+  }
+
+  get accountBalanceUsd(): string {
+    return new EthValue(this.account.balanceBN.multipliedBy(this.exchangeRatePrice)).toString()
   }
 }
 </script>
