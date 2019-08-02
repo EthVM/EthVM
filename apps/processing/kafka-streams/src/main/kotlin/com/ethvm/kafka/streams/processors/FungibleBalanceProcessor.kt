@@ -1,10 +1,8 @@
 package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
-import com.ethvm.avro.processing.FungibleBalanceDeltaType
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
-import com.ethvm.avro.processing.FungibleTokenType
 import com.ethvm.common.extensions.getAmountBI
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.kafka.streams.Serdes
