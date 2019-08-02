@@ -14,18 +14,24 @@ DATASET="ethvm_dev.sql.gz"
 # docker_usage - prints docker subcommand usage
 docker_usage() {
 
-  echo -e ""
-  echo -e "Utility that wraps docker / docker-compose commands to spin up a EthVM development environment."
-  echo -e ""
-  echo -e "Usage:"
-  echo -e "  docker-run [COMMAND] [ARGS...]"
-  echo -e ""
-  echo -e "Commands:"
-  echo -e "  up    -m | --mode [MODE]          Create and start docker containers in the specified mode (if no mode is provided, default is dev)."
-  echo -e "  down                              Stop and remove docker containers, networks, images, and volumes."
-  echo -e "  logs                              View output from containers."
-  echo -e "  help                              Print the help information and exit."
-  echo -e ""
+cat << EOF
+
+NAME:
+  docker-run - Utility that wraps docker / docker-compose commands to spin up a EthVM development environment
+
+USAGE:
+  docker-run command [arguments...]
+
+COMMANDS:
+    up [mode] Create and start docker containers in the specified mode (default: dev-private)
+    down      Stop and remove docker containers, networks, images, and volumes
+    logs      View output from containers
+    help      Prints the help information
+
+ARGS:
+    <mode>    Possible options: simple, dev-mainnet, dev-ropsten, dev-private (default: dev-private)
+
+EOF
 
 }
 
