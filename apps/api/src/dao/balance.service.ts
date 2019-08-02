@@ -17,7 +17,7 @@ export class BalanceService {
       .where('b.address IN (:...addresses)', { addresses })
 
     if (contracts.length) {
-      // Replace "EthAddress" with 42 spaces TODO change to empty string when DB updated
+      // Replace "EthAddress" with empty string
       const ethAddressIdx = contracts.indexOf(ETH_ADDRESS)
       if (ethAddressIdx > -1) {
         contracts[ethAddressIdx] = ''

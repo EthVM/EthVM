@@ -36,6 +36,7 @@ import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.enti
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
 import { BalanceEntity } from '@app/orm/entities/balance.entity'
 import { BalanceService } from '@app/dao/balance.service'
+import { BalanceDeltaEntity } from '@app/orm/entities/balance-delta.entity'
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { BalanceService } from '@app/dao/balance.service'
       TokenMetadataEntity,
       TokenDetailEntity,
       BalanceEntity,
+      BalanceDeltaEntity,
     ], DbConnection.Principal),
     TypeOrmModule.forFeature([
       AccountEntity,

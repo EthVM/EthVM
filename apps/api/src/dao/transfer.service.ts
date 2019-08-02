@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { Brackets, EntityManager, FindManyOptions, Not, Repository } from 'typeorm'
+import { Brackets, EntityManager, FindManyOptions, Repository } from 'typeorm'
 import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
 import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 import { DbConnection } from '@app/orm/config'
 import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
 import BigNumber from 'bignumber.js'
+import { BalanceDeltaEntity } from '@app/orm/entities/balance-delta.entity'
+import { FilterEnum } from '@app/graphql/schema'
+import { ETH_ADDRESS } from '@app/shared/eth.service'
 
 @Injectable()
 export class TransferService {
@@ -16,6 +19,8 @@ export class TransferService {
     @InjectRepository(FungibleBalanceDeltaEntity, DbConnection.Principal)
     private readonly deltaRepository: Repository<FungibleBalanceDeltaEntity>,
     @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
+    @InjectRepository(BalanceDeltaEntity, DbConnection.Principal)
+    private readonly balanceDeltaRepository: Repository<BalanceDeltaEntity>,
   ) {
   }
 
@@ -103,62 +108,42 @@ export class TransferService {
 
   }
 
-  /**
-   * The difference between this query and findTokenTransfersByContractAddressForHolder
-   * is that this query:
-   *
-   * 1) Accepts an array of possible token contractAddresses
-   * 2) Accepts timestampTo/timestampFrom and sorts accordingly
-   */
-  async findTokenTransfersByContractAddressesForHolder(
+  async findBalanceDeltas(
     addresses: string[],
-    holder: string,
-    filter: string = 'all',
-    take: number = 10,
-    page: number = 0,
-    timestampFrom: number = 0,
-    timestampTo: number = 0,
-  ): Promise<[FungibleBalanceTransferEntity[], number]> {
-    const skip = take * page
+    contracts: string[] = [],
+    filter: FilterEnum = FilterEnum.all,
+    offset: number = 0,
+    limit: number = 10
+  ): Promise<[BalanceDeltaEntity[], number]> {
 
-    const builder = this.transferRepository.createQueryBuilder('t')
-      .where('t.contract_address = ANY(:addresses)')
-      .andWhere('t.delta_type = :deltaType')
+    const qb = this.balanceDeltaRepository.createQueryBuilder('bd')
+      .where('bd.address IN (:...addresses)', { addresses })
 
-    switch (filter) {
-      case 'in':
-        builder.andWhere('t.from = :holder')
-        break
-      case 'out':
-        builder.andWhere('t.to = :holder')
-        break
-      default:
-        builder.andWhere(new Brackets(sqb => {
-          sqb.where('t.from = :holder')
-          sqb.orWhere('t.to = :holder')
-        }))
-        break
+    if (contracts.length) {
+      // Replace "EthAddress" with empty string
+      const ethAddressIdx = contracts.indexOf(ETH_ADDRESS)
+      if (ethAddressIdx > -1) {
+        contracts[ethAddressIdx] = ''
+      }
+      qb.andWhere('bd.contract_address IN (:...contracts)', { contracts })
     }
 
-    if (timestampFrom > 0) {
-      builder.andWhere(new Brackets(sqb => {
-        sqb.where('t.timestamp > :timestampFrom')
-      }))
+    if (filter === FilterEnum.in) {
+      qb.andWhere('bd.is_receiving = TRUE')
+    } else if (filter === FilterEnum.out) {
+      qb.andWhere('bd.receiving === FALSE')
     }
 
-    if (timestampTo > 0) {
-      builder.andWhere(new Brackets(sqb => {
-        sqb.where('t.timestamp < :timestampTo')
-      }))
-    }
+    const count = await qb.getCount()
 
-    return builder
-      .setParameters({ addresses, deltaType: 'TOKEN_TRANSFER', holder, timestampFrom, timestampTo })
-      .orderBy('t.timestamp', 'DESC')
-      .offset(skip)
-      .take(take)
-      .cache(true)
-      .getManyAndCount()
+    const items = await qb.orderBy('bd.trace_location_block_number', 'DESC')
+      .addOrderBy('bd.trace_location_transaction_index', 'DESC')
+      .addOrderBy('bd.trace_location_trace_address', 'DESC')
+      .offset(offset)
+      .limit(limit)
+      .getMany()
+
+    return [items, count]
 
   }
 

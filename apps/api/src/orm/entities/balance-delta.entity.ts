@@ -22,7 +22,7 @@ export class BalanceDeltaEntity {
   isReceiving!: boolean
 
   @Column({type: 'character', length: 42, readonly: true})
-  address?: string
+  address!: string
 
   @Column({type: 'character', length: 42, readonly: true})
   contractAddress?: string

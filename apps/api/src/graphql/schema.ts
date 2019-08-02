@@ -357,12 +357,12 @@ export interface IQuery {
     tokensMetadata(addresses?: string[], offset?: number, limit?: number): TokenMetadataPage | Promise<TokenMetadataPage>;
     tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
     tokenDetailByAddress(address: string): TokenDetail | Promise<TokenDetail>;
-    tokenTransfersByContractAddressesForHolder(contractAddresses: string[], holderAddress: string, filter?: FilterEnum, limit?: number, page?: number, timestampFrom?: number, timestampTo?: number): TransferPage | Promise<TransferPage>;
     internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
     tokenTransfersByContractAddress(contractAddress: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     totalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): BigNumber | Promise<BigNumber>;
+    balanceDeltas(addresses?: string[], contracts?: string[], filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
     transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
     transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
@@ -563,7 +563,8 @@ export interface Transfer {
     from?: string;
     contractAddress?: string;
     tokenType?: string;
-    amount: BigNumber;
+    amount?: BigNumber;
+    tokenId?: BigNumber;
     traceLocationBlockHash: string;
     traceLocationBlockNumber: BigNumber;
     traceLocationTransactionHash?: string;
