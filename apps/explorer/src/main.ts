@@ -47,15 +47,15 @@ const link = split(
   httpLink
 )
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache()
 
 const resolvers = {
   Mutation: {
-    updateLastBlockReceived: (_, { timestamp }, {cache}) => {
+    updateLastBlockReceived: (_, { timestamp }, { cache }) => {
       const data = { lastBlockReceived: timestamp }
-      cache.writeQuery({query: lastBlockReceivedQuery, data})
+      cache.writeQuery({ query: lastBlockReceivedQuery, data })
       return timestamp
-    },
+    }
   }
 }
 
@@ -69,8 +69,8 @@ const apolloClient = new ApolloClient({
 cache.writeData({
   data: {
     lastBlockReceived: null
-  },
-});
+  }
+})
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient

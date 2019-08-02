@@ -41,7 +41,14 @@
 
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import { latestBlockStats, newBlockStats, latestHashRate, newHashRate, lastBlockReceivedQuery, updateLastBlockReceivedMutation } from '@app/core/components/ui/stats.graphql'
+import {
+  latestBlockStats,
+  newBlockStats,
+  latestHashRate,
+  newHashRate,
+  lastBlockReceivedQuery,
+  updateLastBlockReceivedMutation
+} from '@app/core/components/ui/stats.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
@@ -204,10 +211,10 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   updateLastBlockReceived(timestamp): void {
-      this.$apollo.mutate({
-          mutation: updateLastBlockReceivedMutation,
-          variables: { timestamp }
-      })
+    this.$apollo.mutate({
+      mutation: updateLastBlockReceivedMutation,
+      variables: { timestamp }
+    })
   }
 
   calculateHashValueAndLabel(value?: BigNumber): [BigNumber | undefined, HashUnitLabel] {
