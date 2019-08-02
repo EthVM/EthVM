@@ -140,17 +140,24 @@
         <v-flex xs9 sm7 md6> <app-search /> </v-flex>
       </v-layout>
     </v-toolbar>
+    <v-toolbar  app fixed clipped bottom flat color="green">
+      <app-sync-message />
+    </v-toolbar>
+
   </div>
 </template>
 
 <script lang="ts">
+import AppSyncMessage from '@app/core/components/ui/AppSyncMessage.vue'
+
 import AppSearch from '@app/core/components/ui/AppSearch.vue'
 import { NavMenuEntry } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppSearch
+    AppSearch,
+    AppSyncMessage
   }
 })
 export default class TheNavigationDrawer extends Vue {

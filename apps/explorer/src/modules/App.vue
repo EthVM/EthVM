@@ -10,14 +10,12 @@
         </v-flex>
         <v-spacer />
         <the-footer />
-        <app-sync-message />
       </v-layout>
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
-import AppSyncMessage from '@app/core/components/ui/AppSyncMessage.vue'
 import AppGreeting from '@app/core/components/ui/AppGreeting.vue'
 import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
@@ -30,7 +28,6 @@ const MAX_ITEMS = 10
 @Component({
   components: {
     AppGreeting,
-    AppSyncMessage,
     AppConnectionMessage,
     TheNavigationDrawer,
     TheFooter

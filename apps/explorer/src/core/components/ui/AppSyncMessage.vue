@@ -1,8 +1,9 @@
 <template>
-  <div v-if="sync" :class="alertClass">
+  <div v-if="temp">
     <v-layout>
-      <v-flex xs12 v-if="!hide">
-        <v-card color="sync" flat>
+      <v-flex xs12 >
+       <v-slide-x-reverse-transition>
+        <v-card v-if="!hide" color="sync" flat>
           <v-layout row wrap class="pl-4 pr-4 pt-3 pb-3" align-center justify-center>
             <v-flex shrink pl-2 pr-2>
               <v-img
@@ -20,23 +21,25 @@
             </v-flex>
           </v-layout>
         </v-card>
-      </v-flex>
-      <v-flex v-else xs12>
-        <v-layout row align-center justify-end fill-height>
-          <v-tooltip left>
-            <template v-slot:activator="{ on }">
+
+
+        <v-layout v-else align-center justify-end fill-height>
+
+          <!-- <v-tooltip left>
+            <template v-slot:activator="{ on }"> -->
               <v-img
                 :src="require('@/assets/icon-warning-outline.png')"
-                width="50px"
+                max-width="50px"
                 height="50px"
                 contain
                 @click="hide=false"
                 v-on="on"
               />
-            </template>
+            <!-- </template>
             <span>{{ $t('btn.details')}}</span>
-          </v-tooltip>
+          </v-tooltip> -->
         </v-layout>
+         </v-slide-x-reverse-transition>
       </v-flex>
     </v-layout>
   </div>
@@ -46,32 +49,32 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.graphql'
 @Component({
-  data() {
-    return {
-      syncing: undefined
-    }
-  },
-  apollo: {
-    syncing: {
-      query: syncStatus,
-      update({ metadata }) {
-        const { isSyncing } = metadata
-        return isSyncing
-      },
-      subscribeToMore: {
-        document: syncStatusUpdates,
-        updateQuery(previousResult, { subscriptionData }) {
-          const { isSyncing } = subscriptionData.data
-          const previousIsSyncing = previousResult.metadata.isSyncing
-          if (isSyncing != previousIsSyncing) {
-            // TODO implement this without needing a page reload
-            window.history.go()
-          }
-          return { metadata: { __typename: 'Metadata', isSyncing } }
-        }
-      }
-    }
-  }
+  // data() {
+  //   return {
+  //     syncing: undefined
+  //   }
+  // },
+  // apollo: {
+  //   syncing: {
+  //     query: syncStatus,
+  //     update({ metadata }) {
+  //       const { isSyncing } = metadata
+  //       return isSyncing
+  //     },
+  //     subscribeToMore: {
+  //       document: syncStatusUpdates,
+  //       updateQuery(previousResult, { subscriptionData }) {
+  //         const { isSyncing } = subscriptionData.data
+  //         const previousIsSyncing = previousResult.metadata.isSyncing
+  //         if (isSyncing != previousIsSyncing) {
+  //           // TODO implement this without needing a page reload
+  //           window.history.go()
+  //         }
+  //         return { metadata: { __typename: 'Metadata', isSyncing } }
+  //       }
+  //     }
+  //   }
+  // }
 })
 export default class AppSyncMessage extends Vue {
   /*
@@ -80,8 +83,21 @@ export default class AppSyncMessage extends Vue {
   ===================================================================================
   */
 
-  syncing?: boolean
+  //syncing?: boolean
+  temp = true
   hide: boolean = false
+  showIcon: boolean = false
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  afterLeave():void {
+    this.showIcon = true
+  }
+
 
   /*
   ===================================================================================
@@ -90,6 +106,10 @@ export default class AppSyncMessage extends Vue {
   */
   get alertClass(): string {
     return this.hide ? 'alert-small' : 'alert-large'
+  }
+
+  get smallAlert(): boolean {
+    return this.showIcon && this.hide
   }
 }
 </script>
@@ -101,9 +121,21 @@ export default class AppSyncMessage extends Vue {
   bottom: 0%;
 }
 
-.alert-small {
+.alert {
   position: fixed;
-  bottom: 2%;
+  display: flex;
+  bottom: 0%;
   right: 0%;
+  width: 100%;
 }
+
+
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 </style>
