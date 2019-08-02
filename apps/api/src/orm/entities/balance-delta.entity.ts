@@ -14,11 +14,10 @@ export class BalanceDeltaEntity {
   @PrimaryColumn({type: 'bigint', readonly: true})
   id!: string
 
-  @PrimaryColumn({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
   tokenId?: BigNumber
 
-  // isReceiving must be part of unique primary key until double-entry system implemented for non_fungible_balance_delta table
-  @PrimaryColumn({type: 'boolean', readonly: true})
+  @Column({type: 'boolean', readonly: true})
   isReceiving!: boolean
 
   @Column({type: 'character', length: 42, readonly: true})

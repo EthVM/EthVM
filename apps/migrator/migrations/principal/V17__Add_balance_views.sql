@@ -174,7 +174,7 @@ FROM non_fungible_balance AS nfb;
 
 -- Necessary to UNION with non_fungible_balance_delta twice to simulate "double-entry bookkeeping" approach, reversing "to", "from" and "is_receiving" fields
 CREATE VIEW canonical_balance_delta AS
-SELECT  fbd.id,
+SELECT  fbd.id * -1 AS id,
         fbd.address,
         fbd.contract_address,
         fbd.counterpart_address,
