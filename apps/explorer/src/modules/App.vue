@@ -1,7 +1,7 @@
 <template>
   <v-app class="content">
     <the-navigation-drawer />
-    <v-content >
+    <v-content>
       <v-layout column fill-height>
         <app-greeting v-if="appGreet" :greet="appGreet" />
         <!--        <app-connection-message />-->
@@ -9,9 +9,9 @@
           <router-view :key="$route.path" />
         </v-flex>
         <the-footer />
+        <app-sync-message />
       </v-layout>
     </v-content>
-    <app-sync-message />
   </v-app>
 </template>
 
@@ -41,7 +41,6 @@ export default class App extends Vue {
     Computed values
   ===================================================================================
   */
-  sheet=true
   get appGreet() {
     return !storePack.get('notFirstTimeVisit')
   }
@@ -54,4 +53,5 @@ export default class App extends Vue {
 .content {
   background: #f3f4f8;
 }
+
 </style>

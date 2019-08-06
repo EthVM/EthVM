@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <v-footer v-if="load" app inset fixed color="transparent" height="auto">
+    <v-footer v-if="load" fixed color="transparent" height="auto">
       <v-layout>
         <v-flex xs12>
           <transition-group name="fade" group mode="out-in">
@@ -95,7 +95,7 @@ export default class AppSyncMessage extends Vue {
   mounted() {
     setTimeout(() => {
       this.temp = true
-    }, 1000)
+    }, 2000)
   }
   get load(): boolean {
     return this.temp
