@@ -357,7 +357,6 @@ export interface IQuery {
     uncleByHash(hash: string): Uncle | Promise<Uncle>;
     uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
     latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
-    temp__(): boolean | Promise<boolean>;
 }
 
 export interface Receipt {
@@ -596,7 +595,6 @@ export interface UnclePage {
 
 export type BigNumber = any;
 export type Buffer = any;
-export type Date = any;
 export type Decimal = any;
 export type JSON = any;
 export type Long = any;

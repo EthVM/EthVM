@@ -231,7 +231,7 @@ const blockMetricsServiceMock = {
     const items = collection.filter(c => c.time >= (start.getTime() / 1000) && c.time <= (end.getTime() / 1000))
 
     return items.map(i => {
-      const res = { timestamp: i.time } as AggregateBlockMetric
+      const res: AggregateBlockMetric = { timestamp: new Date(i.time) }
       if (field === BlockMetricField.AVG_BLOCK_TIME) {
         res.avgBlockTime = i.avg_block_time
       }
@@ -403,12 +403,14 @@ describe('BlockMetricResolvers', () => {
       expect(aggregateBlockMetrics).toHaveLength(12)
 
       expect(aggregateBlockMetrics[0]).toHaveProperty('timestamp')
-      expect(aggregateBlockMetrics[0].timestamp).toBeGreaterThanOrEqual(1556668800)
-      expect(aggregateBlockMetrics[0].timestamp).toBeLessThanOrEqual(1556708400)
+      const metric0Time = aggregateBlockMetrics[0].timestamp.getTime()
+      expect(metric0Time).toBeGreaterThanOrEqual(1556668800)
+      expect(metric0Time).toBeLessThanOrEqual(1556708400)
 
       expect(aggregateBlockMetrics[11]).toHaveProperty('timestamp')
-      expect(aggregateBlockMetrics[11].timestamp).toBeGreaterThanOrEqual(1556668800)
-      expect(aggregateBlockMetrics[11].timestamp).toBeLessThanOrEqual(1556708400)
+      const metric11Time = aggregateBlockMetrics[11].timestamp.getTime()
+      expect(metric11Time).toBeGreaterThanOrEqual(1556668800)
+      expect(metric11Time).toBeLessThanOrEqual(1556708400)
 
       expect(aggregateBlockMetrics[0]).toBeInstanceOf(AggregateBlockMetricDto)
       expect(aggregateBlockMetrics[11]).toBeInstanceOf(AggregateBlockMetricDto)
@@ -467,11 +469,11 @@ describe('BlockMetricResolvers', () => {
 
       const start = 1556668800
       const daySeconds = 86400
-      expect(aggregateBlockMetrics[0]).toHaveProperty('timestamp', start)
-      expect(aggregateBlockMetrics[1]).toHaveProperty('timestamp', start + daySeconds)
-      expect(aggregateBlockMetrics[2]).toHaveProperty('timestamp', start + (daySeconds * 2))
-      expect(aggregateBlockMetrics[3]).toHaveProperty('timestamp', start + (daySeconds * 3))
-      expect(aggregateBlockMetrics[4]).toHaveProperty('timestamp', start + (daySeconds * 4))
+      expect(aggregateBlockMetrics[0]).toHaveProperty('timestamp', new Date(start))
+      expect(aggregateBlockMetrics[1]).toHaveProperty('timestamp', new Date(start + daySeconds))
+      expect(aggregateBlockMetrics[2]).toHaveProperty('timestamp', new Date(start + (daySeconds * 2)))
+      expect(aggregateBlockMetrics[3]).toHaveProperty('timestamp', new Date(start + (daySeconds * 3)))
+      expect(aggregateBlockMetrics[4]).toHaveProperty('timestamp', new Date(start + (daySeconds * 4)))
 
     })
 
