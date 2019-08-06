@@ -4,7 +4,7 @@
   <v-footer v-if="temp" app inset fixed color="transparent" height="auto">
     <v-layout>
       <v-flex xs12>
-        <transition-group name="fade" group mode="in-out">
+        <transition-group name="fade" group mode="out-in">
           <v-card v-show="!hide" color="sync" flat key="large">
             <v-layout row wrap class="pl-4 pr-4 pt-3 pb-3" align-center justify-center>
               <v-flex shrink pl-2 pr-2>
@@ -23,7 +23,7 @@
               </v-flex>
             </v-layout>
           </v-card>
-          <v-layout v-show="hide" align-center justify-end key="small">
+          <v-layout v-show="hide" align-center justify-end key="small" class="alert">
             <v-tooltip left>
               <template v-slot:activator="{ on }">
                 <v-img
@@ -38,7 +38,8 @@
               <span>{{ $t('btn.details')}}</span>
             </v-tooltip>
           </v-layout>
-        </transition-group>
+          </transition-group>
+
       </v-flex>
     </v-layout>
   </v-footer>
@@ -90,10 +91,23 @@ export default class AppSyncMessage extends Vue {
 </script>
 
 <style lang="css">
+.fade-item {
+  transition: all 1s;
+
+}
 .fade-enter-active {
   transition: opacity 1s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter{
   opacity: 0;
 }
+.fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-leave-active {
+  position: absolute
+}
+
 </style>
