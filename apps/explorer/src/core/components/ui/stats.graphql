@@ -31,3 +31,22 @@ query latestHashRate {
 subscription newHashRate {
   hashRate
 }
+
+type BlockReceived {
+  timestamp: BigNumber!
+}
+
+type Mutation {
+  updateLastBlockReceived(timestamp: BigNumber!): Boolean
+}
+
+type Query {
+  lastBlockReceived: BigNumber
+}
+
+mutation updateLastBlockReceivedMutation($timestamp: BigNumber) {
+  updateLastBlockReceived(timestamp: $timestamp) @client
+}
+query lastBlockReceivedQuery {
+  lastBlockReceived @client
+}

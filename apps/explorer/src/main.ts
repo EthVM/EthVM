@@ -14,6 +14,7 @@ import { getMainDefinition } from 'apollo-utilities'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { lastBlockReceivedQuery } from '@app/core/components/ui/stats.graphql'
 
 /*
   ===================================================================================
@@ -46,10 +47,29 @@ const link = split(
   httpLink
 )
 
+const cache = new InMemoryCache()
+
+const resolvers = {
+  Mutation: {
+    updateLastBlockReceived: (_, { timestamp }, { cache }) => {
+      const data = { lastBlockReceived: timestamp }
+      cache.writeQuery({ query: lastBlockReceivedQuery, data })
+      return timestamp
+    }
+  }
+}
+
 const apolloClient = new ApolloClient({
   link: link,
-  cache: new InMemoryCache(),
-  connectToDevTools: process.env.NODE_ENV === 'development'
+  cache,
+  connectToDevTools: process.env.NODE_ENV === 'development',
+  resolvers
+})
+
+cache.writeData({
+  data: {
+    lastBlockReceived: null
+  }
 })
 
 const apolloProvider = new VueApollo({
