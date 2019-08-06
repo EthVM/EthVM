@@ -18,7 +18,6 @@
 <script lang="ts">
 import AppGreeting from '@app/core/components/ui/AppGreeting.vue'
 import AppSyncMessage from '@app/core/components/ui/AppSyncMessage.vue'
-
 import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
 import storePack from 'store'
