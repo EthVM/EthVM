@@ -1,48 +1,48 @@
 <template>
-  <div v-if="temp">
+        <transition name="fade" >
+
+  <v-footer v-if="temp" app inset fixed color="transparent" height="auto">
     <v-layout>
-      <v-flex xs12 >
-       <v-slide-x-reverse-transition>
-        <v-card v-if="!hide" color="sync" flat>
-          <v-layout row wrap class="pl-4 pr-4 pt-3 pb-3" align-center justify-center>
-            <v-flex shrink pl-2 pr-2>
-              <v-img
-                :src="require('@/assets/icon-warning.png')"
-                width="30px"
-                height="30px"
-                contain
-              />
-            </v-flex>
-            <v-flex grow>
-              <p class="black--text font-italic">{{ $t('message.sync.main') }}</p>
-            </v-flex>
-            <v-flex shrink>
-              <v-btn outline color="primary" class="text-capitalize" @click="hide=true">Got It</v-btn>
-            </v-flex>
+      <v-flex xs12>
+        <transition-group name="fade" group mode="in-out">
+          <v-card v-show="!hide" color="sync" flat key="large">
+            <v-layout row wrap class="pl-4 pr-4 pt-3 pb-3" align-center justify-center>
+              <v-flex shrink pl-2 pr-2>
+                <v-img
+                  :src="require('@/assets/icon-warning.png')"
+                  width="30px"
+                  height="30px"
+                  contain
+                />
+              </v-flex>
+              <v-flex grow>
+                <p class="black--text font-italic">{{ $t('message.sync.main') }}</p>
+              </v-flex>
+              <v-flex shrink>
+                <v-btn outline color="primary" class="text-capitalize" @click="hide=true">Got It</v-btn>
+              </v-flex>
+            </v-layout>
+          </v-card>
+          <v-layout v-show="hide" align-center justify-end key="small">
+            <v-tooltip left>
+              <template v-slot:activator="{ on }">
+                <v-img
+                  :src="require('@/assets/icon-warning-outline.png')"
+                  max-width="50px"
+                  height="50px"
+                  contain
+                  @click="hide=false"
+                  v-on="on"
+                />
+              </template>
+              <span>{{ $t('btn.details')}}</span>
+            </v-tooltip>
           </v-layout>
-        </v-card>
-
-
-        <v-layout v-else align-center justify-end fill-height>
-
-          <!-- <v-tooltip left>
-            <template v-slot:activator="{ on }"> -->
-              <v-img
-                :src="require('@/assets/icon-warning-outline.png')"
-                max-width="50px"
-                height="50px"
-                contain
-                @click="hide=false"
-                v-on="on"
-              />
-            <!-- </template>
-            <span>{{ $t('btn.details')}}</span>
-          </v-tooltip> -->
-        </v-layout>
-         </v-slide-x-reverse-transition>
+        </transition-group>
       </v-flex>
     </v-layout>
-  </div>
+  </v-footer>
+        </transition>
 </template>
 
 <script lang="ts">
@@ -86,56 +86,14 @@ export default class AppSyncMessage extends Vue {
   //syncing?: boolean
   temp = true
   hide: boolean = false
-  showIcon: boolean = false
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  afterLeave():void {
-    this.showIcon = true
-  }
-
-
-  /*
-  ===================================================================================
-    Computed
-  ===================================================================================
-  */
-  get alertClass(): string {
-    return this.hide ? 'alert-small' : 'alert-large'
-  }
-
-  get smallAlert(): boolean {
-    return this.showIcon && this.hide
-  }
 }
 </script>
 
 <style lang="css">
-.alert-large {
-  display: flex;
-  position: sticky;
-  bottom: 0%;
-}
-
-.alert {
-  position: fixed;
-  display: flex;
-  bottom: 0%;
-  right: 0%;
-  width: 100%;
-}
-
-
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active {
+  transition: opacity 1s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
 </style>
