@@ -4,13 +4,28 @@
       <v-layout>
         <v-flex xs12>
           <transition-group name="fade" group mode="out-in">
-            <v-card class="footer-content" color="sync" flat key="large" :class="hide ? 'footer-hidden' : ''">
+            <v-card
+              class="footer-content"
+              color="sync"
+              flat
+              key="large"
+              :class="hide ? 'footer-hidden' : ''"
+            >
               <v-layout row wrap class="pl-4 pr-4 pt-3 pb-3" align-center justify-center>
                 <v-flex shrink pl-2 pr-2>
-                  <v-img :src="require('@/assets/icon-warning.png')" width="30px" height="30px" contain />
+                  <v-img
+                    :src="require('@/assets/icon-warning.png')"
+                    width="30px"
+                    height="30px"
+                    contain
+                  />
                 </v-flex>
                 <v-flex grow>
-                  <p v-for="(message, i) in messages" :key="i"  class="black--text font-italic">{{ message }}</p>
+                  <p
+                    v-for="(message, i) in messages"
+                    :key="i"
+                    class="black--text font-italic"
+                  >{{ message }}</p>
                 </v-flex>
                 <v-flex shrink>
                   <v-btn outline color="primary" class="text-capitalize" @click="hide = true">Got It</v-btn>
@@ -20,7 +35,14 @@
             <v-layout v-if="hide" align-center justify-end key="small">
               <v-tooltip left>
                 <template v-slot:activator="{ on }">
-                  <v-img :src="require('@/assets/icon-warning-outline.png')" max-width="50px" height="50px" contain @click="hide = false" v-on="on" />
+                  <v-img
+                    :src="require('@/assets/icon-warning-outline.png')"
+                    max-width="50px"
+                    height="50px"
+                    contain
+                    @click="hide = false"
+                    v-on="on"
+                  />
                 </template>
                 <span>{{ $t('btn.details') }}</span>
               </v-tooltip>
@@ -33,13 +55,18 @@
 </template>
 
 <script lang="ts">
+  /*
+  ===================================================================================
+   Computed
+  ===================================================================================
+  */
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 import debounce from 'lodash.debounce'
-import { TranslateResult } from 'vue-i18n';
-import { connect } from 'http2';
+import { TranslateResult } from 'vue-i18n'
+import { connect } from 'http2'
+import { setTimeout } from 'timers'
 @Component
 export default class AppMessage extends Vue {
-
   /*
   ===================================================================================
     Props
@@ -57,11 +84,21 @@ export default class AppMessage extends Vue {
 
   hide: boolean = false
   show: boolean = false
+  messages: TranslateResult[] = new Array()
   debouncedShow = debounce(this.setShow, 1000)
+  debouncedMess = debounce(this.setMess, 1000)
 
-  created(){
-    if(this.syncing || this.connected) {
+
+  /*
+  ===================================================================================
+    LifeCycle
+  ===================================================================================
+  */
+
+  created() {
+    if (this.syncing || this.connected) {
       this.debouncedShow()
+      this.debouncedMess()
     }
   }
 
@@ -71,9 +108,16 @@ export default class AppMessage extends Vue {
   ===================================================================================
   */
 
-  @Watch('temp')
-  onTempChanged(): void {
+  @Watch('syncing')
+  onSyncingChanged(): void {
     this.debouncedShow()
+    this.debouncedMess()
+  }
+
+  @Watch('connected')
+  onConnectedChanged(): void {
+    this.debouncedShow()
+    this.debouncedMess()
   }
 
   /*
@@ -83,28 +127,18 @@ export default class AppMessage extends Vue {
   */
 
   setShow(): void {
-    this.show = (this.syncing || this.connected) || false
+    this.show = this.syncing || this.connected || false
   }
 
-  /*
-  ===================================================================================
-   Computed
-  ===================================================================================
-  */
-
-  get messages(): TranslateResult[]  {
-    let newMes: TranslateResult[] = new Array()
-    if (this.syncing)  {
-      newMes.push(this.$t('message.sync.main'))
+  setMess(): void {
+    this.messages = []
+    if (this.syncing) {
+      this.messages.push(this.$t('message.sync.main'))
     }
     if (this.connected) {
-      newMes.push(this.$t('message.disconnected'))
+      this.messages.push(this.$t('message.disconnected'))
     }
-    console.log(newMes)
-    return newMes
   }
-
-
 }
 </script>
 
