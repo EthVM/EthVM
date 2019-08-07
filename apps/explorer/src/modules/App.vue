@@ -62,7 +62,6 @@ const MAX_ITEMS = 10
   }
 })
 export default class App extends Vue {
-
   /*
   ===================================================================================
     Initial Data
@@ -74,7 +73,6 @@ export default class App extends Vue {
   private readonly connectedStates: Set<SubscriptionState> = new Set(['connected', 'reconnected'] as SubscriptionState[])
 
   syncing?: boolean
-
 
   /*
   ===================================================================================
@@ -94,7 +92,6 @@ export default class App extends Vue {
     }
   }
 
-
   /*
   ===================================================================================
     Computed values
@@ -106,8 +103,6 @@ export default class App extends Vue {
   get connected(): boolean {
     return !this.connectedStates.has(this.state)
   }
-
-
 }
 </script>
 
