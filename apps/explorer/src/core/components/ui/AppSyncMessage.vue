@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <v-footer v-if="load" fixed color="transparent" height="auto">
+    <v-footer v-if="show" fixed color="transparent" height="auto">
       <v-layout>
         <v-flex xs12>
           <transition-group name="fade" group mode="out-in">
@@ -29,7 +29,7 @@
               </v-layout>
             </v-card>
             <v-layout v-if="hide" align-center justify-end key="small">
-              <v-tooltip left >
+              <v-tooltip left>
                 <template v-slot:activator="{ on }">
                   <v-img
                     :src="require('@/assets/icon-warning-outline.png')"
@@ -51,35 +51,36 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.graphql'
+import debounce from 'lodash.debounce'
 @Component({
-  // data() {
-  //   return {
-  //     syncing: undefined
-  //   }
-  // },
-  // apollo: {
-  //   syncing: {
-  //     query: syncStatus,
-  //     update({ metadata }) {
-  //       const { isSyncing } = metadata
-  //       return isSyncing
-  //     },
-  //     subscribeToMore: {
-  //       document: syncStatusUpdates,
-  //       updateQuery(previousResult, { subscriptionData }) {
-  //         const { isSyncing } = subscriptionData.data
-  //         const previousIsSyncing = previousResult.metadata.isSyncing
-  //         if (isSyncing != previousIsSyncing) {
-  //           // TODO implement this without needing a page reload
-  //           window.history.go()
-  //         }
-  //         return { metadata: { __typename: 'Metadata', isSyncing } }
-  //       }
-  //     }
-  //   }
-  // }
+  data() {
+    return {
+      syncing: undefined
+    }
+  },
+  apollo: {
+    syncing: {
+      query: syncStatus,
+      update({ metadata }) {
+        const { isSyncing } = metadata
+        return isSyncing
+      },
+      subscribeToMore: {
+        document: syncStatusUpdates,
+        updateQuery(previousResult, { subscriptionData }) {
+          const { isSyncing } = subscriptionData.data
+          const previousIsSyncing = previousResult.metadata.isSyncing
+          if (isSyncing != previousIsSyncing) {
+            // TODO implement this without needing a page reload
+            window.history.go()
+          }
+          return { metadata: { __typename: 'Metadata', isSyncing } }
+        }
+      }
+    }
+  }
 })
 export default class AppSyncMessage extends Vue {
   /*
@@ -88,27 +89,38 @@ export default class AppSyncMessage extends Vue {
   ===================================================================================
   */
 
-  //syncing?: boolean
-  temp = false
+  syncing?: boolean
   hide: boolean = false
+  show: boolean = false
+  debouncedShow = debounce(this.setShow, 1000)
 
-  mounted() {
-    setTimeout(() => {
-      this.temp = true
-    }, 2000)
+  /*
+  ===================================================================================
+    Watch
+  ===================================================================================
+  */
+
+  @Watch('temp')
+  onTempChanged(): void {
+    this.debouncedShow()
   }
-  get load(): boolean {
-    return this.temp
+
+  /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+
+  setShow(): void {
+    this.show = this.syncing || false
   }
 }
 </script>
 
 <style lang="css">
-
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   transform: translateY(30px);
 }
-
 
 .footer-content {
   transition: all 0.5s ease;
@@ -119,10 +131,5 @@ export default class AppSyncMessage extends Vue {
   bottom: -300px;
   transition: all 0.5s ease-in;
 }
-/* .alert {
-  position: absolute;
-  bottom: 1%;
-  right: 1%;
-  min-width: 50px;
-} */
+
 </style>
