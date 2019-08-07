@@ -150,7 +150,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
-    AppSearch,
+    AppSearch
   }
 })
 export default class TheNavigationDrawer extends Vue {

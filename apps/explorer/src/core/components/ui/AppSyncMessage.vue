@@ -4,43 +4,25 @@
       <v-layout>
         <v-flex xs12>
           <transition-group name="fade" group mode="out-in">
-            <v-card
-              class="footer-content"
-              color="sync"
-              flat
-              key="large"
-              :class="hide ? 'footer-hidden' : ''"
-            >
+            <v-card class="footer-content" color="sync" flat key="large" :class="hide ? 'footer-hidden' : ''">
               <v-layout row wrap class="pl-4 pr-4 pt-3 pb-3" align-center justify-center>
                 <v-flex shrink pl-2 pr-2>
-                  <v-img
-                    :src="require('@/assets/icon-warning.png')"
-                    width="30px"
-                    height="30px"
-                    contain
-                  />
+                  <v-img :src="require('@/assets/icon-warning.png')" width="30px" height="30px" contain />
                 </v-flex>
                 <v-flex grow>
                   <p class="black--text font-italic">{{ $t('message.sync.main') }}</p>
                 </v-flex>
                 <v-flex shrink>
-                  <v-btn outline color="primary" class="text-capitalize" @click="hide=true">Got It</v-btn>
+                  <v-btn outline color="primary" class="text-capitalize" @click="hide = true">Got It</v-btn>
                 </v-flex>
               </v-layout>
             </v-card>
             <v-layout v-if="hide" align-center justify-end key="small">
               <v-tooltip left>
                 <template v-slot:activator="{ on }">
-                  <v-img
-                    :src="require('@/assets/icon-warning-outline.png')"
-                    max-width="50px"
-                    height="50px"
-                    contain
-                    @click="hide=false"
-                    v-on="on"
-                  />
+                  <v-img :src="require('@/assets/icon-warning-outline.png')" max-width="50px" height="50px" contain @click="hide = false" v-on="on" />
                 </template>
-                <span>{{ $t('btn.details')}}</span>
+                <span>{{ $t('btn.details') }}</span>
               </v-tooltip>
             </v-layout>
           </transition-group>
@@ -131,5 +113,4 @@ export default class AppSyncMessage extends Vue {
   bottom: -300px;
   transition: all 0.5s ease-in;
 }
-
 </style>
