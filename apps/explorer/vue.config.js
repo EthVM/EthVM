@@ -6,36 +6,22 @@ const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const GoogleFontsPlugin = require('@beyonk/google-fonts-webpack-plugin')
 
 const fontConfig = {
-  "fonts": [
+  fonts: [
     {
-      "family": "Roboto Mono",
-      "variants": [
-        "400",
-      ]
+      family: 'Roboto Mono',
+      variants: ['400']
     },
     {
-      "family": "Roboto",
-      "variants": [
-        "100",
-        "400",
-        "500",
-        "700"
-      ]
+      family: 'Roboto',
+      variants: ['100', '400', '500', '700']
     }
   ],
-  "formats": [
-    "woff",
-    "woff2"
-  ],
-  "local": "true"
+  formats: ['woff', 'woff2'],
+  local: 'true'
 }
 
 const webpackCommon = {
-  plugins: [
-    new VuetifyLoaderPlugin(),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new GoogleFontsPlugin(fontConfig)
-  ],
+  plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new GoogleFontsPlugin(fontConfig)],
   resolve: {
     extensions: ['.ts', '.vue', '.json'],
     alias: {
