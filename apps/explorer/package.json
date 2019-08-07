@@ -22,6 +22,7 @@
     "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript --outputFlat ./src/core/api/apollo/types"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.10.1",
     "@sentry/browser": "4.6.4",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
