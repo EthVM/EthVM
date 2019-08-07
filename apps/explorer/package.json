@@ -22,7 +22,7 @@
     "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript --outputFlat ./src/core/api/apollo/types"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.10.1",
+    "@beyonk/google-fonts-webpack-plugin": "^1.2.3",
     "@sentry/browser": "4.6.4",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
@@ -57,6 +57,7 @@
     "vuex-class": "^0.3.1"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.10.1",
     "@types/node": "~11.10.5",
     "@vue/cli-plugin-babel": "^3.4.1",
     "@vue/cli-plugin-eslint": "^3.4.1",
