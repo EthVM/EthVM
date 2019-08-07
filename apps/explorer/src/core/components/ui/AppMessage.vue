@@ -10,7 +10,7 @@
                   <v-img :src="require('@/assets/icon-warning.png')" width="30px" height="30px" contain />
                 </v-flex>
                 <v-flex grow>
-                  <p class="black--text font-italic">{{ $t('message.sync.main') }}</p>
+                  <p v-for="(message, i) in messages" :key="i"  class="black--text font-italic">{{ message }}</p>
                 </v-flex>
                 <v-flex shrink>
                   <v-btn outline color="primary" class="text-capitalize" @click="hide = true">Got It</v-btn>
@@ -33,48 +33,37 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
-import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.graphql'
+import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 import debounce from 'lodash.debounce'
-@Component({
-  data() {
-    return {
-      syncing: undefined
-    }
-  },
-  apollo: {
-    syncing: {
-      query: syncStatus,
-      update({ metadata }) {
-        const { isSyncing } = metadata
-        return isSyncing
-      },
-      subscribeToMore: {
-        document: syncStatusUpdates,
-        updateQuery(previousResult, { subscriptionData }) {
-          const { isSyncing } = subscriptionData.data
-          const previousIsSyncing = previousResult.metadata.isSyncing
-          if (isSyncing != previousIsSyncing) {
-            // TODO implement this without needing a page reload
-            window.history.go()
-          }
-          return { metadata: { __typename: 'Metadata', isSyncing } }
-        }
-      }
-    }
-  }
-})
-export default class AppSyncMessage extends Vue {
+import { TranslateResult } from 'vue-i18n';
+import { connect } from 'http2';
+@Component
+export default class AppMessage extends Vue {
+
+  /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+
+  @Prop(Boolean) syncing?: boolean
+  @Prop(Boolean) connected?: boolean
+
   /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
 
-  syncing?: boolean
   hide: boolean = false
   show: boolean = false
   debouncedShow = debounce(this.setShow, 1000)
+
+  created(){
+    if(this.syncing || this.connected) {
+      this.debouncedShow()
+    }
+  }
 
   /*
   ===================================================================================
@@ -94,8 +83,28 @@ export default class AppSyncMessage extends Vue {
   */
 
   setShow(): void {
-    this.show = this.syncing || false
+    this.show = (this.syncing || this.connected) || false
   }
+
+  /*
+  ===================================================================================
+   Computed
+  ===================================================================================
+  */
+
+  get messages(): TranslateResult[]  {
+    let newMes: TranslateResult[] = new Array()
+    if (this.syncing)  {
+      newMes.push(this.$t('message.sync.main'))
+    }
+    if (this.connected) {
+      newMes.push(this.$t('message.disconnected'))
+    }
+    console.log(newMes)
+    return newMes
+  }
+
+
 }
 </script>
 
