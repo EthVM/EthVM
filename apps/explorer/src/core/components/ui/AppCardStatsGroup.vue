@@ -41,7 +41,14 @@
 
 <script lang="ts">
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import { latestBlockStats, newBlockStats, latestHashRate, newHashRate } from '@app/core/components/ui/stats.graphql'
+import {
+  latestBlockStats,
+  newBlockStats,
+  latestHashRate,
+  newHashRate,
+  lastBlockReceivedQuery,
+  updateLastBlockReceivedMutation
+} from '@app/core/components/ui/stats.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
@@ -67,7 +74,11 @@ enum HashUnitLabel {
 
       update({ blockSummaries }) {
         if (blockSummaries && blockSummaries.items.length) {
-          this.lastReceivedAt = new Date()
+          // If this is the first blockSummary received (i.e. app has just loaded), update local state and seconds with last block timestamp
+          if (!this.lastBlockReceived) {
+            this.seconds = Math.ceil((new Date().getTime() - blockSummaries.items[0].timestamp) / 1000)
+            this.updateLastBlockReceived(blockSummaries.items[0].timestamp) // Add timestamp of most recent block to local state
+          }
           return new BlockSummaryPageExt_items(blockSummaries.items[0])
         }
         return null
@@ -78,7 +89,7 @@ enum HashUnitLabel {
 
         updateQuery(previousResult, { subscriptionData }) {
           const { newBlock } = subscriptionData.data
-          this.lastReceivedAt = new Date()
+          this.updateLastBlockReceived(new Date().getTime())
           return {
             ...previousResult,
             blockSummaries: {
@@ -108,6 +119,10 @@ enum HashUnitLabel {
           }
         }
       }
+    },
+
+    lastBlockReceived: {
+      query: lastBlockReceivedQuery
     }
   }
 })
@@ -132,7 +147,7 @@ export default class AppInfoCardGroup extends Vue {
   seconds: number = 0
   secondsInterval?: number
 
-  lastReceivedAt?: Date
+  lastBlockReceived?: number
 
   connectedSubscription?: Subscription
 
@@ -189,10 +204,17 @@ export default class AppInfoCardGroup extends Vue {
   startCount(): void {
     this.secondsInterval = window.setInterval(() => {
       if (this.blockSummary) {
-        const lastTimestamp = this.lastReceivedAt || new Date()
-        this.seconds = Math.ceil((new Date().getTime() - lastTimestamp.getTime()) / 1000)
+        const lastTimestamp = this.lastBlockReceived || new Date().getTime()
+        this.seconds = Math.ceil((new Date().getTime() - lastTimestamp) / 1000)
       }
     }, 1000)
+  }
+
+  updateLastBlockReceived(timestamp): void {
+    this.$apollo.mutate({
+      mutation: updateLastBlockReceivedMutation,
+      variables: { timestamp }
+    })
   }
 
   calculateHashValueAndLabel(value?: BigNumber): [BigNumber | undefined, HashUnitLabel] {

@@ -10,7 +10,7 @@
   "dependencies": {
     "avro-schema-registry": "~1.2.0",
     "avsc": "~5.4.7",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bignumber.js": "~8.0.2",
     "commander": "^2.20.0",
     "convict": "~4.4.1",

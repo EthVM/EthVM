@@ -104,6 +104,7 @@ CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_timestamp ON fungible_b
 WHERE delta_type = 'TOKEN_TRANSFER';
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_transaction_hash ON fungible_balance_delta USING hash (trace_location_transaction_hash)
 WHERE delta_type = 'TOKEN_TRANSFER';
+CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_address_contract_address ON fungible_balance_delta (address, contract_address);
 
 /* Non-fungible balance deltas */
 CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_contract_token_id ON non_fungible_balance_delta (contract, token_id);
@@ -112,6 +113,8 @@ CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_to ON non_fungible_bal
 CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_trace_location_block_hash ON non_fungible_balance_delta (trace_location_block_hash);
 CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_address ON non_fungible_balance (address);
 CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_contract_address ON non_fungible_balance (contract, address);
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_to_contract ON non_fungible_balance_delta ("to", contract);
+CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_delta_from_contract ON non_fungible_balance_delta ("from", contract);
 
 /* Token exchange rates */
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_market_cap_rank ON token_exchange_rates (market_cap_rank ASC);
@@ -127,7 +130,7 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rat
 /* Token metadata */
 CREATE INDEX IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
 CREATE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
-/* Update sync status */
 
+/* Update sync status */
 UPDATE metadata set value = 'false' where key = 'sync_status';
 

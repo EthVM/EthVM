@@ -32,7 +32,8 @@ import com.ethvm.avro.processing.TransactionGasPriceRecord
 import com.ethvm.avro.processing.TransactionGasUsedRecord
 import org.joda.time.DateTime
 import java.math.BigInteger
-import java.util.*
+import java.util.Comparator
+import java.util.TreeSet
 
 fun ParitySyncStateRecord.Builder.setHeadBI(head: BigInteger) = setHead(head.byteBuffer())
 
@@ -249,7 +250,6 @@ fun TraceRecord.toFungibleBalanceDeltas(timestamp: DateTime, traceListSummary: T
             .setAmount(action.getValue())
             .build()
         )
-
       }
     }
 
@@ -512,7 +512,6 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
             delta.deltaType == FungibleBalanceDeltaType.CONTRACT_DESTRUCTION &&
               delta.isReceiving &&
               delta.address == delta.counterpartAddress
-
           }
           .map { delta ->
 
@@ -523,7 +522,7 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
               FungibleBalanceDeltaType.INTERNAL_TX, FungibleBalanceDeltaType.CONTRACT_DESTRUCTION -> {
 
-                if(isTraceAddressGreaterThanSelfDestruct(traceAddress, destroyedContracts[delta.address] ?: sortedSetOf())) {
+                if (isTraceAddressGreaterThanSelfDestruct(traceAddress, destroyedContracts[delta.address] ?: sortedSetOf())) {
 
                   // We zero out any balance modification where the receiving address has already self destructed
                   // The reason we zero is so that we will reflect a zero balance for some addresses which may have only existed within the lifetime of a tx call stack
@@ -531,7 +530,6 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
                   FungibleBalanceDeltaRecord.newBuilder(delta)
                     .setAmountBI(BigInteger.ZERO)
                     .build()
-
                 } else {
                   delta
                 }
@@ -539,10 +537,8 @@ fun TraceListRecord.toFungibleBalanceDeltas(): List<FungibleBalanceDeltaRecord> 
 
               else -> delta
             }
-
           }
           .toList()
-
       }
 
       deltas
@@ -596,7 +592,6 @@ data class TraceListSummary(
       destroyedContracts + (address to traceAddresses)
     )
   }
-
 }
 
 fun isTraceAddressGreaterThanSelfDestruct(traceAddress: List<Int>, selfDestructTraceAddresses: TreeSet<List<Int>>): Boolean {

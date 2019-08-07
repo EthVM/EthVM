@@ -14,6 +14,7 @@ import { SharedModule } from '@app/shared/shared.module'
 import { Module } from '@nestjs/common'
 import { SubscriptionsModule } from '@app/subscriptions/subscriptions.module'
 import { MetadataModule } from '@app/graphql/metadata/metadata.module'
+import { BalanceModule } from '@app/graphql/balances/balance.module'
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { MetadataModule } from '@app/graphql/metadata/metadata.module'
     BlockMetricsModule,
     MetadataModule,
     SubscriptionsModule,
+    BalanceModule,
   ],
 })
 export class AppModule { }

@@ -5,7 +5,7 @@ import { EthService } from '@app/shared/eth.service'
 export class ParseAddressesPipe implements PipeTransform<string[], string[]> {
   constructor(private readonly ethService: EthService) {}
 
-  transform(value: string[], metadata: ArgumentMetadata): string[] {
+  transform(value: string[] = [], metadata: ArgumentMetadata): string[] {
     value.forEach(val => {
       if (!this.ethService.isValidAddress(val)) {
         throw new BadRequestException('Invalid address hash')
