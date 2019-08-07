@@ -111,7 +111,11 @@ Vue.use(Vuetify, {
     // used -->
     // background: String(colors.grey.darken3)
   },
-  iconfont: 'fa' // use font awesome icons
+  iconfont: 'fa', // use font awesome icons,
+  icons: {
+    expand: 'fa-chevron-down fa-1x',
+    dropdown: 'fa-caret-down fa-1x'
+  }
 })
 
 /*
