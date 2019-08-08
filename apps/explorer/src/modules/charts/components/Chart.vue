@@ -4,7 +4,7 @@
       <v-flex grow pa-0>
         <v-card-title class="title font-weight-bold pb-0">{{ chartTitle }}</v-card-title>
         <v-layout align-center justify-start row fill-height pr-2 pl-2>
-        <v-card-text class="info--text caption">{{ chartDescription }}</v-card-text>
+          <v-card-text class="info--text caption">{{ chartDescription }}</v-card-text>
         </v-layout>
       </v-flex>
       <v-flex grow v-if="!liveChart">

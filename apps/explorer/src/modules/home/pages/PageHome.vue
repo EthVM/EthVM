@@ -19,11 +19,10 @@
         </v-card>
       </v-flex>
       <v-flex xs12 md6>
-                <v-card flat color="white" height="100%">
-
-        <chart-live-tx-fees />
-                </v-card>
-        </v-flex>
+        <v-card flat color="white" height="100%">
+          <chart-live-tx-fees />
+        </v-card>
+      </v-flex>
     </v-layout>
     <!--
     =====================================================================================
