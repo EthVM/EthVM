@@ -29,21 +29,21 @@
       <!-- End Table Header -->
 
       <!-- Start Rows -->
-      <v-card v-if="loading">
-        <v-flex sm12 hidden-xs-only>
-          <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex >
+      <v-card v-if="loading" flat>
+        <v-flex xs12>
+          <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile pa-3 mb-2' : 'pa-2']" >
+            <v-layout grid-list-xs row wrap align-center justify-start fill-height>
+              <v-flex xs12 sm6>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down sm2 md4>
+              <v-flex xs12 sm3 md4>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
-              <v-flex hidden-sm-and-down md2>
+              <v-flex xs12 sm3 md2>
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
             </v-layout>
-            <v-divider class="mb-2 mt-2" />
+            <v-divider class="mb-2 mt-2 hidden-xs-only" />
           </div>
         </v-flex>
       </v-card>
@@ -189,3 +189,9 @@ export default class TokenTableHolders extends Vue{
   }
 }
 </script>
+
+<style lang="css" scoped>
+.table-row-mobile {
+  border: 1px solid #b4bfd2;
+}
+</style>
