@@ -11,19 +11,19 @@
           <v-layout grid-list-xs row wrap align-center justify-center class="pa-3">
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
-                <p class="info--text pr-2">Holder: </p>
+                <p class="info--text pr-2">Holder:</p>
                 <app-transform-hash :hash="holder.address" :link="holderAddress(holder)" />
               </v-layout>
             </v-flex>
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
-                <p class="info--text pr-2">{{ $t('common.quantity') }}: </p>
+                <p class="info--text pr-2">{{ $t('common.quantity') }}:</p>
                 <p>{{ holderBalance(holder) }}</p>
               </v-layout>
             </v-flex>
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
-                <p class="info--text pr-2 ">{{ $t('common.percentage') }}}: </p>
+                <p class="info--text pr-2 ">{{ $t('common.percentage') }}}:</p>
                 <p>{{ holderShare(holder) }}}</p>
               </v-layout>
             </v-flex>
@@ -38,7 +38,7 @@
       <v-flex hidden-xs-only>
         <v-layout align-center justify-start row fill-height pa-3>
           <!-- Column 1: Holders Address -->
-          <v-flex sm6  pr-4>
+          <v-flex sm6 pr-4>
             <app-transform-hash :hash="holder.address" :link="holderAddress(holder)" />
           </v-flex>
           <!-- End Column 1 -->

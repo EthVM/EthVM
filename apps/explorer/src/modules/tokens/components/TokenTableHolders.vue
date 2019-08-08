@@ -12,7 +12,7 @@
     <!-- End Pagination -->
 
     <!-- Table Header -->
-    <div v-if="!hasError" >
+    <div v-if="!hasError">
       <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-xs-only" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
           <v-flex sm6>
@@ -31,7 +31,7 @@
       <!-- Start Rows -->
       <v-card v-if="loading" flat>
         <v-flex xs12>
-          <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile pa-3 mb-2' : 'pa-2']" >
+          <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile pa-3 mb-2' : 'pa-2']">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height>
               <v-flex xs12 sm6>
                 <v-flex xs12 class="table-row-loading"></v-flex>
@@ -51,8 +51,8 @@
         <v-card v-if="!hasItems" flat>
           <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-holders') }}</v-card-text>
         </v-card>
-        <div v-else v-for="(holder, i) in holders"  :key="i">
-          <token-table-holders-row :holder="holder" :decimals="decimals" :totalSupply="totalSupply" />
+        <div v-else v-for="(holder, i) in holders" :key="i">
+          <token-table-holders-row :holder="holder" :decimals="decimals" :total-supply="totalSupply" />
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenTableHoldersRow from '@app/modules/tokens/components/TokenTableHoldersRow.vue'
@@ -110,7 +110,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
     }
   }
 })
-export default class TokenTableHolders extends Vue{
+export default class TokenTableHolders extends Vue {
   /*
     ===================================================================================
       Props
@@ -159,7 +159,7 @@ export default class TokenTableHolders extends Vue{
     return this.holdersPage ? this.holdersPage.items : []
   }
 
-  get totalCount(): BN{
+  get totalCount(): BN {
     return this.holdersPage ? this.holdersPage.totalCountBN : new BN(0)
   }
 
