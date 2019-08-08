@@ -33,7 +33,7 @@
         <v-flex sm12 hidden-xs-only>
           <div v-for="i in maxItems" :key="i">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex xs6 sm8 md5>
+              <v-flex >
                 <v-flex xs12 class="table-row-loading"></v-flex>
               </v-flex>
               <v-flex hidden-sm-and-down sm2 md4>
@@ -61,13 +61,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Vue} from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenTableHoldersRow from '@app/modules/tokens/components/TokenTableHoldersRow.vue'
-import { StringConcatMixin } from '@app/core/components/mixins'
 import { TokenHolderPageExt, TokenHolderPageExt_items } from '@app/core/api/apollo/extensions/token-holder-page.ext'
-
 const MAX_ITEMS = 10
 import { tokenHolders } from '@app/modules/tokens/tokens.graphql'
 import AppError from '@app/core/components/ui/AppError.vue'
@@ -112,7 +110,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
     }
   }
 })
-export default class TokenTableHolders extends Mixins(StringConcatMixin) {
+export default class TokenTableHolders extends Vue{
   /*
     ===================================================================================
       Props
