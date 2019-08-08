@@ -306,7 +306,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     if (decimals) {
       n = n.div(new BN(10).pow(decimals))
     }
-    return this.getRoundNumber(n)
+    return n.toString()
   }
 
   /*

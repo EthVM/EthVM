@@ -82,10 +82,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import BigNumber from 'bignumber.js'
+import { StringConcatMixin } from '@app/core/components/mixins'
 import { TokenHolderPageExt, TokenHolderPageExt_items } from '@app/core/api/apollo/extensions/token-holder-page.ext'
 
 const MAX_ITEMS = 10
@@ -131,7 +132,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
     }
   }
 })
-export default class TokenTableHolders extends Vue {
+export default class TokenTableHolders extends Mixins(StringConcatMixin) {
   /*
     ===================================================================================
       Props
@@ -209,9 +210,7 @@ export default class TokenTableHolders extends Vue {
    * @return {String} - Amount
    */
   holderBalance(holder: TokenHolderPageExt_items): string {
-    return this.calculateHolderBalance(holder.balanceBN)
-      .toFormat(2)
-      .toString()
+    return this.calculateHolderBalance(holder.balanceBN).toString()
   }
 
   /*
