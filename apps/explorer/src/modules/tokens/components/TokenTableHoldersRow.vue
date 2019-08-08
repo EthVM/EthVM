@@ -38,7 +38,7 @@
       <v-flex hidden-xs-only>
         <v-layout align-center justify-start row fill-height pa-3>
           <!-- Column 1: Holders Address -->
-          <v-flex sm6 md5 pr-4>
+          <v-flex sm6  pr-4>
             <app-transform-hash :hash="holder.address" :link="holderAddress(holder)" />
           </v-flex>
           <!-- End Column 1 -->
@@ -50,7 +50,7 @@
           <!-- End Column 2 -->
 
           <!-- Column 3: Share -->
-          <v-flex sm3 md3>
+          <v-flex sm3 md2>
             <p class="mb-0 ml-2">{{ holderShare(holder) }}</p>
           </v-flex>
           <!-- End Column 3 -->

@@ -12,16 +12,16 @@
     <!-- End Pagination -->
 
     <!-- Table Header -->
-    <div v-if="!hasError">
-      <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2" height="40px">
+    <div v-if="!hasError" >
+      <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-xs-only" height="40px">
         <v-layout align-center justify-start row fill-height pr-3>
-          <v-flex xs6 sm8 md5>
+          <v-flex sm6>
             <h5>{{ $tc('address.name', 1) }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down sm2 md4>
+          <v-flex sm3 md4>
             <h5>{{ $t('common.quantity') }}</h5>
           </v-flex>
-          <v-flex hidden-sm-and-down md2>
+          <v-flex sm3 md2>
             <h5>{{ $t('common.percentage') }}</h5>
           </v-flex>
         </v-layout>
