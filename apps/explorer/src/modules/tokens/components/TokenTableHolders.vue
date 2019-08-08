@@ -51,30 +51,9 @@
         <v-card v-if="!hasItems" flat>
           <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-holders') }}</v-card-text>
         </v-card>
-        <v-card v-else color="white" v-for="holder in holders" class="transparent" flat :key="holder.address">
-          <v-layout align-center justify-start row fill-height pr-3>
-            <!-- Column 1 -->
-            <v-flex xs6 sm8 md5>
-              <router-link class="primary--text text-truncate font-italic psmall pb-0 ml-2" :to="holderAddress(holder)">
-                {{ holder.address }}
-              </router-link>
-            </v-flex>
-            <!-- End Column 1 -->
-
-            <!-- Column 2 -->
-            <v-flex hidden-sm-and-down sm2 md4>
-              <p class="mb-0 ml-2">{{ holderBalance(holder) }}</p>
-            </v-flex>
-            <!-- End Column 2 -->
-
-            <!-- Column 3 -->
-            <v-flex hidden-sm-and-down md2>
-              <p class="mb-0 ml-2">{{ holderShare(holder) }}</p>
-            </v-flex>
-            <!-- End Column 3 -->
-          </v-layout>
-          <v-divider class="mb-2" />
-        </v-card>
+        <div v-else v-for="(holder, i) in holders"  :key="i">
+          <token-table-holders-row :holder="holder" :decimals="decimals" :totalSupply="totalSupply" />
+        </div>
       </div>
     </div>
     <!-- End Rows -->
@@ -85,7 +64,7 @@
 import { Component, Prop, Vue, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import BigNumber from 'bignumber.js'
+import TokenTableHoldersRow from '@app/modules/tokens/components/TokenTableHoldersRow.vue'
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { TokenHolderPageExt, TokenHolderPageExt_items } from '@app/core/api/apollo/extensions/token-holder-page.ext'
 
@@ -96,7 +75,8 @@ import AppError from '@app/core/components/ui/AppError.vue'
 @Component({
   components: {
     AppPaginate,
-    AppError
+    AppError,
+    TokenTableHoldersRow
   },
   data() {
     return {
@@ -140,7 +120,7 @@ export default class TokenTableHolders extends Mixins(StringConcatMixin) {
     */
 
   @Prop(String) addressRef!: string
-  @Prop(BigNumber) totalSupply?: BigNumber
+  @Prop(BN) totalSupply?: BN
   @Prop(Number) decimals?: number
 
   holdersPage?: TokenHolderPageExt
@@ -171,48 +151,6 @@ export default class TokenTableHolders extends Mixins(StringConcatMixin) {
     })
   }
 
-  /**
-   * Format url to token details -> holder view
-   *
-   * @param  {Object} holder - Holder object
-   * @return {String}        [description]
-   */
-  holderAddress(holder) {
-    return `/token/${this.addressRef}?holder=${holder.address}`
-  }
-
-  /**
-   * Calculate percentage share of totalSupply held by this holder
-   * @param  {Object} holder - Holder object
-   * @return {String} - Share
-   */
-  holderShare(holder: TokenHolderPageExt_items): string {
-    if (!(this.totalSupply && holder.balance)) {
-      return 'N/A'
-    }
-    return `${holder.balanceBN
-      .div(this.totalSupply)
-      .times(100)
-      .toFormat(2)
-      .toString()}%`
-  }
-
-  private calculateHolderBalance(balance: BigNumber): BigNumber {
-    if (!this.decimals) {
-      return balance
-    }
-    return balance.div(new BN(10).pow(this.decimals))
-  }
-
-  /**
-   * Calculate and format balance held by given holder
-   * @param  {Object} holder - Holder object
-   * @return {String} - Amount
-   */
-  holderBalance(holder: TokenHolderPageExt_items): string {
-    return this.calculateHolderBalance(holder.balanceBN).toString()
-  }
-
   /*
     ===================================================================================
       Computed Values
@@ -223,8 +161,8 @@ export default class TokenTableHolders extends Mixins(StringConcatMixin) {
     return this.holdersPage ? this.holdersPage.items : []
   }
 
-  get totalCount(): BigNumber {
-    return this.holdersPage ? this.holdersPage.totalCountBN : new BigNumber(0)
+  get totalCount(): BN{
+    return this.holdersPage ? this.holdersPage.totalCountBN : new BN(0)
   }
 
   /**
