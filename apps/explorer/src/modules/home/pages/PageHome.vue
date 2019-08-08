@@ -12,9 +12,18 @@
       Live Charts
     =====================================================================================
     -->
-    <v-layout row wrap justify-center mb-4>
-      <v-flex xs12 md6> <chart-live-txs /> </v-flex>
-      <v-flex xs12 md6> <chart-live-tx-fees /> </v-flex>
+    <v-layout row wrap justify-center mb-4 fill-height>
+      <v-flex xs12 md6>
+        <v-card flat color="white" height="100%">
+          <chart-live-txs />
+        </v-card>
+      </v-flex>
+      <v-flex xs12 md6>
+                <v-card flat color="white" height="100%">
+
+        <chart-live-tx-fees />
+                </v-card>
+        </v-flex>
     </v-layout>
     <!--
     =====================================================================================
