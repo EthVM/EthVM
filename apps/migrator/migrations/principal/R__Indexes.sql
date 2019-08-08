@@ -57,19 +57,19 @@ DROP INDEX IF EXISTS idx_token_exchange_rates_symbol;
 
 
 /* Block header */
-CREATE INDEX IF NOT EXISTS idx_block_header_number__hash__author ON canonical_block_header (number DESC, hash, author);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_block_header_number__hash__author ON canonical_block_header (number DESC, hash, author);
 CREATE INDEX IF NOT EXISTS idx_block_header_author_hash ON canonical_block_header (author);
 -- possibly missing index on parent hash
 
 /* Transactions, receipts & traces */
-CREATE INDEX IF NOT EXISTS idx_transaction_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_transaction_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
 CREATE INDEX IF NOT EXISTS idx_transaction_block_hash ON transaction (block_hash);
 CREATE INDEX IF NOT EXISTS idx_transaction_to ON transaction ("to");
 CREATE INDEX IF NOT EXISTS idx_transaction_from ON transaction ("from");
 CREATE INDEX IF NOT EXISTS idx_transaction_trace_transaction_hash ON transaction_trace (transaction_hash);
 
 /* Uncles */
-CREATE INDEX IF NOT EXISTS idx_uncle_hash__nephew_hash__author ON uncle (hash, nephew_hash, author);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_uncle_hash__nephew_hash__author ON uncle (hash, nephew_hash, author);
 CREATE INDEX IF NOT EXISTS idx_uncle_number__nephew_hash__author ON uncle (number DESC, nephew_hash, author);
 CREATE INDEX IF NOT EXISTS idx_uncle_height ON uncle (height DESC);
 
@@ -81,8 +81,8 @@ CREATE INDEX IF NOT EXISTS idx_contract_created_address ON contract_created (add
 CREATE INDEX IF NOT EXISTS idx_contract_destroyed_address ON public.contract_destroyed (address);
 
 /* Fungible/non-fungible balances */
-CREATE INDEX IF NOT EXISTS idx_fungible_balance_contract__address__amount ON fungible_balance (contract, address, amount);
-CREATE INDEX IF NOT EXISTS idx_non_fungible_balance_contract__address ON non_fungible_balance (contract, address);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_fungible_balance_contract__address__amount ON fungible_balance (contract, address, amount);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_non_fungible_balance_contract__address ON non_fungible_balance (contract, address);
 
 /* Fungible balance deltas */
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_block_hash ON fungible_balance_delta (trace_location_block_hash);
@@ -123,12 +123,12 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_current_price ON token_excha
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_current_price_desc ON token_exchange_rates (current_price DESC);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume ON token_exchange_rates (total_volume ASC);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume_desc ON token_exchange_rates (total_volume DESC);
-CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rates (address);
+CREATE INDEX UNIQUE IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rates (address);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rates (symbol);
 
 /* Token metadata */
-CREATE INDEX IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
-CREATE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
+CREATE INDEX UNIQUE IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
+CREATE INDEX UNIQUE IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
 
 /* Update sync status */
 UPDATE metadata set value = 'false' where key = 'sync_status';
