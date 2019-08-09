@@ -22,12 +22,9 @@ export class TransferResolvers {
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TransferPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddress(contractAddress, offset, limit)
-    return new TransferPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
+  ): Promise<BalanceDeltaPageDto> {
+    const [items, totalCount] = await this.transferService.findTokenTransfersByContractAddress(contractAddress, offset, limit)
+    return new BalanceDeltaPageDto({ items, totalCount })
   }
 
   @Query()
@@ -37,12 +34,9 @@ export class TransferResolvers {
     @Args('filter') filter: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TransferPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, offset, limit)
-    return new TransferPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
+  ): Promise<BalanceDeltaPageDto> {
+    const [items, totalCount] = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, offset, limit)
+    return new BalanceDeltaPageDto({ items, totalCount })
   }
 
   @Query()
