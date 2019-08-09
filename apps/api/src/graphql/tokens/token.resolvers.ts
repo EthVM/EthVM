@@ -47,8 +47,8 @@ export class TokenResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<TokenBalancePageDto> {
-    const [tokens, totalCount] = await this.tokenService.findAddressAllErc20TokensOwned(address, offset, limit)
-    return new TokenBalancePageDto({items: tokens, totalCount})
+    const [items, hasMore] = await this.tokenService.findAddressAllErc20TokensOwned(address, offset, limit)
+    return new TokenBalancePageDto({items, hasMore})
   }
 
   @Query()

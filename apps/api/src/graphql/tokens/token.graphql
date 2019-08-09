@@ -14,7 +14,7 @@ type Query {
 
 type TokenBalancePage {
   items: [TokenBalance!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type TokenBalance {

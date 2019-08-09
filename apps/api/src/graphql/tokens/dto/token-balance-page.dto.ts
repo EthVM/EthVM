@@ -4,7 +4,7 @@ import { TokenBalanceDto } from '@app/graphql/tokens/dto/token-balance.dto'
 
 export class TokenBalancePageDto implements TokenBalancePage {
   items!: TokenBalanceDto[]
-  totalCount!: number
+  hasMore!: boolean
 
   constructor(data: any) {
     if (data.items) {

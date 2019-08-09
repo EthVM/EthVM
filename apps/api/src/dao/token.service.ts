@@ -59,27 +59,28 @@ export class TokenService {
     return this.erc721BalanceRepository.findOne({ where })
   }
 
-  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], number]> {
+  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], boolean]> {
 
-    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], number]> => {
+    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], boolean]> => {
 
-      const queryBuilder = txn.createQueryBuilder(Erc20BalanceEntity, 'b')
+      let entities = await txn.createQueryBuilder(Erc20BalanceEntity, 'b')
         .where('b.address = :address')
         .andWhere('b.amount != :amount')
         .setParameters({ address, amount: 0 })
         .cache(true)
-
-      const count = await queryBuilder.getCount()
-
-      const entities = await queryBuilder
         .leftJoinAndSelect('b.tokenExchangeRate', 'ter')
         .leftJoinAndSelect('b.metadata', 'm')
         .leftJoinAndSelect('b.contractMetadata', 'cm')
         .offset(offset)
-        .limit(limit)
+        .limit(limit + 1)
         .getMany()
 
-      return [entities, count]
+      const hasMore = entities.length > limit
+      if (hasMore) {
+        entities.pop() // Remove last item if extra item was retrieved
+      }
+
+      return [entities, hasMore]
 
     })
   }

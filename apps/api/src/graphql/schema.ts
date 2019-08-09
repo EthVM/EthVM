@@ -435,7 +435,7 @@ export interface TokenBalance {
 
 export interface TokenBalancePage {
     items: TokenBalance[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface TokenDetail {
