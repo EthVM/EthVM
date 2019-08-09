@@ -41,24 +41,21 @@ export class TransferService {
     filter: string = 'all',
     offset: number = 0,
     limit: number = 10,
-  ): Promise<[FungibleBalanceTransferEntity[], number]> {
+  ): Promise<[FungibleBalanceDeltaEntity[], number]> {
 
-    const builder = this.transferRepository.createQueryBuilder('t')
+    const builder = this.deltaRepository.createQueryBuilder('t')
       .where('t.contract_address = :address')
       .andWhere('t.delta_type = :deltaType')
+      .andWhere('t.address = :holder')
 
     switch (filter) {
       case 'in':
-        builder.andWhere('t.from = :holder')
+        builder.andWhere('t.is_receiving = true')
         break
       case 'out':
-        builder.andWhere('t.to = :holder')
+        builder.andWhere('t.is_receiving = false')
         break
       default:
-        builder.andWhere(new Brackets(sqb => {
-          sqb.where('t.from = :holder')
-          sqb.orWhere('t.to = :holder')
-        }))
         break
     }
 
@@ -201,6 +198,7 @@ export class TransferService {
           traceLocationTransactionIndex: item.t_trace_location_transaction_index,
           traceLocationLogIndex: item.t_trace_location_log_index,
           traceLocationTraceAddress: item.t_trace_location_trace_address,
+          isReceiving: item.t_is_receiving
           // transaction: item.transaction
         } as FungibleBalanceDeltaEntity
       }),

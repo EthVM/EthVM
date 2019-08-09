@@ -2,6 +2,7 @@ import { DeltaType, Transfer } from '@app/graphql/schema'
 import { BalanceDeltaEntity } from '@app/orm/entities/balance-delta.entity'
 import { assignClean } from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
+import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 
 export class BalanceDeltaDto implements Transfer {
   amount?: BigNumber
@@ -20,11 +21,10 @@ export class BalanceDeltaDto implements Transfer {
   traceLocationTransactionHash!: string
   traceLocationTransactionIndex!: number
 
-  constructor(data: BalanceDeltaEntity) {
+  constructor(data: BalanceDeltaEntity | FungibleBalanceDeltaEntity) {
     assignClean(this, data)
-
     // Assign "to" and "from" depending on "isReceiving" flag
-    this.to = data.isReceiving ? data.address : data.counterpartAddress!
+    this.to = data.isReceiving ? data.address! : data.counterpartAddress!
     this.from = data.isReceiving ? data.counterpartAddress : data.address
   }
 

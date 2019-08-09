@@ -37,9 +37,9 @@ export class TransferResolvers {
     @Args('filter') filter: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TransferPageDto> {
+  ): Promise<BalanceDeltaPageDto> {
     const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, offset, limit)
-    return new TransferPageDto({
+    return new BalanceDeltaPageDto({
       items: result[0],
       totalCount: result[1],
     })
