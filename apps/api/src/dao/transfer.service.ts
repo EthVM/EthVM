@@ -195,7 +195,7 @@ export class TransferService {
           traceLocationTransactionIndex: item.t_trace_location_transaction_index,
           traceLocationLogIndex: item.t_trace_location_log_index,
           traceLocationTraceAddress: item.t_trace_location_trace_address,
-          isReceiving: item.t_is_receiving
+          isReceiving: item.t_is_receiving,
           // transaction: item.transaction
         } as FungibleBalanceDeltaEntity
       }),
