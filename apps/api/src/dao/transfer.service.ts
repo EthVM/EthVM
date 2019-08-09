@@ -23,7 +23,7 @@ export class TransferService {
 
   async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], number]> {
     const findOptions: FindManyOptions = {
-      where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
+      where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address, isReceiving: true},
       skip: offset,
       take: limit,
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
