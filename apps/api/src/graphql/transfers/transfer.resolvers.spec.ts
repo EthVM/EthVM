@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing'
 import { EthService } from '../../shared/eth.service'
-import { FungibleBalanceTransferEntity } from '../../orm/entities/fungible-balance-transfer.entity'
 import { TransferResolvers } from './transfer.resolvers'
 import { TransferDto } from './dto/transfer.dto'
 import { TransferService } from '../../dao/transfer.service'
@@ -13,6 +12,8 @@ import { InternalTransferPageDto } from './dto/internal-transfer-page.dto'
 import BigNumber from 'bignumber.js'
 import { InternalTransferDto } from './dto/internal-transfer.dto'
 import { InternalTransferEntity } from '../../orm/entities/internal-transfer.entity'
+import { BalanceDeltaPageDto } from './dto/balance-delta-page.dto'
+import { BalanceDeltaDto } from './dto/balance-delta.dto'
 
 const address1 = '0000000000000000000000000000000000000001'
 const address2 = '0000000000000000000000000000000000000002'
@@ -28,102 +29,134 @@ const transfers = [
   {
     id: 1,
     contractAddress: address1,
-    from: holder1,
-    to: holder3,
+    address: holder1,
+    counterpartAddress: holder3,
     traceLocationBlockNumber: 1,
     traceLocationTransactionIndex: 0,
     deltaType: 'TOKEN_TRANSFER',
-    timestamp: 1400000001
+    timestamp: 1400000001,
+    isReceiving: false
   },
   {
     id: 2,
-    contractAddress: address2,
-    from: holder2,
-    to: holder1,
+    contractAddress: address1,
+    address: holder3,
+    counterpartAddress: holder1,
     traceLocationBlockNumber: 1,
-    traceLocationTransactionIndex: 1,
+    traceLocationTransactionIndex: 0,
     deltaType: 'TOKEN_TRANSFER',
-    timestamp: 1400000002
+    timestamp: 1400000001,
+    isReceiving: true
   },
   {
     id: 3,
-    contractAddress: address3,
-    from: holder1,
-    to: holder2,
-    traceLocationBlockNumber: 2,
-    traceLocationTransactionIndex: 0,
+    contractAddress: address2,
+    address: holder2,
+    counterpartAddress: holder1,
+    traceLocationBlockNumber: 1,
+    traceLocationTransactionIndex: 1,
     deltaType: 'TOKEN_TRANSFER',
-    timestamp: 1400000003
+    timestamp: 1400000002,
+    isReceiving: false
   },
   {
     id: 4,
-    contractAddress: address1,
-    from: holder2,
-    to: holder3,
-    traceLocationBlockNumber: 2,
-    traceLocationTransactionIndex: 4,
+    contractAddress: address2,
+    address: holder1,
+    counterpartAddress: holder2,
+    traceLocationBlockNumber: 1,
+    traceLocationTransactionIndex: 1,
     deltaType: 'TOKEN_TRANSFER',
-    timestamp: 1400000004
+    timestamp: 1400000002,
+    isReceiving: true
   },
   {
     id: 5,
-    contractAddress: address1,
-    from: holder1,
-    to: holder3,
-    traceLocationBlockNumber: 3,
-    traceLocationTransactionIndex: 2,
+    contractAddress: address3,
+    address: holder1,
+    counterpartAddress: holder2,
+    traceLocationBlockNumber: 2,
+    traceLocationTransactionIndex: 0,
     deltaType: 'TOKEN_TRANSFER',
-    timestamp: 1400000005
+    timestamp: 1400000003,
+    isReceiving: false
   },
   {
     id: 6,
-    contractAddress: address2,
-    from: holder1,
-    to: holder2,
-    traceLocationBlockNumber: 6,
+    contractAddress: address3,
+    address: holder2,
+    counterpartAddress: holder1,
+    traceLocationBlockNumber: 2,
     traceLocationTransactionIndex: 0,
     deltaType: 'TOKEN_TRANSFER',
-    timestamp: 1400000006
+    timestamp: 1400000003,
+    isReceiving: true
   },
   {
     id: 7,
     contractAddress: address1,
-    from: holder4,
-    to: holder1,
-    traceLocationBlockNumber: 8,
-    traceLocationTransactionIndex: 0,
-    deltaType: 'INTERNAL_TX',
-    timestamp: 1400000007
+    address: holder2,
+    counterpartAddress: holder3,
+    traceLocationBlockNumber: 2,
+    traceLocationTransactionIndex: 4,
+    deltaType: 'TOKEN_TRANSFER',
+    timestamp: 1400000004,
+    isReceiving: false
   },
   {
     id: 8,
-    contractAddress: address4,
-    from: holder2,
-    to: holder3,
-    traceLocationBlockNumber: 8,
-    traceLocationTransactionIndex: 1,
-    deltaType: 'INTERNAL_TX',
-    timestamp: 1400000008
+    contractAddress: address1,
+    address: holder3,
+    counterpartAddress: holder2,
+    traceLocationBlockNumber: 2,
+    traceLocationTransactionIndex: 4,
+    deltaType: 'TOKEN_TRANSFER',
+    timestamp: 1400000004,
+    isReceiving: true
   },
   {
     id: 9,
-    contractAddress: address3,
-    from: holder3,
-    to: holder2,
-    traceLocationBlockNumber: 10,
-    traceLocationTransactionIndex: 0,
-    deltaType: 'CONTRACT_CREATION',
-    timestamp: 1400000009
+    contractAddress: address1,
+    address: holder1,
+    counterpartAddress: holder3,
+    traceLocationBlockNumber: 3,
+    traceLocationTransactionIndex: 2,
+    deltaType: 'TOKEN_TRANSFER',
+    timestamp: 1400000005,
+    isReceiving: false
   },
   {
     id: 10,
     contractAddress: address1,
-    from: holder4,
-    to: holder3,
-    traceLocationBlockNumber: 11,
+    address: holder3,
+    counterpartAddress: holder1,
+    traceLocationBlockNumber: 3,
+    traceLocationTransactionIndex: 2,
+    deltaType: 'TOKEN_TRANSFER',
+    timestamp: 1400000005,
+    isReceiving: true
+  },
+  {
+    id: 11,
+    contractAddress: address2,
+    address: holder1,
+    counterpartAddress: holder2,
+    traceLocationBlockNumber: 6,
     traceLocationTransactionIndex: 0,
-    deltaType: 'CONTRACT_DESTRUCTION',
-    timestamp: 1400000010
+    deltaType: 'TOKEN_TRANSFER',
+    timestamp: 1400000006,
+    isReceiving: false
+  },
+  {
+    id: 12,
+    contractAddress: address2,
+    address: holder2,
+    counterpartAddress: holder1,
+    traceLocationBlockNumber: 6,
+    traceLocationTransactionIndex: 0,
+    deltaType: 'TOKEN_TRANSFER',
+    timestamp: 1400000006,
+    isReceiving: true
   }
 ]
 
@@ -265,15 +298,15 @@ const metadataServiceMock = {
 
 
 const transferServiceMock = {
-  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceTransferEntity[], number]> {
-    const data = transfers.filter(t => t.contractAddress === address && t.deltaType === 'TOKEN_TRANSFER')
+  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], number]> {
+    const data = transfers.filter(t => t.contractAddress === address && t.deltaType === 'TOKEN_TRANSFER' && t.isReceiving === true)
 
-    const sorted = data.map(t => new FungibleBalanceTransferEntity(t)).sort(this.sortTokenTransfers)
+    const sorted = data.map(t => new FungibleBalanceDeltaEntity(t)).sort(this.sortTokenTransfers)
 
     const items = sorted.slice(offset, offset + limit)
     return [items, data.length]
   },
-  sortTokenTransfers(a: FungibleBalanceTransferEntity | InternalTransferEntity, b: FungibleBalanceTransferEntity | InternalTransferEntity) {
+  sortTokenTransfers(a: FungibleBalanceDeltaEntity | InternalTransferEntity, b: FungibleBalanceDeltaEntity | InternalTransferEntity) {
     if (a.traceLocationBlockNumber == b.traceLocationBlockNumber) {
       return (b.traceLocationTransactionIndex || 0) - (a.traceLocationTransactionIndex || 0)
     } else {
@@ -286,16 +319,16 @@ const transferServiceMock = {
 
     switch (filter) {
       case 'in':
-        data = transfers.filter(t => t.contractAddress === address && t.from === holder && t.deltaType === 'TOKEN_TRANSFER')
+        data = transfers.filter(t => t.contractAddress === address && t.address === holder && t.isReceiving === true)
         break
       case 'out':
-        data = transfers.filter(t => t.contractAddress === address && t.to === holder && t.deltaType === 'TOKEN_TRANSFER')
+        data = transfers.filter(t => t.contractAddress === address && t.address === holder && t.isReceiving === false)
         break
       default:
-        data = transfers.filter(t => t.contractAddress === address && (t.to === holder || t.from === holder) && t.deltaType === 'TOKEN_TRANSFER')
+        data = transfers.filter(t => t.contractAddress === address && t.address === holder)
     }
 
-    const sorted = data.map(t => new FungibleBalanceTransferEntity(t)).sort(this.sortTokenTransfers)
+    const sorted = data.map(t => new FungibleBalanceDeltaEntity(t)).sort(this.sortTokenTransfers)
 
     const items = sorted.slice(offset, offset + limit)
     return [items, data.length]
@@ -308,54 +341,6 @@ const transferServiceMock = {
 
     const items = sorted.slice(offset, offset + limit)
     return [items, data.length]
-  },
-  async findTokenTransfersByContractAddressesForHolder(
-    addresses: string[],
-    holder: string,
-    filter: string = 'all',
-    take: number = 10,
-    page: number = 0,
-    timestampFrom: number = 0,
-    timestampTo: number = 0,
-  ): Promise<[FungibleBalanceTransferEntity[], number]> {
-    let data
-
-    switch (filter) {
-      case 'in':
-        data = transfers.filter(t => {
-          return addresses.includes(t.contractAddress)
-            && t.from === holder
-            && t.deltaType === 'TOKEN_TRANSFER'
-            && t.timestamp >= timestampFrom
-            && t.timestamp <= timestampTo
-        })
-        break
-      case 'out':
-        data = transfers.filter(t => {
-          return addresses.includes(t.contractAddress)
-            && t.to === holder
-            && t.deltaType === 'TOKEN_TRANSFER'
-            && t.timestamp >= timestampFrom
-            && t.timestamp <= timestampTo
-        })
-        break
-      default:
-        data = transfers.filter(t => {
-          return addresses.includes(t.contractAddress)
-            && (t.to === holder || t.from === holder)
-            && t.deltaType === 'TOKEN_TRANSFER'
-            && t.timestamp >= timestampFrom
-            && t.timestamp <= timestampTo
-        })
-    }
-    const totalCount = data.length
-
-    const sorted = data.map(t => new FungibleBalanceTransferEntity(t)).sort(this.sortTokenTransfers)
-
-    const start = take * page
-    const end = start + take
-    const items = sorted.slice(start, end)
-    return [items, totalCount]
   },
   async findTokenBalancesByContractAddressForHolder(
     address: string,
@@ -370,7 +355,7 @@ const transferServiceMock = {
   },
   async findTotalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): Promise<BigNumber> {
     const data = transfers.filter(t => {
-      return contractAddress === t.contractAddress && (t.to === holderAddress || t.from === holderAddress) && t.deltaType === 'TOKEN_TRANSFER'
+      return contractAddress === t.contractAddress && t.address === holderAddress
     })
     return new BigNumber(data.length)
   }
@@ -403,12 +388,12 @@ describe('TransferResolvers', () => {
   })
 
   describe('tokenTransfersByContractAddress', () => {
-    it('should return a TransfersPageDto with items (TransferDto[]) and totalCount where "contractAddress" matches the address provided', async () => {
+    it('should return a BalanceDeltaPageDto with items (BalanceDeltaDto[]) and totalCount where "contractAddress" matches the address provided', async () => {
 
       const transfersForAddress1 = await transferResolvers.tokenTransfersByContractAddress(address1, 0, 10)
       const transfersForAddress2 = await transferResolvers.tokenTransfersByContractAddress(address2, 0, 10)
 
-      expect(transfersForAddress1).toBeInstanceOf(TransferPageDto)
+      expect(transfersForAddress1).toBeInstanceOf(BalanceDeltaPageDto)
       expect(transfersForAddress1).toHaveProperty('items')
       expect(transfersForAddress1).toHaveProperty('totalCount', 3)
       if (transfersForAddress1.items) {
@@ -416,7 +401,7 @@ describe('TransferResolvers', () => {
         expect(transfersForAddress1.items[0]).toHaveProperty('contractAddress', address1)
       }
 
-      expect(transfersForAddress2).toBeInstanceOf(TransferPageDto)
+      expect(transfersForAddress2).toBeInstanceOf(BalanceDeltaPageDto)
       expect(transfersForAddress2).toHaveProperty('items')
       expect(transfersForAddress2).toHaveProperty('totalCount', 2)
       if (transfersForAddress2.items) {
@@ -434,8 +419,8 @@ describe('TransferResolvers', () => {
       expect(transfers1).toHaveProperty('items')
       if (transfers1.items) {
         expect(transfers1.items).toHaveLength(2)
-        expect(transfers1.items[0]).toHaveProperty('id', 5)
-        expect(transfers1.items[1]).toHaveProperty('id', 4)
+        expect(transfers1.items[0]).toHaveProperty('id', 10)
+        expect(transfers1.items[1]).toHaveProperty('id', 8)
       }
 
       const transfers2 = await transferResolvers.tokenTransfersByContractAddress(address1, 2, 2)
@@ -444,7 +429,7 @@ describe('TransferResolvers', () => {
       expect(transfers2).toHaveProperty('items')
       if (transfers2.items) {
         expect(transfers2.items).toHaveLength(1)
-        expect(transfers2.items[0]).toHaveProperty('id', 1)
+        expect(transfers2.items[0]).toHaveProperty('id', 2)
       }
 
       // Check an empty array is returned if no items available for requested page
@@ -454,61 +439,33 @@ describe('TransferResolvers', () => {
       expect(transfers3.items).toHaveLength(0)
     })
 
-    it('should convert an array of TransferEntity instances to an array of TransferDto instances', async () => {
+    it('should convert an array of FungibleBalanceDeltaEntity instances to an array of FungibleBalanceDeltaDto instances', async () => {
       const transfers = await transferResolvers.tokenTransfersByContractAddress(address1, 0, 10)
-      const expected = [
-        new TransferDto({
-          id: 5,
-          contractAddress: address1,
-          from: holder1,
-          to: holder3,
-          traceLocationBlockNumber: 3,
-          traceLocationTransactionIndex: 2,
-          deltaType: 'TOKEN_TRANSFER',
-          timestamp: 1400000005
-        }),
-        new TransferDto({
-          id: 4,
-          contractAddress: address1,
-          from: holder2,
-          to: holder3,
-          traceLocationBlockNumber: 2,
-          traceLocationTransactionIndex: 4,
-          deltaType: 'TOKEN_TRANSFER',
-          timestamp: 1400000004
-        }),
-        new TransferDto({
-          id: 1,
-          contractAddress: address1,
-          from: holder1,
-          to: holder3,
-          traceLocationBlockNumber: 1,
-          traceLocationTransactionIndex: 0,
-          deltaType: 'TOKEN_TRANSFER',
-          timestamp: 1400000001
-        }),
-      ]
-      expect(transfers.items).toEqual(expect.arrayContaining(expected))
+      expect(transfers.items).not.toBeUndefined()
+      expect(transfers.items).toHaveLength(3)
+      expect(transfers.items[0]).toBeInstanceOf(BalanceDeltaDto)
+      expect(transfers.items[1]).toBeInstanceOf(BalanceDeltaDto)
+      expect(transfers.items[2]).toBeInstanceOf(BalanceDeltaDto)
     })
 
-    it('should return Transfers ordered by "traceLocationBlockNumber" and "traceLocationTransactionIndex" decending', async () => {
+    it('should return Transfers ordered by "traceLocationBlockNumber" and "traceLocationTransactionIndex" descending', async () => {
       const transfers = await transferResolvers.tokenTransfersByContractAddress(address1, 0, 10)
       expect(transfers).toHaveProperty('items')
       if (transfers.items) {
-        expect(transfers.items[0]).toHaveProperty('id', 5)
-        expect(transfers.items[1]).toHaveProperty('id', 4)
-        expect(transfers.items[2]).toHaveProperty('id', 1)
+        expect(transfers.items[0]).toHaveProperty('id', 10)
+        expect(transfers.items[1]).toHaveProperty('id', 8)
+        expect(transfers.items[2]).toHaveProperty('id', 2)
       }
     })
   })
 
   describe('tokenTransfersByContractAddressForHolder', () => {
-    it('should return a TransferPageDto of items matching the contractAddress and holderAddress provided', async () => {
+    it('should return a BalanceDeltaPageDto of items matching the contractAddress and holderAddress provided', async () => {
 
       const transfers1 = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder1, 'all', 0, 10)
       const transfers2 = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder2, 'all', 0, 10)
 
-      expect(transfers1).toBeInstanceOf(TransferPageDto)
+      expect(transfers1).toBeInstanceOf(BalanceDeltaPageDto)
       expect(transfers1).toHaveProperty('items')
       expect(transfers1).toHaveProperty('totalCount', 2)
       if (transfers1.items) {
@@ -519,7 +476,7 @@ describe('TransferResolvers', () => {
         expect(transfers1.items[1]).toHaveProperty('from', holder1)
       }
 
-      expect(transfers2).toBeInstanceOf(TransferPageDto)
+      expect(transfers2).toBeInstanceOf(BalanceDeltaPageDto)
       expect(transfers2).toHaveProperty('items')
       expect(transfers2).toHaveProperty('totalCount', 1)
       if (transfers2.items) {
@@ -532,24 +489,24 @@ describe('TransferResolvers', () => {
     })
 
     it('should respect provided filter', async () => {
-      const transfersIn = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder1, 'in', 0, 10)
-      const transfersOut = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder3, 'out', 0, 10)
+      const transfersOut = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder1, 'out', 0, 10)
+      const transfersIn = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder3, 'in', 0, 10)
 
-      expect(transfersIn).toHaveProperty('totalCount', 2)
-      expect(transfersIn).toHaveProperty('items')
-      if (transfersIn.items) {
-        expect(transfersIn.items).toHaveLength(2)
-        expect(transfersIn.items[0]).toHaveProperty('from', holder1)
-        expect(transfersIn.items[1]).toHaveProperty('from', holder1)
-      }
-
-      expect(transfersOut).toHaveProperty('totalCount', 3)
+      expect(transfersOut).toHaveProperty('totalCount', 2)
       expect(transfersOut).toHaveProperty('items')
       if (transfersOut.items) {
-        expect(transfersOut.items).toHaveLength(3)
-        expect(transfersOut.items[0]).toHaveProperty('to', holder3)
-        expect(transfersOut.items[1]).toHaveProperty('to', holder3)
-        expect(transfersOut.items[2]).toHaveProperty('to', holder3)
+        expect(transfersOut.items).toHaveLength(2)
+        expect(transfersOut.items[0]).toHaveProperty('from', holder1)
+        expect(transfersOut.items[1]).toHaveProperty('from', holder1)
+      }
+
+      expect(transfersIn).toHaveProperty('totalCount', 3)
+      expect(transfersIn).toHaveProperty('items')
+      if (transfersIn.items) {
+        expect(transfersIn.items).toHaveLength(3)
+        expect(transfersIn.items[0]).toHaveProperty('to', holder3)
+        expect(transfersIn.items[1]).toHaveProperty('to', holder3)
+        expect(transfersIn.items[2]).toHaveProperty('to', holder3)
       }
 
       expect(transfersIn).not.toEqual(transfersOut)
@@ -582,38 +539,18 @@ describe('TransferResolvers', () => {
       expect(transfers3.items).toHaveLength(0)
     })
 
-    it('should convert an array of TransferEntity instances to an array of TransferDto instances', async () => {
+    it('should convert an array of FungibleBalanceDeltaEntity instances to an array of BalanceDelatDto instances', async () => {
       const transfers = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder1, 'all', 0, 10)
-      const expected = [
-        new TransferDto({
-          id: 5,
-          contractAddress: address1,
-          from: holder1,
-          to: holder3,
-          traceLocationBlockNumber: 3,
-          traceLocationTransactionIndex: 2,
-          deltaType: 'TOKEN_TRANSFER',
-          timestamp: 1400000005
-        }),
-        new TransferDto({
-          id: 1,
-          contractAddress: address1,
-          from: holder1,
-          to: holder3,
-          traceLocationBlockNumber: 1,
-          traceLocationTransactionIndex: 0,
-          deltaType: 'TOKEN_TRANSFER',
-          timestamp: 1400000001
-        }),
-      ]
-      expect(transfers.items).toEqual(expect.arrayContaining(expected))
+      expect(transfers.items).toHaveLength(2)
+      expect(transfers.items[0]).toBeInstanceOf(BalanceDeltaDto)
+      expect(transfers.items[1]).toBeInstanceOf(BalanceDeltaDto)
     })
 
     it('should return Transfers ordered by "traceLocationBlockNumber" and "traceLocationTransactionIndex" decending', async () => {
       const transfers = await transferResolvers.tokenTransfersByContractAddressForHolder(address1, holder1, 'all', 0, 10)
       expect(transfers).toHaveProperty('items')
       if (transfers.items) {
-        expect(transfers.items[0]).toHaveProperty('id', 5)
+        expect(transfers.items[0]).toHaveProperty('id', 9)
         expect(transfers.items[1]).toHaveProperty('id', 1)
       }
     })
