@@ -331,6 +331,10 @@ export interface Metadata {
     isSyncing: boolean;
 }
 
+export interface IMutation {
+    foo(): boolean | Promise<boolean>;
+}
+
 export interface IQuery {
     accountByAddress(address: string): Account | Promise<Account>;
     balances(addresses: string[], contracts?: string[], offset?: number, limit?: number): BalancePage | Promise<BalancePage>;
