@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { Brackets, EntityManager, FindManyOptions, Repository } from 'typeorm'
-import { FungibleBalanceTransferEntity } from '@app/orm/entities/fungible-balance-transfer.entity'
+import { EntityManager, FindManyOptions, Repository } from 'typeorm'
 import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 import { DbConnection } from '@app/orm/config'
 import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
@@ -14,17 +13,15 @@ import { ETH_ADDRESS } from '@app/shared/eth.service'
 export class TransferService {
 
   constructor(
-    @InjectRepository(FungibleBalanceTransferEntity, DbConnection.Principal)
-    private readonly transferRepository: Repository<FungibleBalanceTransferEntity>,
     @InjectRepository(FungibleBalanceDeltaEntity, DbConnection.Principal)
-    private readonly deltaRepository: Repository<FungibleBalanceDeltaEntity>,
+    private readonly fungibleDeltaRepository: Repository<FungibleBalanceDeltaEntity>,
     @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
     @InjectRepository(BalanceDeltaEntity, DbConnection.Principal)
     private readonly balanceDeltaRepository: Repository<BalanceDeltaEntity>,
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceTransferEntity[], number]> {
+  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], number]> {
     const findOptions: FindManyOptions = {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address},
       skip: offset,
@@ -32,7 +29,7 @@ export class TransferService {
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
       cache: true,
     }
-    return this.transferRepository.findAndCount(findOptions)
+    return this.fungibleDeltaRepository.findAndCount(findOptions)
   }
 
   async findTokenTransfersByContractAddressForHolder(
@@ -43,7 +40,7 @@ export class TransferService {
     limit: number = 10,
   ): Promise<[FungibleBalanceDeltaEntity[], number]> {
 
-    const builder = this.deltaRepository.createQueryBuilder('t')
+    const builder = this.fungibleDeltaRepository.createQueryBuilder('t')
       .where('t.contract_address = :address')
       .andWhere('t.delta_type = :deltaType')
       .andWhere('t.address = :holder')
@@ -72,7 +69,7 @@ export class TransferService {
 
   async findTotalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): Promise<BigNumber> {
 
-    return new BigNumber(await this.deltaRepository.createQueryBuilder('d')
+    return new BigNumber(await this.fungibleDeltaRepository.createQueryBuilder('d')
       .where('d.delta_type = :deltaType')
       .andWhere('d.address = :holderAddress')
       .andWhere('d.contract_address = :contractAddress')
@@ -165,7 +162,7 @@ export class TransferService {
     // /query-builder/subquery/query-builder-subquery.ts#L328-L327
     // https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#partial-selection
     // https://dba.stackexchange.com/questions/192553/calculate-running-sum-of-each-row-from-start-even-when-filtering-records
-    const builder = this.deltaRepository.createQueryBuilder('t')
+    const builder = this.fungibleDeltaRepository.createQueryBuilder('t')
       .leftJoinAndSelect('t.transaction', 'transaction')
       .addSelect('*, SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance')
       .where('t.contract_address = :address')
