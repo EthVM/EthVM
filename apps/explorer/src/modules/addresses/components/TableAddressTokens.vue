@@ -31,8 +31,8 @@
 <!--          </p>-->
         </v-flex>
         <v-flex xs12 sm6 pt-0 pb-0>
-          <v-layout v-if="pages > 1" justify-end row>
-            <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
+          <v-layout v-if="showPaginate" justify-end row>
+            <app-paginate-has-more :current-page="page" :has-more="tokensPage.hasMore" @newPage="setPage" />
           </v-layout>
         </v-flex>
       </v-layout>
@@ -84,8 +84,8 @@
       <div v-else v-for="(token, index) in tokens" :key="index">
         <table-address-tokens-row :token="token" :holder="address" :is-ropsten="isRopsten" />
       </div>
-      <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-        <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
+      <v-layout v-if="showPaginate" justify-end row class="pb-1 pr-2 pl-2">
+        <app-paginate-has-more :current-page="page" :has-more="tokensPage.hasMore" @newPage="setPage" />
       </v-layout>
     </div>
   </v-card>
@@ -94,7 +94,6 @@
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import TableAddressTokensRowLoading from '@app/modules/addresses/components/TableAddressTokensRowLoading.vue'
 import BN from 'bignumber.js'
@@ -103,14 +102,15 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
 import { ConfigHelper } from '@app/core/helper/config-helper'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue';
 
 const MAX_ITEMS = 10
 
 @Component({
   components: {
+    AppPaginateHasMore,
     AppError,
     AppInfoLoad,
-    AppPaginate,
     TableAddressTokensRow,
     TableAddressTokensRowLoading
   },
@@ -238,10 +238,6 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     return !!this.error && this.error !== ''
   }
 
-  get totalCount(): number {
-    return this.tokensPage ? this.tokensPage.totalCountBN.toNumber() : 0
-  }
-
   /**
    * @return {Number} - MAX_ITEMS per pagination page
    */
@@ -252,8 +248,16 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   /**
    * @return {Number} - Total number of pagination pages
    */
-  get pages(): number {
-    return this.tokensPage ? Math.ceil(this.tokensPage.totalCount / this.maxItems) : 0
+  get showPaginate(): boolean {
+    if (this.page && this.page > 0) {
+      // If we're past the first page, there must be pagination
+      return true
+    }
+    else if (this.tokensPage && this.tokensPage.hasMore) {
+      // We're on the first page, but there are more items, show pagination
+      return true
+    }
+    return false
   }
 
   get getTotalMonetaryValue(): string {
@@ -263,15 +267,15 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     return this.totalTokensValue ? this.totalTokensValue.toFormat(2).toString() : '0.00'
   }
 
-  get totalTokens(): string {
-    if (this.loading) {
-      return this.$i18n.t('message.load').toString()
-    }
-    return this.totalCount.toString()
-  }
+  // get totalTokens(): string {
+  //   if (this.loading) {
+  //     return this.$i18n.t('message.load').toString()
+  //   }
+  //   return this.totalCount.toString()
+  // }
 
-  get tokensString(): string {
-    return new BN(this.totalCount).isGreaterThan(1) ? this.$i18n.tc('token.name', 2) : this.$i18n.tc('token.name', 1)
-  }
+  // get tokensString(): string {
+  //   return new BN(this.totalCount).isGreaterThan(1) ? this.$i18n.tc('token.name', 2) : this.$i18n.tc('token.name', 1)
+  // }
 }
 </script>
