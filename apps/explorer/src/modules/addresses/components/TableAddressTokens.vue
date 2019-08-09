@@ -20,15 +20,15 @@
       <v-progress-linear v-if="loading" color="blue" indeterminate />
       <v-layout v-else justify-space-between align-end row wrap class="pa-2">
         <v-flex xs12 sm6>
-          <p class="info--text">
-            {{ $t('token.total') }}
-            <span class="black--text">{{ totalTokens }}</span>
-            {{ tokensString }}
-            <span v-if="!isRopsten">
-              <span class="black--text">@ ${{ getTotalMonetaryValue }}</span>
-              {{ $t('usd.value') }}
-            </span>
-          </p>
+<!--          <p class="info&#45;&#45;text">-->
+<!--            {{ $t('token.total') }}-->
+<!--            <span class="black&#45;&#45;text">{{ totalTokens }}</span>-->
+<!--            {{ tokensString }}-->
+<!--            <span v-if="!isRopsten">-->
+<!--              <span class="black&#45;&#45;text">@ ${{ getTotalMonetaryValue }}</span>-->
+<!--              {{ $t('usd.value') }}-->
+<!--            </span>-->
+<!--          </p>-->
         </v-flex>
         <v-flex xs12 sm6 pt-0 pb-0>
           <v-layout v-if="pages > 1" justify-end row>
@@ -150,21 +150,21 @@ const MAX_ITEMS = 10
         }
       }
     },
-    totalTokensValue: {
-      query: totalTokensValue,
-      variables() {
-        return { address: this.address }
-      },
-      update({ totalTokensValue }) {
-        return totalTokensValue ? new BN(totalTokensValue) : null
-      },
-      error({ graphQLErrors, networkError }) {
-        // TODO refine
-        if (networkError) {
-          this.error = this.$i18n.t('message.no-data')
-        }
-      }
-    }
+    // totalTokensValue: {
+    //   query: totalTokensValue,
+    //   variables() {
+    //     return { address: this.address }
+    //   },
+    //   update({ totalTokensValue }) {
+    //     return totalTokensValue ? new BN(totalTokensValue) : null
+    //   },
+    //   error({ graphQLErrors, networkError }) {
+    //     // TODO refine
+    //     if (networkError) {
+    //       this.error = this.$i18n.t('message.no-data')
+    //     }
+    //   }
+    // }
   }
 })
 export default class TableAddressTokens extends Mixins(StringConcatMixin) {
