@@ -123,12 +123,12 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_current_price ON token_excha
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_current_price_desc ON token_exchange_rates (current_price DESC);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume ON token_exchange_rates (total_volume ASC);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume_desc ON token_exchange_rates (total_volume DESC);
-CREATE INDEX UNIQUE IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rates (address);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rates (address);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rates (symbol);
 
 /* Token metadata */
-CREATE INDEX UNIQUE IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
-CREATE INDEX UNIQUE IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
 
 /* Update sync status */
 UPDATE metadata set value = 'false' where key = 'sync_status';
