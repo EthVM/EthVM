@@ -198,7 +198,7 @@ export class TxService {
       'READ COMMITTED',
       async (entityManager): Promise<[TransactionSummary[], number]> => {
 
-        let [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
+        const [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
           select: ['count'],
           where: {
             entity: 'transaction',

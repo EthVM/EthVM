@@ -35,7 +35,7 @@ export class UncleService {
       'READ COMMITTED',
       async (entityManager): Promise<[UncleEntity[], number]> => {
 
-        let [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
+        const [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
           select: ['count'],
           where: {
             entity: 'uncle',
