@@ -111,10 +111,10 @@
                 <v-flex xs2 sm2 md1>
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
-                <v-flex hidden-sm-and-down md1>
+                <v-flex hidden-sm-and-down md2>
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
-                <v-flex hidden-sm-and-down md2>
+                <v-flex hidden-sm-and-down md1>
                   <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-flex>
                 <v-flex hidden-xs-only sm1>
