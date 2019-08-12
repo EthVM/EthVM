@@ -64,7 +64,7 @@ CREATE INDEX IF NOT EXISTS idx_block_header_author_hash ON canonical_block_heade
 -- possibly missing index on parent hash
 
 /* Transactions, receipts & traces */
-CREATE UNIQUE INDEX IF NOT EXISTS idx_transaction_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
+CREATE INDEX IF NOT EXISTS idx_transaction_block_number__transaction_index ON transaction (block_number DESC, transaction_index DESC);
 CREATE INDEX IF NOT EXISTS idx_transaction_block_hash ON transaction (block_hash);
 CREATE INDEX IF NOT EXISTS idx_transaction_to ON transaction ("to");
 CREATE INDEX IF NOT EXISTS idx_transaction_from ON transaction ("from");
