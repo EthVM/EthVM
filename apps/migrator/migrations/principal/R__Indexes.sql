@@ -53,7 +53,9 @@ DROP INDEX IF EXISTS idx_contract_created_trace_location_block_hash;
 DROP INDEX IF EXISTS idx_contract_destroyed_trace_location_block_hash;
 DROP INDEX IF EXISTS idx_token_exchange_rates_name;
 DROP INDEX IF EXISTS idx_token_exchange_rates_symbol;
-
+DROP INDEX IF EXISTS idx_fungible_balance_delta_internal_transfer;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_address__delta_type__amount;
+DROP INDEX IF EXISTS idx_fungible_balance_delta_counterpart_address__delta_type__amount;
 
 
 /* Block header */
@@ -86,12 +88,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_non_fungible_balance_contract__address ON 
 
 /* Fungible balance deltas */
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_tl_block_hash ON fungible_balance_delta (trace_location_block_hash);
-CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_internal_transfer ON fungible_balance_delta (address, amount, delta_type, trace_location_block_hash, counterpart_address)
-WHERE delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION');
-CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_address__delta_type__amount ON fungible_balance_delta (address, delta_type, amount)
-WHERE amount > 0 and delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION');
-CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_counterpart_address__delta_type__amount ON fungible_balance_delta (counterpart_address, delta_type, amount)
-WHERE amount > 0 and delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION');
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_delta_type__amount__tl_block_hash ON fungible_balance_delta (delta_type, amount, trace_location_block_hash)
 WHERE delta_type IN ('BLOCK_REWARD', 'UNCLE_REWARD');
 CREATE INDEX IF NOT EXISTS idx_fungible_balance_delta_address__tl_block_hash ON fungible_balance_delta (address, trace_location_block_hash)
