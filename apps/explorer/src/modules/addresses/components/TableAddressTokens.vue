@@ -20,15 +20,15 @@
       <v-progress-linear v-if="loading" color="blue" indeterminate />
       <v-layout v-else justify-space-between align-end row wrap class="pa-2">
         <v-flex xs12 sm6>
-<!--          <p class="info&#45;&#45;text">-->
-<!--            {{ $t('token.total') }}-->
-<!--            <span class="black&#45;&#45;text">{{ totalTokens }}</span>-->
-<!--            {{ tokensString }}-->
-<!--            <span v-if="!isRopsten">-->
-<!--              <span class="black&#45;&#45;text">@ ${{ getTotalMonetaryValue }}</span>-->
-<!--              {{ $t('usd.value') }}-->
-<!--            </span>-->
-<!--          </p>-->
+          <!--          <p class="info&#45;&#45;text">-->
+          <!--            {{ $t('token.total') }}-->
+          <!--            <span class="black&#45;&#45;text">{{ totalTokens }}</span>-->
+          <!--            {{ tokensString }}-->
+          <!--            <span v-if="!isRopsten">-->
+          <!--              <span class="black&#45;&#45;text">@ ${{ getTotalMonetaryValue }}</span>-->
+          <!--              {{ $t('usd.value') }}-->
+          <!--            </span>-->
+          <!--          </p>-->
         </v-flex>
         <v-flex xs12 sm6 pt-0 pb-0>
           <v-layout v-if="showPaginate" justify-end row>
@@ -102,7 +102,7 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
 import { ConfigHelper } from '@app/core/helper/config-helper'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue';
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 
 const MAX_ITEMS = 10
 
@@ -149,7 +149,7 @@ const MAX_ITEMS = 10
           this.error = this.$i18n.t('message.no-data')
         }
       }
-    },
+    }
     // totalTokensValue: {
     //   query: totalTokensValue,
     //   variables() {
@@ -252,8 +252,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
     if (this.page && this.page > 0) {
       // If we're past the first page, there must be pagination
       return true
-    }
-    else if (this.tokensPage && this.tokensPage.hasMore) {
+    } else if (this.tokensPage && this.tokensPage.hasMore) {
       // We're on the first page, but there are more items, show pagination
       return true
     }

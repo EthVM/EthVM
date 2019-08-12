@@ -11,12 +11,12 @@
           <v-progress-linear color="blue" indeterminate />
         </v-flex>
         <v-flex xs12 sm6>
-<!--          <p class="info&#45;&#45;text mb-0 pl-2">-->
-<!--            {{ $t('contract.total') }}:-->
-<!--            <span v-if="!loading" class="black&#45;&#45;text">{{ totalCount.toString() }}</span>-->
-<!--            <span v-else class="table-row-loading" />-->
-<!--            {{ contractString }}-->
-<!--          </p>-->
+          <!--          <p class="info&#45;&#45;text mb-0 pl-2">-->
+          <!--            {{ $t('contract.total') }}:-->
+          <!--            <span v-if="!loading" class="black&#45;&#45;text">{{ totalCount.toString() }}</span>-->
+          <!--            <span v-else class="table-row-loading" />-->
+          <!--            {{ contractString }}-->
+          <!--          </p>-->
         </v-flex>
         <v-layout justify-end v-if="!loading && showPaginate" xs12 sm6>
           <v-flex shrink>
@@ -119,15 +119,15 @@
 </template>
 
 <script lang="ts">
-    import AppError from '@app/core/components/ui/AppError.vue'
-    import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-    import { Component, Prop, Vue } from 'vue-property-decorator'
-    import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
-    import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
-    import { ContractSummaryPageExt } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
-    import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
+import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
+import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
+import { ContractSummaryPageExt } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 
-    const MAX_ITEMS = 10
+const MAX_ITEMS = 10
 
 @Component({
   components: {
@@ -254,15 +254,14 @@ export default class TableAddressContracts extends Vue {
   // }
 
   get showPaginate(): boolean {
-      if (this.page && this.page > 0) {
-          // If we're past the first page, there must be pagination
-          return true
-      }
-      else if (this.contractsPage && this.contractsPage.hasMore) {
-          // We're on the first page, but there are more items, show pagination
-          return true
-      }
-      return false
+    if (this.page && this.page > 0) {
+      // If we're past the first page, there must be pagination
+      return true
+    } else if (this.contractsPage && this.contractsPage.hasMore) {
+      // We're on the first page, but there are more items, show pagination
+      return true
+    }
+    return false
   }
 }
 </script>

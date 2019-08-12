@@ -10,7 +10,8 @@
         <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
       </template>
       <template v-slot:pagination v-if="hasPagination">
-        <app-paginate v-if="!isPageDetailsAddress"
+        <app-paginate
+          v-if="!isPageDetailsAddress"
           :total="pages"
           @newPage="setPage"
           :current-page="page"
@@ -64,7 +65,8 @@
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
           <v-layout v-if="hasPagination" justify-end row class="pb-1 pt-2 pr-2 pl-2">
-            <app-paginate v-if="!isPageDetailsAddress"
+            <app-paginate
+              v-if="!isPageDetailsAddress"
               :total="pages"
               @newPage="setPage"
               :current-page="page"
@@ -121,7 +123,7 @@ import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
-import { BlockSummaryByAuthorPageExt } from "@app/core/api/apollo/extensions/block-summary-by-author-page.ext";
+import { BlockSummaryByAuthorPageExt } from '@app/core/api/apollo/extensions/block-summary-by-author-page.ext'
 
 const MAX_ITEMS = 50
 
@@ -369,15 +371,14 @@ export default class TableBlocks extends Vue {
 
   get hasPagination(): boolean {
     if (this.isPageDetailsAddress) {
-        if (this.page && this.page > 0) {
-            // If we're past the first page, there must be pagination
-            return true
-        }
-        else if (this.blockPage && (this.blockPage as BlockSummaryByAuthorPageExt).hasMore) {
-            // We're on the first page, but there are more items, show pagination
-            return true
-        }
-        return false
+      if (this.page && this.page > 0) {
+        // If we're past the first page, there must be pagination
+        return true
+      } else if (this.blockPage && (this.blockPage as BlockSummaryByAuthorPageExt).hasMore) {
+        // We're on the first page, but there are more items, show pagination
+        return true
+      }
+      return false
     }
 
     return this.pageType !== 'home' && this.pages > 1 && !this.hasError

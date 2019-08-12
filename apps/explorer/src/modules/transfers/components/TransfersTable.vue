@@ -241,20 +241,19 @@ export default class TransfersTable extends Vue {
     return MAX_ITEMS
   }
 
-    /**
-     * @return {Boolean} - Whether to display pagination component
-     */
-    get showPaginate(): boolean {
-        if (this.page && this.page > 0) {
-            // If we're past the first page, there must be pagination
-            return true
-        }
-        else if (this.transferPage && this.transferPage.hasMore) {
-            // We're on the first page, but there are more items, show pagination
-            return true
-        }
-        return false
+  /**
+   * @return {Boolean} - Whether to display pagination component
+   */
+  get showPaginate(): boolean {
+    if (this.page && this.page > 0) {
+      // If we're past the first page, there must be pagination
+      return true
+    } else if (this.transferPage && this.transferPage.hasMore) {
+      // We're on the first page, but there are more items, show pagination
+      return true
     }
+    return false
+  }
 }
 </script>
 

@@ -63,7 +63,7 @@ export class TokenService {
 
     return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], boolean]> => {
 
-      let entities = await txn.createQueryBuilder(Erc20BalanceEntity, 'b')
+      const entities = await txn.createQueryBuilder(Erc20BalanceEntity, 'b')
         .where('b.address = :address')
         .andWhere('b.amount != :amount')
         .setParameters({ address, amount: 0 })
