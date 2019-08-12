@@ -73,7 +73,7 @@ export class BlockService {
             .leftJoinAndSelect('b.rewards', 'br')
 
           if (fromBlock) {
-            queryBuilder.where('b.number <= :fromBlock', { fromBlock })
+            queryBuilder.where('b.number <= :fromBlock', { fromBlock: fromBlock.toNumber() })
           }
 
           const headersWithRewards = await queryBuilder
