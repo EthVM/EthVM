@@ -3,7 +3,7 @@ type Query {
 }
 
 type BalancePage {
-  totalCount: Int!,
+  hasMore: Boolean!,
   items: [BalanceNew!]!
 }
 

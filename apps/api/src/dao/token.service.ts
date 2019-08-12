@@ -12,6 +12,7 @@ import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
+import has = Reflect.has
 
 @Injectable()
 export class TokenService {
@@ -37,19 +38,24 @@ export class TokenService {
     @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
   ) {}
 
-  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
+  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], boolean]> {
     const findOptions: FindManyOptions = {
       where: { contract: address },
-      take: limit,
+      take: limit + 1,
       skip: offset,
       cache: true,
     }
     const findOptionsErc20: FindManyOptions = { ...findOptions, select: ['address', 'amount'] }
-    const erc20Balances = await this.erc20BalanceRepository.findAndCount(findOptionsErc20)
-    if (erc20Balances[1] > 0) {
-      return erc20Balances
+
+    // Currently only erc20 tokens are displayed in explorer
+    const erc20Balances = await this.erc20BalanceRepository.find(findOptionsErc20)
+    const hasMore = erc20Balances.length > limit
+    if (hasMore) {
+      erc20Balances.pop()
     }
-    return await this.erc721BalanceRepository.findAndCount(findOptions)
+
+    return [erc20Balances, hasMore]
+    // return await this.erc721BalanceRepository.findAndCount(findOptions)
   }
 
   async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<Erc20BalanceEntity | Erc721BalanceEntity | undefined> {
@@ -59,27 +65,28 @@ export class TokenService {
     return this.erc721BalanceRepository.findOne({ where })
   }
 
-  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], number]> {
+  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], boolean]> {
 
-    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], number]> => {
+    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], boolean]> => {
 
-      const queryBuilder = txn.createQueryBuilder(Erc20BalanceEntity, 'b')
+      const entities = await txn.createQueryBuilder(Erc20BalanceEntity, 'b')
         .where('b.address = :address')
         .andWhere('b.amount != :amount')
         .setParameters({ address, amount: 0 })
         .cache(true)
-
-      const count = await queryBuilder.getCount()
-
-      const entities = await queryBuilder
         .leftJoinAndSelect('b.tokenExchangeRate', 'ter')
         .leftJoinAndSelect('b.metadata', 'm')
         .leftJoinAndSelect('b.contractMetadata', 'cm')
         .offset(offset)
-        .limit(limit)
+        .limit(limit + 1)
         .getMany()
 
-      return [entities, count]
+      const hasMore = entities.length > limit
+      if (hasMore) {
+        entities.pop() // Remove last item if extra item was retrieved
+      }
+
+      return [entities, hasMore]
 
     })
   }
@@ -97,7 +104,7 @@ export class TokenService {
     limit: number = 10,
     offset: number = 0,
     addresses: string[] = [],
-  ): Promise<[TokenExchangeRateEntity[], number]> {
+  ): Promise<[TokenExchangeRateEntity[], boolean]> {
     let order
     switch (sort) {
       case 'price_high':
@@ -126,7 +133,7 @@ export class TokenService {
 
     const findOptions: FindManyOptions = {
       order,
-      take: limit,
+      take: limit + 1,
       skip: offset,
       cache: true,
     }
@@ -135,7 +142,13 @@ export class TokenService {
       findOptions.where = {address: Any(addresses)}
     }
 
-    return this.tokenExchangeRateRepository.findAndCount(findOptions)
+    const items = await this.tokenExchangeRateRepository.find(findOptions)
+    const hasMore = items.length > limit
+    if (hasMore) {
+      items.pop()
+    }
+
+    return [items, hasMore]
   }
 
   async countTokenExchangeRates(): Promise<number> {
@@ -182,10 +195,10 @@ export class TokenService {
     addresses: string[] = [],
     offset: number = 0,
     limit: number = 20,
-  ): Promise<[TokenMetadataEntity[], number]> {
+  ): Promise<[TokenMetadataEntity[], boolean]> {
 
     const findOptions: FindManyOptions = {
-      take: limit,
+      take: limit + 1,
       skip: offset,
       cache: true,
     }
@@ -194,7 +207,13 @@ export class TokenService {
       findOptions.where = { address: Any(addresses) }
     }
 
-    return await this.tokenMetadataRepository.findAndCount(findOptions)
+    const items = await this.tokenMetadataRepository.find(findOptions)
+    const hasMore = items.length > limit
+    if (hasMore) {
+      items.pop()
+    }
+
+    return [items, hasMore]
   }
 
   async findDetailByAddress(address: string): Promise<TokenDetailEntity | undefined> {

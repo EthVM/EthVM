@@ -13,6 +13,7 @@ import retry from 'async-retry'
 import { PartialReadException } from '@app/shared/errors/partial-read-exception'
 import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
+import { BlockSummaryByAuthorPageDto } from '@app/graphql/blocks/dto/block-summary-by-author-page.dto'
 
 @Resolver('Block')
 @UseInterceptors(SyncingInterceptor)
@@ -60,12 +61,12 @@ export class BlockResolvers {
     @Args('author', ParseAddressPipe) author: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<BlockSummaryPageDto | undefined> {
+  ): Promise<BlockSummaryByAuthorPageDto | undefined> {
     return retry(async bail => {
 
       try {
-        const [summaries, count] = await this.blockService.findSummariesByAuthor(author, offset, limit)
-        return new BlockSummaryPageDto(summaries, count)
+        const [summaries, hasMore] = await this.blockService.findSummariesByAuthor(author, offset, limit)
+        return new BlockSummaryByAuthorPageDto(summaries, hasMore)
       } catch (err) {
 
         if (err instanceof PartialReadException) {

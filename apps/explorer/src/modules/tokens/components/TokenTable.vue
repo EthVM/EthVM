@@ -5,14 +5,15 @@
           TITLE
         =====================================================================================
     -->
-    <app-table-title
-      page-type="tokens"
-      :title="$tc('token.name', 2)"
-      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"
-      :has-pagination="hasPagination"
-    >
+    <!--    <app-table-title-->
+    <!--      page-type="tokens"-->
+    <!--      :title="$tc('token.name', 2)"-->
+    <!--      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
+    <!--      :has-pagination="hasPagination"-->
+    <!--    >-->
+    <app-table-title page-type="tokens" :title="$tc('token.name', 2)" :has-pagination="hasPagination">
       <template v-slot:pagination v-if="hasPagination">
-        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+        <app-paginate-has-more :has-more="tokenExchangeRatePage.hasMore" @newPage="setPage" :current-page="page" />
       </template>
     </app-table-title>
     <!--
@@ -103,7 +104,7 @@
             <token-table-row :token="token" />
           </div>
           <v-layout v-if="hasPagination" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+            <app-paginate-has-more :has-more="tokenExchangeRatePage.hasMore" @newPage="setPage" :current-page="page" />
           </v-layout>
         </v-flex>
         <v-flex xs12 v-else>
@@ -126,9 +127,11 @@ import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLo
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { tokenExchangeRates } from '@app/modules/tokens/tokens.graphql'
 import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 
 @Component({
   components: {
+    AppPaginateHasMore,
     AppError,
     AppPaginate,
     AppTableTitle,
@@ -264,15 +267,15 @@ export default class TokenTable extends Vue {
     return !!this.error && this.error !== ''
   }
 
-  get totalCount(): number {
-    return this.tokenExchangeRatePage ? this.tokenExchangeRatePage.totalCount : 0
-  }
+  // get totalCount(): number {
+  //   return this.tokenExchangeRatePage ? this.tokenExchangeRatePage.totalCount : 0
+  // }
 
-  get pages(): number {
-    return this.tokenExchangeRatePage ? Math.ceil(this.tokenExchangeRatePage!.totalCount / this.maxItems) : 0
-  }
+  // get pages(): number {
+  //   return this.tokenExchangeRatePage ? Math.ceil(this.tokenExchangeRatePage!.totalCount / this.maxItems) : 0
+  // }
   get hasPagination(): boolean {
-    return this.pages > 1 && !this.hasError
+    return !!(!this.hasError && (this.page > 0 || (this.tokenExchangeRatePage && this.tokenExchangeRatePage.hasMore)))
   }
 }
 </script>

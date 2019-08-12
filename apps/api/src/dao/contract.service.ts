@@ -39,23 +39,26 @@ export class ContractService {
     )
   }
 
-  async findContractsCreatedBy(creator: string, offset: number = 0, limit: number = 10): Promise<[ContractSummary[], number]> {
+  async findContractsCreatedBy(creator: string, offset: number = 0, limit: number = 10): Promise<[ContractSummary[], boolean]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[ContractSummary[], number]> => {
+      async (txn): Promise<[ContractSummary[], boolean]> => {
 
         const where = { creator }
-
-        const count = await txn.count(ContractEntity, { where, cache: true })
 
         const contracts = await txn.find(ContractEntity, {
           select: ['address', 'creator', 'traceCreatedAtBlockNumber', 'traceCreatedAtTransactionHash'],
           where,
           skip: offset,
-          take: limit,
+          take: limit + 1,
           cache: true,
         })
+
+        const hasMore = contracts.length > limit
+        if (hasMore) {
+          contracts.pop()
+        }
 
         // Get tx summaries
         const txSummaries = await this.txService
@@ -82,7 +85,7 @@ export class ContractService {
           } as ContractSummary
         })
 
-        return [contractSummaries, count]
+        return [contractSummaries, hasMore]
       },
     )
   }

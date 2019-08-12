@@ -73,14 +73,10 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
 export class TokenBalancePageExt implements TokenBalancePage {
   __typename!: 'TokenBalancePage'
   items: (TokenBalancePageExt_items)[]
-  totalCount: number
+  hasMore: boolean
 
   constructor(proto: TokenBalancePage) {
     this.items = proto.items.map(s => new TokenBalancePageExt_items(s as TokenBalance))
-    this.totalCount = proto.totalCount
-  }
-
-  get totalCountBN(): BN {
-    return new BN(this.totalCount)
+    this.hasMore = proto.hasMore
   }
 }

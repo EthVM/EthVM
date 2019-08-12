@@ -6,8 +6,8 @@
     </v-flex>
     <app-error :has-error="hasError" :message="error" class="mb-4" />
     <!-- Pagination -->
-    <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="pages > 1">
-      <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+    <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="showPaginate">
+      <app-paginate-has-more :current-page="page" :has-more="transferPage.hasMore" @newPage="setPage" />
     </v-layout>
     <!-- End Pagination -->
 
@@ -64,8 +64,8 @@
           <transfers-table-row :transfer="transfer" :is-internal="isInternal" :decimals="decimals" />
         </v-card>
         <!-- End Rows -->
-        <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="pages > 1">
-          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+        <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="showPaginate">
+          <app-paginate-has-more :current-page="page" :has-more="transferPage.hasMore" @newPage="setPage" />
         </v-layout>
       </div>
     </div>
@@ -75,14 +75,13 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import {
   internalTransactionsByAddress,
   tokenTransfersByContractAddress,
   tokenTransfersByContractAddressForHolder
 } from '@app/modules/transfers/transfers.graphql'
 import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
-import BigNumber from 'bignumber.js'
 import AppError from '@app/core/components/ui/AppError.vue'
 import TransfersTableRow from '@app/modules/transfers/components/TransfersTableRow.vue'
 
@@ -91,9 +90,9 @@ const MAX_ITEMS = 10
 @Component({
   components: {
     AppTimeAgo,
-    AppPaginate,
     AppError,
-    TransfersTableRow
+    TransfersTableRow,
+    AppPaginateHasMore
   },
   data() {
     return {
@@ -219,26 +218,41 @@ export default class TransfersTable extends Vue {
     return !!this.error && this.error !== ''
   }
 
-  get totalCount(): BigNumber {
-    return this.transferPage ? this.transferPage.totalCountBN : new BigNumber(0)
-  }
+  // get totalCount(): BigNumber {
+  //   return this.transferPage ? this.transferPage.totalCountBN : new BigNumber(0)
+  // }
 
   get hasItems(): boolean {
-    return this.totalCount.isGreaterThan(0)
+    return !!(this.transferPage && this.transferPage.items.length)
+    // return this.totalCount.isGreaterThan(0)
   }
 
   /**
    * @return {Number} - Total number of pagination pages
    */
-  get pages(): number {
-    return this.transferPage ? Math.ceil(this.transferPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
-  }
+  // get pages(): number {
+  //   return this.transferPage ? Math.ceil(this.transferPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  // }
 
   /**
    * @return {Number} - MAX_ITEMS per pagination page
    */
   get maxItems(): number {
     return MAX_ITEMS
+  }
+
+  /**
+   * @return {Boolean} - Whether to display pagination component
+   */
+  get showPaginate(): boolean {
+    if (this.page && this.page > 0) {
+      // If we're past the first page, there must be pagination
+      return true
+    } else if (this.transferPage && this.transferPage.hasMore) {
+      // We're on the first page, but there are more items, show pagination
+      return true
+    }
+    return false
   }
 }
 </script>

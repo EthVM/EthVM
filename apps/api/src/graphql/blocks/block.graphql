@@ -4,7 +4,7 @@ type Query {
   hashRate: BigNumber!
 
   blockSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
-  blockSummariesByAuthor(author: String!, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
+  blockSummariesByAuthor(author: String!, offset: Int = 0, limit: Int = 20): BlockSummaryByAuthorPage!
 
   blockByHash(hash: String!): Block
   blockByNumber(number: BigNumber!): Block
@@ -33,6 +33,11 @@ type BlockSummary {
 type BlockSummaryPage {
   items: [BlockSummary!]!
   totalCount: Int!
+}
+
+type BlockSummaryByAuthorPage {
+  items: [BlockSummary!]!
+  hasMore: Boolean!
 }
 
 type Block {

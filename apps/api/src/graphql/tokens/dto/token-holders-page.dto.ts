@@ -1,11 +1,11 @@
-import { TokenHolder, TokenHoldersPage } from '@app/graphql/schema'
+import { TokenHoldersPage } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
 
 export class TokenHoldersPageDto implements TokenHoldersPage {
 
   items!: TokenHolderDto[]
-  totalCount!: number
+  hasMore!: boolean
 
   constructor(data: any) {
     if (data.items) {

@@ -5,7 +5,7 @@ type Query {
 
 type ContractSummaryPage {
   items: [ContractSummary!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type ContractSummary {

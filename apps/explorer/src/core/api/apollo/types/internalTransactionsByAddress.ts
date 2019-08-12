@@ -23,7 +23,7 @@ export interface internalTransactionsByAddress_transfers_items {
 export interface internalTransactionsByAddress_transfers {
   __typename: "TransferPage";
   items: internalTransactionsByAddress_transfers_items[];
-  totalCount: any;
+  hasMore: boolean;
 }
 
 export interface internalTransactionsByAddress {

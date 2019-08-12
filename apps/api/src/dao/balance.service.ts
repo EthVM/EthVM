@@ -11,7 +11,7 @@ export class BalanceService {
   constructor(@InjectRepository(BalanceEntity, DbConnection.Principal) private readonly balanceRepository: Repository<BalanceEntity>) {
   }
 
-  async findAndCount(addresses: string[], contracts: string[] = [], offset: number = 0, limit: number = 10): Promise<[BalanceEntity[], number]> {
+  async find(addresses: string[], contracts: string[] = [], offset: number = 0, limit: number = 10): Promise<[BalanceEntity[], boolean]> {
 
     const qb = this.balanceRepository.createQueryBuilder('b')
       .where('b.address IN (:...addresses)', { addresses })
@@ -25,15 +25,18 @@ export class BalanceService {
       qb.andWhere('b.contract IN (:...contracts)', { contracts })
     }
 
-    const count = await qb.getCount()
-
     const items = await qb
       .orderBy('b.timestamp', 'DESC') // Add ordering to guarantee paging reliability
       .offset(offset)
-      .limit(limit)
+      .limit(limit + 1)
       .getMany()
 
-    return [items, count]
+    const hasMore = items.length > limit
+    if (hasMore) {
+      items.pop()
+    }
+
+    return [items, hasMore]
 
   }
 }

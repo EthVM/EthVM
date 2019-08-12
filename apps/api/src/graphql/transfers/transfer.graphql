@@ -1,3 +1,7 @@
+type Mutation {
+  foo: Boolean
+}
+
 type Query {
   internalTransactionsByAddress(address: String!, offset: Int = 0, limit: Int = 20): TransferPage!
 
@@ -11,7 +15,7 @@ type Query {
 
 type TransferPage {
   items: [Transfer!]!
-  totalCount: BigNumber!
+  hasMore: Boolean!
 }
 
 type Transfer {

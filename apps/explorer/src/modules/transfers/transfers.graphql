@@ -31,5 +31,5 @@ fragment TransferPage on TransferPage {
   items {
     ...Transfer
   }
-  totalCount
+  hasMore
 }

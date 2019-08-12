@@ -369,7 +369,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "BlockSummaryPage",
+                "name": "BlockSummaryByAuthorPage",
                 "ofType": null
               }
             },
@@ -1893,7 +1893,7 @@
         "description": null,
         "fields": [
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -1901,7 +1901,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -2928,6 +2928,57 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Date",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "BlockSummaryByAuthorPage",
+        "description": null,
+        "fields": [
+          {
+            "name": "items",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "BlockSummary",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "hasMore",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -4961,7 +5012,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -4969,7 +5020,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -5691,7 +5742,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -5699,7 +5750,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -6048,7 +6099,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -6056,7 +6107,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -6338,7 +6389,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -6346,7 +6397,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -6484,7 +6535,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -6492,7 +6543,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -6754,7 +6805,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -6762,7 +6813,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "BigNumber",
+                "name": "Boolean",
                 "ofType": null
               }
             },
