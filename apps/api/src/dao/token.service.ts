@@ -37,19 +37,24 @@ export class TokenService {
     @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
   ) {}
 
-  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], number]> {
+  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], boolean]> {
     const findOptions: FindManyOptions = {
       where: { contract: address },
-      take: limit,
+      take: limit + 1,
       skip: offset,
       cache: true,
     }
     const findOptionsErc20: FindManyOptions = { ...findOptions, select: ['address', 'amount'] }
-    const erc20Balances = await this.erc20BalanceRepository.findAndCount(findOptionsErc20)
-    if (erc20Balances[1] > 0) {
-      return erc20Balances
+
+    // Currently only erc20 tokens are displayed in explorer
+    const erc20Balances = await this.erc20BalanceRepository.find(findOptionsErc20)
+    const hasMore = erc20Balances.length > limit
+    if (hasMore) {
+      erc20Balances.pop()
     }
-    return await this.erc721BalanceRepository.findAndCount(findOptions)
+
+    return [erc20Balances, hasMore]
+    // return await this.erc721BalanceRepository.findAndCount(findOptions)
   }
 
   async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<Erc20BalanceEntity | Erc721BalanceEntity | undefined> {

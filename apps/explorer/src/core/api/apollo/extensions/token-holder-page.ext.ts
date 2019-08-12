@@ -19,14 +19,11 @@ export class TokenHolderPageExt_items implements TokenHolderPage_items {
 export class TokenHolderPageExt implements TokenHolderPage {
   __typename!: 'TokenHoldersPage'
   items: TokenHolderPageExt_items[]
-  totalCount: number
+  hasMore: boolean
 
   constructor(proto: TokenHolderPage) {
-    this.totalCount = proto.totalCount
+    this.hasMore = proto.hasMore
     this.items = proto.items.map(i => new TokenHolderPageExt_items(i))
   }
 
-  get totalCountBN(): BigNumber {
-    return new BigNumber(this.totalCount)
-  }
 }

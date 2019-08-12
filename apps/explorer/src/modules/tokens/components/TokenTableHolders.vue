@@ -6,8 +6,8 @@
     </v-flex>
     <app-error :has-error="hasError" :message="error" class="mb-4" />
     <!-- Pagination -->
-    <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="numPages > 1">
-      <app-paginate :total="numPages" @newPage="setPage" :current-page="page" />
+    <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="showPagination">
+      <app-paginate-has-more :has-more="holdersPage.hasMore" @newPage="setPage" :current-page="page" />
     </v-layout>
     <!-- End Pagination -->
 
@@ -69,9 +69,11 @@ import { TokenHolderPageExt, TokenHolderPageExt_items } from '@app/core/api/apol
 const MAX_ITEMS = 10
 import { tokenHolders } from '@app/modules/tokens/tokens.graphql'
 import AppError from '@app/core/components/ui/AppError.vue'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue';
 
 @Component({
   components: {
+      AppPaginateHasMore,
     AppPaginate,
     AppError,
     TokenTableHoldersRow
@@ -159,18 +161,18 @@ export default class TokenTableHolders extends Vue {
     return this.holdersPage ? this.holdersPage.items : []
   }
 
-  get totalCount(): BN {
-    return this.holdersPage ? this.holdersPage.totalCountBN : new BN(0)
-  }
+  // get totalCount(): BN {
+  //   return this.holdersPage ? this.holdersPage.totalCountBN : new BN(0)
+  // }
 
   /**
    * Given a MAX_ITEMS per page, calculate the number of pages for pagination.
    * @return {Integer} - Number of pages of results
    */
-  get numPages() {
-    const { holdersPage } = this
-    return holdersPage ? Math.ceil(holdersPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
-  }
+  // get numPages() {
+  //   const { holdersPage } = this
+  //   return holdersPage ? Math.ceil(holdersPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  // }
 
   get maxItems() {
     return MAX_ITEMS
@@ -185,7 +187,12 @@ export default class TokenTableHolders extends Vue {
   }
 
   get hasItems(): boolean {
-    return this.totalCount.isGreaterThan(0)
+    // return this.totalCount.isGreaterThan(0)
+    return !!((this.page && this.page > 0) || (this.holdersPage && this.holdersPage.items.length > 0))
+  }
+
+  get showPagination(): boolean {
+    return !!((this.page && this.page > 0) || (this.holdersPage && this.holdersPage.hasMore))
   }
 }
 </script>

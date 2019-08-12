@@ -497,7 +497,7 @@ export interface TokenHolder {
 
 export interface TokenHoldersPage {
     items: TokenHolder[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface TokenMetadata {

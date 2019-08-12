@@ -25,11 +25,8 @@ export class TokenResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<TokenHoldersPageDto> {
-    const result = await this.tokenService.findTokenHolders(address, limit, offset)
-    return new TokenHoldersPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
+    const [items, hasMore] = await this.tokenService.findTokenHolders(address, limit, offset)
+    return new TokenHoldersPageDto({ items, hasMore })
   }
 
   @Query()
