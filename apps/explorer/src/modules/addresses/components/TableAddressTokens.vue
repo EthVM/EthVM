@@ -30,7 +30,7 @@
           <!--            </span>-->
           <!--          </p>-->
         </v-flex>
-        <v-flex xs12 sm6 pt-0 pb-0>
+        <v-flex xs12 sm6 pt-0>
           <v-layout v-if="showPaginate" justify-end row>
             <app-paginate-has-more :current-page="page" :has-more="tokensPage.hasMore" @newPage="setPage" />
           </v-layout>
@@ -84,7 +84,7 @@
       <div v-else v-for="(token, index) in tokens" :key="index">
         <table-address-tokens-row :token="token" :holder="address" :is-ropsten="isRopsten" />
       </div>
-      <v-layout v-if="showPaginate" justify-end row class="pb-1 pr-2 pl-2">
+      <v-layout v-if="showPaginate" justify-end row class="pa-2">
         <app-paginate-has-more :current-page="page" :has-more="tokensPage.hasMore" @newPage="setPage" />
       </v-layout>
     </div>

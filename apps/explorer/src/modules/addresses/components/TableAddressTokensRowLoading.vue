@@ -40,8 +40,8 @@
        -->
       <v-flex hidden-xs-only sm12>
         <!-- Standard layout -->
-        <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-          <v-flex sm4 :sm6="isRopsten">
+        <v-layout grid-list-xs row wrap align-center justify-start fill-height>
+          <v-flex sm4 :sm6="isRopsten" class="pt-0 pb-0">
             <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-2>
               <div class="token-image">
                 <v-img :src="require('@/assets/icon-token.png')" contain />
@@ -49,14 +49,14 @@
               <v-flex class="table-row-loading" />
             </v-layout>
           </v-flex>
-          <v-flex sm3 :sm6="isRopsten">
-            <div class="table-row-loading"></div>
+          <v-flex sm3 :sm6="isRopsten" class="pt-0 pb-0">
+            <div class="table-row-loading" :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' }"></div>
           </v-flex>
-          <v-flex v-if="!isRopsten" sm3>
-            <div class="table-row-loading"></div>
+          <v-flex v-if="!isRopsten" sm3 class="pt-0 pb-0">
+            <div class="table-row-loading" :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' }"></div>
           </v-flex>
-          <v-flex v-if="!isRopsten" sm2>
-            <div class="table-row-loading"></div>
+          <v-flex v-if="!isRopsten" sm2 class="pt-0 pb-0">
+            <div class="table-row-loading" :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' }"></div>
           </v-flex>
         </v-layout>
         <v-divider class="mb-2 mt-2" />
@@ -77,6 +77,9 @@ export default class TokenTableRowLoading extends Vue {
 <style scoped lang="css">
 .table-row-loading {
   margin: 1px;
+}
+.table-row-loading-desktop {
+  height: 16px !important;
 }
 .token-mobile {
   border: 1px solid #b4bfd2;
