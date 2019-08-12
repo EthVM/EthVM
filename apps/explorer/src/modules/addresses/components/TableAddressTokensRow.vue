@@ -17,13 +17,14 @@
                   </div>
                 </v-layout>
               </v-flex>
-              <v-flex>
+              <v-flex xs10>
                 <v-layout row wrap align-center justify-start>
                   <v-flex xs10 :xs12="isRopsten" pa-1>
-                    <p class="black--text text-uppercase font-weight-medium">
+                    <p v-if="token.name || token.symbol" class="black--text text-uppercase font-weight-medium">
                       {{ token.symbol }}
                       <span class="caption text-none">({{ token.name }}) </span>
                     </p>
+                    <app-transform-hash v-else :hash="token.address" :is-blue="false"></app-transform-hash>
                   </v-flex>
                   <v-flex v-if="!isRopsten" xs2 pa-1>
                     <v-layout grid-list-xs row justify-end pr-3>
@@ -60,9 +61,10 @@
                 <div class="token-image">
                   <v-img :src="image" contain />
                 </div>
-                <p class="black--text">
-                  {{ token.name }} <span class="text-uppercase caption">({{ token.symbol }})</span>
+                <p v-if="token.name || token.symbol" class="black--text">
+                  {{ token.name }} <span v-if="token.symbol" class="text-uppercase caption">({{ token.symbol }})</span>
                 </p>
+                <app-transform-hash v-else :hash="token.address" :is-blue="false"></app-transform-hash>
               </v-layout>
             </v-flex>
             <v-flex sm3 :sm6="isRopsten">
@@ -93,8 +95,10 @@
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
-
-@Component
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue';
+@Component({
+    components: {AppTransformHash}
+})
 export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   /*
   ===================================================================================
