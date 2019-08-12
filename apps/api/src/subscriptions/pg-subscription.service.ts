@@ -249,7 +249,7 @@ export class PgSubscriptionService {
 
   private initPrincipal() {
 
-    const {principalUrl, blockService, transactionService, blockMetricsService, pubSub, principalEntityManager} = this
+    const {principalUrl, blockService, transactionService, logger, pubSub, principalEntityManager} = this
 
     const events$ = Observable.create(
       async observer => {
@@ -301,30 +301,42 @@ export class PgSubscriptionService {
       )
       .subscribe(async blockHashes => {
 
+        logger.info(
+          `[Subscription service] New blocks available, count = %d, hashes = %s`,
+          blockHashes.length,
+          blockHashes,
+        )
+
         // clear query cache
         await principalEntityManager.connection.queryResultCache!.clear()
 
         const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes, false)
 
-        blockSummaries.forEach(async blockSummary => {
+        const publishPromises = blockSummaries.map(async blockSummary => {
 
           // get data
           const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
           const hashRate = await blockService.calculateHashRate(false)
 
+          const promises: Promise<void>[] = [];
+
           // publish events
 
-          pubSub.publish('newBlock', blockSummary)
+          promises.push(pubSub.publish('newBlock', blockSummary))
 
-          pubSub.publish('newTransactions', txSummaries)
+          promises.push(pubSub.publish('newTransactions', txSummaries))
 
           txSummaries.forEach(txSummary => {
-            pubSub.publish('newTransaction', txSummary)
+            promises.push(pubSub.publish('newTransaction', txSummary))
           })
 
-          pubSub.publish('hashRate', hashRate)
+          promises.push(pubSub.publish('hashRate', hashRate))
+
+          return Promise.all(promises)
         })
 
+        // await on all the promises, throwing an error if any of them failed
+        await Promise.all(publishPromises);
       })
 
   }
@@ -339,6 +351,7 @@ export class PgSubscriptionService {
           const subscriber = createSubscriber({connectionString: this.metricsUrl})
 
           subscriber.notifications.on('events', e => observer.next(e))
+
           subscriber.events.on('error', err => {
             console.error('pg sub error', err)
             observer.error(err)
