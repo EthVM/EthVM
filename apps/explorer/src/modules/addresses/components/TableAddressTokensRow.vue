@@ -95,9 +95,9 @@
 import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
-import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue';
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 @Component({
-    components: {AppTransformHash}
+  components: { AppTransformHash }
 })
 export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   /*
