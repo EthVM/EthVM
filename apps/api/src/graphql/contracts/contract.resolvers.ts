@@ -24,7 +24,7 @@ export class ContractResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<ContractSummaryPageDto> {
-    const [contractSummaries, totalCount] = await this.contractService.findContractsCreatedBy(creator, offset, limit)
-    return new ContractSummaryPageDto(contractSummaries, totalCount)
+    const [contractSummaries, hasMore] = await this.contractService.findContractsCreatedBy(creator, offset, limit)
+    return new ContractSummaryPageDto(contractSummaries, hasMore)
   }
 }

@@ -324,7 +324,7 @@ export interface ContractSummary {
 
 export interface ContractSummaryPage {
     items: ContractSummary[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface ContractSupport {

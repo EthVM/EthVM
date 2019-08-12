@@ -19,5 +19,5 @@ export interface ContractSummaryPage_items {
 export interface ContractSummaryPage {
   __typename: "ContractSummaryPage";
   items: ContractSummaryPage_items[];
-  totalCount: number;
+  hasMore: boolean;
 }
