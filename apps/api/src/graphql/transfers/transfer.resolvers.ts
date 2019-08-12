@@ -23,8 +23,8 @@ export class TransferResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, totalCount] = await this.transferService.findTokenTransfersByContractAddress(contractAddress, offset, limit)
-    return new BalanceDeltaPageDto({ items, totalCount })
+    const [items, hasMore] = await this.transferService.findTokenTransfersByContractAddress(contractAddress, offset, limit)
+    return new BalanceDeltaPageDto({ items, hasMore })
   }
 
   @Query()
@@ -35,8 +35,8 @@ export class TransferResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, totalCount] = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, offset, limit)
-    return new BalanceDeltaPageDto({ items, totalCount })
+    const [items, hasMore] = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, offset, limit)
+    return new BalanceDeltaPageDto({ items, hasMore })
   }
 
   @Query()
@@ -53,8 +53,8 @@ export class TransferResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<InternalTransferPageDto> {
-    const [items, totalCount] = await this.transferService.findInternalTransactionsByAddress(address, offset, limit)
-    return new InternalTransferPageDto({ items, totalCount })
+    const [items, hasMore] = await this.transferService.findInternalTransactionsByAddress(address, offset, limit)
+    return new InternalTransferPageDto({ items, hasMore })
   }
 
   @Query()
@@ -81,7 +81,7 @@ export class TransferResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, totalCount] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
-    return new BalanceDeltaPageDto({ items, totalCount })
+    const [items, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
+    return new BalanceDeltaPageDto({ items, hasMore })
   }
 }

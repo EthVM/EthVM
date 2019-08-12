@@ -21,15 +21,20 @@ export class TransferService {
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], number]> {
+  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], boolean]> {
     const findOptions: FindManyOptions = {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address, isReceiving: true},
       skip: offset,
-      take: limit,
+      take: limit + 1,
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
       cache: true,
     }
-    return this.fungibleDeltaRepository.findAndCount(findOptions)
+    const items = await this.fungibleDeltaRepository.find(findOptions)
+    const hasMore = items.length > limit
+    if (hasMore) {
+      items.pop()
+    }
+    return [items, hasMore]
   }
 
   async findTokenTransfersByContractAddressForHolder(
@@ -38,7 +43,7 @@ export class TransferService {
     filter: string = 'all',
     offset: number = 0,
     limit: number = 10,
-  ): Promise<[FungibleBalanceDeltaEntity[], number]> {
+  ): Promise<[FungibleBalanceDeltaEntity[], boolean]> {
 
     const builder = this.fungibleDeltaRepository.createQueryBuilder('t')
       .where('t.contract_address = :address')
@@ -56,15 +61,21 @@ export class TransferService {
         break
     }
 
-    return builder
+    const items = await builder
       .setParameters({ address, deltaType: 'TOKEN_TRANSFER', holder })
       .orderBy('t.traceLocationBlockNumber', 'DESC')
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(offset)
-      .take(limit)
+      .limit(limit + 1)
       .cache(true)
-      .getManyAndCount()
+      .getMany()
 
+    const hasMore = items.length > limit
+    if (hasMore) {
+      items.pop()
+    }
+
+    return [items, hasMore]
   }
 
   async findTotalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): Promise<BigNumber> {
@@ -78,13 +89,11 @@ export class TransferService {
 
   }
 
-  async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10): Promise<[InternalTransferEntity[], number]> {
+  async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10): Promise<[InternalTransferEntity[], boolean]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[InternalTransferEntity[], number]> => {
-
-        const count = await txn.count(InternalTransferEntity, { where: { address }, cache: true })
+      async (txn): Promise<[InternalTransferEntity[], boolean]> => {
 
         const items = await txn.createQueryBuilder(InternalTransferEntity, 'it')
           .where('it.address = :address', { address })
@@ -92,10 +101,15 @@ export class TransferService {
           .addOrderBy('trace_location_transaction_index', 'DESC')
           .addOrderBy('trace_location_trace_address', 'DESC')
           .offset(offset)
-          .limit(limit)
+          .limit(limit + 1)
           .getMany()
 
-        return [items, count]
+        const hasMore = items.length > limit
+        if (hasMore) {
+          items.pop()
+        }
+
+        return [items, hasMore]
 
       },
     )
@@ -110,7 +124,7 @@ export class TransferService {
     timestampFrom?: number,
     offset: number = 0,
     limit: number = 10,
-  ): Promise<[BalanceDeltaEntity[], number]> {
+  ): Promise<[BalanceDeltaEntity[], boolean]> {
 
     const qb = this.balanceDeltaRepository.createQueryBuilder('bd')
       .where('bd.address IN (:...addresses)', { addresses })
@@ -137,16 +151,19 @@ export class TransferService {
       qb.andWhere('bd.timestamp > :timestampFrom', { timestampFrom: new Date(timestampFrom * 1000).toISOString() })
     }
 
-    const count = await qb.getCount()
-
     const items = await qb.orderBy('bd.trace_location_block_number', 'DESC')
       .addOrderBy('bd.trace_location_transaction_index', 'DESC')
       .addOrderBy('bd.trace_location_trace_address', 'DESC')
       .offset(offset)
-      .limit(limit)
+      .limit(limit + 1) // Request one extra item to determine if there are more pages
       .getMany()
 
-    return [items, count]
+    const hasMore = items.length > limit
+    if (hasMore) {
+      items.pop()
+    }
+
+    return [items, hasMore]
 
   }
 
