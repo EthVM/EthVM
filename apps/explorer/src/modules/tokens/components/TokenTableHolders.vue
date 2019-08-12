@@ -69,11 +69,11 @@ import { TokenHolderPageExt, TokenHolderPageExt_items } from '@app/core/api/apol
 const MAX_ITEMS = 10
 import { tokenHolders } from '@app/modules/tokens/tokens.graphql'
 import AppError from '@app/core/components/ui/AppError.vue'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue';
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 
 @Component({
   components: {
-      AppPaginateHasMore,
+    AppPaginateHasMore,
     AppPaginate,
     AppError,
     TokenTableHoldersRow

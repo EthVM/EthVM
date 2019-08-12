@@ -5,17 +5,13 @@
           TITLE
         =====================================================================================
     -->
-<!--    <app-table-title-->
-<!--      page-type="tokens"-->
-<!--      :title="$tc('token.name', 2)"-->
-<!--      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
-<!--      :has-pagination="hasPagination"-->
-<!--    >-->
-      <app-table-title
-        page-type="tokens"
-        :title="$tc('token.name', 2)"
-        :has-pagination="hasPagination"
-      >
+    <!--    <app-table-title-->
+    <!--      page-type="tokens"-->
+    <!--      :title="$tc('token.name', 2)"-->
+    <!--      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
+    <!--      :has-pagination="hasPagination"-->
+    <!--    >-->
+    <app-table-title page-type="tokens" :title="$tc('token.name', 2)" :has-pagination="hasPagination">
       <template v-slot:pagination v-if="hasPagination">
         <app-paginate-has-more :has-more="tokenExchangeRatePage.hasMore" @newPage="setPage" :current-page="page" />
       </template>
@@ -131,11 +127,11 @@ import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLo
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { tokenExchangeRates } from '@app/modules/tokens/tokens.graphql'
 import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue';
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 
 @Component({
   components: {
-      AppPaginateHasMore,
+    AppPaginateHasMore,
     AppError,
     AppPaginate,
     AppTableTitle,
@@ -279,7 +275,7 @@ export default class TokenTable extends Vue {
   //   return this.tokenExchangeRatePage ? Math.ceil(this.tokenExchangeRatePage!.totalCount / this.maxItems) : 0
   // }
   get hasPagination(): boolean {
-    return !!(!this.hasError && ((this.page > 0) || (this.tokenExchangeRatePage && this.tokenExchangeRatePage.hasMore)))
+    return !!(!this.hasError && (this.page > 0 || (this.tokenExchangeRatePage && this.tokenExchangeRatePage.hasMore)))
   }
 }
 </script>

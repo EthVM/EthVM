@@ -25,5 +25,4 @@ export class TokenHolderPageExt implements TokenHolderPage {
     this.hasMore = proto.hasMore
     this.items = proto.items.map(i => new TokenHolderPageExt_items(i))
   }
-
 }
