@@ -132,7 +132,7 @@ export interface BalanceNew {
 }
 
 export interface BalancePage {
-    totalCount: number;
+    hasMore: boolean;
     items: BalanceNew[];
 }
 

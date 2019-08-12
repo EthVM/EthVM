@@ -19,7 +19,7 @@ export class BalanceResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalancePageDto> {
-    const [items, totalCount] = await this.balanceService.findAndCount(addresses, contracts, offset, limit)
-    return new BalancePageDto({ items, totalCount })
+    const [items, hasMore] = await this.balanceService.find(addresses, contracts, offset, limit)
+    return new BalancePageDto({ items, hasMore })
   }
 }
