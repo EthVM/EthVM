@@ -5742,7 +5742,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -5750,7 +5750,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -6389,7 +6389,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -6397,7 +6397,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               }
             },
