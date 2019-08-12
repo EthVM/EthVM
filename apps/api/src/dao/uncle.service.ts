@@ -45,20 +45,6 @@ export class UncleService {
 
         if (totalCount === 0) return [[], totalCount]
 
-        if (fromUncle) {
-          // we count all uncles greater than the from uncle and deduct from totalcache: true
-          // this is much faster way of determining the count
-
-          const { count: filterCount } = await entityManager.createQueryBuilder()
-            .select('count(hash)', 'count')
-            .from(UncleEntity, 't')
-            .where({ number: MoreThan(fromUncle) })
-            .cache(true)
-            .getRawOne() as { count: number }
-
-          totalCount = totalCount - filterCount
-        }
-
         const where = fromUncle ? { number: LessThanOrEqual(fromUncle) } : {}
 
         const uncles = await entityManager.find(UncleEntity, {
