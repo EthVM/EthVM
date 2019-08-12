@@ -19,7 +19,7 @@ fragment TokenExchangeRatePage on TokenExchangeRatesPage {
   items {
     ...TokenExchangeRate
   }
-  totalCount
+  hasMore
 }
 
 query tokenDetails($address: String!) {

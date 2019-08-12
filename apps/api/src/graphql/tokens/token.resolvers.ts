@@ -71,8 +71,8 @@ export class TokenResolvers {
     @Args('limit') limit?: number,
     @Args('offset') offset?: number,
   ): Promise<TokenExchangeRatePageDto> {
-    const [items, totalCount] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, addresses)
-    return new TokenExchangeRatePageDto({ items, totalCount })
+    const [items, hasMore] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, addresses)
+    return new TokenExchangeRatePageDto({ items, hasMore })
   }
 
   @Query()

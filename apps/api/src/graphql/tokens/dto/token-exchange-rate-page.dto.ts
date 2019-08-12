@@ -4,7 +4,7 @@ import { TokenExchangeRateDto } from '@app/graphql/tokens/dto/token-exchange-rat
 
 export class TokenExchangeRatePageDto implements TokenExchangeRatesPage {
   items!: TokenExchangeRateDto[]
-  totalCount!: number
+  hasMore!: boolean
 
   constructor(data: any) {
     if (data.items) {

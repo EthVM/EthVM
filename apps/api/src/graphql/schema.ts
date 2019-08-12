@@ -487,7 +487,7 @@ export interface TokenExchangeRate {
 
 export interface TokenExchangeRatesPage {
     items: TokenExchangeRate[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface TokenHolder {

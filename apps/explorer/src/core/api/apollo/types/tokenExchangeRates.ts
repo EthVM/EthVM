@@ -23,7 +23,7 @@ export interface tokenExchangeRates_tokenExchangeRates_items {
 export interface tokenExchangeRates_tokenExchangeRates {
   __typename: "TokenExchangeRatesPage";
   items: tokenExchangeRates_tokenExchangeRates_items[];
-  totalCount: number;
+  hasMore: boolean;
 }
 
 export interface tokenExchangeRates {
