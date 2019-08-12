@@ -23,5 +23,5 @@ export interface TransferPage_items {
 export interface TransferPage {
   __typename: "TransferPage";
   items: TransferPage_items[];
-  totalCount: any;
+  hasMore: boolean;
 }

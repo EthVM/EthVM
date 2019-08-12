@@ -47,6 +47,9 @@ export class FungibleBalanceDeltaEntity {
   @Column({type: 'character varying', length: 64, readonly: true})
   traceLocationTraceAddress!: string
 
+  @Column({type: 'timestamp', name: 'traceLocationTimestamp', readonly: true})
+  timestamp!: Date
+
   @Column({type: 'boolean', readonly: true})
   isReceiving!: boolean
 

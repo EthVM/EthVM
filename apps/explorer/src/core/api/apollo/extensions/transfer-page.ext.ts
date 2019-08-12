@@ -37,14 +37,10 @@ export class TransferPageExt_items implements TransferPage_items {
 export class TransferPageExt implements TransferPage {
   __typename!: 'TransferPage'
   items: (TransferPageExt_items)[]
-  totalCount: any
+  hasMore: boolean
 
   constructor(proto: TransferPage) {
     this.items = proto.items.map(s => new TransferPageExt_items(s as Transfer))
-    this.totalCount = proto.totalCount
-  }
-
-  get totalCountBN(): BN {
-    return new BN(this.totalCount)
+    this.hasMore = proto.hasMore
   }
 }

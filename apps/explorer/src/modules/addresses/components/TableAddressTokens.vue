@@ -78,7 +78,7 @@
       </div>
     </div>
     <div v-else>
-      <v-card v-if="totalCount === 0" flat>
+      <v-card v-if="!hasTokens" flat>
         <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-tokens-for-address') }}</v-card-text>
       </v-card>
       <div v-else v-for="(token, index) in tokens" :key="index">
@@ -246,7 +246,7 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   /**
-   * @return {Number} - Total number of pagination pages
+   * @return {Boolean} - Whether to display pagination component
    */
   get showPaginate(): boolean {
     if (this.page && this.page > 0) {
@@ -265,6 +265,10 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
       return this.$i18n.t('message.load').toString()
     }
     return this.totalTokensValue ? this.totalTokensValue.toFormat(2).toString() : '0.00'
+  }
+
+  get hasTokens(): boolean {
+    return !!(this.tokensPage && this.tokensPage.items && this.tokensPage.items.length)
   }
 
   // get totalTokens(): string {

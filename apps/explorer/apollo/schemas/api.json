@@ -6754,7 +6754,7 @@
             "deprecationReason": null
           },
           {
-            "name": "totalCount",
+            "name": "hasMore",
             "description": null,
             "args": [],
             "type": {
@@ -6762,7 +6762,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "BigNumber",
+                "name": "Boolean",
                 "ofType": null
               }
             },

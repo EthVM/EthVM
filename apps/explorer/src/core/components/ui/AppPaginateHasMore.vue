@@ -26,7 +26,7 @@ export default class AppPaginate extends Vue {
   ===================================================================================
   */
 
-  @Prop(Number) hasMore!: boolean
+  @Prop(Boolean) hasMore!: boolean
   @Prop(Number) currentPage!: number
   @Prop({ type: Boolean, default: true }) hasFirst!: boolean
   @Prop({ type: Boolean, default: true }) hasLast!: boolean
