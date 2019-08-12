@@ -89,7 +89,7 @@ type TokenMetadata {
 
 type TokenMetadataPage {
   items: [TokenMetadata!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type TokenDetail {

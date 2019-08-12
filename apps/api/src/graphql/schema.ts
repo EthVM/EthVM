@@ -512,7 +512,7 @@ export interface TokenMetadata {
 
 export interface TokenMetadataPage {
     items: TokenMetadata[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface Trace {

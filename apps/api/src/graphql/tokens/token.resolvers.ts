@@ -97,8 +97,8 @@ export class TokenResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<TokenMetadataPageDto> {
-    const [items, totalCount] = await this.tokenService.findTokensMetadata(addresses, offset, limit)
-    return new TokenMetadataPageDto({ items, totalCount })
+    const [items, hasMore] = await this.tokenService.findTokensMetadata(addresses, offset, limit)
+    return new TokenMetadataPageDto({ items, hasMore })
   }
 
   @Query()

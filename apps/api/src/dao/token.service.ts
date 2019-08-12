@@ -12,6 +12,7 @@ import BigNumber from 'bignumber.js'
 import { DbConnection } from '@app/orm/config'
 import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
 import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
+import has = Reflect.has
 
 @Injectable()
 export class TokenService {
@@ -194,10 +195,10 @@ export class TokenService {
     addresses: string[] = [],
     offset: number = 0,
     limit: number = 20,
-  ): Promise<[TokenMetadataEntity[], number]> {
+  ): Promise<[TokenMetadataEntity[], boolean]> {
 
     const findOptions: FindManyOptions = {
-      take: limit,
+      take: limit + 1,
       skip: offset,
       cache: true,
     }
@@ -206,7 +207,13 @@ export class TokenService {
       findOptions.where = { address: Any(addresses) }
     }
 
-    return await this.tokenMetadataRepository.findAndCount(findOptions)
+    const items = await this.tokenMetadataRepository.find(findOptions)
+    const hasMore = items.length > limit
+    if (hasMore) {
+      items.pop()
+    }
+
+    return [items, hasMore]
   }
 
   async findDetailByAddress(address: string): Promise<TokenDetailEntity | undefined> {
