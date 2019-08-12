@@ -132,7 +132,7 @@ export interface BalanceNew {
 }
 
 export interface BalancePage {
-    totalCount: number;
+    hasMore: boolean;
     items: BalanceNew[];
 }
 
@@ -234,6 +234,11 @@ export interface BlockSummary {
     timestamp: Date;
 }
 
+export interface BlockSummaryByAuthorPage {
+    items: BlockSummary[];
+    hasMore: boolean;
+}
+
 export interface BlockSummaryPage {
     items: BlockSummary[];
     totalCount: number;
@@ -319,7 +324,7 @@ export interface ContractSummary {
 
 export interface ContractSummaryPage {
     items: ContractSummary[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface ContractSupport {
@@ -343,7 +348,7 @@ export interface IQuery {
     blockMetricsTimeseries(bucket: TimeBucket, field: BlockMetricField, start?: Date, end?: Date): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
     hashRate(): BigNumber | Promise<BigNumber>;
     blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
-    blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
+    blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryByAuthorPage | Promise<BlockSummaryByAuthorPage>;
     blockByHash(hash: string): Block | Promise<Block>;
     blockByNumber(number: BigNumber): Block | Promise<Block>;
     contractByAddress(address: string): Contract | Promise<Contract>;
@@ -435,7 +440,7 @@ export interface TokenBalance {
 
 export interface TokenBalancePage {
     items: TokenBalance[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface TokenDetail {
@@ -482,7 +487,7 @@ export interface TokenExchangeRate {
 
 export interface TokenExchangeRatesPage {
     items: TokenExchangeRate[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface TokenHolder {
@@ -492,7 +497,7 @@ export interface TokenHolder {
 
 export interface TokenHoldersPage {
     items: TokenHolder[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface TokenMetadata {
@@ -507,7 +512,7 @@ export interface TokenMetadata {
 
 export interface TokenMetadataPage {
     items: TokenMetadata[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface Trace {
@@ -580,7 +585,7 @@ export interface Transfer {
 
 export interface TransferPage {
     items: Transfer[];
-    totalCount: BigNumber;
+    hasMore: boolean;
 }
 
 export interface Uncle {

@@ -15,5 +15,5 @@ export interface TokenHolderPage_items {
 export interface TokenHolderPage {
   __typename: "TokenHoldersPage";
   items: TokenHolderPage_items[];
-  totalCount: number;
+  hasMore: boolean;
 }

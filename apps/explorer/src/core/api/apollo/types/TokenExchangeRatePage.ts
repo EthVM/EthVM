@@ -21,5 +21,5 @@ export interface TokenExchangeRatePage_items {
 export interface TokenExchangeRatePage {
   __typename: "TokenExchangeRatesPage";
   items: TokenExchangeRatePage_items[];
-  totalCount: number;
+  hasMore: boolean;
 }

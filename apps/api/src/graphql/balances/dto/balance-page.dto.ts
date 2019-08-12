@@ -4,7 +4,7 @@ import { BalanceDto } from '@app/graphql/balances/dto/balance.dto'
 
 export class BalancePageDto implements BalancePage {
   items!: BalanceNew[]
-  totalCount!: number
+  hasMore!: boolean
 
   constructor(data) {
     if (data.items) {

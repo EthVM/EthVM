@@ -14,7 +14,7 @@ type Query {
 
 type TokenBalancePage {
   items: [TokenBalance!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type TokenBalance {
@@ -38,12 +38,12 @@ type TokenHolder {
 
 type TokenHoldersPage {
   items: [TokenHolder!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type TokenExchangeRatesPage {
   items: [TokenExchangeRate!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type TokenExchangeRate {
@@ -89,7 +89,7 @@ type TokenMetadata {
 
 type TokenMetadataPage {
   items: [TokenMetadata!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type TokenDetail {

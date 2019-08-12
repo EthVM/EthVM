@@ -3,11 +3,11 @@ import { ContractSummaryDto } from '@app/graphql/contracts/dto/contract-summary.
 
 export class ContractSummaryPageDto implements ContractSummaryPage {
   items!: ContractSummaryDto[]
-  totalCount!: number
+  hasMore!: boolean
 
-  constructor(items: ContractSummary[], totalCount: number) {
+  constructor(items: ContractSummary[], hasMore: boolean) {
     this.items = items.map(s => new ContractSummaryDto(s))
-    this.totalCount = totalCount
+    this.hasMore = hasMore
   }
 
 }
