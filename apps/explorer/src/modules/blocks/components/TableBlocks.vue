@@ -10,7 +10,7 @@
         <notice-new-block v-if="isPageBlocks" @reload="resetFromBlock" />
       </template>
       <template v-slot:pagination v-if="hasPagination">
-        <app-paginate
+        <app-paginate v-if="!isPageDetailsAddress"
           :total="pages"
           @newPage="setPage"
           :current-page="page"
@@ -18,6 +18,7 @@
           :has-first="!simplePagination"
           :has-last="!simplePagination"
         />
+        <app-paginate-has-more v-else :current-page="page" :has-more="blockPage.hasMore" @newPage="setPage" />
       </template>
     </app-table-title>
 
@@ -63,7 +64,7 @@
             <table-blocks-row :block="block" :page-type="pageType" />
           </div>
           <v-layout v-if="hasPagination" justify-end row class="pb-1 pt-2 pr-2 pl-2">
-            <app-paginate
+            <app-paginate v-if="!isPageDetailsAddress"
               :total="pages"
               @newPage="setPage"
               :current-page="page"
@@ -71,6 +72,7 @@
               :has-first="!simplePagination"
               :has-last="!simplePagination"
             />
+            <app-paginate-has-more v-else :current-page="page" :has-more="blockPage.hasMore" @newPage="setPage" />
           </v-layout>
         </v-flex>
         <div xs12 v-if="loading">
@@ -109,6 +111,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
@@ -118,6 +121,7 @@ import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { BlockSummaryPageExt } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { BlockSummaryByAuthorPageExt } from "@app/core/api/apollo/extensions/block-summary-by-author-page.ext";
 
 const MAX_ITEMS = 50
 
@@ -129,7 +133,8 @@ const MAX_ITEMS = 50
     AppPaginate,
     AppTableTitle,
     TableBlocksRow,
-    NoticeNewBlock
+    NoticeNewBlock,
+    AppPaginateHasMore
   },
   data() {
     return {
@@ -160,7 +165,7 @@ const MAX_ITEMS = 50
       update({ blockSummaries }) {
         if (blockSummaries) {
           this.error = '' // clear error
-          return new BlockSummaryPageExt(blockSummaries)
+          return this.isPageDetailsAddress ? new BlockSummaryByAuthorPageExt(blockSummaries) : new BlockSummaryPageExt(blockSummaries)
         } else if (!this.syncing) {
           this.error = this.error || this.$i18n.t('message.err')
         }
@@ -242,7 +247,7 @@ export default class TableBlocks extends Vue {
   page!: number
   error: string = ''
   syncing?: boolean
-  blockPage?: BlockSummaryPageExt
+  blockPage?: BlockSummaryPageExt | BlockSummaryByAuthorPageExt
   fromBlock?: BigNumber
 
   connectedSubscription?: Subscription
@@ -287,10 +292,10 @@ export default class TableBlocks extends Vue {
     const { blockPage } = this
     const { blockPage: query } = this.$apollo.queries
 
-    if (resetFrom) {
+    if (resetFrom || this.isPageDetailsAddress) {
       this.fromBlock = undefined
     } else {
-      const { totalCountBN } = blockPage!
+      const { totalCountBN } = blockPage! as BlockSummaryPageExt
       if (!this.fromBlock) {
         this.fromBlock = totalCountBN
       }
@@ -355,11 +360,26 @@ export default class TableBlocks extends Vue {
   }
 
   get pages(): number {
+    if (this.isPageDetailsAddress) {
+      throw new Error('Cannot determine pages for block summaries by author')
+    }
     const { blockPage, maxItems } = this
-    return blockPage ? Math.ceil(blockPage.totalCountBN.div(maxItems).toNumber()) : 0
+    return blockPage ? Math.ceil((blockPage as BlockSummaryPageExt).totalCountBN.div(maxItems).toNumber()) : 0
   }
 
   get hasPagination(): boolean {
+    if (this.isPageDetailsAddress) {
+        if (this.page && this.page > 0) {
+            // If we're past the first page, there must be pagination
+            return true
+        }
+        else if (this.blockPage && (this.blockPage as BlockSummaryByAuthorPageExt).hasMore) {
+            // We're on the first page, but there are more items, show pagination
+            return true
+        }
+        return false
+    }
+
     return this.pageType !== 'home' && this.pages > 1 && !this.hasError
   }
 }

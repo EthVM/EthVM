@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: blocksByAuthor
+// GraphQL fragment: BlockSummaryByAuthorPage
 // ====================================================
 
-export interface blocksByAuthor_blockSummaries_items {
+export interface BlockSummaryByAuthorPage_items {
   __typename: "BlockSummary";
   number: any;
   hash: string;
@@ -21,18 +21,8 @@ export interface blocksByAuthor_blockSummaries_items {
   timestamp: any;
 }
 
-export interface blocksByAuthor_blockSummaries {
+export interface BlockSummaryByAuthorPage {
   __typename: "BlockSummaryByAuthorPage";
-  items: blocksByAuthor_blockSummaries_items[];
+  items: BlockSummaryByAuthorPage_items[];
   hasMore: boolean;
-}
-
-export interface blocksByAuthor {
-  blockSummaries: blocksByAuthor_blockSummaries;
-}
-
-export interface blocksByAuthorVariables {
-  author: string;
-  offset?: number | null;
-  limit?: number | null;
 }
