@@ -106,7 +106,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
           FungibleBalanceDeltaRecord.newBuilder()
             .setTokenType(FungibleTokenType.ETHER)
             .setDeltaType(FungibleBalanceDeltaType.HARD_FORK)
-            .setIsReceiving(true)
+            .setIsReceiving(false)
             .setTraceLocation(
               TraceLocationRecord.newBuilder()
                 .setBlockNumberBI(number)
