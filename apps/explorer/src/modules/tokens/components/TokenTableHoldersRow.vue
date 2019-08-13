@@ -18,7 +18,7 @@
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
                 <p class="info--text pr-2">{{ $t('common.quantity') }}:</p>
-                <p>{{ holderBalance(holder) }}</p>
+                <p>{{ balanceFormatted }}</p>
               </v-layout>
             </v-flex>
             <v-flex xs12>
@@ -45,7 +45,15 @@
 
           <!-- Column 2: Balance -->
           <v-flex sm3 md4>
-            <p class="mb-0 ml-2">{{ holderBalance(holder) }}</p>
+            <p class="mb-0 ml-2">
+              {{ balanceFormatted }}
+            <v-tooltip v-if="tooltipText" bottom>
+              <template #activator="data">
+                <v-icon v-on="data.on" small class="primary--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+              </template>
+              <span>{{ tooltipText }}</span>
+            </v-tooltip>
+            </p>
           </v-flex>
           <!-- End Column 2 -->
 
@@ -115,21 +123,47 @@ export default class TokenTableHoldersRow extends Vue {
       .toString()}%`
   }
 
-  private calculateHolderBalance(balance: BN): BN {
-    if (!this.decimals) {
-      return balance
-    }
-    return balance.div(new BN(10).pow(this.decimals))
-  }
-
   /**
    * Calculate and format balance held by given holder
    * @param  {Object} holder - Holder object
    * @return {String} - Amount
    */
-  holderBalance(holder: TokenHolderPageExt_items): string {
-    return this.calculateHolderBalance(holder.balanceBN).toString()
+  get balanceFormatted(): string {
+    const balance = this.balance
+    const dp = this.decimalPlaces
+
+    let precision = 3
+    if (dp < 3) {
+      precision = dp
+    }
+    if (balance.isLessThan(0.001)) {
+      return '< 0.001'
+    }
+    if (dp > 3) {
+      return `${balance.toFormat(precision)}...`
+    }
+    return balance.toFormat(precision)
   }
+
+  get tooltipText(): string | undefined {
+      if (this.decimalPlaces < 4) {
+       return undefined
+     }
+     return this.balance.toFormat()
+  }
+
+  get balance(): BN {
+      if (!this.decimals) {
+          return this.holder.balanceBN
+      }
+      return this.holder.balanceBN.div(new BN(10).pow(this.decimals))
+  }
+
+  get decimalPlaces(): number {
+      const { balance } = this
+      return balance.decimalPlaces()
+  }
+
 }
 </script>
 
