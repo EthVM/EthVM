@@ -56,7 +56,7 @@ export class OrmModule {
     @InjectConnection(DbConnection.Metrics)
     private readonly metricsConnection: Connection,
     @Inject('winston')
-    private readonly logger: Logger
+    private readonly logger: Logger,
   ) {
 
     // we set statement timeout on all connections to max 20 seconds
