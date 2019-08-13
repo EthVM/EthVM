@@ -189,14 +189,14 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
 
   isRopsten = ConfigHelper.isRopsten
 
-    /*
+  /*
   ===================================================================================
     Lifecycle
   ===================================================================================
   */
 
   mounted() {
-      this.$apollo.queries.tokensPage.refetch()
+    this.$apollo.queries.tokensPage.refetch()
   }
 
   /*

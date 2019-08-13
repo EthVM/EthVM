@@ -186,15 +186,15 @@ export default class TableAddressContracts extends Vue {
   error?: string
   page?: number
 
-    /*
+  /*
 ===================================================================================
 Lifecycle
 ===================================================================================
 */
 
-    mounted() {
-        this.$apollo.queries.contractsPage.refetch()
-    }
+  mounted() {
+    this.$apollo.queries.contractsPage.refetch()
+  }
 
   /*
   ===================================================================================

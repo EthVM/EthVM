@@ -324,7 +324,7 @@ export default class TableTxs extends TableTxsMixin {
   }
 
   mounted() {
-      this.$apollo.queries.txPage.refetch()
+    this.$apollo.queries.txPage.refetch()
   }
 
   destroyed() {

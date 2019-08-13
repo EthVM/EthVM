@@ -271,7 +271,7 @@ export default class TableBlocks extends Vue {
   }
 
   mounted() {
-      this.$apollo.queries.blockPage.refetch()
+    this.$apollo.queries.blockPage.refetch()
   }
 
   destroyed() {

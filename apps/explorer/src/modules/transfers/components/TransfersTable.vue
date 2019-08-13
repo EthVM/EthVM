@@ -164,15 +164,15 @@ export default class TransfersTable extends Vue {
   error?: string
   page?: number
 
-    /*
+  /*
 ===================================================================================
 Lifecycle
 ===================================================================================
 */
 
-    mounted() {
-        this.$apollo.queries.transferPage.refetch()
-    }
+  mounted() {
+    this.$apollo.queries.transferPage.refetch()
+  }
 
   /*
         ===================================================================================
