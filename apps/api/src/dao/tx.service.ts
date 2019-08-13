@@ -60,6 +60,9 @@ export class TxService {
       relations: ['receipt'],
       cache: true,
     })
+    if (!txs.length) { // User may be searching by hash which does not exist as a tx
+      return []
+    }
     return this.findAndMapTraces(txs)
   }
 
