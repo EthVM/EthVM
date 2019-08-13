@@ -240,6 +240,7 @@ export class BlockService {
     const blockHeader = await this.blockHeaderRepository.createQueryBuilder('b')
       .leftJoinAndSelect('b.rewards', 'br')
       .leftJoinAndSelect('b.blockTime', 'bt')
+      .leftJoinAndSelect('b.uncles', 'u')
       .where('b.hash = :hash', { hash })
       .cache(true)
       .getOne()

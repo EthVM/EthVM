@@ -2,11 +2,10 @@ import { UncleEntity } from '@app/orm/entities/uncle.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
+import { EntityManager, LessThanOrEqual, Repository } from 'typeorm'
 import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
 import { DbConnection } from '@app/orm/config'
-import { UncleRewardEntity } from '@app/orm/entities/uncle-reward.entity'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 
 @Injectable()
 export class UncleService {
@@ -23,8 +22,8 @@ export class UncleService {
         const uncle = await entityManager.findOne(UncleEntity, { where: { hash }, cache: true })
         if (!uncle) return undefined
 
-        const where = { blockHash: uncle.nephewHash, address: uncle.author }
-        uncle.reward = await entityManager.findOne(UncleRewardEntity, { where, cache: true })
+        const [reward] = await this.findRewards(entityManager, [uncle.nephewHash], [uncle.author])
+        uncle.reward = reward
         return uncle
       })
   }
@@ -55,19 +54,18 @@ export class UncleService {
           cache: true,
         })
 
-        // Cheaper to get all rewards for each block hash and filter to those matching authors manually
-        const rewards = await entityManager.find(UncleRewardEntity, {
-          where: { blockHash: In(uncles.map(u => u.nephewHash)) },
-          cache: true,
-        })
+        const nephewHashes = uncles.map(u => u.nephewHash)
+        const authors = uncles.map(u => u.author)
+
+        const rewards = await this.findRewards(entityManager, nephewHashes, authors)
 
         // Map rewards to uncles
 
         const rewardsByBlockHash = rewards.reduce((memo, next) => {
-          if (!memo[next.blockHash]) {
-            memo[next.blockHash] = []
+          if (!memo[next.traceLocationBlockHash]) {
+            memo[next.traceLocationBlockHash] = []
           }
-          memo[next.blockHash].push(next)
+          memo[next.traceLocationBlockHash].push(next)
           return memo
         }, {})
 
@@ -79,6 +77,18 @@ export class UncleService {
         return [uncles, totalCount]
 
       })
+
+  }
+
+  private async findRewards(entityManager: EntityManager, blockHashes: string[], addresses: string[]): Promise<FungibleBalanceDeltaEntity[]> {
+
+    return await entityManager.createQueryBuilder(FungibleBalanceDeltaEntity, 'bd')
+      .select(['bd.address', 'bd.traceLocationBlockHash', 'bd.amount'])
+      .where('bd.delta_type = :deltaType', { deltaType: 'UNCLE_REWARD' })
+      .andWhere('bd.trace_location_block_hash IN (:...blockHashes)', { blockHashes })
+      .andWhere('bd.address IN (:...addresses)', { addresses })
+      .cache(true)
+      .getMany()
 
   }
 
