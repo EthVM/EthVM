@@ -1,11 +1,11 @@
-import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity';
-import { assignClean } from '@app/shared/utils';
-import BigNumber from 'bignumber.js';
-import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm'
-import { Column } from 'typeorm/decorator/columns/Column';
-import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
+import { assignClean } from '@app/shared/utils'
+import BigNumber from 'bignumber.js'
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Column } from 'typeorm/decorator/columns/Column'
+import { BigNumberTransformer } from '../transformers/big-number.transformer'
 import { DateTransformer } from '@app/orm/transformers/date.transformer'
-import { UncleRewardEntity } from '@app/orm/entities/uncle-reward.entity'
+import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
 
 @Entity('canonical_uncle')
 export class UncleEntity {
@@ -82,6 +82,6 @@ export class UncleEntity {
   blockHeader!: BlockHeaderEntity
 
   // Complicated join on two fields so cheaper to query separately and manually attach
-  reward?: UncleRewardEntity;
+  reward?: FungibleBalanceDeltaEntity;
 
 }
