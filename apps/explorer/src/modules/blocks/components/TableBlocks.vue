@@ -270,6 +270,10 @@ export default class TableBlocks extends Vue {
     }
   }
 
+  mounted() {
+    this.$apollo.queries.blockPage.refetch()
+  }
+
   destroyed() {
     if (this.connectedSubscription) {
       this.connectedSubscription.unsubscribe()

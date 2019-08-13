@@ -323,6 +323,10 @@ export default class TableTxs extends TableTxsMixin {
     }
   }
 
+  mounted() {
+    this.$apollo.queries.txPage.refetch()
+  }
+
   destroyed() {
     if (this.connectedSubscription) {
       this.connectedSubscription.unsubscribe()

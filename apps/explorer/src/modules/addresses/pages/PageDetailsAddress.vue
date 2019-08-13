@@ -18,14 +18,14 @@
       ADDRESS TABS
     =====================================================================================
     -->
-    <app-tabs v-if="!loading && !hasError" :tabs="tabs">
+    <app-tabs v-if="!loading && !hasError" :tabs="tabs" @changeTab="activeTab = $event">
       <!--
       =====================================================================================
         TRANSACTIONS TAB
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-0">
-        <table-txs :address="addressRef" :page-type="'address'" :max-items="max"></table-txs>
+        <table-txs v-if="activeTab === 'tab-0'" :address="addressRef" :page-type="'address'" :max-items="max"></table-txs>
       </v-tab-item>
       <!--
       =====================================================================================
@@ -33,7 +33,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" value="tab-1">
-        <table-address-tokens :address="addressRef" />
+        <table-address-tokens v-if="activeTab === 'tab-1'" :address="addressRef" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -49,7 +49,7 @@
       =====================================================================================
       -->
       <v-tab-item v-if="account.hasInternalTransfers" slot="tabs-item" value="tab-5">
-        <transfers-table :address="addressRef" :page-type="'internal'" />
+        <transfers-table v-if="activeTab === 'tab-5'" :address="addressRef" :page-type="'internal'" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -57,7 +57,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" v-if="account.isMiner" value="tab-3">
-        <table-blocks :author="addressRef" :page-type="detailsType" :max-items="max" />
+        <table-blocks v-if="activeTab === 'tab-3'" :author="addressRef" :page-type="detailsType" :max-items="max" />
       </v-tab-item>
       <!--
       =====================================================================================
@@ -65,7 +65,7 @@
       =====================================================================================
       -->
       <v-tab-item slot="tabs-item" v-if="account.isContractCreator" value="tab-4">
-        <table-address-contracts :address="addressRef" />
+        <table-address-contracts v-if="activeTab === 'tab-4'" :address="addressRef" />
       </v-tab-item>
     </app-tabs>
   </v-container>
@@ -169,6 +169,8 @@ export default class PageDetailsAddress extends Vue {
   error = ''
   syncing?: boolean
   account?: AccountExt
+
+  activeTab = 'tab-0'
 
   /*
   ===================================================================================
