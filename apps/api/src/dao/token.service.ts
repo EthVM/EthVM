@@ -168,9 +168,20 @@ export class TokenService {
   }
 
   async countTokenHolders(address: string): Promise<number> {
-    let numHolders = await this.erc20BalanceRepository.count({ where: { contract: address }, cache: true })
+    let { count: numHolders } = await this.erc20BalanceRepository.createQueryBuilder('b')
+      .select('COUNT(*)', 'count')
+      .where('b.contract = :address', { address })
+      .andWhere('b.amount > 0')
+      .cache(true)
+      .getRawOne()
+
     if (!numHolders || numHolders === 0) {
-      numHolders = await this.erc721BalanceRepository.count({ where: { contract: address }, cache: true })
+      const { count } = await this.erc721BalanceRepository.createQueryBuilder('b')
+        .select('COUNT(*)', 'count')
+        .where('b.contract = :address', { address })
+        .cache(true)
+        .getRawOne()
+      numHolders = count
     }
     return numHolders
   }

@@ -16,7 +16,7 @@ import { PostgresDriver } from 'typeorm/driver/postgres/PostgresDriver'
         synchronize: false,
         namingStrategy: new SnakeCaseNamingStrategy(),
         entities: ['src/**/**.entity{.ts,.js}'],
-        logging: ['error'],
+        logging: ['error', 'query'],
         maxQueryExecutionTime: 1000,
         cache: {
           type: 'redis',
