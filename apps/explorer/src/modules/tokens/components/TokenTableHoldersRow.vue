@@ -55,12 +55,12 @@
           <v-flex sm3 md4>
             <p class="mb-0 ml-2">
               {{ balanceFormatted }}
-            <v-tooltip v-if="tooltipText" bottom>
-              <template #activator="data">
-                <v-icon v-on="data.on" small class="primary--text text-xs-center pl-1">fa fa-question-circle</v-icon>
-              </template>
-              <span>{{ tooltipText }}</span>
-            </v-tooltip>
+              <v-tooltip v-if="tooltipText" bottom>
+                <template #activator="data">
+                  <v-icon v-on="data.on" small class="primary--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+                </template>
+                <span>{{ tooltipText }}</span>
+              </v-tooltip>
             </p>
           </v-flex>
           <!-- End Column 2 -->
@@ -151,24 +151,23 @@ export default class TokenTableHoldersRow extends Vue {
   }
 
   get tooltipText(): string | undefined {
-      if (this.decimalPlaces < 4) {
-       return undefined
-     }
-     return this.balance.toFormat()
+    if (this.decimalPlaces < 4) {
+      return undefined
+    }
+    return this.balance.toFormat()
   }
 
   get balance(): BN {
-      if (!this.decimals) {
-          return this.holder.balanceBN
-      }
-      return this.holder.balanceBN.div(new BN(10).pow(this.decimals))
+    if (!this.decimals) {
+      return this.holder.balanceBN
+    }
+    return this.holder.balanceBN.div(new BN(10).pow(this.decimals))
   }
 
   get decimalPlaces(): number {
-      const { balance } = this
-      return balance.decimalPlaces()
+    const { balance } = this
+    return balance.decimalPlaces()
   }
-
 }
 </script>
 
