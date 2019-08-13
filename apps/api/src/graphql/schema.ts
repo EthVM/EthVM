@@ -420,6 +420,7 @@ export interface ISubscription {
     newBlock(): BlockSummary | Promise<BlockSummary>;
     hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;
+    keepAlive(): boolean | Promise<boolean>;
     newTransaction(): TransactionSummary | Promise<TransactionSummary>;
     newTransactions(): TransactionSummary[] | Promise<TransactionSummary[]>;
 }

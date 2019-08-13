@@ -243,8 +243,24 @@ export class PgSubscriptionService {
     this.principalUrl = config.dbPrincipal.url
     this.metricsUrl = config.dbMetrics.url
 
+    this.initKeepAlive()
     this.initPrincipal()
     this.initMetrics()
+  }
+
+  private initKeepAlive() {
+
+    // we publish a keep alive every 30 seconds to prevent the web socket from closing
+    const periodMs = 30000;
+
+    const { pubSub } = this
+
+    const keepAlive = () => {
+      pubSub.publish('keepAlive', true);
+      setTimeout(keepAlive, periodMs)
+    }
+
+    setTimeout(keepAlive, periodMs)
   }
 
   private initPrincipal() {

@@ -21,7 +21,7 @@ import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
 import storePack from 'store'
 import { Vue, Component } from 'vue-property-decorator'
-import { syncStatus, syncStatusUpdates } from '@app/core/components/ui/metadata.graphql'
+import { syncStatus, keepAliveUpdates, syncStatusUpdates } from '@app/core/components/ui/metadata.graphql'
 import { Subscription } from 'rxjs'
 import { SubscriptionState } from '@app/core/plugins'
 
@@ -40,6 +40,13 @@ const MAX_ITEMS = 10
     }
   },
   apollo: {
+    $subscribe: {
+      // forces the websocket to stay open despite the 60 second cut off from cloudflare
+      keepAlive: {
+        query: keepAliveUpdates
+      }
+    },
+
     syncing: {
       query: syncStatus,
       update({ metadata }) {
