@@ -52,7 +52,7 @@
           <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-holders') }}</v-card-text>
         </v-card>
         <div v-else v-for="(holder, i) in holders" :key="i">
-          <token-table-holders-row :holder="holder" :decimals="decimals" :total-supply="totalSupply" />
+          <token-table-holders-row :holder="holder" :token-address="addressRef" :decimals="decimals" :total-supply="totalSupply" />
         </div>
       </div>
     </div>
