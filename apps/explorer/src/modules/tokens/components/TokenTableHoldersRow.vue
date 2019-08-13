@@ -18,7 +18,15 @@
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
                 <p class="info--text pr-2">{{ $t('common.quantity') }}:</p>
-                <p>{{ balanceFormatted }}</p>
+                <p>
+                  {{ balanceFormatted }}
+                  <v-tooltip v-if="tooltipText" bottom>
+                    <template #activator="data">
+                      <v-icon v-on="data.on" small class="primary--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+                    </template>
+                    <span>{{ tooltipText }}</span>
+                  </v-tooltip>
+                </p>
               </v-layout>
             </v-flex>
             <v-flex xs12>
