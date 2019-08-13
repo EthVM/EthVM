@@ -169,8 +169,8 @@
     },
     "not-found": "Страница не найдена :(",
     "welcome": {
-      "title": "Welcome to EthVM Alpha!",
-      "text1": "We are now on Ethereum ropsten, so have a look around and let us know about any bugs or feature requests at ",
+      "title": "Добро пожаловать в EthVM Alpha!",
+      "text1": "Мы перешли на Ethereum ropsten: теперь вы можете попробовать все функции и сообщить нам о любых ошибках, пожеланиях и предложениях сюда ",
       "text2": "или посетите ",
       "text3": "что бы узнать больше об обновлениях или внести свои вклад в систему EthVM",
       "text4": "Команда EthVM будет рада сотрудничеству с нашим сообществом пользователей и разработчиков в создании полезных инструментов для блокчейна!",
