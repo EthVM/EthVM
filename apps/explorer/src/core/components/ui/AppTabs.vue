@@ -34,6 +34,7 @@
           color="white"
           show-arrows
           :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3 pt-2': $vuetify.breakpoint.mdAndUp }"
+          @change="$emit('changeTab', $event)"
         >
           <v-tab
             v-for="item in tabs"
