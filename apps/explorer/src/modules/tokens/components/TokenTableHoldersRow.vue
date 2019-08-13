@@ -80,6 +80,7 @@ export default class TokenTableHoldersRow extends Vue {
   */
 
   @Prop(TokenHolderPageExt_items) holder!: TokenHolderPageExt_items
+  @Prop(String) tokenAddress!: string
   @Prop(BN) totalSupply?: BN
   @Prop(Number) decimals?: number
   /*
@@ -95,7 +96,7 @@ export default class TokenTableHoldersRow extends Vue {
    * @return {String}        [description]
    */
   holderAddress(holder) {
-    return `/token/${this.holder.address}?holder=${this.holder.address}`
+    return `/token/${this.tokenAddress}?holder=${this.holder.address}`
   }
 
   /**
