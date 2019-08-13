@@ -12,7 +12,7 @@
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
                 <p class="info--text pr-2">Holder:</p>
-                <app-transform-hash :hash="holder.address" :link="holderAddress(holder)" />
+                <app-transform-hash :hash="holder.address" :link="holderLink" />
               </v-layout>
             </v-flex>
             <v-flex xs12>
@@ -24,7 +24,7 @@
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
                 <p class="info--text pr-2 ">{{ $t('common.percentage') }}}:</p>
-                <p>{{ holderShare(holder) }}}</p>
+                <p>{{ share }}}</p>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -39,7 +39,7 @@
         <v-layout align-center justify-start row fill-height pa-3>
           <!-- Column 1: Holders Address -->
           <v-flex sm6 pr-4>
-            <app-transform-hash :hash="holder.address" :link="holderAddress(holder)" />
+            <app-transform-hash :hash="holder.address" :link="holderLink" />
           </v-flex>
           <!-- End Column 1 -->
 
@@ -59,7 +59,7 @@
 
           <!-- Column 3: Share -->
           <v-flex sm3 md2>
-            <p class="mb-0 ml-2">{{ holderShare(holder) }}</p>
+            <p class="mb-0 ml-2">{{ share }}</p>
           </v-flex>
           <!-- End Column 3 -->
         </v-layout>
@@ -93,39 +93,36 @@ export default class TokenTableHoldersRow extends Vue {
   @Prop(Number) decimals?: number
   /*
   ===================================================================================
-    Methods
+    Computed values
   ===================================================================================
   */
 
   /**
    * Format url to token details -> holder view
-   *
-   * @param  {Object} holder - Holder object
    * @return {String}        [description]
    */
-  holderAddress(holder) {
+  get holderLink(): string {
     return `/token/${this.tokenAddress}?holder=${this.holder.address}`
   }
 
   /**
    * Calculate percentage share of totalSupply held by this holder
-   * @param  {Object} holder - Holder object
    * @return {String} - Share
    */
-  holderShare(holder: TokenHolderPageExt_items): string {
-    if (!(this.totalSupply && holder.balance)) {
+  get share(): string {
+    if (!(this.totalSupply && this.holder.balance)) {
       return 'N/A'
     }
-    return `${holder.balanceBN
-      .div(this.totalSupply)
-      .times(100)
-      .toFormat(2)
-      .toString()}%`
+    const share = this.holder.balanceBN.div(this.totalSupply).times(100)
+    if (share.isLessThan(0.01)) {
+      return '< 0.01%'
+    }
+
+    return `${share.toFormat(2).toString()}%`
   }
 
   /**
    * Calculate and format balance held by given holder
-   * @param  {Object} holder - Holder object
    * @return {String} - Amount
    */
   get balanceFormatted(): string {
