@@ -182,6 +182,12 @@ export default class ChartLiveTxFees extends Vue {
     })
   }
 
+  mounted() {
+    // Ensure queries are refetched each time the component is mounted to keep data updated
+    this.$apollo.queries.avgGasPrice.refetch()
+    this.$apollo.queries.avgTxFees.refetch()
+  }
+
   destroyed() {
     if (this.connectedSubscription) {
       this.connectedSubscription.unsubscribe()
