@@ -120,6 +120,11 @@ export default class ChartLiveTxs extends Vue {
     })
   }
 
+  mounted() {
+    // Ensure query is refetched each time the component is mounted to keep data updated
+    this.$apollo.queries.blockPage.refetch()
+  }
+
   destroyed() {
     if (this.connectedSubscription) {
       this.connectedSubscription.unsubscribe()
