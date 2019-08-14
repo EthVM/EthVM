@@ -114,7 +114,7 @@ protocol Capture {
   }
 
   record TransactionReceiptListRecord {
-    long timestamp;   
+    long timestamp;
     array<TransactionReceiptRecord> receipts;
   }
 
@@ -148,9 +148,9 @@ protocol Capture {
   }
 
   record TransactionListRecord {
-    string blockHash;
-    long timestamp;   
-    array<TransactionRecord> transactions;
+    union { null, string } blockHash = null;
+    union { null, long } timestamp = null;
+    array<TransactionRecord> transactions = [];
   }
 
   record BlockHeaderRecord {
@@ -175,7 +175,7 @@ protocol Capture {
     decimal(80, 0) gasLimit;                            // the maximum gas allowed in this block
     decimal(80, 0) gasUsed;                             // the total used gas by all transactions in this block
 
-    long timestamp;                               
+    long timestamp;
     long size;
 
     int transactionCount;
@@ -219,7 +219,7 @@ protocol Capture {
   }
 
   record UncleListRecord {
-    long timestamp;   
+    long timestamp;
     array<UncleRecord> uncles;
   }
 

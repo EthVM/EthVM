@@ -1,28 +1,15 @@
 package com.ethvm.kafka.streams.apps
 
 import com.ethvm.common.config.NetConfig
+import com.ethvm.kafka.streams.Modules.kafkaStreams
+import com.ethvm.kafka.streams.Modules.web3
 import com.ethvm.kafka.streams.config.AppConfig
 import com.ethvm.kafka.streams.config.KafkaConfig
 import com.ethvm.kafka.streams.config.Web3Config
-import com.ethvm.kafka.streams.Modules.kafkaStreams
-import com.ethvm.kafka.streams.Modules.web3
-import com.ethvm.kafka.streams.processors.BlockMetricsProcessor
-import com.ethvm.kafka.streams.processors.CanonicalBlockHeaderProcessor
-import com.ethvm.kafka.streams.processors.CanonicalCountProcessor
-import com.ethvm.kafka.streams.processors.CanonicalReceiptsProcessor
-import com.ethvm.kafka.streams.processors.CanonicalTracesProcessor
-import com.ethvm.kafka.streams.processors.CanonicalTransactionsProcessor
-import com.ethvm.kafka.streams.processors.CanonicalUnclesProcessor
-import com.ethvm.kafka.streams.processors.ContractMetadataProcessor
-import com.ethvm.kafka.streams.processors.FungibleBalanceDeltaProcessor
-import com.ethvm.kafka.streams.processors.FungibleBalanceProcessor
 import com.ethvm.kafka.streams.processors.KafkaProcessor
-import com.ethvm.kafka.streams.processors.NonFungibleBalanceProcessor
-import com.ethvm.kafka.streams.processors.TransactionCountProcessor
-import com.ethvm.kafka.streams.processors.TransactionFeesProcessor
-
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.multiple
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import org.koin.core.context.startKoin
@@ -72,6 +59,9 @@ class ProcessingCommand : CliktCommand() {
     envvar = "WEB3_WS_URL"
   ).default(DEFAULT_WEB3_WS_URL)
 
+  private val processors: List<String> by option(
+    help = "List of processors to run"
+  ).multiple(DEFAULT_PROCESSORS)
   // DI
 
   private val configModule = module {
@@ -110,24 +100,17 @@ class ProcessingCommand : CliktCommand() {
       modules(configModule, kafkaStreams, web3)
     }
 
-    listOf<KafkaProcessor>(
-      CanonicalBlockHeaderProcessor(),
-      CanonicalTransactionsProcessor(),
-      CanonicalReceiptsProcessor(),
-      CanonicalTracesProcessor(),
-      CanonicalUnclesProcessor(),
-      CanonicalCountProcessor(),
-      TransactionCountProcessor(),
-      TransactionFeesProcessor(),
-      FungibleBalanceDeltaProcessor(),
-      FungibleBalanceProcessor(),
-      NonFungibleBalanceProcessor(),
-      BlockMetricsProcessor(),
-      ContractMetadataProcessor()
-    ).forEach {
-      it.buildTopology()
-      it.start(resetStreamsState == 1)
-    }
+    val processorCleanState = resetStreamsState == 1
+
+    processors
+      .map { name -> Class.forName("$DEFAULT_PROCESSORS_PACKAGE.$name").kotlin }
+      .map { clazz -> clazz.constructors.find { it.parameters.isEmpty() }!! }
+      .map { constructor -> constructor.call() as KafkaProcessor }
+      .forEach{ processor ->
+        processor.buildTopology()
+        processor.start(processorCleanState)
+      }
+
   }
 
   companion object Defaults {
@@ -140,6 +123,24 @@ class ProcessingCommand : CliktCommand() {
     const val DEFAULT_STREAMS_STATE_DIR = "/tmp/kafka-streams"
     const val DEFAULT_WEB3_WS_URL = "ws://localhost:8546"
     const val DEFAULT_ETH_NET_CONFIG = "mainnet"
+
+    const val DEFAULT_PROCESSORS_PACKAGE = "com.ethvm.kafka.streams.processors"
+
+    val DEFAULT_PROCESSORS = listOf(
+      "CanonicalBlockHeaderProcessor",
+      "CanonicalTransactionsProcessor",
+      "CanonicalReceiptsProcessor",
+      "CanonicalTracesProcessor",
+      "CanonicalUnclesProcessor",
+      "CanonicalCountProcessor",
+      "TransactionCountProcessor",
+      "TransactionFeesProcessor",
+      "FungibleBalanceDeltaProcessor",
+      "FungibleBalanceProcessor",
+      "NonFungibleBalanceProcessor",
+      "BlockMetricsProcessor",
+      "ContractMetadataProcessor"
+    )
   }
 }
 
