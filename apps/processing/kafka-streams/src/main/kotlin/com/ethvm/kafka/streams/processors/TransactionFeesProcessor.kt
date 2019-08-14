@@ -5,10 +5,10 @@ import com.ethvm.avro.processing.TransactionFeeRecord
 import com.ethvm.common.extensions.getGasPriceBI
 import com.ethvm.common.extensions.getGasUsedBI
 import com.ethvm.common.extensions.setTransactionFeeBI
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalGasPrices
 import com.ethvm.kafka.streams.config.Topics.CanonicalGasUsed
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
+import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging

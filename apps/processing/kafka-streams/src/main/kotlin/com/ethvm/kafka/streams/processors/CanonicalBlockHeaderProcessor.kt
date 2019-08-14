@@ -10,7 +10,7 @@ import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockHeader
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockTime
-import com.ethvm.kafka.streams.processors.transformers.BlockTimeTransformer
+import com.ethvm.kafka.streams.transformers.BlockTimeTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging

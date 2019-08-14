@@ -1,9 +1,9 @@
 package com.ethvm.kafka.streams.processors
 
 import com.ethvm.avro.processing.TransactionCountRecord
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.TransactionCount
 import com.ethvm.kafka.streams.config.Topics.TransactionCountDelta
+import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging

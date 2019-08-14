@@ -14,7 +14,6 @@ import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.common.extensions.setBlockNumberBI
 import com.ethvm.common.extensions.toEtherBalanceDeltas
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
@@ -22,8 +21,9 @@ import com.ethvm.kafka.streams.config.Topics.HardForkBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.MinerFeeBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.PremineBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
-import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
-import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
+import com.ethvm.kafka.streams.Serdes
+import com.ethvm.kafka.streams.transformers.CanonicalKStreamReducer
+import com.ethvm.kafka.streams.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder

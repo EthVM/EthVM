@@ -3,9 +3,9 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.kafka.streams.Serdes.CanonicalCount
 import com.ethvm.kafka.streams.config.Topics.CanonicalCount
 import com.ethvm.kafka.streams.config.Topics.CanonicalCountDelta
-import com.ethvm.kafka.streams.processors.transformers.CanonicalCountKStreamReducer
-import com.ethvm.kafka.streams.processors.transformers.CanonicalCounter
-import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
+import com.ethvm.kafka.streams.transformers.CanonicalCountKStreamReducer
+import com.ethvm.kafka.streams.transformers.CanonicalCounter
+import com.ethvm.kafka.streams.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging

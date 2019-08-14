@@ -21,10 +21,10 @@ import com.ethvm.avro.processing.TransactionReceiptKeyRecord
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.common.extensions.setTokenIdBI
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
-import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
+import com.ethvm.kafka.streams.Serdes
+import com.ethvm.kafka.streams.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.ERC721Abi
 import com.ethvm.kafka.streams.utils.toTopic

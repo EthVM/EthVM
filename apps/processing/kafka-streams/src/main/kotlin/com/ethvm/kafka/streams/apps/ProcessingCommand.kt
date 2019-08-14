@@ -1,11 +1,11 @@
-package com.ethvm.kafka.streams
+package com.ethvm.kafka.streams.apps
 
 import com.ethvm.common.config.NetConfig
 import com.ethvm.kafka.streams.config.AppConfig
 import com.ethvm.kafka.streams.config.KafkaConfig
 import com.ethvm.kafka.streams.config.Web3Config
-import com.ethvm.kafka.streams.di.Modules.kafkaStreams
-import com.ethvm.kafka.streams.di.Modules.web3
+import com.ethvm.kafka.streams.Modules.kafkaStreams
+import com.ethvm.kafka.streams.Modules.web3
 import com.ethvm.kafka.streams.processors.BlockMetricsProcessor
 import com.ethvm.kafka.streams.processors.CanonicalBlockHeaderProcessor
 import com.ethvm.kafka.streams.processors.CanonicalCountProcessor
@@ -28,7 +28,7 @@ import com.github.ajalt.clikt.parameters.types.int
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-class Cli : CliktCommand() {
+class ProcessingCommand : CliktCommand() {
 
   // General - CLI
 
@@ -141,4 +141,8 @@ class Cli : CliktCommand() {
     const val DEFAULT_WEB3_WS_URL = "ws://localhost:8546"
     const val DEFAULT_ETH_NET_CONFIG = "mainnet"
   }
+}
+
+fun main(args: Array<String>) {
+  ProcessingCommand().main(args)
 }

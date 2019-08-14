@@ -21,11 +21,11 @@ import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.setAvgGasLimitBI
 import com.ethvm.common.extensions.setAvgGasPriceBI
 import com.ethvm.common.extensions.setTotalGasPriceBI
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
-import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
-import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
+import com.ethvm.kafka.streams.Serdes
+import com.ethvm.kafka.streams.transformers.CanonicalKStreamReducer
+import com.ethvm.kafka.streams.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger
 import mu.KotlinLogging

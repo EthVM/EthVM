@@ -5,7 +5,6 @@ import com.ethvm.avro.processing.FungibleBalanceKeyRecord
 import com.ethvm.avro.processing.FungibleBalanceRecord
 import com.ethvm.common.extensions.getAmountBI
 import com.ethvm.common.extensions.setAmountBI
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.Erc20BalanceDelta
 import com.ethvm.kafka.streams.config.Topics.Erc20BalanceLog
 import com.ethvm.kafka.streams.config.Topics.FungibleBalance
@@ -20,7 +19,8 @@ import com.ethvm.kafka.streams.config.Topics.TransactionBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionBalanceLog
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceLog
-import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
+import com.ethvm.kafka.streams.Serdes
+import com.ethvm.kafka.streams.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
 import org.apache.kafka.streams.StreamsBuilder

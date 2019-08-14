@@ -7,7 +7,7 @@ plugins {
 val test by tasks.getting(Test::class) { useJUnitPlatform {} }
 
 application {
-  mainClassName = "com.ethvm.kafka.streams.MainKt"
+  mainClassName = "com.ethvm.kafka.streams.apps.ProcessingCommandKt"
   applicationDefaultJvmArgs = listOf("-Xms2g", "-Xmx8g")
 }
 

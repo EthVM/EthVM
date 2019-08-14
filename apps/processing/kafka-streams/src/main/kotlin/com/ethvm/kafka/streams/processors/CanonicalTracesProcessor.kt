@@ -25,12 +25,12 @@ import com.ethvm.common.extensions.hexBuffer
 import com.ethvm.common.extensions.reverse
 import com.ethvm.common.extensions.toContractEventRecord
 import com.ethvm.common.extensions.toFungibleBalanceDeltas
-import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.ContractCreated
 import com.ethvm.kafka.streams.config.Topics.ContractDestroyed
-import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
+import com.ethvm.kafka.streams.Serdes
+import com.ethvm.kafka.streams.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.StandardTokenDetector
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KLogger

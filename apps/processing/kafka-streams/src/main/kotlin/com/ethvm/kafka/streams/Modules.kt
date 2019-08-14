@@ -1,4 +1,4 @@
-package com.ethvm.kafka.streams.di
+package com.ethvm.kafka.streams
 
 import com.ethvm.kafka.streams.config.AppConfig
 import com.ethvm.kafka.streams.config.Topics

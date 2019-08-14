@@ -1,4 +1,4 @@
-package com.ethvm.kafka.streams.processors.transformers
+package com.ethvm.kafka.streams.transformers
 
 import com.ethvm.avro.processing.CanonicalCountKeyRecord
 import com.ethvm.avro.processing.CanonicalCountRecord
