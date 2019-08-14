@@ -1,5 +1,11 @@
 topics:
 
+  - name: metadata
+    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
+    partitions: 12
+    config:
+      cleanup.policy: compact
+
   - name: parity_sync_state
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12

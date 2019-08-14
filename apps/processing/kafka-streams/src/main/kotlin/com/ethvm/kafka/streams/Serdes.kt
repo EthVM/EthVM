@@ -33,6 +33,8 @@ import com.ethvm.avro.processing.NonFungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleBalanceRecord
+import com.ethvm.avro.processing.SystemMetadataKeyRecord
+import com.ethvm.avro.processing.SystemMetadataRecord
 import com.ethvm.avro.processing.TraceKeyRecord
 import com.ethvm.avro.processing.TransactionCountDeltaListRecord
 import com.ethvm.avro.processing.TransactionCountDeltaRecord
@@ -58,6 +60,14 @@ object Serdes : KoinComponent {
   private val config = mutableMapOf(
     "schema.registry.url" to kafkaConfig.schemaRegistryUrl
   )
+
+  fun SystemMetadataKey() = SpecificAvroSerde<SystemMetadataKeyRecord>(registryClient).apply {
+    configure(config, true)
+  }
+
+  fun SystemMetadata() = SpecificAvroSerde<SystemMetadataRecord>(registryClient).apply {
+    configure(config, false)
+  }
 
   fun FungibleBalanceKey() = SpecificAvroSerde<FungibleBalanceKeyRecord>(registryClient).apply {
     configure(config, true)

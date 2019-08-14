@@ -30,6 +30,8 @@ import com.ethvm.avro.processing.FungibleBalanceRecord
 import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleBalanceRecord
+import com.ethvm.avro.processing.SystemMetadataKeyRecord
+import com.ethvm.avro.processing.SystemMetadataRecord
 import com.ethvm.avro.processing.TraceKeyRecord
 import com.ethvm.avro.processing.TransactionCountDeltaRecord
 import com.ethvm.avro.processing.TransactionCountRecord
@@ -63,6 +65,8 @@ import com.ethvm.kafka.streams.Serdes.NonFungibleBalance
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.Serdes.NonFungibleBalanceKey
 import com.ethvm.kafka.streams.Serdes.ReceiptList
+import com.ethvm.kafka.streams.Serdes.SystemMetadata
+import com.ethvm.kafka.streams.Serdes.SystemMetadataKey
 import com.ethvm.kafka.streams.Serdes.TraceKey
 import com.ethvm.kafka.streams.Serdes.TraceList
 import com.ethvm.kafka.streams.Serdes.Transaction
@@ -111,6 +115,8 @@ data class KafkaTopic<K, V>(
 }
 
 object Topics {
+
+  val SystemMetadata = KafkaTopic<SystemMetadataKeyRecord, SystemMetadataRecord>("metadata", SystemMetadataKeyRecord.`SCHEMA$`, SystemMetadataKey(), SystemMetadataRecord.`SCHEMA$`, SystemMetadata())
 
   val CanonicalBlockHeader = KafkaTopic<CanonicalKeyRecord, BlockHeaderRecord>("canonical_block_header", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockHeaderRecord.`SCHEMA$`, BlockHeader())
   val CanonicalBlockTime = KafkaTopic<CanonicalKeyRecord, BlockTimeRecord>("canonical_block_time", CanonicalKeyRecord.`SCHEMA$`, CanonicalKey(), BlockTimeRecord.`SCHEMA$`, BlockTime())

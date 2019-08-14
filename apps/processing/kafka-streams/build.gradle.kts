@@ -42,6 +42,9 @@ dependencies {
   implementation("io.confluent:kafka-schema-registry-client:5.2.1")
   implementation("io.confluent:kafka-streams-avro-serde:5.2.1")
 
+  // AWS
+  implementation("com.amazonaws:aws-java-sdk-pinpoint:1.11.609")
+
   // Utils
   implementation("com.github.ajalt:clikt:1.7.0")
   implementation("ch.qos.logback:logback-classic:${ext.get("logback-version") as String}")
