@@ -36,7 +36,7 @@
                   <v-flex xs12 pa-1>
                     <p class="info--text mb-1">
                       {{ $t('common.amount') }}:
-                      <span class="black--text">{{ balance }}</span>
+                      <span class="black--text">{{ balance.value }}</span>
                     </p>
                     <p v-if="!isRopsten" class="info--text">
                       {{ $t('usd.value') }}:
@@ -68,7 +68,15 @@
               </v-layout>
             </v-flex>
             <v-flex sm3 :sm6="isRopsten">
-              <p class="black--text ">{{ balance }}</p>
+              <p class="black--text ">
+                {{ balance.value }}
+                <v-tooltip v-if="balance.tooltipText" bottom>
+                  <template #activator="data">
+                    <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                  </template>
+                  <span>{{ balance.tooltipText }}</span>
+                </v-tooltip>
+              </p>
             </v-flex>
             <v-flex v-if="!isRopsten" sm3>
               <p class="black--text ">
@@ -96,6 +104,7 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
 @Component({
   components: { AppTransformHash }
 })
@@ -120,8 +129,8 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
     return this.token.image || require('@/assets/icon-token.png')
   }
 
-  get balance(): string {
-    return this.token.formattedBalance
+  get balance(): FormattedNumber {
+    return this.token.balanceFormatted
   }
 
   get tokenLink(): string {

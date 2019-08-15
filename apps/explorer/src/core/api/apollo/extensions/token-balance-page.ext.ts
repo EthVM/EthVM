@@ -2,6 +2,7 @@ import BN from 'bignumber.js'
 import { TokenUtils } from '@app/core/helper/token.utils'
 import { TokenBalancePage, TokenBalancePage_items } from '@app/core/api/apollo/types/TokenBalancePage'
 import { TokenBalance } from '@app/core/api/apollo/types/TokenBalance'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TokenBalancePageExt_items implements TokenBalancePage_items {
   __typename!: 'TokenBalance'
@@ -29,14 +30,10 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
     return TokenUtils.currentPriceBN(this)
   }
 
-  get formattedBalance(): string {
+  get balanceFormatted(): FormattedNumber {
     const { decimals, balanceBN } = this
-
-    if (!decimals) {
-      return balanceBN.toFixed()
-    }
-
-    return balanceBN.div(new BN(10).pow(decimals)).toFixed()
+    const raw = decimals ? balanceBN.div(new BN(10).pow(decimals)) : balanceBN
+    return NumberFormatHelper.formatFloatingPointValue(raw)
   }
 
   get balanceBN(): BN {

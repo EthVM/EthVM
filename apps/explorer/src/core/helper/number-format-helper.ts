@@ -2,9 +2,9 @@ import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
 
 export enum FormattedNumberUnit {
-  ETH = 'Eth',
-  GWEI = 'GWei',
-  WEI = 'Wei',
+  ETH = 'eth',
+  GWEI = 'gwei',
+  WEI = 'wei',
   PERCENT = '%',
   USD = '$',
   B = 'B'
@@ -86,21 +86,24 @@ export class NumberFormatHelper {
 
     if (value.isGreaterThanOrEqualTo(ethBreakpoint)) { // Show large values in ETH, no tooltip
       const ethBN = new BigNumber(new EthValue(value).toEth())
-      const dps = allowRounding && ethBN.decimalPlaces() > 7 ? 7 : undefined // Round to 7 dps if applicable
-      return { value: ethBN.toFormat(dps), unit: FormattedNumberUnit.ETH }
+      if (allowRounding) { // follow rules of floating point formatting
+        const formatted = this.formatFloatingPointValue(ethBN)
+        return {...formatted, unit: FormattedNumberUnit.ETH}
+      }
+      return { value: ethBN.toFormat(), unit: FormattedNumberUnit.ETH }
     }
     if (value.isGreaterThanOrEqualTo(TenThousand)) { // Show medium values (>= 0.00001 GWEI) in GWEI, with tooltip with ETH value
       const gweiBN = new BigNumber(new EthValue(value).toGWei())
       const dps = allowRounding && gweiBN.decimalPlaces() > 7 ? 7 : undefined // Round to 7 dps if applicable
       return {
-        value: gweiBN.toFormat(dps), unit: FormattedNumberUnit.GWEI, tooltipText: `${new EthValue(value).toEth().toString()} ${FormattedNumberUnit.ETH }`
+        value: gweiBN.toFormat(dps), unit: FormattedNumberUnit.GWEI, tooltipText: `${new EthValue(value).toEth().toString()}`
       }
     }
     // Show small values in WEI (no conversion) with tooltip with ETH value
     return {
       value: value.toFormat(),
       unit: FormattedNumberUnit.WEI,
-      tooltipText: `${new EthValue(value).toEth().toString()} ${FormattedNumberUnit.ETH }`
+      tooltipText: `${ new EthValue(value).toEthBN().toFixed() }`
     }
   }
 
@@ -174,7 +177,7 @@ export class NumberFormatHelper {
       return { value: value.toFormat(Math.min(7, dps)), unit, tooltipText: dps > 7 ? value.toFormat() : undefined  }
     }
     // Less than 0.0000001
-    return { value: '< 0.0000001', unit, tooltipText: value.toFormat()}
+    return { value: '< $0.0000001', unit, tooltipText: value.toFixed() }
   }
 
   /* Helper functions */
@@ -182,7 +185,7 @@ export class NumberFormatHelper {
   private static convertToBillions(value: BigNumber): FormattedNumber {
     const result = value.dividedBy(OneBillion)
     return {
-      value: result.toFormat(Math.min(3, result.decimalPlaces())),
+      value: `${result.toFormat(Math.min(3, result.decimalPlaces()))}B`,
       unit: FormattedNumberUnit.B,
       tooltipText: value.toFormat()
     }
