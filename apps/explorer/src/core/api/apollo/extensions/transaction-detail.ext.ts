@@ -2,6 +2,7 @@ import { TransactionDetail, TransactionDetail_receipt } from '@app/core/api/apol
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
 import Signatures from '@app/core/helper/signatures.json'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TransactionDetailExt_receipt implements TransactionDetail_receipt {
   __typename!: 'Receipt'
@@ -62,8 +63,8 @@ export class TransactionDetailExt implements TransactionDetail {
     return new BigNumber(this.gasPrice)
   }
 
-  get gasPriceEth(): EthValue {
-    return new EthValue(this.gasPriceBN)
+  get gasPriceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableGWeiValue(this.gasPriceBN)
   }
 
   get nonceBN(): BigNumber {
@@ -74,22 +75,21 @@ export class TransactionDetailExt implements TransactionDetail {
     return new BigNumber(this.value)
   }
 
-  get valueEth(): EthValue {
-    return new EthValue(this.valueBN)
+  get valueFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.valueBN)
   }
 
   get timestampMs(): number {
     return this.timestamp
   }
 
-  get feeEth(): EthValue {
+  get feeFormatted(): FormattedNumber {
     if (this.blockNumber == new BigNumber(0)) {
       // for genesis block we have no receipt
-      return new EthValue(new BigNumber(0))
+      return NumberFormatHelper.formatNonVariableEthValue(new BigNumber(0))
     }
-
     const gasUsed = this.receipt!.gasUsedBN
-    return new EthValue(this.gasPriceBN.multipliedBy(gasUsed))
+    return NumberFormatHelper.formatNonVariableEthValue(this.gasPriceBN.multipliedBy(gasUsed))
   }
 
   get inputMethodId(): string | null {

@@ -226,12 +226,12 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.amount'),
-          detail: `${transaction.valueEth.toEth().toString()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.valueFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         this.toDetail(transaction),
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${transaction.feeEth.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
@@ -243,7 +243,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('gas.price'),
-          detail: `${transaction.gasPriceEth.toGWei()} ${this.$i18n.t('common.gwei')}`
+          detail: `${transaction.gasPriceFormatted.value} ${this.$i18n.t('common.gwei')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
