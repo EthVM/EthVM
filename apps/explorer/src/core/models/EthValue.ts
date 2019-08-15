@@ -1,5 +1,6 @@
 import BN from 'bignumber.js'
 import NumberFormatter from 'number-formatter'
+import BigNumber from 'bignumber.js'
 
 export class EthValue {
   private value: string | number | BN
@@ -22,6 +23,11 @@ export class EthValue {
   public toEth(): number {
     const value = this.value instanceof BN ? this.value : new BN(this.value)
     return value.div(1_000_000_000_000_000_000).toNumber()
+  }
+
+  public toEthBN(): BigNumber {
+    const value = this.value instanceof BN ? this.value : new BN(this.value)
+    return value.div(1_000_000_000_000_000_000)
   }
 
   public toWei(): number {

@@ -1,3 +1,4 @@
+import {FormattedNumberUnit} from '@app/core/helper/number-format-helper'
 <template>
   <v-card color="white" flat>
     <v-layout grid-list-md align-start justify-start row fill-height :class="layoutPadding">
@@ -49,37 +50,31 @@
           <v-flex xs12 md4>
             <v-card class="primary white--text pl-2" flat>
               <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
-              <!-- isShortValue -->
-              <v-card-title v-if="!isShortValue(account.balanceEth.toString())" class="headline text-truncate pr-1"
-                >{{ getShortValue(account.balanceEth) }} {{ $t('common.eth') }}
-                <v-tooltip bottom>
+              <v-card-title class="headline text-truncate pr-1"
+                >{{ account.balanceFormatted.value }} {{ $t(`common.${account.balanceFormatted.unit}`) }}
+                <v-tooltip v-if="account.balanceFormatted.tooltipText" bottom>
                   <template #activator="data">
                     <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
                   </template>
-                  <span>{{ formatStr(account.balanceEth.toString()) }} {{ $t('common.eth') }}</span>
+                  <span>{{ account.balanceFormatted.tooltipText }} {{ $t('common.eth') }}</span>
                 </v-tooltip>
               </v-card-title>
-              <!-- !isShortValue -->
-              <v-card-title v-else class="headline text-truncate">{{ account.balanceEth }} {{ $t('common.eth') }}</v-card-title>
             </v-card>
           </v-flex>
           <!-- End Ether Balance -->
           <!-- USD Value -->
           <v-flex xs12 md4>
             <v-card class="error white--text pl-2" flat>
-              <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(exchangeRatePrice) }})</v-card-text>
-              <!-- !isShortValue -->
-              <v-card-title v-if="!isShortValue(accountBalanceUsd)" class="headline text-truncate">
-                ${{ getShortValue(accountBalanceUsd) }}
-                <v-tooltip bottom>
+              <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ exchangeRateFormatted }})</v-card-text>
+              <v-card-title class="headline text-truncate">
+                {{ accountBalanceUsdShort }}
+                <v-tooltip v-if="accountBalanceUsdFormatted.tooltipText" bottom>
                   <template #activator="data">
                     <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
                   </template>
-                  <span>${{ formatStr(accountBalanceUsd) }}</span>
+                  <span>${{ accountBalanceUsdFormatted.tooltipText }}</span>
                 </v-tooltip>
               </v-card-title>
-              <!-- isShortValue -->
-              <v-card-title v-else class="headline text-truncate"> ${{ getRoundNumber(accountBalanceUsd) }} </v-card-title>
             </v-card>
           </v-flex>
           <!-- End USD Value -->
@@ -87,7 +82,7 @@
           <v-flex xs12 md4>
             <v-card class="warning white--text pl-2" flat>
               <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-              <v-card-title class="headline text-truncate">{{ account.totalTxCountBN.toString() }}</v-card-title>
+              <v-card-title class="headline text-truncate">{{ account.totalTxCountFormatted.value }}</v-card-title>
             </v-card>
           </v-flex>
           <!-- End Number of Tx -->
@@ -98,27 +93,33 @@
           <v-card class="primary xs-div white--text ">
             <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
             <!-- isShortValue -->
-            <v-card-title v-if="!isShortValue(account.balanceEth.toString())" class="headline text-truncate pr-1"
-              >{{ getShortValue(account.balanceEth) }} {{ $t('common.eth') }}
-              <v-tooltip bottom>
+            <v-card-title class="headline text-truncate pr-1"
+              >{{ account.balanceFormatted.value }} {{ $t(`common.${account.balanceFormatted.unit}`) }}
+              <v-tooltip v-if="account.balanceFormatted.tooltipText" bottom>
                 <template #activator="data">
                   <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
                 </template>
-                <span>{{ formatStr(account.balanceEth.toString()) }} {{ $t('common.eth') }}</span>
+                <span>{{ account.balanceFormatted.tooltipText }} {{ $t('common.eth') }}</span>
               </v-tooltip>
             </v-card-title>
-            <!-- !isShortValue -->
-            <v-card-title v-else class="headline text-truncate">{{ account.balanceEth }} {{ $t('common.eth') }}</v-card-title>
           </v-card>
 
           <v-card class="error white--text xs-div " flat>
-            <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ getRoundNumber(exchangeRatePrice) }})</v-card-text>
-            <v-card-title class="headline text-truncate">${{ getRoundNumber(account.balanceEth * exchangeRatePrice) }}</v-card-title>
+            <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ exchangeRateFormatted }})</v-card-text>
+            <v-card-title class="headline text-truncate">
+              {{ accountBalanceUsdShort }}
+              <v-tooltip v-if="accountBalanceUsdFormatted.tooltipText" bottom>
+                <template #activator="data">
+                  <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
+                </template>
+                <span>${{ accountBalanceUsdFormatted.tooltipText }}</span>
+              </v-tooltip>
+            </v-card-title>
           </v-card>
 
           <v-card class="warning white--text xs-div" flat>
             <v-card-text class="pb-0">{{ $t('tx.total') }}</v-card-text>
-            <v-card-title class="headline text-truncate">{{ account.totalTxCountBN.toString() }}</v-card-title>
+            <v-card-title class="headline text-truncate">{{ account.totalTxCountFormatted.value }}</v-card-title>
           </v-card>
 
           <div class="empty-xs"></div>
@@ -129,16 +130,17 @@
 </template>
 
 <script lang="ts">
-import { StringConcatMixin } from '@app/core/components/mixins'
-import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
-import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
-import Blockies from '@app/modules/addresses/components/Blockies.vue'
-import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
-import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
-import { EthValue } from '@app/core/models'
+    import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
+    import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+    import Blockies from '@app/modules/addresses/components/Blockies.vue'
+    import { Component, Mixins, Prop } from 'vue-property-decorator'
+    import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
+    import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
+    import { FormattedNumber } from '@app/core/helper/number-format-helper'
+    import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+    import BigNumber from 'bignumber.js'
 
-@Component({
+    @Component({
   components: {
     AddressQr,
     AppCopyToClip,
@@ -154,7 +156,7 @@ import { EthValue } from '@app/core/models'
     }
   }
 })
-export default class AddressDetail extends Mixins(StringConcatMixin) {
+export default class AddressDetail extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -191,8 +193,20 @@ export default class AddressDetail extends Mixins(StringConcatMixin) {
     }
   }
 
-  get accountBalanceUsd(): string {
-    return new EthValue(this.account.balanceBN.multipliedBy(this.exchangeRatePrice)).toString()
+  get accountBalanceUsdFormatted(): FormattedNumber {
+    const balanceUsd = this.account.balanceEth.multipliedBy(this.exchangeRatePrice)
+    return this.formatUsdValue(balanceUsd)
+  }
+
+  get accountBalanceUsdShort(): string {
+     if (this.accountBalanceUsdFormatted.value.substring(0,1) === '<') {
+       return this.accountBalanceUsdFormatted.value
+     }
+     return `$${this.accountBalanceUsdFormatted.value}`
+  }
+
+  get exchangeRateFormatted(): string {
+     return this.formatUsdValue(new BigNumber(this.exchangeRatePrice)).value
   }
 }
 </script>
