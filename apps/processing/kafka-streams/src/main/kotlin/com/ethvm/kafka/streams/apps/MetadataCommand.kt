@@ -2,24 +2,18 @@ package com.ethvm.kafka.streams.apps
 
 import com.ethvm.avro.processing.SystemMetadataKeyRecord
 import com.ethvm.avro.processing.SystemMetadataRecord
-import com.ethvm.kafka.streams.Modules.kafkaStreams
-import com.ethvm.kafka.streams.config.AppConfig
 import com.ethvm.kafka.streams.config.KafkaConfig
 import com.ethvm.kafka.streams.config.Topics
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
-import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.StreamsConfig
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import java.util.Properties
@@ -102,10 +96,8 @@ class MetadataCommand : CliktCommand() {
     future.get(10, TimeUnit.SECONDS)
 
     //
-    println{ "Success. Key = $key, value = $value"}
+    println { "Success. Key = $key, value = $value" }
   }
-
-
 }
 
 fun main(args: Array<String>) {

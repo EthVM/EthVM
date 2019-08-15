@@ -3,7 +3,6 @@ package com.ethvm.kafka.streams.processors
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TransactionListRecord
 import com.ethvm.avro.capture.TransactionReceiptListRecord
-import com.ethvm.avro.capture.TransactionRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaListRecord
 import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.FungibleBalanceKeyRecord
@@ -12,17 +11,14 @@ import com.ethvm.avro.processing.NonFungibleBalanceDeltaRecord
 import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.SystemMetadataKeyRecord
 import com.ethvm.avro.processing.SystemMetadataRecord
-import com.ethvm.avro.processing.TransactionKeyRecord
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactions
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.config.Topics.SystemMetadata
-import com.ethvm.kafka.streams.config.Topics.Transaction
 import mu.KLogger
 import mu.KotlinLogging
-import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.common.serialization.Serdes as KafkaSerdes
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
@@ -90,11 +86,10 @@ class PushNotificationsProcessor : AbstractKafkaProcessor() {
 
     transactionStream
       .filterNot { _, v -> v == null }
-      .foreach{ _, txList ->
-        logger.info { "Sending transaction batch of size ${txList!!.transactions.size}"}
+      .foreach { _, txList ->
+        logger.info { "Sending transaction batch of size ${txList!!.transactions.size}" }
         // TODO integrated with push notification system
       }
-
   }
 
   private fun receiptNotifications(builder: StreamsBuilder, metadataTable: GlobalKTable<SystemMetadataKeyRecord, SystemMetadataRecord>) {
@@ -116,11 +111,10 @@ class PushNotificationsProcessor : AbstractKafkaProcessor() {
 
     transactionStream
       .filterNot { _, v -> v == null }
-      .foreach{ _, receiptList ->
-        logger.info { "Sending receipt batch of size ${receiptList!!.receipts.size}"}
+      .foreach { _, receiptList ->
+        logger.info { "Sending receipt batch of size ${receiptList!!.receipts.size}" }
         // TODO integrated with push notification system
       }
-
   }
 
   private fun fungibleBalanceDeltaNotifications(builder: StreamsBuilder, metadataTable: GlobalKTable<SystemMetadataKeyRecord, SystemMetadataRecord>) {
@@ -162,11 +156,10 @@ class PushNotificationsProcessor : AbstractKafkaProcessor() {
       )
       .suppress(Suppressed.untilWindowCloses(unbounded()))
       .toStream()
-      .foreach{ windowedKey, deltaList ->
-        logger.info { "Sending fungible balance deltas, block hash = ${windowedKey.key()}, size = ${deltaList.deltas.size}"}
+      .foreach { windowedKey, deltaList ->
+        logger.info { "Sending fungible balance deltas, block hash = ${windowedKey.key()}, size = ${deltaList.deltas.size}" }
         // TODO integrated with push notification system
       }
-
   }
 
   private fun nonFungibleBalanceDeltaNotifications(builder: StreamsBuilder, metadataTable: GlobalKTable<SystemMetadataKeyRecord, SystemMetadataRecord>) {
@@ -208,10 +201,9 @@ class PushNotificationsProcessor : AbstractKafkaProcessor() {
       )
       .suppress(Suppressed.untilWindowCloses(unbounded()))
       .toStream()
-      .foreach{ windowedKey, deltaList ->
-        logger.info { "Sending non fungible balance deltas, block hash = ${windowedKey.key()}, size = ${deltaList.deltas.size}"}
+      .foreach { windowedKey, deltaList ->
+        logger.info { "Sending non fungible balance deltas, block hash = ${windowedKey.key()}, size = ${deltaList.deltas.size}" }
         // TODO integrated with push notification system
       }
   }
-
 }

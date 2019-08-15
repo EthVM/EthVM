@@ -106,11 +106,10 @@ class ProcessingCommand : CliktCommand() {
       .map { name -> Class.forName("$DEFAULT_PROCESSORS_PACKAGE.$name").kotlin }
       .map { clazz -> clazz.constructors.find { it.parameters.isEmpty() }!! }
       .map { constructor -> constructor.call() as KafkaProcessor }
-      .forEach{ processor ->
+      .forEach { processor ->
         processor.buildTopology()
         processor.start(processorCleanState)
       }
-
   }
 
   companion object Defaults {
