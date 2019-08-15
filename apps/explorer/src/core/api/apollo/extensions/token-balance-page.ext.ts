@@ -30,6 +30,10 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
     return TokenUtils.currentPriceBN(this)
   }
 
+  get currentPriceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.currentPriceBN || new BN(0))
+  }
+
   get balanceFormatted(): FormattedNumber {
     const { decimals, balanceBN } = this
     const raw = decimals ? balanceBN.div(new BN(10).pow(decimals)) : balanceBN
@@ -50,6 +54,10 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
     return balanceBN.multipliedBy(currentPriceBN)
   }
 
+  get usdValueFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.usdValueBN)
+  }
+
   get priceChangePercentage24hBN(): BN | null {
     return TokenUtils.priceChangePercentage24hBN(this)
   }
@@ -64,6 +72,10 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
 
   get priceChangeClass(): string {
     return TokenUtils.priceChangeClass(this)
+  }
+
+  get priceChangeTooltip(): string | undefined {
+    return TokenUtils.priceChangeTooltip(this)
   }
 }
 

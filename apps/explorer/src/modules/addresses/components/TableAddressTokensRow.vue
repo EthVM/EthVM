@@ -19,28 +19,50 @@
               </v-flex>
               <v-flex xs10>
                 <v-layout row wrap align-center justify-start>
-                  <v-flex xs10 :xs12="isRopsten" pa-1>
+                  <v-flex xs9 :xs12="isRopsten" pa-1>
                     <p v-if="token.name || token.symbol" class="black--text text-uppercase font-weight-medium">
                       {{ token.symbol }}
                       <span class="caption text-none">({{ token.name }}) </span>
                     </p>
                     <app-transform-hash v-else :hash="token.address" :is-blue="false"></app-transform-hash>
                   </v-flex>
-                  <v-flex v-if="!isRopsten" xs2 pa-1>
+                  <v-flex v-if="!isRopsten" xs3 pa-1>
                     <v-layout grid-list-xs row justify-end pr-3>
                       <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
                       <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                       <v-img v-if="token.priceChangeSymbol === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                      <v-tooltip v-if="token.priceChangeTooltip" bottom>
+                        <template #activator="data">
+                          <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                        </template>
+                        <span>{{ token.priceChangeTooltip }}</span>
+                      </v-tooltip>
                     </v-layout>
                   </v-flex>
                   <v-flex xs12 pa-1>
                     <p class="info--text mb-1">
                       {{ $t('common.amount') }}:
-                      <span class="black--text">{{ balance.value }}</span>
+                      <span class="black--text">
+                        {{ balance.value }}
+                        <v-tooltip v-if="balance.tooltipText" bottom>
+                          <template #activator="data">
+                            <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                          </template>
+                          <span>{{ balance.tooltipText }}</span>
+                        </v-tooltip>
+                      </span>
                     </p>
                     <p v-if="!isRopsten" class="info--text">
                       {{ $t('usd.value') }}:
-                      <span class="black--text">${{ usdValue }}</span>
+                      <span class="black--text">
+                        {{ usdValue }}
+                        <v-tooltip v-if="usdValueFormatted.tooltipText" bottom>
+                          <template #activator="data">
+                            <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                          </template>
+                          <span>{{ usdValueFormatted.tooltipText }}</span>
+                        </v-tooltip>
+                      </span>
                       <span class="caption"> (@ ${{ currPrice }} {{ $t('token.per') }} {{ token.symbol }}) </span>
                     </p>
                   </v-flex>
@@ -80,15 +102,29 @@
             </v-flex>
             <v-flex v-if="!isRopsten" sm3>
               <p class="black--text ">
-                ${{ usdValue }}
-                <span class="info--text caption">(@ ${{ currPrice }} {{ $t('token.per') }} {{ token.symbol }})</span>
+                {{ usdValue }}
+                <v-tooltip v-if="usdValueFormatted.tooltipText" bottom>
+                  <template #activator="data">
+                    <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                  </template>
+                  <span>{{ usdValueFormatted.tooltipText }}</span>
+                </v-tooltip>
+                <span class="info--text caption"> (@ ${{ currPrice }} {{ $t('token.per') }} {{ token.symbol }})</span>
               </p>
             </v-flex>
             <v-flex v-if="!isRopsten" sm2>
               <v-layout grid-list-xs row align-center justify-start pl-2 pr-2>
-                <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
+                <p :class="token.priceChangeClass">
+                  {{ token.priceChangeFormatted }}%
+                </p>
                 <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                 <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                <v-tooltip v-if="token.priceChangeTooltip" bottom>
+                  <template #activator="data">
+                    <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                  </template>
+                  <span>{{ token.priceChangeTooltip }}</span>
+                </v-tooltip>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -138,11 +174,15 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   }
 
   get currPrice(): string {
-    return this.token.currentPriceBN ? this.getRoundNumber(this.token.currentPriceBN) : '0.00'
+    return this.token.currentPriceFormatted.value
+  }
+
+  get usdValueFormatted(): FormattedNumber {
+    return this.token.usdValueFormatted
   }
 
   get usdValue(): string {
-    return this.getRoundNumber(this.token.usdValueBN)
+    return this.usdValueFormatted.value.substring(0, 1) === '<' ? this.usdValueFormatted.value : `${this.usdValueFormatted.value}`
   }
 }
 </script>

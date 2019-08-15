@@ -27,7 +27,7 @@
             <v-flex xs12 pt-1>
               <p class="info--text tx-hash">
                 {{ $t('tx.cost') }}:
-                <span class="black--text">{{ getTxFee(contract) }}</span>
+                <span class="black--text">{{ txFeeFormatted.value }}</span>
               </p>
             </v-flex>
           </v-layout>
@@ -53,7 +53,7 @@
             <app-time-ago :timestamp="contract.timestampDate" />
           </v-flex>
           <v-flex sm2>
-            {{ getTxFee(contract) }}
+            {{ txFeeFormatted.value }}
           </v-flex>
         </v-layout>
         <v-divider />
@@ -69,6 +69,8 @@ import { EthValue } from '@app/core/models'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { ContractSummaryPageExt_items } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
 
 @Component({
   components: {
@@ -76,7 +78,7 @@ import { ContractSummaryPageExt_items } from '@app/core/api/apollo/extensions/co
     AppTransformHash
   }
 })
-export default class TableAddressContractsRow extends Mixins(StringConcatMixin) {
+export default class TableAddressContractsRow extends Mixins(NumberFormatMixin) {
   /*
     ===================================================================================
       Props
@@ -87,12 +89,12 @@ export default class TableAddressContractsRow extends Mixins(StringConcatMixin) 
 
   /*
     ===================================================================================
-      Methods
+      Computed
     ===================================================================================
     */
 
-  getTxFee(contract: ContractSummaryPageExt_items): string {
-    return this.getRoundNumber(new EthValue(contract.txFee).toEth())
+  get txFeeFormatted(): FormattedNumber {
+    return this.formatNonVariableEthValue(this.contract.txFeeBN)
   }
 }
 </script>
