@@ -2,6 +2,7 @@ import { BlockDetail, BlockDetail_header, BlockDetail_rewards } from '@app/core/
 import BigNumber from 'bignumber.js'
 import { DeltaType } from '@app/core/api/apollo/types/globalTypes'
 import { EthValue } from '@app/core/models'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class BlockDetailExt_header implements BlockDetail_header {
   __typename!: 'BlockHeader'
@@ -104,6 +105,16 @@ export class BlockDetailExt implements BlockDetail {
     return this._minerReward
   }
 
+  get minerRewardBN(): BigNumber {
+    return this.rewards!.filter(r => r!.deltaType === 'BLOCK_REWARD')
+      .map(r => r!.amountBN!)
+      .reduce((acc, value: any) => value, new BigNumber(0))
+  }
+
+  get minerRewardFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.minerRewardBN)
+  }
+
   get uncleReward(): EthValue {
     if (!this._uncleReward) {
       const rawReward = this.rewards!.filter(r => r!.deltaType === 'UNCLE_REWARD')
@@ -116,11 +127,21 @@ export class BlockDetailExt implements BlockDetail {
     return this._uncleReward
   }
 
+  get uncleRewardBN(): BigNumber {
+    return this.rewards!.filter(r => r!.deltaType === 'UNCLE_REWARD')
+      .map(r => r!.amountBN!)
+      .reduce((acc, value: any) => acc.plus(value), new BigNumber(0))
+  }
+
+  get uncleRewardFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.uncleRewardBN)
+  }
+
   get transactionCount(): number | null {
     return this.transactionHashes ? this.transactionHashes.length : null
   }
 
-  get totalTxFeesEth(): EthValue {
-    return new EthValue(this.totalTxFees)
+  get totalTxFeesFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.totalTxFees)
   }
 }
