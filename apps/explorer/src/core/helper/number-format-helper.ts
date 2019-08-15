@@ -142,16 +142,16 @@ export class NumberFormatHelper {
   /**
    * Converts a percentage value to a FormattedNumber
    * @param value: BigNumber already converted to a percentage e.g. < 100 (expect in special cases)
+   * @param allowOver100: whether a percentage greater than 100 should be allowed (default true)
    * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
    */
-  public static formatPercentageValue(value: BigNumber): FormattedNumber {
-
+  public static formatPercentageValue(value: BigNumber, allowOver100: boolean = true): FormattedNumber {
     const unit = FormattedNumberUnit.PERCENT
     if (value.isLessThan(0.01)) {
-      return { value: '< 0.01', unit }
+      return { value: '<0.01', unit }
     }
-    if (value.isGreaterThan(100)) {
-      return { value: '> 100%', unit, tooltipText: `${ new BigNumber(value).toFormat(2)}%` }
+    if (!allowOver100 && value.isGreaterThan(100)) {
+      return { value: '>100', unit, tooltipText: `${ new BigNumber(value).toFormat(2)}%` }
     }
     return { value: new BigNumber(value).toFormat(2), unit }
   }
@@ -175,6 +175,9 @@ export class NumberFormatHelper {
     if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) { // 0.0000001 or greater show 7 dps
       const dps = value.decimalPlaces()
       return { value: value.toFormat(Math.min(7, dps)), unit, tooltipText: dps > 7 ? value.toFormat() : undefined  }
+    }
+    if (value.isZero()) {
+      return { value: '0.00', unit }
     }
     // Less than 0.0000001
     return { value: '< $0.0000001', unit, tooltipText: value.toFixed() }

@@ -33,7 +33,15 @@
 
         <!-- Column 3: Quantity -->
         <v-flex sm2>
-          <p>{{ calculateTransferValue(transfer.value) }}</p>
+          <p>
+            {{ transferValue.value }}
+          <v-tooltip v-if="transferValue.tooltipText" bottom>
+            <template #activator="data">
+              <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+            </template>
+            <span>{{ transferValue.tooltipText }} {{ $t('common.eth') }}</span>
+          </v-tooltip>
+          </p>
         </v-flex>
         <!-- End Column 3 -->
 
@@ -78,7 +86,13 @@
           </v-flex>
           <v-flex xs12>
             <p class="pb-0">
-              <span class="info--text">{{ $t('common.quantity') }}:</span> {{ calculateTransferValue(transfer.value) }}
+              <span class="info--text">{{ $t('common.quantity') }}:</span> {{ transferValue.value }}
+              <v-tooltip v-if="transferValue.tooltipText" bottom>
+                <template #activator="data">
+                  <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
+                </template>
+                <span>{{ transferValue.tooltipText }} {{ $t('common.eth') }}</span>
+              </v-tooltip>
             </p>
           </v-flex>
         </v-layout>
@@ -90,10 +104,12 @@
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { TransferPageExt_items } from '@app/core/api/apollo/extensions/transfer-page.ext'
 import { EthValue } from '@app/core/models'
 import BigNumber from 'bignumber.js'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
 
 @Component({
   components: {
@@ -101,7 +117,7 @@ import BigNumber from 'bignumber.js'
     AppTransformHash
   }
 })
-export default class TransfersTableRow extends Vue {
+export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
   /*
    ===================================================================================
      Props
@@ -117,17 +133,19 @@ export default class TransfersTableRow extends Vue {
     ===================================================================================
     */
 
-  calculateTransferValue(value: string) {
+  get transferValue(): FormattedNumber {
+    let n = this.transfer.valueBN || new BigNumber(0)
+
     if (this.isInternal) {
-      return new EthValue(value).toEthFormatted().toString()
+      return this.formatNonVariableEthValue(n, 7)
     }
 
-    let n = new BigNumber(value)
+    // Must be a token transfer
 
     if (this.decimals) {
       n = n.div(new BigNumber(10).pow(this.decimals))
     }
-    return n.toFormat(2).toString()
+    return this.formatFloatingPointValue(n)
   }
 }
 </script>

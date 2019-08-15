@@ -1,6 +1,7 @@
 import { TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
 import BN from 'bignumber.js'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TokenUtils {
   static currentPriceBN(token: TokenBalancePageExt_items | TokenExchangeRatePageExt_items): BN | null {
@@ -11,6 +12,15 @@ export class TokenUtils {
     return token.priceChangePercentage24h ? new BN(token.priceChangePercentage24h).dp(2) : null
   }
 
+  private static priceChangeFormattedNumber(token: TokenBalancePageExt_items | TokenExchangeRatePageExt_items): FormattedNumber {
+    let bn = token.priceChangePercentage24hBN || new BN(0)
+    if (bn.isNegative()) {
+      bn = bn.negated()
+    }
+    return NumberFormatHelper.formatPercentageValue(bn)
+  }
+
+
   static priceChangeFormatted(token: TokenBalancePageExt_items | TokenExchangeRatePageExt_items): string {
     const { priceChangePercentage24hBN } = token
 
@@ -18,11 +28,15 @@ export class TokenUtils {
       return '0'
     }
 
-    if (priceChangePercentage24hBN.isNegative()) {
-      return priceChangePercentage24hBN.toString()
+    return this.priceChangeFormattedNumber(token).value
+  }
+
+  static priceChangeTooltip(token: TokenBalancePageExt_items): string | undefined {
+    let result = this.priceChangeFormattedNumber(token).tooltipText
+    if (result && token.priceChangeSymbol === '-') {
+      result = `-${result}`
     }
-    // Add "+" symbol
-    return `${token.priceChangeSymbol}${priceChangePercentage24hBN.toString()}`
+    return result
   }
 
   static priceChangeSymbol(token: TokenBalancePageExt_items | TokenExchangeRatePageExt_items): string {
