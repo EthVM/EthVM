@@ -38,7 +38,7 @@
               <p class="info--text psmall">{{ $t('common.eth') }}:</p>
             </v-flex>
             <v-flex shrink pa-1>
-              <p class="black--text align-center">{{ getRoundNumber(ethValue(tx.valueBN).toEth()) }}</p>
+              <p class="black--text align-center">{{ txValueFormatted.value }}</p>
             </v-flex>
           </v-layout>
         </div>
@@ -106,22 +106,13 @@
           =====================================================================================
           -->
           <v-flex d-flex sm2 md1 pr-0>
-            <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{ $t('common.amount') }}: {{ getRoundNumber(ethValue(tx.valueBN).toEth()) }}
-            </p>
-            <p v-else :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{
-                getShortValue(
-                  ethValue(tx.valueBN)
-                    .toEth()
-                    .toString()
-                )
-              }}
-              <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
+            <p :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
+              {{ txValueFormattedShort.value }}
+              <v-tooltip v-if="txValueFormattedShort.tooltipText" bottom>
                 <template #activator="data">
                   <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
                 </template>
-                <span>{{ ethValue(tx.valueBN).toEth() }}</span>
+                <span>{{ txValueFormattedShort.tooltipText }}</span>
               </v-tooltip>
             </p>
           </v-flex>
@@ -147,7 +138,7 @@
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md1>
-            <p class="black--text text-truncate mb-0">{{ ethValue(tx.feeBN.toFixed()).toEth() }}</p>
+            <p class="black--text text-truncate mb-0">{{ txFeeFormatted.value }}</p>
           </v-flex>
           <!--
           =====================================================================================
@@ -171,12 +162,10 @@
 
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { EthValue } from '@app/core/models'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import BigNumber from 'bignumber.js'
 import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
+import { FormattedNumber, NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 @Component({
   components: {
@@ -184,7 +173,7 @@ import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions
     AppTransformHash
   }
 })
-export default class TableTxsRow extends Mixins(StringConcatMixin) {
+export default class TableTxsRow extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -196,22 +185,24 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 
   /*
   ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  ethValue(number: BigNumber) {
-    return new EthValue(number)
-  }
-
-  /*
-  ===================================================================================
    Computed
   ===================================================================================
   */
 
   get txStatusClass(): string {
     return this.tx.successful ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+  }
+
+  get txValueFormatted(): FormattedNumber {
+    return this.formatNonVariableEthValue(this.tx.valueBN)
+  }
+
+  get txValueFormattedShort(): FormattedNumber {
+    return this.formatNonVariableEthValue(this.tx.valueBN, 2)
+  }
+
+  get txFeeFormatted(): FormattedNumber {
+    return this.formatNonVariableEthValue(this.tx.feeBN)
   }
 }
 </script>
