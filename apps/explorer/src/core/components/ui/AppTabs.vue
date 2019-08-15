@@ -90,6 +90,7 @@ export default class AppTabs extends Vue {
       if (this.activeTabId === tab.id) {
         tab.isActive = true
         this.activeTab = `tab-${this.activeTabId}`
+        this.$emit('changeTab', `tab-${tab.id}`) // Notify parent of tab change
       } else {
         tab.isActive = false
       }
