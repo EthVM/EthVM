@@ -35,12 +35,7 @@
         <v-flex sm2>
           <p>
             {{ transferValue.value }}
-          <v-tooltip v-if="transferValue.tooltipText" bottom>
-            <template #activator="data">
-              <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-            </template>
-            <span>{{ transferValue.tooltipText }} {{ $t('common.eth') }}</span>
-          </v-tooltip>
+            <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
           </p>
         </v-flex>
         <!-- End Column 3 -->
@@ -87,12 +82,7 @@
           <v-flex xs12>
             <p class="pb-0">
               <span class="info--text">{{ $t('common.quantity') }}:</span> {{ transferValue.value }}
-              <v-tooltip v-if="transferValue.tooltipText" bottom>
-                <template #activator="data">
-                  <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-                </template>
-                <span>{{ transferValue.tooltipText }} {{ $t('common.eth') }}</span>
-              </v-tooltip>
+              <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
             </p>
           </v-flex>
         </v-layout>
@@ -110,11 +100,13 @@ import { EthValue } from '@app/core/models'
 import BigNumber from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
     AppTimeAgo,
-    AppTransformHash
+    AppTransformHash,
+      AppTooltip
   }
 })
 export default class TransfersTableRow extends Mixins(NumberFormatMixin) {

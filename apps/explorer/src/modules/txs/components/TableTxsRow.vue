@@ -108,12 +108,7 @@
           <v-flex d-flex sm2 md1 pr-0>
             <p :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
               {{ txValueFormattedShort.value }}
-              <v-tooltip v-if="txValueFormattedShort.tooltipText" bottom>
-                <template #activator="data">
-                  <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-                </template>
-                <span>{{ txValueFormattedShort.tooltipText }}</span>
-              </v-tooltip>
+              <app-tooltip v-if="txValueFormattedShort.tooltipText" :text="txValueFormattedShort.tooltipText" />
             </p>
           </v-flex>
           <!--
@@ -166,9 +161,11 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
 import { FormattedNumber, NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
+    AppTooltip,
     AppTimeAgo,
     AppTransformHash
   }

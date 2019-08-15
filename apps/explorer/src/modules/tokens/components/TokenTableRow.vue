@@ -16,7 +16,9 @@
                 <p class="black--text font-weight-medium mb-0 pr-1">{{ token.name }}</p>
               </v-layout>
               <v-layout row align-end justify-start pl-2>
-                <p class="black--text text-truncate mb-0 pr-1">${{ price }}</p>
+                <p class="black--text text-truncate mb-0 pr-1">
+                  ${{ price }}
+                </p>
                 <template v-if="token.priceChangeSymbol !== 'null'">
                   <p :class="token.priceChangeClass">( {{ token.priceChangeFormatted }}%</p>
                   <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
