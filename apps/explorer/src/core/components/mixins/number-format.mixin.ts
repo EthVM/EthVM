@@ -24,7 +24,6 @@ const SmallNumberBreakpoint = 0.0000001
 const TenThousand = 10000
 const OneMillion = 1000000
 const OneBillion = 1000000000
-const OneTrillion = 1000000000000
 const TenTrillion = 10000000000000
 
 @Component

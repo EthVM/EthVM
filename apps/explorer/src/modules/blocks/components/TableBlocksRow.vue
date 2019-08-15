@@ -34,7 +34,7 @@
               <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <p class="black--text align-center pl-2">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
+              <p class="black--text align-center pl-2">{{ formatNonVariableEthValue(block.rewardBN).value }}</p>
             </v-flex>
           </v-layout>
         </div>
@@ -75,7 +75,7 @@
             </v-layout>
           </v-flex>
           <v-flex sm1 xl2>
-            <p class="black--text align-center mb-0">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
+            <p class="black--text align-center mb-0">{{ formatNonVariableEthValue(block.rewardBN).value }}</p>
           </v-flex>
         </v-layout>
         <!--
@@ -107,19 +107,19 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { StringConcatMixin } from '@app/core/components/mixins'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { EthValue } from '@app/core/models'
 import BN from 'bignumber.js'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { NumberFormatMixin } from "@app/core/components/mixins/number-format.mixin";
 
 @Component({
   components: {
     AppTransformHash
   }
 })
-export default class TableBlocksRow extends Mixins(StringConcatMixin) {
+export default class TableBlocksRow extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props

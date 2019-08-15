@@ -76,13 +76,13 @@
           </v-flex>
           <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
             <p class="text-truncate black--text align-center mb-0">
-              <v-tooltip v-if="!isShortValue(uncle.uncleRewardEth.toEth())" bottom>
+              <v-tooltip v-if="rewardFormatted.tooltipText" bottom>
                 <template #activator="data">
                   <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
                 </template>
-                <span>{{ uncle.uncleRewardEth.toEth() }}</span>
+                <span>{{ rewardFormatted.tooltipText }}</span>
               </v-tooltip>
-              {{ getShortValue(uncle.uncleRewardEth.toEth()) }}
+              {{ rewardFormatted.value }}
             </p>
           </v-flex>
         </v-layout>
@@ -94,16 +94,16 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { StringConcatMixin } from '@app/core/components/mixins'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { UncleSummaryPageExt_items } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
+import { FormattedNumber, NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 @Component({
   components: {
     AppTransformHash
   }
 })
-export default class TableUnclesRow extends Mixins(StringConcatMixin) {
+export default class TableUnclesRow extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -112,6 +112,17 @@ export default class TableUnclesRow extends Mixins(StringConcatMixin) {
 
   @Prop(UncleSummaryPageExt_items) uncle!: UncleSummaryPageExt_items
   @Prop({ type: String, default: 'home' }) pageType!: string
+
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+
+    get rewardFormatted(): FormattedNumber {
+        return this.formatNonVariableEthValue(this.uncle.uncleRewardBN, 2)
+    }
+
 }
 </script>
 
