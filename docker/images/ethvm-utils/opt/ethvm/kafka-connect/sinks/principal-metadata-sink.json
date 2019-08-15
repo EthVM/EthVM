@@ -1,0 +1,13 @@
+{
+  "name": "principal-metadata-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": 1,
+    "topics": "metadata",
+    "insert.mode": "upsert",
+    "pk.mode": "record_key",
+    "connection.url": "{{ .Env.PRINCIPAL_JDBC_URL }}",
+    "connection.user": "{{ .Env.PRINCIPAL_USER }}",
+    "connection.password": "{{ .Env.PRINCIPAL_PASSWORD }}"
+  }
+}

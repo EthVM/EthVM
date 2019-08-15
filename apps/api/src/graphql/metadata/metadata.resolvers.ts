@@ -15,9 +15,7 @@ export class MetadataResolvers {
 
   @Query()
   async metadata() {
-
     const isSyncing = await this.metadataService.isSyncing()
-
     return new MetadataDto({ isSyncing })
   }
 

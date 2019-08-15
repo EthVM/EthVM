@@ -13,14 +13,15 @@ export class MetadataService {
   ) {
   }
 
-  async isSyncing(): Promise<boolean | undefined> {
+  async isSyncing(): Promise<boolean> {
     const entry = await this.metadataRepository.findOne({
       where: {
         key: 'sync_status',
       },
       cache: true,
     })
-    return entry ? JSON.parse(entry.value) : undefined
+    // if no entry we assume we are syncing
+    return entry ? JSON.parse(entry.value) : true
   }
 
 }

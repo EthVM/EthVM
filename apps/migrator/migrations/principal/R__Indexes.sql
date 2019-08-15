@@ -131,6 +131,3 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rat
 CREATE UNIQUE INDEX IF NOT EXISTS idx_erc20_metadata_address ON erc20_metadata (address);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_erc721_metadata_address ON erc721_metadata (address);
 
-/* Update sync status */
-UPDATE metadata set value = 'false' where key = 'sync_status';
-
