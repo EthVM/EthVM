@@ -76,13 +76,8 @@
           </v-flex>
           <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
             <p class="text-truncate black--text align-center mb-0">
-              <v-tooltip v-if="rewardFormatted.tooltipText" bottom>
-                <template #activator="data">
-                  <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-                </template>
-                <span>{{ rewardFormatted.tooltipText }}</span>
-              </v-tooltip>
               {{ rewardFormatted.value }}
+              <app-tooltip v-if="rewardFormatted.tooltipText" :text="rewardFormatted.tooltipText" />
             </p>
           </v-flex>
         </v-layout>
@@ -97,10 +92,12 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { UncleSummaryPageExt_items } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
 import { FormattedNumber, NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
-    AppTransformHash
+    AppTransformHash,
+      AppTooltip
   }
 })
 export default class TableUnclesRow extends Mixins(NumberFormatMixin) {

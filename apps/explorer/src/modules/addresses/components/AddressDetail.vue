@@ -1,4 +1,3 @@
-import {FormattedNumberUnit} from '@app/core/helper/number-format-helper'
 <template>
   <v-card color="white" flat>
     <v-layout grid-list-md align-start justify-start row fill-height :class="layoutPadding">
