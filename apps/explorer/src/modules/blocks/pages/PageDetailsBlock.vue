@@ -278,7 +278,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('miner.reward'),
-          detail: `${blockDetail.minerReward.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.minerRewardFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('common.timestmp'),
@@ -286,7 +286,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('uncle.reward'),
-          detail: `${blockDetail.uncleReward.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.uncleRewardFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.tc('tx.name', 2),
@@ -321,15 +321,15 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${blockDetail.totalTxFeesEth.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.totalTxFeesFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: header.gasLimit
+          detail: header.gasLimitBN.toFormat()
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: header.gasUsed
+          detail: header.gasUsedBN.toFormat()
         },
         {
           title: this.$i18n.t('block.logs'),
