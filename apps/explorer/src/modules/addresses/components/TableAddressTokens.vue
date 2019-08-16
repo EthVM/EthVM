@@ -97,12 +97,12 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import TableAddressTokensRow from '@app/modules/addresses/components/TableAddressTokensRow.vue'
 import TableAddressTokensRowLoading from '@app/modules/addresses/components/TableAddressTokensRowLoading.vue'
 import BN from 'bignumber.js'
-import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
 import { ConfigHelper } from '@app/core/helper/config-helper'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 const MAX_ITEMS = 10
 
@@ -167,7 +167,7 @@ const MAX_ITEMS = 10
     // }
   }
 })
-export default class TableAddressTokens extends Mixins(StringConcatMixin) {
+export default class TableAddressTokens extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -277,14 +277,14 @@ export default class TableAddressTokens extends Mixins(StringConcatMixin) {
   }
 
   get hasTokens(): boolean {
-    return !!(this.tokensPage && this.tokensPage.items && this.tokensPage.items.length)
+      return !!(this.tokensPage && this.tokensPage.items && this.tokensPage.items.length)
   }
 
   // get totalTokens(): string {
   //   if (this.loading) {
   //     return this.$i18n.t('message.load').toString()
   //   }
-  //   return this.totalCount.toString()
+  //   return this.formatFloatingPointValue(this.totalCount).value
   // }
 
   // get tokensString(): string {
