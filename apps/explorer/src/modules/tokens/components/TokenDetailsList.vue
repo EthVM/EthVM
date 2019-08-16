@@ -16,7 +16,6 @@
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import { StringConcatMixin } from '@app/core/components/mixins'
 import { Hex } from '@app/core/models'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
@@ -30,7 +29,7 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
     AppDetailsList
   }
 })
-export default class TokenDetailsList extends Mixins(StringConcatMixin, NumberFormatMixin) {
+export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props

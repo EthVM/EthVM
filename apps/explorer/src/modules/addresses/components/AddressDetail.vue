@@ -91,7 +91,6 @@
         <div class="xs-overflow">
           <v-card class="primary xs-div white--text ">
             <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
-            <!-- isShortValue -->
             <v-card-title class="headline text-truncate pr-1"
               >{{ account.balanceFormatted.value }} {{ $t(`common.${account.balanceFormatted.unit}`) }}
               <v-tooltip v-if="account.balanceFormatted.tooltipText" bottom>
@@ -106,7 +105,7 @@
           <v-card class="error white--text xs-div " flat>
             <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ exchangeRateFormatted }})</v-card-text>
             <v-card-title class="headline text-truncate">
-              {{ accountBalanceUsdShort }}
+              {{ accountBalanceUsdFormatted.value }}
               <v-tooltip v-if="accountBalanceUsdFormatted.tooltipText" bottom>
                 <template #activator="data">
                   <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>

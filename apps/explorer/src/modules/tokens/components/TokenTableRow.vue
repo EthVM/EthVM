@@ -90,9 +90,7 @@
 </template>
 
 <script lang="ts">
-import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import BN from 'bignumber.js'
 import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import BigNumber from 'bignumber.js'
@@ -101,7 +99,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 @Component({
     components: {AppTooltip}
 })
-export default class TokenTableRow extends Mixins(StringConcatMixin, NumberFormatMixin) {
+export default class TokenTableRow extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props

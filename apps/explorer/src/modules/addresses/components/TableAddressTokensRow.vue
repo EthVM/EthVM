@@ -106,12 +106,10 @@
 </template>
 
 <script lang="ts">
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
-import AppNumericValueTooltip from '@app/core/components/ui/AppNumericValueTooltip.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 @Component({
   components: {
@@ -119,7 +117,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
       AppTransformHash,
   }
 })
-export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
+export default class TableAddressTokensRow extends Vue {
   /*
   ===================================================================================
     Props
