@@ -17,17 +17,22 @@
               </v-layout>
               <v-layout row align-end justify-start pl-2>
                 <p class="black--text text-truncate mb-0 pr-1">
-                  ${{ price }}
+                  {{ priceFormatted.value }}
+                  <app-tooltip v-if="priceFormatted.tooltipText" :text="priceFormatted.tooltipText" />
                 </p>
                 <template v-if="token.priceChangeSymbol !== 'null'">
                   <p :class="token.priceChangeClass">( {{ token.priceChangeFormatted }}%</p>
                   <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                   <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                   <p :class="token.priceChangeClass">)</p>
+                  <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
                 </template>
               </v-layout>
               <v-layout row align-center justify-start pl-2>
-                <p class="black--text mb-0 pr-1">${{ marketCap }}</p>
+                <p class="black--text mb-0 pr-1">
+                  {{ marketCapFormatted.value }}
+                  <app-tooltip v-if="marketCapFormatted.tooltipText" :text="marketCapFormatted.tooltipText" />
+                </p>
                 <p class="info--text mb-0 cap-text">({{ $t('token.market') }})</p>
               </v-layout>
             </v-flex>
@@ -51,20 +56,30 @@
               </v-layout>
             </v-flex>
             <v-flex xs2>
-              <p class="black--text text-truncate mb-0">${{ price }}</p>
+              <p class="black--text text-truncate mb-0">
+                {{ priceFormatted.value }}
+                <app-tooltip v-if="priceFormatted.tooltipText" :text="priceFormatted.tooltipText" />
+              </p>
             </v-flex>
             <v-flex xs2>
               <v-layout grid-list-xs row align-center justify-start>
                 <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
                 <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                 <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
               </v-layout>
             </v-flex>
             <v-flex xs2>
-              <p class="black--text text-truncate mb-0">${{ volume }}</p>
+              <p class="black--text text-truncate mb-0">
+                {{ volumeFormatted.value }}
+                <app-tooltip v-if="volumeFormatted.tooltipText" :text="volumeFormatted.tooltipText" />
+              </p>
             </v-flex>
             <v-flex xs2>
-              <p class="black--text text-truncate mb-0">${{ marketCap }}</p>
+              <p class="black--text text-truncate mb-0">
+                {{ marketCapFormatted.value }}
+                <app-tooltip v-if="marketCapFormatted.tooltipText" :text="marketCapFormatted.tooltipText" />
+              </p>
             </v-flex>
           </v-layout>
           <v-divider class="mb-2 mt-2" />
@@ -79,9 +94,14 @@ import { StringConcatMixin } from '@app/core/components/mixins'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
-
-@Component
-export default class TokenTableRow extends Mixins(StringConcatMixin) {
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import BigNumber from 'bignumber.js'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+@Component({
+    components: {AppTooltip}
+})
+export default class TokenTableRow extends Mixins(StringConcatMixin, NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -96,16 +116,16 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
   ===================================================================================
   */
 
-  get price(): string {
-    return this.token.currentPriceBN ? this.getRoundNumber(this.token.currentPriceBN) : '0.00'
+  get priceFormatted(): FormattedNumber {
+    return this.formatUsdValue(this.token.currentPriceBN || new BigNumber(0))
   }
 
-  get volume(): string {
-    return this.token.totalVolume ? this.getInt(this.token.totalVolume) : '0'
+  get volumeFormatted(): FormattedNumber {
+    return this.formatUsdValue(this.token.totalVolumeBN)
   }
 
-  get marketCap(): string {
-    return this.token.marketCap ? this.getInt(this.token.marketCap) : '0.00'
+  get marketCapFormatted(): FormattedNumber {
+    return this.formatUsdValue(this.token.marketCapBN)
   }
 
   get tokenLink(): string {
