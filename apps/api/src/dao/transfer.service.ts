@@ -21,9 +21,9 @@ export class TransferService {
   ) {
   }
 
-  async findTokenTransfersByContractAddress(address: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], boolean]> {
+  async findContractTokenTransfers(contractAddress: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], boolean]> {
     const findOptions: FindManyOptions = {
-      where: {deltaType: 'TOKEN_TRANSFER', contractAddress: address, isReceiving: true},
+      where: {deltaType: 'TOKEN_TRANSFER', contractAddress, isReceiving: true},
       skip: offset,
       take: limit + 1,
       order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
@@ -37,18 +37,18 @@ export class TransferService {
     return [items, hasMore]
   }
 
-  async findTokenTransfersByContractAddressForHolder(
+  async findContractTokenTransfersForAddress(
+    contractAddress: string,
     address: string,
-    holder: string,
     filter: string = 'all',
     offset: number = 0,
     limit: number = 10,
   ): Promise<[FungibleBalanceDeltaEntity[], boolean]> {
 
     const builder = this.fungibleDeltaRepository.createQueryBuilder('t')
-      .where('t.contract_address = :address')
-      .andWhere('t.delta_type = :deltaType')
-      .andWhere('t.address = :holder')
+      .where('t.delta_type = :deltaType')
+      .andWhere('t.contract_address = :contractAddress')
+      .andWhere('t.address = :address')
 
     switch (filter) {
       case 'in':
@@ -62,7 +62,7 @@ export class TransferService {
     }
 
     const items = await builder
-      .setParameters({ address, deltaType: 'TOKEN_TRANSFER', holder })
+      .setParameters({ contractAddress, deltaType: 'TOKEN_TRANSFER', address })
       .orderBy('t.traceLocationBlockNumber', 'DESC')
       .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
       .offset(offset)
@@ -78,18 +78,18 @@ export class TransferService {
     return [items, hasMore]
   }
 
-  async findTotalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): Promise<BigNumber> {
+  async countContractTokenTransfersForAddress(contractAddress: string, address: string): Promise<BigNumber> {
 
     return new BigNumber(await this.fungibleDeltaRepository.createQueryBuilder('d')
       .where('d.delta_type = :deltaType')
-      .andWhere('d.address = :holderAddress')
       .andWhere('d.contract_address = :contractAddress')
-      .setParameters({ deltaType: 'TOKEN_TRANSFER', holderAddress, contractAddress })
+      .andWhere('d.address = :address')
+      .setParameters({ deltaType: 'TOKEN_TRANSFER', address, contractAddress })
       .getCount())
 
   }
 
-  async findInternalTransactionsByAddress(address: string, offset: number = 0, limit: number = 10): Promise<[InternalTransferEntity[], boolean]> {
+  async findInternalTransactionsForAddress(address: string, offset: number = 0, limit: number = 10): Promise<[InternalTransferEntity[], boolean]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
