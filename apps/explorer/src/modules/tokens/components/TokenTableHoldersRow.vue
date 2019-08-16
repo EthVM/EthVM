@@ -70,17 +70,17 @@
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { TokenHolderPageExt_items } from '@app/core/api/apollo/extensions/token-holder-page.ext'
 import BN from 'bignumber.js'
-    import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-    import { FormattedNumber } from '@app/core/helper/number-format-helper'
-    import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
-      AppTooltip,
+    AppTooltip,
     AppTransformHash
   }
 })
@@ -124,14 +124,14 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
     return this.formatPercentageValue(share)
   }
 
-    /**
-     * Calculate and format balance held by given holder
-     * @param  {Object} holder - Holder object
-     * @return {Object} - FormattedNumber
-     */
+  /**
+   * Calculate and format balance held by given holder
+   * @param  {Object} holder - Holder object
+   * @return {Object} - FormattedNumber
+   */
   get balance(): FormattedNumber {
-     const balanceBN = this.decimals ? this.holder.balanceBN.div(new BN(10).pow(this.decimals)) : this.holder.balanceBN
-     return this.formatFloatingPointValue(balanceBN)
+    const balanceBN = this.decimals ? this.holder.balanceBN.div(new BN(10).pow(this.decimals)) : this.holder.balanceBN
+    return this.formatFloatingPointValue(balanceBN)
   }
 }
 </script>

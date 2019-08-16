@@ -97,7 +97,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 @Component({
   components: {
     AppTransformHash,
-      AppTooltip
+    AppTooltip
   }
 })
 export default class TableUnclesRow extends Mixins(NumberFormatMixin) {
@@ -110,16 +110,15 @@ export default class TableUnclesRow extends Mixins(NumberFormatMixin) {
   @Prop(UncleSummaryPageExt_items) uncle!: UncleSummaryPageExt_items
   @Prop({ type: String, default: 'home' }) pageType!: string
 
-    /*
+  /*
     ===================================================================================
       Computed
     ===================================================================================
     */
 
-    get rewardFormatted(): FormattedNumber {
-        return this.formatNonVariableEthValue(this.uncle.uncleRewardBN, 2)
-    }
-
+  get rewardFormatted(): FormattedNumber {
+    return this.formatNonVariableEthValue(this.uncle.uncleRewardBN, 2)
+  }
 }
 </script>
 

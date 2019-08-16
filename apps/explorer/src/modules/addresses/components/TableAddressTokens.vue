@@ -277,7 +277,7 @@ export default class TableAddressTokens extends Mixins(NumberFormatMixin) {
   }
 
   get hasTokens(): boolean {
-      return !!(this.tokensPage && this.tokensPage.items && this.tokensPage.items.length)
+    return !!(this.tokensPage && this.tokensPage.items && this.tokensPage.items.length)
   }
 
   // get totalTokens(): string {

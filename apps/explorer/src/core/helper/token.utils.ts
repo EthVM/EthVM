@@ -20,7 +20,6 @@ export class TokenUtils {
     return NumberFormatHelper.formatPercentageValue(bn)
   }
 
-
   static priceChangeFormatted(token: TokenBalancePageExt_items | TokenExchangeRatePageExt_items): string {
     const { priceChangePercentage24hBN } = token
 
