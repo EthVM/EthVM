@@ -31,7 +31,7 @@
                       <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
                       <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                       <v-img v-if="token.priceChangeSymbol === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
-                      <app-tooltip v-if="token.priceChangeTooltip " :text="token.priceChangeTooltip " />
+                      <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
                     </v-layout>
                   </v-flex>
                   <v-flex xs12 pa-1>
@@ -89,9 +89,7 @@
             </v-flex>
             <v-flex v-if="!isRopsten" sm2>
               <v-layout grid-list-xs row align-center justify-start pl-2 pr-2>
-                <p :class="token.priceChangeClass">
-                  {{ token.priceChangeFormatted }}%
-                </p>
+                <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
                 <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                 <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                 <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
@@ -113,8 +111,8 @@ import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 @Component({
   components: {
-      AppTooltip,
-      AppTransformHash,
+    AppTooltip,
+    AppTransformHash
   }
 })
 export default class TableAddressTokensRow extends Vue {

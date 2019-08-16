@@ -6,8 +6,7 @@ import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-for
 
 @Component
 export class NumberFormatMixin extends Vue {
-
-/*
+  /*
 ===================================================================================
   Methods
 ===================================================================================
@@ -58,5 +57,4 @@ export class NumberFormatMixin extends Vue {
   formatUsdValue(value: BigNumber): FormattedNumber {
     return NumberFormatHelper.formatUsdValue(value)
   }
-
 }

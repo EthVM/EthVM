@@ -106,7 +106,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
   components: {
     AppTimeAgo,
     AppTransformHash,
-      AppTooltip
+    AppTooltip
   }
 })
 export default class TransfersTableRow extends Mixins(NumberFormatMixin) {

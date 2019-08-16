@@ -128,17 +128,17 @@
 </template>
 
 <script lang="ts">
-    import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
-    import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
-    import Blockies from '@app/modules/addresses/components/Blockies.vue'
-    import { Component, Mixins, Prop } from 'vue-property-decorator'
-    import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
-    import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
-    import { FormattedNumber } from '@app/core/helper/number-format-helper'
-    import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-    import BigNumber from 'bignumber.js'
+import AddressQr from '@app/modules/addresses/components/AddressQr.vue'
+import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import Blockies from '@app/modules/addresses/components/Blockies.vue'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
+import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import BigNumber from 'bignumber.js'
 
-    @Component({
+@Component({
   components: {
     AddressQr,
     AppCopyToClip,
@@ -197,7 +197,7 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
   }
 
   get exchangeRateFormatted(): string {
-     return this.formatUsdValue(new BigNumber(this.exchangeRatePrice)).value
+    return this.formatUsdValue(new BigNumber(this.exchangeRatePrice)).value
   }
 }
 </script>

@@ -112,7 +112,7 @@ import { EthValue } from '@app/core/models'
 import BN from 'bignumber.js'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
-import { NumberFormatMixin } from "@app/core/components/mixins/number-format.mixin";
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 @Component({
   components: {

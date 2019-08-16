@@ -97,7 +97,7 @@ import BigNumber from 'bignumber.js'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 @Component({
-    components: {AppTooltip}
+  components: { AppTooltip }
 })
 export default class TokenTableRow extends Mixins(NumberFormatMixin) {
   /*
