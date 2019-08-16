@@ -57,22 +57,28 @@ export class OrmModule {
     private readonly metricsConnection: Connection,
     @Inject('winston')
     private readonly logger: Logger,
+    private readonly configService: ConfigService,
   ) {
 
-    // we set statement timeout on all connections to max 20 seconds
+    // we set statement timeout on all connections (default max 30 seconds)
+
     const principalDriver = principalConnection.driver as PostgresDriver
     const {master: principalMasterPool, slaves: principalReplicaPools} = principalDriver
+    const principalPools = [principalMasterPool, ...principalReplicaPools]
+    this.setStatementTimeouts(principalPools, configService.dbPrincipal.statementTimeout)
 
     const metricsDriver = metricsConnection.driver as PostgresDriver
     const {master: metricsMasterPool, slaves: metricsReplicaPools} = metricsDriver
+    const metricsPools = [metricsMasterPool, ...metricsReplicaPools]
+    this.setStatementTimeouts(metricsPools, configService.dbMetrics.statementTimeout)
 
-    const pools = [principalMasterPool, ...principalReplicaPools, metricsMasterPool, ...metricsReplicaPools]
+  }
 
+  private setStatementTimeouts(pools, timeout: string): void {
     pools.forEach(pool => pool.on('connect', client => {
-      logger.debug('[ORM] Setting statement timeout to 20s on new db connection')
-      client.query('SET statement_timeout to \'20s\'')
+      this.logger.debug(`[ORM] Setting statement timeout to ${timeout} on new db connection`)
+      client.query(`SET statement_timeout to \'${timeout}\'`)
     }))
-
   }
 
 }
