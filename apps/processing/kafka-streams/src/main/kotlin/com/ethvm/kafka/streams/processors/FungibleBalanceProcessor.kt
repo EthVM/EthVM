@@ -59,13 +59,6 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
     val minerFeeDeltas = MinerFeeBalanceDelta.stream(builder)
     val erc20Deltas = Erc20BalanceDelta.stream(builder)
 
-    aggregate(premineDeltas).toTopic(PremineBalanceLog)
-    aggregate(hardForkDeltas).toTopic(HardForkBalanceLog)
-    aggregate(transactionDeltas).toTopic(TransactionBalanceLog)
-    aggregate(transactionFeeDeltas).toTopic(TransactionFeeBalanceLog)
-    aggregate(minerFeeDeltas).toTopic(MinerFeeBalanceLog)
-    aggregate(erc20Deltas).toTopic(Erc20BalanceLog)
-
     val allDeltas = premineDeltas
       .merge(hardForkDeltas)
       .merge(transactionDeltas)
