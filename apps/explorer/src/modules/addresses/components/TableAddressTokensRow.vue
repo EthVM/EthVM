@@ -45,10 +45,10 @@
                     <p v-if="!isRopsten" class="info--text">
                       {{ $t('usd.value') }}:
                       <span class="black--text">
-                        {{ usdValue }}
+                        {{ usdValueFormatted.value }}
                         <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
                       </span>
-                      <span class="caption"> (@ ${{ currPrice }} {{ $t('token.per') }} {{ token.symbol }}) </span>
+                      <span class="caption"> (@ {{ currPrice }} {{ $t('token.per') }} {{ token.symbol }}) </span>
                     </p>
                   </v-flex>
                 </v-layout>
@@ -82,9 +82,9 @@
             </v-flex>
             <v-flex v-if="!isRopsten" sm3>
               <p class="black--text ">
-                {{ usdValue }}
+                {{ usdValueFormatted.value }}
                 <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
-                <span class="info--text caption"> (@ ${{ currPrice }} {{ $t('token.per') }} {{ token.symbol }})</span>
+                <span class="info--text caption"> (@ {{ currPrice }} {{ $t('token.per') }} {{ token.symbol }})</span>
               </p>
             </v-flex>
             <v-flex v-if="!isRopsten" sm2>
@@ -154,10 +154,6 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
 
   get usdValueFormatted(): FormattedNumber {
     return this.token.usdValueFormatted
-  }
-
-  get usdValue(): string {
-    return this.usdValueFormatted.value.substring(0, 1) === '<' ? this.usdValueFormatted.value : `${this.usdValueFormatted.value}`
   }
 }
 </script>

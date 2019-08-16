@@ -84,6 +84,10 @@ export class NumberFormatHelper {
    */
   public static formatVariableUnitEthValue(value: BigNumber, ethBreakpoint: number = TenTrillion, allowRounding?: boolean): FormattedNumber {
 
+    if (value.isZero()) { // Return "0 ETH" if value is 0
+      return { value: '0', unit: FormattedNumberUnit.ETH }
+    }
+
     if (value.isGreaterThanOrEqualTo(ethBreakpoint)) { // Show large values in ETH, no tooltip
       const ethBN = new BigNumber(new EthValue(value).toEth())
       if (allowRounding) { // follow rules of floating point formatting
@@ -167,20 +171,21 @@ export class NumberFormatHelper {
 
     const unit = FormattedNumberUnit.USD
     if (value.isGreaterThanOrEqualTo(OneBillion)) { // 1 Billion or greater convert to billions
-      return this.convertToBillions(value)
+      let result = this.convertToBillions(value)
+      return {...result, value: `$${result.value}` }
     }
     if (value.isGreaterThanOrEqualTo(SmallUsdBreakpoint)) { // 0.004 or greater show 2 dps
-      return { value: value.toFormat(2), unit, tooltipText: value.decimalPlaces() > 2 ? value.toFormat() : undefined }
+      return { value: `$${value.toFormat(2)}`, unit, tooltipText: value.decimalPlaces() > 2 ? `$${value.toFormat()}` : undefined }
     }
     if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) { // 0.0000001 or greater show 7 dps
       const dps = value.decimalPlaces()
-      return { value: value.toFormat(Math.min(7, dps)), unit, tooltipText: dps > 7 ? value.toFormat() : undefined  }
+      return { value: `$${value.toFormat(Math.min(7, dps))}`, unit, tooltipText: dps > 7 ? `$${value.toFormat()}` : undefined  }
     }
     if (value.isZero()) {
-      return { value: '0.00', unit }
+      return { value: '$0.00', unit }
     }
     // Less than 0.0000001
-    return { value: '< $0.0000001', unit, tooltipText: value.toFixed() }
+    return { value: '< $0.0000001', unit, tooltipText: `$${value.toFixed()}` }
   }
 
   /* Helper functions */

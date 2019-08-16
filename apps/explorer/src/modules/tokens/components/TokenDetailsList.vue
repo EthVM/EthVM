@@ -23,13 +23,14 @@ import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext
 import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
 import BN from 'bignumber.js'
 import { ConfigHelper } from '@app/core/helper/config-helper'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 @Component({
   components: {
     AppDetailsList
   }
 })
-export default class TokenDetailsList extends Mixins(StringConcatMixin) {
+export default class TokenDetailsList extends Mixins(StringConcatMixin, NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -170,8 +171,11 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   get priceDetail(): Detail {
     const detail: Detail = { title: this.$i18n.tc('price.name', 1) }
     if (!this.isLoading && this.tokenDetails) {
-      detail.detail = this.tokenDetails.currentPriceBN ? this.getRoundNumber(this.tokenDetails.currentPriceBN) : '0.00'
-      detail.priceChange = this.getPriceChange()
+      let priceFormatted = this.formatUsdValue(this.tokenDetails.currentPriceBN || new BN(0)).value
+      if (this.priceChange) {
+          priceFormatted += ` (${this.priceChange}%)`
+      }
+      detail.detail = priceFormatted
     }
     return detail
   }
@@ -179,29 +183,32 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.formatStr(this.tokenDetails.totalSupply.toString()) : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.formatIntegerValue(this.tokenDetails.totalSupplyBN).value : undefined
     }
   }
 
   get circulatingSupplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.circSupply'),
-      detail:
-        !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.formatStr(this.tokenDetails.circulatingSupply.toString()) : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ?
+          this.formatIntegerValue(this.tokenDetails.circulatingSupplyBN).value  :
+          undefined
     }
   }
 
   get marketCapDetail(): Detail {
+    const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.market'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.marketCap ? `$${this.getRoundNumber(this.tokenDetails.marketCap)}` : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.marketCap ? `${this.formatUsdValue(tokenDetails.marketCapBN).value}` : undefined
     }
   }
 
   get volumeDetail(): Detail {
+    const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.volume'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalVolume ? `$${this.getInt(this.tokenDetails.totalVolume)}` : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.totalVolume ? `${this.formatUsdValue(tokenDetails.totalVolumeBN).value}` : undefined
     }
   }
 
@@ -279,25 +286,28 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   }
 
   get holderTransfersDetail(): Detail {
+    const { holderDetails, isLoading } = this
     return {
       title: this.$t('token.transfers'),
-      detail: !this.isLoading && this.holderDetails && this.holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersBN.toString() : undefined
+      detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.formatIntegerValue(holderDetails.totalTransfersBN).value : undefined
     }
   }
 
   get balanceUsd(): string | undefined {
-    if (!this.holderDetails) {
+    const { holderDetails, tokenDetails } = this
+
+    if (!holderDetails) {
       return ''
     }
 
-    const decimals = this.tokenDetails.decimals
-    let n = this.holderDetails.balanceBN
+    const decimals = tokenDetails.decimals
+    let n = holderDetails.balanceBN
 
     if (decimals) {
       n = n.div(new BN(10).pow(decimals))
     }
 
-    return this.holderDetails.balance && this.tokenDetails.currentPrice ? `$${this.getRoundNumber(n.multipliedBy(this.tokenDetails.currentPrice))}` : undefined
+    return holderDetails.balance && tokenDetails.currentPrice ? `${this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice)).value}` : undefined
   }
 
   get balance(): string {
@@ -306,22 +316,14 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
     if (decimals) {
       n = n.div(new BN(10).pow(decimals))
     }
-    return n.toString()
+    return this.formatFloatingPointValue(n).value
   }
 
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  getPriceChange(): string {
-    if (this.tokenDetails.currentPrice) {
-      return this.tokenDetails.priceChangePercentage24h > 0
-        ? `+${this.getPercent(this.tokenDetails.priceChangePercentage24h)}`
-        : this.getPercent(this.tokenDetails.priceChangePercentage24h)
-    }
-    return ''
+  get priceChange(): string | undefined {
+      if (this.tokenDetails.priceChangePercentage24h) {
+          const { value } = this.formatPercentageValue(new BN(this.tokenDetails.priceChangePercentage24hBN))
+          return this.tokenDetails.priceChangePercentage24h > 0 ? `+${value}` : value
+      }
   }
 }
 </script>

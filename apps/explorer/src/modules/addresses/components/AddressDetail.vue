@@ -64,14 +64,14 @@
           <!-- USD Value -->
           <v-flex xs12 md4>
             <v-card class="error white--text pl-2" flat>
-              <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ exchangeRateFormatted }})</v-card-text>
+              <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = {{ exchangeRateFormatted }})</v-card-text>
               <v-card-title class="headline text-truncate">
-                {{ accountBalanceUsdShort }}
+                {{ accountBalanceUsdFormatted.value }}
                 <v-tooltip v-if="accountBalanceUsdFormatted.tooltipText" bottom>
                   <template #activator="data">
                     <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
                   </template>
-                  <span>${{ accountBalanceUsdFormatted.tooltipText }}</span>
+                  <span>{{ accountBalanceUsdFormatted.tooltipText }}</span>
                 </v-tooltip>
               </v-card-title>
             </v-card>
@@ -195,13 +195,6 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
   get accountBalanceUsdFormatted(): FormattedNumber {
     const balanceUsd = this.account.balanceEth.multipliedBy(this.exchangeRatePrice)
     return this.formatUsdValue(balanceUsd)
-  }
-
-  get accountBalanceUsdShort(): string {
-     if (this.accountBalanceUsdFormatted.value.substring(0,1) === '<') {
-       return this.accountBalanceUsdFormatted.value
-     }
-     return `$${this.accountBalanceUsdFormatted.value}`
   }
 
   get exchangeRateFormatted(): string {

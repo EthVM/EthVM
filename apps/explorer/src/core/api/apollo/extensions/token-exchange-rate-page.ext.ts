@@ -44,6 +44,14 @@ export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_ite
   get priceChangeClass(): string {
     return TokenUtils.priceChangeClass(this)
   }
+
+  get totalVolumeBN(): BN {
+    return new BN(this.totalVolume || 0)
+  }
+
+  get marketCapBN(): BN {
+    return new BN(this.marketCap || 0)
+  }
 }
 
 export class TokenExchangeRatePageExt implements TokenExchangeRatePage {
