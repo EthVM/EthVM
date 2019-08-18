@@ -71,6 +71,30 @@ register_sinks() {
 
 } >&2
 
+update_sinks() {
+
+  echo "===> Registering sinks ..."
+  ensure_kafka_connect
+
+  local SINKS=$(ls ${KAFKA_CONNECT_DIR}/sinks/*.json)
+
+  for FILE in ${SINKS}; do
+
+    local connector=$(cat ${FILE} | jq -r '.name')
+    local config=$(cat ${FILE} | jq '.config')
+
+    echo "Applying config update to connector: ${connector}"
+    echo "Config:"
+
+    echo -e "\n${config}\n"
+
+    curl -s -H "Content-Type: application/json" -X PUT -d "${config}" ${KAFKA_CONNECT_URL}/connectors/${connector}/config
+
+  done
+
+
+}
+
 register() {
 
   echo "===> Elems to register: $@"
@@ -126,6 +150,7 @@ run() {
   case ${command} in
     ensure-kafka-connect) ensure_kafka_connect "$@";;
     ensure-sinks)         register_sinks "$@"      ;;
+    update-sinks)         update_sinks "$@"        ;;
     ensure-sources)       register_sources "$@"    ;;
     register)             register "$@"            ;;
     reset-sink-offsets)   reset_sink_offsets "$@"  ;;
