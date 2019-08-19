@@ -10,7 +10,9 @@
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`">{{ $t('block.number') }} {{ block.numberFormatted }}</router-link>
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`"
+                >{{ $t('block.number') }} {{ block.numberFormatted }}</router-link
+              >
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
