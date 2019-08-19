@@ -1,6 +1,5 @@
 import { TransactionDetail, TransactionDetail_receipt } from '@app/core/api/apollo/types/TransactionDetail'
 import BigNumber from 'bignumber.js'
-import { EthValue } from '@app/core/models'
 import Signatures from '@app/core/helper/signatures.json'
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
@@ -16,6 +15,10 @@ export class TransactionDetailExt_receipt implements TransactionDetail_receipt {
 
   get gasUsedBN(): BigNumber {
     return new BigNumber(this.gasUsed || 0)
+  }
+
+  get gasUsedFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN, false).value
   }
 }
 
@@ -55,8 +58,16 @@ export class TransactionDetailExt implements TransactionDetail {
     return new BigNumber(this.blockNumber)
   }
 
+  get blockNumberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.blockNumberBN, false).value
+  }
+
   get gasBN(): BigNumber {
     return new BigNumber(this.gas)
+  }
+
+  get gasFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasBN, false).value
   }
 
   get gasPriceBN(): BigNumber {
@@ -69,6 +80,10 @@ export class TransactionDetailExt implements TransactionDetail {
 
   get nonceBN(): BigNumber {
     return new BigNumber(this.nonce)
+  }
+
+  get nonceFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.nonceBN, false).value
   }
 
   get valueBN(): BigNumber {

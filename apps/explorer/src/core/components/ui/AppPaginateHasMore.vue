@@ -16,10 +16,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+    import { Component, Mixins, Prop } from 'vue-property-decorator'
+    import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+    import BigNumber from 'bignumber.js'
 
-@Component
-export default class AppPaginate extends Vue {
+    @Component
+export default class AppPaginate extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -99,7 +101,7 @@ export default class AppPaginate extends Vue {
    * a human-readable string that starts from 1 as opposed to 0
    */
   get pageDisplay(): string {
-    return (this.currentPage + 1).toString()
+    return this.formatIntegerValue(new BigNumber(this.currentPage + 1)).value
   }
 }
 </script>

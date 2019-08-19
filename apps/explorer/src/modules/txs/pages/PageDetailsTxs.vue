@@ -204,7 +204,7 @@ export default class PageDetailsTxs extends Vue {
       details = [
         {
           title: this.$i18n.t('block.number'),
-          detail: transaction.blockNumberBN.toString(),
+          detail: transaction.blockNumberFormatted,
           link: `/block/${transaction.blockHash}`
         },
         {
@@ -235,11 +235,11 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: transaction.gasBN.toString()
+          detail: transaction.gasFormatted
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: receipt ? receipt.gasUsedBN.toString() : '0' // genesis block txs can have no receipt
+          detail: receipt ? receipt.gasUsedFormatted : '0' // genesis block txs can have no receipt
         },
         {
           title: this.$i18n.t('gas.price'),
@@ -247,7 +247,7 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: transaction.nonceBN.toString()
+          detail: transaction.nonceFormatted
         },
         {
           title: this.$i18n.t('tx.input'),

@@ -1,5 +1,6 @@
 import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BN from 'bignumber.js'
+import { NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
   __typename!: 'BlockSummary'
@@ -21,6 +22,10 @@ export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
 
   get numberBN(): BN {
     return new BN(this.number)
+  }
+
+  get numberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.numberBN).value
   }
 
   get numTxsBN(): BN {

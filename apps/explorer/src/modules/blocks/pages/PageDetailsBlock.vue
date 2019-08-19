@@ -254,7 +254,7 @@ export default class PageDetailsBlock extends Vue {
       details = [
         {
           title: this.$i18n.t('common.height'),
-          detail: header.number
+          detail: header.numberFormatted
         },
         {
           title: this.$i18n.t('common.hash'),
@@ -290,23 +290,23 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.tc('tx.name', 2),
-          detail: blockDetail.transactionCount!
+          detail: blockDetail.transactionCountFormatted
         },
         {
           title: this.$i18n.t('diff.name'),
-          detail: header.difficulty
+          detail: header.difficultyFormatted
         },
         {
           title: this.$i18n.t('diff.total'),
-          detail: header.totalDifficulty
+          detail: header.totalDifficultyFormatted
         },
         {
           title: this.$i18n.t('common.size'),
-          detail: `${header.size!.toString()} ${this.$i18n.t('block.bytes')}`
+          detail: `${header.sizeFormatted} ${this.$i18n.t('block.bytes')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: header.nonce,
+          detail: header.nonceFormatted,
           mono: true
         },
         {
@@ -325,11 +325,11 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: header.gasLimitBN.toFormat()
+          detail: header.gasLimitFormatted
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: header.gasUsedBN.toFormat()
+          detail: header.gasUsedFormatted
         },
         {
           title: this.$i18n.t('block.logs'),

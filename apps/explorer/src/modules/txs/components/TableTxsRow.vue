@@ -11,7 +11,7 @@
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
             <v-flex xs6 pa-1>
               <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.blockHash}`"
-                >{{ $t('block.number') }} {{ tx.blockNumberBN }}</router-link
+                >{{ $t('block.number') }} {{ tx.blockNumberFormatted }}</router-link
               >
             </v-flex>
             <v-flex xs6 pr-44>
@@ -38,7 +38,7 @@
               <p class="info--text psmall">{{ $t('common.eth') }}:</p>
             </v-flex>
             <v-flex shrink pa-1>
-              <p class="black--text align-center">{{ txValueFormatted.value }}</p>
+              <p class="black--text align-center">{{ tx.valueFormatted.value }}</p>
             </v-flex>
           </v-layout>
         </div>
@@ -60,7 +60,7 @@
           =====================================================================================
           -->
           <v-flex sm2 md1 pr-1>
-            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockHash}`">{{ tx.blockNumberBN }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockHash}`">{{ tx.blockNumberFormatted }}</router-link>
           </v-flex>
           <!--
           =====================================================================================
@@ -107,8 +107,8 @@
           -->
           <v-flex d-flex sm2 md1 pr-0>
             <p :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{ txValueFormattedShort.value }}
-              <app-tooltip v-if="txValueFormattedShort.tooltipText" :text="txValueFormattedShort.tooltipText" />
+              {{ tx.valueFormattedShort.value }}
+              <app-tooltip v-if="tx.valueFormattedShort.tooltipText" :text="tx.valueFormattedShort.tooltipText" />
             </p>
           </v-flex>
           <!--
@@ -133,7 +133,7 @@
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md1>
-            <p class="black--text text-truncate mb-0">{{ txFeeFormatted.value }}</p>
+            <p class="black--text text-truncate mb-0">{{ tx.feeFormatted.value }}</p>
           </v-flex>
           <!--
           =====================================================================================
@@ -157,10 +157,9 @@
 
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
-import { FormattedNumber, NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
@@ -170,7 +169,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
     AppTransformHash
   }
 })
-export default class TableTxsRow extends Mixins(NumberFormatMixin) {
+export default class TableTxsRow extends Vue {
   /*
   ===================================================================================
     Props
@@ -188,18 +187,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
   get txStatusClass(): string {
     return this.tx.successful ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
-  }
-
-  get txValueFormatted(): FormattedNumber {
-    return this.formatNonVariableEthValue(this.tx.valueBN)
-  }
-
-  get txValueFormattedShort(): FormattedNumber {
-    return this.formatNonVariableEthValue(this.tx.valueBN, 2)
-  }
-
-  get txFeeFormatted(): FormattedNumber {
-    return this.formatNonVariableEthValue(this.tx.feeBN)
   }
 }
 </script>
