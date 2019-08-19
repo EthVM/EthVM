@@ -52,7 +52,7 @@ export class NumberFormatMixin extends Vue {
 
   /* USD values (Group VIII) */
 
-  formatUsdValue(value: BigNumber): FormattedNumber {
-    return NumberFormatHelper.formatUsdValue(value)
+  formatUsdValue(value: BigNumber, allowRounding?: boolean): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(value, allowRounding)
   }
 }

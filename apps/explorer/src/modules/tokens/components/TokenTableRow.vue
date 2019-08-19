@@ -17,8 +17,8 @@
               </v-layout>
               <v-layout row align-end justify-start pl-2>
                 <p class="black--text text-truncate mb-0 pr-1">
-                  {{ priceFormatted.value }}
-                  <app-tooltip v-if="priceFormatted.tooltipText" :text="priceFormatted.tooltipText" />
+                  {{ token.currentPriceFormatted.value }}
+                  <app-tooltip v-if="token.currentPriceFormatted.tooltipText" :text="token.currentPriceFormatted.tooltipText" />
                 </p>
                 <template v-if="token.priceChangeSymbol !== 'null'">
                   <p :class="token.priceChangeClass">( {{ token.priceChangeFormatted }}%</p>
@@ -30,8 +30,8 @@
               </v-layout>
               <v-layout row align-center justify-start pl-2>
                 <p class="black--text mb-0 pr-1">
-                  {{ marketCapFormatted.value }}
-                  <app-tooltip v-if="marketCapFormatted.tooltipText" :text="marketCapFormatted.tooltipText" />
+                  {{ token.marketCapFormatted.value }}
+                  <app-tooltip v-if="token.marketCapFormatted.tooltipText" :text="token.marketCapFormatted.tooltipText" />
                 </p>
                 <p class="info--text mb-0 cap-text">({{ $t('token.market') }})</p>
               </v-layout>
@@ -57,8 +57,8 @@
             </v-flex>
             <v-flex xs2>
               <p class="black--text text-truncate mb-0">
-                {{ priceFormatted.value }}
-                <app-tooltip v-if="priceFormatted.tooltipText" :text="priceFormatted.tooltipText" />
+                {{ token.currentPriceFormatted.value }}
+                <app-tooltip v-if="token.currentPriceFormatted.tooltipText" :text="token.currentPriceFormatted.tooltipText" />
               </p>
             </v-flex>
             <v-flex xs2>
@@ -71,14 +71,14 @@
             </v-flex>
             <v-flex xs2>
               <p class="black--text text-truncate mb-0">
-                {{ volumeFormatted.value }}
-                <app-tooltip v-if="volumeFormatted.tooltipText" :text="volumeFormatted.tooltipText" />
+                {{ token.totalVolumeFormatted.value }}
+                <app-tooltip v-if="token.totalVolumeFormatted.tooltipText" :text="token.totalVolumeFormatted.tooltipText" />
               </p>
             </v-flex>
             <v-flex xs2>
               <p class="black--text text-truncate mb-0">
-                {{ marketCapFormatted.value }}
-                <app-tooltip v-if="marketCapFormatted.tooltipText" :text="marketCapFormatted.tooltipText" />
+                {{ token.marketCapFormatted.value }}
+                <app-tooltip v-if="token.marketCapFormatted.tooltipText" :text="token.marketCapFormatted.tooltipText" />
               </p>
             </v-flex>
           </v-layout>
@@ -90,16 +90,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
-import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import BigNumber from 'bignumber.js'
-import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 @Component({
   components: { AppTooltip }
 })
-export default class TokenTableRow extends Mixins(NumberFormatMixin) {
+export default class TokenTableRow extends Vue {
   /*
   ===================================================================================
     Props
@@ -113,18 +110,6 @@ export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     Computed
   ===================================================================================
   */
-
-  get priceFormatted(): FormattedNumber {
-    return this.formatUsdValue(this.token.currentPriceBN || new BigNumber(0))
-  }
-
-  get volumeFormatted(): FormattedNumber {
-    return this.formatUsdValue(this.token.totalVolumeBN)
-  }
-
-  get marketCapFormatted(): FormattedNumber {
-    return this.formatUsdValue(this.token.marketCapBN)
-  }
 
   get tokenLink(): string {
     return `/token/${this.token.address}`
