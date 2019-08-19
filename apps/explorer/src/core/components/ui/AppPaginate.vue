@@ -10,7 +10,7 @@
         <!--          <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />-->
         <!--        </div>-->
         <p class="info--text pr-1">{{ pageDisplay }}</p>
-        <p class="info--text">out of {{ total }}</p>
+        <p class="info--text">out of {{ totalFormatted }}</p>
         <v-btn flat class="bttnGrey info--text text-capitalize bttn" @click="setPageOnClick('next')" small :disabled="currentPage === lastPage"
           ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
         </v-btn>
@@ -21,10 +21,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+    import { Component, Prop, Mixins } from 'vue-property-decorator'
+    import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+    import BigNumber from 'bignumber.js'
 
 @Component
-export default class AppPaginate extends Vue {
+export default class AppPaginate extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -136,7 +138,7 @@ export default class AppPaginate extends Vue {
    * a human-readable string that starts from 1 as opposed to 0
    */
   get pageDisplay(): string {
-    return (this.currentPage + 1).toString()
+    return this.formatIntegerValue(new BigNumber(this.currentPage + 1)).value
   }
 
   /**
@@ -146,6 +148,10 @@ export default class AppPaginate extends Vue {
    */
   get isValidPageDisplay(): boolean {
     return !this.isError
+  }
+
+  get totalFormatted(): string {
+    return this.formatIntegerValue(new BigNumber(this.total)).value
   }
 
   /**

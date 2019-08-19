@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { UncleSummaryPage, UncleSummaryPage_items } from '@app/core/api/apollo/types/UncleSummaryPage'
 import { EthValue } from '@app/core/models'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
   __typename!: 'Uncle'
@@ -24,16 +25,24 @@ export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
     return new BigNumber(this.nephewNumber)
   }
 
+  get nephewNumberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.nephewNumberBN).value
+  }
+
   get numberBN(): BigNumber {
     return new BigNumber(this.number)
+  }
+
+  get numberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.numberBN).value
   }
 
   get uncleRewardBN(): BigNumber {
     return new BigNumber(this.uncleReward)
   }
 
-  get uncleRewardEth(): EthValue {
-    return new EthValue(this.uncleRewardBN)
+  get uncleRewardFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.uncleRewardBN, 2)
   }
 }
 

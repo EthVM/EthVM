@@ -33,24 +33,52 @@ export class BlockDetailExt_header implements BlockDetail_header {
     return new BigNumber(this.difficulty)
   }
 
+  get difficultyFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.difficultyBN, false).value
+  }
+
   get gasLimitBN(): BigNumber {
     return new BigNumber(this.gasLimit)
+  }
+
+  get gasLimitFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN, false).value
   }
 
   get gasUsedBN(): BigNumber {
     return new BigNumber(this.gasUsed)
   }
 
+  get gasUsedFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN, false).value
+  }
+
   get nonceBN(): BigNumber | null {
     return this.nonce ? new BigNumber(this.nonce) : null
+  }
+
+  get nonceFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.nonceBN || new BigNumber(0), false).value
   }
 
   get numberBN(): BigNumber {
     return new BigNumber(this.number)
   }
 
+  get numberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.numberBN, false).value
+  }
+
+  get sizeFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.size || 0), false).value
+  }
+
   get totalDifficultyBN(): BigNumber {
     return new BigNumber(this.totalDifficulty)
+  }
+
+  get totalDifficultyFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.totalDifficultyBN, false).value
   }
 
   get timestampMs(): number {
@@ -139,6 +167,10 @@ export class BlockDetailExt implements BlockDetail {
 
   get transactionCount(): number | null {
     return this.transactionHashes ? this.transactionHashes.length : null
+  }
+
+  get transactionCountFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.transactionCount || 0)).value
   }
 
   get totalTxFeesFormatted(): FormattedNumber {

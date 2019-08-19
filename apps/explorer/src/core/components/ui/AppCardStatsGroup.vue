@@ -49,10 +49,11 @@ import {
   lastBlockReceivedQuery,
   updateLastBlockReceivedMutation
 } from '@app/core/components/ui/stats.graphql'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
 import { Subscription } from 'rxjs'
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 interface HashUnit {
   unit: HashUnitLabel
@@ -126,7 +127,7 @@ enum HashUnitLabel {
     }
   }
 })
-export default class AppInfoCardGroup extends Vue {
+export default class AppInfoCardGroup extends Mixins(NumberFormatMixin) {
   /*
     ===================================================================================
       Props
@@ -269,7 +270,7 @@ export default class AppInfoCardGroup extends Vue {
 
   get latestBlockNumber(): string {
     const { loading, loadingMessage, blockSummary } = this
-    return !loading && !!blockSummary ? blockSummary.numberBN.toString() : loadingMessage
+    return !loading && !!blockSummary ? blockSummary.numberFormatted : loadingMessage
   }
 
   get latestHashRateValueAndLabel(): [BigNumber | undefined, HashUnitLabel] {
@@ -320,7 +321,7 @@ export default class AppInfoCardGroup extends Vue {
   }
 
   get secSinceLastBlock(): string {
-    return !this.loading ? this.seconds.toString() : this.loadingMessage
+    return !this.loading ? this.formatIntegerValue(new BigNumber(this.seconds)).value : this.loadingMessage
   }
 }
 </script>

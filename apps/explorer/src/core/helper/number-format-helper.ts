@@ -34,10 +34,11 @@ export class NumberFormatHelper {
   /**
    * Converts an integer value to a FormattedNumber object, returns value in billions if > 1 billion
    * @param value: BigNumber
+   * @param allowBillions: whether or not number should be converted to billuons
    * @return FormattedNumber
    */
-  public static formatIntegerValue(value: BigNumber): FormattedNumber {
-    if (value.isLessThan(OneBillion)) {
+  public static formatIntegerValue(value: BigNumber, allowBillions: boolean = true): FormattedNumber {
+    if (value.isLessThan(OneBillion) || !allowBillions) {
       return { value: value.toFormat() }
     }
     // Convert numbers >= 1 billion to billions (with max 3 decimal places)

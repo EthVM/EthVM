@@ -10,7 +10,7 @@
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`">{{ $t('block.number') }} {{ block.numberBN }}</router-link>
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`">{{ $t('block.number') }} {{ block.numberFormatted }}</router-link>
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
@@ -52,7 +52,7 @@
         -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex sm2>
-            <router-link class="black--text pb-1" :to="`/block/${block.hash}`">{{ block.numberBN }}</router-link>
+            <router-link class="black--text pb-1" :to="`/block/${block.hash}`">{{ block.numberFormatted }}</router-link>
             <div v-if="block.uncleHashes.length" class="arrow">
               <div class="line"></div>
             </div>
@@ -108,8 +108,6 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { EthValue } from '@app/core/models'
-import BN from 'bignumber.js'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
@@ -134,10 +132,6 @@ export default class TableBlocksRow extends Mixins(NumberFormatMixin) {
     Methods
   ===================================================================================
   */
-
-  ethValue(number: BN) {
-    return new EthValue(number)
-  }
 
   sucessTransalate(): number {
     return this.block && this.block.numSuccessfulTxsBN!.toNumber() > 1 ? 2 : 1
