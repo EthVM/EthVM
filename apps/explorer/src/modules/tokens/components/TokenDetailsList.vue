@@ -170,7 +170,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get priceDetail(): Detail {
     const detail: Detail = { title: this.$i18n.tc('price.name', 1) }
     if (!this.isLoading && this.tokenDetails) {
-      let priceFormatted = this.formatUsdValue(this.tokenDetails.currentPriceBN || new BN(0)).value
+      let priceFormatted = this.tokenDetails.currentPriceFormatted
       if (this.priceChange) {
         priceFormatted += ` (${this.priceChange}%)`
       }
@@ -182,7 +182,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.formatIntegerValue(this.tokenDetails.totalSupplyBN).value : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalVolumeFormatted : undefined
     }
   }
 
@@ -191,7 +191,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
       title: this.$i18n.t('token.circSupply'),
       detail:
         !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply
-          ? this.formatIntegerValue(this.tokenDetails.circulatingSupplyBN).value
+          ? this.tokenDetails.circulatingSupplyFormatted
           : undefined
     }
   }
@@ -200,7 +200,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.market'),
-      detail: !isLoading && tokenDetails && tokenDetails.marketCap ? `${this.formatUsdValue(tokenDetails.marketCapBN).value}` : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.marketCap ? this.tokenDetails.marketCapFormatted : undefined
     }
   }
 
@@ -208,7 +208,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.volume'),
-      detail: !isLoading && tokenDetails && tokenDetails.totalVolume ? `${this.formatUsdValue(tokenDetails.totalVolumeBN).value}` : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.totalVolume ? this.tokenDetails.totalVolumeFormatted : undefined
     }
   }
 
@@ -289,7 +289,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { holderDetails, isLoading } = this
     return {
       title: this.$t('token.transfers'),
-      detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.formatIntegerValue(holderDetails.totalTransfersBN).value : undefined
+      detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted : undefined
     }
   }
 
@@ -307,7 +307,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
       n = n.div(new BN(10).pow(decimals))
     }
 
-    return holderDetails.balance && tokenDetails.currentPrice ? `${this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice)).value}` : undefined
+    return holderDetails.balance && tokenDetails.currentPrice ? this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice), false).value : undefined
   }
 
   get balance(): string {
@@ -321,7 +321,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
 
   get priceChange(): string | undefined {
     if (this.tokenDetails.priceChangePercentage24h) {
-      const { value } = this.formatPercentageValue(new BN(this.tokenDetails.priceChangePercentage24hBN))
+      const value = this.tokenDetails.priceChangePercentage24hFormatted
       return this.tokenDetails.priceChangePercentage24h > 0 ? `+${value}` : value
     }
   }
