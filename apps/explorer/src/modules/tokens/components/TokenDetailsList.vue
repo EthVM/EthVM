@@ -189,10 +189,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get circulatingSupplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.circSupply'),
-      detail:
-        !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply
-          ? this.tokenDetails.circulatingSupplyFormatted
-          : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted : undefined
     }
   }
 
