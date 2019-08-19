@@ -211,7 +211,8 @@ export class NumberFormatHelper {
       return { value: '$0.00', unit }
     }
 
-    if (!allowRounding) { // Return value with all decimal places if rounding not allowed
+    if (!allowRounding) {
+      // Return value with all decimal places if rounding not allowed
       return { value: `${value.toFormat()}`, unit }
     }
 
