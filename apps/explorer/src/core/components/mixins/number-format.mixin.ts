@@ -1,7 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
-import { EthValue } from '@app/core/models'
-import { eth } from '@app/core/helper'
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 @Component
