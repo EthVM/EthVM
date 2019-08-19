@@ -21,9 +21,9 @@
 </template>
 
 <script lang="ts">
-    import { Component, Prop, Mixins } from 'vue-property-decorator'
-    import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-    import BigNumber from 'bignumber.js'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import BigNumber from 'bignumber.js'
 
 @Component
 export default class AppPaginate extends Mixins(NumberFormatMixin) {

@@ -16,11 +16,11 @@
 </template>
 
 <script lang="ts">
-    import { Component, Mixins, Prop } from 'vue-property-decorator'
-    import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-    import BigNumber from 'bignumber.js'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import BigNumber from 'bignumber.js'
 
-    @Component
+@Component
 export default class AppPaginate extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
