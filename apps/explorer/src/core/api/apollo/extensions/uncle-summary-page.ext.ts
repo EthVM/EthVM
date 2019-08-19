@@ -42,7 +42,7 @@ export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
   }
 
   get uncleRewardFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.uncleRewardBN, 2)
+    return NumberFormatHelper.formatNonVariableEthValue(this.uncleRewardBN)
   }
 }
 

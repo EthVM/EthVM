@@ -18,6 +18,7 @@ export interface FormattedNumber {
 
 const SmallUsdBreakpoint = 0.04
 const SmallNumberBreakpoint = 0.0000001
+const SmallEthBreakpoint = 0.00001
 
 const TenThousand = 10000
 const OneMillion = 1000000
@@ -123,17 +124,46 @@ export class NumberFormatHelper {
   /**
    * Convert a value in WEI to ETH
    * @param value: BigNumber (in wei)
-   * @param maxDecimalPlaces: number
+   * @param allowRounding: whether or not to allow rounding
    * @return FormattedNumber with value converted to ETH and tooltip if maxDecimalPlaces was applied
    */
-  public static formatNonVariableEthValue(value: BigNumber, maxDecimalPlaces?: number): FormattedNumber {
-    const ethBN = new BigNumber(new EthValue(value).toEth())
-    const dps = maxDecimalPlaces && ethBN.decimalPlaces() > maxDecimalPlaces ? maxDecimalPlaces : undefined // Set max decimals for formatting
-    return {
-      value: ethBN.toFormat(dps),
-      unit: FormattedNumberUnit.ETH,
-      tooltipText: dps ? ethBN.toFormat() : undefined
+  public static formatNonVariableEthValue(value: BigNumber, allowRounding: boolean = true): FormattedNumber {
+    const ethBN = new BigNumber(new EthValue(value).toEthBN())
+    const unit = FormattedNumberUnit.ETH
+
+    if (ethBN.isZero()) {
+      return { value: ethBN.toFormat(), unit }
     }
+
+    // Return full number formatted if rounding is not allowed
+    if (!allowRounding) {
+      return { value: ethBN.toFormat(), unit }
+    }
+    const dps = ethBN.decimalPlaces()
+    if (ethBN.isGreaterThanOrEqualTo(OneBillion)) {
+      // Convert to billions if greater than 1 billion
+      return { ...this.convertToBillions(ethBN), unit }
+    }
+    if (ethBN.isGreaterThanOrEqualTo(OneMillion)) {
+      // Show round number if greater than 1 million
+      return { value: ethBN.toFormat(0), unit, tooltipText: dps ? ethBN.toFormat() : undefined }
+    }
+    if (ethBN.isGreaterThanOrEqualTo(1)) {
+      // Show up to 2 decimal places if greater than 1
+      return { value: ethBN.toFormat(Math.min(2, dps)), unit, tooltipText: dps > 2 ? ethBN.toFormat() : undefined }
+    }
+    if (ethBN.isGreaterThanOrEqualTo(SmallEthBreakpoint)) {
+      // Round to first significant number or 2 decimals places
+      const numZerosAfterDp = this.numZerosAfterDp(ethBN)
+      const dps = Math.max(2, numZerosAfterDp + 1) // Show at least one significant number or minimum 2 decimals places
+      return {
+        value: ethBN.toFormat(dps),
+        unit,
+        tooltipText: ethBN.decimalPlaces() > dps ? ethBN.toFormat() : undefined
+      }
+    }
+    // Value is less than 0.00001
+    return { value: '<0.00001', unit, tooltipText: ethBN.toFormat() }
   }
 
   /* Non-variable GWei values (Group VI) */
@@ -205,5 +235,10 @@ export class NumberFormatHelper {
       unit: FormattedNumberUnit.B,
       tooltipText: value.toFormat()
     }
+  }
+
+  private static numZerosAfterDp(value: BigNumber): number {
+    const matches = value.toFormat().match('\\.(0+)')
+    return matches && matches.length ? matches[0].length - 1 : 0
   }
 }

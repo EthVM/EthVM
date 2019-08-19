@@ -1,6 +1,6 @@
 import { BlockSummaryPage, BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
 import BN from 'bignumber.js'
-import { NumberFormatHelper } from '@app/core/helper/number-format-helper'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
   __typename!: 'BlockSummary'
@@ -42,6 +42,10 @@ export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
 
   get rewardBN(): BN {
     return new BN(this.reward)
+  }
+
+  get rewardFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.rewardBN)
   }
 
   get difficultyBN(): BN {

@@ -27,7 +27,8 @@
             <v-flex xs12 pt-1>
               <p class="info--text tx-hash">
                 {{ $t('tx.cost') }}:
-                <span class="black--text">{{ txFeeFormatted.value }}</span>
+                <span class="black--text">{{ contract.txFeeFormatted.value }}</span>
+                <app-tooltip v-if="contract.txFeeFormatted.tooltipText" :text="contract.txFeeFormatted.tooltipText" />
               </p>
             </v-flex>
           </v-layout>
@@ -53,7 +54,8 @@
             <app-time-ago :timestamp="contract.timestampDate" />
           </v-flex>
           <v-flex sm2>
-            {{ txFeeFormatted.value }}
+            {{ contract.txFeeFormatted.value }}
+            <app-tooltip v-if="contract.txFeeFormatted.tooltipText" :text="contract.txFeeFormatted.tooltipText" />
           </v-flex>
         </v-layout>
         <v-divider />
@@ -63,20 +65,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { ContractSummaryPageExt_items } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
-import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
+    AppTooltip,
     AppTimeAgo,
     AppTransformHash
   }
 })
-export default class TableAddressContractsRow extends Mixins(NumberFormatMixin) {
+export default class TableAddressContractsRow extends Vue {
   /*
     ===================================================================================
       Props
@@ -84,16 +86,6 @@ export default class TableAddressContractsRow extends Mixins(NumberFormatMixin) 
     */
 
   @Prop(Object) contract!: ContractSummaryPageExt_items
-
-  /*
-    ===================================================================================
-      Computed
-    ===================================================================================
-    */
-
-  get txFeeFormatted(): FormattedNumber {
-    return this.formatNonVariableEthValue(this.contract.txFeeBN)
-  }
 }
 </script>
 
