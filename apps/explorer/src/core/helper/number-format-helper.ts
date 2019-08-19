@@ -62,8 +62,9 @@ export class NumberFormatHelper {
       return { value: value.toFormat(0), tooltipText: value.decimalPlaces() ? value.toFormat() : undefined }
     }
     if (value.isGreaterThan(1)) {
-      // show 2 decimal places and tooltip with full value if > 2 decimal places
-      return { value: value.toFormat(2), tooltipText: value.decimalPlaces() > 2 ? value.toFormat() : undefined }
+      // show max 2 decimal places and tooltip with full value if > 2 decimal places
+      const dps = value.decimalPlaces()
+      return { value: value.toFormat(Math.min(2, dps)), tooltipText: dps > 2 ? value.toFormat() : undefined }
     }
     if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
       // show up to 7 decimal places and tooltip with full value if > 7 decimal places
