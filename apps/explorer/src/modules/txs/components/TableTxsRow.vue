@@ -107,8 +107,8 @@
           -->
           <v-flex d-flex sm2 md1 pr-0>
             <p :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{ tx.valueFormattedShort.value }}
-              <app-tooltip v-if="tx.valueFormattedShort.tooltipText" :text="tx.valueFormattedShort.tooltipText" />
+              {{ tx.valueFormatted.value }}
+              <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="tx.valueFormatted.tooltipText" />
             </p>
           </v-flex>
           <!--

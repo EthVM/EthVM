@@ -91,7 +91,7 @@ export class TransactionDetailExt implements TransactionDetail {
   }
 
   get valueFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.valueBN)
+    return NumberFormatHelper.formatNonVariableEthValue(this.valueBN, false)
   }
 
   get timestampMs(): number {
@@ -104,7 +104,7 @@ export class TransactionDetailExt implements TransactionDetail {
       return NumberFormatHelper.formatNonVariableEthValue(new BigNumber(0))
     }
     const gasUsed = this.receipt!.gasUsedBN
-    return NumberFormatHelper.formatNonVariableEthValue(this.gasPriceBN.multipliedBy(gasUsed))
+    return NumberFormatHelper.formatNonVariableEthValue(this.gasPriceBN.multipliedBy(gasUsed), false)
   }
 
   get inputMethodId(): string | null {

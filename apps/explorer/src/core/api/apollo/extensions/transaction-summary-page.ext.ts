@@ -46,10 +46,6 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
     return NumberFormatHelper.formatNonVariableEthValue(this.valueBN)
   }
 
-  get valueFormattedShort(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.valueBN, 2)
-  }
-
   get isContractCreation(): boolean {
     return !!this.creates && this.creates !== ''
   }

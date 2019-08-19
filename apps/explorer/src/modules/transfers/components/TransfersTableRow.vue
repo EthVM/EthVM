@@ -129,7 +129,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
     let n = this.transfer.valueBN || new BigNumber(0)
 
     if (this.isInternal) {
-      return this.formatNonVariableEthValue(n, 7)
+      return this.formatNonVariableEthValue(n)
     }
 
     // Must be a token transfer

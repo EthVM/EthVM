@@ -36,7 +36,10 @@
               <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <p class="black--text align-center pl-2">{{ formatNonVariableEthValue(block.rewardBN).value }}</p>
+              <p class="black--text align-center pl-2">
+                {{ block.rewardFormatted.value }}
+                <app-tooltip v-if="block.rewardFormatted.tooltipText" :text="block.rewardFormatted.tooltipText" />
+              </p>
             </v-flex>
           </v-layout>
         </div>
@@ -77,7 +80,10 @@
             </v-layout>
           </v-flex>
           <v-flex sm1 xl2>
-            <p class="black--text align-center mb-0">{{ formatNonVariableEthValue(block.rewardBN).value }}</p>
+            <p class="black--text align-center mb-0">
+              {{ block.rewardFormatted.value }}
+              <app-tooltip v-if="block.rewardFormatted.tooltipText" :text="block.rewardFormatted.tooltipText" />
+            </p>
           </v-flex>
         </v-layout>
         <!--
@@ -113,9 +119,11 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
+    AppTooltip,
     AppTransformHash
   }
 })
