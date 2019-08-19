@@ -44,8 +44,8 @@ const schema = {
     statementTimeout: {
       doc: 'DB Principal statement_timeout',
       env: 'PRINCIPAL_STATEMENT_TIMEOUT',
-      default: '30s'
-    }
+      default: '30s',
+    },
   },
   dbMetrics: {
     url: {
@@ -56,8 +56,8 @@ const schema = {
     statementTimeout: {
       doc: 'DB Metrics statement_timeout',
       env: 'METRICS_STATEMENT_TIMEOUT',
-      default: '30s'
-    }
+      default: '30s',
+    },
   },
   redis: {
     host: {
