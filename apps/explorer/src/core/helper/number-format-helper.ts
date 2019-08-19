@@ -201,10 +201,20 @@ export class NumberFormatHelper {
   /**
    * Converts a USD value to a FormattedNumber
    * @param value: BigNumber
+   * @param allowRounding: whether or not to allow value to be rounded
    * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
    */
-  public static formatUsdValue(value: BigNumber): FormattedNumber {
+  public static formatUsdValue(value: BigNumber, allowRounding: boolean = true): FormattedNumber {
     const unit = FormattedNumberUnit.USD
+
+    if (value.isZero()) {
+      return { value: '$0.00', unit }
+    }
+
+    if (!allowRounding) { // Return value with all decimal places if rounding not allowed
+      return { value: `${value.toFormat()}`, unit }
+    }
+
     if (value.isGreaterThanOrEqualTo(OneBillion)) {
       // 1 Billion or greater convert to billions
       const result = this.convertToBillions(value)
@@ -215,12 +225,10 @@ export class NumberFormatHelper {
       return { value: `$${value.toFormat(2)}`, unit, tooltipText: value.decimalPlaces() > 2 ? `$${value.toFormat()}` : undefined }
     }
     if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-      // 0.0000001 or greater show 7 dps
-      const dps = value.decimalPlaces()
-      return { value: `$${value.toFormat(Math.min(7, dps))}`, unit, tooltipText: dps > 7 ? `$${value.toFormat()}` : undefined }
-    }
-    if (value.isZero()) {
-      return { value: '$0.00', unit }
+      // 0.0000001 or greater show first significant number or minimum 2 dps
+      const numZerosAfterDp = this.numZerosAfterDp(value)
+      const dps = Math.max(2, numZerosAfterDp + 1)
+      return { value: `$${value.toFormat(dps)}`, unit, tooltipText: value.decimalPlaces() > dps ? `$${value.toFormat()}` : undefined }
     }
     // Less than 0.0000001
     return { value: '< $0.0000001', unit, tooltipText: `$${value.toFixed()}` }
