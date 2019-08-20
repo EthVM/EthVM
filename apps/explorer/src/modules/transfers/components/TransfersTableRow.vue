@@ -129,6 +129,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
     let n = this.transfer.valueBN || new BigNumber(0)
 
     if (this.isInternal) {
+      if (n.isNegative()) { n = n.negated() } // Convert negative values to positive
       return this.formatNonVariableEthValue(n)
     }
 
