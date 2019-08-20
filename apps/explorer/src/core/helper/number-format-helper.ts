@@ -54,6 +54,9 @@ export class NumberFormatHelper {
    * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
    */
   public static formatFloatingPointValue(value: BigNumber): FormattedNumber {
+    if (value.isZero()) {
+      return { value: '0' }
+    }
     if (value.isGreaterThan(OneBillion)) {
       // convert value to billions
       return this.convertToBillions(value)
@@ -132,7 +135,7 @@ export class NumberFormatHelper {
     const unit = FormattedNumberUnit.ETH
 
     if (ethBN.isZero()) {
-      return { value: ethBN.toFormat(), unit }
+      return { value: '0', unit }
     }
 
     // Return full number formatted if rounding is not allowed
@@ -153,11 +156,9 @@ export class NumberFormatHelper {
       return { value: ethBN.toFormat(Math.min(2, dps)), unit, tooltipText: dps > 2 ? ethBN.toFormat() : undefined }
     }
     if (ethBN.isGreaterThanOrEqualTo(SmallEthBreakpoint)) {
-      // Round to first significant number or 2 decimals places
-      const numZerosAfterDp = this.numZerosAfterDp(ethBN)
-      const dps = Math.max(2, numZerosAfterDp + 1) // Show at least one significant number or minimum 2 decimals places
+      // Show up to 7 decimal places
       return {
-        value: ethBN.toFormat(dps),
+        value: ethBN.toFormat(Math.min(7, ethBN.decimalPlaces())),
         unit,
         tooltipText: ethBN.decimalPlaces() > dps ? ethBN.toFormat() : undefined
       }
@@ -187,6 +188,9 @@ export class NumberFormatHelper {
    */
   public static formatPercentageValue(value: BigNumber, allowOver100: boolean = true): FormattedNumber {
     const unit = FormattedNumberUnit.PERCENT
+    if (value.isZero()) {
+      return { value: '0', unit }
+    }
     if (value.isLessThan(0.01)) {
       return { value: '<0.01', unit }
     }
@@ -222,14 +226,13 @@ export class NumberFormatHelper {
       return { ...result, value: `$${result.value}` }
     }
     if (value.isGreaterThanOrEqualTo(SmallUsdBreakpoint)) {
-      // 0.004 or greater show 2 dps
+      // 0.004 or greater show 2 decimal places
       return { value: `$${value.toFormat(2)}`, unit, tooltipText: value.decimalPlaces() > 2 ? `$${value.toFormat()}` : undefined }
     }
     if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-      // 0.0000001 or greater show first significant number or minimum 2 dps
-      const numZerosAfterDp = this.numZerosAfterDp(value)
-      const dps = Math.max(2, numZerosAfterDp + 1)
-      return { value: `$${value.toFormat(dps)}`, unit, tooltipText: value.decimalPlaces() > dps ? `$${value.toFormat()}` : undefined }
+      // 0.0000001 or greater show up to 7 decimals places
+      const formatted = value.toFormat(Math.min(7, value.decimalPlaces()))
+      return { value: `$${formatted}`, unit, tooltipText: value.decimalPlaces() > 7 ? `$${value.toFormat()}` : undefined }
     }
     // Less than 0.0000001
     return { value: '< $0.0000001', unit, tooltipText: `$${value.toFixed()}` }
@@ -244,10 +247,5 @@ export class NumberFormatHelper {
       unit: FormattedNumberUnit.B,
       tooltipText: value.toFormat()
     }
-  }
-
-  private static numZerosAfterDp(value: BigNumber): number {
-    const matches = value.toFormat().match('\\.(0+)')
-    return matches && matches.length ? matches[0].length - 1 : 0
   }
 }
