@@ -26,9 +26,11 @@
             </v-flex>
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
-                <p class="info--text pr-2 ">{{ $t('common.percentage') }}}:</p>
-                <p>{{ share.value }}%</p>
-                <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+                <p class="info--text pr-2 ">{{ $t('common.percentage') }}:</p>
+                <p>
+                  {{ share.value }}%
+                  <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+                </p>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -58,8 +60,10 @@
 
           <!-- Column 3: Share -->
           <v-flex sm3 md2>
-            <p class="mb-0 ml-2">{{ share.value }}%</p>
-            <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+            <p class="mb-0 ml-2">
+              {{ share.value }}%
+              <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+            </p>
           </v-flex>
           <!-- End Column 3 -->
         </v-layout>
@@ -77,6 +81,7 @@ import BN from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {
@@ -113,14 +118,14 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
 
   /**
    * Calculate percentage share of totalSupply held by this holder
-   * @param  {Object} holder - Holder object
    * @return {FormattedNumber} - Share
    */
   get share(): FormattedNumber {
     if (!(this.totalSupply && this.holder.balance)) {
       return { value: 'N/A' }
     }
-    const share = this.holder.balanceBN.div(this.totalSupply).times(100)
+    BigNumber.config({ DECIMAL_PLACES: 50 }) // Ensure precision is not lost when performing division operations with very small results
+    const share = this.holder.balanceBN.times(100).dividedBy(this.totalSupply)
     return this.formatPercentageValue(share)
   }
 

@@ -14,9 +14,6 @@ export class TokenUtils {
 
   private static priceChangeFormattedNumber(token: TokenBalancePageExt_items | TokenExchangeRatePageExt_items): FormattedNumber {
     let bn = token.priceChangePercentage24hBN || new BN(0)
-    if (bn.isNegative()) {
-      bn = bn.negated()
-    }
     return NumberFormatHelper.formatPercentageValue(bn)
   }
 
