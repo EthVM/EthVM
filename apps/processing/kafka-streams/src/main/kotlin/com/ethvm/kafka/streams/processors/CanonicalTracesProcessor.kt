@@ -30,6 +30,7 @@ import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalTraces
 import com.ethvm.kafka.streams.config.Topics.ContractCreated
 import com.ethvm.kafka.streams.config.Topics.ContractDestroyed
+import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
 import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.StandardTokenDetector
 import com.ethvm.kafka.streams.utils.toTopic
@@ -370,7 +371,7 @@ class CanonicalTracesProcessor : AbstractKafkaProcessor() {
         }
       }
 
-    toAccountDeltas(etherDeltas).toTopic(Topics.TransactionBalanceDelta)
+    toAccountDeltas(etherDeltas).toTopic(FungibleBalanceDelta)
 
     return builder.build()
   }

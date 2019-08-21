@@ -131,23 +131,7 @@ object Topics {
 
   val FungibleBalanceDelta = KafkaTopic("fungible_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
 
-  val PremineBalanceDelta = KafkaTopic("premine_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
-  val HardForkBalanceDelta = KafkaTopic("hard_fork_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
-  val TransactionBalanceDelta = KafkaTopic("transaction_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
-  val TransactionFeeBalanceDelta = KafkaTopic("transaction_fee_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
-  val MinerFeeBalanceDelta = KafkaTopic("miner_fee_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
-  val Erc20BalanceDelta = KafkaTopic("erc20_balance_delta", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceDeltaRecord.`SCHEMA$`, FungibleBalanceDelta())
-
-  val Erc721BalanceDelta = KafkaTopic("erc721_balance_delta", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceDeltaRecord.`SCHEMA$`, NonFungibleBalanceDelta())
-
   val FungibleBalance = KafkaTopic("fungible_balance", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
-
-  val PremineBalanceLog = KafkaTopic("premine_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
-  val HardForkBalanceLog = KafkaTopic("hard_fork_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
-  val TransactionBalanceLog = KafkaTopic("transaction_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
-  val TransactionFeeBalanceLog = KafkaTopic("transaction_fee_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
-  val MinerFeeBalanceLog = KafkaTopic("miner_fee_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
-  val Erc20BalanceLog = KafkaTopic("erc20_balance_log", FungibleBalanceKeyRecord.`SCHEMA$`, FungibleBalanceKey(), FungibleBalanceRecord.`SCHEMA$`, FungibleBalance())
 
   val NonFungibleBalanceDelta = KafkaTopic("non_fungible_balance_delta", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceDeltaRecord.`SCHEMA$`, NonFungibleBalanceDelta())
   val Erc721BalanceLog = KafkaTopic("erc721_balance_log", NonFungibleBalanceKeyRecord.`SCHEMA$`, NonFungibleBalanceKey(), NonFungibleBalanceRecord.`SCHEMA$`, NonFungibleBalance())

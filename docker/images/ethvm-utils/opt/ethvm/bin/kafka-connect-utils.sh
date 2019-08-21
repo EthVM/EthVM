@@ -71,6 +71,30 @@ register_sinks() {
 
 } >&2
 
+update_sources() {
+
+  echo "===> Updating sources ..."
+  ensure_kafka_connect
+
+  local SOURCES=$(ls ${KAFKA_CONNECT_DIR}/sources/*.json)
+
+  for FILE in ${SOURCES}; do
+
+    local connector=$(cat ${FILE} | jq -r '.name')
+    local config=$(cat ${FILE} | jq '.config')
+
+    echo "Applying config update to connector: ${connector}"
+    echo "Config:"
+
+    echo -e "\n${config}\n"
+
+    curl -s -H "Content-Type: application/json" -X PUT -d "${config}" ${KAFKA_CONNECT_URL}/connectors/${connector}/config
+
+  done
+
+
+}
+
 update_sinks() {
 
   echo "===> Registering sinks ..."
@@ -92,6 +116,42 @@ update_sinks() {
 
   done
 
+
+}
+
+delete_sinks() {
+
+  echo "===> Deleting sinks ..."
+  ensure_kafka_connect
+
+  local SINKS=$(ls ${KAFKA_CONNECT_DIR}/sinks/*.json)
+
+  for FILE in ${SINKS}; do
+
+    local connector=$(cat ${FILE} | jq -r '.name')
+
+    echo "Deleting connector: ${connector}"
+    curl -s -H "Content-Type: application/json" -X DELETE ${KAFKA_CONNECT_URL}/connectors/${connector}
+
+  done
+
+}
+
+delete_sources() {
+
+  echo "===> Deleting sources ..."
+  ensure_kafka_connect
+
+  local SOURCES=$(ls ${KAFKA_CONNECT_DIR}/sources/*.json)
+
+  for FILE in ${SOURCES}; do
+
+    local connector=$(cat ${FILE} | jq -r '.name')
+
+    echo "Deleting connector: ${connector}"
+    curl -s -H "Content-Type: application/json" -X DELETE ${KAFKA_CONNECT_URL}/connectors/${connector}
+
+  done
 
 }
 
@@ -151,7 +211,10 @@ run() {
     ensure-kafka-connect) ensure_kafka_connect "$@";;
     ensure-sinks)         register_sinks "$@"      ;;
     update-sinks)         update_sinks "$@"        ;;
+    delete-sinks)         delete_sinks "$@"         ;;
+    update-sources)       update_sources "$@"        ;;
     ensure-sources)       register_sources "$@"    ;;
+    delete-sources)       delete_sources "$@"       ;;
     register)             register "$@"            ;;
     reset-sink-offsets)   reset_sink_offsets "$@"  ;;
     init)                 init "$@"                ;;

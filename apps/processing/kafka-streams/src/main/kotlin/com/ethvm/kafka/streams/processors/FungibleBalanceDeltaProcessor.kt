@@ -18,10 +18,7 @@ import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics.CanonicalBlockAuthor
 import com.ethvm.kafka.streams.config.Topics.CanonicalMinerFeesEtherDeltas
 import com.ethvm.kafka.streams.config.Topics.CanonicalTransactionFees
-import com.ethvm.kafka.streams.config.Topics.HardForkBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.MinerFeeBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.PremineBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
+import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
 import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.toTopic
@@ -46,7 +43,7 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -63,10 +60,10 @@ class FungibleBalanceDeltaProcessor : AbstractFungibleBalanceDeltaProcessor() {
 
     val (txFeeDeltas, minerFeeDeltas) = etherDeltasForFees(builder, canonicalBlockAuthor)
 
-    toAccountDeltas(premineDeltas).toTopic(PremineBalanceDelta)
-    toAccountDeltas(hardForkDeltas).toTopic(HardForkBalanceDelta)
-    toAccountDeltas(txFeeDeltas).toTopic(TransactionFeeBalanceDelta)
-    toAccountDeltas(minerFeeDeltas).toTopic(MinerFeeBalanceDelta)
+    toAccountDeltas(premineDeltas).toTopic(FungibleBalanceDelta)
+    toAccountDeltas(hardForkDeltas).toTopic(FungibleBalanceDelta)
+    toAccountDeltas(txFeeDeltas).toTopic(FungibleBalanceDelta)
+    toAccountDeltas(minerFeeDeltas).toTopic(FungibleBalanceDelta)
 
     // Generate the topology
     return builder.build()

@@ -115,79 +115,7 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: premine_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: hard_fork_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: transaction_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: transaction_fee_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: miner_fee_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: erc20_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
   - name: fungible_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: premine_balance_log
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: hard_fork_balance_log
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: transaction_balance_log
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: transaction_fee_balance_log
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: miner_fee_balance_log
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: erc20_balance_log
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 12
     config:
@@ -198,18 +126,6 @@ topics:
     partitions: 12
     config:
       cleanup.policy: compact
-
-  - name: erc721_balance_delta
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
-
-  - name: erc721_balance_log
-    replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
-    partitions: 12
-    config:
-      retention.ms: -1
 
   - name: non_fungible_balance_delta
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
