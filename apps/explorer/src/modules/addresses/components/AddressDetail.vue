@@ -71,7 +71,7 @@
                   <template #activator="data">
                     <v-icon v-on="data.on" small class="white--text text-xs-center pl-1">fa fa-question-circle</v-icon>
                   </template>
-                  <span>{{ accountBalanceUsdFormatted.tooltipText }}</span>
+                  <span>${{ accountBalanceUsdFormatted.tooltipText }}</span>
                 </v-tooltip>
               </v-card-title>
             </v-card>
