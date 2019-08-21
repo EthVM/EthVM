@@ -43,7 +43,7 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
   }
 
   get valueFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.valueBN)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.valueBN)
   }
 
   get isContractCreation(): boolean {
