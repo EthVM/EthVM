@@ -34,8 +34,8 @@
         <!-- Column 3: Quantity -->
         <v-flex sm2>
           <p>
-            {{ transferValue.value }}
-            <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
+            {{ transferValue.value }} {{ units }}
+            <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
           </p>
         </v-flex>
         <!-- End Column 3 -->
@@ -81,8 +81,8 @@
           </v-flex>
           <v-flex xs12>
             <p class="pb-0">
-              <span class="info--text">{{ $t('common.quantity') }}:</span> {{ transferValue.value }}
-              <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
+              <span class="info--text">{{ $t('common.quantity') }}:</span> {{ transferValue.value }} {{ units }}
+              <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
             </p>
           </v-flex>
         </v-layout>
@@ -118,6 +118,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
   @Prop(TransferPageExt_items) transfer!: TransferPageExt_items
   @Prop(Boolean) isInternal?: boolean
   @Prop(Number) decimals?: number
+  @Prop(String) symbol?: string
 
   /*
     ===================================================================================
@@ -132,7 +133,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
       if (n.isNegative()) {
         n = n.negated()
       } // Convert negative values to positive
-      return this.formatNonVariableEthValue(n)
+      return this.formatVariableUnitEthValue(n)
     }
 
     // Must be a token transfer
@@ -141,6 +142,26 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
       n = n.div(new BigNumber(10).pow(this.decimals))
     }
     return this.formatFloatingPointValue(n)
+  }
+
+  get units(): string | undefined {
+    return this.isInternal ? this.$i18n.t(`common.${this.transferValue.unit}`).toString() : this.symbolFormatted
+  }
+
+  get symbolFormatted(): string | undefined {
+      return this.symbol ? this.symbol.toUpperCase() : undefined
+  }
+
+  get transferValueTooltip(): string | undefined {
+      const { tooltipText } = this.transferValue
+      if (!tooltipText) {
+          return undefined
+      }
+      if (this.isInternal) {
+          return `${ tooltipText } ${ this.$i18n.t('common.eth') }`
+      } else {
+          return `${ tooltipText } ${ this.symbolFormatted }`
+      }
   }
 }
 </script>

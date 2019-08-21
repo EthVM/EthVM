@@ -18,7 +18,7 @@
         =====================================================================================
         -->
         <v-tab-item slot="tabs-item" value="tab-0">
-          <transfers-table :address="addressRef" :page-type="'token'" :decimals="decimals" />
+          <transfers-table :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" />
         </v-tab-item>
         <!--
         =====================================================================================
@@ -43,7 +43,7 @@
       <app-tabs v-if="!syncing" :tabs="tabsTokenHolderDetails">
         <!-- Transfers -->
         <v-tab-item slot="tabs-item" value="tab-0">
-          <transfers-table :address="addressRef" :page-type="'tokenHolder'" :decimals="decimals" :holder="holderAddress" />
+          <transfers-table :address="addressRef" :page-type="'tokenHolder'" :decimals="decimals" :holder="holderAddress" :symbol="symbol" />
         </v-tab-item>
         <!-- End Transfers -->
       </app-tabs>
@@ -292,6 +292,11 @@ export default class PageDetailsToken extends Vue {
   get decimals(): number | null {
     const { tokenDetails } = this
     return tokenDetails ? tokenDetails.decimals : null
+  }
+
+  get symbol(): string | null {
+      const { tokenDetails } = this
+      return tokenDetails ? tokenDetails.symbol : null
   }
 
   /**
