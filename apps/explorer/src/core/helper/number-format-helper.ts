@@ -193,21 +193,36 @@ export class NumberFormatHelper {
   /**
    * Converts a percentage value to a FormattedNumber
    * @param value: BigNumber already converted to a percentage e.g. < 100 (expect in special cases)
-   * @param allowOver100: whether a percentage greater than 100 should be allowed (default true)
    * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
    */
-  public static formatPercentageValue(value: BigNumber, allowOver100: boolean = true): FormattedNumber {
+  public static formatPercentageValue(value: BigNumber | number): FormattedNumber {
+
+    if (!(value instanceof BigNumber)) { // Convert to BigNumber if necessary
+      value = new BigNumber(value)
+    }
     const unit = FormattedNumberUnit.PERCENT
+
     if (value.isZero()) {
       return { value: '0', unit }
     }
-    if (value.isLessThan(0.01)) {
-      return { value: '<0.01', unit }
+
+    const isNegative = value.isNegative() // Record whether value is negative
+    const positiveValue = isNegative ? value.negated() : value // Convert negative values to positive for comparisons
+    const dps = value.decimalPlaces()
+
+    if (positiveValue.isGreaterThanOrEqualTo(1000)) { // Display >1000 or <-1000
+      const result = isNegative ? '<-1000' : '>1000'
+      return { value: result, unit, tooltipText: `${value.toFormat()}%` }
     }
-    if (!allowOver100 && value.isGreaterThan(100)) {
-      return { value: '>100', unit, tooltipText: `${new BigNumber(value).toFormat(2)}%` }
+    if (positiveValue.isGreaterThanOrEqualTo(100)) { // Display whole number
+      return { value: value.toFormat(0), unit, tooltipText: dps ? `${value.toFormat()}%` : undefined }
     }
-    return { value: new BigNumber(value).toFormat(2), unit }
+    if (positiveValue.isGreaterThanOrEqualTo(0.01)) { // Display up to 2 decimal places
+      return { value: value.toFormat(2), unit, tooltipText: dps > 2 ? `${value.toFormat()}%` : undefined }
+    }
+    // If -0.01 < x < 0.01
+    const result = isNegative ? '>-0.01' : '<0.01'
+    return { value: result, unit, tooltipText: `${value.toFormat()}%` }
   }
 
   /* USD values (Group VIII) */

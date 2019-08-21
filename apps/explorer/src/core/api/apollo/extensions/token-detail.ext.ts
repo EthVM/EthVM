@@ -87,6 +87,6 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get priceChangePercentage24hFormatted(): string {
-    return NumberFormatHelper.formatPercentageValue(this.priceChangePercentage24hBN, true).value
+    return NumberFormatHelper.formatPercentageValue(this.priceChangePercentage24hBN).value
   }
 }
