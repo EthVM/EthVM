@@ -7,7 +7,8 @@ export enum FormattedNumberUnit {
   WEI = 'wei',
   PERCENT = '%',
   USD = '$',
-  B = 'B'
+  B = 'B',
+  T = 'T'
 }
 
 export interface FormattedNumber {
@@ -23,6 +24,7 @@ const SmallEthBreakpoint = 0.00001
 const TenThousand = 10000
 const OneMillion = 1000000
 const OneBillion = 1000000000
+const OneTrillion = 1000000000000
 const TenTrillion = 10000000000000
 
 export class NumberFormatHelper {
@@ -39,11 +41,13 @@ export class NumberFormatHelper {
    * @return FormattedNumber
    */
   public static formatIntegerValue(value: BigNumber, allowBillions: boolean = true): FormattedNumber {
-    if (value.isLessThan(OneBillion) || !allowBillions) {
-      return { value: value.toFormat() }
+    if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+      return this.convertToTrillions(value)
     }
-    // Convert numbers >= 1 billion to billions (with max 3 decimal places)
-    return this.convertToBillions(value)
+    if (value.isGreaterThanOrEqualTo(OneBillion)) {
+      return this.convertToBillions(value)
+    }
+    return { value: value.toFormat() }
   }
 
   /* Token Balances / Quantities (Group III) */
@@ -57,8 +61,10 @@ export class NumberFormatHelper {
     if (value.isZero()) {
       return { value: '0' }
     }
+    if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+      return this.convertToTrillions(value)
+    }
     if (value.isGreaterThan(OneBillion)) {
-      // convert value to billions
       return this.convertToBillions(value)
     }
     if (value.isGreaterThanOrEqualTo(OneMillion)) {
@@ -143,6 +149,10 @@ export class NumberFormatHelper {
       return { value: ethBN.toFormat(), unit }
     }
     const dps = ethBN.decimalPlaces()
+    if (ethBN.isGreaterThanOrEqualTo(OneTrillion)) {
+      // Convert to trillions if greater than 1 trillion
+      return { ...this.convertToTrillions(value), unit }
+    }
     if (ethBN.isGreaterThanOrEqualTo(OneBillion)) {
       // Convert to billions if greater than 1 billion
       return { ...this.convertToBillions(ethBN), unit }
@@ -219,7 +229,11 @@ export class NumberFormatHelper {
       // Return value with all decimal places if rounding not allowed
       return { value: `${value.toFormat()}`, unit }
     }
-
+    if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+      // 1 Trillion or greater convert to trillions
+      const result = this.convertToTrillions(value)
+      return { ...result, value: `$${result.value}` }
+    }
     if (value.isGreaterThanOrEqualTo(OneBillion)) {
       // 1 Billion or greater convert to billions
       const result = this.convertToBillions(value)
@@ -245,6 +259,15 @@ export class NumberFormatHelper {
     return {
       value: `${result.toFormat(Math.min(3, result.decimalPlaces()))}B`,
       unit: FormattedNumberUnit.B,
+      tooltipText: value.toFormat()
+    }
+  }
+
+  private static convertToTrillions(value: BigNumber): FormattedNumber {
+    const result = value.dividedBy(OneTrillion)
+    return {
+      value:  `${result.toFormat(Math.min(3, result.decimalPlaces()))}T`,
+      unit: FormattedNumberUnit.T,
       tooltipText: value.toFormat()
     }
   }
