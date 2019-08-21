@@ -156,7 +156,7 @@ export default class TokenDetailsList extends Mixins(StringConcatMixin) {
   get contractDecimalsDetail(): Detail {
     return {
       title: this.$t('token.decimals'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.decimals ? this.tokenDetails.decimals : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.decimals != null ? this.tokenDetails.decimals : undefined
     }
   }
 
