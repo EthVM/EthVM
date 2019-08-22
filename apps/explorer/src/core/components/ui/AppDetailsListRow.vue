@@ -62,7 +62,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
-      AppTooltip,
+    AppTooltip,
     AppCopyToClip,
     AppTransformHash
   }

@@ -11,7 +11,8 @@
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
             <v-flex xs6 pa-1>
               <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.blockHash}`"
-                >{{ $t('block.number') }} {{ tx.blockNumberFormatted }}</router-link>
+                >{{ $t('block.number') }} {{ tx.blockNumberFormatted }}</router-link
+              >
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
@@ -39,7 +40,7 @@
             <v-flex shrink pa-1>
               <p class="black--text align-center">
                 {{ tx.valueFormatted.value }} {{ $t(`common.${tx.valueFormatted.unit}`) }}
-                <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="`${tx.valueFormatted.tooltipText} ${ $t('common.eth') }`" />
+                <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="`${tx.valueFormatted.tooltipText} ${$t('common.eth')}`" />
               </p>
             </v-flex>
           </v-layout>
@@ -110,7 +111,7 @@
           <v-flex d-flex sm2 md1 pr-0>
             <p :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
               {{ tx.valueFormatted.value }} {{ $t(`common.${tx.valueFormatted.unit}`) }}
-              <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="`${tx.valueFormatted.tooltipText} ${ $t('common.eth') }`" />
+              <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="`${tx.valueFormatted.tooltipText} ${$t('common.eth')}`" />
             </p>
           </v-flex>
           <!--

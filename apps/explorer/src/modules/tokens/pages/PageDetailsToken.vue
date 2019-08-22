@@ -295,8 +295,8 @@ export default class PageDetailsToken extends Vue {
   }
 
   get symbol(): string | null {
-      const { tokenDetails } = this
-      return tokenDetails ? tokenDetails.symbol : null
+    const { tokenDetails } = this
+    return tokenDetails ? tokenDetails.symbol : null
   }
 
   /**

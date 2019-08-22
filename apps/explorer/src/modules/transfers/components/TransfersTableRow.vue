@@ -149,19 +149,18 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
   }
 
   get symbolFormatted(): string | undefined {
-      return this.symbol ? this.symbol.toUpperCase() : undefined
+    return this.symbol ? this.symbol.toUpperCase() : undefined
   }
 
   get transferValueTooltip(): string | undefined {
-      const { tooltipText } = this.transferValue
-      if (!tooltipText) {
-          return undefined
-      }
-      if (this.isInternal) {
-          return `${ tooltipText } ${ this.$i18n.t('common.eth') }`
-      } else {
-          return `${ tooltipText } ${ this.symbolFormatted }`
-      }
+    const { tooltipText } = this.transferValue
+    if (!tooltipText) {
+      return undefined
+    }
+    if (this.isInternal) {
+      return `${tooltipText} ${this.$i18n.t('common.eth')}`
+    }
+    return `${tooltipText} ${this.symbolFormatted}`
   }
 }
 </script>

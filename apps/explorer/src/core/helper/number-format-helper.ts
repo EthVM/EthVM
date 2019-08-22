@@ -196,8 +196,8 @@ export class NumberFormatHelper {
    * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
    */
   public static formatPercentageValue(value: BigNumber | number): FormattedNumber {
-
-    if (!(value instanceof BigNumber)) { // Convert to BigNumber if necessary
+    if (!(value instanceof BigNumber)) {
+      // Convert to BigNumber if necessary
       value = new BigNumber(value)
     }
     const unit = FormattedNumberUnit.PERCENT
@@ -210,14 +210,17 @@ export class NumberFormatHelper {
     const positiveValue = isNegative ? value.negated() : value // Convert negative values to positive for comparisons
     const dps = value.decimalPlaces()
 
-    if (positiveValue.isGreaterThanOrEqualTo(1000)) { // Display >1000 or <-1000
+    if (positiveValue.isGreaterThanOrEqualTo(1000)) {
+      // Display >1000 or <-1000
       const result = isNegative ? '<-1000' : '>1000'
       return { value: result, unit, tooltipText: `${value.toFormat()}%` }
     }
-    if (positiveValue.isGreaterThanOrEqualTo(100)) { // Display whole number
+    if (positiveValue.isGreaterThanOrEqualTo(100)) {
+      // Display whole number
       return { value: value.toFormat(0), unit, tooltipText: dps ? `${value.toFormat()}%` : undefined }
     }
-    if (positiveValue.isGreaterThanOrEqualTo(0.01)) { // Display up to 2 decimal places
+    if (positiveValue.isGreaterThanOrEqualTo(0.01)) {
+      // Display up to 2 decimal places
       return { value: value.toFormat(2), unit, tooltipText: dps > 2 ? `${value.toFormat()}%` : undefined }
     }
     // If -0.01 < x < 0.01
@@ -281,7 +284,7 @@ export class NumberFormatHelper {
   private static convertToTrillions(value: BigNumber): FormattedNumber {
     const result = value.dividedBy(OneTrillion)
     return {
-      value:  `${result.toFormat(Math.min(3, result.decimalPlaces()))}T`,
+      value: `${result.toFormat(Math.min(3, result.decimalPlaces()))}T`,
       unit: FormattedNumberUnit.T,
       tooltipText: value.toFormat()
     }
