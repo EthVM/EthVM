@@ -226,7 +226,8 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.amount'),
-          detail: `${transaction.valueFormatted.value} ${this.$i18n.t(`common.${transaction.valueFormatted.unit}`)}`
+          detail: `${transaction.valueFormatted.value} ${this.$i18n.t(`common.${transaction.valueFormatted.unit}`)}`,
+          tooltip: transaction.valueFormatted.tooltipText ? `${transaction.valueFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
         },
         this.toDetail(transaction),
         {

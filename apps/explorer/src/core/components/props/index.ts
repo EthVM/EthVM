@@ -37,6 +37,7 @@ export interface Detail {
   txInput?: string[]
   mono?: boolean
   priceChange?: string
+  tooltip?: string
 }
 
 export interface Crumb {
