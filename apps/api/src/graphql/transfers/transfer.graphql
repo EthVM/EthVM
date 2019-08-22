@@ -16,6 +16,7 @@ type Query {
 type TransferPage {
   items: [Transfer!]!
   hasMore: Boolean!
+  txs: [Transaction]
 }
 
 type Transfer {
@@ -67,6 +68,7 @@ enum DeltaType {
   TOKEN_TRANSFER
   CONTRACT_DESTRUCTION
   TX
-  MINER_FEE
   INTERNAL_TX
+  MINER_FEE
+  TX_FEE
 }

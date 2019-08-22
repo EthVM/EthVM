@@ -27,8 +27,9 @@ export enum DeltaType {
     TOKEN_TRANSFER = "TOKEN_TRANSFER",
     CONTRACT_DESTRUCTION = "CONTRACT_DESTRUCTION",
     TX = "TX",
+    INTERNAL_TX = "INTERNAL_TX",
     MINER_FEE = "MINER_FEE",
-    INTERNAL_TX = "INTERNAL_TX"
+    TX_FEE = "TX_FEE"
 }
 
 export enum Duration {
@@ -542,7 +543,7 @@ export interface Transaction {
     creates?: string;
     chainId?: string;
     receipt?: Receipt;
-    trace: Trace;
+    trace?: Trace;
     successful: boolean;
 }
 
@@ -587,6 +588,7 @@ export interface Transfer {
 export interface TransferPage {
     items: Transfer[];
     hasMore: boolean;
+    txs?: Transaction[];
 }
 
 export interface Uncle {

@@ -25,7 +25,7 @@ export class TxDto implements Transaction {
   creates?: string;
   chainId?: string;
   receipt?: TxReceiptDto;
-  trace!: TxTraceDto;
+  trace?: TxTraceDto;
   successful!: boolean;
 
   constructor(data: TransactionEntity) {

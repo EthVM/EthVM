@@ -81,7 +81,7 @@ export class TransferResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, txs, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
-    return new BalanceDeltaPageDto({ items, hasMore })
+    const [transfers, txs, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
+    return new BalanceDeltaPageDto({ transfers, txs, hasMore })
   }
 }

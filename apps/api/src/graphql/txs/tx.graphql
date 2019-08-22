@@ -53,7 +53,7 @@ type Transaction {
   creates: String
   chainId: String
   receipt: Receipt
-  trace: Trace!
+  trace: Trace
   successful: Boolean!
 }
 

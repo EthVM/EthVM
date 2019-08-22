@@ -174,7 +174,8 @@ export class TransferService {
     }, [] as string [])
 
     // Find related txs and receipts
-    const txs = await this.txService.findByHash(txHashes, false)
+    // There may not be any txs for the transfers array if all transfers are block-related, e.g. MINER_FEE or BLOCK_REWARD
+    const txs = txHashes.length ? await this.txService.findByHash(txHashes, false) : []
 
     return [transfers, txs, hasMore]
 
