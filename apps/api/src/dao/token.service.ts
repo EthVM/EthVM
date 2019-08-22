@@ -104,7 +104,7 @@ export class TokenService {
     limit: number = 10,
     offset: number = 0,
     addresses: string[] = [],
-  ): Promise<[TokenExchangeRateEntity[], boolean]> {
+  ): Promise<[TokenExchangeRateEntity[], number]> {
     let order
     switch (sort) {
       case 'price_high':
@@ -133,7 +133,7 @@ export class TokenService {
 
     const findOptions: FindManyOptions = {
       order,
-      take: limit + 1,
+      take: limit,
       skip: offset,
       cache: true,
     }
@@ -143,12 +143,9 @@ export class TokenService {
     }
 
     const items = await this.tokenExchangeRateRepository.find(findOptions)
-    const hasMore = items.length > limit
-    if (hasMore) {
-      items.pop()
-    }
+    const totalCount = await this.tokenExchangeRateRepository.count({ cache: true, where: findOptions.where })
 
-    return [items, hasMore]
+    return [items, totalCount]
   }
 
   async countTokenExchangeRates(): Promise<number> {
