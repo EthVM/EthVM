@@ -8,6 +8,8 @@ import BigNumber from 'bignumber.js'
 import { BalanceDeltaEntity } from '@app/orm/entities/balance-delta.entity'
 import { FilterEnum } from '@app/graphql/schema'
 import { ETH_ADDRESS } from '@app/shared/eth.service'
+import { TransactionEntity } from '@app/orm/entities/transaction.entity'
+import { TxService } from '@app/dao/tx.service'
 
 @Injectable()
 export class TransferService {
@@ -18,6 +20,7 @@ export class TransferService {
     @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
     @InjectRepository(BalanceDeltaEntity, DbConnection.Principal)
     private readonly balanceDeltaRepository: Repository<BalanceDeltaEntity>,
+    private readonly txService: TxService,
   ) {
   }
 
@@ -124,7 +127,7 @@ export class TransferService {
     timestampFrom?: number,
     offset: number = 0,
     limit: number = 10,
-  ): Promise<[BalanceDeltaEntity[], boolean]> {
+  ): Promise<[BalanceDeltaEntity[], TransactionEntity[], boolean]> {
 
     const qb = this.balanceDeltaRepository.createQueryBuilder('bd')
       .where('bd.address IN (:...addresses)', { addresses })
@@ -151,19 +154,29 @@ export class TransferService {
       qb.andWhere('bd.timestamp > :timestampFrom', { timestampFrom: new Date(timestampFrom * 1000).toISOString() })
     }
 
-    const items = await qb.orderBy('bd.trace_location_block_number', 'DESC')
+    const transfers = await qb.orderBy('bd.trace_location_block_number', 'DESC')
       .addOrderBy('bd.trace_location_transaction_index', 'DESC')
       .addOrderBy('bd.trace_location_trace_address', 'DESC')
       .offset(offset)
       .limit(limit + 1) // Request one extra item to determine if there are more pages
       .getMany()
 
-    const hasMore = items.length > limit
+    const hasMore = transfers.length > limit
     if (hasMore) {
-      items.pop()
+      transfers.pop()
     }
 
-    return [items, hasMore]
+    const txHashes = transfers.reduce((memo, next) => {
+      if (next.traceLocationTransactionHash) {
+        memo.push(next.traceLocationTransactionHash)
+      }
+      return memo
+    }, [] as string [])
+
+    // Find related txs and receipts
+    const txs = await this.txService.findByHash(txHashes, false)
+
+    return [transfers, txs, hasMore]
 
   }
 

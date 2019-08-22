@@ -30,7 +30,7 @@ export class TxService {
   }
 
   async findOneByHash(hash: string): Promise<TransactionEntity | undefined> {
-    const txs = await this.findByHash(hash)
+    const txs = await this.findByHash([hash])
 
     if (txs.length !== 1) return undefined
 
@@ -54,7 +54,7 @@ export class TxService {
     return tx
   }
 
-  async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
+  async findByHash(hashes: string[], getTraces: boolean = true): Promise<TransactionEntity[]> {
     const txs = await this.transactionRepository.find({
       where: { hash: In(hashes) },
       relations: ['receipt'],
@@ -62,6 +62,9 @@ export class TxService {
     })
     if (!txs.length) { // User may be searching by hash which does not exist as a tx
       return []
+    }
+    if (!getTraces) { // Don't return traces if not necessary
+      return txs
     }
     return this.findAndMapTraces(txs)
   }
