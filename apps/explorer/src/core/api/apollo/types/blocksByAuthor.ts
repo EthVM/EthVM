@@ -22,9 +22,9 @@ export interface blocksByAuthor_blockSummaries_items {
 }
 
 export interface blocksByAuthor_blockSummaries {
-  __typename: "BlockSummaryPage";
+  __typename: "BlockSummaryByAuthorPage";
   items: blocksByAuthor_blockSummaries_items[];
-  totalCount: number;
+  hasMore: boolean;
 }
 
 export interface blocksByAuthor {

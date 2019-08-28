@@ -41,12 +41,22 @@ const schema = {
       env: 'PRINCIPAL_URL',
       default: 'postgres://postgres:1234@db-principal/ethvm_dev',
     },
+    statementTimeout: {
+      doc: 'DB Principal statement_timeout',
+      env: 'PRINCIPAL_STATEMENT_TIMEOUT',
+      default: '30s',
+    },
   },
   dbMetrics: {
     url: {
       doc: 'DB Metrics connection URL',
       env: 'METRICS_URL',
       default: 'postgres://postgres:1234@db-metrics/ethvm_dev',
+    },
+    statementTimeout: {
+      doc: 'DB Metrics statement_timeout',
+      env: 'METRICS_STATEMENT_TIMEOUT',
+      default: '30s',
     },
   },
   redis: {
@@ -114,6 +124,7 @@ export interface ExpressRateLimitConfig {
 
 export interface DbConfig {
   url: string
+  statementTimeout: string
 }
 
 export interface RedisConfig {

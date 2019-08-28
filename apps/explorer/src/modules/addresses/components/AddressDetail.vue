@@ -79,9 +79,7 @@
                 </v-tooltip>
               </v-card-title>
               <!-- isShortValue -->
-              <v-card-title v-else class="headline text-truncate">
-                ${{ getRoundNumber(accountBalanceUsd) }}
-              </v-card-title>
+              <v-card-title v-else class="headline text-truncate"> ${{ getRoundNumber(accountBalanceUsd) }} </v-card-title>
             </v-card>
           </v-flex>
           <!-- End USD Value -->
@@ -138,7 +136,7 @@ import Blockies from '@app/modules/addresses/components/Blockies.vue'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
 import { AccountExt } from '@app/core/api/apollo/extensions/account.ext'
-import { EthValue } from "@app/core/models";
+import { EthValue } from '@app/core/models'
 
 @Component({
   components: {

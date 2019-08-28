@@ -21,7 +21,7 @@ export interface addressAllTokensOwned_tokens_items {
 export interface addressAllTokensOwned_tokens {
   __typename: "TokenBalancePage";
   items: addressAllTokensOwned_tokens_items[];
-  totalCount: number;
+  hasMore: boolean;
 }
 
 export interface addressAllTokensOwned {

@@ -6,9 +6,7 @@ import com.ethvm.avro.processing.NonFungibleBalanceKeyRecord
 import com.ethvm.avro.processing.NonFungibleBalanceRecord
 import com.ethvm.common.extensions.getBlockNumberBI
 import com.ethvm.kafka.streams.Serdes
-import com.ethvm.kafka.streams.config.Topics.Erc721BalanceDelta
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalance
-import com.ethvm.kafka.streams.config.Topics.Erc721BalanceLog
 import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
@@ -37,15 +35,10 @@ class NonFungibleBalanceProcessor : AbstractKafkaProcessor() {
 
     val builder = StreamsBuilder()
 
-    val erc721Deltas = Erc721BalanceDelta.stream(builder)
-
     // only one stream to aggregate for now
-    val erc721Balances = aggregateBalances(erc721Deltas)
+    val erc721Balances = aggregateBalances(NonFungibleBalanceDelta.stream(builder))
 
-    erc721Balances.toTopic(Erc721BalanceLog)
     erc721Balances.toTopic(NonFungibleBalance)
-
-    erc721Deltas.toTopic(NonFungibleBalanceDelta)
 
     // Generate the topology
     return builder.build()

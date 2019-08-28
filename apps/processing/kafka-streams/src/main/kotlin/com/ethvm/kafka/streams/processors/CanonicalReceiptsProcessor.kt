@@ -24,6 +24,8 @@ import com.ethvm.common.extensions.setTokenIdBI
 import com.ethvm.kafka.streams.Serdes
 import com.ethvm.kafka.streams.config.Topics
 import com.ethvm.kafka.streams.config.Topics.CanonicalReceipts
+import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
+import com.ethvm.kafka.streams.config.Topics.NonFungibleBalanceDelta
 import com.ethvm.kafka.streams.processors.transformers.CanonicalKStreamReducer
 import com.ethvm.kafka.streams.utils.ERC20Abi
 import com.ethvm.kafka.streams.utils.ERC721Abi
@@ -121,13 +123,13 @@ class CanonicalReceiptsProcessor : AbstractKafkaProcessor() {
         }
       }
 
-    toFungibleAccountDeltas(erc20Deltas).toTopic(Topics.Erc20BalanceDelta)
+    toFungibleAccountDeltas(erc20Deltas).toTopic(FungibleBalanceDelta)
 
     // erc721 deltas
 
     val erc721Deltas = erc721DeltasForReceipts(builder, canonicalReceipts)
 
-    toNonFungibleAccountDeltas(erc721Deltas).toTopic(Topics.Erc721BalanceDelta)
+    toNonFungibleAccountDeltas(erc721Deltas).toTopic(NonFungibleBalanceDelta)
 
     // Gas used
 

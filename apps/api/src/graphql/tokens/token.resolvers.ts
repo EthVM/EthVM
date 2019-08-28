@@ -25,11 +25,8 @@ export class TokenResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<TokenHoldersPageDto> {
-    const result = await this.tokenService.findTokenHolders(address, limit, offset)
-    return new TokenHoldersPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
+    const [items, hasMore] = await this.tokenService.findTokenHolders(address, limit, offset)
+    return new TokenHoldersPageDto({ items, hasMore })
   }
 
   @Query()
@@ -47,8 +44,8 @@ export class TokenResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<TokenBalancePageDto> {
-    const [tokens, totalCount] = await this.tokenService.findAddressAllErc20TokensOwned(address, offset, limit)
-    return new TokenBalancePageDto({items: tokens, totalCount})
+    const [items, hasMore] = await this.tokenService.findAddressAllErc20TokensOwned(address, offset, limit)
+    return new TokenBalancePageDto({items, hasMore})
   }
 
   @Query()
@@ -100,8 +97,8 @@ export class TokenResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<TokenMetadataPageDto> {
-    const [items, totalCount] = await this.tokenService.findTokensMetadata(addresses, offset, limit)
-    return new TokenMetadataPageDto({ items, totalCount })
+    const [items, hasMore] = await this.tokenService.findTokensMetadata(addresses, offset, limit)
+    return new TokenMetadataPageDto({ items, hasMore })
   }
 
   @Query()

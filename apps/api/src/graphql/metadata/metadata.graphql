@@ -10,4 +10,5 @@ type Metadata {
 
 type Subscription {
   isSyncing: Boolean!
+  keepAlive: Boolean!
 }

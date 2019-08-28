@@ -5,14 +5,15 @@
           TITLE
         =====================================================================================
     -->
-    <app-table-title
-      page-type="tokens"
-      :title="$tc('token.name', 2)"
-      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"
-      :has-pagination="hasPagination"
-    >
+    <!--    <app-table-title-->
+    <!--      page-type="tokens"-->
+    <!--      :title="$tc('token.name', 2)"-->
+    <!--      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
+    <!--      :has-pagination="hasPagination"-->
+    <!--    >-->
+    <app-table-title page-type="tokens" :title="$tc('token.name', 2)" :has-pagination="hasPagination">
       <template v-slot:pagination v-if="hasPagination">
-        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+        <app-paginate :total="totalCount" @newPage="setPage" :current-page="page" />
       </template>
     </app-table-title>
     <!--
@@ -103,7 +104,7 @@
             <token-table-row :token="token" />
           </div>
           <v-layout v-if="hasPagination" justify-end row class="pb-1 pr-2 pl-2">
-            <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
+            <app-paginate :total="totalCount" @newPage="setPage" :current-page="page" />
           </v-layout>
         </v-flex>
         <v-flex xs12 v-else>
@@ -272,7 +273,7 @@ export default class TokenTable extends Vue {
     return this.tokenExchangeRatePage ? Math.ceil(this.tokenExchangeRatePage!.totalCount / this.maxItems) : 0
   }
   get hasPagination(): boolean {
-    return this.pages > 1 && !this.hasError
+    return !this.hasError && this.pages > 1
   }
 }
 </script>

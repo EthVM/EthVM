@@ -22,12 +22,9 @@ export class TransferResolvers {
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TransferPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddress(contractAddress, offset, limit)
-    return new TransferPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
+  ): Promise<BalanceDeltaPageDto> {
+    const [items, hasMore] = await this.transferService.findContractTokenTransfers(contractAddress, offset, limit)
+    return new BalanceDeltaPageDto({ items, hasMore })
   }
 
   @Query()
@@ -37,12 +34,9 @@ export class TransferResolvers {
     @Args('filter') filter: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<TransferPageDto> {
-    const result = await this.transferService.findTokenTransfersByContractAddressForHolder(contractAddress, holderAddress, filter, offset, limit)
-    return new TransferPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
+  ): Promise<BalanceDeltaPageDto> {
+    const [items, hasMore] = await this.transferService.findContractTokenTransfersForAddress(contractAddress, holderAddress, filter, offset, limit)
+    return new BalanceDeltaPageDto({ items, hasMore })
   }
 
   @Query()
@@ -50,7 +44,7 @@ export class TransferResolvers {
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
   ): Promise<BigNumber> {
-    return this.transferService.findTotalTokenTransfersByContractAddressForHolder(contractAddress, holderAddress)
+    return this.transferService.countContractTokenTransfersForAddress(contractAddress, holderAddress)
   }
 
   @Query()
@@ -59,8 +53,8 @@ export class TransferResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
   ): Promise<InternalTransferPageDto> {
-    const [items, totalCount] = await this.transferService.findInternalTransactionsByAddress(address, offset, limit)
-    return new InternalTransferPageDto({ items, totalCount })
+    const [items, hasMore] = await this.transferService.findInternalTransactionsForAddress(address, offset, limit)
+    return new InternalTransferPageDto({ items, hasMore })
   }
 
   @Query()
@@ -87,7 +81,7 @@ export class TransferResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, totalCount] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
-    return new BalanceDeltaPageDto({ items, totalCount })
+    const [items, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
+    return new BalanceDeltaPageDto({ items, hasMore })
   }
 }

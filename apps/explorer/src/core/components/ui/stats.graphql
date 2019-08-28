@@ -36,17 +36,18 @@ type BlockReceived {
   timestamp: BigNumber!
 }
 
-type Mutation {
-  updateLastBlockReceived(timestamp: BigNumber!): Boolean
-}
-
-type Query {
+extend type Query {
   lastBlockReceived: BigNumber
 }
 
-mutation updateLastBlockReceivedMutation($timestamp: BigNumber) {
+extend type Mutation {
+  updateLastBlockReceived(timestamp: BigNumber!): Boolean
+}
+
+mutation updateLastBlockReceivedMutation($timestamp: BigNumber!) {
   updateLastBlockReceived(timestamp: $timestamp) @client
 }
+
 query lastBlockReceivedQuery {
   lastBlockReceived @client
 }

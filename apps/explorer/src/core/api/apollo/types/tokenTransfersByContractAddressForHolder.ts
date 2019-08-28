@@ -12,7 +12,7 @@ export interface tokenTransfersByContractAddressForHolder_transfers_items {
   __typename: "Transfer";
   id: string;
   transactionHash: string | null;
-  value: any;
+  value: any | null;
   from: string | null;
   to: string;
   timestamp: any;
@@ -23,7 +23,7 @@ export interface tokenTransfersByContractAddressForHolder_transfers_items {
 export interface tokenTransfersByContractAddressForHolder_transfers {
   __typename: "TransferPage";
   items: tokenTransfersByContractAddressForHolder_transfers_items[];
-  totalCount: any;
+  hasMore: boolean;
 }
 
 export interface tokenTransfersByContractAddressForHolder {

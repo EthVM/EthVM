@@ -11,3 +11,7 @@ subscription syncStatusUpdates {
   isSyncing
 
 }
+
+subscription keepAliveUpdates {
+  keepAlive
+}

@@ -1,11 +1,11 @@
-import { BigNumber, Transfer, TransferPage } from '@app/graphql/schema'
+import { Transfer, TransferPage } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import { InternalTransferDto } from '@app/graphql/transfers/dto/internal-transfer.dto'
 
 export class InternalTransferPageDto implements TransferPage {
 
   items!: Transfer[];
-  totalCount!: BigNumber;
+  hasMore!: boolean;
 
   constructor(data: any) {
     if (data.items) {

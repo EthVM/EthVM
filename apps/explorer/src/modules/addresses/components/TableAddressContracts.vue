@@ -11,16 +11,16 @@
           <v-progress-linear color="blue" indeterminate />
         </v-flex>
         <v-flex xs12 sm6>
-          <p class="info--text mb-0 pl-2">
-            {{ $t('contract.total') }}:
-            <span v-if="!loading" class="black--text">{{ totalCount.toString() }}</span>
-            <span v-else class="table-row-loading" />
-            {{ contractString }}
-          </p>
+          <!--          <p class="info&#45;&#45;text mb-0 pl-2">-->
+          <!--            {{ $t('contract.total') }}:-->
+          <!--            <span v-if="!loading" class="black&#45;&#45;text">{{ totalCount.toString() }}</span>-->
+          <!--            <span v-else class="table-row-loading" />-->
+          <!--            {{ contractString }}-->
+          <!--          </p>-->
         </v-flex>
-        <v-layout justify-end v-if="!loading && pages > 1" xs12 sm6>
+        <v-layout justify-end v-if="!loading && showPaginate" xs12 sm6>
           <v-flex shrink>
-            <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
+            <app-paginate-has-more :has-more="contractsPage.hasMore" :current-page="page" @newPage="setPage" />
           </v-flex>
         </v-layout>
         <!--
@@ -104,8 +104,8 @@
         <div v-if="contracts.length > 0">
           <table-address-contracts-row v-for="(contract, index) in contracts" :key="index" :contract="contract" />
         </div>
-        <v-layout v-if="pages > 1" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate :total="pages" :current-page="page" @newPage="setPage" />
+        <v-layout v-if="showPaginate" justify-end row class="pb-1 pr-2 pl-2">
+          <app-paginate-has-more :has-more="contractsPage.hasMore" :current-page="page" @newPage="setPage" />
         </v-layout>
       </div>
     </div>
@@ -121,20 +121,19 @@
 <script lang="ts">
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
 import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
 import { ContractSummaryPageExt } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
-import BigNumber from 'bignumber.js'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 
 const MAX_ITEMS = 10
 
 @Component({
   components: {
+    AppPaginateHasMore,
     AppError,
     AppInfoLoad,
-    AppPaginate,
     TableAddressContractsRow
   },
   data() {
@@ -148,10 +147,11 @@ const MAX_ITEMS = 10
       query: contractsCreatedBy,
 
       variables() {
-        const { address } = this
+        const { address, maxItems: limit } = this
 
         return {
-          address
+          address,
+          limit
         }
       },
 
@@ -185,6 +185,16 @@ export default class TableAddressContracts extends Vue {
   contractsPage?: ContractSummaryPageExt
   error?: string
   page?: number
+
+  /*
+===================================================================================
+Lifecycle
+===================================================================================
+*/
+
+  mounted() {
+    this.$apollo.queries.contractsPage.refetch()
+  }
 
   /*
   ===================================================================================
@@ -231,12 +241,12 @@ export default class TableAddressContracts extends Vue {
     return !!this.error && this.error !== ''
   }
 
-  get totalCount(): BigNumber {
-    return this.contractsPage ? this.contractsPage.totalCountBN : new BigNumber(0)
-  }
+  // get totalCount(): BigNumber {
+  //   return this.contractsPage ? this.contractsPage.totalCountBN : new BigNumber(0)
+  // }
 
   get contractString(): string {
-    return this.totalCount.isGreaterThan(1) ? this.$i18n.tc('contract.name', 2) : this.$i18n.tc('contract.name', 1)
+    return this.contractsPage && this.contractsPage.items.length > 1 ? this.$i18n.tc('contract.name', 2) : this.$i18n.tc('contract.name', 1)
   }
 
   /**
@@ -249,8 +259,19 @@ export default class TableAddressContracts extends Vue {
   /**
    * @return {Number} - Total number of pagination pages
    */
-  get pages(): number {
-    return this.contractsPage ? Math.ceil(this.contractsPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  // get pages(): number {
+  //   return this.contractsPage ? Math.ceil(this.contractsPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  // }
+
+  get showPaginate(): boolean {
+    if (this.page && this.page > 0) {
+      // If we're past the first page, there must be pagination
+      return true
+    } else if (this.contractsPage && this.contractsPage.hasMore) {
+      // We're on the first page, but there are more items, show pagination
+      return true
+    }
+    return false
   }
 }
 </script>

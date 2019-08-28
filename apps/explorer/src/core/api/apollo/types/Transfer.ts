@@ -12,7 +12,7 @@ export interface Transfer {
   __typename: "Transfer";
   id: string;
   transactionHash: string | null;
-  value: any;
+  value: any | null;
   from: string | null;
   to: string;
   timestamp: any;

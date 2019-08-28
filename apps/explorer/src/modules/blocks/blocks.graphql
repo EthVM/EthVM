@@ -9,7 +9,7 @@ query latestBlocks($fromBlock: BigNumber, $offset: Int, $limit: Int) {
 query blocksByAuthor($author: String!, $offset: Int, $limit: Int) {
 
   blockSummaries: blockSummariesByAuthor(author: $author, offset: $offset, limit: $limit) {
-    ...BlockSummaryPage
+    ...BlockSummaryByAuthorPage
   }
 
 }
@@ -33,6 +33,13 @@ fragment BlockSummaryPage on BlockSummaryPage {
     ...BlockSummary
   }
   totalCount
+}
+
+fragment BlockSummaryByAuthorPage on BlockSummaryByAuthorPage {
+  items {
+    ...BlockSummary
+  }
+  hasMore
 }
 
 subscription newBlock {

@@ -1,6 +1,6 @@
 <template>
   <v-btn flat class="new-block-alert text-capitalize  ma-0" @click="onReload" v-if="display">
-    {{ buttonText }} <v-icon class="ml-1 secondary--text">autorenew</v-icon>
+    {{ buttonText }} <v-icon class="ml-1 secondary--text fas fa-sync fa-1x fa-rotate-90"></v-icon>
   </v-btn>
 </template>
 

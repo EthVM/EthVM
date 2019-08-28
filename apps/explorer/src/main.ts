@@ -15,6 +15,7 @@ import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { lastBlockReceivedQuery } from '@app/core/components/ui/stats.graphql'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 /*
   ===================================================================================
@@ -109,6 +110,11 @@ Vue.use(Vuetify, {
 
     // used -->
     // background: String(colors.grey.darken3)
+  },
+  iconfont: 'fa', // use font awesome icons,
+  icons: {
+    expand: 'fa-chevron-down fa-1x',
+    dropdown: 'fa-caret-down fa-1x'
   }
 })
 

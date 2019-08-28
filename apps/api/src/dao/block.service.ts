@@ -73,7 +73,7 @@ export class BlockService {
             .leftJoinAndSelect('b.rewards', 'br')
 
           if (fromBlock) {
-            queryBuilder.where('b.number <= :fromBlock', { fromBlock })
+            queryBuilder.where('b.number <= :fromBlock', { fromBlock: fromBlock.toNumber() })
           }
 
           const headersWithRewards = await queryBuilder
@@ -104,18 +104,12 @@ export class BlockService {
 
   }
 
-  async findSummariesByAuthor(author: string, offset: number = 0, limit: number = 20): Promise<[BlockSummary[], number]> {
+  async findSummariesByAuthor(author: string, offset: number = 0, limit: number = 20): Promise<[BlockSummary[], boolean]> {
 
     return this.entityManager
       .transaction(
         'READ COMMITTED',
-        async (txn): Promise<[BlockSummary[], number]> => {
-
-          const count = await txn.count(BlockHeaderEntity, {
-            where: { author },
-          })
-
-          if (count === 0) return [[], count]
+        async (txn): Promise<[BlockSummary[], boolean]> => {
 
           const headersWithRewards = await txn.createQueryBuilder(BlockHeaderEntity, 'b')
             .leftJoinAndSelect('b.rewards', 'br')
@@ -133,14 +127,19 @@ export class BlockService {
               'br.amount',
             ])
             .orderBy('b.number', 'DESC')
-            .offset(offset)
-            .limit(limit)
+            .skip(offset)
+            .take(limit + 1)
             .cache(true)
             .getMany()
 
+          const hasMore = headersWithRewards.length > limit
+          if (hasMore) {
+            headersWithRewards.pop()
+          }
+
           return [
             await this.summarise(txn, headersWithRewards),
-            count,
+            hasMore,
           ]
         })
 
@@ -241,6 +240,7 @@ export class BlockService {
     const blockHeader = await this.blockHeaderRepository.createQueryBuilder('b')
       .leftJoinAndSelect('b.rewards', 'br')
       .leftJoinAndSelect('b.blockTime', 'bt')
+      .leftJoinAndSelect('b.uncles', 'u')
       .where('b.hash = :hash', { hash })
       .cache(true)
       .getOne()

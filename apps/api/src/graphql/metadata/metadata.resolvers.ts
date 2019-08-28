@@ -31,4 +31,14 @@ export class MetadataResolvers {
     return this.pubSub.asyncIterator('isSyncing')
   }
 
+  @Subscription(
+    'keepAlive', {
+      // TODO determine why we need to specify the resolve function for this to work
+      resolve: (keepAlive: boolean) => keepAlive,
+    } as SubscriptionOptions,
+  )
+  keepAlive() {
+    return this.pubSub.asyncIterator('keepAlive')
+  }
+
 }

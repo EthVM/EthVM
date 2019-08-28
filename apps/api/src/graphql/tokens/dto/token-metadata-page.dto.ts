@@ -4,7 +4,7 @@ import { TokenMetadataDto } from '@app/graphql/tokens/dto/token-metadata.dto'
 
 export class TokenMetadataPageDto implements TokenMetadataPage {
   items!: TokenMetadata[]
-  totalCount!: number
+  hasMore!: boolean
 
   constructor(data) {
     if (data.items) {

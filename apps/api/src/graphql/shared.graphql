@@ -18,3 +18,10 @@ enum Duration {
   WEEK,
   DAY
 }
+
+# We have to do this as we have no mutations yet and it was preventing client side definitions
+
+type Mutation {
+  foo: Boolean
+}
+

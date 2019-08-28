@@ -6,20 +6,8 @@ import com.ethvm.avro.processing.FungibleBalanceRecord
 import com.ethvm.common.extensions.getAmountBI
 import com.ethvm.common.extensions.setAmountBI
 import com.ethvm.kafka.streams.Serdes
-import com.ethvm.kafka.streams.config.Topics.Erc20BalanceDelta
-import com.ethvm.kafka.streams.config.Topics.Erc20BalanceLog
 import com.ethvm.kafka.streams.config.Topics.FungibleBalance
 import com.ethvm.kafka.streams.config.Topics.FungibleBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.HardForkBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.HardForkBalanceLog
-import com.ethvm.kafka.streams.config.Topics.MinerFeeBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.MinerFeeBalanceLog
-import com.ethvm.kafka.streams.config.Topics.PremineBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.PremineBalanceLog
-import com.ethvm.kafka.streams.config.Topics.TransactionBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.TransactionBalanceLog
-import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceDelta
-import com.ethvm.kafka.streams.config.Topics.TransactionFeeBalanceLog
 import com.ethvm.kafka.streams.processors.transformers.OncePerBlockTransformer
 import com.ethvm.kafka.streams.utils.toTopic
 import mu.KotlinLogging
@@ -40,7 +28,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
     .apply {
       putAll(baseKafkaProps.toMap())
       put(StreamsConfig.APPLICATION_ID_CONFIG, id)
-      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 4)
+      put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 2)
     }
 
   override val logger = KotlinLogging.logger {}
@@ -51,31 +39,7 @@ class FungibleBalanceProcessor : AbstractKafkaProcessor() {
       addStateStore(OncePerBlockTransformer.canonicalRecordsStore(appConfig.unitTesting))
     }
 
-    val premineDeltas = PremineBalanceDelta.stream(builder)
-    val hardForkDeltas = HardForkBalanceDelta.stream(builder)
-
-    val transactionDeltas = TransactionBalanceDelta.stream(builder)
-    val transactionFeeDeltas = TransactionFeeBalanceDelta.stream(builder)
-    val minerFeeDeltas = MinerFeeBalanceDelta.stream(builder)
-    val erc20Deltas = Erc20BalanceDelta.stream(builder)
-
-    aggregate(premineDeltas).toTopic(PremineBalanceLog)
-    aggregate(hardForkDeltas).toTopic(HardForkBalanceLog)
-    aggregate(transactionDeltas).toTopic(TransactionBalanceLog)
-    aggregate(transactionFeeDeltas).toTopic(TransactionFeeBalanceLog)
-    aggregate(minerFeeDeltas).toTopic(MinerFeeBalanceLog)
-    aggregate(erc20Deltas).toTopic(Erc20BalanceLog)
-
-    val allDeltas = premineDeltas
-      .merge(hardForkDeltas)
-      .merge(transactionDeltas)
-      .merge(transactionFeeDeltas)
-      .merge(minerFeeDeltas)
-      .merge(erc20Deltas)
-
-    aggregate(allDeltas).toTopic(FungibleBalance)
-
-    allDeltas.toTopic(FungibleBalanceDelta)
+    aggregate(FungibleBalanceDelta.stream(builder)).toTopic(FungibleBalance)
 
     // Generate the topology
     return builder.build()

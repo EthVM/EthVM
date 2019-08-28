@@ -60,6 +60,9 @@ export class TxService {
       relations: ['receipt'],
       cache: true,
     })
+    if (!txs.length) { // User may be searching by hash which does not exist as a tx
+      return []
+    }
     return this.findAndMapTraces(txs)
   }
 
@@ -198,7 +201,7 @@ export class TxService {
       'READ COMMITTED',
       async (entityManager): Promise<[TransactionSummary[], number]> => {
 
-        let [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
+        const [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
           select: ['count'],
           where: {
             entity: 'transaction',
@@ -207,20 +210,6 @@ export class TxService {
         })
 
         if (totalCount === 0) return [[], totalCount]
-
-        if (fromBlock) {
-          // we count all txs in blocks greater than the from block and deduct from total
-          // this is much faster way of determining the count
-
-          const { count: filterCount } = await entityManager.createQueryBuilder()
-            .select('count(hash)', 'count')
-            .from(TransactionEntity, 't')
-            .where({ blockNumber: MoreThan(fromBlock) })
-            .cache(true)
-            .getRawOne() as { count: number }
-
-          totalCount = totalCount - filterCount
-        }
 
         const txs = await entityManager.find(TransactionEntity, {
           select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value'],

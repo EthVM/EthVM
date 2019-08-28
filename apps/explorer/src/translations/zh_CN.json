@@ -169,8 +169,8 @@
     },
     "not-found": "Oops! Page Not Found :(",
     "welcome": {
-      "title": "Welcome to EthVM Beta!",
-      "text1": "We are now on Ethereum mainnet, so have a look around and let us know about any bugs or feature requests at ",
+      "title": "Welcome to EthVM Alpha!",
+      "text1": "We are now on Ethereum ropsten, so have a look around and let us know about any bugs or feature requests at ",
       "text2": ", or go to ",
       "text3": "for updates and to contribute. ",
       "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",

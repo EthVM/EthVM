@@ -4,7 +4,6 @@ import {ContractMetadataEntity} from '@app/orm/entities/contract-metadata.entity
 import {ContractEntity} from '@app/orm/entities/contract.entity'
 import {Erc20BalanceEntity} from '@app/orm/entities/erc20-balance.entity'
 import {Erc721BalanceEntity} from '@app/orm/entities/erc721-balance.entity'
-import {FungibleBalanceTransferEntity} from '@app/orm/entities/fungible-balance-transfer.entity'
 import {FungibleBalanceDeltaEntity} from '@app/orm/entities/fungible-balance-delta.entity'
 import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.entity'
 import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity'
@@ -48,7 +47,6 @@ import { BalanceDeltaEntity } from '@app/orm/entities/balance-delta.entity'
       ContractMetadataEntity,
       Erc20BalanceEntity,
       Erc721BalanceEntity,
-      FungibleBalanceTransferEntity,
       FungibleBalanceDeltaEntity,
       TokenExchangeRateEntity,
       TransactionEntity,
@@ -73,7 +71,6 @@ import { BalanceDeltaEntity } from '@app/orm/entities/balance-delta.entity'
       ContractMetadataEntity,
       Erc20BalanceEntity,
       Erc721BalanceEntity,
-      FungibleBalanceTransferEntity,
       FungibleBalanceDeltaEntity,
       TokenExchangeRateEntity,
       TransactionEntity,

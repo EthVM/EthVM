@@ -12,7 +12,7 @@ export interface TransferPage_items {
   __typename: "Transfer";
   id: string;
   transactionHash: string | null;
-  value: any;
+  value: any | null;
   from: string | null;
   to: string;
   timestamp: any;
@@ -23,5 +23,5 @@ export interface TransferPage_items {
 export interface TransferPage {
   __typename: "TransferPage";
   items: TransferPage_items[];
-  totalCount: any;
+  hasMore: boolean;
 }
