@@ -1,4 +1,4 @@
-FROM boxfuse/flyway:6.0-alpine
+FROM flyway/flyway:6.0-alpine
 
 # Switch to root user as base image changes it to flyway
 USER root
