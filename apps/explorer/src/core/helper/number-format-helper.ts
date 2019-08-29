@@ -19,7 +19,6 @@ export interface FormattedNumber {
 
 const SmallUsdBreakpoint = 0.04
 const SmallNumberBreakpoint = 0.0000001
-const SmallEthBreakpoint = 0.00001
 
 const TenThousand = 10000
 const OneMillion = 1000000
@@ -64,14 +63,14 @@ export class NumberFormatHelper {
     if (value.isGreaterThanOrEqualTo(OneTrillion)) {
       return this.convertToTrillions(value)
     }
-    if (value.isGreaterThan(OneBillion)) {
+    if (value.isGreaterThanOrEqualTo(OneBillion)) {
       return this.convertToBillions(value)
     }
     if (value.isGreaterThanOrEqualTo(OneMillion)) {
       // show round number and tooltip with full value if there are decimal places
       return { value: value.toFormat(0), tooltipText: value.decimalPlaces() ? value.toFormat() : undefined }
     }
-    if (value.isGreaterThan(1)) {
+    if (value.isGreaterThanOrEqualTo(1)) {
       // show max 2 decimal places and tooltip with full value if > 2 decimal places
       const dps = value.decimalPlaces()
       return { value: value.toFormat(Math.min(2, dps)), tooltipText: dps > 2 ? value.toFormat() : undefined }
@@ -165,7 +164,7 @@ export class NumberFormatHelper {
       // Show up to 2 decimal places if greater than 1
       return { value: ethBN.toFormat(Math.min(2, dps)), unit, tooltipText: dps > 2 ? ethBN.toFormat() : undefined }
     }
-    if (ethBN.isGreaterThanOrEqualTo(SmallEthBreakpoint)) {
+    if (ethBN.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
       // Show up to 7 decimal places
       return {
         value: ethBN.toFormat(Math.min(7, ethBN.decimalPlaces())),
@@ -174,7 +173,7 @@ export class NumberFormatHelper {
       }
     }
     // Value is less than 0.00001
-    return { value: '<0.00001', unit, tooltipText: ethBN.toFormat() }
+    return { value: '<0.0000001', unit, tooltipText: ethBN.toFormat() }
   }
 
   /* Non-variable GWei values (Group VI) */
