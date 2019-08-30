@@ -66,13 +66,13 @@ topics:
     config:
       cleanup.policy: compact
 
-  - name: token_exchange_rates
+  - name: token_exchange_rate
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 1
     config:
       cleanup.policy: compact
 
-  - name: coin_exchange_rates
+  - name: coin_exchange_rate
     replicationFactor: {{ .Env.KAFKA_REPLICATION_FACTOR }}
     partitions: 1
     config:

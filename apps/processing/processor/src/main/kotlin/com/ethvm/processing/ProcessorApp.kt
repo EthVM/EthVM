@@ -4,13 +4,10 @@ import com.ethvm.common.config.NetConfig
 import com.ethvm.processing.processors.BasicDataProcessor
 import com.ethvm.processing.processors.BlockMetricsHeaderProcessor
 import com.ethvm.processing.processors.BlockMetricsTraceProcessor
-import com.ethvm.processing.processors.CoinExchangeRateProcessor
 import com.ethvm.processing.processors.ContractLifecycleProcessor
-import com.ethvm.processing.processors.EthListProcessor
 import com.ethvm.processing.processors.EtherBalanceProcessor
 import com.ethvm.processing.processors.ParitySyncStatusProcessor
 import com.ethvm.processing.processors.TokenBalanceProcessor
-import com.ethvm.processing.processors.TokenExchangeRateProcessor
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
@@ -88,10 +85,7 @@ class ProcessorApp(private val netConfig: NetConfig,
       TokenBalanceProcessor(netConfig, kafkaProps, dbContext, storageDir, scheduledExecutor, topicBlocks),
       BlockMetricsHeaderProcessor(netConfig, kafkaProps, dbContext, storageDir, scheduledExecutor, topicBlocks),
       BlockMetricsTraceProcessor(netConfig, kafkaProps, dbContext, storageDir, scheduledExecutor, topicTraces),
-      ParitySyncStatusProcessor(netConfig, kafkaProps, dbContext, topicParitySyncState),
-      EthListProcessor(kafkaProps, dbContext),
-      TokenExchangeRateProcessor(kafkaProps, dbContext),
-      CoinExchangeRateProcessor(kafkaProps, dbContext)
+      ParitySyncStatusProcessor(netConfig, kafkaProps, dbContext, topicParitySyncState)
     )
 
     Runtime.getRuntime().addShutdownHook(Thread(Runnable {
