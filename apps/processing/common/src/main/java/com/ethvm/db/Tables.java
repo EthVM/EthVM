@@ -5,6 +5,10 @@ package com.ethvm.db;
 
 
 import com.ethvm.db.tables.AddDimension;
+import com.ethvm.db.tables.AddressContractsCreatedCount;
+import com.ethvm.db.tables.AddressContractsCreatedCountDelta;
+import com.ethvm.db.tables.AddressInternalTransactionCount;
+import com.ethvm.db.tables.AddressInternalTransactionCountDelta;
 import com.ethvm.db.tables.AddressTransactionCount;
 import com.ethvm.db.tables.AddressTransactionCountDelta;
 import com.ethvm.db.tables.AlterJobSchedule;
@@ -102,6 +106,26 @@ public class Tables {
     public static AddDimension ADD_DIMENSION(Field<Object> mainTable, Field<String> columnName, Field<Integer> numberPartitions, Field<Object> chunkTimeInterval, Field<String> partitioningFunc, Field<Boolean> ifNotExists) {
         return com.ethvm.db.tables.AddDimension.ADD_DIMENSION.call(mainTable, columnName, numberPartitions, chunkTimeInterval, partitioningFunc, ifNotExists);
     }
+
+    /**
+     * The table <code>public.address_contracts_created_count</code>.
+     */
+    public static final AddressContractsCreatedCount ADDRESS_CONTRACTS_CREATED_COUNT = com.ethvm.db.tables.AddressContractsCreatedCount.ADDRESS_CONTRACTS_CREATED_COUNT;
+
+    /**
+     * The table <code>public.address_contracts_created_count_delta</code>.
+     */
+    public static final AddressContractsCreatedCountDelta ADDRESS_CONTRACTS_CREATED_COUNT_DELTA = com.ethvm.db.tables.AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA;
+
+    /**
+     * The table <code>public.address_internal_transaction_count</code>.
+     */
+    public static final AddressInternalTransactionCount ADDRESS_INTERNAL_TRANSACTION_COUNT = com.ethvm.db.tables.AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT;
+
+    /**
+     * The table <code>public.address_internal_transaction_count_delta</code>.
+     */
+    public static final AddressInternalTransactionCountDelta ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA = com.ethvm.db.tables.AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA;
 
     /**
      * The table <code>public.address_transaction_count</code>.

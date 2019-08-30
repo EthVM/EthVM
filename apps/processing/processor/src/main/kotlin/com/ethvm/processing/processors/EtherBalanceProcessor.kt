@@ -14,6 +14,7 @@ import com.ethvm.db.Tables.TRACE
 import com.ethvm.db.tables.records.BalanceDeltaRecord
 import com.ethvm.db.tables.records.TraceRecord
 import com.ethvm.processing.cache.FungibleBalanceCache
+import com.ethvm.processing.cache.InternalTxsCountsCache
 import com.ethvm.processing.extensions.toBalanceDeltas
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
@@ -48,6 +49,8 @@ class EtherBalanceProcessor(netConfig: NetConfig,
 
   private lateinit var fungibleBalanceCache: FungibleBalanceCache
 
+  private lateinit var internalTxsCountsCache: InternalTxsCountsCache
+
   private val executor = Executors.newCachedThreadPool()
 
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
@@ -57,11 +60,15 @@ class EtherBalanceProcessor(netConfig: NetConfig,
     fungibleBalanceCache = FungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ETHER)
     fungibleBalanceCache.initialise(txCtx)
 
+    internalTxsCountsCache = InternalTxsCountsCache(memoryDb, diskDb, scheduledExecutor)
+    internalTxsCountsCache.initialise(txCtx)
+
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     fungibleBalanceCache.rewindUntil(txCtx, blockNumber)
+    internalTxsCountsCache.rewindUntil(txCtx, blockNumber)
 
     txCtx
       .deleteFrom(TRACE)
@@ -95,7 +102,7 @@ class EtherBalanceProcessor(netConfig: NetConfig,
         val genesisBlock = netConfig.genesis
 
         var timestampMs = genesisBlock.timestamp
-        if(timestampMs == 0L) {
+        if (timestampMs == 0L) {
           timestampMs = System.currentTimeMillis()
         }
 
@@ -163,6 +170,11 @@ class EtherBalanceProcessor(netConfig: NetConfig,
 
     }
 
+    // internal tx counts
+    deltas
+      .groupBy { it.blockNumber }
+      .forEach { internalTxsCountsCache.count(it.value, it.key.toBigInteger()) }
+
     // transaction traces
     txCtx.batchInsert(data.map { it.first }.flatten()).execute()
 
@@ -174,6 +186,8 @@ class EtherBalanceProcessor(netConfig: NetConfig,
 
     fungibleBalanceCache.writeToDb(txCtx)
 
+    // write count records
+    internalTxsCountsCache.writeToDb(txCtx)
 
   }
 

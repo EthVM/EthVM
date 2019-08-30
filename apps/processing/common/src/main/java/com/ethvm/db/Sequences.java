@@ -24,6 +24,16 @@ import org.jooq.impl.SequenceImpl;
 public class Sequences {
 
     /**
+     * The sequence <code>public.address_contracts_created_count_delta_id_seq</code>
+     */
+    public static final Sequence<Long> ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ID_SEQ = new SequenceImpl<Long>("address_contracts_created_count_delta_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>public.address_internal_transaction_count_delta_id_seq</code>
+     */
+    public static final Sequence<Long> ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_ID_SEQ = new SequenceImpl<Long>("address_internal_transaction_count_delta_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
      * The sequence <code>public.address_transaction_count_delta_id_seq</code>
      */
     public static final Sequence<Long> ADDRESS_TRANSACTION_COUNT_DELTA_ID_SEQ = new SequenceImpl<Long>("address_transaction_count_delta_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));

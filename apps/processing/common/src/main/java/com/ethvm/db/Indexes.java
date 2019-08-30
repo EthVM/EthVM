@@ -4,6 +4,10 @@
 package com.ethvm.db;
 
 
+import com.ethvm.db.tables.AddressContractsCreatedCount;
+import com.ethvm.db.tables.AddressContractsCreatedCountDelta;
+import com.ethvm.db.tables.AddressInternalTransactionCount;
+import com.ethvm.db.tables.AddressInternalTransactionCountDelta;
 import com.ethvm.db.tables.AddressTransactionCount;
 import com.ethvm.db.tables.AddressTransactionCountDelta;
 import com.ethvm.db.tables.Balance;
@@ -49,6 +53,12 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index ADDRESS_CONTRACTS_CREATED_COUNT_PKEY = Indexes0.ADDRESS_CONTRACTS_CREATED_COUNT_PKEY;
+    public static final Index ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY = Indexes0.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY;
+    public static final Index ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_PKEY = Indexes0.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_PKEY;
+    public static final Index ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY = Indexes0.ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY;
+    public static final Index ADDRESS_INTERNAL_TRANSACTION_COUNT_DEL_ADDRESS_BLOCK_NUMBER_KEY = Indexes0.ADDRESS_INTERNAL_TRANSACTION_COUNT_DEL_ADDRESS_BLOCK_NUMBER_KEY;
+    public static final Index ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_PKEY = Indexes0.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_PKEY;
     public static final Index ADDRESS_TRANSACTION_COUNT_PKEY = Indexes0.ADDRESS_TRANSACTION_COUNT_PKEY;
     public static final Index IDX_ADDRESS_TRANSACTION_COUNTS_BY_NUMBER = Indexes0.IDX_ADDRESS_TRANSACTION_COUNTS_BY_NUMBER;
     public static final Index IDX_TRANSACTION_COUNTS_FOR_ADDRESS = Indexes0.IDX_TRANSACTION_COUNTS_FOR_ADDRESS;
@@ -130,6 +140,12 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
+        public static Index ADDRESS_CONTRACTS_CREATED_COUNT_PKEY = Internal.createIndex("address_contracts_created_count_pkey", AddressContractsCreatedCount.ADDRESS_CONTRACTS_CREATED_COUNT, new OrderField[] { AddressContractsCreatedCount.ADDRESS_CONTRACTS_CREATED_COUNT.ADDRESS, AddressContractsCreatedCount.ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER }, true);
+        public static Index ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY = Internal.createIndex("address_contracts_created_count_delta_address_block_number_key", AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA, new OrderField[] { AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.ADDRESS, AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER }, true);
+        public static Index ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_PKEY = Internal.createIndex("address_contracts_created_count_delta_pkey", AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA, new OrderField[] { AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.ID }, true);
+        public static Index ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY = Internal.createIndex("address_internal_transaction_count_pkey", AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT, new OrderField[] { AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT.ADDRESS, AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER }, true);
+        public static Index ADDRESS_INTERNAL_TRANSACTION_COUNT_DEL_ADDRESS_BLOCK_NUMBER_KEY = Internal.createIndex("address_internal_transaction_count_del_address_block_number_key", AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA, new OrderField[] { AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.ADDRESS, AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER }, true);
+        public static Index ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_PKEY = Internal.createIndex("address_internal_transaction_count_delta_pkey", AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA, new OrderField[] { AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.ID }, true);
         public static Index ADDRESS_TRANSACTION_COUNT_PKEY = Internal.createIndex("address_transaction_count_pkey", AddressTransactionCount.ADDRESS_TRANSACTION_COUNT, new OrderField[] { AddressTransactionCount.ADDRESS_TRANSACTION_COUNT.ADDRESS, AddressTransactionCount.ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER }, true);
         public static Index IDX_ADDRESS_TRANSACTION_COUNTS_BY_NUMBER = Internal.createIndex("idx_address_transaction_counts_by_number", AddressTransactionCount.ADDRESS_TRANSACTION_COUNT, new OrderField[] { AddressTransactionCount.ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER }, false);
         public static Index IDX_TRANSACTION_COUNTS_FOR_ADDRESS = Internal.createIndex("idx_transaction_counts_for_address", AddressTransactionCount.ADDRESS_TRANSACTION_COUNT, new OrderField[] { AddressTransactionCount.ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.desc(), AddressTransactionCount.ADDRESS_TRANSACTION_COUNT.ADDRESS }, true);

@@ -4,6 +4,10 @@
 package com.ethvm.db;
 
 
+import com.ethvm.db.tables.AddressContractsCreatedCount;
+import com.ethvm.db.tables.AddressContractsCreatedCountDelta;
+import com.ethvm.db.tables.AddressInternalTransactionCount;
+import com.ethvm.db.tables.AddressInternalTransactionCountDelta;
 import com.ethvm.db.tables.AddressTransactionCount;
 import com.ethvm.db.tables.AddressTransactionCountDelta;
 import com.ethvm.db.tables.Balance;
@@ -28,6 +32,10 @@ import com.ethvm.db.tables.Trace;
 import com.ethvm.db.tables.Transaction;
 import com.ethvm.db.tables.TransactionReceipt;
 import com.ethvm.db.tables.Uncle;
+import com.ethvm.db.tables.records.AddressContractsCreatedCountDeltaRecord;
+import com.ethvm.db.tables.records.AddressContractsCreatedCountRecord;
+import com.ethvm.db.tables.records.AddressInternalTransactionCountDeltaRecord;
+import com.ethvm.db.tables.records.AddressInternalTransactionCountRecord;
 import com.ethvm.db.tables.records.AddressTransactionCountDeltaRecord;
 import com.ethvm.db.tables.records.AddressTransactionCountRecord;
 import com.ethvm.db.tables.records.BalanceDeltaRecord;
@@ -78,6 +86,8 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<AddressContractsCreatedCountDeltaRecord, Long> IDENTITY_ADDRESS_CONTRACTS_CREATED_COUNT_DELTA = Identities0.IDENTITY_ADDRESS_CONTRACTS_CREATED_COUNT_DELTA;
+    public static final Identity<AddressInternalTransactionCountDeltaRecord, Long> IDENTITY_ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA = Identities0.IDENTITY_ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA;
     public static final Identity<AddressTransactionCountDeltaRecord, Long> IDENTITY_ADDRESS_TRANSACTION_COUNT_DELTA = Identities0.IDENTITY_ADDRESS_TRANSACTION_COUNT_DELTA;
     public static final Identity<BalanceRecord, Long> IDENTITY_BALANCE = Identities0.IDENTITY_BALANCE;
     public static final Identity<BalanceDeltaRecord, Long> IDENTITY_BALANCE_DELTA = Identities0.IDENTITY_BALANCE_DELTA;
@@ -88,6 +98,12 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AddressContractsCreatedCountRecord> ADDRESS_CONTRACTS_CREATED_COUNT_PKEY = UniqueKeys0.ADDRESS_CONTRACTS_CREATED_COUNT_PKEY;
+    public static final UniqueKey<AddressContractsCreatedCountDeltaRecord> ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_PKEY = UniqueKeys0.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_PKEY;
+    public static final UniqueKey<AddressContractsCreatedCountDeltaRecord> ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY = UniqueKeys0.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY;
+    public static final UniqueKey<AddressInternalTransactionCountRecord> ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY = UniqueKeys0.ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY;
+    public static final UniqueKey<AddressInternalTransactionCountDeltaRecord> ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_PKEY = UniqueKeys0.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_PKEY;
+    public static final UniqueKey<AddressInternalTransactionCountDeltaRecord> ADDRESS_INTERNAL_TRANSACTION_COUNT_DEL_ADDRESS_BLOCK_NUMBER_KEY = UniqueKeys0.ADDRESS_INTERNAL_TRANSACTION_COUNT_DEL_ADDRESS_BLOCK_NUMBER_KEY;
     public static final UniqueKey<AddressTransactionCountRecord> ADDRESS_TRANSACTION_COUNT_PKEY = UniqueKeys0.ADDRESS_TRANSACTION_COUNT_PKEY;
     public static final UniqueKey<AddressTransactionCountDeltaRecord> ADDRESS_TRANSACTION_COUNT_DELTA_PKEY = UniqueKeys0.ADDRESS_TRANSACTION_COUNT_DELTA_PKEY;
     public static final UniqueKey<AddressTransactionCountDeltaRecord> ADDRESS_TRANSACTION_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY = UniqueKeys0.ADDRESS_TRANSACTION_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY;
@@ -124,6 +140,8 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class Identities0 {
+        public static Identity<AddressContractsCreatedCountDeltaRecord, Long> IDENTITY_ADDRESS_CONTRACTS_CREATED_COUNT_DELTA = Internal.createIdentity(AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA, AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.ID);
+        public static Identity<AddressInternalTransactionCountDeltaRecord, Long> IDENTITY_ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA = Internal.createIdentity(AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA, AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.ID);
         public static Identity<AddressTransactionCountDeltaRecord, Long> IDENTITY_ADDRESS_TRANSACTION_COUNT_DELTA = Internal.createIdentity(AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA, AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA.ID);
         public static Identity<BalanceRecord, Long> IDENTITY_BALANCE = Internal.createIdentity(Balance.BALANCE, Balance.BALANCE.ID);
         public static Identity<BalanceDeltaRecord, Long> IDENTITY_BALANCE_DELTA = Internal.createIdentity(BalanceDelta.BALANCE_DELTA, BalanceDelta.BALANCE_DELTA.ID);
@@ -132,6 +150,12 @@ public class Keys {
     }
 
     private static class UniqueKeys0 {
+        public static final UniqueKey<AddressContractsCreatedCountRecord> ADDRESS_CONTRACTS_CREATED_COUNT_PKEY = Internal.createUniqueKey(AddressContractsCreatedCount.ADDRESS_CONTRACTS_CREATED_COUNT, "address_contracts_created_count_pkey", AddressContractsCreatedCount.ADDRESS_CONTRACTS_CREATED_COUNT.ADDRESS, AddressContractsCreatedCount.ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER);
+        public static final UniqueKey<AddressContractsCreatedCountDeltaRecord> ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_PKEY = Internal.createUniqueKey(AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA, "address_contracts_created_count_delta_pkey", AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.ID);
+        public static final UniqueKey<AddressContractsCreatedCountDeltaRecord> ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY = Internal.createUniqueKey(AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA, "address_contracts_created_count_delta_address_block_number_key", AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.ADDRESS, AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER);
+        public static final UniqueKey<AddressInternalTransactionCountRecord> ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY = Internal.createUniqueKey(AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT, "address_internal_transaction_count_pkey", AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT.ADDRESS, AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER);
+        public static final UniqueKey<AddressInternalTransactionCountDeltaRecord> ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_PKEY = Internal.createUniqueKey(AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA, "address_internal_transaction_count_delta_pkey", AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.ID);
+        public static final UniqueKey<AddressInternalTransactionCountDeltaRecord> ADDRESS_INTERNAL_TRANSACTION_COUNT_DEL_ADDRESS_BLOCK_NUMBER_KEY = Internal.createUniqueKey(AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA, "address_internal_transaction_count_del_address_block_number_key", AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.ADDRESS, AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER);
         public static final UniqueKey<AddressTransactionCountRecord> ADDRESS_TRANSACTION_COUNT_PKEY = Internal.createUniqueKey(AddressTransactionCount.ADDRESS_TRANSACTION_COUNT, "address_transaction_count_pkey", AddressTransactionCount.ADDRESS_TRANSACTION_COUNT.ADDRESS, AddressTransactionCount.ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER);
         public static final UniqueKey<AddressTransactionCountDeltaRecord> ADDRESS_TRANSACTION_COUNT_DELTA_PKEY = Internal.createUniqueKey(AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA, "address_transaction_count_delta_pkey", AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA.ID);
         public static final UniqueKey<AddressTransactionCountDeltaRecord> ADDRESS_TRANSACTION_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY = Internal.createUniqueKey(AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA, "address_transaction_count_delta_address_block_number_key", AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA.ADDRESS, AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER);
