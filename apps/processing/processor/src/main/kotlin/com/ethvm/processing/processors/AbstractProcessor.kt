@@ -201,7 +201,7 @@ abstract class AbstractProcessor<V>(
 
       consumer
         .offsetsForTimes(offsetsQuery)
-        .forEach { (topicPartition, offsetAndTimestamp) -> consumer.seek(topicPartition, offsetAndTimestamp.offset()) }
+        .forEach { (topicPartition, offsetAndTimestamp) -> consumer.seek(topicPartition, offsetAndTimestamp?.offset() ?: 0L) }
 
       // main processing loop
       while (!stop) {
@@ -315,7 +315,6 @@ abstract class AbstractProcessor<V>(
     } catch (e: Exception) {
 
       logger.error(e) { "Fatal exception, stopping" }
-      close()
 
     } finally {
 
