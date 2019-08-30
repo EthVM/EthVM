@@ -6,6 +6,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
+import java.io.File
 
 class Cli : CliktCommand() {
 
@@ -79,6 +80,10 @@ class Cli : CliktCommand() {
     val netConfig = NetConfig.forChainId(chainId)
     requireNotNull(netConfig) { "Network config not found for chainId = $chainId" }
 
+    // create storage directory if it doesn't exist
+    val storage = File(storageDir)
+    storage.mkdirs()
+
     val app = ProcessorApp(
       netConfig,
       jdbcUrl,
@@ -113,7 +118,7 @@ class Cli : CliktCommand() {
 
     const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091"
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
-    const val DEFAULT_STORAGE_DIR = "/tmp"
+    const val DEFAULT_STORAGE_DIR = "./processor-state"
     const val DEFAULT_WEB3_WS_URL = "ws://localhost:8546"
   }
 
