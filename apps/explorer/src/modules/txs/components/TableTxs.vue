@@ -7,7 +7,7 @@
     -->
 
     <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs" :has-pagination="hasPagination">
-      <template v-slot:update>
+      <template v-slot:update v-if="isPageTxs">
         <notice-new-block :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" />
       </template>
       <template v-slot:pagination v-if="hasPagination">
