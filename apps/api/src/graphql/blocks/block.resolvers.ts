@@ -1,19 +1,18 @@
-import { BlockService } from '@app/dao/block.service'
-import { BlockDto } from '@app/graphql/blocks/dto/block.dto'
-import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
-import { ParseHashPipe } from '@app/shared/validation/parse-hash.pipe'
-import { Inject, UseInterceptors } from '@nestjs/common'
-import { Args, Query, Resolver, Subscription, SubscriptionOptions } from '@nestjs/graphql'
-import { PubSub } from 'graphql-subscriptions'
-import { BlockSummary } from '../schema'
-import { BlockSummaryDto } from './dto/block-summary.dto'
+import {BlockService} from '@app/dao/block.service'
+import {BlockDto} from '@app/graphql/blocks/dto/block.dto'
+import {ParseAddressPipe} from '@app/shared/pipes/parse-address.pipe'
+import {ParseHashPipe} from '@app/shared/pipes/parse-hash.pipe'
+import {Inject, UseInterceptors} from '@nestjs/common'
+import {Args, Query, Resolver, Subscription, SubscriptionOptions} from '@nestjs/graphql'
+import {PubSub} from 'graphql-subscriptions'
+import {BlockSummary} from '../schema'
+import {BlockSummaryDto} from './dto/block-summary.dto'
 import BigNumber from 'bignumber.js'
-import { BlockSummaryPageDto } from './dto/block-summary-page.dto'
-import retry from 'async-retry'
-import { PartialReadException } from '@app/shared/errors/partial-read-exception'
-import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
-import { BlockMetricsService } from '@app/dao/block-metrics.service'
-import { BlockSummaryByAuthorPageDto } from '@app/graphql/blocks/dto/block-summary-by-author-page.dto'
+import {BlockSummaryPageDto} from './dto/block-summary-page.dto'
+import {SyncingInterceptor} from '@app/shared/interceptors/syncing-interceptor'
+import {BlockMetricsService} from '@app/dao/block-metrics.service'
+import {BlockSummaryByAuthorPageDto} from '@app/graphql/blocks/dto/block-summary-by-author-page.dto'
+import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe';
 
 @Resolver('Block')
 @UseInterceptors(SyncingInterceptor)
@@ -28,119 +27,49 @@ export class BlockResolvers {
 
   @Query()
   async blockSummaries(
-    @Args('fromBlock') fromBlock: BigNumber,
-    @Args('offset') offset: number,
-    @Args('limit') limit: number,
-  ) {
-
-    return retry(async bail => {
-
-      try {
-        const [summaries, count] = await this.blockService.findSummaries(offset, limit, fromBlock)
-        return new BlockSummaryPageDto(summaries, count)
-      } catch (err) {
-
-        if (err instanceof PartialReadException) {
-          // re-throw for retry
-          throw err
-        } else {
-          bail(err)
-        }
-
-      }
-    }, {
-      retries: 3,
-      factor: 2,
-      minTimeout: 1000,
-    })
-
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
+    @Args('offset') offset?: number,
+    @Args('limit') limit?: number,
+  ): Promise<BlockSummaryPageDto | undefined> {
+    const [summaries, count] = await this.blockService.findSummaries(blockNumber, offset, limit)
+    return new BlockSummaryPageDto(summaries, count)
   }
 
   @Query()
   async blockSummariesByAuthor(
     @Args('author', ParseAddressPipe) author: string,
-    @Args('offset') offset: number,
-    @Args('limit') limit: number,
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
+    @Args('offset') offset?: number,
+    @Args('limit') limit?: number,
   ): Promise<BlockSummaryByAuthorPageDto | undefined> {
-    return retry(async bail => {
-
-      try {
-        const [summaries, hasMore] = await this.blockService.findSummariesByAuthor(author, offset, limit)
-        return new BlockSummaryByAuthorPageDto(summaries, hasMore)
-      } catch (err) {
-
-        if (err instanceof PartialReadException) {
-          // re-throw for retry
-          throw err
-        } else {
-          bail(err)
-        }
-
-      }
-    }, {
-      retries: 3,
-      factor: 2,
-      minTimeout: 1000,
-    })
+    const [summaries, count] = await this.blockService.findSummariesByAuthor(author, blockNumber, offset, limit)
+    return new BlockSummaryByAuthorPageDto(summaries, count)
   }
 
   @Query()
-  async blockByHash(@Args('hash', ParseHashPipe) hash: string) {
-
-    return retry(async bail => {
-
-      try {
-        const entity = await this.blockService.findByHash(hash)
-        const txFees = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(hash, true)
-        return entity ? new BlockDto(entity, txFees) : null
-      } catch (err) {
-
-        if (err instanceof PartialReadException) {
-          // re-throw for retry
-          throw err
-        } else {
-          bail(err)
-        }
-
-      }
-    }, {
-      retries: 3,
-      factor: 2,
-      minTimeout: 1000,
-    })
+  async blockByHash(
+    @Args('hash', ParseHashPipe) hash: string,
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
+  ): Promise<BlockDto | undefined> {
+    const entity = await this.blockService.findByHash(hash, blockNumber)
+    const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(hash, true, blockNumber)
+    return entity ? new BlockDto(entity, txFees) : undefined
   }
 
   @Query()
-  async blockByNumber(@Args('number') number: BigNumber) {
-    return retry(async bail => {
-
-      try {
-        const entity = await this.blockService.findByNumber(number)
-        if (entity) {
-          const txFees = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(entity.hash, true)
-          return new BlockDto(entity, txFees)
-        }
-        return undefined
-      } catch (err) {
-
-        if (err instanceof PartialReadException) {
-          // re-throw for retry
-          throw err
-        } else {
-          bail(err)
-        }
-
-      }
-    }, {
-      retries: 3,
-      factor: 2,
-      minTimeout: 1000,
-    })
+  async blockByNumber(
+    @Args('number') number: BigNumber,
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
+  ): Promise<BlockDto | undefined> {
+    const entity = await this.blockService.findByNumber(number, blockNumber)
+    if (!entity) { return undefined }
+    const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(entity.hash, true, blockNumber)
+    return new BlockDto(entity, txFees)
   }
 
   @Query('hashRate')
-  async queryHashRate(): Promise<BigNumber | null> {
-    return this.blockService.calculateHashRate()
+  async queryHashRate(@Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber): Promise<BigNumber | null> {
+    return this.blockService.calculateHashRate(true, blockNumber)
   }
 
   @Subscription(

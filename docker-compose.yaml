@@ -79,9 +79,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./apps/api:/var/www/api
-    depends_on:
-      - db-principal
-      - db-metrics
     networks:
       - net
     ports:
@@ -100,6 +97,7 @@ services:
       INSTA_MINING: '${PARITY_INSTA_MINING}'
       NO_TS_TUNE: 'true'
       DISABLE_EXPRESS_RATE_LIMIT: 'true'
+
     command: bash -c "yarn && yarn start:dev"
 
   # ///////////////////////////////////////////////////////
@@ -135,8 +133,6 @@ services:
       - db-principal:/var/lib/postgresql/data
     networks:
       - net
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: '${PRINCIPAL_USER}'
       POSTGRES_PASSWORD: '${PRINCIPAL_PASSWORD}'
@@ -145,7 +141,9 @@ services:
   db-metrics:
     image: timescale/timescaledb:1.2.2-pg11-oss
     restart: unless-stopped
-    shm_size: 1g
+    shm_size: 4g
+    ports:
+      - 5432:5432
     volumes:
       - db-metrics:/var/lib/postgresql/data
     networks:
@@ -287,6 +285,7 @@ services:
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       CONNECT_MAX_POLL_INTERVAL_MS: 120000
+      KAFKA_CONNECT_HEARTBEAT_INTERVAL_MS: 10000
       KAFKA_HEAP_OPTS: "-Xms2G -Xmx4G -XX:MaxDirectMemorySize=512M"
       KAFKA_JMX_PORT: 9588
       PRINCIPAL_BALANCE_DELTA_SINK_TASKS_MAX:

@@ -12,27 +12,12 @@ import java.util.Arrays
 
 class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(web3jService) {
 
-  fun ethvmGetTracesByNumber(from: BigInteger, to: BigInteger): Request<*, EthvmTracesResponse> {
+  fun ethChainId(): Request<*, EthChainIdResponse> {
     return Request(
-      "trace_blocks",
-      Arrays.asList(
-        DefaultBlockParameter.valueOf(from),
-        DefaultBlockParameter.valueOf(to)
-      ),
+      "eth_chainId",
+      emptyList<Any>(),
       web3jService,
-      EthvmTracesResponse::class.java
-    )
-  }
-
-  fun ethvmGetReceiptsByNumber(from: BigInteger, to: BigInteger): Request<*, EthvmReceiptsResponse> {
-    return Request(
-      "parity_getBlocksReceipts",
-      Arrays.asList(
-        DefaultBlockParameter.valueOf(from),
-        DefaultBlockParameter.valueOf(to)
-      ),
-      web3jService,
-      EthvmReceiptsResponse::class.java
+      EthChainIdResponse::class.java
     )
   }
 
@@ -60,6 +45,11 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(we
       EthvmUnclesResponse::class.java
     )
   }
+}
+
+class EthChainIdResponse : Response<String>() {
+  val chainId: String
+    get() = result
 }
 
 class EthvmBlocksResponse : Response<List<FullBlock>>() {

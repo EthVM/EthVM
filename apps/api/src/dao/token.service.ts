@@ -1,92 +1,121 @@
-import { CoinExchangeRateEntity } from '@app/orm/entities/coin-exchange-rate.entity'
-import { ContractEntity } from '@app/orm/entities/contract.entity'
-import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
-import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity'
-import { Erc20MetadataEntity } from '@app/orm/entities/erc20-metadata.entity'
-import { Erc721MetadataEntity } from '@app/orm/entities/erc721-metadata.entity'
-import { TokenExchangeRateEntity } from '@app/orm/entities/token-exchange-rate.entity'
-import { Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { Any, EntityManager, FindManyOptions, FindOneOptions, Repository } from 'typeorm'
+/* tslint:disable:no-trailing-whitespace */
+import {Injectable} from '@nestjs/common'
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm'
+import {Any, EntityManager, FindManyOptions, FindOneOptions, In, LessThanOrEqual, MoreThan, Repository} from 'typeorm'
 import BigNumber from 'bignumber.js'
-import { DbConnection } from '@app/orm/config'
-import { TokenMetadataEntity } from '@app/orm/entities/token-metadata.entity'
-import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
-import has = Reflect.has
+import {BalanceEntity} from '@app/orm/entities/balance.entity';
+import {CoinExchangeRateEntity} from '@app/orm/entities/coin-exchange-rate.entity';
+import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.entity';
+import {TokenMetadataEntity} from '@app/orm/entities/token-metadata.entity';
+import {TokenDetailEntity} from '@app/orm/entities/token-detail.entity';
+import {ContractEntity} from '@app/orm/entities/contract.entity';
 
 @Injectable()
 export class TokenService {
   constructor(
-    @InjectRepository(Erc20BalanceEntity, DbConnection.Principal)
-    private readonly erc20BalanceRepository: Repository<Erc20BalanceEntity>,
-    @InjectRepository(Erc721BalanceEntity, DbConnection.Principal)
-    private readonly erc721BalanceRepository: Repository<Erc721BalanceEntity>,
-    @InjectRepository(Erc20MetadataEntity, DbConnection.Principal)
-    private readonly erc20MetadataRepository: Repository<Erc20MetadataEntity>,
-    @InjectRepository(Erc721MetadataEntity, DbConnection.Principal)
-    private readonly erc721MetadataRepository: Repository<Erc721MetadataEntity>,
-    @InjectRepository(TokenExchangeRateEntity, DbConnection.Principal)
-    private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
-    @InjectRepository(ContractEntity, DbConnection.Principal)
-    private readonly contractRepository: Repository<ContractEntity>,
-    @InjectRepository(CoinExchangeRateEntity, DbConnection.Principal)
+    @InjectRepository(BalanceEntity)
+    private readonly balanceRepository: Repository<BalanceEntity>,
+    @InjectRepository(CoinExchangeRateEntity)
     private readonly coinExchangeRateRepository: Repository<CoinExchangeRateEntity>,
-    @InjectRepository(TokenMetadataEntity, DbConnection.Principal)
+    @InjectRepository(TokenExchangeRateEntity)
+    private readonly tokenExchangeRateRepository: Repository<TokenExchangeRateEntity>,
+    @InjectRepository(TokenMetadataEntity)
     private readonly tokenMetadataRepository: Repository<TokenMetadataEntity>,
-    @InjectRepository(TokenDetailEntity, DbConnection.Principal)
+    @InjectRepository(TokenDetailEntity)
     private readonly tokenDetailRepository: Repository<TokenDetailEntity>,
-    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
+    @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {}
 
-  async findTokenHolders(address: string, limit: number = 10, offset: number = 0): Promise<[Erc20BalanceEntity[] | Erc721BalanceEntity[], boolean]> {
-    const findOptions: FindManyOptions = {
-      where: { contract: address },
-      take: limit + 1,
-      skip: offset,
-      cache: true,
-    }
-    const findOptionsErc20: FindManyOptions = { ...findOptions, select: ['address', 'amount'] }
+  async findAllTokenBalancesForContract(
+    contractAddress: string,
+    limit: number = 10,
+    offset: number = 0,
+    blockNumber: BigNumber,
+  ): Promise<[BalanceEntity[], boolean]> {
 
-    // Currently only erc20 tokens are displayed in explorer
-    const erc20Balances = await this.erc20BalanceRepository.find(findOptionsErc20)
-    const hasMore = erc20Balances.length > limit
+    // TODO handle ERC721
+
+    const balances = await this.entityManager.query(`
+      WITH _balances as (
+        SELECT 
+          *,
+          row_number() OVER (PARTITION BY address ORDER BY block_number DESC) AS row_number
+          FROM balance
+          WHERE contract_address = $1          
+          AND balance > 0
+          AND block_number <= $2
+      )
+      SELECT * FROM _balances
+      WHERE row_number = 1
+      OFFSET $3
+      LIMIT $4
+    `, [contractAddress, blockNumber.toNumber(), offset, limit + 1])
+
+    const hasMore = balances.length > limit
     if (hasMore) {
-      erc20Balances.pop()
+      balances.pop()
     }
-
-    return [erc20Balances, hasMore]
-    // return await this.erc721BalanceRepository.findAndCount(findOptions)
+    return [balances, hasMore]
   }
 
-  async findTokenHolder(tokenAddress: string, holderAddress: string): Promise<Erc20BalanceEntity | Erc721BalanceEntity | undefined> {
-    const where = { contract: tokenAddress, address: holderAddress }
-    const erc20Balance = await this.erc20BalanceRepository.findOne({ where, cache: true })
-    if (erc20Balance) return erc20Balance
-    return this.erc721BalanceRepository.findOne({ where })
+  async findTokenBalance(tokenAddress: string, holderAddress: string, blockNumber: BigNumber): Promise<BalanceEntity | undefined> {
+    const where = { contract: tokenAddress, address: holderAddress, blockNumber: LessThanOrEqual(blockNumber) }
+    return this.balanceRepository.findOne({ where, cache: true, order: { blockNumber: 'DESC' } })
   }
 
-  async findAddressAllErc20TokensOwned(address: string, offset: number = 0, limit: number = 10): Promise<[Erc20BalanceEntity[], boolean]> {
+  async findAllTokenBalancesForAddress(address: string, offset: number = 0, limit: number = 10, blockNumber: BigNumber): Promise<[BalanceEntity[], boolean]> {
 
-    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[Erc20BalanceEntity[], boolean]> => {
+    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[BalanceEntity[], boolean]> => {
 
-      const entities = await txn.createQueryBuilder(Erc20BalanceEntity, 'b')
-        .where('b.address = :address')
-        .andWhere('b.amount != :amount')
-        .setParameters({ address, amount: 0 })
-        .cache(true)
-        .leftJoinAndSelect('b.tokenExchangeRate', 'ter')
-        .leftJoinAndSelect('b.metadata', 'm')
-        .leftJoinAndSelect('b.contractMetadata', 'cm')
-        .offset(offset)
-        .limit(limit + 1)
-        .getMany()
+      const items = await txn.query(`
+      WITH _balances as (
+        SELECT 
+          *,
+          row_number() OVER (PARTITION BY address, contract_address ORDER BY block_number DESC) AS row_number
+          FROM balance
+          WHERE address = $1          
+          AND contract_address IS NOT NULL
+          AND balance > 0          
+          AND block_number <= $2
+      )
+      SELECT * FROM _balances
+      WHERE row_number = 1
+      OFFSET $3
+      LIMIT $4
+    `, [address, blockNumber.toNumber(), offset, limit + 1])
 
-      const hasMore = entities.length > limit
-      if (hasMore) {
-        entities.pop() // Remove last item if extra item was retrieved
+      if (!items.length) {
+        return [[], false]
       }
 
-      return [entities, hasMore]
+      // Get token relations
+      const contractAddresses = items.map(i => i.contract_address)
+      const contracts = await txn.find(ContractEntity, {
+        where: { address: In(contractAddresses), createdAtBlockNumber: LessThanOrEqual(blockNumber) },
+        relations: ['ethListContractMetadata', 'contractMetadata', 'tokenExchangeRate'],
+        cache: true,
+      })
+
+      // Map contracts by contractAddress
+      const contractsByAddress = contracts.reduce((memo, next) => {
+        memo[next.address] = next
+        return memo
+      }, {})
+
+      // Map metadata to balances
+      items.forEach(balance => {
+        const { ethListContractMetadata, contractMetadata, tokenExchangeRate } = contractsByAddress[balance.contract_address]
+        balance.ethListContractMetadata = ethListContractMetadata
+        balance.contractMetadata = contractMetadata
+        balance.tokenExchangeRate = tokenExchangeRate
+      })
+
+      const hasMore = items.length > limit
+      if (hasMore) {
+        items.pop() // Remove last item if extra item was retrieved
+      }
+
+      return [items, hasMore]
 
     })
   }
@@ -143,9 +172,9 @@ export class TokenService {
     }
 
     const items = await this.tokenExchangeRateRepository.find(findOptions)
-    const totalCount = await this.tokenExchangeRateRepository.count({ cache: true, where: findOptions.where })
+    const count = await this.countTokenExchangeRates()
 
-    return [items, totalCount]
+    return [items, count]
   }
 
   async countTokenExchangeRates(): Promise<number> {
@@ -159,47 +188,56 @@ export class TokenService {
   async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | undefined> {
     return this.tokenExchangeRateRepository.findOne({
       where: { address },
-      relations: ['contract', 'contract.metadata'],
+      relations: ['contract', 'contract.contractMetadata', 'contract.ethListContractMetadata'], // TODO confirm all these relations are necessary
       cache: true,
     })
   }
 
-  async countTokenHolders(address: string): Promise<number> {
-    let { count: numHolders } = await this.erc20BalanceRepository.createQueryBuilder('b')
-      .select('COUNT(*)', 'count')
-      .where('b.contract = :address', { address })
-      .andWhere('b.amount > 0')
-      .cache(true)
-      .getRawOne()
+  async countTokenHolders(contract: string, blockNumber: BigNumber): Promise<number> {
 
-    if (!numHolders || numHolders === 0) {
-      const { count } = await this.erc721BalanceRepository.createQueryBuilder('b')
-        .select('COUNT(*)', 'count')
-        .where('b.contract = :address', { address })
-        .cache(true)
-        .getRawOne()
-      numHolders = count
-    }
-    return numHolders
+    // Note this only works for erc20 tokens, not ERC721. Balance and token_id where clauses would need reversing for ERC721
+    const [{ count }] = await this.entityManager.query(`
+      WITH _balances as (
+        SELECT 
+          *,
+          row_number() OVER (PARTITION BY address ORDER BY block_number DESC) AS row_number
+          FROM balance
+          WHERE contract_address = $1
+          AND token_id IS NULL
+          AND balance > 0
+          AND block_number <= $2
+      )
+      SELECT COUNT(*) FROM _balances
+      WHERE row_number = 1
+    `, [contract, blockNumber.toNumber()])
+    return count
   }
 
-  async totalValueUSDByAddress(address: string): Promise<BigNumber | undefined> {
+  async totalValueUSDByAddress(address: string, blockNumber: BigNumber): Promise<BigNumber | undefined> {
 
-    // Only for erc20Tokens as these have fungible value
-    const raw = await this.erc20BalanceRepository
-      .createQueryBuilder('erc20')
-      .leftJoin('erc20.tokenExchangeRate', 'ter')
-      .select('SUM(erc20.amount * ter.currentPrice)', 'usdValue')
-      .where('erc20.address = :address', { address })
-      .andWhere('ter.currentPrice IS NOT NULL')
-      .groupBy('erc20.address')
-      .getRawOne()
+    const raw = await this.entityManager.query(`
+      WITH _balances as (
+        SELECT 
+          b.balance AS balance,
+          ter.current_price AS current_price,
+          row_number() OVER (PARTITION BY b.address ORDER BY b.block_number DESC) AS row_number
+          FROM balance AS b
+          LEFT JOIN token_exchange_rate AS ter ON b.contract_address = ter.address
+          WHERE b.address = $1
+          AND b.token_id IS NULL
+          AND b.balance > 0
+          AND b.block_number <= $2
+          AND ter.current_price IS NOT NULL
+      )
+      SELECT SUM(balance * current_price) FROM _balances
+      WHERE row_number = 1
+    `, [address, blockNumber.toNumber()])
 
     return raw && raw.usdValue ? new BigNumber(raw.usdValue) : undefined
 
   }
 
-  async findTokensMetadata(
+  async findTokenMetadata(
     addresses: string[] = [],
     offset: number = 0,
     limit: number = 20,

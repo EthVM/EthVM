@@ -6,7 +6,7 @@ import { WebsocketProvider } from 'web3-providers'
 import { Pool } from 'pg'
 import Cursor from 'pg-cursor'
 
-export async function EtherBalances(config: Config, blockNumber?: number) {
+export async function EtherBalances(config: Config, foo: number) {
 
   // const spinner = ora('Checking ether balances').start();
 
@@ -28,7 +28,7 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
   const client = await pool.connect()
 
   let offset = 0
-  const limit = 1024
+  const limit = 512
   let progress = 0
 
   let balances = []
@@ -37,7 +37,7 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
   const hasSpaces = []
   const failures = []
 
-  const cursor = client.query(new Cursor('SELECT address, amount FROM canonical_ether_balance', []))
+  const cursor = client.query(new Cursor('SELECT address, balance, block_number FROM balance where contract_address is NULL', []))
 
   do {
 
@@ -45,7 +45,7 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
 
     const comparisons = balances.map(async ethvmBalance => {
 
-      const { address, amount: ethvmAmount } = ethvmBalance
+      const { address, balance: ethvmAmount, blockNumber } = ethvmBalance
 
       const trimmedAddress = ethvmBalance.address.trim()
 
@@ -53,12 +53,13 @@ export async function EtherBalances(config: Config, blockNumber?: number) {
         console.error(`Address '${ethvmBalance.address}' has spaces`)
       } else {
 
-        const parityAmount = await web3.eth.getBalance(ethvmBalance.address, blockNumber ? blockNumber : undefined)
+        const parityAmount = await web3.eth.getBalance(ethvmBalance.address, blockNumber)
 
         if (parityAmount === ethvmAmount) {
           matched += 1
         } else {
-          console.error(`Failure => ${address}, \tparity = ${parityAmount} \tethvm = ${ethvmAmount}`)
+          console.error(`Failure => ${address}, \tblock = ${blockNumber} \tparity = ${parityAmount} \tethvm = ${ethvmAmount}`)
+          // process.exit(1)
           failed += 1
         }
 
@@ -97,7 +98,8 @@ async function fetchBalances(cursor: Cursor, size: number): Promise<EtherBalance
       const entities = rows.map(r => {
         const result = new EtherBalanceView()
         result.address = r.address
-        result.amount = r.amount
+        result.balance = r.balance
+        result.blockNumber = r.block_number
         return result
       })
 

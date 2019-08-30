@@ -18,7 +18,7 @@ query tokenTransfersByContractAddressForHolder($address: String!, $holder: Strin
 
 fragment Transfer on Transfer {
   id
-  transactionHash: traceLocationTransactionHash
+  transactionHash
   value: amount
   from
   to

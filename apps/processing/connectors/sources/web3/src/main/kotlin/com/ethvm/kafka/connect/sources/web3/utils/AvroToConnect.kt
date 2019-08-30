@@ -1,6 +1,7 @@
 package com.ethvm.kafka.connect.sources.web3.utils
 
 import com.ethvm.avro.capture.BlockHeaderRecord
+import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.CanonicalRecord
 import com.ethvm.avro.capture.EthListRecord
@@ -36,7 +37,8 @@ object AvroToConnect {
     UncleListRecord::class to UncleListRecord.`SCHEMA$`,
     UncleRecord::class to UncleRecord.`SCHEMA$`,
     ParitySyncStateKeyRecord::class to ParitySyncStateKeyRecord.`SCHEMA$`,
-    ParitySyncStateRecord::class to ParitySyncStateRecord.`SCHEMA$`
+    ParitySyncStateRecord::class to ParitySyncStateRecord.`SCHEMA$`,
+    BlockRecord::class to BlockRecord.`SCHEMA$`
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)

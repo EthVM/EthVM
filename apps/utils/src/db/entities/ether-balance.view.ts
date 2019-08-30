@@ -6,5 +6,8 @@ export class EtherBalanceView {
   public address: string
 
   @Column()
-  public amount: string
+  public balance: string
+
+  @Column()
+  public blockNumber: string
 }

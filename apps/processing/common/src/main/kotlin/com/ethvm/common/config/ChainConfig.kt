@@ -1,12 +1,9 @@
 package com.ethvm.common.config
 
-import com.ethvm.avro.common.TraceLocationRecord
-import com.ethvm.avro.processing.FungibleBalanceDeltaRecord
-import com.ethvm.avro.processing.FungibleBalanceDeltaType
-import com.ethvm.avro.processing.FungibleTokenType
+import com.ethvm.avro.processing.BalanceDeltaType
+import com.ethvm.avro.processing.TokenType
 import com.ethvm.common.extensions.ether
-import com.ethvm.common.extensions.setAmountBI
-import com.ethvm.common.extensions.setBlockNumberBI
+import com.ethvm.db.tables.records.BalanceDeltaRecord
 import java.math.BigInteger
 import java.util.Collections.emptyList
 
@@ -14,7 +11,7 @@ interface ChainConfig {
 
   val constants: ChainConstants
 
-  fun hardForkFungibleDeltas(number: BigInteger): List<FungibleBalanceDeltaRecord> = emptyList()
+  fun hardForkBalanceDeltas(number: BigInteger): List<BalanceDeltaRecord> = emptyList()
 
   /**
    * EIP161: https://github.com/ethereum/EIPs/issues/161
@@ -95,40 +92,38 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
   private val withdrawAccount = DaoHardFork.withdrawAccount
   private val daoBalances = DaoHardFork.balances
 
-  override fun hardForkFungibleDeltas(number: BigInteger): List<FungibleBalanceDeltaRecord> =
+  override fun hardForkBalanceDeltas(number: BigInteger): List<BalanceDeltaRecord> =
     if (number != forkBlockNumber) {
       emptyList()
     } else {
+
+      val blockNumberDecimal = number.toBigDecimal()
+
       daoBalances.map { (address, balance) ->
         listOf(
 
           // deduct from address
-          FungibleBalanceDeltaRecord.newBuilder()
-            .setTokenType(FungibleTokenType.ETHER)
-            .setDeltaType(FungibleBalanceDeltaType.HARD_FORK)
-            .setIsReceiving(false)
-            .setTraceLocation(
-              TraceLocationRecord.newBuilder()
-                .setBlockNumberBI(number)
-                .build()
-            )
-            .setAddress(address)
-            .setAmountBI(balance.negate())
-            .build(),
+
+          BalanceDeltaRecord()
+            .apply {
+              this.tokenType = TokenType.ETHER.toString()
+              this.deltaType = BalanceDeltaType.HARD_FORK.toString()
+              this.isReceiving = false
+              this.blockNumber = blockNumberDecimal
+              this.address = address
+              this.amount = balance.toBigDecimal().negate()
+            },
 
           // add to withdraw account
-          FungibleBalanceDeltaRecord.newBuilder()
-            .setTokenType(FungibleTokenType.ETHER)
-            .setDeltaType(FungibleBalanceDeltaType.HARD_FORK)
-            .setIsReceiving(true)
-            .setTraceLocation(
-              TraceLocationRecord.newBuilder()
-                .setBlockNumberBI(number)
-                .build()
-            )
-            .setAddress(withdrawAccount)
-            .setAmountBI(balance)
-            .build()
+          BalanceDeltaRecord()
+            .apply {
+              this.tokenType = TokenType.ETHER.toString()
+              this.deltaType = BalanceDeltaType.HARD_FORK.toString()
+              this.isReceiving = false
+              this.blockNumber = blockNumberDecimal
+              this.address = withdrawAccount
+              this.amount = balance.toBigDecimal()
+            }
         )
       }.flatten()
     }
@@ -144,7 +139,7 @@ open class Eip150HardForkConfig(val parent: ChainConfig) : DaoHardForkConfig() {
 
 open class Eip160HardForkConfig(parent: ChainConfig) : Eip150HardForkConfig(parent) {
   override fun eip161() = true
-  override fun chainId(): Int = ChainId.MainNet.number
+  override fun chainId(): Int = ChainId.Mainnet.number
 }
 
 open class RopstenConfig(parent: ChainConfig) : Eip160HardForkConfig(parent) {
@@ -193,6 +188,8 @@ open class PetersburgConfig(parent: ChainConfig) : ConstantinopleConfig(parent) 
 
 interface NetConfig {
 
+  val chainId: ChainId
+
   val genesis: GenesisFile
 
   fun chainConfigForBlock(number: BigInteger): ChainConfig
@@ -201,6 +198,7 @@ interface NetConfig {
 
     val mainnet by lazy {
       BaseNetConfig(
+        ChainId.Mainnet,
         Genesis.Frontier,
         0L to FrontierConfig(),
         1_150_000L to HomesteadConfig(),
@@ -214,6 +212,7 @@ interface NetConfig {
 
     val ropsten by lazy {
       BaseNetConfig(
+        ChainId.Ropsten,
         Genesis.Ropsten,
         0L to HomesteadConfig(),
         10L to RopstenConfig(HomesteadConfig()),
@@ -225,14 +224,21 @@ interface NetConfig {
 
     val dev by lazy {
       BaseNetConfig(
+        ChainId.Dev,
         Genesis.Dev,
         0L to DevConfig(PetersburgConfig(DaoHardForkConfig()))
       )
     }
+
+    private val configByChainId = listOf(mainnet, ropsten, dev)
+      .map { it.chainId to it }
+      .toMap()
+
+    fun forChainId(chainId: ChainId) = configByChainId[chainId]
   }
 }
 
-class BaseNetConfig(genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) :
+class BaseNetConfig(override val chainId: ChainId, genesis: Genesis, vararg configs: Pair<Long, ChainConfig>) :
   NetConfig {
 
   override val genesis: GenesisFile = genesis.load()

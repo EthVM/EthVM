@@ -23,7 +23,7 @@
                 <template v-if="token.priceChangeSymbol !== 'null'">
                   <p :class="token.priceChangeClass">( {{ token.priceChangeFormatted }}%</p>
                   <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                  <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                  <v-img v-if="token.priceChangeSymbol === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                   <p :class="token.priceChangeClass">)</p>
                   <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
                 </template>
@@ -38,7 +38,7 @@
             </v-flex>
             <v-flex xs2>
               <v-btn outline small fab color="bttnToken" :to="tokenLink">
-                <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
+                <v-icon class="bttnToken--text fas fa-chevron-right" small />
               </v-btn>
             </v-flex>
           </v-layout>
@@ -128,11 +128,6 @@ export default class TokenTableRow extends Vue {
     width: 30px;
     margin-right: 0px;
     margin-left: 0px;
-}
-
-.token-btn-icon {
-   height: auto;
-  width: auto;
 }
 
 .cap-text{

@@ -1,25 +1,23 @@
-import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity';
-import { Erc721BalanceEntity } from '@app/orm/entities/erc721-balance.entity';
-import { assignClean } from '@app/shared/utils';
-import BigNumber from 'bignumber.js';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm'
-import { BigNumberTransformer } from '../transformers/big-number.transformer';
-import { ContractEntity } from '@app/orm/entities/contract.entity'
+import {assignClean} from '@app/shared/utils'
+import BigNumber from 'bignumber.js'
+import {Column, Entity, JoinColumn, OneToOne, PrimaryColumn} from 'typeorm'
+import {BigNumberTransformer} from '../transformers/big-number.transformer'
+import {ContractEntity} from '@app/orm/entities/contract.entity'
 
-@Entity('canonical_token_exchange_rates')
+@Entity('canonical_token_exchange_rate')
 export class TokenExchangeRateEntity {
 
   constructor(data: any) {
     assignClean(this, data);
   }
 
-  @PrimaryColumn({ type: 'character', length: 42, readonly: true })
+  @PrimaryColumn({ type: 'char', length: 42, readonly: true })
   address!: string
 
-  @Column({ type: 'character varying', length: 64, readonly: true })
+  @Column({ type: 'varchar', length: 128, readonly: true })
   symbol?: string
 
-  @Column({ type: 'character varying', length: 64, readonly: true })
+  @Column({ type: 'varchar', length: 128, readonly: true })
   name?: string
 
   @Column({ type: 'text', readonly: true })
@@ -31,7 +29,7 @@ export class TokenExchangeRateEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   marketCap?: BigNumber
 
-  @Column({ type: 'integer', readonly: true })
+  @Column({ type: 'int', readonly: true })
   marketCapRank?: number
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
@@ -61,22 +59,8 @@ export class TokenExchangeRateEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   totalSupply?: BigNumber
 
-  @Column({ type: 'bigint', readonly: true })
-  lastUpdated?: string
-
-  @OneToMany(type => Erc20BalanceEntity, erc20 => erc20.tokenExchangeRate)
-  @JoinColumn({
-    name: 'address',
-    referencedColumnName: 'contract',
-  })
-  erc20Balances?: Erc20BalanceEntity[]
-
-  @OneToMany(type => Erc721BalanceEntity, erc721 => erc721.tokenExchangeRate)
-  @JoinColumn({
-    name: 'address',
-    referencedColumnName: 'contract',
-  })
-  erc721Balances?: Erc721BalanceEntity[]
+  @Column({ type: 'bigint', readonly: true, transformer: new BigNumberTransformer() })
+  lastUpdated?: BigNumber
 
   @OneToOne(type => ContractEntity, c => c.tokenExchangeRate)
   @JoinColumn({

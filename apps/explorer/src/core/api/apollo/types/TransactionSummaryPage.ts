@@ -25,5 +25,5 @@ export interface TransactionSummaryPage_items {
 export interface TransactionSummaryPage {
   __typename: "TransactionSummaryPage";
   items: TransactionSummaryPage_items[];
-  totalCount: number;
+  totalCount: any;
 }

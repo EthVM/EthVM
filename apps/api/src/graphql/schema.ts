@@ -28,7 +28,8 @@ export enum DeltaType {
     CONTRACT_DESTRUCTION = "CONTRACT_DESTRUCTION",
     TX = "TX",
     MINER_FEE = "MINER_FEE",
-    INTERNAL_TX = "INTERNAL_TX"
+    INTERNAL_TX = "INTERNAL_TX",
+    TX_FEE = "TX_FEE"
 }
 
 export enum Duration {
@@ -114,31 +115,17 @@ export interface AggregateBlockMetric {
 }
 
 export interface Balance {
-    id: string;
     address: string;
     contractAddress?: string;
-    tokenType?: string;
-    amount: BigNumber;
-    balance: BigNumber;
-    timestamp: Date;
-}
-
-export interface BalanceNew {
-    address: string;
-    contract?: string;
-    amount?: BigNumber;
+    balance?: BigNumber;
     tokenId?: BigNumber;
     timestamp: Date;
+    blockNumber: BigNumber;
 }
 
 export interface BalancePage {
     hasMore: boolean;
-    items: BalanceNew[];
-}
-
-export interface BalancesPage {
     items: Balance[];
-    totalCount: BigNumber;
 }
 
 export interface Block {
@@ -172,7 +159,7 @@ export interface BlockHeader {
 
 export interface BlockMetric {
     number: BigNumber;
-    blockHash: string;
+    hash: string;
     timestamp: Date;
     blockTime: number;
     numUncles: number;
@@ -189,35 +176,22 @@ export interface BlockMetric {
     avgTxFees: BigNumber;
 }
 
-export interface BlockMetricsTransaction {
+export interface BlockMetricsPage {
+    items: BlockMetric[];
+    offset: number;
+    limit: number;
+    totalCount: number;
+}
+
+export interface BlockMetricsTrace {
     number: BigNumber;
-    blockHash: string;
+    hash: string;
     timestamp: Date;
     totalGasPrice: BigNumber;
     avgGasLimit: BigNumber;
     avgGasPrice: BigNumber;
-}
-
-export interface BlockMetricsTransactionFee {
-    number: BigNumber;
-    blockHash: string;
-    timestamp: Date;
     totalTxFees: BigNumber;
     avgTxFees: BigNumber;
-}
-
-export interface BlockMetricsTransactionFeePage {
-    items: BlockMetricsTransactionFee[];
-    offset: number;
-    limit: number;
-    totalCount: number;
-}
-
-export interface BlockMetricsTransactionPage {
-    items: BlockMetricsTransaction[];
-    offset: number;
-    limit: number;
-    totalCount: number;
 }
 
 export interface BlockSummary {
@@ -236,12 +210,12 @@ export interface BlockSummary {
 
 export interface BlockSummaryByAuthorPage {
     items: BlockSummary[];
-    hasMore: boolean;
+    totalCount: BigNumber;
 }
 
 export interface BlockSummaryPage {
     items: BlockSummary[];
-    totalCount: number;
+    totalCount: BigNumber;
 }
 
 export interface CoinExchangeRate {
@@ -260,24 +234,18 @@ export interface Contract {
     code?: string;
     refundAddress?: string;
     refundBalance?: BigNumber;
-    traceCreatedAtBlockHash?: string;
-    traceCreatedAtBlockNumber?: BigNumber;
-    traceCreatedAtTransactionHash?: string;
-    traceCreatedAtTransactionIndex?: number;
-    traceCreatedAtLogIndex?: number;
-    traceCreatedAtTraceAddress?: string;
-    traceDestroyedAtBlockHash?: string;
-    traceDestroyedAtBlockNumber?: BigNumber;
-    traceDestroyedAtTransactionHash?: string;
-    traceDestroyedAtTransactionIndex?: Long;
-    traceDestroyedAtLogIndex?: Long;
-    traceDestroyedAtTraceAddress?: string;
-    traceDestroyedAt?: Buffer;
-    metadata?: ContractMetadata;
+    createdAtBlockHash?: string;
+    createdAtBlockNumber?: BigNumber;
+    createdAtTransactionHash?: string;
+    createdAtTraceAddress?: string;
+    createdAtTimestamp?: Date;
+    destroyedAtBlockHash?: string;
+    destroyedAtBlockNumber?: BigNumber;
+    destroyedAtTransactionHash?: string;
+    destroyedAtTraceAddress?: string;
+    destroyedAtTimestamp?: Date;
+    ethListContractMetadata?: ContractMetadata;
     totalSupply?: BigNumber;
-    createdAtTx?: Transaction;
-    createdAtTxSummary?: TransactionSummary;
-    timestamp?: Date;
 }
 
 export interface ContractLogo {
@@ -341,45 +309,43 @@ export interface IMutation {
 }
 
 export interface IQuery {
-    accountByAddress(address: string): Account | Promise<Account>;
-    balances(addresses: string[], contracts?: string[], offset?: number, limit?: number): BalancePage | Promise<BalancePage>;
-    blockMetricsTransaction(offset?: number, limit?: number): BlockMetricsTransactionPage | Promise<BlockMetricsTransactionPage>;
-    blockMetricsTransactionFee(offset?: number, limit?: number): BlockMetricsTransactionFeePage | Promise<BlockMetricsTransactionFeePage>;
-    blockMetricsTimeseries(bucket: TimeBucket, field: BlockMetricField, start?: Date, end?: Date): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
-    hashRate(): BigNumber | Promise<BigNumber>;
-    blockSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
-    blockSummariesByAuthor(author: string, offset?: number, limit?: number): BlockSummaryByAuthorPage | Promise<BlockSummaryByAuthorPage>;
-    blockByHash(hash: string): Block | Promise<Block>;
-    blockByNumber(number: BigNumber): Block | Promise<Block>;
-    contractByAddress(address: string): Contract | Promise<Contract>;
-    contractsCreatedBy(creator: string, offset?: number, limit?: number): ContractSummaryPage | Promise<ContractSummaryPage>;
+    accountByAddress(address: string, blockNumber?: BigNumber): Account | Promise<Account>;
+    balances(addresses: string[], contracts?: string[], offset?: number, limit?: number, blockNumber?: BigNumber): BalancePage | Promise<BalancePage>;
+    blockMetrics(offset?: number, limit?: number, blockNumber?: BigNumber): BlockMetricsPage | Promise<BlockMetricsPage>;
+    blockMetricsTimeseries(bucket: TimeBucket, field: BlockMetricField, start?: Date, end?: Date, blockNumber?: BigNumber): AggregateBlockMetric[] | Promise<AggregateBlockMetric[]>;
+    hashRate(blockNumber?: BigNumber): BigNumber | Promise<BigNumber>;
+    blockSummaries(blockNumber?: BigNumber, offset?: number, limit?: number): BlockSummaryPage | Promise<BlockSummaryPage>;
+    blockSummariesByAuthor(author: string, offset?: number, limit?: number, blockNumber?: BigNumber): BlockSummaryByAuthorPage | Promise<BlockSummaryByAuthorPage>;
+    blockByHash(hash: string, blockNumber?: BigNumber): Block | Promise<Block>;
+    blockByNumber(number: BigNumber, blockNumber?: BigNumber): Block | Promise<Block>;
+    contractByAddress(address: string, blockNumber?: BigNumber): Contract | Promise<Contract>;
+    contractsCreatedBy(creator: string, offset?: number, limit?: number, blockNumber?: BigNumber): ContractSummaryPage | Promise<ContractSummaryPage>;
     metadata(): Metadata | Promise<Metadata>;
-    search(query: string): Search | Promise<Search>;
-    tokenHolder(address: string, holderAddress: string): TokenHolder | Promise<TokenHolder>;
-    addressAllTokensOwned(address: string, offset?: number, limit?: number): TokenBalancePage | Promise<TokenBalancePage>;
-    addressTotalTokenValueUSD(address: string): BigNumber | Promise<BigNumber>;
+    search(query: string, blockNumber?: BigNumber): Search | Promise<Search>;
+    tokenHolder(address: string, holderAddress: string, blockNumber?: BigNumber): TokenHolder | Promise<TokenHolder>;
+    addressAllTokensOwned(address: string, offset?: number, limit?: number, blockNumber?: BigNumber): TokenBalancePage | Promise<TokenBalancePage>;
+    addressTotalTokenValueUSD(address: string, blockNumber?: BigNumber): BigNumber | Promise<BigNumber>;
     coinExchangeRate(pair: ExchangeRatePair): CoinExchangeRate | Promise<CoinExchangeRate>;
     tokenExchangeRates(addresses?: string[], sort?: TokenExchangeRateFilter, offset?: number, limit?: number): TokenExchangeRatesPage | Promise<TokenExchangeRatesPage>;
     totalNumTokenExchangeRates(): number | Promise<number>;
     tokenExchangeRateBySymbol(symbol: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokenExchangeRateByAddress(address: string): TokenExchangeRate | Promise<TokenExchangeRate>;
     tokensMetadata(addresses?: string[], offset?: number, limit?: number): TokenMetadataPage | Promise<TokenMetadataPage>;
-    tokenHolders(address: string, offset?: number, limit?: number): TokenHoldersPage | Promise<TokenHoldersPage>;
-    tokenDetailByAddress(address: string): TokenDetail | Promise<TokenDetail>;
-    internalTransactionsByAddress(address: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
-    tokenBalancesByContractAddressForHolder(contractAddress: string, holderAddress: string, timestampFrom?: number, timestampTo?: number): BalancesPage | Promise<BalancesPage>;
-    tokenTransfersByContractAddress(contractAddress: string, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
-    tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
-    totalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string): BigNumber | Promise<BigNumber>;
-    balanceDeltas(addresses: string[], contracts?: string[], filter?: FilterEnum, timestampFrom?: number, timestampTo?: number, offset?: number, limit?: number): TransferPage | Promise<TransferPage>;
-    transactionSummaries(fromBlock?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
-    tx(hash: string): Transaction | Promise<Transaction>;
-    uncleByHash(hash: string): Uncle | Promise<Uncle>;
-    uncles(offset?: number, limit?: number, fromUncle?: BigNumber): UnclePage | Promise<UnclePage>;
-    latestUncleBlockNumber(): BigNumber | Promise<BigNumber>;
+    tokenHolders(address: string, offset?: number, limit?: number, blockNumber?: BigNumber): TokenHoldersPage | Promise<TokenHoldersPage>;
+    tokenDetailByAddress(address: string, blockNumber?: BigNumber): TokenDetail | Promise<TokenDetail>;
+    internalTransactionsByAddress(address: string, offset?: number, limit?: number, blockNumber?: BigNumber): TransferPage | Promise<TransferPage>;
+    tokenTransfersByContractAddress(contractAddress: string, offset?: number, limit?: number, blockNumber?: BigNumber): TransferPage | Promise<TransferPage>;
+    tokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, filter?: FilterEnum, offset?: number, limit?: number, blockNumber?: BigNumber): TransferPage | Promise<TransferPage>;
+    totalTokenTransfersByContractAddressForHolder(contractAddress: string, holderAddress: string, blockNumber?: BigNumber): BigNumber | Promise<BigNumber>;
+    balanceDeltas(addresses: string[], contracts?: string[], filter?: FilterEnum, timestampFrom?: number, timestampTo?: number, offset?: number, limit?: number, blockNumber?: BigNumber): TransferPage | Promise<TransferPage>;
+    transactionSummaries(blockNumber?: BigNumber, offset?: number, limit?: number): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForBlockNumber(number: BigNumber, offset?: number, limit?: number, blockNumber?: BigNumber): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForBlockHash(hash: string, offset?: number, limit?: number, blockNumber?: BigNumber): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    transactionSummariesForAddress(address: string, filter?: FilterEnum, offset?: number, limit?: number, blockNumber?: BigNumber): TransactionSummaryPage | Promise<TransactionSummaryPage>;
+    tx(hash: string, blockNumber?: BigNumber): Transaction | Promise<Transaction>;
+    uncleByHash(hash: string, blockNumber?: BigNumber): Uncle | Promise<Uncle>;
+    uncles(offset?: number, limit?: number, blockNumber?: BigNumber): UnclePage | Promise<UnclePage>;
+    latestUncleBlockNumber(blockNumber?: BigNumber): BigNumber | Promise<BigNumber>;
 }
 
 export interface Receipt {
@@ -415,8 +381,7 @@ export interface Search {
 
 export interface ISubscription {
     newBlockMetric(): BlockMetric | Promise<BlockMetric>;
-    newBlockMetricsTransaction(): BlockMetricsTransaction | Promise<BlockMetricsTransaction>;
-    newBlockMetricsTransactionFee(): BlockMetricsTransactionFee | Promise<BlockMetricsTransactionFee>;
+    newBlockMetricsTrace(): BlockMetricsTrace | Promise<BlockMetricsTrace>;
     newBlock(): BlockSummary | Promise<BlockSummary>;
     hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;
@@ -488,7 +453,7 @@ export interface TokenExchangeRate {
 
 export interface TokenExchangeRatesPage {
     items: TokenExchangeRate[];
-    totalCount: number;
+    hasMore: boolean;
 }
 
 export interface TokenHolder {
@@ -563,7 +528,7 @@ export interface TransactionSummary {
 
 export interface TransactionSummaryPage {
     items: TransactionSummary[];
-    totalCount: number;
+    totalCount: BigNumber;
 }
 
 export interface Transfer {
@@ -575,12 +540,10 @@ export interface Transfer {
     tokenType?: string;
     amount?: BigNumber;
     tokenId?: BigNumber;
-    traceLocationBlockHash: string;
-    traceLocationBlockNumber: BigNumber;
-    traceLocationTransactionHash?: string;
-    traceLocationTransactionIndex?: number;
-    traceLocationLogIndex?: number;
-    traceLocationTraceAddress?: string;
+    blockHash: string;
+    blockNumber: BigNumber;
+    transactionHash?: string;
+    traceAddress?: string;
     timestamp: Date;
 }
 
@@ -615,7 +578,7 @@ export interface Uncle {
 
 export interface UnclePage {
     items: Uncle[];
-    totalCount: number;
+    totalCount: BigNumber;
 }
 
 export type BigNumber = any;

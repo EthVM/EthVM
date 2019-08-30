@@ -16,23 +16,23 @@ NETWORK=${NETWORK:-ethvm_net}
 
 shift 1
 
-case ${INDEXES_AND_TRIGGERS} in
-
-  true)
-    FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX="R"
-    ;;
-
-  false)
-    # Causes flyway to ignore our index and trigger migrations
-    FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX="RR"
-    ;;
-
-  *)
-    echo "INDEXES_AND_TRIGGERS option not recognized: ${INDEXES_AND_TRIGGERS}. Must be one of: true, false"
-    exit 1
-    ;;
-
-esac
+#case ${INDEXES_AND_TRIGGERS} in
+#
+#  true)
+#    FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX="R"
+#    ;;
+#
+#  false)
+#    # Causes flyway to ignore our index and trigger migrations
+#    FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX="RR"
+#    ;;
+#
+#  *)
+#    echo "INDEXES_AND_TRIGGERS option not recognized: ${INDEXES_AND_TRIGGERS}. Must be one of: true, false"
+#    exit 1
+#    ;;
+#
+#esac
 
 case ${DB} in
 
@@ -57,5 +57,4 @@ docker run --rm \
   --network ${NETWORK} \
   -e FLYWAY_URL=${FLYWAY_URL} \
   -e FLYWAY_LOCATIONS=${FLYWAY_LOCATIONS} \
-  -e FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX=${FLYWAY_REPEATABLE_SQL_MIGRATION_PREFIX} \
   ethvm/migrator:${version} "$@"

@@ -11,10 +11,9 @@ pluginManagement {
 include(
   ":avro",
   ":common",
+  ":processor",
   ":kafka-streams",
-  ":connectors:sinks:jdbc",
   ":connectors:sources:exchanges",
   ":connectors:sources:eth-tokens-list",
-  ":connectors:sources:web3",
-  ":connectors:sources:kafka-admin"
+  ":connectors:sources:web3"
 )

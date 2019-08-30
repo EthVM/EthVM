@@ -46,7 +46,11 @@ build() {
   local context=$(eval echo -e $(jq -r '.context' <<< "$image"))
   local raw_version=$(eval echo -e $(jq -r '.version' <<< "$image"))
   local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$image"))
-  local version=$(to_version "${raw_version}")
+
+  local version=${VERSION}
+  if [ -x ${version} ]; then
+    version=$(to_version "${raw_version}")
+  fi
 
   if [[ ! -z "${targets}" ]]; then
 
@@ -74,7 +78,12 @@ push() {
 
   local name=$(jq -r '.id' <<< "$image")
   local raw_version=$(eval echo -e $(jq -r '.version' <<< "$image"))
-  local version=$(to_version $raw_version)
+
+  local version=${VERSION}
+  if [ -x ${version} ]; then
+    version=$(to_version "${raw_version}")
+  fi
+
   local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$image"))
 
   if [[ ! -z "${targets}" ]]; then

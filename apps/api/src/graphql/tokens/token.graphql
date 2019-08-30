@@ -1,15 +1,15 @@
 type Query {
-  tokenHolder(address: String!, holderAddress: String!): TokenHolder
-  addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10): TokenBalancePage!
-  addressTotalTokenValueUSD(address: String!): BigNumber
+  tokenHolder(address: String!, holderAddress: String!, blockNumber: BigNumber): TokenHolder
+  addressAllTokensOwned(address: String!, offset: Int = 0, limit: Int = 10, blockNumber: BigNumber): TokenBalancePage!
+  addressTotalTokenValueUSD(address: String!, blockNumber: BigNumber): BigNumber
   coinExchangeRate(pair: ExchangeRatePair!): CoinExchangeRate
   tokenExchangeRates(addresses: [String], sort: TokenExchangeRateFilter, offset: Int = 0, limit: Int = 20): TokenExchangeRatesPage!
   totalNumTokenExchangeRates: Int!
   tokenExchangeRateBySymbol(symbol: String!): TokenExchangeRate
   tokenExchangeRateByAddress(address: String!): TokenExchangeRate
   tokensMetadata(addresses: [String], offset: Int = 0, limit: Int = 20): TokenMetadataPage!
-  tokenHolders(address: String!, offset: Int = 0, limit: Int = 20): TokenHoldersPage!
-  tokenDetailByAddress(address: String!): TokenDetail
+  tokenHolders(address: String!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TokenHoldersPage!
+  tokenDetailByAddress(address: String!, blockNumber: BigNumber): TokenDetail
 }
 
 type TokenBalancePage {
@@ -43,7 +43,7 @@ type TokenHoldersPage {
 
 type TokenExchangeRatesPage {
   items: [TokenExchangeRate!]!
-  totalCount: Int!
+  hasMore: Boolean!
 }
 
 type TokenExchangeRate {

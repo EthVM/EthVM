@@ -14,55 +14,34 @@ enum BlockMetricField {
 
 type Query {
 
-  blockMetricsTransaction(offset: Int = 0, limit: Int = 20): BlockMetricsTransactionPage!
-  blockMetricsTransactionFee(offset: Int = 0, limit: Int = 20): BlockMetricsTransactionFeePage!
+  blockMetrics(offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): BlockMetricsPage!
 
-  blockMetricsTimeseries(bucket: TimeBucket!, field: BlockMetricField!, start: Date, end: Date): [AggregateBlockMetric!]!
+  blockMetricsTimeseries(bucket: TimeBucket!, field: BlockMetricField!, start: Date, end: Date, blockNumber: BigNumber): [AggregateBlockMetric!]!
 
 }
 
 type Subscription {
   newBlockMetric: BlockMetric!
-  newBlockMetricsTransaction: BlockMetricsTransaction!
-  newBlockMetricsTransactionFee: BlockMetricsTransactionFee!
+  newBlockMetricsTrace: BlockMetricsTrace!
 }
 
-type BlockMetricsTransactionPage {
+type BlockMetricsPage {
 
-  items: [BlockMetricsTransaction!]!
-
+  items: [BlockMetric!]!
   offset: Int!
   limit: Int!
   totalCount: Int!
 
 }
 
-type BlockMetricsTransactionFeePage {
-
-  items: [BlockMetricsTransactionFee!]!
-
-  offset: Int!
-  limit: Int!
-  totalCount: Int!
-
-}
-
-type BlockMetricsTransaction {
+type BlockMetricsTrace {
 
   number: BigNumber!
-  blockHash: String!
+  hash: String!
   timestamp: Date!
   totalGasPrice: BigNumber!
   avgGasLimit: BigNumber!
   avgGasPrice: BigNumber!
-
-}
-
-type BlockMetricsTransactionFee {
-
-  number: BigNumber!
-  blockHash: String!
-  timestamp: Date!
   totalTxFees: BigNumber!
   avgTxFees: BigNumber!
 
@@ -90,7 +69,7 @@ type AggregateBlockMetric {
 type BlockMetric {
 
   number: BigNumber!
-  blockHash: String!
+  hash: String!
   timestamp: Date!
   blockTime: Int!
   numUncles: Int!

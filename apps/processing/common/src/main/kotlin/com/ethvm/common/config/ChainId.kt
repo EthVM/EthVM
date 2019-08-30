@@ -2,7 +2,7 @@ package com.ethvm.common.config
 
 enum class ChainId(val number: Int) {
 
-  MainNet(1),
+  Mainnet(1),
   Morden(2),
   Ropsten(3),
   Rinkleby(4),
@@ -17,5 +17,14 @@ enum class ChainId(val number: Int) {
   EWasmTestNet(66),
   GethPrivateChains(1337),
   Görli(6284),
-  Stureby(314158)
+  Stureby(314158);
+
+  companion object {
+
+    fun forName(name: String) = values().firstOrNull { it.name.toLowerCase() == name.toLowerCase() }
+
+    fun forHex(hex: String) = forNumber(Integer.parseInt(hex.replace("0x", ""), 16))
+
+    fun forNumber(number: Int) = values().firstOrNull { it.number == number }
+  }
 }
