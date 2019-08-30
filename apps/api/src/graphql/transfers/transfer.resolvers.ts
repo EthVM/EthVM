@@ -55,8 +55,8 @@ export class TransferResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, hasMore] = await this.transferService.findInternalTransactionsForAddress(address, offset, limit, blockNumber)
-    return new BalanceDeltaPageDto({ items, hasMore })
+    const [items, hasMore, totalCount] = await this.transferService.findInternalTransactionsForAddress(address, offset, limit, blockNumber)
+    return new BalanceDeltaPageDto({ items, hasMore, totalCount })
   }
 
   @Query()

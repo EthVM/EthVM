@@ -550,6 +550,7 @@ export interface Transfer {
 export interface TransferPage {
     items: Transfer[];
     hasMore: boolean;
+    totalCount?: BigNumber;
 }
 
 export interface Uncle {

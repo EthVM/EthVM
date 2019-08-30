@@ -13,6 +13,7 @@ type Query {
 type TransferPage {
   items: [Transfer!]!
   hasMore: Boolean!
+  totalCount: BigNumber
 }
 
 type Transfer {

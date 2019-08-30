@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import {FilterEnum} from '@app/graphql/schema'
 import {ETH_ADDRESS} from '@app/shared/eth.service'
 import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity';
+import {AddressInternalTransactionCountEntity} from '@app/orm/entities/address-internal-transaction-count.entity';
 
 @Injectable()
 export class TransferService {
@@ -97,11 +98,25 @@ export class TransferService {
     offset: number = 0,
     limit: number = 10,
     blockNumber: BigNumber,
-  ): Promise<[BalanceDeltaEntity[], boolean]> {
+  ): Promise<[BalanceDeltaEntity[], boolean, BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[BalanceDeltaEntity[], boolean]> => {
+      async (txn): Promise<[BalanceDeltaEntity[], boolean, BigNumber]> => {
+
+        // Get total count
+        const internalTxsCount = await txn.findOne(AddressInternalTransactionCountEntity, {
+          where: { address, blockNumber: LessThanOrEqual(blockNumber) },
+          order: { blockNumber: 'DESC' },
+          cache: true,
+        })
+
+        const count = internalTxsCount ? internalTxsCount.total : undefined
+        if (!count) {
+          return [[], false, new BigNumber(0)]
+        }
+
+        // Get deltas
 
         const deltaTypes = ['CONTRACT_CREATION', 'CONTRACT_DESTRUCTION', 'INTERNAL_TX']
 
@@ -115,6 +130,7 @@ export class TransferService {
           .addOrderBy('trace_address', 'DESC')
           .offset(offset)
           .limit(limit + 1)
+          .cache(true)
           .getMany()
 
         const hasMore = items.length > limit
@@ -122,7 +138,7 @@ export class TransferService {
           items.pop()
         }
 
-        return [items, hasMore]
+        return [items, hasMore, count]
 
       },
     )
