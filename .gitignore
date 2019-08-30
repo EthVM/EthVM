@@ -38,4 +38,8 @@ env_*.sh
 *.code-workspace
 
 # Docker
+docker/templer/stacks
+docker/templer/vars/*.custom.yaml
+
 .env
+docker-compose.yaml

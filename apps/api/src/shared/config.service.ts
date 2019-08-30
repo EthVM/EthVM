@@ -39,7 +39,7 @@ const schema = {
     url: {
       doc: 'DB connection URL',
       env: 'METRICS_URL',
-      default: 'postgres://postgres:1234@db-metrics/ethvm_dev',
+      default: 'postgres://postgres:1234@timescale/ethvm_dev',
     },
     statementTimeout: {
       doc: 'DB Metrics statement_timeout',

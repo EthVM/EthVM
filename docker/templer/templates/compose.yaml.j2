@@ -1,29 +1,42 @@
-version: '3.7'
+version: '{{ COMPOSE_VERSION }}'
 
 networks:
 
   net:
+    {% if not SIMPLIFIED_NETWORKING %}
     driver: bridge
     ipam:
       config:
         - subnet: 172.25.0.0/24
+    {% endif %}
 
 volumes:
 
-  db-principal:
+  timescale:
     external: false
 
-  db-metrics:
+  {% if PARITY_ENABLED and not PARITY_ENABLE_BIND_MOUNTPOINT %}
+  parity:
     external: false
+  {% endif %}
 
+  {% if KAFKA_ENABLED %}
   kafka-1:
     external: false
 
   zookeeper:
     external: false
 
+  {% if KAFKA_ENABLE_PROCESSORS %}
+  ethvm-kafka-processors:
+    external: false
+  {% endif %}
+  {% endif %}
+
+  {% if GRAFANA_MONITORING_TOOLS_ENABLED %}
   prometheus:
     external: false
+  {% endif %}
 
 services:
 
@@ -31,6 +44,7 @@ services:
   # Front Services
   # ///////////////////////////////////////////////////////
 
+  {% if TRAEFIK_ENABLED %}
   traefik:
     image: ethvm/traefik:0.1.6
     restart: unless-stopped
@@ -47,14 +61,17 @@ services:
       SWARM_MODE: 'false'
       TRAEFIK_DASHBOARD_ENABLED: 'true'
       TRAEFIK_PING_ENABLED: 'false'
+  {% endif %}
 
-  # nginx:
-  #   image: ethvm/nginx:1.17.2-alpine
-  #   restart: unless-stopped
-  #   networks:
-  #     - net
-  #   ports:
-  #     - 80:80
+  {% if NGINX_ENABLED %}
+  nginx:
+    image: ethvm/nginx:1.17.2-alpine
+    restart: unless-stopped
+    networks:
+      - net
+    ports:
+      - 80:80
+  {% endif %}
 
   explorer:
     build:
@@ -65,12 +82,14 @@ services:
       - ./apps/explorer:/var/explorer
     networks:
       - net
+    {% if TRAEFIK_ENABLED %}
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:${DOMAIN}'
+      - 'traefik.frontend.rule=Host:{{ DOMAIN }}'
       - 'traefik.backend=explorer'
       - 'traefik.port=8080'
+    {% endif %}
 
   api:
     build:
@@ -79,27 +98,31 @@ services:
     restart: unless-stopped
     volumes:
       - ./apps/api:/var/www/api
+    depends_on:
+      - timescale
     networks:
       - net
     ports:
       - 3000:3000
+    {% if TRAEFIK_ENABLED %}
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:api.${DOMAIN}'
-      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://${DOMAIN}||Access-Control-Allow-Credentials:true'
+      - 'traefik.frontend.rule=Host:api.{{ DOMAIN }}'
+      - 'traefik.frontend.headers.customResponseHeaders=Access-Control-Allow-Origin:http://{{ DOMAIN }}||Access-Control-Allow-Credentials:true'
       - 'traefik.frontend.passHostHeader=true'
       - 'traefik.backend=api'
       - 'traefik.port=3000'
       - 'traefik.frontend.entryPoints=http,https,ws,wss'
+    {% endif %}
     environment:
       GRAPHQL_PLAYGROUND: 'true'
-      INSTA_MINING: '${PARITY_INSTA_MINING}'
+      INSTA_MINING: '{{ PARITY_INSTA_MINING }}'
       NO_TS_TUNE: 'true'
       DISABLE_EXPRESS_RATE_LIMIT: 'true'
-
     command: bash -c "yarn && yarn start:dev"
 
+  {% if PARITY_ENABLED %}
   # ///////////////////////////////////////////////////////
   # Ethereum Client
   # ///////////////////////////////////////////////////////
@@ -111,59 +134,52 @@ services:
     networks:
       - net
     volumes:
+      {% if PARITY_ENABLE_BIND_MOUNTPOINT %}
       - ${PARITY_BIND_MOUNTPOINT}:/home/parity/.local/share/io.parity.ethereum/
+      {% else %}
+      - parity:/home/parity/.local/share/io.parity.ethereum/
+      {% endif %}
     ports:
       - 8545:8545
       - 8546:8546
       - 30303:30303
     environment:
-      - PARITY_CHAIN
-      - PARITY_MIN_PEERS
-      - PARITY_MAX_PEERS
+      PARITY_CHAIN: {{ PARITY_CHAIN }}
+      PARITY_MIN_PEERS: {{ PARITY_MIN_PEERS }}
+      PARITY_MAX_PEERS: {{ PARITY_MAX_PEERS }}
+  {% endif %}
 
   # ///////////////////////////////////////////////////////
   # Storage
   # ///////////////////////////////////////////////////////
 
-  db-principal:
-    image: postgres:11
-    restart: unless-stopped
-    shm_size: 1g
-    volumes:
-      - db-principal:/var/lib/postgresql/data
-    networks:
-      - net
-    environment:
-      POSTGRES_USER: '${PRINCIPAL_USER}'
-      POSTGRES_PASSWORD: '${PRINCIPAL_PASSWORD}'
-      POSTGRES_DB: '${PRINCIPAL_DB}'
-
-  db-metrics:
+  timescale:
     image: timescale/timescaledb:1.2.2-pg11-oss
     restart: unless-stopped
     shm_size: 4g
     ports:
       - 5432:5432
     volumes:
-      - db-metrics:/var/lib/postgresql/data
+      - timescale:/var/lib/postgresql/data
     networks:
       - net
     environment:
-      POSTGRES_USER: '${METRICS_USER}'
-      POSTGRES_PASSWORD: '${METRICS_PASSWORD}'
-      POSTGRES_DB: '${METRICS_DB}'
+      POSTGRES_USER: '{{ METRICS_USER }}'
+      POSTGRES_PASSWORD: '{{ METRICS_PASSWORD }}'
+      POSTGRES_DB: '{{ METRICS_DB }}'
 
   redis:
     image: redis:5.0-alpine
     networks:
       - net
 
+  {% if KAFKA_ENABLED %}
   # ///////////////////////////////////////////////////////
   # Processing
   # ///////////////////////////////////////////////////////
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:${CP_VERSION}
+    image: confluentinc/cp-zookeeper:{{ CP_VERSION }}
     volumes:
       - zookeeper:/var/lib/zookeeper
     networks:
@@ -179,7 +195,7 @@ services:
       ZOOKEEPER_JMX_PORT: 9585
 
   kafka-1:
-    image: confluentinc/cp-kafka:${CP_VERSION}
+    image: confluentinc/cp-kafka:{{ CP_VERSION }}
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -215,8 +231,30 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       KAFKA_JMX_PORT: 9586
 
+  {% if KAFKA_ENABLE_PROCESSORS %}
+  ethvm-kafka-proccessors:
+    build:
+      context: ./apps/processing
+      dockerfile: ./kafka-streams/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - kafka-1
+      - zookeeper
+      - kafka-schema-registry
+    networks:
+      - net
+    volumes:
+      - ethvm-kafka-processors:/var/lib/kafka-streams
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: {{ KAFKA_BOOTSTRAP_SERVERS }}
+      KAFKA_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
+      WEB3_WS_URL: ws://parity:8546
+      KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
+      ETH_NET_CONFIG: '{{ PARITY_CHAIN }}'
+  {% endif %}
+
   kafka-schema-registry:
-    image: confluentinc/cp-schema-registry:${CP_VERSION}
+    image: confluentinc/cp-schema-registry:{{ CP_VERSION }}
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -227,12 +265,14 @@ services:
     ports:
       - 8081:8081
       - 9587:9587
+    {% if TRAEFIK_ENABLED %}
     labels:
       - "traefik.enable=true"
       - "traefik.default.protocol=http"
-      - "traefik.frontend.rule=Host:kafka-schema-registry.${DOMAIN}"
+      - "traefik.frontend.rule=Host:kafka-schema-registry.{{ DOMAIN }}"
       - "traefik.port=8081"
       - "traefik.backend=kafka-schema-registry"
+    {% endif %}
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka-1:9091"
       SCHEMA_REGISTRY_KAFKASTORE_TIMEOUT_MS: 10000
@@ -273,8 +313,8 @@ services:
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: ${KAFKA_SCHEMA_REGISTRY_URL}
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
       CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
       CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
@@ -285,7 +325,6 @@ services:
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       CONNECT_MAX_POLL_INTERVAL_MS: 120000
-      KAFKA_CONNECT_HEARTBEAT_INTERVAL_MS: 10000
       KAFKA_HEAP_OPTS: "-Xms2G -Xmx4G -XX:MaxDirectMemorySize=512M"
       KAFKA_JMX_PORT: 9588
       PRINCIPAL_BALANCE_DELTA_SINK_TASKS_MAX:
@@ -294,19 +333,24 @@ services:
       PRINCIPAL_RECEIPT_SINK_TASKS_MAX:
       PRINCIPAL_TRACE_SINK_TASKS_MAX:
       METRICS_BLOCK_METRICS_SINK_TASKS_MAX:
+  {% endif %}
 
   # ///////////////////////////////////////////////////////
-  # Extra Tools (Useful for debugging and helping in dev)
+  # Monitoring Tools
   # ///////////////////////////////////////////////////////
 
-  kafka-exporter:
-    image: danielqsj/kafka-exporter
+  pgweb:
+    image: sosedoff/pgweb:0.11.3
+    restart: unless-stopped
     networks:
       - net
+    depends_on:
+      - timescale
     ports:
-      - 9308:9308
-    command: "--kafka.server=kafka-1:9091"
+      - 8082:8082
+    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082"
 
+  {% if GRAFANA_MONITORING_TOOLS_ENABLED %}
   prometheus:
     image: prom/prometheus
     ports:
@@ -323,15 +367,31 @@ services:
     networks:
       - net
     environment:
-      GF_SERVER_ROOT_URL: 'http://grafana.${DOMAIN}'
+      GF_SERVER_ROOT_URL: 'http://grafana.{{ DOMAIN }}'
       GF_SECURITY_ADMIN_PASSWORD: 'admin'
       GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
+    {% if TRAEFIK_ENABLED %}
     labels:
       - 'traefik.enable=true'
       - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:grafana.${DOMAIN}'
+      - 'traefik.frontend.rule=Host:grafana.{{ DOMAIN }}'
       - 'traefik.backend=grafana'
       - 'traefik.port=3000'
+    {% endif %}
+  {% endif %}
+
+  {% if KAFKA_MONITORING_TOOLS_ENABLED %}
+  # ///////////////////////////////////////////////////////
+  # Kafka Monitoring Tools
+  # ///////////////////////////////////////////////////////
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter
+    networks:
+      - net
+    ports:
+      - 9308:9308
+    command: "--kafka.server=kafka-1:9091"
 
   kafka-connect-ui:
     image: landoop/kafka-connect-ui
@@ -354,15 +414,4 @@ services:
       - 9000:9000
     environment:
       ZK_HOSTS: zookeeper:2181
-
-  pgweb:
-    image: sosedoff/pgweb:0.11.3
-    restart: unless-stopped
-    networks:
-      - net
-    depends_on:
-      - db-principal
-      - db-metrics
-    ports:
-      - 8082:8082
-    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082"
+  {% endif %}

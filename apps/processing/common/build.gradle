@@ -1,7 +1,5 @@
 plugins {
-
   id 'org.jetbrains.kotlin.jvm'
-
   id 'org.jlleitschuh.gradle.ktlint'
   id 'nu.studer.jooq' version '3.0.3'
 }
@@ -13,7 +11,7 @@ dependencies {
 
   implementation project(':avro')
 
-  implementation 'org.jooq:jooq:3.11.12'
+  api 'org.jooq:jooq:3.11.12'
 
   jooqRuntime 'org.postgresql:postgresql:42.2.6'
 
@@ -27,7 +25,7 @@ dependencies {
 
 jooq {
 
-  version = '3.11.11'
+  version = '3.11.12'
   edition = 'OSS'
 
   ethvm(sourceSets.main) {
@@ -61,3 +59,5 @@ jooq {
     }
   }
 }
+
+project.tasks.getByName('compileJava').dependsOn -= 'generateEthvmJooqSchemaSource'
