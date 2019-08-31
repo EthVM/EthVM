@@ -3,26 +3,28 @@ package com.ethvm.processing.processors
 import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.processing.TokenType
-import com.ethvm.processing.cache.FungibleBalanceCache
-import com.ethvm.processing.cache.NonFungibleBalanceCache
 import com.ethvm.common.config.NetConfig
 import com.ethvm.db.Tables
 import com.ethvm.db.Tables.BALANCE
+import com.ethvm.processing.cache.FungibleBalanceCache
+import com.ethvm.processing.cache.NonFungibleBalanceCache
 import com.ethvm.processing.extensions.toBalanceDeltas
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import java.math.BigInteger
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 
-class TokenBalanceProcessor(netConfig: NetConfig,
-                            baseKafkaProps: Properties,
-                            dbContext: DSLContext,
-                            storageDir: String,
-                            scheduledExecutor: ScheduledExecutorService,
-                            topicBlocks: String) : AbstractProcessor<BlockRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class TokenBalanceProcessor(
+  netConfig: NetConfig,
+  baseKafkaProps: Properties,
+  dbContext: DSLContext,
+  storageDir: String,
+  scheduledExecutor: ScheduledExecutorService,
+  topicBlocks: String
+) : AbstractProcessor<BlockRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
 
   override val logger = KotlinLogging.logger {}
 

@@ -9,3 +9,6 @@ build/
 
 # Tests
 .kotlintest/
+
+# Processors
+processor-state/

@@ -2,10 +2,10 @@ package com.ethvm.processing.processors
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.common.config.NetConfig
-import com.ethvm.processing.cache.BlockHashCache
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables.SYNC_STATUS
 import com.ethvm.db.Tables.SYNC_STATUS_HISTORY
+import com.ethvm.processing.cache.BlockHashCache
 import mu.KLogger
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -18,7 +18,7 @@ import org.mapdb.DBMaker
 import java.math.BigInteger
 import java.sql.Timestamp
 import java.time.Duration
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 
 interface Processor : Runnable {
@@ -138,7 +138,7 @@ abstract class AbstractProcessor<V>(
       // we add one as the block number parameter is inclusive
 
       val rewindBlockNumber = latestSyncBlock.plus(BigInteger.ONE)
-      logger.info { "Rewinding to block = $rewindBlockNumber"}
+      logger.info { "Rewinding to block = $rewindBlockNumber" }
       rewindUntil(txCtx, rewindBlockNumber)
 
       logger.info { "initialised" }

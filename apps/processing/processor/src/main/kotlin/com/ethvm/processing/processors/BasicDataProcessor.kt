@@ -4,14 +4,10 @@ import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.common.config.NetConfig
+import com.ethvm.common.extensions.bigInteger
+import com.ethvm.db.Tables.*
 import com.ethvm.processing.cache.BlockCountsCache
 import com.ethvm.processing.cache.BlockTimestampCache
-import com.ethvm.common.extensions.bigInteger
-import com.ethvm.db.Tables.BLOCK_HEADER
-import com.ethvm.db.Tables.CANONICAL_COUNT
-import com.ethvm.db.Tables.TRANSACTION
-import com.ethvm.db.Tables.TRANSACTION_RECEIPT
-import com.ethvm.db.Tables.UNCLE
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -19,15 +15,17 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.jooq.exception.DataAccessException
 import java.math.BigInteger
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 
-class BasicDataProcessor(netConfig: NetConfig,
-                         baseKafkaProps: Properties,
-                         dbContext: DSLContext,
-                         storageDir: String,
-                         scheduledExecutor: ScheduledExecutorService,
-                         topicBlocks: String) : AbstractProcessor<BlockRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class BasicDataProcessor(
+  netConfig: NetConfig,
+  baseKafkaProps: Properties,
+  dbContext: DSLContext,
+  storageDir: String,
+  scheduledExecutor: ScheduledExecutorService,
+  topicBlocks: String
+) : AbstractProcessor<BlockRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
 
   override val logger = KotlinLogging.logger {}
 
@@ -108,11 +106,11 @@ class BasicDataProcessor(netConfig: NetConfig,
         val blockNumber = block.header.number.bigInteger()
         val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
 
-        if(blockNumber == BigInteger.ZERO) {
+        if (blockNumber == BigInteger.ZERO) {
           // we override the 0 timestamp
 
           var timestampMs = netConfig.genesis.timestamp
-          if(timestampMs == 0L) {
+          if (timestampMs == 0L) {
             // we are probably using a private network
             timestampMs = System.currentTimeMillis()
           }

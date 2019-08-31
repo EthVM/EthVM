@@ -2,27 +2,29 @@ package com.ethvm.processing.processors
 
 import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.processing.cache.BlockTimestampCache
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.config.NetConfig
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables.BLOCK_METRICS_HEADER
+import com.ethvm.processing.cache.BlockTimestampCache
 import com.ethvm.processing.extensions.toMetricRecord
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import java.math.BigInteger
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 
-class BlockMetricsHeaderProcessor(netConfig: NetConfig,
-                                  baseKafkaProps: Properties,
-                                  dbContext: DSLContext,
-                                  storageDir: String,
-                                  scheduledExecutor: ScheduledExecutorService,
-                                  topicBlocks: String) : AbstractProcessor<BlockRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class BlockMetricsHeaderProcessor(
+  netConfig: NetConfig,
+  baseKafkaProps: Properties,
+  dbContext: DSLContext,
+  storageDir: String,
+  scheduledExecutor: ScheduledExecutorService,
+  topicBlocks: String
+) : AbstractProcessor<BlockRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
 
-  override val logger  = KotlinLogging.logger {}
+  override val logger = KotlinLogging.logger {}
 
   override val processorId = "block-metrics-header-processor"
 
@@ -38,7 +40,7 @@ class BlockMetricsHeaderProcessor(netConfig: NetConfig,
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
 
     blockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
-      .apply { initialise(txCtx, latestSyncBlock?: BigInteger.ZERO) }
+      .apply { initialise(txCtx, latestSyncBlock ?: BigInteger.ZERO) }
 
   }
 
@@ -71,7 +73,7 @@ class BlockMetricsHeaderProcessor(netConfig: NetConfig,
             val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
 
             val blockTime =
-              if(blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
+              if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
 
             block.toMetricRecord(blockTime.toInt())
 

@@ -8,9 +8,7 @@ import com.ethvm.common.config.NetConfig
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.extensions.getNumberBI
 import com.ethvm.common.extensions.hexToBI
-import com.ethvm.db.Tables.BALANCE
-import com.ethvm.db.Tables.BALANCE_DELTA
-import com.ethvm.db.Tables.TRACE
+import com.ethvm.db.Tables.*
 import com.ethvm.db.tables.records.BalanceDeltaRecord
 import com.ethvm.db.tables.records.TraceRecord
 import com.ethvm.processing.cache.FungibleBalanceCache
@@ -24,17 +22,19 @@ import org.jooq.DSLContext
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Timestamp
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
-class EtherBalanceProcessor(netConfig: NetConfig,
-                            baseKafkaProps: Properties,
-                            dbContext: DSLContext,
-                            storageDir: String,
-                            scheduledExecutor: ScheduledExecutorService,
-                            topicTraces: String) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class EtherBalanceProcessor(
+  netConfig: NetConfig,
+  baseKafkaProps: Properties,
+  dbContext: DSLContext,
+  storageDir: String,
+  scheduledExecutor: ScheduledExecutorService,
+  topicTraces: String
+) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
 
   override val logger = KotlinLogging.logger {}
 

@@ -47,6 +47,4 @@ object MapDbSerializers {
     }
   }
 
-
-
 }

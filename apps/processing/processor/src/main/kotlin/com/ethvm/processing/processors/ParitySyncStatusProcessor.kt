@@ -2,8 +2,8 @@ package com.ethvm.processing.processors
 
 import com.ethvm.avro.capture.ParitySyncStateKeyRecord
 import com.ethvm.avro.capture.ParitySyncStateRecord
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.common.config.NetConfig
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables
 import com.ethvm.db.tables.records.SyncStatusHistoryRecord
 import com.ethvm.db.tables.records.SyncStatusRecord
@@ -14,7 +14,7 @@ import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import java.sql.Timestamp
 import java.time.Duration
-import java.util.Properties
+import java.util.*
 
 class ParitySyncStatusProcessor(
   netConfig: NetConfig,
@@ -75,7 +75,7 @@ class ParitySyncStatusProcessor(
             this.blockNumber = historyRecord.blockNumber
             this.timestamp = historyRecord.timestamp
             this.blockTimestamp = Timestamp(record.timestamp)
-        }
+          }
 
         dbContext
           .transaction { txConfig ->

@@ -10,17 +10,19 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import java.math.BigInteger
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 
-class BlockMetricsTraceProcessor(netConfig: NetConfig,
-                                 baseKafkaProps: Properties,
-                                 dbContext: DSLContext,
-                                 storageDir: String,
-                                 scheduledExecutor: ScheduledExecutorService,
-                                 topicTraces: String) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class BlockMetricsTraceProcessor(
+  netConfig: NetConfig,
+  baseKafkaProps: Properties,
+  dbContext: DSLContext,
+  storageDir: String,
+  scheduledExecutor: ScheduledExecutorService,
+  topicTraces: String
+) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
 
-  override val logger  = KotlinLogging.logger {}
+  override val logger = KotlinLogging.logger {}
 
   override val processorId = "block-metrics-trace-processor"
 

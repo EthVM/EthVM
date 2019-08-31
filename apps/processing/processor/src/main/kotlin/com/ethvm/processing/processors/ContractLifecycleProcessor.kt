@@ -23,18 +23,20 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.Transaction
 import java.math.BigInteger
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.math.min
 
-class ContractLifecycleProcessor(netConfig: NetConfig,
-                                 baseKafkaProps: Properties,
-                                 dbContext: DSLContext,
-                                 storageDir: String,
-                                 scheduledExecutor: ScheduledExecutorService,
-                                 private val web3: Web3j,
-                                 topicTraces: String) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class ContractLifecycleProcessor(
+  netConfig: NetConfig,
+  baseKafkaProps: Properties,
+  dbContext: DSLContext,
+  storageDir: String,
+  scheduledExecutor: ScheduledExecutorService,
+  private val web3: Web3j,
+  topicTraces: String
+) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
 
   private val ETHEREUM_ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
