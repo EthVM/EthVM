@@ -6,6 +6,7 @@ import {ContractSummary, TransactionSummary} from '@app/graphql/schema'
 import BigNumber from 'bignumber.js'
 import {MetadataService} from '@app/dao/metadata.service'
 import {ContractEntity} from '@app/orm/entities/contract.entity'
+import {AddressContractsCreatedCountEntity} from '@app/orm/entities/address-contracts-created-count.entity';
 
 @Injectable()
 export class ContractService {
@@ -58,17 +59,32 @@ export class ContractService {
     )
   }
 
-  async findContractsCreatedBy(creator: string, blockNumber: BigNumber, offset: number = 0, limit: number = 10): Promise<[ContractSummary[], boolean]> {
+  async findContractsCreatedBy(creator: string, blockNumber: BigNumber, offset: number = 0, limit: number = 10): Promise<[ContractSummary[], boolean, BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[ContractSummary[], boolean]> => {
+      async (txn): Promise<[ContractSummary[], boolean, BigNumber]> => {
+
+        // Get count
+        const contractsCreatedCount = await txn.findOne(AddressContractsCreatedCountEntity, {
+          where: { address: creator, blockNumber: LessThanOrEqual(blockNumber) },
+          order: { blockNumber: 'DESC' },
+          cache: true,
+        })
+        const count = contractsCreatedCount ? contractsCreatedCount.total : undefined
+
+        if (!count) {
+          return [[], false, new BigNumber(0)]
+        }
+
+        // Get items
 
         const where = { creator, createdAtBlockNumber: LessThanOrEqual(blockNumber) }
 
         const contracts = await txn.find(ContractEntity, {
           select: ['address', 'creator', 'createdAtBlockNumber', 'createdAtTransactionHash'],
           where,
+          order: { createdAtBlockNumber: 'DESC' },
           skip: offset,
           take: limit + 1,
           cache: true,
@@ -104,7 +120,7 @@ export class ContractService {
           } as ContractSummary
         })
 
-        return [contractSummaries, hasMore]
+        return [contractSummaries, hasMore, count]
       },
     )
   }

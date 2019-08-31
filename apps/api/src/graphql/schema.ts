@@ -292,7 +292,8 @@ export interface ContractSummary {
 
 export interface ContractSummaryPage {
     items: ContractSummary[];
-    hasMore: boolean;
+    hasMore?: boolean;
+    totalCount: BigNumber;
 }
 
 export interface ContractSupport {
