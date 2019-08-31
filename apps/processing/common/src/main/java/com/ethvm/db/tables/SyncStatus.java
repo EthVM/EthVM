@@ -4,27 +4,21 @@
 package com.ethvm.db.tables;
 
 
-import com.ethvm.db.Indexes;
-import com.ethvm.db.Keys;
 import com.ethvm.db.Public;
 import com.ethvm.db.tables.records.SyncStatusRecord;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
-import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 
@@ -42,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SyncStatus extends TableImpl<SyncStatusRecord> {
 
-    private static final long serialVersionUID = -934341005;
+    private static final long serialVersionUID = 1475694217;
 
     /**
      * The reference instance of <code>public.sync_status</code>
@@ -60,22 +54,27 @@ public class SyncStatus extends TableImpl<SyncStatusRecord> {
     /**
      * The column <code>public.sync_status.component</code>.
      */
-    public final TableField<SyncStatusRecord, String> COMPONENT = createField("component", org.jooq.impl.SQLDataType.VARCHAR(128).nullable(false), this, "");
+    public final TableField<SyncStatusRecord, String> COMPONENT = createField("component", org.jooq.impl.SQLDataType.VARCHAR(128), this, "");
 
     /**
      * The column <code>public.sync_status.block_number</code>.
      */
-    public final TableField<SyncStatusRecord, BigDecimal> BLOCK_NUMBER = createField("block_number", org.jooq.impl.SQLDataType.NUMERIC.nullable(false), this, "");
+    public final TableField<SyncStatusRecord, BigDecimal> BLOCK_NUMBER = createField("block_number", org.jooq.impl.SQLDataType.NUMERIC, this, "");
 
     /**
      * The column <code>public.sync_status.timestamp</code>.
      */
-    public final TableField<SyncStatusRecord, Timestamp> TIMESTAMP = createField("timestamp", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<SyncStatusRecord, Timestamp> TIMESTAMP = createField("timestamp", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>public.sync_status.block_timestamp</code>.
      */
-    public final TableField<SyncStatusRecord, Timestamp> BLOCK_TIMESTAMP = createField("block_timestamp", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<SyncStatusRecord, Timestamp> BLOCK_TIMESTAMP = createField("block_timestamp", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+
+    /**
+     * The column <code>public.sync_status.row_number</code>.
+     */
+    public final TableField<SyncStatusRecord, Long> ROW_NUMBER = createField("row_number", org.jooq.impl.SQLDataType.BIGINT, this, "");
 
     /**
      * Create a <code>public.sync_status</code> table reference
@@ -116,30 +115,6 @@ public class SyncStatus extends TableImpl<SyncStatusRecord> {
     @Override
     public Schema getSchema() {
         return Public.PUBLIC;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.IDX_SYNC_STATUS_BLOCK_NUMBER, Indexes.SYNC_STATUS_PKEY);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public UniqueKey<SyncStatusRecord> getPrimaryKey() {
-        return Keys.SYNC_STATUS_PKEY;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<UniqueKey<SyncStatusRecord>> getKeys() {
-        return Arrays.<UniqueKey<SyncStatusRecord>>asList(Keys.SYNC_STATUS_PKEY);
     }
 
     /**

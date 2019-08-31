@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ProcessorHashLog extends TableImpl<ProcessorHashLogRecord> {
 
-    private static final long serialVersionUID = -1213848116;
+    private static final long serialVersionUID = -674032253;
 
     /**
      * The reference instance of <code>public.processor_hash_log</code>
@@ -117,7 +117,7 @@ public class ProcessorHashLog extends TableImpl<ProcessorHashLogRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.PROCESSOR_HASH_LOG_PKEY);
+        return Arrays.<Index>asList(Indexes.IDX_PROCESSOR_HASH_LOG_PROCESSOR, Indexes.PROCESSOR_HASH_LOG_PKEY);
     }
 
     /**

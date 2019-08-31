@@ -1,7 +1,6 @@
 
-create index if not exists idx_sync_status_component_block_number ON sync_status (component, block_number desc);
-create index if not exists idx_sync_status_history_timestamp ON sync_status_history (timestamp);
-create index if not exists idx_sync_status_history_block_timestamp ON sync_status_history (block_timestamp);
+create index if not exists idx_sync_status_history_timestamp ON sync_status_history (component, block_number desc, timestamp);
+create index if not exists idx_sync_status_history_block_timestamp ON sync_status_history (component, block_number desc, block_timestamp);
 
 /* Account service */
 

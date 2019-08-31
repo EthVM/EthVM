@@ -219,14 +219,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         )
         .execute()
 
-      txCtx
-        .deleteFrom(SYNC_STATUS)
-        .where(
-          SYNC_STATUS.COMPONENT.eq(processorId)
-            .and(SYNC_STATUS.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-        )
-        .execute()
-
       diskDb.commit()
     }
 
@@ -402,23 +394,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
     val blockNumberDecimal = blockNumber.toBigDecimal()
     val timestampNowMs = Timestamp(System.currentTimeMillis())
     val blockTimestampMs = Timestamp(blockTimestamp)
-
-    // latest
-
-    txCtx
-      .insertInto(
-        SYNC_STATUS,
-        SYNC_STATUS.COMPONENT,
-        SYNC_STATUS.BLOCK_NUMBER,
-        SYNC_STATUS.TIMESTAMP,
-        SYNC_STATUS.BLOCK_TIMESTAMP
-      )
-      .values(processorId, blockNumberDecimal, timestampNowMs, blockTimestampMs)
-      .onDuplicateKeyUpdate()
-      .set(SYNC_STATUS.BLOCK_NUMBER, blockNumberDecimal)
-      .set(SYNC_STATUS.TIMESTAMP, timestampNowMs)
-      .set(SYNC_STATUS.BLOCK_TIMESTAMP, blockTimestampMs)
-      .execute()
 
     // history
 

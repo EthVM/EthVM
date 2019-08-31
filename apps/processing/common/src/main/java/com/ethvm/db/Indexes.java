@@ -21,7 +21,6 @@ import com.ethvm.db.tables.EthListContractMetadata;
 import com.ethvm.db.tables.FlywaySchemaHistory;
 import com.ethvm.db.tables.MinerBlockCount;
 import com.ethvm.db.tables.ProcessorHashLog;
-import com.ethvm.db.tables.SyncStatus;
 import com.ethvm.db.tables.SyncStatusHistory;
 import com.ethvm.db.tables.TokenExchangeRate;
 import com.ethvm.db.tables.Trace;
@@ -67,6 +66,7 @@ public class Indexes {
     public static final Index ADDRESS_TRANSACTION_COUNT_DELTA_PKEY = Indexes0.ADDRESS_TRANSACTION_COUNT_DELTA_PKEY;
     public static final Index BALANCE_PKEY = Indexes0.BALANCE_PKEY;
     public static final Index IDX_ALL_TOKEN_BALANCES_FOR_CONTRACT = Indexes0.IDX_ALL_TOKEN_BALANCES_FOR_CONTRACT;
+    public static final Index IDX_BALANCE_BY_TOKEN_TYPE = Indexes0.IDX_BALANCE_BY_TOKEN_TYPE;
     public static final Index IDX_BALANCES_BY_BLOCK_NUMBER = Indexes0.IDX_BALANCES_BY_BLOCK_NUMBER;
     public static final Index IDX_BALANCES_FOR_ADDRESS = Indexes0.IDX_BALANCES_FOR_ADDRESS;
     public static final Index IDX_ETHER_BALANCE_FOR_ADDRESS = Indexes0.IDX_ETHER_BALANCE_FOR_ADDRESS;
@@ -104,9 +104,8 @@ public class Indexes {
     public static final Index FLYWAY_SCHEMA_HISTORY_PK = Indexes0.FLYWAY_SCHEMA_HISTORY_PK;
     public static final Index FLYWAY_SCHEMA_HISTORY_S_IDX = Indexes0.FLYWAY_SCHEMA_HISTORY_S_IDX;
     public static final Index MINER_BLOCK_COUNT_PKEY = Indexes0.MINER_BLOCK_COUNT_PKEY;
+    public static final Index IDX_PROCESSOR_HASH_LOG_PROCESSOR = Indexes0.IDX_PROCESSOR_HASH_LOG_PROCESSOR;
     public static final Index PROCESSOR_HASH_LOG_PKEY = Indexes0.PROCESSOR_HASH_LOG_PKEY;
-    public static final Index IDX_SYNC_STATUS_BLOCK_NUMBER = Indexes0.IDX_SYNC_STATUS_BLOCK_NUMBER;
-    public static final Index SYNC_STATUS_PKEY = Indexes0.SYNC_STATUS_PKEY;
     public static final Index IDX_SYNC_STATUS_HISTORY_BLOCK_TIMESTAMP = Indexes0.IDX_SYNC_STATUS_HISTORY_BLOCK_TIMESTAMP;
     public static final Index SYNC_STATUS_HISTORY_PKEY = Indexes0.SYNC_STATUS_HISTORY_PKEY;
     public static final Index IDX_TOKEN_EXCHANGE_RATES_ADDRESS = Indexes0.IDX_TOKEN_EXCHANGE_RATES_ADDRESS;
@@ -154,6 +153,7 @@ public class Indexes {
         public static Index ADDRESS_TRANSACTION_COUNT_DELTA_PKEY = Internal.createIndex("address_transaction_count_delta_pkey", AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA, new OrderField[] { AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA.ID }, true);
         public static Index BALANCE_PKEY = Internal.createIndex("balance_pkey", Balance.BALANCE, new OrderField[] { Balance.BALANCE.ID }, true);
         public static Index IDX_ALL_TOKEN_BALANCES_FOR_CONTRACT = Internal.createIndex("idx_all_token_balances_for_contract", Balance.BALANCE, new OrderField[] { Balance.BALANCE.BLOCK_NUMBER.desc(), Balance.BALANCE.CONTRACT_ADDRESS, Balance.BALANCE.ADDRESS }, false);
+        public static Index IDX_BALANCE_BY_TOKEN_TYPE = Internal.createIndex("idx_balance_by_token_type", Balance.BALANCE, new OrderField[] { Balance.BALANCE.TOKEN_TYPE }, false);
         public static Index IDX_BALANCES_BY_BLOCK_NUMBER = Internal.createIndex("idx_balances_by_block_number", Balance.BALANCE, new OrderField[] { Balance.BALANCE.BLOCK_NUMBER }, false);
         public static Index IDX_BALANCES_FOR_ADDRESS = Internal.createIndex("idx_balances_for_address", Balance.BALANCE, new OrderField[] { Balance.BALANCE.ADDRESS, Balance.BALANCE.CONTRACT_ADDRESS, Balance.BALANCE.BLOCK_NUMBER.desc() }, false);
         public static Index IDX_ETHER_BALANCE_FOR_ADDRESS = Internal.createIndex("idx_ether_balance_for_address", Balance.BALANCE, new OrderField[] { Balance.BALANCE.BLOCK_NUMBER.desc(), Balance.BALANCE.ADDRESS }, true);
@@ -191,10 +191,9 @@ public class Indexes {
         public static Index FLYWAY_SCHEMA_HISTORY_PK = Internal.createIndex("flyway_schema_history_pk", FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, new OrderField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
         public static Index FLYWAY_SCHEMA_HISTORY_S_IDX = Internal.createIndex("flyway_schema_history_s_idx", FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, new OrderField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.SUCCESS }, false);
         public static Index MINER_BLOCK_COUNT_PKEY = Internal.createIndex("miner_block_count_pkey", MinerBlockCount.MINER_BLOCK_COUNT, new OrderField[] { MinerBlockCount.MINER_BLOCK_COUNT.AUTHOR, MinerBlockCount.MINER_BLOCK_COUNT.BLOCK_NUMBER }, true);
+        public static Index IDX_PROCESSOR_HASH_LOG_PROCESSOR = Internal.createIndex("idx_processor_hash_log_processor", ProcessorHashLog.PROCESSOR_HASH_LOG, new OrderField[] { ProcessorHashLog.PROCESSOR_HASH_LOG.PROCESSOR_ID }, false);
         public static Index PROCESSOR_HASH_LOG_PKEY = Internal.createIndex("processor_hash_log_pkey", ProcessorHashLog.PROCESSOR_HASH_LOG, new OrderField[] { ProcessorHashLog.PROCESSOR_HASH_LOG.PROCESSOR_ID, ProcessorHashLog.PROCESSOR_HASH_LOG.BLOCK_NUMBER }, true);
-        public static Index IDX_SYNC_STATUS_BLOCK_NUMBER = Internal.createIndex("idx_sync_status_block_number", SyncStatus.SYNC_STATUS, new OrderField[] { SyncStatus.SYNC_STATUS.BLOCK_NUMBER.desc() }, false);
-        public static Index SYNC_STATUS_PKEY = Internal.createIndex("sync_status_pkey", SyncStatus.SYNC_STATUS, new OrderField[] { SyncStatus.SYNC_STATUS.COMPONENT }, true);
-        public static Index IDX_SYNC_STATUS_HISTORY_BLOCK_TIMESTAMP = Internal.createIndex("idx_sync_status_history_block_timestamp", SyncStatusHistory.SYNC_STATUS_HISTORY, new OrderField[] { SyncStatusHistory.SYNC_STATUS_HISTORY.BLOCK_TIMESTAMP }, false);
+        public static Index IDX_SYNC_STATUS_HISTORY_BLOCK_TIMESTAMP = Internal.createIndex("idx_sync_status_history_block_timestamp", SyncStatusHistory.SYNC_STATUS_HISTORY, new OrderField[] { SyncStatusHistory.SYNC_STATUS_HISTORY.COMPONENT, SyncStatusHistory.SYNC_STATUS_HISTORY.BLOCK_NUMBER.desc(), SyncStatusHistory.SYNC_STATUS_HISTORY.BLOCK_TIMESTAMP }, false);
         public static Index SYNC_STATUS_HISTORY_PKEY = Internal.createIndex("sync_status_history_pkey", SyncStatusHistory.SYNC_STATUS_HISTORY, new OrderField[] { SyncStatusHistory.SYNC_STATUS_HISTORY.COMPONENT, SyncStatusHistory.SYNC_STATUS_HISTORY.BLOCK_NUMBER }, true);
         public static Index IDX_TOKEN_EXCHANGE_RATES_ADDRESS = Internal.createIndex("idx_token_exchange_rates_address", TokenExchangeRate.TOKEN_EXCHANGE_RATE, new OrderField[] { TokenExchangeRate.TOKEN_EXCHANGE_RATE.ADDRESS }, true);
         public static Index IDX_TOKEN_EXCHANGE_RATES_CURRENT_PRICE = Internal.createIndex("idx_token_exchange_rates_current_price", TokenExchangeRate.TOKEN_EXCHANGE_RATE, new OrderField[] { TokenExchangeRate.TOKEN_EXCHANGE_RATE.CURRENT_PRICE }, false);

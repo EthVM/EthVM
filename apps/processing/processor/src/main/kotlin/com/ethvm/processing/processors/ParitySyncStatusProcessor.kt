@@ -65,23 +65,9 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
   override fun reset() {
 
     dbContext
-      .transaction { txConfig ->
-
-        val txCtx = DSL.using(txConfig)
-
-        txCtx
-          .deleteFrom(Tables.SYNC_STATUS_HISTORY)
-          .where(Tables.SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
-          .execute()
-
-        txCtx
-          .deleteFrom(Tables.SYNC_STATUS)
-          .where(Tables.SYNC_STATUS.COMPONENT.eq(processorId))
-          .execute()
-
-
-      }
-
+      .deleteFrom(Tables.SYNC_STATUS_HISTORY)
+      .where(Tables.SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+      .execute()
 
   }
 
@@ -108,37 +94,12 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
             this.blockTimestamp = Timestamp(record.timestamp)
           }
 
-        val latestRecord = SyncStatusRecord()
-          .apply {
-            this.component = historyRecord.component
-            this.blockNumber = historyRecord.blockNumber
-            this.timestamp = historyRecord.timestamp
-            this.blockTimestamp = Timestamp(record.timestamp)
-          }
-
-        dbContext
-          .transaction { txConfig ->
-
-            val txCtx = DSL.using(txConfig)
-
-            txCtx
-              .insertInto(Tables.SYNC_STATUS_HISTORY)
-              .set(historyRecord)
-              .execute()
-
-            txCtx
-              .insertInto(Tables.SYNC_STATUS)
-              .set(latestRecord)
-              .onDuplicateKeyUpdate()
-              .set(Tables.SYNC_STATUS.BLOCK_NUMBER, latestRecord.blockNumber)
-              .set(Tables.SYNC_STATUS.TIMESTAMP, latestRecord.timestamp)
-              .set(Tables.SYNC_STATUS.BLOCK_TIMESTAMP, latestRecord.blockTimestamp)
-              .execute()
-
-          }
 
         dbContext
           .insertInto(Tables.SYNC_STATUS_HISTORY)
+          .set(historyRecord)
+          .execute()
+
 
       }
 
