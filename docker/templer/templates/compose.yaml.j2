@@ -144,9 +144,9 @@ services:
       - 8546:8546
       - 30303:30303
     environment:
-      PARITY_CHAIN: {{ PARITY_CHAIN }}
-      PARITY_MIN_PEERS: {{ PARITY_MIN_PEERS }}
-      PARITY_MAX_PEERS: {{ PARITY_MAX_PEERS }}
+      - PARITY_CHAIN
+      - PARITY_MIN_PEERS
+      - PARITY_MAX_PEERS
   {% endif %}
 
   # ///////////////////////////////////////////////////////
@@ -164,9 +164,9 @@ services:
     networks:
       - net
     environment:
-      POSTGRES_USER: '{{ METRICS_USER }}'
-      POSTGRES_PASSWORD: '{{ METRICS_PASSWORD }}'
-      POSTGRES_DB: '{{ METRICS_DB }}'
+      POSTGRES_USER: '${PRINCIPAL_USER}'
+      POSTGRES_PASSWORD: '${PRINCIPAL_PASSWORD}'
+      POSTGRES_DB: '${PRINCIPAL_DB}'
 
   redis:
     image: redis:5.0-alpine
