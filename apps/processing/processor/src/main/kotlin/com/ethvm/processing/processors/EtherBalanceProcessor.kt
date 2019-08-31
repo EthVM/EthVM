@@ -19,6 +19,8 @@ import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Timestamp
@@ -27,14 +29,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
-class EtherBalanceProcessor(
-  netConfig: NetConfig,
-  baseKafkaProps: Properties,
-  dbContext: DSLContext,
-  storageDir: String,
-  scheduledExecutor: ScheduledExecutorService,
-  topicTraces: String
-) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   override val logger = KotlinLogging.logger {}
 
@@ -44,6 +39,8 @@ class EtherBalanceProcessor(
     .apply {
       put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
     }
+
+  private val topicTraces: String by inject(named("topicTraces"))
 
   override val topics: List<String> = listOf(topicTraces)
 

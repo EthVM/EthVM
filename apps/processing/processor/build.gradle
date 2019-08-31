@@ -54,9 +54,10 @@ dependencies {
   implementation 'org.mapdb:mapdb:3.0.7'
   implementation 'org.rocksdb:rocksdbjni:5.18.3'
   implementation 'joda-time:joda-time:2.10.1'
-  implementation 'com.github.ajalt:clikt:1.7.0'
+  implementation 'com.github.ajalt:clikt:2.1.0'
   implementation 'com.beust:klaxon:5.0.5'
   implementation 'org.postgresql:postgresql:42.2.6'
+  implementation "org.koin:koin-core:2.0.1"
 
   implementation 'ch.qos.logback:logback-classic:1.2.3'
   implementation 'io.github.microutils:kotlin-logging:1.7.4'

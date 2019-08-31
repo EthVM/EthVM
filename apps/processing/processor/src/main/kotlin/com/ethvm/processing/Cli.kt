@@ -2,15 +2,32 @@ package com.ethvm.processing
 
 import com.ethvm.common.config.ChainId
 import com.ethvm.common.config.NetConfig
+import com.ethvm.processing.processors.BasicDataProcessor
+import com.ethvm.processing.processors.BlockMetricsHeaderProcessor
+import com.ethvm.processing.processors.BlockMetricsTraceProcessor
+import com.ethvm.processing.processors.ContractLifecycleProcessor
+import com.ethvm.processing.processors.EtherBalanceProcessor
+import com.ethvm.processing.processors.ParitySyncStatusProcessor
+import com.ethvm.processing.processors.Processor
+import com.ethvm.processing.processors.TokenBalanceProcessor
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.split
+import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.int
+import mu.KotlinLogging
+import org.koin.core.Koin
+import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import java.io.File
+import java.util.concurrent.ExecutorService
+import kotlin.reflect.KClass
 
 class Cli : CliktCommand() {
 
-  // General - CLI
+  private val logger = KotlinLogging.logger {}
 
   private val jdbcUrl: String by option(
     help = "Database connect url",
@@ -52,28 +69,27 @@ class Cli : CliktCommand() {
     envvar = "WEB3_WS_URL"
   ).default(DEFAULT_WEB3_WS_URL)
 
-  private val topicBlocks: String by option(
-    help = "",
-    envvar = "TOPIC_BLOCKS"
-  ).default(DEFAULT_TOPIC_BLOCKS)
-
-  private val topicTraces: String by option(
-    help = "",
-    envvar = "TOPIC_TRACES"
-  ).default(DEFAULT_TOPIC_TRACES)
-
-  private val topicParitySyncState: String by option(
-    help = "",
-    envvar = "TOPIC_PARITY_SYNC_STATE"
-  ).default(DEFAULT_TOPIC_PARITY_SYNC_STATE)
-
   private val network: String by option(
-    help = "",
+    "-n", "--network",
+    help = "Ethereum network we are processing e.g. mainnet, ropsten...",
     envvar = "ETH_NETWORK"
   ).default(DEFAULT_NETWORK)
 
+  private val processorsList: List<String> by option(
+    "-p", "--processors",
+    help = "List of processors to use",
+    envvar = "PROCESSOR_LIST"
+  ).split(",").default(DEFAULT_PROCESSORS)
+
+  private val action: String by option(
+    "-a", "--action",
+    help = "Action to perform"
+  ).choice("server")
+    .default("server")
+
   override fun run() {
 
+    // deteermine network related configs
     val chainId = ChainId.forName(network)
     requireNotNull(chainId) { "Chain id not found for network: $network" }
 
@@ -84,31 +100,93 @@ class Cli : CliktCommand() {
     val storage = File(storageDir)
     storage.mkdirs()
 
-    val app = ProcessorApp(
-      netConfig,
-      jdbcUrl,
-      jdbcUsername,
-      jdbcPassword,
-      jdbcMaxConnections,
-      bootstrapServers,
-      schemaRegistryUrl,
-      storageDir,
-      topicBlocks,
-      topicTraces,
-      topicParitySyncState,
-      wsUrl
-    )
+    // create config module
+    val configModule = module {
 
-    app.start()
+      single<NetConfig> { netConfig }
+
+      single(named("storageDir")) { storageDir }
+
+      single(named("wsUrl")) { wsUrl }
+
+      single(named("scheduledThreadCount")) { 3 }
+
+      single { DbConfig(jdbcUrl, jdbcUsername, jdbcPassword, jdbcMaxConnections) }
+
+      single { KafkaConfig(bootstrapServers, schemaRegistryUrl) }
+
+    }
+
+    val modules = listOf(configModule, threadingModule, dbModule, kafkaModule, web3Module)
+
+    val app = startKoin {
+      printLogger()
+      modules(modules)
+    }
+
+    //
+
+    when (action) {
+      "server" -> runAsServer(app.koin, processorsList)
+      else -> {}  // do nothing, action validation by clickt prevents this
+    }
+
+  }
+
+  private fun runAsServer(koin: Koin, processorList: List<String>) {
+
+    // instantiate
+    logger.info { "Instantiating processors: $processorList" }
+
+    val processors = processorList
+      .map { name ->
+        val processorEnum = ProcessorEnum.forName(name)
+        requireNotNull(processorEnum) { "Processor not found with name = $name" }
+        // instantiate the processor
+        processorEnum.newInstance()
+      }
+
+    // register shutdown hook
+
+    val executor = koin.get<ExecutorService>()
+
+    Runtime.getRuntime()
+      .addShutdownHook(Thread(Runnable {
+
+        logger.info { "Shutdown detected, stopping processors" }
+
+        processors
+          .forEach { it.stop() }
+
+        logger.info { "All processors stopped" }
+
+      }))
+
+    // initialise
+
+    logger.info { "Initialising processors" }
+
+    processors
+      .forEach { processor ->
+        processor.initialise()
+        logger.info { "Initialisation complete for ${processor.javaClass}" }
+      }
+
+    // run
+
+    logger.info { "Starting processors" }
+
+    processors
+      .forEach{ executor.submit(it) }
 
   }
 
   companion object Defaults {
 
-    const val DEFAULT_JDBC_URL="jdbc:postgresql://localhost/ethvm_dev?ssl=false"
-    const val DEFAULT_JDBC_USERNAME="postgres"
-    const val DEFAULT_JDBC_PASSWORD="1234"
-    const val DEFAULT_JDBC_MAX_CONNECTIONS=30
+    const val DEFAULT_JDBC_URL = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
+    const val DEFAULT_JDBC_USERNAME = "postgres"
+    const val DEFAULT_JDBC_PASSWORD = "1234"
+    const val DEFAULT_JDBC_MAX_CONNECTIONS = 30
 
     const val DEFAULT_TOPIC_BLOCKS = "ropsten_blocks"
     const val DEFAULT_TOPIC_TRACES = "ropsten_traces"
@@ -120,7 +198,30 @@ class Cli : CliktCommand() {
     const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
     const val DEFAULT_STORAGE_DIR = "./processor-state"
     const val DEFAULT_WEB3_WS_URL = "ws://localhost:8546"
+
+    val DEFAULT_PROCESSORS = ProcessorEnum
+      .values()
+      .map { it.name }
+
   }
+
+}
+
+enum class ProcessorEnum(val clazz: KClass<out Processor>) {
+
+  BasicData(BasicDataProcessor::class),
+  BlockMetricsHeader(BlockMetricsHeaderProcessor::class),
+  BlockMetricsTrace(BlockMetricsTraceProcessor::class),
+  ContractLifecycle(ContractLifecycleProcessor::class),
+  EtherBalance(EtherBalanceProcessor::class),
+  TokenBalance(TokenBalanceProcessor::class),
+  ParitySyncStatus(ParitySyncStatusProcessor::class);
+
+  companion object {
+    fun forName(name: String) = values().firstOrNull { it.name == name }
+  }
+
+  fun newInstance() = clazz.constructors.first().call()
 
 }
 

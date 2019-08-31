@@ -12,6 +12,8 @@ import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.FunctionReturnDecoder
 import org.web3j.abi.TypeReference
@@ -28,15 +30,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.math.min
 
-class ContractLifecycleProcessor(
-  netConfig: NetConfig,
-  baseKafkaProps: Properties,
-  dbContext: DSLContext,
-  storageDir: String,
-  scheduledExecutor: ScheduledExecutorService,
-  private val web3: Web3j,
-  topicTraces: String
-) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
 
   private val ETHEREUM_ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
@@ -48,6 +42,10 @@ class ContractLifecycleProcessor(
     }
 
   override val processorId: String = "contract-lifecycle-processor"
+
+  private val topicTraces: String by inject(named("topicTraces"))
+
+  private val web3: Web3j by inject()
 
   override val topics = listOf(topicTraces)
 

@@ -13,12 +13,16 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.joda.time.DateTime
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import org.mapdb.DB
 import org.mapdb.DBMaker
 import java.math.BigInteger
 import java.sql.Timestamp
 import java.time.Duration
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ScheduledExecutorService
 
 interface Processor : Runnable {
@@ -33,13 +37,7 @@ enum class BlockType {
   NEW, DUPLICATE, FORK
 }
 
-abstract class AbstractProcessor<V>(
-  protected val netConfig: NetConfig,
-  private val baseKafkaProps: Properties,
-  private val dbContext: DSLContext,
-  private val storageDir: String,
-  protected val scheduledExecutor: ScheduledExecutorService
-) : Processor {
+abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
   protected abstract val logger: KLogger
 
@@ -47,9 +45,19 @@ abstract class AbstractProcessor<V>(
 
   protected abstract val topics: List<String>
 
-  open protected val kafkaProps: Properties = Properties()
+  protected open val kafkaProps: Properties = Properties()
 
   protected val pollTimeout = Duration.ofSeconds(10)
+
+  protected val netConfig: NetConfig by inject()
+
+  private val dbContext: DSLContext by inject()
+
+  private val baseKafkaProps: Properties by inject(named("baseKafkaProps"))
+
+  private val storageDir: String by inject(named("storageDir"))
+
+  protected val scheduledExecutor: ScheduledExecutorService by inject()
 
   private val mergedKafkaProps by lazy {
     val merged = Properties()
@@ -83,9 +91,14 @@ abstract class AbstractProcessor<V>(
   @Volatile
   private var stop = false
 
+  private val stopLatch = CountDownLatch(1)
+
   override fun stop() {
+
     logger.info { "stop requested" }
     this.stop = true
+
+    stopLatch.await()
   }
 
   private fun close() {
@@ -319,6 +332,8 @@ abstract class AbstractProcessor<V>(
     } finally {
 
       close()
+      // wake up the caller of the stop method
+      stopLatch.countDown()
 
     }
 

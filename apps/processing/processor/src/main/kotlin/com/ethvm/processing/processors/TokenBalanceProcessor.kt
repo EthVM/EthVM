@@ -13,18 +13,13 @@ import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 
-class TokenBalanceProcessor(
-  netConfig: NetConfig,
-  baseKafkaProps: Properties,
-  dbContext: DSLContext,
-  storageDir: String,
-  scheduledExecutor: ScheduledExecutorService,
-  topicBlocks: String
-) : AbstractProcessor<BlockRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
   override val logger = KotlinLogging.logger {}
 
@@ -34,6 +29,8 @@ class TokenBalanceProcessor(
     .apply {
       put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
     }
+
+  private val topicBlocks: String by inject(named("topicBlocks"))
 
   override val topics = listOf(topicBlocks)
 

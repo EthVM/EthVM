@@ -9,18 +9,13 @@ import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 
-class BlockMetricsTraceProcessor(
-  netConfig: NetConfig,
-  baseKafkaProps: Properties,
-  dbContext: DSLContext,
-  storageDir: String,
-  scheduledExecutor: ScheduledExecutorService,
-  topicTraces: String
-) : AbstractProcessor<TraceListRecord>(netConfig, baseKafkaProps, dbContext, storageDir, scheduledExecutor) {
+class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
 
   override val logger = KotlinLogging.logger {}
 
@@ -30,6 +25,8 @@ class BlockMetricsTraceProcessor(
     .apply {
       put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
     }
+
+  private val topicTraces: String by inject(named("topicTraces"))
 
   override val topics = listOf(topicTraces)
 

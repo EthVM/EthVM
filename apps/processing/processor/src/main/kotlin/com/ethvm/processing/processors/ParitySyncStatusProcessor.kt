@@ -12,18 +12,25 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import java.sql.Timestamp
 import java.time.Duration
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
-class ParitySyncStatusProcessor(
-  netConfig: NetConfig,
-  private val baseKafkaProps: Properties,
-  private val dbContext: DSLContext,
-  private val topicParitySyncState: String
-) : Processor {
+class ParitySyncStatusProcessor : KoinComponent, Processor {
 
   val logger = KotlinLogging.logger {}
+
+  private val netConfig: NetConfig by inject()
+
+  private val dbContext: DSLContext by inject()
+
+  private val baseKafkaProps: Properties by inject(named("baseKafkaProps"))
+
+  private val topicParitySyncState: String by inject(named("topicParitySyncState"))
 
   private val kafkaProps = Properties().apply {
 
@@ -44,11 +51,14 @@ class ParitySyncStatusProcessor(
   @Volatile
   private var stop = false
 
+  private val stopLatch = CountDownLatch(1)
+
   override fun initialise() {
   }
 
   override fun stop() {
     stop = true
+    stopLatch.await()
   }
 
   override fun run() {
@@ -107,6 +117,7 @@ class ParitySyncStatusProcessor(
       logger.error(e) { "Fatal exception" }
     } finally {
       consumer.close()
+      stopLatch.countDown()
     }
   }
 }
