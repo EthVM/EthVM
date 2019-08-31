@@ -46,5 +46,4 @@ object MapDbSerializers {
       return BigInteger(bytes)
     }
   }
-
 }

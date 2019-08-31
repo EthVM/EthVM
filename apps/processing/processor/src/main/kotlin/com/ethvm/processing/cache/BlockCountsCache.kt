@@ -110,18 +110,18 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
     var count = 0
 
-    logger.info { "Beginning reload of transaction counts"}
+    logger.info { "Beginning reload of transaction counts" }
 
     while (cursor.hasNext()) {
       set(cursor.fetchNext())
       count += 1
       if (count % 1000 == 0) {
-        cacheStores.forEach{ it.flushToDisk(true) }
+        cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count entries processed" }
       }
     }
 
-    cacheStores.forEach{ it.flushToDisk(true) }
+    cacheStores.forEach { it.flushToDisk(true) }
 
     writeHistoryToDb = true
 
@@ -155,7 +155,6 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
             this.blockNumber = blockNumber.toBigDecimal()
           }
     }
-
   }
 
   private fun incrementCanonicalCounts(block: BlockRecord) {
@@ -183,9 +182,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
             this.entity = "transactions"
             this.count = canonicalCountMap["transactions"]
           }
-
     }
-
   }
 
   private fun set(count: CanonicalCountRecord) {
@@ -238,9 +235,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
           }
 
         incrementTxCounts(delta)
-
       }
-
   }
 
   private fun incrementTxCounts(delta: AddressTransactionCountDeltaRecord) {
@@ -264,7 +259,6 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
     if (writeHistoryToDb) {
       historyRecords = historyRecords + balance + delta
     }
-
   }
 
   private fun set(balance: AddressTransactionCountRecord) {
@@ -283,7 +277,6 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       ctx
         .batchInsert(historyRecords)
         .execute()
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -293,13 +286,12 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
   fun reset(txCtx: DSLContext) {
 
-    cacheStores.forEach{ it.clear() }
+    cacheStores.forEach { it.clear() }
 
     txCtx.truncate(CANONICAL_COUNT).execute()
     txCtx.truncate(MINER_BLOCK_COUNT).execute()
     txCtx.truncate(ADDRESS_TRANSACTION_COUNT).execute()
     txCtx.truncate(ADDRESS_TRANSACTION_COUNT_DELTA).execute()
-
   }
 
   fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -332,7 +324,6 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         delta.totalOutDelta = delta.totalOutDelta * -1
 
         incrementTxCounts(delta)
-
       }
 
       val authorCursor = txCtx
@@ -367,17 +358,13 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         .execute()
 
       writeHistoryToDb = true
-
     } else {
 
       cacheStores.forEach { it.clear() }
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
 
     logger.info { "Rewind complete" }
-
   }
-
 }

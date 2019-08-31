@@ -17,9 +17,10 @@ class FungibleBalanceCache(
   memoryDb: DB,
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
-  private val tokenType: TokenType) {
+  private val tokenType: TokenType
+) {
 
-  val logger  = KotlinLogging.logger {}
+  val logger = KotlinLogging.logger {}
 
   private val balanceMap = CacheStore(
     memoryDb,
@@ -60,7 +61,7 @@ class FungibleBalanceCache(
       .fetchOne()
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
-    if(latestBlockNumber > latestDbBlockNumber) {
+    if (latestBlockNumber > latestDbBlockNumber) {
       logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
       // reset all state from the beginning as the database is behind us
       balanceMap.clear()
@@ -78,22 +79,21 @@ class FungibleBalanceCache(
 
     var count = 0
 
-    while(cursor.hasNext()) {
+    while (cursor.hasNext()) {
       set(cursor.fetchNext())
       count += 1
-      if(count % 1000 == 0) {
+      if (count % 1000 == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info {"[$tokenType] $count deltas processed"}
+        logger.info { "[$tokenType] $count deltas processed" }
       }
     }
 
-    cacheStores.forEach{ it.flushToDisk(true) }
+    cacheStores.forEach { it.flushToDisk(true) }
 
     writeHistoryToDb = true
 
     logger.info { "[$tokenType] Initialised. $count deltas processed" }
   }
-
 
   fun get(address: String, contractAddress: String?): BigInteger? {
     // TODO optimize serialization
@@ -120,13 +120,12 @@ class FungibleBalanceCache(
     set(balance)
   }
 
-
   private fun set(balance: BalanceRecord) {
 
     val keyStr = "${balance.address}:${balance.contractAddress}"
     balanceMap[keyStr] = balance.balance.toBigInteger()
 
-    if(writeHistoryToDb) {
+    if (writeHistoryToDb) {
       balanceRecords = balanceRecords + balance
     }
   }
@@ -141,14 +140,13 @@ class FungibleBalanceCache(
       .toMap()
       .values
 
-    if(conflatedPerBlock.isNotEmpty()) {
+    if (conflatedPerBlock.isNotEmpty()) {
 
       ctx
         .batchInsert(conflatedPerBlock)
         .execute()
 
       metadataMap["latestBlockNumber"] = conflatedPerBlock.last().blockNumber.toBigInteger()
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -158,7 +156,7 @@ class FungibleBalanceCache(
 
   fun reset(txCtx: DSLContext) {
 
-    cacheStores.forEach{ it.clear() }
+    cacheStores.forEach { it.clear() }
 
     txCtx
       .deleteFrom(BALANCE_DELTA)
@@ -169,7 +167,6 @@ class FungibleBalanceCache(
       .deleteFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
       .execute()
-
   }
 
   fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -178,7 +175,7 @@ class FungibleBalanceCache(
 
     val blockNumberDecimal = blockNumber.toBigDecimal()
 
-    if(blockNumber > BigInteger.ZERO) {
+    if (blockNumber > BigInteger.ZERO) {
 
       val cursor = txCtx
         .selectFrom(BALANCE_DELTA)
@@ -203,9 +200,7 @@ class FungibleBalanceCache(
           }
 
           else -> throw UnsupportedOperationException("Unhandled token type: $deltaTokenType. Expected $tokenType")
-
         }
-
       }
 
       txCtx
@@ -220,17 +215,13 @@ class FungibleBalanceCache(
 
       // re-enable generation of history records
       writeHistoryToDb = true
-
     } else {
 
       balanceMap.clear()
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
 
     logger.info { "[$tokenType] Rewind complete" }
-
   }
-
 }

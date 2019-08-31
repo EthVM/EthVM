@@ -12,7 +12,7 @@ buildscript {
 plugins {
   id 'org.jetbrains.kotlin.jvm'
   id 'application'
-  // id 'org.jlleitschuh.gradle.ktlint'
+  id 'org.jlleitschuh.gradle.ktlint'
 }
 
 mainClassName = 'com.ethvm.processing.CliKt'

@@ -17,9 +17,9 @@ class NonFungibleBalanceCache(
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
   private val tokenType: TokenType
-  ) {
+) {
 
-  val logger  = KotlinLogging.logger {}
+  val logger = KotlinLogging.logger {}
 
   private val balanceMap = CacheStore(
     memoryDb,
@@ -60,7 +60,7 @@ class NonFungibleBalanceCache(
       .fetchOne()
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
-    if(latestBlockNumber > latestDbBlockNumber) {
+    if (latestBlockNumber > latestDbBlockNumber) {
       logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
       // reset all state from the beginning as the database is behind us
       balanceMap.clear()
@@ -78,23 +78,21 @@ class NonFungibleBalanceCache(
 
     var count = 0
 
-    while(cursor.hasNext()) {
+    while (cursor.hasNext()) {
       assign(cursor.fetchNext())
       count += 1
-      if(count % 1000 == 0) {
+      if (count % 1000 == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info {"[$tokenType] $count deltas processed"}
+        logger.info { "[$tokenType] $count deltas processed" }
       }
     }
 
-    cacheStores.forEach{ it.flushToDisk(true) }
+    cacheStores.forEach { it.flushToDisk(true) }
 
     writeHistoryToDb = true
 
     logger.info { "[$tokenType] Initialised. $count deltas processed" }
-
   }
-
 
   fun get(address: String, contractAddress: String?): BigInteger? {
     // TODO optimize serialization
@@ -110,7 +108,7 @@ class NonFungibleBalanceCache(
     val newBalance = BalanceRecord()
       .apply {
         this.address = delta.address
-        this.contractAddress = delta.contractAddress ?: ""  // columns in the primary key cannot be null
+        this.contractAddress = delta.contractAddress ?: "" // columns in the primary key cannot be null
         this.blockNumber = delta.blockNumber
         this.blockHash = delta.blockHash
         this.timestamp = delta.timestamp
@@ -119,7 +117,6 @@ class NonFungibleBalanceCache(
       }
 
     assign(newBalance)
-
   }
 
   private fun assign(balance: BalanceRecord) {
@@ -127,15 +124,14 @@ class NonFungibleBalanceCache(
     val keyStr = "${balance.address}:${balance.contractAddress}"
     balanceMap[keyStr] = balance.tokenId.toBigInteger()
 
-    if(writeHistoryToDb) {
+    if (writeHistoryToDb) {
       balanceHistoryRecords = balanceHistoryRecords + balance
     }
-
   }
 
   fun writeToDb(ctx: DSLContext) {
 
-    if(balanceHistoryRecords.isNotEmpty()) {
+    if (balanceHistoryRecords.isNotEmpty()) {
 
       balanceHistoryRecords
         .forEach { record ->
@@ -154,7 +150,6 @@ class NonFungibleBalanceCache(
             .insertInto(BALANCE)
             .set(record)
             .execute()
-
         }
 
       metadataMap["latestBlockNumber"] = balanceHistoryRecords.last().blockNumber.toBigInteger()
@@ -162,13 +157,12 @@ class NonFungibleBalanceCache(
       balanceHistoryRecords = emptyList()
     }
 
-    cacheStores.forEach{ it.flushToDisk() }
-
+    cacheStores.forEach { it.flushToDisk() }
   }
 
   fun reset(txCtx: DSLContext) {
 
-    cacheStores.forEach{ it.clear() }
+    cacheStores.forEach { it.clear() }
 
     txCtx
       .deleteFrom(BALANCE_DELTA)
@@ -179,7 +173,6 @@ class NonFungibleBalanceCache(
       .deleteFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
       .execute()
-
   }
 
   fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -203,16 +196,12 @@ class NonFungibleBalanceCache(
         this.tokenType.toString() -> assign(delta)
 
         else -> throw UnsupportedOperationException("Unhandled token type: $tokenType")
-
       }
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
 
     // re-enable history
     writeHistoryToDb = true
-
   }
-
 }

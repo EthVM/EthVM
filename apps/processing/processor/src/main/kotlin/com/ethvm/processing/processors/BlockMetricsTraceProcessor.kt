@@ -2,18 +2,14 @@ package com.ethvm.processing.processors
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TraceListRecord
-import com.ethvm.common.config.NetConfig
 import com.ethvm.db.Tables.BLOCK_METRICS_TRACE
 import com.ethvm.processing.extensions.toMetricsRecord
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
-import java.util.*
-import java.util.concurrent.ScheduledExecutorService
 
 class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
 
@@ -43,7 +39,6 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
       .deleteFrom(BLOCK_METRICS_TRACE)
       .where(BLOCK_METRICS_TRACE.NUMBER.ge(blockNumberDecimal))
       .execute()
-
   }
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
@@ -52,7 +47,5 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
       .insertInto(BLOCK_METRICS_TRACE)
       .set(record.value().toMetricsRecord())
       .execute()
-
   }
-
 }

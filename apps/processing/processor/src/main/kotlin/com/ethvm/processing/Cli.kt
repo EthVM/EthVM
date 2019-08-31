@@ -122,7 +122,6 @@ class Cli : CliktCommand() {
       single { DbConfig(jdbcUrl, jdbcUsername, jdbcPassword, jdbcMaxConnections) }
 
       single { KafkaConfig(bootstrapServers, schemaRegistryUrl) }
-
     }
 
     val modules = listOf(configModule, threadingModule, dbModule, kafkaModule, web3Module)
@@ -141,9 +140,8 @@ class Cli : CliktCommand() {
         requireNotNull(blockNumber) { "blockNumber must be specified" }
         rewind(blockNumber!!.toBigInteger(), processorsList)
       }
-      else -> {}  // do nothing, action validation by clickt prevents this
+      else -> {} // do nothing, action validation by clickt prevents this
     }
-
   }
 
   private fun instantiateProcessors(processorList: List<String>): List<Processor> {
@@ -205,7 +203,6 @@ class Cli : CliktCommand() {
           .forEach { it.stop() }
 
         logger.info { "All processors stopped" }
-
       }))
 
     // initialise
@@ -223,8 +220,7 @@ class Cli : CliktCommand() {
     logger.info { "Starting processors" }
 
     processors
-      .forEach{ executor.submit(it) }
-
+      .forEach { executor.submit(it) }
   }
 
   companion object Defaults {
@@ -248,9 +244,7 @@ class Cli : CliktCommand() {
     val DEFAULT_PROCESSORS = ProcessorEnum
       .values()
       .map { it.name }
-
   }
-
 }
 
 enum class Action {
@@ -262,12 +256,9 @@ enum class Action {
   companion object {
     fun forName(name: String) = values().firstOrNull { it.name.toLowerCase() == name.toLowerCase() }
   }
-
-
-
 }
 
-enum class ProcessorEnum(val clazz: KClass<out Processor>) {
+enum class ProcessorEnum(private val clazz: KClass<out Processor>) {
 
   BasicData(BasicDataProcessor::class),
   BlockMetricsHeader(BlockMetricsHeaderProcessor::class),
@@ -282,7 +273,6 @@ enum class ProcessorEnum(val clazz: KClass<out Processor>) {
   }
 
   fun newInstance() = clazz.constructors.first().call()
-
 }
 
 fun main(args: Array<String>) {

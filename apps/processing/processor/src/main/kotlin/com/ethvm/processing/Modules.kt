@@ -47,13 +47,11 @@ val dbModule = module {
       }
 
     HikariDataSource(dataSourceConfig)
-
   }
 
   single<DSLContext> {
     DSL.using(get<DataSource>(), SQLDialect.POSTGRES)
   }
-
 }
 
 val web3Module = module {
@@ -65,9 +63,7 @@ val web3Module = module {
     val wsService = WebSocketService(web3Url, false)
     wsService.connect()
     Web3j.build(wsService)
-
   }
-
 }
 
 val kafkaModule = module {
@@ -84,9 +80,8 @@ val kafkaModule = module {
         put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer::class.java)
         put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 30000)
         put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true)
-        put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1)  // we process one block's worth of data at a time
+        put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1) // we process one block's worth of data at a time
       }
-
   }
 
   single(named("topicBlocks")) {
@@ -103,7 +98,6 @@ val kafkaModule = module {
     val netConfig = get<NetConfig>()
     "${netConfig.chainId.name.toLowerCase()}_parity_sync_state"
   }
-
 }
 
 val threadingModule = module {
@@ -116,5 +110,4 @@ val threadingModule = module {
     val count = get<Int>(named("scheduledThreadCount"))
     Executors.newScheduledThreadPool(count)
   }
-
 }

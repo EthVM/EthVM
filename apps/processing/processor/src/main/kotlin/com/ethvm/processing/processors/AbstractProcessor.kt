@@ -34,7 +34,6 @@ interface Processor : Runnable {
   fun reset()
 
   fun stop()
-
 }
 
 enum class BlockType {
@@ -161,9 +160,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       rewindUntil(txCtx, rewindBlockNumber)
 
       logger.info { "initialised" }
-
     }
-
   }
 
   protected abstract fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?)
@@ -195,9 +192,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         .deleteFrom(SYNC_STATUS)
         .where(SYNC_STATUS.COMPONENT.eq(processorId))
         .execute()
-
     }
-
   }
 
   override fun rewindUntil(blockNumber: BigInteger) {
@@ -221,7 +216,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
       diskDb.commit()
     }
-
   }
 
   override fun run() {
@@ -285,7 +279,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
             hashCache[blockNumber] = blockHash
             BlockType.FORK
           }
-
         }
 
         when (blockType) {
@@ -304,7 +297,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
               // commit local storage
               diskDb.commit()
             }
-
           }
           BlockType.FORK -> {
 
@@ -324,9 +316,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
               // commit local storage
               diskDb.commit()
-
             }
-
           }
         }
 
@@ -336,23 +326,18 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         recordCount += 1
 
         if (recordCount % 100 == 0) {
-          logger.info { "Latest block number = ${blockNumber}, block time = ${DateTime(record.timestamp())}" }
+          logger.info { "Latest block number = $blockNumber, block time = ${DateTime(record.timestamp())}" }
         }
-
       }
-
     } catch (e: Exception) {
 
       logger.error(e) { "Fatal exception, stopping" }
-
     } finally {
 
       close()
       // wake up the caller of the stop method
       stopLatch.countDown()
-
     }
-
   }
 
   private fun processRecord(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, V>) {
@@ -407,8 +392,5 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       )
       .values(processorId, blockNumberDecimal, timestampNowMs, blockTimestampMs)
       .execute()
-
   }
-
-
 }

@@ -6,12 +6,10 @@ import com.ethvm.common.config.NetConfig
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables
 import com.ethvm.db.tables.records.SyncStatusHistoryRecord
-import com.ethvm.db.tables.records.SyncStatusRecord
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.jooq.DSLContext
-import org.jooq.impl.DSL
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
@@ -68,7 +66,6 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
       .deleteFrom(Tables.SYNC_STATUS_HISTORY)
       .where(Tables.SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
       .execute()
-
   }
 
   override fun stop() {
@@ -94,15 +91,11 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
             this.blockTimestamp = Timestamp(record.timestamp)
           }
 
-
         dbContext
           .insertInto(Tables.SYNC_STATUS_HISTORY)
           .set(historyRecord)
           .execute()
-
-
       }
-
     } catch (e: Exception) {
       logger.error(e) { "Fatal exception" }
     } finally {

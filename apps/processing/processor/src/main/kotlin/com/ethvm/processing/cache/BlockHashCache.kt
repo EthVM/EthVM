@@ -12,9 +12,11 @@ import java.math.BigInteger
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class BlockHashCache(memoryDb: DB,
-                     scheduledExecutor: ScheduledExecutorService,
-                     private val processorId: String) {
+class BlockHashCache(
+  memoryDb: DB,
+  scheduledExecutor: ScheduledExecutorService,
+  private val processorId: String
+) {
 
   val logger = KotlinLogging.logger {}
 
@@ -52,7 +54,6 @@ class BlockHashCache(memoryDb: DB,
       .deleteFrom(PROCESSOR_HASH_LOG)
       .where(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
       .execute()
-
   }
 
   fun initialise(ctx: DSLContext) {
@@ -87,7 +88,6 @@ class BlockHashCache(memoryDb: DB,
 
       logger.info { "[$processorId] Initialisation complete" }
     }
-
   }
 
   fun removeKeysFrom(from: BigInteger) {
@@ -101,7 +101,7 @@ class BlockHashCache(memoryDb: DB,
 
   fun writeToDb(txCtx: DSLContext) {
 
-    if(historyRecords.isNotEmpty()) {
+    if (historyRecords.isNotEmpty()) {
 
       txCtx
         .deleteFrom(PROCESSOR_HASH_LOG)
@@ -111,13 +111,9 @@ class BlockHashCache(memoryDb: DB,
       txCtx
         .batchInsert(historyRecords)
         .execute()
-
     }
-
 
     keysToRemove = emptyList()
     historyRecords = emptyList()
-
   }
-
 }

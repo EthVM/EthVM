@@ -82,18 +82,18 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     var count = 0
 
-    logger.info { "Beginning reload of transaction counts"}
+    logger.info { "Beginning reload of transaction counts" }
 
     while (cursor.hasNext()) {
       set(cursor.fetchNext())
       count += 1
       if (count % 1000 == 0) {
-        cacheStores.forEach{ it.flushToDisk(true) }
+        cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count entries processed" }
       }
     }
 
-    cacheStores.forEach{ it.flushToDisk(true) }
+    cacheStores.forEach { it.flushToDisk(true) }
 
     writeHistoryToDb = true
 
@@ -123,7 +123,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     contractsByAddressMap
       .keys
-      .forEach{ address ->
+      .forEach { address ->
         val delta = AddressContractsCreatedCountDeltaRecord()
           .apply {
             this.address = address
@@ -204,9 +204,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
           }
 
         incrementInternalTxCounts(delta)
-
       }
-
   }
 
   private fun incrementInternalTxCounts(delta: AddressInternalTransactionCountDeltaRecord) {
@@ -230,7 +228,6 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
     if (writeHistoryToDb) {
       historyRecords = historyRecords + balance + delta
     }
-
   }
 
   private fun set(balance: AddressInternalTransactionCountRecord) {
@@ -249,7 +246,6 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
       ctx
         .batchInsert(historyRecords)
         .execute()
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -264,7 +260,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
     txCtx.truncate(ADDRESS_INTERNAL_TRANSACTION_COUNT).execute()
     txCtx.truncate(ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA).execute()
 
-    cacheStores.forEach{ it.clear() }
+    cacheStores.forEach { it.clear() }
   }
 
   fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -301,7 +297,6 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
         delta.totalOutDelta = delta.totalOutDelta * -1
 
         incrementInternalTxCounts(delta)
-
       }
 
       val contractsCountCursor = txCtx
@@ -317,7 +312,6 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
         delta.totalDelta = delta.totalDelta * -1
 
         incrementContractsCount(delta)
-
       }
 
       txCtx
@@ -341,17 +335,13 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
         .execute()
 
       writeHistoryToDb = true
-
     } else {
 
       cacheStores.forEach { it.clear() }
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
 
     logger.info { "Rewind complete" }
-
   }
-
 }

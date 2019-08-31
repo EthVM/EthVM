@@ -3,21 +3,15 @@ package com.ethvm.processing.processors
 import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.processing.TokenType
-import com.ethvm.common.config.NetConfig
-import com.ethvm.db.Tables
-import com.ethvm.db.Tables.BALANCE
 import com.ethvm.processing.cache.FungibleBalanceCache
 import com.ethvm.processing.cache.NonFungibleBalanceCache
 import com.ethvm.processing.extensions.toBalanceDeltas
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
-import java.util.*
-import java.util.concurrent.ScheduledExecutorService
 
 class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
@@ -46,21 +40,18 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
       .apply {
         initialise(txCtx)
       }
-
   }
 
   override fun reset(txCtx: DSLContext) {
 
     fungibleBalanceCache.reset(txCtx)
     nonFungibleBalanceCache.reset(txCtx)
-
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     fungibleBalanceCache.rewindUntil(txCtx, blockNumber)
     nonFungibleBalanceCache.rewindUntil(txCtx, blockNumber)
-
   }
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
@@ -93,7 +84,5 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
     fungibleBalanceCache.writeToDb(txCtx)
     nonFungibleBalanceCache.writeToDb(txCtx)
-
   }
-
 }

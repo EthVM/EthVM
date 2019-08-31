@@ -4,19 +4,15 @@ import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.processing.BalanceDeltaType
 import com.ethvm.avro.processing.TokenType
-import com.ethvm.common.config.NetConfig
 import com.ethvm.common.extensions.bigInteger
-import com.ethvm.common.extensions.getNumberBI
 import com.ethvm.common.extensions.hexToBI
 import com.ethvm.db.Tables.*
 import com.ethvm.db.tables.records.BalanceDeltaRecord
-import com.ethvm.db.tables.records.TraceRecord
 import com.ethvm.processing.cache.FungibleBalanceCache
 import com.ethvm.processing.cache.InternalTxsCountsCache
 import com.ethvm.processing.extensions.toBalanceDeltas
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -24,10 +20,6 @@ import org.koin.core.qualifier.named
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Timestamp
-import java.util.*
-import java.util.concurrent.Callable
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
 
 class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
@@ -52,7 +44,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
     internalTxsCountsCache = InternalTxsCountsCache(memoryDb, diskDb, scheduledExecutor)
     internalTxsCountsCache.initialise(txCtx)
-
   }
 
   override fun reset(txCtx: DSLContext) {
@@ -61,7 +52,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
     fungibleBalanceCache.reset(txCtx)
     internalTxsCountsCache.reset(txCtx)
-
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -73,7 +63,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
       .deleteFrom(TRACE)
       .where(TRACE.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
       .execute()
-
   }
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
@@ -108,9 +97,7 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
               this.timestamp = Timestamp(timestampMs)
               this.isReceiving = true
             }
-
           }
-
       }
 
     // hard forks
@@ -131,7 +118,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
         TokenType.ETHER.toString() -> fungibleBalanceCache.add(delta)
         else -> throw UnsupportedOperationException("Unexpected token type: $tokenType")
       }
-
     }
 
     // internal tx counts
@@ -153,7 +139,5 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
     // write count records
     internalTxsCountsCache.writeToDb(txCtx)
-
   }
-
 }

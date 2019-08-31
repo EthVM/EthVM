@@ -48,22 +48,20 @@ class CacheStore<K, V>(
   fun remove(key: K) = map.remove(key)
 
   fun clear() {
-    if(overflow.hasValues) overflow.clear()
-    if(map.hasValues) map.clear()
+    if (overflow.hasValues) overflow.clear()
+    if (map.hasValues) map.clear()
   }
 
   fun flushToDisk(clearMemory: Boolean = false) {
 
-    if(clearMemory) {
+    if (clearMemory) {
       map.clearWithExpire()
     } else {
 
       modifiedKeys
         .map { key -> overflow[key] = map[key] }
-
     }
 
     modifiedKeys = emptyList()
-
   }
 }

@@ -12,7 +12,6 @@ import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.websocket.WebSocketService
 import java.util.concurrent.CompletableFuture
 
-
 class BalanceChecker(val wsUrl: String) : Runnable {
 
   private val logger = KotlinLogging.logger {}
@@ -51,28 +50,26 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     val batchSize = 256
     var batch = emptyList<BalanceRecord>()
 
-    while(cursor.hasNext()) {
+    while (cursor.hasNext()) {
 
       val balance = cursor.fetchNext()
 
       batch = batch + balance
-      if(batch.size == batchSize) {
+      if (batch.size == batchSize) {
         val (matches, failures) = processBatch(batch)
         matched += matches
         failed += failures
         batch = emptyList()
 
-        logger.info { "Matched = $matched, failures = $failed"}
+        logger.info { "Matched = $matched, failures = $failed" }
       }
-
     }
 
     processBatch(batch)
 
-    logger.info { "Final report. Matched = $matched, failures = $failed"}
+    logger.info { "Final report. Matched = $matched, failures = $failed" }
 
     dbContext.close()
-
   }
 
   private fun processBatch(batch: List<BalanceRecord>): Pair<Int, Int> {
@@ -84,7 +81,6 @@ class BalanceChecker(val wsUrl: String) : Runnable {
           .ethGetBalance(balance.address, DefaultBlockParameter.valueOf(balance.blockNumber.toBigInteger()))
           .sendAsync()
             .thenApply { result -> Pair(balance, result.balance) }
-
       }
 
     CompletableFuture.allOf(*futures.toTypedArray()).join()
@@ -102,10 +98,8 @@ class BalanceChecker(val wsUrl: String) : Runnable {
             Pair(0, 1)
           }
         }
-
       }
-      .reduce{ a, b -> Pair(a.first + b.first, a.second + b.second) }
-
+      .reduce { a, b -> Pair(a.first + b.first, a.second + b.second) }
   }
 }
 
@@ -114,6 +108,4 @@ fun main(args: Array<String>) {
   val checker = BalanceChecker("ws://localhost:8546")
 
   checker.run()
-
 }
-

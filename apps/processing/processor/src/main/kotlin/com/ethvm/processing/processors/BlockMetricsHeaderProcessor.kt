@@ -2,20 +2,16 @@ package com.ethvm.processing.processors
 
 import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.common.config.NetConfig
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables.BLOCK_METRICS_HEADER
 import com.ethvm.processing.cache.BlockTimestampCache
 import com.ethvm.processing.extensions.toMetricRecord
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
-import java.util.*
-import java.util.concurrent.ScheduledExecutorService
 
 class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
@@ -33,7 +29,6 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
     blockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
       .apply { initialise(txCtx, latestSyncBlock ?: BigInteger.ZERO) }
-
   }
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
@@ -52,7 +47,6 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
       .deleteFrom(BLOCK_METRICS_HEADER)
       .where(BLOCK_METRICS_HEADER.NUMBER.ge(blockNumberDecimal))
       .execute()
-
   }
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
@@ -74,7 +68,5 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
       .insertInto(BLOCK_METRICS_HEADER)
       .set(dbRecord)
       .execute()
-
   }
-
 }

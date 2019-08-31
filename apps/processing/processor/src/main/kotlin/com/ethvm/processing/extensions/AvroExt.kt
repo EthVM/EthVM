@@ -110,7 +110,6 @@ fun BlockHeaderRecord.toDbRecord(blockTime: Int): com.ethvm.db.tables.records.Bl
       this.transactionHashes = klaxon.toJsonString(avro.transactionHashes)
       this.blockTime = blockTime
     }
-
 }
 
 fun UncleRecord.toDbRecord(index: Int, timestamp: Long): com.ethvm.db.tables.records.UncleRecord {
@@ -140,7 +139,6 @@ fun UncleRecord.toDbRecord(index: Int, timestamp: Long): com.ethvm.db.tables.rec
       this.timestamp = Timestamp(timestamp)
       size = avro.size
     }
-
 }
 
 fun TransactionRecord.toDbRecord(timestamp: Long): com.ethvm.db.tables.records.TransactionRecord {
@@ -166,7 +164,6 @@ fun TransactionRecord.toDbRecord(timestamp: Long): com.ethvm.db.tables.records.T
       this.timestamp = Timestamp(timestamp)
       chainId = avro.chainId
     }
-
 }
 
 fun TransactionReceiptRecord.toDbRecord(timestamp: Long): com.ethvm.db.tables.records.TransactionReceiptRecord {
@@ -190,7 +187,6 @@ fun TransactionReceiptRecord.toDbRecord(timestamp: Long): com.ethvm.db.tables.re
       status = avro.status
       this.timestamp = Timestamp(timestamp * 1000L)
     }
-
 }
 
 fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDeltaRecord> {
@@ -238,7 +234,6 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
           this.isReceiving = true
         }
       )
-
     }
 
   // TODO ERC721
@@ -269,9 +264,7 @@ fun TraceListRecord.toMetricsRecord(): BlockMetricsTraceRecord {
       } else {
         totalInternalTxs += 1
       }
-
     }
-
 
   val totalTxFees =
     traceList
@@ -293,7 +286,6 @@ fun TraceListRecord.toMetricsRecord(): BlockMetricsTraceRecord {
       this.totalTxFees = totalTxFees.toBigDecimal()
       this.avgTxFees = avgTxFees.toBigDecimal()
     }
-
 }
 
 fun TraceListRecord.toContractRecords(): List<ContractRecord> {
@@ -322,7 +314,6 @@ fun TraceListRecord.toContractRecords(): List<ContractRecord> {
     .filter { isTraceValid(it.traceAddress, traceListSummary.errorTraceAddresses) }
     .mapNotNull { it.toContractRecord(traceList) }
     .toList()
-
 }
 
 fun TraceListRecord.toDbRecords(): List<com.ethvm.db.tables.records.TraceRecord> {
@@ -345,12 +336,10 @@ fun TraceListRecord.toDbRecords(): List<com.ethvm.db.tables.records.TraceRecord>
           this.transactionHash = key.second
           this.timestamp = timestamp
           this.traceCount = traces.size
-          this.rootError =  traces.first { it.traceAddress.isEmpty() }.error // traceList.rootError
+          this.rootError = traces.first { it.traceAddress.isEmpty() }.error // traceList.rootError
           this.traces = klaxon.toJsonString(traces)
         }
-
     }
-
 }
 
 fun TraceListRecord.toBalanceDeltas(): List<BalanceDeltaRecord> {
@@ -380,7 +369,6 @@ fun TraceListRecord.toBalanceDeltas(): List<BalanceDeltaRecord> {
 
         // dealing with block and uncle rewards
         deltas = deltas + traces.map { it.toBalanceDeltas(timestamp) }.flatten()
-
       } else {
 
         // all other traces
@@ -410,7 +398,6 @@ fun TraceListRecord.toBalanceDeltas(): List<BalanceDeltaRecord> {
             delta.deltaType == BalanceDeltaType.CONTRACT_DESTRUCTION.toString() &&
               delta.isReceiving &&
               delta.address == delta.counterpartAddress
-
           }
           .map { delta ->
 
@@ -434,7 +421,6 @@ fun TraceListRecord.toBalanceDeltas(): List<BalanceDeltaRecord> {
                   // The reason we zero is so that we will reflect a zero balance for some addresses which may have only existed within the lifetime of a tx call stack
 
                   delta.amount = BigDecimal.ZERO
-
                 }
 
                 delta
@@ -443,7 +429,6 @@ fun TraceListRecord.toBalanceDeltas(): List<BalanceDeltaRecord> {
               else -> delta
             }
           }.toList()
-
       }
 
       deltas
@@ -495,10 +480,7 @@ fun TraceListRecord.toBalanceDeltas(): List<BalanceDeltaRecord> {
           this.isReceiving = false
         }
       )
-
     }.flatten()
-
-
 
   return result
 }
@@ -546,7 +528,6 @@ fun TraceRecord.toContractRecord(traceList: TraceListRecord): ContractRecord? {
 
     else -> null
   }
-
 }
 
 fun TraceRecord.toBalanceDeltas(timestamp: Timestamp): List<BalanceDeltaRecord> {
@@ -745,7 +726,6 @@ fun isTraceAddressGreaterThanSelfDestruct(traceAddress: List<Int>, selfDestructT
   else traceAddressComparator.compare(traceAddress, selfDestructTraceAddresses.first()) > 0
 }
 
-
 data class TraceListSummary(
   val errorTraceAddresses: Set<List<Int>> = emptySet(),
   val destroyedContracts: Map<String, TreeSet<List<Int>>> = emptyMap()
@@ -764,7 +744,6 @@ data class TraceListSummary(
   }
 }
 
-
 fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, target: List<Int> = emptyList()): Boolean {
 
   if (traceAddress.size - target.size == 0) return true
@@ -775,4 +754,3 @@ fun isTraceValid(traceAddress: List<Int>, errorTraceAddresses: Set<List<Int>>, t
     false
   }
 }
-

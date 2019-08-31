@@ -9,9 +9,11 @@ import java.math.BigInteger
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class BlockTimestampCache(memoryDb: DB,
-                          scheduledExecutor: ScheduledExecutorService,
-                          private val processorId: String) {
+class BlockTimestampCache(
+  memoryDb: DB,
+  scheduledExecutor: ScheduledExecutorService,
+  private val processorId: String
+) {
 
   val logger = KotlinLogging.logger {}
 
@@ -33,13 +35,12 @@ class BlockTimestampCache(memoryDb: DB,
       .limit(256)
       .fetchLazy()
 
-    while(cursor.hasNext()) {
+    while (cursor.hasNext()) {
       val next = cursor.fetchNext()
       val blockNumber = next.value1().toBigInteger()
       map[blockNumber] = next.value2().time
-      logger.info { "[$processorId] Reloaded block number = $blockNumber"}
+      logger.info { "[$processorId] Reloaded block number = $blockNumber" }
     }
-
   }
 
   operator fun set(number: BigInteger, timestamp: Long) {
@@ -47,5 +48,4 @@ class BlockTimestampCache(memoryDb: DB,
   }
 
   operator fun get(number: BigInteger): Long? = map[number]
-
 }

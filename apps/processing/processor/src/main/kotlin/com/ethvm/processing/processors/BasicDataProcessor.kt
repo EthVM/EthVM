@@ -3,22 +3,17 @@ package com.ethvm.processing.processors
 import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.common.config.NetConfig
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables.*
 import com.ethvm.processing.cache.BlockCountsCache
 import com.ethvm.processing.cache.BlockTimestampCache
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
-import org.jooq.exception.DataAccessException
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
-import java.util.*
-import java.util.concurrent.ScheduledExecutorService
 
 class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
@@ -41,7 +36,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
     blockCountsCache = BlockCountsCache(memoryDb, diskDb, scheduledExecutor)
       .apply { initialise(txCtx) }
-
   }
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
@@ -54,7 +48,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
     txCtx.truncate(TRANSACTION_RECEIPT).execute()
 
     blockCountsCache.reset(txCtx)
-
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -84,9 +77,7 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
     // rewind counts
 
     blockCountsCache.rewindUntil(txCtx, blockNumber)
-
   }
-
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
 
@@ -115,7 +106,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
             .setTimestamp(timestampMs)
             .build()
         ).build()
-
     }
 
     blockTimestampCache[blockNumber] = block.header.timestamp
@@ -123,7 +113,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
     val blockTime =
       if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
-
 
     // convert to db records
     val dbRecords = block.toDbRecords(blockTime.toInt())
@@ -134,7 +123,5 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
       ).execute()
 
     blockCountsCache.writeToDb(txCtx)
-
   }
-
 }

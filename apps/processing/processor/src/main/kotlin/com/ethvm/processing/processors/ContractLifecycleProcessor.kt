@@ -49,7 +49,6 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
     txCtx
       .truncate(CONTRACT)
       .execute()
-
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -71,7 +70,6 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
       .deleteFrom(Tables.CONTRACT_METADATA)
       .where(Tables.CONTRACT_METADATA.BLOCK_NUMBER.ge(blockNumberDecimal))
       .execute()
-
   }
 
   override fun process(txCtx: DSLContext, consumerRecord: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
@@ -112,7 +110,6 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
                 .insertInto(Tables.CONTRACT_METADATA)
                 .set(metadata)
                 .execute()
-
             }
             "ERC721" -> {
 
@@ -132,10 +129,8 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
                 .insertInto(Tables.CONTRACT_METADATA)
                 .set(metadata)
                 .execute()
-
             }
           }
-
         } else {
 
           txCtx
@@ -147,12 +142,8 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
             .set(Tables.CONTRACT.DESTROYED_AT_TIMESTAMP, record.destroyedAtTimestamp)
             .where(Tables.CONTRACT.ADDRESS.eq(record.address))
             .execute()
-
         }
-
       }
-
-
   }
 
   private fun fetchName(contractAddress: String) =
@@ -241,6 +232,4 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
       // removes non-printable characters from Unicode
       ?.replace("\\p{C}", "")
       ?.trim()
-
-
 }
