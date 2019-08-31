@@ -1,10 +1,7 @@
 package com.ethvm.processing.cache
 
-import com.ethvm.avro.capture.BlockRecord
-import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.avro.processing.BalanceDeltaType
 import com.ethvm.avro.processing.TransactionCountRecord
-import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables.*
 import com.ethvm.db.tables.records.*
 import mu.KotlinLogging
@@ -15,24 +12,32 @@ import org.mapdb.Serializer
 import java.math.BigInteger
 import java.util.concurrent.ScheduledExecutorService
 
-class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExecutorService) {
+class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: ScheduledExecutorService) {
 
   val logger = KotlinLogging.logger {}
 
-  private val internalTxCountByAddress =
-    CacheStore(
+  private val internalTxCountByAddress = CacheStore(
       memoryDb,
       diskDb,
-      scheduledExector,
+      scheduledExecutor,
       "internal_tx_count_by_address",
       Serializer.STRING,
       MapDbSerializers.forAvro<TransactionCountRecord>(TransactionCountRecord.`SCHEMA$`)
     )
 
+  private val contractsCreatedByAddress = CacheStore(
+    memoryDb,
+    diskDb,
+    scheduledExecutor,
+    "contracts_created_by_address",
+    Serializer.STRING,
+    Serializer.LONG
+  )
+
   private val metadataMap = CacheStore(
     memoryDb,
     diskDb,
-    scheduledExector,
+    scheduledExecutor,
     "counts_metadata",
     Serializer.STRING,
     Serializer.BIG_INTEGER
@@ -98,8 +103,57 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: Schedul
   fun count(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
 
     incrementInternalTxCounts(balanceDeltas, blockNumber)
+    incrementContractsCount(balanceDeltas, blockNumber)
 
     metadataMap["latestBlockNumber"] = blockNumber
+  }
+
+  private fun incrementContractsCount(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
+    val contractCreationTraces = balanceDeltas
+      .filterNot { it.isReceiving }
+      .filter { it.deltaType === BalanceDeltaType.CONTRACT_CREATION.toString() }
+
+    val contractsByAddressMap = contractCreationTraces
+      .map { it.address to 1 }
+      .fold(emptyMap<String, Long>()) { map, next ->
+        val address = next.first
+        val delta = next.second
+        map + (address to map.getOrDefault(address, 0L) + delta)
+      }
+
+    contractsByAddressMap
+      .keys
+      .forEach{ address ->
+        val delta = AddressContractsCreatedCountDeltaRecord()
+          .apply {
+            this.address = address
+            this.blockNumber = blockNumber.toBigDecimal()
+            this.totalDelta = contractsByAddressMap[address]
+          }
+
+        incrementContractsCount(delta)
+      }
+  }
+
+  private fun incrementContractsCount(delta: AddressContractsCreatedCountDeltaRecord) {
+
+    val address = delta.address
+    val blockNumberDecimal = delta.blockNumber
+
+    val current = contractsCreatedByAddress[address] ?: 0L
+
+    val balance = AddressContractsCreatedCountRecord()
+      .apply {
+        this.address = address
+        this.blockNumber = blockNumberDecimal
+        this.total = current + delta.totalDelta
+      }
+
+    contractsCreatedByAddress[address] = balance.total
+
+    if (writeHistoryToDb) {
+      historyRecords = historyRecords + balance + delta
+    }
   }
 
   private fun incrementInternalTxCounts(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
@@ -117,7 +171,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: Schedul
         val address = next.first
         val delta = next.second
 
-        map + (address to map.getOrDefault(address, 0) + delta)
+        map + (address to map.getOrDefault(address, 0L) + delta)
       }
 
     val txInMap = internalTxTraces
@@ -128,7 +182,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: Schedul
         val address = next.first
         val delta = next.second
 
-        map + (address to map.getOrDefault(address, 0) + delta)
+        map + (address to map.getOrDefault(address, 0L) + delta)
       }
 
     val addresses = txInMap.keys + txOutMap.keys
@@ -218,6 +272,10 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: Schedul
         .where(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
+      txCtx.delete(ADDRESS_CONTRACTS_CREATED_COUNT)
+        .where(ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
+        .execute()
+
       val txCountCursor = txCtx
         .selectFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA)
         .where(ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
@@ -233,6 +291,22 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: Schedul
         delta.totalOutDelta = delta.totalOutDelta * -1
 
         incrementInternalTxCounts(delta)
+
+      }
+
+      val contractsCountCursor = txCtx
+        .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA)
+        .where(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
+        .orderBy(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER.desc())
+        .fetchLazy()
+
+      while (contractsCountCursor.hasNext()) {
+
+        val delta = contractsCountCursor.fetchNext()
+
+        delta.totalDelta = delta.totalDelta * -1
+
+        incrementContractsCount(delta)
 
       }
 
