@@ -62,6 +62,7 @@ class BlockHashCache(memoryDb: DB,
           .selectFrom(PROCESSOR_HASH_LOG)
           .where(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
           .orderBy(PROCESSOR_HASH_LOG.BLOCK_NUMBER.desc())
+          .limit(historySize)
           .fetchLazy()
 
       var firstBlockNumber: BigDecimal? = null
@@ -73,16 +74,6 @@ class BlockHashCache(memoryDb: DB,
         logger.debug { "[$processorId] Reloaded block = $blockNumber" }
 
         firstBlockNumber = firstBlockNumber ?: next.blockNumber
-      }
-
-      if(firstBlockNumber != null) {
-
-        // clean up old entries
-        txCtx
-          .deleteFrom(PROCESSOR_HASH_LOG)
-          .where(PROCESSOR_HASH_LOG.BLOCK_NUMBER.lt(firstBlockNumber.minus(historySize.toBigDecimal())))
-          .execute()
-
       }
 
       logger.info { "[$processorId] Initialisation complete" }
