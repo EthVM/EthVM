@@ -162,8 +162,23 @@ class NonFungibleBalanceCache(
       balanceHistoryRecords = emptyList()
     }
 
-    balanceMap.flushToDisk()
-    metadataMap.flushToDisk()
+    cacheStores.forEach{ it.flushToDisk() }
+
+  }
+
+  fun reset(txCtx: DSLContext) {
+
+    cacheStores.forEach{ it.clear() }
+
+    txCtx
+      .deleteFrom(BALANCE_DELTA)
+      .where(BALANCE_DELTA.TOKEN_TYPE.eq(tokenType.toString()))
+      .execute()
+
+    txCtx
+      .deleteFrom(BALANCE)
+      .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
+      .execute()
 
   }
 
@@ -192,6 +207,8 @@ class NonFungibleBalanceCache(
       }
 
     }
+
+    cacheStores.forEach { it.flushToDisk() }
 
     // re-enable history
     writeHistoryToDb = true

@@ -46,6 +46,15 @@ class BlockHashCache(memoryDb: DB,
       }
   }
 
+  fun reset(ctx: DSLContext) {
+
+    ctx
+      .deleteFrom(PROCESSOR_HASH_LOG)
+      .where(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
+      .execute()
+
+  }
+
   fun initialise(ctx: DSLContext) {
 
     // clear all local state

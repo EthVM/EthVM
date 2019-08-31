@@ -38,6 +38,12 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
 
+  override fun reset(txCtx: DSLContext) {
+    txCtx
+      .truncate(BLOCK_METRICS_HEADER)
+      .execute()
+  }
+
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     val blockNumberDecimal = blockNumber.toBigDecimal()

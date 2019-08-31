@@ -43,8 +43,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   private lateinit var internalTxsCountsCache: InternalTxsCountsCache
 
-  private val executor = Executors.newCachedThreadPool()
-
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
@@ -57,6 +55,15 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   }
 
+  override fun reset(txCtx: DSLContext) {
+
+    txCtx.truncate(TRACE).execute()
+
+    fungibleBalanceCache.reset(txCtx)
+    internalTxsCountsCache.reset(txCtx)
+
+  }
+
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     fungibleBalanceCache.rewindUntil(txCtx, blockNumber)
@@ -65,18 +72,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
     txCtx
       .deleteFrom(TRACE)
       .where(TRACE.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-      .execute()
-
-    txCtx
-      .deleteFrom(BALANCE)
-      .where(BALANCE.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-      .and(BALANCE.CONTRACT_ADDRESS.isNull)
-      .execute()
-
-    txCtx
-      .deleteFrom(BALANCE_DELTA)
-      .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-      .and(BALANCE_DELTA.CONTRACT_ADDRESS.isNull)
       .execute()
 
   }

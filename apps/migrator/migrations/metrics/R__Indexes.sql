@@ -1,5 +1,5 @@
 
-create index if not exists idx_sync_status_block_number ON sync_status (block_number desc);
+create index if not exists idx_sync_status_component_block_number ON sync_status (component, block_number desc);
 create index if not exists idx_sync_status_history_timestamp ON sync_status_history (timestamp);
 create index if not exists idx_sync_status_history_block_timestamp ON sync_status_history (block_timestamp);
 
@@ -75,6 +75,7 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume_desc ON token_e
 CREATE UNIQUE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rate (address);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rate (symbol);
 
+create index if not exists idx_balance_by_token_type on balance (token_type);
 
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_block_hash on balance_delta(block_hash);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_address on balance_delta(address);
@@ -86,3 +87,6 @@ CREATE INDEX IF NOT EXISTS idx_balance_delta_number_token_type on balance_delta(
 
 create index if not exists idx_address_transaction_counts_by_number on address_transaction_count(block_number);
 create index if not exists idx_canonical_count_by_block_number on canonical_count(block_number desc);
+
+
+create index if not exists idx_processor_hash_log_processor on processor_hash_log (processor_id);

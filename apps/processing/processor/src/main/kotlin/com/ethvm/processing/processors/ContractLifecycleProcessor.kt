@@ -2,14 +2,12 @@ package com.ethvm.processing.processors
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TraceListRecord
-import com.ethvm.common.config.NetConfig
 import com.ethvm.db.Tables
 import com.ethvm.db.Tables.CONTRACT
 import com.ethvm.db.routines.ClearContractDestroyedFields
 import com.ethvm.db.tables.records.ContractMetadataRecord
 import com.ethvm.processing.extensions.toContractRecords
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -25,9 +23,7 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.Transaction
 import java.math.BigInteger
-import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ScheduledExecutorService
 import kotlin.math.min
 
 class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
@@ -47,6 +43,14 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {}
 
   override fun blockHashFor(value: TraceListRecord) = value.blockHash
+
+  override fun reset(txCtx: DSLContext) {
+
+    txCtx
+      .truncate(CONTRACT)
+      .execute()
+
+  }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
@@ -70,9 +74,9 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
 
   }
 
-  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
+  override fun process(txCtx: DSLContext, consumerRecord: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
 
-    record
+    consumerRecord
       .value()
       .toContractRecords()
       .forEach { record ->

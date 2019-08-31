@@ -7,6 +7,7 @@ import com.ethvm.db.Tables.ADDRESS_TRANSACTION_COUNT
 import com.ethvm.db.Tables.ADDRESS_TRANSACTION_COUNT_DELTA
 import com.ethvm.db.Tables.BLOCK_HEADER
 import com.ethvm.db.Tables.CANONICAL_COUNT
+import com.ethvm.db.Tables.MINER_BLOCK_COUNT
 import com.ethvm.db.tables.records.AddressTransactionCountDeltaRecord
 import com.ethvm.db.tables.records.AddressTransactionCountRecord
 import com.ethvm.db.tables.records.CanonicalCountRecord
@@ -290,6 +291,17 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
     historyRecords = emptyList()
   }
 
+  fun reset(txCtx: DSLContext) {
+
+    cacheStores.forEach{ it.clear() }
+
+    txCtx.truncate(CANONICAL_COUNT).execute()
+    txCtx.truncate(MINER_BLOCK_COUNT).execute()
+    txCtx.truncate(ADDRESS_TRANSACTION_COUNT).execute()
+    txCtx.truncate(ADDRESS_TRANSACTION_COUNT_DELTA).execute()
+
+  }
+
   fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     logger.info { "Rewinding until block = $blockNumber" }
@@ -334,6 +346,26 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         incrementMinedCounts(next.value1(), next.value2().toBigInteger(), -1)
       }
 
+      txCtx
+        .deleteFrom(CANONICAL_COUNT)
+        .where(CANONICAL_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
+        .execute()
+
+      txCtx
+        .deleteFrom(MINER_BLOCK_COUNT)
+        .where(MINER_BLOCK_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
+        .execute()
+
+      txCtx
+        .deleteFrom(ADDRESS_TRANSACTION_COUNT)
+        .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
+        .execute()
+
+      txCtx
+        .deleteFrom(ADDRESS_TRANSACTION_COUNT_DELTA)
+        .where(ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
+        .execute()
+
       writeHistoryToDb = true
 
     } else {
@@ -341,6 +373,8 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       cacheStores.forEach { it.clear() }
 
     }
+
+    cacheStores.forEach { it.flushToDisk() }
 
     logger.info { "Rewind complete" }
 

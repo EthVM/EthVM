@@ -29,6 +29,10 @@ interface Processor : Runnable {
 
   fun initialise()
 
+  fun rewindUntil(blockNumber: BigInteger)
+
+  fun reset()
+
   fun stop()
 
 }
@@ -164,13 +168,69 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
   protected abstract fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?)
 
-  protected abstract fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger)
+  protected abstract fun reset(txCtx: DSLContext)
 
-  protected fun beforeFork(txCtx: DSLContext, value: V) {}
+  protected abstract fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger)
 
   protected abstract fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, V>)
 
   protected abstract fun blockHashFor(value: V): String
+
+  override fun reset() {
+
+    dbContext.transaction { txConfig ->
+
+      val txCtx = DSL.using(txConfig)
+
+      hashCache.reset(txCtx)
+
+      reset(txCtx)
+
+      txCtx
+        .deleteFrom(SYNC_STATUS_HISTORY)
+        .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+        .execute()
+
+      txCtx
+        .deleteFrom(SYNC_STATUS)
+        .where(SYNC_STATUS.COMPONENT.eq(processorId))
+        .execute()
+
+    }
+
+  }
+
+  override fun rewindUntil(blockNumber: BigInteger) {
+
+    dbContext.transaction { txConfig ->
+
+      val txCtx = DSL.using(txConfig)
+
+      rewindUntil(txCtx, blockNumber)
+
+      hashCache.removeKeysFrom(blockNumber)
+      hashCache.writeToDb(txCtx)
+
+      txCtx
+        .deleteFrom(SYNC_STATUS_HISTORY)
+        .where(
+          SYNC_STATUS_HISTORY.COMPONENT.eq(processorId)
+            .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
+        )
+        .execute()
+
+      txCtx
+        .deleteFrom(SYNC_STATUS)
+        .where(
+          SYNC_STATUS.COMPONENT.eq(processorId)
+            .and(SYNC_STATUS.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
+        )
+        .execute()
+
+      diskDb.commit()
+    }
+
+  }
 
   override fun run() {
 
@@ -246,6 +306,9 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
               val txCtx = DSL.using(txConfig)
 
               processRecord(txCtx, record)
+
+              hashCache.writeToDb(txCtx)
+
               // commit local storage
               diskDb.commit()
             }
@@ -260,7 +323,9 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
               // rewind first
 
               rewindUntil(txCtx, blockNumber)
+
               hashCache.removeKeysFrom(blockNumber)
+              hashCache.writeToDb(txCtx)
 
               // process the fork block
               processRecord(txCtx, record)
@@ -278,7 +343,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
         recordCount += 1
 
-        if(recordCount % 100 == 0) {
+        if (recordCount % 100 == 0) {
           logger.info { "Latest block number = ${blockNumber}, block time = ${DateTime(record.timestamp())}" }
         }
 

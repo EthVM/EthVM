@@ -151,21 +151,38 @@ class FungibleBalanceCache(
 
     }
 
-    balanceMap.flushToDisk()
-    metadataMap.flushToDisk()
+    cacheStores.forEach { it.flushToDisk() }
 
     balanceRecords = emptyList()
+  }
+
+  fun reset(txCtx: DSLContext) {
+
+    cacheStores.forEach{ it.clear() }
+
+    txCtx
+      .deleteFrom(BALANCE_DELTA)
+      .where(BALANCE_DELTA.TOKEN_TYPE.eq(tokenType.toString()))
+      .execute()
+
+    txCtx
+      .deleteFrom(BALANCE)
+      .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
+      .execute()
+
   }
 
   fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     logger.info { "[$tokenType] Rewinding until block = $blockNumber" }
 
+    val blockNumberDecimal = blockNumber.toBigDecimal()
+
     if(blockNumber > BigInteger.ZERO) {
 
       val cursor = txCtx
         .selectFrom(BALANCE_DELTA)
-        .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
+        .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .and(BALANCE_DELTA.TOKEN_TYPE.eq(tokenType.toString()))
         .orderBy(BALANCE_DELTA.BLOCK_NUMBER.desc())
         .fetchLazy()
@@ -191,6 +208,16 @@ class FungibleBalanceCache(
 
       }
 
+      txCtx
+        .deleteFrom(BALANCE)
+        .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()).and(BALANCE.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .execute()
+
+      txCtx
+        .deleteFrom(BALANCE_DELTA)
+        .where(BALANCE_DELTA.TOKEN_TYPE.eq(tokenType.toString()).and(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .execute()
+
       // re-enable generation of history records
       writeHistoryToDb = true
 
@@ -199,6 +226,8 @@ class FungibleBalanceCache(
       balanceMap.clear()
 
     }
+
+    cacheStores.forEach { it.flushToDisk() }
 
     logger.info { "[$tokenType] Rewind complete" }
 

@@ -46,6 +46,17 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
 
+  override fun reset(txCtx: DSLContext) {
+
+    txCtx.truncate(BLOCK_HEADER).execute()
+    txCtx.truncate(UNCLE).execute()
+    txCtx.truncate(TRANSACTION).execute()
+    txCtx.truncate(TRANSACTION_RECEIPT).execute()
+
+    blockCountsCache.reset(txCtx)
+
+  }
+
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     val blockNumberDecimal = blockNumber.toBigDecimal()
@@ -70,12 +81,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
       .where(TRANSACTION_RECEIPT.BLOCK_NUMBER.ge(blockNumberDecimal))
       .execute()
 
-    txCtx
-      .deleteFrom(CANONICAL_COUNT)
-      .where(CANONICAL_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
-      .execute()
-
-
     // rewind counts
 
     blockCountsCache.rewindUntil(txCtx, blockNumber)
@@ -86,7 +91,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
 
     // insert basic data
-
 
     var block = record.value()
 

@@ -16,14 +16,17 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.split
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.int
+import com.github.ajalt.clikt.parameters.types.long
 import mu.KotlinLogging
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
+import java.math.BigInteger
 import java.util.concurrent.ExecutorService
 import kotlin.reflect.KClass
+import kotlin.system.exitProcess
 
 class Cli : CliktCommand() {
 
@@ -84,8 +87,13 @@ class Cli : CliktCommand() {
   private val action: String by option(
     "-a", "--action",
     help = "Action to perform"
-  ).choice("server")
-    .default("server")
+  ).choice(*Action.values().map { it.name.toLowerCase() }.toTypedArray())
+    .default(Action.Server.name.toLowerCase())
+
+  private val blockNumber: Long? by option(
+    "-b", "--block-number",
+    help = "Block number"
+  ).long()
 
   override fun run() {
 
@@ -126,25 +134,63 @@ class Cli : CliktCommand() {
 
     //
 
-    when (action) {
-      "server" -> runAsServer(app.koin, processorsList)
+    when (Action.forName(action)) {
+      Action.Server -> runAsServer(app.koin, processorsList)
+      Action.Reset -> reset(processorsList)
+      Action.Rewind -> {
+        requireNotNull(blockNumber) { "blockNumber must be specified" }
+        rewind(blockNumber!!.toBigInteger(), processorsList)
+      }
       else -> {}  // do nothing, action validation by clickt prevents this
     }
 
   }
 
-  private fun runAsServer(koin: Koin, processorList: List<String>) {
-
+  private fun instantiateProcessors(processorList: List<String>): List<Processor> {
     // instantiate
     logger.info { "Instantiating processors: $processorList" }
 
-    val processors = processorList
+    return processorList
       .map { name ->
         val processorEnum = ProcessorEnum.forName(name)
         requireNotNull(processorEnum) { "Processor not found with name = $name" }
         // instantiate the processor
         processorEnum.newInstance()
       }
+  }
+
+  private fun reset(processorList: List<String>) {
+
+    // instantiate
+    val processors = instantiateProcessors(processorList)
+
+    processors
+      .forEach {
+        it.initialise()
+        it.reset()
+      }
+
+    exitProcess(0)
+  }
+
+  private fun rewind(blockNumber: BigInteger, processorList: List<String>) {
+
+    // instantiate
+    val processors = instantiateProcessors(processorList)
+
+    processors
+      .forEach {
+        it.initialise()
+        it.rewindUntil(blockNumber)
+      }
+
+    exitProcess(0)
+  }
+
+  private fun runAsServer(koin: Koin, processorList: List<String>) {
+
+    // instantiate
+    val processors = instantiateProcessors(processorList)
 
     // register shutdown hook
 
@@ -204,6 +250,20 @@ class Cli : CliktCommand() {
       .map { it.name }
 
   }
+
+}
+
+enum class Action {
+
+  Server,
+  Reset,
+  Rewind;
+
+  companion object {
+    fun forName(name: String) = values().firstOrNull { it.name.toLowerCase() == name.toLowerCase() }
+  }
+
+
 
 }
 

@@ -29,6 +29,12 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
 
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
+  override fun reset(txCtx: DSLContext) {
+    txCtx
+      .truncate(BLOCK_METRICS_TRACE)
+      .execute()
+  }
+
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     val blockNumberDecimal = blockNumber.toBigDecimal()

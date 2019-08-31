@@ -49,22 +49,17 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
   }
 
+  override fun reset(txCtx: DSLContext) {
+
+    fungibleBalanceCache.reset(txCtx)
+    nonFungibleBalanceCache.reset(txCtx)
+
+  }
+
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
     fungibleBalanceCache.rewindUntil(txCtx, blockNumber)
     nonFungibleBalanceCache.rewindUntil(txCtx, blockNumber)
-
-    txCtx
-      .deleteFrom(BALANCE)
-      .where(BALANCE.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-      .and(BALANCE.CONTRACT_ADDRESS.isNotNull)
-      .execute()
-
-    txCtx
-      .deleteFrom(Tables.BALANCE_DELTA)
-      .where(Tables.BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-      .and(Tables.BALANCE_DELTA.CONTRACT_ADDRESS.isNotNull)
-      .execute()
 
   }
 

@@ -15,6 +15,7 @@ import org.jooq.impl.DSL
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
+import java.math.BigInteger
 import java.sql.Timestamp
 import java.time.Duration
 import java.util.*
@@ -31,6 +32,8 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
   private val baseKafkaProps: Properties by inject(named("baseKafkaProps"))
 
   private val topicParitySyncState: String by inject(named("topicParitySyncState"))
+
+  private val processorId = "parity"
 
   private val kafkaProps = Properties().apply {
 
@@ -56,6 +59,32 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
   override fun initialise() {
   }
 
+  override fun rewindUntil(blockNumber: BigInteger) {
+  }
+
+  override fun reset() {
+
+    dbContext
+      .transaction { txConfig ->
+
+        val txCtx = DSL.using(txConfig)
+
+        txCtx
+          .deleteFrom(Tables.SYNC_STATUS_HISTORY)
+          .where(Tables.SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+          .execute()
+
+        txCtx
+          .deleteFrom(Tables.SYNC_STATUS)
+          .where(Tables.SYNC_STATUS.COMPONENT.eq(processorId))
+          .execute()
+
+
+      }
+
+
+  }
+
   override fun stop() {
     stop = true
     stopLatch.await()
@@ -73,7 +102,7 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
 
         val historyRecord = SyncStatusHistoryRecord()
           .apply {
-            this.component = "parity"
+            this.component = processorId
             this.blockNumber = record.number.bigInteger().toBigDecimal()
             this.timestamp = Timestamp(record.timestamp)
             this.blockTimestamp = Timestamp(record.timestamp)
