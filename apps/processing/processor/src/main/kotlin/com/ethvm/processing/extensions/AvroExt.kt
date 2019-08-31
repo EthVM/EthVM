@@ -250,7 +250,7 @@ fun TraceListRecord.toMetricsRecord(): BlockMetricsTraceRecord {
 
   val traceList = this
 
-  var totalTxs = traceList.gasPrices.size
+  val totalTxs = traceList.gasPrices.size
   var totalSuccessfulTxs = 0
   var totalFailedTxs = 0
   var totalInternalTxs = 0
@@ -345,7 +345,7 @@ fun TraceListRecord.toDbRecords(): List<com.ethvm.db.tables.records.TraceRecord>
           this.transactionHash = key.second
           this.timestamp = timestamp
           this.traceCount = traces.size
-          this.rootError = traceList.rootError
+          this.rootError =  traces.first { it.traceAddress.isEmpty() }.error // traceList.rootError
           this.traces = klaxon.toJsonString(traces)
         }
 
