@@ -25,11 +25,6 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
   override val processorId = "token-balance-processor"
 
-  override val kafkaProps = Properties()
-    .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
-    }
-
   private val topicBlocks: String by inject(named("topicBlocks"))
 
   override val topics = listOf(topicBlocks)
@@ -73,18 +68,13 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, BlockRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
 
-    val deltaRecords = records
-      .map { record ->
-        val block = record.value()
+    val block = record.value()
 
-        block
-          .receipts
-          .map { it.toBalanceDeltas(block) }
-
-      }
-      .flatten()
+    val deltaRecords = block
+      .receipts
+      .map { it.toBalanceDeltas(block) }
       .flatten()
 
     txCtx.batchInsert(deltaRecords).execute()

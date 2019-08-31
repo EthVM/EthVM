@@ -21,11 +21,6 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
 
   override val processorId = "block-metrics-trace-processor"
 
-  override val kafkaProps = Properties()
-    .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
-    }
-
   private val topicTraces: String by inject(named("topicTraces"))
 
   override val topics = listOf(topicTraces)
@@ -45,13 +40,12 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
 
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, TraceListRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
 
     txCtx
-      .batchInsert(
-        records
-          .map { it.value().toMetricsRecord() }
-      ).execute()
+      .insertInto(BLOCK_METRICS_TRACE)
+      .set(record.value().toMetricsRecord())
+      .execute()
 
   }
 

@@ -36,11 +36,6 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
 
   override val logger = KotlinLogging.logger {}
 
-  override val kafkaProps = Properties()
-    .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
-    }
-
   override val processorId: String = "contract-lifecycle-processor"
 
   private val topicTraces: String by inject(named("topicTraces"))
@@ -75,11 +70,11 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
 
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, TraceListRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
 
-    records
-      .map { it.value().toContractRecords() }
-      .flatten()
+    record
+      .value()
+      .toContractRecords()
       .forEach { record ->
 
         if (record.destroyedAtBlockNumber == null) {
@@ -140,7 +135,7 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
         } else {
 
           txCtx
-            .update(Tables.CONTRACT)
+            .update(CONTRACT)
             .set(Tables.CONTRACT.DESTROYED_AT_BLOCK_NUMBER, record.destroyedAtBlockNumber)
             .set(Tables.CONTRACT.DESTROYED_AT_BLOCK_HASH, record.destroyedAtBlockHash)
             .set(Tables.CONTRACT.DESTROYED_AT_TRANSACTION_HASH, record.destroyedAtTransactionHash)

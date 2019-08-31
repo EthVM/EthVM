@@ -35,11 +35,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   override val processorId: String = "ether-balance-processor"
 
-  override val kafkaProps = Properties()
-    .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
-    }
-
   private val topicTraces: String by inject(named("topicTraces"))
 
   override val topics: List<String> = listOf(topicTraces)
@@ -86,12 +81,12 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, TraceListRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
 
-    val firstBlockNumber = records.first().key().getNumberBI()
+    val blockNumber = record.key().number.bigInteger()
 
     var deltas =
-      if (firstBlockNumber > BigInteger.ZERO) {
+      if (blockNumber > BigInteger.ZERO) {
         emptyList()
       } else {
         // Premine balance allocations from Genesis block
@@ -123,40 +118,17 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
       }
 
-    // scatter / gather approach to try and speed up balance delta generation
+    // hard forks
 
-    val data = records
-      .chunked(12)
-      .map { chunk ->
-        executor.submit(Callable {
+    deltas = deltas + netConfig
+      .chainConfigForBlock(blockNumber)
+      .hardForkBalanceDeltas(blockNumber)
 
-          var traceRecords = emptyList<TraceRecord>()
-          var deltas = emptyList<BalanceDeltaRecord>()
+    // deltas for traces
 
-          chunk
-            .map { it.value() }
-            .forEach() { traceList ->
+    val traceList = record.value()
 
-              // hard forks
-
-              val blockNumber = traceList.blockNumber.bigInteger()
-
-              deltas = deltas + netConfig
-                .chainConfigForBlock(blockNumber)
-                .hardForkBalanceDeltas(blockNumber)
-
-              // deltas for traces
-
-              deltas = deltas + traceList.toBalanceDeltas()
-              traceRecords = traceRecords + traceList.toDbRecords()
-            }
-
-          Pair(traceRecords, deltas)
-        })
-      }
-      .map { it.get() }
-
-    deltas = deltas + data.map { it.second }.flatten()
+    deltas = deltas + record.value().toBalanceDeltas()
 
     deltas.forEach { delta ->
 
@@ -173,7 +145,8 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
       .forEach { internalTxsCountsCache.count(it.value, it.key.toBigInteger()) }
 
     // transaction traces
-    txCtx.batchInsert(data.map { it.first }.flatten()).execute()
+    val traceRecords = traceList.toDbRecords()
+    txCtx.batchInsert(traceRecords).execute()
 
     // write delta records
 

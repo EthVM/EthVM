@@ -59,6 +59,8 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
   protected val scheduledExecutor: ScheduledExecutorService by inject()
 
+  private var recordCount = 0
+
   private val mergedKafkaProps by lazy {
     val merged = Properties()
 
@@ -166,28 +168,9 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
   protected fun beforeFork(txCtx: DSLContext, value: V) {}
 
-  protected abstract fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, V>>)
+  protected abstract fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, V>)
 
   protected abstract fun blockHashFor(value: V): String
-
-
-  private fun processBatch(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, V>>) {
-
-    val tail = records.first().key().number.bigInteger()
-    val head = records.last().key().number.bigInteger()
-
-    logger.info { "Processing batch. Tail = $tail, head = $head" }
-
-    process(txCtx, records)
-
-    // update latest block number
-    val last = records.last()
-    val lastBlockNumber = last.key().number.bigInteger()
-    setLatestSyncBlock(txCtx, lastBlockNumber, last.timestamp())
-
-    // flush hash cache
-    hashCache.writeToDb(txCtx)
-  }
 
   override fun run() {
 
@@ -214,114 +197,90 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
       consumer
         .offsetsForTimes(offsetsQuery)
-        .forEach { (topicPartition, offsetAndTimestamp) -> consumer.seek(topicPartition, offsetAndTimestamp?.offset() ?: 0L) }
+        .forEach { (topicPartition, offsetAndTimestamp) ->
+          consumer.seek(topicPartition, offsetAndTimestamp?.offset() ?: 0L)
+        }
 
       // main processing loop
       while (!stop) {
 
         val records = consumer.poll(pollTimeout)
-        val recordCount = records.count()
-
         if (records.isEmpty) continue
 
-        logger.debug { "$recordCount records received" }
+        require(records.count() == 1) { "More than one record received" }
+        val record = records.first()
 
         // look for duplicates and forks
 
-        val classifiedRecords = records
-          .map { record ->
+        val blockNumber = record.key().number.bigInteger()
+        val blockHash = blockHashFor(record.value())
 
-            val blockNumber = record.key().number.bigInteger()
-            val blockHash = blockHashFor(record.value())
+        // lookup to see if we have encountered this block before
 
-            // lookup to see if we have encountered this block before
+        val blockType = when (hashCache[blockNumber]) {
 
-            val blockType = when (hashCache[blockNumber]) {
-
-              null -> {
-                hashCache[blockNumber] = blockHash
-                BlockType.NEW
-              }
-
-              blockHash -> {
-                logger.warn { "Ignoring duplicate block. Number = ${record.key().number.bigInteger()}, hash = $blockHash" }
-                BlockType.DUPLICATE
-              }
-
-              else -> {
-                hashCache[blockNumber] = blockHash
-                BlockType.FORK
-              }
-
-            }
-
-            Pair(record, blockType)
+          null -> {
+            hashCache[blockNumber] = blockHash
+            BlockType.NEW
           }
 
-        val iterator = classifiedRecords.iterator()
+          blockHash -> {
+            logger.warn { "Ignoring duplicate block. Number = ${record.key().number.bigInteger()}, hash = $blockHash" }
+            BlockType.DUPLICATE
+          }
 
-        // TODO guarantee ordering and no skips in the sequence
-
-        var recordBatch = emptyList<ConsumerRecord<CanonicalKeyRecord, V>>()
-
-        while (iterator.hasNext()) {
-
-          val (record, type) = iterator.next()
-
-          when (type) {
-            BlockType.DUPLICATE -> {
-            } // ignore
-            BlockType.NEW -> recordBatch = recordBatch + record
-            BlockType.FORK -> {
-
-              dbContext.transaction { txConfig ->
-
-                val txCtx = DSL.using(txConfig)
-
-                // process current batch
-                processBatch(txCtx, recordBatch)
-                recordBatch = emptyList()
-
-                // rewind
-
-                val blockNumber = record.key().number.bigInteger()
-
-                rewindUntil(txCtx, blockNumber)
-                hashCache.removeKeysFrom(blockNumber)
-
-                // process the fork block
-                processBatch(txCtx, listOf(record))
-
-                // commit local storage
-                diskDb.commit()
-
-              }
-
-            }
+          else -> {
+            hashCache[blockNumber] = blockHash
+            BlockType.FORK
           }
 
         }
 
-        // process any remaining
+        when (blockType) {
+          BlockType.DUPLICATE -> {
+          } // ignore
+          BlockType.NEW -> {
 
-        if (recordBatch.isNotEmpty()) {
+            dbContext.transaction { txConfig ->
 
-          dbContext.transaction { txConfig ->
+              val txCtx = DSL.using(txConfig)
 
-            val txCtx = DSL.using(txConfig)
-            processBatch(txCtx, recordBatch)
-            recordBatch = emptyList()
+              processRecord(txCtx, record)
+              // commit local storage
+              diskDb.commit()
+            }
 
-            // commit local storage
-            diskDb.commit()
           }
+          BlockType.FORK -> {
 
+            dbContext.transaction { txConfig ->
+
+              val txCtx = DSL.using(txConfig)
+
+              // rewind first
+
+              rewindUntil(txCtx, blockNumber)
+              hashCache.removeKeysFrom(blockNumber)
+
+              // process the fork block
+              processRecord(txCtx, record)
+
+              // commit local storage
+              diskDb.commit()
+
+            }
+
+          }
         }
 
         // commit to kafka
         consumer.commitSync()
 
-        logger.info { "$recordCount records processed. Block time = ${DateTime(records.last().timestamp())}" }
+        recordCount += 1
+
+        if(recordCount % 100 == 0) {
+          logger.info { "Latest block number = ${blockNumber}, block time = ${DateTime(record.timestamp())}" }
+        }
 
       }
 
@@ -337,6 +296,18 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
     }
 
+  }
+
+  private fun processRecord(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, V>) {
+
+    process(txCtx, record)
+
+    // update latest block number
+    val lastBlockNumber = record.key().number.bigInteger()
+    setLatestSyncBlock(txCtx, lastBlockNumber, record.timestamp())
+
+    // flush hash cache
+    hashCache.writeToDb(txCtx)
   }
 
   protected fun getLastSyncBlock(txCtx: DSLContext): BigInteger? {

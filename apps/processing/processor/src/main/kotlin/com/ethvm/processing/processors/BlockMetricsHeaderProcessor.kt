@@ -23,11 +23,6 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
   override val processorId = "block-metrics-header-processor"
 
-  override val kafkaProps = Properties()
-    .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 4)
-    }
-
   private val topicBlocks: String by inject(named("topicBlocks"))
 
   override val topics = listOf(topicBlocks)
@@ -54,28 +49,25 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, BlockRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
+
+    val block = record.value()
+
+    val blockNumber = block.header.number.bigInteger()
+    val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
+
+    blockTimestampCache[blockNumber] = block.header.timestamp
+    val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
+
+    val blockTime =
+      if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
+
+    val dbRecord = block.toMetricRecord(blockTime.toInt())
 
     txCtx
-      .batchInsert(
-        records
-          .map { record ->
-
-            val block = record.value()
-
-            val blockNumber = block.header.number.bigInteger()
-            val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
-
-            blockTimestampCache[blockNumber] = block.header.timestamp
-            val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
-
-            val blockTime =
-              if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
-
-            block.toMetricRecord(blockTime.toInt())
-
-          }
-      ).execute()
+      .insertInto(BLOCK_METRICS_HEADER)
+      .set(dbRecord)
+      .execute()
 
   }
 
