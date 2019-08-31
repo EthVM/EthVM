@@ -324,7 +324,7 @@ class ParityFullBlockSource(
             .setBlockNumber(fullBlock.block.number.byteBuffer())
             .setBlockHash(fullBlock.block.hash)
             .setTraceCount(traceRecords.size)
-            .setRootError(fullBlock.traces.first().error)
+            .setRootError(fullBlock.traces.firstOrNull()?.error)
             .setGasPrices(gasPrices)
             .setGasUsed(gasUsed)
             .setTraces(traceRecords)
