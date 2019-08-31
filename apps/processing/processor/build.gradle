@@ -12,26 +12,17 @@ buildscript {
 plugins {
   id 'org.jetbrains.kotlin.jvm'
   id 'application'
+  // id 'org.jlleitschuh.gradle.ktlint'
 }
 
 mainClassName = 'com.ethvm.processing.CliKt'
 applicationDefaultJvmArgs = ['-Xmx4G', '-XX:MaxDirectMemorySize=4G']
 
-repositories {
-  mavenLocal()
-  mavenCentral()
-  jcenter()
-  maven{
-    url 'https://jitpack.io'
-  }
-  maven {
-    url 'https://packages.confluent.io/maven/'
-  }
-  maven {
-    url 'https://oss.sonatype.org/content/repositories/releases/'
-  }
-  maven {
-    url 'https://dl.bintray.com/ethereum/maven/'
+sourceSets {
+  main {
+    java {
+      srcDirs += 'build/generated/sources/jooq/src/main/java'
+    }
   }
 }
 
@@ -65,21 +56,4 @@ dependencies {
   compile 'javax.annotation:javax.annotation-api:1.3.2'
 
   testCompile 'junit:junit:4.11'
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-compileKotlin {
-  kotlinOptions {
-    jvmTarget = '1.8'
-  }
-}
-
-sourceSets {
-  main {
-    java {
-      srcDirs += 'build/generated/sources/jooq/src/main/java'
-    }
-  }
 }

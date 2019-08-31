@@ -4,7 +4,6 @@ plugins {
   id 'nu.studer.jooq' version '3.0.3'
 }
 
-
 dependencies {
 
   implementation 'org.jetbrains.kotlin:kotlin-stdlib'
