@@ -41,7 +41,7 @@ class BalanceChecker(val wsUrl: String) : Runnable {
 
     val cursor = dbContext
       .selectFrom(BALANCE)
-      .where(BALANCE.CONTRACT_ADDRESS.length().eq(0))
+      .where(BALANCE.CONTRACT_ADDRESS.isNull)
       .orderBy(BALANCE.BLOCK_NUMBER.asc())
       .fetchLazy()
 
