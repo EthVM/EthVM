@@ -20,7 +20,7 @@ volumes:
     external: false
   {% endif %}
 
-  {% if KAFKA_ENABLED %}
+  {% if KAFKA_ENABLED and not KAFKA_ENABLE_BIND_MOUNTPOINT %}
   kafka-1:
     external: false
 
@@ -181,7 +181,11 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:{{ CP_VERSION }}
     volumes:
+      {% if KAFKA_ENABLE_BIND_MOUNTPOINT %}
+      - ${ZOOKEEPER_BIND_MOUNTPOINT}:/var/lib/zookeeper
+      {% else %}
       - zookeeper:/var/lib/zookeeper
+      {% endif %}
     networks:
       net:
         ipv4_address: 172.25.0.103
@@ -200,7 +204,11 @@ services:
     depends_on:
       - zookeeper
     volumes:
+      {% if KAFKA_ENABLE_BIND_MOUNTPOINT %}
+      - ${KAFKA_BIND_MOUNTPOINT}:/var/lib/kafka
+      {% else %}
       - kafka-1:/var/lib/kafka
+      {% endif %}
     networks:
       net:
         ipv4_address: 172.25.0.104
@@ -232,10 +240,10 @@ services:
       KAFKA_JMX_PORT: 9586
 
   {% if KAFKA_ENABLE_PROCESSORS %}
-  ethvm-kafka-proccessors:
+  ethvm-proccessors:
     build:
       context: ./apps/processing
-      dockerfile: ./kafka-streams/Dockerfile
+      dockerfile: ./processor/Dockerfile
     restart: unless-stopped
     depends_on:
       - kafka-1

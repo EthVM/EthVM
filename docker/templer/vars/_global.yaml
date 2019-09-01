@@ -46,13 +46,18 @@ PARITY_MAX_PEERS: 0
 # ///////////////////////////////////////////////////////
 
 KAFKA_ENABLED: true
-KAFKA_ENABLE_PROCESSORS: false
 CP_VERSION: '5.2.1'
+
+KAFKA_ENABLE_BIND_MOUNTPOINT: false
+KAFKA_BIND_MOUNTPOINT: '~/.local/share/ethvm/kafka/'
+ZOOKEEPER_BIND_MOUNTPOINT: '~/.local/share/ethvm/zookeeper/'
+
+KAFKA_ENABLE_PROCESSORS: false
+
 KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
 KAFKA_BOOTSTRAP_SERVERS: 'kafka-1:9091'
 KAFKA_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
 KAFKA_CONNECT_URL: 'http://kafka-connect:8083'
-
 
 # ///////////////////////////////////////////////////////
 # Monitoring
