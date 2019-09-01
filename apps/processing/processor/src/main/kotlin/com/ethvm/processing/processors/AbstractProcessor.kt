@@ -176,10 +176,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
         .execute()
 
-      txCtx
-        .deleteFrom(SYNC_STATUS)
-        .where(SYNC_STATUS.COMPONENT.eq(processorId))
-        .execute()
     }
   }
 
