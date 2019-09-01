@@ -258,7 +258,7 @@ services:
       KAFKA_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
       WEB3_WS_URL: ws://parity:8546
       KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
-      ETH_NET_CONFIG: '{{ PARITY_CHAIN }}'
+      ETH_NETWORK: '{{ PARITY_CHAIN }}'
   {% endif %}
 
   kafka-schema-registry:
