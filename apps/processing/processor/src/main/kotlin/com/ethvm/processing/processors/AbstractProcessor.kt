@@ -175,7 +175,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         .deleteFrom(SYNC_STATUS_HISTORY)
         .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
         .execute()
-
     }
   }
 

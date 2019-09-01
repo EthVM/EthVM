@@ -165,7 +165,6 @@ abstract class AbstractCliktCommand(help: String) : CliktCommand(help) {
       printLogger()
       modules(modules)
     }
-
   }
 
   protected fun instantiateProcessors(processorList: List<String>): List<Processor> {
@@ -178,7 +177,6 @@ abstract class AbstractCliktCommand(help: String) : CliktCommand(help) {
         processorEnum.newInstance()
       }
   }
-
 }
 
 class Process : AbstractCliktCommand(help = "Process blocks") {
@@ -189,7 +187,6 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
 
     val app = inject()
     runAsServer(app.koin, processorsList)
-
   }
 
   private fun runAsServer(koin: Koin, processorList: List<String>) {
@@ -230,7 +227,6 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
     processors
       .forEach { executor.submit(it) }
   }
-
 }
 
 class Rewind : AbstractCliktCommand(help = "Rewind processors to a specified concrete block") {
@@ -247,7 +243,6 @@ class Rewind : AbstractCliktCommand(help = "Rewind processors to a specified con
     inject()
     requireNotNull(blockNumber) { "blockNumber must be specified" }
     rewind(blockNumber!!.toBigInteger(), processorsList)
-
   }
 
   private fun rewind(blockNumber: BigInteger, processorList: List<String>) {
@@ -263,9 +258,7 @@ class Rewind : AbstractCliktCommand(help = "Rewind processors to a specified con
       }
 
     exitProcess(0)
-
   }
-
 }
 
 class Reset : AbstractCliktCommand(help = "Reset processors state") {
@@ -276,7 +269,6 @@ class Reset : AbstractCliktCommand(help = "Reset processors state") {
 
     inject()
     reset(processorsList)
-
   }
 
   private fun reset(processorList: List<String>) {
@@ -293,7 +285,6 @@ class Reset : AbstractCliktCommand(help = "Reset processors state") {
 
     exitProcess(0)
   }
-
 }
 
 fun main(args: Array<String>) {
