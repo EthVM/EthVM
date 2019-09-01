@@ -13,6 +13,7 @@ import com.ethvm.processing.cache.InternalTxsCountsCache
 import com.ethvm.processing.extensions.toBalanceDeltas
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -20,6 +21,8 @@ import org.koin.core.qualifier.named
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Timestamp
+import java.time.Duration
+import java.util.Properties
 
 class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
@@ -29,11 +32,18 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   private val topicTraces: String by inject(named("topicTraces"))
 
+  override val kafkaProps: Properties = Properties()
+    .apply {
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 64)
+    }
+
   override val topics: List<String> = listOf(topicTraces)
 
   private lateinit var fungibleBalanceCache: FungibleBalanceCache
 
   private lateinit var internalTxsCountsCache: InternalTxsCountsCache
+
+  override val targetBatchTime = Duration.ofMillis(300)
 
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
@@ -65,79 +75,85 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
       .execute()
   }
 
-  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
+  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, TraceListRecord>>) {
 
-    val blockNumber = record.key().number.bigInteger()
+    records
+      .forEach { record ->
 
-    var deltas =
-      if (blockNumber > BigInteger.ZERO) {
-        emptyList()
-      } else {
-        // Premine balance allocations from Genesis block
+        val blockNumber = record.key().number.bigInteger()
 
-        val genesisBlock = netConfig.genesis
+        var deltas =
+          if (blockNumber > BigInteger.ZERO) {
+            emptyList()
+          } else {
+            // Premine balance allocations from Genesis block
 
-        var timestampMs = genesisBlock.timestamp
-        if (timestampMs == 0L) {
-          timestampMs = System.currentTimeMillis()
+            val genesisBlock = netConfig.genesis
+
+            var timestampMs = genesisBlock.timestamp
+            if (timestampMs == 0L) {
+              timestampMs = System.currentTimeMillis()
+            }
+
+            genesisBlock
+              .allocations
+              .map { (address, balance) ->
+
+                BalanceDeltaRecord().apply {
+                  this.address = address
+                  this.counterpartAddress = null
+                  this.blockNumber = BigDecimal.ZERO
+                  this.blockHash = genesisBlock.hash
+                  this.deltaType = BalanceDeltaType.PREMINE_BALANCE.toString()
+                  this.tokenType = TokenType.ETHER.toString()
+                  this.amount = balance.balance.hexToBI().toBigDecimal()
+                  this.timestamp = Timestamp(timestampMs)
+                  this.isReceiving = true
+                }
+              }
+          }
+
+        // hard forks
+
+        deltas = deltas + netConfig
+          .chainConfigForBlock(blockNumber)
+          .hardForkBalanceDeltas(blockNumber)
+
+        // deltas for traces
+
+        val traceList = record.value()
+
+        deltas = deltas + record.value().toBalanceDeltas()
+
+        deltas.forEach { delta ->
+
+          when (val tokenType = delta.tokenType) {
+            TokenType.ETHER.toString() -> fungibleBalanceCache.add(delta)
+            else -> throw UnsupportedOperationException("Unexpected token type: $tokenType")
+          }
         }
 
-        genesisBlock
-          .allocations
-          .map { (address, balance) ->
+        // internal tx counts
+        deltas
+          .groupBy { it.blockNumber }
+          .forEach { internalTxsCountsCache.count(it.value, it.key.toBigInteger()) }
 
-            BalanceDeltaRecord().apply {
-              this.address = address
-              this.counterpartAddress = null
-              this.blockNumber = BigDecimal.ZERO
-              this.blockHash = genesisBlock.hash
-              this.deltaType = BalanceDeltaType.PREMINE_BALANCE.toString()
-              this.tokenType = TokenType.ETHER.toString()
-              this.amount = balance.balance.hexToBI().toBigDecimal()
-              this.timestamp = Timestamp(timestampMs)
-              this.isReceiving = true
-            }
-          }
+        // transaction traces
+        val traceRecords = traceList.toDbRecords()
+        txCtx.batchInsert(traceRecords).execute()
+
+        // write delta records
+
+        txCtx.batchInsert(deltas).execute()
+
+        // write balance records
+
+        fungibleBalanceCache.writeToDb(txCtx)
+
+        // write count records
+        internalTxsCountsCache.writeToDb(txCtx)
+
       }
 
-    // hard forks
-
-    deltas = deltas + netConfig
-      .chainConfigForBlock(blockNumber)
-      .hardForkBalanceDeltas(blockNumber)
-
-    // deltas for traces
-
-    val traceList = record.value()
-
-    deltas = deltas + record.value().toBalanceDeltas()
-
-    deltas.forEach { delta ->
-
-      when (val tokenType = delta.tokenType) {
-        TokenType.ETHER.toString() -> fungibleBalanceCache.add(delta)
-        else -> throw UnsupportedOperationException("Unexpected token type: $tokenType")
-      }
-    }
-
-    // internal tx counts
-    deltas
-      .groupBy { it.blockNumber }
-      .forEach { internalTxsCountsCache.count(it.value, it.key.toBigInteger()) }
-
-    // transaction traces
-    val traceRecords = traceList.toDbRecords()
-    txCtx.batchInsert(traceRecords).execute()
-
-    // write delta records
-
-    txCtx.batchInsert(deltas).execute()
-
-    // write balance records
-
-    fungibleBalanceCache.writeToDb(txCtx)
-
-    // write count records
-    internalTxsCountsCache.writeToDb(txCtx)
   }
 }

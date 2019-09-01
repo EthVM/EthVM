@@ -8,6 +8,7 @@ import com.ethvm.db.routines.ClearContractDestroyedFields
 import com.ethvm.db.tables.records.ContractMetadataRecord
 import com.ethvm.processing.extensions.toContractRecords
 import mu.KotlinLogging
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -23,6 +24,7 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.Transaction
 import java.math.BigInteger
+import java.util.Properties
 import java.util.concurrent.CompletableFuture
 import kotlin.math.min
 
@@ -33,6 +35,11 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
   override val logger = KotlinLogging.logger {}
 
   override val processorId: String = "contract-lifecycle-processor"
+
+  override val kafkaProps: Properties = Properties()
+    .apply {
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 128)
+    }
 
   private val topicTraces: String by inject(named("topicTraces"))
 
@@ -72,78 +79,85 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
       .execute()
   }
 
-  override fun process(txCtx: DSLContext, consumerRecord: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
+  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, TraceListRecord>>) {
 
-    consumerRecord
-      .value()
-      .toContractRecords()
-      .forEach { record ->
+    records
+      .forEach { consumerRecord ->
 
-        if (record.destroyedAtBlockNumber == null) {
+        consumerRecord
+          .value()
+          .toContractRecords()
+          .forEach { dbRecord ->
 
-          // creation
+            if (dbRecord.destroyedAtBlockNumber == null) {
 
-          txCtx.insertInto(Tables.CONTRACT)
-            .set(record)
-            .execute()
+              // creation
 
-          when (record.contractType) {
-            "ERC20" -> {
-
-              val address = record.address
-
-              val name = fetchName(address)
-              val symbol = fetchSymbol(address)
-              val decimals = fetchDecimals(address)
-              val totalSupply = fetchTotalSupply(address)
-
-              val metadata = ContractMetadataRecord().apply {
-                this.address = address
-                this.blockNumber = record.createdAtBlockNumber
-                this.name = name.join()
-                this.symbol = symbol.join()
-                this.decimals = decimals.join()?.intValueExact()
-                this.totalSupply = totalSupply.join()?.toBigDecimal()
-              }
-
-              txCtx
-                .insertInto(Tables.CONTRACT_METADATA)
-                .set(metadata)
+              txCtx.insertInto(Tables.CONTRACT)
+                .set(dbRecord)
                 .execute()
-            }
-            "ERC721" -> {
 
-              val address = record.address
+              when (dbRecord.contractType) {
+                "ERC20" -> {
 
-              val name = fetchName(address)
-              val symbol = fetchSymbol(address)
+                  val address = dbRecord.address
 
-              val metadata = ContractMetadataRecord().apply {
-                this.address = address
-                this.blockNumber = record.createdAtBlockNumber
-                this.name = name.join()
-                this.symbol = symbol.join()
+                  val name = fetchName(address)
+                  val symbol = fetchSymbol(address)
+                  val decimals = fetchDecimals(address)
+                  val totalSupply = fetchTotalSupply(address)
+
+                  val metadata = ContractMetadataRecord().apply {
+                    this.address = address
+                    this.blockNumber = dbRecord.createdAtBlockNumber
+                    this.name = name.join()
+                    this.symbol = symbol.join()
+                    this.decimals = decimals.join()?.intValueExact()
+                    this.totalSupply = totalSupply.join()?.toBigDecimal()
+                  }
+
+                  txCtx
+                    .insertInto(Tables.CONTRACT_METADATA)
+                    .set(metadata)
+                    .execute()
+                }
+                "ERC721" -> {
+
+                  val address = dbRecord.address
+
+                  val name = fetchName(address)
+                  val symbol = fetchSymbol(address)
+
+                  val metadata = ContractMetadataRecord().apply {
+                    this.address = address
+                    this.blockNumber = dbRecord.createdAtBlockNumber
+                    this.name = name.join()
+                    this.symbol = symbol.join()
+                  }
+
+                  txCtx
+                    .insertInto(Tables.CONTRACT_METADATA)
+                    .set(metadata)
+                    .execute()
+                }
               }
+            } else {
 
               txCtx
-                .insertInto(Tables.CONTRACT_METADATA)
-                .set(metadata)
+                .update(CONTRACT)
+                .set(Tables.CONTRACT.DESTROYED_AT_BLOCK_NUMBER, dbRecord.destroyedAtBlockNumber)
+                .set(Tables.CONTRACT.DESTROYED_AT_BLOCK_HASH, dbRecord.destroyedAtBlockHash)
+                .set(Tables.CONTRACT.DESTROYED_AT_TRANSACTION_HASH, dbRecord.destroyedAtTransactionHash)
+                .set(Tables.CONTRACT.DESTROYED_AT_TRACE_ADDRESS, dbRecord.destroyedAtTraceAddress)
+                .set(Tables.CONTRACT.DESTROYED_AT_TIMESTAMP, dbRecord.destroyedAtTimestamp)
+                .where(Tables.CONTRACT.ADDRESS.eq(dbRecord.address))
                 .execute()
             }
           }
-        } else {
 
-          txCtx
-            .update(CONTRACT)
-            .set(Tables.CONTRACT.DESTROYED_AT_BLOCK_NUMBER, record.destroyedAtBlockNumber)
-            .set(Tables.CONTRACT.DESTROYED_AT_BLOCK_HASH, record.destroyedAtBlockHash)
-            .set(Tables.CONTRACT.DESTROYED_AT_TRANSACTION_HASH, record.destroyedAtTransactionHash)
-            .set(Tables.CONTRACT.DESTROYED_AT_TRACE_ADDRESS, record.destroyedAtTraceAddress)
-            .set(Tables.CONTRACT.DESTROYED_AT_TIMESTAMP, record.destroyedAtTimestamp)
-            .where(Tables.CONTRACT.ADDRESS.eq(record.address))
-            .execute()
-        }
+
       }
+
   }
 
   private fun fetchName(contractAddress: String) =

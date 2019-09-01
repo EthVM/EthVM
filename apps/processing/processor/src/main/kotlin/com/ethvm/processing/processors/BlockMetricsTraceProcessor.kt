@@ -5,17 +5,24 @@ import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.db.Tables.BLOCK_METRICS_TRACE
 import com.ethvm.processing.extensions.toMetricsRecord
 import mu.KotlinLogging
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
+import java.util.Properties
 
 class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
 
   override val logger = KotlinLogging.logger {}
 
   override val processorId = "block-metrics-trace-processor"
+
+  override val kafkaProps: Properties = Properties()
+    .apply {
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 256)
+    }
 
   private val topicTraces: String by inject(named("topicTraces"))
 
@@ -41,11 +48,14 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
       .execute()
   }
 
-  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
+  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, TraceListRecord>>) {
+
+    val dbRecords = records
+      .map { it.value().toMetricsRecord() }
 
     txCtx
-      .insertInto(BLOCK_METRICS_TRACE)
-      .set(record.value().toMetricsRecord())
+      .batchInsert(dbRecords)
       .execute()
+
   }
 }

@@ -7,17 +7,24 @@ import com.ethvm.db.Tables.BLOCK_METRICS_HEADER
 import com.ethvm.processing.cache.BlockTimestampCache
 import com.ethvm.processing.extensions.toMetricRecord
 import mu.KotlinLogging
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
+import java.util.Properties
 
 class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
   override val logger = KotlinLogging.logger {}
 
   override val processorId = "block-metrics-header-processor"
+
+  override val kafkaProps: Properties = Properties()
+    .apply {
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 256)
+    }
 
   private val topicBlocks: String by inject(named("topicBlocks"))
 
@@ -49,24 +56,26 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
       .execute()
   }
 
-  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
+  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, BlockRecord>>) {
 
-    val block = record.value()
+    val dbRecords = records
+      .map { record ->
+        val block = record.value()
 
-    val blockNumber = block.header.number.bigInteger()
-    val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
+        val blockNumber = block.header.number.bigInteger()
+        val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
 
-    blockTimestampCache[blockNumber] = block.header.timestamp
-    val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
+        blockTimestampCache[blockNumber] = block.header.timestamp
+        val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
 
-    val blockTime =
-      if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
+        val blockTime =
+          if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
 
-    val dbRecord = block.toMetricRecord(blockTime.toInt())
+        block.toMetricRecord(blockTime.toInt())
+      }
 
     txCtx
-      .insertInto(BLOCK_METRICS_HEADER)
-      .set(dbRecord)
+      .batchInsert(dbRecords)
       .execute()
   }
 }
