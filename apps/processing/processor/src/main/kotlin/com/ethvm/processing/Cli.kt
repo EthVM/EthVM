@@ -2,23 +2,17 @@ package com.ethvm.processing
 
 import com.ethvm.common.config.ChainId
 import com.ethvm.common.config.NetConfig
-import com.ethvm.processing.processors.BasicDataProcessor
-import com.ethvm.processing.processors.BlockMetricsHeaderProcessor
-import com.ethvm.processing.processors.BlockMetricsTraceProcessor
-import com.ethvm.processing.processors.ContractLifecycleProcessor
-import com.ethvm.processing.processors.EtherBalanceProcessor
-import com.ethvm.processing.processors.ParitySyncStatusProcessor
-import com.ethvm.processing.processors.Processor
-import com.ethvm.processing.processors.TokenBalanceProcessor
+import com.ethvm.processing.processors.*
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.split
-import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.long
 import mu.KotlinLogging
 import org.koin.core.Koin
+import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -28,74 +22,115 @@ import java.util.concurrent.ExecutorService
 import kotlin.reflect.KClass
 import kotlin.system.exitProcess
 
+enum class ProcessorEnum(private val clazz: KClass<out Processor>) {
+
+  BasicData(BasicDataProcessor::class),
+  BlockMetricsHeader(BlockMetricsHeaderProcessor::class),
+  BlockMetricsTrace(BlockMetricsTraceProcessor::class),
+  ContractLifecycle(ContractLifecycleProcessor::class),
+  EtherBalance(EtherBalanceProcessor::class),
+  TokenBalance(TokenBalanceProcessor::class),
+  ParitySyncStatus(ParitySyncStatusProcessor::class);
+
+  companion object {
+    fun forName(name: String) = values().firstOrNull { it.name == name }
+  }
+
+  fun newInstance() = clazz.constructors.first().call()
+}
+
 class Cli : CliktCommand() {
 
-  private val logger = KotlinLogging.logger {}
+  override fun run() {
+  }
 
-  private val jdbcUrl: String by option(
+  companion object Defaults {
+
+    const val DEFAULT_JDBC_URL = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
+    const val DEFAULT_JDBC_USERNAME = "postgres"
+    const val DEFAULT_JDBC_PASSWORD = "1234"
+    const val DEFAULT_JDBC_MAX_CONNECTIONS = 30
+
+    const val DEFAULT_NETWORK = "ropsten"
+
+    const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091"
+    const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
+    const val DEFAULT_STORAGE_DIR = "./processor-state"
+    const val DEFAULT_WEB3_WS_URL = "ws://localhost:8546"
+
+    val DEFAULT_PROCESSORS = ProcessorEnum
+      .values()
+      .map { it.name }
+  }
+}
+
+abstract class AbstractCliktCommand(help: String) : CliktCommand(help) {
+
+  protected val jdbcUrl: String by option(
     help = "Database connect url",
     envvar = "JDBC_URL"
-  ).default(DEFAULT_JDBC_URL)
+  )
+    .default(Cli.DEFAULT_JDBC_URL)
 
-  private val jdbcUsername: String by option(
+  protected val jdbcUsername: String by option(
     help = "Database username",
     envvar = "JDBC_USERNAME"
-  ).default(DEFAULT_JDBC_USERNAME)
+  )
+    .default(Cli.DEFAULT_JDBC_USERNAME)
 
-  private val jdbcPassword: String by option(
+  protected val jdbcPassword: String by option(
     help = "Database password",
     envvar = "JDBC_PASSWORD"
-  ).default(DEFAULT_JDBC_PASSWORD)
+  )
+    .default(Cli.DEFAULT_JDBC_PASSWORD)
 
-  private val jdbcMaxConnections: Int by option(
+  protected val jdbcMaxConnections: Int by option(
     help = "Max db connections",
     envvar = "JDBC_MAX_CONNECTIONS"
-  ).int().default(DEFAULT_JDBC_MAX_CONNECTIONS)
+  )
+    .int()
+    .default(Cli.DEFAULT_JDBC_MAX_CONNECTIONS)
 
-  private val bootstrapServers: String by option(
+  protected val bootstrapServers: String by option(
     help = "A list of host/port pairs to use for establishing the initial connection to the Kafka cluster",
     envvar = "KAFKA_BOOTSTRAP_SERVERS"
-  ).default(DEFAULT_BOOTSTRAP_SERVERS)
+  )
+    .default(Cli.DEFAULT_BOOTSTRAP_SERVERS)
 
-  private val schemaRegistryUrl: String by option(
+  protected val schemaRegistryUrl: String by option(
     help = "Kafka schema registry url",
     envvar = "KAFKA_SCHEMA_REGISTRY_URL"
-  ).default(DEFAULT_SCHEMA_REGISTRY_URL)
+  )
+    .default(Cli.DEFAULT_SCHEMA_REGISTRY_URL)
 
-  private val storageDir: String by option(
+  protected val storageDir: String by option(
     help = "Base dir for local kafka streams state",
     envvar = "ETHVM_STORAGE_DIR"
-  ).default(DEFAULT_STORAGE_DIR)
+  )
+    .default(Cli.DEFAULT_STORAGE_DIR)
 
-  private val wsUrl: String by option(
+  protected val wsUrl: String by option(
     help = "The websocket url for web3",
     envvar = "WEB3_WS_URL"
-  ).default(DEFAULT_WEB3_WS_URL)
+  )
+    .default(Cli.DEFAULT_WEB3_WS_URL)
 
-  private val network: String by option(
+  protected val network: String by option(
     "-n", "--network",
     help = "Ethereum network we are processing e.g. mainnet, ropsten...",
     envvar = "ETH_NETWORK"
-  ).default(DEFAULT_NETWORK)
+  )
+    .default(Cli.DEFAULT_NETWORK)
 
-  private val processorsList: List<String> by option(
+  protected val processorsList: List<String> by option(
     "-p", "--processors",
     help = "List of processors to use",
     envvar = "PROCESSOR_LIST"
-  ).split(",").default(DEFAULT_PROCESSORS)
+  )
+    .split(",")
+    .default(Cli.DEFAULT_PROCESSORS)
 
-  private val action: String by option(
-    "-a", "--action",
-    help = "Action to perform"
-  ).choice(*Action.values().map { it.name.toLowerCase() }.toTypedArray())
-    .default(Action.Server.name.toLowerCase())
-
-  private val blockNumber: Long? by option(
-    "-b", "--block-number",
-    help = "Block number"
-  ).long()
-
-  override fun run() {
+  protected fun inject(): KoinApplication {
 
     // deteermine network related configs
     val chainId = ChainId.forName(network)
@@ -126,27 +161,14 @@ class Cli : CliktCommand() {
 
     val modules = listOf(configModule, threadingModule, dbModule, kafkaModule, web3Module)
 
-    val app = startKoin {
+    return startKoin {
       printLogger()
       modules(modules)
     }
 
-    //
-
-    when (Action.forName(action)) {
-      Action.Server -> runAsServer(app.koin, processorsList)
-      Action.Reset -> reset(processorsList)
-      Action.Rewind -> {
-        requireNotNull(blockNumber) { "blockNumber must be specified" }
-        rewind(blockNumber!!.toBigInteger(), processorsList)
-      }
-      else -> {} // do nothing, action validation by clickt prevents this
-    }
   }
 
-  private fun instantiateProcessors(processorList: List<String>): List<Processor> {
-    // instantiate
-    logger.info { "Instantiating processors: $processorList" }
+  protected fun instantiateProcessors(processorList: List<String>): List<Processor> {
 
     return processorList
       .map { name ->
@@ -157,37 +179,23 @@ class Cli : CliktCommand() {
       }
   }
 
-  private fun reset(processorList: List<String>) {
+}
 
-    // instantiate
-    val processors = instantiateProcessors(processorList)
+class Process : AbstractCliktCommand(help = "Process blocks") {
 
-    processors
-      .forEach {
-        it.initialise()
-        it.reset()
-      }
+  private val logger = KotlinLogging.logger {}
 
-    exitProcess(0)
-  }
+  override fun run() {
 
-  private fun rewind(blockNumber: BigInteger, processorList: List<String>) {
+    val app = inject()
+    runAsServer(app.koin, processorsList)
 
-    // instantiate
-    val processors = instantiateProcessors(processorList)
-
-    processors
-      .forEach {
-        it.initialise()
-        it.rewindUntil(blockNumber)
-      }
-
-    exitProcess(0)
   }
 
   private fun runAsServer(koin: Koin, processorList: List<String>) {
 
     // instantiate
+    logger.info { "Instantiating processors: $processorList" }
     val processors = instantiateProcessors(processorList)
 
     // register shutdown hook
@@ -223,58 +231,73 @@ class Cli : CliktCommand() {
       .forEach { executor.submit(it) }
   }
 
-  companion object Defaults {
-
-    const val DEFAULT_JDBC_URL = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
-    const val DEFAULT_JDBC_USERNAME = "postgres"
-    const val DEFAULT_JDBC_PASSWORD = "1234"
-    const val DEFAULT_JDBC_MAX_CONNECTIONS = 30
-
-    const val DEFAULT_TOPIC_BLOCKS = "ropsten_blocks"
-    const val DEFAULT_TOPIC_TRACES = "ropsten_traces"
-    const val DEFAULT_TOPIC_PARITY_SYNC_STATE = "ropsten_parity_sync_state"
-
-    const val DEFAULT_NETWORK = "ropsten"
-
-    const val DEFAULT_BOOTSTRAP_SERVERS = "kafka-1:9091"
-    const val DEFAULT_SCHEMA_REGISTRY_URL = "http://kafka-schema-registry:8081"
-    const val DEFAULT_STORAGE_DIR = "./processor-state"
-    const val DEFAULT_WEB3_WS_URL = "ws://localhost:8546"
-
-    val DEFAULT_PROCESSORS = ProcessorEnum
-      .values()
-      .map { it.name }
-  }
 }
 
-enum class Action {
+class Rewind : AbstractCliktCommand(help = "Rewind processors to a specified concrete block") {
 
-  Server,
-  Reset,
-  Rewind;
+  private val logger = KotlinLogging.logger {}
 
-  companion object {
-    fun forName(name: String) = values().firstOrNull { it.name.toLowerCase() == name.toLowerCase() }
+  private val blockNumber: Long? by option(
+    "-b", "--block-number",
+    help = "Block number"
+  ).long()
+
+  override fun run() {
+
+    inject()
+    requireNotNull(blockNumber) { "blockNumber must be specified" }
+    rewind(blockNumber!!.toBigInteger(), processorsList)
+
   }
+
+  private fun rewind(blockNumber: BigInteger, processorList: List<String>) {
+
+    // instantiate
+    logger.info { "Instantiating processors: $processorList" }
+    val processors = instantiateProcessors(processorList)
+
+    processors
+      .forEach {
+        it.initialise()
+        it.rewindUntil(blockNumber)
+      }
+
+    exitProcess(0)
+
+  }
+
 }
 
-enum class ProcessorEnum(private val clazz: KClass<out Processor>) {
+class Reset : AbstractCliktCommand(help = "Reset processors state") {
 
-  BasicData(BasicDataProcessor::class),
-  BlockMetricsHeader(BlockMetricsHeaderProcessor::class),
-  BlockMetricsTrace(BlockMetricsTraceProcessor::class),
-  ContractLifecycle(ContractLifecycleProcessor::class),
-  EtherBalance(EtherBalanceProcessor::class),
-  TokenBalance(TokenBalanceProcessor::class),
-  ParitySyncStatus(ParitySyncStatusProcessor::class);
+  private val logger = KotlinLogging.logger {}
 
-  companion object {
-    fun forName(name: String) = values().firstOrNull { it.name == name }
+  override fun run() {
+
+    inject()
+    reset(processorsList)
+
   }
 
-  fun newInstance() = clazz.constructors.first().call()
+  private fun reset(processorList: List<String>) {
+
+    // instantiate
+    logger.info { "Instantiating processors: $processorList" }
+    val processors = instantiateProcessors(processorList)
+
+    processors
+      .forEach {
+        it.initialise()
+        it.reset()
+      }
+
+    exitProcess(0)
+  }
+
 }
 
 fun main(args: Array<String>) {
-  Cli().main(args)
+  Cli()
+    .subcommands(Process(), Rewind(), Reset())
+    .main(args)
 }
