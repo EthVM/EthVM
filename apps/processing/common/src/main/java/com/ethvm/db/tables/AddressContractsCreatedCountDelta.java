@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressContractsCreatedCountDelta extends TableImpl<AddressContractsCreatedCountDeltaRecord> {
 
-    private static final long serialVersionUID = -1043204584;
+    private static final long serialVersionUID = 1544767296;
 
     /**
      * The reference instance of <code>public.address_contracts_created_count_delta</code>
@@ -68,14 +68,14 @@ public class AddressContractsCreatedCountDelta extends TableImpl<AddressContract
     public final TableField<AddressContractsCreatedCountDeltaRecord, String> ADDRESS = createField("address", org.jooq.impl.SQLDataType.CHAR(42), this, "");
 
     /**
-     * The column <code>public.address_contracts_created_count_delta.total_delta</code>.
-     */
-    public final TableField<AddressContractsCreatedCountDeltaRecord, Long> TOTAL_DELTA = createField("total_delta", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
-
-    /**
      * The column <code>public.address_contracts_created_count_delta.block_number</code>.
      */
     public final TableField<AddressContractsCreatedCountDeltaRecord, BigDecimal> BLOCK_NUMBER = createField("block_number", org.jooq.impl.SQLDataType.NUMERIC.nullable(false), this, "");
+
+    /**
+     * The column <code>public.address_contracts_created_count_delta.delta</code>.
+     */
+    public final TableField<AddressContractsCreatedCountDeltaRecord, Integer> DELTA = createField("delta", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * Create a <code>public.address_contracts_created_count_delta</code> table reference

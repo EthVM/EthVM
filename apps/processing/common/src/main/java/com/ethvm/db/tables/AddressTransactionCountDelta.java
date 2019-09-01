@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressTransactionCountDelta extends TableImpl<AddressTransactionCountDeltaRecord> {
 
-    private static final long serialVersionUID = 924786997;
+    private static final long serialVersionUID = 1019590298;
 
     /**
      * The reference instance of <code>public.address_transaction_count_delta</code>
@@ -70,17 +70,17 @@ public class AddressTransactionCountDelta extends TableImpl<AddressTransactionCo
     /**
      * The column <code>public.address_transaction_count_delta.total_delta</code>.
      */
-    public final TableField<AddressTransactionCountDeltaRecord, Long> TOTAL_DELTA = createField("total_delta", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<AddressTransactionCountDeltaRecord, Integer> TOTAL_DELTA = createField("total_delta", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>public.address_transaction_count_delta.total_out_delta</code>.
      */
-    public final TableField<AddressTransactionCountDeltaRecord, Long> TOTAL_OUT_DELTA = createField("total_out_delta", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<AddressTransactionCountDeltaRecord, Integer> TOTAL_OUT_DELTA = createField("total_out_delta", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>public.address_transaction_count_delta.total_in_delta</code>.
      */
-    public final TableField<AddressTransactionCountDeltaRecord, Long> TOTAL_IN_DELTA = createField("total_in_delta", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<AddressTransactionCountDeltaRecord, Integer> TOTAL_IN_DELTA = createField("total_in_delta", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>public.address_transaction_count_delta.block_number</code>.

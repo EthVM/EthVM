@@ -196,7 +196,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
     val txOutMap = block
       .transactions
       .map { it.from to 1 }
-      .fold(emptyMap<String, Long>()) { map, next ->
+      .fold(emptyMap<String, Int>()) { map, next ->
 
         val address = next.first
         val delta = next.second
@@ -208,7 +208,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       .transactions
       .filter { it.to != null }
       .map { it.to to 1 }
-      .fold(emptyMap<String, Long>()) { map, next ->
+      .fold(emptyMap<String, Int>()) { map, next ->
 
         val address = next.first
         val delta = next.second
@@ -219,7 +219,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
     val addresses = txInMap.keys + txOutMap.keys
 
     val txTotalMap = addresses
-      .map { address -> Pair(address, txInMap.getOrDefault(address, 0L) + txOutMap.getOrDefault(address, 0L)) }
+      .map { address -> Pair(address, txInMap.getOrDefault(address, 0) + txOutMap.getOrDefault(address, 0)) }
       .toMap()
 
     addresses
@@ -229,9 +229,9 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
           .apply {
             this.address = address
             this.blockNumber = blockNumber
-            this.totalDelta = txTotalMap[address]!!
-            this.totalInDelta = txInMap.getOrDefault(address, 0L)
-            this.totalOutDelta = txOutMap.getOrDefault(address, 0L)
+            this.totalDelta = txTotalMap[address] ?: error("no total found for address")
+            this.totalInDelta = txInMap.getOrDefault(address, 0)
+            this.totalOutDelta = txOutMap.getOrDefault(address, 0)
           }
 
         incrementTxCounts(delta)

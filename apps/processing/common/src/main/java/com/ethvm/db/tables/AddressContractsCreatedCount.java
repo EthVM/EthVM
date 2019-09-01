@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressContractsCreatedCount extends TableImpl<AddressContractsCreatedCountRecord> {
 
-    private static final long serialVersionUID = -1984066021;
+    private static final long serialVersionUID = 1840609030;
 
     /**
      * The reference instance of <code>public.address_contracts_created_count</code>
@@ -62,14 +62,14 @@ public class AddressContractsCreatedCount extends TableImpl<AddressContractsCrea
     public final TableField<AddressContractsCreatedCountRecord, String> ADDRESS = createField("address", org.jooq.impl.SQLDataType.CHAR(42).nullable(false), this, "");
 
     /**
-     * The column <code>public.address_contracts_created_count.total</code>.
-     */
-    public final TableField<AddressContractsCreatedCountRecord, Long> TOTAL = createField("total", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
-
-    /**
      * The column <code>public.address_contracts_created_count.block_number</code>.
      */
     public final TableField<AddressContractsCreatedCountRecord, BigDecimal> BLOCK_NUMBER = createField("block_number", org.jooq.impl.SQLDataType.NUMERIC.nullable(false), this, "");
+
+    /**
+     * The column <code>public.address_contracts_created_count.count</code>.
+     */
+    public final TableField<AddressContractsCreatedCountRecord, Long> COUNT = createField("count", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * Create a <code>public.address_contracts_created_count</code> table reference

@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressInternalTransactionCount extends TableImpl<AddressInternalTransactionCountRecord> {
 
-    private static final long serialVersionUID = 800138612;
+    private static final long serialVersionUID = -1048882176;
 
     /**
      * The reference instance of <code>public.address_internal_transaction_count</code>
@@ -62,6 +62,11 @@ public class AddressInternalTransactionCount extends TableImpl<AddressInternalTr
     public final TableField<AddressInternalTransactionCountRecord, String> ADDRESS = createField("address", org.jooq.impl.SQLDataType.CHAR(42).nullable(false), this, "");
 
     /**
+     * The column <code>public.address_internal_transaction_count.block_number</code>.
+     */
+    public final TableField<AddressInternalTransactionCountRecord, BigDecimal> BLOCK_NUMBER = createField("block_number", org.jooq.impl.SQLDataType.NUMERIC.nullable(false), this, "");
+
+    /**
      * The column <code>public.address_internal_transaction_count.total</code>.
      */
     public final TableField<AddressInternalTransactionCountRecord, Long> TOTAL = createField("total", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
@@ -75,11 +80,6 @@ public class AddressInternalTransactionCount extends TableImpl<AddressInternalTr
      * The column <code>public.address_internal_transaction_count.total_in</code>.
      */
     public final TableField<AddressInternalTransactionCountRecord, Long> TOTAL_IN = createField("total_in", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
-
-    /**
-     * The column <code>public.address_internal_transaction_count.block_number</code>.
-     */
-    public final TableField<AddressInternalTransactionCountRecord, BigDecimal> BLOCK_NUMBER = createField("block_number", org.jooq.impl.SQLDataType.NUMERIC.nullable(false), this, "");
 
     /**
      * Create a <code>public.address_internal_transaction_count</code> table reference

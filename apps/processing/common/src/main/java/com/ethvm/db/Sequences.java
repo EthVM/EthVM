@@ -34,6 +34,11 @@ public class Sequences {
     public static final Sequence<Long> ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_ID_SEQ = new SequenceImpl<Long>("address_internal_transaction_count_delta_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 
     /**
+     * The sequence <code>public.address_token_count_delta_id_seq</code>
+     */
+    public static final Sequence<Long> ADDRESS_TOKEN_COUNT_DELTA_ID_SEQ = new SequenceImpl<Long>("address_token_count_delta_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
      * The sequence <code>public.address_transaction_count_delta_id_seq</code>
      */
     public static final Sequence<Long> ADDRESS_TRANSACTION_COUNT_DELTA_ID_SEQ = new SequenceImpl<Long>("address_transaction_count_delta_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
@@ -47,4 +52,9 @@ public class Sequences {
      * The sequence <code>public.balance_id_seq</code>
      */
     public static final Sequence<Long> BALANCE_ID_SEQ = new SequenceImpl<Long>("balance_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>public.contract_holder_count_delta_id_seq</code>
+     */
+    public static final Sequence<Long> CONTRACT_HOLDER_COUNT_DELTA_ID_SEQ = new SequenceImpl<Long>("contract_holder_count_delta_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 }

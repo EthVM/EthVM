@@ -9,6 +9,8 @@ import com.ethvm.db.tables.AddressContractsCreatedCount;
 import com.ethvm.db.tables.AddressContractsCreatedCountDelta;
 import com.ethvm.db.tables.AddressInternalTransactionCount;
 import com.ethvm.db.tables.AddressInternalTransactionCountDelta;
+import com.ethvm.db.tables.AddressTokenCount;
+import com.ethvm.db.tables.AddressTokenCountDelta;
 import com.ethvm.db.tables.AddressTransactionCount;
 import com.ethvm.db.tables.AddressTransactionCountDelta;
 import com.ethvm.db.tables.AlterJobSchedule;
@@ -23,16 +25,12 @@ import com.ethvm.db.tables.CanonicalCount;
 import com.ethvm.db.tables.CanonicalTokenExchangeRate;
 import com.ethvm.db.tables.CoinExchangeRate;
 import com.ethvm.db.tables.Contract;
+import com.ethvm.db.tables.ContractHolderCount;
+import com.ethvm.db.tables.ContractHolderCountDelta;
 import com.ethvm.db.tables.ContractMetadata;
 import com.ethvm.db.tables.CreateHypertable;
 import com.ethvm.db.tables.EthListContractMetadata;
 import com.ethvm.db.tables.FlywaySchemaHistory;
-import com.ethvm.db.tables.ForkBalanceDelta;
-import com.ethvm.db.tables.ForkBlockHeader;
-import com.ethvm.db.tables.ForkTrace;
-import com.ethvm.db.tables.ForkTransaction;
-import com.ethvm.db.tables.ForkTransactionReceipt;
-import com.ethvm.db.tables.ForkUncleBalanceDelta;
 import com.ethvm.db.tables.HypertableApproximateRowCount;
 import com.ethvm.db.tables.HypertableRelationSize;
 import com.ethvm.db.tables.HypertableRelationSizePretty;
@@ -86,7 +84,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -95076023;
+    private static final long serialVersionUID = 901407196;
 
     /**
      * The reference instance of <code>public</code>
@@ -141,6 +139,16 @@ public class Public extends SchemaImpl {
      * The table <code>public.address_internal_transaction_count_delta</code>.
      */
     public final AddressInternalTransactionCountDelta ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA = com.ethvm.db.tables.AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA;
+
+    /**
+     * The table <code>public.address_token_count</code>.
+     */
+    public final AddressTokenCount ADDRESS_TOKEN_COUNT = com.ethvm.db.tables.AddressTokenCount.ADDRESS_TOKEN_COUNT;
+
+    /**
+     * The table <code>public.address_token_count_delta</code>.
+     */
+    public final AddressTokenCountDelta ADDRESS_TOKEN_COUNT_DELTA = com.ethvm.db.tables.AddressTokenCountDelta.ADDRESS_TOKEN_COUNT_DELTA;
 
     /**
      * The table <code>public.address_transaction_count</code>.
@@ -237,6 +245,16 @@ public class Public extends SchemaImpl {
     public final Contract CONTRACT = com.ethvm.db.tables.Contract.CONTRACT;
 
     /**
+     * The table <code>public.contract_holder_count</code>.
+     */
+    public final ContractHolderCount CONTRACT_HOLDER_COUNT = com.ethvm.db.tables.ContractHolderCount.CONTRACT_HOLDER_COUNT;
+
+    /**
+     * The table <code>public.contract_holder_count_delta</code>.
+     */
+    public final ContractHolderCountDelta CONTRACT_HOLDER_COUNT_DELTA = com.ethvm.db.tables.ContractHolderCountDelta.CONTRACT_HOLDER_COUNT_DELTA;
+
+    /**
      * The table <code>public.contract_metadata</code>.
      */
     public final ContractMetadata CONTRACT_METADATA = com.ethvm.db.tables.ContractMetadata.CONTRACT_METADATA;
@@ -279,36 +297,6 @@ public class Public extends SchemaImpl {
      * The table <code>public.flyway_schema_history</code>.
      */
     public final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = com.ethvm.db.tables.FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
-
-    /**
-     * The table <code>public.fork_balance_delta</code>.
-     */
-    public final ForkBalanceDelta FORK_BALANCE_DELTA = com.ethvm.db.tables.ForkBalanceDelta.FORK_BALANCE_DELTA;
-
-    /**
-     * The table <code>public.fork_block_header</code>.
-     */
-    public final ForkBlockHeader FORK_BLOCK_HEADER = com.ethvm.db.tables.ForkBlockHeader.FORK_BLOCK_HEADER;
-
-    /**
-     * The table <code>public.fork_trace</code>.
-     */
-    public final ForkTrace FORK_TRACE = com.ethvm.db.tables.ForkTrace.FORK_TRACE;
-
-    /**
-     * The table <code>public.fork_transaction</code>.
-     */
-    public final ForkTransaction FORK_TRANSACTION = com.ethvm.db.tables.ForkTransaction.FORK_TRANSACTION;
-
-    /**
-     * The table <code>public.fork_transaction_receipt</code>.
-     */
-    public final ForkTransactionReceipt FORK_TRANSACTION_RECEIPT = com.ethvm.db.tables.ForkTransactionReceipt.FORK_TRANSACTION_RECEIPT;
-
-    /**
-     * The table <code>public.fork_uncle_balance_delta</code>.
-     */
-    public final ForkUncleBalanceDelta FORK_UNCLE_BALANCE_DELTA = com.ethvm.db.tables.ForkUncleBalanceDelta.FORK_UNCLE_BALANCE_DELTA;
 
     /**
      * The table <code>public.hypertable_approximate_row_count</code>.
@@ -537,9 +525,11 @@ public class Public extends SchemaImpl {
         return Arrays.<Sequence<?>>asList(
             Sequences.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA_ID_SEQ,
             Sequences.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA_ID_SEQ,
+            Sequences.ADDRESS_TOKEN_COUNT_DELTA_ID_SEQ,
             Sequences.ADDRESS_TRANSACTION_COUNT_DELTA_ID_SEQ,
             Sequences.BALANCE_DELTA_ID_SEQ,
-            Sequences.BALANCE_ID_SEQ);
+            Sequences.BALANCE_ID_SEQ,
+            Sequences.CONTRACT_HOLDER_COUNT_DELTA_ID_SEQ);
     }
 
     @Override
@@ -556,6 +546,8 @@ public class Public extends SchemaImpl {
             AddressContractsCreatedCountDelta.ADDRESS_CONTRACTS_CREATED_COUNT_DELTA,
             AddressInternalTransactionCount.ADDRESS_INTERNAL_TRANSACTION_COUNT,
             AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA,
+            AddressTokenCount.ADDRESS_TOKEN_COUNT,
+            AddressTokenCountDelta.ADDRESS_TOKEN_COUNT_DELTA,
             AddressTransactionCount.ADDRESS_TRANSACTION_COUNT,
             AddressTransactionCountDelta.ADDRESS_TRANSACTION_COUNT_DELTA,
             AlterJobSchedule.ALTER_JOB_SCHEDULE,
@@ -570,16 +562,12 @@ public class Public extends SchemaImpl {
             CanonicalTokenExchangeRate.CANONICAL_TOKEN_EXCHANGE_RATE,
             CoinExchangeRate.COIN_EXCHANGE_RATE,
             Contract.CONTRACT,
+            ContractHolderCount.CONTRACT_HOLDER_COUNT,
+            ContractHolderCountDelta.CONTRACT_HOLDER_COUNT_DELTA,
             ContractMetadata.CONTRACT_METADATA,
             CreateHypertable.CREATE_HYPERTABLE,
             EthListContractMetadata.ETH_LIST_CONTRACT_METADATA,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
-            ForkBalanceDelta.FORK_BALANCE_DELTA,
-            ForkBlockHeader.FORK_BLOCK_HEADER,
-            ForkTrace.FORK_TRACE,
-            ForkTransaction.FORK_TRANSACTION,
-            ForkTransactionReceipt.FORK_TRANSACTION_RECEIPT,
-            ForkUncleBalanceDelta.FORK_UNCLE_BALANCE_DELTA,
             HypertableApproximateRowCount.HYPERTABLE_APPROXIMATE_ROW_COUNT,
             HypertableRelationSize.HYPERTABLE_RELATION_SIZE,
             HypertableRelationSizePretty.HYPERTABLE_RELATION_SIZE_PRETTY,

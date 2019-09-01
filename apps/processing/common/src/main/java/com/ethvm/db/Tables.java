@@ -9,6 +9,8 @@ import com.ethvm.db.tables.AddressContractsCreatedCount;
 import com.ethvm.db.tables.AddressContractsCreatedCountDelta;
 import com.ethvm.db.tables.AddressInternalTransactionCount;
 import com.ethvm.db.tables.AddressInternalTransactionCountDelta;
+import com.ethvm.db.tables.AddressTokenCount;
+import com.ethvm.db.tables.AddressTokenCountDelta;
 import com.ethvm.db.tables.AddressTransactionCount;
 import com.ethvm.db.tables.AddressTransactionCountDelta;
 import com.ethvm.db.tables.AlterJobSchedule;
@@ -23,16 +25,12 @@ import com.ethvm.db.tables.CanonicalCount;
 import com.ethvm.db.tables.CanonicalTokenExchangeRate;
 import com.ethvm.db.tables.CoinExchangeRate;
 import com.ethvm.db.tables.Contract;
+import com.ethvm.db.tables.ContractHolderCount;
+import com.ethvm.db.tables.ContractHolderCountDelta;
 import com.ethvm.db.tables.ContractMetadata;
 import com.ethvm.db.tables.CreateHypertable;
 import com.ethvm.db.tables.EthListContractMetadata;
 import com.ethvm.db.tables.FlywaySchemaHistory;
-import com.ethvm.db.tables.ForkBalanceDelta;
-import com.ethvm.db.tables.ForkBlockHeader;
-import com.ethvm.db.tables.ForkTrace;
-import com.ethvm.db.tables.ForkTransaction;
-import com.ethvm.db.tables.ForkTransactionReceipt;
-import com.ethvm.db.tables.ForkUncleBalanceDelta;
 import com.ethvm.db.tables.HypertableApproximateRowCount;
 import com.ethvm.db.tables.HypertableRelationSize;
 import com.ethvm.db.tables.HypertableRelationSizePretty;
@@ -126,6 +124,16 @@ public class Tables {
      * The table <code>public.address_internal_transaction_count_delta</code>.
      */
     public static final AddressInternalTransactionCountDelta ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA = com.ethvm.db.tables.AddressInternalTransactionCountDelta.ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA;
+
+    /**
+     * The table <code>public.address_token_count</code>.
+     */
+    public static final AddressTokenCount ADDRESS_TOKEN_COUNT = com.ethvm.db.tables.AddressTokenCount.ADDRESS_TOKEN_COUNT;
+
+    /**
+     * The table <code>public.address_token_count_delta</code>.
+     */
+    public static final AddressTokenCountDelta ADDRESS_TOKEN_COUNT_DELTA = com.ethvm.db.tables.AddressTokenCountDelta.ADDRESS_TOKEN_COUNT_DELTA;
 
     /**
      * The table <code>public.address_transaction_count</code>.
@@ -222,6 +230,16 @@ public class Tables {
     public static final Contract CONTRACT = com.ethvm.db.tables.Contract.CONTRACT;
 
     /**
+     * The table <code>public.contract_holder_count</code>.
+     */
+    public static final ContractHolderCount CONTRACT_HOLDER_COUNT = com.ethvm.db.tables.ContractHolderCount.CONTRACT_HOLDER_COUNT;
+
+    /**
+     * The table <code>public.contract_holder_count_delta</code>.
+     */
+    public static final ContractHolderCountDelta CONTRACT_HOLDER_COUNT_DELTA = com.ethvm.db.tables.ContractHolderCountDelta.CONTRACT_HOLDER_COUNT_DELTA;
+
+    /**
      * The table <code>public.contract_metadata</code>.
      */
     public static final ContractMetadata CONTRACT_METADATA = com.ethvm.db.tables.ContractMetadata.CONTRACT_METADATA;
@@ -264,36 +282,6 @@ public class Tables {
      * The table <code>public.flyway_schema_history</code>.
      */
     public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = com.ethvm.db.tables.FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
-
-    /**
-     * The table <code>public.fork_balance_delta</code>.
-     */
-    public static final ForkBalanceDelta FORK_BALANCE_DELTA = com.ethvm.db.tables.ForkBalanceDelta.FORK_BALANCE_DELTA;
-
-    /**
-     * The table <code>public.fork_block_header</code>.
-     */
-    public static final ForkBlockHeader FORK_BLOCK_HEADER = com.ethvm.db.tables.ForkBlockHeader.FORK_BLOCK_HEADER;
-
-    /**
-     * The table <code>public.fork_trace</code>.
-     */
-    public static final ForkTrace FORK_TRACE = com.ethvm.db.tables.ForkTrace.FORK_TRACE;
-
-    /**
-     * The table <code>public.fork_transaction</code>.
-     */
-    public static final ForkTransaction FORK_TRANSACTION = com.ethvm.db.tables.ForkTransaction.FORK_TRANSACTION;
-
-    /**
-     * The table <code>public.fork_transaction_receipt</code>.
-     */
-    public static final ForkTransactionReceipt FORK_TRANSACTION_RECEIPT = com.ethvm.db.tables.ForkTransactionReceipt.FORK_TRANSACTION_RECEIPT;
-
-    /**
-     * The table <code>public.fork_uncle_balance_delta</code>.
-     */
-    public static final ForkUncleBalanceDelta FORK_UNCLE_BALANCE_DELTA = com.ethvm.db.tables.ForkUncleBalanceDelta.FORK_UNCLE_BALANCE_DELTA;
 
     /**
      * The table <code>public.hypertable_approximate_row_count</code>.

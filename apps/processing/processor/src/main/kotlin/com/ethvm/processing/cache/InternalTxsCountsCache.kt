@@ -115,10 +115,10 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     val contractsByAddressMap = contractCreationTraces
       .map { it.address to 1 }
-      .fold(emptyMap<String, Long>()) { map, next ->
+      .fold(emptyMap<String, Int>()) { map, next ->
         val address = next.first
         val delta = next.second
-        map + (address to map.getOrDefault(address, 0L) + delta)
+        map + (address to map.getOrDefault(address, 0) + delta)
       }
 
     contractsByAddressMap
@@ -128,7 +128,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
           .apply {
             this.address = address
             this.blockNumber = blockNumber.toBigDecimal()
-            this.totalDelta = contractsByAddressMap[address]
+            this.delta = contractsByAddressMap[address]
           }
 
         incrementContractsCount(delta)
@@ -146,10 +146,10 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
       .apply {
         this.address = address
         this.blockNumber = blockNumberDecimal
-        this.total = current + delta.totalDelta
+        this.count = current + delta.delta
       }
 
-    contractsCreatedByAddress[address] = balance.total
+    contractsCreatedByAddress[address] = balance.count
 
     if (writeHistoryToDb) {
       historyRecords = historyRecords + balance + delta
@@ -158,37 +158,39 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
   private fun incrementInternalTxCounts(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
 
-    val internalDeltaTypes = arrayListOf<String>(BalanceDeltaType.INTERNAL_TX.toString(), BalanceDeltaType.CONTRACT_CREATION.toString(), BalanceDeltaType.CONTRACT_DESTRUCTION.toString())
+    val internalDeltaTypes =
+      setOf(BalanceDeltaType.INTERNAL_TX, BalanceDeltaType.CONTRACT_CREATION, BalanceDeltaType.CONTRACT_DESTRUCTION)
+        .map { it.toString() }
 
     val internalTxTraces = balanceDeltas
-      .filter { internalDeltaTypes.indexOf(it.deltaType) > -1 } // TODO check this logic
+      .filter { internalDeltaTypes.contains(it.deltaType) }
 
     val txOutMap = internalTxTraces
       .filterNot { it.isReceiving }
       .map { it.address to 1 }
-      .fold(emptyMap<String, Long>()) { map, next ->
+      .fold(emptyMap<String, Int>()) { map, next ->
 
         val address = next.first
         val delta = next.second
 
-        map + (address to map.getOrDefault(address, 0L) + delta)
+        map + (address to map.getOrDefault(address, 0) + delta)
       }
 
     val txInMap = internalTxTraces
       .filter { it.isReceiving }
       .map { it.address to 1 }
-      .fold(emptyMap<String, Long>()) { map, next ->
+      .fold(emptyMap<String, Int>()) { map, next ->
 
         val address = next.first
         val delta = next.second
 
-        map + (address to map.getOrDefault(address, 0L) + delta)
+        map + (address to map.getOrDefault(address, 0) + delta)
       }
 
     val addresses = txInMap.keys + txOutMap.keys
 
     val txTotalMap = addresses
-      .map { address -> Pair(address, txInMap.getOrDefault(address, 0L) + txOutMap.getOrDefault(address, 0L)) }
+      .map { address -> Pair(address, txInMap.getOrDefault(address, 0) + txOutMap.getOrDefault(address, 0)) }
       .toMap()
 
     addresses
@@ -199,8 +201,8 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
             this.address = address
             this.blockNumber = blockNumber.toBigDecimal()
             this.totalDelta = txTotalMap[address]!!
-            this.totalInDelta = txInMap.getOrDefault(address, 0L)
-            this.totalOutDelta = txOutMap.getOrDefault(address, 0L)
+            this.totalInDelta = txInMap.getOrDefault(address, 0)
+            this.totalOutDelta = txOutMap.getOrDefault(address, 0)
           }
 
         incrementInternalTxCounts(delta)
@@ -307,9 +309,9 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
       while (contractsCountCursor.hasNext()) {
 
+        // reverse the delta
         val delta = contractsCountCursor.fetchNext()
-
-        delta.totalDelta = delta.totalDelta * -1
+        delta.delta = delta.delta * -1
 
         incrementContractsCount(delta)
       }

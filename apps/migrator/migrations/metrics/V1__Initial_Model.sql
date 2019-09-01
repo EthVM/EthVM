@@ -1,4 +1,3 @@
-
 CREATE TABLE sync_status_history
 (
     component       VARCHAR(128),
@@ -10,9 +9,9 @@ CREATE TABLE sync_status_history
 
 CREATE TABLE processor_hash_log
 (
-    processor_id    VARCHAR(64),
-    block_number    DECIMAL NOT NULL,
-    block_hash      CHAR(66) NOT NULL,
+    processor_id VARCHAR(64),
+    block_number DECIMAL  NOT NULL,
+    block_hash   CHAR(66) NOT NULL,
     PRIMARY KEY (processor_id, block_number)
 );
 
@@ -208,7 +207,7 @@ CREATE TABLE balance_delta
 
 CREATE TABLE balance
 (
-    id  BIGSERIAL PRIMARY KEY,
+    id               BIGSERIAL PRIMARY KEY,
     address          CHAR(42)    NOT NULL,
     block_number     NUMERIC     NOT NULL,
     block_hash       CHAR(66)    NOT NULL,
@@ -261,9 +260,9 @@ CREATE TABLE address_transaction_count_delta
 (
     id              BIGSERIAL PRIMARY KEY,
     address         CHAR(42),
-    total_delta     BIGINT  NOT NULL,
-    total_out_delta BIGINT  NOT NULL,
-    total_in_delta  BIGINT  NOT NULL,
+    total_delta     INT     NOT NULL,
+    total_out_delta INT     NOT NULL,
+    total_in_delta  INT     NOT NULL,
     block_number    NUMERIC NOT NULL,
     UNIQUE (address, block_number)
 );
@@ -276,14 +275,6 @@ CREATE TABLE miner_block_count
     block_number NUMERIC NOT NULL,
     PRIMARY KEY (author, block_number)
 );
-
-/* TODO drop primary keys */
-CREATE TABLE fork_block_header () INHERITS (block_header);
-CREATE TABLE fork_uncle_balance_delta () INHERITS (balance_delta);
-CREATE TABLE fork_transaction () INHERITS (transaction);
-CREATE TABLE fork_transaction_receipt () INHERITS (transaction_receipt);
-CREATE TABLE fork_trace () INHERITS (trace);
-CREATE TABLE fork_balance_delta () INHERITS (balance_delta);
 
 
 /* Coin exchange rates table */
@@ -359,17 +350,17 @@ SELECT bh.number,
        bmt.total_tx_fees,
        bmt.avg_tx_fees
 FROM block_metrics_header AS bh
-    LEFT JOIN block_metrics_trace AS bmt ON bh.number = bmt.number;
+         LEFT JOIN block_metrics_trace AS bmt ON bh.number = bmt.number;
 
 
 
 CREATE TABLE address_internal_transaction_count
 (
     address      CHAR(42),
+    block_number NUMERIC NOT NULL,
     total        BIGINT  NOT NULL,
     total_out    BIGINT  NOT NULL,
     total_in     BIGINT  NOT NULL,
-    block_number NUMERIC NOT NULL,
     PRIMARY KEY (address, block_number)
 );
 
@@ -377,26 +368,63 @@ CREATE TABLE address_internal_transaction_count_delta
 (
     id              BIGSERIAL PRIMARY KEY,
     address         CHAR(42),
-    total_delta     BIGINT  NOT NULL,
-    total_out_delta BIGINT  NOT NULL,
-    total_in_delta  BIGINT  NOT NULL,
     block_number    NUMERIC NOT NULL,
+    total_delta     INT     NOT NULL,
+    total_out_delta INT     NOT NULL,
+    total_in_delta  INT     NOT NULL,
     UNIQUE (address, block_number)
 );
 
 CREATE TABLE address_contracts_created_count
 (
     address      CHAR(42),
-    total        BIGINT  NOT NULL,
     block_number NUMERIC NOT NULL,
+    count        BIGINT  NOT NULL,
     PRIMARY KEY (address, block_number)
 );
 
 CREATE TABLE address_contracts_created_count_delta
 (
-    id              BIGSERIAL PRIMARY KEY,
-    address         CHAR(42),
-    total_delta     BIGINT  NOT NULL,
-    block_number    NUMERIC NOT NULL,
+    id           BIGSERIAL PRIMARY KEY,
+    address      CHAR(42),
+    block_number NUMERIC NOT NULL,
+    delta  INT     NOT NULL,
     UNIQUE (address, block_number)
+);
+
+CREATE TABLE address_token_count
+(
+    address      CHAR(42),
+    token_type   VARCHAR(32),
+    block_number NUMERIC,
+    count        BIGINT NOT NULL,
+    PRIMARY KEY (address, token_type, block_number)
+);
+
+
+CREATE TABLE address_token_count_delta
+(
+    id           BIGSERIAL PRIMARY KEY,
+    address      CHAR(42)    NOT NULL,
+    token_type   VARCHAR(32) NOT NULL,
+    block_number NUMERIC     NOT NULL,
+    delta        INT         NULL
+);
+
+CREATE TABLE contract_holder_count
+(
+    contract_address CHAR(42),
+    block_number     NUMERIC,
+    token_type   VARCHAR(32) NOT NULL,
+    count            BIGINT  NOT NULL,
+    PRIMARY KEY (contract_address, block_number, token_type)
+);
+
+CREATE TABLE contract_holder_count_delta
+(
+    id               BIGSERIAL PRIMARY KEY,
+    contract_address CHAR(42) NOT NULL,
+    token_type   VARCHAR(32) NOT NULL,
+    block_number     NUMERIC NOT NULL,
+    delta            INT  NOT NULL
 );
