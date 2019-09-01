@@ -43,8 +43,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   private lateinit var internalTxsCountsCache: InternalTxsCountsCache
 
-  override val targetBatchTime = Duration.ofMillis(300)
-
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
