@@ -10,13 +10,12 @@ import {TxService} from '@app/dao/tx.service'
 import {BlockMetricsService} from '@app/dao/block-metrics.service'
 import {InjectEntityManager} from '@nestjs/typeorm'
 import {EntityManager} from 'typeorm'
-import {MetadataService} from "@app/dao/metadata.service";
-import BigNumber from "bignumber.js";
+import {MetadataService} from '@app/dao/metadata.service';
+import BigNumber from 'bignumber.js';
 
 export interface SyncStatusPayload {
   earliest_block_number: string
 }
-
 
 export type PgEventPayload = SyncStatusPayload
 
@@ -49,7 +48,7 @@ function isPgEvent<PgEvent>() {
 function isSyncStatusEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => e.table === 'sync_status')
+    filter(e => e.table === 'sync_status'),
   )
 }
 
@@ -143,7 +142,6 @@ export class PgSubscriptionService {
       )
       .subscribe(async blockHashes => {
 
-        console.log('Block hashes', blockHashes)
         logger.info(
           `[Subscription service] New blocks available, count = %d, hashes = %s`,
           blockHashes.length,
@@ -192,7 +190,7 @@ export class PgSubscriptionService {
     const latestBlockNumber = this.latestBlockNumber || new BigNumber(-1)
     const newBlockNumber = new BigNumber(payload.earliest_block_number)
 
-    if(newBlockNumber.gt(latestBlockNumber)) {
+    if (newBlockNumber.gt(latestBlockNumber)) {
 
       // TODO handle forks and review edge cases
 
@@ -204,7 +202,7 @@ export class PgSubscriptionService {
 
         const block = await blockService.findByNumber(numberToPublish, newBlockNumber)
 
-        if(block != null) {
+        if (block != null) {
           blockHashes$.next(block.hash)
         }
         numberToPublish = numberToPublish.plus(1)

@@ -49,7 +49,7 @@ export class BlockMetricsService {
     return this.entityManager
       .findOne(BlockMetricsTraceEntity, {
         where: { hash, number: LessThanOrEqual(blockNumber) },
-        cache
+        cache,
       })
   }
 

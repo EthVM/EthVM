@@ -1,26 +1,17 @@
-import {assignClean} from '@app/shared/utils';
 import {Column, PrimaryColumn} from 'typeorm';
 import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer';
 import {BigNumber} from 'bignumber.js';
+import {assignClean} from '@app/shared/utils';
 
-export abstract class TxCountEntity {
+export abstract class GenericCountEntity {
 
   public constructor(data: any) {
     assignClean(this, data)
   }
 
-  @PrimaryColumn({ type: 'char', length: 42, readonly: true })
-  address!: string
-
   @PrimaryColumn({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   blockNumber!: BigNumber
 
   @Column({ type: 'bigint', readonly: true, transformer: new BigNumberTransformer() })
-  total!: BigNumber
-
-  @Column({ type: 'bigint', readonly: true, transformer: new BigNumberTransformer() })
-  totalOut!: BigNumber
-
-  @Column({ type: 'bigint', readonly: true, transformer: new BigNumberTransformer() })
-  totalIn!: BigNumber
+  count!: BigNumber
 }

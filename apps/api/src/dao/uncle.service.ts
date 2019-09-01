@@ -85,7 +85,7 @@ export class UncleService {
   private async findRewards(
     entityManager: EntityManager,
     blockHashes: string[],
-    addresses: string[]
+    addresses: string[],
   ): Promise<BalanceDeltaEntity[]> {
 
     return await entityManager.createQueryBuilder(BalanceDeltaEntity, 'bd')

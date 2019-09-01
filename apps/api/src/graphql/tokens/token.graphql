@@ -15,6 +15,7 @@ type Query {
 type TokenBalancePage {
   items: [TokenBalance!]!
   hasMore: Boolean!
+  totalCount: BigNumber!
 }
 
 type TokenBalance {
@@ -39,6 +40,7 @@ type TokenHolder {
 type TokenHoldersPage {
   items: [TokenHolder!]!
   hasMore: Boolean!
+  totalCount: BigNumber!
 }
 
 type TokenExchangeRatesPage {
@@ -64,7 +66,7 @@ type TokenExchangeRate {
   circulatingSupply: BigNumber
   totalSupply: BigNumber
   lastUpdated: String
-  holdersCount: Int
+  holdersCount: BigNumber
   contract: Contract
 }
 
@@ -109,7 +111,7 @@ type TokenDetail {
   marketCap: BigNumber
   priceChangePercentage24h: BigNumber
   totalVolume: BigNumber
-  holdersCount: Int
+  holdersCount: BigNumber
 }
 
 enum ExchangeRatePair {

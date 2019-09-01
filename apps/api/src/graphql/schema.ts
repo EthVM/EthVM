@@ -408,6 +408,7 @@ export interface TokenBalance {
 export interface TokenBalancePage {
     items: TokenBalance[];
     hasMore: boolean;
+    totalCount: BigNumber;
 }
 
 export interface TokenDetail {
@@ -427,7 +428,7 @@ export interface TokenDetail {
     marketCap?: BigNumber;
     priceChangePercentage24h?: BigNumber;
     totalVolume?: BigNumber;
-    holdersCount?: number;
+    holdersCount?: BigNumber;
 }
 
 export interface TokenExchangeRate {
@@ -448,7 +449,7 @@ export interface TokenExchangeRate {
     circulatingSupply?: BigNumber;
     totalSupply?: BigNumber;
     lastUpdated?: string;
-    holdersCount?: number;
+    holdersCount?: BigNumber;
     contract?: Contract;
 }
 
@@ -465,6 +466,7 @@ export interface TokenHolder {
 export interface TokenHoldersPage {
     items: TokenHolder[];
     hasMore: boolean;
+    totalCount: BigNumber;
 }
 
 export interface TokenMetadata {

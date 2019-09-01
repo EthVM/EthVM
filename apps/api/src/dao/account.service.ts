@@ -28,12 +28,12 @@ export class AccountService {
     return this.balanceRepository.findOne({
       where: {
         address,
-        blockNumber: LessThanOrEqual(blockNumber)
+        blockNumber: LessThanOrEqual(blockNumber),
       },
       order: {
-        blockNumber: 'DESC'
+        blockNumber: 'DESC',
       },
-      cache: true
+      cache: true,
     })
   }
 
@@ -41,12 +41,12 @@ export class AccountService {
     return this.txCountsRepository.findOne({
       where: {
         address,
-        blockNumber: LessThanOrEqual(blockNumber)
+        blockNumber: LessThanOrEqual(blockNumber),
       },
       order: {
-        blockNumber: 'DESC'
+        blockNumber: 'DESC',
       },
-      cache: true
+      cache: true,
     })
   }
 

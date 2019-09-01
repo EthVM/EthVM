@@ -9,6 +9,8 @@ import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.ent
 import {TokenMetadataEntity} from '@app/orm/entities/token-metadata.entity';
 import {TokenDetailEntity} from '@app/orm/entities/token-detail.entity';
 import {ContractEntity} from '@app/orm/entities/contract.entity';
+import {AddressTokenCountEntity} from '@app/orm/entities/address-token-count.entity';
+import {ContractHolderCountEntity} from '@app/orm/entities/contract-holder-count.entity';
 
 @Injectable()
 export class TokenService {
@@ -26,14 +28,27 @@ export class TokenService {
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {}
 
+  zeroBN = new BigNumber(0)
+
   async findAllTokenBalancesForContract(
     contractAddress: string,
     limit: number = 10,
     offset: number = 0,
     blockNumber: BigNumber,
-  ): Promise<[BalanceEntity[], boolean]> {
+  ): Promise<[BalanceEntity[], boolean, BigNumber]> {
 
     // TODO handle ERC721
+
+    const erc20Count = await this.entityManager.findOne(ContractHolderCountEntity, {
+      where: { contractAddress, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber) },
+      order: { blockNumber: 'DESC' },
+      cache: true,
+    })
+
+    const count = erc20Count ? erc20Count.count : this.zeroBN
+    if (count.isEqualTo(0)) {
+      return [[], false, count]
+    }
 
     const balances = await this.entityManager.query(`
       WITH _balances as (
@@ -55,7 +70,7 @@ export class TokenService {
     if (hasMore) {
       balances.pop()
     }
-    return [balances, hasMore]
+    return [balances, hasMore, count]
   }
 
   async findTokenBalance(tokenAddress: string, holderAddress: string, blockNumber: BigNumber): Promise<BalanceEntity | undefined> {
@@ -63,9 +78,24 @@ export class TokenService {
     return this.balanceRepository.findOne({ where, cache: true, order: { blockNumber: 'DESC' } })
   }
 
-  async findAllTokenBalancesForAddress(address: string, offset: number = 0, limit: number = 10, blockNumber: BigNumber): Promise<[BalanceEntity[], boolean]> {
+  async findAllTokenBalancesForAddress(
+    address: string,
+    offset: number = 0,
+    limit: number = 10,
+    blockNumber: BigNumber,
+  ): Promise<[BalanceEntity[], boolean, BigNumber]> {
 
-    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[BalanceEntity[], boolean]> => {
+    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[BalanceEntity[], boolean, BigNumber]> => {
+
+      const erc20Count = await txn.findOne(AddressTokenCountEntity, {
+        where: { address, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber) },
+        order: { blockNumber: 'DESC' },
+        cache: true,
+      })
+      const count = erc20Count ? erc20Count.count : this.zeroBN
+      if (count.isEqualTo(0)) {
+        return [[], false, count]
+      }
 
       const items = await txn.query(`
       WITH _balances as (
@@ -83,10 +113,6 @@ export class TokenService {
       OFFSET $3
       LIMIT $4
     `, [address, blockNumber.toNumber(), offset, limit + 1])
-
-      if (!items.length) {
-        return [[], false]
-      }
 
       // Get token relations
       const contractAddresses = items.map(i => i.contract_address)
@@ -115,7 +141,7 @@ export class TokenService {
         items.pop() // Remove last item if extra item was retrieved
       }
 
-      return [items, hasMore]
+      return [items, hasMore, count]
 
     })
   }
@@ -193,24 +219,17 @@ export class TokenService {
     })
   }
 
-  async countTokenHolders(contract: string, blockNumber: BigNumber): Promise<number> {
+  async countTokenHolders(contractAddress: string, blockNumber: BigNumber): Promise<BigNumber> {
 
-    // Note this only works for erc20 tokens, not ERC721. Balance and token_id where clauses would need reversing for ERC721
-    const [{ count }] = await this.entityManager.query(`
-      WITH _balances as (
-        SELECT 
-          *,
-          row_number() OVER (PARTITION BY address ORDER BY block_number DESC) AS row_number
-          FROM balance
-          WHERE contract_address = $1
-          AND token_id IS NULL
-          AND balance > 0
-          AND block_number <= $2
-      )
-      SELECT COUNT(*) FROM _balances
-      WHERE row_number = 1
-    `, [contract, blockNumber.toNumber()])
-    return count
+    // Note this only works for erc20 tokens, not ERC721.
+    const contractHolderCount = await this.entityManager.findOne(ContractHolderCountEntity, {
+      where: { contractAddress, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber) },
+      order: { blockNumber: 'DESC' },
+      cache: true,
+    })
+
+    return contractHolderCount ? contractHolderCount.count : this.zeroBN
+
   }
 
   async totalValueUSDByAddress(address: string, blockNumber: BigNumber): Promise<BigNumber | undefined> {

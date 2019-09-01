@@ -1,10 +1,13 @@
 import {Entity, PrimaryColumn} from 'typeorm'
 import {GenericCountEntity} from '@app/orm/entities/generic-count.entity';
 
-@Entity('address_contracts_created_count')
-export class AddressContractsCreatedCountEntity extends GenericCountEntity {
+@Entity('address_token_count')
+export class AddressTokenCountEntity extends GenericCountEntity {
 
   @PrimaryColumn({ type: 'char', length: 42, readonly: true })
   address!: string
+
+  @PrimaryColumn({ type: 'varchar', length: 32, readonly: true })
+  tokenType!: string
 
 }

@@ -19,7 +19,7 @@ export interface contractsCreatedBy_summaries_items {
 export interface contractsCreatedBy_summaries {
   __typename: "ContractSummaryPage";
   items: contractsCreatedBy_summaries_items[];
-  hasMore: boolean;
+  hasMore: boolean | null;
 }
 
 export interface contractsCreatedBy {

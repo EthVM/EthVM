@@ -41,7 +41,7 @@ export class BlockService {
 
     const avgBlockTime = totalBlockTime.gt(this.zeroBI) ? totalBlockTime.dividedBy(blocks.length) : totalBlockTime
 
-    if(avgBlockTime.eq(0)) return this.zeroBI
+    if (avgBlockTime.eq(0)) return this.zeroBI
 
     return blocks[0].difficulty
       .dividedBy(avgBlockTime)

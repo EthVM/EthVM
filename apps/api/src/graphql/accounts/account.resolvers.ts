@@ -31,7 +31,7 @@ export class AccountResolvers {
     const txCountsDto = {
       totalTxCount: txCounts.total,
       inTxCount: txCounts.totalIn,
-      outTxCount: txCounts.totalOut
+      outTxCount: txCounts.totalOut,
     }
 
     return new AccountDto({...balance, isMiner, isContractCreator, hasInternalTransfers, isContract, ...txCountsDto })

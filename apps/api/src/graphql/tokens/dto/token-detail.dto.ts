@@ -11,7 +11,7 @@ export class TokenDetailDto implements TokenDetail {
   creator?: string
   currentPrice?: BigNumber
   decimals?: number
-  holdersCount?: number
+  holdersCount?: BigNumber
   logo?: string
   marketCap?: BigNumber
   name?: string

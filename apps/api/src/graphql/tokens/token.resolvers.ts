@@ -27,8 +27,8 @@ export class TokenResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenHoldersPageDto> {
-    const [items, hasMore] = await this.tokenService.findAllTokenBalancesForContract(address, limit, offset, blockNumber)
-    return new TokenHoldersPageDto({ items, hasMore })
+    const [items, hasMore, totalCount] = await this.tokenService.findAllTokenBalancesForContract(address, limit, offset, blockNumber)
+    return new TokenHoldersPageDto({ items, hasMore, totalCount })
   }
 
   @Query()
@@ -48,8 +48,8 @@ export class TokenResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenBalancePageDto> {
-    const [items, hasMore] = await this.tokenService.findAllTokenBalancesForAddress(address, offset, limit, blockNumber)
-    return new TokenBalancePageDto({items, hasMore})
+    const [items, hasMore, totalCount] = await this.tokenService.findAllTokenBalancesForAddress(address, offset, limit, blockNumber)
+    return new TokenBalancePageDto({ items, hasMore, totalCount })
   }
 
   @Query()

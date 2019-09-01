@@ -59,7 +59,12 @@ export class ContractService {
     )
   }
 
-  async findContractsCreatedBy(creator: string, blockNumber: BigNumber, offset: number = 0, limit: number = 10): Promise<[ContractSummary[], boolean, BigNumber]> {
+  async findContractsCreatedBy(
+    creator: string,
+    blockNumber: BigNumber,
+    offset: number = 0,
+    limit: number = 10,
+  ): Promise<[ContractSummary[], boolean, BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
@@ -71,7 +76,7 @@ export class ContractService {
           order: { blockNumber: 'DESC' },
           cache: true,
         })
-        const count = contractsCreatedCount ? contractsCreatedCount.total : undefined
+        const count = contractsCreatedCount ? contractsCreatedCount.count : undefined
 
         if (!count) {
           return [[], false, new BigNumber(0)]
