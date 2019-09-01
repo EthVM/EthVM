@@ -64,7 +64,7 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
   override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, BlockRecord>>) {
 
     records
-      .forEach{ record ->
+      .forEach { record ->
 
         val block = record.value()
 
@@ -94,9 +94,6 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
         fungibleBalanceCache.writeToDb(txCtx)
         nonFungibleBalanceCache.writeToDb(txCtx)
-
       }
-
-
   }
 }

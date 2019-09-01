@@ -152,8 +152,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
         // write count records
         internalTxsCountsCache.writeToDb(txCtx)
-
       }
-
   }
 }

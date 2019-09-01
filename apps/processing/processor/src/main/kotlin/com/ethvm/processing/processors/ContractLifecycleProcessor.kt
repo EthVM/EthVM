@@ -154,10 +154,7 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
                 .execute()
             }
           }
-
-
       }
-
   }
 
   private fun fetchName(contractAddress: String) =

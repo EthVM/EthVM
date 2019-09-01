@@ -56,6 +56,5 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
     txCtx
       .batchInsert(dbRecords)
       .execute()
-
   }
 }

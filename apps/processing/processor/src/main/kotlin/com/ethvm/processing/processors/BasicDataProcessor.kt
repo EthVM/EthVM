@@ -129,15 +129,12 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
         // convert to db records
         block.toDbRecords(blockTime.toInt())
-
       }.flatten()
-
 
     txCtx
       .batchInsert(dbRecords)
       .execute()
 
     blockCountsCache.writeToDb(txCtx)
-
   }
 }

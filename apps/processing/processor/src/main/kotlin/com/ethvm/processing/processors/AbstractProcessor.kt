@@ -247,7 +247,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
           var batch = emptyList<Pair<BlockType, ConsumerRecord<CanonicalKeyRecord, V>>>()
 
-          while(recordIterator.hasNext() && batch.size < batchSize) {
+          while (recordIterator.hasNext() && batch.size < batchSize) {
 
             val record = recordIterator.next()
 
@@ -267,7 +267,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
               else -> batch + Pair(BlockType.FORK, record)
             }
-
           }
 
           val batchIterator = batch.iterator()
@@ -302,13 +301,11 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
                     diskDb.commit()
                   }
-
               }
 
               else -> {
-              }  // do nothing
+              } // do nothing
             }
-
           }
 
           // process any left overs
@@ -328,8 +325,8 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
           val targetRatio = batchTimeMs.toFloat() / targetBatchTime.toMillis()
           when {
-            targetRatio > 1.5f -> batchSize /= 2    // reduce batch size
-            targetRatio < 0.5f -> batchSize *= 2    // increase batch size
+            targetRatio > 1.5f -> batchSize /= 2 // reduce batch size
+            targetRatio < 0.5f -> batchSize *= 2 // increase batch size
           }
 
           if (batchSize < 1) batchSize = 1
@@ -342,7 +339,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         consumer.commitSync()
 
         val last = records.last()
-        logger.info { "Processing complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${last.timestamp()}"}
+        logger.info { "Processing complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${last.timestamp()}" }
       }
     } catch (e: Exception) {
 
@@ -432,6 +429,4 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
     consumer.close(Duration.ofSeconds(30))
     logger.info { "clean up complete" }
   }
-
-
 }
