@@ -38,4 +38,4 @@ VOLUME ["/var/lib/processor"]
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Define cmd
-CMD ["/usr/bin/processor/bin/processor"]
+CMD ["/usr/bin/processor/bin/processor", "process"]

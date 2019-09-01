@@ -98,7 +98,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
   private val stopLatch = CountDownLatch(1)
 
-  protected open val targetBatchTime = Duration.ofSeconds(1)
+  protected open val targetBatchTime = Duration.ofMillis(500)
 
   private var batchSize = 1
   private var maxBatchSize = 2048
