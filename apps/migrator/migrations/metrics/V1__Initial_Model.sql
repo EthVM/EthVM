@@ -1,11 +1,3 @@
-CREATE TABLE sync_status
-(
-    component       VARCHAR(128),
-    block_number    DECIMAL   NOT NULL,
-    timestamp       TIMESTAMP NOT NULL,
-    block_timestamp TIMESTAMP NOT NULL,
-    PRIMARY KEY (component)
-);
 
 CREATE TABLE sync_status_history
 (
@@ -368,3 +360,43 @@ SELECT bh.number,
        bmt.avg_tx_fees
 FROM block_metrics_header AS bh
     LEFT JOIN block_metrics_trace AS bmt ON bh.number = bmt.number;
+
+
+
+CREATE TABLE address_internal_transaction_count
+(
+    address      CHAR(42),
+    total        BIGINT  NOT NULL,
+    total_out    BIGINT  NOT NULL,
+    total_in     BIGINT  NOT NULL,
+    block_number NUMERIC NOT NULL,
+    PRIMARY KEY (address, block_number)
+);
+
+CREATE TABLE address_internal_transaction_count_delta
+(
+    id              BIGSERIAL PRIMARY KEY,
+    address         CHAR(42),
+    total_delta     BIGINT  NOT NULL,
+    total_out_delta BIGINT  NOT NULL,
+    total_in_delta  BIGINT  NOT NULL,
+    block_number    NUMERIC NOT NULL,
+    UNIQUE (address, block_number)
+);
+
+CREATE TABLE address_contracts_created_count
+(
+    address      CHAR(42),
+    total        BIGINT  NOT NULL,
+    block_number NUMERIC NOT NULL,
+    PRIMARY KEY (address, block_number)
+);
+
+CREATE TABLE address_contracts_created_count_delta
+(
+    id              BIGSERIAL PRIMARY KEY,
+    address         CHAR(42),
+    total_delta     BIGINT  NOT NULL,
+    block_number    NUMERIC NOT NULL,
+    UNIQUE (address, block_number)
+);
