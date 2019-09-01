@@ -66,7 +66,6 @@ class FungibleBalanceCache(
     Serializer.LONG
   )
 
-
   private val cacheStores = listOf(balanceMap, metadataMap, addressErc20BalanceCount, erc20ContractBalanceCount)
 
   private var balanceRecords = emptyList<BalanceRecord>()
@@ -149,7 +148,7 @@ class FungibleBalanceCache(
         this.balance = (currentBalance + delta.amount.toBigInteger()).toBigDecimal()
       }
 
-    if(balance.contractAddress != null) {
+    if (balance.contractAddress != null) {
       incrementBalanceCounts(balance) // Increment counts for erc20 tokens
     }
 
@@ -236,7 +235,6 @@ class FungibleBalanceCache(
       contractHolderCountRecords = contractHolderCountRecords + contractCount
       contractHolderCountDeltaRecords = contractHolderCountDeltaRecords + contractCountDelta
     }
-
   }
 
   fun writeToDb(ctx: DSLContext) {
@@ -320,7 +318,6 @@ class FungibleBalanceCache(
       .deleteFrom(CONTRACT_HOLDER_COUNT_DELTA)
       .where(CONTRACT_HOLDER_COUNT_DELTA.TOKEN_TYPE.eq(tokenTypeStr))
       .execute()
-
   }
 
   fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -395,7 +392,6 @@ class FungibleBalanceCache(
     } else {
 
       cacheStores.forEach { it.clear() }
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
