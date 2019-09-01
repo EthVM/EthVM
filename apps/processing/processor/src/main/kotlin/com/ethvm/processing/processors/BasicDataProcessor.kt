@@ -37,6 +37,8 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
   private lateinit var blockTimestampCache: BlockTimestampCache
 
+  override val targetBatchTime = Duration.ofMillis(300)
+
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
 
     blockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
