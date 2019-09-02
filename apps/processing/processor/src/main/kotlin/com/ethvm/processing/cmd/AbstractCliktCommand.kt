@@ -122,7 +122,7 @@ abstract class AbstractCliktCommand(help: String) : CliktCommand(help) {
 
     return processorList
       .map { name ->
-        val processorEnum = ProcessorEnum.forName(name)
+        val processorEnum = Cli.ProcessorEnum.forName(name)
         requireNotNull(processorEnum) { "Processor not found with name = $name" }
         // instantiate the processor
         processorEnum.newInstance()
