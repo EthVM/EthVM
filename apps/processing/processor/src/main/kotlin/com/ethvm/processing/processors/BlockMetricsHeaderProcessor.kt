@@ -56,26 +56,25 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
       .execute()
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, BlockRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
 
-    val dbRecords = records
-      .map { record ->
-        val block = record.value()
+    val block = record.value()
 
-        val blockNumber = block.header.number.bigInteger()
-        val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
+    val blockNumber = block.header.number.bigInteger()
+    val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
 
-        blockTimestampCache[blockNumber] = block.header.timestamp
-        val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
+    blockTimestampCache[blockNumber] = block.header.timestamp
+    val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
 
-        val blockTime =
-          if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
+    val blockTime =
+      if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
 
-        block.toMetricRecord(blockTime.toInt())
-      }
+    val dbRecord = block.toMetricRecord(blockTime.toInt())
 
     txCtx
-      .batchInsert(dbRecords)
+      .insertInto(BLOCK_METRICS_HEADER)
+      .set(dbRecord)
       .execute()
+
   }
 }

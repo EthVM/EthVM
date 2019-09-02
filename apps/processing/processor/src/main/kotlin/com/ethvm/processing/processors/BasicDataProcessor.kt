@@ -24,11 +24,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
   override val processorId = "basic-data-processor"
 
-  override val kafkaProps: Properties = Properties()
-    .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 128)
-    }
-
   private val topicBlocks: String by inject(named("topicBlocks"))
 
   override val topics = listOf(topicBlocks)
@@ -37,7 +32,7 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
   private lateinit var blockTimestampCache: BlockTimestampCache
 
-  override val targetBatchTime = Duration.ofMillis(300)
+  override val maxTransactionTime = Duration.ofMillis(300)
 
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
 
@@ -89,52 +84,49 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
     blockCountsCache.rewindUntil(txCtx, blockNumber)
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, BlockRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
 
-    val dbRecords =
-      records.map { record ->
+    // insert basic data
 
-        // insert basic data
+    var block = record.value()
 
-        var block = record.value()
+    // increment counts along the way
+    blockCountsCache.count(block)
 
-        // increment counts along the way
-        blockCountsCache.count(block)
+    val blockNumber = block.header.number.bigInteger()
+    val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
 
-        val blockNumber = block.header.number.bigInteger()
-        val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
+    if (blockNumber == BigInteger.ZERO) {
+      // we override the 0 timestamp
 
-        if (blockNumber == BigInteger.ZERO) {
-          // we override the 0 timestamp
+      var timestampMs = netConfig.genesis.timestamp
+      if (timestampMs == 0L) {
+        // we are probably using a private network
+        timestampMs = System.currentTimeMillis()
+      }
 
-          var timestampMs = netConfig.genesis.timestamp
-          if (timestampMs == 0L) {
-            // we are probably using a private network
-            timestampMs = System.currentTimeMillis()
-          }
+      block = BlockRecord.newBuilder(block)
+        .setHeader(
+          BlockHeaderRecord.newBuilder(block.header)
+            .setTimestamp(timestampMs)
+            .build()
+        ).build()
+    }
 
-          block = BlockRecord.newBuilder(block)
-            .setHeader(
-              BlockHeaderRecord.newBuilder(block.header)
-                .setTimestamp(timestampMs)
-                .build()
-            ).build()
-        }
+    blockTimestampCache[blockNumber] = block.header.timestamp
+    val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
 
-        blockTimestampCache[blockNumber] = block.header.timestamp
-        val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
+    val blockTime =
+      if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
 
-        val blockTime =
-          if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
-
-        // convert to db records
-        block.toDbRecords(blockTime.toInt())
-      }.flatten()
+    // convert to db records
+    val dbRecords = block.toDbRecords(blockTime.toInt())
 
     txCtx
       .batchInsert(dbRecords)
       .execute()
 
     blockCountsCache.writeToDb(txCtx)
+
   }
 }

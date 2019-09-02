@@ -48,13 +48,12 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
       .execute()
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, TraceListRecord>>) {
-
-    val dbRecords = records
-      .map { it.value().toMetricsRecord() }
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
 
     txCtx
-      .batchInsert(dbRecords)
+      .insertInto(BLOCK_METRICS_TRACE)
+      .set(record.value().toMetricsRecord())
       .execute()
+
   }
 }

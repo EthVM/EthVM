@@ -25,7 +25,7 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
   override val kafkaProps: Properties = Properties()
     .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 128)
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 256)
     }
 
   override val topics = listOf(topicBlocks)
@@ -61,39 +61,36 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
     nonFungibleBalanceCache.rewindUntil(txCtx, blockNumber)
   }
 
-  override fun process(txCtx: DSLContext, records: List<ConsumerRecord<CanonicalKeyRecord, BlockRecord>>) {
+  override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
 
-    records
-      .forEach { record ->
+    val block = record.value()
 
-        val block = record.value()
+    val deltaRecords = block
+      .receipts
+      .map { it.toBalanceDeltas(block) }
+      .flatten()
 
-        val deltaRecords = block
-          .receipts
-          .map { it.toBalanceDeltas(block) }
-          .flatten()
+    txCtx.batchInsert(deltaRecords).execute()
 
-        txCtx.batchInsert(deltaRecords).execute()
+    deltaRecords
+      .forEach { delta ->
 
-        deltaRecords
-          .forEach { delta ->
+        when (val tokenType = delta.tokenType) {
 
-            when (val tokenType = delta.tokenType) {
+          TokenType.ERC20.toString() ->
+            fungibleBalanceCache.add(delta)
 
-              TokenType.ERC20.toString() ->
-                fungibleBalanceCache.add(delta)
+          TokenType.ERC721.toString() ->
+            nonFungibleBalanceCache.assign(delta)
 
-              TokenType.ERC721.toString() ->
-                nonFungibleBalanceCache.assign(delta)
-
-              else -> throw UnsupportedOperationException("Unexpected token type: $tokenType")
-            }
-          }
-
-        // write changes to db
-
-        fungibleBalanceCache.writeToDb(txCtx)
-        nonFungibleBalanceCache.writeToDb(txCtx)
+          else -> throw UnsupportedOperationException("Unexpected token type: $tokenType")
+        }
       }
+
+    // write changes to db
+
+    fungibleBalanceCache.writeToDb(txCtx)
+    nonFungibleBalanceCache.writeToDb(txCtx)
+
   }
 }
