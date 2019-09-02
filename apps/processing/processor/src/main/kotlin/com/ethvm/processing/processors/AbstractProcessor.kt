@@ -184,14 +184,35 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
   override fun rewindUntil(blockNumber: BigInteger) {
 
+    logger.info { "Rewind requested for $processorId to block number $blockNumber" }
+
     dbContext.transaction { txConfig ->
 
       val txCtx = DSL.using(txConfig)
 
-      rewindUntil(txCtx, blockNumber)
+      // Find closest batch end in sync_status_history
+      val record = txCtx
+        .select(SYNC_STATUS_HISTORY.BLOCK_NUMBER)
+        .from(SYNC_STATUS_HISTORY)
+        .where(
+          SYNC_STATUS_HISTORY.COMPONENT.eq(processorId)
+            .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.lessThan(blockNumber.toBigDecimal()))
+        )
+        .orderBy(SYNC_STATUS_HISTORY.BLOCK_NUMBER.desc())
+        .limit(1)
+        .fetchOne()
 
-      hashCache.removeKeysFrom(blockNumber)
+      val latestBlockNumber = record.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
+      val rewindTo = latestBlockNumber.plus(BigInteger.ONE)
+
+      logger.info { "Rewinding to closest batch end $latestBlockNumber for $processorId" }
+
+      rewindUntil(txCtx, rewindTo)
+
+      hashCache.removeKeysFrom(rewindTo)
       hashCache.writeToDb(txCtx)
+
+      logger.info { "HashCache updated, $processorId latest block number = $latestBlockNumber" }
 
       txCtx
         .deleteFrom(SYNC_STATUS_HISTORY)
@@ -200,6 +221,8 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
             .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
         )
         .execute()
+
+      logger.info { "Sync status history updated, $processorId latest block number = $latestBlockNumber" }
 
       diskDb.commit()
     }

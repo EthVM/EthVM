@@ -93,6 +93,8 @@ class BlockHashCache(
 
   fun removeKeysFrom(from: BigInteger) {
 
+    logger.info { "Removing keys from BlockHashCache starting from $from" }
+
     var key = from
 
     while (store.containsKey(key)) {
