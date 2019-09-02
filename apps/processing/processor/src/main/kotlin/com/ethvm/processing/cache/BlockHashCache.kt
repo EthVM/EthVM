@@ -96,20 +96,20 @@ class BlockHashCache(
 
     while (store.containsKey(key)) {
       store.remove(key)
-      key = key.plus(BigInteger.ONE)
       keysToRemove = keysToRemove + key
+      key = key.plus(BigInteger.ONE)
     }
 
   }
 
   fun writeToDb(txCtx: DSLContext) {
 
-    if (historyRecords.isNotEmpty()) {
+    txCtx
+      .deleteFrom(PROCESSOR_HASH_LOG)
+      .where(PROCESSOR_HASH_LOG.BLOCK_NUMBER.`in`(keysToRemove.map { it.toBigDecimal() }))
+      .execute()
 
-      txCtx
-        .deleteFrom(PROCESSOR_HASH_LOG)
-        .where(PROCESSOR_HASH_LOG.BLOCK_NUMBER.`in`(keysToRemove.map { it.toBigDecimal() }))
-        .execute()
+    if (historyRecords.isNotEmpty()) {
 
       txCtx
         .batchInsert(historyRecords)
