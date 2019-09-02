@@ -47,7 +47,7 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
           processor.initialise()
           logger.info { "Initialisation complete for ${processor.javaClass}" }
         }
-      }
+      }.toList()
 
     // block until they complete
     futures
