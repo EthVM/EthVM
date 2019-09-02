@@ -91,12 +91,15 @@ class BlockHashCache(
   }
 
   fun removeKeysFrom(from: BigInteger) {
+
     var key = from
+
     while (store.containsKey(key)) {
       store.remove(key)
       key = key.plus(BigInteger.ONE)
       keysToRemove = keysToRemove + key
     }
+
   }
 
   fun writeToDb(txCtx: DSLContext) {

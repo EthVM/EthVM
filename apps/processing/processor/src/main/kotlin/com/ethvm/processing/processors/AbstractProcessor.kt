@@ -144,8 +144,12 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       // we add one as the block number parameter is inclusive
 
       val rewindBlockNumber = latestSyncBlock.plus(BigInteger.ONE)
-      logger.info { "Rewinding to block = $rewindBlockNumber" }
+      logger.info { "Rewinding until and including block = $rewindBlockNumber" }
       rewindUntil(txCtx, rewindBlockNumber)
+
+      // clear out hash cache
+      hashCache.removeKeysFrom(rewindBlockNumber)
+      hashCache.writeToDb(txCtx)
 
       logger.info { "initialised" }
     }
@@ -289,7 +293,13 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
                     writeBatch = emptyList()
 
                     // rewind
-                    rewindUntil(txCtx, record.key().number.bigInteger())
+                    val forkBlockNumber = record.key().number.bigInteger()
+
+                    rewindUntil(txCtx, forkBlockNumber)
+
+                    // clear out hash cache
+                    hashCache.removeKeysFrom(forkBlockNumber)
+                    hashCache.writeToDb(txCtx)
 
                     // process fork block
                     processBatch(txCtx, listOf(record))
