@@ -75,6 +75,5 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
       .insertInto(BLOCK_METRICS_HEADER)
       .set(dbRecord)
       .execute()
-
   }
 }

@@ -21,6 +21,7 @@ class BlockHashCache(
   val logger = KotlinLogging.logger {}
 
   private var historyRecords = emptyList<ProcessorHashLogRecord>()
+  private var keysToRemove = emptyList<BigInteger>()
 
   private val historySize = 100000
 
@@ -90,30 +91,25 @@ class BlockHashCache(
     }
   }
 
-  fun removeKeysFrom(txCtx: DSLContext, from: BigInteger) {
+  fun removeKeysFrom(from: BigInteger) {
 
     logger.info { "Removing keys from BlockHashCache starting from $from" }
 
     var key = from
 
-    // remove from local store
     while (store.containsKey(key)) {
       store.remove(key)
+      keysToRemove = keysToRemove + key
       key = key.plus(BigInteger.ONE)
     }
-
-    // remove from db
-    txCtx
-      .deleteFrom(PROCESSOR_HASH_LOG)
-      .where(
-        PROCESSOR_HASH_LOG.BLOCK_NUMBER.ge(from.toBigDecimal())
-          .and(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
-      )
-      .execute()
-
   }
 
   fun writeToDb(txCtx: DSLContext) {
+
+    txCtx
+      .deleteFrom(PROCESSOR_HASH_LOG)
+      .where(PROCESSOR_HASH_LOG.BLOCK_NUMBER.`in`(keysToRemove.map { it.toBigDecimal() }))
+      .execute()
 
     if (historyRecords.isNotEmpty()) {
 
@@ -122,6 +118,7 @@ class BlockHashCache(
         .execute()
     }
 
+    keysToRemove = emptyList()
     historyRecords = emptyList()
   }
 }

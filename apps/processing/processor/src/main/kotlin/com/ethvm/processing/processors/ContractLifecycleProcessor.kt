@@ -8,7 +8,6 @@ import com.ethvm.db.routines.ClearContractDestroyedFields
 import com.ethvm.db.tables.records.ContractMetadataRecord
 import com.ethvm.processing.extensions.toContractRecords
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -24,7 +23,6 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.Transaction
 import java.math.BigInteger
-import java.util.Properties
 import java.util.concurrent.CompletableFuture
 import kotlin.math.min
 
@@ -145,9 +143,7 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
             .where(Tables.CONTRACT.ADDRESS.eq(dbRecord.address))
             .execute()
         }
-
       }
-
   }
 
   private fun fetchName(contractAddress: String) =

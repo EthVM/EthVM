@@ -91,6 +91,5 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
     fungibleBalanceCache.writeToDb(txCtx)
     nonFungibleBalanceCache.writeToDb(txCtx)
-
   }
 }

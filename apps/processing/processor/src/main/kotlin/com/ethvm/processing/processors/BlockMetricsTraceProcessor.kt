@@ -54,6 +54,5 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
       .insertInto(BLOCK_METRICS_TRACE)
       .set(record.value().toMetricsRecord())
       .execute()
-
   }
 }

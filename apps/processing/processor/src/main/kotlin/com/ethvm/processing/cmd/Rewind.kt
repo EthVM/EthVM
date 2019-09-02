@@ -21,7 +21,10 @@ class Rewind : AbstractCliktCommand(help = "Rewind processors to a specified con
     requireNotNull(blockNumber) { "blockNumber must be specified" }
 
     // rewind block number is inclusive so we add one
-    val rewindUntil = blockNumber!!.toBigInteger().plus(BigInteger.ONE)
+    var rewindUntil = blockNumber!!.toBigInteger().plus(BigInteger.ONE)
+    if (rewindUntil < BigInteger.ZERO) {
+      rewindUntil = BigInteger.ZERO
+    }
 
     rewind(rewindUntil, processorsList)
   }

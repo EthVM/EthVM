@@ -258,7 +258,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
                 else -> Pair(BlockType.FORK, record)
               }
-
             }
 
         val recordIterator = classifiedRecords
@@ -296,7 +295,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
                     // update hash entry
                     hashCache[blockNumber] = blockHashFor(record.value())
                     hashCache.writeToDb(txCtx)
-
                   }
 
                   BlockType.FORK -> {
@@ -310,14 +308,13 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
                     hashCache.writeToDb(txCtx)
                   }
 
-                  else -> {}  // do nothing
+                  else -> {} // do nothing
                 }
 
                 recordCount += 1
 
                 txElapsedTimeMs = System.currentTimeMillis() - txStartTimeMs
               }
-
 
               // update latest block number
               val lastBlockNumber = lastRecord!!.key().number.bigInteger()
@@ -328,7 +325,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
               logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${lastRecord!!.timestamp()}" }
             }
-
         }
 
         // commit to kafka
@@ -347,7 +343,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       stopLatch.countDown()
     }
   }
-
 
   protected fun getLastSyncBlock(txCtx: DSLContext): BigInteger? {
 

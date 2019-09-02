@@ -9,14 +9,12 @@ import com.ethvm.processing.cache.BlockCountsCache
 import com.ethvm.processing.cache.BlockTimestampCache
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.time.Duration
-import java.util.Properties
 
 class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
 
@@ -127,6 +125,5 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
       .execute()
 
     blockCountsCache.writeToDb(txCtx)
-
   }
 }
