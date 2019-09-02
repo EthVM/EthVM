@@ -22,6 +22,11 @@ export class BalanceResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalancePageDto> {
+
+    if (!blockNumber) { // There is no data
+      return new BalancePageDto({ items: [], hasMore: false })
+    }
+
     const [items, hasMore] = await this.balanceService.find(addresses, blockNumber, contracts, offset, limit)
     return new BalancePageDto({ items, hasMore })
   }

@@ -18,6 +18,11 @@ export class AccountResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<AccountDto | undefined> {
+
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
+
     const balance = await this.accountService.findEtherBalanceByAddress(address, blockNumber)
     if (!balance) {
       return undefined

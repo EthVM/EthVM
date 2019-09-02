@@ -15,6 +15,7 @@ import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity';
 import {BlockMetricsTraceEntity} from '@app/orm/entities/block-metrics-trace.entity';
 import {BlockMetricsTraceDto} from '@app/graphql/block-metrics/dto/block-metrics-trace.dto';
 import {BlockMetricsPageDto} from '@app/graphql/block-metrics/dto/block-metrics-page.dto';
+import {BalancePageDto} from '@app/graphql/balances/dto/balance-page.dto';
 
 @Resolver('BlockMetric')
 @UseInterceptors(SyncingInterceptor)
@@ -30,6 +31,11 @@ export class BlockMetricsResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BlockMetricsPageDto> {
+
+    if (!blockNumber) { // There is no data
+      return new BlockMetricsPageDto(0, 0, [], 0)
+    }
+
     const [items, count] = await this.blockMetricsService.findBlockMetrics(offset, limit, blockNumber)
     return new BlockMetricsPageDto(offset, limit, items, count)
   }
@@ -42,6 +48,9 @@ export class BlockMetricsResolvers {
     @Args('start') start?: Date,
     @Args('end') end?: Date,
   ): Promise<AggregateBlockMetricDto[]> {
+    if (!blockNumber) { // There is no data
+      return []
+    }
     const entities = await this.blockMetricsService.timeseries(bucket, field, blockNumber, start, end)
     return entities.map(e => new AggregateBlockMetricDto(e))
   }

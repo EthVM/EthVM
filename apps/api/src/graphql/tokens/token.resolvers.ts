@@ -1,17 +1,17 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
-import { ParseAddressPipe } from '@app/shared/pipes/parse-address.pipe'
-import { TokenService } from '@app/dao/token.service'
-import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
-import { TokenExchangeRateDto } from '@app/graphql/tokens/dto/token-exchange-rate.dto'
-import { TokenHoldersPageDto } from '@app/graphql/tokens/dto/token-holders-page.dto'
+import {Args, Query, Resolver} from '@nestjs/graphql'
+import {ParseAddressPipe} from '@app/shared/pipes/parse-address.pipe'
+import {TokenService} from '@app/dao/token.service'
+import {TokenHolderDto} from '@app/graphql/tokens/dto/token-holder.dto'
+import {TokenExchangeRateDto} from '@app/graphql/tokens/dto/token-exchange-rate.dto'
+import {TokenHoldersPageDto} from '@app/graphql/tokens/dto/token-holders-page.dto'
 import BigNumber from 'bignumber.js'
-import { TokenExchangeRatePageDto } from '@app/graphql/tokens/dto/token-exchange-rate-page.dto'
-import { CoinExchangeRateDto } from '@app/graphql/tokens/dto/coin-exchange-rate.dto'
-import { UseInterceptors } from '@nestjs/common'
-import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
-import { TokenMetadataPageDto } from '@app/graphql/tokens/dto/token-metadata-page.dto'
-import { TokenDetailDto } from '@app/graphql/tokens/dto/token-detail.dto'
-import { TokenBalancePageDto } from '@app/graphql/tokens/dto/token-balance-page.dto'
+import {TokenExchangeRatePageDto} from '@app/graphql/tokens/dto/token-exchange-rate-page.dto'
+import {CoinExchangeRateDto} from '@app/graphql/tokens/dto/coin-exchange-rate.dto'
+import {UseInterceptors} from '@nestjs/common'
+import {SyncingInterceptor} from '@app/shared/interceptors/syncing-interceptor'
+import {TokenMetadataPageDto} from '@app/graphql/tokens/dto/token-metadata-page.dto'
+import {TokenDetailDto} from '@app/graphql/tokens/dto/token-detail.dto'
+import {TokenBalancePageDto} from '@app/graphql/tokens/dto/token-balance-page.dto'
 import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe';
 
 @Resolver('Token')
@@ -27,6 +27,9 @@ export class TokenResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenHoldersPageDto> {
+    if (!blockNumber) { // There is no data
+      return new TokenHoldersPageDto({ items: [], hasMore: false, totalCount: 0 })
+    }
     const [items, hasMore, totalCount] = await this.tokenService.findAllTokenBalancesForContract(address, limit, offset, blockNumber)
     return new TokenHoldersPageDto({ items, hasMore, totalCount })
   }
@@ -36,9 +39,12 @@ export class TokenResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
-  ): Promise<TokenHolderDto | null> {
+  ): Promise<TokenHolderDto | undefined> {
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
     const entity = await this.tokenService.findTokenBalance(address, holderAddress, blockNumber)
-    return entity ? new TokenHolderDto(entity) : null
+    return entity ? new TokenHolderDto(entity) : undefined
   }
 
   @Query()
@@ -48,6 +54,9 @@ export class TokenResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenBalancePageDto> {
+    if (!blockNumber) { // There is no data
+      return new TokenBalancePageDto({ items: [], hasMore: false, totalCount: 0 })
+    }
     const [items, hasMore, totalCount] = await this.tokenService.findAllTokenBalancesForAddress(address, offset, limit, blockNumber)
     return new TokenBalancePageDto({ items, hasMore, totalCount })
   }
@@ -57,6 +66,9 @@ export class TokenResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BigNumber | undefined> {
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
     return this.tokenService.totalValueUSDByAddress(address, blockNumber)
   }
 
@@ -93,6 +105,9 @@ export class TokenResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenExchangeRateDto | undefined> {
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
     const tokenExchangeRate = await this.tokenService.findTokenExchangeRateByAddress(address)
     if (!tokenExchangeRate) return undefined
     const holdersCount = await this.tokenService.countTokenHolders(address, blockNumber)
@@ -114,6 +129,9 @@ export class TokenResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenDetailDto | undefined> {
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
     const entity = await this.tokenService.findDetailByAddress(address)
     if (!entity) return undefined
     const holdersCount = await this.tokenService.countTokenHolders(address, blockNumber)

@@ -1,7 +1,7 @@
 
 type Query {
 
-  hashRate(blockNumber: BigNumber): BigNumber!
+  hashRate(blockNumber: BigNumber): BigNumber
 
   blockSummaries(blockNumber: BigNumber, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
   blockSummariesByAuthor(author: String!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): BlockSummaryByAuthorPage!

@@ -22,6 +22,9 @@ export class TransferResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+    }
     const [items, hasMore] = await this.transferService.findContractTokenTransfers(contractAddress, offset, limit, blockNumber)
     return new BalanceDeltaPageDto({ items, hasMore })
   }
@@ -35,6 +38,9 @@ export class TransferResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+    }
     const [items, hasMore] = await this.transferService.findContractTokenTransfersForAddress(contractAddress, holderAddress, filter, offset, limit, blockNumber)
     return new BalanceDeltaPageDto({ items, hasMore })
   }
@@ -45,6 +51,9 @@ export class TransferResolvers {
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BigNumber> {
+    if (!blockNumber) { // There is no data
+      return new BigNumber(0)
+    }
     return this.transferService.countContractTokenTransfersForAddress(contractAddress, holderAddress, blockNumber)
   }
 
@@ -55,6 +64,9 @@ export class TransferResolvers {
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: 0, hasMore: false, totalCount: 0 })
+    }
     const [items, hasMore, totalCount] = await this.transferService.findInternalTransactionsForAddress(address, offset, limit, blockNumber)
     return new BalanceDeltaPageDto({ items, hasMore, totalCount })
   }
@@ -70,6 +82,9 @@ export class TransferResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalanceDeltaPageDto> {
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+    }
     const [items, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, offset, limit, blockNumber, timestampTo, timestampFrom)
     return new BalanceDeltaPageDto({ items, hasMore })
   }

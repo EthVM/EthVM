@@ -22,7 +22,7 @@ export class BlockService {
   ) {
   }
 
-  async calculateHashRate(cache: boolean = true, blockNumber: BigNumber): Promise<BigNumber | null> {
+  async calculateHashRate(cache: boolean = true, blockNumber: BigNumber): Promise<BigNumber | undefined> {
 
     // use up to the last 20 blocks which equates to about 5 mins at the current production rate
     const blocks = await this.blockHeaderRepository.createQueryBuilder('b')
@@ -33,7 +33,7 @@ export class BlockService {
       .cache(cache)
       .getMany()
 
-    if (blocks.length === 0) return null
+    if (blocks.length === 0) return undefined
 
     const totalBlockTime = blocks
       .map(b => b.blockTime || 0)
@@ -55,7 +55,7 @@ export class BlockService {
         'READ COMMITTED',
         async (txn): Promise<[BlockSummary[], BigNumber]> => {
 
-          const count = blockNumber.plus(1) // TODO fix this when there is no DB data
+          const count = blockNumber.plus(1)
 
           // Due to "exactly one" relationship between blocks and blockNumber, we can use this to make querying more efficient and remove the need for
           // offset-style paging

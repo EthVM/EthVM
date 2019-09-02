@@ -25,7 +25,7 @@ export class SearchService {
   ) {
   }
 
-  async search(query: string = '', blockNumber: BigNumber): Promise<SearchDto | null> {
+  async search(query: string = '', blockNumber: BigNumber): Promise<SearchDto> {
     const s: SearchDto = { type: SearchType.None }
     if (query.substring(0, 2) !== '0x') {
       query = `0x${query}`

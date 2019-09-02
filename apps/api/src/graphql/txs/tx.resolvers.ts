@@ -15,6 +15,9 @@ import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe'
 @Resolver('Transaction')
 @UseInterceptors(SyncingInterceptor)
 export class TxResolvers {
+
+  zeroBN = new BigNumber(0)
+
   constructor(
     private readonly txService: TxService,
     @Inject('PUB_SUB') private pubSub: PubSub,
@@ -25,7 +28,10 @@ export class TxResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
-  ) {
+  ): Promise<TransactionSummaryPageDto> {
+    if (!blockNumber) { // There is no data
+      return new TransactionSummaryPageDto([], this.zeroBN)
+    }
     const [summaries, count] = await this.txService.findSummaries(offset, limit, blockNumber)
     return new TransactionSummaryPageDto(summaries, count)
   }
@@ -36,7 +42,10 @@ export class TxResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
-  ) {
+  ): Promise<TransactionSummaryPageDto> {
+    if (!blockNumber) { // There is no data
+      return new TransactionSummaryPageDto([], this.zeroBN)
+    }
     const [summaries, count] = await this.txService.findSummariesByBlockNumber(number, offset, limit, blockNumber)
     return new TransactionSummaryPageDto(summaries, count)
   }
@@ -47,7 +56,10 @@ export class TxResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
-  ) {
+  ): Promise<TransactionSummaryPageDto> {
+    if (!blockNumber) { // There is no data
+      return new TransactionSummaryPageDto([], this.zeroBN)
+    }
     const [summaries, count] = await this.txService.findSummariesByBlockHash(hash, offset, limit, blockNumber)
     return new TransactionSummaryPageDto(summaries, count)
   }
@@ -59,13 +71,19 @@ export class TxResolvers {
     @Args('offset') offset: number,
     @Args('limit') limit: number,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
-  ): Promise<TransactionSummaryPageDto | undefined> {
+  ): Promise<TransactionSummaryPageDto> {
+    if (!blockNumber) { // There is no data
+      return new TransactionSummaryPageDto([], this.zeroBN)
+    }
     const [summaries, count] = await this.txService.findSummariesByAddress(address, filter, offset, limit, blockNumber)
     return new TransactionSummaryPageDto(summaries, count)
   }
 
   @Query()
   async tx(@Args('hash', ParseHashPipe) hash: string, @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber): Promise<TxDto | undefined> {
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
     const entity = await this.txService.findOneByHash(hash, blockNumber)
     return entity ? new TxDto(entity) : undefined
   }

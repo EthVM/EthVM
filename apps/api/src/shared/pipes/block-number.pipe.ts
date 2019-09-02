@@ -1,23 +1,22 @@
-import {ArgumentMetadata, Injectable, PipeTransform} from '@nestjs/common';
+import {Injectable, PipeTransform} from '@nestjs/common';
 import BigNumber from 'bignumber.js';
 import {MetadataService} from '@app/dao/metadata.service';
 import {InvalidBlockNumberException} from '@app/shared/errors/invalid-block-number-exception';
 
 @Injectable()
-export class BlockNumberPipe implements PipeTransform<BigNumber | undefined, Promise<BigNumber>> {
+export class BlockNumberPipe implements PipeTransform<BigNumber | undefined, Promise<BigNumber | undefined>> {
 
   constructor(
     private readonly metadataService: MetadataService,
   ) {
   }
 
-  async transform(value?: BigNumber): Promise<BigNumber> {
+  async transform(value?: BigNumber): Promise<BigNumber | undefined> {
 
-    let latestBlockNumber = await this.metadataService.latestBlockNumber()
+    const latestBlockNumber = await this.metadataService.latestBlockNumber()
 
     if (!latestBlockNumber) {
-      // TODO create a new error type for no data scenario?
-      latestBlockNumber = new BigNumber(0)
+      return undefined
     }
 
     if (value && latestBlockNumber!.isLessThan(value)) {

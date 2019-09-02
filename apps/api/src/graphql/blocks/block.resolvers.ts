@@ -18,6 +18,8 @@ import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe';
 @UseInterceptors(SyncingInterceptor)
 export class BlockResolvers {
 
+  zeroBN = new BigNumber(0)
+
   constructor(
     private readonly blockService: BlockService,
     private readonly blockMetricsService: BlockMetricsService,
@@ -30,7 +32,10 @@ export class BlockResolvers {
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
-  ): Promise<BlockSummaryPageDto | undefined> {
+  ): Promise<BlockSummaryPageDto> {
+    if (!blockNumber) { // There is no data
+      return new BlockSummaryPageDto([], this.zeroBN)
+    }
     const [summaries, count] = await this.blockService.findSummaries(blockNumber, offset, limit)
     return new BlockSummaryPageDto(summaries, count)
   }
@@ -42,6 +47,9 @@ export class BlockResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BlockSummaryByAuthorPageDto | undefined> {
+    if (!blockNumber) { // There is no data
+      return new BlockSummaryByAuthorPageDto([], this.zeroBN)
+    }
     const [summaries, count] = await this.blockService.findSummariesByAuthor(author, blockNumber, offset, limit)
     return new BlockSummaryByAuthorPageDto(summaries, count)
   }
@@ -51,6 +59,11 @@ export class BlockResolvers {
     @Args('hash', ParseHashPipe) hash: string,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BlockDto | undefined> {
+
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
+
     const entity = await this.blockService.findByHash(hash, blockNumber)
     const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(hash, true, blockNumber)
     return entity ? new BlockDto(entity, txFees) : undefined
@@ -61,6 +74,9 @@ export class BlockResolvers {
     @Args('number') number: BigNumber,
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BlockDto | undefined> {
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
     const entity = await this.blockService.findByNumber(number, blockNumber)
     if (!entity) { return undefined }
     const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(entity.hash, true, blockNumber)
@@ -68,7 +84,10 @@ export class BlockResolvers {
   }
 
   @Query('hashRate')
-  async queryHashRate(@Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber): Promise<BigNumber | null> {
+  async queryHashRate(@Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber): Promise<BigNumber | undefined> {
+    if (!blockNumber) { // There is no data
+      return undefined
+    }
     return this.blockService.calculateHashRate(true, blockNumber)
   }
 
