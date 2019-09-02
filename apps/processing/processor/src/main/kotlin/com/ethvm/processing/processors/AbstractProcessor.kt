@@ -148,7 +148,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       rewindUntil(txCtx, rewindBlockNumber)
 
       // clear out hash cache
-      hashCache.removeKeysFrom(rewindBlockNumber)
+      hashCache.removeKeysFrom(txCtx, rewindBlockNumber)
       hashCache.writeToDb(txCtx)
 
       logger.info { "initialised" }
@@ -182,9 +182,9 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
     }
   }
 
-  override fun rewindUntil(blockNumber: BigInteger) {
+  override fun rewindUntil(targetBlockNumber: BigInteger) {
 
-    logger.info { "Rewind requested for $processorId to block number $blockNumber" }
+    logger.info { "Rewind requested for $processorId to block number $targetBlockNumber" }
 
     dbContext.transaction { txConfig ->
 
@@ -196,33 +196,31 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         .from(SYNC_STATUS_HISTORY)
         .where(
           SYNC_STATUS_HISTORY.COMPONENT.eq(processorId)
-            .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.lessThan(blockNumber.toBigDecimal()))
+            .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.lessThan(targetBlockNumber.toBigDecimal()))
         )
         .orderBy(SYNC_STATUS_HISTORY.BLOCK_NUMBER.desc())
         .limit(1)
         .fetchOne()
 
-      val latestBlockNumber = record.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
-      val rewindTo = latestBlockNumber.plus(BigInteger.ONE)
+      val latestBatchBlockNumber = record.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
+      val rewindUntilBlockNumber = latestBatchBlockNumber.plus(BigInteger.ONE)
 
-      logger.info { "Rewinding to closest batch end $latestBlockNumber for $processorId" }
+      logger.info { "Rewinding to closest batch end $latestBatchBlockNumber for $processorId" }
 
-      rewindUntil(txCtx, rewindTo)
+      rewindUntil(txCtx, rewindUntilBlockNumber)
+      hashCache.removeKeysFrom(txCtx, rewindUntilBlockNumber)
 
-      hashCache.removeKeysFrom(rewindTo)
-      hashCache.writeToDb(txCtx)
-
-      logger.info { "HashCache updated, $processorId latest block number = $latestBlockNumber" }
+      logger.info { "HashCache updated, $processorId latest block number = $latestBatchBlockNumber" }
 
       txCtx
         .deleteFrom(SYNC_STATUS_HISTORY)
         .where(
           SYNC_STATUS_HISTORY.COMPONENT.eq(processorId)
-            .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
+            .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(rewindUntilBlockNumber.toBigDecimal()))
         )
         .execute()
 
-      logger.info { "Sync status history updated, $processorId latest block number = $latestBlockNumber" }
+      logger.info { "Sync status history updated, $processorId latest block number = $latestBatchBlockNumber" }
 
       diskDb.commit()
     }
@@ -321,7 +319,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
                     rewindUntil(txCtx, forkBlockNumber)
 
                     // clear out hash cache
-                    hashCache.removeKeysFrom(forkBlockNumber)
+                    hashCache.removeKeysFrom(txCtx, forkBlockNumber)
                     hashCache.writeToDb(txCtx)
 
                     // process fork block
