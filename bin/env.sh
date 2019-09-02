@@ -124,7 +124,8 @@ ensure() {
     exit 1
   else
     local version=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*"/\1\2/p;')
-    [[ $version != "18" ]] && >&2 warning "It looks like your JAVA version is not 1.8.\n\tWe recommend you to switch to version 1.8 in order to avoid issues while executing some Kafka commands!"
+    [[ $version != "18" ]] && >&2 invalid "It looks like your JAVA version is not 1.8.\n\tWe recommend you to switch to version 1.8 in order to avoid issues while executing some Kafka commands!"
+    exit 1
   fi
 
   if ! [ -x "$(command -v yarn)" ]; then
