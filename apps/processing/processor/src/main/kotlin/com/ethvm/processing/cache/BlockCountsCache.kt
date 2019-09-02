@@ -104,6 +104,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
     val cursor = txCtx
       .selectFrom(ADDRESS_TRANSACTION_COUNT)
       .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .fetchSize(1000)
       .fetchLazy()
 
     writeHistoryToDb = false
@@ -313,6 +314,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         .selectFrom(ADDRESS_TRANSACTION_COUNT_DELTA)
         .where(ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .orderBy(ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.desc())
+        .fetchSize(1000)
         .fetchLazy()
 
       while (txCountCursor.hasNext()) {
@@ -330,6 +332,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         .select(BLOCK_HEADER.AUTHOR, BLOCK_HEADER.NUMBER)
         .from(BLOCK_HEADER)
         .where(BLOCK_HEADER.NUMBER.ge(blockNumberDecimal))
+        .fetchSize(1000)
         .fetchLazy()
 
       while (authorCursor.hasNext()) {

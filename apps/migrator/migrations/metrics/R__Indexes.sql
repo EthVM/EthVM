@@ -89,3 +89,5 @@ create index if not exists idx_canonical_count_by_block_number on canonical_coun
 
 
 create index if not exists idx_processor_hash_log_processor on processor_hash_log (processor_id);
+
+create index if not exists idx_balance_cache_init on balance_delta (token_type, block_number asc);

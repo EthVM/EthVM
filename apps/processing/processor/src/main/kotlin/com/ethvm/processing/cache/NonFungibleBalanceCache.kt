@@ -72,6 +72,7 @@ class NonFungibleBalanceCache(
       .selectFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
       .and(BALANCE.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .fetchSize(1000)
       .fetchLazy()
 
     writeHistoryToDb = false
@@ -182,6 +183,7 @@ class NonFungibleBalanceCache(
       .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
       .and(BALANCE_DELTA.TOKEN_TYPE.eq(this.tokenType.toString()))
       .orderBy(BALANCE_DELTA.BLOCK_NUMBER.desc())
+      .fetchSize(1000)
       .fetchLazy()
 
     // temporarily disable

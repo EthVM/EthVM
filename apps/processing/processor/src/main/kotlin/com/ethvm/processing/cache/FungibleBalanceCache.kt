@@ -104,6 +104,7 @@ class FungibleBalanceCache(
       .selectFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
       .and(BALANCE.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .fetchSize(1000)
       .fetchLazy()
 
     writeHistoryToDb = false
@@ -339,6 +340,7 @@ class FungibleBalanceCache(
         .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .and(BALANCE_DELTA.TOKEN_TYPE.eq(tokenTypeStr))
         .orderBy(BALANCE_DELTA.BLOCK_NUMBER.desc())
+        .fetchSize(1000)
         .fetchLazy()
 
       while (cursor.hasNext()) {

@@ -73,6 +73,7 @@ class BlockHashCache(
           .where(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
           .orderBy(PROCESSOR_HASH_LOG.BLOCK_NUMBER.desc())
           .limit(historySize)
+          .fetchSize(1000)
           .fetchLazy()
 
       var firstBlockNumber: BigDecimal? = null

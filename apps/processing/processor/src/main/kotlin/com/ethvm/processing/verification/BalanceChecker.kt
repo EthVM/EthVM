@@ -42,6 +42,7 @@ class BalanceChecker(val wsUrl: String) : Runnable {
       .selectFrom(BALANCE)
       .where(BALANCE.CONTRACT_ADDRESS.isNull)
       .orderBy(BALANCE.BLOCK_NUMBER.asc())
+      .fetchSize(1000)
       .fetchLazy()
 
     var matched = 0
