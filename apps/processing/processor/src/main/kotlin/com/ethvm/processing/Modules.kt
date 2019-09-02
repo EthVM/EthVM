@@ -102,11 +102,11 @@ val kafkaModule = module {
 
 val threadingModule = module {
 
-  single() {
+  single {
     Executors.newCachedThreadPool()
   }
 
-  single() {
+  single {
     val count = get<Int>(named("scheduledThreadCount"))
     Executors.newScheduledThreadPool(count)
   }
