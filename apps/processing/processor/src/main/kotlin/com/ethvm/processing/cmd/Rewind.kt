@@ -19,7 +19,11 @@ class Rewind : AbstractCliktCommand(help = "Rewind processors to a specified con
 
     inject()
     requireNotNull(blockNumber) { "blockNumber must be specified" }
-    rewind(blockNumber!!.toBigInteger(), processorsList)
+
+    // rewind block number is inclusive so we add one
+    val rewindUntil = blockNumber!!.toBigInteger().plus(BigInteger.ONE)
+
+    rewind(rewindUntil, processorsList)
   }
 
   private fun rewind(blockNumber: BigInteger, processorList: List<String>) {
