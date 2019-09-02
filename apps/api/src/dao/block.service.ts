@@ -57,11 +57,13 @@ export class BlockService {
 
           const count = blockNumber.plus(1) // TODO fix this when there is no DB data
 
-          const queryBuilder = txn.createQueryBuilder(BlockHeaderEntity, 'b')
-            .leftJoinAndSelect('b.rewards', 'br')
-            .where('b.number <= :blockNumber', { blockNumber: blockNumber.toNumber() })
+          // Due to "exactly one" relationship between blocks and blockNumber, we can use this to make querying more efficient and remove the need for
+          // offset-style paging
+          const maxBlockNumber = blockNumber.minus(offset).toNumber()
 
-          const headersWithRewards = await queryBuilder
+          const headersWithRewards = await txn.createQueryBuilder(BlockHeaderEntity, 'b')
+            .leftJoinAndSelect('b.rewards', 'br')
+            .where('b.number <= :blockNumber', { blockNumber: maxBlockNumber })
             .select([
               'b.number',
               'b.hash',
@@ -73,10 +75,8 @@ export class BlockService {
               'br.deltaType',
               'br.blockHash',
               'br.amount',
-              // TODO also select txCount and uncleCount?
             ])
             .orderBy('b.number', 'DESC')
-            .offset(offset)
             .limit(limit)
             .cache(true)
             .getMany()

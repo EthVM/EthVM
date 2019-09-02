@@ -17,8 +17,6 @@ export interface SyncStatusPayload {
   earliest_block_number: string
 }
 
-export type PgEventPayload = SyncStatusPayload
-
 export class PgEvent {
 
   public readonly table: string
