@@ -10,14 +10,16 @@ import org.jooq.impl.DSL
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.websocket.WebSocketService
+import java.math.BigDecimal
 import java.util.concurrent.CompletableFuture
+import kotlin.system.exitProcess
 
 class BalanceChecker(val wsUrl: String) : Runnable {
 
   private val logger = KotlinLogging.logger {}
 
   private val dataSourceConfig = HikariConfig().apply {
-    jdbcUrl = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
+    jdbcUrl = "jdbc:postgresql://localhost:6432/ethvm_ropsten?ssl=false"
     username = "postgres"
     password = "1234"
     maximumPoolSize = 10
@@ -42,6 +44,7 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     val cursor = dbContext
       .selectFrom(BALANCE)
       .where(BALANCE.CONTRACT_ADDRESS.isNull)
+      .and(BALANCE.BLOCK_NUMBER.mod(10).eq(BigDecimal.ZERO))
       .orderBy(BALANCE.BLOCK_NUMBER.asc())
       .fetchSize(1000)
       .fetchLazy()
@@ -74,6 +77,8 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     logger.info { "Final report. Matched = $matched, failures = $failed" }
 
     dbContext.close()
+
+    exitProcess(0)
   }
 
   private fun processBatch(batch: List<BalanceRecord>): Pair<Int, Int> {
