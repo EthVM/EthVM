@@ -41,6 +41,7 @@ val dbModule = module {
         this.username = dbConfig.username
         this.password = dbConfig.password
         this.maximumPoolSize = dbConfig.maxConnections
+        this.isAutoCommit = false
         this.addDataSourceProperty("cachePrepStmts", "true")
         this.addDataSourceProperty("prepStmtCacheSize", "250")
         this.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")

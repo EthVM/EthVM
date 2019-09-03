@@ -20,7 +20,8 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     jdbcUrl = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
     username = "postgres"
     password = "1234"
-    maximumPoolSize = 30
+    maximumPoolSize = 10
+    isAutoCommit = false
     addDataSourceProperty("cachePrepStmts", "true")
     addDataSourceProperty("prepStmtCacheSize", "250")
     addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
