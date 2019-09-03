@@ -29,6 +29,7 @@ export class AccountService {
       where: {
         address,
         blockNumber: LessThanOrEqual(blockNumber),
+        tokenType: 'ETHER',
       },
       order: {
         blockNumber: 'DESC',
