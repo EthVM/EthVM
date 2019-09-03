@@ -1,7 +1,7 @@
 import { TransactionDetail, TransactionDetail_receipt } from '@app/core/api/apollo/types/TransactionDetail'
 import BigNumber from 'bignumber.js'
-import { EthValue } from '@app/core/models'
 import Signatures from '@app/core/helper/signatures.json'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TransactionDetailExt_receipt implements TransactionDetail_receipt {
   __typename!: 'Receipt'
@@ -15,6 +15,10 @@ export class TransactionDetailExt_receipt implements TransactionDetail_receipt {
 
   get gasUsedBN(): BigNumber {
     return new BigNumber(this.gasUsed || 0)
+  }
+
+  get gasUsedFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN, false).value
   }
 }
 
@@ -54,42 +58,53 @@ export class TransactionDetailExt implements TransactionDetail {
     return new BigNumber(this.blockNumber)
   }
 
+  get blockNumberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.blockNumberBN, false).value
+  }
+
   get gasBN(): BigNumber {
     return new BigNumber(this.gas)
+  }
+
+  get gasFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasBN, false).value
   }
 
   get gasPriceBN(): BigNumber {
     return new BigNumber(this.gasPrice)
   }
 
-  get gasPriceEth(): EthValue {
-    return new EthValue(this.gasPriceBN)
+  get gasPriceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableGWeiValue(this.gasPriceBN)
   }
 
   get nonceBN(): BigNumber {
     return new BigNumber(this.nonce)
   }
 
+  get nonceFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.nonceBN, false).value
+  }
+
   get valueBN(): BigNumber {
     return new BigNumber(this.value)
   }
 
-  get valueEth(): EthValue {
-    return new EthValue(this.valueBN)
+  get valueFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatVariableUnitEthValue(this.valueBN)
   }
 
   get timestampMs(): number {
     return this.timestamp
   }
 
-  get feeEth(): EthValue {
+  get feeFormatted(): FormattedNumber {
     if (this.blockNumber == new BigNumber(0)) {
       // for genesis block we have no receipt
-      return new EthValue(new BigNumber(0))
+      return NumberFormatHelper.formatNonVariableEthValue(new BigNumber(0))
     }
-
     const gasUsed = this.receipt!.gasUsedBN
-    return new EthValue(this.gasPriceBN.multipliedBy(gasUsed))
+    return NumberFormatHelper.formatNonVariableEthValue(this.gasPriceBN.multipliedBy(gasUsed), false)
   }
 
   get inputMethodId(): string | null {

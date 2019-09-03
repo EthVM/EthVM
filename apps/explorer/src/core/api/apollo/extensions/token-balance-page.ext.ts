@@ -2,6 +2,7 @@ import BN from 'bignumber.js'
 import { TokenUtils } from '@app/core/helper/token.utils'
 import { TokenBalancePage, TokenBalancePage_items } from '@app/core/api/apollo/types/TokenBalancePage'
 import { TokenBalance } from '@app/core/api/apollo/types/TokenBalance'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TokenBalancePageExt_items implements TokenBalancePage_items {
   __typename!: 'TokenBalance'
@@ -29,14 +30,14 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
     return TokenUtils.currentPriceBN(this)
   }
 
-  get formattedBalance(): string {
+  get currentPriceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.currentPriceBN || new BN(0))
+  }
+
+  get balanceFormatted(): FormattedNumber {
     const { decimals, balanceBN } = this
-
-    if (!decimals) {
-      return balanceBN.toFixed()
-    }
-
-    return balanceBN.div(new BN(10).pow(decimals)).toFixed()
+    const raw = decimals ? balanceBN.div(new BN(10).pow(decimals)) : balanceBN
+    return NumberFormatHelper.formatFloatingPointValue(raw)
   }
 
   get balanceBN(): BN {
@@ -53,6 +54,10 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
     return balanceBN.multipliedBy(currentPriceBN)
   }
 
+  get usdValueFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.usdValueBN)
+  }
+
   get priceChangePercentage24hBN(): BN | null {
     return TokenUtils.priceChangePercentage24hBN(this)
   }
@@ -67,6 +72,10 @@ export class TokenBalancePageExt_items implements TokenBalancePage_items {
 
   get priceChangeClass(): string {
     return TokenUtils.priceChangeClass(this)
+  }
+
+  get priceChangeTooltip(): string | undefined {
+    return TokenUtils.priceChangeTooltip(this)
   }
 }
 

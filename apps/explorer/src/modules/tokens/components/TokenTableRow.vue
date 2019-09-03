@@ -16,16 +16,23 @@
                 <p class="black--text font-weight-medium mb-0 pr-1">{{ token.name }}</p>
               </v-layout>
               <v-layout row align-end justify-start pl-2>
-                <p class="black--text text-truncate mb-0 pr-1">${{ price }}</p>
+                <p class="black--text text-truncate mb-0 pr-1">
+                  {{ token.currentPriceFormatted.value }}
+                  <app-tooltip v-if="token.currentPriceFormatted.tooltipText" :text="token.currentPriceFormatted.tooltipText" />
+                </p>
                 <template v-if="token.priceChangeSymbol !== 'null'">
                   <p :class="token.priceChangeClass">( {{ token.priceChangeFormatted }}%</p>
                   <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                   <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                   <p :class="token.priceChangeClass">)</p>
+                  <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
                 </template>
               </v-layout>
               <v-layout row align-center justify-start pl-2>
-                <p class="black--text mb-0 pr-1">${{ marketCap }}</p>
+                <p class="black--text mb-0 pr-1">
+                  {{ token.marketCapFormatted.value }}
+                  <app-tooltip v-if="token.marketCapFormatted.tooltipText" :text="token.marketCapFormatted.tooltipText" />
+                </p>
                 <p class="info--text mb-0 cap-text">({{ $t('token.market') }})</p>
               </v-layout>
             </v-flex>
@@ -49,20 +56,30 @@
               </v-layout>
             </v-flex>
             <v-flex xs2>
-              <p class="black--text text-truncate mb-0">${{ price }}</p>
+              <p class="black--text text-truncate mb-0">
+                {{ token.currentPriceFormatted.value }}
+                <app-tooltip v-if="token.currentPriceFormatted.tooltipText" :text="token.currentPriceFormatted.tooltipText" />
+              </p>
             </v-flex>
             <v-flex xs2>
               <v-layout grid-list-xs row align-center justify-start>
                 <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
                 <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                 <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
               </v-layout>
             </v-flex>
             <v-flex xs2>
-              <p class="black--text text-truncate mb-0">${{ volume }}</p>
+              <p class="black--text text-truncate mb-0">
+                {{ token.totalVolumeFormatted.value }}
+                <app-tooltip v-if="token.totalVolumeFormatted.tooltipText" :text="token.totalVolumeFormatted.tooltipText" />
+              </p>
             </v-flex>
             <v-flex xs2>
-              <p class="black--text text-truncate mb-0">${{ marketCap }}</p>
+              <p class="black--text text-truncate mb-0">
+                {{ token.marketCapFormatted.value }}
+                <app-tooltip v-if="token.marketCapFormatted.tooltipText" :text="token.marketCapFormatted.tooltipText" />
+              </p>
             </v-flex>
           </v-layout>
           <v-divider class="mb-2 mt-2" />
@@ -73,13 +90,13 @@
 </template>
 
 <script lang="ts">
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { Component, Prop, Mixins } from 'vue-property-decorator'
-import BN from 'bignumber.js'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { TokenExchangeRatePageExt_items } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
-
-@Component
-export default class TokenTableRow extends Mixins(StringConcatMixin) {
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+@Component({
+  components: { AppTooltip }
+})
+export default class TokenTableRow extends Vue {
   /*
   ===================================================================================
     Props
@@ -93,18 +110,6 @@ export default class TokenTableRow extends Mixins(StringConcatMixin) {
     Computed
   ===================================================================================
   */
-
-  get price(): string {
-    return this.token.currentPriceBN ? this.getRoundNumber(this.token.currentPriceBN) : '0.00'
-  }
-
-  get volume(): string {
-    return this.token.totalVolume ? this.getInt(this.token.totalVolume) : '0'
-  }
-
-  get marketCap(): string {
-    return this.token.marketCap ? this.getInt(this.token.marketCap) : '0.00'
-  }
 
   get tokenLink(): string {
     return `/token/${this.token.address}`

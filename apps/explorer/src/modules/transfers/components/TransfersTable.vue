@@ -68,7 +68,7 @@
           <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
         </v-card>
         <v-card v-else color="white" v-for="(transfer, index) in transfers" class="transparent" flat :key="index">
-          <transfers-table-row :transfer="transfer" :is-internal="isInternal" :decimals="decimals" />
+          <transfers-table-row :transfer="transfer" :is-internal="isInternal" :decimals="decimals" :symbol="symbol" />
         </v-card>
         <!-- End Rows -->
         <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="showPaginate">
@@ -166,6 +166,7 @@ export default class TransfersTable extends Vue {
   @Prop(String) pageType!: string
   @Prop(Number) decimals?: number
   @Prop(String) holder?: string
+  @Prop(String) symbol?: string
 
   transferPage?: TransferPageExt
   error?: string

@@ -204,7 +204,7 @@ export default class PageDetailsTxs extends Vue {
       details = [
         {
           title: this.$i18n.t('block.number'),
-          detail: transaction.blockNumberBN.toString(),
+          detail: transaction.blockNumberFormatted,
           link: `/block/${transaction.blockHash}`
         },
         {
@@ -226,28 +226,29 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.amount'),
-          detail: `${transaction.valueEth.toEth().toString()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.valueFormatted.value} ${this.$i18n.t(`common.${transaction.valueFormatted.unit}`)}`,
+          tooltip: transaction.valueFormatted.tooltipText ? `${transaction.valueFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
         },
         this.toDetail(transaction),
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${transaction.feeEth.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: transaction.gasBN.toString()
+          detail: transaction.gasFormatted
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: receipt ? receipt.gasUsedBN.toString() : '0' // genesis block txs can have no receipt
+          detail: receipt ? receipt.gasUsedFormatted : '0' // genesis block txs can have no receipt
         },
         {
           title: this.$i18n.t('gas.price'),
-          detail: `${transaction.gasPriceEth.toGWei()} ${this.$i18n.t('common.gwei')}`
+          detail: `${transaction.gasPriceFormatted.value} ${this.$i18n.t('common.gwei')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: transaction.nonceBN.toString()
+          detail: transaction.nonceFormatted
         },
         {
           title: this.$i18n.t('tx.input'),

@@ -12,19 +12,25 @@
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
                 <p class="info--text pr-2">Holder:</p>
-                <app-transform-hash :hash="holder.address" :link="holderAddress(holder)" />
+                <app-transform-hash :hash="holder.address" :link="holderLink" />
               </v-layout>
             </v-flex>
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
                 <p class="info--text pr-2">{{ $t('common.quantity') }}:</p>
-                <p>{{ holderBalance(holder) }}</p>
+                <p>
+                  {{ balance.value }}
+                  <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
+                </p>
               </v-layout>
             </v-flex>
             <v-flex xs12>
               <v-layout row align-center justify-start pa-2>
-                <p class="info--text pr-2 ">{{ $t('common.percentage') }}}:</p>
-                <p>{{ holderShare(holder) }}}</p>
+                <p class="info--text pr-2 ">{{ $t('common.percentage') }}:</p>
+                <p>
+                  {{ share.value }}%
+                  <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+                </p>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -39,19 +45,25 @@
         <v-layout align-center justify-start row fill-height pa-3>
           <!-- Column 1: Holders Address -->
           <v-flex sm6 pr-4>
-            <app-transform-hash :hash="holder.address" :link="holderAddress(holder)" />
+            <app-transform-hash :hash="holder.address" :link="holderLink" />
           </v-flex>
           <!-- End Column 1 -->
 
           <!-- Column 2: Balance -->
           <v-flex sm3 md4>
-            <p class="mb-0 ml-2">{{ holderBalance(holder) }}</p>
+            <p class="mb-0 ml-2">
+              {{ balance.value }}
+              <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
+            </p>
           </v-flex>
           <!-- End Column 2 -->
 
           <!-- Column 3: Share -->
           <v-flex sm3 md2>
-            <p class="mb-0 ml-2">{{ holderShare(holder) }}</p>
+            <p class="mb-0 ml-2">
+              {{ share.value }}%
+              <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+            </p>
           </v-flex>
           <!-- End Column 3 -->
         </v-layout>
@@ -62,17 +74,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { TokenHolderPageExt_items } from '@app/core/api/apollo/extensions/token-holder-page.ext'
 import BN from 'bignumber.js'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import BigNumber from 'bignumber.js'
 
 @Component({
   components: {
+    AppTooltip,
     AppTransformHash
   }
 })
-export default class TokenTableHoldersRow extends Vue {
+export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -85,7 +102,7 @@ export default class TokenTableHoldersRow extends Vue {
   @Prop(Number) decimals?: number
   /*
   ===================================================================================
-    Methods
+    Computed
   ===================================================================================
   */
 
@@ -95,40 +112,31 @@ export default class TokenTableHoldersRow extends Vue {
    * @param  {Object} holder - Holder object
    * @return {String}        [description]
    */
-  holderAddress(holder) {
+  get holderLink(): string {
     return `/token/${this.tokenAddress}?holder=${this.holder.address}`
   }
 
   /**
    * Calculate percentage share of totalSupply held by this holder
-   * @param  {Object} holder - Holder object
-   * @return {String} - Share
+   * @return {FormattedNumber} - Share
    */
-  holderShare(holder: TokenHolderPageExt_items): string {
-    if (!(this.totalSupply && holder.balance)) {
-      return 'N/A'
+  get share(): FormattedNumber {
+    if (!(this.totalSupply && this.holder.balance)) {
+      return { value: 'N/A' }
     }
-    return `${holder.balanceBN
-      .div(this.totalSupply)
-      .times(100)
-      .toFormat(2)
-      .toString()}%`
-  }
-
-  private calculateHolderBalance(balance: BN): BN {
-    if (!this.decimals) {
-      return balance
-    }
-    return balance.div(new BN(10).pow(this.decimals))
+    BigNumber.config({ DECIMAL_PLACES: 50 }) // Ensure precision is not lost when performing division operations with very small results
+    const share = this.holder.balanceBN.times(100).dividedBy(this.totalSupply)
+    return this.formatPercentageValue(share)
   }
 
   /**
    * Calculate and format balance held by given holder
    * @param  {Object} holder - Holder object
-   * @return {String} - Amount
+   * @return {Object} - FormattedNumber
    */
-  holderBalance(holder: TokenHolderPageExt_items): string {
-    return this.calculateHolderBalance(holder.balanceBN).toString()
+  get balance(): FormattedNumber {
+    const balanceBN = this.decimals ? this.holder.balanceBN.div(new BN(10).pow(this.decimals)) : this.holder.balanceBN
+    return this.formatFloatingPointValue(balanceBN)
   }
 }
 </script>

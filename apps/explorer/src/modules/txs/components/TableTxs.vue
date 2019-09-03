@@ -59,7 +59,7 @@
               <h5>{{ $tc('tx.hash', 1) }}</h5>
             </v-flex>
             <v-flex hidden-xs-only sm2 md1>
-              <h5>{{ $t('common.eth') }}</h5>
+              <h5>{{ $t('common.amount') }}</h5>
             </v-flex>
             <v-flex hidden-sm-and-down md2>
               <h5>{{ $t('common.age') }}</h5>

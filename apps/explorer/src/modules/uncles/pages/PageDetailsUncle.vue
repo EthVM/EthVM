@@ -135,7 +135,7 @@ export default class PageDetailsUncle extends Vue {
       details = [
         {
           title: this.$i18n.t('uncle.height'),
-          detail: this.uncleDetail.numberBN.toString()
+          detail: this.uncleDetail.numberFormatted
         },
         {
           title: this.$i18n.t('uncle.position'),
@@ -143,7 +143,7 @@ export default class PageDetailsUncle extends Vue {
         },
         {
           title: this.$i18n.t('uncle.included'),
-          detail: this.uncleDetail.nephewNumberBN.toString(),
+          detail: this.uncleDetail.nephewNumberFormatted,
           link: `/block/${this.uncleDetail.nephewNumberBN.toString()}`
         },
         {
@@ -175,11 +175,11 @@ export default class PageDetailsUncle extends Vue {
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: this.uncleDetail.gasLimitBN.toString()
+          detail: this.uncleDetail.gasLimitFormatted
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: this.uncleDetail.gasUsedBN.toString()
+          detail: this.uncleDetail.gasUsedFormatted
         }
       ]
     }

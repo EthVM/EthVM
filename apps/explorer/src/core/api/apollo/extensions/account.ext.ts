@@ -1,6 +1,7 @@
 import { Account } from '@app/core/api/apollo/types/Account'
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class AccountExt implements Account {
   __typename!: 'Account'
@@ -30,12 +31,20 @@ export class AccountExt implements Account {
     return new BigNumber(this.balance || 0)
   }
 
-  get balanceEth(): number {
+  get balanceEth(): BigNumber {
     const ethValue = new EthValue(this.balance || 0)
-    return ethValue.toEth()
+    return ethValue.toEthBN()
+  }
+
+  get balanceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatVariableUnitEthValue(this.balanceBN, 100_000_000_000, true)
   }
 
   get totalTxCountBN(): BigNumber {
     return new BigNumber(this.totalTxCount || 0)
+  }
+
+  get totalTxCountFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.totalTxCountBN)
   }
 }

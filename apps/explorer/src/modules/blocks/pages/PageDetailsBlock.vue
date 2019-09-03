@@ -254,7 +254,7 @@ export default class PageDetailsBlock extends Vue {
       details = [
         {
           title: this.$i18n.t('common.height'),
-          detail: header.number
+          detail: header.numberFormatted
         },
         {
           title: this.$i18n.t('common.hash'),
@@ -278,7 +278,7 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('miner.reward'),
-          detail: `${blockDetail.minerReward.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.minerRewardFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('common.timestmp'),
@@ -286,27 +286,27 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('uncle.reward'),
-          detail: `${blockDetail.uncleReward.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.uncleRewardFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.tc('tx.name', 2),
-          detail: blockDetail.transactionCount!
+          detail: blockDetail.transactionCountFormatted
         },
         {
           title: this.$i18n.t('diff.name'),
-          detail: header.difficulty
+          detail: header.difficultyFormatted
         },
         {
           title: this.$i18n.t('diff.total'),
-          detail: header.totalDifficulty
+          detail: header.totalDifficultyFormatted
         },
         {
           title: this.$i18n.t('common.size'),
-          detail: `${header.size!.toString()} ${this.$i18n.t('block.bytes')}`
+          detail: `${header.sizeFormatted} ${this.$i18n.t('block.bytes')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: header.nonce,
+          detail: header.nonceFormatted,
           mono: true
         },
         {
@@ -321,15 +321,15 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${blockDetail.totalTxFeesEth.toEth()} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.totalTxFeesFormatted.value} ${this.$i18n.t('common.eth')}`
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: header.gasLimit
+          detail: header.gasLimitFormatted
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: header.gasUsed
+          detail: header.gasUsedFormatted
         },
         {
           title: this.$i18n.t('block.logs'),

@@ -11,7 +11,7 @@
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
             <v-flex xs6 pa-1>
               <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.blockHash}`"
-                >{{ $t('block.number') }} {{ tx.blockNumberBN }}</router-link
+                >{{ $t('block.number') }} {{ tx.blockNumberFormatted }}</router-link
               >
             </v-flex>
             <v-flex xs6 pr-44>
@@ -35,10 +35,13 @@
               </v-layout>
             </v-flex>
             <v-flex shrink pa-1>
-              <p class="info--text psmall">{{ $t('common.eth') }}:</p>
+              <p class="info--text psmall">{{ $t('common.amount') }}:</p>
             </v-flex>
             <v-flex shrink pa-1>
-              <p class="black--text align-center">{{ getRoundNumber(ethValue(tx.valueBN).toEth()) }}</p>
+              <p class="black--text align-center">
+                {{ tx.valueFormatted.value }} {{ $t(`common.${tx.valueFormatted.unit}`) }}
+                <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="`${tx.valueFormatted.tooltipText} ${$t('common.eth')}`" />
+              </p>
             </v-flex>
           </v-layout>
         </div>
@@ -60,7 +63,7 @@
           =====================================================================================
           -->
           <v-flex sm2 md1 pr-1>
-            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockHash}`">{{ tx.blockNumberBN }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockHash}`">{{ tx.blockNumberFormatted }}</router-link>
           </v-flex>
           <!--
           =====================================================================================
@@ -106,23 +109,9 @@
           =====================================================================================
           -->
           <v-flex d-flex sm2 md1 pr-0>
-            <p v-if="$vuetify.breakpoint.xsOnly" :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{ $t('common.amount') }}: {{ getRoundNumber(ethValue(tx.valueBN).toEth()) }}
-            </p>
-            <p v-else :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
-              {{
-                getShortValue(
-                  ethValue(tx.valueBN)
-                    .toEth()
-                    .toString()
-                )
-              }}
-              <v-tooltip v-if="isShortValue(ethValue(tx.valueBN))" bottom>
-                <template #activator="data">
-                  <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-                </template>
-                <span>{{ ethValue(tx.valueBN).toEth() }}</span>
-              </v-tooltip>
+            <p :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
+              {{ tx.valueFormatted.value }} {{ $t(`common.${tx.valueFormatted.unit}`) }}
+              <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="`${tx.valueFormatted.tooltipText} ${$t('common.eth')}`" />
             </p>
           </v-flex>
           <!--
@@ -147,7 +136,7 @@
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md1>
-            <p class="black--text text-truncate mb-0">{{ ethValue(tx.feeBN.toFixed()).toEth() }}</p>
+            <p class="black--text text-truncate mb-0">{{ tx.feeFormatted.value }}</p>
           </v-flex>
           <!--
           =====================================================================================
@@ -171,20 +160,19 @@
 
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { EthValue } from '@app/core/models'
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import BigNumber from 'bignumber.js'
 import { TransactionSummaryPageExt_items } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
+    AppTooltip,
     AppTimeAgo,
     AppTransformHash
   }
 })
-export default class TableTxsRow extends Mixins(StringConcatMixin) {
+export default class TableTxsRow extends Vue {
   /*
   ===================================================================================
     Props
@@ -193,16 +181,6 @@ export default class TableTxsRow extends Mixins(StringConcatMixin) {
 
   @Prop(Object) tx!: TransactionSummaryPageExt_items
   @Prop({ type: Boolean, default: false }) isPending
-
-  /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-  ethValue(number: BigNumber) {
-    return new EthValue(number)
-  }
 
   /*
   ===================================================================================

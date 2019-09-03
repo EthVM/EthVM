@@ -33,7 +33,10 @@
 
         <!-- Column 3: Quantity -->
         <v-flex sm2>
-          <p>{{ calculateTransferValue(transfer.value) }}</p>
+          <p>
+            {{ transferValue.value }} {{ units }}
+            <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
+          </p>
         </v-flex>
         <!-- End Column 3 -->
 
@@ -78,7 +81,8 @@
           </v-flex>
           <v-flex xs12>
             <p class="pb-0">
-              <span class="info--text">{{ $t('common.quantity') }}:</span> {{ calculateTransferValue(transfer.value) }}
+              <span class="info--text">{{ $t('common.quantity') }}:</span> {{ transferValue.value }} {{ units }}
+              <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
             </p>
           </v-flex>
         </v-layout>
@@ -90,18 +94,22 @@
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { TransferPageExt_items } from '@app/core/api/apollo/extensions/transfer-page.ext'
 import { EthValue } from '@app/core/models'
 import BigNumber from 'bignumber.js'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
     AppTimeAgo,
-    AppTransformHash
+    AppTransformHash,
+    AppTooltip
   }
 })
-export default class TransfersTableRow extends Vue {
+export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
   /*
    ===================================================================================
      Props
@@ -110,6 +118,7 @@ export default class TransfersTableRow extends Vue {
   @Prop(TransferPageExt_items) transfer!: TransferPageExt_items
   @Prop(Boolean) isInternal?: boolean
   @Prop(Number) decimals?: number
+  @Prop(String) symbol?: string
 
   /*
     ===================================================================================
@@ -117,17 +126,41 @@ export default class TransfersTableRow extends Vue {
     ===================================================================================
     */
 
-  calculateTransferValue(value: string) {
+  get transferValue(): FormattedNumber {
+    let n = this.transfer.valueBN || new BigNumber(0)
+
     if (this.isInternal) {
-      return new EthValue(value).toEthFormatted().toString()
+      if (n.isNegative()) {
+        n = n.negated()
+      } // Convert negative values to positive
+      return this.formatVariableUnitEthValue(n)
     }
 
-    let n = new BigNumber(value)
+    // Must be a token transfer
 
     if (this.decimals) {
       n = n.div(new BigNumber(10).pow(this.decimals))
     }
-    return n.toFormat(2).toString()
+    return this.formatFloatingPointValue(n)
+  }
+
+  get units(): string | undefined {
+    return this.isInternal ? this.$i18n.t(`common.${this.transferValue.unit}`).toString() : this.symbolFormatted
+  }
+
+  get symbolFormatted(): string | undefined {
+    return this.symbol ? this.symbol.toUpperCase() : undefined
+  }
+
+  get transferValueTooltip(): string | undefined {
+    const { tooltipText } = this.transferValue
+    if (!tooltipText) {
+      return undefined
+    }
+    if (this.isInternal) {
+      return `${tooltipText} ${this.$i18n.t('common.eth')}`
+    }
+    return `${tooltipText} ${this.symbolFormatted}`
   }
 }
 </script>

@@ -1,5 +1,6 @@
 import { TokenDetail, TokenDetail_social } from '@app/core/api/apollo/types/TokenDetail'
 import BigNumber from 'bignumber.js'
+import { NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TokenDetailExt implements TokenDetail {
   __typename!: 'TokenDetail'
@@ -41,23 +42,51 @@ export class TokenDetailExt implements TokenDetail {
     this.website = proto.website
   }
 
-  get totalSupplyBN(): BigNumber | undefined {
-    return this.totalSupply ? new BigNumber(this.totalSupply) : undefined
+  get totalSupplyBN(): BigNumber {
+    return new BigNumber(this.totalSupply || 0)
   }
 
-  get circulatingSupplyBN(): BigNumber | undefined {
-    return this.circulatingSupply ? new BigNumber(this.circulatingSupply) : undefined
+  get totalSupplyFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.totalSupplyBN, false).value
   }
 
-  get currentPriceBN(): BigNumber | undefined {
-    return this.currentPrice ? new BigNumber(this.currentPrice) : undefined
+  get circulatingSupplyBN(): BigNumber {
+    return new BigNumber(this.circulatingSupply || 0)
   }
 
-  get marketCapBN(): BigNumber | undefined {
-    return this.marketCap ? new BigNumber(this.marketCap) : undefined
+  get circulatingSupplyFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.circulatingSupplyBN, false).value
   }
 
-  get totalVolumeBN(): BigNumber | undefined {
-    return this.totalVolume ? new BigNumber(this.totalVolume) : undefined
+  get currentPriceBN(): BigNumber {
+    return new BigNumber(this.currentPrice || 0)
+  }
+
+  get currentPriceFormatted(): string {
+    return NumberFormatHelper.formatUsdValue(this.currentPriceBN, false).value
+  }
+
+  get marketCapBN(): BigNumber {
+    return new BigNumber(this.marketCap || 0)
+  }
+
+  get marketCapFormatted(): string {
+    return NumberFormatHelper.formatUsdValue(this.marketCapBN, false).value
+  }
+
+  get totalVolumeBN(): BigNumber {
+    return new BigNumber(this.totalVolume || 0)
+  }
+
+  get totalVolumeFormatted(): string {
+    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN, false).value
+  }
+
+  get priceChangePercentage24hBN(): BigNumber {
+    return new BigNumber(this.priceChangePercentage24h || 0)
+  }
+
+  get priceChangePercentage24hFormatted(): string {
+    return NumberFormatHelper.formatPercentageValue(this.priceChangePercentage24hBN).value
   }
 }

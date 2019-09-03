@@ -2,6 +2,7 @@ import { BlockDetail, BlockDetail_header, BlockDetail_rewards } from '@app/core/
 import BigNumber from 'bignumber.js'
 import { DeltaType } from '@app/core/api/apollo/types/globalTypes'
 import { EthValue } from '@app/core/models'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class BlockDetailExt_header implements BlockDetail_header {
   __typename!: 'BlockHeader'
@@ -32,24 +33,52 @@ export class BlockDetailExt_header implements BlockDetail_header {
     return new BigNumber(this.difficulty)
   }
 
+  get difficultyFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.difficultyBN, false).value
+  }
+
   get gasLimitBN(): BigNumber {
     return new BigNumber(this.gasLimit)
+  }
+
+  get gasLimitFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN, false).value
   }
 
   get gasUsedBN(): BigNumber {
     return new BigNumber(this.gasUsed)
   }
 
+  get gasUsedFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN, false).value
+  }
+
   get nonceBN(): BigNumber | null {
     return this.nonce ? new BigNumber(this.nonce) : null
+  }
+
+  get nonceFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.nonceBN || new BigNumber(0), false).value
   }
 
   get numberBN(): BigNumber {
     return new BigNumber(this.number)
   }
 
+  get numberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.numberBN, false).value
+  }
+
+  get sizeFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.size || 0), false).value
+  }
+
   get totalDifficultyBN(): BigNumber {
     return new BigNumber(this.totalDifficulty)
+  }
+
+  get totalDifficultyFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.totalDifficultyBN, false).value
   }
 
   get timestampMs(): number {
@@ -104,6 +133,16 @@ export class BlockDetailExt implements BlockDetail {
     return this._minerReward
   }
 
+  get minerRewardBN(): BigNumber {
+    return this.rewards!.filter(r => r!.deltaType === 'BLOCK_REWARD')
+      .map(r => r!.amountBN!)
+      .reduce((acc, value: any) => value, new BigNumber(0))
+  }
+
+  get minerRewardFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.minerRewardBN, false)
+  }
+
   get uncleReward(): EthValue {
     if (!this._uncleReward) {
       const rawReward = this.rewards!.filter(r => r!.deltaType === 'UNCLE_REWARD')
@@ -116,11 +155,25 @@ export class BlockDetailExt implements BlockDetail {
     return this._uncleReward
   }
 
+  get uncleRewardBN(): BigNumber {
+    return this.rewards!.filter(r => r!.deltaType === 'UNCLE_REWARD')
+      .map(r => r!.amountBN!)
+      .reduce((acc, value: any) => acc.plus(value), new BigNumber(0))
+  }
+
+  get uncleRewardFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.uncleRewardBN, false)
+  }
+
   get transactionCount(): number | null {
     return this.transactionHashes ? this.transactionHashes.length : null
   }
 
-  get totalTxFeesEth(): EthValue {
-    return new EthValue(this.totalTxFees)
+  get transactionCountFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.transactionCount || 0)).value
+  }
+
+  get totalTxFeesFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.totalTxFees, false)
   }
 }

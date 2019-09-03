@@ -1,6 +1,7 @@
 import BN from 'bignumber.js'
 import { ContractSummaryPage, ContractSummaryPage_items } from '@app/core/api/apollo/types/ContractSummaryPage'
 import { ContractSummary } from '@app/core/api/apollo/types/ContractSummary'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class ContractSummaryPageExt_items implements ContractSummaryPage_items {
   __typename!: 'ContractSummary'
@@ -21,6 +22,10 @@ export class ContractSummaryPageExt_items implements ContractSummaryPage_items {
 
   get txFeeBN(): BN {
     return new BN(this.txFee)
+  }
+
+  get txFeeFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.txFeeBN)
   }
 
   get timestampDate(): Date | null {

@@ -1,6 +1,7 @@
 import BN from 'bignumber.js'
 import { TransactionSummaryPage, TransactionSummaryPage_items } from '@app/core/api/apollo/types/TransactionSummaryPage'
 import { TransactionSummary } from '@app/core/api/apollo/types/TransactionSummary'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TransactionSummaryPageExt_items implements TransactionSummaryPage_items {
   __typename!: 'TransactionSummary'
@@ -25,12 +26,24 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
     return new BN(this.blockNumber)
   }
 
+  get blockNumberFormatted(): string {
+    return NumberFormatHelper.formatIntegerValue(this.blockNumberBN).value
+  }
+
   get feeBN(): BN {
     return new BN(this.fee)
   }
 
+  get feeFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(this.feeBN)
+  }
+
   get valueBN(): BN {
     return new BN(this.value)
+  }
+
+  get valueFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatVariableUnitEthValue(this.valueBN)
   }
 
   get isContractCreation(): boolean {

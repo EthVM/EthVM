@@ -19,29 +19,36 @@
               </v-flex>
               <v-flex xs10>
                 <v-layout row wrap align-center justify-start>
-                  <v-flex xs10 :xs12="isRopsten" pa-1>
+                  <v-flex xs9 :xs12="isRopsten" pa-1>
                     <p v-if="token.name || token.symbol" class="black--text text-uppercase font-weight-medium">
                       {{ token.symbol }}
                       <span class="caption text-none">({{ token.name }}) </span>
                     </p>
                     <app-transform-hash v-else :hash="token.address" :is-blue="false"></app-transform-hash>
                   </v-flex>
-                  <v-flex v-if="!isRopsten" xs2 pa-1>
+                  <v-flex v-if="!isRopsten" xs3 pa-1>
                     <v-layout grid-list-xs row justify-end pr-3>
                       <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
                       <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                       <v-img v-if="token.priceChangeSymbol === ''" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                      <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
                     </v-layout>
                   </v-flex>
                   <v-flex xs12 pa-1>
                     <p class="info--text mb-1">
                       {{ $t('common.amount') }}:
-                      <span class="black--text">{{ balance }}</span>
+                      <span class="black--text">
+                        {{ balance.value }}
+                        <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
+                      </span>
                     </p>
                     <p v-if="!isRopsten" class="info--text">
                       {{ $t('usd.value') }}:
-                      <span class="black--text">${{ usdValue }}</span>
-                      <span class="caption"> (@ ${{ currPrice }} {{ $t('token.per') }} {{ token.symbol }}) </span>
+                      <span class="black--text">
+                        {{ usdValueFormatted.value }}
+                        <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
+                      </span>
+                      <span class="caption"> (@ {{ currPrice }} {{ $t('token.per') }} {{ token.symbol }}) </span>
                     </p>
                   </v-flex>
                 </v-layout>
@@ -68,12 +75,16 @@
               </v-layout>
             </v-flex>
             <v-flex sm3 :sm6="isRopsten">
-              <p class="black--text ">{{ balance }}</p>
+              <p class="black--text ">
+                {{ balance.value }}
+                <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
+              </p>
             </v-flex>
             <v-flex v-if="!isRopsten" sm3>
               <p class="black--text ">
-                ${{ usdValue }}
-                <span class="info--text caption">(@ ${{ currPrice }} {{ $t('token.per') }} {{ token.symbol }})</span>
+                {{ usdValueFormatted.value }}
+                <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
+                <span class="info--text caption"> (@ {{ currPrice }} {{ $t('token.per') }} {{ token.symbol }})</span>
               </p>
             </v-flex>
             <v-flex v-if="!isRopsten" sm2>
@@ -81,6 +92,7 @@
                 <p :class="token.priceChangeClass">{{ token.priceChangeFormatted }}%</p>
                 <v-img v-if="token.priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                 <v-img v-if="token.priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                <app-tooltip v-if="token.priceChangeTooltip" :text="token.priceChangeTooltip" />
               </v-layout>
             </v-flex>
           </v-layout>
@@ -92,14 +104,18 @@
 </template>
 
 <script lang="ts">
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 @Component({
-  components: { AppTransformHash }
+  components: {
+    AppTooltip,
+    AppTransformHash
+  }
 })
-export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
+export default class TableAddressTokensRow extends Vue {
   /*
   ===================================================================================
     Props
@@ -120,8 +136,8 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
     return this.token.image || require('@/assets/icon-token.png')
   }
 
-  get balance(): string {
-    return this.token.formattedBalance
+  get balance(): FormattedNumber {
+    return this.token.balanceFormatted
   }
 
   get tokenLink(): string {
@@ -129,11 +145,11 @@ export default class TableAddressTokensRow extends Mixins(StringConcatMixin) {
   }
 
   get currPrice(): string {
-    return this.token.currentPriceBN ? this.getRoundNumber(this.token.currentPriceBN) : '0.00'
+    return this.token.currentPriceFormatted.value
   }
 
-  get usdValue(): string {
-    return this.getRoundNumber(this.token.usdValueBN)
+  get usdValueFormatted(): FormattedNumber {
+    return this.token.usdValueFormatted
   }
 }
 </script>

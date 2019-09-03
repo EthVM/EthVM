@@ -27,7 +27,8 @@
             <v-flex xs12 pt-1>
               <p class="info--text tx-hash">
                 {{ $t('tx.cost') }}:
-                <span class="black--text">{{ getTxFee(contract) }}</span>
+                <span class="black--text">{{ contract.txFeeFormatted.value }}</span>
+                <app-tooltip v-if="contract.txFeeFormatted.tooltipText" :text="contract.txFeeFormatted.tooltipText" />
               </p>
             </v-flex>
           </v-layout>
@@ -53,7 +54,8 @@
             <app-time-ago :timestamp="contract.timestampDate" />
           </v-flex>
           <v-flex sm2>
-            {{ getTxFee(contract) }}
+            {{ contract.txFeeFormatted.value }}
+            <app-tooltip v-if="contract.txFeeFormatted.tooltipText" :text="contract.txFeeFormatted.tooltipText" />
           </v-flex>
         </v-layout>
         <v-divider />
@@ -63,20 +65,20 @@
 </template>
 
 <script lang="ts">
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { Component, Mixins, Prop } from 'vue-property-decorator'
-import { EthValue } from '@app/core/models'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { ContractSummaryPageExt_items } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
+    AppTooltip,
     AppTimeAgo,
     AppTransformHash
   }
 })
-export default class TableAddressContractsRow extends Mixins(StringConcatMixin) {
+export default class TableAddressContractsRow extends Vue {
   /*
     ===================================================================================
       Props
@@ -84,16 +86,6 @@ export default class TableAddressContractsRow extends Mixins(StringConcatMixin) 
     */
 
   @Prop(Object) contract!: ContractSummaryPageExt_items
-
-  /*
-    ===================================================================================
-      Methods
-    ===================================================================================
-    */
-
-  getTxFee(contract: ContractSummaryPageExt_items): string {
-    return this.getRoundNumber(new EthValue(contract.txFee).toEth())
-  }
 }
 </script>
 

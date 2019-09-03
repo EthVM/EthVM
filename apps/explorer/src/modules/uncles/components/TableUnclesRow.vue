@@ -14,7 +14,7 @@
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
-                <router-link class="linkBlue--text font-weight-medium pr-2" :to="`/uncle/${uncle.hash}`">{{ uncle.numberBN }}</router-link>
+                <router-link class="linkBlue--text font-weight-medium pr-2" :to="`/uncle/${uncle.hash}`">{{ uncle.numberFormatted }}</router-link>
               </v-layout>
             </v-flex>
             <v-flex xs12 pa-1>
@@ -40,7 +40,7 @@
             <v-flex xs12 pa-1>
               <p class="info--text psmall">
                 {{ $t('uncle.included') }}:<router-link class="secondary--text pl-1" :to="`/block/${uncle.nephewNumberBN}`">{{
-                  uncle.nephewNumberBN
+                  uncle.nephewNumberFormatted
                 }}</router-link>
               </p>
             </v-flex>
@@ -56,10 +56,10 @@
       -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex xs3 sm2 order-xs1>
-            <router-link class="secondary--text pb-1" :to="`/block/${uncle.nephewNumberBN}`">{{ uncle.nephewNumberBN }}</router-link>
+            <router-link class="secondary--text pb-1" :to="`/block/${uncle.nephewNumberBN}`">{{ uncle.nephewNumberFormatted }}</router-link>
           </v-flex>
           <v-flex xs3 sm2 order-xs1>
-            <router-link class="secondary--text pb-1" :to="`/uncle/${uncle.hash}`">{{ uncle.numberBN }}</router-link>
+            <router-link class="secondary--text pb-1" :to="`/uncle/${uncle.hash}`">{{ uncle.numberFormatted }}</router-link>
           </v-flex>
           <v-flex xs12 sm5 md5 order-xs3 order-sm2>
             <v-layout row pl-2 pt-2 pr-3 pb-0>
@@ -76,13 +76,8 @@
           </v-flex>
           <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
             <p class="text-truncate black--text align-center mb-0">
-              <v-tooltip v-if="!isShortValue(uncle.uncleRewardEth.toEth())" bottom>
-                <template #activator="data">
-                  <v-icon v-on="data.on" dark small>fa fa-question-circle info--text</v-icon>
-                </template>
-                <span>{{ uncle.uncleRewardEth.toEth() }}</span>
-              </v-tooltip>
-              {{ getShortValue(uncle.uncleRewardEth.toEth()) }}
+              {{ uncle.uncleRewardFormatted.value }}
+              <app-tooltip v-if="uncle.uncleRewardFormatted.tooltipText" :text="uncle.uncleRewardFormatted.tooltipText" />
             </p>
           </v-flex>
         </v-layout>
@@ -93,17 +88,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { StringConcatMixin } from '@app/core/components/mixins'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { UncleSummaryPageExt_items } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
-    AppTransformHash
+    AppTransformHash,
+    AppTooltip
   }
 })
-export default class TableUnclesRow extends Mixins(StringConcatMixin) {
+export default class TableUnclesRow extends Vue {
   /*
   ===================================================================================
     Props

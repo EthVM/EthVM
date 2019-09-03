@@ -2,6 +2,8 @@ import { TokenExchangeRate } from '@app/core/api/apollo/types/TokenExchangeRate'
 import { TokenExchangeRatePage, TokenExchangeRatePage_items } from '@app/core/api/apollo/types/TokenExchangeRatePage'
 import { TokenUtils } from '@app/core/helper/token.utils'
 import BN from 'bignumber.js'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_items {
   __typename!: 'TokenExchangeRate'
@@ -29,6 +31,10 @@ export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_ite
     return TokenUtils.currentPriceBN(this)
   }
 
+  get currentPriceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.currentPriceBN || new BN(0))
+  }
+
   get priceChangePercentage24hBN(): BN | null {
     return TokenUtils.priceChangePercentage24hBN(this)
   }
@@ -43,6 +49,22 @@ export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_ite
 
   get priceChangeClass(): string {
     return TokenUtils.priceChangeClass(this)
+  }
+
+  get totalVolumeBN(): BN {
+    return new BN(this.totalVolume || 0)
+  }
+
+  get totalVolumeFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN)
+  }
+
+  get marketCapBN(): BN {
+    return new BN(this.marketCap || 0)
+  }
+
+  get marketCapFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.marketCapBN)
   }
 }
 

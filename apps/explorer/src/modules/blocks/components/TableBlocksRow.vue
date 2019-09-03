@@ -10,7 +10,9 @@
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`">{{ $t('block.number') }} {{ block.numberBN }}</router-link>
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`"
+                >{{ $t('block.number') }} {{ block.numberFormatted }}</router-link
+              >
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
@@ -34,7 +36,10 @@
               <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <p class="black--text align-center pl-2">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
+              <p class="black--text align-center pl-2">
+                {{ block.rewardFormatted.value }}
+                <app-tooltip v-if="block.rewardFormatted.tooltipText" :text="block.rewardFormatted.tooltipText" />
+              </p>
             </v-flex>
           </v-layout>
         </div>
@@ -52,7 +57,7 @@
         -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex sm2>
-            <router-link class="black--text pb-1" :to="`/block/${block.hash}`">{{ block.numberBN }}</router-link>
+            <router-link class="black--text pb-1" :to="`/block/${block.hash}`">{{ block.numberFormatted }}</router-link>
             <div v-if="block.uncleHashes.length" class="arrow">
               <div class="line"></div>
             </div>
@@ -75,7 +80,10 @@
             </v-layout>
           </v-flex>
           <v-flex sm1 xl2>
-            <p class="black--text align-center mb-0">{{ getRoundNumber(ethValue(block.rewardBN).toEth()) }}</p>
+            <p class="black--text align-center mb-0">
+              {{ block.rewardFormatted.value }}
+              <app-tooltip v-if="block.rewardFormatted.tooltipText" :text="block.rewardFormatted.tooltipText" />
+            </p>
           </v-flex>
         </v-layout>
         <!--
@@ -107,19 +115,19 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import { StringConcatMixin } from '@app/core/components/mixins'
-import { EthValue } from '@app/core/models'
-import BN from 'bignumber.js'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
+    AppTooltip,
     AppTransformHash
   }
 })
-export default class TableBlocksRow extends Mixins(StringConcatMixin) {
+export default class TableBlocksRow extends Mixins(NumberFormatMixin) {
   /*
   ===================================================================================
     Props
@@ -134,10 +142,6 @@ export default class TableBlocksRow extends Mixins(StringConcatMixin) {
     Methods
   ===================================================================================
   */
-
-  ethValue(number: BN) {
-    return new EthValue(number)
-  }
 
   sucessTransalate(): number {
     return this.block && this.block.numSuccessfulTxsBN!.toNumber() > 1 ? 2 : 1

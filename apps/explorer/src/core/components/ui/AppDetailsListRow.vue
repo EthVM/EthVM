@@ -23,7 +23,10 @@
             <router-link v-if="detail.link" :to="detail.link">
               <div class="text-truncate secondary--text" v-html="detail.detail"></div>
             </router-link>
-            <div v-else class="text-muted text-truncate" v-html="detail.detail"></div>
+            <div v-else class="text-muted text-truncate">
+              <span v-html="detail.detail" class="pr-1"></span>
+              <app-tooltip v-if="detail.tooltip" :text="detail.tooltip" />
+            </div>
           </div>
           <div v-else>
             <app-transform-hash v-if="detail.link" :hash="detail.detail" :link="detail.link" />
@@ -55,9 +58,11 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Detail } from '@app/core/components/props'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 
 @Component({
   components: {
+    AppTooltip,
     AppCopyToClip,
     AppTransformHash
   }
@@ -79,7 +84,7 @@ export default class AppDetailsListRow extends Vue {
   */
 
   get isMono(): boolean {
-    return this.detail.mono ? true : false
+    return !!this.detail.mono
   }
 }
 </script>
