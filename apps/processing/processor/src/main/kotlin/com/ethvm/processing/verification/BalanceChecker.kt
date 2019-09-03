@@ -66,6 +66,8 @@ class BalanceChecker(val wsUrl: String) : Runnable {
       }
     }
 
+    cursor.close()
+
     processBatch(batch)
 
     logger.info { "Final report. Matched = $matched, failures = $failed" }

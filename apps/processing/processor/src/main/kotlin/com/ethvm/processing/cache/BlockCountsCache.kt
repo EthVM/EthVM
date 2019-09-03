@@ -122,6 +122,8 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       }
     }
 
+    cursor.close()
+
     cacheStores.forEach { it.flushToDisk(true) }
 
     writeHistoryToDb = true
@@ -328,6 +330,8 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         incrementTxCounts(delta)
       }
 
+      txCountCursor.close()
+
       val authorCursor = txCtx
         .select(BLOCK_HEADER.AUTHOR, BLOCK_HEADER.NUMBER)
         .from(BLOCK_HEADER)
@@ -339,6 +343,8 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         val next = authorCursor.fetchNext()
         incrementMinedCounts(next.value1(), next.value2().toBigInteger(), -1)
       }
+
+      authorCursor.close()
 
       txCtx
         .deleteFrom(CANONICAL_COUNT)

@@ -48,9 +48,13 @@ create index if not exists idx_contracts_for_address on contract (created_at_blo
 create index if not exists idx_contracts_for_creator on contract (created_at_block_number desc, creator);
 create index if not exists idx_contracts_by_type on contract (created_at_block_number desc, contract_type);
 
+create index if not exists idx_contracts_by_created_asc on contract(created_at_block_number asc);
+create index if not exists idx_contracts_by_destroyed_asc on contract(destroyed_at_block_number asc);
+
 /* Block metrics service */
-create unique index if not exists idx_blocks_metrics_header_by_block_hash on block_metrics_header (timestamp, number desc, hash);
-create unique index if not exists idx_blocks_metrics_trace_by_block_hash on block_metrics_trace (timestamp, number desc, hash);
+
+create index if not exists idx_blocks_metrics_header_by_block_hash on block_metrics_header (timestamp, number desc, hash);
+create index if not exists idx_blocks_metrics_trace_by_block_hash on block_metrics_trace (timestamp, number desc, hash);
 
 /* Block service */
 create unique index if not exists idx_block_header_by_hash on block_header (hash);
@@ -61,7 +65,7 @@ create index if not exists idx_all_token_balances_for_contract on balance (block
 create index if not exists idx_token_balances_for_contract on balance (contract_address, address, block_number desc);
 
 create index if not exists idx_balances_for_address on balance (address, contract_address, block_number desc);
-create index if not exists idx_balances_by_block_number on balance (block_number);
+create index if not exists idx_balances_by_token_type_block_number on balance (token_type, block_number);
 
 /* Token exchange rates */
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_market_cap_rank ON token_exchange_rate (market_cap_rank ASC);
@@ -74,20 +78,28 @@ CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_total_volume_desc ON token_e
 CREATE UNIQUE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exchange_rate (address);
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rate (symbol);
 
-create index if not exists idx_balance_by_token_type on balance (token_type);
+create index if not exists idx_balance_by_token_type_block_number on balance (token_type, block_number asc);
 
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_block_hash on balance_delta(block_hash);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_address on balance_delta(address);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_contract_address on balance_delta(contract_address);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_delta_type on balance_delta(delta_type);
-CREATE INDEX IF NOT EXISTS idx_balance_delta_by_token_type on balance_delta(token_type);
+CREATE INDEX IF NOT EXISTS idx_balance_delta_by_token_type_block_number on balance_delta(token_type, block_number asc);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_number_contract on balance_delta(block_number, contract_address);
-CREATE INDEX IF NOT EXISTS idx_balance_delta_number_token_type on balance_delta(token_type, block_number);
 
-create index if not exists idx_address_transaction_counts_by_number on address_transaction_count(block_number);
+create index if not exists idx_address_transaction_counts_by_number on address_transaction_count (block_number asc);
+create index if not exists idx_address_transaction_count_deltas_by_number on address_transaction_count_delta (block_number asc);
+
+create index if not exists idx_address_internal_tx_counts_by_number on address_internal_transaction_count(block_number);
 create index if not exists idx_canonical_count_by_block_number on canonical_count(block_number desc);
-
 
 create index if not exists idx_processor_hash_log_processor on processor_hash_log (processor_id);
 
-create index if not exists idx_balance_cache_init on balance_delta (token_type, block_number asc);
+create index if not exists idx_miner_block_count_by_number on miner_block_count (block_number asc);
+
+create index if not exists idx_address_token_count_by_token_type on address_token_count (token_type, block_number asc);
+create index if not exists idx_address_token_count_delta_by_token_type on address_token_count_delta (token_type, block_number asc);
+create index if not exists idx_contract_holder_count_by_token_type on contract_holder_count (token_type, block_number asc);
+create index if not exists idx_contract_holder_count_delta_by_token_type on contract_holder_count_delta (token_type, block_number asc);
+
+create index if not exists idx_contract_metadata_by_block_number on contract_metadata(block_number asc);

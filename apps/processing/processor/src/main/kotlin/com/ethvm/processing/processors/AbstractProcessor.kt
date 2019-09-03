@@ -121,6 +121,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
     hashCache = BlockHashCache(memoryDb, scheduledExecutor, processorId)
     hashCache.initialise(dbContext)
 
+
     //
 
     logger.info { "latest synced block from db: $latestSyncBlock" }

@@ -88,6 +88,8 @@ class NonFungibleBalanceCache(
       }
     }
 
+    cursor.close()
+
     cacheStores.forEach { it.flushToDisk(true) }
 
     writeHistoryToDb = true
@@ -200,6 +202,8 @@ class NonFungibleBalanceCache(
         else -> throw UnsupportedOperationException("Unhandled token type: $tokenType")
       }
     }
+
+    cursor.close()
 
     cacheStores.forEach { it.flushToDisk() }
 

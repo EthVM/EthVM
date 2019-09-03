@@ -8,6 +8,7 @@ import com.ethvm.db.routines.ClearContractDestroyedFields
 import com.ethvm.db.tables.records.ContractMetadataRecord
 import com.ethvm.processing.extensions.toContractRecords
 import mu.KotlinLogging
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -23,6 +24,7 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.Transaction
 import java.math.BigInteger
+import java.util.Properties
 import java.util.concurrent.CompletableFuture
 import kotlin.math.min
 
@@ -33,6 +35,11 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
   override val logger = KotlinLogging.logger {}
 
   override val processorId: String = "contract-lifecycle-processor"
+
+  override val kafkaProps: Properties = Properties()
+    .apply {
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 16)
+    }
 
   private val topicTraces: String by inject(named("topicTraces"))
 

@@ -83,6 +83,8 @@ class FungibleBalanceCache(
 
     var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
 
+    logger.info { "Latest block number from metadata map: $latestBlockNumber" }
+
     val latestDbBlockNumber = txCtx
       .select(BALANCE.BLOCK_NUMBER)
       .from(BALANCE)
@@ -92,6 +94,8 @@ class FungibleBalanceCache(
       .fetchOne()
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
+    logger.info { "Latest block number from db: $latestDbBlockNumber" }
+
     if (latestBlockNumber > latestDbBlockNumber) {
       logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
       // reset all state from the beginning as the database is behind us
@@ -99,6 +103,8 @@ class FungibleBalanceCache(
       metadataMap.clear()
       latestBlockNumber = BigInteger.ONE.negate()
     }
+
+    logger.info { "Opening cursor for balance history" }
 
     val cursor = txCtx
       .selectFrom(BALANCE)
@@ -114,11 +120,13 @@ class FungibleBalanceCache(
     while (cursor.hasNext()) {
       set(cursor.fetchNext())
       count += 1
-      if (count % 1000 == 0) {
+      if (count % 10000 == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "[$tokenType] $count deltas processed" }
       }
     }
+
+    cursor.close()
 
     cacheStores.forEach { it.flushToDisk(true) }
 
@@ -357,21 +365,26 @@ class FungibleBalanceCache(
 
           else -> throw UnsupportedOperationException("Unhandled token type: $deltaTokenType. Expected $tokenType")
         }
+
+        cursor.close()
       }
 
       txCtx
         .deleteFrom(BALANCE)
-        .where(BALANCE.TOKEN_TYPE.eq(tokenTypeStr).and(BALANCE.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .where(BALANCE.TOKEN_TYPE.eq(tokenTypeStr))
+        .and(BALANCE.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
       txCtx
         .deleteFrom(BALANCE_DELTA)
-        .where(BALANCE_DELTA.TOKEN_TYPE.eq(tokenTypeStr).and(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .where(BALANCE_DELTA.TOKEN_TYPE.eq(tokenTypeStr))
+        .and(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
       txCtx
         .deleteFrom(ADDRESS_TOKEN_COUNT)
-        .where(ADDRESS_TOKEN_COUNT.TOKEN_TYPE.eq(tokenTypeStr).and(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .where(ADDRESS_TOKEN_COUNT.TOKEN_TYPE.eq(tokenTypeStr))
+        .and(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
       txCtx

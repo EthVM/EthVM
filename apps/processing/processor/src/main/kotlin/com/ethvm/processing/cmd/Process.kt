@@ -39,19 +39,11 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
 
     logger.info { "Initialising processors" }
 
-    // kick off concurrent initialisation
-
-    val futures =
-      processors.map { processor ->
-        executor.submit {
-          processor.initialise()
-          logger.info { "Initialisation complete for ${processor.javaClass}" }
-        }
-      }.toList()
-
-    // block until they complete
-    futures
-      .forEach { it.get() }
+    processors.forEach { processor ->
+      logger.info { "Initialising ${processor.javaClass}" }
+      processor.initialise()
+      logger.info { "Initialisation complete for ${processor.javaClass}" }
+    }
 
     // run
 

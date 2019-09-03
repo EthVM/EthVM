@@ -41,6 +41,8 @@ class BlockTimestampCache(
       map[blockNumber] = next.value2().time
       logger.info { "[$processorId] Reloaded block number = $blockNumber" }
     }
+
+    cursor.close()
   }
 
   operator fun set(number: BigInteger, timestamp: Long) {

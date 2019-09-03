@@ -79,6 +79,8 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
       .fetchSize(1000)
       .fetchLazy()
 
+    cursor.close()
+
     writeHistoryToDb = false
 
     var count = 0
@@ -303,6 +305,8 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
         incrementInternalTxCounts(delta)
       }
 
+      txCountCursor.close()
+
       val contractsCountCursor = txCtx
         .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA)
         .where(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
@@ -318,6 +322,8 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
         incrementContractsCount(delta)
       }
+
+      contractsCountCursor.close()
 
       txCtx
         .deleteFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT)

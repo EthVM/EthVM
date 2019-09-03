@@ -13,7 +13,7 @@
 
     <logger name="com.ethvm" level="INFO"/>
     <logger name="org.apache.kafka" level="WARN"/>
-<!--    <logger name="org.jooq" level="DEBUG"/>-->
+    <logger name="org.jooq" level="INFO"/>
 
 
 </configuration>

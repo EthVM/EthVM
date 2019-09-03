@@ -13,6 +13,7 @@ import com.ethvm.processing.cache.InternalTxsCountsCache
 import com.ethvm.processing.extensions.toBalanceDeltas
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -21,6 +22,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Timestamp
 import java.time.Duration
+import java.util.Properties
 
 class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
@@ -31,6 +33,11 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
   private val topicTraces: String by inject(named("topicTraces"))
 
   override val topics: List<String> = listOf(topicTraces)
+
+  override val kafkaProps: Properties = Properties()
+    .apply {
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 32)
+    }
 
   private lateinit var fungibleBalanceCache: FungibleBalanceCache
 
