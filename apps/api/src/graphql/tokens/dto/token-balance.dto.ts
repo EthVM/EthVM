@@ -1,6 +1,5 @@
 import { BigNumber, TokenBalance } from '@app/graphql/schema'
 import { assignClean, extractFromJson } from '@app/shared/utils'
-import {BalanceEntity} from '@app/orm/entities/balance.entity';
 
 export class TokenBalanceDto implements TokenBalance {
 
@@ -19,8 +18,6 @@ export class TokenBalanceDto implements TokenBalance {
   constructor(data: any) {
     assignClean(this, data)
 
-    this.balance = data.balance
-    this.contractAddress = data.contract_address
     this.holderAddress = data.address
 
     const { tokenExchangeRate, contractMetadata, ethListContractMetadata } = data

@@ -1,5 +1,5 @@
 import {Entity, PrimaryColumn} from 'typeorm'
-import {GenericCountEntity} from '@app/orm/entities/generic-count.entity';
+import {GenericCountEntity} from '@app/orm/abstract-entities/generic-count.entity';
 
 @Entity('miner_block_count')
 export class MinerBlockCountEntity extends GenericCountEntity {

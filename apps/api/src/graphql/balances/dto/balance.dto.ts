@@ -14,15 +14,10 @@ export class BalanceDto implements Balance {
   constructor(data) {
     assignClean(this, data)
 
-    // Data is in raw DB form so map from snake-case to camel-case
-
-    if (!data.contract_address) {
-      this.contractAddress = ETH_ADDRESS
-    } else {
-      this.contractAddress = data.contract_address
+    if (!data.contractAddress) {
+      this.contractAddress = ETH_ADDRESS // Add ETH_ADDRESS to ether balances
     }
-    this.tokenId = data.token_id
-    this.blockNumber = data.block_number
+
   }
 
 }

@@ -1,5 +1,5 @@
 import {Entity, PrimaryColumn} from 'typeorm'
-import {GenericCountEntity} from '@app/orm/entities/generic-count.entity';
+import {GenericCountEntity} from '@app/orm/abstract-entities/generic-count.entity';
 
 @Entity('contract_holder_count')
 export class ContractHolderCountEntity extends GenericCountEntity {

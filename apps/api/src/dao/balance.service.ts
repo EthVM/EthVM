@@ -1,16 +1,16 @@
 /* tslint:disable:no-trailing-whitespace */
 import {Injectable} from '@nestjs/common'
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm'
-import {EntityManager, Repository} from 'typeorm'
+import {Brackets, EntityManager, Repository} from 'typeorm'
 import {ETH_ADDRESS} from '@app/shared/eth.service'
 import BigNumber from 'bignumber.js'
 import {BalanceEntity} from '@app/orm/entities/balance.entity'
+import {LatestBalanceEntity} from '@app/orm/entities/latest-balance.entity';
 
 @Injectable()
 export class BalanceService {
 
   constructor(
-    @InjectRepository(BalanceEntity) private readonly balanceRepository: Repository<BalanceEntity>,
     @InjectEntityManager()
     private readonly entityManager: EntityManager,
   ) {
@@ -24,51 +24,30 @@ export class BalanceService {
     limit: number = 10,
   ): Promise<[BalanceEntity[], boolean]> {
 
-    let sql = `
-      WITH _balances as (
-        SELECT 
-          *,
-          row_number() OVER (PARTITION BY address, contract_address ORDER BY block_number DESC) AS row_number
-          FROM balance
-          WHERE address IN (
-    `
-    const args: any[] = []
-    let currArg = 1
-    addresses.forEach((address) => {
-      args.push(address)
-      sql += `$${currArg},`
-      currArg++
-    })
-    sql = sql.substring(0, sql.length - 1) // Remove trailing comma
-    sql += ') AND '
+    const qb = this.entityManager.createQueryBuilder(LatestBalanceEntity, 'lb')
+      .where('address IN (:...addresses)', { addresses })
+      .andWhere('block_number <= :blockNumber', { blockNumber: blockNumber.toNumber() })
 
     if (contracts.length) {
-      // Replace "EthAddress" with empty string
       const ethAddressIdx = contracts.indexOf(ETH_ADDRESS)
       if (ethAddressIdx > -1) {
-        contracts[ethAddressIdx] = ''
+        // Remove "EthAddress" from contracts array and add OR clause with IS NULL
+        contracts.splice(ethAddressIdx, 1)
+        qb.andWhere(new Brackets(sqb => {
+          sqb.where('contract_address IN (:...contracts)', { contracts })
+            .orWhere('contract_address IS NULL')
+        }))
+      } else {
+        qb.andWhere('contract_address IN :contracts', { contracts })
       }
-      sql += 'contract_address IN ('
-      contracts.forEach((contract) => {
-        args.push(contract)
-        sql += `$${currArg},`
-        currArg++
-      })
-      sql = sql.substring(0, sql.length - 1) // Remove trailing comma
-      sql += ') AND '
     }
 
-    sql += `
-        block_number <= $${currArg}
-      )
-      SELECT * FROM _balances
-      WHERE row_number = 1
-      OFFSET $${currArg + 1}
-      LIMIT $${currArg + 2}
-    `
-    args.push(blockNumber.toNumber(), offset, limit + 1)
-
-    const items = await this.entityManager.query(sql, args)
+    const items = await qb
+      .orderBy('block_number', 'DESC')
+      .offset(offset)
+      .limit(limit + 1)
+      .cache(true) // TODO confirm if caching should be enabled here
+      .getMany()
 
     const hasMore = items.length > limit
     if (hasMore) {

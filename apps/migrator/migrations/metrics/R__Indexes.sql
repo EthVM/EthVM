@@ -63,6 +63,8 @@ create unique index if not exists idx_block_metrics_trace_hash on block_metrics_
 /* Token service */
 create index if not exists idx_all_token_balances_for_contract on balance (block_number desc, contract_address, address);
 create index if not exists idx_token_balances_for_contract on balance (contract_address, address, block_number desc);
+/* TODO remove previous index? */
+create index if not exists idx_token_balances_for_contract_2 on balance (contract_address, address, block_number desc) WHERE balance > 0;
 
 create index if not exists idx_balances_for_address on balance (address, contract_address, block_number desc);
 create index if not exists idx_balances_by_token_type_block_number on balance (token_type, block_number);
