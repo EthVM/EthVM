@@ -88,8 +88,6 @@ class BlockHashCache(
 
       cursor.close()
 
-
-
       logger.info { "[$processorId] Initialisation complete" }
     }
   }
@@ -112,7 +110,6 @@ class BlockHashCache(
       .where(PROCESSOR_HASH_LOG.BLOCK_NUMBER.ge(from.toBigDecimal()))
       .and(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
       .execute()
-
   }
 
   fun writeToDb(txCtx: DSLContext) {

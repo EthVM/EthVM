@@ -418,7 +418,6 @@ class FungibleBalanceCache(
 
       // re-enable generation of history records
       writeHistoryToDb = true
-
     } else {
 
       logger.info { "[$tokenType] Clearing all cache stores" }

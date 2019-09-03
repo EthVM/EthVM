@@ -123,7 +123,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
     hashCache = BlockHashCache(memoryDb, scheduledExecutor, processorId)
     hashCache.initialise(dbContext)
 
-
     //
 
     logger.info { "latest synced block from db: $latestSyncBlock" }
@@ -185,7 +184,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
         .deleteFrom(SYNC_STATUS_HISTORY)
         .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
         .execute()
-
     }
   }
 
@@ -453,7 +451,6 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       .set(SYNC_STATUS.BLOCK_TIMESTAMP, latestRecord.blockTimestamp)
       .set(SYNC_STATUS.TIMESTAMP, latestRecord.timestamp)
       .execute()
-
   }
 
   override fun stop() {

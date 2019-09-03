@@ -63,9 +63,9 @@ class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval
 
       val balance = cursor.fetchNext()
 
-      if(blockNumber != balance.blockNumber) {
+      if (blockNumber != balance.blockNumber) {
         blockNumber = balance.blockNumber
-        logger.info { "Checking block $blockNumber"}
+        logger.info { "Checking block $blockNumber" }
       }
 
       batch = batch + balance
