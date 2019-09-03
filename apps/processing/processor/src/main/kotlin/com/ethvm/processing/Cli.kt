@@ -35,7 +35,7 @@ class Cli : CliktCommand() {
     const val DEFAULT_JDBC_URL = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
     const val DEFAULT_JDBC_USERNAME = "postgres"
     const val DEFAULT_JDBC_PASSWORD = "1234"
-    const val DEFAULT_JDBC_MAX_CONNECTIONS = 30
+    const val DEFAULT_JDBC_MAX_CONNECTIONS = 10
 
     const val DEFAULT_NETWORK = "ropsten"
 
