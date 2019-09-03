@@ -217,7 +217,7 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
           this.blockHash = block.header.hash
           this.transactionHash = receipt.transactionHash
           this.amount = transfer.amount.negate().toBigDecimal()
-          this.timestamp = Timestamp(block.header.timestamp * 1000L)
+          this.timestamp = Timestamp(block.header.timestamp)
           this.isReceiving = false
         },
         BalanceDeltaRecord().apply {
@@ -230,7 +230,7 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
           this.blockHash = block.header.hash
           this.transactionHash = receipt.transactionHash
           this.amount = transfer.amount.toBigDecimal()
-          this.timestamp = Timestamp(block.header.timestamp * 1000L)
+          this.timestamp = Timestamp(block.header.timestamp)
           this.isReceiving = true
         }
       )
