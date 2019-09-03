@@ -11,10 +11,11 @@ import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.websocket.WebSocketService
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.util.concurrent.CompletableFuture
 import kotlin.system.exitProcess
 
-class BalanceChecker(val wsUrl: String) : Runnable {
+class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval: Int = 100) : Runnable {
 
   private val logger = KotlinLogging.logger {}
 
@@ -22,7 +23,7 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     jdbcUrl = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
     username = "postgres"
     password = "1234"
-    maximumPoolSize = 10
+    maximumPoolSize = 1
     isAutoCommit = false
     addDataSourceProperty("cachePrepStmts", "true")
     addDataSourceProperty("prepStmtCacheSize", "250")
@@ -44,7 +45,8 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     val cursor = dbContext
       .selectFrom(BALANCE)
       .where(BALANCE.CONTRACT_ADDRESS.isNull)
-//      .and(BALANCE.BLOCK_NUMBER.mod(10).eq(BigDecimal.ZERO))
+      .and(BALANCE.BLOCK_NUMBER.ge(startBlock.toBigDecimal()))
+      .and(BALANCE.BLOCK_NUMBER.mod(interval).eq(BigDecimal.ZERO))
       .orderBy(BALANCE.BLOCK_NUMBER.asc())
       .fetchSize(1000)
       .fetchLazy()
@@ -55,9 +57,16 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     val batchSize = 256
     var batch = emptyList<BalanceRecord>()
 
+    var blockNumber: BigDecimal? = null
+
     while (cursor.hasNext()) {
 
       val balance = cursor.fetchNext()
+
+      if(blockNumber != balance.blockNumber) {
+        blockNumber = balance.blockNumber
+        logger.info { "Checking block $blockNumber"}
+      }
 
       batch = batch + balance
       if (batch.size == batchSize) {
@@ -114,7 +123,7 @@ class BalanceChecker(val wsUrl: String) : Runnable {
 
 fun main(args: Array<String>) {
 
-  val checker = BalanceChecker("ws://localhost:8546")
+  val checker = BalanceChecker("ws://localhost:8546", 800000.toBigInteger(), 10)
 
   checker.run()
 }
