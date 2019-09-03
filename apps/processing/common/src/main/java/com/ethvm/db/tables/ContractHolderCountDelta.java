@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ContractHolderCountDelta extends TableImpl<ContractHolderCountDeltaRecord> {
 
-    private static final long serialVersionUID = 928386179;
+    private static final long serialVersionUID = 35010988;
 
     /**
      * The reference instance of <code>public.contract_holder_count_delta</code>
@@ -128,7 +128,7 @@ public class ContractHolderCountDelta extends TableImpl<ContractHolderCountDelta
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.CONTRACT_HOLDER_COUNT_DELTA_PKEY);
+        return Arrays.<Index>asList(Indexes.CONTRACT_HOLDER_COUNT_DELTA_PKEY, Indexes.IDX_CONTRACT_HOLDER_COUNT_DELTA_BY_TOKEN_TYPE);
     }
 
     /**

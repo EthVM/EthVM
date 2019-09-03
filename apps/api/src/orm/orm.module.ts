@@ -21,7 +21,7 @@ import { PostgresDriver } from 'typeorm/driver/postgres/PostgresDriver'
           type: 'redis',
           options: {...configService.redis, string_numbers: true}, // Set Redis string_numbers to true to handle numbers as Strings
           // global cache strategy of 60 seconds
-          duration: 10000,
+          duration: 60000,
         },
       }),
       inject: [ConfigService],

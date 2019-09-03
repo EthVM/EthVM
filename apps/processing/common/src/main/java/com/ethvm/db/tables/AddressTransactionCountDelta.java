@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressTransactionCountDelta extends TableImpl<AddressTransactionCountDeltaRecord> {
 
-    private static final long serialVersionUID = 1019590298;
+    private static final long serialVersionUID = -205967065;
 
     /**
      * The reference instance of <code>public.address_transaction_count_delta</code>
@@ -133,7 +133,7 @@ public class AddressTransactionCountDelta extends TableImpl<AddressTransactionCo
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ADDRESS_TRANSACTION_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY, Indexes.ADDRESS_TRANSACTION_COUNT_DELTA_PKEY);
+        return Arrays.<Index>asList(Indexes.ADDRESS_TRANSACTION_COUNT_DELTA_ADDRESS_BLOCK_NUMBER_KEY, Indexes.ADDRESS_TRANSACTION_COUNT_DELTA_PKEY, Indexes.IDX_ADDRESS_TRANSACTION_COUNT_DELTAS_BY_NUMBER);
     }
 
     /**

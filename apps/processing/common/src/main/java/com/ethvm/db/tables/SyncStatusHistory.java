@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SyncStatusHistory extends TableImpl<SyncStatusHistoryRecord> {
 
-    private static final long serialVersionUID = 2124977641;
+    private static final long serialVersionUID = -1148014972;
 
     /**
      * The reference instance of <code>public.sync_status_history</code>
@@ -123,7 +123,7 @@ public class SyncStatusHistory extends TableImpl<SyncStatusHistoryRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.IDX_SYNC_STATUS_HISTORY_BLOCK_TIMESTAMP, Indexes.SYNC_STATUS_HISTORY_PKEY);
+        return Arrays.<Index>asList(Indexes.IDX_SYNC_STATUS_HISTORY, Indexes.SYNC_STATUS_HISTORY_PKEY);
     }
 
     /**

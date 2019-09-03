@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressTokenCount extends TableImpl<AddressTokenCountRecord> {
 
-    private static final long serialVersionUID = -155235243;
+    private static final long serialVersionUID = -1913179536;
 
     /**
      * The reference instance of <code>public.address_token_count</code>
@@ -122,7 +122,7 @@ public class AddressTokenCount extends TableImpl<AddressTokenCountRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ADDRESS_TOKEN_COUNT_PKEY);
+        return Arrays.<Index>asList(Indexes.ADDRESS_TOKEN_COUNT_PKEY, Indexes.IDX_ADDRESS_TOKEN_COUNT_BY_TOKEN_TYPE);
     }
 
     /**

@@ -43,7 +43,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class BalanceDelta extends TableImpl<BalanceDeltaRecord> {
 
-    private static final long serialVersionUID = 960963174;
+    private static final long serialVersionUID = 382113140;
 
     /**
      * The reference instance of <code>public.balance_delta</code>
@@ -179,7 +179,7 @@ public class BalanceDelta extends TableImpl<BalanceDeltaRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.BALANCE_DELTA_PKEY, Indexes.IDX_ADDRESS_HAS_INTERNAL_TRANSFERS, Indexes.IDX_BALANCE_DELTA_BY_ADDRESS, Indexes.IDX_BALANCE_DELTA_BY_BLOCK_HASH, Indexes.IDX_BALANCE_DELTA_BY_CONTRACT_ADDRESS, Indexes.IDX_BALANCE_DELTA_BY_DELTA_TYPE, Indexes.IDX_BALANCE_DELTA_BY_TOKEN_TYPE, Indexes.IDX_BALANCE_DELTA_NUMBER_CONTRACT, Indexes.IDX_BALANCE_DELTA_NUMBER_TOKEN_TYPE, Indexes.IDX_CONTRACT_TOKEN_TRANSFERS, Indexes.IDX_INTERNAL_TRANSACTIONS_FOR_ADDRESS, Indexes.IDX_UNCLE_REWARDS_FOR_BLOCK_AND_ADDRESS);
+        return Arrays.<Index>asList(Indexes.BALANCE_DELTA_PKEY, Indexes.IDX_ADDRESS_HAS_INTERNAL_TRANSFERS, Indexes.IDX_BALANCE_DELTA_BY_ADDRESS, Indexes.IDX_BALANCE_DELTA_BY_BLOCK_HASH, Indexes.IDX_BALANCE_DELTA_BY_CONTRACT_ADDRESS, Indexes.IDX_BALANCE_DELTA_BY_DELTA_TYPE, Indexes.IDX_BALANCE_DELTA_BY_TOKEN_TYPE_BLOCK_NUMBER, Indexes.IDX_BALANCE_DELTA_NUMBER_CONTRACT, Indexes.IDX_CONTRACT_TOKEN_TRANSFERS, Indexes.IDX_INTERNAL_TRANSACTIONS_FOR_ADDRESS, Indexes.IDX_UNCLE_REWARDS_FOR_BLOCK_AND_ADDRESS);
     }
 
     /**

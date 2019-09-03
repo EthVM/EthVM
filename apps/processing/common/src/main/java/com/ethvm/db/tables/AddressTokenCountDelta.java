@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressTokenCountDelta extends TableImpl<AddressTokenCountDeltaRecord> {
 
-    private static final long serialVersionUID = 1481689583;
+    private static final long serialVersionUID = -1234656339;
 
     /**
      * The reference instance of <code>public.address_token_count_delta</code>
@@ -128,7 +128,7 @@ public class AddressTokenCountDelta extends TableImpl<AddressTokenCountDeltaReco
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ADDRESS_TOKEN_COUNT_DELTA_PKEY);
+        return Arrays.<Index>asList(Indexes.ADDRESS_TOKEN_COUNT_DELTA_PKEY, Indexes.IDX_ADDRESS_TOKEN_COUNT_DELTA_BY_TOKEN_TYPE);
     }
 
     /**

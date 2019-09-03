@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Contract extends TableImpl<ContractRecord> {
 
-    private static final long serialVersionUID = -657372715;
+    private static final long serialVersionUID = -297410578;
 
     /**
      * The reference instance of <code>public.contract</code>
@@ -188,7 +188,7 @@ public class Contract extends TableImpl<ContractRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.CONTRACT_PKEY, Indexes.IDX_CONTRACTS_BY_TYPE, Indexes.IDX_CONTRACTS_FOR_ADDRESS, Indexes.IDX_CONTRACTS_FOR_CREATOR, Indexes.IDX_IS_CONTRACT, Indexes.IDX_IS_CONTRACT_CREATOR);
+        return Arrays.<Index>asList(Indexes.CONTRACT_PKEY, Indexes.IDX_CONTRACTS_BY_CREATED_ASC, Indexes.IDX_CONTRACTS_BY_DESTROYED_ASC, Indexes.IDX_CONTRACTS_BY_TYPE, Indexes.IDX_CONTRACTS_FOR_ADDRESS, Indexes.IDX_CONTRACTS_FOR_CREATOR, Indexes.IDX_IS_CONTRACT, Indexes.IDX_IS_CONTRACT_CREATOR);
     }
 
     /**

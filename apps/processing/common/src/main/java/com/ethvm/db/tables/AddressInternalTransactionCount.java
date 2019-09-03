@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AddressInternalTransactionCount extends TableImpl<AddressInternalTransactionCountRecord> {
 
-    private static final long serialVersionUID = -1048882176;
+    private static final long serialVersionUID = -112883138;
 
     /**
      * The reference instance of <code>public.address_internal_transaction_count</code>
@@ -127,7 +127,7 @@ public class AddressInternalTransactionCount extends TableImpl<AddressInternalTr
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY);
+        return Arrays.<Index>asList(Indexes.ADDRESS_INTERNAL_TRANSACTION_COUNT_PKEY, Indexes.IDX_ADDRESS_INTERNAL_TX_COUNTS_BY_NUMBER);
     }
 
     /**

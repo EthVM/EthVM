@@ -1,3 +1,12 @@
+CREATE TABLE sync_status
+(
+    component       VARCHAR(128),
+    block_number    DECIMAL   NOT NULL,
+    timestamp       TIMESTAMP NOT NULL,
+    block_timestamp TIMESTAMP NOT NULL,
+    PRIMARY KEY (component)
+);
+
 CREATE TABLE sync_status_history
 (
     component       VARCHAR(128),

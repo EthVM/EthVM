@@ -43,7 +43,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Balance extends TableImpl<BalanceRecord> {
 
-    private static final long serialVersionUID = 998886159;
+    private static final long serialVersionUID = -1793133774;
 
     /**
      * The reference instance of <code>public.balance</code>
@@ -149,7 +149,7 @@ public class Balance extends TableImpl<BalanceRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.BALANCE_PKEY, Indexes.IDX_ALL_TOKEN_BALANCES_FOR_CONTRACT, Indexes.IDX_BALANCE_BY_TOKEN_TYPE, Indexes.IDX_BALANCES_BY_BLOCK_NUMBER, Indexes.IDX_BALANCES_FOR_ADDRESS, Indexes.IDX_ETHER_BALANCE_FOR_ADDRESS, Indexes.IDX_TOKEN_BALANCES_FOR_CONTRACT);
+        return Arrays.<Index>asList(Indexes.BALANCE_PKEY, Indexes.IDX_ALL_TOKEN_BALANCES_FOR_CONTRACT, Indexes.IDX_BALANCE_BY_TOKEN_TYPE_BLOCK_NUMBER, Indexes.IDX_BALANCES_BY_TOKEN_TYPE_BLOCK_NUMBER, Indexes.IDX_BALANCES_FOR_ADDRESS, Indexes.IDX_ETHER_BALANCE_FOR_ADDRESS, Indexes.IDX_TOKEN_BALANCES_FOR_CONTRACT);
     }
 
     /**

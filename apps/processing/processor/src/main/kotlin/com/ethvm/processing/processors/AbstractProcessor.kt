@@ -5,6 +5,8 @@ import com.ethvm.common.config.NetConfig
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables.SYNC_STATUS
 import com.ethvm.db.Tables.SYNC_STATUS_HISTORY
+import com.ethvm.db.tables.records.SyncStatusHistoryRecord
+import com.ethvm.db.tables.records.SyncStatusRecord
 import com.ethvm.processing.cache.BlockHashCache
 import mu.KLogger
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -144,7 +146,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       rewindUntil(txCtx, rewindBlockNumber)
 
       // clear out hash cache
-      hashCache.removeKeysFrom(rewindBlockNumber)
+      hashCache.removeKeysFrom(txCtx, rewindBlockNumber)
       hashCache.writeToDb(txCtx)
 
       logger.info { "initialised" }
@@ -175,30 +177,74 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       reset(txCtx)
 
       txCtx
+        .deleteFrom(SYNC_STATUS)
+        .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+        .execute()
+
+      txCtx
         .deleteFrom(SYNC_STATUS_HISTORY)
         .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
         .execute()
+
     }
   }
 
-  override fun rewindUntil(blockNumber: BigInteger) {
+  override fun rewindUntil(targetBlockNumber: BigInteger) {
+
+    logger.info { "Rewind requested for $processorId to block number $targetBlockNumber" }
 
     dbContext.transaction { txConfig ->
 
       val txCtx = DSL.using(txConfig)
 
-      rewindUntil(txCtx, blockNumber)
+      // Find closest batch end in sync_status_history
 
-      hashCache.removeKeysFrom(blockNumber)
-      hashCache.writeToDb(txCtx)
+      val record = txCtx
+        .selectFrom(SYNC_STATUS_HISTORY)
+        .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+        .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.lessThan(targetBlockNumber.toBigDecimal()))
+        .orderBy(SYNC_STATUS_HISTORY.BLOCK_NUMBER.desc())
+        .limit(1)
+        .fetchOne()
+
+      val latestBatchBlockNumber = record.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
+      val rewindUntilBlockNumber = latestBatchBlockNumber.plus(BigInteger.ONE)
+
+      logger.info { "Rewinding to closest batch end $latestBatchBlockNumber for $processorId" }
+
+      rewindUntil(txCtx, rewindUntilBlockNumber)
+      hashCache.removeKeysFrom(txCtx, rewindUntilBlockNumber)
+
+      logger.info { "HashCache updated, $processorId latest block number = $latestBatchBlockNumber" }
+
+      // delete history
 
       txCtx
         .deleteFrom(SYNC_STATUS_HISTORY)
-        .where(
-          SYNC_STATUS_HISTORY.COMPONENT.eq(processorId)
-            .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-        )
+        .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+        .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(rewindUntilBlockNumber.toBigDecimal()))
         .execute()
+
+      // update latest sync status
+
+      val latestRecord = SyncStatusRecord()
+        .apply {
+          this.component = record.component
+          this.blockNumber = record.blockNumber
+          this.blockTimestamp = record.blockTimestamp
+          this.timestamp = record.timestamp
+        }
+
+      txCtx
+        .insertInto(SYNC_STATUS)
+        .set(latestRecord)
+        .onDuplicateKeyUpdate()
+        .set(SYNC_STATUS.BLOCK_NUMBER, latestRecord.blockNumber)
+        .set(SYNC_STATUS.BLOCK_TIMESTAMP, latestRecord.blockTimestamp)
+        .set(SYNC_STATUS.TIMESTAMP, latestRecord.timestamp)
+        .execute()
+
+      logger.info { "Sync status history updated, $processorId latest block number = $latestBatchBlockNumber" }
 
       diskDb.commit()
     }
@@ -301,10 +347,11 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
                   BlockType.FORK -> {
 
                     val forkBlockNumber = record.key().number.bigInteger()
-                    rewindUntil(forkBlockNumber)
+
+                    rewindUntil(txCtx, forkBlockNumber)
 
                     // clear out hash cache and update latest block hash
-                    hashCache.removeKeysFrom(forkBlockNumber)
+                    hashCache.removeKeysFrom(txCtx, forkBlockNumber)
                     hashCache[forkBlockNumber] = blockHashFor(record.value())
                     hashCache.writeToDb(txCtx)
                   }
@@ -373,18 +420,40 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
     val timestampNowMs = Timestamp(System.currentTimeMillis())
     val blockTimestampMs = Timestamp(blockTimestamp)
 
+    val record = SyncStatusHistoryRecord()
+      .apply {
+        this.component = processorId
+        this.blockNumber = blockNumberDecimal
+        this.blockTimestamp = blockTimestampMs
+        this.timestamp = timestampNowMs
+      }
+
     // history
 
     txCtx
-      .insertInto(
-        SYNC_STATUS_HISTORY,
-        SYNC_STATUS_HISTORY.COMPONENT,
-        SYNC_STATUS_HISTORY.BLOCK_NUMBER,
-        SYNC_STATUS_HISTORY.TIMESTAMP,
-        SYNC_STATUS_HISTORY.BLOCK_TIMESTAMP
-      )
-      .values(processorId, blockNumberDecimal, timestampNowMs, blockTimestampMs)
+      .insertInto(SYNC_STATUS_HISTORY)
+      .set(record)
       .execute()
+
+    // update latest
+
+    val latestRecord = SyncStatusRecord()
+      .apply {
+        this.component = record.component
+        this.blockNumber = record.blockNumber
+        this.blockTimestamp = record.blockTimestamp
+        this.timestamp = record.timestamp
+      }
+
+    txCtx
+      .insertInto(SYNC_STATUS)
+      .set(latestRecord)
+      .onDuplicateKeyUpdate()
+      .set(SYNC_STATUS.BLOCK_NUMBER, latestRecord.blockNumber)
+      .set(SYNC_STATUS.BLOCK_TIMESTAMP, latestRecord.blockTimestamp)
+      .set(SYNC_STATUS.TIMESTAMP, latestRecord.timestamp)
+      .execute()
+
   }
 
   override fun stop() {

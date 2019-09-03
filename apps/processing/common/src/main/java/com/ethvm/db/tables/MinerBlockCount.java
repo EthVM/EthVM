@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MinerBlockCount extends TableImpl<MinerBlockCountRecord> {
 
-    private static final long serialVersionUID = -1537544485;
+    private static final long serialVersionUID = -1455378458;
 
     /**
      * The reference instance of <code>public.miner_block_count</code>
@@ -117,7 +117,7 @@ public class MinerBlockCount extends TableImpl<MinerBlockCountRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.MINER_BLOCK_COUNT_PKEY);
+        return Arrays.<Index>asList(Indexes.IDX_MINER_BLOCK_COUNT_BY_NUMBER, Indexes.MINER_BLOCK_COUNT_PKEY);
     }
 
     /**

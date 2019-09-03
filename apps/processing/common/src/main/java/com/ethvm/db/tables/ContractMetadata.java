@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ContractMetadata extends TableImpl<ContractMetadataRecord> {
 
-    private static final long serialVersionUID = 745128733;
+    private static final long serialVersionUID = 1000402495;
 
     /**
      * The reference instance of <code>public.contract_metadata</code>
@@ -132,7 +132,7 @@ public class ContractMetadata extends TableImpl<ContractMetadataRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.CONTRACT_METADATA_PKEY);
+        return Arrays.<Index>asList(Indexes.CONTRACT_METADATA_PKEY, Indexes.IDX_CONTRACT_METADATA_BY_BLOCK_NUMBER);
     }
 
     /**
