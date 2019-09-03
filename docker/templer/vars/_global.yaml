@@ -24,11 +24,6 @@ PRINCIPAL_USER: 'postgres'
 PRINCIPAL_PASSWORD: '1234'
 PRINCIPAL_JDBC_URL: 'jdbc:postgresql://timescale:5432/{{ PRINCIPAL_DB }}?user={{ PRINCIPAL_USER }}&password={{ PRINCIPAL_PASSWORD }}&ssl=false'
 
-METRICS_DB: 'ethvm_dev'
-METRICS_USER: 'postgres'
-METRICS_PASSWORD: '1234'
-METRICS_JDBC_URL: 'jdbc:postgresql://timescale:5432/{{ METRICS_DB }}?user={{ METRICS_USER }}&password={{ METRICS_PASSWORD }}&ssl=false'
-
 # ///////////////////////////////////////////////////////
 # Parity
 # ///////////////////////////////////////////////////////

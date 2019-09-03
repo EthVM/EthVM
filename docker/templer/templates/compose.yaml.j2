@@ -28,7 +28,7 @@ volumes:
     external: false
 
   {% if KAFKA_ENABLE_PROCESSORS %}
-  ethvm-kafka-processors:
+  ethvm-processors:
     external: false
   {% endif %}
   {% endif %}
@@ -249,16 +249,21 @@ services:
       - kafka-1
       - zookeeper
       - kafka-schema-registry
+      - timescale
     networks:
       - net
     volumes:
-      - ethvm-kafka-processors:/var/lib/kafka-streams
+      - ethvm-processors:/data
     environment:
       KAFKA_BOOTSTRAP_SERVERS: {{ KAFKA_BOOTSTRAP_SERVERS }}
       KAFKA_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
       WEB3_WS_URL: ws://parity:8546
-      KAFKA_STREAMS_STATE_DIR: /var/lib/kafka-streams
+      ETHVM_STORAGE_DIR: /data
+      JDBC_URL: "jdbc:postgresql://timescale/{{ PRINCIPAL_DB }}?ssl=false"
       ETH_NETWORK: '{{ PARITY_CHAIN }}'
+      TOPIC_BLOCKS: "{{ PARITY_CHAIN }}_blocks"
+      TOPIC_TRACES: "{{ PARITY_CHAIN }}_traces"
+      TOPIC_PARITY_SYNC_STATE: "{{ PARITY_CHAIN }}_parity_sync_state"
   {% endif %}
 
   kafka-schema-registry:
@@ -305,10 +310,8 @@ services:
       - 8083:8083
       - 9588:9588
     volumes:
-      - ./apps/processing/connectors/sinks/jdbc/build/libs:/usr/share/ethvm/jdbc
       - ./apps/processing/connectors/sources/eth-tokens-list/build/libs:/usr/share/ethvm/eth-tokens-list
       - ./apps/processing/connectors/sources/exchanges/build/libs:/usr/share/ethvm/exchanges
-      - ./apps/processing/connectors/sources/kafka-admin/build/libs:/usr/share/ethvm/kafka-admin
       - ./apps/processing/connectors/sources/web3/build/libs:/usr/share/ethvm/web3
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka-1:9091
@@ -318,9 +321,9 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: "ethvm-storage-topic"
       CONNECT_CONFIG_STORAGE_TOPIC: "ethvm-storage-config"
       CONNECT_OFFSET_STORAGE_TOPIC: "ethvm-storage-offsets"
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
       CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
@@ -329,18 +332,15 @@ services:
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_LOG4J_ROOT_LOGLEVEL: "WARN"
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.confluent.connect.jdbc=WARN,com.ethvm.kafka.connect=DEBUG,org.web3j.protocol.websocket.WebSocketService=WARN"
-      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm/jdbc,/usr/share/ethvm/eth-tokens-list,/usr/share/ethvm/exchanges,/usr/share/ethvm/kafka-admin,/usr/share/ethvm/web3
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/ethvm/eth-tokens-list,/usr/share/ethvm/exchanges,/usr/share/ethvm/web3
       CONNECT_PRODUCER_MAX_REQUEST_SIZE: 52428800
       CONNECT_CONSUMER_MAX_PARTITION_FETCH_BYTES: 10485760
       CONNECT_MAX_POLL_INTERVAL_MS: 120000
+      CONNECT_CONSUMER_FETCH_MIN_BYTES: 1000000
+      CONNECT_CONSUMER_MAX_POLL_RECORDS: 2000
+      CONNECT_CONSUMER_FETCH_WAIT_MAX_MS: 1000
       KAFKA_HEAP_OPTS: "-Xms2G -Xmx4G -XX:MaxDirectMemorySize=512M"
       KAFKA_JMX_PORT: 9588
-      PRINCIPAL_BALANCE_DELTA_SINK_TASKS_MAX:
-      PRINCIPAL_BALANCE_SINK_TASKS_MAX:
-      PRINCIPAL_CONTRACT_SINK_TASKS_MAX:
-      PRINCIPAL_RECEIPT_SINK_TASKS_MAX:
-      PRINCIPAL_TRACE_SINK_TASKS_MAX:
-      METRICS_BLOCK_METRICS_SINK_TASKS_MAX:
   {% endif %}
 
   # ///////////////////////////////////////////////////////

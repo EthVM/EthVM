@@ -17,7 +17,7 @@ mkdir -p ${ROOT_DIR}/datasets
 
 set +o errexit
 
-DATASETS=("principal-${BRANCH}.sql.gz" "metrics-${BRANCH}.sql.gz")
+DATASETS=("principal-${BRANCH}.sql.gz")
 
 for DATASET in "${DATASETS[@]}"; do
 

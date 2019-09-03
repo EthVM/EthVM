@@ -45,7 +45,7 @@ case ${DB} in
     ;;
 
   metrics)
-    FLYWAY_URL=${METRICS_JDBC_URL}
+    FLYWAY_URL=${PRINCIPAL_JDBC_URL}
     FLYWAY_LOCATIONS="filesystem:/flyway/migrations/metrics"
     ;;
 
