@@ -90,7 +90,7 @@ fun BlockHeaderRecord.toDbRecord(blockTime: Int): com.ethvm.db.tables.records.Bl
       this.number = avro.number.bigInteger().toBigDecimal()
       this.hash = avro.hash
       this.parentHash = avro.parentHash
-      this.nonce = avro.nonce.bigInteger().toBigDecimal()
+      this.nonce = if (avro.nonce != null) avro.nonce.bigInteger().toBigDecimal() else BigDecimal.ZERO
       this.sha3Uncles = avro.sha3Uncles
       this.logsBloom = avro.logsBloom
       this.transactionsRoot = avro.transactionsRoot
