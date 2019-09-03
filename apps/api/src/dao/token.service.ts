@@ -51,15 +51,21 @@ export class TokenService {
       return [[], false, count]
     }
 
-    const balances = await this.entityManager.createQueryBuilder(LatestTokenBalanceEntity, 'tb')
-      .where('tb.contract_address = :contractAddress')
-      .andWhere('tb.block_number <= :blockNumber')
-      .setParameters({ contractAddress, blockNumber: blockNumber.toNumber() })
-      .orderBy('tb.block_number', 'DESC')
-      .offset(offset)
-      .limit(limit + 1)
-      .cache(true)
-      .getMany()
+    const balances = await this.entityManager.query(`
+      WITH _balances as (
+        SELECT 
+          *,
+          row_number() OVER (PARTITION BY address ORDER BY block_number DESC) AS row_number
+          FROM balance
+          WHERE contract_address = $1          
+          AND balance > 0
+          AND block_number <= $2
+      )
+      SELECT * FROM _balances
+      WHERE row_number = 1
+      OFFSET $3
+      LIMIT $4
+    `, [contractAddress, blockNumber.toNumber(), offset, limit + 1])
 
     const hasMore = balances.length > limit
     if (hasMore) {
@@ -87,23 +93,31 @@ export class TokenService {
         order: { blockNumber: 'DESC' },
         cache: true,
       })
+
       const count = erc20Count ? erc20Count.count : this.zeroBN
       if (count.isEqualTo(0)) {
         return [[], false, count]
       }
 
-      const items = await txn.createQueryBuilder(LatestTokenBalanceEntity, 'tb')
-        .where('address = :address')
-        .andWhere('block_number <= :blockNumber')
-        .setParameters({ address, blockNumber: blockNumber.toNumber() })
-        .offset(offset)
-        .limit(limit + 1)
-        .orderBy('tb.block_number', 'DESC') // TODO decide on ORDER BY
-        .cache(true)
-        .getMany()
+      const items = await txn.query(`
+      WITH _balances as (
+        SELECT 
+          *,
+          row_number() OVER (PARTITION BY address, contract_address ORDER BY block_number DESC) AS row_number
+          FROM balance
+          WHERE address = $1          
+          AND contract_address IS NOT NULL
+          AND balance > 0          
+          AND block_number <= $2
+      )
+      SELECT * FROM _balances
+      WHERE row_number = 1
+      OFFSET $3
+      LIMIT $4
+    `, [address, blockNumber.toNumber(), offset, limit + 1])
 
-      // Get token relations // TODO load these as relations now?
-      const contractAddresses = items.map(i => i.contractAddress)
+      // Get token relations
+      const contractAddresses = items.map(i => i.contract_address)
       const contracts = await txn.find(ContractEntity, {
         where: { address: In(contractAddresses), createdAtBlockNumber: LessThanOrEqual(blockNumber) },
         relations: ['ethListContractMetadata', 'contractMetadata', 'tokenExchangeRate'],
@@ -118,7 +132,7 @@ export class TokenService {
 
       // Map metadata to balances
       items.forEach(balance => {
-        const { ethListContractMetadata, contractMetadata, tokenExchangeRate } = contractsByAddress[balance.contractAddress]
+        const { ethListContractMetadata, contractMetadata, tokenExchangeRate } = contractsByAddress[balance.contract_address]
         balance.ethListContractMetadata = ethListContractMetadata
         balance.contractMetadata = contractMetadata
         balance.tokenExchangeRate = tokenExchangeRate
@@ -222,16 +236,25 @@ export class TokenService {
 
   async totalValueUSDByAddress(address: string, blockNumber: BigNumber): Promise<BigNumber | undefined> {
 
-    const raw = await this.entityManager.createQueryBuilder(LatestTokenBalanceEntity, 'tb')
-      .select('SUM(tb.balance * ter.current_price)')
-      .innerJoin(TokenExchangeRateEntity, 'ter', 'tb.contract_address = ter.address')
-      .where('tb.address = :address')
-      .andWhere('tb.block_number <= :blockNumber')
-      .setParameters({ address, blockNumber: blockNumber.toNumber() })
-      .cache(true)
-      .getRawOne()
+    const raw = await this.entityManager.query(`
+      WITH _balances as (
+        SELECT 
+          b.balance AS balance,
+          ter.current_price AS current_price,
+          row_number() OVER (PARTITION BY b.address ORDER BY b.block_number DESC) AS row_number
+          FROM balance AS b
+          LEFT JOIN token_exchange_rate AS ter ON b.contract_address = ter.address
+          WHERE b.address = $1
+          AND b.token_id IS NULL
+          AND b.balance > 0
+          AND b.block_number <= $2
+          AND ter.current_price IS NOT NULL
+      )
+      SELECT SUM(balance * current_price) FROM _balances
+      WHERE row_number = 1
+    `, [address, blockNumber.toNumber()])
 
-    return raw && raw.sum ? new BigNumber(raw.sum) : undefined
+    return raw && raw.usdValue ? new BigNumber(raw.usdValue) : undefined
 
   }
 
