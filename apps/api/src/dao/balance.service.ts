@@ -5,7 +5,6 @@ import {EntityManager, Repository} from 'typeorm'
 import {ETH_ADDRESS} from '@app/shared/eth.service'
 import BigNumber from 'bignumber.js'
 import {BalanceEntity} from '@app/orm/entities/balance.entity'
-import {LatestBalanceEntity} from '@app/orm/entities/latest-balance.entity';
 
 @Injectable()
 export class BalanceService {

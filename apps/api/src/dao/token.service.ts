@@ -11,7 +11,6 @@ import {TokenDetailEntity} from '@app/orm/entities/token-detail.entity';
 import {ContractEntity} from '@app/orm/entities/contract.entity';
 import {AddressTokenCountEntity} from '@app/orm/entities/address-token-count.entity';
 import {ContractHolderCountEntity} from '@app/orm/entities/contract-holder-count.entity';
-import {LatestTokenBalanceEntity} from '@app/orm/entities/latest-token-balance.entity';
 
 @Injectable()
 export class TokenService {
