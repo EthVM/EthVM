@@ -17,7 +17,7 @@ fragment ContractSummaryPage on ContractSummaryPage {
   items {
     ...ContractSummary
   }
-  hasMore
+  totalCount
 }
 
 query addressAllTokensOwned($address: String!, $offset: Int, $limit: Int) {

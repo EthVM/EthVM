@@ -20,7 +20,7 @@
         </v-flex>
         <v-layout justify-end v-if="!loading && showPaginate" xs12 sm6>
           <v-flex shrink>
-            <app-paginate-has-more :has-more="contractsPage.hasMore" :current-page="page" @newPage="setPage" />
+            <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
           </v-flex>
         </v-layout>
         <!--
@@ -105,7 +105,7 @@
           <table-address-contracts-row v-for="(contract, index) in contracts" :key="index" :contract="contract" />
         </div>
         <v-layout v-if="showPaginate" justify-end row class="pb-1 pr-2 pl-2">
-          <app-paginate-has-more :has-more="contractsPage.hasMore" :current-page="page" @newPage="setPage" />
+          <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
         </v-layout>
       </div>
     </div>
@@ -125,13 +125,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
 import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
 import { ContractSummaryPageExt } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
 
 const MAX_ITEMS = 10
 
 @Component({
   components: {
-    AppPaginateHasMore,
+    AppPaginate,
     AppError,
     AppInfoLoad,
     TableAddressContractsRow
@@ -259,19 +259,12 @@ Lifecycle
   /**
    * @return {Number} - Total number of pagination pages
    */
-  // get pages(): number {
-  //   return this.contractsPage ? Math.ceil(this.contractsPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
-  // }
+  get pages(): number {
+    return this.contractsPage ? Math.ceil(this.contractsPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
+  }
 
   get showPaginate(): boolean {
-    if (this.page && this.page > 0) {
-      // If we're past the first page, there must be pagination
-      return true
-    } else if (this.contractsPage && this.contractsPage.hasMore) {
-      // We're on the first page, but there are more items, show pagination
-      return true
-    }
-    return false
+    return this.pages > 1 && !this.hasError
   }
 }
 </script>
