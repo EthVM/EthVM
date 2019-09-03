@@ -45,7 +45,7 @@ type TokenHoldersPage {
 
 type TokenExchangeRatesPage {
   items: [TokenExchangeRate!]!
-  hasMore: Boolean!
+  totalCount: Int!
 }
 
 type TokenExchangeRate {

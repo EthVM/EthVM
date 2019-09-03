@@ -6032,7 +6032,7 @@
             "deprecationReason": null
           },
           {
-            "name": "hasMore",
+            "name": "totalCount",
             "description": null,
             "args": [],
             "type": {
@@ -6040,7 +6040,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Boolean",
+                "name": "Int",
                 "ofType": null
               }
             },
