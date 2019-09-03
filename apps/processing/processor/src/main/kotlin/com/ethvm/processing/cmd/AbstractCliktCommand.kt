@@ -68,7 +68,7 @@ abstract class AbstractCliktCommand(help: String) : CliktCommand(help) {
 
   protected val network: String by option(
     "-n", "--network",
-    help = "Ethereum network we are processing e.g. mainnet, ropsten...",
+    help = "Ethereum network we are processing e.g. mainnet, ropsten, dev...",
     envvar = "ETH_NETWORK"
   )
     .default(Cli.DEFAULT_NETWORK)
