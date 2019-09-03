@@ -19,7 +19,7 @@ class BalanceChecker(val wsUrl: String) : Runnable {
   private val logger = KotlinLogging.logger {}
 
   private val dataSourceConfig = HikariConfig().apply {
-    jdbcUrl = "jdbc:postgresql://localhost:6432/ethvm_ropsten?ssl=false"
+    jdbcUrl = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
     username = "postgres"
     password = "1234"
     maximumPoolSize = 10
@@ -44,7 +44,7 @@ class BalanceChecker(val wsUrl: String) : Runnable {
     val cursor = dbContext
       .selectFrom(BALANCE)
       .where(BALANCE.CONTRACT_ADDRESS.isNull)
-      .and(BALANCE.BLOCK_NUMBER.mod(10).eq(BigDecimal.ZERO))
+//      .and(BALANCE.BLOCK_NUMBER.mod(10).eq(BigDecimal.ZERO))
       .orderBy(BALANCE.BLOCK_NUMBER.asc())
       .fetchSize(1000)
       .fetchLazy()
@@ -98,14 +98,14 @@ class BalanceChecker(val wsUrl: String) : Runnable {
       .map { it.join() }
       .map { (ethvmBalance, parityBalance) ->
 
-        when {
-          ethvmBalance.balance.toBigIntegerExact() == parityBalance -> Pair(1, 0)
-          else -> {
+        when (parityBalance) {
+            ethvmBalance.balance.toBigIntegerExact() -> Pair(1, 0)
+            else -> {
 
-            logger.error { "Comparison failure. Address = ${ethvmBalance.address}, ethvm = ${ethvmBalance.balance}, pariy = $parityBalance" }
+              logger.error { "Comparison failure. Address = ${ethvmBalance.address}, ethvm = ${ethvmBalance.balance}, parity = $parityBalance" }
 
-            Pair(0, 1)
-          }
+              Pair(0, 1)
+            }
         }
       }
       .reduce { a, b -> Pair(a.first + b.first, a.second + b.second) }

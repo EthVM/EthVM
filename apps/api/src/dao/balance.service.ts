@@ -51,14 +51,21 @@ export class BalanceService {
         // Remove "EthAddress" from contracts array and add OR clause with IS NULL
         contracts.splice(ethAddressIdx, 1)
 
-        sql += '(contract_address IN ('
-        contracts.forEach((contract) => {
-          args.push(contract)
-          sql += `$${currArg},`
-          currArg++
-        })
-        sql = sql.substring(0, sql.length - 1) // Remove trailing comma
-        sql += ') OR contract_address IS NULL) AND '
+        if (contracts.length) {
+          sql += '(contract_address IN ('
+          contracts.forEach((contract) => {
+            args.push(contract)
+            sql += `$${currArg},`
+            currArg++
+          })
+          sql = sql.substring(0, sql.length - 1) // Remove trailing comma
+          sql += ') OR contract_address IS NULL) AND '
+        } else {
+
+          // We're only querying the ether balance
+          sql += 'contract_address IS NULL AND '
+
+        }
 
       } else {
         sql += 'contract_address IN ('
