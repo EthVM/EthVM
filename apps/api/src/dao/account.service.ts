@@ -1,24 +1,22 @@
 import {Injectable} from '@nestjs/common'
-import {Repository, In, LessThanOrEqual} from 'typeorm'
-import {InjectRepository} from '@nestjs/typeorm'
+import {EntityManager, LessThanOrEqual, Repository} from 'typeorm'
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js';
 import {ContractEntity} from '@app/orm/entities/contract.entity';
-import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity';
 import {BalanceEntity} from '@app/orm/entities/balance.entity';
-import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
 import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
+import {MinerBlockCountEntity} from '@app/orm/entities/miner-block-count.entity';
+import {AddressContractsCreatedCountEntity} from '@app/orm/entities/address-contracts-created-count.entity';
+import {AddressInternalTransactionCountEntity} from '@app/orm/entities/address-internal-transaction-count.entity';
 
 @Injectable()
 export class AccountService {
   constructor(
+    @InjectEntityManager() private readonly entityManager: EntityManager,
     @InjectRepository(ContractEntity)
     private readonly contractRepository: Repository<ContractEntity>,
-    @InjectRepository(BalanceDeltaEntity)
-    private readonly balanceDeltaRepository: Repository<BalanceDeltaEntity>,
     @InjectRepository(BalanceEntity)
     private readonly balanceRepository: Repository<BalanceEntity>,
-    @InjectRepository(BlockHeaderEntity)
-    private readonly blockHeaderRepository: Repository<BlockHeaderEntity>,
     @InjectRepository(AddressTransactionCountEntity)
     private readonly txCountsRepository: Repository<AddressTransactionCountEntity>,
   ) {
@@ -52,43 +50,38 @@ export class AccountService {
   }
 
   async findIsMiner(address: string, blockNumber: BigNumber): Promise<boolean> {
-    const header = await this.blockHeaderRepository.findOne({
-      select: ['number'],
+    const header = await this.entityManager.findOne(MinerBlockCountEntity, {
+      select: ['count'],
       where: {
         author: address,
         number: LessThanOrEqual(blockNumber),
       },
       cache: true,
     })
-
     return !!header
   }
 
   async findIsContractCreator(address: string, blockNumber: BigNumber): Promise<boolean> {
-    const contract = await this.contractRepository.findOne({
-      select: ['creator'],
-      where: {
-        creator: address,
-        createdAtBlockNumber: LessThanOrEqual(blockNumber),
-      },
-      cache: true,
-    })
-
-    return !!contract
-  }
-
-  async findHasInternalTransfers(address: string, blockNumber: BigNumber): Promise<boolean> {
-    const transfer = await this.balanceDeltaRepository.findOne({
-      select: ['id'],
+    const contract = await this.entityManager.findOne(AddressContractsCreatedCountEntity, {
+      select: ['count'],
       where: {
         address,
-        deltaType: In(['INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION']),
         blockNumber: LessThanOrEqual(blockNumber),
       },
       cache: true,
     })
+    return !!contract
+  }
 
-    return !!transfer
+  async findHasInternalTransfers(address: string, blockNumber: BigNumber): Promise<boolean> {
+
+    const count = await this.entityManager.findOne(AddressInternalTransactionCountEntity, {
+      select: ['total'],
+      where: { address, blockNumber: LessThanOrEqual(blockNumber) },
+      cache: true,
+    })
+
+    return !!count
 
   }
 
