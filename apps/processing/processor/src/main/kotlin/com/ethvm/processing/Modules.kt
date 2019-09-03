@@ -81,7 +81,7 @@ val kafkaModule = module {
         put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer::class.java)
         put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 300000)
         put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true)
-        put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 64)
+        put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 16)
       }
   }
 

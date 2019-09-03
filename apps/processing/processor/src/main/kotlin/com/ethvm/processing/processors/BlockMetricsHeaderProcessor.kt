@@ -23,7 +23,7 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
   override val kafkaProps: Properties = Properties()
     .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 256)
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 16)
     }
 
   private val topicBlocks: String by inject(named("topicBlocks"))

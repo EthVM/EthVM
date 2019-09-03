@@ -25,7 +25,7 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
   override val kafkaProps: Properties = Properties()
     .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 256)
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 16)
     }
 
   override val topics = listOf(topicBlocks)

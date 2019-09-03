@@ -36,7 +36,7 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
 
   override val kafkaProps: Properties = Properties()
     .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 32)
+      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 16)
     }
 
   private lateinit var fungibleBalanceCache: FungibleBalanceCache
