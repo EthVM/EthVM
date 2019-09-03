@@ -343,6 +343,8 @@ class FungibleBalanceCache(
 
       val tokenTypeStr = tokenType.toString()
 
+      logger.info { "[$tokenType] Replaying balance deltas" }
+
       val cursor = txCtx
         .selectFrom(BALANCE_DELTA)
         .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
@@ -369,11 +371,15 @@ class FungibleBalanceCache(
         cursor.close()
       }
 
+      logger.info { "[$tokenType] Deleting balance entries" }
+
       txCtx
         .deleteFrom(BALANCE)
         .where(BALANCE.TOKEN_TYPE.eq(tokenTypeStr))
         .and(BALANCE.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
+
+      logger.info { "[$tokenType] Deleting balance delta entries" }
 
       txCtx
         .deleteFrom(BALANCE_DELTA)
@@ -381,21 +387,29 @@ class FungibleBalanceCache(
         .and(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
+      logger.info { "[$tokenType] Deleting address token count entries" }
+
       txCtx
         .deleteFrom(ADDRESS_TOKEN_COUNT)
         .where(ADDRESS_TOKEN_COUNT.TOKEN_TYPE.eq(tokenTypeStr))
         .and(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
+      logger.info { "[$tokenType] Deleting address token count delta entries" }
+
       txCtx
         .deleteFrom(ADDRESS_TOKEN_COUNT_DELTA)
         .where(ADDRESS_TOKEN_COUNT_DELTA.TOKEN_TYPE.eq(tokenTypeStr).and(ADDRESS_TOKEN_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal)))
         .execute()
 
+      logger.info { "[$tokenType] Deleting contract holder count entries" }
+
       txCtx
         .deleteFrom(CONTRACT_HOLDER_COUNT)
         .where(CONTRACT_HOLDER_COUNT.TOKEN_TYPE.eq(tokenTypeStr).and(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal)))
         .execute()
+
+      logger.info { "[$tokenType] Deleting contract holder count delta entries" }
 
       txCtx
         .deleteFrom(CONTRACT_HOLDER_COUNT_DELTA)
@@ -404,11 +418,14 @@ class FungibleBalanceCache(
 
       // re-enable generation of history records
       writeHistoryToDb = true
+
     } else {
 
+      logger.info { "[$tokenType] Clearing all cache stores" }
       cacheStores.forEach { it.clear() }
     }
 
+    logger.info { "[$tokenType] Flushing cache stores to disk" }
     cacheStores.forEach { it.flushToDisk() }
 
     logger.info { "[$tokenType] Rewind complete" }
