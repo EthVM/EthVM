@@ -121,6 +121,7 @@
     "age": "Age",
     "eth": "ETH",
     "gwei": "GWEI",
+    "wei": "WEI",
     "timestmp": "Timestamp",
     "success": "Successful",
     "fail": "Failed",
