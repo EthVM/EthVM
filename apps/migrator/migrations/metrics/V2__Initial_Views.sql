@@ -92,7 +92,7 @@ CREATE VIEW latest_token_balance AS
           *,
           row_number() OVER (PARTITION BY address, contract_address ORDER BY block_number DESC) AS row_number
           FROM balance
-          AND contract_address IS NOT NULL
+          WHERE contract_address IS NOT NULL
           AND balance > 0
       )
       SELECT * FROM _balances
@@ -104,7 +104,7 @@ CREATE VIEW latest_balance AS
           *,
           row_number() OVER (PARTITION BY address, contract_address ORDER BY block_number DESC) AS row_number
           FROM balance
-          AND balance > 0
+          WHERE balance > 0
       )
       SELECT * FROM _balances
       WHERE row_number = 1;
