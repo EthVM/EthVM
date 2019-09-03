@@ -41,7 +41,7 @@ fragment TokenBalancePage on TokenBalancePage {
   items {
     ...TokenBalance
   }
-  hasMore
+  totalCount
 }
 
 query addressDetail($address: String!) {
