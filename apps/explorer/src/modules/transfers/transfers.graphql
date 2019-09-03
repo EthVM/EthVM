@@ -32,4 +32,5 @@ fragment TransferPage on TransferPage {
     ...Transfer
   }
   hasMore
+  totalCount
 }
