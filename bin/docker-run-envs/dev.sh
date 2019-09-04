@@ -12,7 +12,7 @@ section "Starting up docker containers..."
 docker-compose up -d --build
 
 section "Initialising db..."
-INDEXES_AND_TRIGGERS=${PARITY_INSTA_MINING} ${SCRIPT_DIR}/migrator.sh metrics migrate
+INDEXES_AND_TRIGGERS=${PARITY_INSTA_MINING} ${SCRIPT_DIR}/migrator.sh migrate
 
 if [[ $KAFKA_ENABLED == "true" ]]; then
   [[ $KAFKA_ENABLE_BIND_MOUNTPOINT == "true" ]] && section "Ensuring kafka / zookeeper docker mount point exists..." && mkdir -p $KAFKA_BIND_MOUNTPOINT && mkdir -p $ZOOKEEPER_BIND_MOUNTPOINT
