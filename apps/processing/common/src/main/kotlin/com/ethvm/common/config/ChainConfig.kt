@@ -12,7 +12,7 @@ interface ChainConfig {
 
   val constants: ChainConstants
 
-  fun hardForkBalanceDeltas(number: BigInteger, blockhash: String, timestamp: Timestamp): List<BalanceDeltaRecord> = emptyList()
+  fun hardForkBalanceDeltas(number: BigInteger, blockHash: String, timestamp: Timestamp): List<BalanceDeltaRecord> = emptyList()
 
   /**
    * EIP161: https://github.com/ethereum/EIPs/issues/161
@@ -124,6 +124,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
               this.deltaType = BalanceDeltaType.HARD_FORK.toString()
               this.isReceiving = false
               this.blockNumber = blockNumberDecimal
+              this.blockHash = blockHash
               this.address = withdrawAccount
               this.amount = balance.toBigDecimal()
               this.timestamp = timestamp
