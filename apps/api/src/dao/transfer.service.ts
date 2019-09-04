@@ -27,7 +27,7 @@ export class TransferService {
       where: {deltaType: 'TOKEN_TRANSFER', contractAddress, isReceiving: true, blockNumber: LessThanOrEqual(blockNumber)},
       skip: offset,
       take: limit + 1,
-      order: {blockNumber: 'DESC', transactionIndex: 'DESC'},
+      order: {blockNumber: 'DESC', transactionIndex: 'DESC', id: 'DESC'},
       cache: true,
     }
     const items = await this.balanceDeltaRepository.find(findOptions)
@@ -68,6 +68,7 @@ export class TransferService {
       .setParameters({ contractAddress, deltaType: 'TOKEN_TRANSFER', address, blockNumber: blockNumber.toNumber() })
       .orderBy('b.block_number', 'DESC')
       .addOrderBy('b.transaction_index', 'DESC')
+      .addOrderBy('b.id', 'DESC')
       .offset(offset)
       .limit(limit + 1)
       .cache(true)
@@ -127,7 +128,7 @@ export class TransferService {
           .setParameters({ address, deltaTypes, blockNumber: blockNumber.toNumber() })
           .orderBy('block_number', 'DESC')
           .addOrderBy('transaction_index', 'DESC')
-          .addOrderBy('trace_address', 'DESC')
+          .addOrderBy('id', 'DESC') // Ensure desc ordering within a transaction
           .offset(offset)
           .limit(limit + 1)
           .cache(true)
@@ -184,7 +185,7 @@ export class TransferService {
 
     const items = await qb.orderBy('bd.block_number', 'DESC')
       .addOrderBy('bd.transaction_index', 'DESC')
-      .addOrderBy('bd.trace_address', 'DESC')
+      .addOrderBy('bd.id', 'DESC')
       .offset(offset)
       .limit(limit + 1) // Request one extra item to determine if there are more pages
       .getMany()

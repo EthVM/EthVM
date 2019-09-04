@@ -32,7 +32,7 @@ create index if not exists idx_tx_for_to on transaction ("to", block_number desc
 /* Transfer service */
 create index if not exists idx_contract_token_transfers on balance_delta (block_number desc, contract_address, address, transaction_index desc, trace_address desc) where delta_type = 'TOKEN_TRANSFER';
 create index if not exists idx_internal_transactions_for_address on balance_delta (block_number desc, contract_address, address, transaction_index desc, trace_address desc) where delta_type IN ('INTERNAL_TX', 'CONTRACT_CREATION', 'CONTRACT_DESTRUCTION');
-create index if not exists idx_balance_deltas on balance_delta (block_number desc, timestamp desc, delta_type, address, contract_address, transaction_index desc, trace_address desc);
+create index if not exists idx_balance_deltas on balance_delta (block_number desc, timestamp desc, delta_type, address, contract_address, transaction_index desc, id desc);
 
 /* Trace service */
 create index if not exists idx_trace_by_block_hash on trace (block_hash);
