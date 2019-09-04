@@ -1,6 +1,6 @@
 import {Args, Query, Resolver, Subscription, SubscriptionOptions} from '@nestjs/graphql'
 import {BlockMetricsService} from '@app/dao/block-metrics.service'
-import {BlockMetricField, TimeBucket,} from '@app/graphql/schema'
+import {BlockMetricField, TimeBucket} from '@app/graphql/schema'
 import {BlockMetricDto} from '@app/graphql/block-metrics/dto/block-metric.dto'
 import {Inject, UseInterceptors} from '@nestjs/common'
 import {PubSub} from 'graphql-subscriptions'
