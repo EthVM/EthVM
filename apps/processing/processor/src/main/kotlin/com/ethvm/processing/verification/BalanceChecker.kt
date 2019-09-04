@@ -20,7 +20,7 @@ class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval
   private val logger = KotlinLogging.logger {}
 
   private val dataSourceConfig = HikariConfig().apply {
-    jdbcUrl = "jdbc:postgresql://localhost/ethvm_dev?ssl=false"
+    jdbcUrl = "jdbc:postgresql://localhost:6432/ethvm?ssl=false"
     username = "postgres"
     password = "1234"
     maximumPoolSize = 1
@@ -54,7 +54,7 @@ class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval
     var matched = 0
     var failed = 0
 
-    val batchSize = 256
+    val batchSize = 1000
     var batch = emptyList<BalanceRecord>()
 
     var blockNumber: BigDecimal? = null
@@ -123,7 +123,7 @@ class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval
 
 fun main(args: Array<String>) {
 
-  val checker = BalanceChecker("ws://localhost:8546", 800000.toBigInteger(), 10)
+  val checker = BalanceChecker("ws://35.168.114.49:8546", 0.toBigInteger(), 5)
 
   checker.run()
 }

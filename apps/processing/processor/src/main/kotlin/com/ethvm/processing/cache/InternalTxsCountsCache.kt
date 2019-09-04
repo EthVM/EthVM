@@ -71,15 +71,11 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
       logger.info { "Local state cleared" }
     }
 
-    logger.info { "Reloaded canonical count state" }
-
-    val cursor = txCtx
+    val addressCountCursor = txCtx
       .selectFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT)
       .where(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
-
-    cursor.close()
 
     writeHistoryToDb = false
 
@@ -87,14 +83,39 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     logger.info { "Beginning reload of transaction counts" }
 
-    while (cursor.hasNext()) {
-      set(cursor.fetchNext())
+    while (addressCountCursor.hasNext()) {
+      set(addressCountCursor.fetchNext())
       count += 1
       if (count % 1000 == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count entries processed" }
       }
     }
+
+    addressCountCursor.close()
+
+    logger.info { "Transaction counts reloaded" }
+
+    val contractCountCursor = txCtx
+      .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT)
+      .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .fetchSize(1000)
+      .fetchLazy()
+
+    logger.info { "Beginning reload of contract counts" }
+
+    while (contractCountCursor.hasNext()) {
+      set(contractCountCursor.fetchNext())
+      count += 1
+      if (count % 1000 == 0) {
+        cacheStores.forEach { it.flushToDisk(true) }
+        logger.info { "$count entries processed" }
+      }
+    }
+
+    contractCountCursor.close()
+
+    logger.info { "Contract counts reloaded" }
 
     cacheStores.forEach { it.flushToDisk(true) }
 
@@ -235,13 +256,17 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
     }
   }
 
-  private fun set(balance: AddressInternalTransactionCountRecord) {
-    internalTxCountByAddress[balance.address] = TransactionCountRecord
+  private fun set(count: AddressInternalTransactionCountRecord) {
+    internalTxCountByAddress[count.address] = TransactionCountRecord
       .newBuilder()
-      .setTotal(balance.total)
-      .setTotalIn(balance.totalIn)
-      .setTotalOut(balance.totalOut)
+      .setTotal(count.total)
+      .setTotalIn(count.totalIn)
+      .setTotalOut(count.totalOut)
       .build()
+  }
+
+  private fun set(count: AddressContractsCreatedCountRecord) {
+    contractsCreatedByAddress[count.address] = count.count
   }
 
   fun writeToDb(ctx: DSLContext) {
