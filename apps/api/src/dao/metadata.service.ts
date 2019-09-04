@@ -7,6 +7,8 @@ import {SyncStatusEntity} from '@app/orm/entities/sync-status.entity';
 @Injectable()
 export class MetadataService {
 
+  private minIsSyncingRange = 10 // TODO make configurable or update logic
+
   constructor(
     @InjectRepository(SyncStatusEntity)
     private readonly syncStatusRepository: Repository<SyncStatusEntity>,
@@ -31,6 +33,24 @@ export class MetadataService {
 
   async latestSyncStatus(): Promise<SyncStatusEntity[]> {
     return await this.syncStatusRepository.find()
+  }
+
+  async isSyncing(): Promise<boolean> {
+    const latestSyncStatus = await this.latestSyncStatus()
+    const blockNumbers = latestSyncStatus.map(item => item.blockNumber)
+
+    return this.calculateIsSyncing(blockNumbers)
+  }
+
+  calculateIsSyncing(blockNumbers: BigNumber[]): boolean {
+    if (!blockNumbers.length) {
+      return true
+    }
+
+    const lowestBlockNumber = BigNumber.minimum(...blockNumbers)
+    const highestBlockNumber = BigNumber.maximum(...blockNumbers)
+
+    return highestBlockNumber.minus(lowestBlockNumber).gte(this.minIsSyncingRange)
   }
 
 }

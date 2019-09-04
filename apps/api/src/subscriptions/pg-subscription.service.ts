@@ -57,6 +57,7 @@ export class PgSubscriptionService {
   private readonly dbUrl: string
 
   private syncStatusMap = new Map<string, BigNumber>()
+  private isSyncing?: boolean
 
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
@@ -101,6 +102,9 @@ export class PgSubscriptionService {
       this.syncStatusMap.set(status.component, status.blockNumber)
     })
 
+    // Determine if we are currently syncing
+    this.isSyncing = await metadataService.isSyncing()
+
     const events$ = Observable.create(
       async observer => {
         try {
@@ -126,6 +130,7 @@ export class PgSubscriptionService {
       })
 
     const blockHashes$ = new Subject<string>()
+    const syncStatusUpdates$ = new Subject<boolean>()
 
     const pgEvents$ = events$
       .pipe(
@@ -137,7 +142,7 @@ export class PgSubscriptionService {
 
     pgEvents$
       .pipe(isSyncStatusEvent())
-      .subscribe(event => this.onSyncStatusUpdate(event, blockHashes$))
+      .subscribe(event => this.onSyncStatusUpdate(event, blockHashes$, syncStatusUpdates$))
 
     blockHashes$
       .pipe(
@@ -187,11 +192,15 @@ export class PgSubscriptionService {
         await Promise.all(publishPromises);
       })
 
+    syncStatusUpdates$
+      .subscribe(async syncStatus => {
+        return pubSub.publish('isSyncing', syncStatus)
+      })
   }
 
-  private async onSyncStatusUpdate(event: PgEvent, blockHashes$: Subject<string>) {
+  private async onSyncStatusUpdate(event: PgEvent, blockHashes$: Subject<string>, syncStatusUpdates$: Subject<boolean>) {
 
-    const {blockService} = this
+    const {blockService, metadataService, isSyncing} = this
     const payload = event.payload as SyncStatusPayload
 
     const prevBlockNumber = this.lowestBlockNumber() || new BigNumber(-1)
@@ -200,7 +209,21 @@ export class PgSubscriptionService {
     this.syncStatusMap.set(payload.component, new BigNumber(payload.block_number))
     const newBlockNumber = this.lowestBlockNumber()!
 
-    if (!newBlockNumber.isEqualTo(prevBlockNumber)) { // This will detect when a new block is published or when a fork happens // TODO unless fork happens after only one block
+    // This will detect when a new block is published or when a fork happens
+    // TODO unless fork happens after only one block
+    if (!newBlockNumber.isEqualTo(prevBlockNumber)) {
+
+      // Determine if sync status event should be published
+      const newSyncStatus = metadataService.calculateIsSyncing(Array.from(this.syncStatusMap.values()))
+      if (newSyncStatus !== isSyncing) {
+        // Publish event and update state
+        syncStatusUpdates$.next(newSyncStatus)
+        this.isSyncing = newSyncStatus
+      }
+
+      if (this.isSyncing) { // This is to prevent flooding clients when we are syncing
+        return
+      }
 
       let numberToPublish = prevBlockNumber.plus(1)
 
