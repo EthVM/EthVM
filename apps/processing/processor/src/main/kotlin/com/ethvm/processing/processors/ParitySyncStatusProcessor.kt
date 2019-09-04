@@ -5,11 +5,13 @@ import com.ethvm.avro.capture.ParitySyncStateRecord
 import com.ethvm.common.config.NetConfig
 import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables
+import com.ethvm.db.Tables.SYNC_STATUS
 import com.ethvm.db.tables.records.SyncStatusHistoryRecord
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.jooq.DSLContext
+import org.jooq.impl.DSL
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
@@ -37,7 +39,7 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
 
     putAll(baseKafkaProps)
 
-    put(ConsumerConfig.GROUP_ID_CONFIG, "${netConfig.chainId.name.toLowerCase()}-parity-sync-state-processor")
+    put(ConsumerConfig.GROUP_ID_CONFIG, "${netConfig.chainId.name.toLowerCase()}-$processorId")
     put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true)
     put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
   }
@@ -62,10 +64,24 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
 
   override fun reset() {
 
-    dbContext
-      .deleteFrom(Tables.SYNC_STATUS_HISTORY)
-      .where(Tables.SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
-      .execute()
+    dbContext.transaction { txConfig ->
+
+      val txCtx = DSL.using(txConfig)
+
+      txCtx
+        .deleteFrom(Tables.SYNC_STATUS_HISTORY)
+        .where(Tables.SYNC_STATUS_HISTORY.COMPONENT.`in`("ingestion", "head"))
+        .execute()
+
+      txCtx
+        .deleteFrom(SYNC_STATUS)
+        .where(Tables.SYNC_STATUS.COMPONENT.`in`("ingestion", "head"))
+        .execute()
+
+    }
+
+
+
   }
 
   override fun stop() {
@@ -83,18 +99,28 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
 
         val record = lastRecord.value()
 
-        val historyRecord = SyncStatusHistoryRecord()
-          .apply {
-            this.component = processorId
-            this.blockNumber = record.number.bigInteger().toBigDecimal()
-            this.timestamp = Timestamp(record.timestamp)
-            this.blockTimestamp = Timestamp(record.timestamp)
-          }
+        dbContext.transaction { txConfig ->
 
-        dbContext
-          .insertInto(Tables.SYNC_STATUS_HISTORY)
-          .set(historyRecord)
-          .execute()
+          val txCtx = DSL.using(txConfig)
+
+          val historyRecords = createHistoryRecords(record)
+          txCtx.batchInsert(historyRecords)
+
+          historyRecords
+            .forEach { historyRecord ->
+
+              txCtx
+                .insertInto(SYNC_STATUS)
+                .set(historyRecord)
+                .onDuplicateKeyUpdate()
+                .set(historyRecord)
+                .execute()
+
+            }
+
+
+        }
+
       }
     } catch (e: Exception) {
       logger.error(e) { "Fatal exception" }
@@ -102,5 +128,28 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
       consumer.close()
       stopLatch.countDown()
     }
+  }
+
+  private fun createHistoryRecords(record: ParitySyncStateRecord): List<SyncStatusHistoryRecord> {
+
+    val now = Timestamp(System.currentTimeMillis())
+
+    return listOf(
+      SyncStatusHistoryRecord()
+        .apply {
+          this.component = "ingestion"
+          this.blockNumber = record.number.bigInteger().toBigDecimal()
+          this.blockTimestamp = Timestamp(record.timestamp)
+          this.timestamp = now
+        },
+      SyncStatusHistoryRecord()
+        .apply {
+          this.component = "head"
+          this.blockNumber = record.head.bigInteger().toBigDecimal()
+          this.blockTimestamp = Timestamp(record.timestamp)   // this is incorrect but we don't have it available
+          this.timestamp = now
+        }
+    )
+
   }
 }
