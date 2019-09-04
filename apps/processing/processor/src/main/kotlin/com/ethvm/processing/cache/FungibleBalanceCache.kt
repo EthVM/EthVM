@@ -48,7 +48,7 @@ class FungibleBalanceCache(
     Serializer.BIG_INTEGER
   )
 
-  private val addressErc20BalanceCount = CacheStore(
+  private val addressTokenCountMap = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
@@ -57,7 +57,7 @@ class FungibleBalanceCache(
     Serializer.LONG
   )
 
-  private val erc20ContractBalanceCount = CacheStore(
+  private val contractHolderCountMap = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
@@ -66,7 +66,7 @@ class FungibleBalanceCache(
     Serializer.LONG
   )
 
-  private val cacheStores = listOf(balanceMap, metadataMap, addressErc20BalanceCount, erc20ContractBalanceCount)
+  private val cacheStores = listOf(balanceMap, metadataMap, addressTokenCountMap, contractHolderCountMap)
 
   private var balanceRecords = emptyList<BalanceRecord>()
 
@@ -106,7 +106,7 @@ class FungibleBalanceCache(
 
     logger.info { "Opening cursor for balance history" }
 
-    val cursor = txCtx
+    val balanceCursor = txCtx
       .selectFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
       .and(BALANCE.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
@@ -117,16 +117,61 @@ class FungibleBalanceCache(
 
     var count = 0
 
-    while (cursor.hasNext()) {
-      set(cursor.fetchNext())
+    while (balanceCursor.hasNext()) {
+      set(balanceCursor.fetchNext())
       count += 1
       if (count % 10000 == 0) {
-        cacheStores.forEach { it.flushToDisk(true) }
+        metadataMap.flushToDisk(true)
+        balanceMap.flushToDisk(true)
         logger.info { "[$tokenType] $count deltas processed" }
       }
     }
 
-    cursor.close()
+    logger.info { "Balance history reloaded" }
+
+    balanceCursor.close()
+
+    logger.info { "Opening cursor for address token count" }
+
+    val addressTokenCountCursor = txCtx
+      .selectFrom(ADDRESS_TOKEN_COUNT)
+      .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .fetchSize(1000)
+      .fetchLazy()
+
+    while (addressTokenCountCursor.hasNext()) {
+      set(addressTokenCountCursor.fetchNext())
+      count += 1
+      if (count % 10000 == 0) {
+        addressTokenCountMap.flushToDisk(true)
+        logger.info { "$count address token counts processed" }
+      }
+    }
+
+    logger.info { "Address token count reloaded" }
+
+    addressTokenCountCursor.close()
+
+    logger.info { "Opening cursor for contract holder count" }
+
+    val contractHolderCount = txCtx
+      .selectFrom(CONTRACT_HOLDER_COUNT)
+      .where(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .fetchSize(1000)
+      .fetchLazy()
+
+    while (contractHolderCount.hasNext()) {
+      set(contractHolderCount.fetchNext())
+      count += 1
+      if (count % 10000 == 0) {
+        contractHolderCountMap.flushToDisk(true)
+        logger.info { "$count contract holder counts processed" }
+      }
+    }
+
+    logger.info { "Contract holder count reloaded" }
+
+    contractHolderCount.close()
 
     cacheStores.forEach { it.flushToDisk(true) }
 
@@ -174,6 +219,14 @@ class FungibleBalanceCache(
     }
   }
 
+  private fun set(count: AddressTokenCountRecord) {
+    addressTokenCountMap[count.address] = count.count
+  }
+
+  private fun set(count: ContractHolderCountRecord) {
+    contractHolderCountMap[count.contractAddress] = count.count
+  }
+
   private fun incrementBalanceCounts(balanceRecord: BalanceRecord) {
 
     val address = balanceRecord.address
@@ -215,8 +268,8 @@ class FungibleBalanceCache(
         this.delta = countDelta
       }
 
-    val currentAddressCount = addressErc20BalanceCount[address] ?: 0L
-    val currentContractCount = erc20ContractBalanceCount[contractAddress] ?: 0L
+    val currentAddressCount = addressTokenCountMap[address] ?: 0L
+    val currentContractCount = contractHolderCountMap[contractAddress] ?: 0L
 
     val addressCount = AddressTokenCountRecord()
       .apply {
@@ -226,7 +279,7 @@ class FungibleBalanceCache(
         this.count = currentAddressCount + addressCountDelta.delta
       }
 
-    addressErc20BalanceCount[address] = addressCount.count
+    addressTokenCountMap[address] = addressCount.count
 
     val contractCount = ContractHolderCountRecord()
       .apply {
@@ -236,7 +289,7 @@ class FungibleBalanceCache(
         this.count = currentContractCount + contractCountDelta.delta
       }
 
-    erc20ContractBalanceCount[contractAddress] = contractCount.count
+    contractHolderCountMap[contractAddress] = contractCount.count
 
     if (writeHistoryToDb) {
       addressTokenCountRecords = addressTokenCountRecords + addressCount
