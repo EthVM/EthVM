@@ -29,4 +29,8 @@ export class MetadataService {
 
   }
 
+  async latestSyncStatus(): Promise<SyncStatusEntity[]> {
+    return await this.syncStatusRepository.find()
+  }
+
 }

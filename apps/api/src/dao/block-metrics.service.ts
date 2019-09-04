@@ -54,6 +54,13 @@ export class BlockMetricsService {
       })
   }
 
+  async findBlockMetric(hash: string, blockNumber: BigNumber): Promise<BlockMetricEntity | undefined> {
+    return this.entityManager
+      .findOne(BlockMetricEntity, {
+        where: { hash, number: LessThanOrEqual(blockNumber) },
+      })
+  }
+
   async findBlockMetrics(offset: number, limit: number, blockNumber: BigNumber): Promise<[BlockMetricEntity[], number]> {
 
     return this.entityManager

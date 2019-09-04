@@ -14,7 +14,8 @@ import {MetadataService} from '@app/dao/metadata.service';
 import BigNumber from 'bignumber.js';
 
 export interface SyncStatusPayload {
-  earliest_block_number: string
+  component: string,
+  block_number: string
 }
 
 export class PgEvent {
@@ -55,7 +56,7 @@ export class PgSubscriptionService {
 
   private readonly dbUrl: string
 
-  private latestBlockNumber: BigNumber | undefined = undefined
+  private syncStatusMap = new Map<string, BigNumber>()
 
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
@@ -91,9 +92,14 @@ export class PgSubscriptionService {
 
   private async init() {
 
-    const {dbUrl, blockService, transactionService, logger, pubSub, entityManager, metadataService} = this
+    const {dbUrl, blockService, transactionService, logger, pubSub, entityManager, metadataService, blockMetricsService} = this
 
-    this.latestBlockNumber = await metadataService.latestBlockNumber(entityManager)
+    // Build sync status map with latest values
+
+    const syncStatuses = await metadataService.latestSyncStatus()
+    syncStatuses.forEach(status => {
+      this.syncStatusMap.set(status.component, status.blockNumber)
+    })
 
     const events$ = Observable.create(
       async observer => {
@@ -156,6 +162,7 @@ export class PgSubscriptionService {
           // get data
           const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
           const hashRate = await blockService.calculateHashRate(false, blockSummary.number)
+          const blockMetric = await blockMetricsService.findBlockMetric(blockSummary.hash, blockSummary.number)
 
           const promises: Promise<void>[] = [];
 
@@ -171,6 +178,8 @@ export class PgSubscriptionService {
 
           promises.push(pubSub.publish('hashRate', hashRate))
 
+          promises.push(pubSub.publish('newBlockMetric', blockMetric))
+
           return Promise.all(promises)
         })
 
@@ -182,21 +191,20 @@ export class PgSubscriptionService {
 
   private async onSyncStatusUpdate(event: PgEvent, blockHashes$: Subject<string>) {
 
-    const {pubSub, entityManager, metadataService, blockService} = this
+    const {blockService} = this
     const payload = event.payload as SyncStatusPayload
 
-    const latestBlockNumber = this.latestBlockNumber || new BigNumber(-1)
-    const newBlockNumber = new BigNumber(payload.earliest_block_number)
+    const prevBlockNumber = this.lowestBlockNumber() || new BigNumber(-1)
 
-    if (newBlockNumber.gt(latestBlockNumber)) {
+    // Update local map and find new lowest block number
+    this.syncStatusMap.set(payload.component, new BigNumber(payload.block_number))
+    const newBlockNumber = this.lowestBlockNumber()!
 
-      // TODO handle forks and review edge cases
+    if (!newBlockNumber.isEqualTo(prevBlockNumber)) { // This will detect when a new block is published or when a fork happens // TODO unless fork happens after only one block
 
-      let numberToPublish = latestBlockNumber.plus(1)
+      let numberToPublish = prevBlockNumber.plus(1)
 
       while (numberToPublish.lte(newBlockNumber)) {
-
-        // TODO find a better way of doing this
 
         const block = await blockService.findByNumber(numberToPublish, newBlockNumber)
 
@@ -206,12 +214,16 @@ export class PgSubscriptionService {
         numberToPublish = numberToPublish.plus(1)
       }
 
-      this.latestBlockNumber = newBlockNumber
-
     }
 
-    //
+  }
 
+  private lowestBlockNumber(): BigNumber | undefined {
+    const blockNumbers = Array.from(this.syncStatusMap.values())
+    if (!(blockNumbers && blockNumbers.length )) {
+      return undefined
+    }
+    return BigNumber.minimum(...blockNumbers)
   }
 
 }

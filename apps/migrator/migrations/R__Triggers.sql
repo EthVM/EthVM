@@ -1,37 +1,35 @@
 
 
---
--- create or replace function notify_sync_status()
--- returns trigger as
---     $body$
---     declare
---         earliest_block_number NUMERIC;
---         payload JSON;
---     begin
---
---         SELECT MIN(s.block_number) INTO earliest_block_number FROM sync_status s;
---
---         payload := json_build_object(
---                 'table', tg_relname,
---                 'action', TG_OP,
---                 'payload', json_build_object(
---                     'earliest_block_number', earliest_block_number
---                 )
---             );
---
---         perform pg_notify('events', payload::text);
---         return null;
---
---     end;
---     $body$ language plpgsql;
---
--- drop trigger if exists notify_sync_status on sync_status;
---
--- create trigger notify_sync_status
---     after insert or update
---     on sync_status
---     for each row
---     execute procedure notify_sync_status();
+
+create or replace function notify_sync_status()
+returns trigger as
+    $body$
+    declare
+        payload JSON;
+    begin
+
+        payload := json_build_object(
+                'table', tg_relname,
+                'action', TG_OP,
+                'payload', json_build_object(
+                    'component', NEW.component,
+                    'block_number', NEW.block_number
+                )
+            );
+
+        perform pg_notify('events', payload::text);
+        return null;
+
+    end;
+    $body$ language plpgsql;
+
+drop trigger if exists notify_sync_status on sync_status;
+
+create trigger notify_sync_status
+    after insert or update
+    on sync_status
+    for each row
+    execute procedure notify_sync_status();
 
 --
 -- /* Block Metric */

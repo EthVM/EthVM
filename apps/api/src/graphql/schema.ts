@@ -183,17 +183,6 @@ export interface BlockMetricsPage {
     totalCount: number;
 }
 
-export interface BlockMetricsTrace {
-    number: BigNumber;
-    hash: string;
-    timestamp: Date;
-    totalGasPrice: BigNumber;
-    avgGasLimit: BigNumber;
-    avgGasPrice: BigNumber;
-    totalTxFees: BigNumber;
-    avgTxFees: BigNumber;
-}
-
 export interface BlockSummary {
     number: BigNumber;
     hash: string;
@@ -382,7 +371,6 @@ export interface Search {
 
 export interface ISubscription {
     newBlockMetric(): BlockMetric | Promise<BlockMetric>;
-    newBlockMetricsTrace(): BlockMetricsTrace | Promise<BlockMetricsTrace>;
     newBlock(): BlockSummary | Promise<BlockSummary>;
     hashRate(): BigNumber | Promise<BigNumber>;
     isSyncing(): boolean | Promise<boolean>;

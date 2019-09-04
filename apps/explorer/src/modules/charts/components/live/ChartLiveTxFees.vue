@@ -130,7 +130,7 @@ const MAX_ITEMS = 10
         query: newAvgGasPrice,
         result({ data }) {
           const self = this as any
-          self.latestAvgGasPrice = data.newBlockMetricsTransaction
+          self.latestAvgGasPrice = data.newBlockMetric
           self.updateLatestData()
         }
       },
@@ -139,7 +139,7 @@ const MAX_ITEMS = 10
         query: newAvgTxFee,
         result({ data }) {
           const self = this as any
-          self.latestAvgTxFee = data.newBlockMetricsTransactionFee
+          self.latestAvgTxFee = data.newBlockMetric
           self.updateLatestData()
         }
       }

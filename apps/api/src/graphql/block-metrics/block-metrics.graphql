@@ -22,7 +22,6 @@ type Query {
 
 type Subscription {
   newBlockMetric: BlockMetric!
-  newBlockMetricsTrace: BlockMetricsTrace!
 }
 
 type BlockMetricsPage {
@@ -31,19 +30,6 @@ type BlockMetricsPage {
   offset: Int!
   limit: Int!
   totalCount: Int!
-
-}
-
-type BlockMetricsTrace {
-
-  number: BigNumber!
-  hash: String!
-  timestamp: Date!
-  totalGasPrice: BigNumber!
-  avgGasLimit: BigNumber!
-  avgGasPrice: BigNumber!
-  totalTxFees: BigNumber!
-  avgTxFees: BigNumber!
 
 }
 

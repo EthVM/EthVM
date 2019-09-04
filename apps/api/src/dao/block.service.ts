@@ -221,7 +221,7 @@ export class BlockService {
 
   async findByNumber(number: BigNumber, blockNumber: BigNumber): Promise<BlockHeaderEntity | undefined> {
 
-    if (blockNumber.lte(number)) {
+    if (blockNumber.lt(number)) {
       return undefined // This block has not been mined yet
     }
 
