@@ -15,8 +15,6 @@ version=$(read_version migrator)
 
 NETWORK=${NETWORK:-ethvm_net}
 
-shift 1
-
 FLYWAY_LOCATIONS="filesystem:/flyway/migrations"
 FLYWAY_URL=${JDBC_URL}
 
