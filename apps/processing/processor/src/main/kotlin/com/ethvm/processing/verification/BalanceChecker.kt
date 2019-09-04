@@ -123,7 +123,7 @@ class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval
 
 fun main(args: Array<String>) {
 
-  val checker = BalanceChecker("ws://35.168.114.49:8546", 0.toBigInteger(), 5)
+  val checker = BalanceChecker("ws://localhost:8546", 0.toBigInteger(), 5)
 
   checker.run()
 }
