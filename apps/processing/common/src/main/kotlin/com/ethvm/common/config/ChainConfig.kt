@@ -5,13 +5,14 @@ import com.ethvm.avro.processing.TokenType
 import com.ethvm.common.extensions.ether
 import com.ethvm.db.tables.records.BalanceDeltaRecord
 import java.math.BigInteger
+import java.sql.Timestamp
 import java.util.Collections.emptyList
 
 interface ChainConfig {
 
   val constants: ChainConstants
 
-  fun hardForkBalanceDeltas(number: BigInteger): List<BalanceDeltaRecord> = emptyList()
+  fun hardForkBalanceDeltas(number: BigInteger, timestamp: Timestamp): List<BalanceDeltaRecord> = emptyList()
 
   /**
    * EIP161: https://github.com/ethereum/EIPs/issues/161
@@ -92,7 +93,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
   private val withdrawAccount = DaoHardFork.withdrawAccount
   private val daoBalances = DaoHardFork.balances
 
-  override fun hardForkBalanceDeltas(number: BigInteger): List<BalanceDeltaRecord> =
+  override fun hardForkBalanceDeltas(number: BigInteger, timestamp: Timestamp): List<BalanceDeltaRecord> =
     if (number != forkBlockNumber) {
       emptyList()
     } else {
@@ -112,6 +113,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
               this.blockNumber = blockNumberDecimal
               this.address = address
               this.amount = balance.toBigDecimal().negate()
+              this.timestamp = timestamp
             },
 
           // add to withdraw account
@@ -123,6 +125,7 @@ open class DaoHardForkConfig(override val constants: ChainConstants = ChainConst
               this.blockNumber = blockNumberDecimal
               this.address = withdrawAccount
               this.amount = balance.toBigDecimal()
+              this.timestamp = timestamp
             }
         )
       }.flatten()
