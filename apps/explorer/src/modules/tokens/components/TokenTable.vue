@@ -5,12 +5,12 @@
           TITLE
         =====================================================================================
     -->
-<!--        <app-table-title-->
-<!--          page-type="tokens"-->
-<!--          :title="$tc('token.name', 2)"-->
-<!--          :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
-<!--          :has-pagination="hasPagination"-->
-<!--        >-->
+    <!--        <app-table-title-->
+    <!--          page-type="tokens"-->
+    <!--          :title="$tc('token.name', 2)"-->
+    <!--          :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
+    <!--          :has-pagination="hasPagination"-->
+    <!--        >-->
     <app-table-title page-type="tokens" :title="$tc('token.name', 2)" :has-pagination="hasPagination">
       <template v-slot:pagination v-if="hasPagination">
         <app-paginate :total="totalCount" @newPage="setPage" :current-page="page" />
@@ -118,17 +118,17 @@
 </template>
 
 <script lang="ts">
-    import AppError from '@app/core/components/ui/AppError.vue'
-    import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-    import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
-    import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
-    import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
-    import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
-    import {Component, Prop, Vue} from 'vue-property-decorator'
-    import {tokenExchangeRates} from '@app/modules/tokens/tokens.graphql'
-    import {TokenExchangeRatePageExt} from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
+import AppError from '@app/core/components/ui/AppError.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
+import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
+import TokenTableRow from '@app/modules/tokens/components/TokenTableRow.vue'
+import TokenTableRowLoading from '@app/modules/tokens/components/TokenTableRowLoading.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { tokenExchangeRates } from '@app/modules/tokens/tokens.graphql'
+import { TokenExchangeRatePageExt } from '@app/core/api/apollo/extensions/token-exchange-rate-page.ext'
 
-    @Component({
+@Component({
   components: {
     AppError,
     AppPaginate,

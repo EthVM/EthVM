@@ -105,7 +105,7 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 
-const MAX_ITEMS = 10
+    const MAX_ITEMS = 10
 
 @Component({
   components: {
@@ -260,12 +260,12 @@ export default class TableAddressTokens extends Mixins(NumberFormatMixin) {
    * @return {Boolean} - Whether to display pagination component
    */
   get showPaginate(): boolean {
-     return this.pages > 1 && !this.hasError
+    return this.pages > 1 && !this.hasError
   }
 
   get pages(): number {
-      const { tokensPage, maxItems } = this
-      return tokensPage ? Math.ceil(tokensPage.totalCountBN.div(maxItems).toNumber()) : 0
+    const { tokensPage, maxItems } = this
+    return tokensPage ? Math.ceil(tokensPage.totalCountBN.div(maxItems).toNumber()) : 0
   }
 
   get getTotalMonetaryValue(): string {

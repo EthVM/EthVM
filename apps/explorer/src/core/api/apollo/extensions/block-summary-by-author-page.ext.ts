@@ -1,6 +1,6 @@
 import { BlockSummaryPageExt_items } from '@app/core/api/apollo/extensions/block-summary-page.ext'
 import { BlockSummaryByAuthorPage } from '@app/core/api/apollo/types/BlockSummaryByAuthorPage'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
 
 export class BlockSummaryByAuthorPageExt implements BlockSummaryByAuthorPage {
   __typename!: 'BlockSummaryByAuthorPage'

@@ -125,7 +125,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
 import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
 import { ContractSummaryPageExt } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
 

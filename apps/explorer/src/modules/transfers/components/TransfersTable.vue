@@ -93,8 +93,8 @@ import {
 import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
 import AppError from '@app/core/components/ui/AppError.vue'
 import TransfersTableRow from '@app/modules/transfers/components/TransfersTableRow.vue'
-import BigNumber from 'bignumber.js';
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
+import BigNumber from 'bignumber.js'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
 
@@ -104,7 +104,7 @@ const MAX_ITEMS = 10
     AppError,
     TransfersTableRow,
     AppPaginateHasMore,
-    AppPaginate,
+    AppPaginate
   },
   data() {
     return {
@@ -255,7 +255,7 @@ Lifecycle
    */
   get pages(): number {
     if (!this.isInternal) {
-       this.error = 'Error: Cannot calculate pages for Transfers'
+      this.error = 'Error: Cannot calculate pages for Transfers'
     }
     return this.transferPage ? Math.ceil(this.transferPage!.totalCountBN!.div(this.maxItems).toNumber()) : 0
   }

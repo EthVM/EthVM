@@ -2,7 +2,7 @@ import BN from 'bignumber.js'
 import { TransferPage, TransferPage_items } from '@app/core/api/apollo/types/TransferPage'
 import { Transfer } from '@app/core/api/apollo/types/Transfer'
 import { DeltaType } from '@app/core/api/apollo/types/globalTypes'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
 
 export class TransferPageExt_items implements TransferPage_items {
   __typename!: 'Transfer'
