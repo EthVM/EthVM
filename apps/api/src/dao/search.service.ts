@@ -56,7 +56,7 @@ export class SearchService {
 
       const block = await this.blockService.findByHash(query, blockNumber)
       if (block != null) {
-        const [txFees] = await this.blockMetricsService.findBlockMetricsTraces([block.hash])
+        const [txFees] = await this.blockMetricsService.findBlockMetricsTraces([block.hash], block.timestamp, block.timestamp)
         s.block = new BlockDto(block, txFees)
         s.type = SearchType.Block
         return s

@@ -159,7 +159,25 @@ export class BlockService {
 
     const blockHashes = headersWithRewards.map(h => h.hash)
 
-    const txStatuses = await this.blockMetricsService.findBlockMetricsTraces(blockHashes, tx)
+    let maxTimestamp: Date = new Date()
+    let minTimestamp = new Date()
+
+    headersWithRewards
+      .forEach(h => {
+
+        const millis = h.timestamp.getTime();
+
+        if(millis < minTimestamp.getTime()) {
+          minTimestamp = h.timestamp
+        }
+
+        if(millis > maxTimestamp.getTime()) {
+          maxTimestamp = h.timestamp
+        }
+
+      });
+
+    const txStatuses = await this.blockMetricsService.findBlockMetricsTraces(blockHashes, maxTimestamp, minTimestamp, tx)
 
     const txStatusesByHash = new Map<string, BlockMetricsTraceEntity>()
     txStatuses.forEach(status => txStatusesByHash.set(status.hash, status))

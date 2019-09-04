@@ -65,8 +65,11 @@ export class BlockResolvers {
     }
 
     const entity = await this.blockService.findByHash(hash, blockNumber)
-    const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(hash, true, blockNumber)
-    return entity ? new BlockDto(entity, txFees) : undefined
+
+    if(!entity) return undefined
+
+    const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(hash, entity.timestamp, entity.timestamp, true, blockNumber)
+    return new BlockDto(entity, txFees)
   }
 
   @Query()
@@ -79,7 +82,7 @@ export class BlockResolvers {
     }
     const entity = await this.blockService.findByNumber(number, blockNumber)
     if (!entity) { return undefined }
-    const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(entity.hash, true, blockNumber)
+    const txFees = await this.blockMetricsService.findBlockMetricsTracesByHash(entity.hash, entity.timestamp, entity.timestamp, true, blockNumber)
     return new BlockDto(entity, txFees)
   }
 
