@@ -106,9 +106,11 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
 
     // hard forks
 
+    val blockHash = blockHashFor(record)
+
     deltas = deltas + netConfig
       .chainConfigForBlock(blockNumber)
-      .hardForkBalanceDeltas(blockNumber)
+      .hardForkBalanceDeltas(blockNumber, blockHash, Timestamp(record.timestamp()))
 
     // deltas for traces
 
