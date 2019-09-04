@@ -138,6 +138,7 @@ class FungibleBalanceCache(
     val addressTokenCountCursor = txCtx
       .selectFrom(ADDRESS_TOKEN_COUNT)
       .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .and(ADDRESS_TOKEN_COUNT.TOKEN_TYPE.eq(tokenType.toString()))
       .fetchSize(1000)
       .fetchLazy()
 
@@ -161,6 +162,7 @@ class FungibleBalanceCache(
     val contractHolderCountCursor = txCtx
       .selectFrom(CONTRACT_HOLDER_COUNT)
       .where(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .and(CONTRACT_HOLDER_COUNT.TOKEN_TYPE.eq(tokenType.toString()))
       .fetchSize(1000)
       .fetchLazy()
 
