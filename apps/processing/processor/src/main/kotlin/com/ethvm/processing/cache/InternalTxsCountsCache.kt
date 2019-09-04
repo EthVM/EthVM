@@ -100,7 +100,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     val contractCountCursor = txCtx
       .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT)
-      .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .where(ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 

@@ -24,11 +24,9 @@ import java.sql.Timestamp
 import java.time.Duration
 import java.util.Properties
 
-class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
+class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-processor") {
 
   override val logger = KotlinLogging.logger {}
-
-  override val processorId: String = "ether-balance-processor"
 
   private val topicTraces: String by inject(named("topicTraces"))
 
@@ -39,20 +37,16 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>() {
       put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 16)
     }
 
-  private lateinit var fungibleBalanceCache: FungibleBalanceCache
+  private val fungibleBalanceCache = FungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ETHER)
 
-  private lateinit var internalTxsCountsCache: InternalTxsCountsCache
+  private val internalTxsCountsCache = InternalTxsCountsCache(memoryDb, diskDb, scheduledExecutor)
 
   override val maxTransactionTime = Duration.ofMillis(300)
 
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
-
-    fungibleBalanceCache = FungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ETHER)
     fungibleBalanceCache.initialise(txCtx)
-
-    internalTxsCountsCache = InternalTxsCountsCache(memoryDb, diskDb, scheduledExecutor)
     internalTxsCountsCache.initialise(txCtx)
   }
 

@@ -4,6 +4,7 @@ import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TraceListRecord
 import com.ethvm.db.Tables
 import com.ethvm.db.Tables.CONTRACT
+import com.ethvm.db.Tables.CONTRACT_METADATA
 import com.ethvm.db.routines.ClearContractDestroyedFields
 import com.ethvm.db.tables.records.ContractMetadataRecord
 import com.ethvm.processing.extensions.toContractRecords
@@ -28,13 +29,11 @@ import java.util.Properties
 import java.util.concurrent.CompletableFuture
 import kotlin.math.min
 
-class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
+class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>("contract-lifecycle-processor") {
 
   private val ETHEREUM_ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
   override val logger = KotlinLogging.logger {}
-
-  override val processorId: String = "contract-lifecycle-processor"
 
   override val kafkaProps: Properties = Properties()
     .apply {
@@ -52,9 +51,12 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>() {
   override fun blockHashFor(value: TraceListRecord) = value.blockHash
 
   override fun reset(txCtx: DSLContext) {
-
     txCtx
       .truncate(CONTRACT)
+      .execute()
+
+    txCtx
+      .truncate(CONTRACT_METADATA)
       .execute()
   }
 

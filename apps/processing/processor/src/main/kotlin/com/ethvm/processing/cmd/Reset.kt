@@ -21,8 +21,9 @@ class Reset : AbstractCliktCommand(help = "Reset processors state") {
 
     processors
       .forEach {
-        it.initialise()
+        logger.info { "Resetting processor: ${it.javaClass}"}
         it.reset()
+        logger.info { "Reset complete: ${it.javaClass}"}
       }
 
     exitProcess(0)

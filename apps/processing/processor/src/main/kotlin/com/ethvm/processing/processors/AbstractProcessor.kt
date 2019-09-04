@@ -42,11 +42,9 @@ enum class BlockType {
   NEW, DUPLICATE, FORK
 }
 
-abstract class AbstractProcessor<V> : KoinComponent, Processor {
+abstract class AbstractProcessor<V>(protected val processorId: String) : KoinComponent, Processor {
 
   protected abstract val logger: KLogger
-
-  protected abstract val processorId: String
 
   protected abstract val topics: List<String>
 
@@ -82,13 +80,13 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
     merged
   }
 
-  protected lateinit var diskDb: DB
+  protected val diskDb: DB
 
-  protected lateinit var memoryDb: DB
+  protected val memoryDb: DB
+
+  private val hashCache: BlockHashCache
 
   private lateinit var consumer: KafkaConsumer<CanonicalKeyRecord, V>
-
-  private lateinit var hashCache: BlockHashCache
 
   private lateinit var latestSyncBlock: BigInteger
   private var latestSyncTimeMs: Long = 0
@@ -100,12 +98,12 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
   protected open val maxTransactionTime: Duration = Duration.ofMillis(100)
 
-  override fun initialise() {
+  init {
 
-    // initialise local storage db
+    // setup local storage db
 
     diskDb = DBMaker
-      .fileDB("$storageDir/${this.processorId}")
+      .fileDB("$storageDir/$processorId")
       .fileMmapEnable()
       .fileMmapEnableIfSupported()
       .fileMmapPreclearDisable()
@@ -117,17 +115,22 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
       .memoryDirectDB()
       .make()
 
+    // create hash cache
+    hashCache = BlockHashCache(memoryDb, scheduledExecutor, processorId)
+
+  }
+
+  override fun initialise() {
+
     latestSyncBlock = getLastSyncBlock(dbContext) ?: BigInteger.ONE.negate()
     latestSyncTimeMs = getLastBlockTimestampMs(dbContext) ?: 0L
 
-    hashCache = BlockHashCache(memoryDb, scheduledExecutor, processorId)
+    logger.info { "latest synced block from db: $latestSyncBlock" }
+
     hashCache.initialise(dbContext)
 
     //
 
-    logger.info { "latest synced block from db: $latestSyncBlock" }
-
-    //
     dbContext.transaction { txConfig ->
 
       val txCtx = DSL.using(txConfig)
@@ -161,7 +164,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
   /**
    * @return Int an estimate of the number of db operations performed
    */
-  protected abstract fun process(txCtx: DSLContext, records: ConsumerRecord<CanonicalKeyRecord, V>)
+  protected abstract fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, V>)
 
   protected abstract fun blockHashFor(value: V): String
 
@@ -177,7 +180,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
 
       txCtx
         .deleteFrom(SYNC_STATUS)
-        .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+        .where(SYNC_STATUS.COMPONENT.eq(processorId))
         .execute()
 
       txCtx
@@ -369,7 +372,7 @@ abstract class AbstractProcessor<V> : KoinComponent, Processor {
               // flush to disk
               diskDb.commit()
 
-              logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${lastRecord!!.timestamp()}" }
+              logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
             }
         }
 

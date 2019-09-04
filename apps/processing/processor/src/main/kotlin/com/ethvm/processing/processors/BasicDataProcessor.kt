@@ -16,29 +16,22 @@ import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.time.Duration
 
-class BasicDataProcessor : AbstractProcessor<BlockRecord>() {
+class BasicDataProcessor : AbstractProcessor<BlockRecord>("basic-data-processor") {
 
   override val logger = KotlinLogging.logger {}
-
-  override val processorId = "basic-data-processor"
 
   private val topicBlocks: String by inject(named("topicBlocks"))
 
   override val topics = listOf(topicBlocks)
 
-  private lateinit var blockCountsCache: BlockCountsCache
-
-  private lateinit var blockTimestampCache: BlockTimestampCache
+  private val blockCountsCache: BlockCountsCache = BlockCountsCache(memoryDb, diskDb, scheduledExecutor)
+  private val blockTimestampCache: BlockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
 
   override val maxTransactionTime = Duration.ofMillis(300)
 
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
-
-    blockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
-      .apply { initialise(txCtx, latestSyncBlock ?: BigInteger.ZERO) }
-
-    blockCountsCache = BlockCountsCache(memoryDb, diskDb, scheduledExecutor)
-      .apply { initialise(txCtx) }
+    blockTimestampCache.initialise(txCtx, latestSyncBlock ?: BigInteger.ZERO)
+    blockCountsCache.initialise(txCtx)
   }
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash

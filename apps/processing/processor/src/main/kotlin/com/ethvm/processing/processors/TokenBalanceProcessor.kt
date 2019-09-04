@@ -15,11 +15,9 @@ import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.util.Properties
 
-class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
+class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>("token-balance-processor") {
 
   override val logger = KotlinLogging.logger {}
-
-  override val processorId = "token-balance-processor"
 
   private val topicBlocks: String by inject(named("topicBlocks"))
 
@@ -30,33 +28,22 @@ class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>() {
 
   override val topics = listOf(topicBlocks)
 
-  private lateinit var fungibleBalanceCache: FungibleBalanceCache
-
-  private lateinit var nonFungibleBalanceCache: NonFungibleBalanceCache
+  private val fungibleBalanceCache = FungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ERC20)
+  private val nonFungibleBalanceCache = NonFungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ERC721)
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
 
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
-
-    fungibleBalanceCache = FungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ERC20)
-      .apply {
-        initialise(txCtx)
-      }
-
-    nonFungibleBalanceCache = NonFungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ERC721)
-      .apply {
-        initialise(txCtx)
-      }
+    fungibleBalanceCache.initialise(txCtx)
+    nonFungibleBalanceCache.initialise(txCtx)
   }
 
   override fun reset(txCtx: DSLContext) {
-
     fungibleBalanceCache.reset(txCtx)
     nonFungibleBalanceCache.reset(txCtx)
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
-
     fungibleBalanceCache.rewindUntil(txCtx, blockNumber)
     nonFungibleBalanceCache.rewindUntil(txCtx, blockNumber)
   }

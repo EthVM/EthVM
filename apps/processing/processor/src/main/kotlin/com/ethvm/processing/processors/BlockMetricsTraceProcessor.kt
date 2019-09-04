@@ -13,11 +13,9 @@ import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.util.Properties
 
-class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>() {
+class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>("block-metrics-trace-processor") {
 
   override val logger = KotlinLogging.logger {}
-
-  override val processorId = "block-metrics-trace-processor"
 
   override val kafkaProps: Properties = Properties()
     .apply {

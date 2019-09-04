@@ -15,11 +15,9 @@ import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.util.Properties
 
-class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
+class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metrics-header-processor") {
 
   override val logger = KotlinLogging.logger {}
-
-  override val processorId = "block-metrics-header-processor"
 
   override val kafkaProps: Properties = Properties()
     .apply {
@@ -30,12 +28,10 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>() {
 
   override val topics = listOf(topicBlocks)
 
-  private lateinit var blockTimestampCache: BlockTimestampCache
+  private val blockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
 
   override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
-
-    blockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
-      .apply { initialise(txCtx, latestSyncBlock ?: BigInteger.ZERO) }
+    blockTimestampCache.initialise(txCtx, latestSyncBlock ?: BigInteger.ZERO)
   }
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
