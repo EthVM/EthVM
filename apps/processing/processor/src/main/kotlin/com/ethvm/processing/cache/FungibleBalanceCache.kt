@@ -131,6 +131,8 @@ class FungibleBalanceCache(
 
     balanceCursor.close()
 
+    count = 0
+
     logger.info { "Opening cursor for address token count" }
 
     val addressTokenCountCursor = txCtx
@@ -152,16 +154,18 @@ class FungibleBalanceCache(
 
     addressTokenCountCursor.close()
 
+    count = 0
+
     logger.info { "Opening cursor for contract holder count" }
 
-    val contractHolderCount = txCtx
+    val contractHolderCountCursor = txCtx
       .selectFrom(CONTRACT_HOLDER_COUNT)
       .where(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
-    while (contractHolderCount.hasNext()) {
-      set(contractHolderCount.fetchNext())
+    while (contractHolderCountCursor.hasNext()) {
+      set(contractHolderCountCursor.fetchNext())
       count += 1
       if (count % 10000 == 0) {
         contractHolderCountMap.flushToDisk(true)
@@ -171,7 +175,7 @@ class FungibleBalanceCache(
 
     logger.info { "Contract holder count reloaded" }
 
-    contractHolderCount.close()
+    contractHolderCountCursor.close()
 
     cacheStores.forEach { it.flushToDisk(true) }
 

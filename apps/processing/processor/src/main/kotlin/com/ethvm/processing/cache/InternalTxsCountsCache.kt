@@ -96,6 +96,8 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     logger.info { "Transaction counts reloaded" }
 
+    count = 0
+
     val contractCountCursor = txCtx
       .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT)
       .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))

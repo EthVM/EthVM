@@ -74,6 +74,9 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
     var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
 
+    // disable histroy generation until we have initialised
+    writeHistoryToDb = false
+
     val latestDbBlockNumber = txCtx
       .select(CANONICAL_COUNT.BLOCK_NUMBER)
       .from(CANONICAL_COUNT)
@@ -101,20 +104,18 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
     logger.info { "Reloaded canonical count state" }
 
-    val cursor = txCtx
+    val addressTxCountCursor = txCtx
       .selectFrom(ADDRESS_TRANSACTION_COUNT)
       .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
-    writeHistoryToDb = false
-
     var count = 0
 
     logger.info { "Beginning reload of transaction counts" }
 
-    while (cursor.hasNext()) {
-      set(cursor.fetchNext())
+    while (addressTxCountCursor.hasNext()) {
+      set(addressTxCountCursor.fetchNext())
       count += 1
       if (count % 1000 == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
@@ -122,7 +123,30 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       }
     }
 
-    cursor.close()
+    addressTxCountCursor.close()
+
+    count = 0
+
+    val minerCountCursor = txCtx
+      .selectFrom(MINER_BLOCK_COUNT)
+      .where(MINER_BLOCK_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .fetchSize(1000)
+      .fetchLazy()
+
+    logger.info { "Beginning reload of miner counts" }
+
+    while (minerCountCursor.hasNext()) {
+      set(minerCountCursor.fetchNext())
+      count += 1
+      if (count % 1000 == 0) {
+        cacheStores.forEach { it.flushToDisk(true) }
+        logger.info { "$count entries processed" }
+      }
+    }
+
+    minerCountCursor.close()
+
+    logger.info { "Transaction counts reloaded" }
 
     cacheStores.forEach { it.flushToDisk(true) }
 
@@ -271,6 +295,10 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       .setTotalIn(balance.totalIn)
       .setTotalOut(balance.totalOut)
       .build()
+  }
+
+  private fun set(count: MinerBlockCountRecord) {
+    minedCountByAddress[count.author] = count.count
   }
 
   fun writeToDb(ctx: DSLContext) {
