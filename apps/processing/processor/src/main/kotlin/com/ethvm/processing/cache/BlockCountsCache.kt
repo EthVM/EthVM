@@ -146,7 +146,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
     minerCountCursor.close()
 
-    logger.info { "Transaction counts reloaded" }
+    logger.info { "Miner counts reloaded" }
 
     cacheStores.forEach { it.flushToDisk(true) }
 
