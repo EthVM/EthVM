@@ -164,9 +164,9 @@ services:
     networks:
       - net
     environment:
-      POSTGRES_USER: '${PRINCIPAL_USER}'
-      POSTGRES_PASSWORD: '${PRINCIPAL_PASSWORD}'
-      POSTGRES_DB: '${PRINCIPAL_DB}'
+      POSTGRES_USER: '${DATABASE_USER}'
+      POSTGRES_PASSWORD: '${DATABASE_PASSWORD}'
+      POSTGRES_DB: '${DATABASE_NAME}'
 
   redis:
     image: redis:5.0-alpine
@@ -259,7 +259,7 @@ services:
       KAFKA_SCHEMA_REGISTRY_URL: {{ KAFKA_SCHEMA_REGISTRY_URL }}
       WEB3_WS_URL: ws://parity:8546
       ETHVM_STORAGE_DIR: /data
-      JDBC_URL: "jdbc:postgresql://timescale/{{ PRINCIPAL_DB }}?ssl=false"
+      JDBC_URL: "jdbc:postgresql://timescale/{{ DATABASE_NAME }}?ssl=false"
       ETH_NETWORK: '{{ PARITY_CHAIN }}'
       TOPIC_BLOCKS: "{{ PARITY_CHAIN }}_blocks"
       TOPIC_TRACES: "{{ PARITY_CHAIN }}_traces"

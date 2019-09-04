@@ -29,4 +29,4 @@ done
 set -o errexit
 
 section "Importing principal dataset..."
-gunzip <${ROOT_DIR}/datasets/${DATASETS[0]} | docker-compose exec -T timescale psql --quiet --username "${PRINCIPAL_USER}" "${PRINCIPAL_DB}"
+gunzip <${ROOT_DIR}/datasets/${DATASETS[0]} | docker-compose exec -T timescale psql --quiet --username "${DATABASE_USER}" "${DATABASE_NAME}"

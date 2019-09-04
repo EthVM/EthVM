@@ -19,10 +19,10 @@ NGINX_ENABLED: false
 # DB
 # ///////////////////////////////////////////////////////
 
-PRINCIPAL_DB: 'ethvm_dev'
-PRINCIPAL_USER: 'postgres'
-PRINCIPAL_PASSWORD: '1234'
-PRINCIPAL_JDBC_URL: 'jdbc:postgresql://timescale:5432/{{ PRINCIPAL_DB }}?user={{ PRINCIPAL_USER }}&password={{ PRINCIPAL_PASSWORD }}&ssl=false'
+DATABASE_NAME: 'ethvm_dev'
+DATABASE_USER: 'postgres'
+DATABASE_PASSWORD: '1234'
+JDBC_URL: 'jdbc:postgresql://timescale:5432/{{ DATABASE_NAME }}?user={{ DATABASE_USER }}&password={{ DATABASE_PASSWORD }}&ssl=false'
 
 # ///////////////////////////////////////////////////////
 # Parity

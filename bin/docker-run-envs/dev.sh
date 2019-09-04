@@ -11,7 +11,7 @@ fi
 section "Starting up docker containers..."
 docker-compose up -d --build
 
-section "Initialising principal db..."
+section "Initialising db..."
 INDEXES_AND_TRIGGERS=${PARITY_INSTA_MINING} ${SCRIPT_DIR}/migrator.sh metrics migrate
 
 if [[ $KAFKA_ENABLED == "true" ]]; then
