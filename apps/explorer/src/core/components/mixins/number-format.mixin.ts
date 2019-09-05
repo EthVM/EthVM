@@ -28,8 +28,8 @@ export class NumberFormatMixin extends Vue {
 
   /* Variable unit ETH values (Group IV) */
 
-  formatVariableUnitEthValue(value: BigNumber, ethBreakpoint?: number, allowRounding?: boolean): FormattedNumber {
-    return NumberFormatHelper.formatVariableUnitEthValue(value, ethBreakpoint, allowRounding)
+  formatVariableUnitEthValue(value: BigNumber, isException?: boolean): FormattedNumber {
+    return NumberFormatHelper.formatVariableUnitEthValue(value, isException)
   }
 
   /* Non-variable ETH values (Group V) */

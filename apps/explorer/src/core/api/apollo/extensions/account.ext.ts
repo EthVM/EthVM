@@ -37,7 +37,7 @@ export class AccountExt implements Account {
   }
 
   get balanceFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatVariableUnitEthValue(this.balanceBN, 100_000_000_000, true)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.balanceBN)
   }
 
   get totalTxCountBN(): BigNumber {
