@@ -53,8 +53,8 @@ create index if not exists idx_contracts_by_destroyed_asc on contract(destroyed_
 
 /* Block metrics service */
 
-create index if not exists idx_blocks_metrics_header_by_block_hash on block_metrics_header (timestamp, number desc, hash);
-create index if not exists idx_blocks_metrics_trace_by_block_hash on block_metrics_trace (timestamp, number desc, hash);
+create unique index if not exists idx_blocks_metrics_header_by_block_hash on block_metrics_header (timestamp, hash);
+create unique index if not exists idx_blocks_metrics_trace_by_block_hash on block_metrics_trace (timestamp, hash);
 
 /* Block service */
 create unique index if not exists idx_block_header_by_hash on block_header (hash);

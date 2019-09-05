@@ -157,15 +157,20 @@ export class BlockService {
 
   private async summarise(tx: EntityManager, headersWithRewards: BlockHeaderEntity[], cache: boolean = true): Promise<BlockSummary[]> {
 
+    if(!headersWithRewards.length) return []
+
     const blockHashes = headersWithRewards.map(h => h.hash)
 
-    let maxTimestamp: Date = new Date()
-    let minTimestamp = new Date()
+    let maxTimestamp: Date = headersWithRewards[0].timestamp
+    let minTimestamp: Date = headersWithRewards[0].timestamp
 
     headersWithRewards
       .forEach(h => {
 
         const millis = h.timestamp.getTime();
+
+        maxTimestamp = maxTimestamp || h.timestamp
+        minTimestamp = minTimestamp || h.timestamp
 
         if (millis < minTimestamp.getTime()) {
           minTimestamp = h.timestamp
