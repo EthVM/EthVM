@@ -114,7 +114,7 @@ module "processing_workers" {
   aws_region         = var.aws_region
 }
 
-module "timescale_workers" {
+module "storage_workers" {
   source             = "./modules/worker"
   name               = "storage-worker"
   swarm_id           = var.swarm_id

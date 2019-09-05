@@ -51,7 +51,7 @@ resource "aws_route53_record" "storage_workers" {
   type    = "A"
   ttl     = "600"
   count   = var.storage_worker_instances
-  records = [module.timescale_workers.worker_ips[count.index]]
+  records = [module.storage_workers.worker_ips[count.index]]
 }
 
 resource "aws_route53_record" "processing_workers" {
