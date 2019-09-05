@@ -1,0 +1,34 @@
+aws_region       = "us-east-1"
+aws_profile      = "aws-profile"
+aws_ssh_key_name = "aws-ssh-keyname"
+aws_ssh_key_path = "~/.ssh/your-pem-path"
+
+swarm_id            = "ethvm"
+alb_enable_ssl_cert = false
+
+manager_ec2_ami = "ami-0015419a71c26a858"
+worker_ec2_ami  = "ami-0015419a71c26a858"
+
+bastion_zone               = "a"
+manager_availability_zones = ["a", "b", "c"]
+worker_availability_zones  = ["a", "b", "c"]
+
+manager_instances        = 1
+manager_ec2_instance     = "t3a.small"
+manager_deployment_zones = ["a"]
+
+web_worker_instances        = 1
+web_worker_ec2_instance     = "t3a.xlarge"
+web_worker_deployment_zones = ["a"]
+
+kafka_worker_instances        = 1
+kafka_worker_ec2_instance     = "r5.large"
+kafka_worker_deployment_zones = ["a"]
+
+processing_worker_instances        = 1
+processing_worker_ec2_instance     = "i3.xlarge"
+processing_worker_deployment_zones = ["a"]
+
+storage_worker_instances        = 1
+storage_worker_ec2_instance     = "t3a.xlarge"
+storage_worker_deployment_zones = ["a"]
