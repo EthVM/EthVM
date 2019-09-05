@@ -15,14 +15,21 @@ import java.math.BigInteger
 import java.util.concurrent.CompletableFuture
 import kotlin.system.exitProcess
 
-class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval: Int = 100) : Runnable {
+class BalanceChecker(
+  private val wsUrl: String,
+  private val startBlock: BigInteger,
+  private val interval: Int = 100,
+  private val jdbcUrl: String,
+  private val jdbcUsername: String,
+  private val jdbcPassword: String
+) : Runnable {
 
   private val logger = KotlinLogging.logger {}
 
   private val dataSourceConfig = HikariConfig().apply {
-    jdbcUrl = "jdbc:postgresql://localhost:6432/ethvm?ssl=false"
-    username = "postgres"
-    password = "1234"
+    jdbcUrl = this@BalanceChecker.jdbcUrl
+    username = jdbcUsername
+    password = jdbcPassword
     maximumPoolSize = 1
     isAutoCommit = false
     addDataSourceProperty("cachePrepStmts", "true")
@@ -48,7 +55,7 @@ class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval
       .and(BALANCE.BLOCK_NUMBER.ge(startBlock.toBigDecimal()))
       .and(BALANCE.BLOCK_NUMBER.mod(interval).eq(BigDecimal.ZERO))
       .orderBy(BALANCE.BLOCK_NUMBER.asc())
-      .fetchSize(1000)
+      .fetchSize(10)
       .fetchLazy()
 
     var matched = 0
@@ -119,11 +126,4 @@ class BalanceChecker(val wsUrl: String, val startBlock: BigInteger, val interval
       }
       .reduce { a, b -> Pair(a.first + b.first, a.second + b.second) }
   }
-}
-
-fun main(args: Array<String>) {
-
-  val checker = BalanceChecker("ws://localhost:8546", 0.toBigInteger(), 5)
-
-  checker.run()
 }

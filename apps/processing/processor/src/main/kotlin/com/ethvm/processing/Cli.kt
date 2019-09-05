@@ -3,6 +3,7 @@ package com.ethvm.processing
 import com.ethvm.processing.cmd.Process
 import com.ethvm.processing.cmd.Reset
 import com.ethvm.processing.cmd.Rewind
+import com.ethvm.processing.cmd.Verify
 import com.ethvm.processing.processors.*
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
@@ -52,6 +53,6 @@ class Cli : CliktCommand() {
 
 fun main(args: Array<String>) {
   Cli()
-    .subcommands(Process(), Rewind(), Reset())
+    .subcommands(Process(), Rewind(), Reset(), Verify())
     .main(args)
 }
