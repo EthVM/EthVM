@@ -40,6 +40,11 @@ export class EthValue {
     return value.div(1_000_000_000).toNumber()
   }
 
+  public toGweiBN(): BigNumber {
+    const value = this.value instanceof BN ? this.value : new BN(this.value)
+    return value.div(1_000_000_000)
+  }
+
   public toEthFormatted(): number {
     return NumberFormatter('#,##0.##', this.toEth())
   }

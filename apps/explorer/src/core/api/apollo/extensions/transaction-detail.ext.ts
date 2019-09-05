@@ -91,7 +91,7 @@ export class TransactionDetailExt implements TransactionDetail {
   }
 
   get valueFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatVariableUnitEthValue(this.valueBN)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.valueBN, true)
   }
 
   get timestampMs(): number {
