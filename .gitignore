@@ -46,3 +46,10 @@ docker/templer/vars/*.custom.yaml
 
 .env
 docker-compose.yaml
+
+# Terraform
+.terraform
+terraform.tfvars
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
