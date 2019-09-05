@@ -25,6 +25,7 @@ import com.ethvm.db.tables.records.BlockMetricsHeaderRecord
 import com.ethvm.db.tables.records.BlockMetricsTraceRecord
 import com.ethvm.db.tables.records.ContractRecord
 import com.ethvm.processing.web3.ERC20Abi
+import com.ethvm.processing.web3.ERC721Abi
 import org.jooq.TableRecord
 import java.lang.IllegalStateException
 import java.math.BigDecimal
@@ -194,15 +195,10 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
   val receipt = this
 
   val erc20Deltas = logs
-    .map { log -> ERC20Abi.decodeTransferEventHex(log.getData(), log.getTopics()) }
-    .mapNotNull { transferOpt -> transferOpt.orNull() }
-    .map { transfer ->
-
-      val contractAddress = when {
-        to != null -> to
-        contractAddress != null -> contractAddress
-        else -> throw IllegalStateException("Could not determine contract address")
-      }
+    .map { log -> Pair(log, ERC20Abi.decodeTransferEventHex(log.getData(), log.getTopics()).orNull()) }
+    .filter { (_, transfer) -> transfer != null }
+    .map { (log, transfer) -> Pair(log, transfer!!) }
+    .map { (log, transfer) ->
 
       // generate balance deltas
 
@@ -210,7 +206,7 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
         BalanceDeltaRecord().apply {
           this.address = transfer.from
           this.counterpartAddress = transfer.to
-          this.contractAddress = contractAddress
+          this.contractAddress = log.address
           this.deltaType = BalanceDeltaType.TOKEN_TRANSFER.toString()
           this.tokenType = TokenType.ERC20.toString()
           this.blockNumber = block.header.number.bigInteger().toBigDecimal()
@@ -223,7 +219,7 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
         BalanceDeltaRecord().apply {
           this.address = transfer.to
           this.counterpartAddress = transfer.from
-          this.contractAddress = contractAddress
+          this.contractAddress = log.address
           this.deltaType = BalanceDeltaType.TOKEN_TRANSFER.toString()
           this.tokenType = TokenType.ERC20.toString()
           this.blockNumber = block.header.number.bigInteger().toBigDecimal()
@@ -236,9 +232,30 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
       )
     }
 
-  // TODO ERC721
+  val erc721Deltas = logs
+    .map { log -> Pair(log, ERC721Abi.decodeTransferEventHex(log.getData(), log.getTopics()).orNull()) }
+    .filter { (_, transfer) -> transfer != null }
+    .map { (log, transfer) -> Pair(log, transfer!!) }
+    .map { (log, transfer) ->
 
-  return erc20Deltas.flatten()
+      listOf(
+        BalanceDeltaRecord().apply {
+          this.address = transfer.to
+          this.counterpartAddress = transfer.from
+          this.contractAddress = log.address
+          this.deltaType = BalanceDeltaType.TOKEN_TRANSFER.toString()
+          this.tokenType = TokenType.ERC721.toString()
+          this.blockNumber = block.header.number.bigInteger().toBigDecimal()
+          this.blockHash = block.header.hash
+          this.transactionHash = receipt.transactionHash
+          this.amount = transfer.tokenId.toBigDecimal()
+          this.timestamp = Timestamp(block.header.timestamp)
+          this.isReceiving = true
+        }
+      )
+    }
+
+  return erc20Deltas.flatten() + erc721Deltas.flatten()
 }
 
 fun TraceListRecord.toMetricsRecord(): BlockMetricsTraceRecord {
