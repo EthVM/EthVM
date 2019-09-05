@@ -364,6 +364,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
         .select(BLOCK_HEADER.AUTHOR, BLOCK_HEADER.NUMBER)
         .from(BLOCK_HEADER)
         .where(BLOCK_HEADER.NUMBER.ge(blockNumberDecimal))
+        .orderBy(BLOCK_HEADER.NUMBER.desc())
         .fetchSize(1000)
         .fetchLazy()
 

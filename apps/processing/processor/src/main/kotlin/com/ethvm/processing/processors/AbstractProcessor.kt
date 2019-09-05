@@ -144,7 +144,10 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       // we add one as the block number parameter is inclusive
 
       val rewindBlockNumber = latestSyncBlock.plus(BigInteger.ONE)
+
+      logger.info { "Latest sync block number = $latestSyncBlock" }
       logger.info { "Rewinding until and including block = $rewindBlockNumber" }
+
       rewindUntil(txCtx, rewindBlockNumber)
 
       // clear out hash cache
@@ -192,7 +195,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   override fun rewindUntil(targetBlockNumber: BigInteger) {
 
-    logger.info { "Rewind requested for $processorId to block number $targetBlockNumber" }
+    logger.info { "Rewind requested for $processorId to target block number $targetBlockNumber" }
 
     dbContext.transaction { txConfig ->
 
@@ -208,15 +211,16 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         .limit(1)
         .fetchOne()
 
-      val latestBatchBlockNumber = record.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
-      val rewindUntilBlockNumber = latestBatchBlockNumber.plus(BigInteger.ONE)
+      val closestBatchBlockNumber = record.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
+      val rewindUntilBlockNumber = closestBatchBlockNumber.plus(BigInteger.ONE)
 
-      logger.info { "Rewinding to closest batch end $latestBatchBlockNumber for $processorId" }
+      logger.info { "Closest batch block number = $closestBatchBlockNumber for $processorId" }
+      logger.info { "Rewinding until and including $rewindUntilBlockNumber" }
 
       rewindUntil(txCtx, rewindUntilBlockNumber)
       hashCache.removeKeysFrom(txCtx, rewindUntilBlockNumber)
 
-      logger.info { "HashCache updated, $processorId latest block number = $latestBatchBlockNumber" }
+      logger.info { "HashCache updated, $processorId latest block number = $closestBatchBlockNumber" }
 
       // delete history
 
@@ -245,7 +249,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         .set(SYNC_STATUS.TIMESTAMP, latestRecord.timestamp)
         .execute()
 
-      logger.info { "Sync status history updated, $processorId latest block number = $latestBatchBlockNumber" }
+      logger.info { "Sync status history updated, $processorId latest block number = $closestBatchBlockNumber" }
 
       diskDb.commit()
     }
