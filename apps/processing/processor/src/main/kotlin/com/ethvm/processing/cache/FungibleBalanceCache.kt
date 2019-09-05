@@ -427,8 +427,9 @@ class FungibleBalanceCache(
           else -> throw UnsupportedOperationException("Unhandled token type: $deltaTokenType. Expected $tokenType")
         }
 
-        cursor.close()
       }
+
+      cursor.close()
 
       logger.info { "[$tokenType] Deleting balance entries" }
 
