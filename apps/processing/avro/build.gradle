@@ -1,6 +1,5 @@
 import com.commercehub.gradle.plugin.avro.GenerateAvroProtocolTask
 import com.commercehub.gradle.plugin.avro.GenerateAvroSchemaTask
-import org.gradle.api.tasks.bundling.Jar
 
 plugins {
   id 'java-library'
@@ -9,10 +8,8 @@ plugins {
 }
 
 dependencies {
-
   compile 'org.apache.avro:avro:1.8.2'
   implementation 'joda-time:joda-time:2.10.1'
-
 }
 
 avro {

@@ -8,10 +8,10 @@ plugins {
 
 project.tasks.build.dependsOn tasks.shadowJar
 
-  shadowJar {
-    baseName = project.name
-    classifier = ""
-  }
+shadowJar {
+  baseName = project.name
+  classifier = ""
+}
 
 sourceSets {
   main {
@@ -31,25 +31,25 @@ dependencies {
   implementation project(':avro')
 
   // Kafka
-  compileOnly "org.apache.kafka:connect-api:${rootProject.ext.get("kafka-connect-api-version")}"
-  implementation "io.confluent:kafka-schema-registry-client:${rootProject.ext.get("kafka-schema-registry-client-version")}"
-  implementation "io.confluent:kafka-connect-avro-converter:${rootProject.ext.get("kafka-connect-avro-converter-version")}"
+  compileOnly "org.apache.kafka:connect-api:2.3.0"
+  implementation "io.confluent:kafka-schema-registry-client:5.2.1"
+  implementation "io.confluent:kafka-connect-avro-converter:5.2.1"
 
   // Web
   implementation "org.web3j:parity:4.2.0"
 
   // Utils
-  implementation("io.arrow-kt:arrow-core:${rootProject.ext.get("arrow-core-version")}") {
+  implementation("io.arrow-kt:arrow-core:0.8.2") {
     // version conflict
     exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-common"
     exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk7"
   }
-  implementation "ch.qos.logback:logback-classic:${rootProject.ext.get("logback-version")}"
-  implementation "io.github.microutils:kotlin-logging:${rootProject.ext.get("kotlin-logging-version")}"
+  implementation "ch.qos.logback:logback-classic:1.2.3"
+  implementation "io.github.microutils:kotlin-logging:1.6.26"
   implementation("joda-time:joda-time:2.10.1")
 
   // Tests
-  testImplementation "io.kotlintest:kotlintest-runner-junit5:${rootProject.ext.get("kotlintest-version")}"
-  testImplementation "io.mockk:mockk:${rootProject.ext.get("mockk-version")}"
-  testImplementation "org.apache.kafka:connect-api:${rootProject.ext.get("kafka-connect-api-version")}"
+  testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
+  testImplementation "io.mockk:mockk:1.9.3"
+  testImplementation "org.apache.kafka:connect-api:2.3.0"
 }
