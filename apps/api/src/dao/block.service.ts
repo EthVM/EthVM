@@ -157,7 +157,7 @@ export class BlockService {
 
   private async summarise(tx: EntityManager, headersWithRewards: BlockHeaderEntity[], cache: boolean = true): Promise<BlockSummary[]> {
 
-    if(!headersWithRewards.length) return []
+    if (!headersWithRewards.length) return []
 
     const blockHashes = headersWithRewards.map(h => h.hash)
 
