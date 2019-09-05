@@ -117,7 +117,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
     // create hash cache
     hashCache = BlockHashCache(memoryDb, scheduledExecutor, processorId)
-
   }
 
   override fun initialise() {

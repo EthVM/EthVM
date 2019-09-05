@@ -77,11 +77,7 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
         .deleteFrom(SYNC_STATUS)
         .where(Tables.SYNC_STATUS.COMPONENT.`in`("ingestion", "head"))
         .execute()
-
     }
-
-
-
   }
 
   override fun stop() {
@@ -115,12 +111,8 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
                 .onDuplicateKeyUpdate()
                 .set(historyRecord)
                 .execute()
-
             }
-
-
         }
-
       }
     } catch (e: Exception) {
       logger.error(e) { "Fatal exception" }
@@ -146,10 +138,9 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
         .apply {
           this.component = "head"
           this.blockNumber = record.head.bigInteger().toBigDecimal()
-          this.blockTimestamp = Timestamp(record.timestamp)   // this is incorrect but we don't have it available
+          this.blockTimestamp = Timestamp(record.timestamp) // this is incorrect but we don't have it available
           this.timestamp = now
         }
     )
-
   }
 }

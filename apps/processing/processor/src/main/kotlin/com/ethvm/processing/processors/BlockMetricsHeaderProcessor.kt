@@ -14,7 +14,6 @@ import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
-import java.sql.Timestamp
 import java.util.Properties
 
 class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metrics-header-processor") {
@@ -79,7 +78,6 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metric
             .build()
         )
         .build()
-
     }
 
     blockTimestampCache[blockNumber] = block.header.timestamp

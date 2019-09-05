@@ -10,7 +10,6 @@ import com.github.ajalt.clikt.parameters.options.split
 import com.github.ajalt.clikt.parameters.types.int
 import org.koin.core.context.startKoin
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class Verify : CliktCommand() {
 

@@ -48,9 +48,7 @@ object ERC20Abi : AbstractAbi(ERC20Abi::class.java.getResourceAsStream("/abi/erc
   }
 }
 
-
 fun main(args: Array<String>) {
-
 
   val topics = listOf(
     "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef".hexBuffer()!!,
@@ -63,5 +61,4 @@ fun main(args: Array<String>) {
   val event = ERC20Abi.decodeTransferEvent(data, topics)
 
   println("Event = $event")
-
 }

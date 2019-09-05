@@ -52,7 +52,7 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>("block-met
 
     val dbRecord = record.value().toMetricsRecord()
 
-    if(record.key().number.bigInteger() == BigInteger.ZERO) {
+    if (record.key().number.bigInteger() == BigInteger.ZERO) {
 
       // override the timestamp of the genesis block
 
