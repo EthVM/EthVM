@@ -34,8 +34,8 @@ export class NumberFormatMixin extends Vue {
 
   /* Non-variable ETH values (Group V) */
 
-  formatNonVariableEthValue(value: BigNumber, allowRounding?: boolean): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(value, allowRounding)
+  formatNonVariableEthValue(value: BigNumber, isException?: boolean): FormattedNumber {
+    return NumberFormatHelper.formatNonVariableEthValue(value, isException)
   }
 
   /* Non-variable GWei values (Group VI) */

@@ -101,10 +101,10 @@ export class TransactionDetailExt implements TransactionDetail {
   get feeFormatted(): FormattedNumber {
     if (this.blockNumber == new BigNumber(0)) {
       // for genesis block we have no receipt
-      return NumberFormatHelper.formatNonVariableEthValue(new BigNumber(0))
+      return NumberFormatHelper.formatNonVariableEthValue(new BigNumber(0), true)
     }
     const gasUsed = this.receipt!.gasUsedBN
-    return NumberFormatHelper.formatNonVariableEthValue(this.gasPriceBN.multipliedBy(gasUsed), false)
+    return NumberFormatHelper.formatNonVariableEthValue(this.gasPriceBN.multipliedBy(gasUsed), true)
   }
 
   get inputMethodId(): string | null {
