@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common'
 import {InjectEntityManager} from '@nestjs/typeorm'
-import {Between, EntityManager, FindOneOptions, In, LessThanOrEqual} from 'typeorm'
+import {Between, EntityManager, Equal, FindOneOptions, In, LessThanOrEqual} from 'typeorm'
 import {AggregateBlockMetric, BlockMetricField, TimeBucket} from '@app/graphql/schema'
 import {unitOfTime} from 'moment'
 import BigNumber from 'bignumber.js';
@@ -40,7 +40,7 @@ export class BlockMetricsService {
       .find(BlockMetricsTraceEntity, {
         where: {
           hash: In(blockHashes),
-          timestamp: Between(minTimestamp.toISOString(), maxTimestamp.toISOString())
+          timestamp: Between(minTimestamp, maxTimestamp),
         },
         cache: true,
       })
@@ -55,15 +55,19 @@ export class BlockMetricsService {
   ): Promise<BlockMetricsTraceEntity | undefined> {
     return this.entityManager
       .findOne(BlockMetricsTraceEntity, {
-        where: { hash, number: LessThanOrEqual(blockNumber), timestamp: Between(minTimestamp.toISOString(), maxTimestamp.toISOString()) },
+        where: { hash, number: LessThanOrEqual(blockNumber), timestamp: Between(minTimestamp, maxTimestamp) },
         cache,
       })
   }
 
-  async findBlockMetric(hash: string, blockNumber: BigNumber): Promise<BlockMetricEntity | undefined> {
+  async findBlockMetric(hash: string, blockNumber: BigNumber, timestamp: Date): Promise<BlockMetricEntity | undefined> {
     return this.entityManager
       .findOne(BlockMetricEntity, {
-        where: { hash, number: LessThanOrEqual(blockNumber) },
+        where: {
+          hash,
+          timestamp: Equal(timestamp),
+          number: LessThanOrEqual(blockNumber),
+        },
       })
   }
 
@@ -81,7 +85,7 @@ export class BlockMetricsService {
             where: {
               number: LessThanOrEqual(blockNumber),
             },
-            orderBy: {
+            order: {
               number: 'DESC',
             },
             cache: true,
@@ -90,7 +94,7 @@ export class BlockMetricsService {
         const entities = await txn.find(BlockMetricEntity, {
           where: {
             number: LessThanOrEqual(blockNumber),
-            timestamp: LessThanOrEqual(timestamp.toISOString()),
+            timestamp: LessThanOrEqual(timestamp),
           },
           order: { number: 'DESC' },
           skip: offset,

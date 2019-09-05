@@ -167,7 +167,7 @@ export class PgSubscriptionService {
           // get data
           const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
           const hashRate = await blockService.calculateHashRate(false, blockSummary.number)
-          const blockMetric = await blockMetricsService.findBlockMetric(blockSummary.hash, blockSummary.number)
+          const blockMetric = await blockMetricsService.findBlockMetric(blockSummary.hash, blockSummary.number, blockSummary.timestamp)
 
           const promises: Promise<void>[] = [];
 

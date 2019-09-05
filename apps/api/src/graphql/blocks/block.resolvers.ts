@@ -68,11 +68,8 @@ export class BlockResolvers {
 
     if (!entity) return undefined
 
-    // Convert Date to seconds for some reason
-    const timestamp =  new Date(entity.timestamp.getTime() / 1000)
-
     const txFees = await this.blockMetricsService
-      .findBlockMetricsTracesByHash(hash, timestamp, timestamp, true, blockNumber)
+      .findBlockMetricsTracesByHash(hash, entity.timestamp, entity.timestamp, true, blockNumber)
     return new BlockDto(entity, txFees)
   }
 
@@ -87,11 +84,8 @@ export class BlockResolvers {
     const entity = await this.blockService.findByNumber(number, blockNumber)
     if (!entity) { return undefined }
 
-    // Convert Date to seconds for some reason
-    const timestamp =  new Date(entity.timestamp.getTime() / 1000)
-
     const txFees = await this.blockMetricsService
-      .findBlockMetricsTracesByHash(entity.hash, timestamp, timestamp, true, blockNumber)
+      .findBlockMetricsTracesByHash(entity.hash, entity.timestamp, entity.timestamp, true, blockNumber)
     return new BlockDto(entity, txFees)
   }
 
