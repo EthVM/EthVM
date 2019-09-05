@@ -326,7 +326,7 @@ export class NumberFormatHelper {
      * Return: >1000 or <-1000 and tooltip
     */
     if (positiveValue.isGreaterThanOrEqualTo(1000)) {
-      const result = isNegative ? '<-1000' : '>1000'
+      const result = isNegative ? '< -1000' : '> 1000'
       return { value: result, unit, tooltipText: `${value.toFormat()}%` }
     }
 
@@ -343,14 +343,14 @@ export class NumberFormatHelper {
      * Return: rounded to 2 decimal points number and tooltip if > 2 decimal points
     */
     if (positiveValue.isGreaterThanOrEqualTo(0.01)) {
-      return { value: value.toFormat(2), unit, tooltipText: dps > 2 ? `${value.toFormat()}%` : undefined }
+      return {...this.getRoundNumber(value, 2, dps), unit, tooltipText: dps > 2 ? `${value.toFormat()}%` : undefined }
     }
 
     /**
      * Case V: If -0.01 < |value| < 0.01
      * Return: '>-0.01' '<0.01'r and tooltip
     */
-    const result = isNegative ? '>-0.01' : '<0.01'
+    const result = isNegative ? '> -0.01' : '< 0.01'
     return { value: result, unit, tooltipText: `${value.toFormat()}%` }
   }
 
