@@ -79,27 +79,72 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_token_exchange_rates_address ON token_exch
 CREATE INDEX IF NOT EXISTS idx_token_exchange_rates_symbol ON token_exchange_rate (symbol);
 
 create index if not exists idx_balance_by_token_type_block_number on balance (token_type, block_number asc);
+create index if not exists idx_balance_by_token_type_block_number_desc on balance (token_type, block_number desc);
 
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_block_hash on balance_delta(block_hash);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_address on balance_delta(address);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_contract_address on balance_delta(contract_address);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_delta_type on balance_delta(delta_type);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_by_token_type_block_number on balance_delta(token_type, block_number asc);
+CREATE INDEX IF NOT EXISTS idx_balance_delta_by_token_type_block_number_alternative on balance_delta(block_number asc, token_type);
+CREATE INDEX IF NOT EXISTS idx_balance_delta_by_token_type_block_number_desc on balance_delta(token_type, block_number desc);
+CREATE INDEX IF NOT EXISTS idx_balance_delta_by_token_type_block_number_desc_alternative on balance_delta(block_number desc, token_type);
 CREATE INDEX IF NOT EXISTS idx_balance_delta_number_contract on balance_delta(block_number, contract_address);
 
 create index if not exists idx_address_transaction_counts_by_number on address_transaction_count (block_number asc);
 create index if not exists idx_address_transaction_count_deltas_by_number on address_transaction_count_delta (block_number asc);
 
-create index if not exists idx_address_internal_tx_counts_by_number on address_internal_transaction_count(block_number);
+create index if not exists idx_address_transaction_counts_by_number_desc on address_transaction_count (block_number desc);
+create index if not exists idx_address_transaction_count_deltas_by_number_desc on address_transaction_count_delta (block_number desc);
+
+
+create index if not exists idx_address_internal_tx_counts_by_number on address_internal_transaction_count(block_number asc);
+create index if not exists idx_address_internal_tx_counts_by_number_desc on address_internal_transaction_count(block_number desc);
 create index if not exists idx_canonical_count_by_block_number on canonical_count(block_number desc);
 
-create index if not exists idx_processor_hash_log_processor on processor_hash_log (processor_id);
+create index if not exists idx_processor_hash_log_processor on processor_hash_log (processor_id, block_number desc);
 
 create index if not exists idx_miner_block_count_by_number on miner_block_count (block_number asc);
+create index if not exists idx_miner_block_count_by_number_desc on miner_block_count (block_number desc);
 
 create index if not exists idx_address_token_count_by_token_type on address_token_count (token_type, block_number asc);
 create index if not exists idx_address_token_count_delta_by_token_type on address_token_count_delta (token_type, block_number asc);
 create index if not exists idx_contract_holder_count_by_token_type on contract_holder_count (token_type, block_number asc);
 create index if not exists idx_contract_holder_count_delta_by_token_type on contract_holder_count_delta (token_type, block_number asc);
 
+create index if not exists idx_address_token_count_by_token_type_desc on address_token_count (token_type, block_number desc);
+create index if not exists idx_address_token_count_delta_by_token_type_desc on address_token_count_delta (token_type, block_number desc);
+create index if not exists idx_contract_holder_count_by_token_type_desc on contract_holder_count (token_type, block_number desc);
+create index if not exists idx_contract_holder_count_delta_by_token_type_desc on contract_holder_count_delta (token_type, block_number desc);
+
+
 create index if not exists idx_contract_metadata_by_block_number on contract_metadata(block_number asc);
+create index if not exists idx_contract_metadata_by_block_number_desc on contract_metadata(block_number desc);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
