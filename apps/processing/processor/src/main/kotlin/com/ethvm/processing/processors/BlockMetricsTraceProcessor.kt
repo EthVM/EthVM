@@ -2,6 +2,7 @@ package com.ethvm.processing.processors
 
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.avro.capture.TraceListRecord
+import com.ethvm.common.extensions.bigInteger
 import com.ethvm.db.Tables.BLOCK_METRICS_TRACE
 import com.ethvm.processing.extensions.toMetricsRecord
 import mu.KotlinLogging
@@ -11,6 +12,7 @@ import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
+import java.sql.Timestamp
 import java.util.Properties
 
 class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>("block-metrics-trace-processor") {
@@ -48,9 +50,25 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>("block-met
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
 
+    val dbRecord = record.value().toMetricsRecord()
+
+    if(record.key().number.bigInteger() == BigInteger.ZERO) {
+
+      // override the timestamp of the genesis block
+
+      val genesisBlock = netConfig.genesis
+
+      var timestampMs = genesisBlock.timestamp
+      if (timestampMs == 0L) {
+        timestampMs = System.currentTimeMillis()
+      }
+
+      dbRecord.timestamp = Timestamp(timestampMs)
+    }
+
     txCtx
       .insertInto(BLOCK_METRICS_TRACE)
-      .set(record.value().toMetricsRecord())
+      .set(dbRecord)
       .execute()
   }
 }

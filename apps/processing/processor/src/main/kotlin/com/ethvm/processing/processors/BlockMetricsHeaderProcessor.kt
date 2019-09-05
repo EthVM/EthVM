@@ -1,5 +1,6 @@
 package com.ethvm.processing.processors
 
+import com.ethvm.avro.capture.BlockHeaderRecord
 import com.ethvm.avro.capture.BlockRecord
 import com.ethvm.avro.capture.CanonicalKeyRecord
 import com.ethvm.common.extensions.bigInteger
@@ -13,6 +14,7 @@ import org.jooq.DSLContext
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import java.math.BigInteger
+import java.sql.Timestamp
 import java.util.Properties
 
 class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metrics-header-processor") {
@@ -54,16 +56,38 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metric
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {
 
-    val block = record.value()
+    var block = record.value()
 
     val blockNumber = block.header.number.bigInteger()
     val prevBlockNumber = blockNumber.minus(BigInteger.ONE)
+
+    if (blockNumber == BigInteger.ZERO) {
+
+      // override the timestamp of the genesis block
+
+      val genesisBlock = netConfig.genesis
+
+      var timestampMs = genesisBlock.timestamp
+      if (timestampMs == 0L) {
+        timestampMs = System.currentTimeMillis()
+      }
+
+      block = BlockRecord.newBuilder(block)
+        .setHeader(
+          BlockHeaderRecord.newBuilder(block.header)
+            .setTimestamp(timestampMs)
+            .build()
+        )
+        .build()
+
+    }
 
     blockTimestampCache[blockNumber] = block.header.timestamp
     val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
 
     val blockTime =
-      if (blockNumber <= BigInteger.ONE) 0 else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
+      if (blockNumber == BigInteger.ONE) 0
+      else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
 
     val dbRecord = block.toMetricRecord(blockTime.toInt())
 
