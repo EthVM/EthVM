@@ -167,11 +167,11 @@ export class BlockService {
 
         const millis = h.timestamp.getTime();
 
-        if(millis < minTimestamp.getTime()) {
+        if (millis < minTimestamp.getTime()) {
           minTimestamp = h.timestamp
         }
 
-        if(millis > maxTimestamp.getTime()) {
+        if (millis > maxTimestamp.getTime()) {
           maxTimestamp = h.timestamp
         }
 

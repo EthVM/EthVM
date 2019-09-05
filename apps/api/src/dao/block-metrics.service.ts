@@ -46,10 +46,16 @@ export class BlockMetricsService {
       })
   }
 
-  async findBlockMetricsTracesByHash(hash: string, maxTimestamp: Date, minTimestamp: Date, cache: boolean = true, blockNumber: BigNumber): Promise<BlockMetricsTraceEntity | undefined> {
+  async findBlockMetricsTracesByHash(
+    hash: string,
+    maxTimestamp: Date,
+    minTimestamp: Date,
+    cache: boolean = true,
+    blockNumber: BigNumber,
+  ): Promise<BlockMetricsTraceEntity | undefined> {
     return this.entityManager
       .findOne(BlockMetricsTraceEntity, {
-        where: { hash, number: LessThanOrEqual(blockNumber), timestamp: Between(minTimestamp.toISOString, maxTimestamp.toISOString) },
+        where: { hash, number: LessThanOrEqual(blockNumber), timestamp: Between(minTimestamp.toISOString(), maxTimestamp.toISOString()) },
         cache,
       })
   }
@@ -84,7 +90,7 @@ export class BlockMetricsService {
         const entities = await txn.find(BlockMetricEntity, {
           where: {
             number: LessThanOrEqual(blockNumber),
-            timestamp: LessThanOrEqual(timestamp.toISOString())
+            timestamp: LessThanOrEqual(timestamp.toISOString()),
           },
           order: { number: 'DESC' },
           skip: offset,
