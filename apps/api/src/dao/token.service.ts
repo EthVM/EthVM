@@ -26,7 +26,8 @@ export class TokenService {
     @InjectRepository(TokenDetailEntity)
     private readonly tokenDetailRepository: Repository<TokenDetailEntity>,
     @InjectEntityManager() private readonly entityManager: EntityManager,
-  ) {}
+  ) {
+  }
 
   zeroBN = new BigNumber(0)
 
@@ -40,8 +41,8 @@ export class TokenService {
     // TODO handle ERC721
 
     const erc20Count = await this.entityManager.findOne(ContractHolderCountEntity, {
-      where: { contractAddress, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber) },
-      order: { blockNumber: 'DESC' },
+      where: {contractAddress, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber)},
+      order: {blockNumber: 'DESC'},
       cache: true,
     })
 
@@ -74,8 +75,8 @@ export class TokenService {
   }
 
   async findTokenBalance(tokenAddress: string, holderAddress: string, blockNumber: BigNumber): Promise<BalanceEntity | undefined> {
-    const where = { contract: tokenAddress, address: holderAddress, blockNumber: LessThanOrEqual(blockNumber) }
-    return this.balanceRepository.findOne({ where, cache: true, order: { blockNumber: 'DESC' } })
+    const where = {contract: tokenAddress, address: holderAddress, blockNumber: LessThanOrEqual(blockNumber)}
+    return this.balanceRepository.findOne({where, cache: true, order: {blockNumber: 'DESC'}})
   }
 
   async findAllTokenBalancesForAddress(
@@ -88,8 +89,8 @@ export class TokenService {
     return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[BalanceEntity[], boolean, BigNumber]> => {
 
       const erc20Count = await txn.findOne(AddressTokenCountEntity, {
-        where: { address, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber) },
-        order: { blockNumber: 'DESC' },
+        where: {address, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber)},
+        order: {blockNumber: 'DESC'},
         cache: true,
       })
 
@@ -105,7 +106,7 @@ export class TokenService {
           row_number() OVER (PARTITION BY address, contract_address ORDER BY block_number DESC) AS row_number
           FROM balance
           WHERE address = $1          
-          AND contract_address IS NOT NULL
+          AND token_type = 'ERC20'
           AND balance > 0          
           AND block_number <= $2
       )
@@ -118,7 +119,7 @@ export class TokenService {
       // Get token relations
       const contractAddresses = items.map(i => i.contract_address)
       const contracts = await txn.find(ContractEntity, {
-        where: { address: In(contractAddresses), createdAtBlockNumber: LessThanOrEqual(blockNumber) },
+        where: {address: In(contractAddresses), createdAtBlockNumber: LessThanOrEqual(blockNumber)},
         relations: ['ethListContractMetadata', 'contractMetadata', 'tokenExchangeRate'],
         cache: true,
       })
@@ -130,12 +131,13 @@ export class TokenService {
       }, {})
 
       // Map metadata to balances
-      items.forEach(balance => {
-        const { ethListContractMetadata, contractMetadata, tokenExchangeRate } = contractsByAddress[balance.contract_address]
-        balance.ethListContractMetadata = ethListContractMetadata
-        balance.contractMetadata = contractMetadata
-        balance.tokenExchangeRate = tokenExchangeRate
-      })
+      items
+        .forEach(balance => {
+          const {ethListContractMetadata, contractMetadata, tokenExchangeRate} = contractsByAddress[balance.contract_address]
+          balance.ethListContractMetadata = ethListContractMetadata
+          balance.contractMetadata = contractMetadata
+          balance.tokenExchangeRate = tokenExchangeRate
+        })
 
       const hasMore = items.length > limit
       if (hasMore) {
@@ -149,7 +151,7 @@ export class TokenService {
 
   async findCoinExchangeRate(pair: string): Promise<CoinExchangeRateEntity | undefined> {
     const findOptions: FindOneOptions = {
-      where: { id: pair },
+      where: {id: pair},
       cache: true,
     }
     return this.coinExchangeRateRepository.findOne(findOptions)
@@ -164,26 +166,26 @@ export class TokenService {
     let order
     switch (sort) {
       case 'price_high':
-        order = { currentPrice: -1 }
+        order = {currentPrice: -1}
         break
       case 'price_low':
-        order = { currentPrice: 1 }
+        order = {currentPrice: 1}
         break
       case 'volume_high':
-        order = { totalVolume: -1 }
+        order = {totalVolume: -1}
         break
       case 'volume_low':
-        order = { totalVolume: 1 }
+        order = {totalVolume: 1}
         break
       case 'market_cap_high':
-        order = { marketCap: -1 }
+        order = {marketCap: -1}
         break
       case 'market_cap_low':
-        order = { marketCap: 1 }
+        order = {marketCap: 1}
         break
       case 'market_cap_rank':
       default:
-        order = { marketCapRank: 1 }
+        order = {marketCapRank: 1}
         break
     }
 
@@ -205,16 +207,16 @@ export class TokenService {
   }
 
   async countTokenExchangeRates(): Promise<number> {
-    return this.tokenExchangeRateRepository.count({ cache: true })
+    return this.tokenExchangeRateRepository.count({cache: true})
   }
 
   async findTokenExchangeRateBySymbol(symbol: string): Promise<TokenExchangeRateEntity | undefined> {
-    return this.tokenExchangeRateRepository.findOne({ where: { symbol }, cache: true })
+    return this.tokenExchangeRateRepository.findOne({where: {symbol}, cache: true})
   }
 
   async findTokenExchangeRateByAddress(address: string): Promise<TokenExchangeRateEntity | undefined> {
     return this.tokenExchangeRateRepository.findOne({
-      where: { address },
+      where: {address},
       relations: ['contract', 'contract.contractMetadata', 'contract.ethListContractMetadata'], // TODO confirm all these relations are necessary
       cache: true,
     })
@@ -224,8 +226,8 @@ export class TokenService {
 
     // Note this only works for erc20 tokens, not ERC721.
     const contractHolderCount = await this.entityManager.findOne(ContractHolderCountEntity, {
-      where: { contractAddress, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber) },
-      order: { blockNumber: 'DESC' },
+      where: {contractAddress, tokenType: 'ERC20', blockNumber: LessThanOrEqual(blockNumber)},
+      order: {blockNumber: 'DESC'},
       cache: true,
     })
 
@@ -270,7 +272,7 @@ export class TokenService {
     }
 
     if (addresses.length) {
-      findOptions.where = { address: Any(addresses) }
+      findOptions.where = {address: Any(addresses)}
     }
 
     const items = await this.tokenMetadataRepository.find(findOptions)
@@ -283,6 +285,6 @@ export class TokenService {
   }
 
   async findDetailByAddress(address: string): Promise<TokenDetailEntity | undefined> {
-    return this.tokenDetailRepository.findOne({ where: { address }, cache: true })
+    return this.tokenDetailRepository.findOne({where: {address}, cache: true})
   }
 }
