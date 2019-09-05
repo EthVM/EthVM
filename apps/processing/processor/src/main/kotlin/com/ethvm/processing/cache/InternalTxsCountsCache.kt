@@ -325,7 +325,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
         val delta = txCountCursor.fetchNext()
 
-        delta.totalDelta = delta.totalOutDelta * -1
+        delta.totalDelta = delta.totalDelta * -1
         delta.totalInDelta = delta.totalInDelta * -1
         delta.totalOutDelta = delta.totalOutDelta * -1
 
