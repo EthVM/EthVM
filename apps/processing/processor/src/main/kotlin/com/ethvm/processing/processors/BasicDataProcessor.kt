@@ -62,6 +62,10 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>("basic-data-processor"
 
     val blockNumberDecimal = blockNumber.toBigDecimal()
 
+    // rewind counts
+
+    blockCountsCache.rewindUntil(txCtx, blockNumber)
+
     txCtx
       .deleteFrom(BLOCK_HEADER)
       .where(BLOCK_HEADER.NUMBER.ge(blockNumberDecimal))
@@ -81,10 +85,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>("basic-data-processor"
       .deleteFrom(TRANSACTION_RECEIPT)
       .where(TRANSACTION_RECEIPT.BLOCK_NUMBER.ge(blockNumberDecimal))
       .execute()
-
-    // rewind counts
-
-    blockCountsCache.rewindUntil(txCtx, blockNumber)
   }
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, BlockRecord>) {

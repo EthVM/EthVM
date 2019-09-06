@@ -407,6 +407,7 @@ class BlockCountsCache(
         .fetchLazy()
 
       while (authorCursor.hasNext()) {
+
         val next = authorCursor.fetchNext()
         val author = next.value1()
         val cursorBlockNumber = next.value2()
