@@ -63,16 +63,6 @@ services:
       TRAEFIK_PING_ENABLED: 'false'
   {% endif %}
 
-  {% if NGINX_ENABLED %}
-  nginx:
-    image: ethvm/nginx:1.17.2-alpine
-    restart: unless-stopped
-    networks:
-      - net
-    ports:
-      - 80:80
-  {% endif %}
-
   explorer:
     build:
       context: ./apps/explorer

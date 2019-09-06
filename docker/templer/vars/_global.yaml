@@ -13,7 +13,6 @@ SIMPLIFIED_NETWORKING: false
 
 DOMAIN: 'ethvm.lan'
 TRAEFIK_ENABLED: true
-NGINX_ENABLED: false
 
 # ///////////////////////////////////////////////////////
 # DB
