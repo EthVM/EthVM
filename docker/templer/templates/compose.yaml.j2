@@ -10,10 +10,13 @@ networks:
         - subnet: 172.25.0.0/24
     {% endif %}
 
+{% if not TIMESCALE_ENABLE_BIND_MOUNTPOINT and not PARITY_ENABLE_BIND_MOUNTPOINT and not KAFKA_ENABLE_BIND_MOUNTPOINT and not KAFKA_ENABLE_PROCESSORS and not GRAFANA_MONITORING_TOOLS_ENABLED %}
 volumes:
 
+  {% if not TIMESCALE_ENABLE_BIND_MOUNTPOINT %}
   timescale:
     external: false
+  {% endif %}
 
   {% if PARITY_ENABLED and not PARITY_ENABLE_BIND_MOUNTPOINT %}
   parity:
@@ -37,6 +40,7 @@ volumes:
   prometheus:
     external: false
   {% endif %}
+{% endif %}
 
 services:
 
@@ -150,7 +154,11 @@ services:
     ports:
       - 5432:5432
     volumes:
+      {% if TIMESCALE_ENABLE_BIND_MOUNTPOINT %}
+      - ${TIMESCALE_BIND_MOUNTPOINT}:/var/lib/postgresql/data
+      {% else %}
       - timescale:/var/lib/postgresql/data
+      {% endif %}
     networks:
       - net
     environment:
@@ -174,7 +182,7 @@ services:
       {% if KAFKA_ENABLE_BIND_MOUNTPOINT %}
       - ${ZOOKEEPER_BIND_MOUNTPOINT}:/var/lib/zookeeper
       {% else %}
-      - zookeeper:/var/lib/zookeeper
+      - zookeeper:/var/lib/zookeeper/data
       {% endif %}
     networks:
       net:
@@ -195,7 +203,7 @@ services:
       - zookeeper
     volumes:
       {% if KAFKA_ENABLE_BIND_MOUNTPOINT %}
-      - ${KAFKA_BIND_MOUNTPOINT}:/var/lib/kafka
+      - ${KAFKA_BIND_MOUNTPOINT}:/var/lib/kafka/data
       {% else %}
       - kafka-1:/var/lib/kafka
       {% endif %}

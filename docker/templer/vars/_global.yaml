@@ -18,6 +18,9 @@ TRAEFIK_ENABLED: true
 # DB
 # ///////////////////////////////////////////////////////
 
+TIMESCALE_ENABLE_BIND_MOUNTPOINT: false
+TIMESCALE_BIND_MOUNTPOINT: '~/.local/share/ethvm/timescale/'
+
 DATABASE_NAME: 'ethvm_dev'
 DATABASE_USER: 'postgres'
 DATABASE_PASSWORD: '1234'
