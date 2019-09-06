@@ -78,7 +78,7 @@ export class TokenDetailExt implements TokenDetail {
     return new BigNumber(this.totalVolume || 0)
   }
 
-  get totalVolumeFormatted(): FormattedNumber{
+  get totalVolumeFormatted(): FormattedNumber {
     return NumberFormatHelper.formatUsdValue(this.totalVolumeBN, false)
   }
 
