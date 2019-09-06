@@ -83,7 +83,6 @@ class BlockHashCache(
       .deleteFrom(PROCESSOR_HASH_LOG)
       .where(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
       .execute()
-
   }
 
   operator fun get(number: BigInteger): String? = memoryMap[number]
@@ -125,7 +124,6 @@ class BlockHashCache(
       .where(PROCESSOR_HASH_LOG.BLOCK_NUMBER.ge(from.toBigDecimal()))
       .and(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
       .execute()
-
   }
 
   fun writeToDb(txCtx: DSLContext) {
@@ -137,7 +135,6 @@ class BlockHashCache(
       txCtx
         .batchInsert(historyRecords)
         .execute()
-
     }
 
     // reset for next transaction

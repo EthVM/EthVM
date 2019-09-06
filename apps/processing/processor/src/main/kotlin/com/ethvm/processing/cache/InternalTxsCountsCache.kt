@@ -258,7 +258,6 @@ class InternalTxsCountsCache(
           }
 
         incrementInternalTxCounts(delta)
-
       }
   }
 
@@ -392,12 +391,10 @@ class InternalTxsCountsCache(
 
       // re-enable db record generation
       writeHistoryToDb = true
-
     } else {
 
       // just clear everything
       cacheStores.forEach { it.clear() }
-
     }
 
     // update our local latest block number
@@ -408,5 +405,4 @@ class InternalTxsCountsCache(
 
     logger.info { "Rewind complete" }
   }
-
 }

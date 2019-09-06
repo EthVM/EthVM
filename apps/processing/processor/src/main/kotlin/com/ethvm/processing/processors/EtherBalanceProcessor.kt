@@ -13,7 +13,6 @@ import com.ethvm.processing.cache.InternalTxsCountsCache
 import com.ethvm.processing.extensions.toBalanceDeltas
 import com.ethvm.processing.extensions.toDbRecords
 import mu.KotlinLogging
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.jooq.DSLContext
 import org.koin.core.inject
@@ -22,7 +21,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Timestamp
 import java.time.Duration
-import java.util.Properties
 
 class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-processor") {
 
@@ -59,7 +57,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
     // note: caches are responsible for maintaining their db state
     fungibleBalanceCache.reset(txCtx)
     internalTxsCountsCache.reset(txCtx)
-
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
@@ -73,7 +70,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
       .deleteFrom(TRACE)
       .where(TRACE.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
       .execute()
-
   }
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {

@@ -155,7 +155,6 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>("contract-
             .set(CONTRACT.DESTROYED_AT_TIMESTAMP, dbRecord.destroyedAtTimestamp)
             .where(CONTRACT.ADDRESS.eq(dbRecord.address))
             .execute()
-
         }
       }
   }

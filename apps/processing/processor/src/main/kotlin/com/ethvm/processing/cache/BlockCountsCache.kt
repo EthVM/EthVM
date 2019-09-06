@@ -417,11 +417,9 @@ class BlockCountsCache(
       authorCursor.close()
 
       writeHistoryToDb = true
-
     } else {
 
       cacheStores.forEach { it.clear() }
-
     }
 
     // delete any state from the rewind block forward

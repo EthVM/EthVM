@@ -3,7 +3,6 @@ package com.ethvm.processing.cache
 import org.mapdb.DB
 import org.mapdb.Serializer
 import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 /**
  * Utility for managing the interoperation of in memory and disk based db instances
@@ -66,7 +65,6 @@ class CacheStore<K, V>(
 
       // empty out the in memory map and flush it's contents to the disk db
       memoryMap.clearWithExpire()
-
     } else {
 
       // ensure the disk db has the changes which have occurred without having
@@ -74,11 +72,9 @@ class CacheStore<K, V>(
 
       modifiedKeys
         .map { key -> overflowMap[key] = memoryMap[key] }
-
     }
 
     // reset key tracking
     modifiedKeys = emptyList()
-
   }
 }

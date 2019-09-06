@@ -43,7 +43,6 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>("basic-data-processor"
 
     blockTimestampCache.initialise(txCtx)
     blockCountsCache.initialise(txCtx)
-
   }
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
@@ -133,6 +132,5 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>("basic-data-processor"
 
     // let the cache flush to db
     blockCountsCache.writeToDb(txCtx)
-
   }
 }

@@ -191,7 +191,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         .deleteFrom(SYNC_STATUS_HISTORY)
         .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
         .execute()
-
     }
   }
 
@@ -242,7 +241,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
         // update latest sync status
 
-        if(lastBatchSyncStatus != null) {
+        if (lastBatchSyncStatus != null) {
 
           val syncStatusRecord = SyncStatusRecord()
             .apply {
@@ -260,21 +259,17 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
             .set(SYNC_STATUS.BLOCK_TIMESTAMP, syncStatusRecord.blockTimestamp)
             .set(SYNC_STATUS.TIMESTAMP, syncStatusRecord.timestamp)
             .execute()
-
         }
 
         logger.info { "Sync status history updated, $processorId latest block number = $closestBatchBlockNumber" }
 
         diskDb.commit()
       }
-
     } catch (e: Exception) {
 
       logger.error(e) { "Fatal exception. Rolling back local changes" }
       diskDb.rollback()
-
     }
-
   }
 
   override fun run() {
@@ -346,7 +341,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
                 // otherwise we have an entry in the hash cache but it does not match the current block hash
                 // due to the design of the parity block source we know this to be the beginning of a fork
                 else -> Pair(BlockType.FORK, record)
-
               }
             }
 
@@ -412,7 +406,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
                       process(txCtx, record)
                       hashCache[blockNumber] = blockHashFor(record.value())
-
                     }
 
                     else -> {} // do nothing
@@ -422,7 +415,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
                   recordCount += 1
                   txElapsedTimeMs = System.currentTimeMillis() - txStartTimeMs
-
                 }
 
                 // flush the hash cache state to the db
@@ -437,7 +429,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
                 logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
               }
-
           } catch (e: Exception) {
 
             // rollback any persistent changes to local state
@@ -446,7 +437,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
             // re throw to stop processing
             throw e
           }
-
         }
 
         // commit to kafka
@@ -458,7 +448,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     } catch (e: Exception) {
 
       logger.error(e) { "Fatal exception, stopping" }
-
     } finally {
 
       close()

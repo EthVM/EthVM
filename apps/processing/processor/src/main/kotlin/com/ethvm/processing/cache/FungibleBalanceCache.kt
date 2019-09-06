@@ -8,11 +8,9 @@ import com.ethvm.db.Tables.BALANCE
 import com.ethvm.db.Tables.BALANCE_DELTA
 import com.ethvm.db.Tables.CONTRACT_HOLDER_COUNT
 import com.ethvm.db.Tables.CONTRACT_HOLDER_COUNT_DELTA
-import com.ethvm.db.tables.records.AddressTokenCountDeltaRecord
 import com.ethvm.db.tables.records.AddressTokenCountRecord
 import com.ethvm.db.tables.records.BalanceDeltaRecord
 import com.ethvm.db.tables.records.BalanceRecord
-import com.ethvm.db.tables.records.ContractHolderCountDeltaRecord
 import com.ethvm.db.tables.records.ContractHolderCountRecord
 import mu.KotlinLogging
 import org.jooq.DSLContext
@@ -207,7 +205,7 @@ class FungibleBalanceCache(
   fun add(delta: BalanceDeltaRecord) {
 
     require(delta.tokenType == tokenType.toString()) {
-      "Token type mismatch: expect ${tokenType}, received delta with token type ${delta.tokenType}"
+      "Token type mismatch: expect $tokenType, received delta with token type ${delta.tokenType}"
     }
 
     val cache = this
@@ -463,12 +461,10 @@ class FungibleBalanceCache(
 
       // re-enable generation of history records
       writeHistoryToDb = true
-
     } else {
 
       logger.info { "[$tokenType] Clearing all cache stores" }
       cacheStores.forEach { it.clear() }
-
     }
 
     // update our local latest block number

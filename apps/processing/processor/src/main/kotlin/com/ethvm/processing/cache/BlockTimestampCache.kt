@@ -7,7 +7,6 @@ import org.mapdb.DB
 import org.mapdb.Serializer
 import java.math.BigInteger
 import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 /**
  * In memory cache for tracking block timestamps. Used when calculating block processing time by comparing
