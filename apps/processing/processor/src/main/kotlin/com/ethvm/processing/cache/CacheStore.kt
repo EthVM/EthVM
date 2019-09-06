@@ -5,63 +5,80 @@ import org.mapdb.Serializer
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
+/**
+ * Utility for managing the interoperation of in memory and disk based db instances
+ */
 class CacheStore<K, V>(
   memoryDb: DB,
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
   name: String,
   keySerializer: Serializer<K>,
-  valueSerializer: Serializer<V>
+  valueSerializer: Serializer<V>,
+  defaultValue: V,
+  maxMemorySize: Int = 16384
 ) {
 
-  private val overflow = diskDb
+  // persistent on disk
+  private val overflowMap = diskDb
     .hashMap(name)
     .keySerializer(keySerializer)
     .valueSerializer(valueSerializer)
     .createOrOpen()
 
-  private val map = memoryDb
+  // in memory map connected to the overflow
+  private val memoryMap = memoryDb
     .hashMap(name)
     .keySerializer(keySerializer)
     .valueSerializer(valueSerializer)
-    .expireAfterCreate(1, TimeUnit.MINUTES)
-    .expireAfterGet(1, TimeUnit.MINUTES)
-    .expireOverflow(overflow)
+    .expireMaxSize(maxMemorySize.toLong())
+    .expireAfterGet()
+    .expireOverflow(overflowMap)
     .expireExecutor(scheduledExecutor)
     .createOrOpen()
 
+  // a list of keys modified during a tx
   private var modifiedKeys = emptyList<K>()
 
   operator fun set(key: K, value: V?) {
-    map[key] = value
+    memoryMap[key] = value
     modifiedKeys = modifiedKeys + key
   }
 
-  operator fun get(key: K): V? = map[key]
+  operator fun get(key: K): V? = memoryMap[key]
 
-  fun putAll(value: Map<K, V>) = map.putAll(value)
+  fun putAll(value: Map<K, V>) = memoryMap.putAll(value)
 
-  fun getOrDefault(key: K, default: V) = map.getOrDefault(key, default)
+  fun getOrDefault(key: K, default: V) = memoryMap.getOrDefault(key, default)
 
-  fun containsKey(key: K) = map.containsKey(key)
+  fun containsKey(key: K) = memoryMap.containsKey(key)
 
-  fun remove(key: K) = map.remove(key)
+  fun remove(key: K) = memoryMap.remove(key)
 
   fun clear() {
-    if (overflow.hasValues) overflow.clear()
-    if (map.hasValues) map.clear()
+    if (overflowMap.hasValues) overflowMap.clear()
+    if (memoryMap.hasValues) memoryMap.clear()
   }
 
   fun flushToDisk(clearMemory: Boolean = false) {
 
     if (clearMemory) {
-      map.clearWithExpire()
+
+      // empty out the in memory map and flush it's contents to the disk db
+      memoryMap.clearWithExpire()
+
     } else {
 
+      // ensure the disk db has the changes which have occurred without having
+      // to clear the in memory state
+
       modifiedKeys
-        .map { key -> overflow[key] = map[key] }
+        .map { key -> overflowMap[key] = memoryMap[key] }
+
     }
 
+    // reset key tracking
     modifiedKeys = emptyList()
+
   }
 }

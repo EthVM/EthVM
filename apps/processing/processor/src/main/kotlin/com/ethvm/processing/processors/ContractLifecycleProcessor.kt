@@ -48,7 +48,7 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>("contract-
 
   override val topics = listOf(topicTraces)
 
-  override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {}
+  override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {}
 
   override fun blockHashFor(value: TraceListRecord) = value.blockHash
 
@@ -71,7 +71,7 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>("contract-
       .where(Tables.CONTRACT.CREATED_AT_BLOCK_NUMBER.ge(blockNumberDecimal))
       .execute()
 
-    // we use a db function as there is a type issue with kotlin and setting fields to null
+    // we use a db stored procedure as there is a type issue with kotlin and setting fields to null
 
     val clear = ClearContractDestroyedFields()
     clear.setBlockNumber(blockNumberDecimal)
@@ -144,6 +144,8 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>("contract-
           }
         } else {
 
+          // contract destruction
+
           txCtx
             .update(CONTRACT)
             .set(CONTRACT.DESTROYED_AT_BLOCK_NUMBER, dbRecord.destroyedAtBlockNumber)
@@ -153,6 +155,7 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>("contract-
             .set(CONTRACT.DESTROYED_AT_TIMESTAMP, dbRecord.destroyedAtTimestamp)
             .where(CONTRACT.ADDRESS.eq(dbRecord.address))
             .execute()
+
         }
       }
   }

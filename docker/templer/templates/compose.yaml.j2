@@ -10,7 +10,6 @@ networks:
         - subnet: 172.25.0.0/24
     {% endif %}
 
-{% if not TIMESCALE_ENABLE_BIND_MOUNTPOINT and not PARITY_ENABLE_BIND_MOUNTPOINT and not KAFKA_ENABLE_BIND_MOUNTPOINT and not KAFKA_ENABLE_PROCESSORS and not GRAFANA_MONITORING_TOOLS_ENABLED %}
 volumes:
 
   {% if not TIMESCALE_ENABLE_BIND_MOUNTPOINT %}
@@ -40,7 +39,6 @@ volumes:
   prometheus:
     external: false
   {% endif %}
-{% endif %}
 
 services:
 

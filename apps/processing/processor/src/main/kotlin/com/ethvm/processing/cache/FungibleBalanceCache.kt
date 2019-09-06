@@ -25,65 +25,76 @@ class FungibleBalanceCache(
   memoryDb: DB,
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
-  private val tokenType: TokenType
+  private val tokenType: TokenType,
+  processorId: String
 ) {
 
   val logger = KotlinLogging.logger {}
 
-  private val balanceMap = CacheStore(
-    memoryDb,
-    diskDb,
-    scheduledExecutor,
-    "fungible_balances",
-    Serializer.STRING,
-    Serializer.BIG_INTEGER
-  )
-
+  // for tracking latest processed block number
   private val metadataMap = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
-    "fungible_balances_metadata",
+    "${processorId}_fungible_balances_metadata",
     Serializer.STRING,
-    Serializer.BIG_INTEGER
+    Serializer.BIG_INTEGER,
+    BigInteger.ZERO
   )
 
+  // for tracking fungible balances such as ether or erc20
+  private val balanceMap = CacheStore(
+    memoryDb,
+    diskDb,
+    scheduledExecutor,
+    "${processorId}_fungible_balances",
+    Serializer.STRING,
+    Serializer.BIG_INTEGER,
+    BigInteger.ZERO
+  )
+
+  // for tracking the total number of fungible tokens an address has
   private val addressTokenCountMap = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
-    "address_erc20_balance_count",
+    "${processorId}_address_fungible_token_balance_count",
     Serializer.STRING,
-    Serializer.LONG
+    Serializer.LONG,
+    0L
   )
 
+  // for tracking the total number of non zero balance holders of a fungible token
   private val contractHolderCountMap = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
-    "erc20_contract_balance_count",
+    "${processorId}_fungible_token_holder_count",
     Serializer.STRING,
-    Serializer.LONG
+    Serializer.LONG,
+    0L
   )
 
+  // convenience list of all cache stores
   private val cacheStores = listOf(balanceMap, metadataMap, addressTokenCountMap, contractHolderCountMap)
 
+  // various lists of pending db records
   private var balanceRecords = emptyList<BalanceRecord>()
-
   private var addressTokenCountRecords = emptyList<AddressTokenCountRecord>()
-  private var addressTokenCountDeltaRecords = emptyList<AddressTokenCountDeltaRecord>()
   private var contractHolderCountRecords = emptyList<ContractHolderCountRecord>()
-  private var contractHolderCountDeltaRecords = emptyList<ContractHolderCountDeltaRecord>()
 
+  // controls whether or not db records are generated during modifications
   private var writeHistoryToDb = true
 
   fun initialise(txCtx: DSLContext) {
 
-    logger.info { "[$tokenType] Initialising state from diskDb" }
+    logger.info { "[$tokenType] Initialising" }
 
     var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
 
     logger.info { "Latest block number from metadata map: $latestBlockNumber" }
+
+    // get latest processed block number from db
 
     val latestDbBlockNumber = txCtx
       .select(BALANCE.BLOCK_NUMBER)
@@ -99,10 +110,12 @@ class FungibleBalanceCache(
     if (latestBlockNumber > latestDbBlockNumber) {
       logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
       // reset all state from the beginning as the database is behind us
-      balanceMap.clear()
-      metadataMap.clear()
+      cacheStores.forEach { it.clear() }
       latestBlockNumber = BigInteger.ONE.negate()
     }
+
+    // disable db record generation until initialisation is complete
+    writeHistoryToDb = false
 
     logger.info { "Opening cursor for balance history" }
 
@@ -113,23 +126,20 @@ class FungibleBalanceCache(
       .fetchSize(1000)
       .fetchLazy()
 
-    writeHistoryToDb = false
-
     var count = 0
 
     while (balanceCursor.hasNext()) {
       set(balanceCursor.fetchNext())
       count += 1
       if (count % 10000 == 0) {
-        metadataMap.flushToDisk(true)
-        balanceMap.flushToDisk(true)
+        cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "[$tokenType] $count deltas processed" }
       }
     }
 
-    logger.info { "Balance history reloaded" }
-
     balanceCursor.close()
+
+    logger.info { "Balance history reloaded" }
 
     count = 0
 
@@ -146,14 +156,14 @@ class FungibleBalanceCache(
       set(addressTokenCountCursor.fetchNext())
       count += 1
       if (count % 10000 == 0) {
-        addressTokenCountMap.flushToDisk(true)
+        cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count address token counts processed" }
       }
     }
 
-    logger.info { "Address token count reloaded" }
-
     addressTokenCountCursor.close()
+
+    logger.info { "Address token count reloaded" }
 
     count = 0
 
@@ -170,20 +180,22 @@ class FungibleBalanceCache(
       set(contractHolderCountCursor.fetchNext())
       count += 1
       if (count % 10000 == 0) {
-        contractHolderCountMap.flushToDisk(true)
+        cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count contract holder counts processed" }
       }
     }
 
-    logger.info { "Contract holder count reloaded" }
-
     contractHolderCountCursor.close()
 
+    logger.info { "Contract holder count reloaded" }
+
+    // final flush for any lingering pending writes
     cacheStores.forEach { it.flushToDisk(true) }
 
+    // re-enable db record generation
     writeHistoryToDb = true
 
-    logger.info { "[$tokenType] Initialised. $count deltas processed" }
+    logger.info { "[$tokenType] Initialised" }
   }
 
   fun get(address: String, contractAddress: String?): BigInteger? {
@@ -193,6 +205,10 @@ class FungibleBalanceCache(
   }
 
   fun add(delta: BalanceDeltaRecord) {
+
+    require(delta.tokenType == tokenType.toString()) {
+      "Token type mismatch: expect ${tokenType}, received delta with token type ${delta.tokenType}"
+    }
 
     val cache = this
     val currentBalance = get(delta.address, delta.contractAddress) ?: BigInteger.ZERO
@@ -208,8 +224,10 @@ class FungibleBalanceCache(
         this.balance = (currentBalance + delta.amount.toBigInteger()).toBigDecimal()
       }
 
-    if (balance.contractAddress != null) {
-      incrementBalanceCounts(balance) // Increment counts for erc20 tokens
+    // if we ever handle more than one fungible token type this check will need updated
+
+    if (delta.tokenType == TokenType.ERC20.toString()) {
+      incrementBalanceCounts(balance) // Increment counts for fungible tokens
     }
 
     set(balance)
@@ -235,11 +253,15 @@ class FungibleBalanceCache(
 
   private fun incrementBalanceCounts(balanceRecord: BalanceRecord) {
 
+    val tokenTypeStr = tokenType.toString()
+
+    require(balanceRecord.tokenType == tokenTypeStr) {
+      "Token type mismatch: expect $tokenTypeStr, received delta with token type ${balanceRecord.tokenType}"
+    }
+
     val address = balanceRecord.address
     val contractAddress = balanceRecord.contractAddress
     val blockNumber = balanceRecord.blockNumber
-
-    // TODO throw error if no contract address is set?
 
     val currentBalance = get(address, contractAddress) ?: BigInteger.ZERO
     val newBalance = balanceRecord.balance.toBigInteger()
@@ -256,24 +278,6 @@ class FungibleBalanceCache(
       else -> return
     }
 
-    val tokenTypeStr = tokenType.toString()
-
-    val addressCountDelta = AddressTokenCountDeltaRecord()
-      .apply {
-        this.address = address
-        this.blockNumber = blockNumber
-        this.tokenType = tokenTypeStr
-        this.delta = countDelta
-      }
-
-    val contractCountDelta = ContractHolderCountDeltaRecord()
-      .apply {
-        this.contractAddress = contractAddress
-        this.tokenType = tokenTypeStr
-        this.blockNumber = blockNumber
-        this.delta = countDelta
-      }
-
     val currentAddressCount = addressTokenCountMap[address] ?: 0L
     val currentContractCount = contractHolderCountMap[contractAddress] ?: 0L
 
@@ -282,7 +286,7 @@ class FungibleBalanceCache(
         this.address = address
         this.blockNumber = blockNumber
         this.tokenType = tokenTypeStr
-        this.count = currentAddressCount + addressCountDelta.delta
+        this.count = currentAddressCount + countDelta
       }
 
     addressTokenCountMap[address] = addressCount.count
@@ -292,16 +296,14 @@ class FungibleBalanceCache(
         this.contractAddress = contractAddress
         this.tokenType = tokenTypeStr
         this.blockNumber = blockNumber
-        this.count = currentContractCount + contractCountDelta.delta
+        this.count = currentContractCount + countDelta
       }
 
     contractHolderCountMap[contractAddress] = contractCount.count
 
     if (writeHistoryToDb) {
       addressTokenCountRecords = addressTokenCountRecords + addressCount
-      addressTokenCountDeltaRecords = addressTokenCountDeltaRecords + addressCountDelta
       contractHolderCountRecords = contractHolderCountRecords + contractCount
-      contractHolderCountDeltaRecords = contractHolderCountDeltaRecords + contractCountDelta
     }
   }
 
@@ -321,24 +323,6 @@ class FungibleBalanceCache(
         .batchInsert(conflatedBalancesPerBlock)
         .execute()
 
-      val conflatedAddressTokenCountsPerBlock = addressTokenCountRecords
-        .map { r -> Tuple3(r.address, r.tokenType, r.blockNumber) to r }
-        .toMap()
-        .values
-
-      ctx
-        .batchInsert(addressTokenCountDeltaRecords + conflatedAddressTokenCountsPerBlock)
-        .execute()
-
-      val conflatedContractHolderCountsPerBlock = contractHolderCountRecords
-        .map { r -> Tuple3(r.contractAddress, r.tokenType, r.blockNumber) to r }
-        .toMap()
-        .values
-
-      ctx
-        .batchInsert(contractHolderCountDeltaRecords + conflatedContractHolderCountsPerBlock)
-        .execute()
-
       metadataMap["latestBlockNumber"] = conflatedBalancesPerBlock.last().blockNumber.toBigInteger()
     }
 
@@ -346,16 +330,17 @@ class FungibleBalanceCache(
 
     balanceRecords = emptyList()
     addressTokenCountRecords = emptyList()
-    addressTokenCountDeltaRecords = emptyList()
     contractHolderCountRecords = emptyList()
-    contractHolderCountDeltaRecords = emptyList()
   }
 
   fun reset(txCtx: DSLContext) {
 
+    // reset all the cache stores
     cacheStores.forEach { it.clear() }
 
     val tokenTypeStr = tokenType.toString()
+
+    // delete all history
 
     txCtx
       .deleteFrom(BALANCE_DELTA)
@@ -416,16 +401,14 @@ class FungibleBalanceCache(
 
         val delta = cursor.fetchNext()
 
-        when (val deltaTokenType = delta.tokenType) {
-
-          tokenTypeStr -> {
-            delta.amount = delta.amount.negate()
-            // this should not only rewind the balances but also the various counts
-            add(delta)
-          }
-
-          else -> throw UnsupportedOperationException("Unhandled token type: $deltaTokenType. Expected $tokenType")
+        require(delta.tokenType == tokenTypeStr) {
+          "Token type mismatch: expect $tokenTypeStr, received delta with token type ${delta.tokenType}"
         }
+
+        delta.amount = delta.amount.negate()
+
+        // this should not only rewind the balances but also the various counts
+        add(delta)
       }
 
       cursor.close()
@@ -458,30 +441,39 @@ class FungibleBalanceCache(
 
       txCtx
         .deleteFrom(ADDRESS_TOKEN_COUNT_DELTA)
-        .where(ADDRESS_TOKEN_COUNT_DELTA.TOKEN_TYPE.eq(tokenTypeStr).and(ADDRESS_TOKEN_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .where(ADDRESS_TOKEN_COUNT_DELTA.TOKEN_TYPE.eq(tokenTypeStr))
+        .and(ADDRESS_TOKEN_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
       logger.info { "[$tokenType] Deleting contract holder count entries" }
 
       txCtx
         .deleteFrom(CONTRACT_HOLDER_COUNT)
-        .where(CONTRACT_HOLDER_COUNT.TOKEN_TYPE.eq(tokenTypeStr).and(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .where(CONTRACT_HOLDER_COUNT.TOKEN_TYPE.eq(tokenTypeStr))
+        .and(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
       logger.info { "[$tokenType] Deleting contract holder count delta entries" }
 
       txCtx
         .deleteFrom(CONTRACT_HOLDER_COUNT_DELTA)
-        .where(CONTRACT_HOLDER_COUNT_DELTA.TOKEN_TYPE.eq(tokenTypeStr).and(CONTRACT_HOLDER_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal)))
+        .where(CONTRACT_HOLDER_COUNT_DELTA.TOKEN_TYPE.eq(tokenTypeStr))
+        .and(CONTRACT_HOLDER_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
       // re-enable generation of history records
       writeHistoryToDb = true
+
     } else {
 
       logger.info { "[$tokenType] Clearing all cache stores" }
       cacheStores.forEach { it.clear() }
+
     }
+
+    // update our local latest block number
+
+    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
 
     logger.info { "[$tokenType] Flushing cache stores to disk" }
     cacheStores.forEach { it.flushToDisk() }

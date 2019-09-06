@@ -31,7 +31,7 @@ interface Processor : Runnable {
 
   fun initialise()
 
-  fun rewindUntil(blockNumber: BigInteger)
+  fun rewindUntil(rewindBlockNumber: BigInteger)
 
   fun reset()
 
@@ -46,32 +46,41 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   protected abstract val logger: KLogger
 
-  protected abstract val topics: List<String>
-
-  protected open val kafkaProps: Properties = Properties()
-
-  protected val pollTimeout = Duration.ofSeconds(10)
-
-  protected val netConfig: NetConfig by inject()
-
-  private val dbContext: DSLContext by inject()
-
-  private val baseKafkaProps: Properties by inject(named("baseKafkaProps"))
-
+  // the base directory in which all persistent processing state will be stored
   private val storageDir: String by inject(named("storageDir"))
 
+  // system wide base kafka properties
+  private val baseKafkaProps: Properties by inject(named("baseKafkaProps"))
+
+  // optional kafka consumer property overrides
+  protected open val kafkaProps: Properties = Properties()
+
+  // list of kafka topics to consume
+  protected abstract val topics: List<String>
+
+  // max amount of time to block when polling the kafka consumer for new records
+  protected val pollTimeout = Duration.ofSeconds(10)
+
+  // the network config e.g. mainnet, ropsten etc.
+  protected val netConfig: NetConfig by inject()
+
+  // base database context
+  private val dbContext: DSLContext by inject()
+
+  // used for evicting keys from the in memory caches
   protected val scheduledExecutor: ScheduledExecutorService by inject()
 
+  // flatten all the various kafka properties into the realised properties for this processor
   private val mergedKafkaProps by lazy {
     val merged = Properties()
 
     // base settings
     merged.putAll(baseKafkaProps)
 
-    // convenience setting of group id
+    // convenience setting of group id for the consumer
     merged.put(ConsumerConfig.GROUP_ID_CONFIG, "${netConfig.chainId.name.toLowerCase()}-$processorId")
 
-    // some common processor related settings
+    // disable auto commit, we will explicitly tell kafka when we have finished processing a given set of records
     merged.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
 
     // processor specific settings and overrides
@@ -80,16 +89,17 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     merged
   }
 
+  // map db instance for persistent storage
   protected val diskDb: DB
 
+  // in memory map db instance for caching
   protected val memoryDb: DB
 
+  // a cache of [blockNumber] => blockhash used for detecting new, duplicate or fork blocks
   private val hashCache: BlockHashCache
 
+  // kafka consumer for ingesting data
   private lateinit var consumer: KafkaConsumer<CanonicalKeyRecord, V>
-
-  private lateinit var latestSyncBlock: BigInteger
-  private var latestSyncTimeMs: Long = 0
 
   @Volatile
   private var stop = false
@@ -119,16 +129,17 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     hashCache = BlockHashCache(memoryDb, scheduledExecutor, processorId)
   }
 
+  protected abstract fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger)
+
+  protected abstract fun reset(txCtx: DSLContext)
+
+  protected abstract fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger)
+
+  protected abstract fun blockHashFor(value: V): String
+
+  protected abstract fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, V>)
+
   override fun initialise() {
-
-    latestSyncBlock = getLastSyncBlock(dbContext) ?: BigInteger.ONE.negate()
-    latestSyncTimeMs = getLastBlockTimestampMs(dbContext) ?: 0L
-
-    logger.info { "latest synced block from db: $latestSyncBlock" }
-
-    hashCache.initialise(dbContext)
-
-    //
 
     dbContext.transaction { txConfig ->
 
@@ -136,39 +147,24 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
       logger.info { "Initialising..." }
 
-      // initialise kafka consumer
+      // initialise our hash cache
 
-      initialise(txCtx, latestSyncBlock)
+      hashCache.initialise(txCtx)
 
-      // we add one as the block number parameter is inclusive
+      // determine the last progress we made
 
-      val rewindBlockNumber = latestSyncBlock.plus(BigInteger.ONE)
+      val latestSyncStatus = getLatestSyncRecord(dbContext)
+      val latestBlockNumber = latestSyncStatus?.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
 
-      logger.info { "Latest sync block number = $latestSyncBlock" }
-      logger.info { "Rewinding until and including block = $rewindBlockNumber" }
+      logger.info { "Latest sync block number = $latestBlockNumber" }
 
-      rewindUntil(txCtx, rewindBlockNumber)
+      // call the implementation initialise method
 
-      // clear out hash cache
-      hashCache.removeKeysFrom(txCtx, rewindBlockNumber)
-      hashCache.writeToDb(txCtx)
+      initialise(txCtx, latestBlockNumber)
 
       logger.info { "initialised" }
     }
   }
-
-  protected abstract fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?)
-
-  protected abstract fun reset(txCtx: DSLContext)
-
-  protected abstract fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger)
-
-  /**
-   * @return Int an estimate of the number of db operations performed
-   */
-  protected abstract fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, V>)
-
-  protected abstract fun blockHashFor(value: V): String
 
   override fun reset() {
 
@@ -176,9 +172,15 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
       val txCtx = DSL.using(txConfig)
 
+      // reset the hash cache
+
       hashCache.reset(txCtx)
 
+      // allow the implementation to reset
+
       reset(txCtx)
+
+      // reset the sync status history for this processor
 
       txCtx
         .deleteFrom(SYNC_STATUS)
@@ -189,80 +191,101 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         .deleteFrom(SYNC_STATUS_HISTORY)
         .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
         .execute()
+
     }
   }
 
-  override fun rewindUntil(targetBlockNumber: BigInteger) {
+  override fun rewindUntil(rewindBlockNumber: BigInteger) {
 
-    logger.info { "Rewind requested for $processorId to target block number $targetBlockNumber" }
+    logger.info { "Rewind requested for $processorId to block number $rewindBlockNumber (inclusive)" }
 
-    dbContext.transaction { txConfig ->
+    try {
 
-      val txCtx = DSL.using(txConfig)
+      dbContext.transaction { txConfig ->
 
-      // Find closest batch end in sync_status_history
+        val txCtx = DSL.using(txConfig)
 
-      val record = txCtx
-        .selectFrom(SYNC_STATUS_HISTORY)
-        .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
-        .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.lessThan(targetBlockNumber.toBigDecimal()))
-        .orderBy(SYNC_STATUS_HISTORY.BLOCK_NUMBER.desc())
-        .limit(1)
-        .fetchOne()
+        // Find closest batch end in sync_status_history before the rewind block number as it is inclusive
 
-      val closestBatchBlockNumber = record.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
-      val rewindUntilBlockNumber = closestBatchBlockNumber.plus(BigInteger.ONE)
+        val lastBatchSyncStatus = txCtx
+          .selectFrom(SYNC_STATUS_HISTORY)
+          .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+          .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.lessThan(rewindBlockNumber.toBigDecimal()))
+          .orderBy(SYNC_STATUS_HISTORY.BLOCK_NUMBER.desc())
+          .limit(1)
+          .fetchOne()
 
-      logger.info { "Closest batch block number = $closestBatchBlockNumber for $processorId" }
-      logger.info { "Rewinding until and including $rewindUntilBlockNumber" }
+        // determine the rewind until block number based on the last batch
+        // e.g. we want to rewind until block 500 which is in the middle of a batch. The previous batch
+        // ended with block 450. So we rewind all state until and including 451
 
-      rewindUntil(txCtx, rewindUntilBlockNumber)
-      hashCache.removeKeysFrom(txCtx, rewindUntilBlockNumber)
+        val closestBatchBlockNumber = lastBatchSyncStatus.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
+        val rewindUntilBlockNumber = closestBatchBlockNumber.plus(BigInteger.ONE)
 
-      logger.info { "HashCache updated, $processorId latest block number = $closestBatchBlockNumber" }
+        logger.info { "Closest batch block number = $closestBatchBlockNumber for $processorId" }
+        logger.info { "Rewinding until and including $rewindUntilBlockNumber" }
 
-      // delete history
+        rewindUntil(txCtx, rewindUntilBlockNumber)
 
-      txCtx
-        .deleteFrom(SYNC_STATUS_HISTORY)
-        .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
-        .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(rewindUntilBlockNumber.toBigDecimal()))
-        .execute()
+        // remove all knowledge of any blocks from the rewind block number forward so we will re-process them
+        hashCache.removeKeysFrom(txCtx, rewindUntilBlockNumber)
 
-      // update latest sync status
+        logger.info { "HashCache updated, $processorId latest block number = $closestBatchBlockNumber" }
 
-      val latestRecord = SyncStatusRecord()
-        .apply {
-          this.component = record.component
-          this.blockNumber = record.blockNumber
-          this.blockTimestamp = record.blockTimestamp
-          this.timestamp = record.timestamp
-        }
+        // delete sync status history
 
-      txCtx
-        .insertInto(SYNC_STATUS)
-        .set(latestRecord)
-        .onDuplicateKeyUpdate()
-        .set(SYNC_STATUS.BLOCK_NUMBER, latestRecord.blockNumber)
-        .set(SYNC_STATUS.BLOCK_TIMESTAMP, latestRecord.blockTimestamp)
-        .set(SYNC_STATUS.TIMESTAMP, latestRecord.timestamp)
-        .execute()
+        txCtx
+          .deleteFrom(SYNC_STATUS_HISTORY)
+          .where(SYNC_STATUS_HISTORY.COMPONENT.eq(processorId))
+          .and(SYNC_STATUS_HISTORY.BLOCK_NUMBER.ge(rewindUntilBlockNumber.toBigDecimal()))
+          .execute()
 
-      logger.info { "Sync status history updated, $processorId latest block number = $closestBatchBlockNumber" }
+        // update latest sync status
 
-      diskDb.commit()
+        val syncStatusRecord = SyncStatusRecord()
+          .apply {
+            this.component = lastBatchSyncStatus.component
+            this.blockNumber = lastBatchSyncStatus.blockNumber
+            this.blockTimestamp = lastBatchSyncStatus.blockTimestamp
+            this.timestamp = lastBatchSyncStatus.timestamp
+          }
+
+        txCtx
+          .insertInto(SYNC_STATUS)
+          .set(syncStatusRecord)
+          .onDuplicateKeyUpdate()
+          .set(SYNC_STATUS.BLOCK_NUMBER, syncStatusRecord.blockNumber)
+          .set(SYNC_STATUS.BLOCK_TIMESTAMP, syncStatusRecord.blockTimestamp)
+          .set(SYNC_STATUS.TIMESTAMP, syncStatusRecord.timestamp)
+          .execute()
+
+        logger.info { "Sync status history updated, $processorId latest block number = $closestBatchBlockNumber" }
+
+        diskDb.commit()
+      }
+
+    } catch (e: Exception) {
+
+      logger.error(e) { "Fatal exception. Rolling back local changes" }
+      diskDb.rollback()
+
     }
+
   }
 
   override fun run() {
 
     try {
 
-      var restartTimeMs = latestSyncTimeMs - Duration.ofHours(3).toMillis()
-      if (restartTimeMs < 0) restartTimeMs = 0
+      // determine the chain time to reset the kafka consumer to
 
-      latestSyncBlock = getLastSyncBlock(dbContext) ?: BigInteger.ONE.negate()
-      latestSyncTimeMs = getLastBlockTimestampMs(dbContext) ?: 0L
+      val latestSyncRecord = getLatestSyncRecord(dbContext)
+      val latestSyncTimeMs = latestSyncRecord?.blockTimestamp?.time ?: 0L
+
+      var restartTimeMs = latestSyncTimeMs - Duration.ofHours(3).toMillis()
+      if (restartTimeMs < 0L) restartTimeMs = 0L
+
+      // initialise the kafka consumer and subscribe to topics
 
       consumer = KafkaConsumer(mergedKafkaProps)
       consumer.subscribe(this.topics)
@@ -270,11 +293,12 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       logger.info { "Last sync time = ${DateTime(latestSyncTimeMs)}. Re-setting consumer to time = ${DateTime(restartTimeMs)}" }
 
       // we poll so we are assigned topics then we will re-seek before consuming again
+
       consumer.poll(pollTimeout)
 
       val offsetsQuery = consumer
         .assignment()
-        .map { it to restartTimeMs }
+        .map { topicPartition -> topicPartition to restartTimeMs }
         .toMap()
 
       consumer
@@ -284,10 +308,16 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         }
 
       // main processing loop
+
       while (!stop) {
 
+        // fetch the next batch of records from kafka. This will block for up to pollTimeout seconds
         val records = consumer.poll(pollTimeout)
+
+        // if empty return
         if (records.isEmpty) continue
+
+        // using the hash cache we classify each of the records we have received
 
         val classifiedRecords =
           records
@@ -300,83 +330,119 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
               when (hashCache[blockNumber]) {
 
+                // never seen this before, it's new
                 null -> Pair(BlockType.NEW, record)
 
+                // hash cache entry matches the current block hash, so this is a duplicate
                 blockHash -> {
-                  logger.warn { "Ignoring duplicate block. Number = ${record.key().number.bigInteger()}, hash = $blockHash" }
+                  logger.warn { "Ignoring duplicate block. Number = $blockNumber, hash = $blockHash" }
                   Pair(BlockType.DUPLICATE, record)
                 }
 
+                // otherwise we have an entry in the hash cache but it does not match the current block hash
+                // due to the design of the parity block source we know this to be the beginning of a fork
                 else -> Pair(BlockType.FORK, record)
+
               }
             }
 
-        val recordIterator = classifiedRecords
+        // now that we have classified the records we start to process them
+
+        val classifiedRecordIterator = classifiedRecords
+          // filter out the duplicates
           .filterNot { it.first == BlockType.DUPLICATE }
           .iterator()
 
-        while (recordIterator.hasNext()) {
+        while (classifiedRecordIterator.hasNext()) {
+
+          // reset
 
           var recordCount = 0
           var lastRecord: ConsumerRecord<CanonicalKeyRecord, V>? = null
+
+          //
 
           val maxTxTimeMs = maxTransactionTime.toMillis()
           val txStartTimeMs = System.currentTimeMillis()
           var txElapsedTimeMs = 0L
 
-          dbContext
-            .transaction { txConfig ->
+          // we write as much as we can into a transaction until we reach the max time
 
-              val txCtx = DSL.using(txConfig)
+          try {
 
-              while (txElapsedTimeMs < maxTxTimeMs && recordIterator.hasNext()) {
+            dbContext
+              .transaction { txConfig ->
 
-                val (blockType, record) = recordIterator.next()
+                val txCtx = DSL.using(txConfig)
 
-                lastRecord = record
+                // we keep taking records until we breach the max tx time or the iterator has no more records
 
-                val blockNumber = record.key().number.bigInteger()
+                while (txElapsedTimeMs < maxTxTimeMs && classifiedRecordIterator.hasNext()) {
 
-                when (blockType) {
+                  // retrieve the next block with it's classification
+                  val (blockType, record) = classifiedRecordIterator.next()
 
-                  BlockType.NEW -> {
+                  // used for updating sync status at the end
+                  lastRecord = record
 
-                    process(txCtx, record)
+                  val blockNumber = record.key().number.bigInteger()
 
-                    // update hash entry
-                    hashCache[blockNumber] = blockHashFor(record.value())
-                    hashCache.writeToDb(txCtx)
+                  when (blockType) {
+
+                    // if it's a new block we allow the implementation to process it and then we update the hash cache
+
+                    BlockType.NEW -> {
+
+                      process(txCtx, record)
+
+                      // update hash entry
+                      hashCache[blockNumber] = blockHashFor(record.value())
+                    }
+
+                    // if it's a fork block we first allow the implementation to rewind and then process the new blcok
+
+                    BlockType.FORK -> {
+
+                      rewindUntil(txCtx, blockNumber)
+                      hashCache.removeKeysFrom(txCtx, blockNumber)
+
+                      process(txCtx, record)
+                      hashCache[blockNumber] = blockHashFor(record.value())
+
+                    }
+
+                    else -> {} // do nothing
                   }
 
-                  BlockType.FORK -> {
+                  // record the record count and update the tx elapsed time
 
-                    val forkBlockNumber = record.key().number.bigInteger()
+                  recordCount += 1
+                  txElapsedTimeMs = System.currentTimeMillis() - txStartTimeMs
 
-                    rewindUntil(txCtx, forkBlockNumber)
-
-                    // clear out hash cache and update latest block hash
-                    hashCache.removeKeysFrom(txCtx, forkBlockNumber)
-                    hashCache[forkBlockNumber] = blockHashFor(record.value())
-                    hashCache.writeToDb(txCtx)
-                  }
-
-                  else -> {} // do nothing
                 }
 
-                recordCount += 1
+                // flush the hash cache state to the db
+                hashCache.writeToDb(txCtx)
 
-                txElapsedTimeMs = System.currentTimeMillis() - txStartTimeMs
+                // update latest block number
+                val lastBlockNumber = lastRecord!!.key().number.bigInteger()
+                setLatestSyncBlock(txCtx, lastBlockNumber, lastRecord!!.timestamp())
+
+                // flush to disk
+                diskDb.commit()
+
+                logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
               }
 
-              // update latest block number
-              val lastBlockNumber = lastRecord!!.key().number.bigInteger()
-              setLatestSyncBlock(txCtx, lastBlockNumber, lastRecord!!.timestamp())
+          } catch (e: Exception) {
 
-              // flush to disk
-              diskDb.commit()
+            // rollback any persistent changes to local state
+            diskDb.rollback()
 
-              logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
-            }
+            // re throw to stop processing
+            throw e
+          }
+
         }
 
         // commit to kafka
@@ -388,6 +454,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     } catch (e: Exception) {
 
       logger.error(e) { "Fatal exception, stopping" }
+
     } finally {
 
       close()
@@ -396,27 +463,11 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     }
   }
 
-  protected fun getLastSyncBlock(txCtx: DSLContext): BigInteger? {
-
-    val record = txCtx
-      .select(SYNC_STATUS.BLOCK_NUMBER)
-      .from(SYNC_STATUS)
+  protected fun getLatestSyncRecord(txCtx: DSLContext): SyncStatusRecord? =
+    txCtx
+      .selectFrom(SYNC_STATUS)
       .where(SYNC_STATUS.COMPONENT.eq(processorId))
       .fetchOne()
-
-    return record?.value1()?.toBigInteger()
-  }
-
-  protected fun getLastBlockTimestampMs(txCtx: DSLContext): Long? {
-
-    val record = txCtx
-      .select(SYNC_STATUS.BLOCK_TIMESTAMP)
-      .from(SYNC_STATUS)
-      .where(SYNC_STATUS.COMPONENT.eq(processorId))
-      .fetchOne()
-
-    return record?.value1()?.time
-  }
 
   protected fun setLatestSyncBlock(txCtx: DSLContext, blockNumber: BigInteger, blockTimestamp: Long) {
 

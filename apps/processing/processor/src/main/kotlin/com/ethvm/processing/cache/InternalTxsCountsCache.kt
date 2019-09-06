@@ -12,35 +12,45 @@ import org.mapdb.Serializer
 import java.math.BigInteger
 import java.util.concurrent.ScheduledExecutorService
 
-class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: ScheduledExecutorService) {
+class InternalTxsCountsCache(
+  memoryDb: DB,
+  diskDb: DB,
+  scheduledExecutor: ScheduledExecutorService,
+  processorId: String
+) {
 
   val logger = KotlinLogging.logger {}
 
   private val internalTxCountByAddress = CacheStore(
-      memoryDb,
-      diskDb,
-      scheduledExecutor,
-      "internal_tx_count_by_address",
-      Serializer.STRING,
-      MapDbSerializers.forAvro<TransactionCountRecord>(TransactionCountRecord.`SCHEMA$`)
-    )
+    memoryDb,
+    diskDb,
+    scheduledExecutor,
+    "${processorId}_internal_tx_count_by_address",
+    Serializer.STRING,
+    MapDbSerializers.forAvro<TransactionCountRecord>(TransactionCountRecord.`SCHEMA$`),
+    TransactionCountRecord
+      .newBuilder()
+      .build()
+  )
 
   private val contractsCreatedByAddress = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
-    "contracts_created_by_address",
+    "${processorId}_contracts_created_by_address",
     Serializer.STRING,
-    Serializer.LONG
+    Serializer.LONG,
+    0L
   )
 
   private val metadataMap = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
-    "counts_metadata",
+    "${processorId}_counts_metadata",
     Serializer.STRING,
-    Serializer.BIG_INTEGER
+    Serializer.BIG_INTEGER,
+    BigInteger.ZERO
   )
 
   private val cacheStores = listOf(internalTxCountByAddress, contractsCreatedByAddress, metadataMap)
@@ -55,6 +65,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
 
+    // get latest block number from db
     val latestDbBlockNumber = txCtx
       .select(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER)
       .from(ADDRESS_INTERNAL_TRANSACTION_COUNT)
@@ -64,24 +75,26 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
     if (latestBlockNumber > latestDbBlockNumber) {
-      logger.info { "local state is ahead of the database. Resetting all local state." }
+      logger.info { "Local state is ahead of the database. Resetting all local state." }
       // reset all state from the beginning as the database is behind us
       cacheStores.forEach { it.clear() }
       latestBlockNumber = BigInteger.ONE.negate()
       logger.info { "Local state cleared" }
     }
 
+    // replay any missed state
     val addressCountCursor = txCtx
       .selectFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT)
       .where(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
+    // disable db record generation
     writeHistoryToDb = false
 
     var count = 0
 
-    logger.info { "Beginning reload of transaction counts" }
+    logger.info { "Beginning reload of internal transaction counts" }
 
     while (addressCountCursor.hasNext()) {
       set(addressCountCursor.fetchNext())
@@ -94,7 +107,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     addressCountCursor.close()
 
-    logger.info { "Transaction counts reloaded" }
+    logger.info { "Internal transaction counts reloaded" }
 
     count = 0
 
@@ -119,8 +132,10 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     logger.info { "Contract counts reloaded" }
 
+    // final flush of any pending writes
     cacheStores.forEach { it.flushToDisk(true) }
 
+    // re-enable db record generation
     writeHistoryToDb = true
 
     logger.info { "Initialised" }
@@ -184,41 +199,52 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
   private fun incrementInternalTxCounts(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
 
+    // list of delta types which constitute an internal tx
     val internalDeltaTypes =
-      setOf(BalanceDeltaType.INTERNAL_TX, BalanceDeltaType.CONTRACT_CREATION, BalanceDeltaType.CONTRACT_DESTRUCTION)
-        .map { it.toString() }
+      setOf(
+        BalanceDeltaType.INTERNAL_TX,
+        BalanceDeltaType.CONTRACT_CREATION,
+        BalanceDeltaType.CONTRACT_DESTRUCTION
+      ).map { it.toString() }
 
+    // filter for only internal txs
     val internalTxTraces = balanceDeltas
       .filter { internalDeltaTypes.contains(it.deltaType) }
 
+    // at some point refactor this to work with filtering by isReceiving
     val txOutMap = internalTxTraces
       .filterNot { it.isReceiving }
+      // this is the sending account
       .map { it.address to 1 }
       .fold(emptyMap<String, Int>()) { map, next ->
 
-        val address = next.first
+        val fromAddress = next.first
         val delta = next.second
 
-        map + (address to map.getOrDefault(address, 0) + delta)
+        map + (fromAddress to map.getOrDefault(fromAddress, 0) + delta)
       }
 
     val txInMap = internalTxTraces
       .filter { it.isReceiving }
+      // this is the receiving address
       .map { it.address to 1 }
       .fold(emptyMap<String, Int>()) { map, next ->
 
-        val address = next.first
+        val toAddress = next.first
         val delta = next.second
 
-        map + (address to map.getOrDefault(address, 0) + delta)
+        map + (toAddress to map.getOrDefault(toAddress, 0) + delta)
       }
 
+    // get the superset of addresses for in and out
     val addresses = txInMap.keys + txOutMap.keys
 
+    // we add up the in and out for each address to get a total tx change
     val txTotalMap = addresses
       .map { address -> Pair(address, txInMap.getOrDefault(address, 0) + txOutMap.getOrDefault(address, 0)) }
       .toMap()
 
+    // for each address we generate a delta record representing the in, out and total tx count change
     addresses
       .forEach { address ->
 
@@ -232,6 +258,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
           }
 
         incrementInternalTxCounts(delta)
+
       }
   }
 
@@ -274,14 +301,12 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
   fun writeToDb(ctx: DSLContext) {
 
     if (writeHistoryToDb) {
-
       ctx
         .batchInsert(historyRecords)
         .execute()
     }
 
     cacheStores.forEach { it.flushToDisk() }
-
     historyRecords = emptyList()
   }
 
@@ -303,16 +328,8 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
     if (blockNumber > BigInteger.ZERO) {
 
+      // disable db record generation
       writeHistoryToDb = false
-
-      txCtx
-        .delete(ADDRESS_INTERNAL_TRANSACTION_COUNT)
-        .where(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
-        .execute()
-
-      txCtx.delete(ADDRESS_CONTRACTS_CREATED_COUNT)
-        .where(ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
-        .execute()
 
       val txCountCursor = txCtx
         .selectFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA)
@@ -325,6 +342,7 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
 
         val delta = txCountCursor.fetchNext()
 
+        // invert the delta amounts
         delta.totalDelta = delta.totalDelta * -1
         delta.totalInDelta = delta.totalInDelta * -1
         delta.totalOutDelta = delta.totalOutDelta * -1
@@ -372,14 +390,23 @@ class InternalTxsCountsCache(memoryDb: DB, diskDb: DB, scheduledExecutor: Schedu
         .where(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
+      // re-enable db record generation
       writeHistoryToDb = true
+
     } else {
 
+      // just clear everything
       cacheStores.forEach { it.clear() }
+
     }
 
+    // update our local latest block number
+    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
+
+    // flush cache store state to disk
     cacheStores.forEach { it.flushToDisk() }
 
     logger.info { "Rewind complete" }
   }
+
 }

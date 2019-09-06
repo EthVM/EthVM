@@ -28,24 +28,25 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
 
   override val logger = KotlinLogging.logger {}
 
+  // the name of the traces topic, it can change based on the chain
   private val topicTraces: String by inject(named("topicTraces"))
 
+  // list of topics to ingest from
   override val topics: List<String> = listOf(topicTraces)
 
-  override val kafkaProps: Properties = Properties()
-    .apply {
-      put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 16)
-    }
+  // for tracking ether balances
+  private val fungibleBalanceCache = FungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ETHER, processorId)
 
-  private val fungibleBalanceCache = FungibleBalanceCache(memoryDb, diskDb, scheduledExecutor, TokenType.ETHER)
+  // for tracking internal txs
+  private val internalTxsCountsCache = InternalTxsCountsCache(memoryDb, diskDb, scheduledExecutor, processorId)
 
-  private val internalTxsCountsCache = InternalTxsCountsCache(memoryDb, diskDb, scheduledExecutor)
-
+  // increase the max transaction time as this processor is write heavy and we want to benefit a bit more from
+  // the economies of scale with transaction writes
   override val maxTransactionTime = Duration.ofMillis(300)
 
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
-  override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
+  override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {
     fungibleBalanceCache.initialise(txCtx)
     internalTxsCountsCache.initialise(txCtx)
   }
@@ -54,12 +55,17 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
 
     txCtx.truncate(TRACE).execute()
 
+    // reset our local state
+    // note: caches are responsible for maintaining their db state
     fungibleBalanceCache.reset(txCtx)
     internalTxsCountsCache.reset(txCtx)
+
   }
 
   override fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger) {
 
+    // rewind our local state
+    // note: caches are responsible for maintaining their db state
     fungibleBalanceCache.rewindUntil(txCtx, blockNumber)
     internalTxsCountsCache.rewindUntil(txCtx, blockNumber)
 
@@ -67,17 +73,19 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
       .deleteFrom(TRACE)
       .where(TRACE.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
       .execute()
+
   }
 
   override fun process(txCtx: DSLContext, record: ConsumerRecord<CanonicalKeyRecord, TraceListRecord>) {
 
     val blockNumber = record.key().number.bigInteger()
 
+    // Premine balance allocations from Genesis block
+
     var deltas =
       if (blockNumber > BigInteger.ZERO) {
         emptyList()
       } else {
-        // Premine balance allocations from Genesis block
 
         val genesisBlock = netConfig.genesis
 
@@ -116,7 +124,9 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
 
     val traceList = record.value()
 
-    deltas = deltas + record.value().toBalanceDeltas()
+    deltas = deltas + traceList.toBalanceDeltas()
+
+    // for each ETHER delta we run it through the fungible balance cache to update our balances
 
     deltas.forEach { delta ->
 
@@ -126,12 +136,13 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
       }
     }
 
-    // internal tx counts
+    // for each delta we update internal tx counts
+
     deltas
       .groupBy { it.blockNumber }
       .forEach { internalTxsCountsCache.count(it.value, it.key.toBigInteger()) }
 
-    // transaction traces
+    // generate and insert db records for traces
 
     val traceRecords = traceList.toDbRecords()
     txCtx.batchInsert(traceRecords).execute()
@@ -145,6 +156,7 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
     fungibleBalanceCache.writeToDb(txCtx)
 
     // write count records
+
     internalTxsCountsCache.writeToDb(txCtx)
   }
 }

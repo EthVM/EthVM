@@ -31,8 +31,8 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metric
 
   private val blockTimestampCache = BlockTimestampCache(memoryDb, scheduledExecutor, processorId)
 
-  override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {
-    blockTimestampCache.initialise(txCtx, latestSyncBlock ?: BigInteger.ZERO)
+  override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {
+    blockTimestampCache.initialise(txCtx)
   }
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
@@ -84,7 +84,7 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metric
     val prevBlockTimestamp = blockTimestampCache[prevBlockNumber]
 
     val blockTime =
-      if (blockNumber == BigInteger.ONE) 0
+      if (blockNumber == BigInteger.ZERO) 0
       else (block.header.timestamp - (prevBlockTimestamp ?: 0)) / 1000
 
     val dbRecord = block.toMetricRecord(blockTime.toInt())

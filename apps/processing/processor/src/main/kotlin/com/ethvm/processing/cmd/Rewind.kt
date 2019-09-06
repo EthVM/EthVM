@@ -12,7 +12,7 @@ class Rewind : AbstractCliktCommand(help = "Rewind processors to a specified con
 
   private val blockNumber: Long? by option(
     "-b", "--block-number",
-    help = "Block number"
+    help = "The block number we will rewind until. Be aware, this number is inclusive"
   ).long()
 
   override fun run() {

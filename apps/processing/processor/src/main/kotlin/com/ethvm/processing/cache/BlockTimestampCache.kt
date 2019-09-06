@@ -9,6 +9,10 @@ import java.math.BigInteger
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
+/**
+ * In memory cache for tracking block timestamps. Used when calculating block processing time by comparing
+ * current timestamp with previous
+ */
 class BlockTimestampCache(
   memoryDb: DB,
   scheduledExecutor: ScheduledExecutorService,
@@ -17,28 +21,36 @@ class BlockTimestampCache(
 
   val logger = KotlinLogging.logger {}
 
-  private val map = memoryDb
-    .hashMap("block_times")
+  // forks can occur 192 blocks in the past maximum. We add some margin of error
+  private val historySize = 256
+
+  private val memoryMap = memoryDb
+    .hashMap("${processorId}_block_times")
     .keySerializer(Serializer.BIG_INTEGER)
     .valueSerializer(Serializer.LONG)
-    .expireAfterGet(5, TimeUnit.MINUTES)
+    .expireMaxSize(historySize.toLong())
+    .expireAfterGet()
     .expireExecutor(scheduledExecutor)
     .create()
 
-  fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {
+  fun initialise(txCtx: DSLContext) {
+
+    // load the last n block timestamps from the database
 
     val cursor = txCtx
       .select(BLOCK_HEADER.NUMBER, BLOCK_HEADER.TIMESTAMP)
       .from(BLOCK_HEADER)
-      .where(BLOCK_HEADER.NUMBER.le(latestBlockNumber.toBigDecimal()))
       .orderBy(BLOCK_HEADER.NUMBER.desc())
-      .limit(256)
+      .limit(historySize)
       .fetchLazy()
 
     while (cursor.hasNext()) {
+
       val next = cursor.fetchNext()
       val blockNumber = next.value1().toBigInteger()
-      map[blockNumber] = next.value2().time
+
+      memoryMap[blockNumber] = next.value2().time
+
       logger.info { "[$processorId] Reloaded block number = $blockNumber" }
     }
 
@@ -46,8 +58,8 @@ class BlockTimestampCache(
   }
 
   operator fun set(number: BigInteger, timestamp: Long) {
-    map[number] = timestamp
+    memoryMap[number] = timestamp
   }
 
-  operator fun get(number: BigInteger): Long? = map[number]
+  operator fun get(number: BigInteger): Long? = memoryMap[number]
 }

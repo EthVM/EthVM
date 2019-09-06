@@ -28,7 +28,7 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>("block-met
 
   override val topics = listOf(topicTraces)
 
-  override fun initialise(txCtx: DSLContext, latestSyncBlock: BigInteger?) {}
+  override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {}
 
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 

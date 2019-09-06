@@ -16,7 +16,8 @@ class NonFungibleBalanceCache(
   memoryDb: DB,
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
-  private val tokenType: TokenType
+  private val tokenType: TokenType,
+  processorId: String
 ) {
 
   val logger = KotlinLogging.logger {}
@@ -25,24 +26,29 @@ class NonFungibleBalanceCache(
     memoryDb,
     diskDb,
     scheduledExecutor,
-    "non_fungible_balances",
+    "${processorId}_non_fungible_balances",
     Serializer.STRING,
-    Serializer.BIG_INTEGER
+    Serializer.BIG_INTEGER,
+    BigInteger.ZERO
   )
 
   private val metadataMap = CacheStore(
     memoryDb,
     diskDb,
     scheduledExecutor,
-    "non_fungible_balances_metadata",
+    "${processorId}_non_fungible_balances_metadata",
     Serializer.STRING,
-    Serializer.BIG_INTEGER
+    Serializer.BIG_INTEGER,
+    BigInteger.ZERO
   )
 
+  // convenience lists
   private val cacheStores = listOf(balanceMap, metadataMap)
 
+  // pending db records
   private var balanceHistoryRecords = emptyList<BalanceRecord>()
 
+  // controls whether db records are generated
   private var writeHistoryToDb = true
 
   fun initialise(txCtx: DSLContext) {
@@ -204,6 +210,10 @@ class NonFungibleBalanceCache(
     }
 
     cursor.close()
+
+    // update our local latest block number
+
+    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
 
     cacheStores.forEach { it.flushToDisk() }
 

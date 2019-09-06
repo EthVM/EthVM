@@ -20,62 +20,81 @@ import org.mapdb.Serializer
 import java.math.BigInteger
 import java.util.concurrent.ScheduledExecutorService
 
-class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExecutorService) {
+class BlockCountsCache(
+  memoryDb: DB,
+  diskDb: DB,
+  scheduledExecutor: ScheduledExecutorService,
+  processorId: String
+) {
 
   val logger = KotlinLogging.logger {}
+
+  // simple metadata map, used only for tracking local latest block number
+
+  private val metadataMap = CacheStore(
+    memoryDb,
+    diskDb,
+    scheduledExecutor,
+    "${processorId}_counts_metadata",
+    Serializer.STRING,
+    Serializer.BIG_INTEGER,
+    BigInteger.ZERO
+  )
 
   private val canonicalCountMap = CacheStore(
     memoryDb,
     diskDb,
-    scheduledExector,
-    "canonical_count",
+    scheduledExecutor,
+    "${processorId}_canonical_count",
     Serializer.STRING,
-    Serializer.LONG
+    Serializer.LONG,
+    0L
   )
 
   private val txCountByAddress =
     CacheStore(
       memoryDb,
       diskDb,
-      scheduledExector,
-      "tx_count_by_address",
+      scheduledExecutor,
+      "${processorId}_tx_count_by_address",
       Serializer.STRING,
-      MapDbSerializers.forAvro<TransactionCountRecord>(TransactionCountRecord.`SCHEMA$`)
+      MapDbSerializers.forAvro<TransactionCountRecord>(TransactionCountRecord.`SCHEMA$`),
+      TransactionCountRecord
+        .newBuilder()
+        .build()
     )
 
   private val minedCountByAddress =
     CacheStore(
       memoryDb,
       diskDb,
-      scheduledExector,
-      "mined_count_by_address",
+      scheduledExecutor,
+      "${processorId}_mined_count_by_address",
       Serializer.STRING,
-      Serializer.LONG
+      Serializer.LONG,
+      0L
     )
 
-  private val metadataMap = CacheStore(
-    memoryDb,
-    diskDb,
-    scheduledExector,
-    "counts_metadata",
-    Serializer.STRING,
-    Serializer.BIG_INTEGER
-  )
-
+  // list of all cache stores for convenience later
   private val cacheStores = listOf(canonicalCountMap, txCountByAddress, minedCountByAddress, metadataMap)
 
+  // list of pending records to be written to the database
   private var historyRecords = emptyList<TableRecord<*>>()
 
+  // flag used to control whether we generate db records, useful when rewinding
   private var writeHistoryToDb = true
 
   fun initialise(txCtx: DSLContext) {
 
     logger.info { "Initialising state from db" }
 
+    // look in our local state and see if we know the latest block number we processed until
     var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
 
-    // disable histroy generation until we have initialised
+    // disable history generation until we have initialised
     writeHistoryToDb = false
+
+    // compare our local latest block number with our state in the db
 
     val latestDbBlockNumber = txCtx
       .select(CANONICAL_COUNT.BLOCK_NUMBER)
@@ -86,23 +105,27 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
     if (latestBlockNumber > latestDbBlockNumber) {
-      logger.info { "local state is ahead of the database. Resetting all local state." }
+
+      logger.info { "Local state is ahead of the database. Resetting all local state." }
+
       // reset all state from the beginning as the database is behind us
       cacheStores.forEach { it.clear() }
+
       latestBlockNumber = BigInteger.ONE.negate()
       logger.info { "Local state cleared" }
     }
+
+    // reload canonical count state
 
     txCtx
       .selectFrom(CANONICAL_COUNT)
       .where(CANONICAL_COUNT.BLOCK_NUMBER.eq(latestDbBlockNumber.toBigDecimal()))
       .fetch()
-      .forEach { record ->
-        set(record)
-        canonicalCountMap[record.entity] = record.count
-      }
+      .forEach { record -> set(record) }
 
     logger.info { "Reloaded canonical count state" }
+
+    // reload address tx count state
 
     val addressTxCountCursor = txCtx
       .selectFrom(ADDRESS_TRANSACTION_COUNT)
@@ -124,6 +147,8 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
     }
 
     addressTxCountCursor.close()
+
+    // reload miner count state
 
     count = 0
 
@@ -148,7 +173,11 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
     logger.info { "Miner counts reloaded" }
 
+    // final flush to disk for any remaining modifications at the end of the batches
+
     cacheStores.forEach { it.flushToDisk(true) }
+
+    // re-enable db record generation
 
     writeHistoryToDb = true
 
@@ -170,6 +199,7 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
   }
 
   private fun incrementMinedCounts(author: String, blockNumber: BigInteger, delta: Int) {
+
     val current = minedCountByAddress[author] ?: 0L
     minedCountByAddress[author] = current + delta
 
@@ -335,10 +365,14 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
       writeHistoryToDb = false
 
+      // rewind canonical count state
+
       txCtx
         .delete(CANONICAL_COUNT)
         .where(CANONICAL_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
+
+      // replay transaction count deltas and unwind local state
 
       val txCountCursor = txCtx
         .selectFrom(ADDRESS_TRANSACTION_COUNT_DELTA)
@@ -351,7 +385,9 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
         val delta = txCountCursor.fetchNext()
 
-        delta.totalDelta = delta.totalOutDelta * -1
+        // invert the counts before applying to local state
+
+        delta.totalDelta = delta.totalDelta * -1
         delta.totalInDelta = delta.totalInDelta * -1
         delta.totalOutDelta = delta.totalOutDelta * -1
 
@@ -359,6 +395,8 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
       }
 
       txCountCursor.close()
+
+      // replay block headers to unwind mined count state
 
       val authorCursor = txCtx
         .select(BLOCK_HEADER.AUTHOR, BLOCK_HEADER.NUMBER)
@@ -370,36 +408,48 @@ class BlockCountsCache(memoryDb: DB, diskDb: DB, scheduledExector: ScheduledExec
 
       while (authorCursor.hasNext()) {
         val next = authorCursor.fetchNext()
-        incrementMinedCounts(next.value1(), next.value2().toBigInteger(), -1)
+        val author = next.value1()
+        val blockNumber = next.value2()
+        incrementMinedCounts(author, blockNumber.toBigInteger(), -1)
       }
 
       authorCursor.close()
 
-      txCtx
-        .deleteFrom(CANONICAL_COUNT)
-        .where(CANONICAL_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
-        .execute()
-
-      txCtx
-        .deleteFrom(MINER_BLOCK_COUNT)
-        .where(MINER_BLOCK_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
-        .execute()
-
-      txCtx
-        .deleteFrom(ADDRESS_TRANSACTION_COUNT)
-        .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
-        .execute()
-
-      txCtx
-        .deleteFrom(ADDRESS_TRANSACTION_COUNT_DELTA)
-        .where(ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
-        .execute()
-
       writeHistoryToDb = true
+
     } else {
 
       cacheStores.forEach { it.clear() }
+
     }
+
+    // delete any state from the rewind block forward
+
+    txCtx
+      .deleteFrom(CANONICAL_COUNT)
+      .where(CANONICAL_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
+      .execute()
+
+    txCtx
+      .deleteFrom(MINER_BLOCK_COUNT)
+      .where(MINER_BLOCK_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
+      .execute()
+
+    txCtx
+      .deleteFrom(ADDRESS_TRANSACTION_COUNT)
+      .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.ge(blockNumberDecimal))
+      .execute()
+
+    txCtx
+      .deleteFrom(ADDRESS_TRANSACTION_COUNT_DELTA)
+      .where(ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
+      .execute()
+
+    // update our local latest block number
+
+    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
+
+    // flush to disk our local state
 
     cacheStores.forEach { it.flushToDisk() }
 
