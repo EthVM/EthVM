@@ -23,6 +23,7 @@ import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext
 import BN from 'bignumber.js'
 import { ConfigHelper } from '@app/core/helper/config-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '../../../core/helper/number-format-helper';
 
 @Component({
   components: {
@@ -277,7 +278,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const detail: Detail = { title: this.$t('common.balance') }
     if (!this.isLoading && this.tokenDetails && this.holderDetails) {
       const symbol = this.tokenDetails.symbol === null ? '' : ` ${this.tokenDetails.symbol.toUpperCase()}`
-      detail.detail = `${this.balance}${symbol}`
+      detail.detail = `${this.balance.value}${symbol}`
+      detail.tooltip = this.balance.tooltipText? this.balance.tooltipText : undefined
     }
     return detail
   }
@@ -314,13 +316,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     return holderDetails.balance && tokenDetails.currentPrice ? this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice), false).value : undefined
   }
 
-  get balance(): string {
+  get balance(): FormattedNumber{
     const decimals = this.tokenDetails.decimals
     let n = this.holderDetails.balanceBN
     if (decimals) {
       n = n.div(new BN(10).pow(decimals))
     }
-    return this.formatFloatingPointValue(n).value
+    return this.formatFloatingPointValue(n)
   }
 
   get priceChange(): string | undefined {
