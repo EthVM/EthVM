@@ -242,22 +242,26 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
         // update latest sync status
 
-        val syncStatusRecord = SyncStatusRecord()
-          .apply {
-            this.component = lastBatchSyncStatus.component
-            this.blockNumber = lastBatchSyncStatus.blockNumber
-            this.blockTimestamp = lastBatchSyncStatus.blockTimestamp
-            this.timestamp = lastBatchSyncStatus.timestamp
-          }
+        if(lastBatchSyncStatus != null) {
 
-        txCtx
-          .insertInto(SYNC_STATUS)
-          .set(syncStatusRecord)
-          .onDuplicateKeyUpdate()
-          .set(SYNC_STATUS.BLOCK_NUMBER, syncStatusRecord.blockNumber)
-          .set(SYNC_STATUS.BLOCK_TIMESTAMP, syncStatusRecord.blockTimestamp)
-          .set(SYNC_STATUS.TIMESTAMP, syncStatusRecord.timestamp)
-          .execute()
+          val syncStatusRecord = SyncStatusRecord()
+            .apply {
+              this.component = lastBatchSyncStatus.component
+              this.blockNumber = lastBatchSyncStatus.blockNumber
+              this.blockTimestamp = lastBatchSyncStatus.blockTimestamp
+              this.timestamp = lastBatchSyncStatus.timestamp
+            }
+
+          txCtx
+            .insertInto(SYNC_STATUS)
+            .set(syncStatusRecord)
+            .onDuplicateKeyUpdate()
+            .set(SYNC_STATUS.BLOCK_NUMBER, syncStatusRecord.blockNumber)
+            .set(SYNC_STATUS.BLOCK_TIMESTAMP, syncStatusRecord.blockTimestamp)
+            .set(SYNC_STATUS.TIMESTAMP, syncStatusRecord.timestamp)
+            .execute()
+
+        }
 
         logger.info { "Sync status history updated, $processorId latest block number = $closestBatchBlockNumber" }
 
