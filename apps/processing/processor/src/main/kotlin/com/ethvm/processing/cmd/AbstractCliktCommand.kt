@@ -55,6 +55,7 @@ abstract class AbstractCliktCommand(help: String) : CliktCommand(help) {
     .default(Cli.DEFAULT_SCHEMA_REGISTRY_URL)
 
   protected val storageDir: String by option(
+    "-s", "--storage-dir",
     help = "Base dir for local kafka streams state",
     envvar = "ETHVM_STORAGE_DIR"
   )
