@@ -115,7 +115,7 @@ class NonFungibleBalanceCache(
         this.blockNumber = delta.blockNumber
         this.blockHash = delta.blockHash
         this.timestamp = delta.timestamp
-        this.tokenType = this.tokenType.toString()
+        this.tokenType = cache.tokenType.toString()
         this.tokenId = delta.tokenId
       }
 
@@ -183,7 +183,7 @@ class NonFungibleBalanceCache(
     val cursor = txCtx
       .selectFrom(BALANCE_DELTA)
       .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
-      .and(BALANCE_DELTA.TOKEN_TYPE.eq(this.tokenType.toString()))
+      .and(BALANCE_DELTA.TOKEN_TYPE.eq(tokenType.toString()))
       .orderBy(BALANCE_DELTA.BLOCK_NUMBER.desc())
       .fetchSize(1000)
       .fetchLazy()
@@ -197,7 +197,7 @@ class NonFungibleBalanceCache(
 
       when (val tokenType = delta.tokenType) {
 
-        this.tokenType.toString() -> assign(delta)
+        tokenType.toString() -> assign(delta)
 
         else -> throw UnsupportedOperationException("Unhandled token type: $tokenType")
       }
