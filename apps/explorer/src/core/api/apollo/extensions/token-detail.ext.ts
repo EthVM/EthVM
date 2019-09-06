@@ -47,7 +47,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get totalSupplyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.totalSupplyBN, false).value
+    return NumberFormatHelper.formatIntegerValue(this.totalSupplyBN).value
   }
 
   get circulatingSupplyBN(): BigNumber {
@@ -55,7 +55,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get circulatingSupplyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.circulatingSupplyBN, false).value
+    return NumberFormatHelper.formatIntegerValue(this.circulatingSupplyBN).value
   }
 
   get currentPriceBN(): BigNumber {

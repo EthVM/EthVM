@@ -24,7 +24,7 @@ export class UncleDetailExt implements UncleDetail {
   }
 
   get numberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.numberBN, false).value
+    return NumberFormatHelper.formatIntegerValue(this.numberBN).value
   }
 
   get nephewNumberBN(): BigNumber {
@@ -32,7 +32,7 @@ export class UncleDetailExt implements UncleDetail {
   }
 
   get nephewNumberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.nephewNumberBN, false).value
+    return NumberFormatHelper.formatIntegerValue(this.nephewNumberBN).value
   }
 
   get gasLimitBN(): BigNumber {
@@ -40,7 +40,7 @@ export class UncleDetailExt implements UncleDetail {
   }
 
   get gasLimitFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN, false).value
+    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN).value
   }
 
   get gasUsedBN(): BigNumber {
@@ -48,7 +48,7 @@ export class UncleDetailExt implements UncleDetail {
   }
 
   get gasUsedFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN, false).value
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN).value
   }
 
   get timestampDate(): Date {
