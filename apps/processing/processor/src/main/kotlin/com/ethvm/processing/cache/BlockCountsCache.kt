@@ -409,8 +409,8 @@ class BlockCountsCache(
       while (authorCursor.hasNext()) {
         val next = authorCursor.fetchNext()
         val author = next.value1()
-        val blockNumber = next.value2()
-        incrementMinedCounts(author, blockNumber.toBigInteger(), -1)
+        val cursorBlockNumber = next.value2()
+        incrementMinedCounts(author, cursorBlockNumber.toBigInteger(), -1)
       }
 
       authorCursor.close()
