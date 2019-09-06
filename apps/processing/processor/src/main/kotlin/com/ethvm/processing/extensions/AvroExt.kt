@@ -248,7 +248,7 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
           this.blockNumber = block.header.number.bigInteger().toBigDecimal()
           this.blockHash = block.header.hash
           this.transactionHash = receipt.transactionHash
-          this.amount = transfer.tokenId.toBigDecimal()
+          this.tokenId = transfer.tokenId.toBigDecimal()
           this.timestamp = Timestamp(block.header.timestamp)
           this.isReceiving = true
         }
