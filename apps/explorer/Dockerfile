@@ -18,5 +18,5 @@ FROM nginx:1.15.8-alpine
 WORKDIR /var/www/html
 
 COPY --from=build /usr/src/app/explorer/dist .
-COPY ${WORKDIR}/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ${WORKDIR}/nginx/nginx.conf /etc/nginx/conf.d/${TARGET}.conf
 
