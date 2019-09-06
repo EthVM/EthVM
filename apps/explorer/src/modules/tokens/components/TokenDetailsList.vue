@@ -169,12 +169,16 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
 
   get priceDetail(): Detail {
     const detail: Detail = { title: this.$i18n.tc('price.name', 1) }
+
     if (!this.isLoading && this.tokenDetails) {
-      let priceFormatted = this.tokenDetails.currentPriceFormatted
+      let priceFormatted = this.tokenDetails.currentPriceFormatted.value
       if (this.priceChange) {
         priceFormatted += ` (${this.priceChange}%)`
       }
       detail.detail = priceFormatted
+      if(this.tokenDetails.currentPriceFormatted.tooltipText){
+        detail.tooltip = this.tokenDetails.currentPriceFormatted.tooltipText
+      }
     }
     return detail
   }
@@ -182,7 +186,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalVolumeFormatted : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalVolumeFormatted.value : undefined,
+      tooltip: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalVolumeFormatted.tooltipText ? this.tokenDetails.totalVolumeFormatted.tooltipText: undefined
     }
   }
 
@@ -197,7 +202,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.market'),
-      detail: !isLoading && tokenDetails && tokenDetails.marketCap ? this.tokenDetails.marketCapFormatted : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.marketCap ? this.tokenDetails.marketCapFormatted.value : undefined,
+      tooltip: !isLoading && tokenDetails && tokenDetails.marketCap && this.tokenDetails.marketCapFormatted.tooltipText ? this.tokenDetails.marketCapFormatted.tooltipText : undefined,
     }
   }
 
@@ -205,7 +211,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.volume'),
-      detail: !isLoading && tokenDetails && tokenDetails.totalVolume ? this.tokenDetails.totalVolumeFormatted : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.totalVolume ? this.tokenDetails.totalVolumeFormatted.value : undefined,
+      tooltip: !isLoading && tokenDetails && tokenDetails.totalVolume && this.tokenDetails.totalVolumeFormatted.tooltipText  ? this.tokenDetails.totalVolumeFormatted.tooltipText : undefined
     }
   }
 

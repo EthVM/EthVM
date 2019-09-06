@@ -367,7 +367,8 @@ export class NumberFormatHelper {
      * Case I: value === 0
      * Return: "$0.00"
     */
-    if (value.isZero()) {
+    if (value=== undefined || value.isZero()) {
+
       return { value: '$0.00', unit }
     }
 
@@ -392,7 +393,7 @@ export class NumberFormatHelper {
     */
     if (value.isGreaterThanOrEqualTo(OneTrillion)) {
       const result = this.convertToTrillions(value)
-      return { ...result, value: `$${result.value}` }
+      return { ...result, value: `$${result.value}`, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**
@@ -401,7 +402,7 @@ export class NumberFormatHelper {
     */
     if (value.isGreaterThanOrEqualTo(OneBillion)) {
       const result = this.convertToBillions(value)
-      return { ...result, value: `$${result.value}` }
+      return { ...result, value: `$${result.value}`, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**
@@ -410,7 +411,7 @@ export class NumberFormatHelper {
     */
     if (value.isGreaterThanOrEqualTo(OneMillion)) {
       const result = this.getRoundNumber(value, 0, value.decimalPlaces())
-      return { ...result, value: `$${result.value}` }
+      return { ...result, value: `$${result.value}`, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**

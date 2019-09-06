@@ -1,6 +1,6 @@
 import { TokenDetail, TokenDetail_social } from '@app/core/api/apollo/types/TokenDetail'
 import BigNumber from 'bignumber.js'
-import { NumberFormatHelper } from '@app/core/helper/number-format-helper'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 export class TokenDetailExt implements TokenDetail {
   __typename!: 'TokenDetail'
@@ -62,24 +62,24 @@ export class TokenDetailExt implements TokenDetail {
     return new BigNumber(this.currentPrice || 0)
   }
 
-  get currentPriceFormatted(): string {
-    return NumberFormatHelper.formatUsdValue(this.currentPriceBN, false).value
+  get currentPriceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.currentPriceBN, true)
   }
 
   get marketCapBN(): BigNumber {
     return new BigNumber(this.marketCap || 0)
   }
 
-  get marketCapFormatted(): string {
-    return NumberFormatHelper.formatUsdValue(this.marketCapBN, false).value
+  get marketCapFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatUsdValue(this.marketCapBN, false)
   }
 
   get totalVolumeBN(): BigNumber {
     return new BigNumber(this.totalVolume || 0)
   }
 
-  get totalVolumeFormatted(): string {
-    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN, false).value
+  get totalVolumeFormatted(): FormattedNumber{
+    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN, false)
   }
 
   get priceChangePercentage24hBN(): BigNumber {
