@@ -8,4 +8,4 @@ pluginManagement {
 
 }
 
-include':avro', ':common', ':processor', ':connectors:sources:exchanges', ':connectors:sources:eth-tokens-list', ':connectors:sources:web3'
+include':avro', ':common', ':processor', ':sinks:jdbc', ':connectors:sources:exchanges', ':connectors:sources:eth-tokens-list', ':connectors:sources:web3'
