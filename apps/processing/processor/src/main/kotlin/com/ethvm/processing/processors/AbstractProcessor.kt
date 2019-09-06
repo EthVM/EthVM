@@ -219,7 +219,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         // e.g. we want to rewind until block 500 which is in the middle of a batch. The previous batch
         // ended with block 450. So we rewind all state until and including 451
 
-        val closestBatchBlockNumber = lastBatchSyncStatus.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
+        val closestBatchBlockNumber = lastBatchSyncStatus?.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
         val rewindUntilBlockNumber = closestBatchBlockNumber.plus(BigInteger.ONE)
 
         logger.info { "Closest batch block number = $closestBatchBlockNumber for $processorId" }
