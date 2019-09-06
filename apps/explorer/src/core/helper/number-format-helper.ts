@@ -28,7 +28,6 @@ const HundredMillion = 100000000
 const OneBillion = 1000000000
 const HundredBillion = 1000000000
 const OneTrillion = 1000000000000
-const TenTrillion = 10000000000000
 const OneQuadrillion = 10000000000000000
 
 
