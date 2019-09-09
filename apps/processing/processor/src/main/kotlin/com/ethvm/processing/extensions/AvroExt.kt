@@ -255,7 +255,9 @@ fun TransactionReceiptRecord.toBalanceDeltas(block: BlockRecord): List<BalanceDe
       )
     }
 
-  return erc20Deltas.flatten() + erc721Deltas.flatten()
+//  return erc20Deltas.flatten() + erc721Deltas.flatten()
+  // TODO: There's an issue related to ERC721 (so commented for now)
+  return erc20Deltas.flatten()
 }
 
 fun TraceListRecord.toMetricsRecord(): BlockMetricsTraceRecord {
