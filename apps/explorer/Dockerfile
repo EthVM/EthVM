@@ -15,8 +15,23 @@ RUN apk add --no-cache bash git \
 
 FROM nginx:1.15.8-alpine
 
+ENV DOCKERIZE_VERSION v0.6.1
+ENV PORT 80
+
 WORKDIR /var/www/html
 
-COPY --from=build /usr/src/app/explorer/dist .
-COPY ${WORKDIR}/nginx/nginx.conf /etc/nginx/conf.d/${TARGET}.conf
+RUN apk add --no-cache- openssl \
+    && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
+COPY --from=build /usr/src/app/explorer/dist .
+COPY ${WORKDIR}/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+ENTRYPOINT [ \
+  "dockerize", \
+  "-template", \
+  "/etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf" \
+]
+
+CMD ["nginx", "-g", "daemon off;"]
