@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { newBlock } from '@app/modules/blocks/blocks.graphql'
 import { TranslateResult } from 'vue-i18n'
 
@@ -16,10 +16,13 @@ import { TranslateResult } from 'vue-i18n'
       newBlock: {
         query: newBlock,
         result({ data }) {
+          console.log(data.uncleHashes)
           ;(this as any).display = true
-        },
-        variables: {
-          block: 0
+          ;(this as any).countTotal++
+          ;(this as any).newTxs += data.numTxs
+          if(data.uncleHashes) {
+            ;(this as any).newUncles += data.uncleHashes.length
+          }
         }
       }
     }
@@ -39,17 +42,20 @@ export default class NoticeNewBlock extends Vue {
     ===================================================================================
   */
   display: boolean = false
-  countTotal: number = 0
+  countTotal = 0
+  newTxs = 0
+  newUncles = 0
+  validID = ['block', 'tx', 'pending', 'uncle']
 
   /*
     ===================================================================================
       Lifecycle:
     ===================================================================================
   */
+
   mounted() {
     //Check for valid ids:
-    const validID = ['block', 'tx', 'pending', 'uncle']
-    if (!validID.includes(this.pageID)) {
+    if (!this.validID.includes(this.pageID)) {
       throw new Error('Invalid pageID for notice new block component: ' + this.pageID)
     }
   }
@@ -63,8 +69,9 @@ export default class NoticeNewBlock extends Vue {
     this.$emit('reload')
     this.display = false
     this.countTotal = 0
+    this.newTxs = 0
+    this.newUncles = 0
   }
-
 
   /*
     ===================================================================================
@@ -75,7 +82,18 @@ export default class NoticeNewBlock extends Vue {
   get buttonText(): String {
     const plural = this.countTotal === 1 ? 1 : 2
     const message = `message.update.${this.pageID}`
-    return `${this.countTotal} ${this.$tc(message, plural)}`
+    return `${this.valueDisplay} ${this.$tc(message, plural)}`
+  }
+
+  get valueDisplay(): number {
+    switch (this.pageID) {
+      case this.validID[1]:
+        return this.newTxs
+      case this.validID[3]:
+        return this.newUncles
+      default:
+        return this.countTotal
+    }
   }
 }
 </script>
