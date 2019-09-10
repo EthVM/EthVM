@@ -193,7 +193,9 @@
     "report": "Find any bugs or have suggestions?",
     "update": {
       "tx": "new tx | new txs",
-      "block": "new block | new blocks"
+      "block": "new block | new blocks",
+      "uncle": "new uncle | new uncles",
+      "pending" : "new pending tx | new pedning txs"
     },
     "sec": "sec",
     "uncle": {
