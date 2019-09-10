@@ -206,7 +206,6 @@ export class BlockService {
       // check transaction hashes
       const expectedTxHashes = new Set<string>(JSON.parse(transactionHashes))
       const retrievedTxHashes = txHashesByBlock.get(hash) || new Set<string>()
-
       if (!setEquals(expectedTxHashes, retrievedTxHashes)) {
         const expected = [...expectedTxHashes].join(',')
         const retrieved = [...retrievedTxHashes].join(',')
@@ -223,7 +222,7 @@ export class BlockService {
         number, hash, author, difficulty, timestamp,
         uncleHashes: JSON.parse(uncleHashes),
         transactionHashes: JSON.parse(transactionHashes),
-        numTxs: transactionHashes.length,
+        numTxs: JSON.parse(transactionHashes).length,
         numSuccessfulTxs: successfulCountByBlock.get(hash) || 0,
         numFailedTxs: failedCountByBlock.get(hash) || 0,
         reward: rewardsByBlock.get(hash) || 0,
