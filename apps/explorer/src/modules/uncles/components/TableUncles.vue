@@ -7,7 +7,7 @@
     -->
     <app-table-title :page-type="pageType" :title="$tc('uncle.name', 2)" :has-pagination="hasPagination">
       <template v-slot:update>
-        <notice-new-block @reload="resetFromUncle" page-id="uncle"/>
+        <notice-new-block @reload="resetFromUncle" page-id="uncle" />
       </template>
       <template v-slot:pagination v-if="hasPagination">
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />

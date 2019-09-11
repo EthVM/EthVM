@@ -38,9 +38,9 @@ export default class NoticeNewBlock extends Vue {
     ===================================================================================
   */
   display: boolean = false
-  countTotal:number = 0
-  newTxs:number = 0
-  newUncles:number = 0
+  countTotal: number = 0
+  newTxs: number = 0
+  newUncles: number = 0
   validID = ['block', 'tx', 'pending', 'uncle']
   valueString: number = 0
 
@@ -67,7 +67,7 @@ export default class NoticeNewBlock extends Vue {
   onCountTotalChange(newVal: number, oldVal: number): void {
     if (this.pageId === this.validID[0] && this.countTotal > 0) {
       this.display = true
-       this.valueString = this.countTotal
+      this.valueString = this.countTotal
     }
     if (this.pageId === this.validID[1] && this.newTxs > 0) {
       this.display = true

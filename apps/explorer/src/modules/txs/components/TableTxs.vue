@@ -8,7 +8,7 @@
 
     <app-table-title v-if="!isAddressDetail" :page-type="pageType" :title="getTitle" page-link="/txs" :has-pagination="hasPagination">
       <template v-slot:update v-if="isPageTxs">
-        <notice-new-block :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" page-id="tx"/>
+        <notice-new-block :message="$tc('message.update.tx', 2)" @reload="resetFromBlock" page-id="tx" />
       </template>
       <template v-slot:pagination v-if="hasPagination">
         <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
@@ -67,7 +67,6 @@
             <v-flex hidden-sm-and-down md1>
               <h5>{{ $tc('tx.fee', 1) }}</h5>
             </v-flex>
-
             <v-flex hidden-xs-only sm1>
               <h5>{{ $t('tx.status') }}</h5>
             </v-flex>
