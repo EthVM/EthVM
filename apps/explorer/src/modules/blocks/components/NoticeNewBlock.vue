@@ -16,13 +16,9 @@ import { TranslateResult } from 'vue-i18n'
       newBlock: {
         query: newBlock,
         result({ data }) {
-          console.log(data.uncleHashes)
-          ;(this as any).display = true
           ;(this as any).countTotal++
-          ;(this as any).newTxs += data.numTxs
-          if(data.uncleHashes) {
-            ;(this as any).newUncles += data.uncleHashes.length
-          }
+          ;(this as any).newTxs += data.newBlock.numTxs
+          ;(this as any).newUncles += data.newBlock.uncleHashes.length
         }
       }
     }
@@ -34,7 +30,7 @@ export default class NoticeNewBlock extends Vue {
       Props:
     ===================================================================================
   */
-  @Prop({ type: String, default: 'block' }) pageID!: string // Ids: block, uncles, txs, pending
+  @Prop({ type: String, default: 'block' }) pageId!: string // Ids: block, uncles, txs, pending
 
   /*
     ===================================================================================
@@ -42,10 +38,11 @@ export default class NoticeNewBlock extends Vue {
     ===================================================================================
   */
   display: boolean = false
-  countTotal = 0
-  newTxs = 0
-  newUncles = 0
+  countTotal:number = 0
+  newTxs:number = 0
+  newUncles:number = 0
   validID = ['block', 'tx', 'pending', 'uncle']
+  valueString: number = 0
 
   /*
     ===================================================================================
@@ -55,11 +52,32 @@ export default class NoticeNewBlock extends Vue {
 
   mounted() {
     //Check for valid ids:
-    if (!this.validID.includes(this.pageID)) {
-      throw new Error('Invalid pageID for notice new block component: ' + this.pageID)
+    if (!this.validID.includes(this.pageId)) {
+      throw new Error('Invalid pageId for notice new block component: ' + this.pageId)
     }
   }
 
+  /*
+    ===================================================================================
+      Watch:
+    ===================================================================================
+  */
+
+  @Watch('countTotal')
+  onCountTotalChange(newVal: number, oldVal: number): void {
+    if (this.pageId === this.validID[0] && this.countTotal > 0) {
+      this.display = true
+       this.valueString = this.countTotal
+    }
+    if (this.pageId === this.validID[1] && this.newTxs > 0) {
+      this.display = true
+      this.valueString = this.newTxs
+    }
+    if (this.pageId === this.validID[3] && this.newUncles > 0) {
+      this.display = true
+      this.valueString = this.newUncles
+    }
+  }
   /*
     ===================================================================================
       Methods:
@@ -81,19 +99,8 @@ export default class NoticeNewBlock extends Vue {
 
   get buttonText(): String {
     const plural = this.countTotal === 1 ? 1 : 2
-    const message = `message.update.${this.pageID}`
-    return `${this.valueDisplay} ${this.$tc(message, plural)}`
-  }
-
-  get valueDisplay(): number {
-    switch (this.pageID) {
-      case this.validID[1]:
-        return this.newTxs
-      case this.validID[3]:
-        return this.newUncles
-      default:
-        return this.countTotal
-    }
+    const message = `message.update.${this.pageId}`
+    return `${this.valueString} ${this.$tc(message, plural)}`
   }
 }
 </script>
