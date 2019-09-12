@@ -69,7 +69,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export default class TokenTableRowLoading extends Vue {
+export default class TableTokensRowLoading extends Vue {
   @Prop(Boolean) isRopsten?: boolean
 }
 </script>
