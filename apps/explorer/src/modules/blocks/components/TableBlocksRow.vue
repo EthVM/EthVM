@@ -10,7 +10,7 @@
         <div class="table-row-mobile">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${block.hash}`"
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/number/${block.number}`"
                 >{{ $t('block.number') }} {{ block.numberFormatted }}</router-link
               >
             </v-flex>
@@ -24,7 +24,7 @@
               <p class="info--text psmall">{{ $t('common.hash') }}:</p>
             </v-flex>
             <v-flex xs10 pa-1>
-              <app-transform-hash :hash="block.hash" :link="`/block/${block.hash}`" />
+              <app-transform-hash :hash="block.hash" :link="`/block/hash/${block.hash}`" />
             </v-flex>
             <v-flex xs2 pa-1>
               <p class="info--text psmall pr-1">{{ $t('miner.name') }}:</p>
@@ -57,7 +57,7 @@
         -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex sm2>
-            <router-link class="black--text pb-1" :to="`/block/${block.hash}`">{{ block.numberFormatted }}</router-link>
+            <router-link class="black--text pb-1" :to="`/block/number/${block.number}`">{{ block.numberFormatted }}</router-link>
             <div v-if="block.uncleHashes.length" class="arrow">
               <div class="line"></div>
             </div>
@@ -65,7 +65,7 @@
           <v-flex sm6>
             <v-layout row pb-2>
               <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-              <app-transform-hash :hash="block.hash" :link="`/block/${block.hash}`" />
+              <app-transform-hash :hash="block.hash" :link="`/block/hash/${block.hash}`" />
             </v-layout>
             <v-layout row>
               <p class="info--text pr-1">{{ $t('miner.name') }}:</p>

@@ -205,7 +205,7 @@ export default class PageDetailsTxs extends Vue {
         {
           title: this.$i18n.t('block.number'),
           detail: transaction.blockNumberFormatted,
-          link: `/block/${transaction.blockHash}`
+          link: `/block/number/${transaction.blockNumber}`
         },
         {
           title: this.$i18n.t('common.hash'),

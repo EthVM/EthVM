@@ -34,7 +34,13 @@ export default new Router({
       name: 'blocks'
     },
     {
-      path: '/block/:blockRef',
+      path: '/block/number/:blockRef',
+      component: PageDetailsBlock,
+      name: 'block',
+      props: true
+    },
+    {
+      path: '/block/hash/:blockRef',
       component: PageDetailsBlock,
       name: 'block',
       props: true

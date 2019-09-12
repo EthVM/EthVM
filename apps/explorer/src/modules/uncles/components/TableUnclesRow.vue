@@ -39,7 +39,7 @@
             </v-flex>
             <v-flex xs12 pa-1>
               <p class="info--text psmall">
-                {{ $t('uncle.included') }}:<router-link class="secondary--text pl-1" :to="`/block/${uncle.nephewNumberBN}`">{{
+                {{ $t('uncle.included') }}:<router-link class="secondary--text pl-1" :to="`/block/number/${uncle.nephewNumberBN}`">{{
                   uncle.nephewNumberFormatted
                 }}</router-link>
               </p>
@@ -56,7 +56,7 @@
       -->
         <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <v-flex xs3 sm2 order-xs1>
-            <router-link class="secondary--text pb-1" :to="`/block/${uncle.nephewNumberBN}`">{{ uncle.nephewNumberFormatted }}</router-link>
+            <router-link class="secondary--text pb-1" :to="`/block/number/${uncle.nephewNumberBN}`">{{ uncle.nephewNumberFormatted }}</router-link>
           </v-flex>
           <v-flex xs3 sm2 order-xs1>
             <router-link class="secondary--text pb-1" :to="`/uncle/${uncle.hash}`">{{ uncle.numberFormatted }}</router-link>

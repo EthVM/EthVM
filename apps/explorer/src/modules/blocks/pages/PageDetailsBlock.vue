@@ -265,7 +265,7 @@ export default class PageDetailsBlock extends Vue {
         {
           title: this.$i18n.t('block.p-hash'),
           detail: header.parentHash!,
-          link: `/block/${header.parentHash!}`,
+          link: `/block/hash/${header.parentHash!}`,
           copy: true,
           mono: true
         },
@@ -368,7 +368,7 @@ export default class PageDetailsBlock extends Vue {
     }
 
     if (number) {
-      return `/block/${number.plus(1)}`
+      return `/block/number/${number.plus(1)}`
     }
     return ''
   }
@@ -385,7 +385,7 @@ export default class PageDetailsBlock extends Vue {
     }
 
     if (number && number.isGreaterThan(0)) {
-      return `/block/${number.minus(1)}`
+      return `/block/number/${number.minus(1)}`
     }
     return ''
   }
