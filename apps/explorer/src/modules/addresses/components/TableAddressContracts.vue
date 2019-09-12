@@ -202,8 +202,7 @@ Lifecycle
   }
 
   get loading() {
-    // return this.$apollo.loading
-    return true
+    return this.$apollo.loading
   }
 
   get hasError(): boolean {
