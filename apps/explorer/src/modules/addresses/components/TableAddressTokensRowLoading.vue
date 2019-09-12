@@ -1,5 +1,4 @@
 <template>
-  <v-card flat white>
     <v-layout>
       <!--
         =====================================================================================
@@ -25,7 +24,7 @@
                   <div class="table-row-loading"></div>
                 </v-flex>
                 <v-flex v-if="!isRopsten" xs12 pa-1>
-                  <div class="table-row-loading"></div>
+                  <div class="table-row-loading mb-2"></div>
                   <div class="table-row-loading"></div>
                 </v-flex>
               </v-layout>
@@ -40,7 +39,7 @@
        -->
       <v-flex hidden-xs-only sm12>
         <!-- Standard layout -->
-        <v-layout grid-list-xs row wrap align-center justify-start fill-height>
+        <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-2">
           <v-flex sm4 :sm6="isRopsten" class="pt-0 pb-0">
             <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-2>
               <div class="token-image">
@@ -62,7 +61,6 @@
         <v-divider class="mb-2 mt-2" />
       </v-flex>
     </v-layout>
-  </v-card>
 </template>
 
 <script lang="ts">
@@ -84,6 +82,5 @@ export default class TableTokensRowLoading extends Vue {
 .token-mobile {
   border: 1px solid #b4bfd2;
   padding: 10px 0px 10px 0px;
-  height: 68px;
 }
 </style>
