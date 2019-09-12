@@ -15,7 +15,7 @@ import org.koin.core.qualifier.named
 import java.math.BigInteger
 import java.util.Properties
 
-class TokenBalanceProcessor() : AbstractProcessor<BlockRecord>("token-balance-processor") {
+class TokenBalanceProcessor : AbstractProcessor<BlockRecord>("token-balance-processor") {
 
   override val logger = KotlinLogging.logger {}
 
