@@ -66,24 +66,7 @@
       </v-flex>
       <v-flex xs12 v-if="loading">
         <div v-for="i in maxItems" :key="i">
-          <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-            <v-flex xs3 sm2 order-xs1>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex xs3 sm2 order-xs1>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex xs12 sm5 md5 class="pr-0" order-xs3 order-sm2>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex hidden-sm-and-down md1 order-xs4 order-sm3>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-            <v-flex d-flex xs6 sm3 md2 order-xs2 order-md4>
-              <v-flex xs12 class="table-row-loading"></v-flex>
-            </v-flex>
-          </v-layout>
-          <v-divider class="mb-2 mt-2" />
+          <table-uncles-row-loading />
         </div>
       </v-flex>
     </v-layout>
@@ -96,6 +79,7 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
+import TableUnclesRowLoading from '@app/modules/uncles/components/TableUnclesRowLoading.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
 import { uncleSummaries } from '@app/modules/uncles/uncles.graphql'
@@ -110,6 +94,7 @@ import { Subscription } from 'rxjs'
     AppPaginate,
     AppTableTitle,
     TableUnclesRow,
+    TableUnclesRowLoading,
     NoticeNewBlock
   },
   data() {
