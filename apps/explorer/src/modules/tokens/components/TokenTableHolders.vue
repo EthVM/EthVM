@@ -31,19 +31,8 @@
       <!-- Start Rows -->
       <v-card v-if="loading" flat>
         <v-flex xs12>
-          <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile pa-3 mb-2' : 'pa-2']">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height>
-              <v-flex xs12 sm6>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex xs12 sm3 md4>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex xs12 sm3 md2>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-            </v-layout>
-            <v-divider class="mb-2 mt-2 hidden-xs-only" />
+          <div v-for="i in maxItems" :key="i" >
+            <token-table-holders-row-loading />
           </div>
         </v-flex>
       </v-card>
@@ -65,6 +54,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenTableHoldersRow from '@app/modules/tokens/components/TokenTableHoldersRow.vue'
+import TokenTableHoldersRowLoading from '@app/modules/tokens/components/TokenTableHoldersRowLoading.vue'
 import { TokenHolderPageExt, TokenHolderPageExt_items } from '@app/core/api/apollo/extensions/token-holder-page.ext'
 const MAX_ITEMS = 10
 import { tokenHolders } from '@app/modules/tokens/tokens.graphql'
@@ -76,7 +66,8 @@ import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
     AppPaginateHasMore,
     AppPaginate,
     AppError,
-    TokenTableHoldersRow
+    TokenTableHoldersRow,
+    TokenTableHoldersRowLoading
   },
   data() {
     return {
@@ -178,7 +169,7 @@ export default class TokenTableHolders extends Vue {
     return MAX_ITEMS
   }
 
-  get loading() {
+  get loading(): boolean |undefined {
     return this.$apollo.loading
   }
 
