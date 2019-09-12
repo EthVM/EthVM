@@ -31,7 +31,7 @@
       <!-- Start Rows -->
       <v-card v-if="loading" flat>
         <v-flex xs12>
-          <div v-for="i in maxItems" :key="i" >
+          <div v-for="i in maxItems" :key="i">
             <token-table-holders-row-loading />
           </div>
         </v-flex>
@@ -169,7 +169,7 @@ export default class TokenTableHolders extends Vue {
     return MAX_ITEMS
   }
 
-  get loading(): boolean |undefined {
+  get loading(): boolean | undefined {
     return this.$apollo.loading
   }
 

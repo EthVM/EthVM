@@ -53,7 +53,7 @@
       =====================================================================================
       -->
       <v-layout row wrap v-if="loading" class="pr-2 pl-2">
-        <v-flex xs12 v-for="i in maxItems" :key="i" >
+        <v-flex xs12 v-for="i in maxItems" :key="i">
           <table-address-contracts-row-loading />
         </v-flex>
       </v-layout>

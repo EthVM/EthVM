@@ -79,7 +79,7 @@
         </v-flex>
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
-           <table-blocks-row-loading />
+            <table-blocks-row-loading />
           </div>
         </div>
       </v-layout>

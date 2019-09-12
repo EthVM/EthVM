@@ -363,7 +363,7 @@ export default class TableTxs extends TableTxsMixin {
       ===================================================================================
       */
 
-  get loading():boolean | undefined {
+  get loading(): boolean | undefined {
     return this.$apollo.loading || this.syncing
   }
 

@@ -35,7 +35,7 @@
       <div v-if="loading">
         <v-flex sm12>
           <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : '']">
-            <transfers-table-row-loading :is-internal="isInternal"/>
+            <transfers-table-row-loading :is-internal="isInternal" />
           </div>
         </v-flex>
       </div>
@@ -68,7 +68,6 @@ import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.e
 import AppError from '@app/core/components/ui/AppError.vue'
 import TransfersTableRow from '@app/modules/transfers/components/TransfersTableRow.vue'
 import TransfersTableRowLoading from '@app/modules/transfers/components/TransfersTableRowLoading.vue'
-
 
 const MAX_ITEMS = 10
 

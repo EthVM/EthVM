@@ -15,7 +15,7 @@
       <v-flex xs4 sm2 order-xs1>
         <v-flex xs12 class="table-row-loading"></v-flex>
       </v-flex>
-      <v-flex xs12 sm5 md5  order-xs3 order-sm2>
+      <v-flex xs12 sm5 md5 order-xs3 order-sm2>
         <v-flex xs12 class="table-row-loading"></v-flex>
       </v-flex>
       <v-flex xs8 hidden-sm-only md1 order-xs4 order-sm3>
