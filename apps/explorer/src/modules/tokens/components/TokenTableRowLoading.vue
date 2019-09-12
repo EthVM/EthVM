@@ -1,13 +1,12 @@
 <template>
-  <v-card flat white>
-    <v-layout class="pr-1 pl-1">
+    <v-layout>
       <!--
         =====================================================================================
           Mobile (XS)
         =====================================================================================
       -->
       <v-flex xs12 hidden-sm-and-up>
-        <div class="table-row-loading-mobile">
+        <div class="table-row-loading-mobile mr-1 ml-1">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pr-2 pl-2">
             <v-flex xs2>
               <div class="token-image-mobile">
@@ -35,11 +34,10 @@
         <v-layout
           grid-list-xs
           row
-          wrap
           align-center
           justify-start
           fill-height
-          class="pr-2 pt-2"
+          class="pr-3  pt-1"
         >
           <v-flex sm1>
             <div class="token-image">
@@ -50,7 +48,7 @@
             <div class="table-row-loading"></div>
           </v-flex>
           <v-flex sm2>
-            <div class="table-row-loading"></div>
+            <div class="table-row-loading ml-2"></div>
           </v-flex>
           <v-flex sm2>
             <div class="table-row-loading"></div>
@@ -62,10 +60,9 @@
             <div class="table-row-loading"></div>
           </v-flex>
         </v-layout>
-        <v-divider class="mb-2 mt-2" />
+        <v-divider class="mb-1 mt-1" />
       </v-flex>
     </v-layout>
-  </v-card>
 </template>
 
 <script lang="ts">
