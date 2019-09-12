@@ -11,7 +11,7 @@ import com.github.ajalt.clikt.parameters.types.int
 import org.koin.core.context.startKoin
 import java.util.concurrent.ExecutorService
 
-class Verify : CliktCommand() {
+class Verify : CliktCommand(help = "Verification tool to check that data is stored as it should") {
 
   private val wsUrl: String by option(
     help = "The websocket url for web3",

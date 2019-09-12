@@ -78,10 +78,10 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     merged.putAll(baseKafkaProps)
 
     // convenience setting of group id for the consumer
-    merged.put(ConsumerConfig.GROUP_ID_CONFIG, "${netConfig.chainId.name.toLowerCase()}-$processorId")
+    merged[ConsumerConfig.GROUP_ID_CONFIG] = "${netConfig.chainId.name.toLowerCase()}-$processorId"
 
     // disable auto commit, we will explicitly tell kafka when we have finished processing a given set of records
-    merged.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
+    merged[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
 
     // processor specific settings and overrides
     merged.putAll(kafkaProps)
@@ -287,7 +287,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       // initialise the kafka consumer and subscribe to topics
 
       consumer = KafkaConsumer(mergedKafkaProps)
-      consumer.subscribe(this.topics)
+      consumer.subscribe(topics)
 
       logger.info { "Last sync time = ${DateTime(latestSyncTimeMs)}. Re-setting consumer to time = ${DateTime(restartTimeMs)}" }
 
