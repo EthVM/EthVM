@@ -63,7 +63,9 @@
           =====================================================================================
           -->
           <v-flex sm2 md1 pr-1>
-            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/number/${tx.blockNumber}`">{{ tx.blockNumberFormatted }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/number/${tx.blockNumber}`">{{
+              tx.blockNumberFormatted
+            }}</router-link>
           </v-flex>
           <!--
           =====================================================================================
