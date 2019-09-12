@@ -51,5 +51,4 @@ docker-compose.yaml
 .terraform
 terraform.tfvars
 *.tfstate
-*.tfstate.backup
-*.tfstate.lock.info
+*.tfstate.*
