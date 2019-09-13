@@ -59,6 +59,11 @@ const schema = {
       format: 'port',
       default: 6379,
     },
+    prefix: {
+      doc: 'Redis prefix for keys',
+      env: 'REDIS_PREFIX',
+      default: '',
+    }
   },
   graphql: {
     playground: {
@@ -118,6 +123,7 @@ export interface DbConfig {
 export interface RedisConfig {
   host: string
   port: number
+  prefix: string
 }
 
 @Injectable()
