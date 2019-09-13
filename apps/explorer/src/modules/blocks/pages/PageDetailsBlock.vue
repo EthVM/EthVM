@@ -11,7 +11,6 @@
         <app-details-list :details="blockDetails" :is-loading="loading" class="mb-4" :error="error" :max-items="8">
           <template v-slot:title>
             <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncleHashes" />
-            <v-divider class="lineGrey" />
           </template>
         </app-details-list>
       </v-flex>
