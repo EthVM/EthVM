@@ -27,3 +27,9 @@ variable "ssl_cert_arn" {
 
 variable "swarm_id" {
 }
+
+variable "explorer_url" {
+}
+
+variable "api_url" {
+}

@@ -174,3 +174,11 @@ variable "alb_ssl_cert_arn" {
   description = "ARN of the SSL certificate"
   default     = ""
 }
+
+variable "explorer_url" {
+  description = "Main URL used for the explorer"
+}
+
+variable "api_url" {
+  description = "Main URL used for the API"
+}

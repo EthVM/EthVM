@@ -77,13 +77,6 @@ resource "aws_security_group" "managers" {
   }
 
   ingress {
-    cidr_blocks = aws_subnet.public_workers.*.cidr_block
-    from_port   = 80
-    to_port     = 81
-    protocol    = "tcp"
-  }
-
-  ingress {
     cidr_blocks = concat(aws_subnet.workers.*.cidr_block, aws_subnet.managers.*.cidr_block)
     from_port   = -1
     to_port     = -1
@@ -105,6 +98,20 @@ resource "aws_security_group" "managers" {
 resource "aws_security_group" "workers" {
   name   = "${var.swarm_id}-worker-sg"
   vpc_id = aws_vpc.vpc.id
+
+  ingress {
+    cidr_blocks = aws_subnet.public_workers.*.cidr_block
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+  }
+
+  ingress {
+    cidr_blocks = aws_subnet.public_workers.*.cidr_block
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+  }
 
   ingress {
     cidr_blocks = [aws_subnet.bastion.cidr_block]

@@ -4,7 +4,11 @@ aws_ssh_key_name = "aws-ssh-keyname"
 aws_ssh_key_path = "~/.ssh/your-pem-path"
 
 swarm_id            = "ethvm"
+
 alb_enable_ssl_cert = false
+
+explorer_url = "ethvm.net"
+api_url = "api.ethvm.net"
 
 manager_ec2_ami = "ami-0015419a71c26a858"
 worker_ec2_ami  = "ami-0015419a71c26a858"

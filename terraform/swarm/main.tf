@@ -145,4 +145,6 @@ module "alb" {
   alb_target_count        = var.web_worker_instances
   enable_ssl_cert         = var.alb_enable_ssl_cert
   ssl_cert_arn            = var.alb_ssl_cert_arn
+  explorer_url            = var.explorer_url
+  api_url                 = var.api_url
 }
