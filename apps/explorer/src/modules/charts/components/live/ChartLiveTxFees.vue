@@ -27,6 +27,7 @@ import { latestAvgTxFees_blockMetricsTransactionFee, latestAvgTxFees_blockMetric
 import { newAvgGasPrice_newBlockMetricsTransaction } from '@app/core/api/apollo/types/newAvgGasPrice'
 import { newAvgTxFee_newBlockMetricsTransactionFee } from '@app/core/api/apollo/types/newAvgTxFee'
 import { ChartConfig, ChartData } from '@app/modules/charts/props'
+import { EthValue } from '@app/core/models'
 
 const MAX_ITEMS = 10
 
@@ -205,7 +206,7 @@ export default class ChartLiveTxFees extends Vue {
 
     const data = [] as any[]
     data.push(gasPrice.avgGasPrice)
-    data.push(txFee.avgTxFees)
+    data.push(new EthValue(txFee.avgTxFees).toEth())
 
     return {
       label: `${numberLabel} ${gasPrice.number}`,
