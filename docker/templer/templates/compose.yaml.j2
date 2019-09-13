@@ -352,37 +352,7 @@ services:
       - timescale
     ports:
       - 8082:8082
-    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082"
-
-  {% if GRAFANA_MONITORING_TOOLS_ENABLED %}
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    networks:
-      - net
-    volumes:
-      - prometheus:/prometheus
-      - ./prometheus:/config
-    command: --config.file=/config/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention=168h
-
-  grafana:
-    image: grafana/grafana:6.1.6
-    networks:
-      - net
-    environment:
-      GF_SERVER_ROOT_URL: 'http://grafana.{{ DOMAIN }}'
-      GF_SECURITY_ADMIN_PASSWORD: 'admin'
-      GF_INSTALL_PLUGINS: 'grafana-clock-panel,grafana-simple-json-datasource'
-    {% if TRAEFIK_ENABLED %}
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.default.protocol=http'
-      - 'traefik.frontend.rule=Host:grafana.{{ DOMAIN }}'
-      - 'traefik.backend=grafana'
-      - 'traefik.port=3000'
-    {% endif %}
-  {% endif %}
+    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082 --url postgres://${DATABASE_USER}:${DATABASE_PASSWORD}d@timescale:5432/${DATABASE_NAME}?sslmode=disable"
 
   {% if KAFKA_MONITORING_TOOLS_ENABLED %}
   # ///////////////////////////////////////////////////////
