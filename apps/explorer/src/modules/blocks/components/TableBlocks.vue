@@ -96,7 +96,6 @@ import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
 import TableBlocksRowLoading from '@app/modules/blocks/components/TableBlocksRowLoading.vue'
-
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
