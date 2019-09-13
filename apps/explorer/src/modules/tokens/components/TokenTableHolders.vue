@@ -169,7 +169,7 @@ export default class TokenTableHolders extends Vue {
     return MAX_ITEMS
   }
 
-  get loading(): boolean | undefined {
+  get loading(): boolean {
     return this.$apollo.loading
   }
 

@@ -258,8 +258,7 @@ export default class TokenTable extends Vue {
   }
 
   get loading() {
-    // return this.$apollo.loading || this.syncing
-    return true
+    return this.$apollo.loading || this.syncing
   }
 
   get hasError(): boolean {
