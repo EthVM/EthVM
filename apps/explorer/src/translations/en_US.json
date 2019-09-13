@@ -129,9 +129,9 @@
     "nonce": "Nonce",
     "sha": "SHA3",
     "age": "Age",
-    "eth": "ETH",
-    "gwei": "GWEI",
-    "wei": "WEI",
+    "eth": "Eth",
+    "gwei": "Gwei",
+    "wei": "Wei",
     "timestmp": "Timestamp",
     "success": "Successful",
     "fail": "Failed",
@@ -189,7 +189,7 @@
       "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",
       "btn": "Onward!"
     },
-    "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten ETH testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
+    "ropsten-no-token": "EthVM is still in testing, so we're currently showing data from the Ropsten Eth testnet. There are no tokens that have actual value on Ropsten testnet, but all mainnet Ethereum token balances will appear here once we go live.",
     "report": "Find any bugs or have suggestions?",
     "update": {
       "tx": "new tx | new txs",
@@ -326,7 +326,7 @@
     "ens": "mewtopia.eth",
     "copy": "Copyright 2019 All rights reserved by ",
     "mew": "MyEtherWallet Inc",
-    "copy-eth-addr": "Copy ETH address",
+    "copy-eth-addr": "Copy Eth address",
     "copy-btc-addr": "Copy BTC address"
   },
 
@@ -416,7 +416,7 @@
     },
     "eth": {
       "term": "Ether",
-      "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
+      "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is Eth."
     },
     "ethreum": {
       "term": "Ethereum",
@@ -432,7 +432,7 @@
     },
     "gas": {
       "term": "Gas",
-      "def": "The fee for executing a transaction or contract on the Ethereum network, paid in ETH. For this reason, a user must have a small amount of ETH available in the account before sending any transactions."
+      "def": "The fee for executing a transaction or contract on the Ethereum network, paid in Eth. For this reason, a user must have a small amount of Eth available in the account before sending any transactions."
     },
     "hash": {
       "term": "Hash",
