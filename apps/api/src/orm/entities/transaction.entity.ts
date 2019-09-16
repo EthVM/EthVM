@@ -1,40 +1,38 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn} from 'typeorm'
+import {Column, Entity, PrimaryColumn, OneToOne, JoinColumn} from 'typeorm'
 import {assignClean} from '@app/shared/utils'
-import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
-import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity'
-import {TransactionTraceEntity} from '@app/orm/entities/transaction-trace.entity'
 import BigNumber from 'bignumber.js'
 import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer'
-import {ContractEntity} from '@app/orm/entities/contract.entity'
-import { DateTransformer } from '@app/orm/transformers/date.transformer'
-import { BufferTransformer } from '@app/orm/transformers/buffer.transformer'
+import {DateTransformer} from '@app/orm/transformers/date.transformer'
+import {BufferTransformer} from '@app/orm/transformers/buffer.transformer'
+import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity';
+import {TraceEntity} from '@app/orm/entities/trace.entity';
 
-@Entity('canonical_transaction')
+@Entity('transaction')
 export class TransactionEntity {
 
   constructor(data: any) {
     assignClean(this, data);
   }
 
-  @PrimaryColumn({ type: 'character', length: 66, readonly: true })
+  @PrimaryColumn({ type: 'char', length: 66, readonly: true })
   hash!: string
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   nonce!: BigNumber
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 66, readonly: true })
   blockHash!: string
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   blockNumber!: BigNumber
 
-  @Column({ type: 'integer', readonly: true })
+  @Column({ type: 'int', readonly: true })
   transactionIndex!: number
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 42, readonly: true })
   from!: string
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 42, readonly: true })
   to?: string
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
@@ -52,27 +50,20 @@ export class TransactionEntity {
   @Column({ type: 'bigint', readonly: true })
   v!: string
 
-  @Column({ type: 'varchar', length: 128, readonly: true })
+  @Column({ type: 'char', length: 78, readonly: true })
   r!: string
 
-  @Column({ type: 'varchar', length: 128, readonly: true })
+  @Column({ type: 'char', length: 78, readonly: true })
   s!: string
 
   @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 42, readonly: true })
   creates?: string
 
   @Column({ type: 'bigint', readonly: true })
   chainId?: string
-
-  @ManyToOne(type => BlockHeaderEntity, block => block.txs)
-  @JoinColumn({
-    name: 'blockHash',
-    referencedColumnName: 'hash',
-  })
-  blockHeader!: BlockHeaderEntity
 
   @OneToOne(type => TransactionReceiptEntity, receipt => receipt.tx)
   @JoinColumn({
@@ -81,18 +72,11 @@ export class TransactionEntity {
   })
   receipt?: TransactionReceiptEntity
 
-  @OneToOne(type => TransactionTraceEntity, trace => trace.tx)
+  @OneToOne(type => TraceEntity, trace => trace.tx)
   @JoinColumn({
     name: 'hash',
     referencedColumnName: 'transactionHash',
   })
-  trace?: TransactionTraceEntity
-
-  @OneToMany(type => ContractEntity, contract => contract.createdAtTx)
-  @JoinColumn({
-    name: 'hash',
-    referencedColumnName: 'traceCreatedAtTransactionHash',
-  })
-  contracts?: ContractEntity[]
+  trace?: TraceEntity
 
 }

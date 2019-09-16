@@ -3,19 +3,17 @@ type Mutation {
 }
 
 type Query {
-  internalTransactionsByAddress(address: String!, offset: Int = 0, limit: Int = 20): TransferPage!
-
-  tokenBalancesByContractAddressForHolder(contractAddress: String!, holderAddress: String!, timestampFrom: Int = 0, timestampTo: Int = 0): BalancesPage
-  tokenTransfersByContractAddress(contractAddress: String!, offset: Int = 0, limit: Int = 20): TransferPage!
-  tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20): TransferPage!
-  totalTokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!): BigNumber!
-
-  balanceDeltas(addresses: [String]!, contracts: [String], filter: FilterEnum = all, timestampFrom: Int, timestampTo: Int, offset: Int = 0, limit: Int = 20): TransferPage!
+  internalTransactionsByAddress(address: String!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TransferPage!
+  tokenTransfersByContractAddress(contractAddress: String!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TransferPage!
+  tokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TransferPage!
+  totalTokenTransfersByContractAddressForHolder(contractAddress: String!, holderAddress: String!, blockNumber: BigNumber): BigNumber!
+  balanceDeltas(addresses: [String]!, contracts: [String], filter: FilterEnum = all, timestampFrom: Int, timestampTo: Int, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TransferPage!
 }
 
 type TransferPage {
   items: [Transfer!]!
   hasMore: Boolean!
+  totalCount: BigNumber
 }
 
 type Transfer {
@@ -27,37 +25,11 @@ type Transfer {
   tokenType: String
   amount: BigNumber
   tokenId: BigNumber
-  traceLocationBlockHash: String!
-  traceLocationBlockNumber: BigNumber!
-  traceLocationTransactionHash: String
-  traceLocationTransactionIndex: Int
-  traceLocationLogIndex: Int
-  traceLocationTraceAddress: String
+  blockHash: String!
+  blockNumber: BigNumber!
+  transactionHash: String
+  traceAddress: String
   timestamp: Date!
-}
-
-type BalancesPage {
-  items: [Balance!]!,
-  totalCount: BigNumber!
-}
-
-type Balance {
-  id: String!,
-  address: String!,
-  # counterpartAddress: String,
-  # deltaType: DeltaType!
-  contractAddress: String
-  tokenType: String
-  amount: BigNumber!
-  balance: BigNumber!
-  timestamp: Date!
-  # traceLocationBlockHash: String!
-  # traceLocationBlockNumber: BigNumber!
-  # traceLocationTransactionHash: String
-  # traceLocationTransactionIndex: Int
-  # traceLocationLogIndex: Int
-  # traceLocationTraceAddress: String
-  # transaction: Transaction
 }
 
 enum DeltaType {
@@ -69,4 +41,5 @@ enum DeltaType {
   TX
   MINER_FEE
   INTERNAL_TX
+  TX_FEE
 }

@@ -1,12 +1,12 @@
 type Query {
 
-  transactionSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
+  transactionSummaries(blockNumber: BigNumber, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
 
-  transactionSummariesForBlockNumber(number: BigNumber!, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
-  transactionSummariesForBlockHash(hash: String!, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
-  transactionSummariesForAddress(address: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20): TransactionSummaryPage!
+  transactionSummariesForBlockNumber(number: BigNumber!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TransactionSummaryPage!
+  transactionSummariesForBlockHash(hash: String!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TransactionSummaryPage!
+  transactionSummariesForAddress(address: String!, filter: FilterEnum = all, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): TransactionSummaryPage!
 
-  tx(hash: String!): Transaction
+  tx(hash: String!, blockNumber: BigNumber): Transaction
 }
 
 type Subscription {
@@ -31,7 +31,7 @@ type TransactionSummary {
 
 type TransactionSummaryPage {
   items: [TransactionSummary!]!
-  totalCount: Int!
+  totalCount: BigNumber!
 }
 
 type Transaction {

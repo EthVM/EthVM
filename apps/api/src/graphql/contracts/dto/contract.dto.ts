@@ -1,7 +1,7 @@
-import { BigNumber, Buffer, Contract, ContractMetadata, Long, Transaction } from '@app/graphql/schema'
+import {BigNumber, Contract, ContractMetadata, Transaction} from '@app/graphql/schema'
 import {assignClean} from '@app/shared/utils'
-import {ContractMetadataDto} from '@app/graphql/contracts/dto/contract-metadata.dto'
 import {TxDto} from '@app/graphql/txs/dto/tx.dto'
+import {EthListContractMetadataDto} from '@app/graphql/contracts/dto/eth-list-contract-metadata.dto';
 
 export class ContractDto implements Contract {
 
@@ -11,37 +11,26 @@ export class ContractDto implements Contract {
   code?: string;
   refundAddress?: string;
   refundBalance?: BigNumber;
-  traceCreatedAtBlockHash?: string;
-  traceCreatedAtBlockNumber?: BigNumber;
-  traceCreatedAtTransactionHash?: string;
-  traceCreatedAtTransactionIndex?: number;
-  traceCreatedAtLogIndex?: number;
-  traceCreatedAtTraceAddress?: string;
-  traceDestroyedAtBlockHash?: string;
-  traceDestroyedAtBlockNumber?: BigNumber;
-  traceDestroyedAtTransactionHash?: string;
-  traceDestroyedAtTransactionIndex?: Long;
-  traceDestroyedAtLogIndex?: Long;
-  traceDestroyedAtTraceAddress?: string;
-  traceDestroyedAt?: Buffer;
-  metadata?: ContractMetadata;
+  createdAtBlockHash?: string;
+  createdAtBlockNumber?: BigNumber;
+  createdAtTransactionHash?: string;
+  createdAtTraceAddress?: string;
+  destroyedAtBlockHash?: string;
+  destroyedAtBlockNumber?: BigNumber;
+  destroyedAtTransactionHash?: string;
+  destroyedAtTraceAddress?: string;
+  ethListContractMetadata?: ContractMetadata;
   totalSupply?: BigNumber;
-  createdAtTx?: Transaction;
-  timestamp?: Date;
 
   constructor(data) {
 
-    if (data.metadata) {
-      this.metadata = new ContractMetadataDto(data.metadata)
+    if (data.ethListContractMetadata) {
+      this.ethListContractMetadata = new EthListContractMetadataDto(data.metadata)
       delete data.metadata
     }
-    if (data.erc20Metadata) {
-      this.totalSupply = data.erc20Metadata.totalSupply
-      delete data.erc20Metadata
-    }
-    if (data.createdAtTx) {
-      this.createdAtTx = new TxDto(data.createdAtTx)
-      delete data.createdAtTx
+    if (data.contractMetadata) { // TODO determine if we can get more data here
+      this.totalSupply = data.contractMetadata.totalSupply
+      delete data.contractMetadata
     }
 
     assignClean(this, data)

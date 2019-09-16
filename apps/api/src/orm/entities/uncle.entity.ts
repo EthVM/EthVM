@@ -1,26 +1,26 @@
-import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
-import { assignClean } from '@app/shared/utils'
+import {assignClean} from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
-import { Column } from 'typeorm/decorator/columns/Column'
-import { BigNumberTransformer } from '../transformers/big-number.transformer'
-import { DateTransformer } from '@app/orm/transformers/date.transformer'
-import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
+import {Entity, JoinColumn, ManyToOne, PrimaryColumn} from 'typeorm'
+import {Column} from 'typeorm/decorator/columns/Column'
+import {BigNumberTransformer} from '../transformers/big-number.transformer'
+import {DateTransformer} from '@app/orm/transformers/date.transformer'
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
+import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity'
 
-@Entity('canonical_uncle')
+@Entity('uncle')
 export class UncleEntity {
 
   constructor(data: any) {
     assignClean(this, data)
   }
 
-  @PrimaryColumn({ type: 'character', length: 66, readonly: true })
+  @PrimaryColumn({ type: 'char', length: 66, readonly: true })
   hash!: string
 
-  @Column({ type: 'integer', readonly: true })
+  @Column({ type: 'int', readonly: true })
   index!: number
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 66, readonly: true })
   nephewHash!: string
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
@@ -29,28 +29,28 @@ export class UncleEntity {
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   height!: BigNumber
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 66, readonly: true })
   parentHash!: string
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   nonce?: BigNumber
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 66, readonly: true })
   sha3Uncles!: string
 
-  @Column({ type: 'character', length: 514, readonly: true })
+  @Column({ type: 'char', length: 514, readonly: true })
   logsBloom!: string
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 66, readonly: true })
   transactionsRoot!: string
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 66, readonly: true })
   stateRoot!: string
 
-  @Column({ type: 'character', length: 66, readonly: true })
+  @Column({ type: 'char', length: 66, readonly: true })
   receiptsRoot!: string
 
-  @Column({ type: 'character', length: 42, readonly: true })
+  @Column({ type: 'char', length: 42, readonly: true })
   author!: string
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
@@ -82,6 +82,6 @@ export class UncleEntity {
   blockHeader!: BlockHeaderEntity
 
   // Complicated join on two fields so cheaper to query separately and manually attach
-  reward?: FungibleBalanceDeltaEntity;
+  reward?: BalanceDeltaEntity
 
 }

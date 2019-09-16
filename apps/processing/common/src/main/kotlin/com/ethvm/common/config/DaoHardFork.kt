@@ -71,5 +71,5 @@ object DaoHardFork {
     Pair("0x807640a13483f8ac783c557fcdf27be11ea4ac7a", BigInteger("89472700"))
   )
 
-  val withdrawAccount = "0xbf4ed7b27f1d666546e30d74d50d173d20bca754"
+  const val withdrawAccount = "0xbf4ed7b27f1d666546e30d74d50d173d20bca754"
 }

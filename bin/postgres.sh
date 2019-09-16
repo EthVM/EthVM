@@ -8,9 +8,6 @@ source ${SCRIPT_DIR}/env.sh
 # verify we have required utilities installed
 ensure
 
-# verify we have required utilities installed
-ensure
-
 run() {
 
   local command="${1}"
@@ -18,19 +15,15 @@ run() {
 
   local datasets_dir="${ROOT_DIR}/datasets"
   local branch=$(git branch 2>/dev/null | grep '^*' | colrm 1 2 | tr / -)
-  local filenames=("principal-${branch}.sql.gz" "metrics-${branch}.sql.gz")
+  local filenames=("principal-${branch}.sql.gz")
 
   case "${command}" in
 
     dump)
 
         local filepath="${datasets_dir}/${filenames[0]}"
-        docker-compose exec -u postgres db-principal pg_dump ethvm_dev | gzip > ${filepath}
+        docker-compose exec -u postgres timescale pg_dump ethvm_dev | gzip > ${filepath}
         cd ${datasets_dir} && md5sum ${filenames[0]} > ${filenames[0]}.md5 # to avoid full path in md5 sum file
-
-        local filepath="${datasets_dir}/${filenames[1]}"
-        docker-compose exec -u postgres db-metrics pg_dump ethvm_dev | gzip > ${filepath}
-        cd ${datasets_dir} && md5sum ${filenames[1]} > ${filenames[1]}.md5 # to avoid full path in md5 sum file
 
       ;;
 

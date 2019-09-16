@@ -4,7 +4,7 @@ import {BigNumberTransformer} from '../transformers/big-number.transformer'
 import { assignClean } from '@app/shared/utils'
 import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
-@Entity('canonical_block_metric')
+@Entity('block_metric')
 export class BlockMetricEntity {
 
   constructor(data: any) {
@@ -17,8 +17,8 @@ export class BlockMetricEntity {
   @PrimaryColumn({type: 'timestamp', readonly: true, transformer: new DateTransformer()})
   timestamp!: Date
 
-  @Column({type: 'character', length: 66, unique: true, readonly: true})
-  blockHash!: string
+  @Column({type: 'char', length: 66, unique: true, readonly: true})
+  hash!: string
 
   @Column({type: 'int', readonly: true})
   blockTime!: number

@@ -23,6 +23,7 @@ import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext
 import BN from 'bignumber.js'
 import { ConfigHelper } from '@app/core/helper/config-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '../../../core/helper/number-format-helper'
 
 @Component({
   components: {
@@ -169,12 +170,16 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
 
   get priceDetail(): Detail {
     const detail: Detail = { title: this.$i18n.tc('price.name', 1) }
+
     if (!this.isLoading && this.tokenDetails) {
-      let priceFormatted = this.tokenDetails.currentPriceFormatted
+      let priceFormatted = this.tokenDetails.currentPriceFormatted.value
       if (this.priceChange) {
         priceFormatted += ` (${this.priceChange}%)`
       }
       detail.detail = priceFormatted
+      if (this.tokenDetails.currentPriceFormatted.tooltipText) {
+        detail.tooltip = this.tokenDetails.currentPriceFormatted.tooltipText
+      }
     }
     return detail
   }
@@ -182,7 +187,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalVolumeFormatted : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalVolumeFormatted.value : undefined,
+      tooltip:
+        !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalVolumeFormatted.tooltipText
+          ? this.tokenDetails.totalVolumeFormatted.tooltipText
+          : undefined
     }
   }
 
@@ -197,7 +206,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.market'),
-      detail: !isLoading && tokenDetails && tokenDetails.marketCap ? this.tokenDetails.marketCapFormatted : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.marketCap ? this.tokenDetails.marketCapFormatted.value : undefined,
+      tooltip:
+        !isLoading && tokenDetails && tokenDetails.marketCap && this.tokenDetails.marketCapFormatted.tooltipText
+          ? this.tokenDetails.marketCapFormatted.tooltipText
+          : undefined
     }
   }
 
@@ -205,7 +218,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { tokenDetails, isLoading } = this
     return {
       title: this.$i18n.t('token.volume'),
-      detail: !isLoading && tokenDetails && tokenDetails.totalVolume ? this.tokenDetails.totalVolumeFormatted : undefined
+      detail: !isLoading && tokenDetails && tokenDetails.totalVolume ? this.tokenDetails.totalVolumeFormatted.value : undefined,
+      tooltip:
+        !isLoading && tokenDetails && tokenDetails.totalVolume && this.tokenDetails.totalVolumeFormatted.tooltipText
+          ? this.tokenDetails.totalVolumeFormatted.tooltipText
+          : undefined
     }
   }
 
@@ -270,7 +287,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const detail: Detail = { title: this.$t('common.balance') }
     if (!this.isLoading && this.tokenDetails && this.holderDetails) {
       const symbol = this.tokenDetails.symbol === null ? '' : ` ${this.tokenDetails.symbol.toUpperCase()}`
-      detail.detail = `${this.balance}${symbol}`
+      detail.detail = `${this.balance.value}${symbol}`
+      detail.tooltip = this.balance.tooltipText ? this.balance.tooltipText : undefined
     }
     return detail
   }
@@ -307,13 +325,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     return holderDetails.balance && tokenDetails.currentPrice ? this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice), false).value : undefined
   }
 
-  get balance(): string {
+  get balance(): FormattedNumber {
     const decimals = this.tokenDetails.decimals
     let n = this.holderDetails.balanceBN
     if (decimals) {
       n = n.div(new BN(10).pow(decimals))
     }
-    return this.formatFloatingPointValue(n).value
+    return this.formatFloatingPointValue(n)
   }
 
   get priceChange(): string | undefined {

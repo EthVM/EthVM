@@ -1,11 +1,10 @@
 package com.ethvm.common.config
 
 import com.beust.klaxon.Klaxon
-import java.math.BigInteger
 
 enum class Genesis(private val filename: String) {
 
-  Frontier("frontier"),
+  Mainnet("mainnet"),
   Ropsten("ropsten"),
   Dev("dev");
 
@@ -29,8 +28,4 @@ data class GenesisFile(
   val mixHash: String,
   val coinbase: String,
   val allocations: Map<String, PremineAccount>
-) {
-
-  val gasLimitBI = BigInteger(gasLimit.substring(2), 16)
-  val difficultyBI = BigInteger(difficulty.substring(2), 16)
-}
+)
