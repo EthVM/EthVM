@@ -316,42 +316,10 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         // if empty return
         if (records.isEmpty) continue
 
-        // using the hash cache we classify each of the records we have received
+        // process the records
+        val recordIterator = records.iterator()
 
-        val classifiedRecords =
-          records
-            .map { record ->
-
-              val blockNumber = record.key().number.bigInteger()
-              val blockHash = blockHashFor(record.value())
-
-              // lookup to see if we have encountered this block before
-
-              when (hashCache[blockNumber]) {
-
-                // never seen this before, it's new
-                null -> Pair(BlockType.NEW, record)
-
-                // hash cache entry matches the current block hash, so this is a duplicate
-                blockHash -> {
-                  logger.warn { "Ignoring duplicate block. Number = $blockNumber, hash = $blockHash" }
-                  Pair(BlockType.DUPLICATE, record)
-                }
-
-                // otherwise we have an entry in the hash cache but it does not match the current block hash
-                // due to the design of the parity block source we know this to be the beginning of a fork
-                else -> Pair(BlockType.FORK, record)
-              }
-            }
-
-        // now that we have classified the records we start to process them
-
-        val classifiedRecordIterator = classifiedRecords
-          // filter out the duplicates
-          .filterNot { it.first == BlockType.DUPLICATE }
-          .iterator()
-
-        while (classifiedRecordIterator.hasNext()) {
+        while (recordIterator.hasNext()) {
 
           // reset
 
@@ -375,40 +343,46 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
                 // we keep taking records until we breach the max tx time or the iterator has no more records
 
-                while (txElapsedTimeMs < maxTxTimeMs && classifiedRecordIterator.hasNext()) {
+                while (txElapsedTimeMs < maxTxTimeMs && recordIterator.hasNext()) {
 
                   // retrieve the next block with it's classification
-                  val (blockType, record) = classifiedRecordIterator.next()
+                  val record = recordIterator.next()
 
                   // used for updating sync status at the end
                   lastRecord = record
 
                   val blockNumber = record.key().number.bigInteger()
+                  val blockHash = blockHashFor(record.value())
 
-                  when (blockType) {
+                  // lookup to see if we have encountered this block before
+
+                  when (hashCache[blockNumber]) {
 
                     // if it's a new block we allow the implementation to process it and then we update the hash cache
-
-                    BlockType.NEW -> {
-
+                    null -> {
                       process(txCtx, record)
 
                       // update hash entry
                       hashCache[blockNumber] = blockHashFor(record.value())
                     }
 
-                    // if it's a fork block we first allow the implementation to rewind and then process the new blcok
+                    // hash cache entry matches the current block hash, so this is a duplicate
+                    blockHash -> {
+                      logger.warn { "Ignoring duplicate block. Number = $blockNumber, hash = $blockHash" }
+                    }
 
-                    BlockType.FORK -> {
+                    // otherwise we have an entry in the hash cache but it does not match the current block hash
+                    // due to the design of the parity block source we know this to be the beginning of a fork
+                    // we first allow the implementation to rewind and then process the new block
+                    else -> {
 
                       rewindUntil(txCtx, blockNumber)
                       hashCache.removeKeysFrom(txCtx, blockNumber)
 
                       process(txCtx, record)
                       hashCache[blockNumber] = blockHashFor(record.value())
-                    }
 
-                    else -> {} // do nothing
+                    }
                   }
 
                   // record the record count and update the tx elapsed time
@@ -429,6 +403,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
                 logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
               }
+
           } catch (e: Exception) {
 
             // rollback any persistent changes to local state
@@ -448,6 +423,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     } catch (e: Exception) {
 
       logger.error(e) { "Fatal exception, stopping" }
+
     } finally {
 
       close()
