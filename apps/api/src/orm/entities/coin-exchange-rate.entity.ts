@@ -1,32 +1,34 @@
 import { Column, PrimaryColumn, Entity } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
+import {BigNumberTransformer} from '@app/orm/transformers/big-number.transformer';
+import BigNumber from 'bignumber.js';
 
-@Entity('coin_exchange_rates')
+@Entity('coin_exchange_rate')
 export class CoinExchangeRateEntity {
 
   constructor(data: any) {
     assignClean(this, data);
   }
 
-  @PrimaryColumn({type: 'character varying', length: 24, readonly: true})
+  @PrimaryColumn({ type: 'varchar', length: 24, readonly: true })
   id!: string
 
-  @Column({type: 'character', length: 3, readonly: true})
+  @Column({ type: 'char', length: 3, readonly: true })
   currency!: string
 
-  @Column({type: 'numeric', readonly: true})
-  price!: number
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  price!: BigNumber
 
-  @Column({type: 'numeric', readonly: true})
-  marketCap!: number
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  marketCap!: BigNumber
 
-  @Column({type: 'numeric', readonly: true})
-  vol24h!: number
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  vol24h!: BigNumber
 
-  @Column({type: 'numeric', readonly: true})
-  change24h!: number
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  change24h!: BigNumber
 
-  @Column({type: 'bigint', readonly: true})
+  @Column({ type: 'bigint', readonly: true })
   lastUpdated!: string
 
 }

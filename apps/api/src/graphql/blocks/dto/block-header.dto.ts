@@ -1,7 +1,7 @@
 import { BlockHeader } from '@app/graphql/schema'
-import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { assignClean } from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
 
 export class BlockHeaderDto implements BlockHeader {
 
@@ -26,7 +26,7 @@ export class BlockHeaderDto implements BlockHeader {
 
   constructor(data: BlockHeaderEntity) {
     assignClean(this, data)
-    this.blockTime = data.blockTime.blockTime || 0
+    this.blockTime = data.blockTime || 0
   }
 
 }

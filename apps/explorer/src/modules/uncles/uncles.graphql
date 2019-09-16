@@ -5,7 +5,7 @@ query uncleByHash($hash: String!) {
 }
 
 query uncleSummaries($offset: Int, $limit: Int, $fromUncle: BigNumber) {
-  summaries: uncles(offset: $offset, limit: $limit, fromUncle: $fromUncle) {
+  summaries: uncles(offset: $offset, limit: $limit, blockNumber: $fromUncle) {
     ...UncleSummaryPage
   }
 }

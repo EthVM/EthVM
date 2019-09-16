@@ -24,5 +24,5 @@ export interface BlockSummaryPage_items {
 export interface BlockSummaryPage {
   __typename: "BlockSummaryPage";
   items: BlockSummaryPage_items[];
-  totalCount: number;
+  totalCount: any;
 }

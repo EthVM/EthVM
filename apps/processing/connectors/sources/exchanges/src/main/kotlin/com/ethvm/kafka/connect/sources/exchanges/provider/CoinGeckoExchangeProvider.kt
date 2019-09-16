@@ -183,7 +183,7 @@ class CoinGeckoCurrencyExchangeProvider(
         .build()
 
     val DEFAULT_OPTS: Map<String, Any> = mapOf(
-      "topic" to "coin_exchange_rates",
+      "topic" to "coin_exchange_rate",
       "currency" to "usd",
       "coinIds" to listOf("ethereum,bitcoin,monero")
     )
@@ -300,7 +300,7 @@ class CoinGeckoTokenExchangeProvider(
         .build()
 
     val DEFAULT_OPTS: Map<String, Any> = mapOf(
-      "topic" to "token_exchange_rates",
+      "topic" to "token_exchange_rate",
       "currency" to "usd",
       "tokenIds" to CoinGeckoTokenExchangeProvider::class.java
         .getResourceAsStream("/coingecko/coingecko-eth.json")!!.let { stream -> jackson.readValue<List<TokenIdEntry>>(stream) },

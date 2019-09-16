@@ -21,5 +21,5 @@ export interface TokenBalancePage_items {
 export interface TokenBalancePage {
   __typename: "TokenBalancePage";
   items: TokenBalancePage_items[];
-  hasMore: boolean;
+  totalCount: any;
 }

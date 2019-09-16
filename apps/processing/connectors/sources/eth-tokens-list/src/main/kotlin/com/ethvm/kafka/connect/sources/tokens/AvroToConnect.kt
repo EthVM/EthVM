@@ -1,15 +1,6 @@
 package com.ethvm.kafka.connect.sources.tokens
 
-import com.ethvm.avro.capture.BlockHeaderRecord
-import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.capture.CanonicalRecord
-import com.ethvm.avro.capture.ContractKeyRecord
-import com.ethvm.avro.capture.EthListRecord
-import com.ethvm.avro.capture.TraceListRecord
-import com.ethvm.avro.capture.TransactionListRecord
-import com.ethvm.avro.capture.TransactionReceiptListRecord
-import com.ethvm.avro.capture.TransactionReceiptRecord
-import com.ethvm.avro.capture.TransactionRecord
+import com.ethvm.avro.capture.*
 import io.confluent.connect.avro.AvroData
 import mu.KotlinLogging
 import org.apache.avro.specific.SpecificRecordBase
@@ -30,8 +21,7 @@ object AvroToConnect {
     BlockHeaderRecord::class to BlockHeaderRecord.`SCHEMA$`,
     TransactionRecord::class to TransactionRecord.`SCHEMA$`,
     TransactionReceiptRecord::class to TransactionReceiptRecord.`SCHEMA$`,
-    TraceListRecord::class to TraceListRecord.`SCHEMA$`,
-    CanonicalRecord::class to CanonicalRecord.`SCHEMA$`
+    TraceListRecord::class to TraceListRecord.`SCHEMA$`
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue =

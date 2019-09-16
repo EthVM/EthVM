@@ -32,7 +32,7 @@
         </v-flex>
         <v-flex xs12 sm6 pt-0>
           <v-layout v-if="showPaginate" justify-end row>
-            <app-paginate-has-more :current-page="page" :has-more="tokensPage.hasMore" @newPage="setPage" />
+            <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
           </v-layout>
         </v-flex>
       </v-layout>
@@ -85,7 +85,7 @@
         <table-address-tokens-row :token="token" :holder="address" :is-ropsten="isRopsten" />
       </div>
       <v-layout v-if="showPaginate" justify-end row class="pa-2">
-        <app-paginate-has-more :current-page="page" :has-more="tokensPage.hasMore" @newPage="setPage" />
+        <app-paginate :total="pages" @newPage="setPage" :current-page="page" />
       </v-layout>
     </div>
   </v-card>
@@ -101,14 +101,14 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
 import { ConfigHelper } from '@app/core/helper/config-helper'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 const MAX_ITEMS = 10
 
 @Component({
   components: {
-    AppPaginateHasMore,
+    AppPaginate,
     AppError,
     AppInfoLoad,
     TableAddressTokensRow,
@@ -259,14 +259,12 @@ export default class TableAddressTokens extends Mixins(NumberFormatMixin) {
    * @return {Boolean} - Whether to display pagination component
    */
   get showPaginate(): boolean {
-    if (this.page && this.page > 0) {
-      // If we're past the first page, there must be pagination
-      return true
-    } else if (this.tokensPage && this.tokensPage.hasMore) {
-      // We're on the first page, but there are more items, show pagination
-      return true
-    }
-    return false
+    return this.pages > 1 && !this.hasError
+  }
+
+  get pages(): number {
+    const { tokensPage, maxItems } = this
+    return tokensPage ? Math.ceil(tokensPage.totalCountBN.div(maxItems).toNumber()) : 0
   }
 
   get getTotalMonetaryValue(): string {

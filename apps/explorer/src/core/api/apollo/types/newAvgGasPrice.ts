@@ -6,13 +6,13 @@
 // GraphQL subscription operation: newAvgGasPrice
 // ====================================================
 
-export interface newAvgGasPrice_newBlockMetricsTransaction {
-  __typename: "BlockMetricsTransaction";
+export interface newAvgGasPrice_newBlockMetric {
+  __typename: "BlockMetric";
   blockHash: string;
   number: any;
   avgGasPrice: any;
 }
 
 export interface newAvgGasPrice {
-  newBlockMetricsTransaction: newAvgGasPrice_newBlockMetricsTransaction;
+  newBlockMetric: newAvgGasPrice_newBlockMetric;
 }

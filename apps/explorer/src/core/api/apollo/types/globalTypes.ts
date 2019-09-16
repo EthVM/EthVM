@@ -14,6 +14,7 @@ export enum DeltaType {
   MINER_FEE = "MINER_FEE",
   TOKEN_TRANSFER = "TOKEN_TRANSFER",
   TX = "TX",
+  TX_FEE = "TX_FEE",
   UNCLE_REWARD = "UNCLE_REWARD",
 }
 

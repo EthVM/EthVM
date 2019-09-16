@@ -22,10 +22,10 @@ import { Footnote } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
 import { latestAvgGasPrices, latestAvgTxFees, newAvgGasPrice, newAvgTxFee } from '@app/modules/charts/charts.graphql'
 import { Subscription } from 'rxjs'
-import { latestAvgGasPrices_blockMetricsTransaction, latestAvgGasPrices_blockMetricsTransaction_items } from '@app/core/api/apollo/types/latestAvgGasPrices'
-import { latestAvgTxFees_blockMetricsTransactionFee, latestAvgTxFees_blockMetricsTransactionFee_items } from '@app/core/api/apollo/types/latestAvgTxFees'
-import { newAvgGasPrice_newBlockMetricsTransaction } from '@app/core/api/apollo/types/newAvgGasPrice'
-import { newAvgTxFee_newBlockMetricsTransactionFee } from '@app/core/api/apollo/types/newAvgTxFee'
+import { latestAvgGasPrices_blockMetrics, latestAvgGasPrices_blockMetrics_items } from '@app/core/api/apollo/types/latestAvgGasPrices'
+import { latestAvgTxFees_blockMetrics, latestAvgTxFees_blockMetrics_items } from '@app/core/api/apollo/types/latestAvgTxFees'
+import { newAvgGasPrice_newBlockMetric } from '@app/core/api/apollo/types/newAvgGasPrice'
+import { newAvgTxFee_newBlockMetric } from '@app/core/api/apollo/types/newAvgTxFee'
 import { ChartConfig, ChartData } from '@app/modules/charts/props'
 import { EthValue } from '@app/core/models'
 
@@ -54,10 +54,10 @@ const MAX_ITEMS = 10
         limit: MAX_ITEMS
       },
 
-      update({ blockMetricsTransaction }) {
-        if (blockMetricsTransaction) {
+      update({ blockMetrics }) {
+        if (blockMetrics) {
           this.error = '' // clear error
-          return blockMetricsTransaction
+          return blockMetrics
         } else if (!this.syncing) {
           this.error = this.$i18n.t('message.no-data')
         }
@@ -94,10 +94,10 @@ const MAX_ITEMS = 10
         limit: MAX_ITEMS
       },
 
-      update({ blockMetricsTransactionFee }) {
-        if (blockMetricsTransactionFee) {
+      update({ blockMetrics }) {
+        if (blockMetrics) {
           this.error = '' // clear error
-          return blockMetricsTransactionFee
+          return blockMetrics
         } else if (!this.syncing) {
           this.error = this.$i18n.t('message.no-data')
         }
@@ -131,7 +131,7 @@ const MAX_ITEMS = 10
         query: newAvgGasPrice,
         result({ data }) {
           const self = this as any
-          self.latestAvgGasPrice = data.newBlockMetricsTransaction
+          self.latestAvgGasPrice = data.newBlockMetric
           self.updateLatestData()
         }
       },
@@ -140,7 +140,7 @@ const MAX_ITEMS = 10
         query: newAvgTxFee,
         result({ data }) {
           const self = this as any
-          self.latestAvgTxFee = data.newBlockMetricsTransactionFee
+          self.latestAvgTxFee = data.newBlockMetric
           self.updateLatestData()
         }
       }
@@ -158,10 +158,10 @@ export default class ChartLiveTxFees extends Vue {
   error: string = ''
   syncing?: boolean
 
-  avgGasPrices?: latestAvgGasPrices_blockMetricsTransaction
-  avgTxFees?: latestAvgTxFees_blockMetricsTransactionFee
-  latestAvgGasPrice?: newAvgGasPrice_newBlockMetricsTransaction
-  latestAvgTxFee?: newAvgTxFee_newBlockMetricsTransactionFee
+  avgGasPrices?: latestAvgGasPrices_blockMetrics
+  avgTxFees?: latestAvgTxFees_blockMetrics
+  latestAvgGasPrice?: newAvgGasPrice_newBlockMetric
+  latestAvgTxFee?: newAvgTxFee_newBlockMetric
   latestData?: ChartData
 
   connectedSubscription?: Subscription
@@ -201,7 +201,7 @@ export default class ChartLiveTxFees extends Vue {
     ===================================================================================
     */
 
-  toChartDataItem(gasPrice: newAvgGasPrice_newBlockMetricsTransaction, txFee: newAvgTxFee_newBlockMetricsTransactionFee): ChartData {
+  toChartDataItem(gasPrice: newAvgGasPrice_newBlockMetric, txFee: newAvgTxFee_newBlockMetric): ChartData {
     const numberLabel = this.$i18n.t('block.number')
 
     const data = [] as any[]
@@ -288,12 +288,12 @@ export default class ChartLiveTxFees extends Vue {
       const gasPricesByNumber = gasPriceItems.reduce((memo, next) => {
         memo.set(parseInt(next.number)!, next)
         return memo
-      }, new Map<number, latestAvgGasPrices_blockMetricsTransaction_items>())
+      }, new Map<number, latestAvgGasPrices_blockMetrics_items>())
 
       const txFeesByNumber = txFeeItems.reduce((memo, next) => {
         memo.set(parseInt(next.number), next)
         return memo
-      }, new Map<number, latestAvgTxFees_blockMetricsTransactionFee_items>())
+      }, new Map<number, latestAvgTxFees_blockMetrics_items>())
 
       numbersAsc.forEach(number => {
         // for some reasons number is a string

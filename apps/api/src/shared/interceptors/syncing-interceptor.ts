@@ -13,7 +13,7 @@ export class SyncingInterceptor implements NestInterceptor {
 
   async intercept(context: ExecutionContext, next: CallHandler) {
 
-    let isSyncing = await this.metadataService.isSyncing()
+    let isSyncing = false // await this.metadataService.isSyncing() // TODO update
     if (isSyncing === undefined) {
       isSyncing = true
     }

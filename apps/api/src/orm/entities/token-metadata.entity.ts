@@ -29,4 +29,7 @@ export class TokenMetadataEntity {
   @Column({ type: 'integer', readonly: true })
   decimals?: string
 
+  @Column({ type: 'character varying', readonly: true })
+  type?: string
+
 }

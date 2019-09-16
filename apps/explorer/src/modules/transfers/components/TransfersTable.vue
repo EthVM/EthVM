@@ -7,7 +7,8 @@
     <app-error :has-error="hasError" :message="error" class="mb-4" />
     <!-- Pagination -->
     <v-layout row fill-height justify-end class="pb-1 pr-2 pl-2" v-if="showPaginate">
-      <app-paginate-has-more :current-page="page" :has-more="transferPage.hasMore" @newPage="setPage" />
+      <app-paginate v-if="isInternal" :total="pages" @newPage="setPage" :current-page="page" />
+      <app-paginate-has-more v-else :current-page="page" :has-more="transferPage.hasMore" @newPage="setPage" />
     </v-layout>
     <!-- End Pagination -->
 
@@ -72,7 +73,8 @@
         </v-card>
         <!-- End Rows -->
         <v-layout justify-end row class="pb-1 pr-2 pl-2" v-if="showPaginate">
-          <app-paginate-has-more :current-page="page" :has-more="transferPage.hasMore" @newPage="setPage" />
+          <app-paginate v-if="isInternal" :total="pages" @newPage="setPage" :current-page="page" />
+          <app-paginate-has-more v-else :current-page="page" :has-more="transferPage.hasMore" @newPage="setPage" />
         </v-layout>
       </div>
     </div>
@@ -91,6 +93,8 @@ import {
 import { TransferPageExt } from '@app/core/api/apollo/extensions/transfer-page.ext'
 import AppError from '@app/core/components/ui/AppError.vue'
 import TransfersTableRow from '@app/modules/transfers/components/TransfersTableRow.vue'
+import BigNumber from 'bignumber.js'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
 
@@ -99,7 +103,8 @@ const MAX_ITEMS = 10
     AppTimeAgo,
     AppError,
     TransfersTableRow,
-    AppPaginateHasMore
+    AppPaginateHasMore,
+    AppPaginate
   },
   data() {
     return {
@@ -236,9 +241,9 @@ Lifecycle
     return !!this.error && this.error !== ''
   }
 
-  // get totalCount(): BigNumber {
-  //   return this.transferPage ? this.transferPage.totalCountBN : new BigNumber(0)
-  // }
+  get totalCount(): BigNumber | undefined {
+    return this.transferPage ? this.transferPage.totalCountBN : undefined
+  }
 
   get hasItems(): boolean {
     return !!(this.transferPage && this.transferPage.items.length)
@@ -248,9 +253,12 @@ Lifecycle
   /**
    * @return {Number} - Total number of pagination pages
    */
-  // get pages(): number {
-  //   return this.transferPage ? Math.ceil(this.transferPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
-  // }
+  get pages(): number {
+    if (!this.isInternal) {
+      this.error = 'Error: Cannot calculate pages for Transfers'
+    }
+    return this.transferPage ? Math.ceil(this.transferPage!.totalCountBN!.div(this.maxItems).toNumber()) : 0
+  }
 
   /**
    * @return {Number} - MAX_ITEMS per pagination page

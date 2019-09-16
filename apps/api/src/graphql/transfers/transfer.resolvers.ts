@@ -1,15 +1,13 @@
-import { Args, Query, Resolver } from '@nestjs/graphql'
-import { TransferService } from '@app/dao/transfer.service'
-import { ParseAddressPipe } from '@app/shared/validation/parse-address.pipe'
-import { ParseAddressesPipe } from '@app/shared/validation/parse-addresses.pipe'
-import { TransferPageDto } from '@app/graphql/transfers/dto/transfer-page.dto'
-import { BalancesPageDto } from '@app/graphql/transfers/dto/balances-page.dto'
-import { UseInterceptors } from '@nestjs/common'
-import { SyncingInterceptor } from '@app/shared/interceptors/syncing-interceptor'
-import { InternalTransferPageDto } from '@app/graphql/transfers/dto/internal-transfer-page.dto'
+import {Args, Query, Resolver} from '@nestjs/graphql'
+import {TransferService} from '@app/dao/transfer.service'
+import {ParseAddressPipe} from '@app/shared/pipes/parse-address.pipe'
+import {ParseAddressesPipe} from '@app/shared/pipes/parse-addresses.pipe'
+import {UseInterceptors} from '@nestjs/common'
+import {SyncingInterceptor} from '@app/shared/interceptors/syncing-interceptor'
 import BigNumber from 'bignumber.js'
-import { FilterEnum } from '@app/graphql/schema'
-import { BalanceDeltaPageDto } from '@app/graphql/transfers/dto/balance-delta-page.dto'
+import {FilterEnum} from '@app/graphql/schema'
+import {BalanceDeltaPageDto} from '@app/graphql/transfers/dto/balance-delta-page.dto'
+import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe';
 
 @Resolver('Transfer')
 @UseInterceptors(SyncingInterceptor)
@@ -22,8 +20,12 @@ export class TransferResolvers {
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, hasMore] = await this.transferService.findContractTokenTransfers(contractAddress, offset, limit)
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+    }
+    const [items, hasMore] = await this.transferService.findContractTokenTransfers(contractAddress, offset, limit, blockNumber)
     return new BalanceDeltaPageDto({ items, hasMore })
   }
 
@@ -34,8 +36,12 @@ export class TransferResolvers {
     @Args('filter') filter: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, hasMore] = await this.transferService.findContractTokenTransfersForAddress(contractAddress, holderAddress, filter, offset, limit)
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+    }
+    const [items, hasMore] = await this.transferService.findContractTokenTransfersForAddress(contractAddress, holderAddress, filter, offset, limit, blockNumber)
     return new BalanceDeltaPageDto({ items, hasMore })
   }
 
@@ -43,8 +49,12 @@ export class TransferResolvers {
   async totalTokenTransfersByContractAddressForHolder(
     @Args('contractAddress', ParseAddressPipe) contractAddress: string,
     @Args('holderAddress', ParseAddressPipe) holderAddress: string,
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BigNumber> {
-    return this.transferService.countContractTokenTransfersForAddress(contractAddress, holderAddress)
+    if (!blockNumber) { // There is no data
+      return new BigNumber(0)
+    }
+    return this.transferService.countContractTokenTransfersForAddress(contractAddress, holderAddress, blockNumber)
   }
 
   @Query()
@@ -52,28 +62,19 @@ export class TransferResolvers {
     @Args('address', ParseAddressPipe) address: string,
     @Args('offset') offset: number,
     @Args('limit') limit: number,
-  ): Promise<InternalTransferPageDto> {
-    const [items, hasMore] = await this.transferService.findInternalTransactionsForAddress(address, offset, limit)
-    return new InternalTransferPageDto({ items, hasMore })
-  }
-
-  @Query()
-  async tokenBalancesByContractAddressForHolder(
-    @Args('contractAddress', ParseAddressPipe) contractAddress: string,
-    @Args('holderAddress', ParseAddressPipe) holderAddress: string,
-    @Args('timestampFrom') timestampFrom: number,
-    @Args('timestampTo') timestampTo: number,
-  ): Promise<BalancesPageDto> {
-    const result = await this.transferService.findTokenBalancesByContractAddressForHolder(contractAddress, holderAddress, timestampFrom, timestampTo)
-    return new BalancesPageDto({
-      items: result[0],
-      totalCount: result[1],
-    })
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
+  ): Promise<BalanceDeltaPageDto> {
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: 0, hasMore: false, totalCount: 0 })
+    }
+    const [items, hasMore, totalCount] = await this.transferService.findInternalTransactionsForAddress(address, offset, limit, blockNumber)
+    return new BalanceDeltaPageDto({ items, hasMore, totalCount })
   }
 
   @Query()
   async balanceDeltas(
     @Args({name: 'addresses', type: () => [String]}, ParseAddressesPipe) addresses: string[],
+    @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
     @Args({name: 'contracts', type: () => [String]}, ParseAddressesPipe) contracts?: string[],
     @Args('filter') filter?: FilterEnum,
     @Args('timestampFrom') timestampFrom?: number,
@@ -81,7 +82,10 @@ export class TransferResolvers {
     @Args('offset') offset?: number,
     @Args('limit') limit?: number,
   ): Promise<BalanceDeltaPageDto> {
-    const [items, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, timestampTo, timestampFrom, offset, limit)
+    if (!blockNumber) { // There is no data
+      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+    }
+    const [items, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, offset, limit, blockNumber, timestampTo, timestampFrom)
     return new BalanceDeltaPageDto({ items, hasMore })
   }
 }

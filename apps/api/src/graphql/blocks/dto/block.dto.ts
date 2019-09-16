@@ -1,9 +1,9 @@
 import { Block } from '@app/graphql/schema'
-import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity'
 import { BlockHeaderDto } from '@app/graphql/blocks/dto/block-header.dto'
 import { BlockRewardDto } from '@app/graphql/blocks/dto/block-reward.dto'
 import BigNumber from 'bignumber.js'
-import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metrics-transaction-fee.entity'
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
+import {BlockMetricsTraceEntity} from '@app/orm/entities/block-metrics-trace.entity';
 
 export class BlockDto implements Block {
 
@@ -13,7 +13,7 @@ export class BlockDto implements Block {
   uncleHashes: string[]
   totalTxFees: BigNumber
 
-  constructor(data: BlockHeaderEntity, txFees?: BlockMetricsTransactionFeeEntity) {
+  constructor(data: BlockHeaderEntity, txFees?: BlockMetricsTraceEntity) {
 
     this.transactionHashes = data.transactionHashes ? JSON.parse(data.transactionHashes) : undefined
     this.uncleHashes = data.uncleHashes ? JSON.parse(data.uncleHashes) : undefined

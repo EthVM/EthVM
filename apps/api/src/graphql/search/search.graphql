@@ -1,5 +1,5 @@
 type Query {
-  search(query: String!): Search!
+  search(query: String!, blockNumber: BigNumber): Search!
 }
 
 type Search {

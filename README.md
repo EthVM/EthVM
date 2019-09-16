@@ -42,7 +42,7 @@ Our core infrastructure is based on well known languages:
 
 And also is backed by popular frameworks:
 
-- [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Streams](https://kafka.apache.org/documentation/streams/) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html) + [Avro](https://avro.apache.org/)
+- [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html) + [Avro](https://avro.apache.org/)
 - [VueJs](https://vuejs.org/)
 - [NestJS](https://nestjs.com/)
 

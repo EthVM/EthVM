@@ -19,7 +19,7 @@ export interface uncleSummaries_summaries_items {
 export interface uncleSummaries_summaries {
   __typename: "UnclePage";
   items: uncleSummaries_summaries_items[];
-  totalCount: number;
+  totalCount: any;
 }
 
 export interface uncleSummaries {
