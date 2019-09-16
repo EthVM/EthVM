@@ -352,7 +352,7 @@ services:
       - timescale
     ports:
       - 8082:8082
-    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082 --url postgres://${DATABASE_USER}:${DATABASE_PASSWORD}d@timescale:5432/${DATABASE_NAME}?sslmode=disable"
+    command: "/usr/bin/pgweb --bind=0.0.0.0 --listen=8082 --url postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@timescale:5432/${DATABASE_NAME}?sslmode=disable"
 
   {% if KAFKA_MONITORING_TOOLS_ENABLED %}
   # ///////////////////////////////////////////////////////
