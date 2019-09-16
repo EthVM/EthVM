@@ -1,6 +1,3 @@
-
-
-
 create or replace function notify_sync_status()
 returns trigger as
     $body$

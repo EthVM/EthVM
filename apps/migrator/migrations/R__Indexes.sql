@@ -120,31 +120,3 @@ create index if not exists idx_contract_holder_count_delta_by_token_type_desc on
 
 create index if not exists idx_contract_metadata_by_block_number on contract_metadata(block_number asc);
 create index if not exists idx_contract_metadata_by_block_number_desc on contract_metadata(block_number desc);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
