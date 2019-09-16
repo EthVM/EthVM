@@ -177,11 +177,16 @@
       "text4": "Команда EthVM будет рада сотрудничеству с нашим сообществом пользователей и разработчиков в создании полезных инструментов для блокчейна!",
       "btn": "Вперед!"
     },
-    "ropsten-no-token": "EthVM все еще находится в тестировании, поэтому в настоящее время мы показываем данные из тест-нета Ropsten ETH. В тест-нете Ropsten нет токенов которые имеют ценность. Балансы всех ценных токенов появятся здесь, когда мы подключим Mainnet.",
+    "ropsten-no-token": {
+      "text": "You are viewing Ropsten testnet which has no tokens of actual monetary value. To view token values please switch to the ",
+      "link": "Ethereum mainnet"
+    },
     "report": "Нашли какие-либо ошибки или есть предложения?",
     "update": {
       "tx": "Новая Tx | Новых Txs",
-      "block": "новый блок | новых блоков"
+      "block": "новый блок | новых блоков",
+      "uncle": "new uncle | new uncles",
+      "pending": "new pending tx | new pedning txs"
     },
     "sec": "сек.",
     "uncle": {
