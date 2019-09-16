@@ -211,10 +211,10 @@ run() {
     ensure-kafka-connect) ensure_kafka_connect "$@";;
     ensure-sinks)         register_sinks "$@"      ;;
     update-sinks)         update_sinks "$@"        ;;
-    delete-sinks)         delete_sinks "$@"         ;;
-    update-sources)       update_sources "$@"        ;;
+    delete-sinks)         delete_sinks "$@"        ;;
+    update-sources)       update_sources "$@"      ;;
     ensure-sources)       register_sources "$@"    ;;
-    delete-sources)       delete_sources "$@"       ;;
+    delete-sources)       delete_sources "$@"      ;;
     register)             register "$@"            ;;
     reset-sink-offsets)   reset_sink_offsets "$@"  ;;
     init)                 init "$@"                ;;

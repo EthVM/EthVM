@@ -2,10 +2,9 @@ import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
 import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
 import { BigNumber } from 'bignumber.js'
-import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
 import { DateTransformer } from '@app/orm/transformers/date.transformer'
 
-@Entity('canonical_block_metrics_header')
+@Entity('block_metrics_header')
 export class BlockMetricsHeaderEntity {
 
   constructor(data: any) {
@@ -15,19 +14,28 @@ export class BlockMetricsHeaderEntity {
   @PrimaryColumn({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   number!: BigNumber
 
-  @Column({ type: 'character', length: 66, unique: true, readonly: true })
-  blockHash!: string
+  @Column({ type: 'char', length: 66, unique: true, readonly: true })
+  hash!: string
 
   @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
   timestamp!: Date
 
-  @Column({type: 'int', readonly: true})
+  @Column({ type: 'int', readonly: true })
+  blockTime?: number
+
+  @Column({ type: 'int', readonly: true })
   numUncles!: number
 
-  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   difficulty!: BigNumber
 
-  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   totalDifficulty!: BigNumber
+
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  avgGasLimit!: BigNumber
+
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  avgGasPrice!: BigNumber
 
 }

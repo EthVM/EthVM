@@ -6,20 +6,20 @@
 // GraphQL query operation: latestAvgGasPrices
 // ====================================================
 
-export interface latestAvgGasPrices_blockMetricsTransaction_items {
-  __typename: "BlockMetricsTransaction";
+export interface latestAvgGasPrices_blockMetrics_items {
+  __typename: "BlockMetric";
   blockHash: string;
   number: any;
   avgGasPrice: any;
 }
 
-export interface latestAvgGasPrices_blockMetricsTransaction {
-  __typename: "BlockMetricsTransactionPage";
-  items: latestAvgGasPrices_blockMetricsTransaction_items[];
+export interface latestAvgGasPrices_blockMetrics {
+  __typename: "BlockMetricsPage";
+  items: latestAvgGasPrices_blockMetrics_items[];
 }
 
 export interface latestAvgGasPrices {
-  blockMetricsTransaction: latestAvgGasPrices_blockMetricsTransaction;
+  blockMetrics: latestAvgGasPrices_blockMetrics;
 }
 
 export interface latestAvgGasPricesVariables {

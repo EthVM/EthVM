@@ -20,6 +20,9 @@ class ParitySourceTask : SourceTask() {
   private lateinit var wsUrl: String
   private lateinit var startBlockNumber: BigInteger
   private lateinit var entitiesList: List<String>
+  private lateinit var topicBlocks: String
+  private lateinit var topicTraces: String
+  private lateinit var topicSyncState: String
 
   private var connectDelayMs: Long = -1
 
@@ -127,7 +130,7 @@ class ParitySourceTask : SourceTask() {
 
       entitySources = entitiesList.map {
         when (it) {
-          "full_block" -> ParityFullBlockSource(context, parity!!, "canonical_block_header", "canonical_transactions", "canonical_receipts", "canonical_uncles", "canonical_traces", "parity_sync_state")
+          "full_block" -> ParityFullBlockSource(context, parity!!)
           else -> throw IllegalArgumentException("Unexpected entity: $it")
         }
       }

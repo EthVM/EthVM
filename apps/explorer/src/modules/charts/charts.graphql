@@ -2,9 +2,9 @@
 
 query latestAvgGasPrices($limit: Int) {
 
-  blockMetricsTransaction(offset: 0, limit: $limit) {
+  blockMetrics(offset: 0, limit: $limit) {
     items {
-      blockHash
+      blockHash: hash
       number
       avgGasPrice
     }
@@ -14,9 +14,9 @@ query latestAvgGasPrices($limit: Int) {
 
 query latestAvgTxFees($limit: Int) {
 
-  blockMetricsTransactionFee(offset: 0, limit: $limit) {
+  blockMetrics(offset: 0, limit: $limit) {
     items {
-      blockHash
+      blockHash: hash
       number
       avgTxFees
     }
@@ -26,8 +26,8 @@ query latestAvgTxFees($limit: Int) {
 
 subscription newAvgGasPrice {
 
-  newBlockMetricsTransaction {
-    blockHash
+  newBlockMetric {
+    blockHash: hash
     number
     avgGasPrice
   }
@@ -37,8 +37,8 @@ subscription newAvgGasPrice {
 
 subscription newAvgTxFee {
 
-  newBlockMetricsTransactionFee {
-    blockHash
+  newBlockMetric {
+    blockHash: hash
     number
     avgTxFees
   }

@@ -1,6 +1,6 @@
 query latestTransactionSummaries($fromBlock: BigNumber, $offset: Int, $limit: Int) {
 
-  summaries: transactionSummaries(fromBlock: $fromBlock, offset: $offset, limit: $limit) {
+  summaries: transactionSummaries(blockNumber: $fromBlock, offset: $offset, limit: $limit) {
     ...TransactionSummaryPage
   }
 

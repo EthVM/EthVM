@@ -7,5 +7,5 @@
 // ====================================================
 
 export interface latestHashRate {
-  hashRate: any;
+  hashRate: any | null;
 }

@@ -1,5 +1,5 @@
 type Query {
-  accountByAddress(address: String!): Account
+  accountByAddress(address: String!, blockNumber: BigNumber): Account
 }
 
 type Account {

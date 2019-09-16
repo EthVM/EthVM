@@ -1,0 +1,43 @@
+import com.commercehub.gradle.plugin.avro.GenerateAvroProtocolTask
+import com.commercehub.gradle.plugin.avro.GenerateAvroSchemaTask
+
+plugins {
+  id 'java-library'
+  id 'maven-publish'
+  id'com.commercehub.gradle.plugin.avro' version "0.16.0"
+}
+
+dependencies {
+  compile 'org.apache.avro:avro:1.8.2'
+  implementation 'joda-time:joda-time:2.10.1'
+}
+
+avro {
+  fieldVisibility = "PUBLIC"
+  enableDecimalLogicalType = false
+  validateDefaults = true
+}
+
+task("generateProtocol", type: GenerateAvroProtocolTask) {
+  source file("src/main/avro")
+  include("**/*.avdl")
+  outputDir = file("build/generated-main-avro-avpr")
+}
+
+task("generateSchema", type: GenerateAvroSchemaTask) {
+  dependsOn generateProtocol
+  source file("src/main/avro")
+  source file("build/generated-main-avro-avpr")
+  include("**/*.avpr")
+  outputDir = file("build/generated-main-avro-avsc")
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}

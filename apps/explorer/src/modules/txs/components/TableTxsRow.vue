@@ -10,7 +10,7 @@
         <div :class="txStatusClass">
           <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
             <v-flex xs6 pa-1>
-              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.blockHash}`"
+              <router-link class="black--text font-weight-medium pb-1" :to="`/block/${tx.blockNumber}`"
                 >{{ $t('block.number') }} {{ tx.blockNumberFormatted }}</router-link
               >
             </v-flex>
@@ -64,7 +64,9 @@
           =====================================================================================
           -->
           <v-flex sm2 lg1 pr-1>
-            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockHash}`">{{ tx.blockNumberFormatted }}</router-link>
+            <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockNumber}`">
+              {{ tx.blockNumberFormatted }}
+            </router-link>
           </v-flex>
           <!--
           =====================================================================================

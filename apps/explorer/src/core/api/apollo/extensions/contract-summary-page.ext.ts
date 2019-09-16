@@ -36,10 +36,14 @@ export class ContractSummaryPageExt_items implements ContractSummaryPage_items {
 export class ContractSummaryPageExt implements ContractSummaryPage {
   __typename!: 'ContractSummaryPage'
   items: (ContractSummaryPageExt_items)[]
-  hasMore: boolean
+  totalCount!: any
 
   constructor(proto: ContractSummaryPage) {
     this.items = proto.items.map(s => new ContractSummaryPageExt_items(s as ContractSummary))
-    this.hasMore = proto.hasMore
+    this.totalCount = proto.totalCount
+  }
+
+  get totalCountBN(): BN {
+    return new BN(this.totalCount)
   }
 }

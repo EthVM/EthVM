@@ -1,6 +1,5 @@
 import { BigNumber, TokenBalance } from '@app/graphql/schema'
 import { assignClean, extractFromJson } from '@app/shared/utils'
-import { Erc20BalanceEntity } from '@app/orm/entities/erc20-balance.entity'
 
 export class TokenBalanceDto implements TokenBalance {
 
@@ -16,28 +15,28 @@ export class TokenBalanceDto implements TokenBalance {
   priceChangePercentage24h?: BigNumber
   image?: string
 
-  constructor(data: Erc20BalanceEntity) {
+  constructor(data: any) {
     assignClean(this, data)
 
-    this.balance = data.amount
-    this.contractAddress = data.contract
+    this.balance = data.balance
+    this.contractAddress = data.contract_address
     this.holderAddress = data.address
 
-    const { tokenExchangeRate, metadata, contractMetadata } = data
+    const { tokenExchangeRate, contractMetadata, ethListContractMetadata } = data
 
-    if (contractMetadata) {
-      this.name = contractMetadata.name
-      this.website = contractMetadata.website
-      this.email = extractFromJson('email', contractMetadata.support)
-      this.symbol = contractMetadata.symbol
-      this.decimals = contractMetadata.decimals
-      this.image = extractFromJson('src', contractMetadata.logo)
+    if (ethListContractMetadata) {
+      this.name = ethListContractMetadata.name
+      this.website = ethListContractMetadata.website
+      this.email = extractFromJson('email', ethListContractMetadata.support)
+      this.symbol = ethListContractMetadata.symbol
+      this.decimals = ethListContractMetadata.decimals
+      this.image = extractFromJson('src', ethListContractMetadata.logo)
     }
 
-    if (metadata) {
-      this.name = this.name || metadata.name
-      this.symbol = this.symbol || metadata.symbol
-      this.decimals = this.decimals || metadata.decimals
+    if (contractMetadata) {
+      this.name = this.name || contractMetadata.name
+      this.symbol = this.symbol || contractMetadata.symbol
+      this.decimals = this.decimals || contractMetadata.decimals
     }
 
     if (tokenExchangeRate) {

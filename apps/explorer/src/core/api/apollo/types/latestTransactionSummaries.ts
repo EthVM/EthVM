@@ -25,7 +25,7 @@ export interface latestTransactionSummaries_summaries_items {
 export interface latestTransactionSummaries_summaries {
   __typename: "TransactionSummaryPage";
   items: latestTransactionSummaries_summaries_items[];
-  totalCount: number;
+  totalCount: any;
 }
 
 export interface latestTransactionSummaries {

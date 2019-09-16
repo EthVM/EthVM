@@ -25,7 +25,7 @@ export interface transactionSummariesByBlockHash_summaries_items {
 export interface transactionSummariesByBlockHash_summaries {
   __typename: "TransactionSummaryPage";
   items: transactionSummariesByBlockHash_summaries_items[];
-  totalCount: number;
+  totalCount: any;
 }
 
 export interface transactionSummariesByBlockHash {

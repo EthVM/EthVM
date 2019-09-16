@@ -24,7 +24,7 @@ export interface latestBlocks_blockSummaries_items {
 export interface latestBlocks_blockSummaries {
   __typename: "BlockSummaryPage";
   items: latestBlocks_blockSummaries_items[];
-  totalCount: number;
+  totalCount: any;
 }
 
 export interface latestBlocks {

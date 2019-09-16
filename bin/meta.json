@@ -20,8 +20,8 @@
       "version": "${DOCKER_IMAGES_PATH}/ethvm-utils/version.properties"
     },
     {
-      "id": "kafka-streams",
-      "dockerfile": "${APPS_PATH}/processing/kafka-streams/Dockerfile",
+      "id": "processor",
+      "dockerfile": "${APPS_PATH}/processing/processor/Dockerfile",
       "context": "${APPS_PATH}/processing",
       "version": "${APPS_PATH}/processing/version.properties"
     },
