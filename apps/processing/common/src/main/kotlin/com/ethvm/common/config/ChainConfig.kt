@@ -204,7 +204,7 @@ interface NetConfig {
     val mainnet by lazy {
       BaseNetConfig(
         ChainId.Mainnet,
-        Genesis.Frontier,
+        Genesis.Mainnet,
         0L to FrontierConfig(),
         1_150_000L to HomesteadConfig(),
         1_920_000L to DaoHardForkConfig(),
