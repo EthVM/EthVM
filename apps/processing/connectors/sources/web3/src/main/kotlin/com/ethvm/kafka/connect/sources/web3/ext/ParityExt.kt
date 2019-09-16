@@ -34,17 +34,6 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(we
     )
   }
 
-  fun ethvmGetUnclesByNumber(from: BigInteger, to: BigInteger): Request<*, EthvmUnclesResponse> {
-    return Request(
-      "eth_getUnclesByNumber",
-      Arrays.asList(
-        DefaultBlockParameter.valueOf(from),
-        DefaultBlockParameter.valueOf(to)
-      ),
-      web3jService,
-      EthvmUnclesResponse::class.java
-    )
-  }
 }
 
 class EthChainIdResponse : Response<String>() {
@@ -54,20 +43,5 @@ class EthChainIdResponse : Response<String>() {
 
 class EthvmBlocksResponse : Response<List<FullBlock>>() {
   val fullBlocks: List<FullBlock>
-    get() = result
-}
-
-class EthvmUnclesResponse : Response<List<UncleBlock.Block>>() {
-  val uncles: List<UncleBlock.Block>
-    get() = result
-}
-
-class EthvmReceiptsResponse : Response<List<TransactionReceipt>>() {
-  val receipts: List<TransactionReceipt>
-    get() = result
-}
-
-class EthvmTracesResponse : Response<List<Trace>>() {
-  val traces: List<Trace>
     get() = result
 }
