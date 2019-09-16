@@ -1,7 +1,6 @@
 package com.ethvm.common.config
 
 import com.beust.klaxon.Klaxon
-import java.math.BigInteger
 
 enum class Genesis(private val filename: String) {
 

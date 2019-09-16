@@ -25,7 +25,7 @@ class BlockHashCache(
   val logger = KotlinLogging.logger {}
 
   // the n last blocks we reload from the database on initialisation
-  private val historySize = 1000000
+  private val historySize = 1_000_000
 
   private val memoryMap = memoryDb
     .hashMap("block_hashes_$processorId")
