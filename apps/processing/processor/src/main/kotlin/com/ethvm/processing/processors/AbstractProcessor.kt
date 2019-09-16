@@ -334,84 +334,74 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
           // we write as much as we can into a transaction until we reach the max time
 
-          try {
+          dbContext
+            .transaction { txConfig ->
 
-            dbContext
-              .transaction { txConfig ->
+              val txCtx = DSL.using(txConfig)
 
-                val txCtx = DSL.using(txConfig)
+              // we keep taking records until we breach the max tx time or the iterator has no more records
 
-                // we keep taking records until we breach the max tx time or the iterator has no more records
+              while (txElapsedTimeMs < maxTxTimeMs && recordIterator.hasNext()) {
 
-                while (txElapsedTimeMs < maxTxTimeMs && recordIterator.hasNext()) {
+                // retrieve the next block with it's classification
+                val record = recordIterator.next()
 
-                  // retrieve the next block with it's classification
-                  val record = recordIterator.next()
+                // used for updating sync status at the end
+                lastRecord = record
 
-                  // used for updating sync status at the end
-                  lastRecord = record
+                val blockNumber = record.key().number.bigInteger()
+                val blockHash = blockHashFor(record.value())
 
-                  val blockNumber = record.key().number.bigInteger()
-                  val blockHash = blockHashFor(record.value())
+                // lookup to see if we have encountered this block before
 
-                  // lookup to see if we have encountered this block before
+                when (hashCache[blockNumber]) {
 
-                  when (hashCache[blockNumber]) {
+                  // if it's a new block we allow the implementation to process it and then we update the hash cache
+                  null -> {
+                    process(txCtx, record)
 
-                    // if it's a new block we allow the implementation to process it and then we update the hash cache
-                    null -> {
-                      process(txCtx, record)
-
-                      // update hash entry
-                      hashCache[blockNumber] = blockHashFor(record.value())
-                    }
-
-                    // hash cache entry matches the current block hash, so this is a duplicate
-                    blockHash -> {
-                      logger.warn { "Ignoring duplicate block. Number = $blockNumber, hash = $blockHash" }
-                    }
-
-                    // otherwise we have an entry in the hash cache but it does not match the current block hash
-                    // due to the design of the parity block source we know this to be the beginning of a fork
-                    // we first allow the implementation to rewind and then process the new block
-                    else -> {
-
-                      rewindUntil(txCtx, blockNumber)
-                      hashCache.removeKeysFrom(txCtx, blockNumber)
-
-                      process(txCtx, record)
-                      hashCache[blockNumber] = blockHashFor(record.value())
-
-                    }
+                    // update hash entry
+                    hashCache[blockNumber] = blockHashFor(record.value())
                   }
 
-                  // record the record count and update the tx elapsed time
+                  // hash cache entry matches the current block hash, so this is a duplicate
+                  blockHash -> {
+                    logger.warn { "Ignoring duplicate block. Number = $blockNumber, hash = $blockHash" }
+                  }
 
-                  recordCount += 1
-                  txElapsedTimeMs = System.currentTimeMillis() - txStartTimeMs
+                  // otherwise we have an entry in the hash cache but it does not match the current block hash
+                  // due to the design of the parity block source we know this to be the beginning of a fork
+                  // we first allow the implementation to rewind and then process the new block
+                  else -> {
+
+                    rewindUntil(txCtx, blockNumber)
+                    hashCache.removeKeysFrom(txCtx, blockNumber)
+
+                    process(txCtx, record)
+                    hashCache[blockNumber] = blockHashFor(record.value())
+
+                  }
                 }
 
-                // flush the hash cache state to the db
-                hashCache.writeToDb(txCtx)
+                // record the record count and update the tx elapsed time
 
-                // update latest block number
-                val lastBlockNumber = lastRecord!!.key().number.bigInteger()
-                setLatestSyncBlock(txCtx, lastBlockNumber, lastRecord!!.timestamp())
-
-                // flush to disk
-                diskDb.commit()
-
-                logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
+                recordCount += 1
+                txElapsedTimeMs = System.currentTimeMillis() - txStartTimeMs
               }
 
-          } catch (e: Exception) {
+              // flush the hash cache state to the db
+              hashCache.writeToDb(txCtx)
 
-            // rollback any persistent changes to local state
-            diskDb.rollback()
+              // update latest block number
+              val lastBlockNumber = lastRecord!!.key().number.bigInteger()
+              setLatestSyncBlock(txCtx, lastBlockNumber, lastRecord!!.timestamp())
 
-            // re throw to stop processing
-            throw e
-          }
+              // flush to disk
+              diskDb.commit()
+
+              logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
+            }
+
         }
 
         // commit to kafka
@@ -421,6 +411,9 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         logger.info { "Kafka batch complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${last.timestamp()}" }
       }
     } catch (e: Exception) {
+
+      // rollback any in progress changes to the local state
+      diskDb.rollback()
 
       logger.error(e) { "Fatal exception, stopping" }
 
