@@ -52,7 +52,7 @@
       =====================================================================================
       -->
       <v-flex hidden-xs-only sm12>
-        <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
+        <v-layout grid-list-xs row align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
           <!--
           =====================================================================================
             BLOCK NUMBER / HASH
@@ -60,9 +60,10 @@
             Responsive Tally:
             SM: 2/12 (2)
             MD: 1/12 (1)
+            LG: 1/12 (1)
           =====================================================================================
           -->
-          <v-flex sm2 md1 pr-1>
+          <v-flex sm2 lg1 pr-1>
             <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/${tx.blockNumber}`">
               {{ tx.blockNumberFormatted }}
             </router-link>
@@ -72,29 +73,26 @@
             TRANSACTION # / HASH
 
             Responsive Tally:
-            SM: 9/12 (7)
-            MD: 7/12 (6)
+            SM: 8/12 (6)
+            MD: 6/12 (5)
+            LG: 5/12 (4)
           =====================================================================================
           -->
-          <v-flex d-flex sm7 md6 pr-3>
-            <v-layout row wrap align-center pb-1>
-              <v-flex sm12 pa-2>
-                <v-layout row align-center justift-start pa-1>
-                  <v-flex shrink pa-1>
-                    <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
-                  </v-flex>
-                  <v-flex sm10 pa-1>
-                    <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`" />
-                  </v-flex>
+          <v-flex sm7 md6 lg5>
+            <v-layout row wrap align-center pa-2 mr-1>
+              <v-flex sm12>
+                <v-layout row align-center justift-start pa-2>
+                  <p class="info--text tx-string">{{ $tc('tx.hash', 1) }}:</p>
+                  <app-transform-hash :hash="tx.hash" :link="`/tx/${tx.hash}`" />
                 </v-layout>
               </v-flex>
-              <v-flex sm12 pa-2>
+              <v-flex sm12>
                 <v-layout row align-center justify-space-around fill-height pa-2>
-                  <p class="info--text mb-0 mr-1">{{ $t('tx.from') }}:</p>
+                  <p class="info--text mr-1">{{ $t('tx.from') }}:</p>
                   <app-transform-hash :hash="tx.from" :link="`/address/${tx.from}`" :italic="true" />
                   <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                  <p class="info--text mb-0 mr-1" v-if="tx.isContractCreation">{{ $tc('contract.name', 1) }}:</p>
-                  <p class="info--text mb-0 mr-1" v-else>{{ $t('tx.to') }}:</p>
+                  <p class="info--text mr-1" v-if="tx.isContractCreation">{{ $tc('contract.name', 1) }}:</p>
+                  <p class="info--text mr-1" v-else>{{ $t('tx.to') }}:</p>
                   <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" />
                   <app-transform-hash v-else :hash="tx.to" :link="`/address/${tx.to}`" :italic="true" />
                 </v-layout>
@@ -106,12 +104,13 @@
           ETH VALUE
 
           Responsive Tally:
-          SM: 11/12 (2)
-          MD: 8/12 (1)
+          SM: 11/12 (3)
+          MD: 9/12 (3)
+          LG: 7/12 (2)
           =====================================================================================
           -->
-          <v-flex d-flex sm2 md1 pr-0>
-            <p :class="[tx.successful ? 'txSuccess--text mb-0' : 'txFail--text mb-0']">
+          <v-flex sm3 md2>
+            <p :class="[tx.successful ? 'txSuccess--text ' : 'txFail--text']">
               {{ tx.valueFormatted.value }} {{ $t(`common.${tx.valueFormatted.unit}`) }}
               <app-tooltip v-if="tx.valueFormatted.tooltipText" :text="`${tx.valueFormatted.tooltipText} ${$t('common.eth')}`" />
             </p>
@@ -123,6 +122,7 @@
             Responsive Tally:
             SM: 11/12 (0)
             MD: 11/12 (2)
+            lg: 9/12 (2)
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md2>
@@ -134,10 +134,11 @@
 
             Responsive Tally:
             SM: 11/12 (0)
-            MD: 9/12 (1)
+            MD: 11/12 (0)
+            lg: 11/12 (2)
           =====================================================================================
           -->
-          <v-flex hidden-sm-and-down md1>
+          <v-flex hidden-md-and-down lg2>
             <p class="black--text text-truncate mb-0">{{ tx.feeFormatted.value }}</p>
           </v-flex>
           <!--
@@ -145,14 +146,15 @@
           STATUS
 
           Responsive Tally:
-          SM: 12/12 (1)
-          MD: 12/12 (1)
+            SM: 12/12 (1)
+            MD: 12/12 (1)
+            lg: 12/12 (1)
           =====================================================================================
           -->
-          <v-flex v-if="!isPending" sm1>
-            <v-icon v-if="tx.successful" small class="txSuccess--text">fa fa-check-circle</v-icon>
-            <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-          </v-flex>
+          <div v-if="!isPending" class="tx-status ">
+            <v-icon v-if="tx.successful" small class="txSuccess--text ml-1">fa fa-check-circle</v-icon>
+            <v-icon v-else small class="txFail--text ml-1">fa fa-times-circle</v-icon>
+          </div>
         </v-layout>
         <v-divider class="mb-2 mt-2" />
       </v-flex>
@@ -212,5 +214,12 @@ p {
 
 .tx-status-sucess {
   border-left: 2px solid #40ce9c;
+}
+.tx-string {
+  min-width: 3em;
+}
+
+.tx-status {
+  width: 45px;
 }
 </style>
