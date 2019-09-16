@@ -26,8 +26,6 @@ fun ParitySyncStateRecord.Builder.setNumberBI(number: BigInteger) = setNumber(nu
 // CanonicalKeyRecord
 // ------------------------------------------------------------
 
-fun CanonicalKeyRecord.getNumberBI() = getNumber().bigInteger()
-
 fun CanonicalKeyRecord.Builder.setNumberBI(number: BigInteger) = setNumber(number.byteBuffer())
 
 // ------------------------------------------------------------
@@ -47,8 +45,6 @@ fun TraceCallActionRecord.Builder.setGasBI(gas: BigInteger) = setGas(gas.byteBuf
 // ------------------------------------------------------------
 // TraceCreateActionRecord
 // ------------------------------------------------------------
-
-fun TraceCreateActionRecord.getValueBI() = getValue().bigInteger()
 
 fun TraceCreateActionRecord.Builder.setValueBI(value: BigInteger) = setValue(value.byteBuffer())
 

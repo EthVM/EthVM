@@ -18,11 +18,6 @@ protocol Capture {
     decimal(80, 0) number;
   }
 
-  record CanonicalRecord {
-    string blockHash;
-    array<string> txHashes;
-  }
-
   record LogRecord {
     string address;
     string data;
