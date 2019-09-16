@@ -4,66 +4,11 @@ protocol Processing {
   import idl "common.avdl";
   import idl "capture.avdl";
 
-  record BlockTimeRecord {
-    string blockHash;
-    long timestamp;
-    union{ null, int } blockTime = null;
+  enum TokenType {
+    ETHER, ERC20, ERC721
   }
 
-  record KafkaOffsetInfoKeyRecord {
-    long timestamp;
-    string consumerGroupId;
-    string topic;
-  }
-
-  record KafkaOffsetInfoRecord {
-    long timestamp;
-    string consumerGroupId;
-    string topic;
-    long totalLength;
-    long totalOffset;
-  }
-
-  record BlockMetricKeyRecord {
-    string blockHash;
-    timestamp_ms timestamp;
-  }
-
-  record BlockKeyRecord {
-    string blockHash;
-  }
-
-  record UncleKeyRecord {
-    string hash;
-  }
-
-  record TransactionKeyRecord {
-    string hash;
-  }
-
-  record TransactionReceiptKeyRecord {
-    string transactionHash;
-  }
-
-  record AccountKeyRecord {
-    string address;
-  }
-
-  record TraceKeyRecord {
-    string blockHash;
-    union { null, string } transactionHash = null;
-  }
-
-  record FungibleBalanceKeyRecord {
-    string address;
-    string contract = "";
-  }
-
-  enum FungibleTokenType {
-    ETHER, ERC20
-  }
-
-  enum FungibleBalanceDeltaType {
+  enum BalanceDeltaType {
     PREMINE_BALANCE,
     HARD_FORK,
     BLOCK_REWARD,
@@ -77,131 +22,41 @@ protocol Processing {
     TOKEN_TRANSFER
   }
 
-  record FungibleBalanceDeltaRecord {
+  record TraceLocationRecord {
+    timestamp_ms timestamp = 0;
+    union { null, string } blockHash = null;
+    union { null, decimal(80,0) } blockNumber = null;
+    union { null, string } transactionHash = null;
+    union { null, int } transactionIndex = null;
+    union { null, int } logIndex = null;
+    union { null, array<int> } traceAddress = null;
+  }
 
-    FungibleTokenType tokenType;
-    FungibleBalanceDeltaType deltaType;
-
-    boolean isReceiving;    // denotes the direction of the delta, sending or receiving
-
-    com.ethvm.avro.common.TraceLocationRecord traceLocation;
-    decimal(80, 0) amount;
+  record BalanceDeltaRecord {
 
     string address;
-    string contractAddress = "";
-
+    union { null, string } contractAddress = null;
     union { null, string } counterpartAddress = null;
-  }
 
-  record FungibleBalanceRecord {
-    timestamp_ms timestamp = 0;
-    decimal(80, 0) amount;
-    union { null, string } address = null;
-    union { null, string } contract = null;
-  }
+    TokenType tokenType;
+    BalanceDeltaType deltaType;
 
-  record FungibleBalanceDeltaListRecord {
-    timestamp_ms timestamp = 0;
-    array<FungibleBalanceDeltaRecord> deltas = [];
-    union { null, string } blockHash = null;
-  }
-
-  record FungibleBalanceDeltaListsRecord {
-    array<FungibleBalanceDeltaListRecord> deltaLists = [];
-  }
-//
-
-  record NonFungibleBalanceKeyRecord {
-    string contract;
-    decimal(80, 0) tokenId;
-  }
-
-  enum NonFungibleTokenType {
-    ERC721
-  }
-
-  record NonFungibleBalanceDeltaRecord {
-
-    NonFungibleTokenType tokenType = null;
-    com.ethvm.avro.common.TraceLocationRecord traceLocation;
-
-    string from;
-    string to;
-
-    union { null, string } contract = null;
-    union { null, decimal(80, 0) } tokenId;
-
-  }
-
-  record NonFungibleBalanceRecord {
-    com.ethvm.avro.common.TraceLocationRecord traceLocation;
-    string address;
-
+    union { null, decimal(80, 0) } amount = null;
     union { null, decimal(80, 0) } tokenId = null;
-    union { null, string } contract = null;
+
+    TraceLocationRecord traceLocation;
+
   }
 
-  record NonFungibleBalanceDeltaListRecord {
-    timestamp_ms timestamp = 0;
-    array<NonFungibleBalanceDeltaRecord> deltas = [];
-    union { null, string } blockHash = null;
-  }
-
-//
-
-  record BlockAuthorRecord {
-    string author;
-    decimal(80, 0) blockNumber;
-    string blockHash;
-    timestamp_ms timestamp;
-  }
-
-  record TransactionGasPriceRecord {
-    decimal(80, 0) blockNumber;
-    string blockHash;
-    string transactionHash;
-    int transactionPosition;
+  record BalanceRecord {
     string address;
-    decimal(80, 0) gasPrice;
-  }
-
-  record TransactionGasPriceListRecord {
-    array<TransactionGasPriceRecord> gasPrices;
-    union { null, string } blockHash = null;
-    timestamp_ms timestamp;
-  }
-
-  record TransactionGasUsedRecord {
-    decimal(80, 0) gasUsed;
-  }
-
-  record TransactionGasUsedListRecord {
-    timestamp_ms timestamp = 0;
-    array<TransactionGasUsedRecord> gasUsed;
-    union { null, string } blockHash = null;
-  }
-
-  record TransactionFeeRecord {
+    union { null, string } contractAddress;
     decimal(80, 0) blockNumber;
-    string blockHash;
-    string transactionHash;
-    int transactionPosition;
-    string address;
-    decimal(80, 0) transactionFee;
-    timestamp_ms timestamp;
-  }
-
-  record TransactionFeeListRecord {
-    array<TransactionFeeRecord> transactionFees;
-    union { null, string } blockHash = null;
-    timestamp_ms timestamp;
+    union { null, decimal(80, 0) } balance = null;
+    union { null, decimal(80, 0) } tokenId = null;
   }
 
 // metrics
-
-  record BlockTimestampRecord {
-    timestamp_ms timestamp;
-  }
 
   record BlockMetricsHeaderRecord {
     decimal(80, 0) number;
@@ -214,35 +69,6 @@ protocol Processing {
     timestamp_ms timestamp;
   }
 
-  record BlockMetricsTransactionTraceRecord {
-    int totalTxs;
-    int numSuccessfulTxs;
-    int numFailedTxs;
-    int numInternalTxs;
-
-    timestamp_ms timestamp;
-  }
-
-  record BlockMetricsTransactionRecord {
-    decimal(80, 0) totalGasPrice;
-    decimal(80, 0) avgGasLimit;
-    decimal(80, 0) avgGasPrice;
-
-    timestamp_ms timestamp;
-  }
-
-  record BlockMetricsTransactionFeeRecord {
-    decimal(80, 0) totalTxFees;
-    decimal(80, 0) avgTxFees;
-
-    timestamp_ms timestamp;
-  }
-
-  record MetricKeyRecord {
-    long `date`;
-    string name;
-  }
-
   record MetricRecord {
 
     union { null, int } `int` = null;
@@ -253,53 +79,7 @@ protocol Processing {
 
   }
 
-  // Processing Metadata
-
-  record ProcessingMetadataKeyRecord {
-    string name;
-  }
-
-  record ProcessingMetadataRecord {
-    union { null, string } `string` = null;
-    union { null, boolean } `boolean` = null;
-    union { null, int } `int` = null;
-    union { null, long } `long` = null;
-    union { null, float } `float` = null;
-    union { null, double } `double` = null;
-    union { null, bytes } `bigInteger` = null;
-  }
-
 // address metadata
-
-  enum AddressMetadataType {
-    OUT_TX_COUNT, IN_TX_COUNT, TOTAL_TX_COUNT, MINER, CONTRACT_CREATOR
-  }
-
-  record AddressMetadataKeyRecord {
-    bytes address;
-    AddressMetadataType type;
-  }
-
-  record AddressMetadataRecord {
-    timestamp_ms timestamp;
-    union { null, long } count = null;
-    union { null, boolean } flag = null;
-  }
-
-
-  record Erc20MetadataRecord {
-    timestamp_ms timestamp;
-    union { null, string } name = null;
-    union { null, string } symbol = null;
-    union { null, int } decimals = null;
-    union { null, decimal(80, 0) } totalSupply = null;
-  }
-
-  record Erc721MetadataRecord {
-    timestamp_ms timestamp;
-    union { null, string } name = null;
-    union { null, string } symbol = null;
-  }
 
   record TransactionCountDeltaRecord {
     timestamp_ms timestamp = 0;
@@ -308,21 +88,11 @@ protocol Processing {
     int out = 0;
   }
 
-  record TransactionCountDeltaListRecord {
-    string blockHash;
-    timestamp_ms timestamp;
-    array<TransactionCountDeltaRecord> counts;
-  }
-
   record TransactionCountRecord {
     timestamp_ms timestamp = 0;
     long totalIn = 0;
     long totalOut = 0;
-  }
-
-  record CanonicalCountKeyRecord {
-    string entity;
-    union { null, decimal(80, 0) } number = null;
+    long total = 0;
   }
 
   record CanonicalCountRecord {

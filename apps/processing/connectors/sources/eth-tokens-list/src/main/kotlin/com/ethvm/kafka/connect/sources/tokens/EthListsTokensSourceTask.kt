@@ -6,7 +6,6 @@ import com.ethvm.avro.capture.ContractLogoRecord
 import com.ethvm.avro.capture.ContractSocialRecord
 import com.ethvm.avro.capture.ContractSupportRecord
 import com.ethvm.avro.capture.EthListRecord
-import com.ethvm.avro.common.ContractType
 import org.apache.kafka.connect.source.SourceRecord
 import org.apache.kafka.connect.source.SourceTask
 import java.net.URL
@@ -50,6 +49,8 @@ class EthListsTokensSourceTask : SourceTask() {
 
     val records = entries
       .dropWhile { it.address == null || it.address.isEmpty() }
+      // sanitize input
+      .map { entry -> entry.copy(address = entry.address?.toLowerCase()) }
       .map { entry ->
 
         val keySchemaAndValue = AvroToConnect.toConnectData(
@@ -157,7 +158,7 @@ class EthListsTokensSourceTask : SourceTask() {
         .setAddress(address)
         .setDecimals(decimals)
         .setEnsAddress(ens_address)
-        .setType(if (type != null) ContractType.valueOf(type) else null)
+        .setType(type)
         .setLogo(logo?.toRecord())
         .setSupport(support?.toRecord())
         .setSocial(social?.toRecord())

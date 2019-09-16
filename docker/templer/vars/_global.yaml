@@ -1,0 +1,63 @@
+---
+
+# ///////////////////////////////////////////////////////
+# General
+# ///////////////////////////////////////////////////////
+
+COMPOSE_VERSION: '3.7'
+SIMPLIFIED_NETWORKING: false
+
+# ///////////////////////////////////////////////////////
+# Front Services
+# ///////////////////////////////////////////////////////
+
+DOMAIN: 'ethvm.lan'
+TRAEFIK_ENABLED: true
+
+# ///////////////////////////////////////////////////////
+# DB
+# ///////////////////////////////////////////////////////
+
+TIMESCALE_ENABLE_BIND_MOUNTPOINT: false
+TIMESCALE_BIND_MOUNTPOINT: '~/.local/share/ethvm/timescale/'
+
+DATABASE_NAME: 'ethvm_dev'
+DATABASE_USER: 'postgres'
+DATABASE_PASSWORD: '1234'
+JDBC_URL: 'jdbc:postgresql://timescale:5432/{{ DATABASE_NAME }}?user={{ DATABASE_USER }}&password={{ DATABASE_PASSWORD }}&ssl=false'
+
+# ///////////////////////////////////////////////////////
+# Parity
+# ///////////////////////////////////////////////////////
+
+PARITY_ENABLED: true
+PARITY_CHAIN: 'ropsten'
+PARITY_ENABLE_BIND_MOUNTPOINT: true
+PARITY_BIND_MOUNTPOINT: '~/.local/share/io.parity.ethereum/ropsten/'
+PARITY_INSTA_MINING: false
+PARITY_MIN_PEERS: 0
+PARITY_MAX_PEERS: 0
+
+# ///////////////////////////////////////////////////////
+# Kafka
+# ///////////////////////////////////////////////////////
+
+KAFKA_ENABLED: true
+CP_VERSION: '5.2.1'
+
+KAFKA_ENABLE_BIND_MOUNTPOINT: false
+KAFKA_BIND_MOUNTPOINT: '~/.local/share/ethvm/kafka/'
+ZOOKEEPER_BIND_MOUNTPOINT: '~/.local/share/ethvm/zookeeper/'
+
+KAFKA_ENABLE_PROCESSORS: false
+
+KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+KAFKA_BOOTSTRAP_SERVERS: 'kafka-1:9091'
+KAFKA_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+KAFKA_CONNECT_URL: 'http://kafka-connect:8083'
+
+# ///////////////////////////////////////////////////////
+# Monitoring
+# ///////////////////////////////////////////////////////
+
+KAFKA_MONITORING_TOOLS_ENABLED: false

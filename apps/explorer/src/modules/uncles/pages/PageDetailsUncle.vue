@@ -144,7 +144,7 @@ export default class PageDetailsUncle extends Vue {
         {
           title: this.$i18n.t('uncle.included'),
           detail: this.uncleDetail.nephewNumberFormatted,
-          link: `/block/${this.uncleDetail.nephewNumberBN.toString()}`
+          link: `/block/number/${this.uncleDetail.nephewNumberBN.toString()}`
         },
         {
           title: this.$i18n.t('common.hash'),

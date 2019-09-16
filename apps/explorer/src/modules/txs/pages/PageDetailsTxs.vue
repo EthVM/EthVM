@@ -205,7 +205,7 @@ export default class PageDetailsTxs extends Vue {
         {
           title: this.$i18n.t('block.number'),
           detail: transaction.blockNumberFormatted,
-          link: `/block/${transaction.blockHash}`
+          link: `/block/number/${transaction.blockNumber}`
         },
         {
           title: this.$i18n.t('common.hash'),
@@ -244,7 +244,8 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('gas.price'),
-          detail: `${transaction.gasPriceFormatted.value} ${this.$i18n.t('common.gwei')}`
+          detail: `${transaction.gasPriceFormatted.value} ${this.$i18n.t(`common.${transaction.gasPriceFormatted.unit}`)}`,
+          tooltip: transaction.gasPriceFormatted.tooltipText ? `${transaction.gasPriceFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('common.nonce'),

@@ -9,7 +9,9 @@
         <v-layout row>
           <v-spacer />
           <v-flex xs12 sm9 md7>
-            <v-card-text class="font-weight-thin font-italic text-xs-center">{{ $t('message.ropsten-no-token') }}</v-card-text>
+            <v-card-text class="font-weight-thin font-italic text-xs-center"
+              >{{ $t('message.ropsten-no-token.text') }}<a href="https://ethvm.com/tokens">{{ $t('message.ropsten-no-token.link') }} </a></v-card-text
+            >
           </v-flex>
           <v-spacer />
         </v-layout>
@@ -42,7 +44,8 @@ export default class PageTokens extends Vue {
   ===================================================================================
   */
 
-  isRopsten = ConfigHelper.isRopsten
+  // isRopsten = ConfigHelper.isRopsten
+  isRopsten = true
 
   /*
   ===================================================================================

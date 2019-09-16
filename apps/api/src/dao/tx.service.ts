@@ -1,62 +1,46 @@
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
-import { forwardRef, Inject, Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import {forwardRef, Inject, Injectable} from '@nestjs/common'
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
-import { EntityManager, In, LessThanOrEqual, MoreThan, Repository } from 'typeorm'
-import { ReceiptService } from './receipt.service'
-import { TraceService, TransactionStatus } from './trace.service'
-import { TransactionSummary } from '@app/graphql/schema'
-import { ContractService } from '@app/dao/contract.service'
-import { ContractEntity } from '@app/orm/entities/contract.entity'
-import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
-import { PartialReadException } from '@app/shared/errors/partial-read-exception'
-import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
-import { DbConnection } from '@app/orm/config'
-import { TransactionCountEntity } from '@app/orm/entities/transaction-count.entity'
+import {Brackets, EntityManager, Equal, FindOneOptions, In, LessThanOrEqual, Repository} from 'typeorm'
+import {ReceiptService} from './receipt.service'
+import {TraceService, TransactionStatus} from './trace.service'
+import {FilterEnum, TransactionSummary} from '@app/graphql/schema'
+import {ContractService} from '@app/dao/contract.service'
+import {TransactionEntity} from '@app/orm/entities/transaction.entity';
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
+import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
+import {CanonicalCountEntity} from '@app/orm/entities/canonical-count.entity';
+import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity';
+import {ContractEntity} from '@app/orm/entities/contract.entity';
 
 @Injectable()
 export class TxService {
+
+  private zeroBI = new BigNumber(0)
 
   constructor(
     private readonly receiptService: ReceiptService,
     private readonly traceService: TraceService,
     @Inject(forwardRef(() => ContractService))
     private readonly contractService: ContractService,
-    @InjectRepository(TransactionEntity, DbConnection.Principal)
+    @InjectRepository(TransactionEntity)
     private readonly transactionRepository: Repository<TransactionEntity>,
-    @InjectEntityManager(DbConnection.Principal)
+    @InjectEntityManager()
     private readonly entityManager: EntityManager,
   ) {
   }
 
-  async findOneByHash(hash: string): Promise<TransactionEntity | undefined> {
-    const txs = await this.findByHash(hash)
+  async findOneByHash(hash: string, blockNumber: BigNumber): Promise<TransactionEntity | undefined> {
+    const txs = await this.findByHash([hash], blockNumber)
 
     if (txs.length !== 1) return undefined
 
-    const tx = txs[0]
-
-    // Partial read checks
-    if (tx.blockNumber.isGreaterThan(0)) {
-
-      // genesis block has no receipt or traces
-
-      if (!tx.receipt) {
-        throw new PartialReadException(`Receipt not found, tx hash = ${tx.hash}`)
-      }
-
-      if (!tx.trace) {
-        throw new PartialReadException(`Traces not found, tx hash = ${tx.hash}`)
-      }
-
-    }
-
-    return tx
+    return txs[0]
   }
 
-  async findByHash(...hashes: string[]): Promise<TransactionEntity[]> {
+  async findByHash(hashes: string[], blockNumber: BigNumber): Promise<TransactionEntity[]> {
     const txs = await this.transactionRepository.find({
-      where: { hash: In(hashes) },
+      where: { hash: In(hashes), blockNumber: LessThanOrEqual(blockNumber) },
       relations: ['receipt'],
       cache: true,
     })
@@ -66,125 +50,138 @@ export class TxService {
     return this.findAndMapTraces(txs)
   }
 
-  async findSummariesByBlockNumber(number: BigNumber, offset: number, limit: number): Promise<[TransactionSummary[], number]> {
+  async findSummariesByBlockNumber(
+    number: BigNumber,
+    offset: number = 0,
+    limit: number = 20,
+    blockNumber: BigNumber,
+  ): Promise<[TransactionSummary[], BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[TransactionSummary[], number]> => {
+      async (txn): Promise<[TransactionSummary[], BigNumber]> => {
 
-        const where = { blockNumber: number }
+        if (number.isGreaterThan(blockNumber)) {
+          return [[], this.zeroBI] // This block has not been mined/synced yet
+        }
 
-        const { count } = await txn
-          .createQueryBuilder()
-          .select('COUNT(hash)', 'count')
-          .from(TransactionEntity, 't')
-          .where(`block_number = ${number.toString()}`)
-          .cache(true)
-          .setParameters({ number })
-          .getRawOne() as { count: number }
+        const header = await txn.findOne(BlockHeaderEntity, { where: { number: Equal(number) }, select: ['transactionCount'], cache: true })
+        const count = header ? header.transactionCount : 0
 
-        if (count === 0) return [[], count]
+        if (count === 0) return [[], this.zeroBI]
 
         const txs = await txn.find(TransactionEntity, {
           select: ['hash'],
-          where,
+          where: { blockNumber: Equal(number) },
           skip: offset,
           take: limit,
           cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
-        return [summaries, count]
+        return [summaries, new BigNumber(count)]
       },
     )
 
   }
 
-  async findSummariesByBlockHash(hash: string, offset: number, limit: number): Promise<[TransactionSummary[], number]> {
+  async findSummariesByBlockHash(hash: string, offset: number = 0, limit: number = 20, blockNumber: BigNumber): Promise<[TransactionSummary[], BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[TransactionSummary[], number]> => {
+      async (txn): Promise<[TransactionSummary[], BigNumber]> => {
 
-        const where = { blockHash: hash }
+        const header = await txn.findOne(BlockHeaderEntity, {
+          where: { hash, number: LessThanOrEqual(blockNumber) },
+          select: ['transactionCount'] ,
+          cache: true,
+        })
+        const count = header ? header.transactionCount : 0
 
-        const { count } = await txn
-          .createQueryBuilder()
-          .select('COUNT(hash)', 'count')
-          .from(TransactionEntity, 't')
-          .where('block_hash = :hash')
-          .cache(true)
-          .setParameters({ hash })
-          .getRawOne() as { count: number }
-
-        if (count === 0) return [[], count]
+        if (count === 0) return [[], this.zeroBI]
 
         const txs = await txn.find(TransactionEntity, {
           select: ['hash'],
-          where,
+          where: { blockHash: hash },
           skip: offset,
           take: limit,
           cache: true,
         })
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
-        return [summaries, count]
+        return [summaries, new BigNumber(count)]
       },
     )
 
   }
 
-  async findSummariesByAddress(address: string, filter?: string, offset: number = 0, limit: number = 20): Promise<[TransactionSummary[], number]> {
+  async findSummariesByAddress(
+    address: string,
+    filter: FilterEnum = FilterEnum.all,
+    offset: number = 0,
+    limit: number = 20,
+    blockNumber: BigNumber,
+  ): Promise<[TransactionSummary[], BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[TransactionSummary[], number]> => {
+      async (txn): Promise<[TransactionSummary[], BigNumber]> => {
 
-        // Use transaction_count table to retrieve count as far more efficient than performing count against canonical_transaction
+        // Use address_transaction_count table to retrieve count as far more efficient than performing count against transaction
 
-        const transactionCount = await txn.findOne(TransactionCountEntity, { where: { address }, cache: true })
+        const transactionCount = await txn.findOne(AddressTransactionCountEntity, {
+          where: { address, blockNumber: LessThanOrEqual(blockNumber) },
+          order: { blockNumber: 'DESC' },
+          cache: true,
+        })
 
         if (!transactionCount) {
-          return [[], 0]
+          return [[], this.zeroBI]
         }
 
         let totalCount
 
         switch (filter) {
-          case 'in':
+          case FilterEnum.in:
             totalCount = transactionCount.totalIn
             break
-          case 'out':
+          case FilterEnum.out:
             totalCount = transactionCount.totalOut
             break
           default:
-            totalCount = transactionCount.totalIn + transactionCount.totalOut
+            totalCount = transactionCount.total
         }
 
         if (totalCount === 0) return [[], totalCount]
 
-        let where
+        const qb = txn.createQueryBuilder(TransactionEntity, 't')
+          .select(['hash'])
+          .where('t.block_number <= :blockNumber')
 
         switch (filter) {
           case 'in':
-            where = { to: address }
+            qb.andWhere('t.to = :address')
             break
           case 'out':
-            where = { from: address }
+            qb.andWhere('t.from = :address')
             break
           default:
-            where = [{ from: address }, { to: address }]
+            qb.andWhere(new Brackets(sqb => {
+              sqb.where('t.from = :address')
+                .orWhere('t.to = :address')
+            }))
             break
         }
 
-        const txs = await txn.find(TransactionEntity, {
-          select: ['hash'],
-          where,
-          skip: offset,
-          take: limit,
-          order: {blockNumber: 'DESC', transactionIndex: 'DESC'},
-          cache: true,
-        })
+        const txs = await qb
+          .setParameters({ address, blockNumber: blockNumber.toNumber() })
+          .select(['t.hash'])
+          .skip(offset)
+          .take(limit)
+          .orderBy('block_number', 'DESC')
+          .addOrderBy('transaction_index', 'DESC')
+          .cache(true)
+          .getMany()
 
         const summaries = await this.findSummariesByHash(txs.map(t => t.hash), txn)
         return [summaries, totalCount]
@@ -193,27 +190,26 @@ export class TxService {
 
   }
 
-  async findSummaries(offset: number, limit: number, fromBlock?: BigNumber): Promise<[TransactionSummary[], number]> {
-
-    const where = fromBlock ? { blockNumber: LessThanOrEqual(fromBlock) } : {}
+  async findSummaries(offset: number = 0, limit: number = 20, blockNumber: BigNumber): Promise<[TransactionSummary[], BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (entityManager): Promise<[TransactionSummary[], number]> => {
+      async (entityManager): Promise<[TransactionSummary[], BigNumber]> => {
 
-        const [{ count: totalCount }] = await entityManager.find(CanonicalCount, {
+        const { count: totalCount } = await entityManager.findOne(CanonicalCountEntity, {
           select: ['count'],
           where: {
-            entity: 'transaction',
+            entity: 'transactions',
+            blockNumber: Equal(blockNumber),
           },
           cache: true,
-        })
+        } as FindOneOptions)
 
-        if (totalCount === 0) return [[], totalCount]
+        if (totalCount.isEqualTo(0)) return [[], totalCount]
 
         const txs = await entityManager.find(TransactionEntity, {
           select: ['blockNumber', 'blockHash', 'hash', 'transactionIndex', 'timestamp', 'gasPrice', 'from', 'to', 'creates', 'value'],
-          where,
+          where: { blockNumber: LessThanOrEqual(blockNumber) },
           order: {
             blockNumber: 'DESC',
             transactionIndex: 'DESC',
@@ -273,13 +269,13 @@ export class TxService {
       return new TransactionEntity({ ...tx, receipt })
     })
 
-    const [summaries, count] = await this.summarise(manager, txsWithReceipts, txsWithReceipts.length)
+    const [summaries, count] = await this.summarise(manager, txsWithReceipts, new BigNumber(txsWithReceipts.length))
     return summaries
   }
 
-  private async summarise(entityManager: EntityManager, txs: TransactionEntity[], count: number): Promise<[TransactionSummary[], number]> {
+  private async summarise(entityManager: EntityManager, txs: TransactionEntity[], count: BigNumber): Promise<[TransactionSummary[], BigNumber]> {
 
-    if (!txs.length) return [[], 0]
+    if (!txs.length) return [[], new BigNumber(0)]
 
     const { traceService, contractService } = this
 
@@ -312,37 +308,17 @@ export class TxService {
       const contract = tx.creates ? contractsByAddress.get(tx.creates) : undefined
 
       const contractName =
-        (contract && contract.metadata && contract.metadata.name) ||
-        (contract && contract.erc20Metadata && contract.erc20Metadata.name) ||
-        (contract && contract.erc721Metadata && contract.erc721Metadata.name)
+        (contract && contract.ethListContractMetadata && contract.ethListContractMetadata.name) ||
+        (contract && contract.contractMetadata && contract.contractMetadata.name)
 
       const contractSymbol =
-        (contract && contract.metadata && contract.metadata.symbol) ||
-        (contract && contract.erc20Metadata && contract.erc20Metadata.symbol) ||
-        (contract && contract.erc721Metadata && contract.erc721Metadata.symbol)
-
-      // Partial read checks
+        (contract && contract.ethListContractMetadata && contract.ethListContractMetadata.symbol) ||
+        (contract && contract.contractMetadata && contract.contractMetadata.symbol)
 
       const txStatus = txStatusByHash.get(tx.hash)
       const { receipt } = tx
 
-      if (tx.blockNumber.isGreaterThan(0)) {
-
-        // genesis block has no trace or receipt
-
-        // Root trace
-        if (!txStatus) {
-          throw new PartialReadException(`Root trace missing, tx hash = ${tx.hash}`)
-        }
-        // Receipt
-        if (!receipt) {
-          throw new PartialReadException(`Receipt missing, tx hash = ${tx.hash}`)
-        }
-
-      }
-
       // default for genesis block
-
       const successful = txStatus ? txStatus.successful : true
       const gasUsed = receipt ? receipt.gasUsed : new BigNumber(0)
 

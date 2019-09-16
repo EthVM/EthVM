@@ -24,5 +24,5 @@ export interface BlockSummaryByAuthorPage_items {
 export interface BlockSummaryByAuthorPage {
   __typename: "BlockSummaryByAuthorPage";
   items: BlockSummaryByAuthorPage_items[];
-  hasMore: boolean;
+  totalCount: any;
 }

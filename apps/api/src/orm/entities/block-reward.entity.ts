@@ -1,10 +1,10 @@
-import { BlockHeaderEntity } from '@app/orm/entities/block-header.entity';
 import { assignClean } from '@app/shared/utils';
 import BigNumber from 'bignumber.js';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { BigNumberTransformer } from '../transformers/big-number.transformer';
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
 
-@Entity('canonical_block_reward')
+@Entity('block_reward')
 export class BlockRewardEntity {
 
   constructor(data: any) {

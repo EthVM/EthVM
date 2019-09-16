@@ -11,7 +11,6 @@
       </template>
       <template v-slot:pagination v-if="hasPagination">
         <app-paginate
-          v-if="!isPageDetailsAddress"
           :total="pages"
           @newPage="setPage"
           :current-page="page"
@@ -19,7 +18,6 @@
           :has-first="!simplePagination"
           :has-last="!simplePagination"
         />
-        <app-paginate-has-more v-else :current-page="page" :has-more="blockPage.hasMore" @newPage="setPage" />
       </template>
     </app-table-title>
 
@@ -66,7 +64,6 @@
           </div>
           <v-layout v-if="hasPagination" justify-end row class="pb-1 pt-2 pr-2 pl-2">
             <app-paginate
-              v-if="!isPageDetailsAddress"
               :total="pages"
               @newPage="setPage"
               :current-page="page"
@@ -74,7 +71,6 @@
               :has-first="!simplePagination"
               :has-last="!simplePagination"
             />
-            <app-paginate-has-more v-else :current-page="page" :has-more="blockPage.hasMore" @newPage="setPage" />
           </v-layout>
         </v-flex>
         <div xs12 v-if="loading">
@@ -284,7 +280,7 @@ export default class TableBlocks extends Vue {
     } else {
       const { totalCountBN } = blockPage! as BlockSummaryPageExt
       if (!this.fromBlock) {
-        this.fromBlock = totalCountBN
+        this.fromBlock = totalCountBN.minus(1) // latest block number is one less than total count
       }
     }
 
@@ -347,25 +343,11 @@ export default class TableBlocks extends Vue {
   }
 
   get pages(): number {
-    if (this.isPageDetailsAddress) {
-      throw new Error('Cannot determine pages for block summaries by author')
-    }
     const { blockPage, maxItems } = this
     return blockPage ? Math.ceil((blockPage as BlockSummaryPageExt).totalCountBN.div(maxItems).toNumber()) : 0
   }
 
   get hasPagination(): boolean {
-    if (this.isPageDetailsAddress) {
-      if (this.page && this.page > 0) {
-        // If we're past the first page, there must be pagination
-        return true
-      } else if (this.blockPage && (this.blockPage as BlockSummaryByAuthorPageExt).hasMore) {
-        // We're on the first page, but there are more items, show pagination
-        return true
-      }
-      return false
-    }
-
     return this.pageType !== 'home' && this.pages > 1 && !this.hasError
   }
 }

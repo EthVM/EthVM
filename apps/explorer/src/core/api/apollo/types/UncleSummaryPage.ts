@@ -19,5 +19,5 @@ export interface UncleSummaryPage_items {
 export interface UncleSummaryPage {
   __typename: "UnclePage";
   items: UncleSummaryPage_items[];
-  totalCount: number;
+  totalCount: any;
 }

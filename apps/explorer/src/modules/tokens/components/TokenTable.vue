@@ -5,12 +5,12 @@
           TITLE
         =====================================================================================
     -->
-    <!--    <app-table-title-->
-    <!--      page-type="tokens"-->
-    <!--      :title="$tc('token.name', 2)"-->
-    <!--      :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
-    <!--      :has-pagination="hasPagination"-->
-    <!--    >-->
+    <!--        <app-table-title-->
+    <!--          page-type="tokens"-->
+    <!--          :title="$tc('token.name', 2)"-->
+    <!--          :title-caption="`(Total: ${totalCount} ${$tc('token.name', 2)})`"-->
+    <!--          :has-pagination="hasPagination"-->
+    <!--        >-->
     <app-table-title page-type="tokens" :title="$tc('token.name', 2)" :has-pagination="hasPagination">
       <template v-slot:pagination v-if="hasPagination">
         <app-paginate :total="totalCount" @newPage="setPage" :current-page="page" />

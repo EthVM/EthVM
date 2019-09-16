@@ -3,7 +3,7 @@ import { assignClean } from '@app/shared/utils'
 import { BigNumberTransformer } from '@app/orm/transformers/big-number.transformer'
 import BigNumber from 'bignumber.js'
 
-@Entity('canonical_token_detail')
+@Entity('token_detail')
 export class TokenDetailEntity {
 
   constructor(data: any) {
@@ -68,21 +68,15 @@ export class TokenDetailEntity {
   image?: string
 
   @Column({ type: 'character varying', length: 64, readonly: true })
-  e20Name?: string
+  cmName?: string
 
   @Column({ type: 'character varying', length: 64, readonly: true })
-  e20Symbol?: string
+  cmSymbol?: string
 
   @Column({ type: 'integer', readonly: true })
-  e20Decimals?: number
+  cmDecimals?: number
 
   @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
-  e20TotalSupply?: BigNumber
-
-  @Column({type: 'character varying', length: 64, readonly: true})
-  e721Name?: string
-
-  @Column({type: 'character varying', length: 64, readonly: true})
-  e721Symbol?: string
+  cmTotalSupply?: BigNumber
 
 }

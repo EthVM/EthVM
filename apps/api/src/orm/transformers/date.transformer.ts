@@ -10,7 +10,7 @@ export class DateTransformer implements ValueTransformer {
 
     } else if (value instanceof Date) {
 
-      return value.toString()
+      return value.toISOString()
 
     } else if (value instanceof FindOperator) {
 
@@ -23,10 +23,10 @@ export class DateTransformer implements ValueTransformer {
       if (value.multipleParameters) {
 
         const arrayValue = (operator.value as Date[]) || []
-        newValue = arrayValue.map(v => v.toString())
+        newValue = arrayValue.map(v => v.toISOString())
 
       } else {
-        newValue = value.value ? (value.value as Date).toString() : undefined
+        newValue = value.value ? (value.value as Date).toISOString() : undefined
       }
 
       // we need this naked reference so we can access the private _type property

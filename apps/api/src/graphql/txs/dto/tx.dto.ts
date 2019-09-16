@@ -1,9 +1,9 @@
 import { BigNumber, Buffer, Transaction } from '@app/graphql/schema'
 import { assignClean, isGzip } from '@app/shared/utils'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
 import { TxReceiptDto } from '@app/graphql/txs/dto/tx-receipt.dto'
 import { TxTraceDto } from '@app/graphql/txs/dto/tx-trace.dto'
 import zlib from 'zlib'
+import {TransactionEntity} from '@app/orm/entities/transaction.entity';
 
 export class TxDto implements Transaction {
 
@@ -38,6 +38,7 @@ export class TxDto implements Transaction {
     }
     if (trace) {
       this.trace = new TxTraceDto(trace)
+      this.successful = !trace.rootError
     }
     delete data.receipt
     delete data.trace

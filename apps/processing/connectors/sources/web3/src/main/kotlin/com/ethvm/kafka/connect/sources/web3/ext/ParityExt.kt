@@ -12,27 +12,12 @@ import java.util.Arrays
 
 class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(web3jService) {
 
-  fun ethvmGetTracesByNumber(from: BigInteger, to: BigInteger): Request<*, EthvmTracesResponse> {
+  fun ethChainId(): Request<*, EthChainIdResponse> {
     return Request(
-      "trace_blocks",
-      Arrays.asList(
-        DefaultBlockParameter.valueOf(from),
-        DefaultBlockParameter.valueOf(to)
-      ),
+      "eth_chainId",
+      emptyList<Any>(),
       web3jService,
-      EthvmTracesResponse::class.java
-    )
-  }
-
-  fun ethvmGetReceiptsByNumber(from: BigInteger, to: BigInteger): Request<*, EthvmReceiptsResponse> {
-    return Request(
-      "parity_getBlocksReceipts",
-      Arrays.asList(
-        DefaultBlockParameter.valueOf(from),
-        DefaultBlockParameter.valueOf(to)
-      ),
-      web3jService,
-      EthvmReceiptsResponse::class.java
+      EthChainIdResponse::class.java
     )
   }
 
@@ -49,35 +34,14 @@ class JsonRpc2_0ParityExtended(web3jService: Web3jService) : JsonRpc2_0Parity(we
     )
   }
 
-  fun ethvmGetUnclesByNumber(from: BigInteger, to: BigInteger): Request<*, EthvmUnclesResponse> {
-    return Request(
-      "eth_getUnclesByNumber",
-      Arrays.asList(
-        DefaultBlockParameter.valueOf(from),
-        DefaultBlockParameter.valueOf(to)
-      ),
-      web3jService,
-      EthvmUnclesResponse::class.java
-    )
-  }
+}
+
+class EthChainIdResponse : Response<String>() {
+  val chainId: String
+    get() = result
 }
 
 class EthvmBlocksResponse : Response<List<FullBlock>>() {
   val fullBlocks: List<FullBlock>
-    get() = result
-}
-
-class EthvmUnclesResponse : Response<List<UncleBlock.Block>>() {
-  val uncles: List<UncleBlock.Block>
-    get() = result
-}
-
-class EthvmReceiptsResponse : Response<List<TransactionReceipt>>() {
-  val receipts: List<TransactionReceipt>
-    get() = result
-}
-
-class EthvmTracesResponse : Response<List<Trace>>() {
-  val traces: List<Trace>
     get() = result
 }

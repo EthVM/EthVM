@@ -1,54 +1,58 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm'
 import { assignClean } from '@app/shared/utils'
-import { TransactionEntity } from '@app/orm/entities/transaction.entity'
-import { BigNumberTransformer } from '../transformers/big-number.transformer';
-import BigNumber from 'bignumber.js';
+import { BigNumberTransformer } from '../transformers/big-number.transformer'
+import BigNumber from 'bignumber.js'
+import {DateTransformer} from '@app/orm/transformers/date.transformer'
+import {TransactionEntity} from '@app/orm/entities/transaction.entity'
 
-@Entity('canonical_transaction_receipt')
+@Entity('transaction_receipt')
 export class TransactionReceiptEntity {
 
   constructor(data: any) {
     assignClean(this, data);
   }
 
-  @PrimaryColumn({type: 'character', length: 66, readonly: true})
+  @PrimaryColumn({ type: 'char', length: 66, readonly: true })
   transactionHash!: string
 
-  @Column({type: 'integer', readonly: true})
+  @Column({ type: 'int', readonly: true })
   transactionIndex!: number
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @Column({ type: 'char', length: 66, readonly: true })
   blockHash!: string
 
-  @Column({type: 'numeric', readonly: true})
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   blockNumber!: string
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @Column({ type: 'char', length: 42, readonly: true })
   from!: string
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @Column({ type: 'char', length: 42, readonly: true })
   to?: string
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @Column({ type: 'char', length: 42, readonly: true })
   contractAddress?: string
 
-  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   cumulativeGasUsed!: BigNumber
 
-  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   gasUsed!: BigNumber
 
-  @Column({type: 'text', readonly: true})
+  @Column({ type: 'text', readonly: true })
   logs!: string
 
-  @Column({type: 'character', length: 514, readonly: true})
+  @Column({ type: 'char', length: 514, readonly: true })
   logsBloom!: string
 
-  @Column({type: 'character', length: 66, readonly: true})
+  @Column({ type: 'char', length: 66, readonly: true })
   root?: string
 
-  @Column({type: 'numeric', readonly: true, transformer: new BigNumberTransformer()})
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
   status?: BigNumber
+
+  @Column({ type: 'timestamp', readonly: true, transformer: new DateTransformer() })
+  timestamp!: Date
 
   @OneToOne(type => TransactionEntity, tx => tx.receipt)
   @JoinColumn({

@@ -13,13 +13,14 @@ import org.apache.kafka.connect.source.SourceTaskContext
 
 abstract class AbstractParityEntitySource(
   private val sourceContext: SourceTaskContext,
-  protected val parity: JsonRpc2_0ParityExtended,
-  private val syncStateTopic: String
+  protected val parity: JsonRpc2_0ParityExtended
 ) {
 
   abstract val partitionKey: Map<String, Any>
 
   protected val logger = KotlinLogging.logger {}
+
+  protected abstract val topicSyncState: String
 
   protected open val batchSize = 256
 
@@ -92,8 +93,8 @@ abstract class AbstractParityEntitySource(
 
     return SourceRecord(
       partitionKey,
-      mapOf("blockNumber" to range.endInclusive),
-      syncStateTopic,
+      mapOf("blockNumber" to range.last),
+      topicSyncState,
       syncStateKeySchemaAndValue.schema(),
       syncStateKeySchemaAndValue.value(),
       syncStateValueSchemaAndValue.schema(),

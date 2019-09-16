@@ -2,7 +2,6 @@ import { TokenDetail } from '@app/graphql/schema'
 import { assignClean, extractFromJson } from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
 import { ContractSocialDto } from '@app/graphql/contracts/dto/contract-social.dto'
-import { TokenDetailEntity } from '@app/orm/entities/token-detail.entity'
 
 export class TokenDetailDto implements TokenDetail {
 
@@ -12,7 +11,7 @@ export class TokenDetailDto implements TokenDetail {
   creator?: string
   currentPrice?: BigNumber
   decimals?: number
-  holdersCount?: number
+  holdersCount?: BigNumber
   logo?: string
   marketCap?: BigNumber
   name?: string

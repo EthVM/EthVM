@@ -1,11 +1,12 @@
 type Query {
-  contractByAddress(address: String!): Contract!
-  contractsCreatedBy(creator: String!, offset: Int = 0, limit: Int = 20): ContractSummaryPage!
+  contractByAddress(address: String!, blockNumber: BigNumber): Contract
+  contractsCreatedBy(creator: String!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): ContractSummaryPage!
 }
 
 type ContractSummaryPage {
   items: [ContractSummary!]!
-  hasMore: Boolean!
+  hasMore: Boolean
+  totalCount: BigNumber!
 }
 
 type ContractSummary {
@@ -24,24 +25,18 @@ type Contract {
   code: String
   refundAddress: String
   refundBalance: BigNumber
-  traceCreatedAtBlockHash: String
-  traceCreatedAtBlockNumber: BigNumber
-  traceCreatedAtTransactionHash: String
-  traceCreatedAtTransactionIndex: Int
-  traceCreatedAtLogIndex: Int
-  traceCreatedAtTraceAddress: String
-  traceDestroyedAtBlockHash: String
-  traceDestroyedAtBlockNumber: BigNumber
-  traceDestroyedAtTransactionHash: String
-  traceDestroyedAtTransactionIndex: Long
-  traceDestroyedAtLogIndex: Long
-  traceDestroyedAtTraceAddress: String
-  traceDestroyedAt: Buffer
-  metadata: ContractMetadata
+  createdAtBlockHash: String
+  createdAtBlockNumber: BigNumber
+  createdAtTransactionHash: String
+  createdAtTraceAddress: String
+  createdAtTimestamp: Date
+  destroyedAtBlockHash: String
+  destroyedAtBlockNumber: BigNumber
+  destroyedAtTransactionHash: String
+  destroyedAtTraceAddress: String
+  destroyedAtTimestamp: Date
+  ethListContractMetadata: ContractMetadata
   totalSupply: BigNumber
-  createdAtTx: Transaction
-  createdAtTxSummary: TransactionSummary
-  timestamp: Date
 }
 
 type ContractMetadata {
