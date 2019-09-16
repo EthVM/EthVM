@@ -178,7 +178,7 @@
       "btn": "Вперед!"
     },
     "ropsten-no-token": {
-      "text": "You are viewing Ropsten testnet which has no tokens of actual monetary value. To view token values please switch to the ",
+      "text": "Вы просматриваете Ropsten тестнет, здесь токены не имеют фактического денежного значения. Чтобы просмотреть денежные значения токенов, пожалуйста, переключитесь на ",
       "link": "Ethereum mainnet"
     },
     "report": "Нашли какие-либо ошибки или есть предложения?",
@@ -186,7 +186,7 @@
       "tx": "Новая Tx | Новых Txs",
       "block": "новый блок | новых блоков",
       "uncle": "новый uncle блок | новые uncle блоки",
-      "pending": "new pending tx | new pedning txs"
+      "pending": "новая ожидающая tx | новых ожидающих txs\n"
     },
     "sec": "сек.",
     "uncle": {
