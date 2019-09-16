@@ -101,11 +101,10 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
 import { ConfigHelper } from '@app/core/helper/config-helper'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue';
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
-
-    const MAX_ITEMS = 10
+const MAX_ITEMS = 10
 
 @Component({
   components: {

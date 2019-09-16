@@ -63,7 +63,7 @@ const schema = {
       doc: 'Redis prefix for keys',
       env: 'REDIS_PREFIX',
       default: '',
-    }
+    },
   },
   graphql: {
     playground: {
