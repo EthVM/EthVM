@@ -185,7 +185,7 @@
     "update": {
       "tx": "Новая Tx | Новых Txs",
       "block": "новый блок | новых блоков",
-      "uncle": "new uncle | new uncles",
+      "uncle": "новый uncle блок | новые uncle блоки",
       "pending": "new pending tx | new pedning txs"
     },
     "sec": "сек.",
