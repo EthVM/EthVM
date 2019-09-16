@@ -32,7 +32,8 @@ main() {
 
   # Install burry
   wget https://github.com/EthVM/burry.sh/releases/download/v0.4.0-38/burry -O /tmp/burry
-  sudo mv /tmp/burry /usr/local/bin
+  sudo mv /tmp/burry /usr/local/bin/burry
+  sudo chmod +x /usr/local/bin/burry
 
   # Allow the ec2-user to run docker commands without sudo
   sudo usermod -a -G docker ubuntu
