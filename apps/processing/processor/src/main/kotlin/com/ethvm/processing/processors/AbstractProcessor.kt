@@ -450,6 +450,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     txCtx
       .insertInto(SYNC_STATUS_HISTORY)
       .set(record)
+      .onConflictDoNothing()    // we do nothing as we may be re-processing duplicate blocks as the result of a restart
       .execute()
 
     // update latest
