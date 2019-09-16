@@ -1,15 +1,11 @@
-import { TransactionReceiptEntity } from '@app/orm/entities/transaction-receipt.entity'
-import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { EntityManager, FindManyOptions, In, Repository } from 'typeorm'
-import { DbConnection } from '@app/orm/config'
+import {Injectable} from '@nestjs/common'
+import {EntityManager, FindManyOptions, In} from 'typeorm'
+import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity';
 
 @Injectable()
 export class ReceiptService {
 
-  constructor(
-    @InjectRepository(TransactionReceiptEntity, DbConnection.Principal) private readonly receiptRepository: Repository<TransactionReceiptEntity>,
-  ) {
+  constructor() {
   }
 
   async findByTxHash(entityManager: EntityManager, txHashes: string[], select: string[] = []): Promise<TransactionReceiptEntity[]> {

@@ -10,62 +10,13 @@ import {TxService} from '@app/dao/tx.service'
 import {BlockMetricsService} from '@app/dao/block-metrics.service'
 import {InjectEntityManager} from '@nestjs/typeorm'
 import {EntityManager} from 'typeorm'
-import {DbConnection} from '@app/orm/config'
+import {MetadataService} from '@app/dao/metadata.service';
+import BigNumber from 'bignumber.js';
 
-import {strict as assert} from 'assert'
-
-export interface CanonicalBlockHeaderPayload {
-  block_hash: string
-  number: string
-  transaction_count: number
-  uncle_count: number
-  author: string
+export interface SyncStatusPayload {
+  component: string,
+  block_number: string
 }
-
-export interface TransactionPayload {
-  transaction_hash: string
-  block_hash: string
-}
-
-export interface BlockTimePayload {
-  block_hash: string
-}
-
-export interface TransactionReceiptPayload {
-  block_hash: string
-  transaction_hash: string
-}
-
-export interface TransactionTracePayload {
-  block_hash: string
-  transaction_hash?: string
-  root_error: string
-}
-
-export interface BlockMetricsTransactionPayload {
-  block_hash: string
-  timestamp: number
-}
-
-export interface BlockMetricsTransactionFeePayload {
-  block_hash: string
-  timestamp: number
-}
-
-export interface MetadataPayload {
-  key: string
-  value: string
-}
-
-export type PgEventPayload =
-  CanonicalBlockHeaderPayload
-  | BlockTimePayload
-  | TransactionPayload
-  | TransactionReceiptPayload
-  | TransactionTracePayload
-  | BlockMetricsTransactionPayload
-  | BlockMetricsTransactionFeePayload
-  | MetadataPayload
 
 export class PgEvent {
 
@@ -93,159 +44,36 @@ function isPgEvent<PgEvent>() {
 }
 
 // tslint:disable-next-line:no-shadowed-variable
-function isMetadataEvent<PgEvent>() {
-
-  const tables = new Set<string>([
-    'metadata',
-  ])
-
+function isSyncStatusEvent<PgEvent>() {
   return (source$: Observable<any>) => source$.pipe(
     filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
+    filter(e => e.table === 'sync_status'),
   )
-}
-
-// tslint:disable-next-line:no-shadowed-variable
-function isBlockEvent<PgEvent>() {
-
-  const tables = new Set<string>([
-    'canonical_block_header',
-    'canonical_block_time',
-    'transaction',
-    'transaction_trace',
-    'transaction_receipt',
-  ])
-
-  return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsPgEvent),
-    filter(e => tables.has(e.table)),
-  )
-}
-
-// tslint:disable-next-line:no-shadowed-variable
-function isBlockMetricsTransactionEvent<PgEvent>() {
-  return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction'),
-  )
-}
-
-// tslint:disable-next-line:no-shadowed-variable
-function isBlockMetricsTransactionFeeEvent<PgEvent>() {
-  return (source$: Observable<any>) => source$.pipe(
-    filter(inputIsPgEvent),
-    filter(e => e.table === 'block_metrics_transaction_fee'),
-  )
-}
-
-class BlockEvents {
-
-  header?: CanonicalBlockHeaderPayload
-
-  rewardsTrace?: TransactionTracePayload
-
-  blockTime?: BlockTimePayload
-
-  transactions: Map<string, TransactionPayload> = new Map()
-  transactionTraces: Map<string, TransactionTracePayload> = new Map()
-  transactionReceipts: Map<string, TransactionReceiptPayload> = new Map()
-
-  constructor(private readonly blockHash: string,
-              private readonly instaMining: boolean) {
-  }
-
-  addHeader(header: CanonicalBlockHeaderPayload) {
-    assert.equal(header.block_hash, this.blockHash, `Block header block hash does not match: Expected = ${this.blockHash}, received = ${header}`)
-    this.header = header
-  }
-
-  addBlockTime(blockTime: BlockTimePayload) {
-    assert.equal(blockTime.block_hash, this.blockHash, `Block time block hash does not match: Expected = ${this.blockHash}, received = ${blockTime}`)
-    this.blockTime = blockTime
-  }
-
-  addRewardsTrace(rewardsTrace: TransactionTracePayload) {
-    const {blockHash} = this
-    assert.equal(rewardsTrace.block_hash, blockHash, `Rewards trace block hash does not match: Expected = ${blockHash}, received = ${rewardsTrace}`)
-    this.rewardsTrace = rewardsTrace
-  }
-
-  addTransaction(transaction: TransactionPayload) {
-    const {blockHash} = this
-    assert.equal(transaction.block_hash, blockHash, `Transaction block hash does not match: Expected = ${blockHash}, received = ${transaction}`)
-    this.transactions.set(transaction.transaction_hash, transaction)
-  }
-
-  addTransactionTrace(transactionTrace: TransactionTracePayload) {
-    const {blockHash} = this
-    assert.equal(transactionTrace.block_hash, blockHash, `Transaction trace block hash does not match: Expected = ${blockHash}, received = ${transactionTrace}`)
-    this.transactionTraces.set(transactionTrace.transaction_hash!!, transactionTrace)
-  }
-
-  addTransactionReceipt(transactionReceipt: TransactionReceiptPayload) {
-    const {blockHash} = this
-    assert.equal(
-      transactionReceipt.block_hash,
-      blockHash,
-      `Transaction receipt block hash does not match: Expected = ${blockHash}, received = ${transactionReceipt}`,
-    )
-    this.transactionReceipts.set(transactionReceipt.transaction_hash, transactionReceipt)
-  }
-
-  get isComplete(): boolean {
-
-    const {header, blockTime, transactions, transactionReceipts, rewardsTrace, transactionTraces, instaMining} = this
-
-    if (!(header && blockTime)) return false
-
-    const {transaction_count} = header
-
-    // check transactions
-
-    if (transactions.size !== transaction_count) return false
-
-    // check receipts
-
-    if (transactionReceipts.size !== transaction_count) return false
-
-    // check traces
-
-    if (transactionTraces.size !== transaction_count) return false
-
-    // check rewards
-
-    if (!instaMining && rewardsTrace == null) return false
-
-    // otherwise we have seen all the components that we need before we can send a notification
-    return true
-  }
-
 }
 
 @Injectable()
 export class PgSubscriptionService {
 
-  private readonly principalUrl: string
-  private readonly metricsUrl: string
+  private readonly dbUrl: string
 
-  private blockEvents: Map<string, BlockEvents> = new Map()
+  private syncStatusMap = new Map<string, BigNumber>()
+  private isSyncing?: boolean
 
   constructor(
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
     @Inject('winston') private readonly logger: Logger,
     private readonly config: ConfigService,
+    private readonly metadataService: MetadataService,
     private readonly blockService: BlockService,
     private readonly transactionService: TxService,
     private readonly blockMetricsService: BlockMetricsService,
-    @InjectEntityManager(DbConnection.Principal) private readonly principalEntityManager: EntityManager,
+    @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {
 
-    this.principalUrl = config.dbPrincipal.url
-    this.metricsUrl = config.dbMetrics.url
+    this.dbUrl = config.db.url
 
     this.initKeepAlive()
-    this.initPrincipal()
-    this.initMetrics()
+    this.init()
   }
 
   private initKeepAlive() {
@@ -263,16 +91,27 @@ export class PgSubscriptionService {
     setTimeout(keepAlive, periodMs)
   }
 
-  private initPrincipal() {
+  private async init() {
 
-    const {principalUrl, blockService, transactionService, logger, pubSub, principalEntityManager} = this
+    const {dbUrl, blockService, transactionService, logger, pubSub, entityManager, metadataService, blockMetricsService} = this
+
+    // Build sync status map with latest values
+
+    const syncStatuses = await metadataService.latestSyncStatus()
+    syncStatuses.forEach(status => {
+      this.syncStatusMap.set(status.component, status.blockNumber)
+    })
+
+    // Determine if we are currently syncing
+    this.isSyncing = await metadataService.isSyncing()
 
     const events$ = Observable.create(
       async observer => {
         try {
-          const subscriber = createSubscriber({connectionString: principalUrl})
+          const subscriber = createSubscriber({connectionString: dbUrl})
 
           subscriber.notifications.on('events', e => observer.next(e))
+
           subscriber.events.on('error', err => {
             console.error('pg sub error', err)
             observer.error(err)
@@ -291,6 +130,7 @@ export class PgSubscriptionService {
       })
 
     const blockHashes$ = new Subject<string>()
+    const syncStatusUpdates$ = new Subject<boolean>()
 
     const pgEvents$ = events$
       .pipe(
@@ -300,15 +140,9 @@ export class PgSubscriptionService {
 
     //
 
-    this.blockEvents = new Map()
-
     pgEvents$
-      .pipe(isMetadataEvent())
-      .subscribe(event => this.onMetadataEvent(event))
-
-    pgEvents$
-      .pipe(isBlockEvent())
-      .subscribe(event => this.onBlockEvent(event, blockHashes$))
+      .pipe(isSyncStatusEvent())
+      .subscribe(event => this.onSyncStatusUpdate(event, blockHashes$, syncStatusUpdates$))
 
     blockHashes$
       .pipe(
@@ -324,7 +158,7 @@ export class PgSubscriptionService {
         )
 
         // clear query cache
-        await principalEntityManager.connection.queryResultCache!.clear()
+        await entityManager.connection.queryResultCache!.clear()
 
         const blockSummaries = await blockService.findSummariesByBlockHash(blockHashes, false)
 
@@ -332,7 +166,8 @@ export class PgSubscriptionService {
 
           // get data
           const txSummaries = await transactionService.findSummariesByHash(blockSummary.transactionHashes || [])
-          const hashRate = await blockService.calculateHashRate(false)
+          const hashRate = await blockService.calculateHashRate(false, blockSummary.number)
+          const blockMetric = await blockMetricsService.findBlockMetric(blockSummary.hash, blockSummary.number, blockSummary.timestamp)
 
           const promises: Promise<void>[] = [];
 
@@ -348,6 +183,8 @@ export class PgSubscriptionService {
 
           promises.push(pubSub.publish('hashRate', hashRate))
 
+          promises.push(pubSub.publish('newBlockMetric', blockMetric))
+
           return Promise.all(promises)
         })
 
@@ -355,174 +192,61 @@ export class PgSubscriptionService {
         await Promise.all(publishPromises);
       })
 
-  }
-
-  private initMetrics() {
-
-    const {blockMetricsService, pubSub} = this
-
-    const events$ = Observable.create(
-      async observer => {
-        try {
-          const subscriber = createSubscriber({connectionString: this.metricsUrl})
-
-          subscriber.notifications.on('events', e => observer.next(e))
-
-          subscriber.events.on('error', err => {
-            console.error('pg sub error', err)
-            observer.error(err)
-          })
-
-          await subscriber.connect()
-          await subscriber.listenTo('events')
-
-          return () => {
-            subscriber.close()
-          }
-        } catch (err) {
-          console.error('Pg sub error', err)
-          observer.error(err)
-        }
+    syncStatusUpdates$
+      .subscribe(async syncStatus => {
+        return pubSub.publish('isSyncing', syncStatus)
       })
-
-    const blockMetrics$ = new Subject<string>()
-
-    const pgEvents$ = events$
-      .pipe(
-        map(event => new PgEvent(event)),
-        isPgEvent(),
-      )
-
-    //
-
-    this.blockEvents = new Map()
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionEvent())
-      .subscribe(event => this.onBlockMetricsTransactionEvent(event))
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionFeeEvent())
-      .subscribe(event => this.onBlockMetricsTransactionFeeEvent(event))
-
-    pgEvents$
-      .pipe(isBlockMetricsTransactionFeeEvent())
-
-    blockMetrics$
-      .pipe(
-        bufferTime(100),
-        filter(blockHashes => blockHashes.length > 0),
-      )
-      .subscribe(async blockHashes => {
-        const metrics = await blockMetricsService.findByBlockHash(blockHashes)
-        metrics.forEach(m => pubSub.publish('newBlockMetric', m))
-      })
-
   }
 
-  private async onMetadataEvent(event: PgEvent) {
-    const {pubSub, principalEntityManager} = this
-    const payload = event.payload as MetadataPayload
+  private async onSyncStatusUpdate(event: PgEvent, blockHashes$: Subject<string>, syncStatusUpdates$: Subject<boolean>) {
 
-    switch (payload.key) {
-      case 'sync_status':
+    const {blockService, metadataService, isSyncing} = this
+    const payload = event.payload as SyncStatusPayload
 
-        // clear query cache
-        await principalEntityManager.connection.queryResultCache!.clear()
+    const prevBlockNumber = this.lowestBlockNumber() || new BigNumber(-1)
 
-        const isSyncing = JSON.parse(payload.value)
-        pubSub.publish('isSyncing', isSyncing)
+    // Update local map and find new lowest block number
+    this.syncStatusMap.set(payload.component, new BigNumber(payload.block_number))
+    const newBlockNumber = this.lowestBlockNumber()!
 
-        break
+    // This will detect when a new block is published or when a fork happens
+    // TODO unless fork happens after only one block
+    if (!newBlockNumber.isEqualTo(prevBlockNumber)) {
 
-      default:
-      // Do nothing
-    }
-  }
+      // Determine if sync status event should be published
+      const newSyncStatus = metadataService.calculateIsSyncing(Array.from(this.syncStatusMap.values()))
+      if (newSyncStatus !== isSyncing) {
+        // Publish event and update state
+        syncStatusUpdates$.next(newSyncStatus)
+        this.isSyncing = newSyncStatus
+      }
 
-  private async onBlockMetricsTransactionEvent(event: PgEvent) {
-    const {pubSub} = this
-    const payload = event.payload as BlockMetricsTransactionPayload
+      if (this.isSyncing) { // This is to prevent flooding clients when we are syncing
+        return
+      }
 
-    const metric = await this.blockMetricsService.findBlockMetricsTransactionByBlockHash(payload.block_hash, false)
+      let numberToPublish = prevBlockNumber.plus(1)
 
-    if (metric) {
-      pubSub.publish('newBlockMetricsTransaction', metric)
-    }
+      while (numberToPublish.lte(newBlockNumber)) {
 
-  }
+        const block = await blockService.findByNumber(numberToPublish, newBlockNumber)
 
-  private async onBlockMetricsTransactionFeeEvent(event: PgEvent) {
-    const {pubSub} = this
-    const payload = event.payload as BlockMetricsTransactionPayload
-
-    const metric = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(payload.block_hash, false)
-
-    if (metric) {
-      pubSub.publish('newBlockMetricsTransactionFee', metric)
-    }
-
-  }
-
-  private onBlockEvent(event: PgEvent, blockHashes$: Subject<string>) {
-
-    const {blockEvents, config} = this
-
-    const {table, payload} = event
-    const {block_hash} = payload as any
-
-    let entry = blockEvents.get(block_hash)
-
-    if (!entry) {
-      entry = new BlockEvents(block_hash, config.instaMining)
-      blockEvents.set(block_hash, entry)
-    }
-
-    switch (table) {
-
-      case 'canonical_block_header':
-        const header = payload as CanonicalBlockHeaderPayload
-        entry.addHeader(header)
-        break
-
-      case 'canonical_block_time':
-        const blockTime = payload as BlockTimePayload
-        entry.addBlockTime(blockTime)
-        break
-
-      case 'transaction':
-        const tx = payload as TransactionPayload
-        entry.addTransaction(tx)
-        break
-
-      case 'transaction_receipt':
-        const receipt = payload as TransactionReceiptPayload
-        entry.addTransactionReceipt(receipt)
-        break
-
-      case 'transaction_trace':
-
-        const trace = payload as TransactionTracePayload
-
-        if (trace.transaction_hash == null) {
-          entry.addRewardsTrace(trace)
-        } else {
-          entry.addTransactionTrace(trace)
+        if (block != null) {
+          blockHashes$.next(block.hash)
         }
-
-        break
-
-      default:
-        throw new Error(`Unexpected table name: ${table}`)
+        numberToPublish = numberToPublish.plus(1)
+      }
 
     }
 
-    if (entry.isComplete) {
-      // remove from the map and emit an event
-      blockHashes$.next(block_hash)
-      blockEvents.delete(block_hash)
-    }
+  }
 
+  private lowestBlockNumber(): BigNumber | undefined {
+    const blockNumbers = Array.from(this.syncStatusMap.values())
+    if (!(blockNumbers && blockNumbers.length )) {
+      return undefined
+    }
+    return BigNumber.minimum(...blockNumbers)
   }
 
 }

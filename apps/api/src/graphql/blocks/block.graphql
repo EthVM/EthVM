@@ -1,13 +1,13 @@
 
 type Query {
 
-  hashRate: BigNumber!
+  hashRate(blockNumber: BigNumber): BigNumber
 
-  blockSummaries(fromBlock: BigNumber, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
-  blockSummariesByAuthor(author: String!, offset: Int = 0, limit: Int = 20): BlockSummaryByAuthorPage!
+  blockSummaries(blockNumber: BigNumber, offset: Int = 0, limit: Int = 20): BlockSummaryPage!
+  blockSummariesByAuthor(author: String!, offset: Int = 0, limit: Int = 20, blockNumber: BigNumber): BlockSummaryByAuthorPage!
 
-  blockByHash(hash: String!): Block
-  blockByNumber(number: BigNumber!): Block
+  blockByHash(hash: String!, blockNumber: BigNumber): Block
+  blockByNumber(number: BigNumber!, blockNumber: BigNumber): Block
 
 }
 
@@ -32,12 +32,12 @@ type BlockSummary {
 
 type BlockSummaryPage {
   items: [BlockSummary!]!
-  totalCount: Int!
+  totalCount: BigNumber!
 }
 
 type BlockSummaryByAuthorPage {
   items: [BlockSummary!]!
-  hasMore: Boolean!
+  totalCount: BigNumber!
 }
 
 type Block {

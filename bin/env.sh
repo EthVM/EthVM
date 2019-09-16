@@ -15,7 +15,8 @@ ORG="${ORG:-ethvm}"
 ROOT_DIR=$(cd ${SCRIPT_DIR}/..; pwd)
 APPS_PATH="${ROOT_DIR}/apps"
 DOCKER_IMAGES_PATH="${ROOT_DIR}/docker/images"
-META_PATH="${SCRIPT_DIR}/meta.json"
+DOCKER_RUN_META_PATH="${SCRIPT_DIR}/docker-run-envs/docker-run.meta.json"
+DOCKER_BUILD_META_PATH="${SCRIPT_DIR}/docker-build.meta.json"
 
 # ---------------------------------------------------------
 #   Helper Functions
@@ -43,7 +44,7 @@ to_version() {
 
 read_version() {
 
-  local raw_version_path=$(jq -car ".projects[] | select(.id==\"${1}\") | .version" ${META_PATH})
+  local raw_version_path=$(jq -car ".projects[] | select(.id==\"${1}\") | .version" ${DOCKER_BUILD_META_PATH})
   local version_path=$(eval "echo -e ${raw_version_path}")
   echo $(to_version "${version_path}")
 
@@ -121,10 +122,10 @@ ensure() {
   if ! [ -x "$(command -v javac)" ]; then
     >&2 invalid "JAVA is necessary to be installed to run this script!\n\tFor installation instructions, please use your OS package manager"
     exit 1
-  else
-    local version=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*"/\1\2/p;')
-    [[ $version != "18" ]] && >&2 warning "It looks like your JAVA version is not 1.8.\n\tWe recommend you to switch to version 1.8 in order to avoid issues while executing some Kafka commands!"
   fi
+
+  local version=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*"/\1\2/p;')
+  [[ $version != "18" ]] && >&2 invalid "It looks like your JAVA version is not 1.8.\n\tWe recommend you to switch to version 1.8 in order to avoid issues while executing some Kafka commands!" && exit 1
 
   if ! [ -x "$(command -v yarn)" ]; then
     >&2 warning "yarn is not installed on the system! Although not completely necessary, it's recommended its installation.\n\tFor installation instructions, please visit: https://yarnpkg.com/lang/en/docs/install/"
@@ -146,6 +147,3 @@ ensure() {
   fi
 
 }
-
-# source docker compose env variables
-source ${ROOT_DIR}/.env.default

@@ -1,35 +1,29 @@
-import { Injectable } from '@nestjs/common'
-import { InjectEntityManager } from '@nestjs/typeorm'
-import { EntityManager, In } from 'typeorm'
-import { BlockMetricEntity } from '@app/orm/entities/block-metric.entity'
-import { AggregateBlockMetric, BlockMetricField, TimeBucket } from '@app/graphql/schema'
-import { unitOfTime } from 'moment'
-import { CanonicalCount } from '@app/orm/entities/row-counts.entity'
-import { BlockMetricsTransactionFeeEntity } from '@app/orm/entities/block-metrics-transaction-fee.entity'
-import { BlockMetricsTransactionEntity } from '@app/orm/entities/block-metrics-transaction.entity'
-import moment = require('moment')
-import { DbConnection } from '@app/orm/config'
-import { BlockMetricsHeaderEntity } from '@app/orm/entities/block-metrics-header.entity'
-import { BlockMetricsTransactionTraceEntity } from '@app/orm/entities/block-metrics-transaction-trace.entity'
-import { BlockTimeEntity } from '@app/orm/entities/block-time.entity'
+import {Injectable} from '@nestjs/common'
+import {InjectEntityManager} from '@nestjs/typeorm'
+import {Between, EntityManager, Equal, FindOneOptions, In, LessThanOrEqual} from 'typeorm'
+import {AggregateBlockMetric, BlockMetricField, TimeBucket} from '@app/graphql/schema'
+import {unitOfTime} from 'moment'
+import BigNumber from 'bignumber.js';
+import {BlockMetricsTraceEntity} from '@app/orm/entities/block-metrics-trace.entity';
+import moment = require('moment');
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
+import {BlockMetricsHeaderEntity} from '@app/orm/entities/block-metrics-header.entity';
+import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity';
 
 const HEADER_FIELDS = [
   BlockMetricField.AVG_BLOCK_TIME,
   BlockMetricField.AVG_DIFFICULTY,
   BlockMetricField.AVG_TOTAL_DIFFICULTY,
   BlockMetricField.AVG_NUM_UNCLES,
-]
-const TX_FIELDS = [
   BlockMetricField.AVG_GAS_LIMIT,
   BlockMetricField.AVG_GAS_PRICE,
 ]
+
 const TX_TRACE_FIELDS = [
   BlockMetricField.AVG_NUM_TXS,
   BlockMetricField.AVG_NUM_SUCCESSFUL_TXS,
   BlockMetricField.AVG_NUM_FAILED_TXS,
   BlockMetricField.AVG_NUM_INTERNAL_TXS,
-]
-const TX_FEE_FIELDS = [
   BlockMetricField.AVG_TX_FEES,
   BlockMetricField.AVG_TOTAL_TX_FEES,
 ]
@@ -37,85 +31,80 @@ const TX_FEE_FIELDS = [
 @Injectable()
 export class BlockMetricsService {
 
-  constructor(@InjectEntityManager(DbConnection.Metrics) private readonly entityManager: EntityManager) {
+  constructor(@InjectEntityManager() private readonly entityManager: EntityManager) {
   }
 
-  async findByBlockHash(blockHashes: string[]): Promise<BlockMetricEntity[]> {
-    return this.entityManager
-      .find(BlockMetricEntity, {
+  async findBlockMetricsTraces(blockHashes: string [], maxTimestamp: Date, minTimestamp: Date, txn?: EntityManager): Promise<BlockMetricsTraceEntity[]> {
+    txn = txn || this.entityManager
+    return txn
+      .find(BlockMetricsTraceEntity, {
         where: {
-          blockHash: In(blockHashes),
+          hash: In(blockHashes),
+          timestamp: Between(minTimestamp, maxTimestamp),
         },
         cache: true,
       })
   }
 
-  async findBlockMetricsTransaction(offset: number, limit: number): Promise<[BlockMetricsTransactionEntity[], number]> {
+  async findBlockMetricsTracesByHash(
+    hash: string,
+    maxTimestamp: Date,
+    minTimestamp: Date,
+    cache: boolean = true,
+    blockNumber: BigNumber,
+  ): Promise<BlockMetricsTraceEntity | undefined> {
+    return this.entityManager
+      .findOne(BlockMetricsTraceEntity, {
+        where: { hash, number: LessThanOrEqual(blockNumber), timestamp: Between(minTimestamp, maxTimestamp) },
+        cache,
+      })
+  }
+
+  async findBlockMetric(hash: string, blockNumber: BigNumber, timestamp: Date): Promise<BlockMetricEntity | undefined> {
+    return this.entityManager
+      .findOne(BlockMetricEntity, {
+        where: {
+          hash,
+          timestamp: Equal(timestamp),
+          number: LessThanOrEqual(blockNumber),
+        },
+      })
+  }
+
+  async findBlockMetrics(offset: number, limit: number, blockNumber: BigNumber): Promise<[BlockMetricEntity[], number]> {
 
     return this.entityManager
-      .transaction('READ COMMITTED', async (txn): Promise<[BlockMetricsTransactionEntity[], number]> => {
+      .transaction('READ COMMITTED', async (txn): Promise<[BlockMetricEntity[], number]> => {
 
         // much cheaper to do the count against canonical block header table instead of using the
         // usual count mechanism
 
-        const [{count}] = await txn.find(CanonicalCount, {
-          select: ['count'],
-          where: {
-            entity: 'block_header',
-          },
-          cache: true,
-        })
+        const {number, timestamp} = await txn
+          .findOne(BlockHeaderEntity, {
+            select: ['number', 'timestamp'],
+            where: {
+              number: LessThanOrEqual(blockNumber),
+            },
+            order: {
+              number: 'DESC',
+            },
+            cache: true,
+          } as FindOneOptions)
 
-        const entities = await txn.find(BlockMetricsTransactionEntity, {
-          order: {number: 'DESC'},
+        const entities = await txn.find(BlockMetricEntity, {
+          where: {
+            number: LessThanOrEqual(blockNumber),
+            timestamp: LessThanOrEqual(timestamp),
+          },
+          order: { number: 'DESC' },
           skip: offset,
           take: limit,
           cache: true,
         })
 
-        return [entities, count]
+        return [entities, number + 1]
       })
 
-  }
-
-  async findBlockMetricsTransactionByBlockHash(blockHash: string, cache: boolean = true): Promise<BlockMetricsTransactionEntity | undefined> {
-    return this.entityManager.findOne(BlockMetricsTransactionEntity, {
-      where: {blockHash}, cache,
-    })
-  }
-
-  async findBlockMetricsTransactionFee(offset: number, limit: number): Promise<[BlockMetricsTransactionFeeEntity[], number]> {
-
-    return this.entityManager
-      .transaction('READ COMMITTED', async (txn): Promise<[BlockMetricsTransactionFeeEntity[], number]> => {
-
-        // much cheaper to do the count against canonical block header table instead of using the
-        // usual count mechanism
-
-        const [{count}] = await txn.find(CanonicalCount, {
-          select: ['count'],
-          where: {
-            entity: 'block_header',
-          },
-          cache: true,
-        })
-
-        const entities = await txn.find(BlockMetricsTransactionFeeEntity, {
-          order: {number: 'DESC'},
-          skip: offset,
-          take: limit,
-          cache: true,
-        })
-
-        return [entities, count]
-      })
-
-  }
-
-  async findBlockMetricsTransactionFeeByBlockHash(blockHash: string, cache: boolean = true): Promise<BlockMetricsTransactionFeeEntity | undefined> {
-    return this.entityManager.findOne(BlockMetricsTransactionFeeEntity, {
-      where: {blockHash}, cache,
-    })
   }
 
   private estimateDatapoints(start: Date = new Date(), end: Date = new Date('2000-01-01T00:00:00.000Z'), bucket: TimeBucket): number {
@@ -150,6 +139,7 @@ export class BlockMetricsService {
   async timeseries(
     bucket: TimeBucket,
     field: BlockMetricField,
+    blockNumber: BigNumber,
     start?: Date,
     end: Date = new Date('2000-01-01T00:00:00.000Z'),
   ): Promise<AggregateBlockMetric[]> {
@@ -190,7 +180,7 @@ export class BlockMetricsService {
 
     switch (field) {
       case BlockMetricField.AVG_BLOCK_TIME:
-        select.push('round(avg(bt.block_time)) as avg_block_time')
+        select.push('round(avg(block_time)) as avg_block_time')
         break
       case BlockMetricField.AVG_NUM_UNCLES:
         select.push('round(avg(num_uncles)) as avg_num_uncles')
@@ -233,35 +223,28 @@ export class BlockMetricsService {
 
     if (HEADER_FIELDS.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsHeaderEntity, 'bm')
-      // If field is blockTime, join with block_time entity where blockTime is now stored
-      if (field === BlockMetricField.AVG_BLOCK_TIME) {
-        queryBuilder = queryBuilder
-          .leftJoin(BlockTimeEntity, 'bt', 'bt.timestamp = bm.timestamp')
-          .where('bt.block_time IS NOT NULL')
-      }
-    } else if (TX_FIELDS.indexOf(field) > -1) {
-      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionEntity, 'bm')
     } else if (TX_TRACE_FIELDS.indexOf(field) > -1) {
-      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionTraceEntity, 'bm')
-    } else if (TX_FEE_FIELDS.indexOf(field) > -1) {
-      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTransactionFeeEntity, 'bm')
+      queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsTraceEntity, 'bm')
     } else {
       throw new Error(`Unexpected metric: ${field}`)
     }
 
     // Set where clause if start and/or end params are set
 
+    queryBuilder
+      .select(select)
+      .where('bm.number <= :blockNumber')
+
     if (start) {
-      queryBuilder.where('bm.timestamp between :end and :start', {start, end})
+      queryBuilder.andWhere('bm.timestamp between :end and :start', {start, end})
     } else {
-      queryBuilder.where('bm.timestamp > :end', {end})
+      queryBuilder.andWhere('bm.timestamp > :end', {end})
     }
 
     const items = await queryBuilder
-      .select(select)
       .groupBy('time')
       .orderBy({time: 'DESC'})
-      .setParameters({start, end})
+      .setParameters({start, end, blockNumber: blockNumber.toNumber()})
       .cache(true)
       .getRawMany()
 

@@ -1,22 +1,8 @@
 package com.ethvm.kafka.connect.sources.web3.utils
 
-import com.ethvm.avro.capture.BlockHeaderRecord
-import com.ethvm.avro.capture.CanonicalKeyRecord
-import com.ethvm.avro.capture.CanonicalRecord
-import com.ethvm.avro.capture.EthListRecord
-import com.ethvm.avro.capture.ParitySyncStateKeyRecord
-import com.ethvm.avro.capture.ParitySyncStateRecord
-import com.ethvm.avro.capture.TraceListRecord
-import com.ethvm.avro.capture.TransactionListRecord
-import com.ethvm.avro.capture.TransactionReceiptListRecord
-import com.ethvm.avro.capture.TransactionReceiptRecord
-import com.ethvm.avro.capture.TransactionRecord
-import com.ethvm.avro.capture.UncleListRecord
-import com.ethvm.avro.capture.UncleRecord
+import com.ethvm.avro.capture.*
 import io.confluent.connect.avro.AvroData
-import org.apache.avro.Schema
 import org.apache.avro.specific.SpecificRecordBase
-import org.apache.kafka.connect.data.ConnectSchema
 import org.apache.kafka.connect.data.SchemaAndValue
 
 object AvroToConnect {
@@ -26,7 +12,6 @@ object AvroToConnect {
   private val mappings = mapOf(
     BlockHeaderRecord::class to BlockHeaderRecord.`SCHEMA$`,
     CanonicalKeyRecord::class to CanonicalKeyRecord.`SCHEMA$`,
-    CanonicalRecord::class to CanonicalRecord.`SCHEMA$`,
     EthListRecord::class to EthListRecord.`SCHEMA$`,
     TraceListRecord::class to TraceListRecord.`SCHEMA$`,
     TransactionListRecord::class to TransactionListRecord.`SCHEMA$`,
@@ -36,27 +21,9 @@ object AvroToConnect {
     UncleListRecord::class to UncleListRecord.`SCHEMA$`,
     UncleRecord::class to UncleRecord.`SCHEMA$`,
     ParitySyncStateKeyRecord::class to ParitySyncStateKeyRecord.`SCHEMA$`,
-    ParitySyncStateRecord::class to ParitySyncStateRecord.`SCHEMA$`
+    ParitySyncStateRecord::class to ParitySyncStateRecord.`SCHEMA$`,
+    BlockRecord::class to BlockRecord.`SCHEMA$`
   )
 
   fun toConnectData(record: SpecificRecordBase): SchemaAndValue = avroData.toConnectData(mappings[record::class], record)
-
-  fun toConnectSchema(schema: Schema, optional: Boolean = false): org.apache.kafka.connect.data.Schema {
-    var connectSchema = avroData.toConnectSchema(schema)
-    if (optional) {
-      connectSchema = ConnectSchema(
-        connectSchema.type(),
-        true,
-        connectSchema.defaultValue(),
-        connectSchema.name(),
-        connectSchema.version(),
-        connectSchema.doc(),
-        connectSchema.parameters(),
-        connectSchema.fields(),
-        null,
-        null
-      )
-    }
-    return connectSchema
-  }
 }

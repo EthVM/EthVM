@@ -1,0 +1,19 @@
+---
+
+include_vars:
+  - vars/_global.yaml
+
+templates:
+  - src: templates/compose.yaml.j2
+    dest: stacks/docker-compose.yaml
+    include_vars:
+      - vars/dev-mainnet.yaml
+      # - Create the file and uncomment below line if you need to customise settings
+      # - vars/dev-mainnet.custom.yaml
+
+  - src: templates/env.j2
+    dest: stacks/.env
+    include_vars:
+      - vars/dev-mainnet.yaml
+      # - Create the file and uncomment below line if you need to customise settings
+      # - vars/dev-mainnet.custom.yaml

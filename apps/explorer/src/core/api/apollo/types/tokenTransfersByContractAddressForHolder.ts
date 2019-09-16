@@ -24,6 +24,7 @@ export interface tokenTransfersByContractAddressForHolder_transfers {
   __typename: "TransferPage";
   items: tokenTransfersByContractAddressForHolder_transfers_items[];
   hasMore: boolean;
+  totalCount: any | null;
 }
 
 export interface tokenTransfersByContractAddressForHolder {

@@ -2,6 +2,7 @@ import BN from 'bignumber.js'
 import { TransferPage, TransferPage_items } from '@app/core/api/apollo/types/TransferPage'
 import { Transfer } from '@app/core/api/apollo/types/Transfer'
 import { DeltaType } from '@app/core/api/apollo/types/globalTypes'
+import BigNumber from 'bignumber.js'
 
 export class TransferPageExt_items implements TransferPage_items {
   __typename!: 'Transfer'
@@ -38,9 +39,15 @@ export class TransferPageExt implements TransferPage {
   __typename!: 'TransferPage'
   items: (TransferPageExt_items)[]
   hasMore: boolean
+  totalCount: any
 
   constructor(proto: TransferPage) {
     this.items = proto.items.map(s => new TransferPageExt_items(s as Transfer))
     this.hasMore = proto.hasMore
+    this.totalCount = proto.totalCount
+  }
+
+  get totalCountBN(): BigNumber | undefined {
+    return this.totalCount ? new BigNumber(this.totalCount) : undefined
   }
 }

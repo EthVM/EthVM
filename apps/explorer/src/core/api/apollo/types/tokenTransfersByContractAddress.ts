@@ -24,6 +24,7 @@ export interface tokenTransfersByContractAddress_transfers {
   __typename: "TransferPage";
   items: tokenTransfersByContractAddress_transfers_items[];
   hasMore: boolean;
+  totalCount: any | null;
 }
 
 export interface tokenTransfersByContractAddress {

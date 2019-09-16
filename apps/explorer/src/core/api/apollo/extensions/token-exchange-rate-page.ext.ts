@@ -71,7 +71,7 @@ export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_ite
 export class TokenExchangeRatePageExt implements TokenExchangeRatePage {
   __typename!: 'TokenExchangeRatesPage'
   items: TokenExchangeRatePage_items[]
-  totalCount: number
+  totalCount!: number
 
   constructor(proto: TokenExchangeRatePage) {
     this.items = proto.items.map(i => new TokenExchangeRatePageExt_items(i))

@@ -1,0 +1,12 @@
+{
+  "ami_name": "ethvm-ami-rev-1",
+  "aws_access_key": "",
+  "aws_secret_key": "",
+  "source_ami": "ami-026c8acd92718196b",
+  "instance_type": "t2.medium",
+  "ssh_username": "ubuntu",
+  "vpc_region": "",
+  "vpc_id": "",
+  "vpc_public_sn_id": "",
+  "vpc_public_sg_id": ""
+}

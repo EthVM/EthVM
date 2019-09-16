@@ -11,7 +11,7 @@ import { AccountService } from '@app/dao/account.service'
 import { AccountDto } from '@app/graphql/accounts/account.dto'
 import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
-import BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js';
 
 @Injectable()
 export class SearchService {
@@ -25,7 +25,7 @@ export class SearchService {
   ) {
   }
 
-  async search(query: string = ''): Promise<SearchDto | null> {
+  async search(query: string = '', blockNumber: BigNumber): Promise<SearchDto> {
     const s: SearchDto = { type: SearchType.None }
     if (query.substring(0, 2) !== '0x') {
       query = `0x${query}`
@@ -33,13 +33,17 @@ export class SearchService {
 
     // Check Accounts
     if (this.ethService.isValidAddress(query)) {
-      const account = await this.accountService.findAccountByAddress(query.toLowerCase())
+      const account = await this.accountService.findEtherBalanceByAddress(query.toLowerCase(), blockNumber)
       if (account != null) {
 
-        const isMiner = await this.accountService.findIsMiner(account.address)
-        const isContractCreator = await this.accountService.findIsContractCreator(account.address)
+        const { address } = account
+        const isMiner = await this.accountService.findIsMiner(address, blockNumber)
+        const isContractCreator = await this.accountService.findIsContractCreator(address, blockNumber)
+        const txCounts = await this.accountService.findTransactionCounts(address, blockNumber) || { total: 0, totalIn: 0, totalOut: 0 }
+        const hasInternalTransfers = await this.accountService.findHasInternalTransfers(address, blockNumber)
+        const isContract = await this.accountService.findIsContract(address, blockNumber)
 
-        s.address = new AccountDto({ ...account, isMiner, isContractCreator })
+        s.address = new AccountDto({ ...account, isMiner, isContractCreator, ...txCounts, hasInternalTransfers, isContract })
         s.type = SearchType.Address
         return s
       }
@@ -50,22 +54,22 @@ export class SearchService {
 
       query = query.toLowerCase() // Ensure query string is sanitized to lowercase before querying DB
 
-      const block = await this.blockService.findByHash(query)
+      const block = await this.blockService.findByHash(query, blockNumber)
       if (block != null) {
-        const txFees = await this.blockMetricsService.findBlockMetricsTransactionFeeByBlockHash(query)
+        const [txFees] = await this.blockMetricsService.findBlockMetricsTraces([block.hash], block.timestamp, block.timestamp)
         s.block = new BlockDto(block, txFees)
         s.type = SearchType.Block
         return s
       }
 
-      const uncle = await this.uncleService.findUncleByHash(query)
+      const uncle = await this.uncleService.findUncleByHash(query, blockNumber)
       if (uncle != null) {
         s.uncle = new UncleDto(uncle)
         s.type = SearchType.Uncle
         return s
       }
 
-      const tx = await this.txService.findOneByHash(query)
+      const tx = await this.txService.findOneByHash(query, blockNumber)
       if (tx != null) {
         s.tx = new TxDto(tx)
         s.type = SearchType.Tx

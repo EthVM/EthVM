@@ -18,11 +18,6 @@ protocol Capture {
     decimal(80, 0) number;
   }
 
-  record CanonicalRecord {
-    string blockHash;
-    array<string> txHashes;
-  }
-
   record LogRecord {
     string address;
     string data;
@@ -76,15 +71,20 @@ protocol Capture {
     decimal(80, 0) blockNumber;
 
     union { null, long } timestamp = null;
-    union { null, string } transactionHash;
-    union { null, int } transactionPosition;
+    union { null, string } transactionHash = null;
+    union { null, int } transactionPosition = null;
 
   }
 
   record TraceListRecord {
+    union { null, decimal(80, 0) } blockNumber = null;
     union { null, string } rootError = null;
+    string blockHash;
+    string author;
     long timestamp;
     int traceCount;
+    map<decimal(80, 0)> gasUsed;
+    map<decimal(80, 0)> gasPrices;
     array<TraceRecord> traces;
   }
 
@@ -114,7 +114,7 @@ protocol Capture {
   }
 
   record TransactionReceiptListRecord {
-    long timestamp;   
+    long timestamp;
     array<TransactionReceiptRecord> receipts;
   }
 
@@ -149,7 +149,7 @@ protocol Capture {
 
   record TransactionListRecord {
     string blockHash;
-    long timestamp;   
+    long timestamp;
     array<TransactionRecord> transactions;
   }
 
@@ -175,7 +175,7 @@ protocol Capture {
     decimal(80, 0) gasLimit;                            // the maximum gas allowed in this block
     decimal(80, 0) gasUsed;                             // the total used gas by all transactions in this block
 
-    long timestamp;                               
+    long timestamp;
     long size;
 
     int transactionCount;
@@ -218,8 +218,16 @@ protocol Capture {
 
   }
 
+  record BlockRecord {
+    BlockHeaderRecord header;
+    array<UncleRecord> uncles = [];
+    array<TransactionRecord> transactions = [];
+    array<TransactionReceiptRecord> receipts = [];
+    boolean isFork = false;
+  }
+
   record UncleListRecord {
-    long timestamp;   
+    long timestamp;
     array<UncleRecord> uncles;
   }
 
@@ -261,7 +269,7 @@ protocol Capture {
     union { null, int } decimals = null;
 
     union { null, string } ensAddress = null;
-    union { null, com.ethvm.avro.common.ContractType } type = null;
+    union { null, string } type = null;
     union { null, ContractLogoRecord } logo = null;
     union { null, ContractSupportRecord } support = null;
     union { null, ContractSocialRecord } social = null;
@@ -271,32 +279,6 @@ protocol Capture {
 
   enum ContractEventType {
     CREATE, DESTROY
-  }
-
-  record ContractEventCreatedRecord {
-    string address;
-    string creator;
-    string init;
-    string code;
-    com.ethvm.avro.common.TraceLocationRecord traceLocation;
-    union{ null, com.ethvm.avro.common.ContractType } contractType = null;
-  }
-
-  record ContractEventDestroyedRecord {
-    string address;
-    string refundAddress;
-    decimal(80, 0) refundBalance;
-    com.ethvm.avro.common.TraceLocationRecord traceLocation;
-  }
-
-  record ContractEventRecord {
-    string address;
-    ContractEventType type;
-    union { ContractEventCreatedRecord, ContractEventDestroyedRecord } `event`;
-  }
-
-  record ContractEventListRecord {
-    array<ContractEventRecord> deltas = [];
   }
 
   record ContractKeyRecord {
