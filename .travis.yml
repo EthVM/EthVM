@@ -44,13 +44,13 @@ matrix:
         - INSTALL=''
         - ACTION='./gradlew --no-daemon ktlintCheck'
       language: generic
-    -
-      env:
-        - ID=processing/kafka-streams/unit-tests
-        - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
-        - INSTALL=''
-        - ACTION='./gradlew --no-daemon :kafka-streams:test'
-      language: generic
+    # -
+    #   env:
+    #     - ID=processing/kafka-streams/unit-tests
+    #     - PROJECT_DIR=$TRAVIS_BUILD_DIR/apps/processing
+    #     - INSTALL=''
+    #     - ACTION='./gradlew --no-daemon :kafka-streams:test'
+    #   language: generic
 
 before_install:
   - chmod +x $TRAVIS_BUILD_DIR/.travis/before-install.sh

@@ -84,32 +84,6 @@ delete_topics() {
 
 } >&2
 
-reset_processor_offsets() {
-
-  # change pwd
-  cd ${ROOT_DIR}
-
-  local topics_file=${KAFKA_DIR}/processor-topics.json
-
-  local processors=$(jq '. | keys[]' ${topics_file} | sed -e 's/\"//g')
-
-  for processor in ${processors}; do
-    local topics=$(jq ".[\"${processor}\"] | values[]" ${topics_file} | tr '\n' ','  | sed -e 's/\"//g' | sed -e 's/,$//')
-
-    echo "Resetting offsets for processor: ${processor}"
-
-    kafka-streams-application-reset.sh  \
-      --zookeeper ${KAFKA_ZOOKEEPER_CONNECT} \
-      --bootstrap-servers ${KAFKA_BOOTSTRAP_SERVERS} \
-      --application-id ${processor} \
-      --input-topics ${topics}
-
-    echo "Processor offsets reset: ${processor}"
-
-  done
-
-} >&2
-
 init() {
 
   ensure_topics true
@@ -127,7 +101,6 @@ run() {
     ensure-kafka)            ensure_kafka "$@";;
     ensure-topics)           ensure_topics "$@";;
     delete-topics)           delete_topics "$@";;
-    reset-processor-offsets) reset_processor_offsets "$@";;
   esac
 
 }

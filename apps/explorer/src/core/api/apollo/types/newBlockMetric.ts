@@ -9,7 +9,7 @@
 export interface newBlockMetric_newBlockMetric {
   __typename: "BlockMetric";
   number: any;
-  blockHash: string;
+  hash: string;
   timestamp: any;
   blockTime: number;
   numUncles: number;

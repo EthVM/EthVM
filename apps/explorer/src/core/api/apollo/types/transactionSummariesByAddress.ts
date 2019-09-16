@@ -27,7 +27,7 @@ export interface transactionSummariesByAddress_summaries_items {
 export interface transactionSummariesByAddress_summaries {
   __typename: "TransactionSummaryPage";
   items: transactionSummariesByAddress_summaries_items[];
-  totalCount: number;
+  totalCount: any;
 }
 
 export interface transactionSummariesByAddress {

@@ -7,7 +7,7 @@ export class BlockMetricDto implements BlockMetric {
   avgGasLimit!: BigNumber
   avgGasPrice!: BigNumber
   avgTxFees!: BigNumber
-  blockHash!: string
+  hash!: string
   blockTime!: number
   difficulty!: BigNumber
   numFailedTxs!: number

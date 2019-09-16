@@ -1,3 +1,6 @@
+processor-state
+
+
 # OSX
 .DS_Store
 
@@ -38,4 +41,14 @@ env_*.sh
 *.code-workspace
 
 # Docker
+docker/templer/stacks
+docker/templer/vars/*.custom.yaml
+
 .env
+docker-compose.yaml
+
+# Terraform
+.terraform
+terraform.tfvars
+*.tfstate
+*.tfstate.*

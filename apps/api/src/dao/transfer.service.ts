@@ -1,35 +1,36 @@
-import { Injectable } from '@nestjs/common'
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { EntityManager, FindManyOptions, Repository } from 'typeorm'
-import { FungibleBalanceDeltaEntity } from '@app/orm/entities/fungible-balance-delta.entity'
-import { DbConnection } from '@app/orm/config'
-import { InternalTransferEntity } from '@app/orm/entities/internal-transfer.entity'
+import {Injectable} from '@nestjs/common'
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm'
+import {EntityManager, FindManyOptions, LessThanOrEqual, Repository} from 'typeorm'
 import BigNumber from 'bignumber.js'
-import { BalanceDeltaEntity } from '@app/orm/entities/balance-delta.entity'
-import { FilterEnum } from '@app/graphql/schema'
-import { ETH_ADDRESS } from '@app/shared/eth.service'
+import {FilterEnum} from '@app/graphql/schema'
+import {ETH_ADDRESS} from '@app/shared/eth.service'
+import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity';
+import {AddressInternalTransactionCountEntity} from '@app/orm/entities/address-internal-transaction-count.entity';
 
 @Injectable()
 export class TransferService {
 
   constructor(
-    @InjectRepository(FungibleBalanceDeltaEntity, DbConnection.Principal)
-    private readonly fungibleDeltaRepository: Repository<FungibleBalanceDeltaEntity>,
-    @InjectEntityManager(DbConnection.Principal) private readonly entityManager: EntityManager,
-    @InjectRepository(BalanceDeltaEntity, DbConnection.Principal)
+    @InjectEntityManager() private readonly entityManager: EntityManager,
+    @InjectRepository(BalanceDeltaEntity)
     private readonly balanceDeltaRepository: Repository<BalanceDeltaEntity>,
   ) {
   }
 
-  async findContractTokenTransfers(contractAddress: string, offset: number = 0, limit: number = 10): Promise<[FungibleBalanceDeltaEntity[], boolean]> {
-    const findOptions: FindManyOptions = {
-      where: {deltaType: 'TOKEN_TRANSFER', contractAddress, isReceiving: true},
+  async findContractTokenTransfers(
+    contractAddress: string,
+    offset: number = 0,
+    limit: number = 10,
+    blockNumber: BigNumber,
+  ): Promise<[BalanceDeltaEntity[], boolean]> {
+    const findOptions: FindManyOptions<BalanceDeltaEntity> = {
+      where: {deltaType: 'TOKEN_TRANSFER', contractAddress, isReceiving: true, blockNumber: LessThanOrEqual(blockNumber)},
       skip: offset,
       take: limit + 1,
-      order: {traceLocationBlockNumber: 'DESC', traceLocationTransactionIndex: 'DESC'},
+      order: {blockNumber: 'DESC', transactionIndex: 'DESC', id: 'DESC'},
       cache: true,
     }
-    const items = await this.fungibleDeltaRepository.find(findOptions)
+    const items = await this.balanceDeltaRepository.find(findOptions)
     const hasMore = items.length > limit
     if (hasMore) {
       items.pop()
@@ -43,28 +44,31 @@ export class TransferService {
     filter: string = 'all',
     offset: number = 0,
     limit: number = 10,
-  ): Promise<[FungibleBalanceDeltaEntity[], boolean]> {
+    blockNumber: BigNumber,
+  ): Promise<[BalanceDeltaEntity[], boolean]> {
 
-    const builder = this.fungibleDeltaRepository.createQueryBuilder('t')
-      .where('t.delta_type = :deltaType')
-      .andWhere('t.contract_address = :contractAddress')
-      .andWhere('t.address = :address')
+    const builder = this.balanceDeltaRepository.createQueryBuilder('b')
+      .where('b.delta_type = :deltaType')
+      .andWhere('b.contract_address = :contractAddress')
+      .andWhere('b.address = :address')
+      .andWhere('b.block_number <= :blockNumber')
 
     switch (filter) {
       case 'in':
-        builder.andWhere('t.is_receiving = true')
+        builder.andWhere('b.is_receiving = true')
         break
       case 'out':
-        builder.andWhere('t.is_receiving = false')
+        builder.andWhere('b.is_receiving = false')
         break
       default:
         break
     }
 
     const items = await builder
-      .setParameters({ contractAddress, deltaType: 'TOKEN_TRANSFER', address })
-      .orderBy('t.traceLocationBlockNumber', 'DESC')
-      .addOrderBy('t.traceLocationTransactionIndex', 'DESC')
+      .setParameters({ contractAddress, deltaType: 'TOKEN_TRANSFER', address, blockNumber: blockNumber.toNumber() })
+      .orderBy('b.block_number', 'DESC')
+      .addOrderBy('b.transaction_index', 'DESC')
+      .addOrderBy('b.id', 'DESC')
       .offset(offset)
       .limit(limit + 1)
       .cache(true)
@@ -78,30 +82,56 @@ export class TransferService {
     return [items, hasMore]
   }
 
-  async countContractTokenTransfersForAddress(contractAddress: string, address: string): Promise<BigNumber> {
+  async countContractTokenTransfersForAddress(contractAddress: string, address: string, blockNumber: BigNumber): Promise<BigNumber> {
 
-    return new BigNumber(await this.fungibleDeltaRepository.createQueryBuilder('d')
-      .where('d.delta_type = :deltaType')
-      .andWhere('d.contract_address = :contractAddress')
-      .andWhere('d.address = :address')
-      .setParameters({ deltaType: 'TOKEN_TRANSFER', address, contractAddress })
+    return new BigNumber(await this.balanceDeltaRepository.createQueryBuilder('b')
+      .where('b.delta_type = :deltaType')
+      .andWhere('b.contract_address = :contractAddress')
+      .andWhere('b.address = :address')
+      .andWhere('b.block_number <= :blockNumber')
+      .setParameters({ deltaType: 'TOKEN_TRANSFER', address, contractAddress, blockNumber: blockNumber.toNumber() })
       .getCount())
 
   }
 
-  async findInternalTransactionsForAddress(address: string, offset: number = 0, limit: number = 10): Promise<[InternalTransferEntity[], boolean]> {
+  async findInternalTransactionsForAddress(
+    address: string,
+    offset: number = 0,
+    limit: number = 10,
+    blockNumber: BigNumber,
+  ): Promise<[BalanceDeltaEntity[], boolean, BigNumber]> {
 
     return this.entityManager.transaction(
       'READ COMMITTED',
-      async (txn): Promise<[InternalTransferEntity[], boolean]> => {
+      async (txn): Promise<[BalanceDeltaEntity[], boolean, BigNumber]> => {
 
-        const items = await txn.createQueryBuilder(InternalTransferEntity, 'it')
-          .where('it.address = :address', { address })
-          .orderBy('trace_location_block_number', 'DESC')
-          .addOrderBy('trace_location_transaction_index', 'DESC')
-          .addOrderBy('trace_location_trace_address', 'DESC')
+        // Get total count
+        const internalTxsCount = await txn.findOne(AddressInternalTransactionCountEntity, {
+          where: { address, blockNumber: LessThanOrEqual(blockNumber) },
+          order: { blockNumber: 'DESC' },
+          cache: true,
+        })
+
+        const count = internalTxsCount ? internalTxsCount.total : undefined
+        if (!count) {
+          return [[], false, new BigNumber(0)]
+        }
+
+        // Get deltas
+
+        const deltaTypes = ['CONTRACT_CREATION', 'CONTRACT_DESTRUCTION', 'INTERNAL_TX']
+
+        const items = await txn.createQueryBuilder(BalanceDeltaEntity, 'b')
+          .where('b.address = :address')
+          .andWhere('b.delta_type IN (:...deltaTypes)')
+          .andWhere('b.block_number <= :blockNumber')
+          .setParameters({ address, deltaTypes, blockNumber: blockNumber.toNumber() })
+          .orderBy('block_number', 'DESC')
+          .addOrderBy('transaction_index', 'DESC')
+          .addOrderBy('id', 'DESC') // Ensure desc ordering within a transaction
           .offset(offset)
           .limit(limit + 1)
+          .cache(true)
           .getMany()
 
         const hasMore = items.length > limit
@@ -109,7 +139,7 @@ export class TransferService {
           items.pop()
         }
 
-        return [items, hasMore]
+        return [items, hasMore, count]
 
       },
     )
@@ -120,14 +150,16 @@ export class TransferService {
     addresses: string[],
     contracts: string[] = [],
     filter: FilterEnum = FilterEnum.all,
-    timestampTo?: number,
-    timestampFrom?: number,
     offset: number = 0,
     limit: number = 10,
+    blockNumber: BigNumber,
+    timestampTo?: number,
+    timestampFrom?: number,
   ): Promise<[BalanceDeltaEntity[], boolean]> {
 
     const qb = this.balanceDeltaRepository.createQueryBuilder('bd')
       .where('bd.address IN (:...addresses)', { addresses })
+      .andWhere('bd.block_number <= :blockNumber', { blockNumber: blockNumber.toNumber() })
 
     if (contracts.length) {
       // Replace "EthAddress" with empty string
@@ -151,9 +183,9 @@ export class TransferService {
       qb.andWhere('bd.timestamp > :timestampFrom', { timestampFrom: new Date(timestampFrom * 1000).toISOString() })
     }
 
-    const items = await qb.orderBy('bd.trace_location_block_number', 'DESC')
-      .addOrderBy('bd.trace_location_transaction_index', 'DESC')
-      .addOrderBy('bd.trace_location_trace_address', 'DESC')
+    const items = await qb.orderBy('bd.block_number', 'DESC')
+      .addOrderBy('bd.transaction_index', 'DESC')
+      .addOrderBy('bd.id', 'DESC')
       .offset(offset)
       .limit(limit + 1) // Request one extra item to determine if there are more pages
       .getMany()
@@ -165,61 +197,6 @@ export class TransferService {
 
     return [items, hasMore]
 
-  }
-
-  async findTokenBalancesByContractAddressForHolder(
-    address: string,
-    holder: string,
-    timestampFrom: number = 0,
-    timestampTo: number = 0,
-  ): Promise<[FungibleBalanceDeltaEntity[], number]>{
-
-    // Need to make subQuery somehow?? //
-    // SEE: https://github.com/typeorm/typeorm/blob/17f3224c58b7126a9c1360ce21f43cda83a35e04/test/functional
-    // /query-builder/subquery/query-builder-subquery.ts#L328-L327
-    // https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#partial-selection
-    // https://dba.stackexchange.com/questions/192553/calculate-running-sum-of-each-row-from-start-even-when-filtering-records
-    const builder = this.fungibleDeltaRepository.createQueryBuilder('t')
-      .leftJoinAndSelect('t.transaction', 'transaction')
-      .addSelect('*, SUM(t.amount) OVER (ORDER BY transaction.timestamp) AS balance')
-      .where('t.contract_address = :address')
-      .andWhere('t.address = :holder')
-      .cache(true)
-
-    const items = await builder
-      .setParameters({ address, holder, timestampFrom, timestampTo })
-      .getRawMany()
-
-    const count = items.length
-
-    // Need to cast items as FungibleBalanceDeltaEntity because of getRawMany() //
-    return [
-
-      items.map(item => {
-        return {
-          id: item.t_id,
-          address: item.t_address,
-          counterpartAddress: item.t_counterpartAddress,
-          deltaType: item.t_deltaType,
-          contractAddress: item.t_contractAddress,
-          tokenType: item.t_tokenType,
-          amount: item.t_amount,
-          balance: item.balance,
-          timestamp: item.transaction_timestamp,
-          traceLocationBlockHash: item.t_trace_location_block_hash,
-          traceLocationBlockNumber: item.t_trace_location_block_number,
-          traceLocationTransactionHash: item.t_trace_location_transaction_hash,
-          traceLocationTransactionIndex: item.t_trace_location_transaction_index,
-          traceLocationLogIndex: item.t_trace_location_log_index,
-          traceLocationTraceAddress: item.t_trace_location_trace_address,
-          isReceiving: item.t_is_receiving,
-          // transaction: item.transaction
-        } as FungibleBalanceDeltaEntity
-      }),
-
-      count as number,
-
-    ]
   }
 
 }

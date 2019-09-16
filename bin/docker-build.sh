@@ -31,7 +31,7 @@ usage() {
   echo "    help           Print version information and exit."
   echo ""
   echo "Images:"
-  echo "    $(jq -r '[.projects[].id] | join(", ")' $META_PATH)"
+  echo "    $(jq -r '[.projects[].id] | join(", ")' $DOCKER_BUILD_META_PATH)"
 
 }
 
@@ -46,7 +46,11 @@ build() {
   local context=$(eval echo -e $(jq -r '.context' <<< "$image"))
   local raw_version=$(eval echo -e $(jq -r '.version' <<< "$image"))
   local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$image"))
-  local version=$(to_version "${raw_version}")
+
+  local version=${VERSION}
+  if [ -x ${version} ]; then
+    version=$(to_version "${raw_version}")
+  fi
 
   if [[ ! -z "${targets}" ]]; then
 
@@ -74,7 +78,12 @@ push() {
 
   local name=$(jq -r '.id' <<< "$image")
   local raw_version=$(eval echo -e $(jq -r '.version' <<< "$image"))
-  local version=$(to_version $raw_version)
+
+  local version=${VERSION}
+  if [ -x ${version} ]; then
+    version=$(to_version "${raw_version}")
+  fi
+
   local targets=$(eval echo -e $(jq -r '.targets[]?' <<< "$image"))
 
   if [[ ! -z "${targets}" ]]; then
@@ -113,7 +122,7 @@ process_subcommand() {
 
       # Iterate our projects
       local builds=false
-      for project in $(jq -car '.projects[]' $META_PATH); do
+      for project in $(jq -car '.projects[]' $DOCKER_BUILD_META_PATH); do
         local id=$(jq -r '.id' <<< "$project")
         if [[ $image == "all" || $image == $id ]]; then
           $action "$project" "$@"

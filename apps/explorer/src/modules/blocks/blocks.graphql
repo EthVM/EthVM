@@ -1,6 +1,6 @@
 query latestBlocks($fromBlock: BigNumber, $offset: Int, $limit: Int) {
 
-  blockSummaries(fromBlock: $fromBlock, offset: $offset, limit: $limit) {
+  blockSummaries(blockNumber: $fromBlock, offset: $offset, limit: $limit) {
     ...BlockSummaryPage
   }
 
@@ -39,7 +39,7 @@ fragment BlockSummaryByAuthorPage on BlockSummaryByAuthorPage {
   items {
     ...BlockSummary
   }
-  hasMore
+  totalCount
 }
 
 subscription newBlock {
@@ -61,7 +61,7 @@ subscription newBlockMetric {
 fragment BlockMetric on BlockMetric {
 
   number
-  blockHash
+  hash
   timestamp
   blockTime
   numUncles
