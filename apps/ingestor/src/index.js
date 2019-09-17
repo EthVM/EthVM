@@ -4,6 +4,7 @@ import Configs from './configs';
 import Status from './status';
 import getWeb3 from './getWeb3';
 import processBlock from './processBlock';
+import SNS from './helpers/sns-publish';
 const HOST = Configs.WS_HOST;
 const MAX_CONCURRENT = Configs.MAX_CONCURRENT;
 const WEB3_INSTANCES = [];
@@ -19,6 +20,7 @@ const volatileStatus = {
 const getCustomWeb3 = getWeb3;
 const web3 = getCustomWeb3(HOST);
 const db = new S3DB(Configs.S3_BUCKET);
+const sns = new SNS(Configs.AWS_SNS_TOPIC);
 const status = new Status(db);
 
 const multibar = new cliProgress.MultiBar(
@@ -40,12 +42,13 @@ const setProcessed = blockNum => {
   const arrLength = volatileStatus.processingBlocks.length;
   for (let i = 0; i < arrLength; i++) {
     if (volatileStatus.processingBlocks[0].processed) {
-      if (volatileStatus.processingBlocks[0].number % 100 === 0)
+      if (
+        volatileStatus.processingBlocks[0].number % 100 === 0 &&
+        Configs.SAVE_STATUS
+      )
         status
           .setLastBlock(volatileStatus.processingBlocks[0].number)
-          .then(() => {
-            // console.log('status updated');
-          });
+          .then(() => {});
       blockProcessorBar.update(volatileStatus.processingBlocks[0].number);
       volatileStatus.processingBlocks.shift();
     } else break;
@@ -68,6 +71,7 @@ const asyncRunner = () => {
       };
       db.put(_block.number, _block)
         .then(() => {
+          if (Configs.PUBLISH_SNS) sns.publish(_block);
           setProcessed(_block.number);
           if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
             volatileStatus.currentBlock++;

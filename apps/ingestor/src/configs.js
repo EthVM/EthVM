@@ -6,5 +6,8 @@ export default {
   S3_BUCKET: process.env.S3_BUCKET || '',
   AWS_PROFILE: process.env.AWS_PROFILE || 'default',
   AWS_REGION: process.env.AWS_REGION || '',
+  AWS_SNS_TOPIC: process.env.AWS_SNS_TOPIC || '',
+  SAVE_STATUS: process.env.SAVE_STATUS === 'true' || '',
+  PUBLISH_SNS: process.env.PUBLISH_SNS === 'true' || '',
   MAX_CONCURRENT: process.env.MAX_CONCURRENT || 10
 };
