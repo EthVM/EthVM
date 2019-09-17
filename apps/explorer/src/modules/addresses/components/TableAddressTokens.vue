@@ -98,7 +98,7 @@ import TableAddressTokensRow from '@app/modules/addresses/components/TableAddres
 import TableAddressTokensRowLoading from '@app/modules/addresses/components/TableAddressTokensRowLoading.vue'
 import BN from 'bignumber.js'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { TokenBalancePageExt } from '@app/core/api/apollo/extensions/token-balance-page.ext'
+import { TokenBalancePageExt, TokenBalancePageExt_items } from '@app/core/api/apollo/extensions/token-balance-page.ext'
 import { addressAllTokensOwned, totalTokensValue } from '@app/modules/addresses/addresses.graphql'
 import { ConfigHelper } from '@app/core/helper/config-helper'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
@@ -236,11 +236,11 @@ export default class TableAddressTokens extends Mixins(NumberFormatMixin) {
   ===================================================================================
   */
 
-  get tokens() {
+  get tokens(): (TokenBalancePageExt_items | undefined)[] {
     return this.tokensPage ? this.tokensPage.items || [] : []
   }
 
-  get loading() {
+  get loading(): boolean | undefined {
     return this.$apollo.loading
   }
 

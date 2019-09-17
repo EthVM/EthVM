@@ -52,45 +52,11 @@
         TABLE BODY
       =====================================================================================
       -->
-      <div v-if="loading">
-        <v-flex sm12 hidden-xs-only>
-          <div v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-              <v-flex sm4>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex sm4>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex sm2>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-              <v-flex sm2>
-                <v-flex xs12 class="table-row-loading"></v-flex>
-              </v-flex>
-            </v-layout>
-            <v-divider class="mb-2 mt-2" />
-          </div>
+      <v-layout row wrap v-if="loading" class="pr-2 pl-2">
+        <v-flex xs12 v-for="i in maxItems" :key="i">
+          <table-address-contracts-row-loading />
         </v-flex>
-        <v-flex xs12 hidden-sm-and-up>
-          <div class="table-row-mobile ma-1" v-for="i in maxItems" :key="i">
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pa-2 ">
-              <v-flex xs4>
-                <div class="table-row-loading"></div>
-              </v-flex>
-              <v-flex xs12>
-                <div class="table-row-loading"></div>
-              </v-flex>
-              <v-flex xs12>
-                <div class="table-row-loading"></div>
-              </v-flex>
-              <v-flex xs4>
-                <div class="table-row-loading"></div>
-              </v-flex>
-            </v-layout>
-          </div>
-        </v-flex>
-      </div>
+      </v-layout>
       <div v-else>
         <v-card v-if="contracts.length === 0" flat>
           <!--
@@ -123,6 +89,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableAddressContractsRow from '@app/modules/addresses/components/TableAddressContractsRow.vue'
+import TableAddressContractsRowLoading from '@app/modules/addresses/components/TableAddressContractsRowLoading.vue'
 import { contractsCreatedBy } from '@app/modules/addresses/addresses.graphql'
 import { ContractSummaryPageExt } from '@app/core/api/apollo/extensions/contract-summary-page.ext'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
@@ -134,7 +101,8 @@ const MAX_ITEMS = 10
     AppPaginate,
     AppError,
     AppInfoLoad,
-    TableAddressContractsRow
+    TableAddressContractsRow,
+    TableAddressContractsRowLoading
   },
   data() {
     return {

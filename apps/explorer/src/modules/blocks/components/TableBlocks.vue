@@ -75,28 +75,7 @@
         </v-flex>
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
-            <div :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile ma-2' : '']">
-              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-4 pr-4 pt-2">
-                <v-flex xs4 sm2>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-spacer class="hidden-sm-and-up" />
-                <v-flex xs3 class="hidden-sm-and-up">
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex xs12 sm7 xl6>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex xs12 sm2>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex xs4 sm1 xl2>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-              </v-layout>
-              <v-divider class="mb-2 mt-2 hidden-xs-only" />
-            </div>
-            <div></div>
+            <table-blocks-row-loading />
           </div>
         </div>
       </v-layout>
@@ -112,6 +91,7 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
+import TableBlocksRowLoading from '@app/modules/blocks/components/TableBlocksRowLoading.vue'
 import { latestBlocks, newBlock, blocksByAuthor } from '@app/modules/blocks/blocks.graphql'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BlockSummaryPage_items } from '@app/core/api/apollo/types/BlockSummaryPage'
@@ -131,6 +111,7 @@ const MAX_ITEMS = 50
     AppPaginate,
     AppTableTitle,
     TableBlocksRow,
+    TableBlocksRowLoading,
     NoticeNewBlock,
     AppPaginateHasMore
   },
