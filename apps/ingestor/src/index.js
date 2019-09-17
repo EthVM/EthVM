@@ -103,6 +103,7 @@ web3.eth.subscribe('newBlockHeaders').on('data', block => {
   ) {
     console.log('new max block received, initiating processing', block.number);
     volatileStatus.toBeProcessed.push(block.number);
+    volatileStatus.currentBlock = block.number;
     asyncRunner();
   } else if (block.number < volatileStatus.currentBlock) {
     console.log('reorg detected, starting to reprocess from', block.number);
@@ -111,24 +112,7 @@ web3.eth.subscribe('newBlockHeaders').on('data', block => {
     asyncRunner();
   }
   if (block.number > volatileStatus.maxBlock) {
-    // console.log('new block, setting maxblock', block.number);
     volatileStatus.maxBlock = block.number;
     blockProcessorBar.setTotal(volatileStatus.maxBlock);
   }
 });
-
-// const justProcess = blockNum => {
-//   processBlock(blockNum, web3).then(_block => {
-//     console.log(_block.rewards);
-//     console.log(_block.transactions[1]);
-//     for (const i in _block.uncles) {
-//       console.log(_block.uncles[i].minerBalance);
-//     }
-//     // justProcess(blockNum + 1);
-//   });
-// };
-// justProcess(2376501);
-// db.get('2678307').then(block => {
-//   console.log(JSON.stringify(block, null, 2));
-// });
-// status.setLastBlock(0).then(console.log);
