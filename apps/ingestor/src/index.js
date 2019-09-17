@@ -50,7 +50,8 @@ const setProcessed = blockNum => {
           .setLastBlock(volatileStatus.processingBlocks[0].number)
           .then(() => {});
       blockProcessorBar.update(volatileStatus.processingBlocks[0].number);
-      volatileStatus.processingBlocks.shift();
+      const blockInfo = volatileStatus.processingBlocks.shift();
+      if (Configs.PUBLISH_SNS) sns.publish(blockInfo.number);
     } else break;
   }
 };
@@ -71,7 +72,6 @@ const asyncRunner = () => {
       };
       db.put(_block.number, _block)
         .then(() => {
-          if (Configs.PUBLISH_SNS) sns.publish(_block);
           setProcessed(_block.number);
           if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
             volatileStatus.currentBlock++;

@@ -13,14 +13,11 @@ class SNS {
     this.sns = new AWS.SNS({ apiVersion: '2010-03-31' });
   }
 
-  publish(block) {
+  publish(blockNumber) {
     return new Promise((resolve, reject) => {
       const msgObj = {
         chain: Configs.CHAIN,
-        number: block.number,
-        hash: block.hash,
-        parentHash: block.parentHash,
-        miner: block.miner
+        number: blockNumber
       };
       var params = {
         Message: JSON.stringify(msgObj),
@@ -30,7 +27,7 @@ class SNS {
         .publish(params)
         .promise()
         .then(data => {
-          resolve(block);
+          resolve(data);
         })
         .catch(reject);
     });
