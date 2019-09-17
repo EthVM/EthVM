@@ -1,6 +1,5 @@
 <template>
-  <v-container pa-0 ma-0>
-    <v-layout d-block>
+    <v-layout>
       <!--
       =====================================================================================
         Mobile (XS)
@@ -59,11 +58,11 @@
 
             Responsive Tally:
             SM: 2/12 (2)
-            MD: 1/12 (1)
+            MD: 2/12 (2)
             LG: 1/12 (1)
           =====================================================================================
           -->
-          <v-flex sm2 md1 pr-1>
+          <v-flex sm2 lg1 >
             <router-link class="primary--text text-truncate font-italic psmall" :to="`/block/number/${tx.blockNumber}`">{{
               tx.blockNumberFormatted
             }}</router-link>
@@ -73,13 +72,13 @@
             TRANSACTION # / HASH
 
             Responsive Tally:
-            SM: 8/12 (6)
-            MD: 6/12 (5)
-            LG: 5/12 (4)
+            SM: 9/12 (7)
+            MD: 8/12 (6)
+            LG: 6/12 (5)
           =====================================================================================
           -->
           <v-flex sm7 md6 lg5>
-            <v-layout row wrap align-center pa-2 mr-1>
+            <v-layout row wrap align-center pr-3 pl-2 >
               <v-flex sm12>
                 <v-layout row align-center justift-start pa-2>
                   <p class="info--text tx-string">{{ $tc('tx.hash', 1) }}:</p>
@@ -104,9 +103,9 @@
           ETH VALUE
 
           Responsive Tally:
-          SM: 11/12 (3)
-          MD: 9/12 (3)
-          LG: 7/12 (2)
+          SM: 12/12 (3)
+          MD: 10/12 (2)
+          LG: 8/12 (2)
           =====================================================================================
           -->
           <v-flex sm3 md2>
@@ -120,9 +119,9 @@
             Age
 
             Responsive Tally:
-            SM: 11/12 (0)
-            MD: 11/12 (2)
-            lg: 9/12 (2)
+            SM: 12/12 (0)
+            MD: 12/12 (2)
+            lg: 10/12 (2)
           =====================================================================================
           -->
           <v-flex hidden-sm-and-down md2>
@@ -133,9 +132,9 @@
             Tx Fee
 
             Responsive Tally:
-            SM: 11/12 (0)
-            MD: 11/12 (0)
-            lg: 11/12 (2)
+            SM: 12/12 (0)
+            MD: 12/12 (0)
+            lg: 12/12 (2)
           =====================================================================================
           -->
           <v-flex hidden-md-and-down lg2>
@@ -151,15 +150,14 @@
             lg: 12/12 (1)
           =====================================================================================
           -->
-          <div v-if="!isPending" class="tx-status ">
-            <v-icon v-if="tx.successful" small class="txSuccess--text ml-1">fa fa-check-circle</v-icon>
-            <v-icon v-else small class="txFail--text ml-1">fa fa-times-circle</v-icon>
+          <div v-if="!isPending">
+            <v-icon v-if="tx.successful" small class="txSuccess--text tx-status text-xs-center">fa fa-check-circle</v-icon>
+            <v-icon v-else small class="txFail--text tx-status text-xs-center">fa fa-times-circle</v-icon>
           </div>
         </v-layout>
         <v-divider class="mb-2 mt-2" />
       </v-flex>
     </v-layout>
-  </v-container>
 </template>
 
 <script lang="ts">
@@ -220,6 +218,6 @@ p {
 }
 
 .tx-status {
-  width: 45px;
+  min-width: 60px;
 }
 </style>
