@@ -119,8 +119,8 @@
     "nonce": "Nonce-Число",
     "sha": "SHA3 Блока",
     "age": "Возраст",
-    "eth": "ETH",
-    "gwei": "GWEI",
+    "eth": "Eth",
+    "gwei": "Gwei",
     "wei": "Wei",
     "timestmp": "Временная Метка",
     "success": "Успешная",
@@ -316,7 +316,7 @@
     "ens": "mewtopia.eth",
     "copy": "Copyright 2019 Все права защищены ",
     "mew": "MyEtherWallet Inc",
-    "copy-eth-addr": "Копировать ETH адрес",
+    "copy-eth-addr": "Copy Eth address",
     "copy-btc-addr": "Копировать BTC адрес"
   },
   "home": "Главная",
@@ -403,7 +403,7 @@
       },
       "eth": {
         "term": "Ether",
-        "def": "Криптографическая валюта блокчейна Эфириума, используемая для оплаты комиссии транзакции (газа) в сети. Сокращенный код Ether - ETH."
+        "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is Eth."
       },
       "ethreum": {
         "term": "Ethereum (Эфириум)",
@@ -419,7 +419,7 @@
       },
       "gas": {
         "term": "Газ",
-        "def": "Сбор за выполнение транзакции или контракта в сети Ethereum, оплачиваемый в ETH. Поэтому перед отправкой любой транзакции пользователь должен иметь на счету небольшое количество ETH."
+        "def": "The fee for executing a transaction or contract on the Ethereum network, paid in Eth. For this reason, a user must have a small amount of Eth available in the account before sending any transactions."
       },
       "hash": {
         "term": "Хэш",
