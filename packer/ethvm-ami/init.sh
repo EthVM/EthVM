@@ -35,6 +35,11 @@ main() {
   sudo mv /tmp/burry /usr/local/bin/burry
   sudo chmod +x /usr/local/bin/burry
 
+  # Install pgbackrest
+  wget https://github.com/EthVM/pgbackrest/releases/download/release%2F2.17/pgbackrest -O /tmp/pgbackrest
+  sudo mv /tmp/pgbackrest /usr/local/bin/pgbackrest
+  sudo chmod +x /usr/local/bin/pgbackrest
+
   # Allow the ec2-user to run docker commands without sudo
   sudo usermod -a -G docker ubuntu
 

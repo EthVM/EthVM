@@ -100,27 +100,7 @@
           </v-flex>
           <v-flex xs12 v-if="loading">
             <div v-for="i in maxItems" :key="i">
-              <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-                <v-flex xs3 sm3 md1 pl-3>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex xs7 sm6 md6>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex xs2 sm2 md1>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex hidden-sm-and-down md2>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex hidden-sm-and-down md1>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-                <v-flex hidden-xs-only sm1>
-                  <v-flex xs12 class="table-row-loading"></v-flex>
-                </v-flex>
-              </v-layout>
-              <v-divider class="mb-2 mt-2" />
+              <table-txs-row-loading />
             </div>
           </v-flex>
         </v-layout>
@@ -135,6 +115,7 @@ import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
+import TableTxsRowLoading from '@app/modules/txs/components/TableTxsRowLoading.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import { TransactionSummaryPageExt } from '@app/core/api/apollo/extensions/transaction-summary-page.ext'
@@ -162,6 +143,7 @@ class TableTxsMixin extends Vue {
     AppPaginate,
     AppTableTitle,
     TableTxsRow,
+    TableTxsRowLoading,
     NoticeNewBlock
   },
   data() {
@@ -380,7 +362,7 @@ export default class TableTxs extends TableTxsMixin {
       ===================================================================================
       */
 
-  get loading() {
+  get loading(): boolean | undefined {
     return this.$apollo.loading || this.syncing
   }
 
