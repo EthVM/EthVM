@@ -1,0 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+export default {
+  CHAIN: process.env.CHAIN || '',
+  WS_HOST: process.env.WS_HOST || '',
+  S3_BUCKET: process.env.S3_BUCKET || '',
+  AWS_PROFILE: process.env.AWS_PROFILE || 'default',
+  AWS_REGION: process.env.AWS_REGION || '',
+  MAX_CONCURRENT: process.env.MAX_CONCURRENT || 10
+};
