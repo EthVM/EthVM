@@ -55,7 +55,7 @@
             <v-flex sm2 lg1>
               <h5>{{ $t('block.number') }}</h5>
             </v-flex>
-            <v-flex sm7 md6 lg5 >
+            <v-flex sm7 md6 lg5>
               <h5>{{ $tc('tx.hash', 1) }}</h5>
             </v-flex>
             <v-flex sm3 md2>
