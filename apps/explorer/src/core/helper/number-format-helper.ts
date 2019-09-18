@@ -59,7 +59,7 @@ export class NumberFormatHelper {
       return this.convertToBillions(value)
     }
 
-    /* Case IV: value < 1,000,000,000,000 */
+    /* Case IV: value < 1,000,000,000 */
     return { value: value.toFormat() }
   }
 
@@ -452,7 +452,7 @@ export class NumberFormatHelper {
 
   private static convertToQuadrillion(value: BigNumber): FormattedNumber {
     const result = value.dividedBy(OneQuadrillion)
-    return { value: '< 1000 Q', unit: FormattedNumberUnit.Q, tooltipText: value.toFormat() }
+    return { value: '> 1000Q', unit: FormattedNumberUnit.Q, tooltipText: value.toFormat() }
   }
 
   public static getRoundNumber(value: BigNumber, round: number, dp: number): FormattedNumber {
