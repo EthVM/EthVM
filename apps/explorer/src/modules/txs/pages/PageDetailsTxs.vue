@@ -234,7 +234,6 @@ export default class PageDetailsTxs extends Vue {
           title: this.$i18n.tc('tx.fee', 2),
           detail: `${transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`,
           tooltip: transaction.feeFormatted.tooltipText ? `${transaction.feeFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
-
         },
         {
           title: this.$i18n.t('gas.limit'),
@@ -244,7 +243,7 @@ export default class PageDetailsTxs extends Vue {
         {
           title: this.$i18n.t('gas.used'),
           detail: receipt ? receipt.gasUsedFormatted.value : '0', // genesis block txs can have no receipt
-          tooltip: receipt &&  receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
+          tooltip: receipt && receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('gas.price'),

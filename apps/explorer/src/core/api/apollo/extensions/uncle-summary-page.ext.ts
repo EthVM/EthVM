@@ -26,7 +26,7 @@ export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
   }
 
   get nephewNumberFormatted(): string {
-    return (this.nephewNumberBN).toFormat()
+    return this.nephewNumberBN.toFormat()
   }
 
   get numberBN(): BigNumber {
