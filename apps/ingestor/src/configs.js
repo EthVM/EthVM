@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from 'dotenv'
+dotenv.config()
 export default {
   CHAIN: process.env.CHAIN || '',
   WS_HOST: process.env.WS_HOST || '',
@@ -10,4 +10,4 @@ export default {
   SAVE_STATUS: process.env.SAVE_STATUS === 'true' || '',
   PUBLISH_SNS: process.env.PUBLISH_SNS === 'true' || '',
   MAX_CONCURRENT: process.env.MAX_CONCURRENT || 10
-};
+}

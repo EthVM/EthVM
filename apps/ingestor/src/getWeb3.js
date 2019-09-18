@@ -1,4 +1,5 @@
-import Web3 from 'web3';
+import Web3 from 'web3'
+
 export default host => {
   const _web3 = new Web3(
     new Web3.providers.WebsocketProvider(host, {
@@ -6,7 +7,7 @@ export default host => {
         maxReceivedMessageSize: 1000 * 1024 * 1024
       }
     })
-  );
+  )
   _web3.extend({
     property: 'trace',
     methods: [
@@ -16,7 +17,7 @@ export default host => {
         params: 2
       }
     ]
-  });
+  })
   _web3.extend({
     property: 'trace',
     methods: [
@@ -26,6 +27,6 @@ export default host => {
         params: 1
       }
     ]
-  });
-  return _web3;
-};
+  })
+  return _web3
+}

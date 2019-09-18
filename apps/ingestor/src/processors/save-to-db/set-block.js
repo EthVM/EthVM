@@ -1,6 +1,6 @@
 class SetBlock {
   constructor(web3) {
-    this.web3 = web3;
+    this.web3 = web3
   }
 
   set(blockNumber) {
@@ -8,10 +8,11 @@ class SetBlock {
       this.web3.eth
         .getBlock(blockNumber, true)
         .then(_block => {
-          resolve(_block);
+          resolve(_block)
         })
-        .catch(reject);
-    });
+        .catch(reject)
+    })
   }
 }
-export default SetBlock;
+
+export default SetBlock
