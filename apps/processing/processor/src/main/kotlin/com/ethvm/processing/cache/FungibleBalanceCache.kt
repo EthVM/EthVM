@@ -90,8 +90,6 @@ class FungibleBalanceCache(
 
     var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
 
-    logger.info { "Latest block number from metadata map: $latestBlockNumber" }
-
     // get latest processed block number from db
 
     val latestDbBlockNumber = txCtx
@@ -103,12 +101,13 @@ class FungibleBalanceCache(
       .fetchOne()
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
-    logger.info { "[$tokenType] Init state. Last processed block number (local): $latestBlockNumber, last processed block number from db: $latestDbBlockNumber" }
+    logger.info { "[$tokenType] Last processed block number (local): $latestBlockNumber, last processed block number from db: $latestDbBlockNumber" }
 
     when {
 
       latestBlockNumber == latestDbBlockNumber -> {
         logger.info { "[$tokenType] Nothing to synchronise. Initialisation complete" }
+        return
       }
 
       latestBlockNumber > latestDbBlockNumber -> {
