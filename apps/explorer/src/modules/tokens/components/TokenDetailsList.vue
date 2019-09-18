@@ -187,7 +187,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalSupply .value : undefined,
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalSupply.value : undefined,
       tooltip:
         !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalSupply.tooltipText
           ? this.tokenDetails.totalSupply.tooltipText
@@ -308,7 +308,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { holderDetails, isLoading } = this
     return {
       title: this.$t('token.transfers'),
-      detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted : undefined
+      detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted.value : undefined,
+      tooltip:
+        !isLoading && holderDetails && holderDetails.totalTransfersBN && this.holderDetails.totalTransfersFormatted.tooltipText
+          ? this.holderDetails.totalTransfersFormatted.tooltipText
+          : undefined
     }
   }
 

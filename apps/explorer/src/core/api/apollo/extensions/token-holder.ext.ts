@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { TokenHolder } from '@app/core/api/apollo/types/TokenHolder'
-import { NumberFormatHelper } from '@app/core/helper/number-format-helper'
+import { NumberFormatHelper, FormattedNumber } from '@app/core/helper/number-format-helper'
 
 export class TokenHolderExt implements TokenHolder {
   __typename!: 'TokenHolder'
@@ -22,7 +22,7 @@ export class TokenHolderExt implements TokenHolder {
     return new BigNumber(this.totalTransfers || 0)
   }
 
-  get totalTransfersFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.totalTransfersBN).value
+  get totalTransfersFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.totalTransfersBN)
   }
 }
