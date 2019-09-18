@@ -27,7 +27,7 @@ export class TransactionSummaryPageExt_items implements TransactionSummaryPage_i
   }
 
   get blockNumberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.blockNumberBN).value
+    return this.blockNumberBN.toFormat()
   }
 
   get feeBN(): BN {

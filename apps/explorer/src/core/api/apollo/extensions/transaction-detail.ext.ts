@@ -17,8 +17,8 @@ export class TransactionDetailExt_receipt implements TransactionDetail_receipt {
     return new BigNumber(this.gasUsed || 0)
   }
 
-  get gasUsedFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN).value
+  get gasUsedFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN)
   }
 }
 
@@ -59,15 +59,15 @@ export class TransactionDetailExt implements TransactionDetail {
   }
 
   get blockNumberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.blockNumberBN).value
+    return this.blockNumberBN.toFormat()
   }
 
   get gasBN(): BigNumber {
     return new BigNumber(this.gas)
   }
 
-  get gasFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasBN).value
+  get gasFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.gasBN)
   }
 
   get gasPriceBN(): BigNumber {
@@ -82,8 +82,8 @@ export class TransactionDetailExt implements TransactionDetail {
     return new BigNumber(this.nonce)
   }
 
-  get nonceFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.nonceBN).value
+  get nonceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.nonceBN)
   }
 
   get valueBN(): BigNumber {
