@@ -61,7 +61,7 @@ class InternalTxsCountsCache(
 
   fun initialise(txCtx: DSLContext) {
 
-    logger.info { "Initialising state from db" }
+    logger.info { "Initialising" }
 
     var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
 
@@ -74,12 +74,22 @@ class InternalTxsCountsCache(
       .fetchOne()
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
-    if (latestBlockNumber > latestDbBlockNumber) {
-      logger.info { "Local state is ahead of the database. Resetting all local state." }
-      // reset all state from the beginning as the database is behind us
-      cacheStores.forEach { it.clear() }
-      latestBlockNumber = BigInteger.ONE.negate()
-      logger.info { "Local state cleared" }
+    logger.info { "Last processed block number (local): $latestBlockNumber, last processed block number from db: $latestDbBlockNumber" }
+
+    when {
+
+      latestBlockNumber == latestDbBlockNumber -> {
+        logger.info { "Nothing to synchronise. Initialisation complete" }
+        return
+      }
+
+      latestBlockNumber > latestDbBlockNumber -> {
+        logger.info { "Local state is ahead of the database. Resetting all local state." }
+        // reset all state from the beginning as the database is behind us
+        cacheStores.forEach { it.clear() }
+        latestBlockNumber = BigInteger.ONE.negate()
+      }
+
     }
 
     // replay any missed state
@@ -107,7 +117,7 @@ class InternalTxsCountsCache(
 
     addressCountCursor.close()
 
-    logger.info { "Internal transaction counts reloaded" }
+    logger.info { "Internal transaction counts reloaded. $count entries processed" }
 
     count = 0
 
@@ -130,7 +140,7 @@ class InternalTxsCountsCache(
 
     contractCountCursor.close()
 
-    logger.info { "Contract counts reloaded" }
+    logger.info { "Contract counts reloaded. $count entries processed" }
 
     // final flush of any pending writes
     cacheStores.forEach { it.flushToDisk(true) }
@@ -138,7 +148,7 @@ class InternalTxsCountsCache(
     // re-enable db record generation
     writeHistoryToDb = true
 
-    logger.info { "Initialised" }
+    logger.info { "Initialisation complete" }
   }
 
   fun count(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {

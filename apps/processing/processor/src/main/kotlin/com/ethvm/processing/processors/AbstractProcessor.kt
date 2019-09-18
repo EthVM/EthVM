@@ -156,7 +156,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       val latestSyncStatus = getLatestSyncRecord(dbContext)
       val latestBlockNumber = latestSyncStatus?.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
 
-      logger.info { "Latest sync block number = $latestBlockNumber" }
+      logger.info { "Last processed block number = $latestBlockNumber" }
 
       // call the implementation initialise method
 
