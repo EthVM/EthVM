@@ -103,19 +103,27 @@ class FungibleBalanceCache(
       .fetchOne()
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
-    logger.info { "Latest block number from db: $latestDbBlockNumber" }
+    logger.info { "[$tokenType] Init state. Last processed block number (local): $latestBlockNumber, last processed block number from db: $latestDbBlockNumber" }
 
-    if (latestBlockNumber > latestDbBlockNumber) {
-      logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
-      // reset all state from the beginning as the database is behind us
-      cacheStores.forEach { it.clear() }
-      latestBlockNumber = BigInteger.ONE.negate()
+    when {
+
+      latestBlockNumber == latestDbBlockNumber -> {
+        logger.info { "[$tokenType] Nothing to synchronise. Initialisation complete" }
+      }
+
+      latestBlockNumber > latestDbBlockNumber -> {
+        logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
+        // reset all state from the beginning as the database is behind us
+        cacheStores.forEach { it.clear() }
+        latestBlockNumber = BigInteger.ONE.negate()
+      }
+
     }
 
     // disable db record generation until initialisation is complete
     writeHistoryToDb = false
 
-    logger.info { "Opening cursor for balance history" }
+    logger.info { "[$tokenType] Opening cursor for balance history" }
 
     val balanceCursor = txCtx
       .selectFrom(BALANCE)
@@ -137,11 +145,11 @@ class FungibleBalanceCache(
 
     balanceCursor.close()
 
-    logger.info { "Balance history reloaded" }
+    logger.info { "[$tokenType] Balance history reloaded. $count deltas processed" }
 
     count = 0
 
-    logger.info { "Opening cursor for address token count" }
+    logger.info { "[$tokenType] Opening cursor for address token count" }
 
     val addressTokenCountCursor = txCtx
       .selectFrom(ADDRESS_TOKEN_COUNT)
@@ -155,17 +163,17 @@ class FungibleBalanceCache(
       count += 1
       if (count % 10000 == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count address token counts processed" }
+        logger.info { "[$tokenType] $count address token counts processed" }
       }
     }
 
     addressTokenCountCursor.close()
 
-    logger.info { "Address token count reloaded" }
+    logger.info { "[$tokenType] Address token count reloaded. $count address token counts processed" }
 
     count = 0
 
-    logger.info { "Opening cursor for contract holder count" }
+    logger.info { "[$tokenType] Opening cursor for contract holder count" }
 
     val contractHolderCountCursor = txCtx
       .selectFrom(CONTRACT_HOLDER_COUNT)
@@ -179,13 +187,13 @@ class FungibleBalanceCache(
       count += 1
       if (count % 10000 == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count contract holder counts processed" }
+        logger.info { "[$tokenType] $count contract holder counts processed" }
       }
     }
 
     contractHolderCountCursor.close()
 
-    logger.info { "Contract holder count reloaded" }
+    logger.info { "[$tokenType] Contract holder count reloaded. $count contract holder counts processed" }
 
     // final flush for any lingering pending writes
     cacheStores.forEach { it.flushToDisk(true) }
@@ -193,7 +201,7 @@ class FungibleBalanceCache(
     // re-enable db record generation
     writeHistoryToDb = true
 
-    logger.info { "[$tokenType] Initialised" }
+    logger.info { "[$tokenType] Initialisation complete" }
   }
 
   fun get(address: String, contractAddress: String?): BigInteger? {
