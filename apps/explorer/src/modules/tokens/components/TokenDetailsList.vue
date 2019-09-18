@@ -187,10 +187,10 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalVolumeFormatted.value : undefined,
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalSupply .value : undefined,
       tooltip:
-        !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalVolumeFormatted.tooltipText
-          ? this.tokenDetails.totalVolumeFormatted.tooltipText
+        !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalSupply.tooltipText
+          ? this.tokenDetails.totalSupply.tooltipText
           : undefined
     }
   }
@@ -198,7 +198,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get circulatingSupplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.circSupply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted.value : undefined,
+      tooltip:
+        !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply && this.tokenDetails.circulatingSupplyFormatted.tooltipText
+          ? this.tokenDetails.circulatingSupplyFormatted.tooltipText
+          : undefined
     }
   }
 

@@ -46,16 +46,16 @@ export class TokenDetailExt implements TokenDetail {
     return new BigNumber(this.totalSupply || 0)
   }
 
-  get totalSupplyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.totalSupplyBN).value
+  get totalSupplyFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.totalSupplyBN)
   }
 
   get circulatingSupplyBN(): BigNumber {
     return new BigNumber(this.circulatingSupply || 0)
   }
 
-  get circulatingSupplyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.circulatingSupplyBN).value
+  get circulatingSupplyFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.circulatingSupplyBN)
   }
 
   get currentPriceBN(): BigNumber {
