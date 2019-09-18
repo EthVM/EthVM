@@ -86,40 +86,39 @@ class BlockCountsCache(
 
   fun initialise(txCtx: DSLContext) {
 
-    logger.info { "Initialising state from db" }
-
-    // look in our local state and see if we know the latest block number we processed until
-    var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
-
-    // disable history generation until we have initialised
-    writeHistoryToDb = false
+    logger.info { "Initialising" }
 
     // compare our local latest block number with our state in the db
 
-    val latestDbBlockNumber = txCtx
-      .select(CANONICAL_COUNT.BLOCK_NUMBER)
-      .from(CANONICAL_COUNT)
-      .orderBy(CANONICAL_COUNT.BLOCK_NUMBER.desc())
-      .limit(1)
-      .fetchOne()
-      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
+    var lastChangeBlockNumber = metadataMap["lastChangeBlockNumber"] ?: BigInteger.ONE.negate()
+    val lastChangeBlockNumberDb = lastChangeBlockNumberDb(txCtx)
 
-    if (latestBlockNumber > latestDbBlockNumber) {
+    logger.info { "Last change block number (local): $lastChangeBlockNumber, last change block number from db: $lastChangeBlockNumberDb" }
 
-      logger.info { "Local state is ahead of the database. Resetting all local state." }
+    when {
 
-      // reset all state from the beginning as the database is behind us
-      cacheStores.forEach { it.clear() }
+      lastChangeBlockNumber == lastChangeBlockNumberDb -> {
+        logger.info { "Nothing to synchronise. Initialisation complete" }
+        return
+      }
 
-      latestBlockNumber = BigInteger.ONE.negate()
-      logger.info { "Local state cleared" }
+      lastChangeBlockNumber > lastChangeBlockNumberDb -> {
+        logger.info { "local state is ahead of the database. Resetting all local state." }
+        // reset all state from the beginning as the database is behind us
+        cacheStores.forEach { it.clear() }
+        lastChangeBlockNumber = BigInteger.ONE.negate()
+      }
+
     }
+
+    // disable history generation until we have initialised
+    writeHistoryToDb = false
 
     // reload canonical count state
 
     txCtx
       .selectFrom(CANONICAL_COUNT)
-      .where(CANONICAL_COUNT.BLOCK_NUMBER.eq(latestDbBlockNumber.toBigDecimal()))
+      .where(CANONICAL_COUNT.BLOCK_NUMBER.eq(lastChangeBlockNumberDb.toBigDecimal()))
       .fetch()
       .forEach { record -> set(record) }
 
@@ -129,7 +128,7 @@ class BlockCountsCache(
 
     val addressTxCountCursor = txCtx
       .selectFrom(ADDRESS_TRANSACTION_COUNT)
-      .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
@@ -154,7 +153,7 @@ class BlockCountsCache(
 
     val minerCountCursor = txCtx
       .selectFrom(MINER_BLOCK_COUNT)
-      .where(MINER_BLOCK_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .where(MINER_BLOCK_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
@@ -181,16 +180,22 @@ class BlockCountsCache(
 
     writeHistoryToDb = true
 
-    logger.info { "Initialised" }
+    logger.info { "Initialisation complete" }
   }
 
-  fun count(block: BlockRecord) {
+  private fun lastChangeBlockNumberDb(txCtx: DSLContext) =
+    txCtx
+      .select(CANONICAL_COUNT.BLOCK_NUMBER)
+      .from(CANONICAL_COUNT)
+      .orderBy(CANONICAL_COUNT.BLOCK_NUMBER.desc())
+      .limit(1)
+      .fetchOne()
+      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
+  fun count(block: BlockRecord) {
     incrementMinedCounts(block)
     incrementCanonicalCounts(block)
     incrementTxCounts(block)
-
-    metadataMap["latestBlockNumber"] = block.header.number.bigInteger()
   }
 
   private fun incrementMinedCounts(block: BlockRecord) {
@@ -331,13 +336,17 @@ class BlockCountsCache(
     minedCountByAddress[count.author] = count.count
   }
 
-  fun writeToDb(ctx: DSLContext) {
+  fun writeToDb(txCtx: DSLContext) {
 
-    if (writeHistoryToDb) {
+    if (writeHistoryToDb && historyRecords.isNotEmpty()) {
 
-      ctx
+      txCtx
         .batchInsert(historyRecords)
         .execute()
+
+      // update our local latest block number
+      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -446,7 +455,7 @@ class BlockCountsCache(
 
     // update our local latest block number
 
-    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
 
     // flush to disk our local state
 

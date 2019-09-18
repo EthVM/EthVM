@@ -88,33 +88,23 @@ class FungibleBalanceCache(
 
     logger.info { "[$tokenType] Initialising" }
 
-    var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
+    var lastChangeBlockNumber = metadataMap["lastChangeBlockNumber"] ?: BigInteger.ONE.negate()
+    val lastChangeBlockNumberDb = lastChangeBlockNumberFromDb(txCtx)
 
-    // get latest processed block number from db
-
-    val latestDbBlockNumber = txCtx
-      .select(BALANCE.BLOCK_NUMBER)
-      .from(BALANCE)
-      .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
-      .orderBy(BALANCE.BLOCK_NUMBER.desc())
-      .limit(1)
-      .fetchOne()
-      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
-
-    logger.info { "[$tokenType] Last processed block number (local): $latestBlockNumber, last processed block number from db: $latestDbBlockNumber" }
+    logger.info { "[$tokenType] Last change block number (local): $lastChangeBlockNumber, last change block number from db: $lastChangeBlockNumberDb" }
 
     when {
 
-      latestBlockNumber == latestDbBlockNumber -> {
+      lastChangeBlockNumber == lastChangeBlockNumberDb -> {
         logger.info { "[$tokenType] Nothing to synchronise. Initialisation complete" }
         return
       }
 
-      latestBlockNumber > latestDbBlockNumber -> {
+      lastChangeBlockNumber > lastChangeBlockNumberDb -> {
         logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
         // reset all state from the beginning as the database is behind us
         cacheStores.forEach { it.clear() }
-        latestBlockNumber = BigInteger.ONE.negate()
+        lastChangeBlockNumber = BigInteger.ONE.negate()
       }
 
     }
@@ -127,7 +117,7 @@ class FungibleBalanceCache(
     val balanceCursor = txCtx
       .selectFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
-      .and(BALANCE.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .and(BALANCE.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
@@ -152,7 +142,7 @@ class FungibleBalanceCache(
 
     val addressTokenCountCursor = txCtx
       .selectFrom(ADDRESS_TOKEN_COUNT)
-      .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .and(ADDRESS_TOKEN_COUNT.TOKEN_TYPE.eq(tokenType.toString()))
       .fetchSize(1000)
       .fetchLazy()
@@ -176,7 +166,7 @@ class FungibleBalanceCache(
 
     val contractHolderCountCursor = txCtx
       .selectFrom(CONTRACT_HOLDER_COUNT)
-      .where(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .where(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .and(CONTRACT_HOLDER_COUNT.TOKEN_TYPE.eq(tokenType.toString()))
       .fetchSize(1000)
       .fetchLazy()
@@ -202,6 +192,17 @@ class FungibleBalanceCache(
 
     logger.info { "[$tokenType] Initialisation complete" }
   }
+
+  private fun lastChangeBlockNumberFromDb(txCtx: DSLContext): BigInteger =
+    txCtx
+      .select(BALANCE.BLOCK_NUMBER)
+      .from(BALANCE)
+      .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
+      .orderBy(BALANCE.BLOCK_NUMBER.desc())
+      .limit(1)
+      .fetchOne()
+      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
+
 
   fun get(address: String, contractAddress: String?): BigInteger? {
     // TODO optimize serialization
@@ -312,7 +313,7 @@ class FungibleBalanceCache(
     }
   }
 
-  fun writeToDb(ctx: DSLContext) {
+  fun writeToDb(txCtx: DSLContext) {
 
     // conflate so we only have one update per block. At a later date we could break it
     // down by tx
@@ -324,11 +325,13 @@ class FungibleBalanceCache(
 
     if (conflatedBalancesPerBlock.isNotEmpty()) {
 
-      ctx
+      txCtx
         .batchInsert(conflatedBalancesPerBlock)
         .execute()
 
-      metadataMap["latestBlockNumber"] = conflatedBalancesPerBlock.last().blockNumber.toBigInteger()
+      // update last block number where changes occurred locally
+      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberFromDb(txCtx)
+
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -466,17 +469,18 @@ class FungibleBalanceCache(
         .and(CONTRACT_HOLDER_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
+      // update last block number where changes occurred locally
+      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberFromDb(txCtx)
+
       // re-enable generation of history records
       writeHistoryToDb = true
+
     } else {
 
       logger.info { "[$tokenType] Clearing all cache stores" }
       cacheStores.forEach { it.clear() }
+
     }
-
-    // update our local latest block number
-
-    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
 
     logger.info { "[$tokenType] Flushing cache stores to disk" }
     cacheStores.forEach { it.flushToDisk() }

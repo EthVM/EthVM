@@ -72,7 +72,7 @@ class BlockHashCache(
 
     cursor.close()
 
-    logger.info { "[$processorId] Initialisation complete. $count records loaded" }
+    logger.info { "[$processorId] Initialisation complete. $count entries processed" }
   }
 
   fun reset(txCtx: DSLContext) {

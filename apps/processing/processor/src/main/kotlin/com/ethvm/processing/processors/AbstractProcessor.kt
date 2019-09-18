@@ -408,7 +408,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         consumer.commitSync()
 
         val last = records.last()
-        logger.info { "Kafka batch complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${last.timestamp()}" }
+        logger.debug { "Kafka batch complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${Date(last.timestamp())}" }
       }
     } catch (e: Exception) {
 

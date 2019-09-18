@@ -63,31 +63,23 @@ class InternalTxsCountsCache(
 
     logger.info { "Initialising" }
 
-    var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
+    var lastChangeBlockNumber = metadataMap["lastChangeBlockNumber"] ?: BigInteger.ONE.negate()
+    val lastChangeBlockNumberDb = lastChangeBlockNumberDb(txCtx)
 
-    // get latest block number from db
-    val latestDbBlockNumber = txCtx
-      .select(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER)
-      .from(ADDRESS_INTERNAL_TRANSACTION_COUNT)
-      .orderBy(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.desc())
-      .limit(1)
-      .fetchOne()
-      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
-
-    logger.info { "Last processed block number (local): $latestBlockNumber, last processed block number from db: $latestDbBlockNumber" }
+    logger.info { "Last change block number (local): $lastChangeBlockNumber, last change block number from db: $lastChangeBlockNumberDb" }
 
     when {
 
-      latestBlockNumber == latestDbBlockNumber -> {
+      lastChangeBlockNumber == lastChangeBlockNumberDb -> {
         logger.info { "Nothing to synchronise. Initialisation complete" }
         return
       }
 
-      latestBlockNumber > latestDbBlockNumber -> {
+      lastChangeBlockNumber > lastChangeBlockNumberDb -> {
         logger.info { "Local state is ahead of the database. Resetting all local state." }
         // reset all state from the beginning as the database is behind us
         cacheStores.forEach { it.clear() }
-        latestBlockNumber = BigInteger.ONE.negate()
+        lastChangeBlockNumber = BigInteger.ONE.negate()
       }
 
     }
@@ -95,7 +87,7 @@ class InternalTxsCountsCache(
     // replay any missed state
     val addressCountCursor = txCtx
       .selectFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT)
-      .where(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .where(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
@@ -123,7 +115,7 @@ class InternalTxsCountsCache(
 
     val contractCountCursor = txCtx
       .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT)
-      .where(ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
+      .where(ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .fetchSize(1000)
       .fetchLazy()
 
@@ -151,12 +143,18 @@ class InternalTxsCountsCache(
     logger.info { "Initialisation complete" }
   }
 
-  fun count(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
+  fun lastChangeBlockNumberDb(txCtx: DSLContext) =
+    txCtx
+      .select(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER)
+      .from(ADDRESS_INTERNAL_TRANSACTION_COUNT)
+      .orderBy(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.desc())
+      .limit(1)
+      .fetchOne()
+      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
+  fun count(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
     incrementInternalTxCounts(balanceDeltas, blockNumber)
     incrementContractsCount(balanceDeltas, blockNumber)
-
-    metadataMap["latestBlockNumber"] = blockNumber
   }
 
   private fun incrementContractsCount(balanceDeltas: List<BalanceDeltaRecord>, blockNumber: BigInteger) {
@@ -307,12 +305,19 @@ class InternalTxsCountsCache(
     contractsCreatedByAddress[count.address] = count.count
   }
 
-  fun writeToDb(ctx: DSLContext) {
+  fun writeToDb(txCtx: DSLContext) {
 
     if (writeHistoryToDb) {
-      ctx
+
+      txCtx
         .batchInsert(historyRecords)
         .execute()
+
+      if(historyRecords.isNotEmpty()) {
+        // update latest block number where changes occurred
+        metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+      }
+
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -399,16 +404,17 @@ class InternalTxsCountsCache(
         .where(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .execute()
 
+      // update latest block number where changes occurred
+      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+
       // re-enable db record generation
       writeHistoryToDb = true
+
     } else {
 
       // just clear everything
       cacheStores.forEach { it.clear() }
     }
-
-    // update our local latest block number
-    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
 
     // flush cache store state to disk
     cacheStores.forEach { it.flushToDisk() }
