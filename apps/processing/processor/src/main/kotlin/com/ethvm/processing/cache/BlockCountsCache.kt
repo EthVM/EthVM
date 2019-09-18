@@ -40,7 +40,7 @@ class BlockCountsCache(
     Serializer.STRING,
     Serializer.BIG_INTEGER,
     BigInteger.ZERO,
-    1024  // 1 kb
+    1024 // 1 kb
   )
 
   private val canonicalCountMap = CacheStore(
@@ -51,7 +51,7 @@ class BlockCountsCache(
     Serializer.STRING,
     Serializer.LONG,
     0L,
-    1024  // 1 kb
+    1024 // 1 kb
   )
 
   private val txCountByAddress =
@@ -65,7 +65,7 @@ class BlockCountsCache(
       TransactionCountRecord
         .newBuilder()
         .build(),
-      1024 * 1024 * 64  // 64 mb
+      1024 * 1024 * 64 // 64 mb
     )
 
   private val minedCountByAddress =
@@ -77,7 +77,7 @@ class BlockCountsCache(
       Serializer.STRING,
       Serializer.LONG,
       0L,
-      1024 * 1024 * 32  // 32 mb
+      1024 * 1024 * 32 // 32 mb
     )
 
   // list of all cache stores for convenience later

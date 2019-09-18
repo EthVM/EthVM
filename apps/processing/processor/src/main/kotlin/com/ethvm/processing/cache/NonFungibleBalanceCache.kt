@@ -31,7 +31,7 @@ class NonFungibleBalanceCache(
     Serializer.STRING,
     Serializer.BIG_INTEGER,
     BigInteger.ZERO,
-    1024 * 1024 * 128   // 128 mb
+    1024 * 1024 * 128 // 128 mb
   )
 
   private val metadataMap = CacheStore(

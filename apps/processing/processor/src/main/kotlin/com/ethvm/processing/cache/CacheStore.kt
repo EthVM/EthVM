@@ -15,7 +15,7 @@ class CacheStore<K, V>(
   keySerializer: Serializer<K>,
   valueSerializer: Serializer<V>,
   defaultValue: V,
-  maxMemorySize: Int = 1024 * 1024   // default is 1 mb
+  maxMemorySize: Int = 1024 * 1024 // default is 1 mb
 ) {
 
   // persistent on disk

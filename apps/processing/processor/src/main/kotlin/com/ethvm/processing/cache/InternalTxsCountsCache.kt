@@ -32,7 +32,7 @@ class InternalTxsCountsCache(
     TransactionCountRecord
       .newBuilder()
       .build(),
-    1024 * 1024 * 32  // 32 mb
+    1024 * 1024 * 32 // 32 mb
   )
 
   private val contractsCreatedByAddress = CacheStore(
@@ -43,7 +43,7 @@ class InternalTxsCountsCache(
     Serializer.STRING,
     Serializer.LONG,
     0L,
-    1024 * 1024 * 16  // 16 mb
+    1024 * 1024 * 16 // 16 mb
   )
 
   private val metadataMap = CacheStore(
@@ -54,7 +54,7 @@ class InternalTxsCountsCache(
     Serializer.STRING,
     Serializer.BIG_INTEGER,
     BigInteger.ZERO,
-    1024  // 1 kb
+    1024 // 1 kb
   )
 
   private val cacheStores = listOf(internalTxCountByAddress, contractsCreatedByAddress, metadataMap)

@@ -39,7 +39,7 @@ class FungibleBalanceCache(
     Serializer.STRING,
     Serializer.BIG_INTEGER,
     BigInteger.ZERO,
-    1024  // 1kb
+    1024 // 1kb
   )
 
   // for tracking fungible balances such as ether or erc20
@@ -51,7 +51,7 @@ class FungibleBalanceCache(
     Serializer.STRING,
     Serializer.BIG_INTEGER,
     BigInteger.ZERO,
-    1024 * 1024 * 128   // 128 mb
+    1024 * 1024 * 128 // 128 mb
   )
 
   // for tracking the total number of fungible tokens an address has
@@ -63,7 +63,7 @@ class FungibleBalanceCache(
     Serializer.STRING,
     Serializer.LONG,
     0L,
-    1024 * 1024 * 32  // 32 mb
+    1024 * 1024 * 32 // 32 mb
   )
 
   // for tracking the total number of non zero balance holders of a fungible token
@@ -75,7 +75,7 @@ class FungibleBalanceCache(
     Serializer.STRING,
     Serializer.LONG,
     0L,
-    1024 * 1024 * 16  // 16 mb
+    1024 * 1024 * 16 // 16 mb
   )
 
   // convenience list of all cache stores
