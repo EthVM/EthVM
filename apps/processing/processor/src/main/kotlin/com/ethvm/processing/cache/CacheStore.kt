@@ -15,7 +15,7 @@ class CacheStore<K, V>(
   keySerializer: Serializer<K>,
   valueSerializer: Serializer<V>,
   defaultValue: V,
-  maxMemorySize: Int = 16384
+  maxMemorySize: Int = 1024 * 1024   // default is 1 mb
 ) {
 
   // persistent on disk
@@ -30,7 +30,7 @@ class CacheStore<K, V>(
     .hashMap(name)
     .keySerializer(keySerializer)
     .valueSerializer(valueSerializer)
-    .expireMaxSize(maxMemorySize.toLong())
+    .expireStoreSize(maxMemorySize.toLong())
     .expireAfterGet()
     .expireOverflow(overflowMap)
     .expireExecutor(scheduledExecutor)
