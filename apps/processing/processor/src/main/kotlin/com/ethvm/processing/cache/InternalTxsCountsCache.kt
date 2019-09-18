@@ -16,7 +16,8 @@ class InternalTxsCountsCache(
   memoryDb: DB,
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
-  processorId: String
+  processorId: String,
+  private val dbFetchSize: Int = 512
 ) {
 
   val logger = KotlinLogging.logger {}
@@ -30,7 +31,8 @@ class InternalTxsCountsCache(
     MapDbSerializers.forAvro<TransactionCountRecord>(TransactionCountRecord.`SCHEMA$`),
     TransactionCountRecord
       .newBuilder()
-      .build()
+      .build(),
+    1024 * 1024 * 32  // 32 mb
   )
 
   private val contractsCreatedByAddress = CacheStore(
@@ -40,7 +42,8 @@ class InternalTxsCountsCache(
     "${processorId}_contracts_created_by_address",
     Serializer.STRING,
     Serializer.LONG,
-    0L
+    0L,
+    1024 * 1024 * 16  // 16 mb
   )
 
   private val metadataMap = CacheStore(
@@ -50,7 +53,8 @@ class InternalTxsCountsCache(
     "${processorId}_counts_metadata",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024  // 1 kb
   )
 
   private val cacheStores = listOf(internalTxCountByAddress, contractsCreatedByAddress, metadataMap)
@@ -87,7 +91,7 @@ class InternalTxsCountsCache(
     val addressCountCursor = txCtx
       .selectFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT)
       .where(ADDRESS_INTERNAL_TRANSACTION_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     // disable db record generation
@@ -100,7 +104,7 @@ class InternalTxsCountsCache(
     while (addressCountCursor.hasNext()) {
       set(addressCountCursor.fetchNext())
       count += 1
-      if (count % 1000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count entries processed" }
       }
@@ -115,7 +119,7 @@ class InternalTxsCountsCache(
     val contractCountCursor = txCtx
       .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT)
       .where(ADDRESS_CONTRACTS_CREATED_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     logger.info { "Beginning reload of contract counts" }
@@ -123,7 +127,7 @@ class InternalTxsCountsCache(
     while (contractCountCursor.hasNext()) {
       set(contractCountCursor.fetchNext())
       count += 1
-      if (count % 1000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count entries processed" }
       }
@@ -347,7 +351,7 @@ class InternalTxsCountsCache(
         .selectFrom(ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA)
         .where(ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .orderBy(ADDRESS_INTERNAL_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.desc())
-        .fetchSize(1000)
+        .fetchSize(dbFetchSize)
         .fetchLazy()
 
       while (txCountCursor.hasNext()) {
@@ -368,7 +372,7 @@ class InternalTxsCountsCache(
         .selectFrom(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA)
         .where(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .orderBy(ADDRESS_CONTRACTS_CREATED_COUNT_DELTA.BLOCK_NUMBER.desc())
-        .fetchSize(1000)
+        .fetchSize(dbFetchSize)
         .fetchLazy()
 
       while (contractsCountCursor.hasNext()) {

@@ -24,7 +24,8 @@ class BlockCountsCache(
   memoryDb: DB,
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
-  processorId: String
+  processorId: String,
+  private val dbFetchSize: Int = 512
 ) {
 
   val logger = KotlinLogging.logger {}
@@ -38,7 +39,8 @@ class BlockCountsCache(
     "${processorId}_counts_metadata",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024  // 1 kb
   )
 
   private val canonicalCountMap = CacheStore(
@@ -48,7 +50,8 @@ class BlockCountsCache(
     "${processorId}_canonical_count",
     Serializer.STRING,
     Serializer.LONG,
-    0L
+    0L,
+    1024  // 1 kb
   )
 
   private val txCountByAddress =
@@ -61,7 +64,8 @@ class BlockCountsCache(
       MapDbSerializers.forAvro<TransactionCountRecord>(TransactionCountRecord.`SCHEMA$`),
       TransactionCountRecord
         .newBuilder()
-        .build()
+        .build(),
+      1024 * 1024 * 64  // 64 mb
     )
 
   private val minedCountByAddress =
@@ -72,7 +76,8 @@ class BlockCountsCache(
       "${processorId}_mined_count_by_address",
       Serializer.STRING,
       Serializer.LONG,
-      0L
+      0L,
+      1024 * 1024 * 32  // 32 mb
     )
 
   // list of all cache stores for convenience later
@@ -128,7 +133,7 @@ class BlockCountsCache(
     val addressTxCountCursor = txCtx
       .selectFrom(ADDRESS_TRANSACTION_COUNT)
       .where(ADDRESS_TRANSACTION_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     var count = 0
@@ -138,7 +143,7 @@ class BlockCountsCache(
     while (addressTxCountCursor.hasNext()) {
       set(addressTxCountCursor.fetchNext())
       count += 1
-      if (count % 1000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count entries processed" }
       }
@@ -153,7 +158,7 @@ class BlockCountsCache(
     val minerCountCursor = txCtx
       .selectFrom(MINER_BLOCK_COUNT)
       .where(MINER_BLOCK_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     logger.info { "Beginning reload of miner counts" }
@@ -161,7 +166,7 @@ class BlockCountsCache(
     while (minerCountCursor.hasNext()) {
       set(minerCountCursor.fetchNext())
       count += 1
-      if (count % 1000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "$count entries processed" }
       }
@@ -385,7 +390,7 @@ class BlockCountsCache(
         .selectFrom(ADDRESS_TRANSACTION_COUNT_DELTA)
         .where(ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .orderBy(ADDRESS_TRANSACTION_COUNT_DELTA.BLOCK_NUMBER.desc())
-        .fetchSize(1000)
+        .fetchSize(dbFetchSize)
         .fetchLazy()
 
       while (txCountCursor.hasNext()) {
@@ -410,7 +415,7 @@ class BlockCountsCache(
         .from(BLOCK_HEADER)
         .where(BLOCK_HEADER.NUMBER.ge(blockNumberDecimal))
         .orderBy(BLOCK_HEADER.NUMBER.desc())
-        .fetchSize(1000)
+        .fetchSize(dbFetchSize)
         .fetchLazy()
 
       while (authorCursor.hasNext()) {
