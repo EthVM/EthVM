@@ -17,7 +17,8 @@ class NonFungibleBalanceCache(
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
   private val tokenType: TokenType,
-  processorId: String
+  processorId: String,
+  private val dbFetchSize: Int = 512
 ) {
 
   val logger = KotlinLogging.logger {}
@@ -29,7 +30,8 @@ class NonFungibleBalanceCache(
     "${processorId}_non_fungible_balances",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024 * 1024 * 128 // 128 mb
   )
 
   private val metadataMap = CacheStore(
@@ -39,7 +41,8 @@ class NonFungibleBalanceCache(
     "${processorId}_non_fungible_balances_metadata",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024
   )
 
   // convenience lists
@@ -79,7 +82,7 @@ class NonFungibleBalanceCache(
       .selectFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
       .and(BALANCE.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     writeHistoryToDb = false
@@ -89,7 +92,7 @@ class NonFungibleBalanceCache(
     while (cursor.hasNext()) {
       assign(cursor.fetchNext())
       count += 1
-      if (count % 1000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "[$tokenType] $count deltas processed" }
       }
@@ -203,7 +206,7 @@ class NonFungibleBalanceCache(
       .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
       .and(BALANCE_DELTA.TOKEN_TYPE.eq(tokenType.toString()))
       .orderBy(BALANCE_DELTA.BLOCK_NUMBER.desc())
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     // temporarily disable

@@ -24,7 +24,8 @@ class FungibleBalanceCache(
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
   private val tokenType: TokenType,
-  processorId: String
+  processorId: String,
+  private val dbFetchSize: Int = 512
 ) {
 
   val logger = KotlinLogging.logger {}
@@ -37,7 +38,8 @@ class FungibleBalanceCache(
     "${processorId}_fungible_balances_metadata",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024 // 1kb
   )
 
   // for tracking fungible balances such as ether or erc20
@@ -48,7 +50,8 @@ class FungibleBalanceCache(
     "${processorId}_fungible_balances",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024 * 1024 * 128 // 128 mb
   )
 
   // for tracking the total number of fungible tokens an address has
@@ -59,7 +62,8 @@ class FungibleBalanceCache(
     "${processorId}_address_fungible_token_balance_count",
     Serializer.STRING,
     Serializer.LONG,
-    0L
+    0L,
+    1024 * 1024 * 32 // 32 mb
   )
 
   // for tracking the total number of non zero balance holders of a fungible token
@@ -70,7 +74,8 @@ class FungibleBalanceCache(
     "${processorId}_fungible_token_holder_count",
     Serializer.STRING,
     Serializer.LONG,
-    0L
+    0L,
+    1024 * 1024 * 16 // 16 mb
   )
 
   // convenience list of all cache stores
@@ -117,7 +122,7 @@ class FungibleBalanceCache(
       .selectFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
       .and(BALANCE.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     var count = 0
@@ -125,7 +130,7 @@ class FungibleBalanceCache(
     while (balanceCursor.hasNext()) {
       set(balanceCursor.fetchNext())
       count += 1
-      if (count % 10000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "[$tokenType] $count deltas processed" }
       }
@@ -143,13 +148,13 @@ class FungibleBalanceCache(
       .selectFrom(ADDRESS_TOKEN_COUNT)
       .where(ADDRESS_TOKEN_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .and(ADDRESS_TOKEN_COUNT.TOKEN_TYPE.eq(tokenType.toString()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     while (addressTokenCountCursor.hasNext()) {
       set(addressTokenCountCursor.fetchNext())
       count += 1
-      if (count % 10000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "[$tokenType] $count address token counts processed" }
       }
@@ -167,13 +172,13 @@ class FungibleBalanceCache(
       .selectFrom(CONTRACT_HOLDER_COUNT)
       .where(CONTRACT_HOLDER_COUNT.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
       .and(CONTRACT_HOLDER_COUNT.TOKEN_TYPE.eq(tokenType.toString()))
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     while (contractHolderCountCursor.hasNext()) {
       set(contractHolderCountCursor.fetchNext())
       count += 1
-      if (count % 10000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "[$tokenType] $count contract holder counts processed" }
       }
@@ -399,7 +404,7 @@ class FungibleBalanceCache(
         .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumberDecimal))
         .and(BALANCE_DELTA.TOKEN_TYPE.eq(tokenTypeStr))
         .orderBy(BALANCE_DELTA.BLOCK_NUMBER.desc())
-        .fetchSize(1000)
+        .fetchSize(dbFetchSize)
         .fetchLazy()
 
       while (cursor.hasNext()) {
