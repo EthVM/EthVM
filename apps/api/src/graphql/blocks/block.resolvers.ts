@@ -98,7 +98,7 @@ export class BlockResolvers {
 
     // Find the tx fees for the block.
     const txFees = await this.blockMetricsService
-      .findBlockMetricsTracesByHash(hash, entity.timestamp, entity.timestamp, true, blockNumber)
+      .findBlockMetricsTraceByHash(hash, entity.timestamp, entity.timestamp, true, blockNumber)
 
     return new BlockDto(entity, txFees)
   }
@@ -124,7 +124,7 @@ export class BlockResolvers {
 
     // Find the tx fees for the block.
     const txFees = await this.blockMetricsService
-      .findBlockMetricsTracesByHash(entity.hash, entity.timestamp, entity.timestamp, true, blockNumber)
+      .findBlockMetricsTraceByHash(entity.hash, entity.timestamp, entity.timestamp, true, blockNumber)
 
     return new BlockDto(entity, txFees)
   }

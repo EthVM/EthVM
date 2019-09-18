@@ -10,6 +10,11 @@ import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
 import {BlockMetricsHeaderEntity} from '@app/orm/entities/block-metrics-header.entity';
 import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity';
 
+/**
+ * @const
+ * @type {BlockMetricField[]}
+ * @default
+ */
 const HEADER_FIELDS = [
   BlockMetricField.AVG_BLOCK_TIME,
   BlockMetricField.AVG_DIFFICULTY,
@@ -19,6 +24,11 @@ const HEADER_FIELDS = [
   BlockMetricField.AVG_GAS_PRICE,
 ]
 
+/**
+ * @const
+ * @type {BlockMetricField[]}
+ * @default
+ */
 const TX_TRACE_FIELDS = [
   BlockMetricField.AVG_NUM_TXS,
   BlockMetricField.AVG_NUM_SUCCESSFUL_TXS,
@@ -34,6 +44,14 @@ export class BlockMetricsService {
   constructor(@InjectEntityManager() private readonly entityManager: EntityManager) {
   }
 
+  /**
+   * Find block metrics trace entities by block hashes.
+   * @param {string[]} blockHashes - Array of block hashes.
+   * @param {Date} maxTimestamp - Max timestamp for filtering (to improve performance).
+   * @param {Date} minTimestamp - Min timestamp for filtering (to improve performance).
+   * @param {EntityManager} txn - The txn within which to perform the query.
+   * @returns {Promise<BlockMetricsTraceEntity[]>}
+   */
   async findBlockMetricsTraces(blockHashes: string [], maxTimestamp: Date, minTimestamp: Date, txn?: EntityManager): Promise<BlockMetricsTraceEntity[]> {
     txn = txn || this.entityManager
     return txn
@@ -46,7 +64,16 @@ export class BlockMetricsService {
       })
   }
 
-  async findBlockMetricsTracesByHash(
+  /**
+   * Find a block metrics trace entity for a given block hash.
+   * @param {string} hash - The block hash to filter by.
+   * @param {Date} maxTimestamp - Max timestamp for filtering (to improve performance).
+   * @param {Date} minTimestamp - Min timestamp for filtering (to improve performance).
+   * @param {boolean} cache - Whether to use the cache.
+   * @param {BigNumber} blockNumber - Block metrics trace entities for block numbers above this will be ignored.
+   * @returns {Promise<BlockMetricsTraceEntity | undefined>}
+   */
+  async findBlockMetricsTraceByHash(
     hash: string,
     maxTimestamp: Date,
     minTimestamp: Date,
@@ -60,6 +87,13 @@ export class BlockMetricsService {
       })
   }
 
+  /**
+   * Find block metric entity by block hash.
+   * @param {string} hash - The block hash to filter by.
+   * @param {BigNumber} blockNumber - Block metrics trace entities for block numbers above this will be ignored.
+   * @param {Date} timestamp - Timestamp to filter by (to improve performance).
+   * @returns {Promise<BlockMetricEntity | undefined>}
+   */
   async findBlockMetric(hash: string, blockNumber: BigNumber, timestamp: Date): Promise<BlockMetricEntity | undefined> {
     return this.entityManager
       .findOne(BlockMetricEntity, {
@@ -71,13 +105,20 @@ export class BlockMetricsService {
       })
   }
 
-  async findBlockMetrics(offset: number, limit: number, blockNumber: BigNumber): Promise<[BlockMetricEntity[], number]> {
+  /**
+   * Find a page of blocks metric entities
+   * @param {number} [offset=0] - Number of items to skip.
+   * @param {number} [limit=10] - Page size.
+   * @param {BigNumber} blockNumber - Block metrics trace entities for block numbers above this will be ignored.
+   * @returns {Promise<BlockMetricEntity[], number>} An array of block metric entities and the total count.
+   */
+  async findBlockMetrics(offset: number = 0, limit: number = 10, blockNumber: BigNumber): Promise<[BlockMetricEntity[], number]> {
 
     return this.entityManager
       .transaction('READ COMMITTED', async (txn): Promise<[BlockMetricEntity[], number]> => {
 
-        // much cheaper to do the count against canonical block header table instead of using the
-        // usual count mechanism
+        // It's much cheaper to do the count against canonical block header table instead of using the usual count mechanism.
+        // Also retrieve the timestamp of the latest block to improve performance of the BlockMetricEntity query.
 
         const {number, timestamp} = await txn
           .findOne(BlockHeaderEntity, {
@@ -107,6 +148,14 @@ export class BlockMetricsService {
 
   }
 
+  /**
+   * Estimate the total number of datapoints that will be returned by the "timeseries" query.
+   * @private
+   * @param {Date} [start=new Date()] - The start date of the query.
+   * @param {Date} [end=new Date('2000-01-01T00:00:00.000Z')] - The end date of the query.
+   * @param {TimeBucket} bucket - Length of time to aggregate metrics by.
+   * @returns {number}
+   */
   private estimateDatapoints(start: Date = new Date(), end: Date = new Date('2000-01-01T00:00:00.000Z'), bucket: TimeBucket): number {
 
     const startMoment = moment(start)
@@ -136,6 +185,15 @@ export class BlockMetricsService {
     return startMoment.diff(endMoment, timeUnit)
   }
 
+  /**
+   * Get a series of time-identified data (a list of block metric data aggregated by a given time bucket).
+   * @param {TimeBucket} bucket - The length of time to aggregate block metrics by.
+   * @param {BlockMetricField} field - The field of a block metric entity to aggregate data for.
+   * @param {BigNumber} blockNumber - Block metric entities for block numbers above this will be ignored.
+   * @param {Date} [start] - The start date to filter by.
+   * @param {Date} [end=new Date('2000-01-01T00:00:00.000Z')] - The end date to filter by.
+   * @returns {Promise<AggregateBlockMetric[]>} An array of aggregated block metrics in descending order with data for the requested field only.
+   */
   async timeseries(
     bucket: TimeBucket,
     field: BlockMetricField,
@@ -144,10 +202,12 @@ export class BlockMetricsService {
     end: Date = new Date('2000-01-01T00:00:00.000Z'),
   ): Promise<AggregateBlockMetric[]> {
 
-    // If start or end is set, round to nearest minute in order to take advantage of caching similar queries
-    // Start is set to end of minute as it is later in time, and vice versa, to be inclusive of time range
+    // If start or end is set, round to nearest minute in order to take advantage of caching similar queries.
+    // Start is set to end of minute as it is later in time, and vice versa, to be inclusive of time range.
     start = start ? moment(start).endOf('minute').toDate() : undefined
     end = moment(end).startOf('minute').toDate()
+
+    // Estimate the number of datapoints and throw an error if it is too many.
 
     const datapoints = this.estimateDatapoints(start, end, bucket)
 
@@ -155,9 +215,12 @@ export class BlockMetricsService {
       throw new Error('Estimated datapoints exceeds 10,000. Try refining your date range or adjusting your time bucket')
     }
 
+    // Start building the query.
+
     const select: string[] = []
     let queryBuilder
 
+    // Select the start timestamp of the time bucket
     switch (bucket) {
       case TimeBucket.ONE_HOUR:
         select.push('time_bucket(\'1 hour\', bm.timestamp) as time')
@@ -178,6 +241,7 @@ export class BlockMetricsService {
         throw new Error(`Unexpected bucket value: ${bucket}`)
     }
 
+    // Select the rounded avg of only the required field.
     switch (field) {
       case BlockMetricField.AVG_BLOCK_TIME:
         select.push('round(avg(block_time)) as avg_block_time')
@@ -219,7 +283,7 @@ export class BlockMetricsService {
         throw new Error(`Unexpected metric: ${field}`)
     }
 
-    // Create query builder for correct entity depending on field param
+    // Create query builder for correct entity depending on the field requested.
 
     if (HEADER_FIELDS.indexOf(field) > -1) {
       queryBuilder = this.entityManager.createQueryBuilder(BlockMetricsHeaderEntity, 'bm')
@@ -229,7 +293,7 @@ export class BlockMetricsService {
       throw new Error(`Unexpected metric: ${field}`)
     }
 
-    // Set where clause if start and/or end params are set
+    // Set where clause if start and/or end params are set.
 
     queryBuilder
       .select(select)
@@ -238,9 +302,10 @@ export class BlockMetricsService {
     if (start) {
       queryBuilder.andWhere('bm.timestamp between :end and :start', {start, end})
     } else {
-      queryBuilder.andWhere('bm.timestamp > :end', {end})
+      queryBuilder.andWhere('bm.timestamp > :end', {end}) // End has been defaulted to {new Date('2000-01-01T00:00:00.000Z')}
     }
 
+    // Perform query.
     const items = await queryBuilder
       .groupBy('time')
       .orderBy({time: 'DESC'})
@@ -248,7 +313,7 @@ export class BlockMetricsService {
       .cache(true)
       .getRawMany()
 
-    // Map items to AggregateBlockMetric shape before returning
+    // Map items to AggregateBlockMetric shape before returning.
 
     return items.map(item => {
 
