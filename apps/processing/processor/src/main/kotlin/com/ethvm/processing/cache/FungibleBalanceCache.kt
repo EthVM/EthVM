@@ -106,7 +106,6 @@ class FungibleBalanceCache(
         cacheStores.forEach { it.clear() }
         lastChangeBlockNumber = BigInteger.ONE.negate()
       }
-
     }
 
     // disable db record generation until initialisation is complete
@@ -202,7 +201,6 @@ class FungibleBalanceCache(
       .limit(1)
       .fetchOne()
       ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
-
 
   fun get(address: String, contractAddress: String?): BigInteger? {
     // TODO optimize serialization
@@ -331,7 +329,6 @@ class FungibleBalanceCache(
 
       // update last block number where changes occurred locally
       metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberFromDb(txCtx)
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -474,12 +471,10 @@ class FungibleBalanceCache(
 
       // re-enable generation of history records
       writeHistoryToDb = true
-
     } else {
 
       logger.info { "[$tokenType] Clearing all cache stores" }
       cacheStores.forEach { it.clear() }
-
     }
 
     logger.info { "[$tokenType] Flushing cache stores to disk" }

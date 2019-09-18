@@ -108,7 +108,6 @@ class BlockCountsCache(
         cacheStores.forEach { it.clear() }
         lastChangeBlockNumber = BigInteger.ONE.negate()
       }
-
     }
 
     // disable history generation until we have initialised
@@ -346,7 +345,6 @@ class BlockCountsCache(
 
       // update our local latest block number
       metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
-
     }
 
     cacheStores.forEach { it.flushToDisk() }

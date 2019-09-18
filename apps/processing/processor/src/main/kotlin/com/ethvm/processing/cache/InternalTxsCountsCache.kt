@@ -81,7 +81,6 @@ class InternalTxsCountsCache(
         cacheStores.forEach { it.clear() }
         lastChangeBlockNumber = BigInteger.ONE.negate()
       }
-
     }
 
     // replay any missed state
@@ -313,11 +312,10 @@ class InternalTxsCountsCache(
         .batchInsert(historyRecords)
         .execute()
 
-      if(historyRecords.isNotEmpty()) {
+      if (historyRecords.isNotEmpty()) {
         // update latest block number where changes occurred
         metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
       }
-
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -409,7 +407,6 @@ class InternalTxsCountsCache(
 
       // re-enable db record generation
       writeHistoryToDb = true
-
     } else {
 
       // just clear everything

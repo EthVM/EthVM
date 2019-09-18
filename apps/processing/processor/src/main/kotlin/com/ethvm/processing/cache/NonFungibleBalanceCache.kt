@@ -73,7 +73,6 @@ class NonFungibleBalanceCache(
         cacheStores.forEach { it.clear() }
         lastChangeBlockNumber = BigInteger.ONE.negate()
       }
-
     }
 
     val cursor = txCtx
