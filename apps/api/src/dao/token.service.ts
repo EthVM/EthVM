@@ -285,6 +285,6 @@ export class TokenService {
   }
 
   async findDetailByAddress(address: string, blockNumber: BigNumber): Promise<TokenDetailEntity | undefined> {
-    return this.tokenDetailRepository.findOne({where: [{ address }, {  }], cache: true})
+    return this.tokenDetailRepository.findOne({where: { address, createdAtBlockNumber: LessThanOrEqual(blockNumber) }, cache: true})
   }
 }

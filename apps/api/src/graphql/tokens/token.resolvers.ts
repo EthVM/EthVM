@@ -132,7 +132,7 @@ export class TokenResolvers {
     if (!blockNumber) { // There is no data
       return undefined
     }
-    const entity = await this.tokenService.findDetailByAddress(address)
+    const entity = await this.tokenService.findDetailByAddress(address, blockNumber)
     if (!entity) return undefined
     const holdersCount = await this.tokenService.countTokenHolders(address, blockNumber)
     return new TokenDetailDto({...entity, holdersCount})
