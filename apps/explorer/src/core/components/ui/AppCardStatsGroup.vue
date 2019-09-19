@@ -307,12 +307,12 @@ export default class AppInfoCardGroup extends Mixins(NumberFormatMixin) {
 
   get latestBlockSuccessTxs(): string {
     const { loading, loadingMessage, blockSummary } = this
-    return !loading && blockSummary ? blockSummary.numSuccessfulTxsBN!.toString() : loadingMessage
+    return !loading && blockSummary ? blockSummary.numSucessfulTxsFormatted.value : loadingMessage
   }
 
   get latestBlockFailedTxs(): string {
     const { loading, loadingMessage, blockSummary } = this
-    return !loading && blockSummary ? blockSummary.numFailedTxsBN!.toString() : loadingMessage
+    return !loading && blockSummary ? blockSummary.numFailedTxsFormatted.value : loadingMessage
   }
 
   get latestBlockPendingTxs(): string {
