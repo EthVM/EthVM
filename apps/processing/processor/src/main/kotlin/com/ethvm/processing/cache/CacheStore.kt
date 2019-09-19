@@ -3,6 +3,7 @@ package com.ethvm.processing.cache
 import org.mapdb.DB
 import org.mapdb.Serializer
 import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 /**
  * Utility for managing the interoperation of in memory and disk based db instances
@@ -31,9 +32,12 @@ class CacheStore<K, V>(
     .keySerializer(keySerializer)
     .valueSerializer(valueSerializer)
     .expireStoreSize(maxMemorySize.toLong())
-    .expireAfterGet()
+    .expireAfterGet(1, TimeUnit.MINUTES)
+    .expireAfterCreate(30, TimeUnit.SECONDS)
+    .expireAfterUpdate(30, TimeUnit.SECONDS)
     .expireOverflow(overflowMap)
     .expireExecutor(scheduledExecutor)
+    .expireExecutorPeriod(10_000)
     .createOrOpen()
 
   // a list of keys modified during a tx
