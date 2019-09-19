@@ -45,6 +45,7 @@ CREATE VIEW token_detail AS
 SELECT c.address,
        c.creator,
        c.contract_type,
+       c.created_at_block_number,
        elcm.name,
        elcm.symbol,
        elcm.decimals,

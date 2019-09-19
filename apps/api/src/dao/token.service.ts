@@ -284,7 +284,7 @@ export class TokenService {
     return [items, hasMore]
   }
 
-  async findDetailByAddress(address: string): Promise<TokenDetailEntity | undefined> {
-    return this.tokenDetailRepository.findOne({where: {address}, cache: true})
+  async findDetailByAddress(address: string, blockNumber: BigNumber): Promise<TokenDetailEntity | undefined> {
+    return this.tokenDetailRepository.findOne({where: [{ address }, {  }], cache: true})
   }
 }
