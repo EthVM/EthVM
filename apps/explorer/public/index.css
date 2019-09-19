@@ -17,8 +17,7 @@ noscript > .img-container > img {
   height: 260px;
 }
 
-p,
-h1,
-h3 {
+noscript > .text-public {
   margin: 5px 10px;
 }
+
