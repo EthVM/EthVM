@@ -13,7 +13,7 @@ import {TokenMetadataPageDto} from '@app/graphql/tokens/dto/token-metadata-page.
 import {TokenDetailDto} from '@app/graphql/tokens/dto/token-detail.dto'
 import {TokenBalancePageDto} from '@app/graphql/tokens/dto/token-balance-page.dto'
 import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe'
-import {ExchangeRatePair, TokenExchangeRateFilter} from '@app/graphql/schema';
+import {ExchangeRatePair, TokenExchangeRateFilter} from '@app/graphql/schema'
 
 @Resolver('Token')
 @UseInterceptors(SyncingInterceptor)
