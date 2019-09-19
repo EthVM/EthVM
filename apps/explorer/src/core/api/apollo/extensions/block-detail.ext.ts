@@ -140,7 +140,7 @@ export class BlockDetailExt implements BlockDetail {
   }
 
   get minerRewardFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.minerRewardBN, true)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.minerRewardBN)
   }
 
   get uncleReward(): EthValue {
@@ -162,7 +162,7 @@ export class BlockDetailExt implements BlockDetail {
   }
 
   get uncleRewardFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.uncleRewardBN, true)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.uncleRewardBN)
   }
 
   get transactionCount(): number | null {
@@ -174,6 +174,6 @@ export class BlockDetailExt implements BlockDetail {
   }
 
   get totalTxFeesFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.totalTxFees, true)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.totalTxFees)
   }
 }
