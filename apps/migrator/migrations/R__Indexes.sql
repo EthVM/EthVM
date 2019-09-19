@@ -17,6 +17,7 @@ create unique index if not exists idx_uncle_by_hash on uncle (hash);
 create unique index if not exists idx_uncle_for_hash on uncle (height DESC, hash);
 create index if not exists idx_uncle_rewards_for_block_and_address on balance_delta (block_hash, address) where delta_type = 'UNCLE_REWARD';
 create unique index if not exists idx_uncle_count on canonical_count (block_number desc) where entity = 'uncle';
+create index if not exists idx_uncle_nephew_hash ON uncle (nephew_hash);
 
 /* Tx service */
 create unique index if not exists idx_tx_by_hash on transaction (hash);
