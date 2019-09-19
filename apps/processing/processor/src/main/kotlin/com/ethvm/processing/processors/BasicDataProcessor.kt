@@ -41,8 +41,13 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>("basic-data-processor"
 
     // initialise our caches
 
-    blockTimestampCache.initialise(txCtx)
-    blockCountsCache.initialise(txCtx)
+    val futures = listOf(
+      executor.submit { blockTimestampCache.initialise(txCtx) },
+      executor.submit { blockCountsCache.initialise(txCtx) }
+    )
+
+    // block until caches have finished initialising
+    futures.forEach { it.get() }
   }
 
   override fun blockHashFor(value: BlockRecord): String = value.header.hash

@@ -35,6 +35,19 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
         logger.info { "All processors stopped" }
       }))
 
+    // initialise
+
+    logger.info { "Initialising processors" }
+
+    val initFutures = processors
+      .map { processor ->
+        logger.info { "Initialising ${processor.javaClass}" }
+        executor.submit { processor.initialise() }
+      }
+      .toList()
+
+    initFutures.forEach { it.get() }
+
     // run
 
     logger.info { "Starting processors" }
