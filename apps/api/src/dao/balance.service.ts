@@ -16,6 +16,15 @@ export class BalanceService {
   ) {
   }
 
+  /**
+   * Find a page of balances.
+   * @param {string[]} addresses - Array of address hashes to filter balances by.
+   * @param {BigNumber} blockNumber - Block number as of which to find balances (balance changes after this block number will be ignored).
+   * @param {string[]} [contracts=[]] - Array of contract address hashes to filter balances by.
+   * @param {number} [offset=0] - The number of items to skip.
+   * @param {number} [limit=10] - The page size.
+   * @returns {Promise<[BalanceEntity[], boolean]>} An array of balance entities and a boolean representing whether there are more items after these.
+   */
   async find(
     addresses: string[],
     blockNumber: BigNumber,
@@ -27,6 +36,7 @@ export class BalanceService {
     // TODO update to use query builder when TypeORM releases "with" functionality
     // see https://github.com/typeorm/typeorm/issues/1116
 
+    // Use "with" clause to get only the latest balance entry for each address and contract address combination
     let sql = `
       WITH _balances as (
         SELECT 
@@ -35,20 +45,27 @@ export class BalanceService {
           FROM balance
           WHERE address IN (
     `
+
     const args: any[] = []
     let currArg = 1
+
+    // Add addresses to args array and SQL statement.
+
     addresses.forEach((address) => {
       args.push(address)
       sql += `$${currArg},`
       currArg++
     })
-    sql = sql.substring(0, sql.length - 1) // Remove trailing comma
+
+    sql = sql.substring(0, sql.length - 1) // Remove trailing comma.
     sql += ') AND '
+
+    // Add contract addresses to args array and SQL statement if applicable.
 
     if (contracts.length) {
       const ethAddressIdx = contracts.indexOf(ETH_ADDRESS)
       if (ethAddressIdx > -1) {
-        // Remove "EthAddress" from contracts array and add OR clause with IS NULL
+        // Remove "EthAddress" from contracts array and add OR clause with IS NULL.
         contracts.splice(ethAddressIdx, 1)
 
         if (contracts.length) {
@@ -58,13 +75,12 @@ export class BalanceService {
             sql += `$${currArg},`
             currArg++
           })
-          sql = sql.substring(0, sql.length - 1) // Remove trailing comma
+          sql = sql.substring(0, sql.length - 1) // Remove trailing comma.
           sql += ') OR contract_address IS NULL) AND '
+
         } else {
-
-          // We're only querying the ether balance
+          // We're only querying the ether balance.
           sql += 'contract_address IS NULL AND '
-
         }
 
       } else {
@@ -74,10 +90,12 @@ export class BalanceService {
           sql += `$${currArg},`
           currArg++
         })
-        sql = sql.substring(0, sql.length - 1) // Remove trailing comma
+        sql = sql.substring(0, sql.length - 1) // Remove trailing comma.
         sql += ') AND '
       }
     }
+
+    // Complete SQL statement and add all args to args array.
 
     sql += `
         block_number <= $${currArg}
@@ -87,10 +105,12 @@ export class BalanceService {
       OFFSET $${currArg + 1}
       LIMIT $${currArg + 2}
     `
-    args.push(blockNumber.toNumber(), offset, limit + 1)
+    args.push(blockNumber.toNumber(), offset, limit + 1) // Add one to the limit to determine if there are more items available.
 
+    // Perform query
     const items = await this.entityManager.query(sql, args)
 
+    // Determine whether more items were retrieved than the limit and if so remove the last item from the array and set hasMore to "true".
     const hasMore = items.length > limit
     if (hasMore) {
       items.pop()
