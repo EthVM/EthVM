@@ -25,6 +25,7 @@ import java.sql.Timestamp
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.ScheduledExecutorService
 
 interface Processor : Runnable {
@@ -67,6 +68,8 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
   // base database context
   private val dbContext: DSLContext by inject()
 
+  protected val executor: ExecutorService by inject()
+
   // used for evicting keys from the in memory caches
   protected val scheduledExecutor: ScheduledExecutorService by inject()
 
@@ -100,6 +103,10 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   // kafka consumer for ingesting data
   private lateinit var consumer: KafkaConsumer<CanonicalKeyRecord, V>
+
+  // when running with process command we will need to initialise ourselves, otherwise other commands call initialise method directly without the run method
+  @Volatile
+  private var initialised = false
 
   @Volatile
   private var stop = false
@@ -141,6 +148,8 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   override fun initialise() {
 
+    if (initialised) return // do nothing
+
     dbContext.transaction { txConfig ->
 
       val txCtx = DSL.using(txConfig)
@@ -158,9 +167,23 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
       logger.info { "Last processed block number = $latestBlockNumber" }
 
-      // call the implementation initialise method
+      // start a task for committing disk db periodically (100 ms intervals) during init to prevent one big transactional commit at the end
+
+      val commitFuture = executor.submit(DiskCommitTask(diskDb, 100))
+
+      // call implementation init method
 
       initialise(txCtx, latestBlockNumber)
+
+      // record initialisation
+      initialised = true
+
+      // wait for commit task to exit
+      commitFuture.get()
+
+      // flush any remaining changes that were not caught by the last invocation of the commit task
+
+      diskDb.commit()
 
       logger.info { "initialised" }
     }
@@ -275,6 +298,10 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
   override fun run() {
 
     try {
+
+      // initialise
+
+      initialise()
 
       // determine the chain time to reset the kafka consumer to
 
@@ -485,5 +512,28 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
     consumer.close(Duration.ofSeconds(30))
     logger.info { "clean up complete" }
+  }
+
+  /**
+   * Task for periodically commit disk db during initialisation phase
+   */
+  private inner class DiskCommitTask(val db: DB, val intervalMs: Long) : Runnable {
+
+    override fun run() {
+
+      while (!initialised) {
+
+        logger.debug { "Committing disk db" }
+
+        val startMs = System.currentTimeMillis()
+        db.commit()
+        val elapsedMs = System.currentTimeMillis() - startMs
+
+        logger.debug { "Disk db committed. Elapsed time = $elapsedMs ms" }
+
+        logger.debug { "Waiting $intervalMs ms" }
+        Thread.sleep(intervalMs)
+      }
+    }
   }
 }

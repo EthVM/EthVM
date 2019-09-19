@@ -19,6 +19,9 @@ export class TokenDetailEntity {
   @Column({ type: 'varchar', length: 32, readonly: true })
   contractType?: string
 
+  @Column({ type: 'numeric', readonly: true, transformer: new BigNumberTransformer() })
+  createdAtBlockNumber!: BigNumber
+
   @Column({type: 'character varying', length: 64, readonly: true})
   name?: string
 

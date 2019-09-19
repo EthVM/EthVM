@@ -51,25 +51,25 @@
     <v-layout pl-2 pr-2>
       <v-flex hidden-xs-only sm12>
         <v-card v-if="!hasError" :color="headerColor" flat class="white--text" height="40px">
-          <v-layout align-center justify-start row fill-height pl-3 pr-1>
-            <v-flex xs4 sm2 lg1>
+          <v-layout align-center justify-start row fill-height pl-3 pr-2>
+            <v-flex sm2 lg1>
               <h5>{{ $t('block.number') }}</h5>
             </v-flex>
-            <v-flex xs6 sm7 md6 lg5 mr-1>
+            <v-flex sm7 md6 lg5>
               <h5>{{ $tc('tx.hash', 1) }}</h5>
             </v-flex>
             <v-flex sm3 md2>
-              <h5 class="pl-2">{{ $t('common.amount') }}</h5>
+              <h5 class="pl-3">{{ $t('common.amount') }}</h5>
             </v-flex>
             <v-flex hidden-sm-and-down md2>
-              <h5>{{ $t('common.age') }}</h5>
+              <h5 class="pl-2">{{ $t('common.age') }}</h5>
             </v-flex>
             <v-flex hidden-md-and-down lg2>
               <h5>{{ $tc('tx.fee', 1) }}</h5>
             </v-flex>
-            <v-flex hidden-xs-only sm1>
-              <h5>{{ $t('tx.status') }}</h5>
-            </v-flex>
+            <div v-if="!isPending">
+              <h5 class="tx-status text-xs-center">{{ $t('tx.status') }}</h5>
+            </div>
           </v-layout>
         </v-card>
       </v-flex>
@@ -500,6 +500,6 @@ export default class TableTxs extends TableTxsMixin {
   padding-top: 1px;
 }
 .tx-status {
-  width: 45px;
+  min-width: 60px;
 }
 </style>
