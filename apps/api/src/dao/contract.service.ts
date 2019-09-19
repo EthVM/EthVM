@@ -6,7 +6,7 @@ import {ContractSummary, TransactionSummary} from '@app/graphql/schema'
 import BigNumber from 'bignumber.js'
 import {MetadataService} from '@app/dao/metadata.service'
 import {ContractEntity} from '@app/orm/entities/contract.entity'
-import {AddressContractsCreatedCountEntity} from '@app/orm/entities/address-contracts-created-count.entity';
+import {AddressContractsCreatedCountEntity} from '@app/orm/entities/address-contracts-created-count.entity'
 
 @Injectable()
 export class ContractService {
@@ -19,11 +19,19 @@ export class ContractService {
               private readonly metadataService: MetadataService) {
   }
 
+  /**
+   * Find a contract entity by address.
+   * @param {string} address - The address hash.
+   * @param {BigNumber} [blockNumber] - Contract entities created at block numbers above this will be ignored.
+   * @returns {Promise<ContractEntity | undefined>}
+   */
   async findContractByAddress(address: string, blockNumber?: BigNumber): Promise<ContractEntity | undefined> {
 
+    // Retrieve latest block number if it has not been passed as a param and return undefined if there is none.
     blockNumber = blockNumber || await this.metadataService.latestBlockNumber()
-    if (!blockNumber) { return undefined } // No data in DB
+    if (!blockNumber) { return undefined }
 
+    // Retrieve the contract with its associated metadata
     const item = await this.contractRepository.createQueryBuilder('c')
       .leftJoinAndSelect('c.ethListContractMetadata', 'elcm')
       .leftJoinAndSelect('c.contractMetadata', 'cm')
@@ -35,7 +43,7 @@ export class ContractService {
       return undefined
     }
 
-    // Nullify destroyed at fields if destroyed after blockNumber
+    // Nullify "destroyed at" fields if destroyed after blockNumber.
     if (item.destroyedAtBlockNumber && item.destroyedAtBlockNumber.isGreaterThan(blockNumber)) {
       item.destroyedAtBlockNumber = undefined
       item.destroyedAtBlockHash = undefined
@@ -47,6 +55,12 @@ export class ContractService {
     return item
   }
 
+  /**
+   * Find many contract entities by an array of addresses.
+   * @param {EntityManager} entityManager - The txn within which to perform the query.
+   * @param {string[]} addresses - The array of address hashes.
+   * @returns {Promise<ContractEntity[]>}
+   */
   async findAllByAddress(entityManager: EntityManager, addresses: string[]): Promise<ContractEntity[]> {
 
     if (!addresses.length) return []
@@ -59,6 +73,15 @@ export class ContractService {
     )
   }
 
+  /**
+   * Find and summarise a page of contracts created by a given address.
+   * @param {string} creator - The creator address hash.
+   * @param {BigNumber} blockNumber - Contracts created after this block number will be ignored.
+   * @param {number} [offset=0] - The number of items to skip.
+   * @param {number} [limit=10] - The page size.
+   * @returns {Promise<[ContractSummary[], boolean, BigNumber]>} - An array of contract entities summarised with tx information, a boolean to indicate whether
+   * there are more items after these and the total number of contracts created by this address.
+   */
   async findContractsCreatedBy(
     creator: string,
     blockNumber: BigNumber,
@@ -70,7 +93,7 @@ export class ContractService {
       'READ COMMITTED',
       async (txn): Promise<[ContractSummary[], boolean, BigNumber]> => {
 
-        // Get count
+        // Get count.
         const contractsCreatedCount = await txn.findOne(AddressContractsCreatedCountEntity, {
           where: { address: creator, blockNumber: LessThanOrEqual(blockNumber) },
           order: { blockNumber: 'DESC' },
@@ -82,7 +105,7 @@ export class ContractService {
           return [[], false, new BigNumber(0)]
         }
 
-        // Get items
+        // Get items.
 
         const where = { creator, createdAtBlockNumber: LessThanOrEqual(blockNumber) }
 
@@ -100,19 +123,20 @@ export class ContractService {
           contracts.pop()
         }
 
-        // Get tx summaries
+        // Get tx summaries.
         const txSummaries = await this.txService
           .findSummariesByHash(
             contracts.map(c => c.createdAtTransactionHash),
             txn,
           )
 
-        // Map summaries to contracts
+        // Map summaries to contracts.
         const summariesByHash = new Map<string, TransactionSummary>()
         txSummaries.forEach(tx => {
           summariesByHash.set(tx.hash, tx)
         })
 
+        // Summarise contracts together with tx info.
         const contractSummaries = contracts.map(c => {
           const txSummary = summariesByHash.get(c.createdAtTransactionHash)
           return {
