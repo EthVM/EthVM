@@ -167,6 +167,9 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
       initialise(txCtx, latestBlockNumber)
 
+      // commit cache changes to disk
+      diskDb.commit()
+
       logger.info { "initialised" }
     }
 
