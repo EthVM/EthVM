@@ -4,7 +4,8 @@ create index if not exists idx_sync_status_history ON sync_status_history (compo
 
 /* Account service */
 
-create unique index if not exists idx_ether_balance_for_address on balance (block_number desc, address) where contract_address is null;
+create unique index if not exists idx_ether_balance_for_address_v2 on balance (address, block_number desc) where (token_type = 'ETHER');
+drop index if exists idx_ether_balance_for_address;
 create unique index if not exists idx_transaction_counts_for_address on address_transaction_count (block_number desc, address);
 create unique index if not exists idx_is_miner on block_header (number desc, author);
 create index if not exists idx_is_contract_creator on contract (creator, created_at_block_number desc);
