@@ -35,21 +35,14 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
         logger.info { "All processors stopped" }
       }))
 
-    // initialise
-
-    logger.info { "Initialising processors" }
-
-    processors.forEach { processor ->
-      logger.info { "Initialising ${processor.javaClass}" }
-      processor.initialise()
-      logger.info { "Initialisation complete for ${processor.javaClass}" }
-    }
-
     // run
 
     logger.info { "Starting processors" }
 
     processors
-      .forEach { executor.submit(it) }
+      .forEach { processor ->
+        logger.info { "Starting ${processor.javaClass}" }
+        executor.submit(processor)
+      }
   }
 }

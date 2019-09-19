@@ -101,6 +101,9 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
   // kafka consumer for ingesting data
   private lateinit var consumer: KafkaConsumer<CanonicalKeyRecord, V>
 
+  // when running with process command we will need to initialise ourselves, otherwise other commands call initialise method directly without the run method
+  private var initialised = false
+
   @Volatile
   private var stop = false
 
@@ -141,6 +144,8 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   override fun initialise() {
 
+    if (initialised) return // do nothing
+
     dbContext.transaction { txConfig ->
 
       val txCtx = DSL.using(txConfig)
@@ -162,8 +167,14 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
       initialise(txCtx, latestBlockNumber)
 
+      // commit cache changes to disk
+      diskDb.commit()
+
       logger.info { "initialised" }
     }
+
+    // record initialisation
+    initialised = true
   }
 
   override fun reset() {
@@ -275,6 +286,10 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
   override fun run() {
 
     try {
+
+      // initialise
+
+      initialise()
 
       // determine the chain time to reset the kafka consumer to
 
