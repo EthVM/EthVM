@@ -18,28 +18,28 @@ export interface FormattedNumber {
   tooltipText?: string
 }
 
+/* Constants: */
 const SmallUsdBreakpoint = 0.04
 const SmallNumberBreakpoint = 0.0000001
 const SmallGweiBreakpoint = 0.00001
 
-const TenThousand = 10000
-const OneMillion = 1000000
-const HundredMillion = 100000000
-const OneBillion = 1000000000
-const HundredBillion = 1000000000
-const OneTrillion = 1000000000000
-const OneQuadrillion = 10000000000000000
+const TenThousand = 1e4
+const HundredThousand = 1e5
+const OneMillion = 1e6
+const OneBillion = 1e9
+const OneTrillion = 1e12
+const OneQuadrillion = 1e15
 
 export class NumberFormatHelper {
   /**
-   * General: Non-formatted integers
-   * E.g. Block Number, Nonce
-   * Numbers that do nnot need  formating methods
+   * General: Formatted integers
+   * E.g. Block Number
+   * Numbers that do not need  formating methods
    */
 
   /**
    * GROUP I: Formatted integers
-   * Converts an integer value to a FormattedNumber object, returns value in billions if > 1 billion
+   * Converts an integer value to a FormattedNumber object, returns value in { billions, trillions, "> 1Q"} if > 1 billion
    * @param value: BigNumber
    * @return FormattedNumber
    */
@@ -66,7 +66,7 @@ export class NumberFormatHelper {
   /**
    * GROUP II: Floating point values
    * Converts a floating point value to a FormattedNumber object
-   * Use cases: Token Balances / Quantities
+   * Use cases: Token Balances / Quantities / Non Detail page for floating numbers
    * @param value BigNumber
    * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
    */
@@ -98,11 +98,19 @@ export class NumberFormatHelper {
     }
 
     /**
-     * Case IV: value >= 1
+     * Case IV: value >= 10,000
      * Return: a number, rounded to 2 decimal points and tooltip with full value if > 2 decimal places
      */
-    if (value.isGreaterThanOrEqualTo(1)) {
+    if (value.isGreaterThanOrEqualTo(TenThousand)) {
       return this.getRoundNumber(value, 2, dps)
+    }
+
+    /**
+     * Case IV: value >= 1
+     * Return: a number, rounded to 4 decimal points and tooltip with full value if > 4 decimal places
+     */
+    if (value.isGreaterThanOrEqualTo(1)) {
+      return this.getRoundNumber(value, 4, dps)
     }
 
     /**
@@ -121,13 +129,12 @@ export class NumberFormatHelper {
   }
 
   /**
-   * GROUP III:  Variable unit ETH values
+   * GROUP III:  Variable unit ETH values, used in details pages
    * Converts a value from wei to a formatted string in an appropriate unit
    * @param value BigNumber - must be original wei value (not already converted to Eth)
-   * @param isException boolean - if true follow special rounding rulles (use in Transaction's detail page)
    * @returns  Object FormattedNumber with value as formatted string, unit and tooltipText
    */
-  public static formatVariableUnitEthValue(value: BigNumber, isException: boolean = false): FormattedNumber {
+  public static formatVariableUnitEthValue(value: BigNumber): FormattedNumber {
     /**
      * Case I: value === 0
      * Return: "0 ETH"
@@ -137,36 +144,71 @@ export class NumberFormatHelper {
     }
 
     /**
-     * Case II: value >= 100,000,000,000 wei or value >= 0.0000001 Eth
-     * Return: Group II formated number or follow rulles for exception
+     * Case II: value < 10,000 wei
+     * Return: small values in WEI (no conversion) and tooltip with ETH value
      */
-    if (value.isGreaterThanOrEqualTo(HundredBillion)) {
-      const ethBN = new EthValue(value).toEthBN()
-      const dps = ethBN.decimalPlaces()
-      return this.getEthValueForDetailsPage(ethBN, dps)
-    }
-
-    /**
-     * Case III: value >= 10,000 wei or value >= 0.00001 Gwei
-     * Return: medium values (>= 0.00001 GWEI) in GWEI with up to 7 decimal points and tooltip with ETH value
-     */
-    if (value.isGreaterThanOrEqualTo(TenThousand)) {
-      const gweiBN = new EthValue(value).toGweiBN().decimalPlaces(7)
+    else if (value.isLessThan(TenThousand)) {
       return {
-        value: gweiBN.toFormat(),
-        unit: FormattedNumberUnit.GWEI,
+        value: value.toFormat(),
+        unit: FormattedNumberUnit.WEI,
         tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
       }
     }
 
     /**
-     * Case IV: value < 10,000 wei
-     * Return: small values in WEI (no conversion) and tooltip with ETH value
+     * Case III: value < 1 Trillion Wei OR value < 100 Gwei
+     * Return: Gwei value, using Group II
      */
-    return {
-      value: value.toFormat(),
-      unit: FormattedNumberUnit.WEI,
-      tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
+    else if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+      const gweiBN = new EthValue(value).toGweiBN()
+      return {
+        value: this.formatFloatingPointValue(gweiBN).value,
+        unit: FormattedNumberUnit.GWEI,
+        tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
+      }
+    }
+    else {
+      const ethBN = new EthValue(value).toEthBN()
+      const unit = FormattedNumberUnit.ETH
+      const dps = ethBN.decimalPlaces()
+
+      /**
+       * Case IV: 0.0000001 Eth <= X < 1 Eth
+       * Return: rounded number to 12 dps
+       */
+      if (ethBN.isLessThan(1)) {
+        return { ...this.getRoundNumber(ethBN, 12, dps), unit}
+      }
+
+      /**
+       * Case V: 1 Eth <= X < 100,000 Eth
+       * Return: rounded number to 6 dps
+       */
+      if (ethBN.isLessThan(HundredThousand)){
+        return { ...this.getRoundNumber(ethBN, 6, dps), unit}
+      }
+
+      /**
+       * Case VI: 100,000 <= X < 1 mill
+       * Return: rounded number to 4 dps
+       */
+      if (ethBN.isLessThan(OneMillion)){
+        return {...this.getRoundNumber(ethBN, 4, dps), unit}
+      }
+
+      /**
+       * Case VII: 100,000 <= X < 1 mill
+       * Return: rounded number to 4 dps
+       */
+      if (ethBN.isLessThan(OneBillion)) {
+        return {...this.getRoundNumber(value, 0, dps), unit}
+      }
+
+      /**
+       * Case VIII: V >= 1 Billion
+       * Return: Group I formatted value
+       */
+      return {...this.formatIntegerValue(ethBN), unit}
     }
   }
 
@@ -174,67 +216,46 @@ export class NumberFormatHelper {
    * GROUP IV: Non-variable ETH values
    * Convert a value in WEI to ETH
    * @param value: BigNumber (in wei)
-   * @param allowRounding: whether or not to allow rounding
    * @return FormattedNumber with value converted to ETH and tooltip if maxDecimalPlaces was applied
    */
-  public static formatNonVariableEthValue(value: BigNumber, isException: boolean = false): FormattedNumber {
-    const ethBN = new EthValue(value).toEthBN()
-    const unit = FormattedNumberUnit.ETH
-    const dps = ethBN.decimalPlaces()
+  public static formatNonVariableEthValue(value: BigNumber): FormattedNumber {
 
     /**
      * Case I: value === 0
      * Return: "0 ETH"
      */
-    if (ethBN.isZero()) {
-      return { value: '0', unit }
+    if (value.isZero()) {
+      return { value: '0', unit: FormattedNumberUnit.ETH }
     }
 
     /**
-     * Case II: details page
-     * Return: return special case rounded number
+     * Case II: value < 10,000 wei
+     * Return: small values in WEI (no conversion) and tooltip with ETH value
      */
-    if (isException) {
-      return this.getEthValueForDetailsPage(ethBN, dps)
+    else if (value.isLessThan(TenThousand)) {
+      return {
+        value: value.toFormat(),
+        unit: FormattedNumberUnit.WEI,
+        tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
+      }
     }
 
     /**
-     * Case III: x >= 1 Trillion
-     * Return: formated integer number with tooltip"
+     * Case III: value < 1 Trillion Wei OR value < 100 Gwei
+     * Return: Gwei value, using Group II
      */
-    if (ethBN.isGreaterThanOrEqualTo(OneBillion)) {
-      return { ...this.formatIntegerValue(ethBN), unit: unit }
+    else if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+      const gweiBN = new EthValue(value).toGweiBN()
+      return {
+        value: this.formatFloatingPointValue(gweiBN).value,
+        unit: FormattedNumberUnit.GWEI,
+        tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
+      }
     }
-
-    /**
-     * Case IV: x >= 1 Million
-     * Return: round number and tooltip if has decimal points
-     */
-    if (ethBN.isGreaterThanOrEqualTo(OneMillion)) {
-      return { ...this.getRoundNumber(ethBN, 0, dps), unit: unit }
+    else {
+      const ethBN = new EthValue(value).toEthBN()
+      return {...this.formatFloatingPointValue(ethBN), unit: FormattedNumberUnit.ETH }
     }
-
-    /**
-     * Case V: x >= 1
-     * Return: round number to 2 decimal points and tooltip if > 2 decimal points
-     */
-    if (ethBN.isGreaterThanOrEqualTo(1)) {
-      return { ...this.getRoundNumber(ethBN, 2, dps), unit: unit }
-    }
-
-    /**
-     * Case VI: 0 <= x <= 0.0000001
-     * Return: round number upto 7 decimal points and tooltip if > 7 decimal points
-     */
-    if (ethBN.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-      return { ...this.getRoundNumber(ethBN, 7, dps), unit: unit }
-    }
-
-    /**
-     * Case V: value < 0.0000001
-     * Return: string "< 0.0000001" and tooltip with full value
-     */
-    return { value: '<0.0000001', unit, tooltipText: ethBN.toFormat() }
   }
 
   /**
@@ -246,13 +267,14 @@ export class NumberFormatHelper {
   public static formatNonVariableGWeiValue(value: BigNumber): FormattedNumber {
     const gweiBN = new EthValue(value).toGweiBN()
     const dps = gweiBN.decimalPlaces()
+    const unit = FormattedNumberUnit.GWEI
 
     /**
      * Case I: value === 0
      * Return: "0 ETH"
      */
     if (gweiBN.isZero()) {
-      return { value: '0', unit: FormattedNumberUnit.GWEI }
+      return { value: '0', unit }
     }
 
     /**
@@ -262,22 +284,18 @@ export class NumberFormatHelper {
     if (gweiBN.isLessThan(SmallGweiBreakpoint)) {
       return {
         value: value.toFormat(),
-        unit: FormattedNumberUnit.WEI,
-        tooltipText: `${gweiBN} ${FormattedNumberUnit.GWEI}`
+        unit,
+        tooltipText: `${gweiBN.toFormat()} ${unit}`
       }
     }
 
     /**
      * Case III: x < 1 mill
-     * Return: number in wei and show tooltip with Gwei value
+     * Return: number in Gwei using Group II
      */
 
     if (gweiBN.isLessThan(OneMillion)) {
-      return {
-        value: gweiBN.toFormat(Math.min(7, dps)),
-        unit: FormattedNumberUnit.GWEI,
-        tooltipText: dps > 7 ? `${gweiBN.toFormat()} ${FormattedNumberUnit.GWEI}` : undefined
-      }
+      return { ...this.formatFloatingPointValue(gweiBN), unit }
     }
 
     /**
@@ -285,8 +303,8 @@ export class NumberFormatHelper {
      * Return: number in wei and show tooltip with Gwei value
      */
     return {
-      ...this.formatNonVariableEthValue(value, true),
-      tooltipText: `${gweiBN.toFormat()} ${FormattedNumberUnit.GWEI}`
+      ...this.formatNonVariableEthValue(value), unit,
+      tooltipText: `${gweiBN.toFixed()} ${unit}`
     }
   }
 
@@ -312,14 +330,14 @@ export class NumberFormatHelper {
     }
 
     const isNegative = value.isNegative() // Record whether value is negative
-    const positiveValue = isNegative ? value.negated() : value // Convert negative values to positive for comparisons
+    const absoluteValue = value.absoluteValue() // Get Absolute value
     const dps = value.decimalPlaces()
 
     /**
      * Case II: |value| >= 1000
      * Return: >1000 or <-1000 and tooltip
      */
-    if (positiveValue.isGreaterThanOrEqualTo(1000)) {
+    if (absoluteValue.isGreaterThanOrEqualTo(1000)) {
       const result = isNegative ? '< -1000' : '> 1000'
       return { value: result, unit, tooltipText: `${value.toFormat()}%` }
     }
@@ -328,7 +346,7 @@ export class NumberFormatHelper {
      * Case III: |value| >= 100
      * Return: whole number and tooltips if has decimal points
      */
-    if (positiveValue.isGreaterThanOrEqualTo(100)) {
+    if (absoluteValue.isGreaterThanOrEqualTo(100)) {
       return { value: value.toFormat(0), unit, tooltipText: dps ? `${value.toFormat()}%` : undefined }
     }
 
@@ -336,7 +354,7 @@ export class NumberFormatHelper {
      * Case IV: |value| >= 0.01
      * Return: rounded to 2 decimal points number and tooltip if > 2 decimal points
      */
-    if (positiveValue.isGreaterThanOrEqualTo(0.01)) {
+    if (absoluteValue.isGreaterThanOrEqualTo(0.01)) {
       return { ...this.getRoundNumber(value, 2, dps), unit, tooltipText: dps > 2 ? `${value.toFormat()}%` : undefined }
     }
 
@@ -352,10 +370,9 @@ export class NumberFormatHelper {
    * GROUP VII: USD Values
    * Converts a USD value to a FormattedNumber
    * @param value: BigNumber
-   * @param allowRounding: whether or not to allow value to be rounded
    * @returns Object FormattedNumber with value as formatted string, unit and tooltipText
    */
-  public static formatUsdValue(value: BigNumber, allowRounding: boolean = true): FormattedNumber {
+  public static formatUsdValue(value: BigNumber): FormattedNumber {
     const unit = FormattedNumberUnit.USD
     /**
      * Case I: value === 0
@@ -365,18 +382,13 @@ export class NumberFormatHelper {
       return { value: '$0.00', unit }
     }
 
-    if (!allowRounding) {
-      // Return value with all decimal places if rounding not allowed
-      return { value: `${value.toFormat()}`, unit }
-    }
-
     /**
      * Case II: value >= 1 Quadrillion
      * Return:  value converted to Quadrillions"
      */
     if (value.isGreaterThanOrEqualTo(OneQuadrillion)) {
       const result = this.convertToQuadrillion(value)
-      return { ...result, value: `$${result.value}` }
+      return { value: `$${result.value}`, unit, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**
@@ -385,7 +397,7 @@ export class NumberFormatHelper {
      */
     if (value.isGreaterThanOrEqualTo(OneTrillion)) {
       const result = this.convertToTrillions(value)
-      return { ...result, value: `$${result.value}`, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
+      return { value: `$${result.value}`, unit, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**
@@ -394,7 +406,7 @@ export class NumberFormatHelper {
      */
     if (value.isGreaterThanOrEqualTo(OneBillion)) {
       const result = this.convertToBillions(value)
-      return { ...result, value: `$${result.value}`, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
+      return { value: `$${result.value}`, unit, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**
@@ -403,7 +415,7 @@ export class NumberFormatHelper {
      */
     if (value.isGreaterThanOrEqualTo(OneMillion)) {
       const result = this.getRoundNumber(value, 0, value.decimalPlaces())
-      return { ...result, value: `$${result.value}`, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
+      return {value: `$${result.value}`, unit, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**
@@ -452,51 +464,10 @@ export class NumberFormatHelper {
 
   private static convertToQuadrillion(value: BigNumber): FormattedNumber {
     const result = value.dividedBy(OneQuadrillion)
-    return { value: '> 1000Q', unit: FormattedNumberUnit.Q, tooltipText: value.toFormat() }
+    return { value: '> 1Q', unit: FormattedNumberUnit.Q, tooltipText: value.toFormat() }
   }
 
   public static getRoundNumber(value: BigNumber, round: number, dp: number): FormattedNumber {
     return { value: value.toFormat(Math.min(round, dp)), tooltipText: dp > round ? value.toFormat() : undefined }
-  }
-
-  private static getEthValueForDetailsPage(ethBN: BigNumber, dps: number): FormattedNumber {
-    /**
-     * Case 1: 0.0000001 <= value < 1
-     * Return: value rounded up to 12 decimal points and show tooltip if > 12 decimal points
-     */
-
-    if (ethBN.isLessThan(1)) {
-      return { ...this.getRoundNumber(ethBN, 12, dps), unit: FormattedNumberUnit.ETH }
-    }
-
-    /**
-     * Case 2: 1<= value < 100,000
-     * Return: value rounded up to 6 decimal points and show tooltip if > 6 decimal points
-     */
-    if (ethBN.isLessThan(100000)) {
-      return { ...this.getRoundNumber(ethBN, 6, dps), unit: FormattedNumberUnit.ETH }
-    }
-
-    /**
-     * Case 3: 100,000 <= value < 100 mill
-     * Return: value rounded up to 4 decimal points and show tooltip if > 4 decimal points
-     */
-    if (ethBN.isLessThan(HundredMillion)) {
-      return { ...this.getRoundNumber(ethBN, 4, dps), unit: FormattedNumberUnit.ETH }
-    }
-
-    /**
-     * Case 4: 100 mil <= value < 1 Trillion
-     * Return: value rounded integer and show tooltip if has decimal points
-     */
-    if (ethBN.isLessThan(OneTrillion)) {
-      return { ...this.getRoundNumber(ethBN, 0, dps), unit: FormattedNumberUnit.ETH }
-    }
-
-    /**
-     * Case 5: 1value >= 1 Trillion
-     * Return: formated large integer value
-     */
-    return { ...this.formatIntegerValue(ethBN), unit: FormattedNumberUnit.ETH }
   }
 }
