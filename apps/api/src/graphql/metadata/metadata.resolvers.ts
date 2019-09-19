@@ -13,14 +13,21 @@ export class MetadataResolvers {
   ) {
   }
 
+  /**
+   * Get metadata including whether or not syncing is in progress
+   * @returns {Promise<MetadataDto>}
+   */
   @Query()
-  async metadata() {
+  async metadata(): Promise<MetadataDto> {
 
     const isSyncing = await this.metadataService.isSyncing()
 
     return new MetadataDto({ isSyncing })
   }
 
+  /**
+   * Subscribe to notifications of sync status changes.
+   */
   @Subscription(
     'isSyncing', {
       // TODO determine why we need to specify the resolve function for this to work
@@ -31,6 +38,9 @@ export class MetadataResolvers {
     return this.pubSub.asyncIterator('isSyncing')
   }
 
+  /**
+   * Subscribe to "keep alive" notifications to ensure websocket is kept open.
+   */
   @Subscription(
     'keepAlive', {
       // TODO determine why we need to specify the resolve function for this to work
