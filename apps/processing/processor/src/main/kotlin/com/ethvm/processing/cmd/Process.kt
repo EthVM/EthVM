@@ -44,6 +44,5 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
         logger.info { "Starting ${processor.javaClass}" }
         executor.submit(processor)
       }
-
   }
 }

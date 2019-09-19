@@ -144,7 +144,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   override fun initialise() {
 
-    if(initialised) return  // do nothing
+    if (initialised) return // do nothing
 
     dbContext.transaction { txConfig ->
 
