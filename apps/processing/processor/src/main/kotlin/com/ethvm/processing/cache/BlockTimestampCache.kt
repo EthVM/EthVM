@@ -34,6 +34,7 @@ class BlockTimestampCache(
 
   fun initialise(txCtx: DSLContext) {
 
+    logger.info { "Initialising" }
     // load the last n block timestamps from the database
 
     val cursor = txCtx
@@ -43,6 +44,8 @@ class BlockTimestampCache(
       .limit(historySize)
       .fetchLazy()
 
+    var count = 0
+
     while (cursor.hasNext()) {
 
       val next = cursor.fetchNext()
@@ -50,10 +53,13 @@ class BlockTimestampCache(
 
       memoryMap[blockNumber] = next.value2().time
 
-      logger.info { "[$processorId] Reloaded block number = $blockNumber" }
+      logger.debug { "[$processorId] Reloaded block number = $blockNumber" }
+      count += 1
     }
 
     cursor.close()
+
+    logger.info { "Initialisation complete. $count entries processed" }
   }
 
   operator fun set(number: BigInteger, timestamp: Long) {

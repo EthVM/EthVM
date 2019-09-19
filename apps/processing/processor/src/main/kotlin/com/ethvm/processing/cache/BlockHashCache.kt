@@ -19,13 +19,14 @@ import java.util.concurrent.ScheduledExecutorService
 class BlockHashCache(
   memoryDb: DB,
   scheduledExecutor: ScheduledExecutorService,
-  private val processorId: String
+  private val processorId: String,
+  private val dbFetchSize: Int = 512
 ) {
 
   val logger = KotlinLogging.logger {}
 
   // the n last blocks we reload from the database on initialisation
-  private val historySize = 1_000_000
+  private val historySize = 10240
 
   private val memoryMap = memoryDb
     .hashMap("block_hashes_$processorId")
@@ -54,7 +55,7 @@ class BlockHashCache(
         .where(PROCESSOR_HASH_LOG.PROCESSOR_ID.eq(processorId))
         .orderBy(PROCESSOR_HASH_LOG.BLOCK_NUMBER.desc())
         .limit(historySize)
-        .fetchSize(1000)
+        .fetchSize(dbFetchSize)
         .fetchLazy()
 
     var count = 0
@@ -72,7 +73,7 @@ class BlockHashCache(
 
     cursor.close()
 
-    logger.info { "[$processorId] Initialisation complete. $count records loaded" }
+    logger.info { "[$processorId] Initialisation complete. $count entries processed" }
   }
 
   fun reset(txCtx: DSLContext) {
