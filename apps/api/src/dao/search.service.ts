@@ -11,7 +11,7 @@ import { AccountService } from '@app/dao/account.service'
 import { AccountDto } from '@app/graphql/accounts/account.dto'
 import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
 
 @Injectable()
 export class SearchService {
@@ -25,16 +25,29 @@ export class SearchService {
   ) {
   }
 
+  /**
+   * Search for a block, tx, uncle or account matching a query string.
+   * @param {string} [query=''] - The query string.
+   * @param {BigNumber} blockNumber - Entities created after this block number will be ignored.
+   * @returns {Promise<SearchDto>} - An object with the type of entity returned (e.g. Tx, None) and the entity itself.
+   */
   async search(query: string = '', blockNumber: BigNumber): Promise<SearchDto> {
-    const s: SearchDto = { type: SearchType.None }
+
+    // Create the object to return and default the search type to "None".
+    const result: SearchDto = { type: SearchType.None }
+
+    // Add "0x" to the start of the query string if it is not set.
     if (query.substring(0, 2) !== '0x') {
       query = `0x${query}`
     }
 
-    // Check Accounts
+    // If the query string is a valid address hash, search for an account with that address.
+
     if (this.ethService.isValidAddress(query)) {
       const account = await this.accountService.findEtherBalanceByAddress(query.toLowerCase(), blockNumber)
       if (account != null) {
+
+        // Build "Account" object to return.
 
         const { address } = account
         const isMiner = await this.accountService.findIsMiner(address, blockNumber)
@@ -43,40 +56,45 @@ export class SearchService {
         const hasInternalTransfers = await this.accountService.findHasInternalTransfers(address, blockNumber)
         const isContract = await this.accountService.findIsContract(address, blockNumber)
 
-        s.address = new AccountDto({ ...account, isMiner, isContractCreator, ...txCounts, hasInternalTransfers, isContract })
-        s.type = SearchType.Address
-        return s
+        result.address = new AccountDto({ ...account, isMiner, isContractCreator, ...txCounts, hasInternalTransfers, isContract })
+        result.type = SearchType.Address
+        return result
       }
     }
 
-    // Check Block, Uncle or Tx
+    // If the query string is a valid hash, search for a block, uncle or tx with that hash.
+
     if (this.ethService.isValidHash(query)) {
 
       query = query.toLowerCase() // Ensure query string is sanitized to lowercase before querying DB
 
+      // Search for blocks.
       const block = await this.blockService.findByHash(query, blockNumber)
       if (block != null) {
         const [txFees] = await this.blockMetricsService.findBlockMetricsTraces([block.hash], block.timestamp, block.timestamp)
-        s.block = new BlockDto(block, txFees)
-        s.type = SearchType.Block
-        return s
+        result.block = new BlockDto(block, txFees)
+        result.type = SearchType.Block
+        return result
       }
 
+    // Search for uncles.
       const uncle = await this.uncleService.findUncleByHash(query, blockNumber)
       if (uncle != null) {
-        s.uncle = new UncleDto(uncle)
-        s.type = SearchType.Uncle
-        return s
+        result.uncle = new UncleDto(uncle)
+        result.type = SearchType.Uncle
+        return result
       }
 
+      // Search for txs.
       const tx = await this.txService.findOneByHash(query, blockNumber)
       if (tx != null) {
-        s.tx = new TxDto(tx)
-        s.type = SearchType.Tx
-        return s
+        result.tx = new TxDto(tx)
+        result.type = SearchType.Tx
+        return result
       }
     }
 
-    return s
+    // Return the empty SearchDto object with type "None" if no matches have been found.
+    return result
   }
 }

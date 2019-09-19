@@ -217,7 +217,7 @@ export class BlockService {
     headersWithRewards
       .forEach(h => {
 
-        const millis = h.timestamp.getTime();
+        const millis = h.timestamp.getTime()
 
         maxTimestamp = maxTimestamp || h.timestamp
         minTimestamp = minTimestamp || h.timestamp

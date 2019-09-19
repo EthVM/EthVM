@@ -3,12 +3,12 @@ import {InjectEntityManager} from '@nestjs/typeorm'
 import {Between, EntityManager, Equal, FindOneOptions, In, LessThanOrEqual} from 'typeorm'
 import {AggregateBlockMetric, BlockMetricField, TimeBucket} from '@app/graphql/schema'
 import {unitOfTime} from 'moment'
-import BigNumber from 'bignumber.js';
-import {BlockMetricsTraceEntity} from '@app/orm/entities/block-metrics-trace.entity';
-import moment = require('moment');
-import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
-import {BlockMetricsHeaderEntity} from '@app/orm/entities/block-metrics-header.entity';
-import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity';
+import BigNumber from 'bignumber.js'
+import {BlockMetricsTraceEntity} from '@app/orm/entities/block-metrics-trace.entity'
+import moment = require('moment')
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
+import {BlockMetricsHeaderEntity} from '@app/orm/entities/block-metrics-header.entity'
+import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 
 /**
  * @const

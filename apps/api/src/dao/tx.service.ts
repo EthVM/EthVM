@@ -6,12 +6,12 @@ import {ReceiptService} from './receipt.service'
 import {TraceService, TransactionStatus} from './trace.service'
 import {FilterEnum, TransactionSummary} from '@app/graphql/schema'
 import {ContractService} from '@app/dao/contract.service'
-import {TransactionEntity} from '@app/orm/entities/transaction.entity';
-import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
-import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
-import {CanonicalCountEntity} from '@app/orm/entities/canonical-count.entity';
-import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity';
-import {ContractEntity} from '@app/orm/entities/contract.entity';
+import {TransactionEntity} from '@app/orm/entities/transaction.entity'
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
+import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity'
+import {CanonicalCountEntity} from '@app/orm/entities/canonical-count.entity'
+import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity'
+import {ContractEntity} from '@app/orm/entities/contract.entity'
 
 @Injectable()
 export class TxService {

@@ -2,9 +2,9 @@ import {Injectable} from '@nestjs/common'
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm'
 import BigNumber from 'bignumber.js'
 import {EntityManager, Equal, FindOneOptions, LessThanOrEqual, Repository} from 'typeorm'
-import {UncleEntity} from '@app/orm/entities/uncle.entity';
-import {CanonicalCountEntity} from '@app/orm/entities/canonical-count.entity';
-import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity';
+import {UncleEntity} from '@app/orm/entities/uncle.entity'
+import {CanonicalCountEntity} from '@app/orm/entities/canonical-count.entity'
+import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity'
 
 @Injectable()
 export class UncleService {
