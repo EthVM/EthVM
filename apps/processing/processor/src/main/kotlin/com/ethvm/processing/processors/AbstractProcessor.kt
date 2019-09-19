@@ -187,9 +187,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
       logger.info { "initialised" }
     }
-
-
-
   }
 
   override fun reset() {
@@ -524,7 +521,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
     override fun run() {
 
-      while(!initialised) {
+      while (!initialised) {
 
         logger.debug { "Committing disk db" }
 
@@ -536,9 +533,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
         logger.debug { "Waiting $intervalMs ms" }
         Thread.sleep(intervalMs)
-
       }
-
     }
   }
 }

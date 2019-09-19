@@ -53,7 +53,6 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
 
     // block until caches have finished initialising
     futures.forEach { it.get() }
-
   }
 
   override fun reset(txCtx: DSLContext) {

@@ -42,11 +42,11 @@ class Process : AbstractCliktCommand(help = "Process blocks") {
     val initFutures = processors
       .map { processor ->
         logger.info { "Initialising ${processor.javaClass}" }
-        executor.submit{ processor.initialise() }
+        executor.submit { processor.initialise() }
       }
       .toList()
 
-    initFutures.forEach{ it.get() }
+    initFutures.forEach { it.get() }
 
     // run
 
