@@ -1,0 +1,9 @@
+apps/processing     @brianmcgee @aldoborrero
+apps/explorer       @olgakup @carolinaf86
+apps/api            @carolinaf86
+apps/migrator       @brianmcgee @aldoborrero
+apps/ingestor       @kvhnuke
+terraform/          @aldoborrero
+bin/                @aldoborrero
+packer/             @aldoborrero
+*                   @kvhnuke @olgakup @aldoborrero @brianmcgee @carolinaf86

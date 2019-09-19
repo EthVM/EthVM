@@ -156,7 +156,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       val latestSyncStatus = getLatestSyncRecord(dbContext)
       val latestBlockNumber = latestSyncStatus?.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
 
-      logger.info { "Latest sync block number = $latestBlockNumber" }
+      logger.info { "Last processed block number = $latestBlockNumber" }
 
       // call the implementation initialise method
 
@@ -379,7 +379,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
                     process(txCtx, record)
                     hashCache[blockNumber] = blockHashFor(record.value())
-
                   }
                 }
 
@@ -401,14 +400,13 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
               logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
             }
-
         }
 
         // commit to kafka
         consumer.commitSync()
 
         val last = records.last()
-        logger.info { "Kafka batch complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${last.timestamp()}" }
+        logger.debug { "Kafka batch complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${Date(last.timestamp())}" }
       }
     } catch (e: Exception) {
 
@@ -416,7 +414,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       diskDb.rollback()
 
       logger.error(e) { "Fatal exception, stopping" }
-
     } finally {
 
       close()
@@ -450,7 +447,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     txCtx
       .insertInto(SYNC_STATUS_HISTORY)
       .set(record)
-      .onConflictDoNothing()    // we do nothing as we may be re-processing duplicate blocks as the result of a restart
+      .onConflictDoNothing() // we do nothing as we may be re-processing duplicate blocks as the result of a restart
       .execute()
 
     // update latest
