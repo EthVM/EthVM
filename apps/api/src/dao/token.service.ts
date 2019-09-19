@@ -72,11 +72,11 @@ export class TokenService {
     // Ask for an extra item to determine whether there is another page of items after this.
     const balances = await this.entityManager.query(`
       WITH _balances as (
-        SELECT 
+        SELECT
           *,
           row_number() OVER (PARTITION BY address ORDER BY block_number DESC) AS row_number
           FROM balance
-          WHERE contract_address = $1          
+          WHERE contract_address = $1
           AND balance > 0
           AND block_number <= $2
       )
@@ -142,13 +142,13 @@ export class TokenService {
       // Ask for an extra item to determine whether there is another page of items after this.
       const items = await txn.query(`
       WITH _balances as (
-        SELECT 
+        SELECT
           *,
           row_number() OVER (PARTITION BY address, contract_address ORDER BY block_number DESC) AS row_number
           FROM balance
-          WHERE address = $1          
+          WHERE address = $1
           AND token_type = 'ERC20'
-          AND balance > 0          
+          AND balance > 0
           AND block_number <= $2
       )
       SELECT * FROM _balances
@@ -331,7 +331,7 @@ export class TokenService {
     // SUM all balances after converting to USD using their exchange rates.
     const raw = await this.entityManager.query(`
       WITH _balances as (
-        SELECT 
+        SELECT
           b.balance AS balance,
           ter.current_price AS current_price,
           row_number() OVER (PARTITION BY b.contract_address ORDER BY b.block_number DESC) AS row_number
@@ -389,9 +389,10 @@ export class TokenService {
   /**
    * Find a TokenDetailEntity by its address.
    * @param {string} address - The address hash.
+   * @param {BigNumber} blockNumber - The block number to filter details by address.
    * @returns {Promise<TokenDetailEntity | undefined>}
    */
-  async findDetailByAddress(address: string): Promise<TokenDetailEntity | undefined> {
-    return this.tokenDetailRepository.findOne({where: {address}, cache: true})
+  async findDetailByAddress(address: string, blockNumber: BigNumber): Promise<TokenDetailEntity | undefined> {
+    return this.tokenDetailRepository.findOne({where: { address, createdAtBlockNumber: LessThanOrEqual(blockNumber) }, cache: true})
   }
 }
