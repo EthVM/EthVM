@@ -28,24 +28,31 @@ const getValueTransfers = traces => {
           from: trace.action.from,
           to: trace.action.to,
           value: trace.action.callType === 'call' ? trace.action.value : '0x0',
-          type: 'call'
+          type: trace.type
         })
-      } else if (trace.type === 'create') {
+      } else if (trace.type === 'create' || trace.type === 'create2') {
         transfers.push({
           from: trace.action.from,
           to: trace.result.address,
           value: trace.action.value,
-          type: 'create'
+          type: trace.type
         })
       } else if (trace.type === 'suicide') {
         transfers.push({
           from: trace.action.address,
           to: trace.action.refundAddress,
           value: trace.action.balance,
-          type: 'suicide'
+          type: trace.type
         })
       }
-      if (trace.type !== 'call' && trace.type !== 'create' && trace.type !== 'suicide' && trace.type !== 'staticcall')
+      if (
+        trace.type !== 'call' &&
+        trace.type !== 'create' &&
+        trace.type !== 'suicide' &&
+        trace.type !== 'staticcall' &&
+        trace.type !== 'create2' &&
+        trace.type !== 'delegatecall'
+      )
         throw new Error('unknownTrace: ' + JSON.stringify(trace))
     }
   }
@@ -66,15 +73,22 @@ const setInitialState = (web3, block, prevBlockNumber) => {
           if (trace.type === 'call' && trace.action.value !== '0x0') {
             state[trace.action.from] = utils.toBN('0x0')
             state[trace.action.to] = utils.toBN('0x0')
-          } else if (trace.type === 'create' && trace.action.value !== '0x0') {
+          } else if ((trace.type === 'create' || trace.type === 'create2') && trace.action.value !== '0x0') {
             state[trace.action.from] = utils.toBN('0x0')
             state[trace.result.address] = utils.toBN('0x0')
           } else if (trace.type === 'suicide' && trace.action.balance !== '0x0') {
             state[trace.action.address] = utils.toBN('0x0')
             state[trace.action.refundAddress] = utils.toBN('0x0')
           }
-          if (trace.type !== 'call' && trace.type !== 'create' && trace.type !== 'suicide' && trace.type !== 'staticcall')
-            throw new Error('Unknown trace', trace)
+          if (
+            trace.type !== 'call' &&
+            trace.type !== 'create' &&
+            trace.type !== 'suicide' &&
+            trace.type !== 'staticcall' &&
+            trace.type !== 'create2' &&
+            trace.type !== 'delegatecall'
+          )
+            throw new Error('Unknown trace' + trace.type)
         }
       })
     })

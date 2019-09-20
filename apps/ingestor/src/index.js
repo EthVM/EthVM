@@ -5,6 +5,7 @@ import Status from './status'
 import getWeb3 from './getWeb3'
 import processBlock from './processBlock'
 import SNS from './helpers/sns-publish'
+import WSNotif from './helpers/ws-publish'
 
 const HOST = Configs.WS_HOST
 const MAX_CONCURRENT = Configs.MAX_CONCURRENT
@@ -24,6 +25,7 @@ const getCustomWeb3 = getWeb3
 const web3 = getCustomWeb3(HOST)
 const db = new S3DB(Configs.S3_BUCKET)
 const sns = new SNS(Configs.AWS_SNS_TOPIC)
+const wsNotif = new WSNotif()
 const status = new Status(db)
 
 const multibar = new cliProgress.MultiBar(
@@ -47,6 +49,7 @@ const setProcessed = blockNum => {
       blockProcessorBar.update(volatileStatus.processingBlocks[0].number)
       const blockInfo = volatileStatus.processingBlocks.shift()
       if (Configs.PUBLISH_SNS) sns.publish(blockInfo.number)
+      if (Configs.PUBLISH_WS) wsNotif.publish(blockInfo.number)
     } else break
   }
 }
@@ -82,7 +85,7 @@ const asyncRunner = () => {
 web3.eth.getBlockNumber().then(_blockNumber => {
   volatileStatus.maxBlock = _blockNumber
   status.getLastBlock().then(lastProcessedBlock => {
-    volatileStatus.currentBlock = 22757
+    volatileStatus.currentBlock = lastProcessedBlock
     blockProcessorBar.setTotal(volatileStatus.maxBlock)
     for (let i = 0; i < MAX_CONCURRENT; i++) {
       if (volatileStatus.currentBlock < volatileStatus.maxBlock) {

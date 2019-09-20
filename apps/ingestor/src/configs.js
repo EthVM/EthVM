@@ -10,5 +10,7 @@ export default {
   SAVE_STATUS: process.env.SAVE_STATUS === 'true' || false,
   PUBLISH_SNS: process.env.PUBLISH_SNS === 'true' || false,
   MAX_CONCURRENT: process.env.MAX_CONCURRENT || 10,
-  IS_GETH: process.env.IS_GETH === 'true' || false
+  IS_GETH: process.env.IS_GETH === 'true' || false,
+  PUBLISH_WS: process.env.PUBLISH_WS === 'true' || false,
+  WS_PUBLISH_PORT: process.env.WS_PUBLISH_PORT || 8547
 }
