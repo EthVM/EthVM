@@ -27,6 +27,7 @@ const TenThousand = 1e4
 const HundredThousand = 1e5
 const OneMillion = 1e6
 const OneBillion = 1e9
+const HundredBillion = 1e11
 const OneTrillion = 1e12
 const OneQuadrillion = 1e15
 
@@ -156,10 +157,10 @@ export class NumberFormatHelper {
     }
 
     /**
-     * Case III: value < 1 Trillion Wei OR value < 100 Gwei
+     * Case III: value < 100 Billion Wei OR value < 100 Gwei
      * Return: Gwei value, using Group II
      */
-    else if (value.isLessThan(OneTrillion)) {
+    else if (value.isLessThan(HundredBillion)) {
       const gweiBN = new EthValue(value).toGweiBN()
       return {
         value: this.formatFloatingPointValue(gweiBN).value,
@@ -241,10 +242,10 @@ export class NumberFormatHelper {
     }
 
     /**
-     * Case III: value < 1 Trillion Wei OR value < 100 Gwei
+     * Case III: value < 100 Billion Wei OR value < 100 Gwei
      * Return: Gwei value, using Group II
      */
-    else if (value.isLessThan(OneTrillion)) {
+    else if (value.isLessThan(HundredBillion)) {
       const gweiBN = new EthValue(value).toGweiBN()
       return {
         value: this.formatFloatingPointValue(gweiBN).value,
