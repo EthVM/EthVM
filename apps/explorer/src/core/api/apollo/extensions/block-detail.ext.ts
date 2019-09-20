@@ -120,7 +120,7 @@ export class BlockDetailExt implements BlockDetail {
     this.header = new BlockDetailExt_header(header)
     this.rewards = rewards.map(r => new BlockDetailExt_rewards(r))
 
-    this.totalTxFees = detail.totalTxFees
+    this.totalTxFees = new BigNumber(detail.totalTxFees)
   }
 
   get minerReward(): EthValue {

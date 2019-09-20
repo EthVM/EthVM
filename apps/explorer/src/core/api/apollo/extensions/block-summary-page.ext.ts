@@ -48,7 +48,7 @@ export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
     return new BN(this.numSuccessfulTxs)
   }
 
-  get numSucessfulTxsFormatted(): FormattedNumber {
+  get numSuccessfulTxsFormatted(): FormattedNumber {
     return NumberFormatHelper.formatIntegerValue(this.numSuccessfulTxsBN)
   }
 

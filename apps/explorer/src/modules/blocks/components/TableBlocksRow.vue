@@ -81,11 +81,10 @@
           <v-spacer hidden-xl-only />
           <v-flex sm2>
             <v-layout row wrap>
-              <p>
+              <p class="pr-1">
                 {{ block.numSuccessfulTxsFormatted.value }} {{ $tc('tx.name-short', sucessTransalate()) }}
                 <app-tooltip v-if="block.numSuccessfulTxsFormatted.tooltipText" :text="block.numSuccessfulTxsFormatted.tooltipText" />
               </p>
-              <p class="pr-1">{{ block.numSuccessfulTxsFormatted.value }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
               <p v-if="block.numFailedTxsBN > 0" class="txFail--text">
                 ({{ block.numFailedTxsFormatted.value }} {{ $tc('tx.failed', failedTranslate()) }}
                 <app-tooltip v-if="block.numFailedTxsFormatted.tooltipText" :text="block.numFailedTxsFormatted.tooltipText" />)
