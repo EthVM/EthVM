@@ -187,10 +187,10 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalSupply.value : undefined,
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalSupplyFormatted.value : undefined,
       tooltip:
-        !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalSupply.tooltipText
-          ? this.tokenDetails.totalSupply.tooltipText
+        !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalSupplyFormatted.tooltipText
+          ? this.tokenDetails.totalSupplyFormatted.tooltipText
           : undefined
     }
   }

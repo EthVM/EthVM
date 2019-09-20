@@ -63,7 +63,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get currentPriceFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatUsdValue(this.currentPriceBN, true)
+    return NumberFormatHelper.formatUsdValue(this.currentPriceBN)
   }
 
   get marketCapBN(): BigNumber {
@@ -71,7 +71,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get marketCapFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatUsdValue(this.marketCapBN, false)
+    return NumberFormatHelper.formatUsdValue(this.marketCapBN)
   }
 
   get totalVolumeBN(): BigNumber {
@@ -79,7 +79,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get totalVolumeFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN, false)
+    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN)
   }
 
   get priceChangePercentage24hBN(): BigNumber {
