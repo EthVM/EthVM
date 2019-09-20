@@ -137,12 +137,12 @@
             lg: 12/12 (2)
           =====================================================================================
           -->
-          <v-flex hidden-md-and-down lg2>
-            <p class="black--text text-truncate mb-0">
-              {{ tx.feeFormatted.value }} <app-tooltip v-if="tx.feeFormatted.tooltipText" :text="`${tx.feeFormatted.tooltipText} ${$t('common.eth')}`" />
-            </p>
-          </v-flex>
-          <!--
+        <v-flex hidden-md-and-down lg2>
+          <p class="black--text text-truncate mb-0">
+            {{ tx.feeFormatted.value }} <app-tooltip v-if="tx.feeFormatted.tooltipText" :text="`${tx.feeFormatted.tooltipText} ${$t('common.eth')}`" />
+          </p>
+        </v-flex>
+        <!--
           =====================================================================================
           STATUS
 
