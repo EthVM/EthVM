@@ -1,5 +1,5 @@
 import cliProgress from 'cli-progress'
-import { S3DB } from './databases'
+import { S3DB } from './datastore'
 import Configs from './configs'
 import Status from './status'
 import getWeb3 from './getWeb3'
@@ -82,7 +82,7 @@ const asyncRunner = () => {
 web3.eth.getBlockNumber().then(_blockNumber => {
   volatileStatus.maxBlock = _blockNumber
   status.getLastBlock().then(lastProcessedBlock => {
-    volatileStatus.currentBlock = lastProcessedBlock
+    volatileStatus.currentBlock = 0
     blockProcessorBar.setTotal(volatileStatus.maxBlock)
     for (let i = 0; i < MAX_CONCURRENT; i++) {
       if (volatileStatus.currentBlock < volatileStatus.maxBlock) {

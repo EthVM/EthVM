@@ -2,6 +2,7 @@ import { utils } from 'web3'
 import ethjsCommon from 'ethereumjs-common'
 import BN from 'bn.js'
 
+const ZERO_BLOCK_REWARD = utils.toBN(utils.toWei('0', 'ether'))
 const FRONTIER_BLOCK_REWARD = utils.toBN(utils.toWei('5', 'ether'))
 const BYZANTIUM_BLOCK_REWARD = utils.toBN(utils.toWei('3', 'ether'))
 const CONSTANTINOPLE_BLOCK_REWARD = utils.toBN(utils.toWei('2', 'ether'))
@@ -72,6 +73,16 @@ const consensus = {
   },
   kovan: block => {
     const reward = FRONTIER_BLOCK_REWARD
+    const txFees = getTxFees(block)
+    block.rewards = {
+      base: utils.toHex(reward),
+      uncles: '0x0',
+      txFees: utils.toHex(txFees),
+      total: utils.toHex(reward.add(txFees))
+    }
+  },
+  goerli: block => {
+    const reward = ZERO_BLOCK_REWARD
     const txFees = getTxFees(block)
     block.rewards = {
       base: utils.toHex(reward),

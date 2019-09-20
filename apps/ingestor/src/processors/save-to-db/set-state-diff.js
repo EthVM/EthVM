@@ -45,7 +45,8 @@ const getValueTransfers = traces => {
           type: 'suicide'
         })
       }
-      if (trace.type !== 'call' && trace.type !== 'create' && trace.type !== 'suicide') throw new Error('unknownTrace: ' + JSON.stringify(trace))
+      if (trace.type !== 'call' && trace.type !== 'create' && trace.type !== 'suicide' && trace.type !== 'staticcall')
+        throw new Error('unknownTrace: ' + JSON.stringify(trace))
     }
   }
   return transfers
@@ -72,7 +73,8 @@ const setInitialState = (web3, block, prevBlockNumber) => {
             state[trace.action.address] = utils.toBN('0x0')
             state[trace.action.refundAddress] = utils.toBN('0x0')
           }
-          if (trace.type !== 'call' && trace.type !== 'create' && trace.type !== 'suicide') throw new Error('Unknown trace', trace)
+          if (trace.type !== 'call' && trace.type !== 'create' && trace.type !== 'suicide' && trace.type !== 'staticcall')
+            throw new Error('Unknown trace', trace)
         }
       })
     })
@@ -133,10 +135,10 @@ class SetStateDiff {
             }
           }
         })
-        if (verifyBalances) {
-          const bP = new BlockProcessor(block)
-          const changes = bP.getBalanceChangedAccounts()
-          const addresses = Object.keys(changes)
+        const bP = new BlockProcessor(block)
+        const changes = bP.getBalanceChangedAccounts()
+        const addresses = Object.keys(changes)
+        if (verifyBalances && addresses.length) {
           addresses.forEach(address => {
             if (!utils.toBN(changes[address].from).eq(originalState[address])) throw new Error('balances dont match: previous:' + address)
           })

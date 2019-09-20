@@ -6,4 +6,5 @@ import SetStateChanges from './set-state-changes'
 import SetMinerBalances from './set-miner-balances'
 import SetTraces from './set-traces'
 import SetStateDiff from './set-state-diff'
-export { CalculateReward, SetBlock, SetTxReceipt, SetUncles, SetStateChanges, SetMinerBalances, SetTraces, SetStateDiff }
+import SetChainConfigs from './set-chain-configs'
+export { CalculateReward, SetBlock, SetTxReceipt, SetUncles, SetStateChanges, SetMinerBalances, SetTraces, SetStateDiff, SetChainConfigs }

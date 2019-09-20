@@ -28,5 +28,15 @@ export default host => {
       }
     ]
   })
+  _web3.extend({
+    property: 'debug',
+    methods: [
+      {
+        name: 'traceBlockByNumber',
+        call: 'debug_traceBlockByNumber',
+        params: 2
+      }
+    ]
+  })
   return _web3
 }
