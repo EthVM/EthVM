@@ -24,7 +24,7 @@ class SetTrace {
         })
       } else {
         this.web3.debug
-          .traceBlockByNumber(utils.toHex(block.number), { tracer: traceCode })
+          .traceBlockByNumber(utils.toHex(block.number), { tracer: traceCode, timeout: '5m' })
           .then(traces => {
             const parityTraces = gethToParity(traces, block)
             const txHashTraces = {}
