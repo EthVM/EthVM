@@ -101,6 +101,9 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
   // kafka consumer for ingesting data
   private lateinit var consumer: KafkaConsumer<CanonicalKeyRecord, V>
 
+  // when running with process command we will need to initialise ourselves, otherwise other commands call initialise method directly without the run method
+  private var initialised = false
+
   @Volatile
   private var stop = false
 
@@ -141,6 +144,8 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   override fun initialise() {
 
+    if (initialised) return // do nothing
+
     dbContext.transaction { txConfig ->
 
       val txCtx = DSL.using(txConfig)
@@ -156,14 +161,20 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       val latestSyncStatus = getLatestSyncRecord(dbContext)
       val latestBlockNumber = latestSyncStatus?.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
 
-      logger.info { "Latest sync block number = $latestBlockNumber" }
+      logger.info { "Last processed block number = $latestBlockNumber" }
 
       // call the implementation initialise method
 
       initialise(txCtx, latestBlockNumber)
 
+      // commit cache changes to disk
+      diskDb.commit()
+
       logger.info { "initialised" }
     }
+
+    // record initialisation
+    initialised = true
   }
 
   override fun reset() {
@@ -276,6 +287,10 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
     try {
 
+      // initialise
+
+      initialise()
+
       // determine the chain time to reset the kafka consumer to
 
       val latestSyncRecord = getLatestSyncRecord(dbContext)
@@ -379,7 +394,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
                     process(txCtx, record)
                     hashCache[blockNumber] = blockHashFor(record.value())
-
                   }
                 }
 
@@ -401,14 +415,13 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
               logger.info { "Tx elapsed time = $txElapsedTimeMs ms. Record count = $recordCount. Latest block number = $lastBlockNumber, block time = ${Date(lastRecord!!.timestamp())}" }
             }
-
         }
 
         // commit to kafka
         consumer.commitSync()
 
         val last = records.last()
-        logger.info { "Kafka batch complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${last.timestamp()}" }
+        logger.debug { "Kafka batch complete. Count = ${records.count()}, head = ${last.key().number.bigInteger()}, block timestamp = ${Date(last.timestamp())}" }
       }
     } catch (e: Exception) {
 
@@ -416,7 +429,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       diskDb.rollback()
 
       logger.error(e) { "Fatal exception, stopping" }
-
     } finally {
 
       close()
@@ -450,7 +462,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     txCtx
       .insertInto(SYNC_STATUS_HISTORY)
       .set(record)
-      .onConflictDoNothing()    // we do nothing as we may be re-processing duplicate blocks as the result of a restart
+      .onConflictDoNothing() // we do nothing as we may be re-processing duplicate blocks as the result of a restart
       .execute()
 
     // update latest

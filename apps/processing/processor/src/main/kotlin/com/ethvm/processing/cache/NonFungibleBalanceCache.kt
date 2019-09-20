@@ -17,7 +17,8 @@ class NonFungibleBalanceCache(
   diskDb: DB,
   scheduledExecutor: ScheduledExecutorService,
   private val tokenType: TokenType,
-  processorId: String
+  processorId: String,
+  private val dbFetchSize: Int = 512
 ) {
 
   val logger = KotlinLogging.logger {}
@@ -29,7 +30,8 @@ class NonFungibleBalanceCache(
     "${processorId}_non_fungible_balances",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024 * 1024 * 128 // 128 mb
   )
 
   private val metadataMap = CacheStore(
@@ -39,7 +41,8 @@ class NonFungibleBalanceCache(
     "${processorId}_non_fungible_balances_metadata",
     Serializer.STRING,
     Serializer.BIG_INTEGER,
-    BigInteger.ZERO
+    BigInteger.ZERO,
+    1024
   )
 
   // convenience lists
@@ -55,30 +58,31 @@ class NonFungibleBalanceCache(
 
     logger.info { "[$tokenType] Initialising state from diskDb" }
 
-    var latestBlockNumber = metadataMap["latestBlockNumber"] ?: BigInteger.ONE.negate()
+    var lastChangeBlockNumber = metadataMap["lastChangeBlockNumber"] ?: BigInteger.ONE.negate()
+    val lastChangeBlockNumberDb = lastChangeBlockNumberDb(txCtx)
 
-    val latestDbBlockNumber = txCtx
-      .select(BALANCE.BLOCK_NUMBER)
-      .from(BALANCE)
-      .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
-      .orderBy(BALANCE.BLOCK_NUMBER.desc())
-      .limit(1)
-      .fetchOne()
-      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
+    logger.info { "[$tokenType] Last change block number (local): $lastChangeBlockNumber, last change block number from db: $lastChangeBlockNumberDb" }
 
-    if (latestBlockNumber > latestDbBlockNumber) {
-      logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
-      // reset all state from the beginning as the database is behind us
-      balanceMap.clear()
-      metadataMap.clear()
-      latestBlockNumber = BigInteger.ONE.negate()
+    when {
+
+      lastChangeBlockNumber == lastChangeBlockNumberDb -> {
+        logger.info { "[$tokenType] Nothing to synchronise. Initialisation complete" }
+        return
+      }
+
+      lastChangeBlockNumber > lastChangeBlockNumberDb -> {
+        logger.info { "[$tokenType] local state is ahead of the database. Resetting all local state." }
+        // reset all state from the beginning as the database is behind us
+        cacheStores.forEach { it.clear() }
+        lastChangeBlockNumber = BigInteger.ONE.negate()
+      }
     }
 
     val cursor = txCtx
       .selectFrom(BALANCE)
       .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
-      .and(BALANCE.BLOCK_NUMBER.gt(latestBlockNumber.toBigDecimal()))
-      .fetchSize(1000)
+      .and(BALANCE.BLOCK_NUMBER.gt(lastChangeBlockNumber.toBigDecimal()))
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     writeHistoryToDb = false
@@ -88,7 +92,7 @@ class NonFungibleBalanceCache(
     while (cursor.hasNext()) {
       assign(cursor.fetchNext())
       count += 1
-      if (count % 1000 == 0) {
+      if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
         logger.info { "[$tokenType] $count deltas processed" }
       }
@@ -102,6 +106,16 @@ class NonFungibleBalanceCache(
 
     logger.info { "[$tokenType] Initialised. $count deltas processed" }
   }
+
+  private fun lastChangeBlockNumberDb(txCtx: DSLContext) =
+    txCtx
+      .select(BALANCE.BLOCK_NUMBER)
+      .from(BALANCE)
+      .where(BALANCE.TOKEN_TYPE.eq(tokenType.toString()))
+      .orderBy(BALANCE.BLOCK_NUMBER.desc())
+      .limit(1)
+      .fetchOne()
+      ?.value1()?.toBigInteger() ?: BigInteger.ONE.negate()
 
   fun get(address: String, contractAddress: String?): BigInteger? {
     // TODO optimize serialization
@@ -138,7 +152,7 @@ class NonFungibleBalanceCache(
     }
   }
 
-  fun writeToDb(ctx: DSLContext) {
+  fun writeToDb(txCtx: DSLContext) {
 
     if (balanceHistoryRecords.isNotEmpty()) {
 
@@ -147,7 +161,7 @@ class NonFungibleBalanceCache(
 
           // remove from current owner
 
-          ctx
+          txCtx
             .deleteFrom(BALANCE)
             .where(BALANCE.CONTRACT_ADDRESS.eq(record.contractAddress))
             .and(BALANCE.TOKEN_ID.eq(record.tokenId))
@@ -155,13 +169,14 @@ class NonFungibleBalanceCache(
 
           // assign to new owner
 
-          ctx
+          txCtx
             .insertInto(BALANCE)
             .set(record)
             .execute()
         }
 
-      metadataMap["latestBlockNumber"] = balanceHistoryRecords.last().blockNumber.toBigInteger()
+      // update our local last change block block number
+      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
 
       balanceHistoryRecords = emptyList()
     }
@@ -191,7 +206,7 @@ class NonFungibleBalanceCache(
       .where(BALANCE_DELTA.BLOCK_NUMBER.ge(blockNumber.toBigDecimal()))
       .and(BALANCE_DELTA.TOKEN_TYPE.eq(tokenType.toString()))
       .orderBy(BALANCE_DELTA.BLOCK_NUMBER.desc())
-      .fetchSize(1000)
+      .fetchSize(dbFetchSize)
       .fetchLazy()
 
     // temporarily disable
@@ -211,9 +226,8 @@ class NonFungibleBalanceCache(
 
     cursor.close()
 
-    // update our local latest block number
-
-    metadataMap["latestBlockNumber"] = blockNumber.minus(BigInteger.ONE)
+    // update our local last change block block number
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
 
     cacheStores.forEach { it.flushToDisk() }
 
