@@ -37,7 +37,7 @@ class CacheStore<K, V>(
     .expireAfterUpdate(15, TimeUnit.SECONDS)
     .expireOverflow(overflowMap)
     .expireExecutor(scheduledExecutor)
-    .expireExecutorPeriod(500)  // expire every 500 ms
+    .expireExecutorPeriod(500) // expire every 500 ms
     .createOrOpen()
 
   // a list of keys modified during a tx
