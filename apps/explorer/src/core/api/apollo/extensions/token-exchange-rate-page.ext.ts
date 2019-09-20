@@ -47,6 +47,10 @@ export class TokenExchangeRatePageExt_items implements TokenExchangeRatePage_ite
     return TokenUtils.priceChangeSymbol(this)
   }
 
+  get priceChangeTooltip(): string | undefined {
+    return TokenUtils.priceChangeTooltip(this)
+  }
+
   get priceChangeClass(): string {
     return TokenUtils.priceChangeClass(this)
   }
