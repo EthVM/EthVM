@@ -159,7 +159,7 @@ export class NumberFormatHelper {
      * Case III: value < 1 Trillion Wei OR value < 100 Gwei
      * Return: Gwei value, using Group II
      */
-    else if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+    else if (value.isLessThan(OneTrillion)) {
       const gweiBN = new EthValue(value).toGweiBN()
       return {
         value: this.formatFloatingPointValue(gweiBN).value,
@@ -244,7 +244,7 @@ export class NumberFormatHelper {
      * Case III: value < 1 Trillion Wei OR value < 100 Gwei
      * Return: Gwei value, using Group II
      */
-    else if (value.isGreaterThanOrEqualTo(OneTrillion)) {
+    else if (value.isLessThan(OneTrillion)) {
       const gweiBN = new EthValue(value).toGweiBN()
       return {
         value: this.formatFloatingPointValue(gweiBN).value,
