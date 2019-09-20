@@ -1,4 +1,5 @@
 const getTraceObj = trace => {
+  if (trace.type === 'SELFDESTRUCT') trace.type = 'suicide'
   const obj = {
     action: {
       callType: trace.type.toLowerCase(),
@@ -13,6 +14,12 @@ const getTraceObj = trace => {
       gasUsed: trace.gasUsed,
       output: trace.output
     }
+  }
+  if (obj.type === 'create') obj.result.address = obj.action.to
+  if (obj.type === 'suicide') {
+    obj.action.refundAddress = obj.action.to
+    obj.action.balance = obj.action.value
+    delete obj.result
   }
   if (trace.error) obj.error = trace.error
   return obj

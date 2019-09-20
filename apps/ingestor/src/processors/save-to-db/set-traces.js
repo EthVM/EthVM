@@ -1,6 +1,7 @@
 import { utils } from 'web3'
 import Configs from '../../configs'
 import gethToParity from '../../helpers/geth-to-parity-trace'
+import traceCode from '../../helpers/js-tracer'
 
 class SetTrace {
   constructor(web3) {
@@ -23,7 +24,7 @@ class SetTrace {
         })
       } else {
         this.web3.debug
-          .traceBlockByNumber(utils.toHex(block.number), { tracer: 'callTracer' })
+          .traceBlockByNumber(utils.toHex(block.number), { tracer: traceCode })
           .then(traces => {
             const parityTraces = gethToParity(traces, block)
             const txHashTraces = {}

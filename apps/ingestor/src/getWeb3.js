@@ -38,5 +38,15 @@ export default host => {
       }
     ]
   })
+  _web3.extend({
+    property: 'debug',
+    methods: [
+      {
+        name: 'traceTransaction',
+        call: 'debug_traceTransaction',
+        params: 2
+      }
+    ]
+  })
   return _web3
 }

@@ -82,7 +82,7 @@ const asyncRunner = () => {
 web3.eth.getBlockNumber().then(_blockNumber => {
   volatileStatus.maxBlock = _blockNumber
   status.getLastBlock().then(lastProcessedBlock => {
-    volatileStatus.currentBlock = 0
+    volatileStatus.currentBlock = 22757
     blockProcessorBar.setTotal(volatileStatus.maxBlock)
     for (let i = 0; i < MAX_CONCURRENT; i++) {
       if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
