@@ -142,25 +142,21 @@ export class NumberFormatHelper {
      */
     if (value.isZero()) {
       return { value: '0', unit: FormattedNumberUnit.ETH }
-    }
-
-    /**
-     * Case II: value < 10,000 wei
-     * Return: small values in WEI (no conversion) and tooltip with ETH value
-     */
-    else if (value.isLessThan(TenThousand)) {
+    } else if (value.isLessThan(TenThousand)) {
+      /**
+       * Case II: value < 10,000 wei
+       * Return: small values in WEI (no conversion) and tooltip with ETH value
+       */
       return {
         value: value.toFormat(),
         unit: FormattedNumberUnit.WEI,
         tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
       }
-    }
-
-    /**
-     * Case III: value < 100 Billion Wei OR value < 100 Gwei
-     * Return: Gwei value, using Group II
-     */
-    else if (value.isLessThan(HundredBillion)) {
+    } else if (value.isLessThan(HundredBillion)) {
+      /**
+       * Case III: value < 100 Billion Wei OR value < 100 Gwei
+       * Return: Gwei value, using Group II
+       */
       const gweiBN = new EthValue(value).toGweiBN()
       return {
         value: this.formatFloatingPointValue(gweiBN).value,
@@ -168,49 +164,48 @@ export class NumberFormatHelper {
         tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
       }
     }
-    else {
-      const ethBN = new EthValue(value).toEthBN()
-      const unit = FormattedNumberUnit.ETH
-      const dps = ethBN.decimalPlaces()
 
-      /**
-       * Case IV: 0.0000001 Eth <= X < 1 Eth
-       * Return: rounded number to 12 dps
-       */
-      if (ethBN.isLessThan(1)) {
-        return { ...this.getRoundNumber(ethBN, 12, dps), unit}
-      }
+    const ethBN = new EthValue(value).toEthBN()
+    const unit = FormattedNumberUnit.ETH
+    const dps = ethBN.decimalPlaces()
 
-      /**
-       * Case V: 1 Eth <= X < 100,000 Eth
-       * Return: rounded number to 6 dps
-       */
-      if (ethBN.isLessThan(HundredThousand)){
-        return { ...this.getRoundNumber(ethBN, 6, dps), unit}
-      }
-
-      /**
-       * Case VI: 100,000 <= X < 1 mill
-       * Return: rounded number to 4 dps
-       */
-      if (ethBN.isLessThan(OneMillion)){
-        return {...this.getRoundNumber(ethBN, 4, dps), unit}
-      }
-
-      /**
-       * Case VII: 100,000 <= X < 1 mill
-       * Return: rounded number to 4 dps
-       */
-      if (ethBN.isLessThan(OneBillion)) {
-        return {...this.getRoundNumber(value, 0, dps), unit}
-      }
-
-      /**
-       * Case VIII: V >= 1 Billion
-       * Return: Group I formatted value
-       */
-      return {...this.formatIntegerValue(ethBN), unit}
+    /**
+     * Case IV: 0.0000001 Eth <= X < 1 Eth
+     * Return: rounded number to 12 dps
+     */
+    if (ethBN.isLessThan(1)) {
+      return { ...this.getRoundNumber(ethBN, 12, dps), unit }
     }
+
+    /**
+     * Case V: 1 Eth <= X < 100,000 Eth
+     * Return: rounded number to 6 dps
+     */
+    if (ethBN.isLessThan(HundredThousand)) {
+      return { ...this.getRoundNumber(ethBN, 6, dps), unit }
+    }
+
+    /**
+     * Case VI: 100,000 <= X < 1 mill
+     * Return: rounded number to 4 dps
+     */
+    if (ethBN.isLessThan(OneMillion)) {
+      return { ...this.getRoundNumber(ethBN, 4, dps), unit }
+    }
+
+    /**
+     * Case VII: 100,000 <= X < 1 mill
+     * Return: rounded number to 4 dps
+     */
+    if (ethBN.isLessThan(OneBillion)) {
+      return { ...this.getRoundNumber(value, 0, dps), unit }
+    }
+
+    /**
+     * Case VIII: V >= 1 Billion
+     * Return: Group I formatted value
+     */
+    return { ...this.formatIntegerValue(ethBN), unit }
   }
 
   /**
@@ -220,32 +215,27 @@ export class NumberFormatHelper {
    * @return FormattedNumber with value converted to ETH and tooltip if maxDecimalPlaces was applied
    */
   public static formatNonVariableEthValue(value: BigNumber): FormattedNumber {
-
     /**
      * Case I: value === 0
      * Return: "0 ETH"
      */
     if (value.isZero()) {
       return { value: '0', unit: FormattedNumberUnit.ETH }
-    }
-
-    /**
-     * Case II: value < 10,000 wei
-     * Return: small values in WEI (no conversion) and tooltip with ETH value
-     */
-    else if (value.isLessThan(TenThousand)) {
+    } else if (value.isLessThan(TenThousand)) {
+      /**
+       * Case II: value < 10,000 wei
+       * Return: small values in WEI (no conversion) and tooltip with ETH value
+       */
       return {
         value: value.toFormat(),
         unit: FormattedNumberUnit.WEI,
         tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
       }
-    }
-
-    /**
-     * Case III: value < 100 Billion Wei OR value < 100 Gwei
-     * Return: Gwei value, using Group II
-     */
-    else if (value.isLessThan(HundredBillion)) {
+    } else if (value.isLessThan(HundredBillion)) {
+      /**
+       * Case III: value < 100 Billion Wei OR value < 100 Gwei
+       * Return: Gwei value, using Group II
+       */
       const gweiBN = new EthValue(value).toGweiBN()
       return {
         value: this.formatFloatingPointValue(gweiBN).value,
@@ -253,10 +243,9 @@ export class NumberFormatHelper {
         tooltipText: `${new EthValue(value).toEthBN().toFixed()}`
       }
     }
-    else {
-      const ethBN = new EthValue(value).toEthBN()
-      return {...this.formatFloatingPointValue(ethBN), unit: FormattedNumberUnit.ETH }
-    }
+
+    const ethBN = new EthValue(value).toEthBN()
+    return { ...this.formatFloatingPointValue(ethBN), unit: FormattedNumberUnit.ETH }
   }
 
   /**
@@ -304,7 +293,8 @@ export class NumberFormatHelper {
      * Return: number in wei and show tooltip with Gwei value
      */
     return {
-      ...this.formatNonVariableEthValue(value), unit,
+      ...this.formatNonVariableEthValue(value),
+      unit,
       tooltipText: `${gweiBN.toFixed()} ${unit}`
     }
   }
@@ -416,7 +406,7 @@ export class NumberFormatHelper {
      */
     if (value.isGreaterThanOrEqualTo(OneMillion)) {
       const result = this.getRoundNumber(value, 0, value.decimalPlaces())
-      return {value: `$${result.value}`, unit, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
+      return { value: `$${result.value}`, unit, tooltipText: result.tooltipText ? `$${result.tooltipText}` : undefined }
     }
 
     /**

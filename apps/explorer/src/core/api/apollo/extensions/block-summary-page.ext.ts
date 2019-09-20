@@ -40,7 +40,7 @@ export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
     return new BN(this.numFailedTxs)
   }
 
-  get numFailedTxsFormatted(): FormattedNumber{
+  get numFailedTxsFormatted(): FormattedNumber {
     return NumberFormatHelper.formatIntegerValue(this.numFailedTxsBN)
   }
 
