@@ -330,7 +330,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
       n = n.div(new BN(10).pow(decimals))
     }
 
-    return holderDetails.balance && tokenDetails.currentPrice ? this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice), false).value : undefined
+    return holderDetails.balance && tokenDetails.currentPrice ? this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice)).value : undefined
   }
 
   get balance(): FormattedNumber {
