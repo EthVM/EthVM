@@ -106,7 +106,7 @@ class InternalTxsCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count address count entries processed" }
       }
     }
 
@@ -129,7 +129,7 @@ class InternalTxsCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count contract count entries processed" }
       }
     }
 

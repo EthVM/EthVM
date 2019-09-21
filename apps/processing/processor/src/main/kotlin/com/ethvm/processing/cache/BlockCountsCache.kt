@@ -145,7 +145,7 @@ class BlockCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count address tx count entries processed" }
       }
     }
 
@@ -168,7 +168,7 @@ class BlockCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count miner count entries processed" }
       }
     }
 
