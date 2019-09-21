@@ -37,6 +37,8 @@ interface Processor : Runnable {
   fun reset()
 
   fun stop()
+
+  fun close()
 }
 
 enum class BlockType {
@@ -102,7 +104,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
   private val hashCache: BlockHashCache
 
   // kafka consumer for ingesting data
-  private lateinit var consumer: KafkaConsumer<CanonicalKeyRecord, V>
+  private var consumer: KafkaConsumer<CanonicalKeyRecord, V>? = null
 
   // when running with process command we will need to initialise ourselves, otherwise other commands call initialise method directly without the run method
   @Volatile
@@ -313,7 +315,9 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
       // initialise the kafka consumer and subscribe to topics
 
-      consumer = KafkaConsumer(mergedKafkaProps)
+      this.consumer = KafkaConsumer(mergedKafkaProps)
+
+      val consumer = this.consumer!!
       consumer.subscribe(topics)
 
       logger.info { "Last sync time = ${DateTime(latestSyncTimeMs)}. Re-setting consumer to time = ${DateTime(restartTimeMs)}" }
@@ -505,12 +509,14 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
     stopLatch.await()
   }
 
-  private fun close() {
+  override fun close() {
 
     diskDb.close()
     memoryDb.close()
 
-    consumer.close(Duration.ofSeconds(30))
+    // might not have been initialized
+    consumer?.close(Duration.ofSeconds(30))
+
     logger.info { "clean up complete" }
   }
 
