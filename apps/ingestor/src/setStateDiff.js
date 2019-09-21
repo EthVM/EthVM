@@ -9,7 +9,7 @@ import processBlock from './processBlock'
 //   if (!b) throw new Error('Not valid')
 // }
 
-const BLOCK_NUM = 220209
+const BLOCK_NUM = 478396
 
 const web3 = getWeb3(Configs.WS_HOST)
 // web3.eth.getBlock(BLOCK_NUM).then(block => {
