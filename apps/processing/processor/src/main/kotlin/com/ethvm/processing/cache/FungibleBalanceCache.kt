@@ -188,6 +188,11 @@ class FungibleBalanceCache(
 
     logger.info { "[$tokenType] Contract holder count reloaded. $count contract holder counts processed" }
 
+    // update last change block locally
+
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}"}
+
     // final flush for any lingering pending writes
     cacheStores.forEach { it.flushToDisk(true) }
 

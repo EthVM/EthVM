@@ -176,6 +176,11 @@ class BlockCountsCache(
 
     logger.info { "Miner counts reloaded" }
 
+    // update last change block locally
+
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}"}
+
     // final flush to disk for any remaining modifications at the end of the batches
 
     cacheStores.forEach { it.flushToDisk(true) }
