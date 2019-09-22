@@ -199,6 +199,7 @@ class BlockCountsCache(
   fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
     val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
     metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber
+    cacheStores.forEach { it.flushToDisk(true) }
     logger.info { "Last change block number override from db: $lastChangeBlockNumber" }
   }
 

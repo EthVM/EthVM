@@ -21,18 +21,13 @@ class LogLastChangeBlockNumber : AbstractCliktCommand(
 
     // register shutdown hook
 
-    val executor = koin.get<ExecutorService>()
-
     logger.info { "Logging out last change block numbers" }
 
-    val initFutures = processors
-      .map { processor ->
+    processors
+      .forEach { processor ->
         logger.info { "Logging out for ${processor.javaClass}" }
-        executor.submit { processor.logLastChangeBlockNumber() }
+        processor.logLastChangeBlockNumber()
       }
-      .toList()
-
-    initFutures.forEach { it.get() }
 
     logger.info { "Finished" }
 

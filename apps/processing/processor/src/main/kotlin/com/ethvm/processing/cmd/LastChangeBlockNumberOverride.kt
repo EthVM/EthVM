@@ -21,18 +21,13 @@ class LastChangeBlockNumberOverride : AbstractCliktCommand(
 
     // register shutdown hook
 
-    val executor = koin.get<ExecutorService>()
-
     logger.info { "Overriding last change block numbers" }
 
-    val initFutures = processors
-      .map { processor ->
+    processors
+      .forEach { processor ->
         logger.info { "Overriding for ${processor.javaClass}" }
-        executor.submit { processor.setLastChangeBlockNumberFromDb() }
+        processor.setLastChangeBlockNumberFromDb()
       }
-      .toList()
-
-    initFutures.forEach { it.get() }
 
     logger.info { "Overrides completed" }
 
