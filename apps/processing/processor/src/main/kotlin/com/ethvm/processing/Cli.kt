@@ -1,6 +1,7 @@
 package com.ethvm.processing
 
 import com.ethvm.processing.cmd.Init
+import com.ethvm.processing.cmd.LastChangeBlockNumberOverride
 import com.ethvm.processing.cmd.Process
 import com.ethvm.processing.cmd.Reset
 import com.ethvm.processing.cmd.Rewind
@@ -54,6 +55,6 @@ class Cli : CliktCommand() {
 
 fun main(args: Array<String>) {
   Cli()
-    .subcommands(Init(), Process(), Rewind(), Reset(), Verify())
+    .subcommands(Init(), LastChangeBlockNumberOverride(), Process(), Rewind(), Reset(), Verify())
     .main(args)
 }

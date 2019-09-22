@@ -30,6 +30,8 @@ class BlockMetricsTraceProcessor : AbstractProcessor<TraceListRecord>("block-met
 
   override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {}
 
+  override fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {}
+
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
   override fun reset(txCtx: DSLContext) {

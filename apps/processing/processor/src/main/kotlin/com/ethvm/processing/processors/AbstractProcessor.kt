@@ -32,6 +32,8 @@ interface Processor : Runnable {
 
   fun initialise()
 
+  fun setLastChangeBlockNumberFromDb()
+
   fun rewindUntil(rewindBlockNumber: BigInteger)
 
   fun reset()
@@ -140,6 +142,8 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
   protected abstract fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger)
 
+  protected abstract fun setLastChangeBlockNumberFromDb(txCtx: DSLContext)
+
   protected abstract fun reset(txCtx: DSLContext)
 
   protected abstract fun rewindUntil(txCtx: DSLContext, blockNumber: BigInteger)
@@ -152,43 +156,69 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
     if (initialised) return // do nothing
 
-    dbContext.transaction { txConfig ->
+    try {
 
-      val txCtx = DSL.using(txConfig)
+      dbContext.transaction { txConfig ->
 
-      logger.info { "Initialising..." }
+        val txCtx = DSL.using(txConfig)
 
-      // initialise our hash cache
+        logger.info { "Initialising..." }
 
-      hashCache.initialise(txCtx)
+        // initialise our hash cache
 
-      // determine the last progress we made
+        hashCache.initialise(txCtx)
 
-      val latestSyncStatus = getLatestSyncRecord(dbContext)
-      val latestBlockNumber = latestSyncStatus?.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
+        // determine the last progress we made
 
-      logger.info { "Last processed block number = $latestBlockNumber" }
+        val latestSyncStatus = getLatestSyncRecord(dbContext)
+        val latestBlockNumber = latestSyncStatus?.blockNumber?.toBigInteger() ?: BigInteger.ONE.negate()
 
-      // start a task for committing disk db periodically (100 ms intervals) during init to prevent one big transactional commit at the end
+        logger.info { "Last processed block number = $latestBlockNumber" }
 
-      val commitFuture = executor.submit(DiskCommitTask(diskDb, 100))
+        // start a task for committing disk db periodically (100 ms intervals) during init to prevent one big transactional commit at the end
 
-      // call implementation init method
+        val commitFuture = executor.submit(DiskCommitTask(diskDb, 100))
 
-      initialise(txCtx, latestBlockNumber)
+        // call implementation init method
 
-      // record initialisation
-      initialised = true
+        initialise(txCtx, latestBlockNumber)
 
-      // wait for commit task to exit
-      commitFuture.get()
+        // record initialisation
+        initialised = true
 
-      // flush any remaining changes that were not caught by the last invocation of the commit task
+        // wait for commit task to exit
+        commitFuture.get()
 
-      diskDb.commit()
+        // flush any remaining changes that were not caught by the last invocation of the commit task
 
-      logger.info { "initialised" }
+        diskDb.commit()
+
+        logger.info { "initialised" }
+      }
+
+    } catch (ex: Exception) {
+      diskDb.rollback()
+      throw ex
     }
+  }
+
+  override fun setLastChangeBlockNumberFromDb() {
+
+    try {
+
+      dbContext.transaction { txConfig ->
+
+        setLastChangeBlockNumberFromDb(DSL.using(txConfig))
+
+        diskDb.commit()
+
+      }
+
+    } catch (ex: Exception) {
+      diskDb.rollback()
+      throw ex
+    }
+
   }
 
   override fun reset() {

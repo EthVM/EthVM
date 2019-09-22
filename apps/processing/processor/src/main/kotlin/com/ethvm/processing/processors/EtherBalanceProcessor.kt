@@ -55,6 +55,11 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
     futures.forEach { it.get() }
   }
 
+  override fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    fungibleBalanceCache.setLastChangeBlockNumberFromDb(txCtx)
+    internalTxsCountsCache.setLastChangeBlockNumberFromDb(txCtx)
+  }
+
   override fun reset(txCtx: DSLContext) {
 
     txCtx.truncate(TRACE).execute()

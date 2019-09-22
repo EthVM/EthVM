@@ -50,6 +50,10 @@ class BasicDataProcessor : AbstractProcessor<BlockRecord>("basic-data-processor"
     futures.forEach { it.get() }
   }
 
+  override fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    blockCountsCache.setLastChangeBlockNumberFromDb(txCtx)
+  }
+
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
 
   override fun reset(txCtx: DSLContext) {

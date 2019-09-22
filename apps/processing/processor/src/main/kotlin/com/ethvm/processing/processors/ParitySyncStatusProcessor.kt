@@ -59,6 +59,9 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
   override fun initialise() {
   }
 
+  override fun setLastChangeBlockNumberFromDb() {
+  }
+
   override fun rewindUntil(rewindBlockNumber: BigInteger) {
   }
 

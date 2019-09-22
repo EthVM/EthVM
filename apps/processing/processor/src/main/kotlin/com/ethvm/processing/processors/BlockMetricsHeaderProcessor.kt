@@ -35,6 +35,9 @@ class BlockMetricsHeaderProcessor : AbstractProcessor<BlockRecord>("block-metric
     blockTimestampCache.initialise(txCtx)
   }
 
+  override fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+  }
+
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
 
   override fun reset(txCtx: DSLContext) {

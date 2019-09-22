@@ -50,6 +50,8 @@ class ContractLifecycleProcessor : AbstractProcessor<TraceListRecord>("contract-
 
   override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {}
 
+  override fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {}
+
   override fun blockHashFor(value: TraceListRecord) = value.blockHash
 
   override fun reset(txCtx: DSLContext) {

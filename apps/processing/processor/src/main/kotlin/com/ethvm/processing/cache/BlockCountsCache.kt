@@ -187,6 +187,12 @@ class BlockCountsCache(
     logger.info { "Initialisation complete" }
   }
 
+  fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber
+    logger.info { "Last change block number override from db: $lastChangeBlockNumber" }
+  }
+
   private fun lastChangeBlockNumberDb(txCtx: DSLContext) =
     txCtx
       .select(CANONICAL_COUNT.BLOCK_NUMBER)
