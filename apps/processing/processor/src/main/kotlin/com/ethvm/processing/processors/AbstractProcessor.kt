@@ -133,7 +133,7 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
       .make()
 
     memoryDb = DBMaker
-      .memoryDirectDB()
+      .heapDB()
       .make()
 
     // create hash cache
