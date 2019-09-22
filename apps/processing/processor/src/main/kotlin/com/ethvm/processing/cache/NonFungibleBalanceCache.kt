@@ -112,6 +112,10 @@ class NonFungibleBalanceCache(
     logger.info { "[$tokenType] Initialised. $count deltas processed" }
   }
 
+  fun logLastChangeBlockNumber() {
+    logger.info { "Last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+  }
+
   fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
     val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
     metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber

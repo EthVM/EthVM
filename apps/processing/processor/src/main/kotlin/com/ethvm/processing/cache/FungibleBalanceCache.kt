@@ -208,6 +208,10 @@ class FungibleBalanceCache(
     logger.info { "Last change block number override from db: $lastChangeBlockNumber" }
   }
 
+  fun logLastChangeBlockNumber() {
+    logger.info { "Last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+  }
+
   private fun lastChangeBlockNumberDb(txCtx: DSLContext): BigInteger =
     txCtx
       .select(BALANCE.BLOCK_NUMBER)

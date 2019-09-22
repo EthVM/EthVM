@@ -151,6 +151,10 @@ class InternalTxsCountsCache(
     logger.info { "Initialisation complete" }
   }
 
+  fun logLastChangeBlockNumber() {
+    logger.info { "Last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+  }
+
   fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
     val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
     metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber

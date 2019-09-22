@@ -32,6 +32,8 @@ interface Processor : Runnable {
 
   fun initialise()
 
+  fun logLastChangeBlockNumber()
+
   fun setLastChangeBlockNumberFromDb()
 
   fun rewindUntil(rewindBlockNumber: BigInteger)
