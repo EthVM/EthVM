@@ -34,8 +34,14 @@ class TokenBalanceProcessor : AbstractProcessor<BlockRecord>("token-balance-proc
   override fun blockHashFor(value: BlockRecord): String = value.header.hash
 
   override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {
-    fungibleBalanceCache.initialise(txCtx)
-    nonFungibleBalanceCache.initialise(txCtx)
+
+    val futures = listOf(
+      executor.submit { fungibleBalanceCache.initialise(txCtx) },
+      executor.submit { nonFungibleBalanceCache.initialise(txCtx) }
+    )
+
+    // block until caches have finished initialising
+    futures.forEach { it.get() }
   }
 
   override fun reset(txCtx: DSLContext) {

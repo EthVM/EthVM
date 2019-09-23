@@ -45,8 +45,14 @@ class EtherBalanceProcessor : AbstractProcessor<TraceListRecord>("ether-balance-
   override fun blockHashFor(value: TraceListRecord): String = value.blockHash
 
   override fun initialise(txCtx: DSLContext, latestBlockNumber: BigInteger) {
-    fungibleBalanceCache.initialise(txCtx)
-    internalTxsCountsCache.initialise(txCtx)
+
+    val futures = listOf(
+      executor.submit { fungibleBalanceCache.initialise(txCtx) },
+      executor.submit { internalTxsCountsCache.initialise(txCtx) }
+    )
+
+    // block until caches have finished initialising
+    futures.forEach { it.get() }
   }
 
   override fun reset(txCtx: DSLContext) {

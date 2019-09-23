@@ -13,7 +13,7 @@ import {TokenMetadataPageDto} from '@app/graphql/tokens/dto/token-metadata-page.
 import {TokenDetailDto} from '@app/graphql/tokens/dto/token-detail.dto'
 import {TokenBalancePageDto} from '@app/graphql/tokens/dto/token-balance-page.dto'
 import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe'
-import {ExchangeRatePair, TokenExchangeRateFilter} from '@app/graphql/schema';
+import {ExchangeRatePair, TokenExchangeRateFilter} from '@app/graphql/schema'
 
 @Resolver('Token')
 @UseInterceptors(SyncingInterceptor)
@@ -209,8 +209,7 @@ export class TokenResolvers {
     if (!blockNumber) { // No latest block number was found so there are no tokens.
       return undefined
     }
-    // Find token details matching this address.
-    const entity = await this.tokenService.findDetailByAddress(address)
+    const entity = await this.tokenService.findDetailByAddress(address, blockNumber)
     if (!entity) return undefined
 
     // Find total number of holders of this token at the given block number.
