@@ -21,7 +21,7 @@ export class SearchResolvers {
   @Query()
   async search(@Args('query') query: string, @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber): Promise<SearchDto> {
     if (!blockNumber) { // There is no data
-      return new SearchDto({ type: SearchType.None })
+      return new SearchDto(SearchType.None)
     }
     return this.searchService.search(query, blockNumber)
   }
