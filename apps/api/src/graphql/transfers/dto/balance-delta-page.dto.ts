@@ -1,19 +1,19 @@
-import { Transfer, TransferPage } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
-import { BalanceDeltaDto } from '@app/graphql/transfers/dto/balance-delta.dto'
+import {Transfer, TransferPage} from '@app/graphql/schema'
+import {BalanceDeltaDto} from '@app/graphql/transfers/dto/balance-delta.dto'
 import BigNumber from 'bignumber.js'
+import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity'
 
 export class BalanceDeltaPageDto implements TransferPage {
   items!: Transfer[]
   hasMore!: boolean
   totalCount?: BigNumber
 
-  constructor(data: any) {
-    if (data.items) {
-      this.items = data.items.map(i => new BalanceDeltaDto(i))
-      delete data.items
+  constructor(items: BalanceDeltaEntity[], hasMore: boolean, totalCount?: BigNumber) {
+    if (items) {
+      this.items = items.map(i => new BalanceDeltaDto(i))
     }
-    assignClean(this, data)
+    this.hasMore = hasMore
+    this.totalCount = totalCount
   }
 
 }

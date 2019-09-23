@@ -19,7 +19,7 @@ export class AggregateBlockMetricDto implements AggregateBlockMetric {
   avgTotalTxFees?: BigNumber
   avgTxFees?: BigNumber
 
-  constructor(data: any) {
+  constructor(data: AggregateBlockMetric) {
     assignClean(this, data)
   }
 

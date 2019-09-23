@@ -1,5 +1,6 @@
 import { BigNumber, TokenBalance } from '@app/graphql/schema'
 import { assignClean, extractFromJson } from '@app/shared/utils'
+import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto'
 
 export class TokenBalanceDto implements TokenBalance {
 
@@ -15,7 +16,7 @@ export class TokenBalanceDto implements TokenBalance {
   priceChangePercentage24h?: BigNumber
   image?: string
 
-  constructor(data: any) {
+  constructor(data: RawBalanceEntity) {
     assignClean(this, data)
 
     this.balance = data.balance
