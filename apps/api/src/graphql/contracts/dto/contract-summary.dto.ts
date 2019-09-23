@@ -10,7 +10,7 @@ export class ContractSummaryDto implements ContractSummary {
   timestamp!: Date
   txFee!: BigNumber
 
-  constructor(data: any) {
+  constructor(data: ContractSummary) {
     assignClean(this, data)
   }
 }
