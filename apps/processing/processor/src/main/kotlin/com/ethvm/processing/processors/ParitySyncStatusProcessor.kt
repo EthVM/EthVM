@@ -59,6 +59,12 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
   override fun initialise() {
   }
 
+  override fun logLastChangeBlockNumber() {
+  }
+
+  override fun setLastChangeBlockNumberFromDb() {
+  }
+
   override fun rewindUntil(rewindBlockNumber: BigInteger) {
   }
 
@@ -83,6 +89,11 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
   override fun stop() {
     stop = true
     stopLatch.await()
+  }
+
+  override fun close() {
+    consumer.close()
+    stopLatch.countDown()
   }
 
   override fun run() {
@@ -117,8 +128,7 @@ class ParitySyncStatusProcessor : KoinComponent, Processor {
     } catch (e: Exception) {
       logger.error(e) { "Fatal exception" }
     } finally {
-      consumer.close()
-      stopLatch.countDown()
+      close()
     }
   }
 
