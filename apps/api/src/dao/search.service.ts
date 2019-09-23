@@ -12,6 +12,7 @@ import { AccountDto } from '@app/graphql/accounts/account.dto'
 import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
 import BigNumber from 'bignumber.js'
+import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
 
 @Injectable()
 export class SearchService {
@@ -52,11 +53,12 @@ export class SearchService {
         const { address } = account
         const isMiner = await this.accountService.findIsMiner(address, blockNumber)
         const isContractCreator = await this.accountService.findIsContractCreator(address, blockNumber)
-        const txCounts = await this.accountService.findTransactionCounts(address, blockNumber) || { total: 0, totalIn: 0, totalOut: 0 }
+        const txCounts = await this.accountService.findTransactionCounts(address, blockNumber) ||
+          new AddressTransactionCountEntity({ total: 0, totalIn: 0, totalOut: 0, address, blockNumber })
         const hasInternalTransfers = await this.accountService.findHasInternalTransfers(address, blockNumber)
         const isContract = await this.accountService.findIsContract(address, blockNumber)
 
-        result.address = new AccountDto({ ...account, isMiner, isContractCreator, ...txCounts, hasInternalTransfers, isContract })
+        result.address = new AccountDto(account, isMiner, isContractCreator, hasInternalTransfers, isContract, txCounts)
         result.type = SearchType.Address
         return result
       }

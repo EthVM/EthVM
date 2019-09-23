@@ -1,6 +1,7 @@
 import { Account } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
+import {BalanceEntity} from '@app/orm/entities/balance.entity';
+import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
 
 export class AccountDto implements Account {
 
@@ -14,12 +15,27 @@ export class AccountDto implements Account {
   isContract!: boolean
   hasInternalTransfers!: boolean
 
-  constructor(data: any) {
-    assignClean(this, data)
+  constructor(
+    balance: BalanceEntity,
+    isMiner: boolean,
+    isContractCreator: boolean,
+    hasInternalTransfers: boolean,
+    isContract: boolean,
+    txCounts: AddressTransactionCountEntity,
+  ) {
+    // Set balance info
+    this.address = balance.address
+    this.balance = balance.balance!
 
-    // default counts
-    this.inTxCount = this.inTxCount || 0
-    this.outTxCount = this.outTxCount || 0
-    this.totalTxCount = this.totalTxCount || 0
+    // Set boolean info fields
+    this.isContract = isContract
+    this.isContractCreator = isContractCreator
+    this.isMiner = isMiner
+    this.hasInternalTransfers = hasInternalTransfers
+
+    // Set tx count info
+    this.totalTxCount = txCounts.total || 0
+    this.inTxCount = txCounts.totalIn || 0
+    this.outTxCount = txCounts.totalOut || 0
   }
 }
