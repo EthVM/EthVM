@@ -6,6 +6,7 @@ import getWeb3 from './getWeb3'
 import processBlock from './processBlock'
 import SNS from './helpers/sns-publish'
 import WSNotif from './helpers/ws-publish'
+import InfluxPublish from './helpers/influx-cloud-publish'
 
 const HOST = Configs.WS_HOST
 const MAX_CONCURRENT = Configs.MAX_CONCURRENT
@@ -26,6 +27,7 @@ const web3 = getCustomWeb3(HOST)
 const db = new S3DB(Configs.S3_BUCKET)
 const sns = new SNS(Configs.AWS_SNS_TOPIC)
 const wsNotif = new WSNotif()
+const influxPublish = new InfluxPublish()
 const status = new Status(db)
 
 const multibar = new cliProgress.MultiBar(
@@ -50,6 +52,7 @@ const setProcessed = blockNum => {
       const blockInfo = volatileStatus.processingBlocks.shift()
       if (Configs.PUBLISH_SNS) sns.publish(blockInfo.number)
       if (Configs.PUBLISH_WS) wsNotif.publish(blockInfo.number)
+      if (Configs.PUBLISH_INFLUX) influxPublish.publish(blockInfo.number)
     } else break
   }
 }

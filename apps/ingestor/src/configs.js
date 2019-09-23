@@ -12,5 +12,10 @@ export default {
   MAX_CONCURRENT: process.env.MAX_CONCURRENT || 10,
   IS_GETH: process.env.IS_GETH === 'true' || false,
   PUBLISH_WS: process.env.PUBLISH_WS === 'true' || false,
-  WS_PUBLISH_PORT: process.env.WS_PUBLISH_PORT || 8547
+  WS_PUBLISH_PORT: process.env.WS_PUBLISH_PORT || 8547,
+  PUBLISH_INFLUX: process.env.PUBLISH_INFLUX === 'true' || false,
+  INFLUX_URL: process.env.INFLUX_URL || '',
+  INFLUX_ORG: process.env.INFLUX_ORG || '',
+  INFLUX_BUCKET: process.env.INFLUX_BUCKET || '',
+  INFLUX_TOKEN: process.env.INFLUX_TOKEN || ''
 }
