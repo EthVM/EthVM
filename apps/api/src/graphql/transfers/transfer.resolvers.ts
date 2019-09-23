@@ -31,10 +31,10 @@ export class TransferResolvers {
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
     if (!blockNumber) { // No latest block number was found so there are no valid balance transfers.
-      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+      return new BalanceDeltaPageDto([], false)
     }
     const [items, hasMore] = await this.transferService.findContractTokenTransfers(contractAddress, offset, limit, blockNumber)
-    return new BalanceDeltaPageDto({ items, hasMore })
+    return new BalanceDeltaPageDto(items, hasMore)
   }
 
   /**
@@ -57,10 +57,10 @@ export class TransferResolvers {
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
     if (!blockNumber) { // No latest block number was found so there are no valid balance transfers.
-      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+      return new BalanceDeltaPageDto([], false)
     }
     const [items, hasMore] = await this.transferService.findContractTokenTransfersForAddress(contractAddress, holderAddress, filter, offset, limit, blockNumber)
-    return new BalanceDeltaPageDto({ items, hasMore })
+    return new BalanceDeltaPageDto(items, hasMore)
   }
 
   /**
@@ -99,10 +99,10 @@ export class TransferResolvers {
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<BalanceDeltaPageDto> {
     if (!blockNumber) { // No latest block number was found so there are no valid balance transfers.
-      return new BalanceDeltaPageDto({ items: 0, hasMore: false, totalCount: 0 })
+      return new BalanceDeltaPageDto([], false, new BigNumber(0))
     }
     const [items, hasMore, totalCount] = await this.transferService.findInternalTransactionsForAddress(address, offset, limit, blockNumber)
-    return new BalanceDeltaPageDto({ items, hasMore, totalCount })
+    return new BalanceDeltaPageDto(items, hasMore, totalCount)
   }
 
   /**
@@ -130,9 +130,9 @@ export class TransferResolvers {
     @Args('limit') limit?: number,
   ): Promise<BalanceDeltaPageDto> {
     if (!blockNumber) { // No latest block number was found so there are no valid balance transfers.
-      return new BalanceDeltaPageDto({ items: [], hasMore: false })
+      return new BalanceDeltaPageDto([], false)
     }
     const [items, hasMore] = await this.transferService.findBalanceDeltas(addresses, contracts, filter, offset, limit, blockNumber, timestampTo, timestampFrom)
-    return new BalanceDeltaPageDto({ items, hasMore })
+    return new BalanceDeltaPageDto(items, hasMore)
   }
 }

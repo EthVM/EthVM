@@ -1,7 +1,7 @@
-import { DeltaType, Transfer } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
+import {DeltaType, Transfer} from '@app/graphql/schema'
+import {assignClean} from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
-import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity';
+import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity'
 
 export class BalanceDeltaDto implements Transfer {
   amount?: BigNumber
