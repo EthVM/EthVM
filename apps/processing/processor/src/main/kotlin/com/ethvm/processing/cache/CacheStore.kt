@@ -32,12 +32,12 @@ class CacheStore<K, V>(
     .keySerializer(keySerializer)
     .valueSerializer(valueSerializer)
     .expireStoreSize(maxMemorySize.toLong())
-    .expireAfterGet(1, TimeUnit.MINUTES)
-    .expireAfterCreate(30, TimeUnit.SECONDS)
-    .expireAfterUpdate(30, TimeUnit.SECONDS)
+    .expireAfterGet(15, TimeUnit.SECONDS)
+    .expireAfterCreate(15, TimeUnit.SECONDS)
+    .expireAfterUpdate(15, TimeUnit.SECONDS)
     .expireOverflow(overflowMap)
     .expireExecutor(scheduledExecutor)
-    .expireExecutorPeriod(10_000)
+    .expireExecutorPeriod(500) // expire every 500 ms
     .createOrOpen()
 
   // a list of keys modified during a tx
