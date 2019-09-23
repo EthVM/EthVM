@@ -1,7 +1,7 @@
 import { AccountEntity } from '../../orm/entities/account.entity'
 import { AccountResolvers } from './account.resolvers'
 import { Test } from '@nestjs/testing'
-import { AccountDto } from './account.dto'
+import { AccountDto } from './dto/account.dto'
 import { EthService } from '../../shared/eth.service'
 import { AccountService } from '../../dao/account.service'
 import { MetadataService } from '../../dao/metadata.service'

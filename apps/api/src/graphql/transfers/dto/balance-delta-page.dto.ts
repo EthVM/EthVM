@@ -1,7 +1,7 @@
 import {Transfer, TransferPage} from '@app/graphql/schema'
 import {BalanceDeltaDto} from '@app/graphql/transfers/dto/balance-delta.dto'
 import BigNumber from 'bignumber.js'
-import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity';
+import {BalanceDeltaEntity} from '@app/orm/entities/balance-delta.entity'
 
 export class BalanceDeltaPageDto implements TransferPage {
   items!: Transfer[]

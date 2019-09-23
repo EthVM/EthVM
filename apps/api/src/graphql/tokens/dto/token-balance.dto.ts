@@ -1,6 +1,6 @@
 import { BigNumber, TokenBalance } from '@app/graphql/schema'
 import { assignClean, extractFromJson } from '@app/shared/utils'
-import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto';
+import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto'
 
 export class TokenBalanceDto implements TokenBalance {
 

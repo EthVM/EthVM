@@ -1,6 +1,6 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
 import {AccountService} from '@app/dao/account.service'
-import {AccountDto} from '@app/graphql/accounts/account.dto'
+import {AccountDto} from '@app/graphql/accounts/dto/account.dto'
 import {UseInterceptors} from '@nestjs/common'
 import BigNumber from 'bignumber.js'
 import {SyncingInterceptor} from '@app/shared/interceptors/syncing-interceptor'

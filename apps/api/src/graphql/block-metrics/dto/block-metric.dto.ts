@@ -1,7 +1,7 @@
 import { BlockMetric } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
-import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity';
+import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 
 export class BlockMetricDto implements BlockMetric {
 

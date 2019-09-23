@@ -1,7 +1,7 @@
 import { BigNumber, TokenExchangeRate } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import { ContractDto } from '@app/graphql/contracts/dto/contract.dto'
-import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.entity';
+import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.entity'
 
 export class TokenExchangeRateDto implements TokenExchangeRate {
 

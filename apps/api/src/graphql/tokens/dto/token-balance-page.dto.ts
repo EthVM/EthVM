@@ -1,8 +1,8 @@
 import { TokenBalancePage } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import { TokenBalanceDto } from '@app/graphql/tokens/dto/token-balance.dto'
-import BigNumber from 'bignumber.js';
-import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto';
+import BigNumber from 'bignumber.js'
+import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto'
 
 export class TokenBalancePageDto implements TokenBalancePage {
   items!: TokenBalanceDto[]

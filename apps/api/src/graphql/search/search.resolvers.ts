@@ -4,7 +4,7 @@ import {UseInterceptors} from '@nestjs/common'
 import {SyncingInterceptor} from '@app/shared/interceptors/syncing-interceptor'
 import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe'
 import BigNumber from 'bignumber.js'
-import {SearchDto} from '@app/graphql/search/search.dto'
+import {SearchDto} from '@app/graphql/search/dto/search.dto'
 import {SearchType} from '@app/graphql/schema'
 
 @Resolver('Search')

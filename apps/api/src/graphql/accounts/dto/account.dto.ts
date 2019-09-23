@@ -1,7 +1,7 @@
 import { Account } from '@app/graphql/schema'
 import BigNumber from 'bignumber.js'
-import {BalanceEntity} from '@app/orm/entities/balance.entity';
-import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
+import {BalanceEntity} from '@app/orm/entities/balance.entity'
+import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity'
 
 export class AccountDto implements Account {
 

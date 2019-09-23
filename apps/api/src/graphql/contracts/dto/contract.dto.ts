@@ -1,7 +1,7 @@
 import {BigNumber, Contract, ContractMetadata} from '@app/graphql/schema'
 import {assignClean} from '@app/shared/utils'
 import {EthListContractMetadataDto} from '@app/graphql/contracts/dto/eth-list-contract-metadata.dto'
-import {ContractEntity} from '@app/orm/entities/contract.entity';
+import {ContractEntity} from '@app/orm/entities/contract.entity'
 
 export class ContractDto implements Contract {
 

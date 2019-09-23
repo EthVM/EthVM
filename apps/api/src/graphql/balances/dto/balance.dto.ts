@@ -2,9 +2,9 @@ import { Balance } from '@app/graphql/schema'
 import BigNumber from 'bignumber.js'
 import { assignClean } from '@app/shared/utils'
 import { ETH_ADDRESS } from '@app/shared/eth.service'
-import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.entity';
-import {ContractMetadataEntity} from '@app/orm/entities/contract-metadata.entity';
-import {EthListContractMetadataEntity} from '@app/orm/entities/eth-list-contract-metadata.entity';
+import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.entity'
+import {ContractMetadataEntity} from '@app/orm/entities/contract-metadata.entity'
+import {EthListContractMetadataEntity} from '@app/orm/entities/eth-list-contract-metadata.entity'
 
 export interface RawBalanceEntity {
   address: string
