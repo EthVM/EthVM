@@ -1,5 +1,6 @@
 import { CoinExchangeRate, Decimal } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
+import {CoinExchangeRateEntity} from '@app/orm/entities/coin-exchange-rate.entity';
 
 export class CoinExchangeRateDto implements CoinExchangeRate {
 
@@ -10,7 +11,7 @@ export class CoinExchangeRateDto implements CoinExchangeRate {
   change24h?: Decimal;
   lastUpdated?: Decimal;
 
-  constructor(data: any) {
+  constructor(data: CoinExchangeRateEntity) {
     assignClean(this, data)
   }
 }

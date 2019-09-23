@@ -1,6 +1,7 @@
 import { BigNumber, TokenExchangeRate } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import { ContractDto } from '@app/graphql/contracts/dto/contract.dto'
+import {TokenExchangeRateEntity} from '@app/orm/entities/token-exchange-rate.entity';
 
 export class TokenExchangeRateDto implements TokenExchangeRate {
 
@@ -24,12 +25,14 @@ export class TokenExchangeRateDto implements TokenExchangeRate {
   holdersCount?: BigNumber
   contract?: ContractDto
 
-  constructor(data: any) {
+  constructor(data: TokenExchangeRateEntity, holdersCount?: BigNumber) {
 
     if (data.contract) {
       this.contract = new ContractDto(data.contract)
       delete data.contract
     }
+
+    this.holdersCount = holdersCount
 
     assignClean(this, data)
   }

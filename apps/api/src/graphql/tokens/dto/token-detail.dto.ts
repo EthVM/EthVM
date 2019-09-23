@@ -2,6 +2,7 @@ import { TokenDetail } from '@app/graphql/schema'
 import { assignClean, extractFromJson } from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
 import { ContractSocialDto } from '@app/graphql/contracts/dto/contract-social.dto'
+import {TokenDetailEntity} from '@app/orm/entities/token-detail.entity';
 
 export class TokenDetailDto implements TokenDetail {
 
@@ -23,26 +24,28 @@ export class TokenDetailDto implements TokenDetail {
   totalVolume?: BigNumber
   website?: string
 
-  constructor(data: any) {
+  constructor(data: TokenDetailEntity, holdersCount?: BigNumber) {
 
     assignClean(this, data)
+
+    this.holdersCount = holdersCount
 
     // If data is missing, try to fill from equivalent fields
 
     if (!this.name) {
-      this.name = data.terName || data.e20Name || data.e721Name
+      this.name = data.terName || data.cmName
     }
 
     if (!this.symbol) {
-      this.symbol = data.terSymbol || data.e20Symbol || data.e721Symbol
+      this.symbol = data.terSymbol || data.cmSymbol
     }
 
     if (!this.decimals) {
-      this.decimals = data.e20Decimals
+      this.decimals = data.cmDecimals
     }
 
     if (!this.totalSupply) {
-      this.totalSupply = data.e20TotalSupply
+      this.totalSupply = data.cmTotalSupply
     }
 
     this.logo = extractFromJson('src', data.logo) || data.image

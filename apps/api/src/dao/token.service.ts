@@ -12,6 +12,7 @@ import {ContractEntity} from '@app/orm/entities/contract.entity'
 import {AddressTokenCountEntity} from '@app/orm/entities/address-token-count.entity'
 import {ContractHolderCountEntity} from '@app/orm/entities/contract-holder-count.entity'
 import {ExchangeRatePair, TokenExchangeRateFilter} from '@app/graphql/schema'
+import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto';
 
 /**
  * @const
@@ -51,7 +52,7 @@ export class TokenService {
     limit: number = 10,
     offset: number = 0,
     blockNumber: BigNumber,
-  ): Promise<[BalanceEntity[], boolean, BigNumber]> {
+  ): Promise<[RawBalanceEntity[], boolean, BigNumber]> {
 
     // TODO handle ERC721
 
@@ -121,9 +122,9 @@ export class TokenService {
     offset: number = 0,
     limit: number = 10,
     blockNumber: BigNumber,
-  ): Promise<[BalanceEntity[], boolean, BigNumber]> {
+  ): Promise<[RawBalanceEntity[], boolean, BigNumber]> {
 
-    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[BalanceEntity[], boolean, BigNumber]> => {
+    return this.entityManager.transaction('READ COMMITTED', async (txn): Promise<[RawBalanceEntity[], boolean, BigNumber]> => {
 
       // Get the latest count of positive token balances (not Ether) for this address.
       const erc20Count = await txn.findOne(AddressTokenCountEntity, {
