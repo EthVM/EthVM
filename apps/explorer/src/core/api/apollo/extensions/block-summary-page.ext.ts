@@ -32,12 +32,24 @@ export class BlockSummaryPageExt_items implements BlockSummaryPage_items {
     return new BN(this.numTxs)
   }
 
+  get numTxsFromatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.numTxsBN)
+  }
+
   get numFailedTxsBN(): BN {
     return new BN(this.numFailedTxs)
   }
 
+  get numFailedTxsFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.numFailedTxsBN)
+  }
+
   get numSuccessfulTxsBN(): BN {
     return new BN(this.numSuccessfulTxs)
+  }
+
+  get numSuccessfulTxsFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.numSuccessfulTxsBN)
   }
 
   get rewardBN(): BN {

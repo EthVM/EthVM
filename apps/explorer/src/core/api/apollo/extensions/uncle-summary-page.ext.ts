@@ -26,7 +26,7 @@ export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
   }
 
   get nephewNumberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.nephewNumberBN).value
+    return this.nephewNumberBN.toFormat()
   }
 
   get numberBN(): BigNumber {
@@ -34,7 +34,7 @@ export class UncleSummaryPageExt_items implements UncleSummaryPage_items {
   }
 
   get numberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.numberBN).value
+    return this.numberBN.toFormat()
   }
 
   get uncleRewardBN(): BigNumber {
