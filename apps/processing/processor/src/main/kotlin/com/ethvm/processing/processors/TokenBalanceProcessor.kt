@@ -44,6 +44,16 @@ class TokenBalanceProcessor : AbstractProcessor<BlockRecord>("token-balance-proc
     futures.forEach { it.get() }
   }
 
+  override fun logLastChangeBlockNumber() {
+    fungibleBalanceCache.logLastChangeBlockNumber()
+    nonFungibleBalanceCache.logLastChangeBlockNumber()
+  }
+
+  override fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    fungibleBalanceCache.setLastChangeBlockNumberFromDb(txCtx)
+    nonFungibleBalanceCache.setLastChangeBlockNumberFromDb(txCtx)
+  }
+
   override fun reset(txCtx: DSLContext) {
     fungibleBalanceCache.reset(txCtx)
     nonFungibleBalanceCache.reset(txCtx)

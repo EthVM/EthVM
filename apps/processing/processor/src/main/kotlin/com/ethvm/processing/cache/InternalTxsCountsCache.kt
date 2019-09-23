@@ -106,7 +106,7 @@ class InternalTxsCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count address count entries processed" }
       }
     }
 
@@ -129,13 +129,18 @@ class InternalTxsCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count contract count entries processed" }
       }
     }
 
     contractCountCursor.close()
 
     logger.info { "Contract counts reloaded. $count entries processed" }
+
+    // update last change block locally
+
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
 
     // final flush of any pending writes
     cacheStores.forEach { it.flushToDisk(true) }
@@ -144,6 +149,17 @@ class InternalTxsCountsCache(
     writeHistoryToDb = true
 
     logger.info { "Initialisation complete" }
+  }
+
+  fun logLastChangeBlockNumber() {
+    logger.info { "Last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+  }
+
+  fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber
+    cacheStores.forEach { it.flushToDisk(true) }
+    logger.info { "Last change block number override from db: $lastChangeBlockNumber" }
   }
 
   fun lastChangeBlockNumberDb(txCtx: DSLContext) =

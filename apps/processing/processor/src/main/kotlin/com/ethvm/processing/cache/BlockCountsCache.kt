@@ -145,7 +145,7 @@ class BlockCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count address tx count entries processed" }
       }
     }
 
@@ -168,13 +168,18 @@ class BlockCountsCache(
       count += 1
       if (count % dbFetchSize == 0) {
         cacheStores.forEach { it.flushToDisk(true) }
-        logger.info { "$count entries processed" }
+        logger.info { "$count miner count entries processed" }
       }
     }
 
     minerCountCursor.close()
 
     logger.info { "Miner counts reloaded" }
+
+    // update last change block locally
+
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
 
     // final flush to disk for any remaining modifications at the end of the batches
 
@@ -185,6 +190,17 @@ class BlockCountsCache(
     writeHistoryToDb = true
 
     logger.info { "Initialisation complete" }
+  }
+
+  fun logLastChangeBlockNumber() {
+    logger.info { "Last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+  }
+
+  fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber
+    cacheStores.forEach { it.flushToDisk(true) }
+    logger.info { "Last change block number override from db: $lastChangeBlockNumber" }
   }
 
   private fun lastChangeBlockNumberDb(txCtx: DSLContext) =

@@ -100,11 +100,27 @@ class NonFungibleBalanceCache(
 
     cursor.close()
 
+    // update last change block locally
+
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+
     cacheStores.forEach { it.flushToDisk(true) }
 
     writeHistoryToDb = true
 
     logger.info { "[$tokenType] Initialised. $count deltas processed" }
+  }
+
+  fun logLastChangeBlockNumber() {
+    logger.info { "Last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+  }
+
+  fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber
+    cacheStores.forEach { it.flushToDisk(true) }
+    logger.info { "Last change block number override from db: $lastChangeBlockNumber" }
   }
 
   private fun lastChangeBlockNumberDb(txCtx: DSLContext) =
