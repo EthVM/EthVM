@@ -40,6 +40,5 @@ class Init : AbstractCliktCommand(help = "Initializes processors") {
       .forEach { it.close() }
 
     exitProcess(0)
-
   }
 }

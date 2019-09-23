@@ -197,7 +197,6 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
 
         logger.info { "initialised" }
       }
-
     } catch (ex: Exception) {
       diskDb.rollback()
       throw ex
@@ -213,14 +212,11 @@ abstract class AbstractProcessor<V>(protected val processorId: String) : KoinCom
         setLastChangeBlockNumberFromDb(DSL.using(txConfig))
 
         diskDb.commit()
-
       }
-
     } catch (ex: Exception) {
       diskDb.rollback()
       throw ex
     }
-
   }
 
   override fun reset() {

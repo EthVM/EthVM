@@ -140,7 +140,7 @@ class InternalTxsCountsCache(
     // update last change block locally
 
     metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
-    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}"}
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
 
     // final flush of any pending writes
     cacheStores.forEach { it.flushToDisk(true) }

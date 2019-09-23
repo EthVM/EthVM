@@ -103,7 +103,7 @@ class NonFungibleBalanceCache(
     // update last change block locally
 
     metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
-    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}"}
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
 
     cacheStores.forEach { it.flushToDisk(true) }
 

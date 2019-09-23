@@ -1,7 +1,6 @@
 package com.ethvm.processing.cmd
 
 import mu.KotlinLogging
-import java.util.concurrent.ExecutorService
 import kotlin.system.exitProcess
 
 class LastChangeBlockNumberOverride : AbstractCliktCommand(
@@ -35,6 +34,5 @@ class LastChangeBlockNumberOverride : AbstractCliktCommand(
       .forEach { it.close() }
 
     exitProcess(0)
-
   }
 }
