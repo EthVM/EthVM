@@ -1,17 +1,15 @@
-import { Balance, BalancePage } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
-import { BalanceDto } from '@app/graphql/balances/dto/balance.dto'
+import {Balance, BalancePage} from '@app/graphql/schema'
+import {BalanceDto, RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto'
 
 export class BalancePageDto implements BalancePage {
   items!: Balance[]
   hasMore!: boolean
 
-  constructor(data) {
-    if (data.items) {
-      this.items = data.items.map(i => new BalanceDto(i))
-      delete data.items
+  constructor(items: RawBalanceEntity[], hasMore: boolean) {
+    if (items) {
+      this.items = items.map(i => new BalanceDto(i))
     }
-    assignClean(this, data)
+    this.hasMore = hasMore
   }
 
 }

@@ -5,6 +5,7 @@ import {EntityManager, Repository} from 'typeorm'
 import {ETH_ADDRESS} from '@app/shared/eth.service'
 import BigNumber from 'bignumber.js'
 import {BalanceEntity} from '@app/orm/entities/balance.entity'
+import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto';
 
 @Injectable()
 export class BalanceService {
@@ -23,7 +24,7 @@ export class BalanceService {
    * @param {string[]} [contracts=[]] - Array of contract address hashes to filter balances by.
    * @param {number} [offset=0] - The number of items to skip.
    * @param {number} [limit=10] - The page size.
-   * @returns {Promise<[BalanceEntity[], boolean]>} An array of balance entities and a boolean representing whether there are more items after these.
+   * @returns {Promise<[RawBalanceEntity[], boolean]>} An array of raw balance entities and a boolean representing whether there are more items after these.
    */
   async find(
     addresses: string[],
@@ -31,7 +32,7 @@ export class BalanceService {
     contracts: string[] = [],
     offset: number = 0,
     limit: number = 10,
-  ): Promise<[BalanceEntity[], boolean]> {
+  ): Promise<[RawBalanceEntity[], boolean]> {
 
     // TODO update to use query builder when TypeORM releases "with" functionality
     // see https://github.com/typeorm/typeorm/issues/1116
