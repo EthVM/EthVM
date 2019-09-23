@@ -94,7 +94,7 @@ class FungibleBalanceCache(
     logger.info { "[$tokenType] Initialising" }
 
     var lastChangeBlockNumber = metadataMap["lastChangeBlockNumber"] ?: BigInteger.ONE.negate()
-    val lastChangeBlockNumberDb = lastChangeBlockNumberFromDb(txCtx)
+    val lastChangeBlockNumberDb = lastChangeBlockNumberDb(txCtx)
 
     logger.info { "[$tokenType] Last change block number (local): $lastChangeBlockNumber, last change block number from db: $lastChangeBlockNumberDb" }
 
@@ -188,6 +188,11 @@ class FungibleBalanceCache(
 
     logger.info { "[$tokenType] Contract holder count reloaded. $count contract holder counts processed" }
 
+    // update last change block locally
+
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
+    logger.info { "Updated last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+
     // final flush for any lingering pending writes
     cacheStores.forEach { it.flushToDisk(true) }
 
@@ -197,7 +202,18 @@ class FungibleBalanceCache(
     logger.info { "[$tokenType] Initialisation complete" }
   }
 
-  private fun lastChangeBlockNumberFromDb(txCtx: DSLContext): BigInteger =
+  fun setLastChangeBlockNumberFromDb(txCtx: DSLContext) {
+    val lastChangeBlockNumber = lastChangeBlockNumberDb(txCtx)
+    metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumber
+    cacheStores.forEach { it.flushToDisk(true) }
+    logger.info { "Last change block number override from db: $lastChangeBlockNumber" }
+  }
+
+  fun logLastChangeBlockNumber() {
+    logger.info { "Last change block number: ${metadataMap["lastChangeBlockNumber"]}" }
+  }
+
+  private fun lastChangeBlockNumberDb(txCtx: DSLContext): BigInteger =
     txCtx
       .select(BALANCE.BLOCK_NUMBER)
       .from(BALANCE)
@@ -333,7 +349,7 @@ class FungibleBalanceCache(
         .execute()
 
       // update last block number where changes occurred locally
-      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberFromDb(txCtx)
+      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
     }
 
     cacheStores.forEach { it.flushToDisk() }
@@ -472,7 +488,7 @@ class FungibleBalanceCache(
         .execute()
 
       // update last block number where changes occurred locally
-      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberFromDb(txCtx)
+      metadataMap["lastChangeBlockNumber"] = lastChangeBlockNumberDb(txCtx)
 
       // re-enable generation of history records
       writeHistoryToDb = true
