@@ -1,6 +1,7 @@
 import { BlockMetric } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
 import BigNumber from 'bignumber.js'
+import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity';
 
 export class BlockMetricDto implements BlockMetric {
 
@@ -21,7 +22,7 @@ export class BlockMetricDto implements BlockMetric {
   totalTxFees!: BigNumber
   totalTxs!: number
 
-  constructor(data: any) {
+  constructor(data: BlockMetricEntity) {
     assignClean(this, data)
   }
 
