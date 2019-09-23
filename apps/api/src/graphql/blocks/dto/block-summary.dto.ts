@@ -16,7 +16,7 @@ export class BlockSummaryDto implements BlockSummary {
   transactionHashes!: string[]
   uncleHashes!: string[]
 
-  constructor(data: any) {
+  constructor(data: BlockSummary) {
     assignClean(this, data)
   }
 

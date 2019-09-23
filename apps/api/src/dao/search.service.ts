@@ -1,6 +1,6 @@
 import { SearchType } from '@app/graphql/schema'
 import { BlockService } from '@app/dao/block.service'
-import { SearchDto } from '@app/graphql/search/search.dto'
+import { SearchDto } from '@app/graphql/search/dto/search.dto'
 import { TxService } from '@app/dao/tx.service'
 import { EthService } from '@app/shared/eth.service'
 import { Injectable } from '@nestjs/common'
@@ -8,10 +8,11 @@ import { TxDto } from '@app/graphql/txs/dto/tx.dto'
 import { BlockDto } from '@app/graphql/blocks/dto/block.dto'
 import { UncleService } from '@app/dao/uncle.service'
 import { AccountService } from '@app/dao/account.service'
-import { AccountDto } from '@app/graphql/accounts/account.dto'
+import { AccountDto } from '@app/graphql/accounts/dto/account.dto'
 import { UncleDto } from '@app/graphql/uncles/dto/uncle.dto'
 import { BlockMetricsService } from '@app/dao/block-metrics.service'
 import BigNumber from 'bignumber.js'
+import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
 
 @Injectable()
 export class SearchService {
@@ -52,11 +53,12 @@ export class SearchService {
         const { address } = account
         const isMiner = await this.accountService.findIsMiner(address, blockNumber)
         const isContractCreator = await this.accountService.findIsContractCreator(address, blockNumber)
-        const txCounts = await this.accountService.findTransactionCounts(address, blockNumber) || { total: 0, totalIn: 0, totalOut: 0 }
+        const txCounts = await this.accountService.findTransactionCounts(address, blockNumber) ||
+          new AddressTransactionCountEntity({ total: 0, totalIn: 0, totalOut: 0, address, blockNumber })
         const hasInternalTransfers = await this.accountService.findHasInternalTransfers(address, blockNumber)
         const isContract = await this.accountService.findIsContract(address, blockNumber)
 
-        result.address = new AccountDto({ ...account, isMiner, isContractCreator, ...txCounts, hasInternalTransfers, isContract })
+        result.address = new AccountDto(account, isMiner, isContractCreator, hasInternalTransfers, isContract, txCounts)
         result.type = SearchType.Address
         return result
       }

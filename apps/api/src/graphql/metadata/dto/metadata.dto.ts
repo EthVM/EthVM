@@ -5,7 +5,7 @@ export class MetadataDto implements Metadata {
 
   isSyncing!: boolean
 
-  constructor(data: any) {
+  constructor(data: Metadata) {
     assignClean(this, data)
   }
 

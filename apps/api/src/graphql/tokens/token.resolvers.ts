@@ -38,10 +38,10 @@ export class TokenResolvers {
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenHoldersPageDto> {
     if (!blockNumber) { // No latest block number was found so there are no token balances.
-      return new TokenHoldersPageDto({ items: [], hasMore: false, totalCount: 0 })
+      return new TokenHoldersPageDto([], false, new BigNumber(0))
     }
     const [items, hasMore, totalCount] = await this.tokenService.findAllTokenBalancesForContract(address, limit, offset, blockNumber)
-    return new TokenHoldersPageDto({ items, hasMore, totalCount })
+    return new TokenHoldersPageDto(items, hasMore, totalCount)
   }
 
   /**
@@ -81,10 +81,10 @@ export class TokenResolvers {
     @Args('blockNumber', BlockNumberPipe) blockNumber: BigNumber,
   ): Promise<TokenBalancePageDto> {
     if (!blockNumber) { // No latest block number was found so there are no token balances.
-      return new TokenBalancePageDto({ items: [], hasMore: false, totalCount: 0 })
+      return new TokenBalancePageDto([], false, new BigNumber(0))
     }
     const [items, hasMore, totalCount] = await this.tokenService.findAllTokenBalancesForAddress(address, offset, limit, blockNumber)
-    return new TokenBalancePageDto({ items, hasMore, totalCount })
+    return new TokenBalancePageDto(items, hasMore, totalCount)
   }
 
   /**
@@ -131,7 +131,7 @@ export class TokenResolvers {
     @Args('offset') offset?: number,
   ): Promise<TokenExchangeRatePageDto> {
     const [items, totalCount] = await this.tokenService.findTokenExchangeRates(sort, limit, offset, addresses)
-    return new TokenExchangeRatePageDto({ items, totalCount })
+    return new TokenExchangeRatePageDto(items, totalCount)
   }
 
   /**
@@ -175,7 +175,7 @@ export class TokenResolvers {
     // Find the total number of holders of this token as of this block number.
     const holdersCount = await this.tokenService.countTokenHolders(address, blockNumber)
 
-    return new TokenExchangeRateDto({...tokenExchangeRate, holdersCount})
+    return new TokenExchangeRateDto(tokenExchangeRate, holdersCount)
   }
 
   /**
@@ -192,7 +192,7 @@ export class TokenResolvers {
     @Args('limit') limit?: number,
   ): Promise<TokenMetadataPageDto> {
     const [items, hasMore] = await this.tokenService.findTokenMetadata(addresses, offset, limit)
-    return new TokenMetadataPageDto({ items, hasMore })
+    return new TokenMetadataPageDto(items, hasMore)
   }
 
   /**
@@ -215,6 +215,6 @@ export class TokenResolvers {
     // Find total number of holders of this token at the given block number.
     const holdersCount = await this.tokenService.countTokenHolders(address, blockNumber)
 
-    return new TokenDetailDto({...entity, holdersCount})
+    return new TokenDetailDto(entity, holdersCount)
   }
 }
