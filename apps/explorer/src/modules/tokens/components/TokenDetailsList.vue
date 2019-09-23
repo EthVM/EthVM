@@ -187,10 +187,10 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get supplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.supply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalVolumeFormatted.value : undefined,
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalSupplyFormatted.value : undefined,
       tooltip:
-        !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalVolumeFormatted.tooltipText
-          ? this.tokenDetails.totalVolumeFormatted.tooltipText
+        !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalSupplyFormatted.tooltipText
+          ? this.tokenDetails.totalSupplyFormatted.tooltipText
           : undefined
     }
   }
@@ -198,7 +198,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   get circulatingSupplyDetail(): Detail {
     return {
       title: this.$i18n.t('token.circSupply'),
-      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted : undefined
+      detail: !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted.value : undefined,
+      tooltip:
+        !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply && this.tokenDetails.circulatingSupplyFormatted.tooltipText
+          ? this.tokenDetails.circulatingSupplyFormatted.tooltipText
+          : undefined
     }
   }
 
@@ -304,7 +308,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     const { holderDetails, isLoading } = this
     return {
       title: this.$t('token.transfers'),
-      detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted : undefined
+      detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted.value : undefined,
+      tooltip:
+        !isLoading && holderDetails && holderDetails.totalTransfersBN && this.holderDetails.totalTransfersFormatted.tooltipText
+          ? this.holderDetails.totalTransfersFormatted.tooltipText
+          : undefined
     }
   }
 
@@ -322,7 +330,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
       n = n.div(new BN(10).pow(decimals))
     }
 
-    return holderDetails.balance && tokenDetails.currentPrice ? this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice), false).value : undefined
+    return holderDetails.balance && tokenDetails.currentPrice ? this.formatUsdValue(n.multipliedBy(tokenDetails.currentPrice)).value : undefined
   }
 
   get balance(): FormattedNumber {

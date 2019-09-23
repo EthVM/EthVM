@@ -27,7 +27,7 @@ export class TokenUtils {
     return this.priceChangeFormattedNumber(token).value
   }
 
-  static priceChangeTooltip(token: TokenBalancePageExt_items): string | undefined {
+  static priceChangeTooltip(token: TokenBalancePageExt_items | TokenExchangeRatePageExt_items): string | undefined {
     let result = this.priceChangeFormattedNumber(token).tooltipText
     if (result && token.priceChangeSymbol === '-') {
       result = `-${result}`

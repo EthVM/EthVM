@@ -16,7 +16,7 @@ export class TransactionSummaryDto implements TransactionSummary {
   successful!: boolean
   timestamp!: Date
 
-  constructor(data: any) {
+  constructor(data: TransactionSummary) {
     assignClean(this, data)
   }
 

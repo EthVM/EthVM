@@ -6,7 +6,7 @@ export class ContractSupportDto implements ContractSupport {
   email?: string
   url?: string
 
-  constructor(data: any) {
+  constructor(data: string) {
     // Deserialize JSON string
     data = JSON.parse(data)
     assignClean(this, data)

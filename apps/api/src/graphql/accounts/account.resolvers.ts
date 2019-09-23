@@ -1,11 +1,12 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
 import {AccountService} from '@app/dao/account.service'
-import {AccountDto} from '@app/graphql/accounts/account.dto'
+import {AccountDto} from '@app/graphql/accounts/dto/account.dto'
 import {UseInterceptors} from '@nestjs/common'
 import BigNumber from 'bignumber.js'
 import {SyncingInterceptor} from '@app/shared/interceptors/syncing-interceptor'
 import {ParseAddressPipe} from '@app/shared/pipes/parse-address.pipe'
 import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe'
+import {AddressTransactionCountEntity} from '@app/orm/entities/address-transaction-count.entity';
 
 @Resolver('Account')
 @UseInterceptors(SyncingInterceptor)
@@ -40,7 +41,8 @@ export class AccountResolvers {
     const isMiner = await this.accountService.findIsMiner(address, blockNumber)
 
     // Find the total number of txs (in and out) this address has been involved in.
-    const txCounts = await this.accountService.findTransactionCounts(address, blockNumber) || { total: 0, totalIn: 0, totalOut: 0 }
+    const txCounts = await this.accountService.findTransactionCounts(address, blockNumber)
+      || new AddressTransactionCountEntity({ total: 0, totalIn: 0, totalOut: 0, address, blockNumber })
 
     // Find whether this address has created any contracts.
     const isContractCreator = await this.accountService.findIsContractCreator(address, blockNumber)
@@ -59,7 +61,7 @@ export class AccountResolvers {
     }
 
     // Build and return an AccountDto with all account info combined.
-    return new AccountDto({...balance, isMiner, isContractCreator, hasInternalTransfers, isContract, ...txCountsDto })
+    return new AccountDto(balance, isMiner, isContractCreator, hasInternalTransfers, isContract, txCounts)
   }
 
 }

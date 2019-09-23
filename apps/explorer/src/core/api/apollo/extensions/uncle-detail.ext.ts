@@ -1,6 +1,6 @@
 import { UncleDetail } from '@app/core/api/apollo/types/UncleDetail'
 import BigNumber from 'bignumber.js'
-import { NumberFormatHelper } from '@app/core/helper/number-format-helper'
+import { NumberFormatHelper, FormattedNumber } from '@app/core/helper/number-format-helper'
 
 export class UncleDetailExt implements UncleDetail {
   __typename!: 'Uncle'
@@ -24,7 +24,7 @@ export class UncleDetailExt implements UncleDetail {
   }
 
   get numberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.numberBN).value
+    return this.numberBN.toFormat()
   }
 
   get nephewNumberBN(): BigNumber {
@@ -32,23 +32,23 @@ export class UncleDetailExt implements UncleDetail {
   }
 
   get nephewNumberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.nephewNumberBN).value
+    return this.nephewNumberBN.toFormat()
   }
 
   get gasLimitBN(): BigNumber {
     return new BigNumber(this.gasLimit || 0)
   }
 
-  get gasLimitFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN).value
+  get gasLimitFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN)
   }
 
   get gasUsedBN(): BigNumber {
     return new BigNumber(this.gasUsed || 0)
   }
 
-  get gasUsedFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN).value
+  get gasUsedFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN)
   }
 
   get timestampDate(): Date {

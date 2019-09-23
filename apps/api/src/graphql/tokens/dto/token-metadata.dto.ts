@@ -1,6 +1,6 @@
 import { TokenMetadata } from '@app/graphql/schema'
 import { assignClean, extractFromJson } from '@app/shared/utils'
-import {TokenMetadataEntity} from '@app/orm/entities/token-metadata.entity';
+import {TokenMetadataEntity} from '@app/orm/entities/token-metadata.entity'
 
 export class TokenMetadataDto implements TokenMetadata {
 
