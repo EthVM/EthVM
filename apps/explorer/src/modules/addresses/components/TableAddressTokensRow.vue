@@ -48,7 +48,10 @@
                         {{ usdValueFormatted.value }}
                         <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
                       </span>
-                      <span class="caption"> (@ {{ currPrice }} {{ $t('token.per') }} {{ token.symbol }}) </span>
+                      <span class="caption">
+                        (@ {{ currPrice.value }}<app-tooltip v-if="currPrice.tooltipText" :text="currPrice.tooltipText" /> {{ $t('token.per') }}
+                        {{ token.symbol }})
+                      </span>
                     </p>
                   </v-flex>
                 </v-layout>
@@ -84,7 +87,10 @@
               <p class="black--text ">
                 {{ usdValueFormatted.value }}
                 <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
-                <span class="info--text caption"> (@ {{ currPrice }} {{ $t('token.per') }} {{ token.symbol }})</span>
+                <span class="info--text caption">
+                  (@ {{ currPrice.value }}<app-tooltip v-if="currPrice.tooltipText" :text="currPrice.tooltipText" /> {{ $t('token.per') }}
+                  {{ token.symbol }})</span
+                >
               </p>
             </v-flex>
             <v-flex v-if="!isRopsten" sm2>
@@ -144,8 +150,8 @@ export default class TableAddressTokensRow extends Vue {
     return `/token/${this.token.address}?holder=${this.holder}`
   }
 
-  get currPrice(): string {
-    return this.token.currentPriceFormatted.value
+  get currPrice(): FormattedNumber {
+    return this.token.currentPriceFormatted
   }
 
   get usdValueFormatted(): FormattedNumber {

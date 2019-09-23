@@ -175,11 +175,13 @@ export default class PageDetailsUncle extends Vue {
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: this.uncleDetail.gasLimitFormatted
+          detail: this.uncleDetail.gasLimitFormatted.value,
+          tooltip: this.uncleDetail.gasLimitFormatted.tooltipText ? `${this.uncleDetail.gasLimitFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: this.uncleDetail.gasUsedFormatted
+          detail: this.uncleDetail.gasUsedFormatted.value,
+          tooltip: this.uncleDetail.gasUsedFormatted.tooltipText ? `${this.uncleDetail.gasUsedFormatted.tooltipText}` : undefined
         }
       ]
     }

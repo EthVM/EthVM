@@ -249,7 +249,6 @@ export default class PageDetailsBlock extends Vue {
     } else {
       const blockDetail = this.blockDetail!
       const header = blockDetail.header!
-
       details = [
         {
           title: this.$i18n.t('common.height'),
@@ -277,7 +276,8 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('miner.reward'),
-          detail: `${blockDetail.minerRewardFormatted.value} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.minerRewardFormatted.value} ${this.$i18n.t('common.eth')}`,
+          tooltip: blockDetail.minerRewardFormatted.tooltipText ? `${blockDetail.minerRewardFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
         },
         {
           title: this.$i18n.t('common.timestmp'),
@@ -285,28 +285,34 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.t('uncle.reward'),
-          detail: `${blockDetail.uncleRewardFormatted.value} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.uncleRewardFormatted.value} ${this.$i18n.t('common.eth')}`,
+          tooltip: blockDetail.uncleRewardFormatted.tooltipText ? `${blockDetail.uncleRewardFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
         },
         {
           title: this.$i18n.tc('tx.name', 2),
-          detail: blockDetail.transactionCountFormatted
+          detail: blockDetail.transactionCountFormatted.value,
+          tooltip: blockDetail.transactionCountFormatted.tooltipText
+            ? `${blockDetail.transactionCountFormatted.tooltipText} ${this.$i18n.tc('tx.name', 2)}`
+            : undefined
         },
         {
           title: this.$i18n.t('diff.name'),
-          detail: header.difficultyFormatted
+          detail: header.difficultyFormatted.value,
+          tooltip: header.difficultyFormatted.tooltipText ? `${header.difficultyFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('diff.total'),
-          detail: header.totalDifficultyFormatted
+          detail: header.totalDifficultyFormatted.value,
+          tooltip: header.totalDifficultyFormatted.tooltipText ? `${header.totalDifficultyFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('common.size'),
-          detail: `${header.sizeFormatted} ${this.$i18n.t('block.bytes')}`
+          detail: `${header.sizeFormatted.value} ${this.$i18n.t('block.bytes')}`
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: header.nonceFormatted,
-          mono: true
+          detail: header.nonceFormatted.value,
+          tooltip: header.nonceFormatted.tooltipText ? `${header.nonceFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('block.state-root'),
@@ -320,15 +326,18 @@ export default class PageDetailsBlock extends Vue {
         },
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${blockDetail.totalTxFeesFormatted.value} ${this.$i18n.t('common.eth')}`
+          detail: `${blockDetail.totalTxFeesFormatted.value} ${this.$i18n.t('common.eth')}`,
+          tooltip: blockDetail.totalTxFeesFormatted.tooltipText ? `${blockDetail.totalTxFeesFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: header.gasLimitFormatted
+          detail: header.gasLimitFormatted.value,
+          tooltip: header.gasLimitFormatted.tooltipText ? `${header.gasLimitFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: header.gasUsedFormatted
+          detail: header.gasUsedFormatted.value,
+          tooltip: header.gasUsedFormatted.tooltipText ? `${header.gasUsedFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('block.logs'),

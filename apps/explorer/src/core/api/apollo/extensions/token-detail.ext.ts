@@ -46,16 +46,16 @@ export class TokenDetailExt implements TokenDetail {
     return new BigNumber(this.totalSupply || 0)
   }
 
-  get totalSupplyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.totalSupplyBN).value
+  get totalSupplyFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.totalSupplyBN)
   }
 
   get circulatingSupplyBN(): BigNumber {
     return new BigNumber(this.circulatingSupply || 0)
   }
 
-  get circulatingSupplyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.circulatingSupplyBN).value
+  get circulatingSupplyFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.circulatingSupplyBN)
   }
 
   get currentPriceBN(): BigNumber {
@@ -63,7 +63,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get currentPriceFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatUsdValue(this.currentPriceBN, true)
+    return NumberFormatHelper.formatUsdValue(this.currentPriceBN)
   }
 
   get marketCapBN(): BigNumber {
@@ -71,7 +71,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get marketCapFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatUsdValue(this.marketCapBN, false)
+    return NumberFormatHelper.formatUsdValue(this.marketCapBN)
   }
 
   get totalVolumeBN(): BigNumber {
@@ -79,7 +79,7 @@ export class TokenDetailExt implements TokenDetail {
   }
 
   get totalVolumeFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN, false)
+    return NumberFormatHelper.formatUsdValue(this.totalVolumeBN)
   }
 
   get priceChangePercentage24hBN(): BigNumber {
