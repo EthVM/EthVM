@@ -15,11 +15,15 @@
           =====================================================================================
           -->
           <v-layout v-if="mini" column>
-            <v-img :src="require('@/assets/logo-compact.png')" height="70px" max-width="80px" contain class="mb-2 mt-2"></v-img>
+            <router-link to="/">
+              <v-img :src="require('@/assets/logo-compact.png')" height="70px" max-width="80px" contain class="mb-2 mt-2"></v-img>
+            </router-link>
             <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="80px" contain class="mb-2"></v-img>
           </v-layout>
           <v-layout v-else align-end justify-start row>
-            <v-img :src="require('@/assets/logo-white.png')" height="50px" max-width="130px" contain class="mb-4 mt-4 ml-2"></v-img>
+            <router-link to="/">
+              <v-img :src="require('@/assets/logo-white.png')" height="50px" width="130px" contain class="mb-4 mt-4 ml-2"></v-img>
+            </router-link>
             <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="50px" contain class="mb-4 "></v-img>
           </v-layout>
 
@@ -94,7 +98,9 @@
       <v-layout align-center row fill-height>
         <v-flex shrink>
           <v-layout align-end justify-start row fill-height>
-            <v-img :src="require('@/assets/logo-white.png')" height="30px" width="70px" contain></v-img>
+            <router-link to="/">
+              <v-img :src="require('@/assets/logo-white.png')" height="30px" width="70px" contain></v-img>
+            </router-link>
             <v-img :src="require('@/assets/alpha.png')" height="16px" width="40px" contain></v-img>
           </v-layout>
         </v-flex>
