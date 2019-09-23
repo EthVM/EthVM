@@ -72,6 +72,9 @@
               :has-last="!simplePagination"
             />
           </v-layout>
+          <v-card v-if="!blocks.length" flat>
+              <v-card-text class="text-xs-center secondary--text">{{ $t('message.block.no-history') }}</v-card-text>
+            </v-card>
         </v-flex>
         <div xs12 v-if="loading">
           <div v-for="i in maxItems" :key="i">
