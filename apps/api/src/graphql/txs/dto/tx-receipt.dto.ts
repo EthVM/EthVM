@@ -1,5 +1,6 @@
 import { BigNumber, Receipt } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
+import {TransactionReceiptEntity} from '@app/orm/entities/transaction-receipt.entity';
 
 export class TxReceiptDto implements Receipt {
 
@@ -17,7 +18,7 @@ export class TxReceiptDto implements Receipt {
   root!: string
   status?: string
 
-  constructor(data: any) {
+  constructor(data: TransactionReceiptEntity) {
     assignClean(this, data)
   }
 }
