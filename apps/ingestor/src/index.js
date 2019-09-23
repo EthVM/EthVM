@@ -105,7 +105,8 @@ web3.eth.subscribe('newBlockHeaders').on('data', block => {
   } else if (block.number < volatileStatus.currentBlock) {
     console.log('reorg detected, starting to reprocess from', block.number)
     volatileStatus.currentBlock = block.number - 1
-    volatileStatus.toBeProcessed.push(block.number)
+    volatileStatus.maxBlock = block.number
+    volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
     asyncRunner()
   }
   if (block.number > volatileStatus.maxBlock) {
