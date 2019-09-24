@@ -285,7 +285,9 @@ export default class ChartTimeseries extends Vue {
 
   get chartData(): ChartData[] {
     const items = this.timeseries || []
-    return items.map(item => this.toChartDataItem(item))
+    const a = items.map(item => this.toChartDataItem(item))
+    console.log("a: ", a.length)
+    return a
   }
 
   get loading(): boolean | undefined {

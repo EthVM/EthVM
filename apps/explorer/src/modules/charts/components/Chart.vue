@@ -9,29 +9,70 @@
       </v-flex>
       <v-flex grow v-if="!liveChart">
         <v-layout row wrap align-center justify-end pa-3>
-          <button flat :class="[this.toggleData === 0 ? 'active-button' : 'button']" @click="toggleData = 0" small>{{ $tc('charts.states.day', 2) }}</button>
-          <button flat :class="[this.toggleData === 1 ? 'active-button' : 'button']" @click="toggleData = 1" small>{{ $tc('charts.states.week', 2) }}</button>
-          <button flat :class="[this.toggleData === 2 ? 'active-button' : 'button']" @click="toggleData = 2" small>
-            {{ $tc('charts.states.week-two', 2) }}
-          </button>
-          <button flat :class="[this.toggleData === 3 ? 'active-button' : 'button']" @click="toggleData = 3" small>{{ $tc('charts.states.month', 2) }}</button>
-          <button flat :class="[this.toggleData === 4 ? 'active-button' : 'button']" @click="toggleData = 4" small>
-            {{ $tc('charts.states.month-three', 2) }}
-          </button>
-          <button flat :class="[this.toggleData === 5 ? 'active-button' : 'button']" @click="toggleData = 5" small>
-            {{ $tc('charts.states.month-six', 2) }}
-          </button>
-          <button flat :class="[this.toggleData === 6 ? 'active-button' : 'button']" @click="toggleData = 6" small>{{ $tc('charts.states.year', 2) }}</button>
-          <button flat :class="[this.toggleData === 7 ? 'active-button' : 'button']" @click="toggleData = 7" small>{{ $tc('charts.states.all', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 0 ? 'active-button' : 'button']"
+            @click="toggleData = 0"
+            small
+          >{{ $tc('charts.states.day', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 1 ? 'active-button' : 'button']"
+            @click="toggleData = 1"
+            small
+          >{{ $tc('charts.states.week', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 2 ? 'active-button' : 'button']"
+            @click="toggleData = 2"
+            small
+          >{{ $tc('charts.states.week-two', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 3 ? 'active-button' : 'button']"
+            @click="toggleData = 3"
+            small
+          >{{ $tc('charts.states.month', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 4 ? 'active-button' : 'button']"
+            @click="toggleData = 4"
+            small
+          >{{ $tc('charts.states.month-three', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 5 ? 'active-button' : 'button']"
+            @click="toggleData = 5"
+            small
+          >{{ $tc('charts.states.month-six', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 6 ? 'active-button' : 'button']"
+            @click="toggleData = 6"
+            small
+          >{{ $tc('charts.states.year', 2) }}</button>
+          <button
+            flat
+            :class="[this.toggleData === 7 ? 'active-button' : 'button']"
+            @click="toggleData = 7"
+            small
+          >{{ $tc('charts.states.all', 2) }}</button>
         </v-layout>
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
-    <v-layout align-center justify-end row fill-height v-if="footnotes" pb-3 pt-2> <app-footnotes :footnotes="footnotes" /> </v-layout>
+    <v-layout align-center justify-end row fill-height v-if="footnotes" pb-3 pt-2>
+      <app-footnotes :footnotes="footnotes" />
+    </v-layout>
     <app-info-load v-show="dataLoading" />
     <div v-show="!(dataLoading || hasError)">
-      <canvas v-if="!liveChart" ref="chart" :class="chartClass" />
-      <canvas v-else ref="chart" />
+      <div v-if="hasData">
+        <canvas v-if="!liveChart" ref="chart" :class="chartClass" />
+        <canvas v-else ref="chart" />
+      </div>
+        <v-layout v-else column fill-height align-center justify-center class="xs-chart pa-3">
+          <p class="text-xs-center secondary--text ma-5" >{{noDataText}}</p>
+        </v-layout>
     </div>
     <app-error :has-error="hasError" :message="error" class="mb-4" />
   </v-card>
@@ -45,6 +86,7 @@ import { Footnote } from '@app/core/components/props'
 import { ChartConfig, ChartData } from '@app/modules/charts/props'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import AppError from '@app/core/components/ui/AppError.vue'
+import { TranslateResult } from 'vue-i18n';
 
 ChartJs.defaults.global = Object.assign(ChartJs.defaults.global, {
   defaultFontFamily: "'Open Sans', 'sans-serif'",
@@ -161,6 +203,37 @@ export default class AppChart extends Vue {
 
   get hasError(): boolean {
     return this.error !== ''
+  }
+
+  get hasData(): boolean {
+    return this.chart ? true : false
+  }
+
+  get noDataText(): string {
+    const text=this.$t("charts.captions.no-data")
+    if(this.liveChart){
+      return `${this.$t("charts.captions.no-data-live")}`
+    }
+    else {
+      switch(this.toggleData){
+        case 0 :
+          return `${text} ${this.$tc('charts.states.day', 1)}`
+        case 1 :
+          return `${text} ${this.$tc('charts.states.week', 1)}`
+        case 2 :
+          return `${text} ${this.$tc('charts.states.week-two', 1)}`
+        case 3 :
+          return `${text} ${this.$tc('charts.states.month', 1)}`
+        case 4 :
+          return `${text} ${this.$tc('charts.states.month-three', 1)}`
+        case 5 :
+          return `${text} ${this.$tc('charts.states.month-six', 1)}`
+        case 6 :
+          return `${text} ${this.$tc('charts.states.year', 1)}`
+        default :
+          return ` ${this.$t('charts.captions.no-data-all')}`
+      }
+    }
   }
   /*
   ===================================================================================
@@ -280,19 +353,20 @@ export default class AppChart extends Vue {
     }
     this.initialData.unshift(newVal)
   }
+
 }
 </script>
 
 <style scoped lang="css">
-.active-button{
-  background-color:#3965e8;
+.active-button {
+  background-color: #3965e8;
   color: white;
   width: 32px;
   margin: 10px;
-  border-radius:2px;
+  border-radius: 2px;
   padding: 5px;
 }
-.button{
+.button {
   color: #8391a8;
   width: 32px;
   margin: 10px;
@@ -300,10 +374,11 @@ export default class AppChart extends Vue {
 }
 
 .xs-chart {
-  min-height: 280px
+  min-height: 280px;
 }
 
 .chart-caption {
   min-height: 3em;
 }
+
 </style>
