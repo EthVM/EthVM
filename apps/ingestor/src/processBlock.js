@@ -26,6 +26,9 @@ const processBlock = (blockNum, web3 = getWeb3(Configs.WS_HOST)) => {
       .then(_block => {
         resolve(_block)
       })
+      .catch(err => {
+        console.error(err)
+      })
   })
 }
 

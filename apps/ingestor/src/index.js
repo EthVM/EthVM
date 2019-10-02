@@ -11,6 +11,7 @@ import InfluxPublish from './helpers/influx-cloud-publish'
 const HOST = Configs.WS_HOST
 const MAX_CONCURRENT = Configs.MAX_CONCURRENT
 const WEB3_INSTANCES = []
+let IS_SYNCED = false
 
 for (let i = 0; i < MAX_CONCURRENT; i++) {
   WEB3_INSTANCES.push(getWeb3(HOST))
@@ -78,6 +79,8 @@ const asyncRunner = () => {
             volatileStatus.currentBlock++
             volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
             asyncRunner()
+          } else {
+            IS_SYNCED = true
           }
         })
         .catch(console.error)
@@ -100,16 +103,8 @@ web3.eth.getBlockNumber().then(_blockNumber => {
 })
 
 web3.eth.subscribe('newBlockHeaders').on('data', block => {
-  if (volatileStatus.currentBlock === volatileStatus.maxBlock && block.number > volatileStatus.maxBlock) {
-    console.log('new max block received, initiating processing', block.number)
+  if (IS_SYNCED) {
     volatileStatus.toBeProcessed.push(block.number)
-    volatileStatus.currentBlock = block.number
-    asyncRunner()
-  } else if (block.number < volatileStatus.currentBlock) {
-    console.log('reorg detected, starting to reprocess from', block.number)
-    volatileStatus.currentBlock = block.number - 1
-    volatileStatus.maxBlock = block.number
-    volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
     asyncRunner()
   }
   if (block.number > volatileStatus.maxBlock) {
