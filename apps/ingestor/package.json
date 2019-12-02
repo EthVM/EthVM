@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
+    "start:forever": "nodemon --exec 'babel-node src/index.js || touch src/index.js'",
     "build": "babel src -d dist",
     "prettier": "prettier --write 'src/**/*.js'"
   },

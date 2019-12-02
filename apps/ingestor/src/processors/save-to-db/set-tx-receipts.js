@@ -20,7 +20,8 @@ class SetTxReceipts {
           if (!err) {
             if (result.length !== block.transactions.length) return reject(new Error('most likely chain forked'))
             result.forEach((_txReceipt, idx) => {
-              if (block.transactions[idx].hash !== _txReceipt.result.transactionHash) return reject(new Error('most likely chain forked 2'))
+              if (!_txReceipt.result || block.transactions[idx].hash !== _txReceipt.result.transactionHash)
+                return reject(new Error('most likely chain forked 2'))
               block.transactions[idx] = Object.assign(block.transactions[idx], _txReceipt.result)
             })
             resolve(block)
