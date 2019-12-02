@@ -2,8 +2,8 @@ import { Block } from '@app/graphql/schema'
 import { BlockHeaderDto } from '@app/graphql/blocks/dto/block-header.dto'
 import { BlockRewardDto } from '@app/graphql/blocks/dto/block-reward.dto'
 import BigNumber from 'bignumber.js'
-import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity';
-import {BlockMetricsTraceEntity} from '@app/orm/entities/block-metrics-trace.entity';
+import {BlockHeaderEntity} from '@app/orm/entities/block-header.entity'
+import {BlockMetricsTraceEntity} from '@app/orm/entities/block-metrics-trace.entity'
 
 export class BlockDto implements Block {
 

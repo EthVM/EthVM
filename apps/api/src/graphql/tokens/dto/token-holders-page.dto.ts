@@ -1,7 +1,7 @@
-import { TokenHoldersPage } from '@app/graphql/schema'
-import { assignClean } from '@app/shared/utils'
-import { TokenHolderDto } from '@app/graphql/tokens/dto/token-holder.dto'
-import BigNumber from 'bignumber.js';
+import {TokenHoldersPage} from '@app/graphql/schema'
+import {TokenHolderDto} from '@app/graphql/tokens/dto/token-holder.dto'
+import BigNumber from 'bignumber.js'
+import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto'
 
 export class TokenHoldersPageDto implements TokenHoldersPage {
 
@@ -9,11 +9,11 @@ export class TokenHoldersPageDto implements TokenHoldersPage {
   hasMore!: boolean
   totalCount!: BigNumber
 
-  constructor(data: any) {
-    if (data.items) {
-      this.items = data.items.map(i => new TokenHolderDto(i))
-      delete data.items
+  constructor(items: RawBalanceEntity[], hasMore: boolean, totalCount: BigNumber) {
+    if (items) {
+      this.items = items.map(i => new TokenHolderDto(i))
     }
-    assignClean(this, data)
+    this.hasMore = hasMore
+    this.totalCount = totalCount
   }
 }

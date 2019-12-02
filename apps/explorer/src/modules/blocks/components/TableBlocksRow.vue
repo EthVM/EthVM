@@ -16,8 +16,14 @@
             </v-flex>
             <v-flex xs6 pr-44>
               <v-layout row justify-end>
-                <p>{{ block.numSuccessfulTxsBN }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
-                <p v-if="block.numFailedTxsBN > 0" class="txFail--text pl-1 ">({{ block.numFailedTxsBN }} {{ $tc('tx.failed', failedTranslate()) }})</p>
+                <p>
+                  {{ block.numSuccessfulTxsFormatted.value }} {{ $tc('tx.name-short', sucessTransalate()) }}
+                  <app-tooltip v-if="block.numSuccessfulTxsFormatted.tooltipText" :text="block.numSuccessfulTxsFormatted.tooltipText" />
+                </p>
+                <p v-if="block.numFailedTxsBN > 0" class="txFail--text pl-1">
+                  ({{ block.numFailedTxsFormatted.value }} {{ $tc('tx.failed', failedTranslate()) }}
+                  <app-tooltip v-if="block.numFailedTxsFormatted.tooltipText" :text="block.numFailedTxsFormatted.tooltipText" />)
+                </p>
               </v-layout>
             </v-flex>
             <v-flex xs2 pa-1>
@@ -75,8 +81,14 @@
           <v-spacer hidden-xl-only />
           <v-flex sm2>
             <v-layout row wrap>
-              <p class="pr-1">{{ block.numSuccessfulTxsBN }} {{ $tc('tx.name-short', sucessTransalate()) }}</p>
-              <p v-if="block.numFailedTxsBN > 0" class="txFail--text">({{ block.numFailedTxsBN }} {{ $tc('tx.failed', failedTranslate()) }})</p>
+              <p class="pr-1">
+                {{ block.numSuccessfulTxsFormatted.value }} {{ $tc('tx.name-short', sucessTransalate()) }}
+                <app-tooltip v-if="block.numSuccessfulTxsFormatted.tooltipText" :text="block.numSuccessfulTxsFormatted.tooltipText" />
+              </p>
+              <p v-if="block.numFailedTxsBN > 0" class="txFail--text">
+                ({{ block.numFailedTxsFormatted.value }} {{ $tc('tx.failed', failedTranslate()) }}
+                <app-tooltip v-if="block.numFailedTxsFormatted.tooltipText" :text="block.numFailedTxsFormatted.tooltipText" />)
+              </p>
             </v-layout>
           </v-flex>
           <v-flex sm1 xl2>
@@ -93,7 +105,7 @@
         -->
         <v-flex sm12 v-if="block.uncleHashes.length" pt-3>
           <v-layout row class="uncle">
-            <v-flex sm2> </v-flex>
+            <v-flex sm2></v-flex>
             <v-flex sm6>
               <div class="uncles">
                 <v-card flat color="transparent">
@@ -163,17 +175,17 @@ p {
   padding-bottom: 0px;
 }
 .arrow {
-    position: relative;
+  position: relative;
 }
 
 .line {
-    border-left: 1px solid #b4bfd2;
-    border-bottom: 1px solid #b4bfd2;
-    height: 50px;
-    width: 105%;
-    position: absolute;
-    margin-left: 2px;
-    margin-bottom: 10px;
+  border-left: 1px solid #b4bfd2;
+  border-bottom: 1px solid #b4bfd2;
+  height: 50px;
+  width: 105%;
+  position: absolute;
+  margin-left: 2px;
+  margin-bottom: 10px;
 }
 
 .uncles {

@@ -33,32 +33,32 @@ export class BlockDetailExt_header implements BlockDetail_header {
     return new BigNumber(this.difficulty)
   }
 
-  get difficultyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.difficultyBN).value
+  get difficultyFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.difficultyBN)
   }
 
   get gasLimitBN(): BigNumber {
     return new BigNumber(this.gasLimit)
   }
 
-  get gasLimitFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN).value
+  get gasLimitFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.gasLimitBN)
   }
 
   get gasUsedBN(): BigNumber {
     return new BigNumber(this.gasUsed)
   }
 
-  get gasUsedFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN).value
+  get gasUsedFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.gasUsedBN)
   }
 
   get nonceBN(): BigNumber | null {
     return this.nonce ? new BigNumber(this.nonce) : null
   }
 
-  get nonceFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.nonceBN || new BigNumber(0)).value
+  get nonceFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.nonceBN || new BigNumber(0))
   }
 
   get numberBN(): BigNumber {
@@ -66,19 +66,19 @@ export class BlockDetailExt_header implements BlockDetail_header {
   }
 
   get numberFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.numberBN).value
+    return this.numberBN.toFormat()
   }
 
-  get sizeFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.size || 0)).value
+  get sizeFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.size || 0))
   }
 
   get totalDifficultyBN(): BigNumber {
     return new BigNumber(this.totalDifficulty)
   }
 
-  get totalDifficultyFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(this.totalDifficultyBN).value
+  get totalDifficultyFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(this.totalDifficultyBN)
   }
 
   get timestampMs(): number {
@@ -120,7 +120,7 @@ export class BlockDetailExt implements BlockDetail {
     this.header = new BlockDetailExt_header(header)
     this.rewards = rewards.map(r => new BlockDetailExt_rewards(r))
 
-    this.totalTxFees = detail.totalTxFees
+    this.totalTxFees = new BigNumber(detail.totalTxFees)
   }
 
   get minerReward(): EthValue {
@@ -140,7 +140,7 @@ export class BlockDetailExt implements BlockDetail {
   }
 
   get minerRewardFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.minerRewardBN, true)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.minerRewardBN)
   }
 
   get uncleReward(): EthValue {
@@ -162,18 +162,18 @@ export class BlockDetailExt implements BlockDetail {
   }
 
   get uncleRewardFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.uncleRewardBN, true)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.uncleRewardBN)
   }
 
   get transactionCount(): number | null {
     return this.transactionHashes ? this.transactionHashes.length : null
   }
 
-  get transactionCountFormatted(): string {
-    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.transactionCount || 0)).value
+  get transactionCountFormatted(): FormattedNumber {
+    return NumberFormatHelper.formatIntegerValue(new BigNumber(this.transactionCount || 0))
   }
 
   get totalTxFeesFormatted(): FormattedNumber {
-    return NumberFormatHelper.formatNonVariableEthValue(this.totalTxFees, true)
+    return NumberFormatHelper.formatVariableUnitEthValue(this.totalTxFees)
   }
 }

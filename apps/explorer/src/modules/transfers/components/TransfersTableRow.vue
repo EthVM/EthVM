@@ -133,7 +133,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
       if (n.isNegative()) {
         n = n.negated()
       } // Convert negative values to positive
-      return this.formatVariableUnitEthValue(n)
+      return this.formatNonVariableEthValue(n)
     }
 
     // Must be a token transfer

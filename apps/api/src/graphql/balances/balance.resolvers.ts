@@ -6,6 +6,7 @@ import { BalanceService } from '@app/dao/balance.service'
 import { BalancePageDto } from '@app/graphql/balances/dto/balance-page.dto'
 import BigNumber from 'bignumber.js'
 import {BlockNumberPipe} from '@app/shared/pipes/block-number.pipe'
+import {RawBalanceEntity} from '@app/graphql/balances/dto/balance.dto';
 
 @Resolver('Balance')
 @UseInterceptors(SyncingInterceptor)
@@ -33,10 +34,10 @@ export class BalanceResolvers {
   ): Promise<BalancePageDto> {
 
     if (!blockNumber) { // No latest block number was found so there are no valid balances.
-      return new BalancePageDto({ items: [], hasMore: false })
+      return new BalancePageDto([], false)
     }
 
     const [items, hasMore] = await this.balanceService.find(addresses, blockNumber, contracts, offset, limit)
-    return new BalancePageDto({ items, hasMore })
+    return new BalancePageDto(items, hasMore)
   }
 }

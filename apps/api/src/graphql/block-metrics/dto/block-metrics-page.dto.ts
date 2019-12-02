@@ -1,6 +1,6 @@
-import {BlockMetricsPage} from '@app/graphql/schema';
-import {BlockMetricDto} from '@app/graphql/block-metrics/dto/block-metric.dto';
-import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity';
+import {BlockMetricsPage} from '@app/graphql/schema'
+import {BlockMetricDto} from '@app/graphql/block-metrics/dto/block-metric.dto'
+import {BlockMetricEntity} from '@app/orm/entities/block-metric.entity'
 
 export class BlockMetricsPageDto implements BlockMetricsPage {
 

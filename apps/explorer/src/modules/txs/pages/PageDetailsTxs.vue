@@ -232,15 +232,18 @@ export default class PageDetailsTxs extends Vue {
         this.toDetail(transaction),
         {
           title: this.$i18n.tc('tx.fee', 2),
-          detail: `${transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`
+          detail: `${transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`,
+          tooltip: transaction.feeFormatted.tooltipText ? `${transaction.feeFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
         },
         {
           title: this.$i18n.t('gas.limit'),
-          detail: transaction.gasFormatted
+          detail: transaction.gasFormatted.value,
+          tooltip: transaction.gasFormatted.tooltipText ? `${transaction.gasFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('gas.used'),
-          detail: receipt ? receipt.gasUsedFormatted : '0' // genesis block txs can have no receipt
+          detail: receipt ? receipt.gasUsedFormatted.value : '0', // genesis block txs can have no receipt
+          tooltip: receipt && receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('gas.price'),
@@ -249,7 +252,8 @@ export default class PageDetailsTxs extends Vue {
         },
         {
           title: this.$i18n.t('common.nonce'),
-          detail: transaction.nonceFormatted
+          detail: transaction.nonceFormatted.value,
+          tooltip: transaction.nonceFormatted.tooltipText ? `${transaction.nonceFormatted.tooltipText}` : undefined
         },
         {
           title: this.$i18n.t('tx.input'),

@@ -3,30 +3,30 @@ import { assignClean, isGzip } from '@app/shared/utils'
 import { TxReceiptDto } from '@app/graphql/txs/dto/tx-receipt.dto'
 import { TxTraceDto } from '@app/graphql/txs/dto/tx-trace.dto'
 import zlib from 'zlib'
-import {TransactionEntity} from '@app/orm/entities/transaction.entity';
+import {TransactionEntity} from '@app/orm/entities/transaction.entity'
 
 export class TxDto implements Transaction {
 
-  hash!: string;
-  nonce!: BigNumber;
-  blockHash!: string;
-  blockNumber!: BigNumber;
-  transactionIndex!: number;
-  from!: string;
-  to?: string;
-  value!: BigNumber;
-  gas!: BigNumber;
-  gasPrice!: BigNumber;
-  input!: Buffer;
-  v!: string;
-  r!: string;
-  s!: string;
-  timestamp!: Date;
-  creates?: string;
-  chainId?: string;
-  receipt?: TxReceiptDto;
-  trace!: TxTraceDto;
-  successful!: boolean;
+  hash!: string
+  nonce!: BigNumber
+  blockHash!: string
+  blockNumber!: BigNumber
+  transactionIndex!: number
+  from!: string
+  to?: string
+  value!: BigNumber
+  gas!: BigNumber
+  gasPrice!: BigNumber
+  input!: Buffer
+  v!: string
+  r!: string
+  s!: string
+  timestamp!: Date
+  creates?: string
+  chainId?: string
+  receipt?: TxReceiptDto
+  trace!: TxTraceDto
+  successful!: boolean
 
   constructor(data: TransactionEntity) {
 

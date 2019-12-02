@@ -29,4 +29,7 @@ done
 set -o errexit
 
 section "Importing principal dataset..."
+
+docker-compose exec timescale psql --quiet --username "${DATABASE_USER}" "${DATABASE_NAME}" -c "ALTER DATABASE ${DATABASE_NAME} SET timescaledb.restoring = 'on';"
 gunzip <${ROOT_DIR}/datasets/${DATASETS[0]} | docker-compose exec -T timescale psql --quiet --username "${DATABASE_USER}" "${DATABASE_NAME}"
+docker-compose exec timescale psql --quiet --username "${DATABASE_USER}" "${DATABASE_NAME}" -c "ALTER DATABASE ${DATABASE_NAME} SET timescaledb.restoring = 'off';"

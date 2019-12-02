@@ -1,6 +1,6 @@
 import { BigNumber, Uncle } from '@app/graphql/schema'
 import { assignClean } from '@app/shared/utils'
-import {UncleEntity} from '@app/orm/entities/uncle.entity';
+import {UncleEntity} from '@app/orm/entities/uncle.entity'
 
 export class UncleDto implements Uncle {
 
