@@ -77,7 +77,11 @@ const asyncRunner = () => {
           setProcessed(_block.number)
           if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
             volatileStatus.currentBlock++
-            volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
+            let isProcessing = false
+            volatileStatus.processingBlocks.forEach(_b => {
+              if (_b.number === volatileStatus.currentBlock) isProcessing = true
+            })
+            if (!isProcessing) volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
             asyncRunner()
           } else {
             IS_SYNCED = true
@@ -104,6 +108,7 @@ web3.eth.getBlockNumber().then(_blockNumber => {
 
 web3.eth.subscribe('newBlockHeaders').on('data', block => {
   if (IS_SYNCED) {
+    volatileStatus.currentBlock = block.number
     volatileStatus.toBeProcessed.push(block.number)
     asyncRunner()
   }
