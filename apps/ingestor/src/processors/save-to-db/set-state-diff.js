@@ -1,94 +1,31 @@
 import { utils } from 'web3'
 import BlockProcessor from '../process-block'
 import { getBatchEthBalance } from '../../helpers'
-
-const getNumberOfErrorSkips = (traces, i) => {
-  let tempSkips = traces[i].subtraces
-  for (let j = i + 1; j <= i + tempSkips; j++) {
-    if (traces[j].subtraces) {
-      const skips = getNumberOfErrorSkips(traces, j)
-      j += skips
-      tempSkips += skips
-    }
-  }
-  return tempSkips
-}
-
-const getValueTransfers = traces => {
-  const transfers = []
-  for (let i = 0; i < traces.length; i++) {
-    if (traces[i].error) {
-      const skips = getNumberOfErrorSkips(traces, i)
-      i += skips
-      continue
-    } else {
-      const trace = traces[i]
-      if (trace.type === 'call') {
-        transfers.push({
-          from: trace.action.from,
-          to: trace.action.to,
-          value: trace.action.callType === 'call' ? trace.action.value : '0x0',
-          type: trace.type
-        })
-      } else if (trace.type === 'create' || trace.type === 'create2') {
-        transfers.push({
-          from: trace.action.from,
-          to: trace.result.address,
-          value: trace.action.value,
-          type: trace.type
-        })
-      } else if (trace.type === 'suicide') {
-        transfers.push({
-          from: trace.action.address,
-          to: trace.action.refundAddress,
-          value: trace.action.balance,
-          type: trace.type
-        })
-      }
-      if (
-        trace.type !== 'call' &&
-        trace.type !== 'create' &&
-        trace.type !== 'suicide' &&
-        trace.type !== 'staticcall' &&
-        trace.type !== 'create2' &&
-        trace.type !== 'delegatecall'
-      )
-        throw new Error('unknownTrace: ' + JSON.stringify(trace))
-    }
-  }
-  return transfers
-}
-
+import getValueTransfers from '../../helpers/get-eth-transfers'
+import TraceTypes from '../../helpers/trace-types'
+const HEX_ZERO = '0x0'
+const BN_ZERO = utils.toBN(HEX_ZERO)
 const setInitialState = (web3, block, prevBlockNumber) => {
   return new Promise(resolve => {
     const state = {}
-    state[block.miner.toLowerCase()] = utils.toBN('0x0')
+    state[block.miner.toLowerCase()] = BN_ZERO
     block.uncles.forEach(uncle => {
-      state[uncle.miner.toLowerCase()] = utils.toBN('0x0')
+      state[uncle.miner.toLowerCase()] = BN_ZERO
     })
     block.transactions.forEach(tx => {
-      state[tx.from.toLowerCase()] = utils.toBN('0x0')
+      state[tx.from.toLowerCase()] = BN_ZERO
       tx.trace.forEach(trace => {
         if (!trace.error) {
-          if (trace.type === 'call' && trace.action.value !== '0x0') {
-            state[trace.action.from] = utils.toBN('0x0')
-            state[trace.action.to] = utils.toBN('0x0')
-          } else if ((trace.type === 'create' || trace.type === 'create2') && trace.action.value !== '0x0') {
-            state[trace.action.from] = utils.toBN('0x0')
-            state[trace.result.address] = utils.toBN('0x0')
-          } else if (trace.type === 'suicide' && trace.action.balance !== '0x0') {
-            state[trace.action.address] = utils.toBN('0x0')
-            state[trace.action.refundAddress] = utils.toBN('0x0')
+          if (trace.type === TraceTypes.CALL && trace.action.value !== HEX_ZERO) {
+            state[trace.action.from] = BN_ZERO
+            state[trace.action.to] = BN_ZERO
+          } else if ((trace.type === TraceTypes.CREATE || trace.type === TraceTypes.CREATE2) && trace.action.value !== HEX_ZERO) {
+            state[trace.action.from] = BN_ZERO
+            state[trace.result.address] = BN_ZERO
+          } else if (trace.type === TraceTypes.SUICIDE && trace.action.balance !== HEX_ZERO) {
+            state[trace.action.address] = BN_ZERO
+            state[trace.action.refundAddress] = BN_ZERO
           }
-          if (
-            trace.type !== 'call' &&
-            trace.type !== 'create' &&
-            trace.type !== 'suicide' &&
-            trace.type !== 'staticcall' &&
-            trace.type !== 'create2' &&
-            trace.type !== 'delegatecall'
-          )
-            throw new Error('Unknown trace' + trace.type)
         }
       })
     })
@@ -124,17 +61,17 @@ class SetStateDiff {
           const transfers = getValueTransfers(tx.trace)
           const suicidedAddresses = {}
           transfers.forEach(transfer => {
-            if (transfer.value !== '0x0') {
+            if (transfer.value !== HEX_ZERO) {
               state[transfer.from] = state[transfer.from].sub(utils.toBN(transfer.value))
               state[transfer.to] = state[transfer.to].add(utils.toBN(transfer.value))
-              if (state[transfer.from].lt(utils.toBN(0))) throw new Error('balance went below 0: ' + transfer.from + ' ' + block.number + ' ' + tx.hash)
+              if (state[transfer.from].lt(BN_ZERO)) throw new Error('balance went below 0: ' + transfer.from + ' ' + block.number + ' ' + tx.hash)
             }
-            if (transfer.type === 'suicide' && transfer.value !== '0x0') {
+            if (transfer.type === TraceTypes.SUICIDE && transfer.value !== HEX_ZERO) {
               suicidedAddresses[transfer.from] = true
             }
           })
           for (const address in suicidedAddresses) {
-            state[address] = utils.toBN(0)
+            state[address] = BN_ZERO
           }
           for (const address in state) {
             if (!state[address].eq(stateCopy[address])) {

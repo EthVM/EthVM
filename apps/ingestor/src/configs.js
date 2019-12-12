@@ -17,5 +17,6 @@ export default {
   INFLUX_URL: process.env.INFLUX_URL || '',
   INFLUX_ORG: process.env.INFLUX_ORG || '',
   INFLUX_BUCKET: process.env.INFLUX_BUCKET || '',
-  INFLUX_TOKEN: process.env.INFLUX_TOKEN || ''
+  INFLUX_TOKEN: process.env.INFLUX_TOKEN || '',
+  ERC20_WS_CONNECTION: process.env.ERC20_WS_CONNECTION || ''
 }

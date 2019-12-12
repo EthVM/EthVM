@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
+    "start:erc20": "nodemon --exec babel-node src/post-processors/erc20/index.js",
     "start:forever": "nodemon --exec 'babel-node src/index.js || touch src/index.js'",
+    "start:erc20:forever": "nodemon --exec 'babel-node src/post-processors/erc20/index.js || touch src/post-processors/erc20/index.js'",
     "build": "babel src -d dist",
     "prettier": "prettier --write 'src/**/*.js'"
   },
