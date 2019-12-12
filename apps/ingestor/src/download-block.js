@@ -4,7 +4,7 @@ import fs from 'fs'
 import BlockProcessor from './processors/process-block'
 
 const db = new S3DB(Configs.S3_BUCKET)
-const BLOCK_NUMBER = '9091947'
+const BLOCK_NUMBER = '9096684'
 const ERC_20_PREFIX = 'ERC20/'
 
 // db.get(BLOCK_NUMBER).then(_block => {

@@ -18,13 +18,14 @@ class SetERC20Info {
           const tx = block.transactions[i]
           tx.logs.forEach((log, eventIdx) => {
             if (log.topics.length === 3 && log.topics[0] === ERC_20_TRANSFER_EVENT) {
-              var from = '0x' + log.topics[1].substr(log.topics[1].length - 40)
-              var to = '0x' + log.topics[2].substr(log.topics[2].length - 40)
-              var value = '0x' + log.data.replace('0x', '').replace(/^0+/, '')
+              const from = '0x' + log.topics[1].substr(log.topics[1].length - 40)
+              const to = '0x' + log.topics[2].substr(log.topics[2].length - 40)
+              const value = '0x' + log.data.replace('0x', '').replace(/^0+/, '')
               const contract = log.address
               const blockNumber = block.number
               const txFee = utils.toHex(utils.toBN(tx.gasUsed).mul(utils.toBN(tx.gasPrice)))
               transfers.push({
+                id: `${blockNumber}-erc20-${i}-${eventIdx}`,
                 transactionHash: tx.hash,
                 timestamp: block.timestamp,
                 from,

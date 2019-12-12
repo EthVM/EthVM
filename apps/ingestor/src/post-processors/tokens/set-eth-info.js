@@ -13,11 +13,6 @@ const getGenesisState = () => {
   return require('ethereumjs-common/dist/genesisStates').genesisStateByName(Configs.CHAIN)
 }
 
-const removeZeroTransfers = transfers => {
-  return transfers.filter(item => {
-    return item.value !== HEX_ZERO
-  })
-}
 class EthTransfers {
   process(block) {
     return new Promise(resolve => {
@@ -26,6 +21,7 @@ class EthTransfers {
         const transfers = []
         for (const address in genesis) {
           transfers.push({
+            id: `${block.number}-genesis-${address.toLowerCase()}`,
             transactionHash: VALUE_TYPES.GENESIS,
             timestamp: block.timestamp,
             from: VALUE_TYPES.GENESIS,
@@ -43,10 +39,11 @@ class EthTransfers {
         return resolve(transfers)
       } else {
         const transfers = []
-        block.transactions.forEach(tx => {
+        block.transactions.forEach((tx, idx) => {
           const valueTransfers = getValueTransfers(tx.trace)
-          valueTransfers.forEach(transfer => {
-            transfers.push({
+          valueTransfers.forEach((transfer, transferIdx) => {
+            const valTransfer = {
+              id: `${block.number}-transfer-${idx}-${transferIdx}`,
               transactionHash: tx.hash,
               timestamp: block.timestamp,
               from: transfer.from.toLowerCase(),
@@ -59,12 +56,16 @@ class EthTransfers {
               },
               contract: ETH_CONTRACT,
               block: block.number
-            })
+            }
+            if (!(valTransfer.value === HEX_ZERO && valTransfer.before.from === HEX_ZERO)) {
+              transfers.push(valTransfer)
+            }
           })
         })
-        block.uncles.forEach(uncle => {
+        block.uncles.forEach((uncle, uncleIdx) => {
           if (uncle.reward !== HEX_ZERO) {
             transfers.push({
+              id: `${block.number}-uncle-${uncleIdx}`,
               transactionHash: VALUE_TYPES.UNCLE_REWARD,
               timestamp: block.timestamp,
               from: VALUE_TYPES.UNCLE_REWARD,
@@ -82,6 +83,7 @@ class EthTransfers {
         })
         if (block.rewards.total !== HEX_ZERO) {
           transfers.push({
+            id: `${block.number}-block`,
             transactionHash: VALUE_TYPES.BLOCK_REWARD,
             timestamp: block.timestamp,
             from: VALUE_TYPES.BLOCK_REWARD,

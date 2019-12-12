@@ -1,6 +1,7 @@
 import { CalculateReward, SetBlock, SetTxReceipt, SetUncles, SetMinerBalances, SetStateDiff, SetTraces, SetChainConfigs } from './processors/save-to-db'
 import Configs from './configs'
 import getWeb3 from './getWeb3'
+import { TokenProcessor } from './post-processors'
 
 const CHAIN = Configs.CHAIN
 
@@ -24,7 +25,9 @@ const processBlock = (blockNum, web3 = getWeb3(Configs.WS_HOST)) => {
       .then(_block => setMinerBalances.set(_block))
       .then(_block => setStateDiff.set(_block, true))
       .then(_block => {
-        resolve(_block)
+        TokenProcessor(_block).then(() => {
+          resolve(_block)
+        })
       })
       .catch(err => {
         console.error(err)
