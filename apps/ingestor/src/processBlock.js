@@ -25,7 +25,7 @@ const processBlock = (blockNum, web3 = getWeb3(Configs.WS_HOST)) => {
       .then(_block => setMinerBalances.set(_block))
       .then(_block => setStateDiff.set(_block, true))
       .then(_block => {
-        TokenProcessor(_block).then(() => {
+        TokenProcessor(_block, web3).then(() => {
           resolve(_block)
         })
       })
