@@ -18,5 +18,5 @@ export default {
   INFLUX_ORG: process.env.INFLUX_ORG || '',
   INFLUX_BUCKET: process.env.INFLUX_BUCKET || '',
   INFLUX_TOKEN: process.env.INFLUX_TOKEN || '',
-  TOKEN_KEY_PREFIX: process.env.TOKEN_KEY_PREFIX || 'TOKENS'
+  TOKEN_KEY_PREFIX: process.env.TOKEN_KEY_PREFIX || 'TOKENS/'
 }

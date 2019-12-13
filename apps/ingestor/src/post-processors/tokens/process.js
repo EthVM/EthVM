@@ -1,5 +1,4 @@
 import Configs from '../../configs'
-import getWeb3 from '../../getWeb3'
 import SetERC20Info from './set-erc20-info'
 import SetERC721Info from './set-erc721-info'
 import SetEthInfo from './set-eth-info'

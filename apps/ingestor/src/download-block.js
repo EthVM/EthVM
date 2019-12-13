@@ -4,7 +4,7 @@ import fs from 'fs'
 import BlockProcessor from './processors/process-block'
 
 const db = new S3DB(Configs.S3_BUCKET)
-const BLOCK_NUMBER = '1'
+const BLOCK_NUMBER = '500'
 const ERC_20_PREFIX = Configs.TOKEN_KEY_PREFIX
 console.log(ERC_20_PREFIX)
 
