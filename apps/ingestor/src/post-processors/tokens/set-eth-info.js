@@ -12,7 +12,21 @@ const HEX_ZERO = '0x0'
 const getGenesisState = () => {
   return require('ethereumjs-common/dist/genesisStates').genesisStateByName(Configs.CHAIN)
 }
-
+const normalizeStateDiffs = stateDiff => {
+  for (const diff in stateDiff) {
+    if (stateDiff[diff].balance['+']) {
+      stateDiff[diff].balance['*'] = {
+        from: HEX_ZERO,
+        to: stateDiff[diff].balance['+']
+      }
+    } else if (stateDiff[diff].balance['-']) {
+      stateDiff[diff].balance['*'] = {
+        from: stateDiff[diff].balance['-'],
+        to: HEX_ZERO
+      }
+    }
+  }
+}
 class EthTransfers {
   process(block) {
     return new Promise(resolve => {
@@ -41,6 +55,7 @@ class EthTransfers {
         const transfers = []
         block.transactions.forEach((tx, idx) => {
           const valueTransfers = getValueTransfers(tx.trace)
+          normalizeStateDiffs(tx.stateDiff)
           valueTransfers.forEach((transfer, transferIdx) => {
             const valTransfer = {
               id: `${block.number}-transfer-${idx}-${transferIdx}`,
