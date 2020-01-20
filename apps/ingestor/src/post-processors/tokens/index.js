@@ -73,7 +73,8 @@ WEB3_INSTANCES[0].eth.getBlockNumber().then(_blockNumber => {
   blockProcessorBar.setTotal(volatileStatus.maxBlock)
   for (let i = 0; i < MAX_CONCURRENT; i++) {
     if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
-      volatileStatus.toBeProcessed.push(volatileStatus.currentBlock + i)
+      volatileStatus.currentBlock += i
+      volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
       asyncRunner()
     }
   }
