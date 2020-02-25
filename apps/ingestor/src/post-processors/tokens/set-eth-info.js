@@ -118,25 +118,31 @@ class EthTransfers {
           })
         }
         const requests = []
-        const indexes = []
+        const addresses = []
         transfers.forEach((transfer, idx) => {
-          if (transfer.value === HEX_ZERO && transfer.before.to === HEX_ZERO) {
+          if (transfer.value === HEX_ZERO && transfer.before.to === HEX_ZERO && !addresses.includes(transfer.to)) {
             requests.push({
               method: 'eth_getBalance',
               params: [transfer.to, utils.toHex(utils.toBN(block.number - 1))],
               id: `${transfer.transactionHash}-${idx}`,
               jsonrpc: '2.0'
             })
-            indexes.push(idx)
+            addresses.push(transfer.to)
           }
         })
         if (requests.length) {
           this.web3.currentProvider.send(requests, (err, result) => {
             if (!err) {
               if (result.length !== requests.length) return reject(new Error('most likely chain forked'))
+              const balances = {}
               for (let i = 0; i < result.length; i++) {
-                transfers[indexes[i]].before.to = result[i].result
+                balances[addresses[i]] = result[i].result
               }
+              transfers.forEach(transfer => {
+                if (transfer.value === HEX_ZERO && transfer.before.to === HEX_ZERO) {
+                  transfer.before.to = balances[transfer.to]
+                }
+              })
               resolve(transfers)
             } else {
               reject(err)
