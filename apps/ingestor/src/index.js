@@ -72,22 +72,21 @@ const asyncRunner = () => {
         hash: _block.hash,
         parentHash: _block.parentHash
       }
-      db.put(_block.number, _block)
-        .then(() => {
-          setProcessed(_block.number)
-          if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
-            volatileStatus.currentBlock++
-            let isProcessing = false
-            volatileStatus.processingBlocks.forEach(_b => {
-              if (_b.number === volatileStatus.currentBlock) isProcessing = true
-            })
-            if (!isProcessing) volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
-            asyncRunner()
-          } else {
-            IS_SYNCED = true
-          }
-        })
-        .catch(console.error)
+      db.put(_block.number, _block).then(() => {
+        setProcessed(_block.number)
+        if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
+          volatileStatus.currentBlock++
+          let isProcessing = false
+          volatileStatus.processingBlocks.forEach(_b => {
+            if (_b.number === volatileStatus.currentBlock) isProcessing = true
+          })
+          if (!isProcessing) volatileStatus.toBeProcessed.push(volatileStatus.currentBlock)
+          asyncRunner()
+        } else {
+          IS_SYNCED = true
+        }
+      })
+      //        .catch(console.error)
     })
   }
 }

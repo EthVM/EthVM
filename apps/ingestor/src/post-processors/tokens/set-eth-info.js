@@ -28,8 +28,12 @@ const normalizeStateDiffs = stateDiff => {
   }
 }
 class EthTransfers {
+  constructor(web3) {
+    this.web3 = web3
+  }
+
   process(block) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       if (block.number === 0) {
         const genesis = getGenesisState()
         const transfers = []
@@ -113,7 +117,34 @@ class EthTransfers {
             block: block.number
           })
         }
-        return resolve(transfers)
+        const requests = []
+        const indexes = []
+        transfers.forEach((transfer, idx) => {
+          if (transfer.value === HEX_ZERO && transfer.before.to === HEX_ZERO) {
+            requests.push({
+              method: 'eth_getBalance',
+              params: [transfer.to, utils.toHex(utils.toBN(block.number - 1))],
+              id: `${transfer.transactionHash}-${idx}`,
+              jsonrpc: '2.0'
+            })
+            indexes.push(idx)
+          }
+        })
+        if (requests.length) {
+          this.web3.currentProvider.send(requests, (err, result) => {
+            if (!err) {
+              if (result.length !== requests.length) return reject(new Error('most likely chain forked'))
+              for (let i = 0; i < result.length; i++) {
+                transfers[indexes[i]].before.to = result[i].result
+              }
+              resolve(transfers)
+            } else {
+              reject(err)
+            }
+          })
+        } else {
+          resolve(transfers)
+        }
       }
     })
   }

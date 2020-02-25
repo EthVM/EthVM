@@ -7,11 +7,11 @@ import { S3DB } from '../../datastore'
 const TOKEN_KEY_PREFIX = Configs.TOKEN_KEY_PREFIX
 
 const db = new S3DB(Configs.S3_BUCKET)
-const setEthInfo = new SetEthInfo()
 const setERC721Info = new SetERC721Info()
 
 const processBlock = (_block, web3) => {
   const setERC20Info = new SetERC20Info(web3)
+  const setEthInfo = new SetEthInfo(web3)
   return new Promise(resolve => {
     const result = {
       ERC20: [],
