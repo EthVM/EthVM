@@ -36,7 +36,6 @@ class S3DB {
 
   put(key, value) {
     return new Promise((resolve, reject) => {
-      console.log(key)
       this.db.putObject(
         {
           Bucket: this.bucketName,
