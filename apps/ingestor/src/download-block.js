@@ -4,7 +4,8 @@ import fs from 'fs'
 import BlockProcessor from './processors/process-block'
 
 const db = new S3DB(Configs.S3_BUCKET)
-const BLOCK_NUMBER = '9554459'
+const BLOCK_NUMBER = '10021248'
+const IS_TOKEN = false
 const ERC_20_PREFIX = Configs.TOKEN_KEY_PREFIX
 console.log(ERC_20_PREFIX)
 
@@ -16,10 +17,17 @@ console.log(ERC_20_PREFIX)
 //     console.log('Successfully Written to File.')
 //   })
 // })
-
-db.get(ERC_20_PREFIX + BLOCK_NUMBER).then(_block => {
-  fs.writeFile('block-erc20-' + BLOCK_NUMBER + '.json', JSON.stringify(_block, null, 2), err => {
-    if (err) console.log(err)
-    console.log('Successfully Written to File.')
+if (!IS_TOKEN)
+  db.get(BLOCK_NUMBER).then(_block => {
+    fs.writeFile('block-' + BLOCK_NUMBER + '.json', JSON.stringify(_block, null, 2), err => {
+      if (err) console.log(err)
+      console.log('Successfully Written to File.')
+    })
   })
-})
+else
+  db.get(ERC_20_PREFIX + BLOCK_NUMBER).then(_block => {
+    fs.writeFile('block-erc20-' + BLOCK_NUMBER + '.json', JSON.stringify(_block, null, 2), err => {
+      if (err) console.log(err)
+      console.log('Successfully Written to File.')
+    })
+  })
