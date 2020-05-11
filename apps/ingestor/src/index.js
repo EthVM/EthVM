@@ -26,6 +26,7 @@ const volatileStatus = {
 const getCustomWeb3 = getWeb3
 const web3 = getCustomWeb3(HOST)
 const db = new S3DB(Configs.S3_BUCKET)
+const dbGz = new S3DB(Configs.S3_BUCKET_GZ)
 const sns = new SNS(Configs.AWS_SNS_TOPIC)
 const wsNotif = new WSNotif()
 const influxPublish = new InfluxPublish()
@@ -72,7 +73,7 @@ const asyncRunner = () => {
         hash: _block.hash,
         parentHash: _block.parentHash
       }
-      db.put(_block.number, _block).then(() => {
+      Promise.all([db.put(_block.number, _block), dbGz.putgz(`${Configs.CHAIN}/blocks/block=${_block.number}/block.json.gz`, _block)]).then(() => {
         setProcessed(_block.number)
         if (volatileStatus.currentBlock < volatileStatus.maxBlock) {
           volatileStatus.currentBlock++

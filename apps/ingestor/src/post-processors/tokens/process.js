@@ -7,6 +7,7 @@ import { S3DB } from '../../datastore'
 const TOKEN_KEY_PREFIX = Configs.TOKEN_KEY_PREFIX
 
 const db = new S3DB(Configs.S3_BUCKET)
+const dbGz = new S3DB(Configs.S3_BUCKET_GZ)
 const setERC721Info = new SetERC721Info()
 
 const processBlock = (_block, web3) => {
@@ -24,7 +25,10 @@ const processBlock = (_block, web3) => {
         result.ETH = ethTransfers
         setERC721Info.process(_block).then(erc721Transfers => {
           result.ERC721 = erc721Transfers
-          db.put(TOKEN_KEY_PREFIX + _block.number, result).then(() => {
+          Promise.all([
+            db.put(TOKEN_KEY_PREFIX + _block.number, result),
+            dbGz.putgz(`${Configs.CHAIN}/transfers/block=${_block.number}/transfers.json.gz`, _block)
+          ]).then(() => {
             resolve(_block.number)
           })
         })

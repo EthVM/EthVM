@@ -4,6 +4,7 @@ export default {
   CHAIN: process.env.CHAIN || '',
   WS_HOST: process.env.WS_HOST || '',
   S3_BUCKET: process.env.S3_BUCKET || '',
+  S3_BUCKET_GZ: process.env.S3_BUCKET_GZ || '',
   AWS_PROFILE: process.env.AWS_PROFILE || 'default',
   AWS_REGION: process.env.AWS_REGION || '',
   AWS_SNS_TOPIC: process.env.AWS_SNS_TOPIC || '',

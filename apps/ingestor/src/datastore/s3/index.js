@@ -1,5 +1,7 @@
 import AWS from 'aws-sdk'
 import LZUTF8 from 'lzutf8'
+import { gzipSync } from 'zlib'
+
 import Configs from '../../configs'
 const credentials = new AWS.SharedIniFileCredentials({
   profile: Configs.AWS_PROFILE
@@ -44,6 +46,25 @@ class S3DB {
           }),
           ContentType: 'application/json',
           Key: key + FILE_EXTENSION,
+          Metadata: value.Metadata
+        },
+        function(err, data) {
+          if (err) return reject(err)
+          resolve(data)
+        }
+      )
+    })
+  }
+
+  putgz(key, value) {
+    return new Promise((resolve, reject) => {
+      this.db.putObject(
+        {
+          Bucket: this.bucketName,
+          Body: gzipSync(Buffer.from(JSON.stringify(value), 'utf8')),
+          ContentType: 'application/json',
+          ContentEncoding: 'gzip',
+          Key: key,
           Metadata: value.Metadata
         },
         function(err, data) {
