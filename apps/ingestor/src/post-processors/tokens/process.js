@@ -27,7 +27,7 @@ const processBlock = (_block, web3) => {
           result.ERC721 = erc721Transfers
           Promise.all([
             db.put(TOKEN_KEY_PREFIX + _block.number, result),
-            dbGz.putgz(`${Configs.CHAIN}/transfers/block=${_block.number}/transfers.json.gz`, _block)
+            dbGz.putgz(`${Configs.CHAIN}/transfers/block=${_block.number}/transfers.json.gz`, result)
           ]).then(() => {
             resolve(_block.number)
           })
