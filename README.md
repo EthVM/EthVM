@@ -19,21 +19,19 @@
 
 ## Warning
 
-**We are on active development!** 
+**We are on active development!**
 
-Things may break or not work as expected and documentation may be deprecated! 
+We are currently removing Kafka and other core parts, as well as, refatcoring front end. Mostly likely starting mid May, project will not bahave as expected. Tentative date for the project to be fully functional and have approrpiate documentation is in Mid June.
 
-If you detect a bug, please report it on the issues section (but make sure that is not a duplicated one!)
-
-You have been warned!
+Documentation is deprecated.
 
 ## About
 
 ### What is EthVM?
 
-EthVM is an open-source Blockchain Explorer focused mainly on [Ethereum](https://www.ethereum.org/) (although other networks and forks will be supported over time) under the [SSPL license](https://www.mongodb.com/licensing/server-side-public-license) (a small variation of the GNU Affero License v3) and written in a mixture of different languages. 
+EthVM is an open-source Blockchain Explorer focused mainly on [Ethereum](https://www.ethereum.org/) (although other networks and forks will be supported over time) under the [SSPL license](https://www.mongodb.com/licensing/server-side-public-license) (a small variation of the GNU Affero License v3) and written in a mixture of different languages.
 
-You can use EthVM as a tool to explore your custom private network or the existing public ones or as a ETL (Extract, Transform, Load) platform to perform different analysis on the data. 
+You can use EthVM as a tool to explore your custom private network or the existing public ones or as a ETL (Extract, Transform, Load) platform to perform different analysis on the data.
 
 Our core infrastructure is based on well known languages:
 

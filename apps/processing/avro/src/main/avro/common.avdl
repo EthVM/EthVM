@@ -1,8 +1,0 @@
-@namespace("com.ethvm.avro.common")
-protocol Common {
-
-  enum ContractType {
-    GENERIC, ERC20, ERC721
-  }
-
-}
