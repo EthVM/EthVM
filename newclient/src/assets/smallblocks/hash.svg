@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="87px" height="117px" viewBox="0 0 87 117" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+    <title>hash</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-12.6%" y="-21.9%" width="125.3%" height="143.8%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="9" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.597496811   0 0 0 0 0.597496811   0 0 0 0 0.597496811  0 0 0 0.0387228261 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="desktop_new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.3">
+        <g id="Home-dropdown-menu-" transform="translate(-1045.000000, -217.000000)" fill-rule="nonzero">
+            <g id="Group-3" filter="url(#filter-1)" transform="translate(859.000000, 164.000000)">
+                <g id="hash">
+                    <g transform="translate(194.000000, 53.000000)" id="Shape">
+                        <path d="M99.7773037,101.491774 C82.6165947,115.502742 29.033242,115.502742 12.2226963,101.491774 C-4.93801267,87.480807 -3.18695007,27.5840382 12.2226963,11.8217307 C27.6323427,-3.94057689 84.3676573,-3.94057689 99.7773037,11.8217307 C115.18695,27.5840382 116.938013,87.4810533 99.7773037,101.491774 Z" fill="#FFFFFF"></path>
+                        <path d="M55.9760586,77.0958049 C40.6548387,89.3485786 23.5926044,95.649977 7.57507667,96 C-4.2641146,75.6954668 -1.82654763,26.334595 12.1018119,11.9814371 C24.6373109,-0.97138259 63.9848225,-3.4220358 86.6184985,4.62972366 C92.1896954,27.7349331 80.6989028,57.1412947 55.9760586,77.0958049 Z" fill="#FFFFFF"></path>
+                        <path d="M85.565119,47.9998523 L88,36.4499163 L76.8696396,36.4499163 L80.0000611,20 L68.1739157,20 L65.3912645,36.4499163 L52.5218082,36.4499163 L55.3044595,20 L43.478314,20 L40.6956628,36.4499163 L29.9130727,36.4499163 L27.8262066,47.9998523 L38.6087967,47.9998523 L36.1739157,63.0499852 L26.434881,63.0499852 L24,74.5999212 L33.7390347,74.5999212 L31.3041538,90 L43.1302992,90 L45.9129504,74.5999212 L58.7824067,74.5999212 L56.3475257,90 L68.1736711,90 L70.9563224,74.5999212 L82.434453,74.5999212 L84.8693339,63.0499852 L73.0431885,63.0499852 L75.4780695,47.9998523 L85.565119,47.9998523 Z M64,48 L61.1555,63 L48,63 L50.8445,48 L64,48 Z" fill="#FED9A1"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
