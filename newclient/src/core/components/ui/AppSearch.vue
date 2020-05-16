@@ -41,6 +41,12 @@
             }}</v-btn>
             <v-btn v-else depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey" @click="onSearch">{{ $t('search.name') }}</v-btn>
         </v-flex>
+        <v-snackbar v-model="snackbar" :bottom="true" :right="true" :timeout="5000">
+            SEARCH IS NOT IMPLEMENTED
+            <v-btn color="primary" text @click="snackbar = false">
+                Close
+            </v-btn>
+        </v-snackbar>
     </v-layout>
 </template>
 
@@ -58,6 +64,7 @@ export default class AppSearch extends Vue {
     searchInput = ''
     phText = 'default'
     isValid = true
+    snackbar = false
 
     /*
   ===================================================================================
@@ -77,6 +84,9 @@ export default class AppSearch extends Vue {
     Methods
   ===================================================================================
   */
+    onSearch(): void {
+        this.snackbar = true
+    }
 
     resetValues(): void {
         this.isValid = true
