@@ -1,8 +1,16 @@
 query getLatestBlockInfo {
-  getLatestBlockInfo {
-    number
-    avgBlockTime
-    hashRate
-    difficulty
-  }
+    getLatestBlockInfo {
+        number
+        avgBlockTime
+        hashRate
+        difficulty
+    }
+}
+query getBlocksArrayByNumber {
+    getBlocksArrayByNumber {
+        number
+        miner
+        txCount
+        timestamp
+    }
 }

@@ -3,7 +3,8 @@
         <v-layout wrap fill-height>
             <v-flex xs12>
                 <v-layout align-end row pr-2>
-                    <p class="display-1 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ value }}</p>
+                    <p v-if="!isDate" class="display-1 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ value }}</p>
+                    <vue-time-ticker v-else :value="value" format="SECONDS" class="display-1 text-truncate font-weight-medium pb-0 pl-1 mb-0" />
                     <p v-if="metrics" class="headline pl-1 mb-0">{{ metrics }}</p>
                 </v-layout>
             </v-flex>
@@ -16,8 +17,13 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import VueTimeTicker from 'vue-time-ticker'
 
-@Component
+@Component({
+    components: {
+        VueTimeTicker
+    }
+})
 export default class AppInfoCard extends Vue {
     /*
     ===================================================================================
@@ -25,11 +31,12 @@ export default class AppInfoCard extends Vue {
     ===================================================================================
     */
 
-    @Prop(String) value!: string
+    @Prop(String) value!: string | Date
     @Prop(String) title!: string
     @Prop(String) colorType!: string
     @Prop(String) metrics!: string
     @Prop(String) backType!: string
+    @Prop({ type: Boolean, default: false }) isDate!: boolean
 
     /*
     ===================================================================================

@@ -3,9 +3,18 @@
         <v-flex xs12 sm6 md3>
             <app-info-card :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" />
         </v-flex>
-        <v-flex xs12 sm6 md3> </v-flex>
         <v-flex xs12 sm6 md3>
-            <app-info-card :title="$t('block.hash-rate')" :value="latestHashRate.value" :metrics="''" color-type="warning" back-type="hash-rate" />
+            <app-info-card
+                :title="$t('block.time')"
+                :value="timestamp"
+                :isDate="!initialLoad"
+                color-type="success"
+                back-type="time-since"
+                :metrics="$t('message.sec')"
+            />
+        </v-flex>
+        <v-flex xs12 sm6 md3>
+            <app-info-card :title="$t('block.hash-rate')" :value="latestHashRate" :metrics="hashUnitLabel.th" color-type="warning" back-type="hash-rate" />
         </v-flex>
         <v-flex xs12 sm6 md3>
             <app-info-card :title="$t('diff.name')" :value="latestDifficulty" :metrics="''" color-type="error" back-type="difficulty" />
@@ -16,22 +25,10 @@
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
-import getLatestBlockInfo from './stats.graphql'
+import { getLatestBlockInfo } from './stats.graphql'
 import BN from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './getLatestBlockInfo.type'
-interface BlockStatistics {
-    number?: number
-    avgBlockTime?: number
-    hashRate?: string
-    difficulty?: string
-    timestamp?: number
-}
-enum HashUnitLabel {
-    th = 'Th/s',
-    gh = 'Gh/s',
-    mh = 'Mh/s'
-}
 
 @Component({
     components: {
@@ -42,8 +39,8 @@ enum HashUnitLabel {
             query: getLatestBlockInfo,
             result({ data }) {
                 if (data) {
-                    ;(this as any).initialLoad = false
-                    ;(this as any).timeStamp = new Date()
+                    this.initialLoad = false
+                    this.timestamp = new Date().toString()
                 }
             }
             //     error (error) {
@@ -66,8 +63,13 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     initialLoad: boolean = true
-    timestamp?: Date
+    timestamp?: string = ''
     getLatestBlockInfo?: BlockInfoType
+    hashUnitLabel = {
+        th: 'Th/s',
+        gh: 'Gh/s',
+        mh: 'Mh/s'
+    }
 
     /*
     ===================================================================================
@@ -80,21 +82,16 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     }
 
     get latestBlockNumber(): string {
-        return this.getLatestBlockInfo && this.getLatestBlockInfo.number ? this.getLatestBlockInfo.number : ''
+        return this.getLatestBlockInfo ? this.formatNumber(this.getLatestBlockInfo.number) : ''
     }
 
     get latestHashRate(): string {
-        return this.getLatestBlockInfo && this.getLatestBlockInfo.hashRate
-            ? this.formatIntegerValue(new BN(this.getLatestBlockInfo.hashRate).div('1e12').decimalPlaces(2))
-            : ''
+        return this.getLatestBlockInfo ? this.formatFloatingPointValue(new BN(this.getLatestBlockInfo.hashRate).div('1e12').decimalPlaces(2)).value : ''
     }
 
     get latestDifficulty(): string {
-        return this.getLatestBlockInfo && this.getLatestBlockInfo.difficulty
-            ? new BN(this.getLatestBlockInfo.difficulty).div('1e12').decimalPlaces(2).toString()
-            : ''
+        return this.getLatestBlockInfo ? `${this.formatFloatingPointValue(new BN(this.getLatestBlockInfo.difficulty).div('1e12').decimalPlaces(2)).value}` : ''
     }
-
     /*
     ===================================================================================
       Watch

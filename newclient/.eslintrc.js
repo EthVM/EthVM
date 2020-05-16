@@ -15,7 +15,15 @@ module.exports = {
         'prefer-const': 'error',
         'no-var': 'error',
         'vue/no-unused-vars': 'error',
-        'vue/require-default-prop': 'off'
+        'vue/require-default-prop': 'off',
+        'graphql/template-strings': [
+            'error',
+            {
+                env: 'apollo',
+                schemaJson: require('./apollo/schemas/api.json')
+                // tagName is gql by default
+            }
+        ]
     },
     parserOptions: {
         parser: 'typescript-eslint-parser'

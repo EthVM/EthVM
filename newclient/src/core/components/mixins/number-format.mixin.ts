@@ -13,7 +13,9 @@ export class NumberFormatMixin extends Vue {
     /* Non-formatted integers (Group I) */
     /* E.g. Block Number, Nonce */
     /* Are not formatted so no need for formatting method */
-
+    formatNumber(value: number): string {
+        return new BigNumber(value).toFormat().toString()
+    }
     /* Formatted integers (Group II) */
 
     formatIntegerValue(value: BigNumber): FormattedNumber {
