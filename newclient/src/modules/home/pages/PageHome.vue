@@ -6,7 +6,7 @@
       Card Stats
     =====================================================================================
     -->
-        <block-stats />
+        <block-stats :new-block="newBlockNumber" />
         <!-- <app-card-stats-group /> -->
         <!--
     =====================================================================================
@@ -51,11 +51,12 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import BlockStats from '@app/modules/blocks/containers/BlockStats/BlockStats.vue'
+import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 // import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 // import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 // import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 // import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
 
@@ -69,7 +70,7 @@ const MAX_ITEMS = 50
         // TableTxs
     }
 })
-export default class PageHome extends Vue {
+export default class PageHome extends Mixins(NewBlockSubscription) {
     /*
   ===================================================================================
     Initial Data

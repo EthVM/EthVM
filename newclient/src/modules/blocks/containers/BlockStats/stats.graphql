@@ -6,11 +6,3 @@ query getLatestBlockInfo {
         difficulty
     }
 }
-query getBlocksArrayByNumber {
-    getBlocksArrayByNumber {
-        number
-        miner
-        txCount
-        timestamp
-    }
-}

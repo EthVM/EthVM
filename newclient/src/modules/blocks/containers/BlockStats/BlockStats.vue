@@ -7,10 +7,10 @@
             <app-info-card
                 :title="$t('block.time')"
                 :value="timestamp"
-                :isDate="!initialLoad"
+                :is-date="!initialLoad"
+                :metrics="$t('message.sec')"
                 color-type="success"
                 back-type="time-since"
-                :metrics="$t('message.sec')"
             />
         </v-flex>
         <v-flex xs12 sm6 md3>
@@ -42,10 +42,10 @@ import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './getLat
                     this.initialLoad = false
                     this.timestamp = new Date().toString()
                 }
+            },
+            error(error) {
+                this.error = JSON.stringify(error.message)
             }
-            //     error (error) {
-            //   this.error = JSON.stringify(error.message)
-            // }
         }
     }
 })
@@ -56,7 +56,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    // @Prop({ type: Number }) newBlock?: number
+    @Prop(Number) newBlock?: number
     /*
     ===================================================================================
       Initial Data
@@ -96,12 +96,12 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     ===================================================================================
       Watch
     ===================================================================================
-  //   */
-    // @Watch('newBlock')
-    // onNewBlockChange (newVal: number, oldVal: number): void {
-    //   if (newVal && newVal != oldVal) {
-    //     this.$apollo.queries.tokensPage.refetch()
-    //   }
-    // }
+    */
+    @Watch('newBlock')
+    onNewBlockChanged(newVal: number, oldVal: number): void {
+        if (newVal && newVal != oldVal) {
+            this.$apollo.queries.getLatestBlockInfo.refetch()
+        }
+    }
 }
 </script>
