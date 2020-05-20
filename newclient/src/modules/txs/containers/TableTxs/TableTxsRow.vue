@@ -5,7 +5,7 @@
         Mobile (XS)
       =====================================================================================
       -->
-        <v-flex xs12 hidden-sm-and-up>
+        <v-flex v-if="isSmall" xs12 hidden-sm-and-up>
             <div :class="txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs6 pa-1>
@@ -51,7 +51,7 @@
         Tablet/ Desktop (SM - XL)
       =====================================================================================
       -->
-        <v-flex hidden-xs-only sm12>
+        <v-flex v-else hidden-xs-only sm12>
             <v-layout grid-list-xs row align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <!--
           =====================================================================================
@@ -74,11 +74,11 @@
 
             Responsive Tally:
             SM: 9/12 (7)
-            MD: 8/12 (6)
+            MD: 7/12 (5)
             LG: 6/12 (5)
           =====================================================================================
           -->
-                <v-flex sm7 md6 lg5>
+                <v-flex sm7 md5>
                     <v-layout row wrap align-center pr-3 pl-2>
                         <v-flex sm12>
                             <v-layout row align-center justift-start pa-2>
@@ -105,11 +105,11 @@
 
           Responsive Tally:
           SM: 12/12 (3)
-          MD: 10/12 (2)
+          MD: 10/12 (3)
           LG: 8/12 (2)
           =====================================================================================
           -->
-                <v-flex sm3 md2>
+                <v-flex sm3 lg2>
                     <p :class="[status ? 'txSuccess--text ' : 'txFail--text']">
                         {{ transaction.value.value }}
                         {{ $t(`common.${transaction.value.unit}`) }}
@@ -142,7 +142,6 @@
                 <v-flex hidden-md-and-down lg2>
                     <p class="black--text text-truncate mb-0">
                         {{ transaction.fee.value }}
-                        <!-- <app-tooltip v-if="transaction.fee.tooltipText" :text="`${transaction.fee.tooltipText} ${$t('common.eth')}`" /> -->
                     </p>
                 </v-flex>
                 <!--
@@ -227,6 +226,9 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             value: this.formatNonVariableEthValue(new BN(this.tx.value)),
             status: true
         }
+    }
+    get isSmall(): boolean {
+        return this.$vuetify.breakpoint.name === 'sm'
     }
 }
 </script>

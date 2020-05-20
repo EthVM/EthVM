@@ -38,11 +38,10 @@
         <!--
     =====================================================================================
       Latest Txs
-    =====================================================================================
     -->
         <v-layout row wrap justify-center mb-4>
             <v-flex xs12>
-                <table-txs :max-items="maxItems" page-type="home" />
+                <table-txs :max-items="maxItems" :new-block="newBlockNumber" page-type="home" />
             </v-flex>
         </v-layout>
     </v-container>

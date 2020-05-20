@@ -64,10 +64,10 @@
                         <v-flex sm2 lg1>
                             <h5>{{ $t('block.number') }}</h5>
                         </v-flex>
-                        <v-flex sm7 md6 lg5>
+                        <v-flex sm7 md5>
                             <h5>{{ $tc('tx.hash', 1) }}</h5>
                         </v-flex>
-                        <v-flex sm3 md2>
+                        <v-flex sm3 lg2>
                             <h5 class="pl-3">{{ $t('common.amount') }}</h5>
                         </v-flex>
                         <v-flex hidden-sm-and-down md2>
@@ -125,7 +125,7 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableTxsRow from '@app/modules/txs/containers/TableTxs/TableTxsRow.vue'
 import TableTxsRowLoading from '@app/modules/txs/containers/TableTxs/TableTxsRowLoading.vue'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 import BigNumber from 'bignumber.js'
 // import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
@@ -431,6 +431,18 @@ export default class TableTxs extends Vue {
             return this.$i18n.t('message.tx.no-in-block').toString()
         }
         return this.$i18n.t('message.tx.no-history').toString()
+    }
+
+    /*
+    ===================================================================================
+      Watch
+    ===================================================================================
+    */
+    @Watch('newBlock')
+    onNewBlockChanged(newVal: number, oldVal: number): void {
+        if (newVal && newVal != oldVal) {
+            this.$apollo.queries.txPage.refetch()
+        }
     }
 }
 </script>
