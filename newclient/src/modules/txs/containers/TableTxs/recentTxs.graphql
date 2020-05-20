@@ -1,0 +1,15 @@
+query getBlockTransfers($_number: Int) {
+    getBlockTransfers(number: $_number) {
+        transfers {
+            transfer {
+                transactionHash
+                to
+                block
+                timestamp
+                from
+                txFee
+            }
+            value
+        }
+    }
+}
