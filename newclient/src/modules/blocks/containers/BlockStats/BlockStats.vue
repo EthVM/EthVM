@@ -39,8 +39,12 @@ import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './getLat
             query: getLatestBlockInfo,
             result({ data }) {
                 if (data) {
-                    this.initialLoad = false
-                    this.timestamp = new Date().toString()
+                    if (this.initialLoad) {
+                        this.initialLoad = false
+                        this.timestamp = data.getLatestBlockInfo.timestamp
+                    } else {
+                        this.timestamp = new Date().toString()
+                    }
                 }
             },
             error(error) {

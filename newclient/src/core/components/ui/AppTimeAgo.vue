@@ -1,8 +1,8 @@
 <template>
     <p class="black--text mb-0">
-        <timeago v-if="moreThenAMin" :datetime="timestamp" :locale="locale" :auto-update="60" />
-        <vue-time-ticker v-else :value="timestamp.toString()" format="SECONDS" />
-        {{ text }}
+        <timeago :datetime="timestamp" :locale="locale" :auto-update="60" />
+        <!-- <vue-time-ticker v-else :value="timestamp.toString()" format="SECONDS" /> -->
+        <!-- {{ text }} -->
     </p>
 </template>
 
@@ -42,6 +42,7 @@ export default class AppTimeAgo extends Vue {
     */
 
     currentTime = Date.now()
+    count?: NodeJS.Timeout
     /*
     ===================================================================================
       Computed
@@ -74,12 +75,17 @@ export default class AppTimeAgo extends Vue {
     mounted() {
         this.currentTime = Date.now()
         if (!this.moreThenAMin) {
-            const count = setInterval(() => {
+            this.count = setInterval(() => {
                 this.currentTime = Date.now()
-                if (this.moreThenAMin) {
-                    clearInterval(count)
+                if (this.moreThenAMin && this.count) {
+                    clearInterval(this.count)
                 }
             }, 500)
+        }
+    }
+    beforeDestroy() {
+        if (this.count) {
+            clearInterval(this.count)
         }
     }
 }
