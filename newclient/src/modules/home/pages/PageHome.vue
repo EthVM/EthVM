@@ -54,7 +54,7 @@ import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/n
 // import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 // import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 // import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import HomeTxs from '@app/modules/txs/handlers/HomeTxs/HomeTxs.vue'
+import HomeTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
 import { Component, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -70,13 +70,6 @@ const MAX_ITEMS = 50
     }
 })
 export default class PageHome extends Mixins(NewBlockSubscription) {
-    /*
-    ===================================================================================
-    Initial Data
-    ===================================================================================
-    */
-    tableStyle = 'max-height: 450px'
-
     /*
     ===================================================================================
       Computed
