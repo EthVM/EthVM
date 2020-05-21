@@ -2,7 +2,7 @@ module.exports = {
     client: {
         service: {
             name: 'api',
-            url: 'https://hbfzqg7jia.execute-api.us-west-2.amazonaws.com/dev',
+            url: process.env.VUE_APP_HTTP_LINK,
             includes: ['**/*.graphql'],
             excludes: ['node_modules/**/*']
         }

@@ -168,7 +168,6 @@
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
-import { getBlockTransfers_getBlockTransfers_transfers as TransferType } from './getBlockTransfers.type'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
@@ -199,7 +198,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) tx!: TransferType
+    @Prop(Object) tx!: any
     @Prop({ type: Boolean, default: false }) isPending
 
     /*
