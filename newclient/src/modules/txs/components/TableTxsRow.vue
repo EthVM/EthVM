@@ -171,18 +171,9 @@ import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
-import BN from 'bignumber.js'
+import { Tx } from './props'
 
-interface Tx {
-    hash: string
-    block: string
-    from: string
-    to: string
-    timestamp: Date
-    fee: FormattedNumber
-    value: FormattedNumber
-    status: boolean
-}
+import BN from 'bignumber.js'
 
 @Component({
     components: {
