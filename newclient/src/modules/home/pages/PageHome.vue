@@ -41,7 +41,7 @@
     -->
         <v-layout row wrap justify-center mb-4>
             <v-flex xs12>
-                <table-txs :max-items="maxItems" :new-block="newBlockNumber" page-type="home" />
+                <home-txs :max-items="maxItems" :new-block="newBlockNumber" />
             </v-flex>
         </v-layout>
     </v-container>
@@ -49,12 +49,12 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import BlockStats from '@app/modules/blocks/containers/BlockStats/BlockStats.vue'
+import BlockStats from '@app/modules/blocks/handlers/BlockStats/BlockStats.vue'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 // import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 // import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 // import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
-import TableTxs from '@app/modules/txs/containers/TableTxs/TableTxs.vue'
+import HomeTxs from '@app/modules/txs/handlers/HomeTxs/HomeTxs.vue'
 import { Component, Mixins } from 'vue-property-decorator'
 
 const MAX_ITEMS = 50
@@ -66,7 +66,7 @@ const MAX_ITEMS = 50
         // ChartLiveTxFees,
         // ChartLiveTxs,
         // TableBlocks,
-        TableTxs
+        HomeTxs
     }
 })
 export default class PageHome extends Mixins(NewBlockSubscription) {

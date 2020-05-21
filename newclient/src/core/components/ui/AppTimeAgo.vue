@@ -1,8 +1,8 @@
 <template>
     <p class="black--text mb-0">
         <timeago :datetime="timestamp" :locale="locale" :auto-update="60" />
-        <!-- <vue-time-ticker v-else :value="timestamp.toString()" format="SECONDS" /> -->
-        <!-- {{ text }} -->
+        <!-- <vue-time-ticker v-else :value="timestamp.toString()" format="SECONDS" />
+        {{ text }} -->
     </p>
 </template>
 
@@ -41,8 +41,8 @@ export default class AppTimeAgo extends Vue {
     ===================================================================================
     */
 
-    currentTime = Date.now()
-    count?: NodeJS.Timeout
+    // currentTime = Date.now()
+    // count?: NodeJS.Timeout
     /*
     ===================================================================================
       Computed
@@ -59,34 +59,32 @@ export default class AppTimeAgo extends Vue {
                 return 'en'
         }
     }
-    get moreThenAMin(): boolean {
-        const diffInMilliSeconds = Math.abs(this.currentTime - this.timestamp.getTime()) / 1000
-        const minutes = Math.floor(diffInMilliSeconds / 60) % 60
-        return minutes > 0
-    }
-    get text(): TranslateResult {
-        return !this.moreThenAMin ? this.$t('message.sec-ago') : ''
-    }
+    // get moreThenAMin(): boolean {
+    //     return new Date().getTime() - this.timestamp.getTime() >= 60 * 1e3
+    // }
+    // get text(): TranslateResult {
+    //     return !this.moreThenAMin ? this.$t('message.sec-ago') : ''
+    // }
     /*
     ===================================================================================
       Lifecycle
     ===================================================================================
     */
-    mounted() {
-        this.currentTime = Date.now()
-        if (!this.moreThenAMin) {
-            this.count = setInterval(() => {
-                this.currentTime = Date.now()
-                if (this.moreThenAMin && this.count) {
-                    clearInterval(this.count)
-                }
-            }, 500)
-        }
-    }
-    beforeDestroy() {
-        if (this.count) {
-            clearInterval(this.count)
-        }
-    }
+    // mounted() {
+    //     this.currentTime = Date.now()
+    //     if (!this.moreThenAMin) {
+    //         this.count = setInterval(() => {
+    //             this.currentTime = Date.now()
+    //             if (this.moreThenAMin && this.count) {
+    //                 clearInterval(this.count)
+    //             }
+    //         }, 1000)
+    //     }
+    // }
+    // beforeDestroy() {
+    //     if (this.count) {
+    //         clearInterval(this.count)
+    //     }
+    // }
 }
 </script>
