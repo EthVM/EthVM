@@ -1,6 +1,9 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-3">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/blocks">
+            <template v-slot:update v-if="!isHome">
+                <notice-new-block @reload="setPage(0, true)" />
+            </template>
             <template v-slot:pagination v-if="showPagination && !initialLoad">
                 <app-paginate
                     :total="totalPages"
@@ -22,7 +25,7 @@
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-
+import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getBlocksArrayByNumber, newBlockTable } from './recentBlocks.graphql'
@@ -42,6 +45,7 @@ interface BlockMap {
     components: {
         AppTableTitle,
         AppPaginate,
+        NoticeNewBlock,
         TableBlocks
     },
     apollo: {
@@ -168,11 +172,12 @@ export default class RecentBlocks extends Vue {
     */
 
     setPage(page: number, reset: boolean = false): void {
+        this.index = page
         if (reset) {
-            this.index = 0
+            this.indexedBlocks = {}
+            this.initialLoad = true
             this.$apollo.queries.getBlocksArrayByNumber.refetch()
         } else {
-            this.index = page
             const from = this.startBlock - this.maxItems * this.index
             if (from > 0 && !this.indexedBlocks[this.index]) {
                 this.$apollo.queries.getBlocksArrayByNumber.fetchMore({
@@ -181,7 +186,6 @@ export default class RecentBlocks extends Vue {
                         limit: this.maxItems
                     },
                     updateQuery: (previousResult, { fetchMoreResult }) => {
-                        this.index = page
                         return fetchMoreResult
                     }
                 })

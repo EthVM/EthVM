@@ -38,4 +38,7 @@ export class NewBlockSubscription extends Vue {
     get newBlockNumber(): number | undefined {
         return this.newBlock ? this.newBlock.number : undefined
     }
+    get newTxs(): number | undefined {
+        return this.newBlock ? this.newBlock.txCount : undefined
+    }
 }

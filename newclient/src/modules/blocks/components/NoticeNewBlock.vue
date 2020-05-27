@@ -1,30 +1,18 @@
 <template>
-    <v-btn flat class="new-block-alert text-capitalize ma-0" @click="onReload" v-if="display">
+    <v-btn v-if="display" class="new-block-alert text-capitalize ma-0" flat @click="onReload">
         {{ buttonText }}
         <v-icon class="ml-1 secondary--text fas fa-sync fa-1x fa-rotate-90"></v-icon>
     </v-btn>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Mixins, Component, Prop, Watch } from 'vue-property-decorator'
+import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 import { newBlock } from '@app/modules/blocks/blocks.graphql'
 import { TranslateResult } from 'vue-i18n'
 
-@Component({
-    apollo: {
-        $subscribe: {
-            newBlock: {
-                query: newBlock,
-                result({ data }) {
-                    ;(this as any).countTotal++
-                    ;(this as any).newTxs += data.newBlock.numTxs
-                    ;(this as any).newUncles += data.newBlock.uncleHashes.length
-                }
-            }
-        }
-    }
-})
-export default class NoticeNewBlock extends Vue {
+@Component
+export default class NoticeNewBlock extends Mixins(NewBlockSubscription) {
     /*
     ===================================================================================
       Props:
@@ -39,7 +27,7 @@ export default class NoticeNewBlock extends Vue {
   */
     display: boolean = false
     countTotal: number = 0
-    newTxs: number = 0
+    newTxsCount: number = 0
     newUncles: number = 0
     validID = ['block', 'tx', 'pending', 'uncle']
     valueString: number = 0
@@ -63,14 +51,16 @@ export default class NoticeNewBlock extends Vue {
     ===================================================================================
   */
 
-    @Watch('countTotal')
-    onCountTotalChange(newVal: number, oldVal: number): void {
-        if (this.pageId === this.validID[0] && this.countTotal > 0) {
+    @Watch('newBlockNumber')
+    onNewBlockNumberChange(newVal: number, oldVal: number): void {
+        if (this.pageId === this.validID[0] && this.newBlockNumber) {
             this.display = true
+            this.countTotal++
             this.valueString = this.countTotal
         }
-        if (this.pageId === this.validID[1] && this.newTxs > 0) {
+        if (this.pageId === this.validID[1] && this.newTxs && this.newTxs > 0) {
             this.display = true
+            this.newTxsCount += this.newTxs
             this.valueString = this.newTxs
         }
         if (this.pageId === this.validID[3] && this.newUncles > 0) {
@@ -87,7 +77,7 @@ export default class NoticeNewBlock extends Vue {
         this.$emit('reload')
         this.display = false
         this.countTotal = 0
-        this.newTxs = 0
+        this.newTxsCount = 0
         this.newUncles = 0
     }
 
