@@ -10,7 +10,7 @@
                 <div class="table-row-mobile">
                     <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
                         <v-flex xs6 pa-1>
-                            <router-link :to="`/block/number/${_block.number}`" class="black--text font-weight-medium pb-1"
+                            <router-link :to="`/block/number/${block.number}`" class="black--text font-weight-medium pb-1"
                                 >{{ $t('block.number') }} {{ _block.number }}</router-link
                             >
                         </v-flex>
@@ -59,7 +59,7 @@
         -->
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                     <v-flex sm2>
-                        <router-link :to="`/block/number/${_block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
+                        <router-link :to="`/block/number/${block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
                         <div v-if="uncles.length" class="arrow">
                             <div class="line"></div>
                         </div>

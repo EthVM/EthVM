@@ -7,7 +7,7 @@ const PageTxs = () => import(/* webpackChunkName: "page-txs" */ '@app/modules/tx
 // const PagePendingTxs = () => import(/* webpackChunkName: "page-pending-txs" */ '@app/modules/pending-txs/pages/PagePendingTxs.vue')
 const PageAbout = () => import(/* webpackChunkName: "page-about" */ '@app/modules/other/pages/PageAbout.vue')
 // const PageUncles = () => import(/* webpackChunkName: "page-uncles" */ '@app/modules/uncles/pages/PageUncles.vue')
-// const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" */ '@app/modules/blocks/pages/PageDetailsBlock.vue')
+const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" */ '@app/modules/blocks/pages/PageDetailsBlock.vue')
 // const PageDetailsTxs = () => import(/* webpackChunkName: "page-details-txs" */ '@app/modules/txs/pages/PageDetailsTxs.vue')
 // const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr" */ '@app/modules/addresses/pages/PageDetailsAddress.vue')
 // const PageCharts = () => import(/* webpackChunkName: "page-charts" */ '@app/modules/charts/pages/PageCharts.vue')
@@ -33,17 +33,17 @@ export default new Router({
             component: PageBlocks,
             name: 'blocks'
         },
+        {
+            path: '/block/number/:blockRef',
+            component: PageDetailsBlock,
+            name: 'block',
+            props: true
+        },
         // {
-        //   path: '/block/number/:blockRef',
-        //   component: PageDetailsBlock,
-        //   name: 'block',
-        //   props: true
-        // },
-        // {
-        //   path: '/block/hash/:blockRef',
-        //   component: PageDetailsBlock,
-        //   name: 'block',
-        //   props: true
+        //     path: '/block/hash/:blockRef',
+        //     component: PageDetailsBlock,
+        //     name: 'block',
+        //     props: true
         // },
         {
             path: '/txs',

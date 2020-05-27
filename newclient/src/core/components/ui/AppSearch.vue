@@ -7,10 +7,10 @@
                         v-if="phText === 'default'"
                         v-model="searchInput"
                         :placeholder="$t('search.default')"
+                        :prepend-inner-icon="getIcon"
                         color="primary"
                         solo
                         flat
-                        :prepend-inner-icon="getIcon"
                         clearable
                         spellcheck="false"
                         class="ma-0"
