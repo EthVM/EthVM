@@ -5,7 +5,6 @@
       isLoading / ERROR
     =====================================================================================
     -->
-        <v-progress-linear v-if="isLoading && !hasMessage" color="blue" indeterminate class="mt-0" />
         <!-- <app-error :has-error="hasMessage" :message="'error'" class="mb-4" /> -->
         <!--
     =====================================================================================
