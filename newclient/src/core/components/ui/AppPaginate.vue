@@ -8,11 +8,11 @@
                 <v-btn :disabled="currentPage === 0" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('prev')"
                     ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
                 </v-btn>
-                <!--        <div v-if="hasInput" class="page-input">-->
-                <!--          <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />-->
-                <!--        </div>-->
-                <p class="info--text pr-1">{{ pageDisplay }}</p>
-                <p class="info--text">out of {{ totalFormatted }}</p>
+                <div v-if="hasInput" class="page-input">
+                    <v-text-field v-model="pageDisplay" :mask="inputMask" :placeholder="pageDisplay" :error="!isValidPageDisplay" :class="validClass" />
+                </div>
+
+                <p class="info--text text-center">{{ showText }}</p>
                 <v-btn :disabled="currentPage === lastPage" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('next')"
                     ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
                 </v-btn>
@@ -119,14 +119,18 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
   */
 
     set pageDisplay(pageDisplay: string) {
+        console.log('hi')
         const desiredPage = parseInt(pageDisplay, 10) - 1
+        console.log('desired', desiredPage)
         ;(desiredPage >= 0 && desiredPage <= this.lastPage) || !pageDisplay ? (this.isError = false) : (this.isError = true)
         if (this.pageDisplayUpdateTimeout) {
+            console.log('clearing timeout')
             clearTimeout(this.pageDisplayUpdateTimeout)
         }
         this.pageDisplayUpdateTimeout = window.setTimeout(() => {
+            console.log('setting timeout')
             this.setPage(desiredPage)
-        }, 500)
+        }, 1000)
     }
 
     /*
@@ -139,6 +143,10 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
      * Transform the "zero-based" value of this.page into
      * a human-readable string that starts from 1 as opposed to 0
      */
+
+    get showText(): string {
+        return this.hasInput ? `${this.$t('message.page')} ${this.totalFormatted}` : `${this.pageDisplay}${this.$t('message.page')} ${this.totalFormatted}`
+    }
     get pageDisplay(): string {
         return this.formatIntegerValue(new BigNumber(this.currentPage + 1)).value
     }

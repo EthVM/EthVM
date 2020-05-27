@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white" flat class="pt-3 pb-2 mt-0">
+    <v-card color="white" flat class="pt-3 mt-0">
         <!--
     =====================================================================================
       isLoading / ERROR
@@ -35,7 +35,7 @@
       TABLE BODY
     =====================================================================================
     -->
-        <v-container v-if="!hasMessage" :style="getStyle" flat class="scroll-y pa-2">
+        <v-container v-if="!hasMessage" :style="getStyle" flat class="scroll-y pt-2 pr-2 pl-2 pb-0">
             <v-layout column class="mb-1">
                 <v-flex v-if="!isLoading">
                     <div v-for="(block, index) in displayData" :key="index">

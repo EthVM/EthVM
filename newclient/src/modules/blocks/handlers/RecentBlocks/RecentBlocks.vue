@@ -1,17 +1,20 @@
 <template>
-    <v-card color="white" flat class="pt-3 pb-2">
+    <v-card color="white" flat class="pt-3 pb-3">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/blocks">
             <template v-slot:pagination v-if="showPagination && !initialLoad">
                 <app-paginate
                     :total="totalPages"
                     :current-page="currentPage"
-                    :has-input="false"
+                    :has-input="true"
                     :has-first="true"
                     :has-last="true"
                     @newPage="setPage"
                 /> </template
         ></app-table-title>
         <table-blocks :max-items="maxItems" :index="0" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="isHome" />
+        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
+            <app-paginate :total="totalPages" :current-page="currentPage" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+        </v-layout>
     </v-card>
 </template>
 
