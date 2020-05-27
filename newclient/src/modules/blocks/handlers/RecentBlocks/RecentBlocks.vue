@@ -1,19 +1,29 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-2">
-        <app-table-title :title="getTitle" :has-pagination="false" :page-type="pageType" page-link="/blocks" />
-        <table-blocks :max-items="MAX_ITEMS" :index="0" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="true" />
+        <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/blocks">
+            <template v-slot:pagination v-if="showPagination && !initialLoad">
+                <app-paginate
+                    :total="totalPages"
+                    :current-page="currentPage"
+                    :has-input="false"
+                    :has-first="true"
+                    :has-last="true"
+                    @newPage="setPage"
+                /> </template
+        ></app-table-title>
+        <table-blocks :max-items="maxItems" :index="0" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="isHome" />
     </v-card>
 </template>
 
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-import BigNumber from 'bignumber.js'
+import BN from 'bignumber.js'
 import { getBlocksArrayByNumber, newBlockTable } from './recentBlocks.graphql'
 import { getBlocksArrayByNumber_getBlocksArrayByNumber as TypeBlocks } from './getBlocksArrayByNumber.type'
-
-const MAX_ITEMS = 20
 
 /*
   DEV NOTES:
@@ -21,9 +31,14 @@ const MAX_ITEMS = 20
   - add messages if Error to be displayed in Table
 */
 
+interface BlockMap {
+    [key: number]: TypeBlocks
+}
+
 @Component({
     components: {
         AppTableTitle,
+        AppPaginate,
         TableBlocks
     },
     apollo: {
@@ -31,7 +46,7 @@ const MAX_ITEMS = 20
             query: getBlocksArrayByNumber,
             variables() {
                 return {
-                    limit: MAX_ITEMS
+                    limit: this.maxItems
                 }
             },
             subscribeToMore: [
@@ -59,7 +74,12 @@ const MAX_ITEMS = 20
             result({ data }) {
                 if (data && data.getBlocksArrayByNumber) {
                     this.error = '' // clear the error
-                    this.initialLoad = false
+                    if (this.initialLoad) {
+                        this.startBlock = data.getBlocksArrayByNumber[0].number
+                        this.index = 0
+                        this.totalPages = Math.ceil(new BN(this.startBlock).div(this.maxItems).toNumber())
+                        this.initialLoad = false
+                    }
                     if (this.pageType === 'home') {
                         if (this.getBlocksArrayByNumber[0].number - this.getBlocksArrayByNumber[1].number > 1) {
                             this.$apollo.queries.getBlocksArrayByNumber.refetch()
@@ -88,11 +108,14 @@ export default class RecentBlocks extends Vue {
     ===================================================================================
     */
 
-    MAX_ITEMS = MAX_ITEMS
     initialLoad = true
     error = ''
     syncing?: boolean = false
     getBlocksArrayByNumber!: TypeBlocks
+    indexedBlocks: BlockMap = {}
+    index = 0
+    totalPages = 0
+    startBlock!: number
 
     /*
     ===================================================================================
@@ -101,8 +124,8 @@ export default class RecentBlocks extends Vue {
     */
 
     get blocks(): TypeBlocks | [] {
-        if (this.getBlocksArrayByNumber && this.getBlocksArrayByNumber !== null) {
-            return this.getBlocksArrayByNumber
+        if (this.indexedBlocks && this.indexedBlocks[this.index]) {
+            return this.indexedBlocks[this.index]
         }
         return []
     }
@@ -120,37 +143,70 @@ export default class RecentBlocks extends Vue {
         return titles[this.pageType]
     }
     get loading(): boolean {
-        // if (this.pageType !== 'home')
-        return this.initialLoad
+        if (this.pageType == 'home') {
+            return this.initialLoad
+        }
+        return this.$apollo.queries.getBlocksArrayByNumber.loading
     }
-    get skipSubscriptions() {
-        return this.pageType !== 'home'
+    get isHome(): boolean {
+        return this.pageType === 'home'
+    }
+    get currentPage(): number {
+        return this.index
+    }
+    get showPagination(): boolean {
+        return !this.initialLoad && !this.isHome && this.startBlock - this.maxItems > 0
+    }
+
+    /*
+    ===================================================================================
+      Methods:
+    ===================================================================================
+    */
+
+    setPage(page: number, reset: boolean = false): void {
+        if (reset) {
+            this.index = 0
+            this.$apollo.queries.getBlocksArrayByNumber.refetch()
+        } else {
+            this.index = page
+            const from = this.startBlock - this.maxItems * this.index
+            if (from > 0 && !this.indexedBlocks[this.index]) {
+                this.$apollo.queries.getBlocksArrayByNumber.fetchMore({
+                    variables: {
+                        fromBlock: from,
+                        limit: this.maxItems
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        this.index = page
+                        return fetchMoreResult
+                    }
+                })
+            }
+        }
     }
     /*
     ===================================================================================
       Watch
     ===================================================================================
     */
-    // @Watch('newBlock')
-    // onNewBlockChanged(newVal: number, oldVal: number): void {
-    //     if (newVal && newVal != oldVal) {
-    //         this.$apollo.queries.getBlocksArrayByNumber.refetch({
-    //             updateQuery: (previousResult, { fetchMoreResult }) => {
-    //                 return {
-    //                     getBlocksArrayByNumber: {
-    //                         __typename: previousResult.getBlocksArrayByNumber.__typename,
-    //                         tags: [...fetchMoreResult.getBlocksArrayByNumber, ...previousResult.getBlocksArrayByNumber]
-    //                     }
-    //                 }
-    //             }
-    //         })
-    //     }
-    // }
+    @Watch('getBlocksArrayByNumber', { deep: true })
+    onGetBlocksArrayByNumberChanged(val: TypeBlocks, oldVal: TypeBlocks) {
+        if (val != oldVal) {
+            this.$set(this.indexedBlocks, this.index, val)
+        }
+    }
+
     /*
     ===================================================================================
       LifeCycle:
     ===================================================================================
     */
+    mounted() {
+        if (!this.isHome) {
+            this.$apollo.skipAllSubscriptions = true
+        }
+    }
 }
 </script>
 <style scoped lang="css">

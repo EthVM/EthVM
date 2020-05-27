@@ -4,9 +4,9 @@
         <block-stats :new-block="newBlockNumber" />
 
         <v-layout row wrap justify-center mb-4>
-            <!-- <v-flex xs12>
-        <table-blocks :max-items="max" />
-      </v-flex> -->
+            <v-flex xs12>
+                <recent-blocks :max-items="max" page-type="blocks" />
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
@@ -16,17 +16,17 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import BlockStats from '@app/modules/blocks/handlers/BlockStats/BlockStats.vue'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 
-// import TableBlocks from '@app/modules/blocks/components/TableBlocks.vue'
+import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks.vue'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
 
-const MAX_ITEMS = 50
+const MAX_ITEMS = 10
 
 @Component({
     components: {
         AppBreadCrumbs,
-        BlockStats
-        // TableBlocks
+        BlockStats,
+        RecentBlocks
     }
 })
 export default class PageBlocks extends Mixins(NewBlockSubscription) {

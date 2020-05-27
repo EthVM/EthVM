@@ -16,7 +16,7 @@
                 <v-btn :disabled="currentPage === lastPage" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('next')"
                     ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
                 </v-btn>
-                <!--        <v-btn v-if="hasLast" flat class="bttnGrey info&#45;&#45;text text-capitalize bttn" @click="setPageOnClick('last')" small>{{ $t('btn.last') }}</v-btn>-->
+                <v-btn v-if="hasLast" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('last')">{{ $t('btn.last') }}</v-btn>
             </v-layout>
         </v-container>
     </v-card>

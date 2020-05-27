@@ -41,7 +41,7 @@
     -->
         <v-layout row wrap justify-center mb-4>
             <v-flex xs12>
-                <home-txs :max-items="maxItems" :new-block="newBlockNumber" />
+                <home-txs :max-items="maxItems" />
             </v-flex>
         </v-layout>
     </v-container>
@@ -57,7 +57,7 @@ import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks
 import HomeTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
 import { Component, Mixins } from 'vue-property-decorator'
 
-const MAX_ITEMS = 50
+const MAX_ITEMS = 10
 
 @Component({
     components: {

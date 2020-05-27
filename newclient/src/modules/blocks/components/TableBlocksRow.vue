@@ -150,7 +150,7 @@ export default class TableBlocksRow extends Mixins(NumberFormatMixin) {
 
     get _block(): any {
         return {
-            number: this.block.number,
+            number: this.formatNumber(this.block.number),
             miner: this.block.miner,
             rewards: this.formatNonVariableEthValue(new BN(this.block.rewards.total)),
             timestamp: new Date(this.block.timestamp * 1e3),
