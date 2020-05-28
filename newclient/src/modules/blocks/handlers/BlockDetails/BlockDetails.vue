@@ -174,7 +174,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                 {
                     title: this.$i18n.t('block.p-hash'),
                     detail: this.block.parentHash!,
-                    link: `/block/hash/${this.block.parentHash}`,
+                    link: `/block/number/${this.block.summary.number - 1}`,
                     copy: true,
                     mono: true
                 },
