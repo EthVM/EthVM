@@ -60,9 +60,6 @@
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                     <v-flex sm2>
                         <router-link :to="`/block/number/${block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
-                        <div v-if="uncles.length" class="arrow">
-                            <div class="line"></div>
-                        </div>
                     </v-flex>
                     <v-flex sm5>
                         <v-layout row pb-2>
@@ -88,28 +85,6 @@
                         </p>
                     </v-flex>
                 </v-layout>
-                <!--
-        =====================================================================================
-          Uncles Info
-        =====================================================================================
-        -->
-                <v-flex v-if="uncles.length" sm12 pt-3>
-                    <v-layout row class="uncle">
-                        <v-flex sm2></v-flex>
-                        <v-flex sm6>
-                            <div class="uncles">
-                                <v-card flat color="transparent">
-                                    <v-card-title class="pt-1 font-weight-medium pb-2">{{ $tc('uncle.name', 2) }}:</v-card-title>
-                                    <v-layout v-for="(uncle, index) in uncles" :key="index" row pl-4 pr-4 pb-2>
-                                        <p class="info--text psmall pr-2">{{ $t('common.hash') }}:</p>
-                                        <app-transform-hash :hash="uncle" :link="`/uncle/${uncle}`" />
-                                    </v-layout>
-                                </v-card>
-                            </div>
-                        </v-flex>
-                        <v-spacer />
-                    </v-layout>
-                </v-flex>
                 <v-divider class="mb-2 mt-2" />
             </v-flex>
         </v-layout>
@@ -170,9 +145,6 @@ export default class TableBlocksRow extends Mixins(NumberFormatMixin) {
    Methods
   ===================================================================================
   */
-    uncles(): boolean {
-        return this.block.uncles
-    }
 
     sucessTransalate(): number {
         return this._block && this._block.txSuccess > 1 ? 2 : 1
@@ -205,10 +177,5 @@ p {
     position: absolute;
     margin-left: 2px;
     margin-bottom: 10px;
-}
-
-.uncles {
-    border: 1px solid #b4bfd2;
-    padding-bottom: 5px;
 }
 </style>
