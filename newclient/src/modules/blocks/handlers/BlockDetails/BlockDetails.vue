@@ -50,7 +50,8 @@ import BN from 'bignumber.js'
             update: data => data.getBlockByNumber || data.getBlockByHash
         },
         getLatestBlockInfo: {
-            query: getLastBlockNumber
+            query: getLastBlockNumber,
+            fetchPolicy: 'cache-and-network'
         }
     }
 })
@@ -159,7 +160,6 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                 }
             ]
         } else {
-            console.log(this.block)
             details = [
                 {
                     title: this.$i18n.t('common.height'),
@@ -283,16 +283,13 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
         return `${this.formatNumber(this.block.summary.txCount)} ${failedString}`
     }
     get lastBlock(): number | undefined {
-        console.log('loading', this.$apollo.queries.getLatestBlockInfo.loading)
         if (!this.$apollo.queries.getLatestBlockInfo.loading) {
-            console.log('here')
             return this.newBlockNumber ? this.newBlockNumber : this.getLatestBlockInfo.number
         }
         return undefined
     }
     get nextBlock(): String | null {
         const next = this.block.summary.number + 1
-        console.log('last Block ', this.lastBlock)
         if (this.lastBlock && this.lastBlock >= next) {
             return `/block/number/${next}`
         }
@@ -316,15 +313,5 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     get hasError(): boolean {
         return this.error !== ''
     }
-    /*
-    ===================================================================================
-      Methods
-    ===================================================================================
-    */
-
-    // onReload() {
-    //     console.log('refetching')
-    //     this.$apollo.queries.getgetLatestBlockInfo.refetch()
-    // }
 }
 </script>

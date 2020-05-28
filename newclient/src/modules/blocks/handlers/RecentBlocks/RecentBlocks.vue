@@ -56,6 +56,7 @@ interface BlockMap {
                     limit: this.maxItems
                 }
             },
+            fetchPolicy: 'network-only',
             subscribeToMore: [
                 {
                     document: newBlockTable,
@@ -150,7 +151,7 @@ export default class RecentBlocks extends Vue {
         return titles[this.pageType]
     }
     get loading(): boolean {
-        if (this.pageType == 'home') {
+        if (this.isHome) {
             return this.initialLoad
         }
         return this.$apollo.queries.getBlocksArrayByNumber.loading

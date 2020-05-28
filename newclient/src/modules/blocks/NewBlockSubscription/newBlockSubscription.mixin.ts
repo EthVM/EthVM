@@ -16,9 +16,10 @@ export class NewBlockSubscription extends Vue {
       Lifecycle
     ===================================================================================
     */
-    mounted() {
+    created() {
         const blockFeed = this.$apollo.subscribe({
-            query: newBlockFeed
+            query: newBlockFeed,
+            fetchPolicy: 'network-only'
         })
 
         blockFeed.subscribe({
