@@ -40,3 +40,9 @@ query getBlockDetailsHash($blockRef: String!) {
         ...BlockDetails
     }
 }
+
+query getLastBlockNumber {
+    getLatestBlockInfo {
+        number
+    }
+}

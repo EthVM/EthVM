@@ -8,7 +8,7 @@
         <v-flex xs12>
             <app-details-list :details="blockDetails" :is-loading="loading" :error="error" :max-items="9" class="mb-4">
                 <template v-slot:title>
-                    <p>Block Details</p>
+                    <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncleHashes" />
                 </template>
             </app-details-list>
         </v-flex>
@@ -27,10 +27,11 @@ import { Detail, Crumb } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
 import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { getBlockByNumber, getBlockByHash } from './blockDetails.graphql'
-// import { BlockDetails as BlockDetailsType } from './BlockDetails.type'
+import { getBlockByNumber, getBlockByHash, getLastBlockNumber } from './blockDetails.graphql'
+import { BlockDetails as BlockDetailsType } from './BlockDetails.type'
+import { getLastBlockNumber_getLatestBlockInfo as lastBlockType } from './getLastBlockNumber.type'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
-
+import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 import BN from 'bignumber.js'
 
 @Component({
@@ -47,11 +48,13 @@ import BN from 'bignumber.js'
                 return this.isHash ? { blockRef: this.blockRef } : { blockRef: parseInt(this.blockRef) }
             },
             update: data => data.getBlockByNumber || data.getBlockByHash
-            //Todo: Define on error
+        },
+        getLatestBlockInfo: {
+            query: getLastBlockNumber
         }
     }
 })
-export default class BlockDetails extends Mixins(NumberFormatMixin) {
+export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubscription) {
     /*
     ===================================================================================
       Props
@@ -69,7 +72,8 @@ export default class BlockDetails extends Mixins(NumberFormatMixin) {
 
     error = ''
     syncing: undefined
-    block!: any
+    block!: BlockDetailsType
+    getLatestBlockInfo!: lastBlockType
 
     /*
     ===================================================================================
@@ -207,11 +211,11 @@ export default class BlockDetails extends Mixins(NumberFormatMixin) {
                 },
                 {
                     title: this.$i18n.t('diff.name'),
-                    detail: this.formatNumber(this.block.difficulty)
+                    detail: this.formatNumber(new BN(this.block.difficulty).toNumber())
                 },
                 {
                     title: this.$i18n.t('diff.total'),
-                    detail: this.formatNumber(this.block.totalDifficulty)
+                    detail: this.formatNumber(new BN(this.block.totalDifficulty).toNumber())
                 },
                 {
                     title: this.$i18n.t('common.size'),
@@ -235,12 +239,10 @@ export default class BlockDetails extends Mixins(NumberFormatMixin) {
                 {
                     title: this.$i18n.t('gas.limit'),
                     detail: this.formatNumber(this.block.gasLimit)
-                    //tooltip: header.gasLimitFormatted.tooltipText ? `${header.gasLimitFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.used'),
                     detail: this.formatNumber(this.block.gasUsed)
-                    // tooltip: header.gasUsedFormatted.tooltipText ? `${header.gasUsedFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('block.logs'),
@@ -277,42 +279,33 @@ export default class BlockDetails extends Mixins(NumberFormatMixin) {
     }
     get transactionsCount(): string {
         const failed = this.block.summary.txFail ? 1 : 2
-        const failedString = this.block.summary.txFail > 0 ? `, ${this.formatNumber(this.block.summary.txFail)} ${this.$tc('tx.fail', failed)}` : ''
+        const failedString = this.block.summary.txFail > 0 ? `, ${this.formatNumber(this.block.summary.txFail)} ${this.$tc('tx.failed', failed)}` : ''
         return `${this.formatNumber(this.block.summary.txCount)} ${failedString}`
     }
-    // get nextBlock(): String {
-    //     const { blockNumber, blockHash, blockDetail } = this
+    get lastBlock(): number | undefined {
+        console.log('loading', this.$apollo.queries.getLatestBlockInfo.loading)
+        if (!this.$apollo.queries.getLatestBlockInfo.loading) {
+            console.log('here')
+            return this.newBlockNumber ? this.newBlockNumber : this.getLatestBlockInfo.number
+        }
+        return undefined
+    }
+    get nextBlock(): String | null {
+        const next = this.block.summary.number + 1
+        console.log('last Block ', this.lastBlock)
+        if (this.lastBlock && this.lastBlock >= next) {
+            return `/block/number/${next}`
+        }
+        return ''
+    }
 
-    //     let number: BigNumber | null = null
-
-    //     if (blockNumber) {
-    //         number = blockNumber
-    //     } else if (blockHash && blockDetail) {
-    //         number = blockDetail.header.numberBN
-    //     }
-
-    //     if (number) {
-    //         return `/block/number/${number.plus(1)}`
-    //     }
-    //     return ''
-    // }
-
-    // get previousBlock(): string {
-    //     const { blockNumber, blockHash, blockDetail } = this
-
-    //     let number: BigNumber | null = null
-
-    //     if (blockNumber) {
-    //         number = blockNumber
-    //     } else if (blockHash && blockDetail) {
-    //         number = blockDetail.header!.numberBN!
-    //     }
-
-    //     if (number && number.isGreaterThan(0)) {
-    //         return `/block/number/${number.minus(1)}`
-    //     }
-    //     return ''
-    // }
+    get previousBlock(): string {
+        const prev = this.block.summary.number - 1
+        if (prev >= 0) {
+            return `/block/number/${prev}`
+        }
+        return ''
+    }
 
     /**
      * Determines whether or not component has an error.
@@ -323,5 +316,15 @@ export default class BlockDetails extends Mixins(NumberFormatMixin) {
     get hasError(): boolean {
         return this.error !== ''
     }
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+    // onReload() {
+    //     console.log('refetching')
+    //     this.$apollo.queries.getgetLatestBlockInfo.refetch()
+    // }
 }
 </script>

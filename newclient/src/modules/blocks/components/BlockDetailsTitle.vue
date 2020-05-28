@@ -4,7 +4,7 @@
             <!-- Previous Block -->
             <v-flex xs2 sm1>
                 <v-layout v-if="prevBlock != ''" align-center justify-start>
-                    <v-btn :to="prevBlock" flat color="primary" class="black--text" icon> <v-icon>fas fa-angle-left</v-icon> </v-btn>
+                    <v-btn :to="prevBlock" flat color="primary" class="black--text" icon @click="reload()"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
                 </v-layout>
             </v-flex>
             <!-- Title -->
@@ -87,6 +87,15 @@ export default class BlockDetailsTitle extends Vue {
 
     get unclesPlural(): number {
         return this.hasUncles && this.uncles.length > 1 ? 2 : 1
+    }
+    /*
+  ===================================================================================
+  Methods
+  ===================================================================================
+  */
+
+    reload() {
+        this.$emit('reload')
     }
 }
 </script>
