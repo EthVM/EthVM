@@ -203,7 +203,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get transaction(): Tx {
-        console.log(this.tx)
         return {
             hash: this.tx.transfer.transactionHash,
             block: this.formatNumber(this.tx.transfer.block),
