@@ -12,13 +12,22 @@
                 <v-btn :disabled="!hasMore" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('next')"
                     ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
                 </v-btn>
+                <v-btn
+                    v-if="hasLast"
+                    :disabled="currentPage === lastPage"
+                    flat
+                    class="bttnGrey info--text text-capitalize bttn"
+                    small
+                    @click="setPageOnClick('last')"
+                    ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
+                </v-btn>
             </v-layout>
         </v-container>
     </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import BigNumber from 'bignumber.js'
 
@@ -42,7 +51,9 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
     validClass = 'center-input body-1 secondary--text'
     invalidClass = 'center-input body-1 error--text'
     isError = false
-    pageDisplayUpdateTimeout: number | null = null // Timeout object to update page with override of pageDisplay input model
+    pageDisplayUpdateTimeout: number | null = null
+    hasLast = false // Timeout object to update page with override of pageDisplay input model
+    lastPage = 0
 
     /*
   ===================================================================================
@@ -84,6 +95,9 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
             case 'next':
                 this.emitNewPage(this.currentPage + 1)
                 break
+            case 'last':
+                this.emitNewPage(this.lastPage)
+                break
             default:
                 break
         }
@@ -108,6 +122,18 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
     }
     get hasFirst(): boolean {
         return this.currentPage > 0
+    }
+    /*
+  ===================================================================================
+   Watch
+  ===================================================================================
+  */
+    @Watch('hasMore')
+    onHasMoreChanged(newVal: boolean, oldVal: boolean): void {
+        if (!newVal && oldVal) {
+            this.hasLast = true
+            this.lastPage = this.currentPage
+        }
     }
 }
 </script>
