@@ -15,6 +15,7 @@ export interface getBlockTransfers_getBlockTransfers_transfers_transfer {
   timestamp: number;
   from: string;
   txFee: string;
+  status: boolean | null;
 }
 
 export interface getBlockTransfers_getBlockTransfers_transfers {

@@ -323,7 +323,8 @@
         "out": "Outgoing",
         "in": "Incoming",
         "high": "High to Low",
-        "low": "Low to High"
+        "low": "Low to High",
+        "page": "Page"
     },
 
     "footer": {

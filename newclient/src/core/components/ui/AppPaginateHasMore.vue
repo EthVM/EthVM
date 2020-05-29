@@ -8,7 +8,7 @@
                 <v-btn :disabled="currentPage === 0" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('prev')"
                     ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
                 </v-btn>
-                <p class="info--text pr-1">{{ pageDisplay }}</p>
+                <p class="info--text pr-1">{{ textDisplay }}</p>
                 <v-btn :disabled="!hasMore" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('next')"
                     ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
                 </v-btn>
@@ -32,9 +32,6 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
 
     @Prop(Boolean) hasMore!: boolean
     @Prop(Number) currentPage!: number
-    @Prop({ type: Boolean, default: true }) hasFirst!: boolean
-    @Prop({ type: Boolean, default: true }) hasLast!: boolean
-    @Prop({ type: Boolean, default: true }) hasInput!: boolean
 
     /*
   ===================================================================================
@@ -104,6 +101,13 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
      */
     get pageDisplay(): string {
         return this.formatIntegerValue(new BigNumber(this.currentPage + 1)).value
+    }
+
+    get textDisplay(): string {
+        return `${this.$t('filter.page')} ${this.pageDisplay}`
+    }
+    get hasFirst(): boolean {
+        return this.currentPage > 0
     }
 }
 </script>
