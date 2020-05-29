@@ -119,16 +119,12 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
   */
 
     set pageDisplay(pageDisplay: string) {
-        console.log('hi')
         const desiredPage = parseInt(pageDisplay, 10) - 1
-        console.log('desired', desiredPage)
         ;(desiredPage >= 0 && desiredPage <= this.lastPage) || !pageDisplay ? (this.isError = false) : (this.isError = true)
         if (this.pageDisplayUpdateTimeout) {
-            console.log('clearing timeout')
             clearTimeout(this.pageDisplayUpdateTimeout)
         }
         this.pageDisplayUpdateTimeout = window.setTimeout(() => {
-            console.log('setting timeout')
             this.setPage(desiredPage)
         }, 1000)
     }

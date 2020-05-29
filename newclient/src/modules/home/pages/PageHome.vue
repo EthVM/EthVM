@@ -32,7 +32,7 @@
     -->
         <v-layout row wrap justify-center mb-4>
             <v-flex xs12>
-                <recent-blocks :new-block="newBlockNumber" :max-items="maxItems" page-type="home" />
+                <recent-blocks :max-items="maxItems" page-type="home" />
             </v-flex>
         </v-layout>
         <!--
@@ -41,7 +41,7 @@
     -->
         <v-layout row wrap justify-center mb-4>
             <v-flex xs12>
-                <home-txs :max-items="maxItems" />
+                <home-txs :max-items="maxItems" :new-block="newBlockNumber" page-type="home" />
             </v-flex>
         </v-layout>
     </v-container>

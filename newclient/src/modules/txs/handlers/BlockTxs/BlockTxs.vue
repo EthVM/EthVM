@@ -1,22 +1,37 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-2">
-        <app-table-title :title="$t('tx.last')" :has-pagination="false" page-type="home" page-link="/txs" />
-        <table-txs :max-items="MAX_ITEMS" :index="0" :is-loading="initialLoad" :table-message="message" :txs-data="transactions" :is-scroll-view="true" />
+        <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/txs">
+            <template v-slot:update v-if="!isHome && !isBlock">
+                <notice-new-block @reload="setPage(0, true)" />
+            </template>
+            <template v-slot:pagination v-if="showPagination && !initialLoad">
+                <app-paginate
+                    :total="totalPages"
+                    :current-page="index"
+                    :has-input="isBlock"
+                    :has-first="isBlock"
+                    :has-last="isBlock"
+                    @newPage="setPage"
+                /> </template
+        ></app-table-title>
+        <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="transactions" :is-scroll-view="isHome" />
+        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
+            <app-paginate :total="totalPages" :current-page="index" :has-input="isBlock" :has-first="isBlock" :has-last="isBlock" @newPage="setPage" />
+        </v-layout>
     </v-card>
 </template>
 
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-import BigNumber from 'bignumber.js'
+import BN from 'bignumber.js'
 import { getBlockTransfers } from './queryBlockTransfers.graphql'
 import {
     getBlockTransfers_getBlockTransfers as TypeBlockTransfers,
     getBlockTransfers_getBlockTransfers_transfers as TypeTransfers
 } from './getBlockTransfers.type'
-
-const MAX_ITEMS = 20
 
 /*
   DEV NOTES:
@@ -27,15 +42,26 @@ const MAX_ITEMS = 20
 @Component({
     components: {
         AppTableTitle,
+        AppPaginate,
         TableTxs
     },
     apollo: {
         getBlockTransfers: {
             query: getBlockTransfers,
+            fetchPolicy: 'network-only',
+            skip() {
+                return !(this.isHome || this.isBlock)
+            },
+            variables() {
+                return this.isBlock ? { _number: parseInt(this.blockRef) } : undefined
+            },
             result({ data }) {
                 if (data && data.getBlockTransfers) {
                     this.error = '' // clear the error
                     this.initialLoad = false
+                    if (this.isBlock) {
+                        this.totalPages = Math.ceil(new BN(data.getBlockTransfers.transfers.length).div(this.maxItems).toNumber())
+                    }
                 } else {
                     this.error = this.error || this.$i18n.t('message.err')
                 }
@@ -74,6 +100,9 @@ export default class HomeTxs extends Vue {
 
     @Prop(Number) maxItems!: number
     @Prop(Number) newBlock?: number
+    @Prop({ type: String, default: 'home' }) pageType!: string
+    @Prop(String) blockRef?: string
+    @Prop({ type: Boolean, default: false }) isHash!: boolean
 
     /*
     ===================================================================================
@@ -81,15 +110,16 @@ export default class HomeTxs extends Vue {
     ===================================================================================
     */
 
-    MAX_ITEMS = MAX_ITEMS
     initialLoad = true
     error = ''
     syncing?: boolean = false
     getBlockTransfers!: TypeBlockTransfers
+    index = 0
+    totalPages = 0
 
     /*
     ===================================================================================
-      Lifecycle
+      Mounted
     ===================================================================================
     */
 
@@ -100,8 +130,33 @@ export default class HomeTxs extends Vue {
         return []
     }
 
-    get message() {
+    get message(): string {
         return ''
+    }
+
+    get isHome(): boolean {
+        return this.pageType === 'home'
+    }
+
+    get isBlock(): boolean {
+        return this.pageType === 'blockDetails'
+    }
+
+    get getTitle(): string {
+        return this.isBlock ? `${this.$t('block.txs')}` : `${this.$t('tx.last')}`
+    }
+    get showPagination(): boolean {
+        return !this.isHome
+    }
+
+    /*
+    ===================================================================================
+      Methods:
+    ===================================================================================
+    */
+
+    setPage(page: number): void {
+        this.index = page
     }
 
     /*
@@ -111,7 +166,7 @@ export default class HomeTxs extends Vue {
     */
     @Watch('newBlock')
     onNewBlockChanged(newVal: number, oldVal: number): void {
-        if (newVal && newVal != oldVal) {
+        if (newVal != oldVal) {
             this.$apollo.queries.getBlockTransfers.refetch({
                 updateQuery: (previousResult, { fetchMoreResult }) => {
                     return {
@@ -122,6 +177,16 @@ export default class HomeTxs extends Vue {
                     }
                 }
             })
+        }
+    }
+    /*
+    ===================================================================================
+      LifeCycle:
+    ===================================================================================
+    */
+    mounted() {
+        if (!this.isHome) {
+            this.$apollo.skipAllSubscriptions = true
         }
     }
 }

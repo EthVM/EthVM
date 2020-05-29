@@ -6,13 +6,14 @@
       DETAILS LIST
     =====================================================================================
     -->
-        <block-details v-if="isValid" :block-ref="blockRef" />
+        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" />
 
         <!--
     =====================================================================================
       TX TABLE
     =====================================================================================
     -->
+        <block-txs v-if="isValid" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
     </v-container>
 </template>
 
@@ -20,7 +21,7 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import BlockDetails from '@app/modules/blocks/handlers/BlockDetails/BlockDetails.vue'
-import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import BlockTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
 import { eth } from '@app/core/helper'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -33,7 +34,7 @@ const MAX_TXS = 10
         AppBreadCrumbs,
         AppDetailsList,
         BlockDetails,
-        TableTxs
+        BlockTxs
     }
 })
 export default class PageDetailsBlock extends Vue {
@@ -90,6 +91,10 @@ export default class PageDetailsBlock extends Vue {
         return eth.isValidHash(this.blockRef) || eth.isValidBlockNumber(this.blockRef)
     }
 
+    get isHash(): boolean {
+        return eth.isValidHash(this.blockRef)
+    }
+
     /**
      * Returns breadcrumbs entry for this particular view.
      * Required for AppBreadCrumbs
@@ -119,6 +124,9 @@ export default class PageDetailsBlock extends Vue {
             text: `${this.$t('block.number')} ${this.$route.params.blockRef}`
         })
         return crumbs
+    }
+    get maxItems(): number {
+        return MAX_TXS
     }
 }
 </script>
