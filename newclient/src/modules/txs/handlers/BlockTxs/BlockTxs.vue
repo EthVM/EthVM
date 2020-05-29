@@ -107,6 +107,7 @@ import { getAllTxs_getAllEthTransfers as AllTxType } from './getAllTxs.type'
         },
         getAllEthTransfers: {
             query: getAllTxs,
+            fetchPolicy: 'network-only',
             variables() {
                 return {
                     _limit: this.maxItems,
@@ -148,6 +149,7 @@ export default class HomeTxs extends Vue {
     getAllEthTransfers!: AllTxType
     index = 0
     totalPages = 0
+    isEnd = 0
 
     /*
     ===================================================================================
@@ -193,7 +195,7 @@ export default class HomeTxs extends Vue {
     }
 
     get loading(): boolean {
-        if (this.isHome || this.isBlock) {
+        if (this.isBlock || this.isHome) {
             return this.initialLoad
         }
         return this.$apollo.queries.getAllEthTransfers.loading
@@ -211,26 +213,32 @@ export default class HomeTxs extends Vue {
     ===================================================================================
     */
 
-    setPage(page: number): void {
-        if (!this.isBlock && page > this.index && this.hasMore) {
-            this.$apollo.queries.getAllEthTransfers.fetchMore({
-                variables: {
-                    _limit: this.maxItems,
-                    _nextKey: this.getAllEthTransfers.nextKey
-                },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    const newT = fetchMoreResult.getAllEthTransfers.transfers
-                    const prevT = previousResult.getAllEthTransfers.transfers
-                    return {
-                        ...previousResult,
-                        getAllEthTransfers: {
-                            __typename: previousResult.getAllEthTransfers.__typename,
-                            nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
-                            transfers: [...prevT, ...newT]
+    setPage(page: number, reset: boolean = false): void {
+        if (reset) {
+            this.isEnd = 0
+            this.$apollo.queries.getAllEthTransfers.refetch()
+        } else {
+            if (!this.isBlock && page > this.isEnd && this.hasMore) {
+                this.$apollo.queries.getAllEthTransfers.fetchMore({
+                    variables: {
+                        _limit: this.maxItems,
+                        _nextKey: this.getAllEthTransfers.nextKey
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        this.isEnd = page
+                        const newT = fetchMoreResult.getAllEthTransfers.transfers
+                        const prevT = previousResult.getAllEthTransfers.transfers
+                        return {
+                            ...previousResult,
+                            getAllEthTransfers: {
+                                __typename: previousResult.getAllEthTransfers.__typename,
+                                nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
+                                transfers: [...prevT, ...newT]
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
         }
 
         this.index = page
@@ -244,17 +252,7 @@ export default class HomeTxs extends Vue {
     @Watch('newBlock')
     onNewBlockChanged(newVal: number, oldVal: number): void {
         if (newVal != oldVal && this.isHome) {
-            this.$apollo.queries.getAllEthTransfers.refetch()
-        }
-    }
-    /*
-    ===================================================================================
-      LifeCycle:
-    ===================================================================================
-    */
-    mounted() {
-        if (!this.isHome) {
-            this.$apollo.skipAllSubscriptions = true
+            this.$apollo.queries.getAllEthTransfers.refresh()
         }
     }
 }
