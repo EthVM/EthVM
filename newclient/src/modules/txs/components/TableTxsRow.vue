@@ -110,7 +110,7 @@
           =====================================================================================
           -->
                 <v-flex sm3 lg2>
-                    <p :class="[status ? 'txSuccess--text ' : 'txFail--text']">
+                    <p>
                         {{ transaction.value.value }}
                         {{ $t(`common.${transaction.value.unit}`) }}
                         <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
@@ -155,7 +155,7 @@
           =====================================================================================
           -->
                 <div v-if="!isPending">
-                    <v-icon v-if="status" small class="txSuccess--text tx-status text-xs-center">fa fa-check-circle</v-icon>
+                    <v-icon v-if="transaction.status" small class="txSuccess--text tx-status text-xs-center">fa fa-check-circle</v-icon>
                     <v-icon v-else small class="txFail--text tx-status text-xs-center">fa fa-times-circle</v-icon>
                 </div>
             </v-layout>
@@ -172,7 +172,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { Tx } from './props'
-
+import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/TxSummary.type'
 import BN from 'bignumber.js'
 
 @Component({
@@ -189,7 +189,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) tx!: any
+    @Prop(Object) tx!: TransferType
     @Prop({ type: Boolean, default: false }) isPending
 
     /*
@@ -199,13 +199,11 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     */
 
     get txStatusClass(): string {
-        // return this.tx.successful ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
-        return 'tx-status-sucess table-row-mobile'
+        return this.tx.transfer.status ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
     }
-    get status(): boolean {
-        return true
-    }
+
     get transaction(): Tx {
+        console.log(this.tx)
         return {
             hash: this.tx.transfer.transactionHash,
             block: this.formatNumber(this.tx.transfer.block),
@@ -214,7 +212,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             timestamp: new Date(this.tx.transfer.timestamp * 1e3),
             fee: this.formatNonVariableEthValue(new BN(this.tx.transfer.txFee)),
             value: this.formatNonVariableEthValue(new BN(this.tx.value)),
-            status: true
+            status: this.tx.transfer.status != null ? this.tx.transfer.status : false
         }
     }
     get isSmall(): boolean {
