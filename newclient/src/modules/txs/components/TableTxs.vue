@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-progress-linear v-if="isLoading && !hasMessage" color="blue" indeterminate class="mt-0" />
-        <!-- <app-error :has-error="hasMessage" :message="error" class="mb-4" /> -->
+        <v-progress-linear v-if="isLoading" color="blue" indeterminate class="mt-0" />
+        <!-- <app-error :has-error="hasMessage" :message="tableMessage" class="mb-4" /> -->
 
         <!--
     =====================================================================================
@@ -54,8 +54,8 @@
                     </v-flex>
                 </v-layout>
             </v-card>
-            <v-card v-else>
-                <v-card-title>{{ hasMessage }} </v-card-title>
+            <v-card v-else flat>
+                <v-card-title>{{ tableMessage }} </v-card-title>
             </v-card>
         </div>
     </div>

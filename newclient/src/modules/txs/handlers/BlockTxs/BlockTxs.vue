@@ -75,7 +75,7 @@ import { getAllTxs_getAllEthTransfers as AllTxType } from './getAllTxs.type'
                 if (data && data.getBlockTransfers) {
                     this.error = '' // clear the error
                     this.initialLoad = false
-                    if (this.isBlock) {
+                    if (data.getBlockTransfers.transfers.length > 0) {
                         this.totalPages = Math.ceil(new BN(data.getBlockTransfers.transfers.length).div(this.maxItems).toNumber())
                     }
                 } else {
@@ -118,7 +118,15 @@ import { getAllTxs_getAllEthTransfers as AllTxType } from './getAllTxs.type'
                 return this.isBlock
             },
             result({ data }) {
-                this.initialLoad = false
+                if (data && data.getAllEthTransfers && data.getAllEthTransfers.transfers) {
+                    this.error = '' // clear the error
+                    this.initialLoad = false
+                } else {
+                    console.log('error failed no data: ', data)
+                    this.error = this.error || this.$i18n.t('message.err')
+                    this.initialLoad = true
+                    this.$apollo.queries.getAllEthTransfers.refetch()
+                }
             }
         }
     }
@@ -162,14 +170,17 @@ export default class HomeTxs extends Vue {
             return this.getBlockTransfers.transfers
         }
         if (!this.isBlock && this.getAllEthTransfers && this.getAllEthTransfers.transfers !== null) {
+            console.log(this.getAllEthTransfers)
             return this.getAllEthTransfers.transfers
         }
-
         return []
     }
 
     get message(): string {
-        return ''
+        if (this.isBlock && this.transactions.length === 0) {
+            return `${this.$t('message.tx.no-in-block')}`
+        }
+        return !this.transactions.length ? 'error' : ''
     }
 
     get isHome(): boolean {
