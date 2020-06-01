@@ -9,7 +9,7 @@ const PageAbout = () => import(/* webpackChunkName: "page-about" */ '@app/module
 // const PageUncles = () => import(/* webpackChunkName: "page-uncles" */ '@app/modules/uncles/pages/PageUncles.vue')
 const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" */ '@app/modules/blocks/pages/PageDetailsBlock.vue')
 // const PageDetailsTxs = () => import(/* webpackChunkName: "page-details-txs" */ '@app/modules/txs/pages/PageDetailsTxs.vue')
-// const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr" */ '@app/modules/addresses/pages/PageDetailsAddress.vue')
+const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr" */ '@app/modules/address/pages/PageDetailsAddress.vue')
 // const PageCharts = () => import(/* webpackChunkName: "page-charts" */ '@app/modules/charts/pages/PageCharts.vue')
 // const PageDetailsChart = () => import(/* webpackChunkName: "page-details-chart" */ '@app/modules/charts/pages/PageDetailsChart.vue')
 // const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" */ '@app/modules/uncles/pages/PageDetailsUncle.vue')
@@ -72,12 +72,12 @@ export default new Router({
         //   name: 'uncle',
         //   props: true
         // },
-        // {
-        //   path: '/address/:addressRef',
-        //   component: PageDetailsAddress,
-        //   name: 'address',
-        //   props: true
-        // },
+        {
+            path: '/address/:addressRef',
+            component: PageDetailsAddress,
+            name: 'address',
+            props: true
+        },
         // {
         //   path: '/charts',
         //   component: PageCharts,
