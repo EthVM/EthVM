@@ -61,7 +61,7 @@
         "detail": "Token Details",
         "empty": "No tokens",
         "decimals": "Decimals",
-        "number": "Total Tokens ",
+        "number": "Total ERC20 Tokens ",
         "tokenName": "Token Name",
         "supply": "Total Supply",
         "holder": "Holder",

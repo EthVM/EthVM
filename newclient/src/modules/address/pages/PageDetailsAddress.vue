@@ -10,7 +10,7 @@
         <div v-else>
             <v-layout row wrap justify-start class="mb-4">
                 <v-flex xs12>
-                    <!-- <address-detail :account="account" :address="addressRef" /> -->
+                    <address-overview :address="addressRef" :is-miner="isMiner" :is-contractcreator="isContractCreator" :is-contract="isContract" />
                 </v-flex>
             </v-layout>
             <!--
@@ -64,7 +64,8 @@ import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
-
+import { eth } from '@app/core/helper'
+import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
 const MAX_ITEMS = 10
 
 @Component({
@@ -72,24 +73,24 @@ const MAX_ITEMS = 10
         AppInfoLoad,
         AppBreadCrumbs,
         AppError,
+        AddressOverview,
         AppTabs
     }
 })
 export default class PageDetailsAddress extends Vue {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+   */
 
     @Prop({ type: String, default: '' }) addressRef!: string
 
     /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-    isValidAddress: boolean | undefined = undefined
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
     isMiner = false
     isContractCreator = false
     isContract = false
@@ -97,10 +98,13 @@ export default class PageDetailsAddress extends Vue {
     activeTab = 'tab-0'
 
     /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
+    get isValid(): boolean {
+        return eth.isValidAddress(this.addressRef)
+    }
 
     get hasError(): boolean {
         return this.error !== ''
@@ -162,10 +166,10 @@ export default class PageDetailsAddress extends Vue {
     }
 
     /*
-  ===================================================================================
-   Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
     setMiner(value: boolean): void {
         this.isMiner = value
     }
@@ -174,6 +178,19 @@ export default class PageDetailsAddress extends Vue {
     }
     setContract(value: boolean): void {
         this.isContract = value
+    }
+    /*
+    ===================================================================================
+      LifeCycle
+    ===================================================================================
+    */
+
+    created() {
+        if (!this.isValid) {
+            this.error = this.$i18n.t('message.invalid.addr').toString()
+            return
+        }
+        window.scrollTo(0, 0)
     }
 }
 </script>
