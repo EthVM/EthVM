@@ -27,4 +27,3 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component
 export default class TableAddressTxsHeader extends Vue {}
 </script>
-
