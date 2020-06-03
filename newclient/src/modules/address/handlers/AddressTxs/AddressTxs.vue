@@ -66,8 +66,6 @@ import { getTxs } from './transfers.graphql'
                     this.error = '' // clear the error
 
                     if (this.initialLoad) {
-                        console.log(data.getEthTransfers.nextKey)
-
                         this.showPagination = data.getEthTransfers.nextKey != null
                         this.initialLoad = false
                     }

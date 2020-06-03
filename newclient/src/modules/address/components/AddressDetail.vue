@@ -49,7 +49,7 @@
                     <v-flex xs12 md4>
                         <v-card class="primary white--text pl-2" flat>
                             <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
-                            <v-card-title v-if="!loading" class="headline text-truncate pr-1"
+                            <v-card-title v-if="!loading" class="title font-weight-regular text-truncate pr-1"
                                 >{{ balance.value }} {{ $t(`common.${balance.unit}`) }}
                                 <v-tooltip v-if="balance.tooltipText" bottom>
                                     <template #activator="data">
@@ -76,7 +76,7 @@
                     <v-flex xs12 md4>
                         <v-card class="error white--text pl-2" flat>
                             <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = {{ exchangeRateFormatted }})</v-card-text>
-                            <v-card-title v-if="!loading" class="headline text-truncate">
+                            <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">
                                 {{ balanceUsd.value }}
                                 <v-tooltip v-if="balanceUsd.tooltipText" bottom>
                                     <template #activator="data">
@@ -103,7 +103,7 @@
                     <v-flex xs12 md4>
                         <v-card class="warning white--text pl-2" flat>
                             <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
-                            <v-card-title v-if="!loading" class="headline text-truncate">{{ address.totalERC20 }}</v-card-title>
+                            <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                             <v-card-title v-else>
                                 <v-progress-linear
                                     color="#fed18e"
@@ -124,7 +124,7 @@
                 <div class="xs-overflow">
                     <v-card class="primary xs-div white--text">
                         <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
-                        <v-card-title v-if="!loading" class="headline text-truncate pr-1"
+                        <v-card-title v-if="!loading" class="title font-weight-regular text-truncate pr-1"
                             >{{ balance.value }} {{ $t(`common.${balance.unit}`) }}
                             <v-tooltip v-if="balance.tooltipText" bottom>
                                 <template #activator="data">
@@ -148,7 +148,7 @@
 
                     <v-card class="error white--text xs-div" flat>
                         <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ exchangeRateFormatted }})</v-card-text>
-                        <v-card-title v-if="!loading" class="headline text-truncate">
+                        <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">
                             {{ balanceUsd.value }}
                             <v-tooltip v-if="balanceUsd.tooltipText" bottom>
                                 <template #activator="data">
@@ -172,7 +172,7 @@
 
                     <v-card class="warning white--text xs-div" flat>
                         <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
-                        <v-card-title v-if="!loading" class="headline text-truncate">{{ address.totalERC20 }}</v-card-title>
+                        <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
                                 color="#fed18e"
@@ -243,7 +243,7 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
             case 'xs':
                 return 'pa-2'
             default:
-                return 'pa-3'
+                return 'pl-3 pr-3 pt-0 pb-2'
         }
     }
 
@@ -305,7 +305,7 @@ p {
     position: absolute;
     bottom: 0;
     right: 0;
-    height: 120px;
+    height: 100%;
     width: 12vw;
     content: '';
     background: linear-gradient(to left, rgba(255, 255, 255, 1) 5%, hsla(0, 0%, 100%, 0) 80%);
