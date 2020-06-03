@@ -274,7 +274,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     }
     get transactionsCount(): string {
         const failed = this.block.summary.txFail ? 1 : 2
-        const failedString = this.block.summary.txFail > 1 ? `, ${this.formatNumber(this.block.summary.txFail)} ${this.$tc('tx.failed', failed)}` : ''
+        const failedString = this.block.summary.txFail > 0 ? `, ${this.formatNumber(this.block.summary.txFail)} ${this.$tc('tx.failed', failed)}` : ''
         return `${this.formatNumber(this.block.summary.txCount)} ${failedString}`
     }
     get lastBlock(): number | undefined {

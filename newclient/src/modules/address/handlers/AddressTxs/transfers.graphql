@@ -1,0 +1,20 @@
+fragment TransferSummary on Transfer {
+    transactionHash
+    timestamp
+    from
+    to
+    txFee
+    status
+}
+
+query getTxs($hash: String!, $_limit: Int, $_nextKey: String) {
+    getEthTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            transfer {
+                ...TransferSummary
+            }
+            value
+        }
+        nextKey
+    }
+}

@@ -53,7 +53,12 @@
         "input": "Input Data",
         "func": "Function",
         "method": "Method ID",
-        "self": "Self Sent"
+        "type": {
+            "self": "Self Sent",
+            "in": "Incoming from",
+            "out": "Outgoing to",
+            "internal": "Internal Transfer"
+        }
     },
 
     "token": {
@@ -129,9 +134,9 @@
         "nonce": "Nonce",
         "sha": "SHA3",
         "age": "Age",
-        "eth": "Eth",
-        "gwei": "Gwei",
-        "wei": "Wei",
+        "eth": "ETH",
+        "gwei": "GWEI",
+        "wei": "WEI",
         "timestmp": "Timestamp",
         "success": "Successful",
         "fail": "Failed",
@@ -139,7 +144,7 @@
         "amount": "Amount",
         "quantity": "Quantity",
         "percentage": "Percentage",
-        "eth-balance": "Ether Balance",
+        "eth-balance": "ETH Balance",
         "balance": "Balance"
     },
 
@@ -334,7 +339,7 @@
         "ens": "mewtopia.eth",
         "copy": "Copyright 2019 All rights reserved by ",
         "mew": "MyEtherWallet Inc",
-        "copy-eth-addr": "Copy Eth address",
+        "copy-eth-addr": "Copy ETH address",
         "copy-btc-addr": "Copy BTC address"
     },
 
@@ -423,12 +428,12 @@
                 "def": "Ethereum Name Service – registers plain text names that correspond to cryptographic wallet addresses, for greater security and ease of use."
             },
             "eth": {
-                "term": "Ether",
-                "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is Eth."
+                "term": "ETH / Ether",
+                "def": "Cryptographic currency of the Ethereum blockchain, used to pay transaction fees (gas) on the network. The short code for Ether is ETH."
             },
             "ethreum": {
                 "term": "Ethereum",
-                "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, Ether is the currency."
+                "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, ETH/Ether is the currency."
             },
             "evm": {
                 "term": "EVM",

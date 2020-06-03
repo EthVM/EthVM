@@ -11,26 +11,28 @@
         <v-layout pl-2 pr-2>
             <v-flex hidden-xs-only sm12>
                 <v-card v-if="!hasMessage" :color="headerColor" flat class="white--text" height="40px">
-                    <v-layout align-center justify-start row fill-height pl-3 pr-2>
-                        <v-flex sm2 lg1>
-                            <h5>{{ $t('block.number') }}</h5>
-                        </v-flex>
-                        <v-flex sm7 md5>
-                            <h5>{{ $tc('tx.hash', 1) }}</h5>
-                        </v-flex>
-                        <v-flex sm3 lg2>
-                            <h5 class="pl-3">{{ $t('common.amount') }}</h5>
-                        </v-flex>
-                        <v-flex hidden-sm-and-down md2>
-                            <h5 class="pl-2">{{ $t('common.age') }}</h5>
-                        </v-flex>
-                        <v-flex hidden-md-and-down lg2>
-                            <h5>{{ $tc('tx.fee', 1) }}</h5>
-                        </v-flex>
-                        <div v-if="!pending">
-                            <h5 class="tx-status text-xs-center">{{ $t('tx.status') }}</h5>
-                        </div>
-                    </v-layout>
+                    <slot name="header">
+                        <v-layout align-center justify-start row fill-height pl-3 pr-2>
+                            <v-flex sm2 lg1>
+                                <h5>{{ $t('block.number') }}</h5>
+                            </v-flex>
+                            <v-flex sm7 md5>
+                                <h5>{{ $tc('tx.hash', 1) }}</h5>
+                            </v-flex>
+                            <v-flex sm3 lg2>
+                                <h5 class="pl-3">{{ $t('common.amount') }}</h5>
+                            </v-flex>
+                            <v-flex hidden-sm-and-down md2>
+                                <h5 class="pl-2">{{ $t('common.age') }}</h5>
+                            </v-flex>
+                            <v-flex hidden-md-and-down lg2>
+                                <h5>{{ $tc('tx.fee', 1) }}</h5>
+                            </v-flex>
+                            <div v-if="!pending">
+                                <h5 class="tx-status text-xs-center">{{ $t('tx.status') }}</h5>
+                            </div>
+                        </v-layout>
+                    </slot>
                 </v-card>
             </v-flex>
         </v-layout>
@@ -43,9 +45,11 @@
             <v-card v-if="!hasMessage" :style="getStyle" flat class="scroll-y pa-2" style="overflow-x: hidden;">
                 <v-layout column fill-height class="mb-1">
                     <v-flex v-if="!isLoading" xs12>
-                        <v-card v-for="(tx, index) in displayData" :key="index" class="transparent" flat>
-                            <table-txs-row :tx="tx" :is-pending="false" />
-                        </v-card>
+                        <slot name="rows">
+                            <v-card v-for="(tx, index) in displayData" :key="index" class="transparent" flat>
+                                <table-txs-row :tx="tx" :is-pending="false" />
+                            </v-card>
+                        </slot>
                     </v-flex>
                     <v-flex v-if="isLoading" xs12>
                         <div v-for="i in maxItems" :key="i">

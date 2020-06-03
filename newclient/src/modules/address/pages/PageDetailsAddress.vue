@@ -25,7 +25,7 @@
       =====================================================================================
       -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <!-- <table-txs v-if="activeTab === 'tab-0'" :address="addressRef" :page-type="'address'" :max-items="max"></table-txs> -->
+                    <address-txs v-if="activeTab === 'tab-0'" :address="addressRef" :max-items="max"></address-txs>
                 </v-tab-item>
                 <!--
       =====================================================================================
@@ -66,6 +66,7 @@ import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
 import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
+import AddressTxs from '@app/modules/address/handlers/AddressTxs/AddressTxs.vue'
 const MAX_ITEMS = 10
 
 @Component({
@@ -74,7 +75,8 @@ const MAX_ITEMS = 10
         AppBreadCrumbs,
         AppError,
         AddressOverview,
-        AppTabs
+        AppTabs,
+        AddressTxs
     }
 })
 export default class PageDetailsAddress extends Vue {
