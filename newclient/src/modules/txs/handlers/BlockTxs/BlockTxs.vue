@@ -14,7 +14,7 @@
                     :has-last="isBlock"
                     @newPage="setPage"
                 />
-                <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" @newPage="setPage" /> </template
+                <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" /> </template
         ></app-table-title>
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transactions" :is-scroll-view="isHome" />
         <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
@@ -27,7 +27,7 @@
                 :has-last="isBlock"
                 @newPage="setPage"
             />
-            <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" @newPage="setPage" />
+            <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
         </v-layout>
     </v-card>
 </template>

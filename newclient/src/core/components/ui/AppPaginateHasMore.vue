@@ -2,14 +2,14 @@
     <v-card color="transparent" flat max-width="340">
         <v-container grid-list-xs pa-1>
             <v-layout row align-center justify-end fill-height>
-                <v-btn v-if="hasFirst" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('first')">{{
+                <v-btn :disabled="currentPage === 0" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('first')">{{
                     $t('btn.first')
                 }}</v-btn>
                 <v-btn :disabled="currentPage === 0" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('prev')"
                     ><v-icon class="secondary--text" small>fas fa-angle-left</v-icon>
                 </v-btn>
                 <p class="info--text pr-1">{{ textDisplay }}</p>
-                <v-btn :disabled="!hasMore" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('next')"
+                <v-btn :disabled="!enableNext" flat class="bttnGrey info--text text-capitalize bttn" small @click="setPageOnClick('next')"
                     ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
                 </v-btn>
                 <v-btn
@@ -19,7 +19,7 @@
                     class="bttnGrey info--text text-capitalize bttn"
                     small
                     @click="setPageOnClick('last')"
-                    ><v-icon class="secondary--text" small>fas fa-angle-right</v-icon>
+                    >{{ $t('btn.last') }}
                 </v-btn>
             </v-layout>
         </v-container>
@@ -41,6 +41,7 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
 
     @Prop(Boolean) hasMore!: boolean
     @Prop(Number) currentPage!: number
+    @Prop(Boolean) loading!: boolean
 
     /*
   ===================================================================================
@@ -120,8 +121,15 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
     get textDisplay(): string {
         return `${this.$t('filter.page')} ${this.pageDisplay}`
     }
-    get hasFirst(): boolean {
-        return this.currentPage > 0
+
+    get enableNext(): boolean {
+        if (this.loading) {
+            return false
+        }
+        if (!this.hasLast) {
+            return this.hasMore
+        }
+        return this.lastPage !== this.currentPage
     }
     /*
   ===================================================================================

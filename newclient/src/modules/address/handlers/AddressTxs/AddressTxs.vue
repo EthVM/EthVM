@@ -6,7 +6,7 @@
                 <notice-new-block @reload="setPage(0, true)" />
             </template> -->
             <template v-slot:pagination v-if="showPagination && !initialLoad">
-                <app-paginate-has-more :has-more="hasMore" :current-page="index" @newPage="setPage" />
+                <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
             </template>
         </app-table-title>
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transactions" :is-scroll-view="false">
@@ -20,16 +20,7 @@
         </table-txs>
 
         <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
-            <app-paginate
-                v-if="isBlock"
-                :total="totalPages"
-                :current-page="index"
-                :has-input="isBlock"
-                :has-first="isBlock"
-                :has-last="isBlock"
-                @newPage="setPage"
-            />
-            <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" @newPage="setPage" />
+            <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
         </v-layout>
     </v-card>
 </template>
@@ -43,7 +34,7 @@ import TableAddressTxsHeader from '@app/modules/address/components/TableAddressT
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getTxs_getEthTransfers as EthTransferType } from './getTxs.type'
+import { getTxs_getEthTransfers as EthTransferType, getTxs as EthTransfersType } from './getTxs.type'
 import { getTxs } from './transfers.graphql'
 /*
   DEV NOTES:
@@ -73,14 +64,17 @@ import { getTxs } from './transfers.graphql'
             result({ data }) {
                 if (data && data.getEthTransfers && data.getEthTransfers.transfers) {
                     this.error = '' // clear the error
+
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMore
-                        this.intialLoad = false
+                        console.log(data.getEthTransfers.nextKey)
+
+                        this.showPagination = data.getEthTransfers.nextKey != null
+                        this.initialLoad = false
                     }
                 } else {
                     console.log('error failed no data: ', data)
                     this.showPagination = false
-                    this.intialLoad = true
+                    this.initialLoad = true
                     this.error = this.error || this.$i18n.t('message.err')
                     this.$apollo.queries.getAllEthTransfers.refetch()
                 }
@@ -108,7 +102,7 @@ export default class AddressTxs extends Vue {
     error = ''
     syncing?: boolean = false
     getEthTransfers!: EthTransferType
-    intialLoad = true
+    initialLoad = true
     showPagination = false
     index = 0
     totalPages = 0
@@ -125,7 +119,6 @@ export default class AddressTxs extends Vue {
         if (this.getEthTransfers && this.getEthTransfers.transfers !== null) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getEthTransfers.transfers.length ? this.getEthTransfers.transfers.length : start + this.maxItems
-            console.log(this.getEthTransfers.transfers)
             return this.getEthTransfers.transfers.slice(start, end)
         }
         return []
@@ -164,7 +157,7 @@ export default class AddressTxs extends Vue {
             this.$apollo.queries.getEthTransfers.refetch()
         } else {
             if (page > this.isEnd && this.hasMore) {
-                this.$apollo.queries.getAllEthTransfers.fetchMore({
+                this.$apollo.queries.getEthTransfers.fetchMore({
                     variables: {
                         hash: this.address,
                         _limit: this.maxItems,
@@ -172,13 +165,13 @@ export default class AddressTxs extends Vue {
                     },
                     updateQuery: (previousResult, { fetchMoreResult }) => {
                         this.isEnd = page
-                        const newT = fetchMoreResult.getAllEthTransfers.transfers
-                        const prevT = previousResult.getAllEthTransfers.transfers
+                        const newT = fetchMoreResult.getEthTransfers.transfers
+                        const prevT = previousResult.getEthTransfers.transfers
                         return {
                             ...previousResult,
-                            getAllEthTransfers: {
-                                __typename: previousResult.getAllEthTransfers.__typename,
-                                nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
+                            getEthTransfers: {
+                                __typename: previousResult.getEthTransfers.__typename,
+                                nextKey: fetchMoreResult.getEthTransfers.nextKey,
                                 transfers: [...prevT, ...newT]
                             }
                         }
