@@ -170,7 +170,6 @@ export default class HomeTxs extends Vue {
             return this.getBlockTransfers.transfers
         }
         if (!this.isBlock && this.getAllEthTransfers && this.getAllEthTransfers.transfers !== null) {
-            console.log(this.getAllEthTransfers)
             return this.getAllEthTransfers.transfers
         }
         return []
@@ -180,7 +179,7 @@ export default class HomeTxs extends Vue {
         if (this.isBlock && this.transactions.length === 0) {
             return `${this.$t('message.tx.no-in-block')}`
         }
-        return !this.transactions.length ? 'error' : ''
+        return !this.transactions.length && !this.loading ? 'error' : ''
     }
 
     get isHome(): boolean {
