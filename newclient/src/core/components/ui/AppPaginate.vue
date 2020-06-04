@@ -144,7 +144,8 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
         return this.hasInput ? `${this.$t('message.page')} ${this.totalFormatted}` : `${this.pageDisplay}${this.$t('message.page')} ${this.totalFormatted}`
     }
     get pageDisplay(): string {
-        return this.formatIntegerValue(new BigNumber(this.currentPage + 1)).value
+        const formattedInt = this.formatIntegerValue(new BigNumber(this.currentPage + 1)).value
+        return formattedInt.replace(/\,/g,'')
     }
 
     /**
