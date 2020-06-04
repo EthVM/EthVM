@@ -5,41 +5,72 @@
         Mobile (XS)
       =====================================================================================
       -->
-        <!-- <v-flex xs12 hidden-md-and-up>
-            <div :class="txStatusClass">
+        <v-flex xs12 hidden-md-and-up>
+            <div class="table-row-mobile">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
-                    <v-flex xs6 pa-1>
-                        <p :class="[tx.transfer.status ? 'black--text' : 'info--text', 'caption']">
-                            {{ amountSign }}{{ transaction.value.value }}
-                            {{ $t(`common.${transaction.value.unit}`) }}
-                            <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
-                        </p>
-                    </v-flex>
-                    <v-flex xs6>
+                    <v-flex xs5 pa-1> </v-flex>
+                    <v-flex xs7 pa-1>
                         <v-layout row align-center justify-end>
-                            <app-time-ago :timestamp="transaction.timestamp" class="info--text caption" />
+                            <app-time-ago :timestamp="tokenTransfer.timestamp" />
                             <v-btn class="ml-2 mr-1 more-btn" color="white" fab depressed>
                                 <p class="info--text title pb-2">...</p>
                             </v-btn>
                         </v-layout>
                     </v-flex>
+                    <v-flex xs2 sm1>
+                        <v-layout row align-center justify-center>
+                            <div class="token-image-mobile">
+                                <v-img :src="image" contain />
+                            </div>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs10 sm11 pa-0>
+                        <v-layout grid-list-xs row wrap align-center justify-start fill-height pb-2 pl-3>
+                            <v-flex xs12 pb-1>
+                                <div v-if="tokenTransfer.name !== '' || tokenTransfer.symbol" class="black--text subtitle-2 font-weight-medium">
+                                    <p v-if="tokenTransfer.name">{{ tokenTransfer.name }}</p>
+                                    <p v-else class="text-uppercase">{{ tokenTransfer.symbol }}</p>
+                                </div>
+                                <v-layout v-else row align-center justift-start pa-1>
+                                    <p class="info--text contract-string caption mr-1">{{ $tc('contract.name', 1) }}:</p>
+                                    <app-transform-hash :hash="transfer.contract" :link="`/address/${transfer.contract}`" />
+                                </v-layout>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-layout row align-center justift-start pr-2 pl-2>
+                                    <p v-if="isErc20" class="black--text">
+                                        {{ amountSign }}{{ amount.value }}
+                                        <span v-if="isErc20 && tokenTransfer.symbol" class="info--text caption pr-1">{{ tokenTransfer.symbol }}</span>
+                                        <app-tooltip v-if="isErc20 && amount.tooltipText" :text="`${amount.tooltipText} ${tokenTransfer.symbol}`" />
+                                    </p>
+                                    <p v-else class="black--text caption">
+                                        {{ amount }}
+                                    </p>
+                                </v-layout>
+                            </v-flex>
+                        </v-layout>
+                    </v-flex>
                     <v-flex xs12>
                         <v-layout row align-center justift-start pa-1>
                             <p class="info--text tx-string caption">{{ $tc('tx.hash', 1) }}:</p>
-                            <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+                            <app-transform-hash :hash="tokenTransfer.hash" :link="`/tx/${tokenTransfer.hash}`" />
                         </v-layout>
                     </v-flex>
-                    <v-flex xs5 sm3 pa-1>
-                        <v-card :color="typeColor" flat>
-                            <p class="white--text text-xs-center caption pa-1">{{ typeString }}</p>
-                        </v-card>
-                    </v-flex>
-                    <v-flex xs7 sm9 pa-1>
-                        <app-transform-hash :hash="typeAddr" :link="`/address/${typeAddr}`" />
+                    <v-flex xs12 pt-1>
+                        <v-layout row align-center justify-start fill-height pr-6>
+                            <v-flex xs5 sm3 pr-1 pl-1>
+                                <v-card :color="typeColor" flat>
+                                    <p class="white--text text-xs-center caption pa-1">{{ typeString }}</p>
+                                </v-card>
+                            </v-flex>
+                            <v-flex xs7 sm9 pl-1>
+                                <app-transform-hash :hash="typeAddr" :link="`/address/${typeAddr}`" :italic="true" />
+                            </v-flex>
+                        </v-layout>
                     </v-flex>
                 </v-layout>
             </div>
-        </v-flex> -->
+        </v-flex>
         <!--
       =====================================================================================
         Tablet/ Desktop (SM - XL)
@@ -291,6 +322,9 @@ p {
 
 .tx-string {
     min-width: 3em;
+}
+.contract-string {
+    min-width: 4em;
 }
 .more-btn {
     height: 20px;

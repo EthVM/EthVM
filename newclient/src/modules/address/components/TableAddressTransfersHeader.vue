@@ -12,7 +12,7 @@
         <v-flex md3>
             <h5>{{ text }}</h5>
         </v-flex>
-        <v-flex md3>
+        <v-flex md2>
             <h5>{{ $t('common.age') }}</h5>
         </v-flex>
     </v-layout>
