@@ -64,7 +64,7 @@
                     <v-flex sm5>
                         <v-layout row pb-2>
                             <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
-                            <app-transform-hash :hash="_block.miner" :italic="true" :link="`/address/${_block.mniner}`" />
+                            <app-transform-hash :hash="_block.miner" :italic="true" :link="`/address/${_block.miner}`" />
                         </v-layout>
                         <v-layout row>
                             <p class="info--text psmall pr-2">{{ $t('common.age') }}:</p>
