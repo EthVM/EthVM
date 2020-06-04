@@ -33,7 +33,7 @@
       =====================================================================================
       -->
                 <v-tab-item slot="tabs-item" value="tab-1">
-                    <!-- <table-address-tokens v-if="activeTab === 'tab-1'" :address="addressRef" /> -->
+                    <address-transfers v-if="activeTab === 'tab-1'" :address="addressRef" :max-items="max" transfers-type="ERC20"></address-transfers>
                 </v-tab-item>
 
                 <!--

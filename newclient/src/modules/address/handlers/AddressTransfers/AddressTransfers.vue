@@ -10,15 +10,14 @@
             </template>
         </app-table-title>
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
-            <template #header> <table-address-txs-header :address="address" /> </template>
-
-            <template #rows>
+            <template v-if="isETH" #header> <table-address-txs-header :address="address" /> </template>
+            <template v-else #header><table-address-transfers-header :is-erc20="isERC20" /> </template>
+            <template v-if="isETH" #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
                     <table-address-txs-row :tx="tx" :is-pending="false" :address="address" />
                 </v-card>
             </template>
         </table-txs>
-
         <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
             <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
         </v-layout>
@@ -32,10 +31,12 @@ import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
+import TableAddressTransfersHeader from '@app/modules/address/components/TableAddressTransfersHeader.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getEthTransfers, getERC20Transfers } from './transfers.graphql'
 import { getEthTransfers_getEthTransfers as EthTransfersType } from './getEthTransfers.type'
+import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './getERC20Transfers.type'
 /*
   DEV NOTES:
   - add on Error
@@ -48,12 +49,13 @@ import { getEthTransfers_getEthTransfers as EthTransfersType } from './getEthTra
         AppPaginateHasMore,
         TableTxs,
         TableAddressTxsRow,
-        TableAddressTxsHeader
+        TableAddressTxsHeader,
+        TableAddressTransfersHeader
     },
     apollo: {
         getTransfers: {
             query() {
-                return this.transfersType === 'eth' ? getEthTransfers : getERC20Transfers
+                return this.isETH ? getEthTransfers : getERC20Transfers
             },
             fetchPolicy: 'network-only',
             variables() {
@@ -66,6 +68,7 @@ import { getEthTransfers_getEthTransfers as EthTransfersType } from './getEthTra
             update: data => data.getEthTransfers || data.getERC20Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
+                    console.log(this.getTransfers)
                     this.error = '' // clear the error
                     if (this.initialLoad) {
                         this.showPagination = this.getTransfers.nextKey != null
@@ -109,7 +112,7 @@ export default class AddressTransers extends Vue {
     /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
-    getTransfers!: EthTransfersType
+    getTransfers!: EthTransfersType | ERC20TransfersType
 
     /*
     ===================================================================================
@@ -118,7 +121,7 @@ export default class AddressTransers extends Vue {
     */
 
     get transfers(): any[] {
-        if (!this.loading && this.getTransfers && this.getTransfers.transfers !== null) {
+        if (!this.loading && this.hasTransfers) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
             return this.getTransfers.transfers.slice(start, end)
@@ -127,17 +130,26 @@ export default class AddressTransers extends Vue {
     }
 
     get message(): string {
-        if (this.getTransfers && this.getTransfers.transfers.length === 0) {
-            return `${this.$t('message.tx.no-all')}`
+        if (!this.loading && this.hasTransfers && this.getTransfers.transfers.length === 0) {
+            if (this.isETH) {
+                return `${this.$t('message.tx.no-all')}`
+            }
+            return `${this.$t('message.transfer.no-all')}`
         }
-        if (this.error) {
+        if (this.error != '') {
             return this.error
         }
         return ''
     }
 
     get getTitle(): string {
-        return this.isPending ? `${this.$t('block.txs')}` : `${this.$t('tx.last')}`
+        if (this.isETH) {
+            return !this.isPending ? `${this.$t('tx.last')}` : `${this.$t('tx.pendign')}`
+        }
+        if (this.isERC20) {
+            return `${this.$t('transfer.erc20')}`
+        }
+        return `${this.$t('transfer.erc721')}`
     }
 
     get loading(): boolean {
@@ -148,6 +160,18 @@ export default class AddressTransers extends Vue {
     }
     get hasTransfers(): boolean {
         return this.getTransfers && this.getTransfers.transfers != null
+    }
+
+    get isETH(): boolean {
+        return this.transfersType === 'eth'
+    }
+
+    get isERC20(): boolean {
+        return this.transfersType === 'ERC20'
+    }
+
+    get NFT(): boolean {
+        return this.transfersType === 'ERC721'
     }
 
     /*
@@ -163,7 +187,7 @@ export default class AddressTransers extends Vue {
         } else {
             if (page > this.isEnd && this.hasMore) {
                 let queryName!: string
-                if (this.transfersType === 'eth') {
+                if (this.isETH) {
                     queryName = 'getEthTransfers'
                 } else {
                     queryName = 'getERC20Transfers'

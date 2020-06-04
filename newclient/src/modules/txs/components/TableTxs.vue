@@ -10,7 +10,7 @@
     -->
         <v-layout pl-2 pr-2>
             <v-flex hidden-xs-only sm12>
-                <v-card v-if="!hasMessage" :color="headerColor" flat class="white--text" height="40px">
+                <v-card :color="headerColor" flat class="white--text" height="40px">
                     <slot name="header">
                         <v-layout align-center justify-start row fill-height pl-3 pr-2>
                             <v-flex sm2 lg1>
