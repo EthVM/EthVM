@@ -9,11 +9,11 @@
                 <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
             </template>
         </app-table-title>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transactions" :is-scroll-view="false">
+        <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
             <template #header> <table-address-txs-header :address="address" /> </template>
 
             <template #rows>
-                <v-card v-for="(tx, index) in transactions" :key="index" class="transparent" flat>
+                <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
                     <table-address-txs-row :tx="tx" :is-pending="false" :address="address" />
                 </v-card>
             </template>
@@ -34,8 +34,8 @@ import TableAddressTxsHeader from '@app/modules/address/components/TableAddressT
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getTxs_getEthTransfers as EthTransferType, getTxs as EthTransfersType } from './getTxs.type'
-import { getTxs } from './transfers.graphql'
+import { getEthTransfers, getERC20Transfers } from './transfers.graphql'
+import { getEthTransfers_getEthTransfers as EthTransfersType } from './getEthTransfers.type'
 /*
   DEV NOTES:
   - add on Error
@@ -51,22 +51,24 @@ import { getTxs } from './transfers.graphql'
         TableAddressTxsHeader
     },
     apollo: {
-        getEthTransfers: {
-            query: getTxs,
+        getTransfers: {
+            query() {
+                return this.transfersType === 'eth' ? getEthTransfers : getERC20Transfers
+            },
             fetchPolicy: 'network-only',
             variables() {
                 return {
                     hash: this.address,
-                    _limit: this.maxItems,
-                    _nextKey: null
+                    _limit: this.maxItems
                 }
             },
+            deep: true,
+            update: data => data.getEthTransfers || data.getERC20Transfers,
             result({ data }) {
-                if (data && data.getEthTransfers && data.getEthTransfers.transfers) {
+                if (this.hasTransfers) {
                     this.error = '' // clear the error
-
                     if (this.initialLoad) {
-                        this.showPagination = data.getEthTransfers.nextKey != null
+                        this.showPagination = this.getTransfers.nextKey != null
                         this.initialLoad = false
                     }
                 } else {
@@ -74,13 +76,13 @@ import { getTxs } from './transfers.graphql'
                     this.showPagination = false
                     this.initialLoad = true
                     this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getAllEthTransfers.refetch()
+                    this.$apollo.queries.getTransfers.refetch()
                 }
             }
         }
     }
 })
-export default class AddressTxs extends Vue {
+export default class AddressTransers extends Vue {
     /*
     ===================================================================================
       Props
@@ -90,6 +92,7 @@ export default class AddressTxs extends Vue {
     @Prop(Number) maxItems!: number
     @Prop({ type: Boolean, default: false }) isPending!: boolean
     @Prop(String) address!: string
+    @Prop({ type: String, default: 'eth' }) transfersType!: string
 
     /*
     ===================================================================================
@@ -99,13 +102,14 @@ export default class AddressTxs extends Vue {
 
     error = ''
     syncing?: boolean = false
-    getEthTransfers!: EthTransferType
     initialLoad = true
     showPagination = false
     index = 0
     totalPages = 0
+    /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
+    getTransfers!: EthTransfersType
 
     /*
     ===================================================================================
@@ -113,17 +117,17 @@ export default class AddressTxs extends Vue {
     ===================================================================================
     */
 
-    get transactions(): any[] {
-        if (this.getEthTransfers && this.getEthTransfers.transfers !== null) {
+    get transfers(): any[] {
+        if (!this.loading && this.getTransfers && this.getTransfers.transfers !== null) {
             const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.getEthTransfers.transfers.length ? this.getEthTransfers.transfers.length : start + this.maxItems
-            return this.getEthTransfers.transfers.slice(start, end)
+            const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
+            return this.getTransfers.transfers.slice(start, end)
         }
         return []
     }
 
     get message(): string {
-        if (this.getEthTransfers && this.getEthTransfers.transfers.length === 0) {
+        if (this.getTransfers && this.getTransfers.transfers.length === 0) {
             return `${this.$t('message.tx.no-all')}`
         }
         if (this.error) {
@@ -137,10 +141,13 @@ export default class AddressTxs extends Vue {
     }
 
     get loading(): boolean {
-        return this.$apollo.queries.getEthTransfers.loading
+        return this.$apollo.queries.getTransfers.loading
     }
     get hasMore(): boolean {
-        return this.getEthTransfers && this.getEthTransfers.nextKey != null
+        return this.getTransfers && this.getTransfers.nextKey != null
+    }
+    get hasTransfers(): boolean {
+        return this.getTransfers && this.getTransfers.transfers != null
     }
 
     /*
@@ -152,25 +159,31 @@ export default class AddressTxs extends Vue {
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
-            this.$apollo.queries.getEthTransfers.refetch()
+            this.$apollo.queries.getTransfers.refetch()
         } else {
             if (page > this.isEnd && this.hasMore) {
-                this.$apollo.queries.getEthTransfers.fetchMore({
+                let queryName!: string
+                if (this.transfersType === 'eth') {
+                    queryName = 'getEthTransfers'
+                } else {
+                    queryName = 'getERC20Transfers'
+                }
+
+                this.$apollo.queries.getTransfers.fetchMore({
                     variables: {
                         hash: this.address,
                         _limit: this.maxItems,
-                        _nextKey: this.getEthTransfers.nextKey
+                        _nextKey: this.getTransfers.nextKey
                     },
                     updateQuery: (previousResult, { fetchMoreResult }) => {
                         this.isEnd = page
-                        const newT = fetchMoreResult.getEthTransfers.transfers
-                        const prevT = previousResult.getEthTransfers.transfers
+                        const newT = fetchMoreResult[queryName].transfers
+                        const prevT = previousResult[queryName].transfers
                         return {
-                            ...previousResult,
                             getEthTransfers: {
-                                __typename: previousResult.getEthTransfers.__typename,
-                                nextKey: fetchMoreResult.getEthTransfers.nextKey,
-                                transfers: [...prevT, ...newT]
+                                nextKey: fetchMoreResult[queryName].nextKey,
+                                transfers: [...prevT, ...newT],
+                                __typename: fetchMoreResult[queryName].__typename
                             }
                         }
                     }
