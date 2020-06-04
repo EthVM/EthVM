@@ -5,7 +5,7 @@
         Mobile (XS)
       =====================================================================================
       -->
-        <v-flex xs12 hidden-md-and-up>
+        <!-- <v-flex xs12 hidden-md-and-up>
             <div :class="txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs6 pa-1>
@@ -39,7 +39,7 @@
                     </v-flex>
                 </v-layout>
             </div>
-        </v-flex>
+        </v-flex> -->
         <!--
       =====================================================================================
         Tablet/ Desktop (SM - XL)
@@ -49,6 +49,27 @@
             <v-layout grid-list-xs row align-center justify-start fill-height>
                 <!--
           =====================================================================================
+            TOKEN NAME/IMAGE
+
+            Responsive Tally:
+            MD: 5/12 (5)
+            Lg: 5/12 (5)
+          =====================================================================================
+          -->
+                <v-flex md3>
+                    <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-2>
+                        <div class="token-image">
+                            <v-img :src="image" contain />
+                        </div>
+                        <div v-if="tokenTransfer.name !== '' || tokenTransfer.symbol" class="black--text">
+                            <p v-if="tokenTransfer.name">{{ tokenTransfer.name }}</p>
+                            <p v-else class="text-uppercase caption">{{ tokenTransfer.symbol }}</p>
+                        </div>
+                        <app-transform-hash v-else :hash="transfer.contract" :link="`/address/${transfer.contract}`" />
+                    </v-layout>
+                </v-flex>
+                <!--
+          =====================================================================================
             TRANSACTION # / HASH
 
             Responsive Tally:
@@ -56,12 +77,12 @@
             Lg: 5/12 (5)
           =====================================================================================
           -->
-                <v-flex md5>
-                    <v-layout row wrap align-center pl-3>
+                <v-flex md4>
+                    <v-layout row wrap align-center pl-1>
                         <v-flex sm12>
                             <v-layout row align-center justift-start pa-2>
                                 <p class="info--text tx-string">{{ $tc('tx.hash', 1) }}:</p>
-                                <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+                                <app-transform-hash :hash="tokenTransfer.hash" :link="`/tx/${tokenTransfer.hash}`" />
                             </v-layout>
                         </v-flex>
                         <v-flex sm12 pt-0 pb-0>
@@ -80,46 +101,28 @@
                 </v-flex>
                 <!--
           =====================================================================================
-          ETH VALUE
+          AMOUNT/ TOKEN ID
 
           Responsive Tally:
           MD: 8/12 (3)
           LG: 7/2 (2)
           =====================================================================================
           -->
-                <v-flex md3 lg2>
-                    <v-layout row wrap align-center pl-1 pr->
+                <v-flex md3>
+                    <v-layout row wrap align-center pl-1>
                         <v-flex sm12>
-                            <p :class="[tx.transfer.status ? 'black--text' : 'info--text']">
-                                <span class="hidden-lg-and-up info--text pr-1">{{ $t('common.amount') }}:</span>
-                                {{ amountSign }}{{ transaction.value.value }}
-                                {{ $t(`common.${transaction.value.unit}`) }}
-                                <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
+                            <p v-if="isErc20" class="black--text">
+                                {{ amountSign }}{{ amount.value }}
+                                <span v-if="isErc20 && tokenTransfer.symbol" class="info--text caption pr-1">{{ tokenTransfer.symbol }}</span>
+                                <app-tooltip v-if="isErc20 && amount.tooltipText" :text="`${amount.tooltipText} ${tokenTransfer.symbol}`" />
                             </p>
-                        </v-flex>
-                        <v-flex sm12 hidden-lg-and-up>
-                            <p :class="[type === 'out' ? 'black--text' : 'info--text', 'text-truncate mb-0']">
-                                <span class="info--text pr-1">{{ $tc('tx.fee', 1) }}: </span><span v-if="transaction.status && type === 'out'">-</span
-                                >{{ transaction.fee.value }}
+                            <p v-else>
+                                {{ amount }}
                             </p>
                         </v-flex>
                     </v-layout>
                 </v-flex>
-                <!--
-          =====================================================================================
-            Tx Fee
 
-            Responsive Tally:
-            SM: 10/12 (0)
-            MD: 9/12 (0)
-            LG: 9/2 (2)
-          =====================================================================================
-          -->
-                <v-flex hidden-md-and-down lg2>
-                    <p :class="[type === 'out' ? 'black--text' : 'info--text', 'text-truncate mb-0']">
-                        <span v-if="transaction.status && type === 'out'">-</span>{{ transaction.fee.value }}
-                    </p>
-                </v-flex>
                 <!--
           =====================================================================================
             Age
@@ -130,25 +133,10 @@
             LG: 11/2 (2)
           =====================================================================================
           -->
-                <v-flex md3 lg2>
-                    <app-time-ago :timestamp="transaction.timestamp" />
-                </v-flex>
-
-                <!--
-          =====================================================================================
-          More
-
-          Responsive Tally:
-            SM: 12/12 (1)
-            MD: 12/12 (1)
-            LG: 12/12 (1)
-          =====================================================================================
-          -->
-                <v-flex shrink>
-                    <v-layout row align-center justify-end>
-                        <v-icon v-if="transaction.status" small class="txSuccess--text">fa fa-check-circle</v-icon>
-                        <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-                        <v-btn class="ml-3 mr-1 more-btn" color="white" fab depressed>
+                <v-flex md2>
+                    <v-layout row wrap align-center justify-space-between pr-3>
+                        <app-time-ago :timestamp="tokenTransfer.timestamp" />
+                        <v-btn class="more-btn" color="white" fab depressed>
                             <p class="info--text title pb-2">...</p>
                         </v-btn>
                     </v-layout>
@@ -184,9 +172,9 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) tx!: TransferType
+    @Prop(Object) transfer!: any
     @Prop(String) address!: string
-    @Prop({ type: Boolean, default: false }) isPending
+    @Prop(Boolean) isErc20!: boolean
 
     /*
     ===================================================================================
@@ -194,28 +182,36 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    get txStatusClass(): string {
-        return this.tx.transfer.status ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+    get tokenTransfer(): any {
+        return {
+            image: null,
+            symbol: this.transfer.tokenInfo.symbol,
+            contract: this.transfer.contract,
+            hash: this.transfer.transfer.transactionHash,
+            from: this.transfer.transfer.from,
+            to: this.transfer.transfer.to,
+            timestamp: new Date(new BN(this.transfer.transfer.timestamp).multipliedBy(1e3).toNumber()),
+            name: this.transfer.tokenInfo.name
+        }
+    }
+    /*NOTE:  Add Token Image from tokens, when implemented */
+    get image(): any {
+        return this.tokenTransfer.image || require('@/assets/icon-token.png')
     }
 
-    get transaction(): any {
-        return {
-            hash: this.tx.transfer.transactionHash,
-            from: this.tx.transfer.from,
-            to: this.tx.transfer.to,
-            timestamp: new Date(this.tx.transfer.timestamp * 1e3),
-            fee: this.formatNonVariableEthValue(new BN(this.tx.transfer.txFee)),
-            value: this.formatNonVariableEthValue(new BN(this.tx.value)),
-            status: this.tx.transfer.status != null ? this.tx.transfer.status : false
+    get amount(): FormattedNumber | string {
+        if (this.isErc20) {
+            return this.formatFloatingPointValue(this.getValue())
         }
+        return this.formatNumber(new BN(this.transfer.token).toNumber())
     }
     get isSmall(): boolean {
         return this.$vuetify.breakpoint.name === 'sm'
     }
 
     get type(): string {
-        const from = this.tx.transfer.from.toLowerCase()
-        const to = this.tx.transfer.to.toLowerCase()
+        const from = this.transfer.transfer.from.toLowerCase()
+        const to = this.transfer.transfer.to.toLowerCase()
         const addr = this.address.toLowerCase()
 
         if (addr === from && addr === to) {
@@ -249,24 +245,36 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get typeAddr(): string {
         switch (this.type) {
             case TYPES[0]:
-                return this.tx.transfer.from
+                return this.tokenTransfer.from
             case TYPES[1]:
-                return this.tx.transfer.to
+                return this.tokenTransfer.to
             default:
                 return this.address
         }
     }
 
     get amountSign(): string {
-        if (this.tx.transfer.status) {
-            if (this.type === TYPES[0]) {
-                return '+'
-            }
-            if (this.type === TYPES[1]) {
-                return '-'
-            }
+        if (this.type === TYPES[0]) {
+            return '+'
         }
+        if (this.type === TYPES[1]) {
+            return '-'
+        }
+
         return ''
+    }
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+    getValue(): BN {
+        let n = new BN(this.transfer.value)
+        if (this.transfer.tokenInfo.decimals) {
+            n = n.div(new BN(10).pow(this.transfer.tokenInfo.decimals))
+        }
+        return n
     }
 }
 </script>
@@ -281,13 +289,6 @@ p {
     padding-bottom: 0px;
 }
 
-.tx-status-fail {
-    border-left: 2px solid #fe1377;
-}
-
-.tx-status-sucess {
-    border-left: 2px solid #40ce9c;
-}
 .tx-string {
     min-width: 3em;
 }

@@ -10,11 +10,14 @@
             </template>
         </app-table-title>
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
-            <template v-if="isETH" #header> <table-address-txs-header :address="address" /> </template>
-            <template v-else #header><table-address-transfers-header :is-erc20="isERC20" /> </template>
-            <template v-if="isETH" #rows>
+            <template #header>
+                <table-address-txs-header v-if="isETH" :address="address" />
+                <table-address-transfers-header v-else :is-erc20="isERC20" />
+            </template>
+            <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
-                    <table-address-txs-row :tx="tx" :is-pending="false" :address="address" />
+                    <table-address-txs-row v-if="isETH" :tx="tx" :is-pending="false" :address="address" />
+                    <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" />
                 </v-card>
             </template>
         </table-txs>
@@ -32,6 +35,8 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
 import TableAddressTransfersHeader from '@app/modules/address/components/TableAddressTransfersHeader.vue'
+import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
+
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getEthTransfers, getERC20Transfers } from './transfers.graphql'
@@ -50,7 +55,8 @@ import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './get
         TableTxs,
         TableAddressTxsRow,
         TableAddressTxsHeader,
-        TableAddressTransfersHeader
+        TableAddressTransfersHeader,
+        TableAddressTransfersRow
     },
     apollo: {
         getTransfers: {
