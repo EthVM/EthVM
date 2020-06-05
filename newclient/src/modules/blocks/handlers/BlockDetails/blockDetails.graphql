@@ -26,7 +26,6 @@ fragment BlockDetails on Block {
     gasLimit
     gasUsed
     transactions
-    uncles
 }
 
 query getBlockByNumber($blockRef: Int!) {

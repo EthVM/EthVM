@@ -42,7 +42,6 @@ export interface getBlockDetailsHash_getBlockByHash {
   gasLimit: number;
   gasUsed: number;
   transactions: (string | null)[];
-  uncles: (string | null)[];
 }
 
 export interface getBlockDetailsHash {

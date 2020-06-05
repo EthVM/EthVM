@@ -42,7 +42,6 @@ export interface getBlockByNumber_getBlockByNumber {
   gasLimit: number;
   gasUsed: number;
   transactions: (string | null)[];
-  uncles: (string | null)[];
 }
 
 export interface getBlockByNumber {

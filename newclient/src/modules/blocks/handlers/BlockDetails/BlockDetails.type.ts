@@ -42,5 +42,4 @@ export interface BlockDetails {
   gasLimit: number;
   gasUsed: number;
   transactions: (string | null)[];
-  uncles: (string | null)[];
 }
