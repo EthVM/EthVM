@@ -1,0 +1,57 @@
+fragment TransferSummary on Transfer {
+    transactionHash
+    timestamp
+    from
+    to
+    txFee
+}
+fragment TokenFragment on EthTokenInfo {
+    name
+    symbol
+    decimals
+}
+
+query getEthTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getEthTransfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            transfer {
+                ...TransferSummary
+                status
+            }
+            value
+        }
+        nextKey
+    }
+}
+
+query getERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getERC20Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            transfer {
+                ...TransferSummary
+            }
+            value
+            contract
+            tokenInfo {
+                ...TokenFragment
+            }
+        }
+        nextKey
+    }
+}
+
+query getERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getERC721Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            transfer {
+                ...TransferSummary
+            }
+            token
+            contract
+            tokenInfo {
+                name
+            }
+        }
+        nextKey
+    }
+}

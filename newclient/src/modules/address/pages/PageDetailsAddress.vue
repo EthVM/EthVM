@@ -3,10 +3,10 @@
         <app-bread-crumbs :new-items="crumbs" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
-    =====================================================================================
-      ADDRESS DETAILS
-    =====================================================================================
-    -->
+        =====================================================================================
+          ADDRESS DETAILS
+        =====================================================================================
+        -->
         <div v-else>
             <v-layout row wrap justify-start class="mb-4">
                 <v-flex xs12>
@@ -14,41 +14,46 @@
                 </v-flex>
             </v-layout>
             <!--
-    =====================================================================================
-      ADDRESS TABS
-    =====================================================================================
-    -->
+            =====================================================================================
+            ADDRESS TABS
+            =====================================================================================
+            -->
             <app-tabs :tabs="tabs" @changeTab="activeTab = $event">
                 <!--
-      =====================================================================================
-        TRANSACTIONS INFO TAB
-      =====================================================================================
-      -->
+                =====================================================================================
+                  TRANSACTIONS INFO TAB
+                =====================================================================================
+                -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <address-txs v-if="activeTab === 'tab-0'" :address="addressRef" :max-items="max"></address-txs>
+                    <keep-alive>
+                        <address-transfers v-if="activeTab === 'tab-0'" :address="addressRef" :max-items="max"></address-transfers>
+                    </keep-alive>
                 </v-tab-item>
                 <!--
-      =====================================================================================
-        TOKENS INFO TAB
-      =====================================================================================
-      -->
+                =====================================================================================
+                  ERC20 TOKENS INFO TAB
+                =====================================================================================
+                -->
                 <v-tab-item slot="tabs-item" value="tab-1">
-                    <!-- <table-address-tokens v-if="activeTab === 'tab-1'" :address="addressRef" /> -->
-                </v-tab-item>
-
-                <!--
-      =====================================================================================
-        MINER INFO TAB
-      =====================================================================================
-      -->
-                <v-tab-item v-if="isMiner" slot="tabs-item" value="tab-3">
-                    <!-- <table-blocks v-if="activeTab === 'tab-3'" :author="addressRef" :page-type="detailsType" :max-items="max" /> -->
+                    <keep-alive>
+                        <address-transfers v-if="activeTab === 'tab-1'" :address="addressRef" :max-items="max" transfers-type="ERC20"></address-transfers>
+                    </keep-alive>
                 </v-tab-item>
                 <!--
-      =====================================================================================
-        CONTRACT CREATOR INFO TAB
-      =====================================================================================
-      -->
+                =====================================================================================
+                  ERC721 TOKENS INFO TAB
+                =====================================================================================
+                -->
+                <v-tab-item slot="tabs-item" value="tab-2">
+                    <keep-alive>
+                        <address-transfers v-if="activeTab === 'tab-2'" :address="addressRef" :max-items="max" transfers-type="ERC721"></address-transfers>
+                    </keep-alive>
+                </v-tab-item>
+                <!--
+                =====================================================================================
+                  CONTRACT CREATOR INFO TAB
+                =====================================================================================
+                -->
                 <v-tab-item v-if="isContractCreator" slot="tabs-item" value="tab-4">
                     <!-- <table-address-contracts v-if="activeTab === 'tab-4'" :address="addressRef" /> -->
                 </v-tab-item>
@@ -66,7 +71,7 @@ import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
 import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
-import AddressTxs from '@app/modules/address/handlers/AddressTxs/AddressTxs.vue'
+import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
 const MAX_ITEMS = 10
 
 @Component({
@@ -76,7 +81,7 @@ const MAX_ITEMS = 10
         AppError,
         AddressOverview,
         AppTabs,
-        AddressTxs
+        AddressTransfers
     }
 })
 export default class PageDetailsAddress extends Vue {
@@ -134,12 +139,12 @@ export default class PageDetailsAddress extends Vue {
             },
             {
                 id: 1,
-                title: this.$i18n.tc('token.name', 2),
+                title: this.$i18n.t('token.erc20'),
                 isActive: false
             },
             {
                 id: 2,
-                title: this.$i18n.tc('token.name', 2),
+                title: this.$i18n.t('token.nft'),
                 isActive: false
             }
         ]

@@ -4,40 +4,41 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: getTxs
+// GraphQL query operation: getEthTransfers
 // ====================================================
 
-export interface getTxs_getEthTransfers_transfers_transfer {
+export interface getEthTransfers_getEthTransfers_transfers_transfer {
   __typename: "Transfer";
   transactionHash: string;
   timestamp: number;
   from: string;
   to: string;
   txFee: string;
+  status: boolean | null;
 }
 
-export interface getTxs_getEthTransfers_transfers {
+export interface getEthTransfers_getEthTransfers_transfers {
   __typename: "EthTransfer";
-  transfer: getTxs_getEthTransfers_transfers_transfer;
+  transfer: getEthTransfers_getEthTransfers_transfers_transfer;
   value: string;
 }
 
-export interface getTxs_getEthTransfers {
+export interface getEthTransfers_getEthTransfers {
   __typename: "ETHTransfers";
-  transfers: (getTxs_getEthTransfers_transfers | null)[];
+  transfers: (getEthTransfers_getEthTransfers_transfers | null)[];
   nextKey: string | null;
 }
 
-export interface getTxs {
+export interface getEthTransfers {
   /**
    * ------------------------------------------------
    * Transfers:
    * ------------------------------------------------
    */
-  getEthTransfers: getTxs_getEthTransfers;
+  getEthTransfers: getEthTransfers_getEthTransfers;
 }
 
-export interface getTxsVariables {
+export interface getEthTransfersVariables {
   hash: string;
   _limit?: number | null;
   _nextKey?: string | null;

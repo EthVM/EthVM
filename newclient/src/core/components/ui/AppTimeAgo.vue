@@ -1,5 +1,5 @@
 <template>
-    <p class="black--text mb-0">
+    <p class="black--text mb-0 caption">
         <timeago :datetime="timestamp" :locale="locale" :auto-update="60" />
         <!-- <vue-time-ticker v-else :value="timestamp.toString()" format="SECONDS" />
         {{ text }} -->

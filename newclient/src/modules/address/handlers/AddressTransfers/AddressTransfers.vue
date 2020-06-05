@@ -9,16 +9,18 @@
                 <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
             </template>
         </app-table-title>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transactions" :is-scroll-view="false">
-            <template #header> <table-address-txs-header :address="address" /> </template>
-
+        <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
+            <template #header>
+                <table-address-txs-header v-if="isETH" :address="address" />
+                <table-address-transfers-header v-else :is-erc20="isERC20" />
+            </template>
             <template #rows>
-                <v-card v-for="(tx, index) in transactions" :key="index" class="transparent" flat>
-                    <table-address-txs-row :tx="tx" :is-pending="false" :address="address" />
+                <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
+                    <table-address-txs-row v-if="isETH" :tx="tx" :is-pending="false" :address="address" />
+                    <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" />
                 </v-card>
             </template>
         </table-txs>
-
         <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
             <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
         </v-layout>
@@ -32,10 +34,15 @@ import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
+import TableAddressTransfersHeader from '@app/modules/address/components/TableAddressTransfersHeader.vue'
+import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
+
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getTxs_getEthTransfers as EthTransferType, getTxs as EthTransfersType } from './getTxs.type'
-import { getTxs } from './transfers.graphql'
+import { getEthTransfers, getERC20Transfers, getERC721Transfers } from './transfers.graphql'
+import { getEthTransfers_getEthTransfers as EthTransfersType } from './getEthTransfers.type'
+import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './getERC20Transfers.type'
+import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './getERC721Transfers.type'
 /*
   DEV NOTES:
   - add on Error
@@ -48,25 +55,32 @@ import { getTxs } from './transfers.graphql'
         AppPaginateHasMore,
         TableTxs,
         TableAddressTxsRow,
-        TableAddressTxsHeader
+        TableAddressTxsHeader,
+        TableAddressTransfersHeader,
+        TableAddressTransfersRow
     },
     apollo: {
-        getEthTransfers: {
-            query: getTxs,
+        getTransfers: {
+            query() {
+                if (this.isETH) {
+                    return getEthTransfers
+                }
+                return this.isERC20 ? getERC20Transfers : getERC721Transfers
+            },
             fetchPolicy: 'network-only',
             variables() {
                 return {
                     hash: this.address,
-                    _limit: this.maxItems,
-                    _nextKey: null
+                    _limit: this.maxItems
                 }
             },
+            deep: true,
+            update: data => data.getEthTransfers || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
-                if (data && data.getEthTransfers && data.getEthTransfers.transfers) {
+                if (this.hasTransfers) {
                     this.error = '' // clear the error
-
                     if (this.initialLoad) {
-                        this.showPagination = data.getEthTransfers.nextKey != null
+                        this.showPagination = this.getTransfers.nextKey != null
                         this.initialLoad = false
                     }
                 } else {
@@ -74,13 +88,13 @@ import { getTxs } from './transfers.graphql'
                     this.showPagination = false
                     this.initialLoad = true
                     this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getAllEthTransfers.refetch()
+                    this.$apollo.queries.getTransfers.refetch()
                 }
             }
         }
     }
 })
-export default class AddressTxs extends Vue {
+export default class AddressTransers extends Vue {
     /*
     ===================================================================================
       Props
@@ -90,6 +104,7 @@ export default class AddressTxs extends Vue {
     @Prop(Number) maxItems!: number
     @Prop({ type: Boolean, default: false }) isPending!: boolean
     @Prop(String) address!: string
+    @Prop({ type: String, default: 'eth' }) transfersType!: string
 
     /*
     ===================================================================================
@@ -99,13 +114,14 @@ export default class AddressTxs extends Vue {
 
     error = ''
     syncing?: boolean = false
-    getEthTransfers!: EthTransferType
     initialLoad = true
     showPagination = false
     index = 0
     totalPages = 0
+    /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
+    getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
 
     /*
     ===================================================================================
@@ -113,34 +129,58 @@ export default class AddressTxs extends Vue {
     ===================================================================================
     */
 
-    get transactions(): any[] {
-        if (this.getEthTransfers && this.getEthTransfers.transfers !== null) {
+    get transfers(): any[] {
+        if (!this.loading && this.hasTransfers) {
             const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.getEthTransfers.transfers.length ? this.getEthTransfers.transfers.length : start + this.maxItems
-            return this.getEthTransfers.transfers.slice(start, end)
+            const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
+            return this.getTransfers.transfers.slice(start, end)
         }
         return []
     }
 
     get message(): string {
-        if (this.getEthTransfers && this.getEthTransfers.transfers.length === 0) {
-            return `${this.$t('message.tx.no-all')}`
+        if (!this.loading && this.hasTransfers && this.getTransfers.transfers.length === 0) {
+            if (this.isETH) {
+                return `${this.$t('message.tx.no-all')}`
+            }
+            return `${this.$t('message.transfer.no-all')}`
         }
-        if (this.error) {
+        if (this.error != '') {
             return this.error
         }
         return ''
     }
 
     get getTitle(): string {
-        return this.isPending ? `${this.$t('block.txs')}` : `${this.$t('tx.last')}`
+        if (this.isETH) {
+            return !this.isPending ? `${this.$t('tx.last')}` : `${this.$t('tx.pendign')}`
+        }
+        if (this.isERC20) {
+            return `${this.$t('transfer.erc20')}`
+        }
+        return `${this.$t('transfer.erc721')}`
     }
 
     get loading(): boolean {
-        return this.$apollo.queries.getEthTransfers.loading
+        return this.$apollo.queries.getTransfers.loading
     }
     get hasMore(): boolean {
-        return this.getEthTransfers && this.getEthTransfers.nextKey != null
+        return this.getTransfers && this.getTransfers.nextKey != null
+    }
+    get hasTransfers(): boolean {
+        return this.getTransfers && this.getTransfers.transfers != null
+    }
+
+    get isETH(): boolean {
+        return this.transfersType === 'eth'
+    }
+
+    get isERC20(): boolean {
+        return this.transfersType === 'ERC20'
+    }
+
+    get NFT(): boolean {
+        return this.transfersType === 'ERC721'
     }
 
     /*
@@ -152,25 +192,31 @@ export default class AddressTxs extends Vue {
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
-            this.$apollo.queries.getEthTransfers.refetch()
+            this.$apollo.queries.getTransfers.refetch()
         } else {
             if (page > this.isEnd && this.hasMore) {
-                this.$apollo.queries.getEthTransfers.fetchMore({
+                let queryName!: string
+                if (this.isETH) {
+                    queryName = 'getEthTransfers'
+                } else {
+                    queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
+                }
+
+                this.$apollo.queries.getTransfers.fetchMore({
                     variables: {
                         hash: this.address,
                         _limit: this.maxItems,
-                        _nextKey: this.getEthTransfers.nextKey
+                        _nextKey: this.getTransfers.nextKey
                     },
                     updateQuery: (previousResult, { fetchMoreResult }) => {
                         this.isEnd = page
-                        const newT = fetchMoreResult.getEthTransfers.transfers
-                        const prevT = previousResult.getEthTransfers.transfers
+                        const newT = fetchMoreResult[queryName].transfers
+                        const prevT = previousResult[queryName].transfers
                         return {
-                            ...previousResult,
-                            getEthTransfers: {
-                                __typename: previousResult.getEthTransfers.__typename,
-                                nextKey: fetchMoreResult.getEthTransfers.nextKey,
-                                transfers: [...prevT, ...newT]
+                            [queryName]: {
+                                nextKey: fetchMoreResult[queryName].nextKey,
+                                transfers: [...prevT, ...newT],
+                                __typename: fetchMoreResult[queryName].__typename
                             }
                         }
                     }
