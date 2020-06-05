@@ -4,9 +4,9 @@
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
         =====================================================================================
-      ADDRESS DETAILS
-    =====================================================================================
-    -->
+          ADDRESS DETAILS
+        =====================================================================================
+        -->
         <div v-else>
             <v-layout row wrap justify-start class="mb-4">
                 <v-flex xs12>
@@ -14,40 +14,46 @@
                 </v-flex>
             </v-layout>
             <!--
-    =====================================================================================
-      ADDRESS TABS
-    =====================================================================================
-    -->
+            =====================================================================================
+            ADDRESS TABS
+            =====================================================================================
+            -->
             <app-tabs :tabs="tabs" @changeTab="activeTab = $event">
                 <!--
-      =====================================================================================
-        TRANSACTIONS INFO TAB
-      =====================================================================================
-      -->
+                =====================================================================================
+                  TRANSACTIONS INFO TAB
+                =====================================================================================
+                -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <address-transfers v-if="activeTab === 'tab-0'" :address="addressRef" :max-items="max"></address-transfers>
+                    <keep-alive>
+                        <address-transfers v-if="activeTab === 'tab-0'" :address="addressRef" :max-items="max"></address-transfers>
+                    </keep-alive>
                 </v-tab-item>
                 <!--
-      =====================================================================================
-        ERC20 TOKENS INFO TAB
-      =====================================================================================
-      -->
+                =====================================================================================
+                  ERC20 TOKENS INFO TAB
+                =====================================================================================
+                -->
                 <v-tab-item slot="tabs-item" value="tab-1">
-                    <address-transfers v-if="activeTab === 'tab-1'" :address="addressRef" :max-items="max" transfers-type="ERC20"></address-transfers>
+                    <keep-alive>
+                        <address-transfers v-if="activeTab === 'tab-1'" :address="addressRef" :max-items="max" transfers-type="ERC20"></address-transfers>
+                    </keep-alive>
                 </v-tab-item>
                 <!--
-      =====================================================================================
-          ERC721 TOKENS INFO TAB
-      =====================================================================================
-      -->
+                =====================================================================================
+                  ERC721 TOKENS INFO TAB
+                =====================================================================================
+                -->
                 <v-tab-item slot="tabs-item" value="tab-2">
-                    <address-transfers v-if="activeTab === 'tab-2'" :address="addressRef" :max-items="max" transfers-type="ERC721"></address-transfers>
+                    <keep-alive>
+                        <address-transfers v-if="activeTab === 'tab-2'" :address="addressRef" :max-items="max" transfers-type="ERC721"></address-transfers>
+                    </keep-alive>
                 </v-tab-item>
                 <!--
-      =====================================================================================
-        CONTRACT CREATOR INFO TAB
-      =====================================================================================
-      -->
+                =====================================================================================
+                  CONTRACT CREATOR INFO TAB
+                =====================================================================================
+                -->
                 <v-tab-item v-if="isContractCreator" slot="tabs-item" value="tab-4">
                     <!-- <table-address-contracts v-if="activeTab === 'tab-4'" :address="addressRef" /> -->
                 </v-tab-item>
