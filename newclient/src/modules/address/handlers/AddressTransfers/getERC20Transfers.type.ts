@@ -14,7 +14,6 @@ export interface getERC20Transfers_getERC20Transfers_transfers_transfer {
   from: string;
   to: string;
   txFee: string;
-  status: boolean | null;
 }
 
 export interface getERC20Transfers_getERC20Transfers_transfers_tokenInfo {

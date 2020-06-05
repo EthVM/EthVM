@@ -62,6 +62,9 @@
     },
 
     "token": {
+        "erc20": "ERC20 Tokens",
+        "erc721": "ERC721 Tokens",
+        "nft": "NFTs",
         "name": "Token | Tokens",
         "detail": "Token Details",
         "empty": "No tokens",

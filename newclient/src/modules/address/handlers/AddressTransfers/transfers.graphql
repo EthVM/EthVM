@@ -4,7 +4,6 @@ fragment TransferSummary on Transfer {
     from
     to
     txFee
-    status
 }
 fragment TokenFragment on EthTokenInfo {
     name
@@ -17,6 +16,7 @@ query getEthTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
         transfers {
             transfer {
                 ...TransferSummary
+                status
             }
             value
         }
@@ -34,6 +34,22 @@ query getERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
             contract
             tokenInfo {
                 ...TokenFragment
+            }
+        }
+        nextKey
+    }
+}
+
+query getERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getERC721Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            transfer {
+                ...TransferSummary
+            }
+            token
+            contract
+            tokenInfo {
+                name
             }
         }
         nextKey

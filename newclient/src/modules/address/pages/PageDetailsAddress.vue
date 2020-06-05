@@ -3,7 +3,7 @@
         <app-bread-crumbs :new-items="crumbs" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
-    =====================================================================================
+        =====================================================================================
       ADDRESS DETAILS
     =====================================================================================
     -->
@@ -29,20 +29,19 @@
                 </v-tab-item>
                 <!--
       =====================================================================================
-        TOKENS INFO TAB
+        ERC20 TOKENS INFO TAB
       =====================================================================================
       -->
                 <v-tab-item slot="tabs-item" value="tab-1">
                     <address-transfers v-if="activeTab === 'tab-1'" :address="addressRef" :max-items="max" transfers-type="ERC20"></address-transfers>
                 </v-tab-item>
-
                 <!--
       =====================================================================================
-        MINER INFO TAB
+          ERC721 TOKENS INFO TAB
       =====================================================================================
       -->
-                <v-tab-item v-if="isMiner" slot="tabs-item" value="tab-3">
-                    <!-- <table-blocks v-if="activeTab === 'tab-3'" :author="addressRef" :page-type="detailsType" :max-items="max" /> -->
+                <v-tab-item slot="tabs-item" value="tab-2">
+                    <address-transfers v-if="activeTab === 'tab-2'" :address="addressRef" :max-items="max" transfers-type="ERC721"></address-transfers>
                 </v-tab-item>
                 <!--
       =====================================================================================
@@ -134,12 +133,12 @@ export default class PageDetailsAddress extends Vue {
             },
             {
                 id: 1,
-                title: this.$i18n.tc('token.name', 2),
+                title: this.$i18n.t('token.erc20'),
                 isActive: false
             },
             {
                 id: 2,
-                title: this.$i18n.tc('token.name', 2),
+                title: this.$i18n.t('token.nft'),
                 isActive: false
             }
         ]

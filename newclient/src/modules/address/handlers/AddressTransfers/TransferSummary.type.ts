@@ -14,5 +14,4 @@ export interface TransferSummary {
   from: string;
   to: string;
   txFee: string;
-  status: boolean | null;
 }

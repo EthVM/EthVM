@@ -39,9 +39,10 @@ import TableAddressTransfersRow from '@app/modules/address/components/TableAddre
 
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getEthTransfers, getERC20Transfers } from './transfers.graphql'
+import { getEthTransfers, getERC20Transfers, getERC721Transfers } from './transfers.graphql'
 import { getEthTransfers_getEthTransfers as EthTransfersType } from './getEthTransfers.type'
 import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './getERC20Transfers.type'
+import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './getERC721Transfers.type'
 /*
   DEV NOTES:
   - add on Error
@@ -61,7 +62,10 @@ import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './get
     apollo: {
         getTransfers: {
             query() {
-                return this.isETH ? getEthTransfers : getERC20Transfers
+                if (this.isETH) {
+                    return getEthTransfers
+                }
+                return this.isERC20 ? getERC20Transfers : getERC721Transfers
             },
             fetchPolicy: 'network-only',
             variables() {
@@ -71,10 +75,9 @@ import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './get
                 }
             },
             deep: true,
-            update: data => data.getEthTransfers || data.getERC20Transfers,
+            update: data => data.getEthTransfers || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
-                    console.log(this.getTransfers)
                     this.error = '' // clear the error
                     if (this.initialLoad) {
                         this.showPagination = this.getTransfers.nextKey != null
@@ -118,7 +121,7 @@ export default class AddressTransers extends Vue {
     /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
-    getTransfers!: EthTransfersType | ERC20TransfersType
+    getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
 
     /*
     ===================================================================================
@@ -196,7 +199,7 @@ export default class AddressTransers extends Vue {
                 if (this.isETH) {
                     queryName = 'getEthTransfers'
                 } else {
-                    queryName = 'getERC20Transfers'
+                    queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
                 }
 
                 this.$apollo.queries.getTransfers.fetchMore({
@@ -210,7 +213,7 @@ export default class AddressTransers extends Vue {
                         const newT = fetchMoreResult[queryName].transfers
                         const prevT = previousResult[queryName].transfers
                         return {
-                            getEthTransfers: {
+                            [queryName]: {
                                 nextKey: fetchMoreResult[queryName].nextKey,
                                 transfers: [...prevT, ...newT],
                                 __typename: fetchMoreResult[queryName].__typename
