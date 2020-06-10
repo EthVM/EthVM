@@ -122,7 +122,6 @@ export default class PageDetailsUncle extends Vue {
                 }
             ]
         } else {
-            console.error('this', this.uncleDetail)
             if (!this.uncleDetail) {
                 this.error = this.$i18n.t('message.invalid.uncle').toString()
                 return []
