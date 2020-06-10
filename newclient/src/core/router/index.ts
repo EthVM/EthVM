@@ -12,7 +12,7 @@ const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" 
 const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr" */ '@app/modules/address/pages/PageDetailsAddress.vue')
 // const PageCharts = () => import(/* webpackChunkName: "page-charts" */ '@app/modules/charts/pages/PageCharts.vue')
 // const PageDetailsChart = () => import(/* webpackChunkName: "page-details-chart" */ '@app/modules/charts/pages/PageDetailsChart.vue')
-// const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" */ '@app/modules/uncles/pages/PageDetailsUncle.vue')
+const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" */ '@app/modules/uncles/pages/PageDetailsUncle.vue')
 // const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modules/tokens/pages/PageTokens.vue')
 // const PageDetailsToken = () => import(/* webpackChunkName: "page-details-token" */ '@app/modules/tokens/pages/PageDetailsToken.vue')
 const PageKnowledgeBase = () => import(/* webpackChunkName: "page-kb" */ '@app/modules/other/pages/PageKnowledgeBase.vue')
@@ -66,12 +66,12 @@ export default new Router({
         //   component: PageUncles,
         //   name: 'uncles'
         // },
-        // {
-        //   path: '/uncle/:uncleRef',
-        //   component: PageDetailsUncle,
-        //   name: 'uncle',
-        //   props: true
-        // },
+        {
+          path: '/uncle/:uncleRef',
+          component: PageDetailsUncle,
+          name: 'uncle',
+          props: true
+        },
         {
             path: '/address/:addressRef',
             component: PageDetailsAddress,

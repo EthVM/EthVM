@@ -82,7 +82,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     }
 
     get uncleHashes(): (string | null)[] {
-        return this.block && this.block.uncles ? this.block.uncles! : []
+        return this.block && this.block.summary.uncles ? this.block.summary.uncles! : []
     }
 
     get blockDetails(): Detail[] {

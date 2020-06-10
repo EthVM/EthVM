@@ -20,6 +20,7 @@ export interface getBlockDetailsHash_getBlockByHash_summary {
   miner: string;
   txCount: number;
   timestamp: number;
+  uncles: (string | null)[];
   rewards: getBlockDetailsHash_getBlockByHash_summary_rewards;
   txFail: number;
 }

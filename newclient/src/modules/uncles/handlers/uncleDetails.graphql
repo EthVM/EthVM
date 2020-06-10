@@ -1,5 +1,6 @@
-fragment BlockDetails on Block {
-    summary {
+fragment UncleDetails on Uncle {
+  block {
+      summary {
         number
         miner
         txCount
@@ -27,22 +28,14 @@ fragment BlockDetails on Block {
     gasLimit
     gasUsed
     transactions
+  }
+  parentHash
+  parentBlockNumber
+  unclePosition
 }
 
-query getBlockByNumber($blockRef: Int!) {
-    getBlockByNumber(number: $blockRef) {
-        ...BlockDetails
-    }
-}
-
-query getBlockDetailsHash($blockRef: String!) {
-    getBlockByHash(hash: $blockRef) {
-        ...BlockDetails
-    }
-}
-
-query getLastBlockNumber {
-    getLatestBlockInfo {
-        number
-    }
+query getUncleByHash($hash: String!) {
+  getUncleByHash(hash: $hash) {
+    ...UncleDetails
+  }
 }

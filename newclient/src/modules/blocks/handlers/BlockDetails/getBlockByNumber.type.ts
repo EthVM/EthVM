@@ -20,6 +20,7 @@ export interface getBlockByNumber_getBlockByNumber_summary {
   miner: string;
   txCount: number;
   timestamp: number;
+  uncles: (string | null)[];
   rewards: getBlockByNumber_getBlockByNumber_summary_rewards;
   txFail: number;
 }
