@@ -30,11 +30,6 @@ export interface getEthTransfers_getEthTransfers {
 }
 
 export interface getEthTransfers {
-  /**
-   * ------------------------------------------------
-   * Transfers:
-   * ------------------------------------------------
-   */
   getEthTransfers: getEthTransfers_getEthTransfers;
 }
 
