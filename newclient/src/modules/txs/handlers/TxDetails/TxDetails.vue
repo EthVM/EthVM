@@ -142,7 +142,6 @@ export default class TxDetails extends Vue {
                 }
             ]
         } else {
-            console.error('tx', this.transaction)
             // const receipt = transaction.receipt!
             details = [
                 {
