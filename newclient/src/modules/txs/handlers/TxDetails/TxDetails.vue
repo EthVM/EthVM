@@ -13,8 +13,7 @@
 
 <script lang="ts">
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import { eth } from '@app/core/helper'
-import { Detail, Crumb } from '@app/core/components/props'
+import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { getTransactionByHash } from './txDetails.graphql'
 import { TxDetails as TxDetailsType } from './TxDetails.type'

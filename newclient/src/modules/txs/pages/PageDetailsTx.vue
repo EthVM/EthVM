@@ -13,7 +13,7 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import { eth } from '@app/core/helper'
-import { Detail, Crumb } from '@app/core/components/props'
+import { Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import TxDetails from '@app/modules/txs/handlers/TxDetails/TxDetails.vue'
 
