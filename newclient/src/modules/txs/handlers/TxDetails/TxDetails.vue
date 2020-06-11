@@ -23,25 +23,20 @@ import { TxDetails as TxDetailsType } from './TxDetails.type'
     components: {
         AppDetailsList
     },
-    data() {
-        return {
-            syncing: undefined
-        }
-    },
     apollo: {
         transaction: {
             query() {
                 return getTransactionByHash
             },
             variables() {
-                return { hash: this.txHash }
+                return { hash: this.txRef }
             },
             fetchPolicy: 'cache-and-network',
             update: data => data.getTransactionByHash
         }
     }
 })
-export default class PageDetailsTxs extends Vue {
+export default class TxDetails extends Vue {
     /*
   ===================================================================================
     Props
@@ -57,39 +52,13 @@ export default class PageDetailsTxs extends Vue {
   */
 
     error = ''
-    syncing?: boolean
-    transactionDetail?: TransactionDetailExt
-
-    // TODO remove these?
-    listType = 'tx'
-
-    /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-    created() {
-        // Check that current tx ref is valid one
-
-        if (!this.txHash) {
-            this.error = this.$i18n.t('message.invalid.tx').toString()
-            return
-        }
-
-        window.scrollTo(0, 0)
-    }
+    transaction?: TxDetailsType
 
     /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
-
-    get txHash(): string | null {
-        const { txRef } = this
-        return eth.isValidHash(txRef) ? txRef : null
-    }
 
     /**
      * Create properly-formatted title from tokenDetails
@@ -111,18 +80,19 @@ export default class PageDetailsTxs extends Vue {
      *
      * @return {Detail}
      */
-    toDetail(transaction: TransactionDetailExt): Detail {
-        const { receipt } = transaction
+    toDetail(transaction: TxDetailsType): Detail {
+        // TODO need tx receipt
+        // const { receipt } = transaction
 
-        if (receipt && receipt.contractAddress) {
-            return {
-                title: `${this.$i18n.t('tx.to')} ${this.$i18n.tc('contract.name', 1).toString()}`,
-                detail: receipt.contractAddress,
-                copy: true,
-                link: `/address/${receipt.contractAddress}`,
-                mono: true
-            }
-        }
+        // if (receipt && receipt.contractAddress) {
+        //     return {
+        //         title: `${this.$i18n.t('tx.to')} ${this.$i18n.tc('contract.name', 1).toString()}`,
+        //         detail: receipt.contractAddress,
+        //         copy: true,
+        //         link: `/address/${receipt.contractAddress}`,
+        //         mono: true
+        //     }
+        // }
 
         return {
             title: this.$i18n.t('tx.to').toString(),
@@ -173,67 +143,67 @@ export default class PageDetailsTxs extends Vue {
                 }
             ]
         } else {
-            const transaction = this.transactionDetail!
-            const receipt = transaction.receipt!
-
+            console.error('tx', this.transaction)
+            // const receipt = transaction.receipt!
             details = [
                 {
                     title: this.$i18n.t('block.number'),
-                    detail: transaction.blockNumberFormatted,
-                    link: `/block/number/${transaction.blockNumber}`
+                    detail: this.transaction.blockNumber,
+                    link: `/block/number/${this.transaction.blockNumber}`
                 },
                 {
                     title: this.$i18n.t('common.hash'),
-                    detail: transaction.hash,
+                    detail: this.transaction.hash,
                     copy: true,
                     mono: true
                 },
                 {
                     title: this.$i18n.t('common.timestmp'),
-                    detail: this.$i18n.d(transaction.timestampMs, 'long', this.$i18n.locale.replace('_', '-'))
+                    detail: this.$i18n.d(this.transaction.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
                 },
                 {
                     title: this.$i18n.t('tx.from'),
-                    detail: transaction.from,
+                    detail: this.transaction.from,
                     copy: true,
-                    link: `/address/${transaction.from}`,
+                    link: `/address/${this.transaction.from}`,
                     mono: true
                 },
                 {
                     title: this.$i18n.t('common.amount'),
-                    detail: `${transaction.valueFormatted.value} ${this.$i18n.t(`common.${transaction.valueFormatted.unit}`)}`,
-                    tooltip: transaction.valueFormatted.tooltipText ? `${transaction.valueFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
+                    detail: this.transaction.value
+                    // tooltip: this.transaction.valueFormatted.tooltipText ? `${this.transaction.valueFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
-                this.toDetail(transaction),
-                {
-                    title: this.$i18n.tc('tx.fee', 2),
-                    detail: `${transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`,
-                    tooltip: transaction.feeFormatted.tooltipText ? `${transaction.feeFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
-                },
+                this.toDetail(this.transaction),
+                // TODO need tx fee or do we calculate it ourselves ? 
+                // {
+                //     title: this.$i18n.tc('tx.fee', 2),
+                //     detail: `${this.transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`,
+                //     // tooltip: this.transaction.feeFormatted.tooltipText ? `${this.transaction.feeFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
+                // },
                 {
                     title: this.$i18n.t('gas.limit'),
-                    detail: transaction.gasFormatted.value,
-                    tooltip: transaction.gasFormatted.tooltipText ? `${transaction.gasFormatted.tooltipText}` : undefined
+                    detail: this.transaction.gas
+                    // tooltip: this.transaction.gasFormatted.tooltipText ? `${this.transaction.gasFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.used'),
-                    detail: receipt ? receipt.gasUsedFormatted.value : '0', // genesis block txs can have no receipt
-                    tooltip: receipt && receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
+                    detail: this.transaction.gasUsed // TODO genesis block txs can have no receipt
+                    // tooltip: receipt && receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.price'),
-                    detail: `${transaction.gasPriceFormatted.value} ${this.$i18n.t(`common.${transaction.gasPriceFormatted.unit}`)}`,
-                    tooltip: transaction.gasPriceFormatted.tooltipText ? `${transaction.gasPriceFormatted.tooltipText}` : undefined
+                    detail: this.transaction.gasPrice
+                    // tooltip: this.transaction.gasPriceFormatted.tooltipText ? `${this.transaction.gasPriceFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('common.nonce'),
-                    detail: transaction.nonceFormatted.value,
-                    tooltip: transaction.nonceFormatted.tooltipText ? `${transaction.nonceFormatted.tooltipText}` : undefined
+                    detail: this.transaction.nonce
+                    // tooltip: this.transaction.nonce.tooltipText ? `${this.transaction.nonce.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('tx.input'),
-                    detail: '',
-                    txInput: this.inputFormatted
+                    detail: this.transaction.input
+                    // txInput: this.inputFormatted
                 }
             ]
         }
@@ -242,52 +212,34 @@ export default class PageDetailsTxs extends Vue {
     }
 
     /**
-     * Returns breadcrumbs entry for this particular view.
-     * Required for AppBreadCrumbs
-     *
-     * @return {Array} - Breadcrumb entry. See description.
-     */
-    get crumbs(): Crumb[] {
-        return [
-            {
-                text: this.$t('tx.mined'),
-                link: '/txs'
-            },
-            {
-                text: this.$tc('tx.hash', 1),
-                hash: this.txRef
-            }
-        ]
-    }
-
-    /**
      * Determines whether or not the tx object has been loaded/populated.
      *
      * @return {Boolean}
      */
     get isLoading(): boolean | undefined {
-        return this.$apollo.loading || this.syncing
+        return this.$apollo.queries.transaction.loading
     }
 
-    get inputFormatted(): string[] {
-        if (!this.transactionDetail) {
-            return ['0x']
-        }
+    // TODO Figure out if we stil need this
+    // get inputFormatted(): string[] {
+    //     if (!this.transaction) {
+    //         return ['0x']
+    //     }
 
-        const methodId = this.transactionDetail.inputMethodId
-        if (!methodId) {
-            return ['0x']
-        }
+    //     const methodId = this.transaction.input
+    //     if (!methodId) {
+    //         return ['0x']
+    //     }
 
-        const methodFormatted = `${this.$i18n.t('tx.method')}: ${methodId}`
+    //     const methodFormatted = `${this.$i18n.t('tx.method')}: ${methodId}`
 
-        const inputFunction = this.transactionDetail.inputFunction
+    //     const inputFunction = this.transaction.inputFunction
 
-        if (inputFunction) {
-            return [`${this.$i18n.t('tx.func')}: ${inputFunction}`, methodFormatted]
-        }
+    //     if (inputFunction) {
+    //         return [`${this.$i18n.t('tx.func')}: ${inputFunction}`, methodFormatted]
+    //     }
 
-        return [methodFormatted]
-    }
+    //     return [methodFormatted]
+    // }
 }
 </script>
