@@ -36,7 +36,23 @@
                 -->
                 <v-tab-item slot="tabs-item" value="tab-1">
                     <keep-alive>
-                        <address-transfers v-if="activeTab === 'tab-1'" :address="addressRef" :max-items="max" transfers-type="ERC20"></address-transfers>
+                        <div>
+                            <v-layout row wrap align-center justify-start pr-3 pl-3 pt-1>
+                                <v-btn :class="[toggleERC20 === 0 ? 'active-button' : 'button']" flat small @click="toggleERC20 = 0">
+                                    Tokens
+                                </v-btn>
+                                <v-divider vertical></v-divider>
+                                <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button']" flat small @click="toggleERC20 = 1">
+                                    Transfers
+                                </v-btn>
+                            </v-layout>
+                            <v-slide-x-reverse-transition>
+                                <address-transfers v-show="toggleERC20 === 1" :address="addressRef" :max-items="max" transfers-type="ERC20" />
+                            </v-slide-x-reverse-transition>
+                            <v-slide-x-reverse-transition>
+                                <address-tokens v-show="toggleERC20 === 0" :address="addressRef" :max-items="max" token-type="ERC20" />
+                            </v-slide-x-reverse-transition>
+                        </div>
                     </keep-alive>
                 </v-tab-item>
                 <!--
@@ -72,6 +88,7 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
 import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
 import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
+import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
 const MAX_ITEMS = 10
 
 @Component({
@@ -81,7 +98,8 @@ const MAX_ITEMS = 10
         AppError,
         AddressOverview,
         AppTabs,
-        AddressTransfers
+        AddressTransfers,
+        AddressTokens
     }
 })
 export default class PageDetailsAddress extends Vue {
@@ -103,6 +121,7 @@ export default class PageDetailsAddress extends Vue {
     isContract = false
     error = ''
     activeTab = 'tab-0'
+    toggleERC20 = 0
 
     /*
     ===================================================================================
@@ -172,6 +191,21 @@ export default class PageDetailsAddress extends Vue {
         return tabs
     }
 
+    get tokenTabs(): Tab[] {
+        return [
+            {
+                id: 0,
+                title: 'Tokens',
+                isActive: true
+            },
+            {
+                id: 1,
+                title: 'Transfers',
+                isActive: false
+            }
+        ]
+    }
+
     /*
     ===================================================================================
       Methods
@@ -201,3 +235,21 @@ export default class PageDetailsAddress extends Vue {
     }
 }
 </script>
+
+<style scoped lang="css">
+.active-button {
+    color: #3d55a5;
+    margin: 0px 10px;
+    padding: 4px;
+    min-width: 30px;
+}
+.button {
+    min-width: 30px;
+    color: #8391a8;
+    margin: 0px 10px;
+    padding: 4px;
+}
+.divider {
+    height: 24px;
+}
+</style>
