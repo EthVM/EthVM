@@ -24,9 +24,7 @@ import { UncleDetails as UncleDetailsType } from './UncleDetails.type'
     },
     apollo: {
         uncle: {
-            query() {
-                return getUncleByHash
-            },
+            query: getUncleByHash,
             variables() {
                 return { hash: this.uncleRef }
             },
