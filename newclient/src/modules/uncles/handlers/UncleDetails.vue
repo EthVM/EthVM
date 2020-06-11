@@ -28,13 +28,7 @@ import { UncleDetails as UncleDetailsType } from './UncleDetails.type'
             variables() {
                 return { hash: this.uncleRef }
             },
-            update: data => data.getUncleByHash,
-            error({ graphQLErrors, networkError }) {
-                // TODO refine
-                if (networkError) {
-                    this.error = this.$i18n.t('message.invalid.uncle')
-                }
-            }
+            update: data => data.getUncleByHash
         }
     }
 })
