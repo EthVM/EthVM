@@ -33,7 +33,7 @@ import { UncleDetailExt } from '@app/core/api/apollo/extensions/uncle-detail.ext
           return null
         }
         return uncleByHash
-      },      
+      },
       variables() {
         return { hash: this.uncleRef }
       },
