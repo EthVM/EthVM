@@ -1,6 +1,11 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <!--
+    =====================================================================================
+      UNCLE DETAILS LIST
+    =====================================================================================
+    -->
         <uncle-details v-if="isValid" :uncle-ref="uncleRef" />
     </v-container>
 </template>
