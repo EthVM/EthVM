@@ -34,6 +34,9 @@ import { UncleDetailExt } from '@app/core/api/apollo/extensions/uncle-detail.ext
         }
         return uncleByHash
       },
+
+      fetchPolicy: 'catch-and-network',
+      
       variables() {
         return { hash: this.uncleRef }
       },
