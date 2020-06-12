@@ -50,7 +50,7 @@
                                 <address-transfers v-show="toggleERC20 === 1" :address="addressRef" :max-items="max" transfers-type="ERC20" />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
-                                <address-tokens v-show="toggleERC20 === 0" :address="addressRef" :max-items="max" token-type="ERC20" />
+                                <address-tokens v-if="toggleERC20 === 0" :address="addressRef" :max-items="max" token-type="ERC20" />
                             </v-slide-x-reverse-transition>
                         </div>
                     </keep-alive>
@@ -119,6 +119,7 @@ export default class PageDetailsAddress extends Vue {
     isMiner = false
     isContractCreator = false
     isContract = false
+    totalERC20 = 0
     error = ''
     activeTab = 'tab-0'
     toggleERC20 = 0
@@ -219,6 +220,9 @@ export default class PageDetailsAddress extends Vue {
     }
     setContract(value: boolean): void {
         this.isContract = value
+    }
+    setTotalTokens(value: number): void {
+        this.totalERC20 = value
     }
     /*
     ===================================================================================

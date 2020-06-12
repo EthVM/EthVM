@@ -21,3 +21,8 @@ export interface Tx {
     value: FormattedNumber
     status: boolean
 }
+
+export interface PriceInfo {
+    price: string | null
+    change: number | null
+}

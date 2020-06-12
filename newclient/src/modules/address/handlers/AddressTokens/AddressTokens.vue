@@ -6,39 +6,38 @@
                 <notice-new-block @reload="setPage(0, true)" />
             </template> -->
             <template v-slot:pagination v-if="showPagination && !initialLoad">
-                <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
+                <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
             </template>
         </app-table-title>
-        <!-- <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
+        <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="tokens" :is-scroll-view="false">
             <template #header>
-                <table-address-transfers-header :is-erc20="isERC20" />
+                <table-address-tokens-header :is-erc20="isERC20" :is-transfers="false" />
             </template>
             <template #rows>
-                <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
-                    <table-address-transfers-row :transfer="tx" :is-erc20="isERC20" :address="address" />
+                <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
+                    <table-address-tokens-row :token="token" :is-erc20="isERC20" :address="address" :token-price-info="getUSDInfo(token.tokenInfo.contract)" />
                 </v-card>
             </template>
-        </table-txs> -->
+        </table-txs>
         <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
-            <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
+            <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
     </v-card>
 </template>
 
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 // import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
-import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
-import TableAddressTransfersHeader from '@app/modules/address/components/TableAddressTransfersHeader.vue'
-import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
+import TableAddressTokensRow from '@app/modules/address/components/TableAddressTokensRow.vue'
+import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getOwnersERC20Tokens, getOwnersERC721UniqueTokens, getOwnersERC721Balances } from './tokens.graphql'
 import { getERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './getERC20Tokens.type'
 import { getOwnersERC721Totals_getOwnersERC721Balances as ERC721BalanceType } from './getOwnersERC721Totals.type'
+import { PriceInfo } from '@app/modules/address/components/props'
 
 /*
   DEV NOTES:
@@ -49,12 +48,10 @@ import { getOwnersERC721Totals_getOwnersERC721Balances as ERC721BalanceType } fr
 @Component({
     components: {
         AppTableTitle,
-        AppPaginateHasMore,
+        AppPaginate,
         TableTxs,
-        TableAddressTxsRow,
-        TableAddressTxsHeader,
-        TableAddressTransfersHeader,
-        TableAddressTransfersRow
+        TableAddressTokensHeader,
+        TableAddressTokensRow
     },
     apollo: {
         getTokens: {
@@ -72,15 +69,21 @@ import { getOwnersERC721Totals_getOwnersERC721Balances as ERC721BalanceType } fr
                 return this.isERC20 ? data.getOwnersERC20Tokens.owners : data.getOwnersERC721Balances
             },
             result({ data }) {
-                console.log(data)
                 if (this.hasTokens) {
                     this.error = '' // clear the error
-                    if (this.isERC20 && this.getTokens.nextKey != null) {
-                        this.hasNext = this.getTokens.nextKey
-                        this.fetchMore()
-                    } else {
-                        this.initialLoad = false
-                        this.totalPages = Math.ceil(new BN(this.getTokens.length).div(this.maxItems).toNumber())
+                    if (this.isERC20) {
+                        this.hasNext = data.getOwnersERC20Tokens.nextKey || null
+                        if (this.hasNext != null) {
+                            this.fetchMore()
+                        } else {
+                            console.log(data)
+                            this.initialLoad = false
+                            this.totalTokens = this.getTokens.length
+                            if (this.totalTokens > this.maxItems) {
+                                this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
+                                this.showPagination = true
+                            }
+                        }
                     }
                 } else {
                     console.log('error failed no data: ', data)
@@ -120,7 +123,9 @@ export default class AddressTokens extends Vue {
     isEnd = false
     pageType = 'address'
     getTokens!: ERC20TokensType[] | ERC721BalanceType[]
-    hasNext!: string
+    hasNext!: string | null
+    totalERC20 = 0
+    totalERC721 = 0
 
     /*
     ===================================================================================
@@ -128,10 +133,9 @@ export default class AddressTokens extends Vue {
     ===================================================================================
     */
 
-    get tokens(): any[] {
+    get tokens(): ERC20TokensType[] | ERC721BalanceType[] {
         const start = this.index * this.maxItems
-        console.log(this.getTokens)
-        if (!this.loading && this.hasTokens) {
+        if (!this.initialLoad && this.hasTokens) {
             const end = start + this.maxItems > this.getTokens.length ? this.getTokens.length : start + this.maxItems
             return this.getTokens.slice(start, end)
         }
@@ -139,7 +143,7 @@ export default class AddressTokens extends Vue {
     }
 
     get message(): string {
-        if (!this.loading && this.hasTokens && this.getTokens.length === 0) {
+        if (!this.initialLoad && this.hasTokens && this.getTokens.length === 0) {
             return `${this.$t('message.transfer.no-all')}`
         }
         if (this.error != '') {
@@ -150,10 +154,6 @@ export default class AddressTokens extends Vue {
 
     get getTitle(): string {
         return this.isERC20 ? `${this.$t('token.erc20')}` : `${this.$t('token.erc721')}`
-    }
-
-    get loading(): boolean {
-        return this.initialLoad
     }
 
     get hasTokens(): boolean {
@@ -186,23 +186,29 @@ export default class AddressTokens extends Vue {
     }
 
     fetchMore(): void {
-        if (this.isERC20) {
-            console.log('Fetching again')
-            this.$apollo.queries.getTokens.fetchMore({
-                variables: {
-                    hash: this.address,
-                    _limit: this.maxItems,
-                    _nextKey: this.hasNext
-                },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    if (fetchMoreResult.getOwnersERC20Tokens.nextKey) {
-                        this.hasNext = fetchMoreResult.getOwnersERC20Tokens.nextKey
+        this.$apollo.queries.getTokens.fetchMore({
+            variables: {
+                hash: this.address,
+                _nextKey: this.hasNext
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                const newT = fetchMoreResult.getOwnersERC20Tokens.owners
+                const prevT = previousResult.getOwnersERC20Tokens.owners
+                return {
+                    getOwnersERC20Tokens: {
+                        __typename: previousResult.getOwnersERC20Tokens.__typename,
+                        owners: [...prevT, ...newT],
+                        nextKey: fetchMoreResult.getOwnersERC20Tokens.nextKey
                     }
-                    const newT = fetchMoreResult.getOwnersERC20Tokens.owners
-                    const prevT = previousResult.getOwnersERC20Tokens.owners
-                    return [...prevT, ...newT]
                 }
-            })
+            }
+        })
+    }
+
+    getUSDInfo(contract: string): PriceInfo {
+        return {
+            price: '0.5',
+            change: -0.23
         }
     }
 }
