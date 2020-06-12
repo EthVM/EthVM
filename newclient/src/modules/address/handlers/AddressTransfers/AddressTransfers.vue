@@ -36,7 +36,6 @@ import TableAddressTxsHeader from '@app/modules/address/components/TableAddressT
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
-
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getEthTransfers, getERC20Transfers, getERC721Transfers } from './transfers.graphql'

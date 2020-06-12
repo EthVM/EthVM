@@ -76,9 +76,9 @@ import { PriceInfo } from '@app/modules/address/components/props'
                         if (this.hasNext != null) {
                             this.fetchMore()
                         } else {
-                            console.log(data)
                             this.initialLoad = false
                             this.totalTokens = this.getTokens.length
+                            this.$emit('totalERC20', this.totalTokens)
                             if (this.totalTokens > this.maxItems) {
                                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                                 this.showPagination = true

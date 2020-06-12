@@ -10,7 +10,13 @@
         <div v-else>
             <v-layout row wrap justify-start class="mb-4">
                 <v-flex xs12>
-                    <address-overview :address="addressRef" :is-miner="isMiner" :is-contractcreator="isContractCreator" :is-contract="isContract" />
+                    <address-overview
+                        :address="addressRef"
+                        :is-miner="isMiner"
+                        :is-contractcreator="isContractCreator"
+                        :is-contract="isContract"
+                        :total-erc20-owned="totalERC20"
+                    />
                 </v-flex>
             </v-layout>
             <!--
@@ -38,12 +44,12 @@
                     <keep-alive>
                         <div>
                             <v-layout row wrap align-center justify-start pt-2>
-                                <v-btn :class="[toggleERC20 === 0 ? 'active-button' : 'button', 'pl-3']" flat small @click="toggleERC20 = 0">
-                                    Tokens
+                                <v-btn :class="[toggleERC20 === 0 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleERC20 = 0">
+                                    {{ $tc('token.name', 2) }}
                                 </v-btn>
                                 <v-divider vertical />
-                                <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button']" flat small @click="toggleERC20 = 1">
-                                    Transfers
+                                <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button text-capitalize']" flat small @click="toggleERC20 = 1">
+                                    {{ $tc('transfer.name', 2) }}
                                 </v-btn>
                                 <v-flex xs12 pa-1>
                                     <v-divider class="lineGrey mt-1 mb-1" />
@@ -53,7 +59,13 @@
                                 <address-transfers v-show="toggleERC20 === 1" :address="addressRef" :max-items="max" transfers-type="ERC20" />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
-                                <address-tokens v-if="toggleERC20 === 0" :address="addressRef" :max-items="max" token-type="ERC20" />
+                                <address-tokens
+                                    v-show="toggleERC20 === 0"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    token-type="ERC20"
+                                    @totalERC20="setTotalTokens"
+                                />
                             </v-slide-x-reverse-transition>
                         </div>
                     </keep-alive>
@@ -92,6 +104,7 @@ import { eth } from '@app/core/helper'
 import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
 import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
 import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
+import { Address } from '@app/modules/address/components/props'
 const MAX_ITEMS = 10
 
 @Component({
@@ -132,6 +145,7 @@ export default class PageDetailsAddress extends Vue {
       Computed Values
     ===================================================================================
     */
+
     get isValid(): boolean {
         return eth.isValidAddress(this.addressRef)
     }
@@ -193,21 +207,6 @@ export default class PageDetailsAddress extends Vue {
         }
 
         return tabs
-    }
-
-    get tokenTabs(): Tab[] {
-        return [
-            {
-                id: 0,
-                title: 'Tokens',
-                isActive: true
-            },
-            {
-                id: 1,
-                title: 'Transfers',
-                isActive: false
-            }
-        ]
     }
 
     /*
