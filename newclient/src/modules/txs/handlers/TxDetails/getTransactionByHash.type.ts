@@ -17,6 +17,7 @@ export interface getTransactionByHash_getTransactionByHash {
   timestamp: number | null;
   hash: string;
   input: string;
+  status: string | null;
   nonce: number;
   to: string | null;
   transactionIndex: number | null;

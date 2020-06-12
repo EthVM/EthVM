@@ -155,6 +155,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                 }
             ]
         } else {
+            console.log('block', this.uncleRewards)
             details = [
                 {
                     title: this.$i18n.t('common.height'),

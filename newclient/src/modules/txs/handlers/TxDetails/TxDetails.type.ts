@@ -17,6 +17,7 @@ export interface TxDetails {
   timestamp: number | null;
   hash: string;
   input: string;
+  status: string | null;
   nonce: number;
   to: string | null;
   transactionIndex: number | null;

@@ -14,9 +14,12 @@
 <script lang="ts">
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Detail } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { getTransactionByHash } from './txDetails.graphql'
 import { TxDetails as TxDetailsType } from './TxDetails.type'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import BN from 'bignumber.js'
 
 @Component({
     components: {
@@ -35,7 +38,7 @@ import { TxDetails as TxDetailsType } from './TxDetails.type'
         }
     }
 })
-export default class TxDetails extends Vue {
+export default class TxDetails extends Mixins(NumberFormatMixin) {
     /*
   ===================================================================================
     Props
@@ -143,10 +146,11 @@ export default class TxDetails extends Vue {
             ]
         } else {
             // const receipt = transaction.receipt!
+            console.log('adf', this.txFee)
             details = [
                 {
                     title: this.$i18n.t('block.number'),
-                    detail: this.transaction.blockNumber,
+                    detail: this.formatNumber(this.transaction.blockNumber),
                     link: `/block/number/${this.transaction.blockNumber}`
                 },
                 {
@@ -168,30 +172,34 @@ export default class TxDetails extends Vue {
                 },
                 {
                     title: this.$i18n.t('common.amount'),
-                    detail: this.transaction.value
-                    // tooltip: this.transaction.valueFormatted.tooltipText ? `${this.transaction.valueFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
+                    detail: `${this.txAmount.value} ${this.txAmount.unit}`,
+                    tooltip: this.txAmount.tooltipText ? `${this.txAmount.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
                 this.toDetail(this.transaction),
+                {
+                    title: this.$i18n.t('tx.status'),
+                    detail: `${this.$i18n.tc('tx.' + this.txStatus, 1)}`
+                },
                 // TODO need tx fee or do we calculate it ourselves ? 
-                // {
-                //     title: this.$i18n.tc('tx.fee', 2),
-                //     detail: `${this.transaction.feeFormatted.value} ${this.$i18n.t('common.eth')}`,
-                //     // tooltip: this.transaction.feeFormatted.tooltipText ? `${this.transaction.feeFormatted.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
-                // },
+                {
+                    title: this.$i18n.tc('tx.fee', 2),
+                    detail: `${this.txFee.value} ${this.$i18n.t('common.eth')}`,
+                    tooltip: this.txFee.tooltipText ? `${this.txFee.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
+                },
                 {
                     title: this.$i18n.t('gas.limit'),
-                    detail: this.transaction.gas
+                    detail: this.formatNumber(this.transaction.gas)
                     // tooltip: this.transaction.gasFormatted.tooltipText ? `${this.transaction.gasFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.used'),
-                    detail: this.transaction.gasUsed // TODO genesis block txs can have no receipt
+                    detail: this.formatNumber(this.transaction.gasUsed) // TODO genesis block txs can have no receipt
                     // tooltip: receipt && receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.price'),
-                    detail: this.transaction.gasPrice
-                    // tooltip: this.transaction.gasPriceFormatted.tooltipText ? `${this.transaction.gasPriceFormatted.tooltipText}` : undefined
+                    detail: `${this.gasPrice.value} ${this.gasPrice.unit}`,
+                    tooltip: this.gasPrice.tooltipText ? `${this.gasPrice.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
                 {
                     title: this.$i18n.t('common.nonce'),
@@ -216,6 +224,53 @@ export default class TxDetails extends Vue {
      */
     get isLoading(): boolean | undefined {
         return this.$apollo.queries.transaction.loading
+    }
+    /**
+     * Formats the transaction value to ETH.
+     *
+     * @return {FormattedNumber}
+     */
+    get txAmount(): FormattedNumber {
+        return this.formatVariableUnitEthValue(new BN(this.transaction.value))
+    }
+    /**
+     * Formats the gas price value to gwei.
+     *
+     * @return {FormattedNumber}
+     */
+    get gasPrice(): FormattedNumber {
+        return this.formatVariableUnitEthValue(new BN(this.transaction.gasPrice))
+    }
+    /**
+     * Gets the tx status.
+     *
+     * @return {String}
+     */
+    get txStatus(): string {
+        const statuses = ['0x0', '0x1']
+        if (this.transaction.status === statuses[1]) {
+            return 'success'
+        }
+
+        if (this.transaction.status === statuses[0]) {
+            return 'failed'
+        }
+
+        return 'pending'
+    }
+    /**
+     * Calculate the transaction fee.
+     *
+     * @return {String}
+     */
+    get txFee(): string | null {
+        if (this.transaction && this.transaction.gasUsed) {
+            const price = new BN(this.transaction.gasPrice)
+            const used = new BN(this.transaction.gasUsed)
+            const fee = price.times(used)
+            return this.formatVariableUnitEthValue(fee)
+        }
+        return '0'
     }
 
     // TODO Figure out if we stil need this

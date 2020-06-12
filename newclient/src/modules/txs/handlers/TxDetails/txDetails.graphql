@@ -7,6 +7,7 @@ fragment TxDetails on Tx {
   timestamp
   hash
   input
+  status
   nonce
   to
   transactionIndex
