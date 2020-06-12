@@ -248,14 +248,12 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      */
     get txStatus(): string {
         const statuses = ['0x0', '0x1']
-        if (this.transaction.status === statuses[1]) {
-            return 'success'
-        }
-
         if (this.transaction.status === statuses[0]) {
             return 'failed'
         }
-
+        if (this.transaction.status === statuses[1]) {
+            return 'success'
+        }
         return 'pending'
     }
     /**
