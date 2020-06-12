@@ -3,19 +3,130 @@
         <router-link :to="tokenLink">
             <v-layout d-block>
                 <!--
-        =====================================================================================
-          Mobile (XS)
-        =====================================================================================
-        -->
-                <!-- <v-flex xs12 hidden-sm-and-up>
-                </v-flex> -->
+                =====================================================================================
+                  Mobile (XS - SM)
+                =====================================================================================
+                -->
+                <v-flex xs12 hidden-md-and-up>
+                    <div class="table-row-mobile">
+                        <v-layout grid-list-xs row align-center justify-center class="pt-3 pb-3 pr-2 pl-2">
+                            <!--
+                            =====================================================================================
+                              TOKEN IMAGE
+
+                              Responsive Tally:
+                              XS: 2/12 (2)
+                            =====================================================================================
+                            -->
+                            <v-flex xs2 pa-1>
+                                <v-layout row align-center justify-center pa-2>
+                                    <div class="token-image-mobile">
+                                        <v-img :src="image" contain />
+                                    </div>
+                                </v-layout>
+                            </v-flex>
+                            <!--
+                            =====================================================================================
+                              REMAINING TOKEN INFO
+
+                              Responsive Tally:
+                              XS: 12/12 (10)
+                            =====================================================================================
+                            -->
+                            <v-flex xs10>
+                                <v-layout row wrap align-center justify-start>
+                                    <!--
+                                    =====================================================================================
+                                      TOKEN NAME
+
+                                      Responsive Tally:
+                                      XS: 9/12 (9)
+                                    =====================================================================================
+                                    -->
+                                    <v-flex xs9 pa-1>
+                                        <div v-if="token.tokenInfo.name || token.tokenInfo.symbol" class="black--text subtitle-2 font-weight-medium">
+                                            <p v-if="token.tokenInfo.name">{{ token.tokenInfo.name }}</p>
+                                            <p v-else class="text-uppercase">{{ token.tokenInfo.symbol }}</p>
+                                        </div>
+                                    </v-flex>
+                                    <!--
+                                    =====================================================================================
+                                      TOKEN PRICE CHANGE
+
+                                      Responsive Tally:
+                                      XS: 12/12 (3)
+                                    =====================================================================================
+                                    -->
+                                    <v-flex v-if="isErc20" xs3 pb-1 pt-1 pr-2>
+                                        <v-layout v-if="priceChangeFormatted" grid-list-xs row justify-end pr-3>
+                                            <p :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
+                                            <v-img
+                                                v-if="tokenPriceInfo.change > 0"
+                                                :src="require('@/assets/up.png')"
+                                                height="18px"
+                                                max-width="18px"
+                                                contain
+                                            ></v-img>
+                                            <v-img
+                                                v-if="tokenPriceInfo.change < 0"
+                                                :src="require('@/assets/down.png')"
+                                                height="18px"
+                                                max-width="18px"
+                                                contain
+                                            ></v-img>
+                                            <app-tooltip v-if="priceChangeFormatted.tooltipText" :text="priceChangeFormatted.tooltipText" />
+                                        </v-layout>
+                                    </v-flex>
+                                    <v-spacer v-else />
+                                    <!--
+                                    =====================================================================================
+                                      TOKEN BALANCE/USD VALUE
+
+                                      Responsive Tally:
+                                      XS: 12/12 (12)
+                                    =====================================================================================
+                                    -->
+                                    <v-flex xs12 pa-1>
+                                        <p class="info--text mb-2">
+                                            {{ $t('common.amount') }}:
+                                            <span class="black--text"> {{ balance.value }}</span>
+                                            <span v-if="isErc20 && token.tokenInfo.symbol" class="info--text caption pl-1 pr-1">{{
+                                                token.tokenInfo.symbol
+                                            }}</span>
+                                            <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" pl-1 />
+                                        </p>
+                                        <p v-if="isErc20 && tokenPriceInfo.price" class="info--text mb-2">
+                                            {{ $t('usd.value') }}:
+                                            <span class="black--text">
+                                                {{ usdValueFormatted.value }}
+                                                <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
+                                            </span>
+                                        </p>
+                                        <p class="caption info--text">
+                                            (@ {{ currPrice.value }}<app-tooltip v-if="currPrice.tooltipText" :text="currPrice.tooltipText" />
+                                            {{ $t('token.per') }} {{ symbolString }})
+                                        </p>
+                                    </v-flex>
+                                </v-layout>
+                            </v-flex>
+                        </v-layout>
+                    </div>
+                </v-flex>
                 <!--
-        =====================================================================================
-          Desktop (SM-LG)
-        =====================================================================================
-        -->
-                <v-flex hidden-xs-only>
+                =====================================================================================
+                  Desktop (MD and UP)
+                =====================================================================================
+                -->
+                <v-flex hidden-sm-and-down>
                     <v-layout grid-list-xs row wrap align-center justify-start fill-height pt-2 pb-2>
+                        <!--
+                        =====================================================================================
+                          TOKEN NAME/IMAGE
+
+                          Responsive Tally:
+                          MD: 4/12 (4)
+                        =====================================================================================
+                        -->
                         <v-flex md4>
                             <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-1>
                                 <div class="token-image">
@@ -31,6 +142,14 @@
                                 </v-layout>
                             </v-layout>
                         </v-flex>
+                        <!--
+                        =====================================================================================
+                          TOKEN Balance / Token ID
+
+                          Responsive Tally:
+                          MD: 7/12 (3)
+                        =====================================================================================
+                        -->
                         <v-flex md3>
                             <p class="black--text">
                                 {{ balance.value }}
@@ -38,6 +157,14 @@
                                 <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
                             </p>
                         </v-flex>
+                        <!--
+                        =====================================================================================
+                          TOKEN USD VALUE
+
+                          Responsive Tally:
+                          MD: 10/12 (3)
+                        =====================================================================================
+                        -->
                         <v-flex v-if="isErc20" md3>
                             <v-layout v-if="tokenPriceInfo.price" column align-start fill-height pl-2>
                                 <p class="black--text">
@@ -50,6 +177,14 @@
                                 </p>
                             </v-layout>
                         </v-flex>
+                        <!--
+                        =====================================================================================
+                          TOKEN  Price Change
+
+                          Responsive Tally:
+                          MD: 12/12 (2)
+                        =====================================================================================
+                        -->
                         <v-flex v-if="isErc20" md2>
                             <v-layout v-if="priceChangeFormatted" grid-list-xs row align-center justify-start pl-2 pr-2>
                                 <p :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
@@ -58,6 +193,7 @@
                                 <app-tooltip v-if="priceChangeFormatted.tooltipText" :text="priceChangeFormatted.tooltipText" />
                             </v-layout>
                         </v-flex>
+                        <v-spacer v-else />
                     </v-layout>
                     <v-divider />
                 </v-flex>
@@ -125,7 +261,6 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get usdValueFormatted(): FormattedNumber | string {
-        console.log(this.tokenPriceInfo)
         if (this.isErc20 && this.tokenPriceInfo.price) {
             return this.formatUsdValue(new BN(this.tokenPriceInfo.price).multipliedBy(this.getValue()))
         }
