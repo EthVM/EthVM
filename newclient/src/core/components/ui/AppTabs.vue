@@ -1,6 +1,6 @@
 <template>
     <v-card color="white" flat>
-        <v-layout pa-2>
+        <v-layout pr-2 pl-2 pt-1>
             <!--
     =====================================================================================
       Mobile
@@ -28,10 +28,10 @@
       Desktop
     =====================================================================================
     -->
-            <v-flex hidden-xs-only>
+            <v-flex hidden-xs-only pa-0>
                 <v-tabs
                     v-model="activeTab"
-                    :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pl-3 pr-3 pt-2': $vuetify.breakpoint.mdAndUp }"
+                    :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pt-1': $vuetify.breakpoint.mdAndUp }"
                     color="white"
                     show-arrows
                     @change="$emit('changeTab', $event)"
@@ -40,7 +40,7 @@
                         v-for="item in tabs"
                         :key="item.id"
                         :href="`#tab-${item.id}`"
-                        class="info--text text-capitalize pb-2 tab-opacity"
+                        class="info--text text-capitalize pb-1 tab-opacity"
                         active-class="primary--text "
                         ripple
                         >{{ item.title }}</v-tab

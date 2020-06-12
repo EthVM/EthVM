@@ -37,14 +37,17 @@
                 <v-tab-item slot="tabs-item" value="tab-1">
                     <keep-alive>
                         <div>
-                            <v-layout row wrap align-center justify-start pr-3 pl-3 pt-1>
-                                <v-btn :class="[toggleERC20 === 0 ? 'active-button' : 'button']" flat small @click="toggleERC20 = 0">
+                            <v-layout row wrap align-center justify-start pt-2>
+                                <v-btn :class="[toggleERC20 === 0 ? 'active-button' : 'button', 'pl-3']" flat small @click="toggleERC20 = 0">
                                     Tokens
                                 </v-btn>
-                                <v-divider vertical></v-divider>
+                                <v-divider vertical />
                                 <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button']" flat small @click="toggleERC20 = 1">
                                     Transfers
                                 </v-btn>
+                                <v-flex xs12 pa-1>
+                                    <v-divider class="lineGrey mt-1 mb-1" />
+                                </v-flex>
                             </v-layout>
                             <v-slide-x-reverse-transition>
                                 <address-transfers v-show="toggleERC20 === 1" :address="addressRef" :max-items="max" transfers-type="ERC20" />
