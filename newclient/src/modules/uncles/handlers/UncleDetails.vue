@@ -14,9 +14,10 @@
 <script lang="ts">
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Detail } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { getUncleByHash } from './uncleDetails.graphql'
 import { UncleDetails as UncleDetailsType } from './UncleDetails.type'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 @Component({
     components: {
@@ -32,7 +33,7 @@ import { UncleDetails as UncleDetailsType } from './UncleDetails.type'
         }
     }
 })
-export default class UncleDetails extends Vue {
+export default class UncleDetails extends Mixins(NumberFormatMixin) {
     /*
   ===================================================================================
     Props
@@ -115,7 +116,7 @@ export default class UncleDetails extends Vue {
             details = [
                 {
                     title: this.$i18n.t('uncle.height'),
-                    detail: this.uncle.block.summary.number
+                    detail: this.formatNumber(this.uncle.parentBlockNumber)
                 },
                 {
                     title: this.$i18n.t('uncle.position'),
@@ -133,8 +134,9 @@ export default class UncleDetails extends Vue {
                     mono: true
                 },
                 {
-                    title: this.$i18n.t('block.p-hash'),
+                    title: this.$i18n.t('uncle.included'),
                     detail: this.uncle.parentHash,
+                    link: `/block/number/${this.uncle.parentBlockNumber}`,
                     mono: true
                 },
                 {
@@ -155,12 +157,12 @@ export default class UncleDetails extends Vue {
                 },
                 {
                     title: this.$i18n.t('gas.limit'),
-                    detail: this.uncle.block.gasLimit
+                    detail: this.formatNumber(this.uncle.block.gasLimit)
                     // tooltip: this.uncle.gasLimit.tooltipText ? `${this.uncle.gasLimitFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.used'),
-                    detail: this.uncle.block.gasUsed
+                    detail: this.formatNumber(this.uncle.block.gasUsed)
                     // tooltip: this.uncle.gasUsedFormatted.tooltipText ? `${this.uncle.gasUsedFormatted.tooltipText}` : undefined
                 }
             ]
