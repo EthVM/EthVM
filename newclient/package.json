@@ -43,6 +43,7 @@
         "graphql": "^14.6.0",
         "graphql-tag": "^2.10.3",
         "moment": "^2.25.3",
+        "node-fetch": "^2.6.0",
         "number-formatter": "^1.2.0",
         "rxjs": "^6.5.5",
         "store": "^2.0.12",
