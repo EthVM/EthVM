@@ -4,30 +4,30 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: BlockDetails
+// GraphQL query operation: getUncleByHash
 // ====================================================
 
-export interface BlockDetails_summary_rewards {
+export interface getUncleByHash_getUncleByHash_block_summary_rewards {
   __typename: "BlockRewards";
   txFees: string;
   total: string;
   uncles: string;
 }
 
-export interface BlockDetails_summary {
+export interface getUncleByHash_getUncleByHash_block_summary {
   __typename: "BlockSummary";
   number: number;
   miner: string;
   txCount: number;
   timestamp: number;
   uncles: (string | null)[];
-  rewards: BlockDetails_summary_rewards;
+  rewards: getUncleByHash_getUncleByHash_block_summary_rewards;
   txFail: number;
 }
 
-export interface BlockDetails {
+export interface getUncleByHash_getUncleByHash_block {
   __typename: "Block";
-  summary: BlockDetails_summary;
+  summary: getUncleByHash_getUncleByHash_block_summary;
   hash: string;
   parentHash: string;
   nonce: string;
@@ -43,4 +43,20 @@ export interface BlockDetails {
   gasLimit: number;
   gasUsed: number;
   transactions: (string | null)[];
+}
+
+export interface getUncleByHash_getUncleByHash {
+  __typename: "Uncle";
+  block: getUncleByHash_getUncleByHash_block;
+  parentHash: string;
+  parentBlockNumber: number;
+  unclePosition: number;
+}
+
+export interface getUncleByHash {
+  getUncleByHash: getUncleByHash_getUncleByHash;
+}
+
+export interface getUncleByHashVariables {
+  hash: string;
 }
