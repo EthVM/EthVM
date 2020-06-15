@@ -146,7 +146,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             ]
         } else {
             // const receipt = transaction.receipt!
-            console.log('adf', this.txFee)
             details = [
                 {
                     title: this.$i18n.t('block.number'),
