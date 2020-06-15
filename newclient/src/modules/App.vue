@@ -50,6 +50,7 @@ export default class App extends Vue {
         return !storePack.get('notFirstTimeVisit')
     }
     get connected(): boolean {
+        this.$CD.getEthereumTokens().then(console.log)
         // return !this.connectedStates.has(this.state)
         return true
     }
