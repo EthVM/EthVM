@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white" flat class="pt-3 pb-2">
+    <v-card color="white" flat class="pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
             <!-- Notice new update-->
             <!-- <template v-slot:update >
@@ -12,7 +12,7 @@
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
             <template #header>
                 <table-address-txs-header v-if="isETH" :address="address" />
-                <table-address-transfers-header v-else :is-erc20="isERC20" />
+                <table-address-tokens-header v-else :is-erc20="isERC20" :is-transfers="true" />
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
@@ -34,9 +34,8 @@ import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
-import TableAddressTransfersHeader from '@app/modules/address/components/TableAddressTransfersHeader.vue'
+import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
-
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getEthTransfers, getERC20Transfers, getERC721Transfers } from './transfers.graphql'
@@ -56,7 +55,7 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
         TableTxs,
         TableAddressTxsRow,
         TableAddressTxsHeader,
-        TableAddressTransfersHeader,
+        TableAddressTokensHeader,
         TableAddressTransfersRow
     },
     apollo: {

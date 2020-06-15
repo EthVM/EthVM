@@ -10,7 +10,13 @@
         <div v-else>
             <v-layout row wrap justify-start class="mb-4">
                 <v-flex xs12>
-                    <address-overview :address="addressRef" :is-miner="isMiner" :is-contractcreator="isContractCreator" :is-contract="isContract" />
+                    <address-overview
+                        :address="addressRef"
+                        :is-miner="isMiner"
+                        :is-contractcreator="isContractCreator"
+                        :is-contract="isContract"
+                        :total-erc20-owned="totalERC20"
+                    />
                 </v-flex>
             </v-layout>
             <!--
@@ -36,7 +42,32 @@
                 -->
                 <v-tab-item slot="tabs-item" value="tab-1">
                     <keep-alive>
-                        <address-transfers v-if="activeTab === 'tab-1'" :address="addressRef" :max-items="max" transfers-type="ERC20"></address-transfers>
+                        <div>
+                            <v-layout row wrap align-center justify-start pt-2>
+                                <v-btn :class="[toggleERC20 === 0 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleERC20 = 0">
+                                    {{ $tc('token.name', 2) }}
+                                </v-btn>
+                                <v-divider vertical />
+                                <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button text-capitalize']" flat small @click="toggleERC20 = 1">
+                                    {{ $tc('transfer.name', 2) }}
+                                </v-btn>
+                                <v-flex xs12 pa-1>
+                                    <v-divider class="lineGrey mt-1 mb-1" />
+                                </v-flex>
+                            </v-layout>
+                            <v-slide-x-reverse-transition>
+                                <address-transfers v-show="toggleERC20 === 1" :address="addressRef" :max-items="max" transfers-type="ERC20" />
+                            </v-slide-x-reverse-transition>
+                            <v-slide-x-reverse-transition>
+                                <address-tokens
+                                    v-show="toggleERC20 === 0"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    token-type="ERC20"
+                                    @totalERC20="setTotalTokens"
+                                />
+                            </v-slide-x-reverse-transition>
+                        </div>
                     </keep-alive>
                 </v-tab-item>
                 <!--
@@ -72,6 +103,8 @@ import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
 import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
 import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
+import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
+import { Address } from '@app/modules/address/components/props'
 const MAX_ITEMS = 10
 
 @Component({
@@ -81,7 +114,8 @@ const MAX_ITEMS = 10
         AppError,
         AddressOverview,
         AppTabs,
-        AddressTransfers
+        AddressTransfers,
+        AddressTokens
     }
 })
 export default class PageDetailsAddress extends Vue {
@@ -101,14 +135,17 @@ export default class PageDetailsAddress extends Vue {
     isMiner = false
     isContractCreator = false
     isContract = false
+    totalERC20 = 0
     error = ''
     activeTab = 'tab-0'
+    toggleERC20 = 0
 
     /*
     ===================================================================================
       Computed Values
     ===================================================================================
     */
+
     get isValid(): boolean {
         return eth.isValidAddress(this.addressRef)
     }
@@ -186,6 +223,9 @@ export default class PageDetailsAddress extends Vue {
     setContract(value: boolean): void {
         this.isContract = value
     }
+    setTotalTokens(value: number): void {
+        this.totalERC20 = value
+    }
     /*
     ===================================================================================
       LifeCycle
@@ -201,3 +241,21 @@ export default class PageDetailsAddress extends Vue {
     }
 }
 </script>
+
+<style scoped lang="css">
+.active-button {
+    color: #3d55a5;
+    margin: 0px 10px;
+    padding: 4px;
+    min-width: 30px;
+}
+.button {
+    min-width: 30px;
+    color: #8391a8;
+    margin: 0px 10px;
+    padding: 4px;
+}
+.divider {
+    height: 24px;
+}
+</style>

@@ -50,6 +50,7 @@ export default class AddressOverview extends Vue {
     @Prop(Boolean) isMiner!: boolean
     @Prop(Boolean) isContractcreator!: boolean
     @Prop(Boolean) isContract!: boolean
+    @Prop(Number) totalErc20Owned!: number
 
     /*
   ===================================================================================
@@ -71,7 +72,7 @@ export default class AddressOverview extends Vue {
             isMiner: this.isMiner,
             isContractCreator: this.isContractcreator,
             isContract: this.isContract,
-            totalERC20: 0
+            totalERC20: this.totalErc20Owned
         }
     }
 
