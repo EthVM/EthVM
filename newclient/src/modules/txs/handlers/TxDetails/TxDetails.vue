@@ -179,7 +179,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     title: this.$i18n.t('tx.status'),
                     detail: `${this.$i18n.tc('tx.' + this.txStatus, 1)}`
                 },
-                // TODO need tx fee or do we calculate it ourselves ? 
+                // TODO need tx fee or do we calculate it ourselves ?
                 {
                     title: this.$i18n.tc('tx.fee', 2),
                     detail: `${this.txFee.value} ${this.$i18n.t('common.eth')}`,

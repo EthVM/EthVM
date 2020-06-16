@@ -51,10 +51,10 @@ export default new Router({
             name: 'transactions'
         },
         {
-          path: '/tx/:txRef',
-          component: PageDetailsTxs,
-          name: 'transaction',
-          props: true
+            path: '/tx/:txRef',
+            component: PageDetailsTxs,
+            name: 'transaction',
+            props: true
         },
         // {
         //   path: '/pending-txs',
@@ -67,10 +67,10 @@ export default new Router({
         //   name: 'uncles'
         // },
         {
-          path: '/uncle/:uncleRef',
-          component: PageDetailsUncle,
-          name: 'uncle',
-          props: true
+            path: '/uncle/:uncleRef',
+            component: PageDetailsUncle,
+            name: 'uncle',
+            props: true
         },
         {
             path: '/address/:addressRef',

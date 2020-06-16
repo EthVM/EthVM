@@ -1,14 +1,9 @@
 import Vue from 'vue'
 import { BehaviorSubject } from 'rxjs'
-import { SubscriptionState } from '@app/core/plugins'
+import { ICoinData } from '@app/plugins/CoinData'
 
 declare module 'vue/types/vue' {
     interface Vue {
-        $subscriptionState: BehaviorSubject<SubscriptionState>
+        $CD: ICoinData
     }
-}
-
-declare module '*.vue' {
-    import Vue from 'vue'
-    export default Vue
 }
