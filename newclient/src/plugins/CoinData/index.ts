@@ -1,10 +1,7 @@
 import { VueConstructor } from 'vue'
 import fetch from 'node-fetch'
 import { keccak256 } from 'web3-utils'
-import BN from 'bignumber.js'
-interface IPrototype {
-    prototype: any
-}
+
 interface IPluginOptions {
     ttl: number
     varName: string
@@ -24,7 +21,10 @@ interface IEthereumToken {
         ethereum: string
     }
     image: string
-    price: BN
+    price: number
+    marketCap: number
+    volume: number
+    percentChange24h: number
 }
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3/'
 
@@ -48,7 +48,7 @@ class CoinData {
     }
     getEthereumTokens(): Promise<IEthereumToken[]> {
         const QUERY_ALL_ETH_TOKENS: string = 'coins/list?include_platform=true&asset_platform_id=ethereum&order_by_market_cap=true'
-        const QUERY_TOKEN_PRICES: string = 'coins/markets?vs_currency=usd&ids='
+        const QUERY_TOKEN_PRICES: string = 'coins/markets?vs_currency=usd&price_change_percentage=24&ids='
         return this.fetchWithCache(QUERY_ALL_ETH_TOKENS).then((tokens: IEthereumToken[]) => {
             tokens = tokens.slice(0, 200)
             let temparray: IEthereumToken[]
@@ -65,6 +65,9 @@ class CoinData {
                             for (const _tidx in tokens) {
                                 if (tokens[_tidx].id === _tokenInfo.id) {
                                     tokens[_tidx].price = _tokenInfo.current_price
+                                    tokens[_tidx].marketCap = _tokenInfo.market_cap
+                                    tokens[_tidx].volume = _tokenInfo.total_volume
+                                    tokens[_tidx].percentChange24h = _tokenInfo.price_change_percentage_24h
                                     tokens[_tidx].contract = tokens[_tidx].platforms.ethereum
                                     tokens[_tidx].image = 'https://img.mewapi.io/?image=' + _tokenInfo.image
                                     return
