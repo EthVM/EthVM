@@ -54,7 +54,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
   */
 
     error = ''
-    transaction?: TxDetailsType
+    transaction!: TxDetailsType
 
     /*
   ===================================================================================
@@ -149,7 +149,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             details = [
                 {
                     title: this.$i18n.t('block.number'),
-                    detail: this.formatNumber(this.transaction.blockNumber),
+                    detail: this.formatNumber(this.transaction.blockNumber || 0),
                     link: `/block/number/${this.transaction.blockNumber}`
                 },
                 {
@@ -160,7 +160,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                 },
                 {
                     title: this.$i18n.t('common.timestmp'),
-                    detail: this.$i18n.d(this.transaction.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+                    detail: this.transaction.timestamp !== null ? this.$i18n.d(this.transaction.timestamp, 'long', this.$i18n.locale.replace('_', '-')) : ''
                 },
                 {
                     title: this.$i18n.t('tx.from'),
@@ -187,12 +187,12 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                 },
                 {
                     title: this.$i18n.t('gas.limit'),
-                    detail: this.formatNumber(this.transaction.gas)
+                    detail: this.formatNumber(new BN(this.transaction.gas).toNumber())
                     // tooltip: this.transaction.gasFormatted.tooltipText ? `${this.transaction.gasFormatted.tooltipText}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.used'),
-                    detail: this.formatNumber(this.transaction.gasUsed) // TODO genesis block txs can have no receipt
+                    detail: this.formatNumber(new BN(this.transaction.gasUsed || 0).toNumber()) // TODO genesis block txs can have no receipt
                     // tooltip: receipt && receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
                 },
                 {
@@ -260,14 +260,14 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      *
      * @return {String}
      */
-    get txFee(): string | null {
+    get txFee(): any {
         if (this.transaction && this.transaction.gasUsed) {
             const price = new BN(this.transaction.gasPrice)
             const used = new BN(this.transaction.gasUsed)
             const fee = price.times(used)
             return this.formatVariableUnitEthValue(fee)
         }
-        return '0'
+        return { value: '0' }
     }
 
     // TODO Figure out if we stil need this
