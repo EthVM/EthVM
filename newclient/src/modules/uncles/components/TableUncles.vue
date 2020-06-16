@@ -177,27 +177,7 @@ export default class TableUncles extends Vue {
 
     unclePage?: UncleSummaryPageExt
 
-    connectedSubscription?: Subscription
-
-    /*
-      ===================================================================================
-        Lifecycle
-      ===================================================================================
-      */
-
-    created() {
-        this.connectedSubscription = this.$subscriptionState.subscribe(async state => {
-            if (state === 'reconnected') {
-                this.$apollo.queries.unclePage.refetch()
-            }
-        })
-    }
-
-    destroyed() {
-        if (this.connectedSubscription) {
-            this.connectedSubscription.unsubscribe()
-        }
-    }
+    // connectedSubscription?: Subscription
 
     /*
     ===================================================================================
