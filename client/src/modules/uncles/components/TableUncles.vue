@@ -81,7 +81,7 @@ import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableUnclesRow from '@app/modules/uncles/components/TableUnclesRow.vue'
 import TableUnclesRowLoading from '@app/modules/uncles/components/TableUnclesRowLoading.vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-// import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
+import { UncleSummaryPageExt } from '@app/core/api/apollo/extensions/uncle-summary-page.ext'
 import { uncleSummaries } from '@app/modules/uncles/uncles.graphql'
 import BigNumber from 'bignumber.js'
 import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
@@ -122,7 +122,7 @@ import { Subscription } from 'rxjs'
 
         if (summaries) {
           self.error = '' // clear error
-          // return new UncleSummaryPageExt(summaries)
+          return new UncleSummaryPageExt(summaries)
         } else if (!this.syncing) {
           self.error = this.error || this.$i18n.t('message.err')
         }
@@ -175,7 +175,7 @@ export default class TableUncles extends Vue {
   pageType = 'uncles'
   fromUncle?: BigNumber
 
-  // unclePage?: UncleSummaryPageExt
+  unclePage?: UncleSummaryPageExt
 
   connectedSubscription?: Subscription
 
