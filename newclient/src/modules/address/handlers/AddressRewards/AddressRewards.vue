@@ -9,15 +9,13 @@
                 <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
             </template>
         </app-table-title>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :txs-data="transfers" :is-scroll-view="false" table-message="">
+        <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :txs-data="rewards" :is-scroll-view="false" table-message="">
             <template #header>
-                <table-address-txs-header v-if="isBlock" :address="address" />
-                <table-address-tokens-header v-else :is-erc20="isUncle" :is-transfers="true" />
+                <table-address-rewards-header :is-genesis="isGenesis" />
             </template>
             <template #rows>
-                <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
-                    <table-address-txs-row v-if="isBlock" :tx="tx" :is-pending="false" :address="address" />
-                    <table-address-transfers-row v-else :transfer="tx" :is-erc20="isUncle" :address="address" />
+                <v-card v-for="(i, index) in rewards" :key="index" class="transparent" flat>
+                    <table-address-rewards-row :reward="i" :reward-type="rewardsType" />
                 </v-card>
             </template>
         </table-txs>
@@ -32,13 +30,10 @@ import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 // import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
-import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
-import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
-import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
+import TableAddressRewardsHeader from '@app/modules/address/components/TableAddressRewardsHeader.vue'
+import TableAddressRewardsRow from '@app/modules/address/components/TableAddressRewardsRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-import BN from 'bignumber.js'
-import { getAddrRewardsBlock, getAddrRewardsUncles, getAddrRewardsGenesis } from './rewards.graphql'
+import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from './rewards.graphql'
 import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from './getAddrRewardsBlock.type'
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from './getAddrRewardsUncle.type'
 import { getAddrRewardsGenesis_getGenesisRewards as RewardsGenesisType } from './getAddrRewardsGenesis.type'
@@ -54,10 +49,8 @@ import { RewardSummary_transfers as RewardType } from './RewardSummary.type'
         AppTableTitle,
         AppPaginateHasMore,
         TableTxs,
-        TableAddressTxsRow,
-        TableAddressTxsHeader,
-        TableAddressTokensHeader,
-        TableAddressTransfersRow
+        TableAddressRewardsHeader,
+        TableAddressRewardsRow
     },
     apollo: {
         getRewards: {
@@ -65,7 +58,7 @@ import { RewardSummary_transfers as RewardType } from './RewardSummary.type'
                 if (this.isBlock) {
                     return getAddrRewardsBlock
                 }
-                return this.isUncle ? getAddrRewardsUncles : getAddrRewardsUncles
+                return this.isUncle ? getAddrRewardsUncle : getAddrRewardsGenesis
             },
             fetchPolicy: 'network-only',
             variables() {
@@ -77,12 +70,18 @@ import { RewardSummary_transfers as RewardType } from './RewardSummary.type'
             deep: true,
             update: data => data.getBlockRewards || data.getUncleRewards || data.getGenesisRewards,
             result({ data }) {
+                console.log(data)
                 if (this.hasRewards) {
                     this.error = '' // clear the error
                     if (this.initialLoad) {
                         this.showPagination = this.getRewards.nextKey != null
                         this.initialLoad = false
+                        if (this.getRewards.transfers.length > 0) {
+                            this.emitRewards()
+                        }
                     }
+
+                    console.log(this.rewards)
                 } else {
                     console.log('error failed no data: ', data)
                     this.showPagination = false
@@ -94,7 +93,7 @@ import { RewardSummary_transfers as RewardType } from './RewardSummary.type'
         }
     }
 })
-export default class AddressTransers extends Vue {
+export default class AddressRewards extends Vue {
     /*
     ===================================================================================
       Props
@@ -127,7 +126,7 @@ export default class AddressTransers extends Vue {
     ===================================================================================
     */
 
-    get transfers(): any[] {
+    get rewards(): any[] {
         if (!this.loading && this.hasRewards) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getRewards.transfers.length ? this.getRewards.transfers.length : start + this.maxItems
@@ -181,7 +180,7 @@ export default class AddressTransers extends Vue {
                 if (this.isBlock) {
                     queryName = 'getBlockRewards'
                 } else {
-                    queryName = this.isUncle ? ' getUncleRewards' : ' getGenesisRewards'
+                    queryName = this.isUncle ? 'getUncleRewards' : 'getGenesisRewards'
                 }
 
                 this.$apollo.queries.getRewards.fetchMore({
@@ -207,6 +206,16 @@ export default class AddressTransers extends Vue {
         }
 
         this.index = page
+    }
+
+    emitRewards(): void {
+        if (this.isBlock) {
+            this.$emit('blockRewards', true)
+        } else if (this.isUncle) {
+            this.$emit('uncleRewards', true)
+        } else {
+            this.$emit('genesisRewards', true)
+        }
     }
 
     /*
