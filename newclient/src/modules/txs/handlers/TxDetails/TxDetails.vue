@@ -258,9 +258,9 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
     /**
      * Calculate the transaction fee.
      *
-     * @return {String}
+     * @return {FormattedNumber}
      */
-    get txFee(): any {
+    get txFee(): FormattedNumber {
         if (this.transaction && this.transaction.gasUsed) {
             const price = new BN(this.transaction.gasPrice)
             const used = new BN(this.transaction.gasUsed)
