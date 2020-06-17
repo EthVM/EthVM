@@ -10,12 +10,10 @@
 export interface getERC20Transfers_getERC20Transfers_transfers_transfer {
   __typename: "Transfer";
   transactionHash: string;
-  block: number;
   timestamp: number;
   from: string;
   to: string;
   txFee: string;
-  status: boolean | null;
 }
 
 export interface getERC20Transfers_getERC20Transfers_transfers_tokenInfo {

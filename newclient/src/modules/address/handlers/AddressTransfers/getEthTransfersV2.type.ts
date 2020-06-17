@@ -12,11 +12,11 @@ import { TransferFilter } from "./../../../../../globalTypes";
 export interface getEthTransfersV2_getEthTransfersV2_transfers_transfer {
   __typename: "Transfer";
   transactionHash: string;
-  block: number;
   timestamp: number;
   from: string;
   to: string;
   txFee: string;
+  block: number;
   status: boolean | null;
 }
 

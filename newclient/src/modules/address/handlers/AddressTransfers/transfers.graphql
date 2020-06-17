@@ -1,11 +1,9 @@
 fragment TransferSummary on Transfer {
     transactionHash
-    block
     timestamp
     from
     to
     txFee
-    status
 }
 fragment TokenFragment on EthTokenInfo {
     name
@@ -18,6 +16,8 @@ query getEthTransfersV2($hash: String, $filter: TransferFilter, $_limit: Int, $_
         transfers {
             transfer {
                 ...TransferSummary
+                block
+                status
             }
             value
         }
