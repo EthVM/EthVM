@@ -5,10 +5,41 @@
             <!-- <template v-slot:update >
                 <notice-new-block @reload="setPage(0, true)" />
             </template> -->
-            <template v-slot:pagination v-if="showPagination && !initialLoad">
-                <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
-            </template>
         </app-table-title>
+        <v-layout
+            :column="$vuetify.breakpoint.smAndDown"
+            :align-center="$vuetify.breakpoint.mdAndUp"
+            :align-baseline="$vuetify.breakpoint.smAndDown"
+            d-flex
+            justify-space-between
+            wrap
+            pa-3
+        >
+            <v-layout align-center px-2>
+                <p class="pr-2 info--text">{{ $t('filter.name') }}</p>
+                <v-card flat class="tx-filter-select-container pl-2" height="36px">
+                    <v-select
+                        v-model="filter"
+                        :items="options"
+                        solo
+                        flat
+                        hide-details
+                        class="primary body-1"
+                        item-text="text"
+                        item-value="value"
+                        height="32px"
+                    />
+                </v-card>
+            </v-layout>
+            <app-paginate-has-more
+                v-if="showPagination && !initialLoad"
+                :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
+                :has-more="hasMore"
+                :current-page="index"
+                :loading="loading"
+                @newPage="setPage"
+            />
+        </v-layout>
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
             <template #header>
                 <table-address-txs-header v-if="isETH" :address="address" />
@@ -38,8 +69,8 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getEthTransfers, getERC20Transfers, getERC721Transfers } from './transfers.graphql'
-import { getEthTransfers_getEthTransfers as EthTransfersType } from './getEthTransfers.type'
+import { getEthTransfersV2, getERC20Transfers, getERC721Transfers } from './transfers.graphql'
+import { getEthTransfersV2_getEthTransfersV2 as EthTransfersType } from './getEthTransfersV2.type'
 import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './getERC20Transfers.type'
 import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './getERC721Transfers.type'
 /*
@@ -62,7 +93,7 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
         getTransfers: {
             query() {
                 if (this.isETH) {
-                    return getEthTransfers
+                    return getEthTransfersV2
                 }
                 return this.isERC20 ? getERC20Transfers : getERC721Transfers
             },
@@ -70,11 +101,12 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
             variables() {
                 return {
                     hash: this.address,
+                    filter: this.filter,
                     _limit: this.maxItems
                 }
             },
             deep: true,
-            update: data => data.getEthTransfers || data.getERC20Transfers || data.getERC721Transfers,
+            update: data => data.getEthTransfersV2 || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
                     this.error = '' // clear the error
@@ -120,6 +152,7 @@ export default class AddressTransers extends Vue {
     /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
+    filter = null
     getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
 
     /*
@@ -182,6 +215,23 @@ export default class AddressTransers extends Vue {
         return this.transfersType === 'ERC721'
     }
 
+    get options() {
+        return [
+            {
+                text: this.$i18n.t('filter.all'),
+                value: null
+            },
+            {
+                text: this.$i18n.t('filter.in'),
+                value: 'TO'
+            },
+            {
+                text: this.$i18n.t('filter.out'),
+                value: 'FROM'
+            }
+        ]
+    }
+
     /*
     ===================================================================================
       Methods:
@@ -196,7 +246,7 @@ export default class AddressTransers extends Vue {
             if (page > this.isEnd && this.hasMore) {
                 let queryName!: string
                 if (this.isETH) {
-                    queryName = 'getEthTransfers'
+                    queryName = 'getEthTransfersV2'
                 } else {
                     queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
                 }

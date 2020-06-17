@@ -10,6 +10,7 @@
 export interface getEthTransfers_getEthTransfers_transfers_transfer {
   __typename: "Transfer";
   transactionHash: string;
+  block: number;
   timestamp: number;
   from: string;
   to: string;

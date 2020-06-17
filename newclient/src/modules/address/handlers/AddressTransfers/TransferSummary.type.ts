@@ -10,8 +10,10 @@
 export interface TransferSummary {
   __typename: "Transfer";
   transactionHash: string;
+  block: number;
   timestamp: number;
   from: string;
   to: string;
   txFee: string;
+  status: boolean | null;
 }
