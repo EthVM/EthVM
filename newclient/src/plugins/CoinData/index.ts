@@ -1,31 +1,8 @@
 import { VueConstructor } from 'vue'
 import fetch from 'node-fetch'
 import { keccak256 } from 'web3-utils'
+import { IEthereumToken, ICacheObject, IPluginOptions } from './models'
 
-interface IPluginOptions {
-    ttl: number
-    varName: string
-}
-interface ICacheObject {
-    [key: string]: {
-        ttl: number
-        data: any
-    }
-}
-interface IEthereumToken {
-    id: string
-    symbol: string
-    name: string
-    contract: string
-    platforms: {
-        ethereum: string
-    }
-    image: string
-    price: number
-    marketCap: number
-    volume: number
-    percentChange24h: number
-}
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3/'
 
 class CoinData {
