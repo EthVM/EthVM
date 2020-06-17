@@ -51,6 +51,8 @@ export default class App extends Vue {
     }
     get connected(): boolean {
         this.$CD.getEthereumTokens().then(console.log)
+        this.$CD.getEthereumTokenByContract('0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0').then(console.log)
+        this.$CD.getEthereumTokenByContract('0x7d1afa7b718fb893db30a3abc0cfc608aacfebb1').then(console.log)
         // return !this.connectedStates.has(this.state)
         return true
     }
