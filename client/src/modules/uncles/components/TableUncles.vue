@@ -122,7 +122,7 @@ import { Subscription } from 'rxjs'
 
         if (summaries) {
           self.error = '' // clear error
-          return new UncleSummaryPageExt(summaries)
+          // return new UncleSummaryPageExt(summaries)
         } else if (!this.syncing) {
           self.error = this.error || this.$i18n.t('message.err')
         }
@@ -175,7 +175,7 @@ export default class TableUncles extends Vue {
   pageType = 'uncles'
   fromUncle?: BigNumber
 
-  unclePage?: UncleSummaryPageExt
+  // unclePage?: UncleSummaryPageExt
 
   connectedSubscription?: Subscription
 
