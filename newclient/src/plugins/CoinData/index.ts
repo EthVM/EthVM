@@ -82,16 +82,28 @@ class CoinData {
             })
         })
     }
+    getEthereumTokenByContract(contract: string): Promise<IEthereumToken | false> {
+        return this.getEthereumTokens().then(tokens => {
+            for (const token of tokens) {
+                if (token.contract.toLowerCase() === contract.toLowerCase()) {
+                    return token
+                }
+            }
+            return false
+        })
+    }
     install(Vue: VueConstructor<Vue>, options: IPluginOptions): void {
         if (options.ttl) {
             this.ttl = options.ttl
         }
         Vue.prototype[options.varName ? options.varName : '$CD'] = {
-            getEthereumTokens: this.getEthereumTokens.bind(this)
+            getEthereumTokens: this.getEthereumTokens.bind(this),
+            getEthereumTokenByContract: this.getEthereumTokenByContract.bind(this)
         }
     }
 }
 export interface ICoinData {
     getEthereumTokens(): Promise<IEthereumToken[]>
+    getEthereumTokenByContract(contract: string): Promise<IEthereumToken | false>
 }
 export default CoinData
