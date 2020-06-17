@@ -48,7 +48,7 @@
                                     {{ $tc('token.name', 2) }}
                                 </v-btn>
                                 <v-divider vertical />
-                                <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button text-capitalize']" flat small @click="toggleERC20 = 1">
+                                <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button', 'text-capitalize']" flat small @click="toggleERC20 = 1">
                                     {{ $tc('transfer.name', 2) }}
                                 </v-btn>
                                 <v-flex xs12 pa-1>
@@ -82,6 +82,78 @@
                 </v-tab-item>
                 <!--
                 =====================================================================================
+                  MINING HISTORY INFO TAB
+                =====================================================================================
+                -->
+                <v-tab-item slot="tabs-item" value="tab-3">
+                    <keep-alive>
+                        <div>
+                            <v-layout row wrap align-center justify-start pt-2>
+                                <v-btn
+                                    v-if="hasBlockRewards"
+                                    :class="[toggleMiner === 0 ? 'active-button' : 'button', 'ml-3 text-capitalize']"
+                                    flat
+                                    small
+                                    @click="toggleMiner = 0"
+                                >
+                                    {{ $tc('block.name', 2) }}
+                                </v-btn>
+                                <v-divider v-if="hasUncleRewards" vertical />
+                                <v-btn
+                                    v-if="hasUncleRewards"
+                                    :class="[toggleMiner === 1 ? 'active-button' : 'button', 'text-capitalize']"
+                                    flat
+                                    small
+                                    @click="toggleMiner = 1"
+                                >
+                                    {{ $tc('uncle.name', 2) }}
+                                </v-btn>
+                                <v-divider v-if="hasGenesisRewards" vertical />
+                                <v-btn
+                                    v-if="hasGenesisRewards"
+                                    :class="[toggleMiner === 2 ? 'active-button' : 'button', 'text-capitalize']"
+                                    flat
+                                    small
+                                    @click="toggleMiner = 2"
+                                >
+                                    {{ $t('miner.reward.genesis') }}
+                                </v-btn>
+                                <v-flex xs12 pa-1>
+                                    <v-divider class="lineGrey mt-1 mb-1" />
+                                </v-flex>
+                            </v-layout>
+                            <v-slide-x-reverse-transition>
+                                <address-rewards
+                                    v-show="toggleMiner === 0"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    rewards-type="block"
+                                    @blockRewards="setBlockRewards"
+                                />
+                            </v-slide-x-reverse-transition>
+                            <v-slide-x-reverse-transition>
+                                <address-rewards
+                                    v-show="toggleMiner === 1"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    rewards-type="uncle"
+                                    @uncleRewards="setUncleRewards"
+                                />
+                            </v-slide-x-reverse-transition>
+                            <v-slide-x-reverse-transition>
+                                <address-rewards
+                                    v-show="toggleMiner === 2"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    rewards-type="genesis"
+                                    @genesisRewards="setGenesisRewards"
+                                />
+                            </v-slide-x-reverse-transition>
+                        </div>
+                    </keep-alive>
+                </v-tab-item>
+                <!--
+                =====================================================================================
                   CONTRACT CREATOR INFO TAB
                 =====================================================================================
                 -->
@@ -104,6 +176,7 @@ import { eth } from '@app/core/helper'
 import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
 import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
 import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
+import AddressRewards from '@app/modules/address/handlers/AddressRewards/AddressRewards.vue'
 import { Address } from '@app/modules/address/components/props'
 const MAX_ITEMS = 10
 
@@ -115,7 +188,8 @@ const MAX_ITEMS = 10
         AddressOverview,
         AppTabs,
         AddressTransfers,
-        AddressTokens
+        AddressTokens,
+        AddressRewards
     }
 })
 export default class PageDetailsAddress extends Vue {
@@ -132,13 +206,16 @@ export default class PageDetailsAddress extends Vue {
       Initial Data
     ===================================================================================
     */
-    isMiner = false
     isContractCreator = false
     isContract = false
     totalERC20 = 0
     error = ''
     activeTab = 'tab-0'
     toggleERC20 = 0
+    toggleMiner = 0
+    hasGenesisRewards = false
+    hasUncleRewards = false
+    hasBlockRewards = false
 
     /*
     ===================================================================================
@@ -187,7 +264,7 @@ export default class PageDetailsAddress extends Vue {
         ]
 
         if (!this.error) {
-            if (this.isMiner) {
+            if (this.showMiningRewards) {
                 const newTab = {
                     id: 3,
                     title: this.$i18n.t('miner.history').toString(),
@@ -209,13 +286,26 @@ export default class PageDetailsAddress extends Vue {
         return tabs
     }
 
+    get isMiner(): boolean {
+        return this.hasBlockRewards || this.hasUncleRewards
+    }
+    get showMiningRewards(): boolean {
+        return this.isMiner || this.hasGenesisRewards
+    }
+
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
-    setMiner(value: boolean): void {
-        this.isMiner = value
+    setBlockRewards(value: boolean): void {
+        this.hasBlockRewards = value
+    }
+    setUncleRewards(value: boolean): void {
+        this.hasUncleRewards = value
+    }
+    setGenesisRewards(value: boolean): void {
+        this.hasGenesisRewards = value
     }
     setContractCreator(value: boolean): void {
         this.isContractCreator = value

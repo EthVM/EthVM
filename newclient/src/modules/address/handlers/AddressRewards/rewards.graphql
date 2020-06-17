@@ -1,0 +1,28 @@
+fragment RewardSummary on ETHTransfers {
+    transfers {
+        transfer {
+            block
+            timestamp
+        }
+        value
+    }
+    nextKey
+}
+
+query getAddrRewardsBlock($hash: String!, $_limit: Int, $_nextKey: String) {
+    getBlockRewards(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        ...RewardSummary
+    }
+}
+
+query getAddrRewardsUncle($hash: String!, $_limit: Int, $_nextKey: String) {
+    getUncleRewards(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        ...RewardSummary
+    }
+}
+
+query getAddrRewardsGenesis($hash: String!, $_limit: Int, $_nextKey: String) {
+    getGenesisRewards(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        ...RewardSummary
+    }
+}

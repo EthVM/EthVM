@@ -113,7 +113,11 @@
 
     "miner": {
         "name": "Miner",
-        "reward": "Miner Reward",
+        "reward": {
+            "block": "Mined Blocks Rewads",
+            "uncle": "Mined Uncles Rewads",
+            "genesis": "Genesis Rewards"
+        },
         "reward-short": "Reward",
         "history": "Mining History"
     },
