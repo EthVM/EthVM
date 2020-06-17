@@ -23,6 +23,11 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
 export default class TableAddressRewardsHeader extends Vue {
+    /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
     @Prop({ type: Boolean, default: false }) isGenesis!: boolean
 }
 </script>

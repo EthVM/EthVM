@@ -70,7 +70,6 @@ import { RewardSummary_transfers as RewardType } from './RewardSummary.type'
             deep: true,
             update: data => data.getBlockRewards || data.getUncleRewards || data.getGenesisRewards,
             result({ data }) {
-                console.log(data)
                 if (this.hasRewards) {
                     this.error = '' // clear the error
                     if (this.initialLoad) {
@@ -80,8 +79,6 @@ import { RewardSummary_transfers as RewardType } from './RewardSummary.type'
                             this.emitRewards()
                         }
                     }
-
-                    console.log(this.rewards)
                 } else {
                     console.log('error failed no data: ', data)
                     this.showPagination = false

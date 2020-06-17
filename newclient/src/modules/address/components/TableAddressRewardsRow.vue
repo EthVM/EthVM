@@ -71,7 +71,6 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/TxSummary.type'
 import BN from 'bignumber.js'
-const TYPES = ['in', 'out', 'self']
 
 @Component({
     components: {
