@@ -19,8 +19,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(token, index) in showTokens" :key="index" class="transparent" flat>
-                    <p>Hello</p>
-                    <!-- <table-address-tokens-row :token="token" :is-erc20="isERC20" :address="address" :token-price-info="getUSDInfo(token.tokenInfo.contract)" /> -->
+                    <table-tokens-row :token="token" />
                 </v-card>
             </template>
         </table-txs>
@@ -37,6 +36,8 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 // import TableAddressTokensRow from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableTokensHeader from '@app/modules/tokens/components/TableTokensHeader.vue'
+import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
+
 import { IEthereumToken } from '@app/plugins/CoinData/models'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
@@ -53,7 +54,8 @@ const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volu
         AppTableTitle,
         AppPaginate,
         TableTxs,
-        TableTokensHeader
+        TableTokensHeader,
+        TableTokensRow
     }
 })
 export default class AddressTokens extends Vue {
@@ -144,6 +146,7 @@ export default class AddressTokens extends Vue {
                         this.initialLoad = false
                         this.totalTokens = this.tokensData.length
                         this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
+                        console.log(this.tokensData)
                     }
                 })
                 .catch(error => {
