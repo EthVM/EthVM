@@ -34,13 +34,32 @@ import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 // import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-// import TableAddressTokensRow from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableTokensHeader from '@app/modules/tokens/components/TableTokensHeader.vue'
 import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
-
 import { IEthereumToken } from '@app/plugins/CoinData/models'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
+
+interface TokensSortedInterface {
+    ascend: IEthereumToken[] | null
+    desend: IEthereumToken[] | null
+}
+
+class TokensSorted implements TokensSortedInterface {
+    /* Properties: */
+    ascend: IEthereumToken[]
+    desend: IEthereumToken[]
+
+    /* Constructor: */
+    constructor(data: IEthereumToken[], sortKey: string) {
+        this.desend = this.sortByKeyDesend([...data], sortKey)
+        this.ascend = [...this.desend].reverse()
+    }
+    /* Method to sort object array in desending order by Key: */
+    sortByKeyDesend(data: IEthereumToken[], key: string) {
+        return data.sort((x, y) => (y[key] < x[key] ? -1 : y[key] > x[key] ? 1 : 0))
+    }
+}
 
 /*
   DEV NOTES:
@@ -83,6 +102,10 @@ export default class AddressTokens extends Vue {
     totalTokens = 0
     isSortedBy = FILTER_VALUES[0]
     tokensData: IEthereumToken[] | null = null
+    tokensByMarket!: TokensSorted
+    tokensBySymbol!: TokensSorted
+    tokensByPrice!: TokensSorted
+    tokensByVolume!: TokensSorted
 
     /*
     ===================================================================================
@@ -120,6 +143,22 @@ export default class AddressTokens extends Vue {
     */
     sortTokens(sort: string): void {
         this.isSortedBy = sort
+        this.index = 0
+        if (!this.error) {
+            if (sort === FILTER_VALUES[0] || sort === FILTER_VALUES[1]) {
+                /* Sort By Symbol: */
+                this.tokensData = sort.includes('high') ? this.tokensBySymbol.ascend : this.tokensBySymbol.desend
+            } else if (sort === FILTER_VALUES[2] || sort === FILTER_VALUES[3]) {
+                /* Sort By Price: */
+                this.tokensData = sort.includes('high') ? this.tokensByPrice.desend : this.tokensByPrice.ascend
+            } else if (sort === FILTER_VALUES[4] || sort === FILTER_VALUES[5]) {
+                /* Sort By Volume: */
+                this.tokensData = sort.includes('high') ? this.tokensByVolume.desend : this.tokensByVolume.ascend
+            } else {
+                /* Sort By Market Cap: */
+                this.tokensData = sort.includes('high') ? this.tokensByMarket.desend : this.tokensByMarket.ascend
+            }
+        }
     }
 
     setPage(page: number, reset: boolean = false): void {
@@ -131,6 +170,7 @@ export default class AddressTokens extends Vue {
             this.index = page
         }
     }
+
     /*
     ===================================================================================
       LifeCycle:
@@ -142,11 +182,14 @@ export default class AddressTokens extends Vue {
                 .getEthereumTokens()
                 .then(data => {
                     if (data && data.length > 0) {
-                        this.tokensData = data
+                        this.tokensByVolume = new TokensSorted(data, 'volume')
+                        this.tokensByMarket = new TokensSorted(data, 'marketCap')
+                        this.tokensBySymbol = new TokensSorted(data, 'symbol')
+                        this.tokensByPrice = new TokensSorted(data, 'price')
+                        this.sortTokens(this.isSortedBy)
                         this.initialLoad = false
-                        this.totalTokens = this.tokensData.length
+                        this.totalTokens = data.length
                         this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
-                        console.log(this.tokensData)
                     }
                 })
                 .catch(error => {
