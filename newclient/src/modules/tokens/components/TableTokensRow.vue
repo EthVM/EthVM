@@ -34,7 +34,7 @@
                         <v-flex xs8 pr-0 pt-2>
                             <v-layout row wrap align-center justify-start pl-2 pb-1>
                                 <p class="black--text text-uppercase font-weight-medium mb-0 pr-1">{{ token.symbol }} -</p>
-                                <p class="black--text font-weight-medium mb-0 pr-1">{{ token.name }}</p>
+                                <p class="info--text caption mb-0 pr-1">{{ token.name }}</p>
                             </v-layout>
                             <v-layout row wrap align-end justify-start pa-2>
                                 <p class="black--text text-truncate">
@@ -99,12 +99,12 @@
                         -->
                         <v-flex md4>
                             <v-layout grid-list-xs row align-center justify-start fill-height>
-                                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" height="25px" max-width="25px" contain class="ml-4 mr-4" />
-                                <v-img v-else :src="token.image" height="25px" max-width="25px" contain class="ml-4 mr-4" />
-                                <router-link :to="tokenLink" class="black--text">
-                                    <span v-if="token.symbol" class="text-uppercase"> {{ token.symbol }} - </span>
-                                    {{ token.name }}</router-link
-                                >
+                                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" height="25px" max-width="25px" contain class="ml-3 mr-2" />
+                                <v-img v-else :src="token.image" height="25px" max-width="25px" contain class="ml-3 mr-2" />
+                                <router-link :to="tokenLink" class="info--text caption">
+                                    <span v-if="token.symbol" class="black--text text-uppercase font-weight-medium"> {{ token.symbol }} - </span>
+                                    {{ token.name }}
+                                </router-link>
                             </v-layout>
                         </v-flex>
                         <!--

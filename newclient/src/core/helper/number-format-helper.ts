@@ -418,12 +418,12 @@ export class NumberFormatHelper {
         }
 
         /**
-         * Case VI: 0.0000001 <= value <= 0.04
-         * Return: rounded number up to 7 decimal points and tooltip if > 7 decimal points"
+         * Case VI: 0.00001 <= value <= 0.04
+         * Return: rounded number up to 5 decimal points and tooltip if > 5 decimal points"
          */
-        if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-            const formatted = value.toFormat(Math.min(7, value.decimalPlaces()))
-            return { value: `$${formatted}`, unit, tooltipText: value.decimalPlaces() > 7 ? `$${value.toFormat()}` : undefined }
+        if (value.isGreaterThanOrEqualTo(SmallGweiBreakpoint)) {
+            const formatted = value.toFormat(Math.min(5, value.decimalPlaces()))
+            return { value: `$${formatted}`, unit, tooltipText: value.decimalPlaces() > 5 ? `$${value.toFormat()}` : undefined }
         }
 
         /**
