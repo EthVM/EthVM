@@ -44,8 +44,8 @@ import { getBlockTransfers, getAllTxs } from './queryTransfers.graphql'
 import {
     getBlockTransfers_getBlockTransfers as TypeBlockTransfers,
     getBlockTransfers_getBlockTransfers_transfers as TypeTransfers
-} from './getBlockTransfers.type'
-import { getAllTxs_getAllEthTransfers as AllTxType } from './getAllTxs.type'
+} from './apolloTypes/getBlockTransfers'
+import { getAllTxs_getAllEthTransfers as AllTxType } from './apolloTypes/getAllTxs'
 
 /*
   DEV NOTES:

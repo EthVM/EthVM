@@ -70,9 +70,9 @@ import TableAddressTransfersRow from '@app/modules/address/components/TableAddre
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getEthTransfersV2, getERC20Transfers, getERC721Transfers } from './transfers.graphql'
-import { getEthTransfersV2_getEthTransfersV2 as EthTransfersType } from './getEthTransfersV2.type'
-import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './getERC20Transfers.type'
-import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './getERC721Transfers.type'
+import { getEthTransfersV2_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getEthTransfersV2'
+import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getERC20Transfers'
+import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getERC721Transfers'
 /*
   DEV NOTES:
   - add on Error

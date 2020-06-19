@@ -16,7 +16,7 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Detail } from '@app/core/components/props'
 import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { getUncleByHash } from './uncleDetails.graphql'
-import { UncleDetails as UncleDetailsType } from './UncleDetails.type'
+import { UncleDetails as UncleDetailsType } from './apolloTypes/UncleDetails'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 @Component({
