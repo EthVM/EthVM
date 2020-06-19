@@ -20,7 +20,7 @@ module.exports = {
             'error',
             {
                 env: 'apollo',
-                schemaJson: require('./apollo/schemas/api.json')
+                schemaJson: require('./src/apollo/schemas/api.json')
                 // tagName is gql by default
             }
         ]

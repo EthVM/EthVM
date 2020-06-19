@@ -29,7 +29,7 @@ import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getBlocksArrayByNumber, newBlockTable } from './recentBlocks.graphql'
-import { getBlocksArrayByNumber_getBlocksArrayByNumber as TypeBlocks } from './getBlocksArrayByNumber.type'
+import { getBlocksArrayByNumber_getBlocksArrayByNumber as TypeBlocks } from './apolloTypes/getBlocksArrayByNumber'
 
 /*
   DEV NOTES:

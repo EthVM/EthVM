@@ -34,10 +34,10 @@ import TableAddressRewardsHeader from '@app/modules/address/components/TableAddr
 import TableAddressRewardsRow from '@app/modules/address/components/TableAddressRewardsRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from './rewards.graphql'
-import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from './getAddrRewardsBlock.type'
-import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from './getAddrRewardsUncle.type'
-import { getAddrRewardsGenesis_getGenesisRewards as RewardsGenesisType } from './getAddrRewardsGenesis.type'
-import { RewardSummary_transfers as RewardType } from './RewardSummary.type'
+import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from './apolloTypes/getAddrRewardsBlock'
+import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from './apolloTypes/getAddrRewardsUncle'
+import { getAddrRewardsGenesis_getGenesisRewards as RewardsGenesisType } from './apolloTypes/getAddrRewardsGenesis'
+import { RewardSummary_transfers as RewardType } from './apolloTypes/RewardSummary'
 /*
   DEV NOTES:
   - add on Error

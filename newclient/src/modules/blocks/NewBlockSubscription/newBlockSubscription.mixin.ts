@@ -1,6 +1,6 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import newBlockFeed from './newBlockFeed.graphql'
-import { newBlockFeed_newBlockFeed as newBlockFeedType } from './newBlockFeed.type'
+import { newBlockFeed_newBlockFeed as newBlockFeedType } from './apolloTypes/newBlockFeed'
 
 @Component
 export class NewBlockSubscription extends Vue {
