@@ -28,7 +28,7 @@ import AppInfoCard from '@app/core/components/ui/AppInfoCard.vue'
 import { getLatestBlockInfo } from './stats.graphql'
 import BN from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './getLatestBlockInfo.type'
+import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './apolloTypes/getLatestBlockInfo'
 
 @Component({
     components: {

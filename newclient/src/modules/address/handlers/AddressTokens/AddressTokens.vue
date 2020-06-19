@@ -35,8 +35,8 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getOwnersERC20Tokens, getOwnersERC721UniqueTokens, getOwnersERC721Balances } from './tokens.graphql'
-import { getERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './getERC20Tokens.type'
-import { getOwnersERC721Totals_getOwnersERC721Balances as ERC721BalanceType } from './getOwnersERC721Totals.type'
+import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './apolloTypes/getOwnersERC20Tokens'
+import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721BalanceType } from './apolloTypes/getOwnersERC721Balances'
 import { PriceInfo } from '@app/modules/address/components/props'
 
 /*

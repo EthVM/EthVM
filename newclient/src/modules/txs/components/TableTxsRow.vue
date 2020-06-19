@@ -172,7 +172,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { Tx } from './props'
-import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/TxSummary.type'
+import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import BN from 'bignumber.js'
 
 @Component({

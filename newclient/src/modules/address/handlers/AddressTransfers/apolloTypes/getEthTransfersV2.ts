@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TransferFilter } from "./../../../../../globalTypes";
+import { TransferFilter } from "./../../../../../apollo/global/globalTypes";
 
 // ====================================================
 // GraphQL query operation: getEthTransfersV2

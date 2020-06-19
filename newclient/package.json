@@ -19,8 +19,8 @@
         "lint": "vue-cli-service lint --no-fix",
         "lint:fix": "vue-cli-service lint",
         "apollo": "apollo",
-        "apollo:schema": "rm -f ./apollo/schemas/api.json && apollo service:download ./apollo/schemas/api.json",
-        "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript --tsFileExtension=type.ts ."
+        "apollo:schema": "apollo service:download ./src/apollo/schemas/api.json",
+        "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript  --globalTypesFile=./src/apollo/global/globalTypes.ts  apolloTypes"
     },
     "dependencies": {
         "@babel/core": "^7.4.5",
