@@ -1,5 +1,6 @@
 <template>
     <div>
+        <app-bread-crumbs :new-items="crumbs" />
         <!--
     =====================================================================================
       BASIC VIEW
@@ -10,23 +11,23 @@
     -->
         <div v-if="!isHolder">
             <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" :error="error" />
-            <app-tabs v-if="!syncing" :tabs="tabsTokenDetails">
+            <app-tabs v-if="!loading" :tabs="tabsTokenDetails">
                 <!--
         =====================================================================================
           TRANSFERS
         =====================================================================================
         -->
-                <v-tab-item slot="tabs-item" value="tab-0">
+                <!-- <v-tab-item slot="tabs-item" value="tab-0">
                     <transfers-table :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" />
-                </v-tab-item>
+                </v-tab-item> -->
                 <!--
         =====================================================================================
           HOLDERS
         =====================================================================================
         -->
-                <v-tab-item slot="tabs-item" value="tab-1">
-                    <token-table-holders :address-ref="addressRef" :total-supply="totalSupply" :decimals="decimals" />
-                </v-tab-item>
+                <!-- <v-tab-item slot="tabs-item" value="tab-1">
+                    <token-table-holders :address-ref="addressRef" :decimals="decimals" />
+                </v-tab-item> -->
             </app-tabs>
         </div>
         <!--
@@ -38,11 +39,17 @@
     =====================================================================================
     -->
         <div v-if="isHolder">
-            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :holder-details="holderDetails" :is-loading="loading" :error="error" />
-            <app-tabs v-if="!syncing" :tabs="tabsTokenHolderDetails">
+            <token-details-list
+                :address-ref="addressRef"
+                :holder-details="tokenDetails"
+                :token-details="isHolder && tokenDetails ? tokenDetails.tokenInfo : tokenDetails"
+                :is-loading="loading"
+                :error="error"
+            />
+            <app-tabs :tabs="tabsTokenHolderDetails">
                 <!-- Transfers -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <transfers-table :address="addressRef" :page-type="'tokenHolder'" :decimals="decimals" :holder="holderAddress" :symbol="symbol" />
+                    <!-- <transfers-table :address="addressRef" :page-type="'tokenHolder'" :decimals="decimals" :holder="holderAddress" :symbol="symbol" /> -->
                 </v-tab-item>
                 <!-- End Transfers -->
             </app-tabs>
@@ -52,16 +59,16 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import TokenDetailsList from '@app/modules/tokens/components/TokenDetailsList.vue'
+import TokenDetailsList from '@app/modules/tokens/components/TokenDetails/TokenDetailsList.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import TokenTableHolders from '@app/modules/tokens/components/TokenTableHolders.vue'
-import TransfersTable from '@app/modules/transfers/components/TransfersTable.vue'
-import { getTokenInfoByContract, getERC20TokenBalance } from './tokenDetails.graphql'
-import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './ERC20TokenOwnerDetails.type'
-import { TokenDetails as TokenInfo } from './TokenDetails.type'
+// import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
+// import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
+import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
+import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
+import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
 
 const MAX_ITEMS = 10
 
@@ -69,16 +76,9 @@ const MAX_ITEMS = 10
     components: {
         AppBreadCrumbs,
         TokenDetailsList,
-        AppTabs,
-        TokenTableHolders,
-        TransfersTable
-    },
-    data() {
-        return {
-            holderAddress: undefined,
-            holderDetails: undefined,
-            syncing: undefined
-        }
+        AppTabs
+        // TokenTableHolders,
+        // TransfersTable
     },
     apollo: {
         tokenDetails: {
@@ -87,23 +87,10 @@ const MAX_ITEMS = 10
             },
 
             variables() {
-                return { address: this.addressRef, holderAddress: this.holderAddress }
+                return { contract: this.addressRef, owner: this.holderAddress }
             },
 
-            update(data) {
-                console.log('data', data)
-                // if (tokenHolder) {
-                //     this.holderDetails = new TokenHolderExt(tokenHolder, totalTransfers)
-                // }
-
-                // if (tokenDetails) {
-                //     return new TokenDetailExt(tokenDetails)
-                // } else if (!this.syncing) {
-                //     this.error = this.error || this.$i18n.t('message.invalid.token')
-                // }
-
-                // return null
-            }
+            update: data => data.getERC20TokenBalance || data.getTokenInfoByContract
         }
     }
 })
@@ -115,6 +102,8 @@ export default class TokenDetails extends Vue {
   */
 
     @Prop({ type: String }) addressRef!: string
+    @Prop({ type: Boolean }) isHolder!: boolean
+    @Prop({ type: String }) holderAddress!: string
 
     /*
   ===================================================================================
@@ -122,59 +111,10 @@ export default class TokenDetails extends Vue {
   ===================================================================================
   */
 
-    tokenDetails?: EthToken
-    holderDetails?: TokenOwnerInfo
+    tokenDetails?: TokenInfo | TokenOwnerInfo
     address = ''
 
-    error = '' // Error string pertaining to the TokenDetailsList component
-    syncing?: undefined
-
-    // Holder //
-    isHolder = false // Whether or not "holder" is included in query params to display view accordingly
-    holderAddress?: string // Address of current token holder, if applicable
-
-    /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-    /**
-     * Set isHolder and holderAddress if found in route
-     */
-    async mounted() {
-        const query = this.$route.query
-
-        if (query.holder) {
-            this.isHolder = true
-            this.holderAddress = query.holder as string
-        }
-    }
-
-    /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-    /**
-     * Watch $route/parameter changes.
-     * If route updates with query param "holder", then fetch additional information
-     * for that holder address.
-     */
-    @Watch('$route', { deep: true })
-    onRouteChange() {
-        const query = this.$route.query
-        if (query.holder) {
-            this.isHolder = true
-            this.holderAddress = query.holder as string
-        } else {
-            this.isHolder = false
-            this.holderAddress = undefined
-            this.holderDetails = undefined
-        }
-        window.scrollTo(0, 0)
-    }
+    error = '' // Error string pertaining to the TokenDetailsList components
 
     /*
   ===================================================================================
@@ -189,6 +129,7 @@ export default class TokenDetails extends Vue {
      * @return {Array} - Breadcrumb entry. See description.
      */
     get crumbs(): Crumb[] {
+        console.error('dafadf', this.tokenDetails)
         return this.isHolder ? this.crumbsHolder : this.crumbsBasic
     }
 
@@ -239,7 +180,7 @@ export default class TokenDetails extends Vue {
   */
 
     get loading(): boolean | undefined {
-        return this.$apollo.loading || this.syncing
+        return this.$apollo.loading
     }
 
     get totalSupply(): BigNumber | undefined {

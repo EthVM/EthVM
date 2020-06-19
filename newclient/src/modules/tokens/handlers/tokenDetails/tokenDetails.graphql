@@ -24,7 +24,6 @@ query getTokenInfoByContract($contract: String!) {
   }
 } 
 
-
 query getERC20TokenBalance($contract: String!, $owner: String!) {
   getERC20TokenBalance(contract: $contract, owner: $owner) {
     ...ERC20TokenOwnerDetails

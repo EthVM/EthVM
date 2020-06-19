@@ -91,10 +91,10 @@ export default new Router({
         //   props: true
         // },
         {
-          path: '/token/:addressRef',
-          component: PageDetailsToken,
-          name: 'token-detail',
-          props: true
+            path: '/token/:addressRef',
+            component: PageDetailsToken,
+            name: 'token-detail',
+            props: true
         },
         {
             path: '/tokens',
