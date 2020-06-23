@@ -69,18 +69,35 @@ class CoinData {
             return false
         })
     }
+    getEthereumTokensArray(contracts: string[]): Promise<Map<string, IEthereumToken> | false> {
+        return this.getEthereumTokens().then(tokens => {
+            const tokensMarketInfo = new Map<string, IEthereumToken>()
+            const _contracts = contracts.map(i => i.toLowerCase())
+            for (const token of tokens) {
+                if (_contracts.includes(token.contract.toLowerCase())) {
+                    tokensMarketInfo.set(token.contract.toLowerCase(), token)
+                }
+            }
+            if (tokensMarketInfo.size > 0) {
+                return tokensMarketInfo
+            }
+            return false
+        })
+    }
     install(Vue: VueConstructor<Vue>, options: IPluginOptions): void {
         if (options.ttl) {
             this.ttl = options.ttl
         }
         Vue.prototype[options.varName ? options.varName : '$CD'] = {
             getEthereumTokens: this.getEthereumTokens.bind(this),
-            getEthereumTokenByContract: this.getEthereumTokenByContract.bind(this)
+            getEthereumTokenByContract: this.getEthereumTokenByContract.bind(this),
+            getEthereumTokensArray: this.getEthereumTokensArray.bind(this)
         }
     }
 }
 export interface ICoinData {
     getEthereumTokens(): Promise<IEthereumToken[]>
     getEthereumTokenByContract(contract: string): Promise<IEthereumToken | false>
+    getEthereumTokensArray(contracts: string[]): Promise<Map<string, IEthereumToken> | false>
 }
 export default CoinData
