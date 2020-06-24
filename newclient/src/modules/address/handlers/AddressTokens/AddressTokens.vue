@@ -93,7 +93,7 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
                             }
                             const contracts = this.getTokens.map(token => token.tokenInfo.contract)
                             this.$CD
-                                .getEthereumTokensArray(contracts)
+                                .getEthereumTokensMap(contracts)
                                 .then(data => {
                                     console.log(data)
                                     this.tokenPrices = data
