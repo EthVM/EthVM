@@ -43,7 +43,7 @@
                                       XS: 9/12 (9)
                                     =====================================================================================
                                     -->
-                                    <v-flex xs9 pa-1>
+                                    <v-flex xs8 pa-1>
                                         <div v-if="token.tokenInfo.name || token.tokenInfo.symbol" class="black--text subtitle-2 font-weight-medium">
                                             <p v-if="token.tokenInfo.name">{{ token.tokenInfo.name }}</p>
                                             <p v-else class="text-uppercase">{{ token.tokenInfo.symbol }}</p>
@@ -57,24 +57,11 @@
                                       XS: 12/12 (3)
                                     =====================================================================================
                                     -->
-                                    <v-flex v-if="isErc20" xs3 pb-1 pt-1 pr-2>
-                                        <v-layout v-if="priceChangeFormatted" grid-list-xs row justify-end pr-3>
+                                    <v-flex v-if="isErc20" xs4 pb-1 pt-1 pr-2>
+                                        <v-layout v-if="priceChangeFormatted" grid-list-xs row justify-end>
                                             <p :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
-                                            <v-img
-                                                v-if="tokenPriceInfo.change > 0"
-                                                :src="require('@/assets/up.png')"
-                                                height="18px"
-                                                max-width="18px"
-                                                contain
-                                            ></v-img>
-                                            <v-img
-                                                v-if="tokenPriceInfo.change < 0"
-                                                :src="require('@/assets/down.png')"
-                                                height="18px"
-                                                max-width="18px"
-                                                contain
-                                            ></v-img>
-                                            <app-tooltip v-if="priceChangeFormatted.tooltipText" :text="priceChangeFormatted.tooltipText" />
+                                            <v-img v-if="change > 0" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                                            <v-img v-if="change < 0" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                                         </v-layout>
                                     </v-flex>
                                     <v-spacer v-else />
@@ -95,16 +82,13 @@
                                             }}</span>
                                             <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" pl-1 />
                                         </p>
-                                        <p v-if="isErc20 && tokenPriceInfo.price" class="info--text mb-2">
+                                        <p v-if="isErc20" class="info--text mb-2">
                                             {{ $t('usd.value') }}:
                                             <span class="black--text">
                                                 {{ usdValueFormatted.value }}
                                                 <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
                                             </span>
-                                        </p>
-                                        <p class="caption info--text">
-                                            (@ {{ currPrice.value }}<app-tooltip v-if="currPrice.tooltipText" :text="currPrice.tooltipText" />
-                                            {{ $t('token.per') }} {{ symbolString }})
+                                            <span class="caption pl-2"> @ {{ currPrice.value }} {{ $t('token.per') }} {{ symbolString }} </span>
                                         </p>
                                     </v-flex>
                                 </v-layout>
@@ -138,7 +122,7 @@
                                 </div>
                                 <v-layout v-else row align-center justift-start pa-1>
                                     <p class="info--text contract-string caption mr-1">{{ $tc('contract.name', 1) }}:</p>
-                                    <app-transform-hash :hash="token.tokenInfo" :link="`/address/${token.tokenInfo.contract}`" />
+                                    <app-transform-hash :hash="token.tokenInfo.contract" :link="`/address/${token.tokenInfo.contract}`" />
                                 </v-layout>
                             </v-layout>
                         </v-flex>
@@ -166,15 +150,12 @@
                         =====================================================================================
                         -->
                         <v-flex v-if="isErc20" md3>
-                            <v-layout v-if="tokenPriceInfo.price" column align-start fill-height pl-2>
+                            <v-layout column align-start fill-height pl-2>
                                 <p class="black--text">
                                     {{ usdValueFormatted.value }}
                                     <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
                                 </p>
-                                <p class="info--text caption pt-1">
-                                    (@ {{ currPrice.value }}<app-tooltip v-if="currPrice.tooltipText" :text="currPrice.tooltipText" /> {{ $t('token.per') }}
-                                    {{ symbolString }})
-                                </p>
+                                <p class="info--text caption pt-1">(@ {{ currPrice.value }} {{ $t('token.per') }} {{ symbolString }})</p>
                             </v-layout>
                         </v-flex>
                         <!--
@@ -188,9 +169,8 @@
                         <v-flex v-if="isErc20" md2>
                             <v-layout v-if="priceChangeFormatted" grid-list-xs row align-center justify-start pl-2 pr-2>
                                 <p :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
-                                <v-img v-if="tokenPriceInfo.change > 0" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                                <v-img v-if="tokenPriceInfo.change < 0" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
-                                <app-tooltip v-if="priceChangeFormatted.tooltipText" :text="priceChangeFormatted.tooltipText" />
+                                <v-img v-if="change > 0" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                                <v-img v-if="change < 0" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                             </v-layout>
                         </v-flex>
                         <v-spacer v-else />
@@ -209,7 +189,7 @@ import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { ObjectCache } from 'apollo-cache-inmemory'
-import { PriceInfo } from './props'
+import { IEthereumToken } from '@app/plugins/CoinData/models'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC721Balances'
 import BN from 'bignumber.js'
@@ -230,7 +210,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     @Prop(Object) token!: ERC20TokenType
     @Prop(String) holder!: string
     @Prop(Boolean) isErc20!: boolean
-    @Prop(Object) tokenPriceInfo!: PriceInfo
+    @Prop(Object) tokenPriceInfo!: IEthereumToken | undefined
 
     /*
     ===================================================================================
@@ -239,6 +219,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     */
 
     get image(): string {
+        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image) {
+            return this.tokenPriceInfo.image
+        }
         return require('@/assets/icon-token.png')
     }
 
@@ -257,28 +240,37 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
         return `/token/${this.token.tokenInfo.contract}?holder=${this.holder}`
     }
 
-    get currPrice(): FormattedNumber | null {
-        return this.tokenPriceInfo.price ? this.formatUsdValue(new BN(this.tokenPriceInfo.price)) : null
+    get currPrice(): FormattedNumber {
+        return this.tokenPriceInfo && this.tokenPriceInfo.price ? this.formatUsdValue(new BN(this.tokenPriceInfo.price)) : this.formatUsdValue(new BN(0))
     }
 
-    get usdValueFormatted(): FormattedNumber | string {
-        if (this.isErc20 && this.tokenPriceInfo.price) {
+    get usdValueFormatted(): FormattedNumber {
+        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.price) {
             return this.formatUsdValue(new BN(this.tokenPriceInfo.price).multipliedBy(this.getValue()))
         }
-        return ''
+        return this.formatUsdValue(new BN(0))
+    }
+
+    get change(): number {
+        if (!this.tokenPriceInfo || this.tokenPriceInfo.percentChange24h === 0) {
+            return 0
+        } else if (this.tokenPriceInfo.percentChange24h > 0) {
+            return 1
+        }
+        return -1
     }
 
     get priceChangeClass(): string {
-        if (!this.tokenPriceInfo.change || this.tokenPriceInfo.change === 0) {
+        if (this.change === 0) {
             return 'black--text'
-        } else if (this.tokenPriceInfo.change > 0) {
+        } else if (this.change > 0) {
             return 'txSuccess--text'
         }
         return 'txFail--text'
     }
 
     get priceChangeFormatted(): FormattedNumber | null {
-        return this.tokenPriceInfo.change ? this.formatPercentageValue(new BN(this.tokenPriceInfo.change)) : null
+        return this.tokenPriceInfo ? this.formatPercentageValue(new BN(this.tokenPriceInfo.percentChange24h)) : null
     }
 
     /*
