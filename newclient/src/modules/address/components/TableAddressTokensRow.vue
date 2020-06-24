@@ -88,7 +88,7 @@
                                                 {{ usdValueFormatted.value }}
                                                 <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
                                             </span>
-                                            <span v-if="" class="caption pl-2"> @ {{ currPrice.value }} {{ $t('token.per') }} {{ symbolString }} </span>
+                                            <span class="caption pl-2"> @ {{ currPrice.value }} {{ $t('token.per') }} {{ symbolString }} </span>
                                         </p>
                                     </v-flex>
                                 </v-layout>
