@@ -49,7 +49,7 @@
             <app-tabs :tabs="tabsTokenHolderDetails">
                 <!-- Transfers -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <!-- <transfers-table :address="addressRef" :page-type="'tokenHolder'" :decimals="decimals" :holder="holderAddress" :symbol="symbol" /> -->
+                    <transfers-table :address="addressRef" :page-type="'tokenHolder'" :holder="holderAddress" :symbol="symbol" />
                 </v-tab-item>
                 <!-- End Transfers -->
             </app-tabs>
@@ -65,7 +65,7 @@ import { Crumb, Tab } from '@app/core/components/props'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 // import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
-// import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
+import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
 import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
 import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
@@ -76,9 +76,9 @@ const MAX_ITEMS = 10
     components: {
         AppBreadCrumbs,
         TokenDetailsList,
-        AppTabs
+        AppTabs,
         // TokenTableHolders,
-        // TransfersTable
+        TransfersTable
     },
     apollo: {
         tokenDetails: {
@@ -129,7 +129,7 @@ export default class TokenDetails extends Vue {
      * @return {Array} - Breadcrumb entry. See description.
      */
     get crumbs(): Crumb[] {
-        console.error('dafadf', this.tokenDetails)
+        console.error('dafadf', this.addressRef,)
         return this.isHolder ? this.crumbsHolder : this.crumbsBasic
     }
 
@@ -209,8 +209,9 @@ export default class TokenDetails extends Vue {
     }
 
     get decimals(): number | null {
-        const { tokenDetails } = this
-        return tokenDetails ? tokenDetails.decimals : null
+        // const { tokenDetails } = this
+        console.error('this', this.tokenDetails)
+        return this.tokenDetails ? this.tokenDetails.decimals : null
     }
 
     get symbol(): string | null {
