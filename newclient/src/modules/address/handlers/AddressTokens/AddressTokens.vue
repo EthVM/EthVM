@@ -15,7 +15,14 @@
             </template>
             <template #rows>
                 <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
-                    <table-address-tokens-row :token="token" :is-erc20="isERC20" :address="address" :token-price-info="getUSDInfo(token.tokenInfo.contract)" />
+                    <table-address-tokens-row
+                        v-if="!initialLoad"
+                        :token="token"
+                        :is-erc20="isERC20"
+                        :address="address"
+                        :token-price-info="getUSDInfo(token.tokenInfo.contract)"
+                    />
+                    <table-address-tokens-row-loading v-else />
                 </v-card>
             </template>
         </table-txs>
@@ -31,13 +38,14 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 // import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTokensRow from '@app/modules/address/components/TableAddressTokensRow.vue'
+import TableAddressTokensRowLoading from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getOwnersERC20Tokens, getOwnersERC721UniqueTokens, getOwnersERC721Balances } from './tokens.graphql'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721BalanceType } from './apolloTypes/getOwnersERC721Balances'
-import { PriceInfo } from '@app/modules/address/components/props'
+import { IEthereumToken } from '@app/plugins/CoinData/models'
 
 /*
   DEV NOTES:
@@ -51,7 +59,8 @@ import { PriceInfo } from '@app/modules/address/components/props'
         AppPaginate,
         TableTxs,
         TableAddressTokensHeader,
-        TableAddressTokensRow
+        TableAddressTokensRow,
+        TableAddressTokensRowLoading
     },
     apollo: {
         getTokens: {
@@ -76,13 +85,24 @@ import { PriceInfo } from '@app/modules/address/components/props'
                         if (this.hasNext != null) {
                             this.fetchMore()
                         } else {
-                            this.initialLoad = false
                             this.totalTokens = this.getTokens.length
                             this.$emit('totalERC20', this.totalTokens)
                             if (this.totalTokens > this.maxItems) {
                                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                                 this.showPagination = true
                             }
+                            const contracts = this.getTokens.map(token => token.tokenInfo.contract)
+                            this.$CD
+                                .getEthereumTokensMap(contracts)
+                                .then(data => {
+                                    console.log(data)
+                                    this.tokenPrices = data
+                                    this.initialLoad = false
+                                })
+                                .catch(error => {
+                                    console.log(error)
+                                    this.initialLoad = false
+                                })
                         }
                     }
                 } else {
@@ -126,6 +146,7 @@ export default class AddressTokens extends Vue {
     hasNext!: string | null
     totalERC20 = 0
     totalERC721 = 0
+    tokenPrices: Map<string, IEthereumToken> | false = false
 
     /*
     ===================================================================================
@@ -205,11 +226,11 @@ export default class AddressTokens extends Vue {
         })
     }
 
-    getUSDInfo(contract: string): PriceInfo {
-        return {
-            price: '0.5',
-            change: -0.23
+    getUSDInfo(contract: string): IEthereumToken | undefined {
+        if (!this.initialLoad && this.tokenPrices && this.tokenPrices.has(contract)) {
+            return this.tokenPrices.get(contract)
         }
+        return undefined
     }
 }
 </script>
