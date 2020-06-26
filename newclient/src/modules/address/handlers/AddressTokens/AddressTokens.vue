@@ -21,6 +21,7 @@
                         :is-erc20="isERC20"
                         :address="address"
                         :token-price-info="getUSDInfo(token.tokenInfo.contract)"
+                        @showNft="showNftTokens"
                     />
                     <table-address-tokens-row-loading v-else />
                 </v-card>
@@ -42,9 +43,11 @@ import TableAddressTokensRowLoading from '@app/modules/address/components/TableA
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getOwnersERC20Tokens, getOwnersERC721UniqueTokens, getOwnersERC721Balances } from './tokens.graphql'
+import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances } from './tokens.graphql'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721BalanceType } from './apolloTypes/getOwnersERC721Balances'
+import { getOwnersERC721Tokens_getOwnersERC721Tokens_tokens as ERC721TokenType } from './apolloTypes/getOwnersERC721Tokens'
+
 import { IEthereumToken } from '@app/plugins/CoinData/models'
 
 /*
@@ -52,6 +55,9 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
   - add on Error
   - add messages if Error to be displayed in Table
 */
+interface NFTMap {
+    [key: number]: ERC721TokenType[]
+}
 
 @Component({
     components: {
@@ -80,6 +86,9 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
             result({ data }) {
                 if (this.hasTokens) {
                     this.error = '' // clear the error
+                    if (this.isNFT) {
+                        console.log(data)
+                    }
                     if (this.isERC20) {
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
@@ -95,7 +104,6 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
                             this.$CD
                                 .getEthereumTokensMap(contracts)
                                 .then(data => {
-                                    console.log(data)
                                     this.tokenPrices = data
                                     this.initialLoad = false
                                 })
@@ -105,6 +113,7 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
                                 })
                         }
                     }
+                    this.initialLoad = false
                 } else {
                     console.log('error failed no data: ', data)
                     this.showPagination = false
@@ -112,6 +121,25 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
                     this.error = this.error || this.$i18n.t('message.err')
                     this.$apollo.queries.getTokens.refetch()
                 }
+            }
+        },
+
+        getOwnersERC721Tokens: {
+            query: getOwnersERC721Tokens,
+            variables() {
+                return {
+                    hash: this.address,
+                    tokenContract: this.requestContract
+                }
+            },
+            skip() {
+                return this.showUniqueNFT
+            },
+            result() {
+                this.$set(this.tokenStore, this.requestContract, {
+                    tokens: this.getOwnersERC721Tokens.tokens,
+                    nextKey: this.getOwnersERC721Tokens.nextKey
+                })
             }
         }
     }
@@ -147,6 +175,12 @@ export default class AddressTokens extends Vue {
     totalERC20 = 0
     totalERC721 = 0
     tokenPrices: Map<string, IEthereumToken> | false = false
+
+    /* Unique NFT List for contract */
+    uniqueNFTMap?: Map<string, ERC721TokenType[]>
+    loadingUniqueNFT = true
+    showUniqueNFT = false
+    uniqueNFT: ERC721TokenType[] = []
 
     /*
     ===================================================================================
@@ -231,6 +265,23 @@ export default class AddressTokens extends Vue {
             return this.tokenPrices.get(contract)
         }
         return undefined
+    }
+    /* NFT TOKENS*/
+
+    showNftTokens(contract: string) {
+        if (contract) {
+            if (this.uniqueNFTMap && this.uniqueNFTMap[contract]) {
+                this.uniqueNFT = this.uniqueNFTMap[contract]
+                this.loadingUniqueNFT = false
+                this.showUniqueNFT = true
+            } else {
+                /* Load Tokens */
+            }
+        }
+    }
+    hideNFTTokens(): void {
+        this.showUniqueNFT = false
+        this.loadingUniqueNFT = true
     }
 }
 </script>
