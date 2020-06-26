@@ -10,16 +10,16 @@
     =====================================================================================
     -->
         <div v-if="!isHolder">
-            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" :error="error" />
+            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" />
             <app-tabs v-if="!loading" :tabs="tabsTokenDetails">
                 <!--
         =====================================================================================
           TRANSFERS
         =====================================================================================
         -->
-                <!-- <v-tab-item slot="tabs-item" value="tab-0">
+                <v-tab-item slot="tabs-item" value="tab-0">
                     <transfers-table :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" />
-                </v-tab-item> -->
+                </v-tab-item>
                 <!--
         =====================================================================================
           HOLDERS
@@ -39,20 +39,7 @@
     =====================================================================================
     -->
         <div v-if="isHolder">
-            <token-details-list
-                :address-ref="addressRef"
-                :holder-details="tokenDetails"
-                :token-details="isHolder && tokenDetails ? tokenDetails.tokenInfo : tokenDetails"
-                :is-loading="loading"
-                :error="error"
-            />
-            <app-tabs :tabs="tabsTokenHolderDetails">
-                <!-- Transfers -->
-                <v-tab-item slot="tabs-item" value="tab-0">
-                    <transfers-table :address="addressRef" :page-type="'tokenHolder'" :holder="holderAddress" :symbol="symbol" />
-                </v-tab-item>
-                <!-- End Transfers -->
-            </app-tabs>
+            <token-details-list :address-ref="addressRef" :holder-details="tokenDetails" :token-details="tokenDetails.tokenInfo" :is-loading="loading" />
         </div>
     </div>
 </template>
@@ -67,8 +54,8 @@ import AppTabs from '@app/core/components/ui/AppTabs.vue'
 // import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
 import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
 import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
-import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
-import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
+import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
+import { TokenDetails as TokenInfo } from './apolloTypes/TokenDetails'
 
 const MAX_ITEMS = 10
 
@@ -111,10 +98,8 @@ export default class TokenDetails extends Vue {
   ===================================================================================
   */
 
-    tokenDetails?: TokenInfo | TokenOwnerInfo
+    tokenDetails!: TokenInfo | TokenOwnerInfo
     address = ''
-
-    error = '' // Error string pertaining to the TokenDetailsList components
 
     /*
   ===================================================================================
@@ -129,7 +114,6 @@ export default class TokenDetails extends Vue {
      * @return {Array} - Breadcrumb entry. See description.
      */
     get crumbs(): Crumb[] {
-        console.error('dafadf', this.addressRef,)
         return this.isHolder ? this.crumbsHolder : this.crumbsBasic
     }
 
@@ -184,21 +168,17 @@ export default class TokenDetails extends Vue {
     }
 
     get totalSupply(): BigNumber | undefined {
-        return this.tokenDetails ? this.tokenDetails.totalSupplyBN : undefined
+        return this.tokenDetails['tokenInfo'] ? this.tokenDetails['tokenInfo'].totalSupply : this.tokenDetails['totalSupply']
     }
 
     get tokenLabel(): string {
-        const { tokenDetails } = this
-        if (!tokenDetails) {
+        if (!this.tokenDetails) {
             return this.tokenLabelDefault
         }
-
-        const { symbol, name } = tokenDetails
-
-        if (symbol) {
-            return symbol.toUpperCase()
-        } else if (name) {
-            return name.toUpperCase()
+        if (this.symbol) {
+            return this.symbol.toUpperCase()
+        } else if (this.name) {
+            return this.name.toUpperCase()
         }
         return this.tokenLabelDefault
     }
@@ -209,14 +189,15 @@ export default class TokenDetails extends Vue {
     }
 
     get decimals(): number | null {
-        // const { tokenDetails } = this
-        console.error('this', this.tokenDetails)
-        return this.tokenDetails ? this.tokenDetails.decimals : null
+        return this.tokenDetails['tokenInfo'] ? this.tokenDetails['tokenInfo'].decimals : this.tokenDetails['decimals']
     }
 
     get symbol(): string | null {
-        const { tokenDetails } = this
-        return tokenDetails ? tokenDetails.symbol : null
+        return this.tokenDetails['tokenInfo'] ? this.tokenDetails['tokenInfo'].symbol : this.tokenDetails['symbol']
+    }
+
+    get name(): string | null {
+        return this.tokenDetails['tokenInfo'] ? this.tokenDetails['tokenInfo'].name : this.tokenDetails['name']
     }
 
     /**

@@ -18,12 +18,10 @@ import { Detail } from '@app/core/components/props'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Hex } from '@app/core/models'
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { TokenDetailExt } from '@app/core/api/apollo/extensions/token-detail.ext'
-import { TokenHolderExt } from '@app/core/api/apollo/extensions/token-holder.ext'
 import BN from 'bignumber.js'
 import { ConfigHelper } from '@app/core/helper/config-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { FormattedNumber } from '../../../core/helper/number-format-helper'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { IEthereumToken } from '@app/plugins/CoinData/models'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
 import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
@@ -43,14 +41,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     @Prop(String) addressRef!: string // Token contract address
     @Prop(Object) tokenDetails!: TokenInfo
     @Prop(Boolean) isLoading!: boolean
-    @Prop(String) error!: string
     @Prop(Object) holderDetails!: TokenOwnerInfo
     /*
   ===================================================================================
     Initial Values
   ===================================================================================
   */
-
+    error = ''
     icons = {
         blog: 'fab fa-ethereum',
         chat: 'fab fa-ethereum',
@@ -82,7 +79,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
                     console.error('data', this.tokenData, this.tokenDetails)
                 })
                 .catch(error => {
-                    console.log(error)
+                    console.error('error', error)
                     this.error = `${this.$t('message.no-data')}`
                 })
         }
@@ -139,7 +136,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
         if (!this.isRopsten) {
             details.push(this.circulatingSupplyDetail, this.marketCapDetail, this.volumeDetail)
         }
-        details.push(this.websiteDetail, this.supportDetail, this.socialDetail)
+        // details.push(this.websiteDetail, this.supportDetail, this.socialDetail)
         return details
     }
 
@@ -185,7 +182,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     get tokenTypeDetail(): Detail {
         return {
             title: this.$tc('token.type', 1),
-            detail: !this.isLoading && this.tokenDetails && this.tokenDetails.contractType ? this.tokenDetails.contractType : undefined
+            detail: ''
+            // detail: !this.isLoading && this.tokenData && this.tokenData.contractType ? this.tokenData.contractType : undefined
         }
     }
 
@@ -218,13 +216,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     //TODO: Figure out where is circulatingSupply
     get circulatingSupplyDetail(): Detail {
         return {
-            title: this.$i18n.t('token.circSupply'),
-            detail:
-                !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted.value : undefined,
-            tooltip:
-                !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply && this.tokenDetails.circulatingSupplyFormatted.tooltipText
-                    ? this.tokenDetails.circulatingSupplyFormatted.tooltipText
-                    : undefined
+            title: this.$i18n.t('token.circSupply')
+            // detail:
+            //     !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted.value : undefined,
+            // tooltip:
+            //     !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply && this.tokenDetails.circulatingSupplyFormatted.tooltipText
+            //         ? this.tokenDetails.circulatingSupplyFormatted.tooltipText
+            //         : undefined
         }
     }
 
@@ -242,7 +240,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     get volumeDetail(): Detail {
         return {
             title: this.$i18n.t('token.volume'),
-            detail: !this.isLoading && this.tokenData && this.tokenData.volume ? this.formatNumber(this.tokenDetails.volume) : undefined
+            detail: !this.isLoading && this.tokenData && this.tokenData.volume ? this.formatNumber(this.tokenData.volume) : undefined
             // tooltip:
             //     !isLoading && tokenDetails && tokenDetails.totalVolume && this.tokenDetails.totalVolumeFormatted.tooltipText
             //         ? this.tokenDetails.totalVolumeFormatted.tooltipText
@@ -253,50 +251,51 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     //TODO: Figure out where is website
     get websiteDetail(): Detail {
         const detail: Detail = { title: this.$i18n.t('token.website') }
-        if (!this.isLoading && this.tokenDetails && this.tokenDetails.website) {
-            detail.detail = this.tokenDetails.website
-            detail.link = `${this.tokenDetails.website}`
-        }
+        // if (!this.isLoading && this.tokenData && this.tokenData.website) {
+        //     detail.detail = this.tokenData.website
+        //     detail.link = `${this.tokenData.website}`
+        // }
         return detail
     }
 
     //TODO: Figure out where is email
     get supportDetail(): Detail {
         return {
-            title: this.$i18n.t('token.support'),
-            detail:
-                !this.isLoading && this.tokenDetails && this.tokenDetails.email
-                    ? `<a href="mailto:${this.tokenDetails.email}" target="_BLANK">${this.tokenDetails.email}</a>`
-                    : undefined
+            title: this.$i18n.t('token.support')
+            // detail:
+            //     !this.isLoading && this.tokenDetails && this.tokenDetails.email
+            //         ? `<a href="mailto:${this.tokenDetails.email}" target="_BLANK">${this.tokenDetails.email}</a>`
+            //         : undefined
         }
     }
 
     //TODO: Figure out where is socialDetail
     get socialDetail(): Detail {
         const detail: Detail = { title: this.$i18n.t('token.links') }
-        if (!this.isLoading && this.tokenDetails && this.tokenDetails.social) {
-            detail.detail = Object.entries(this.tokenDetails.social)
-                .map(obj => {
-                    const name = obj[0]
-                    const url = obj[1]
-                    if (url === null || url === '') {
-                        return ''
-                    }
-                    return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${this.icons[name]} pr-2 material-icons theme--light"></i></a>`
-                })
-                .reduce((a, b) => {
-                    return `${a}${b}`
-                })
-        }
+        // if (!this.isLoading && this.tokenDetails && this.tokenDetails.social) {
+        //     detail.detail = Object.entries(this.tokenDetails.social)
+        //         .map(obj => {
+        //             const name = obj[0]
+        //             const url = obj[1]
+        //             if (url === null || url === '') {
+        //                 return ''
+        //             }
+        //             return `<a href="${url}" target="_BLANK"><i aria-hidden="true" class="v-icon primary--text ${this.icons[name]} pr-2 material-icons theme--light"></i></a>`
+        //         })
+        //         .reduce((a, b) => {
+        //             return `${a}${b}`
+        //         })
+        // }
         return detail
     }
 
-    // get totalHoldersDetail(): Detail {
-    //     return {
-    //         title: this.$i18n.t('token.holder-total'),
-    //         detail: !this.isLoading && this.tokenDetails ? this.tokenDetails.holdersCount || 0 : undefined
-    //     }
-    // }
+    //TODO: Figure out where totalHolders is
+    get totalHoldersDetail(): Detail {
+        return {
+            title: this.$i18n.t('token.holder-total'),
+            // detail: !this.isLoading && this.tokenDetails ? this.tokenDetails.holdersCount || 0 : undefined
+        }
+    }
 
     get holderDetail(): Detail {
         const detail: Detail = { title: this.$t('token.holder') }
@@ -325,17 +324,18 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
         }
     }
 
-    // get holderTransfersDetail(): Detail {
-    //     const { holderDetails, isLoading } = this
-    //     return {
-    //         title: this.$t('token.transfers'),
-    //         detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted.value : undefined,
-    //         tooltip:
-    //             !isLoading && holderDetails && holderDetails.totalTransfersBN && this.holderDetails.totalTransfersFormatted.tooltipText
-    //                 ? this.holderDetails.totalTransfersFormatted.tooltipText
-    //                 : undefined
-    //     }
-    // }
+    //TODO: Figure out where totalTransfer is
+    get holderTransfersDetail(): Detail {
+        const { holderDetails, isLoading } = this
+        return {
+            title: this.$t('token.transfers')
+            // detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted.value : undefined,
+            // tooltip:
+            //     !isLoading && holderDetails && holderDetails.totalTransfersBN && this.holderDetails.totalTransfersFormatted.tooltipText
+            //         ? this.holderDetails.totalTransfersFormatted.tooltipText
+            //         : undefined
+        }
+    }
 
     get balanceUsd(): string | undefined {
         if (!this.holderDetails) {
