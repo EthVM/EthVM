@@ -48,21 +48,21 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
   ===================================================================================
   */
     error = ''
-    icons = {
-        blog: 'fab fa-ethereum',
-        chat: 'fab fa-ethereum',
-        facebook: 'fab fa-facebook',
-        forum: 'fas fa-comments',
-        github: 'fab fa-github',
-        gitter: 'fab fa-gitter',
-        instagram: 'fab fa-instagram',
-        linkedin: 'fab fa-linkedin',
-        reddit: 'fab fa-reddit',
-        slack: 'fab fa-slack',
-        telegram: 'fab fa-telegram',
-        twitter: 'fab fa-twitter',
-        youtube: 'fab fa-youtube'
-    }
+    // icons = {
+    //     blog: 'fab fa-ethereum',
+    //     chat: 'fab fa-ethereum',
+    //     facebook: 'fab fa-facebook',
+    //     forum: 'fas fa-comments',
+    //     github: 'fab fa-github',
+    //     gitter: 'fab fa-gitter',
+    //     instagram: 'fab fa-instagram',
+    //     linkedin: 'fab fa-linkedin',
+    //     reddit: 'fab fa-reddit',
+    //     slack: 'fab fa-slack',
+    //     telegram: 'fab fa-telegram',
+    //     twitter: 'fab fa-twitter',
+    //     youtube: 'fab fa-youtube'
+    // }
     tokenData: IEthereumToken | null = null
     isRopsten = ConfigHelper.isRopsten
     /*
@@ -76,10 +76,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
                 .getEthereumTokenByContract(this.addressRef)
                 .then(data => {
                     this.tokenData = data ? data : null
-                    console.error('data', this.tokenData, this.tokenDetails)
                 })
                 .catch(error => {
-                    console.error('error', error)
                     this.error = `${this.$t('message.no-data')}`
                 })
         }
@@ -125,7 +123,10 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
      * Get details list for token detail view
      */
     get tokenDetailsList(): Detail[] {
-        const details = [this.contractDetail, this.contractOwnerDetail, this.contractDecimalsDetail, this.tokenTypeDetail]
+        const details = [this.contractDetail, this.contractDecimalsDetail]
+        if (this.holderDetails && this.holderDetails.owner) {
+            details.push(this.contractOwnerDetail)
+        }
         if (!this.holderDetails) {
             // details.push(this.totalHoldersDetail)
         }
@@ -134,7 +135,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
         }
         details.push(this.supplyDetail)
         if (!this.isRopsten) {
-            details.push(this.circulatingSupplyDetail, this.marketCapDetail, this.volumeDetail)
+            details.push(this.marketCapDetail, this.volumeDetail)
         }
         // details.push(this.websiteDetail, this.supportDetail, this.socialDetail)
         return details
@@ -178,23 +179,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
             detail: !this.isLoading && this.tokenDetails && this.tokenDetails.decimals != null ? this.tokenDetails.decimals : undefined
         }
     }
-    //TODO: Figure out what is contractType
-    get tokenTypeDetail(): Detail {
-        return {
-            title: this.$tc('token.type', 1),
-            detail: ''
-            // detail: !this.isLoading && this.tokenData && this.tokenData.contractType ? this.tokenData.contractType : undefined
-        }
-    }
 
     get priceDetail(): Detail {
         const detail: Detail = { title: this.$i18n.tc('price.name', 1) }
         if (!this.isLoading && this.tokenData) {
-            let priceFormatted = this.formatNumber(this.tokenData.price).toString()
-            if (this.priceChange) {
-                priceFormatted += ` (${this.priceChange}%)`
-            }
+            const priceFormatted = this.formatNumber(this.tokenData.price).toString()
             detail.detail = priceFormatted
+            detail.percentChange24h = this.tokenData.percentChange24h
             // if (this.tokenDetails.currentPriceFormatted.tooltipText) {
             //     detail.tooltip = this.tokenDetails.currentPriceFormatted.tooltipText
             // }
@@ -209,19 +200,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
             // tooltip:
             //     !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalSupplyFormatted.tooltipText
             //         ? this.tokenDetails.totalSupplyFormatted.tooltipText
-            //         : undefined
-        }
-    }
-
-    //TODO: Figure out where is circulatingSupply
-    get circulatingSupplyDetail(): Detail {
-        return {
-            title: this.$i18n.t('token.circSupply')
-            // detail:
-            //     !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply ? this.tokenDetails.circulatingSupplyFormatted.value : undefined,
-            // tooltip:
-            //     !this.isLoading && this.tokenDetails && this.tokenDetails.circulatingSupply && this.tokenDetails.circulatingSupplyFormatted.tooltipText
-            //         ? this.tokenDetails.circulatingSupplyFormatted.tooltipText
             //         : undefined
         }
     }
@@ -361,13 +339,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
             n = n.div(new BN(10).pow(decimals))
         }
         return this.formatFloatingPointValue(n)
-    }
-
-    get priceChange(): string | number | undefined {
-        if (this.tokenData && this.tokenData.percentChange24h) {
-            const value = this.tokenData.percentChange24h
-            return this.tokenData.percentChange24h > 0 ? `+${value}` : value
-        }
     }
 }
 </script>

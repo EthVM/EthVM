@@ -39,12 +39,12 @@
                 <v-card v-if="!hasItems" flat>
                     <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
                 </v-card>
-                <v-card v-for="(transfer, index) in getTransfers.transfers" v-else :key="index" color="white" class="transparent" flat>
+                <v-card v-for="(transfer, index) in transferData" v-else :key="index" color="white" class="transparent" flat>
                     <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" />
                 </v-card>
                 <!-- End Rows -->
                 <v-layout v-if="showPagination" justify-end row class="pb-1 pr-2 pl-2">
-                    <app-paginate-has-more :current-page="page" :has-more="getTransfers.nextKey" @newPage="setPage" />
+                    <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading" @newPage="setPage" />
                 </v-layout>
             </div>
         </div>
@@ -132,17 +132,49 @@ export default class TransfersTable extends Vue {
         if (reset) {
             this.isEnd = 0
             this.$apollo.queries.getTransfers.refetch()
-        } 
+        } else {
+            if (page > this.isEnd && this.hasMore) {
+                const queryName = 'getERC20Transfers'
+
+                this.$apollo.queries.getTransfers.fetchMore({
+                    variables: {
+                        hash: this.address,
+                        _limit: 10,
+                        _nextKey: this.getTransfers.nextKey
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        this.isEnd = page
+                        const newT = fetchMoreResult[queryName].transfers
+                        const prevT = previousResult[queryName].transfers
+                        return {
+                            [queryName]: {
+                                nextKey: fetchMoreResult[queryName].nextKey,
+                                transfers: [...prevT, ...newT],
+                                __typename: fetchMoreResult[queryName].__typename
+                            }
+                        }
+                    }
+                })
+            }
+        }
         this.index = page
     }
-
     /*
         ===================================================================================
           Computed Values
         ===================================================================================
         */
+    get transferData(): any[] {
+        if (this.getTransfers.transfers) {
+            const start = this.index * this.maxItems
+            const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
+            return this.getTransfers.transfers.slice(start, end)
+        }
+        return []
+    }
+
     get hasMore(): boolean {
-        return this.getTransfers?.nextKey !== null
+        return this.getTransfers.nextKey !== null
     }
 
     get isToken(): boolean {
@@ -165,21 +197,9 @@ export default class TransfersTable extends Vue {
         return !!this.error && this.error !== ''
     }
 
-    // get totalCount(): BigNumber | undefined {
-    //     return this.getTransfers ? this.getTransfers.totalCountBN : undefined
-    // }
-
     get hasItems(): boolean {
-        console.error('transfers', this.getTransfers, this.loading)
         return !!(this.getTransfers && this.getTransfers.transfers.length)
     }
-
-    // /**
-    //  * @return {Number} - Total number of pagination pages
-    //  */
-    // get pages(): number {
-    //     return this.getTransfers ? Math.ceil(this.getTransfers!.totalCountBN!.div(this.maxItems).toNumber()) : 0
-    // }
 
     /**
      * @return {Number} - MAX_ITEMS per pagination page

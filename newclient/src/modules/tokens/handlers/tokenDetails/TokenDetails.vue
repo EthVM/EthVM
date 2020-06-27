@@ -25,9 +25,9 @@
           HOLDERS
         =====================================================================================
         -->
-                <!-- <v-tab-item slot="tabs-item" value="tab-1">
+                <v-tab-item slot="tabs-item" value="tab-1">
                     <token-table-holders :address-ref="addressRef" :decimals="decimals" />
-                </v-tab-item> -->
+                </v-tab-item>
             </app-tabs>
         </div>
         <!--
@@ -51,7 +51,7 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-// import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
+import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
 import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
 import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
@@ -64,7 +64,7 @@ const MAX_ITEMS = 10
         AppBreadCrumbs,
         TokenDetailsList,
         AppTabs,
-        // TokenTableHolders,
+        TokenTableHolders,
         TransfersTable
     },
     apollo: {

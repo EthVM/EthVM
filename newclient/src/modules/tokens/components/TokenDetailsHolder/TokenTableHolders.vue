@@ -7,7 +7,7 @@
         <app-error :has-error="hasError" :message="error" class="mb-4" />
         <!-- Pagination -->
         <v-layout v-if="showPagination" row fill-height justify-end class="pb-1 pr-2 pl-2">
-            <app-paginate-has-more :has-more="holdersPage.hasMore" :current-page="page" @newPage="setPage" />
+            <app-paginate-has-more :has-more="hasMore" :current-page="index" @newPage="setPage" />
         </v-layout>
         <!-- End Pagination -->
 
@@ -41,7 +41,7 @@
                     <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-holders') }}</v-card-text>
                 </v-card>
                 <div v-for="(holder, i) in holders" v-else :key="i">
-                    <token-table-holders-row :holder="holder" :token-address="addressRef" :decimals="decimals" :total-supply="totalSupply" />
+                    <token-table-holders-row :holder="holder" :token-address="addressRef" :decimals="decimals" />
                 </div>
             </div>
         </div>
@@ -53,14 +53,14 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import TokenTableHoldersRow from '@app/modules/tokens/components/TokenTableHoldersRow.vue'
-import TokenTableHoldersRowLoading from '@app/modules/tokens/components/TokenTableHoldersRowLoading.vue'
-import { TokenHolderPageExt, TokenHolderPageExt_items } from '@app/core/api/apollo/extensions/token-holder-page.ext'
-const MAX_ITEMS = 10
-import { getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails.graphql'
+import TokenTableHoldersRow from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHoldersRow.vue'
+import TokenTableHoldersRowLoading from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHoldersRowLoading.vue'
+import { getERC20TokenOwners } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
+import { ERC20TokenOwners as TokenOwners } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwners'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 
+const MAX_ITEMS = 10
 @Component({
     components: {
         AppPaginateHasMore,
@@ -69,35 +69,30 @@ import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
         TokenTableHoldersRow,
         TokenTableHoldersRowLoading
     },
-    data() {
-        return {
-            page: 0,
-            error: undefined
-        }
-    },
     apollo: {
         holdersPage: {
-            query: getERC20TokenBalance,
+            query: getERC20TokenOwners,
+            fetchPolicy: 'network-only',
             variables() {
-                const { addressRef, maxItems, page } = this
                 return {
-                    address: addressRef,
-                    limit: maxItems,
-                    page: page
+                    contract: this.addressRef,
+                    limit: this.maxItems
                 }
             },
-            update({ getERC20TokenBalance }) {
-                if (getERC20TokenBalance) {
-                    this.error = '' // clear the error
-                    return new TokenHolderPageExt(getERC20TokenBalance)
-                }
-                this.error = this.error || this.$i18n.t('message.err')
-                return getERC20TokenBalance
-            },
-            error({ graphQLErrors, networkError }) {
-                // TODO refine
-                if (networkError) {
-                    this.error = this.$i18n.t('message.no-data')
+            deep: true,
+            update: data => data.getERC20TokenOwners,
+            result({ data }) {
+                if (this.hasItems) {
+                    this.error = ''
+                    if (this.initialLoad) {
+                        this.showPagination = this.hasMore
+                        this.initialLoad = false
+                    }
+                } else {
+                    this.showPagination = false
+                    this.initialLoad = true
+                    this.error = this.error || this.$i18n.t('message.err')
+                    this.$apollo.queries.holdersPage.refetch()
                 }
             }
         }
@@ -111,35 +106,51 @@ export default class TokenTableHolders extends Vue {
     */
 
     @Prop(String) addressRef!: string
-    @Prop(BN) totalSupply?: BN
     @Prop(Number) decimals?: number
 
-    holdersPage?: TokenHolderPageExt
-    error?: string
+    holdersPage!: TokenOwners
+    error = ''
     page?: number
+    showPagination = false
+    index = 0
+    isEnd = 0
+    initialLoad = true
 
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
+    setPage(page: number, reset: boolean = false): void {
+        if (reset) {
+            this.isEnd = 0
+            this.$apollo.queries.holdersPage.refetch()
+        } else {
+            if (page > this.isEnd && this.hasMore) {
+                const queryName = 'getERC20TokenOwners'
 
-    setPage(page: number): void {
-        const { holdersPage: query } = this.$apollo.queries
-
-        const self = this
-
-        query.fetchMore({
-            variables: {
-                address: self.addressRef,
-                offset: page * this.maxItems,
-                limit: this.maxItems
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                self.page = page
-                return fetchMoreResult
+                this.$apollo.queries.holdersPage.fetchMore({
+                    variables: {
+                        contract: this.addressRef,
+                        _limit: this.maxItems,
+                        _nextKey: this.holdersPage.nextKey
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        this.isEnd = page
+                        const newT = fetchMoreResult[queryName].owners
+                        const prevT = previousResult[queryName].owners
+                        return {
+                            [queryName]: {
+                                nextKey: fetchMoreResult[queryName].nextKey,
+                                owners: [...prevT, ...newT],
+                                __typename: fetchMoreResult[queryName].__typename
+                            }
+                        }
+                    }
+                })
             }
-        })
+        }
+        this.index = page
     }
 
     /*
@@ -148,22 +159,15 @@ export default class TokenTableHolders extends Vue {
     ===================================================================================
     */
 
-    get holders(): TokenHolderPageExt_items[] {
-        return this.holdersPage ? this.holdersPage.items : []
+    get holders(): any[] {
+        if (this.holdersPage.owners) {
+            const start = this.index * this.maxItems
+            const end = start + this.maxItems > this.holdersPage.owners.length ? this.holdersPage.owners.length : start + this.maxItems
+            console.error('start', this.holdersPage)
+            return this.holdersPage.owners.slice(start, end)
+        }
+        return []
     }
-
-    // get totalCount(): BN {
-    //   return this.holdersPage ? this.holdersPage.totalCountBN : new BN(0)
-    // }
-
-    /**
-     * Given a MAX_ITEMS per page, calculate the number of pages for pagination.
-     * @return {Integer} - Number of pages of results
-     */
-    // get numPages() {
-    //   const { holdersPage } = this
-    //   return holdersPage ? Math.ceil(holdersPage!.totalCountBN.div(this.maxItems).toNumber()) : 0
-    // }
 
     get maxItems() {
         return MAX_ITEMS
@@ -178,12 +182,11 @@ export default class TokenTableHolders extends Vue {
     }
 
     get hasItems(): boolean {
-        // return this.totalCount.isGreaterThan(0)
-        return !!((this.page && this.page > 0) || (this.holdersPage && this.holdersPage.items.length > 0))
+        return !!(this.holdersPage && this.holdersPage.owners.length)
     }
 
-    get showPagination(): boolean {
-        return !!((this.page && this.page > 0) || (this.holdersPage && this.holdersPage.hasMore))
+    get hasMore(): boolean {
+        return this.holdersPage.nextKey !== null
     }
 }
 </script>

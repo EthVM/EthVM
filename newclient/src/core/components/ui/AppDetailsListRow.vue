@@ -7,6 +7,7 @@
       =====================================================================================
       -->
             <v-flex xs4 sm3 md2>
+                <div :class="[priceChangeClass, 'info--text', 'font-weight-medium']" v-html="detail.title" />
                 <div class="info--text font-weight-medium" v-html="detail.title" />
             </v-flex>
             <!--
@@ -82,6 +83,17 @@ export default class AppDetailsListRow extends Vue {
     Computed
   ===================================================================================
   */
+
+    get priceChangeClass(): string {
+        console.error('detail', this.detail)
+        if (this.detail.percentChange24h > 0) {
+            return 'txSuccess--text pl-3'
+        }
+        if (this.detail.percentChange24h < 0) {
+            return 'txFail--text pl-3'
+        }
+        return 'black--text pl-3'
+    }
 
     get isMono(): boolean {
         return !!this.detail.mono
