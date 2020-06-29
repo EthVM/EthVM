@@ -132,8 +132,8 @@ export default class TokenTableHolders extends Vue {
                 this.$apollo.queries.holdersPage.fetchMore({
                     variables: {
                         contract: this.addressRef,
-                        _limit: this.maxItems,
-                        _nextKey: this.holdersPage.nextKey
+                        limit: this.maxItems,
+                        nextKey: this.holdersPage.nextKey
                     },
                     updateQuery: (previousResult, { fetchMoreResult }) => {
                         this.isEnd = page
@@ -163,7 +163,6 @@ export default class TokenTableHolders extends Vue {
         if (this.holdersPage.owners) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.holdersPage.owners.length ? this.holdersPage.owners.length : start + this.maxItems
-            console.error('start', this.holdersPage)
             return this.holdersPage.owners.slice(start, end)
         }
         return []

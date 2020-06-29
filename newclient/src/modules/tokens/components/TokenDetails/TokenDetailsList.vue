@@ -183,12 +183,12 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     get priceDetail(): Detail {
         const detail: Detail = { title: this.$i18n.tc('price.name', 1) }
         if (!this.isLoading && this.tokenData) {
-            const priceFormatted = this.formatNumber(this.tokenData.price).toString()
-            detail.detail = priceFormatted
-            detail.percentChange24h = this.tokenData.percentChange24h
-            // if (this.tokenDetails.currentPriceFormatted.tooltipText) {
-            //     detail.tooltip = this.tokenDetails.currentPriceFormatted.tooltipText
-            // }
+            const priceFormatted = this.formatUsdValue(new BN(this.tokenData.price))
+            detail.detail = priceFormatted.value
+            detail.priceChange = this.formatPercentageValue(new BN(this.tokenData.percentChange24h)).value
+            if (priceFormatted.tooltipText) {
+                detail.tooltip = priceFormatted.tooltipText
+            }
         }
         return detail
     }
@@ -270,7 +270,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     //TODO: Figure out where totalHolders is
     get totalHoldersDetail(): Detail {
         return {
-            title: this.$i18n.t('token.holder-total'),
+            title: this.$i18n.t('token.holder-total')
             // detail: !this.isLoading && this.tokenDetails ? this.tokenDetails.holdersCount || 0 : undefined
         }
     }

@@ -7,8 +7,7 @@
       =====================================================================================
       -->
             <v-flex xs4 sm3 md2>
-                <div :class="[priceChangeClass, 'info--text', 'font-weight-medium']" v-html="detail.title" />
-                <div class="info--text font-weight-medium" v-html="detail.title" />
+                <div class="info--text font-weight-medium">{{ detail.title }}</div>
             </v-flex>
             <!--
       =====================================================================================
@@ -22,11 +21,24 @@
                 <div v-else>
                     <div v-if="!isMono">
                         <router-link v-if="detail.link" :to="detail.link">
-                            <div class="text-truncate secondary--text" v-html="detail.detail"></div>
+                            <div class="text-truncate secondary--text">{{ detail.detail }}</div>
                         </router-link>
-                        <div v-else class="text-muted text-truncate">
-                            <span class="pr-1" v-html="detail.detail"></span>
+                        <div v-else class="text-muted text-truncate detail-container">
+                            <span class="pr-1">{{ detail.detail }}</span>
                             <app-tooltip v-if="detail.tooltip" :text="detail.tooltip" />
+                            <v-layout
+                                v-if="detail.priceChange"
+                                :class="[detail.tooltip ? 'pl-3' : 'pl-2', priceChangeClass, 'price-container', 'font-weight-medium']"
+                                row
+                                wrap
+                                align-center
+                                justify-start
+                            >
+                                (<span class="pl-1">{{ detail.priceChange }}%</span>
+                                <v-img v-if="priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="16px" max-width="16px" contain></v-img>
+                                <v-img v-if="priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="16px" max-width="16px" contain></v-img>
+                                )
+                            </v-layout>
                         </div>
                     </div>
                     <div v-else>
@@ -60,6 +72,7 @@ import { Detail } from '@app/core/components/props'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import BN from 'bignumber.js'
 
 @Component({
     components: {
@@ -84,15 +97,24 @@ export default class AppDetailsListRow extends Vue {
   ===================================================================================
   */
 
+    get priceChangeSymbol() {
+        if (this.detail.priceChange && new BN(this.detail.priceChange).gt(0)) {
+            return '+'
+        }
+        if (this.detail.priceChange && new BN(this.detail.priceChange).lt(0)) {
+            return '-'
+        }
+        return ''
+    }
+
     get priceChangeClass(): string {
-        console.error('detail', this.detail)
-        if (this.detail.percentChange24h > 0) {
-            return 'txSuccess--text pl-3'
+        if (this.detail.priceChange && new BN(this.detail.priceChange).gt(0)) {
+            return 'txSuccess--text'
         }
-        if (this.detail.percentChange24h < 0) {
-            return 'txFail--text pl-3'
+        if (this.detail.priceChange && new BN(this.detail.priceChange).lt(0)) {
+            return 'txFail--text'
         }
-        return 'black--text pl-3'
+        return 'black--text'
     }
 
     get isMono(): boolean {
@@ -105,5 +127,11 @@ export default class AppDetailsListRow extends Vue {
 .data-input {
     border: 1.2px solid #dee5f0;
     border-radius: 5px;
+}
+.detail-container {
+    display: flex;
+}
+.price-container {
+    margin-bottom: 0 !important;
 }
 </style>
