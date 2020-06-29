@@ -76,7 +76,7 @@ const MAX_ITEMS = 10
             variables() {
                 return {
                     contract: this.addressRef,
-                    limit: this.maxItems
+                    _limit: this.maxItems
                 }
             },
             deep: true,
@@ -132,8 +132,8 @@ export default class TokenTableHolders extends Vue {
                 this.$apollo.queries.holdersPage.fetchMore({
                     variables: {
                         contract: this.addressRef,
-                        limit: this.maxItems,
-                        nextKey: this.holdersPage.nextKey
+                        _limit: this.maxItems,
+                        _nextKey: this.holdersPage.nextKey
                     },
                     updateQuery: (previousResult, { fetchMoreResult }) => {
                         this.isEnd = page

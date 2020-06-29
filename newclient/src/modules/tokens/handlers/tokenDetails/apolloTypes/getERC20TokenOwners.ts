@@ -38,6 +38,6 @@ export interface getERC20TokenOwners {
 
 export interface getERC20TokenOwnersVariables {
   contract: string;
-  limit?: number | null;
-  nextKey?: string | null;
+  _limit?: number | null;
+  _nextKey?: string | null;
 }
