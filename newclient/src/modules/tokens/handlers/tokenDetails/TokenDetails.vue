@@ -39,7 +39,12 @@
     =====================================================================================
     -->
         <div v-if="isHolder">
-            <token-details-list :address-ref="addressRef" :holder-details="tokenDetails" :token-details="tokenDetails.tokenInfo" :is-loading="loading" />
+            <token-details-list
+                :address-ref="addressRef"
+                :holder-details="tokenDetails"
+                :token-details="tokenDetails ? tokenDetails.tokenInfo : {}"
+                :is-loading="loading"
+            />
         </div>
     </div>
 </template>
