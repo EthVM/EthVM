@@ -208,10 +208,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
         return {
             title: this.$i18n.t('token.market'),
             detail: !this.isLoading && this.tokenData && this.tokenData.marketCap ? this.formatNumber(this.tokenData.marketCap) : undefined
-            // tooltip:
-            //     !isLoading && tokenDetails && tokenDetails.marketCap && this.tokenDetails.marketCapFormatted.tooltipText
-            //         ? this.tokenDetails.marketCapFormatted.tooltipText
-            //         : undefined
         }
     }
 
@@ -219,10 +215,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
         return {
             title: this.$i18n.t('token.volume'),
             detail: !this.isLoading && this.tokenData && this.tokenData.volume ? this.formatNumber(this.tokenData.volume) : undefined
-            // tooltip:
-            //     !isLoading && tokenDetails && tokenDetails.totalVolume && this.tokenDetails.totalVolumeFormatted.tooltipText
-            //         ? this.tokenDetails.totalVolumeFormatted.tooltipText
-            //         : undefined
         }
     }
 
@@ -268,12 +260,12 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     }
 
     //TODO: Figure out where totalHolders is
-    get totalHoldersDetail(): Detail {
-        return {
-            title: this.$i18n.t('token.holder-total')
-            // detail: !this.isLoading && this.tokenDetails ? this.tokenDetails.holdersCount || 0 : undefined
-        }
-    }
+    // get totalHoldersDetail(): Detail {
+    //     return {
+    //         title: this.$i18n.t('token.holder-total')
+    //         // detail: !this.isLoading && this.tokenDetails ? this.tokenDetails.holdersCount || 0 : undefined
+    //     }
+    // }
 
     get holderDetail(): Detail {
         const detail: Detail = { title: this.$t('token.holder') }
@@ -303,17 +295,17 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     }
 
     //TODO: Figure out where totalTransfer is
-    get holderTransfersDetail(): Detail {
-        const { holderDetails, isLoading } = this
-        return {
-            title: this.$t('token.transfers')
-            // detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted.value : undefined,
-            // tooltip:
-            //     !isLoading && holderDetails && holderDetails.totalTransfersBN && this.holderDetails.totalTransfersFormatted.tooltipText
-            //         ? this.holderDetails.totalTransfersFormatted.tooltipText
-            //         : undefined
-        }
-    }
+    // get holderTransfersDetail(): Detail {
+    //     const { holderDetails, isLoading } = this
+    //     return {
+    //         title: this.$t('token.transfers')
+    //         detail: !isLoading && holderDetails && holderDetails.totalTransfersBN ? this.holderDetails.totalTransfersFormatted.value : undefined,
+    //         tooltip:
+    //             !isLoading && holderDetails && holderDetails.totalTransfersBN && this.holderDetails.totalTransfersFormatted.tooltipText
+    //                 ? this.holderDetails.totalTransfersFormatted.tooltipText
+    //                 : undefined
+    //     }
+    // }
 
     get balanceUsd(): string | undefined {
         if (!this.holderDetails) {
