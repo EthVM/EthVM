@@ -5,8 +5,19 @@
             <!-- <template v-slot:update >
                 <notice-new-block @reload="setPage(0, true)" />
             </template> -->
+            <template v-slot:pagination v-if="!isETH && showPagination && !initialLoad">
+                <app-paginate-has-more
+                    v-if="showPagination && !initialLoad"
+                    :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
+                    :has-more="hasMore"
+                    :current-page="index"
+                    :loading="loading"
+                    @newPage="setPage"
+                />
+            </template>
         </app-table-title>
         <v-layout
+            v-if="isETH"
             :column="$vuetify.breakpoint.smAndDown"
             :align-center="$vuetify.breakpoint.mdAndUp"
             :align-baseline="$vuetify.breakpoint.smAndDown"
@@ -31,6 +42,7 @@
                     />
                 </v-card>
             </v-layout>
+
             <app-paginate-has-more
                 v-if="showPagination && !initialLoad"
                 :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
