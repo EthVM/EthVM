@@ -38,7 +38,7 @@ query getEthTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
     }
 }
 
-query getERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+query getAdrERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
     getERC20Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {

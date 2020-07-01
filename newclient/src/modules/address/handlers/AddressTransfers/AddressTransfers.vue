@@ -69,9 +69,9 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getEthTransfersV2, getERC20Transfers, getERC721Transfers } from './transfers.graphql'
+import { getEthTransfersV2, getAdrERC20Transfers, getERC721Transfers } from './transfers.graphql'
 import { getEthTransfersV2_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getEthTransfersV2'
-import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getERC20Transfers'
+import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAdrErc20Transfers'
 import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getERC721Transfers'
 /*
   DEV NOTES:
@@ -95,7 +95,7 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
                 if (this.isETH) {
                     return getEthTransfersV2
                 }
-                return this.isERC20 ? getERC20Transfers : getERC721Transfers
+                return this.isERC20 ? getAdrERC20Transfers : getERC721Transfers
             },
             fetchPolicy: 'network-only',
             variables() {
@@ -106,7 +106,7 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
                 }
             },
             deep: true,
-            update: data => data.getEthTransfersV2 || data.getERC20Transfers || data.getERC721Transfers,
+            update: data => data.getEthTransfersV2 || data.getAdrERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
                     this.error = '' // clear the error
@@ -248,7 +248,7 @@ export default class AddressTransers extends Vue {
                 if (this.isETH) {
                     queryName = 'getEthTransfersV2'
                 } else {
-                    queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
+                    queryName = this.isERC20 ? 'getAdrERC20Transfers' : 'getERC721Transfers'
                 }
 
                 this.$apollo.queries.getTransfers.fetchMore({

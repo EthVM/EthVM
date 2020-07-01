@@ -1,0 +1,40 @@
+fragment TokenDetails on EthTokenInfo {
+  name
+  symbol
+  decimals
+  totalSupply
+  contract
+}
+
+fragment ERC20TokenOwnerDetails on ERC20TokenBalance  {
+  tokenInfo {
+    ...TokenDetails
+  }
+  owner
+  balance
+}
+
+fragment ERC20TokenOwners on ERC20TokenOwners {
+  owners {
+    ...ERC20TokenOwnerDetails
+  }
+  nextKey
+}
+
+query getTokenInfoByContract($contract: String!) {
+  getTokenInfoByContract(contract: $contract) {
+    ...TokenDetails
+  }
+} 
+
+query getERC20TokenBalance($contract: String!, $owner: String!) {
+  getERC20TokenBalance(contract: $contract, owner: $owner) {
+    ...ERC20TokenOwnerDetails
+  }
+}
+
+query getERC20TokenOwners($contract: String!, $_limit: Int, $_nextKey: String) {
+  getERC20TokenOwners(contract: $contract, limit: $_limit, nextKey: $_nextKey) { 
+    ...ERC20TokenOwners
+  }
+}

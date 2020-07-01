@@ -13,8 +13,8 @@ const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr"
 // const PageCharts = () => import(/* webpackChunkName: "page-charts" */ '@app/modules/charts/pages/PageCharts.vue')
 // const PageDetailsChart = () => import(/* webpackChunkName: "page-details-chart" */ '@app/modules/charts/pages/PageDetailsChart.vue')
 const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" */ '@app/modules/uncles/pages/PageDetailsUncle.vue')
+const PageDetailsToken = () => import(/* webpackChunkName: "page-details-token" */ '@app/modules/tokens/pages/PageDetailsToken.vue')
 const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modules/tokens/pages/PageTokes.vue')
-// const PageDetailsToken = () => import(/* webpackChunkName: "page-details-token" */ '@app/modules/tokens/pages/PageDetailsToken.vue')
 const PageKnowledgeBase = () => import(/* webpackChunkName: "page-kb" */ '@app/modules/other/pages/PageKnowledgeBase.vue')
 const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp" */ '@app/modules/other/pages/PagePrivacyPolicy.vue')
 const PageNotFound = () => import(/* webpackChunkName: "page-not-found" */ '@app/modules/other/pages/PageNotFound.vue')
@@ -91,16 +91,16 @@ export default new Router({
         //   props: true
         // },
         {
+            path: '/token/:addressRef',
+            component: PageDetailsToken,
+            name: 'token-detail',
+            props: true
+        },
+        {
             path: '/tokens',
             component: PageTokens,
             name: 'tokens'
         },
-        // {
-        //   path: '/token/:addressRef',
-        //   component: PageDetailsToken,
-        //   name: 'token-detail',
-        //   props: true
-        // },
         {
             path: '/about',
             component: PageAbout,
