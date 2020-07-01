@@ -95,7 +95,6 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
                             this.$CD
                                 .getEthereumTokensMap(contracts)
                                 .then(data => {
-                                    console.log(data)
                                     this.tokenPrices = data
                                     this.initialLoad = false
                                 })

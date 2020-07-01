@@ -106,7 +106,7 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
                 }
             },
             deep: true,
-            update: data => data.getEthTransfersV2 || data.getAdrERC20Transfers || data.getERC721Transfers,
+            update: data => data.getEthTransfersV2 || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
                     this.error = '' // clear the error
@@ -119,7 +119,6 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
                     this.showPagination = false
                     this.initialLoad = true
                     this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getTransfers.refetch()
                 }
             }
         }
