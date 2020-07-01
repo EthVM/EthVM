@@ -69,10 +69,10 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getEthTransfersV2, getAdrERC20Transfers, getERC721Transfers } from './transfers.graphql'
-import { getEthTransfersV2_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getEthTransfersV2'
+import { getAdrEthTransfers, getAdrERC20Transfers, getAdrERC721Transfers } from './transfers.graphql'
+import { getAdrEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAdrEthTransfers'
 import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAdrErc20Transfers'
-import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getERC721Transfers'
+import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAdrERC721Transfers'
 /*
   DEV NOTES:
   - add on Error
@@ -93,9 +93,9 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
         getTransfers: {
             query() {
                 if (this.isETH) {
-                    return getEthTransfersV2
+                    return getAdrEthTransfers
                 }
-                return this.isERC20 ? getAdrERC20Transfers : getERC721Transfers
+                return this.isERC20 ? getAdrERC20Transfers : getAdrERC721Transfers
             },
             fetchPolicy: 'network-only',
             variables() {

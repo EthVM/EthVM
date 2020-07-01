@@ -54,7 +54,7 @@
                     <v-flex v-if="isLoading" xs12>
                         <div v-for="i in maxItems" :key="i">
                             <table-txs-row-loading />
-                        </div>  
+                        </div>
                     </v-flex>
                 </v-layout>
             </v-card>
