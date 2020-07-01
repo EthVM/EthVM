@@ -5,8 +5,19 @@
             <!-- <template v-slot:update >
                 <notice-new-block @reload="setPage(0, true)" />
             </template> -->
+            <template v-slot:pagination v-if="!isETH && showPagination && !initialLoad">
+                <app-paginate-has-more
+                    v-if="showPagination && !initialLoad"
+                    :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
+                    :has-more="hasMore"
+                    :current-page="index"
+                    :loading="loading"
+                    @newPage="setPage"
+                />
+            </template>
         </app-table-title>
         <v-layout
+            v-if="isETH"
             :column="$vuetify.breakpoint.smAndDown"
             :align-center="$vuetify.breakpoint.mdAndUp"
             :align-baseline="$vuetify.breakpoint.smAndDown"
@@ -31,6 +42,7 @@
                     />
                 </v-card>
             </v-layout>
+
             <app-paginate-has-more
                 v-if="showPagination && !initialLoad"
                 :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
@@ -69,10 +81,10 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getEthTransfersV2, getAdrERC20Transfers, getERC721Transfers } from './transfers.graphql'
-import { getEthTransfersV2_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getEthTransfersV2'
+import { getAdrEthTransfers, getAdrERC20Transfers, getAdrERC721Transfers } from './transfers.graphql'
+import { getAdrEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAdrEthTransfers'
 import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAdrErc20Transfers'
-import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getERC721Transfers'
+import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAdrERC721Transfers'
 /*
   DEV NOTES:
   - add on Error
@@ -93,9 +105,9 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
         getTransfers: {
             query() {
                 if (this.isETH) {
-                    return getEthTransfersV2
+                    return getAdrEthTransfers
                 }
-                return this.isERC20 ? getAdrERC20Transfers : getERC721Transfers
+                return this.isERC20 ? getAdrERC20Transfers : getAdrERC721Transfers
             },
             fetchPolicy: 'network-only',
             variables() {
@@ -106,7 +118,7 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
                 }
             },
             deep: true,
-            update: data => data.getEthTransfersV2 || data.getAdrERC20Transfers || data.getERC721Transfers,
+            update: data => data.getEthTransfersV2 || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
                     this.error = '' // clear the error
@@ -119,7 +131,6 @@ import { getERC721Transfers_getERC721Transfers as ERC721TransfersType } from './
                     this.showPagination = false
                     this.initialLoad = true
                     this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getTransfers.refetch()
                 }
             }
         }
