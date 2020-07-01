@@ -19,7 +19,7 @@
                         v-if="!initialLoad"
                         :token="token"
                         :is-erc20="isERC20"
-                        :address="address"
+                        :holder="address"
                         :token-price-info="getUSDInfo(token.tokenInfo.contract)"
                         @showNft="showNftTokens"
                     />

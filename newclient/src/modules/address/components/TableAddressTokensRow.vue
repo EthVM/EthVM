@@ -1,6 +1,6 @@
 <template>
     <v-container pa-0 ma-0>
-        <router-link :to="tokenLink">
+        <component :is="isErc20 ? 'router-link' : 'span'" :to="tokenLink">
             <v-layout d-block>
                 <!--
                 =====================================================================================
@@ -184,7 +184,7 @@
                     <v-divider />
                 </v-flex>
             </v-layout>
-        </router-link>
+        </component>
     </v-container>
 </template>
 
@@ -285,9 +285,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     getValue(): BN {
-        if (this.isErc20 && this.token.tokenInfo.decimals) {
+        if (this.isErc20) {
             let n = new BN(this.token.balance)
-            if (this.token.tokenInfo.decimals) {
+            if ('decimals' in this.token.tokenInfo && this.token.tokenInfo.decimals) {
                 n = n.div(new BN(10).pow(this.token.tokenInfo.decimals))
             }
             return n
