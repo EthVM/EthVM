@@ -17,8 +17,8 @@ fragment TxDetails on Tx {
   replacedBy
 }
 
-query getPendingTransactions($owner: String!) {
-  getPendingTransactions(owner: $owner) {
+query getPendingTransactions($hash: String!) {
+  getPendingTransactions(owner: $hash) {
     ...TxDetails
   }
 }

@@ -49,7 +49,7 @@
                                 <address-transfers v-show="toggleLastTx === 0" :address="addressRef" :max-items="max"></address-transfers>
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
-                                <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" />
+                                <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" />
                             </v-slide-x-reverse-transition>
                         </div>
                     </keep-alive>
