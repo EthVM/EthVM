@@ -83,7 +83,7 @@
                                     {{ $tc('token.name', 2) }}
                                 </v-btn>
                                 <v-divider vertical />
-                                <v-btn :class="[toggleERC721 === 1 ? 'active-button' : 'button', 'text-capitalize']" flat small @click="toggleERC7210 = 1">
+                                <v-btn :class="[toggleERC721 === 1 ? 'active-button' : 'button', 'text-capitalize']" flat small @click="toggleERC721 = 1">
                                     {{ $tc('transfer.name', 2) }}
                                 </v-btn>
                                 <v-flex xs12 pa-1>
