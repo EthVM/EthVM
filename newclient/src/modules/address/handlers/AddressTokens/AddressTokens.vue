@@ -46,7 +46,10 @@ import BN from 'bignumber.js'
 import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances } from './tokens.graphql'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721BalanceType } from './apolloTypes/getOwnersERC721Balances'
-import { getOwnersERC721Tokens_getOwnersERC721Tokens_tokens as ERC721TokenType } from './apolloTypes/getOwnersERC721Tokens'
+import {
+    getOwnersERC721Tokens_getOwnersERC721Tokens as ERC721ContractTokensType,
+    getOwnersERC721Tokens_getOwnersERC721Tokens_tokens as ERC721TokenType
+} from './apolloTypes/getOwnersERC721Tokens'
 
 import { IEthereumToken } from '@app/plugins/CoinData/models'
 
@@ -56,7 +59,7 @@ import { IEthereumToken } from '@app/plugins/CoinData/models'
   - add messages if Error to be displayed in Table
 */
 interface NFTMap {
-    [key: number]: ERC721TokenType[]
+    [key: string]: ERC721TokenType[]
 }
 
 @Component({
@@ -86,9 +89,9 @@ interface NFTMap {
             result({ data }) {
                 if (this.hasTokens) {
                     this.error = '' // clear the error
-                    if (this.isNFT) {
-                        console.log(data)
-                    }
+                    // if (this.isNFT) {
+                    //     console.log(data)
+                    // }
                     if (this.isERC20) {
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
@@ -133,13 +136,21 @@ interface NFTMap {
                 }
             },
             skip() {
-                return this.showUniqueNFT
+                return this.skipGetUniqueTokens
             },
-            result() {
-                this.$set(this.tokenStore, this.requestContract, {
-                    tokens: this.getOwnersERC721Tokens.tokens,
-                    nextKey: this.getOwnersERC721Tokens.nextKey
-                })
+            update: data => data.getOwnersERC721Tokens,
+            result({ data }) {
+                if (this.getOwnersERC721Tokens.tokens) {
+                    if (this.getOwnersERC721Tokens.nextKey) {
+                        this.fetchMoreUniqueNFT()
+                    } else {
+                        this.uniqueNFTMap[this.requestContract] = this.getOwnersERC721Tokens.tokens
+                        this.uniqueNFT = this.uniqueNFTMap[this.requestContract]
+                        this.loadingUniqueNFT = false
+                        this.skipGetUniqueTokens = true
+                        console.log(this.uniqueNFT)
+                    }
+                }
             }
         }
     }
@@ -177,10 +188,13 @@ export default class AddressTokens extends Vue {
     tokenPrices: Map<string, IEthereumToken> | false = false
 
     /* Unique NFT List for contract */
-    uniqueNFTMap?: Map<string, ERC721TokenType[]>
+    getOwnersERC721Tokens!: ERC721ContractTokensType
+    uniqueNFTMap: NFTMap = {}
     loadingUniqueNFT = true
     showUniqueNFT = false
     uniqueNFT: ERC721TokenType[] = []
+    requestContract = ''
+    skipGetUniqueTokens = true
 
     /*
     ===================================================================================
@@ -244,7 +258,7 @@ export default class AddressTokens extends Vue {
         this.$apollo.queries.getTokens.fetchMore({
             variables: {
                 hash: this.address,
-                _nextKey: this.hasNext
+                _nextKey: this.getOwnersERC721Tokens.nextKey
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
                 const newT = fetchMoreResult.getOwnersERC20Tokens.owners
@@ -276,8 +290,30 @@ export default class AddressTokens extends Vue {
                 this.showUniqueNFT = true
             } else {
                 /* Load Tokens */
+                this.requestContract = contract
+                this.loadingUniqueNFT = true
+                this.skipGetUniqueTokens = false
             }
         }
+    }
+    fetchMoreUniqueNFT(): void {
+        this.$apollo.queries.getTokens.fetchMore({
+            variables: {
+                hash: this.address,
+                _nextKey: this.getOwnersERC721Tokens.nextKey
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                const newT = fetchMoreResult.getOwnersERC721Tokens
+                const prevT = previousResult.getOwnersERC721Tokens
+                return {
+                    getOwnersERC721Tokens: {
+                        __typename: previousResult.getOwnersERC721Tokens.__typename,
+                        tokens: [...prevT, ...newT],
+                        nextKey: fetchMoreResult.getOwnersERC721Tokens.nextKey
+                    }
+                }
+            }
+        })
     }
     hideNFTTokens(): void {
         this.showUniqueNFT = false
