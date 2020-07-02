@@ -176,9 +176,13 @@
                         </v-flex>
                         <v-spacer v-else />
                         <v-flex v-if="!isErc20" shrink>
-                            <v-btn outline color="secondary" class="text-capitalize" @click="$emit('showNft', token.tokenInfo.contract)">{{
-                                $t('btn.view-all')
-                            }}</v-btn>
+                            <v-btn
+                                outline
+                                color="secondary"
+                                class="text-capitalize"
+                                @click="$emit('showNft', token.tokenInfo.contract, token.tokenInfo.name)"
+                                >{{ $t('btn.view-all') }}</v-btn
+                            >
                         </v-flex>
                     </v-layout>
                     <v-divider />

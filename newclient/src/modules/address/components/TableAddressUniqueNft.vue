@@ -6,7 +6,9 @@
     =====================================================================================
     -->
         <v-layout align-center justify-start row fill-height>
-            <v-btn flat color="primary" class="text-capitalize" @click="$emit('hideNFT')">{{ $t('btn.back') }}</v-btn>
+            <v-btn flat color="primary" class="text-capitalize" @click="$emit('hideNFT')">
+                <v-icon left small>fas fa-arrow-left</v-icon>{{ $t('btn.back') }}</v-btn
+            >
             <v-card-title class="title font-weight-bold pl-1">{{ contractName }} </v-card-title>
             <v-spacer />
             <app-paginate

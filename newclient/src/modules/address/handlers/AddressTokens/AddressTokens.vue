@@ -32,7 +32,7 @@
                 <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
             </v-layout>
         </div>
-        <table-address-unique-nft v-else :contract-name="'hello'" :tokens="uniqueNFT" :loading="loadingUniqueNFT" @hideNFT="hideNFTTokens" />
+        <table-address-unique-nft v-else :contract-name="requestContractName" :tokens="uniqueNFT" :loading="loadingUniqueNFT" @hideNFT="hideNFTTokens" />
     </v-card>
 </template>
 
@@ -97,7 +97,7 @@ interface NFTMap {
                     if (this.isERC20) {
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
-                            this.fetchMore()
+                            this.fetchMore(this.hasNext)
                         } else {
                             this.totalTokens = this.getTokens.length
                             this.$emit('totalERC20', this.totalTokens)
@@ -195,6 +195,7 @@ export default class AddressTokens extends Vue {
     showUniqueNFT = false
     uniqueNFT: ERC721TokenType[] = []
     requestContract = ''
+    requestContractName = ''
     skipGetUniqueTokens = true
 
     /*
@@ -255,11 +256,11 @@ export default class AddressTokens extends Vue {
         }
     }
 
-    fetchMore(): void {
+    fetchMore(nextKey: string): void {
         this.$apollo.queries.getTokens.fetchMore({
             variables: {
                 hash: this.address,
-                _nextKey: this.getTokens.nextKey
+                _nextKey: nextKey
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
                 const newT = fetchMoreResult.getOwnersERC20Tokens.owners
@@ -283,7 +284,8 @@ export default class AddressTokens extends Vue {
     }
     /* NFT TOKENS*/
 
-    showNftTokens(contract: string) {
+    showNftTokens(contract: string, name: string | null) {
+        this.requestContractName = name ? name : contract
         if (contract) {
             if (this.uniqueNFTMap && this.uniqueNFTMap[contract]) {
                 this.uniqueNFT = this.uniqueNFTMap[contract]
