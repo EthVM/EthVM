@@ -1,35 +1,38 @@
 <template>
     <v-card color="white" flat class="pb-2">
-        <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
-            <!-- Notice new update-->
-            <!-- <template v-slot:update >
+        <div v-if="!showUniqueNFT">
+            <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
+                <!-- Notice new update-->
+                <!-- <template v-slot:update >
                 <notice-new-block @reload="setPage(0, true)" />
             </template> -->
-            <template v-slot:pagination v-if="showPagination && !initialLoad">
+                <template v-slot:pagination v-if="showPagination && !initialLoad">
+                    <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+                </template>
+            </app-table-title>
+            <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="tokens" :is-scroll-view="false">
+                <template #header>
+                    <table-address-tokens-header :is-erc20="isERC20" :is-transfers="false" />
+                </template>
+                <template #rows>
+                    <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
+                        <table-address-tokens-row
+                            v-if="!initialLoad"
+                            :token="token"
+                            :is-erc20="isERC20"
+                            :holder="address"
+                            :token-price-info="getUSDInfo(token.tokenInfo.contract)"
+                            @showNft="showNftTokens"
+                        />
+                        <table-address-tokens-row-loading v-else />
+                    </v-card>
+                </template>
+            </table-txs>
+            <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
                 <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
-            </template>
-        </app-table-title>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="tokens" :is-scroll-view="false">
-            <template #header>
-                <table-address-tokens-header :is-erc20="isERC20" :is-transfers="false" />
-            </template>
-            <template #rows>
-                <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
-                    <table-address-tokens-row
-                        v-if="!initialLoad"
-                        :token="token"
-                        :is-erc20="isERC20"
-                        :holder="address"
-                        :token-price-info="getUSDInfo(token.tokenInfo.contract)"
-                        @showNft="showNftTokens"
-                    />
-                    <table-address-tokens-row-loading v-else />
-                </v-card>
-            </template>
-        </table-txs>
-        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
-            <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
-        </v-layout>
+            </v-layout>
+        </div>
+        <table-address-unique-nft v-else :contract-name="'hello'" :tokens="uniqueNFT" :loading="loadingUniqueNFT" @hideNFT="hideNFTTokens" />
     </v-card>
 </template>
 
@@ -41,6 +44,7 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTokensRow from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableAddressTokensRowLoading from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
+import TableAddressUniqueNft from '@app/modules/address/components/TableAddressUniqueNft.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances } from './tokens.graphql'
@@ -69,7 +73,8 @@ interface NFTMap {
         TableTxs,
         TableAddressTokensHeader,
         TableAddressTokensRow,
-        TableAddressTokensRowLoading
+        TableAddressTokensRowLoading,
+        TableAddressUniqueNft
     },
     apollo: {
         getTokens: {
@@ -89,9 +94,6 @@ interface NFTMap {
             result({ data }) {
                 if (this.hasTokens) {
                     this.error = '' // clear the error
-                    // if (this.isNFT) {
-                    //     console.log(data)
-                    // }
                     if (this.isERC20) {
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
@@ -148,7 +150,6 @@ interface NFTMap {
                         this.uniqueNFT = this.uniqueNFTMap[this.requestContract]
                         this.loadingUniqueNFT = false
                         this.skipGetUniqueTokens = true
-                        console.log(this.uniqueNFT)
                     }
                 }
             }
@@ -258,7 +259,7 @@ export default class AddressTokens extends Vue {
         this.$apollo.queries.getTokens.fetchMore({
             variables: {
                 hash: this.address,
-                _nextKey: this.getOwnersERC721Tokens.nextKey
+                _nextKey: this.getTokens.nextKey
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
                 const newT = fetchMoreResult.getOwnersERC20Tokens.owners
@@ -290,6 +291,7 @@ export default class AddressTokens extends Vue {
                 this.showUniqueNFT = true
             } else {
                 /* Load Tokens */
+                this.showUniqueNFT = true
                 this.requestContract = contract
                 this.loadingUniqueNFT = true
                 this.skipGetUniqueTokens = false

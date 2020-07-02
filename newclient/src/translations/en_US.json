@@ -323,7 +323,8 @@
         "last": "Last",
         "back-home": "Go Back Home",
         "report": "Report Issue",
-        "details": "View Details"
+        "details": "View Details",
+        "back": "Back"
     },
 
     "search": {
