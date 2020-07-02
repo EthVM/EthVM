@@ -32,7 +32,26 @@
                 -->
                 <v-tab-item slot="tabs-item" value="tab-0">
                     <keep-alive>
-                        <address-transfers v-if="activeTab === 'tab-0'" :address="addressRef" :max-items="max"></address-transfers>
+                        <div>
+                            <v-layout row wrap align-center justify-start pt-2>
+                                <v-btn :class="[toggleLastTx === 0 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleLastTx = 0">
+                                    {{ $tc('btn.last', 2) }}
+                                </v-btn>
+                                <v-divider vertical />
+                                <v-btn :class="[toggleLastTx === 1 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleLastTx = 1">
+                                    {{ $tc('common.pending', 2) }}
+                                </v-btn>
+                                <v-flex xs12 pa-1>
+                                    <v-divider class="lineGrey mt-1 mb-1" />
+                                </v-flex>
+                            </v-layout>
+                            <v-slide-x-reverse-transition>
+                                <address-transfers v-show="toggleLastTx === 0" :address="addressRef" :max-items="max"></address-transfers>
+                            </v-slide-x-reverse-transition>
+                            <v-slide-x-reverse-transition>
+                                <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" />
+                            </v-slide-x-reverse-transition>
+                        </div>
                     </keep-alive>
                 </v-tab-item>
                 <!--
@@ -195,6 +214,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
+import AddressPendingTx from '@app/modules/address/handlers/AddressPendingTx/AddressPendingTx.vue'
 import AddressOverview from '@app/modules/address/handlers/AddressOverview/AddressOverview.vue'
 import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
 import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
@@ -211,7 +231,8 @@ const MAX_ITEMS = 10
         AppTabs,
         AddressTransfers,
         AddressTokens,
-        AddressRewards
+        AddressRewards,
+        AddressPendingTx
     }
 })
 export default class PageDetailsAddress extends Vue {
@@ -236,6 +257,7 @@ export default class PageDetailsAddress extends Vue {
     toggleERC20 = 0
     toggleERC721 = 0
     toggleMiner = 0
+    toggleLastTx = 0
     hasGenesisRewards = false
     hasUncleRewards = false
     hasBlockRewards = false

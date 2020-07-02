@@ -1,0 +1,24 @@
+fragment TxDetails on Tx {
+  blockHash
+  blockNumber
+  from
+  gas
+  gasPrice
+  gasUsed
+  timestamp
+  hash
+  input
+  status
+  input
+  nonce
+  to
+  transactionIndex
+  value
+  replacedBy
+}
+
+query getPendingTransactions($owner: String!) {
+  getPendingTransactions(owner: $owner) {
+    ...TxDetails
+  }
+}
