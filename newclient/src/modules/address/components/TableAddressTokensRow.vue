@@ -1,6 +1,6 @@
 <template>
     <v-container pa-0 ma-0>
-        <router-link :to="tokenLink">
+        <component :is="isErc20 ? 'router-link' : 'span'" :to="tokenLink">
             <v-layout d-block>
                 <!--
                 =====================================================================================
@@ -135,11 +135,12 @@
                         =====================================================================================
                         -->
                         <v-flex md3>
-                            <p class="black--text">
+                            <p v-if="isErc20" class="black--text">
                                 {{ balance.value }}
                                 <span v-if="isErc20 && token.tokenInfo.symbol" class="info--text caption pr-1">{{ token.tokenInfo.symbol }}</span>
                                 <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
                             </p>
+                            <p v-else class="black--text">{{ balance }}</p>
                         </v-flex>
                         <!--
                         =====================================================================================
@@ -174,11 +175,20 @@
                             </v-layout>
                         </v-flex>
                         <v-spacer v-else />
+                        <v-flex v-if="!isErc20" shrink>
+                            <v-btn
+                                outline
+                                color="secondary"
+                                class="text-capitalize"
+                                @click="$emit('showNft', token.tokenInfo.contract, token.tokenInfo.name)"
+                                >{{ $t('btn.view-all') }}</v-btn
+                            >
+                        </v-flex>
                     </v-layout>
                     <v-divider />
                 </v-flex>
             </v-layout>
-        </router-link>
+        </component>
     </v-container>
 </template>
 
@@ -207,7 +217,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) token!: ERC20TokenType
+    @Prop(Object) token!: ERC20TokenType | ERC721TokenType
     @Prop(String) holder!: string
     @Prop(Boolean) isErc20!: boolean
     @Prop(Object) tokenPriceInfo!: IEthereumToken | undefined
@@ -279,11 +289,14 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     getValue(): BN {
-        let n = new BN(this.token.balance)
-        if (this.token.tokenInfo.decimals) {
-            n = n.div(new BN(10).pow(this.token.tokenInfo.decimals))
+        if (this.isErc20) {
+            let n = new BN(this.token.balance)
+            if ('decimals' in this.token.tokenInfo && this.token.tokenInfo.decimals) {
+                n = n.div(new BN(10).pow(this.token.tokenInfo.decimals))
+            }
+            return n
         }
-        return n
+        return new BN(this.token.balance)
     }
 }
 </script>

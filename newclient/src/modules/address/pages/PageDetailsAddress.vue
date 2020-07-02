@@ -77,8 +77,30 @@
                 -->
                 <v-tab-item slot="tabs-item" value="tab-2">
                     <keep-alive>
-                        <address-transfers v-if="activeTab === 'tab-2'" :address="addressRef" :max-items="max" transfers-type="ERC721"></address-transfers>
+                        <div>
+                            <v-layout row wrap align-center justify-start pt-2>
+                                <v-btn :class="[toggleERC721 === 0 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleERC721 = 0">
+                                    {{ $tc('token.name', 2) }}
+                                </v-btn>
+                                <v-divider vertical />
+                                <v-btn :class="[toggleERC721 === 1 ? 'active-button' : 'button', 'text-capitalize']" flat small @click="toggleERC721 = 1">
+                                    {{ $tc('transfer.name', 2) }}
+                                </v-btn>
+                                <v-flex xs12 pa-1>
+                                    <v-divider class="lineGrey mt-1 mb-1" />
+                                </v-flex>
+                            </v-layout>
+                            <v-slide-x-reverse-transition>
+                                <address-transfers v-show="toggleERC721 === 1" :address="addressRef" :max-items="max" transfers-type="ERC721" />
+                            </v-slide-x-reverse-transition>
+                            <v-slide-x-reverse-transition>
+                                <address-tokens v-show="toggleERC721 === 0" :address="addressRef" :max-items="max" token-type="ERC721" />
+                            </v-slide-x-reverse-transition>
+                        </div>
                     </keep-alive>
+
+                    <!--- -->
+                    <keep-alive> </keep-alive>
                 </v-tab-item>
                 <!--
                 =====================================================================================
@@ -212,6 +234,7 @@ export default class PageDetailsAddress extends Vue {
     error = ''
     activeTab = 'tab-0'
     toggleERC20 = 0
+    toggleERC721 = 0
     toggleMiner = 0
     hasGenesisRewards = false
     hasUncleRewards = false

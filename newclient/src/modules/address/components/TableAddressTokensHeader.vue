@@ -63,7 +63,7 @@ export default class TableAddressTokensHeader extends Vue {
    */
 
     get text(): string {
-        return this.isErc20 ? `${this.$t('common.amount')}` : 'Token ID'
+        return this.isErc20 ? `${this.$t('common.amount')}` : 'Total Tokens'
     }
 }
 </script>
