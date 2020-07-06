@@ -12,12 +12,12 @@
                 />
             </template>
         </app-table-title>
-        <table-txs :is-loading="loading" :table-message="message" :txs-data="getPendingTx" :is-scroll-view="false">
+        <table-txs :is-loading="loading" :table-message="message" :txs-data="pendingTx" :is-scroll-view="false">
             <template #header>
                 <table-address-txs-header :address="address" />
             </template>
             <template #rows>
-                <v-card v-for="(tx, index) in getPendingTx" :key="index" class="transparent" flat>
+                <v-card v-for="(tx, index) in pendingTx" :key="index" class="transparent" flat>
                     <table-address-txs-row :is-pending="true" :tx="tx" :address="address" />
                 </v-card>
             </template>
@@ -75,7 +75,6 @@ export default class AddressPendingTx extends Vue {
   ===================================================================================
   */
     index = 0
-    totalPages = 0
     /*isEnd -  Last Index loaded */
     isEnd = 0
     showPagination = true
@@ -90,8 +89,8 @@ export default class AddressPendingTx extends Vue {
     get pendingTx(): any[] {
         if (!this.loading && this.getPendingTx) {
             const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.getPendingTx.length ? this.pendingTx.length : start + this.maxItems
-            return this.pendingTx.slice(start, end)
+            const end = start + this.maxItems > this.getPendingTx.length ? this.getPendingTx.length : start + this.maxItems
+            return this.getPendingTx.slice(start, end)
         }
         return []
     }
@@ -109,6 +108,34 @@ export default class AddressPendingTx extends Vue {
             return `${this.$t('message.tx.no-pending')}`
         }
         return ''
+    }
+
+    get totalPages(): number {
+        if (this.getPendingTx) {
+            return Math.ceil(new BN(this.getPendingTx.length).div(this.maxItems).toNumber())
+        }
+        return 0
+    }
+
+    get hasMore(): boolean {
+        return this.isEnd + 1 < this.totalPages
+    }
+
+    /*
+    ===================================================================================
+      Methods: 
+    ===================================================================================
+    */
+
+    setPage(page: number, reset: boolean = false): void {
+        if (reset) {
+            this.isEnd = 0
+        } else {
+            if (page > this.isEnd && this.hasMore) {
+                this.isEnd = page
+            }
+        }
+        this.index = page
     }
 }
 </script>
