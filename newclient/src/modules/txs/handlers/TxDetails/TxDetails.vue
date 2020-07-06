@@ -27,9 +27,7 @@ import BN from 'bignumber.js'
     },
     apollo: {
         transaction: {
-            query() {
-                return getTransactionByHash
-            },
+            query: getTransactionByHash,
             variables() {
                 return { hash: this.txRef }
             },
