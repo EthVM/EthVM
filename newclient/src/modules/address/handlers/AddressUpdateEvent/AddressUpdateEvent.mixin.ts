@@ -9,8 +9,7 @@ import { addressEvent_addressEvent as EventSubscriptionType } from './apolloType
                 query: addressEvent,
                 variables() {
                     return {
-                        _owner: this.owner,
-                        _event: this.event
+                        owner: this.owner
                     }
                 },
                 skip() {
