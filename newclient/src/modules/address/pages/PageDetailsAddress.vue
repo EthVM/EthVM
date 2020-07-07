@@ -191,7 +191,8 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
@@ -201,6 +202,7 @@ import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTo
 import AddressRewards from '@app/modules/address/handlers/AddressRewards/AddressRewards.vue'
 import { Address } from '@app/modules/address/components/props'
 const MAX_ITEMS = 10
+import { AddressEventType } from '@app/apollo/global/globalTypes'
 
 @Component({
     components: {
@@ -214,7 +216,7 @@ const MAX_ITEMS = 10
         AddressRewards
     }
 })
-export default class PageDetailsAddress extends Vue {
+export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     /*
     ===================================================================================
       Props
@@ -350,6 +352,8 @@ export default class PageDetailsAddress extends Vue {
             this.error = this.$i18n.t('message.invalid.addr').toString()
             return
         }
+        this.setEventVariables(this.addressRef, AddressEventType.NEW_MINED_BLOCK)
+
         window.scrollTo(0, 0)
     }
 }

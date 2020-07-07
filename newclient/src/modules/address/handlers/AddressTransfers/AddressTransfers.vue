@@ -85,6 +85,7 @@ import { getAdrEthTransfers, getAdrERC20Transfers, getAdrERC721Transfers } from 
 import { getAdrEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAdrEthTransfers'
 import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAdrErc20Transfers'
 import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAdrERC721Transfers'
+
 /*
   DEV NOTES:
   - add on Error

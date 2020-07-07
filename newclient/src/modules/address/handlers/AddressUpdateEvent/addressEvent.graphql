@@ -1,0 +1,8 @@
+subscription addressEvent($_owner: String!, $_event: AddressEventType) {
+    addressEvent(owner: $_owner, event: $_event) {
+        blockNumber
+        event
+        timestamp
+        owner
+    }
+}
