@@ -9,7 +9,7 @@
             <div :class="txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs6 pa-1>
-                        <p :class="[tx.transfer.status ? 'black--text' : 'info--text', 'caption']">
+                        <p :class="[txObj.status ? 'black--text' : 'info--text', 'caption']">
                             {{ amountSign }}{{ transaction.value.value }}
                             {{ $t(`common.${transaction.value.unit}`) }}
                             <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
@@ -90,7 +90,7 @@
                 <v-flex md3 lg2>
                     <v-layout row wrap align-center pl-1 pr->
                         <v-flex sm12>
-                            <p :class="[tx.transfer.status ? 'black--text' : 'info--text']">
+                            <p :class="[txObj.status ? 'black--text' : 'info--text']">
                                 <span class="hidden-lg-and-up info--text pr-1">{{ $t('common.amount') }}:</span>
                                 {{ amountSign }}{{ transaction.value.value }}
                                 {{ $t(`common.${transaction.value.unit}`) }}
@@ -144,7 +144,7 @@
             LG: 12/12 (1)
           =====================================================================================
           -->
-                <v-flex shrink>
+                <v-flex v-if="!isPending" shrink>
                     <v-layout row align-center justify-end>
                         <v-icon v-if="transaction.status" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
@@ -167,6 +167,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
+import { getPendingTransactions as PendingTxType } from '@app/modules/address/handlers/AddressPendingTx/apolloTypes/getPendingTransactions'
 import BN from 'bignumber.js'
 const TYPES = ['in', 'out', 'self']
 
@@ -184,7 +185,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) tx!: TransferType
+    @Prop(Object) tx!: TransferType | PendingTxType
     @Prop(String) address!: string
     @Prop({ type: Boolean, default: false }) isPending
 
@@ -195,18 +196,22 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     */
 
     get txStatusClass(): string {
-        return this.tx.transfer.status ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+        return this.txObj && this.txObj.status ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+    }
+
+    get txObj(): any {
+        return this.tx['transfer'] ? this.tx['transfer'] : this.tx
     }
 
     get transaction(): any {
         return {
-            hash: this.tx.transfer.transactionHash,
-            from: this.tx.transfer.from,
-            to: this.tx.transfer.to,
-            timestamp: new Date(this.tx.transfer.timestamp * 1e3),
-            fee: this.formatNonVariableEthValue(new BN(this.tx.transfer.txFee)),
-            value: this.formatNonVariableEthValue(new BN(this.tx.value)),
-            status: this.tx.transfer.status != null ? this.tx.transfer.status : false
+            hash: this.txObj.transactionHash || this.txObj.hash,
+            from: this.txObj.from,
+            to: this.txObj.to,
+            timestamp: new Date(this.txObj.timestamp * 1e3),
+            fee: this.formatNonVariableEthValue(new BN(this.txObj.txFee)),
+            value: this.formatNonVariableEthValue(new BN(this.txObj.value)),
+            status: this.txObj.status != null ? this.txObj.status : false
         }
     }
     get isSmall(): boolean {
@@ -214,8 +219,8 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get type(): string {
-        const from = this.tx.transfer.from.toLowerCase()
-        const to = this.tx.transfer.to.toLowerCase()
+        const from = this.txObj.from.toLowerCase()
+        const to = this.txObj.to.toLowerCase()
         const addr = this.address.toLowerCase()
 
         if (addr === from && addr === to) {
@@ -249,16 +254,16 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get typeAddr(): string {
         switch (this.type) {
             case TYPES[0]:
-                return this.tx.transfer.from
+                return this.txObj.from
             case TYPES[1]:
-                return this.tx.transfer.to
+                return this.txObj.to
             default:
                 return this.address
         }
     }
 
     get amountSign(): string {
-        if (this.tx.transfer.status) {
+        if (this.txObj.status) {
             if (this.type === TYPES[0]) {
                 return '+'
             }
