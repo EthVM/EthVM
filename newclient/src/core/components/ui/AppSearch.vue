@@ -1,8 +1,16 @@
 <template>
-    <v-layout align-center fill-height justify-end row height="48px" class="pl-1">
-        <v-flex xs12 md8>
+    <v-layout align-center fill-height justify-end row height="48px" class="app-search pl-1">
+        <v-flex xs12 md12>
             <v-card flat class="search-input-container">
-                <v-layout align-center justify-end>
+                <v-layout fill-height align-center justify-end>
+                    <v-select
+                        :flat="true"
+                        :solo="true"
+                        :items="selectItems"
+                        v-model="selectValue"
+                        height="48"
+                        append-icon="fa fa-chevron-down secondary--text"
+                    />
                     <v-text-field
                         v-if="phText === 'default'"
                         v-model="searchInput"
@@ -14,7 +22,7 @@
                         clearable
                         spellcheck="false"
                         class="ma-0"
-                        height="46px"
+                        height="48px"
                         @keyup.enter="onSearch"
                         @click:clear="resetValues"
                     />
@@ -41,12 +49,6 @@
             }}</v-btn>
             <v-btn v-else depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey" @click="onSearch">{{ $t('search.name') }}</v-btn>
         </v-flex>
-        <v-snackbar v-model="snackbar" :bottom="true" :right="true" :timeout="5000">
-            SEARCH IS NOT IMPLEMENTED
-            <v-btn color="primary" text @click="snackbar = false">
-                Close
-            </v-btn>
-        </v-snackbar>
     </v-layout>
 </template>
 
@@ -65,6 +67,7 @@ export default class AppSearch extends Vue {
     phText = 'default'
     isValid = true
     snackbar = false
+    selectValue = 'all'
 
     /*
   ===================================================================================
@@ -85,11 +88,20 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
     onSearch(): void {
-        this.snackbar = true
+        this.$router.push({ name: this.selectValue, params: this.getParam() })
     }
 
     resetValues(): void {
         this.isValid = true
+    }
+
+    getParam(): {} {
+        if (this.selectValue === 'transaction') {
+            return { txRef: this.searchInput }
+        } else if (this.selectValue === 'token-detail' || this.selectValue === 'address') {
+            return { addressRef: this.searchInput }
+        }
+        return { blockRef: this.searchInput }
     }
 
     /*
@@ -98,17 +110,74 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
+    get selectItems(): any[] {
+        return [
+            { text: this.$t('filter.all'), value: 'all' },
+            { text: this.$t('kb.terms.block.term'), value: 'block' },
+            { text: this.$tc('tx.name-short', 1), value: 'transaction' },
+            { text: this.$tc('address.name', 1), value: 'address' },
+            { text: this.$tc('token.name', 1), value: 'token-detail' }
+        ]
+    }
+
     get getIcon(): string {
         return this.isValid ? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
     }
 }
 </script>
-<style scoped lang="css">
-.search-input-container {
-    height: 48px;
-    border: solid 1px #efefef !important;
-}
-.search-button-container {
-    max-width: 115px !important;
+<style lang="scss">
+.app-search {
+    .search-input-container {
+        height: 48px;
+        .v-select {
+            height: 100%;
+            max-width: 117px;
+            padding-top: 0;
+
+            .v-input__control {
+                .v-input__slot {
+                    border: 1px solid #b5c0d3 !important;
+                    border-radius: 2px 0 0 2px;
+                    min-height: 48px;
+                    padding-left: 20px;
+
+                    .v-icon {
+                        font-size: 12px;
+                        padding-right: 15px;
+                    }
+                }
+                .v-input__slot:before {
+                    border: none;
+                }
+
+                .v-select__slot {
+                    .v-label {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+
+        .v-text-field {
+            .v-input__slot {
+                border-bottom: 1px solid #b5c0d3 !important;
+                border-top: 1px solid #b5c0d3 !important;
+                border-right: 1px solid #b5c0d3 !important;
+                border-radius: 0;
+                font-size: 14px;
+
+                .v-icon {
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+    .search-button-container {
+        max-width: 115px !important;
+
+        .search-button {
+            border-radius: 0 2px 2px 0;
+        }
+    }
 }
 </style>
