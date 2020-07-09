@@ -49,11 +49,18 @@
             }}</v-btn>
             <v-btn v-else depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey" @click="onSearch">{{ $t('search.name') }}</v-btn>
         </v-flex>
+        <v-snackbar v-model="snackbar" :bottom="true" :right="true" :timeout="5000">
+            ERROR: NO SEARCH RESULTS
+            <v-btn color="primary" text @click="snackbar = false">
+                Close
+            </v-btn>
+        </v-snackbar>
     </v-layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
+import { eth } from '@app/core/helper'
 
 @Component
 export default class AppSearch extends Vue {
@@ -88,17 +95,32 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
     onSearch(): void {
-        this.$router.push({ name: this.selectValue, params: this.getParam() })
+        const route = this.selectValue === 'all' ? this.getSearchValue() : { name: this.selectValue, params: this.getParam(this.selectValue) }
+        this.$router.push(route)
     }
 
     resetValues(): void {
         this.isValid = true
     }
 
-    getParam(): {} {
-        if (this.selectValue === 'transaction') {
+    getSearchValue(): {} {
+        let routeName = ''
+        if (eth.isValidAddress(this.searchInput)) {
+            routeName = 'address'
+        } else if (eth.isValidHash(this.searchInput)) {
+            routeName = 'transaction'
+        } else if (eth.isValidBlockNumber(this.searchInput)) {
+            routeName = 'block'
+        } else {
+            this.snackbar = true
+        }
+        return { name: routeName, params: this.getParam(routeName) }
+    }
+
+    getParam(value): {} {
+        if (value === 'transaction') {
             return { txRef: this.searchInput }
-        } else if (this.selectValue === 'token-detail' || this.selectValue === 'address') {
+        } else if (value === 'token-detail' || value === 'address') {
             return { addressRef: this.searchInput }
         }
         return { blockRef: this.searchInput }
