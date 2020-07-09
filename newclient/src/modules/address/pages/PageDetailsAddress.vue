@@ -62,7 +62,14 @@
                                 </v-flex>
                             </v-layout>
                             <v-slide-x-reverse-transition>
-                                <address-transfers v-show="toggleERC20 === 1" :address="addressRef" :max-items="max" transfers-type="ERC20" />
+                                <address-transfers
+                                    v-show="toggleERC20 === 1"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    :new-transfers="newERC20Transfers"
+                                    transfers-type="ERC20"
+                                    @resetUpdateCount="setNewEvent"
+                                />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
                                 <address-tokens
@@ -97,7 +104,14 @@
                                 </v-flex>
                             </v-layout>
                             <v-slide-x-reverse-transition>
-                                <address-transfers v-show="toggleERC721 === 1" :address="addressRef" :max-items="max" transfers-type="ERC721" />
+                                <address-transfers
+                                    v-show="toggleERC721 === 1"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    :new-transfers="newERC721Transfers"
+                                    transfers-type="ERC721"
+                                    @resetUpdateCount="setNewEvent"
+                                />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
                                 <address-tokens v-show="toggleERC721 === 0" :address="addressRef" :max-items="max" token-type="ERC721" />
