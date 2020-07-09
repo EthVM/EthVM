@@ -16,7 +16,7 @@ import { addressEvent_addressEvent as EventSubscriptionType } from './apolloType
                     return this.skipEventSubscription
                 },
                 result({ data }) {
-                    console.log('new addr event', data)
+                    this.setNewEvent(data.addressEvent.event)
                 },
                 error(error) {
                     console.error(error)
@@ -32,8 +32,12 @@ export class AddressUpdateEvent extends Vue {
     ===================================================================================
     */
     addressEvent!: EventSubscriptionType
-    event: AddressEventType | null = null
     owner: string | null = null
+    newETHTransfers = 0
+    newERC20Transfers = 0
+    newERC721Transfers = 0
+    newMinedBlocks = 0
+    newMinedUncles = 0
 
     /*
     ===================================================================================
@@ -41,8 +45,7 @@ export class AddressUpdateEvent extends Vue {
     ===================================================================================
     */
     get skipEventSubscription(): boolean {
-        console.log(this.event === null || this.owner === null)
-        return this.event === null || this.owner === null
+        return this.owner === null
     }
 
     /*
@@ -50,19 +53,29 @@ export class AddressUpdateEvent extends Vue {
       Methods
     ===================================================================================
     */
-    setEventVariables(_owner: string, _event: AddressEventType) {
+    setEventVariables(_owner: string) {
         this.owner = _owner.toLowerCase()
-        this.event = _event
-        console.log(this.owner, this.event)
     }
+    setNewEvent(newEvent: AddressEventType | string, reset: boolean = false): void {
+        switch (true) {
+            case newEvent === AddressEventType.NEW_ETH_TRANSFER:
+                reset ? (this.newETHTransfers = 0) : this.newETHTransfers++
+                return
+            case newEvent === AddressEventType.NEW_ERC20_TRANSFER:
+                reset ? (this.newERC20Transfers = 0) : this.newERC20Transfers++
+                return
+            case newEvent === AddressEventType.NEW_ERC721_TRANSFER:
+                reset ? (this.newERC721Transfers = 0) : this.newERC721Transfers++
+                return
+            case newEvent === AddressEventType.NEW_MINED_BLOCK:
+                reset ? (this.newMinedBlocks = 0) : this.newMinedBlocks++
 
-    /*
-    ===================================================================================
-      Watch
-    ===================================================================================
-    */
-    @Watch('addressEvent')
-    onAddressEventChanged(): void {
-        console.log('new event', this.addressEvent)
+                return
+            case newEvent === AddressEventType.NEW_MINED_UNCLE:
+                reset ? (this.newMinedUncles = 0) : this.newMinedUncles++
+                return
+            default:
+                return
+        }
     }
 }

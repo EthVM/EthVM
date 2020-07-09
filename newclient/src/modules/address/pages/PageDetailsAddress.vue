@@ -32,7 +32,13 @@
                 -->
                 <v-tab-item slot="tabs-item" value="tab-0">
                     <keep-alive>
-                        <address-transfers v-if="activeTab === 'tab-0'" :address="addressRef" :max-items="max"></address-transfers>
+                        <address-transfers
+                            v-if="activeTab === 'tab-0'"
+                            :address="addressRef"
+                            :max-items="max"
+                            :new-transfers="newETHTransfers"
+                            @resetUpdateCount="setNewEvent"
+                        ></address-transfers>
                     </keep-alive>
                 </v-tab-item>
                 <!--
@@ -202,7 +208,6 @@ import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTo
 import AddressRewards from '@app/modules/address/handlers/AddressRewards/AddressRewards.vue'
 import { Address } from '@app/modules/address/components/props'
 const MAX_ITEMS = 10
-import { AddressEventType } from '@app/apollo/global/globalTypes'
 
 @Component({
     components: {
@@ -350,9 +355,9 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     created() {
         if (!this.isValid) {
             this.error = this.$i18n.t('message.invalid.addr').toString()
-            return
+        } else {
+            this.setEventVariables(this.addressRef)
         }
-        this.setEventVariables(this.addressRef, AddressEventType.NEW_MINED_BLOCK)
 
         window.scrollTo(0, 0)
     }
