@@ -2,9 +2,10 @@
     <v-card color="white" flat class="pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
             <!-- Notice new update-->
-            <!-- <template v-slot:update >
-                <notice-new-block @reload="setPage(0, true)" />
-            </template> -->
+            <template v-slot:update>
+                <app-new-update :text="updateText" :update-count="newRewards" @reload="setPage(0, true)" />
+            </template>
+
             <template v-slot:pagination v-if="showPagination && !initialLoad">
                 <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
             </template>
@@ -38,6 +39,8 @@ import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from './apoll
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from './apolloTypes/getAddrRewardsUncle'
 import { getAddrRewardsGenesis_getGenesisRewards as RewardsGenesisType } from './apolloTypes/getAddrRewardsGenesis'
 import { RewardSummary_transfers as RewardType } from './apolloTypes/RewardSummary'
+import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
+import { AddressEventType } from '@app/apollo/global/globalTypes'
 /*
   DEV NOTES:
   - add on Error
@@ -46,6 +49,7 @@ import { RewardSummary_transfers as RewardType } from './apolloTypes/RewardSumma
 
 @Component({
     components: {
+        AppNewUpdate,
         AppTableTitle,
         AppPaginateHasMore,
         TableTxs,
@@ -100,6 +104,7 @@ export default class AddressRewards extends Vue {
     @Prop(Number) maxItems!: number
     @Prop(String) address!: string
     @Prop({ type: String, default: 'block' }) rewardsType!: string
+    @Prop(Number) newRewards!: number
 
     /*
     ===================================================================================
@@ -161,6 +166,14 @@ export default class AddressRewards extends Vue {
         return this.rewardsType === 'genesis'
     }
 
+    get eventType(): AddressEventType {
+        return this.isBlock ? AddressEventType.NEW_MINED_BLOCK : AddressEventType.NEW_MINED_UNCLE
+    }
+    get updateText(): string {
+        const plural = this.newRewards > 1 ? 2 : 1
+        return this.isBlock ? `${this.$tc('message.update.block', plural)}` : `${this.$tc('message.update.uncle', plural)}`
+    }
+
     /*
     ===================================================================================
       Methods:
@@ -170,7 +183,10 @@ export default class AddressRewards extends Vue {
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
+            this.initialLoad = true
+            this.showPagination = false
             this.$apollo.queries.getRewards.refetch()
+            this.$emit('resetUpdateCount', this.eventType, true)
         } else {
             if (page > this.isEnd && this.hasMore) {
                 let queryName!: string

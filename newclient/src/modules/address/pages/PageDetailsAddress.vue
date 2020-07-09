@@ -150,24 +150,43 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
+                            <!--
+                            =====================================================================================
+                              BLOCK REWARDS TABLE
+                            =====================================================================================
+                            -->
                             <v-slide-x-reverse-transition>
                                 <address-rewards
                                     v-show="toggleMiner === 0"
                                     :address="addressRef"
                                     :max-items="max"
+                                    :new-rewards="newMinedBlocks"
                                     rewards-type="block"
                                     @blockRewards="setBlockRewards"
+                                    @resetUpdateCount="setNewEvent"
                                 />
                             </v-slide-x-reverse-transition>
+                            <!--
+                            =====================================================================================
+                              UNCLE REWARDS TABLE
+                            =====================================================================================
+                            -->
                             <v-slide-x-reverse-transition>
                                 <address-rewards
                                     v-show="toggleMiner === 1"
                                     :address="addressRef"
                                     :max-items="max"
+                                    :new-rewards="newMinedUncles"
                                     rewards-type="uncle"
                                     @uncleRewards="setUncleRewards"
+                                    @resetUpdateCount="setNewEvent"
                                 />
                             </v-slide-x-reverse-transition>
+                            <!--
+                            =====================================================================================
+                              GENESIS REWARDS TABLE
+                            =====================================================================================
+                            -->
                             <v-slide-x-reverse-transition>
                                 <address-rewards
                                     v-show="toggleMiner === 2"

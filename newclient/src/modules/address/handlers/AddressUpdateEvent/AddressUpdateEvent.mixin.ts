@@ -69,7 +69,6 @@ export class AddressUpdateEvent extends Vue {
                 return
             case newEvent === AddressEventType.NEW_MINED_BLOCK:
                 reset ? (this.newMinedBlocks = 0) : this.newMinedBlocks++
-
                 return
             case newEvent === AddressEventType.NEW_MINED_UNCLE:
                 reset ? (this.newMinedUncles = 0) : this.newMinedUncles++
