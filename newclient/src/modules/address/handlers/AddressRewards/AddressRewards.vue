@@ -5,7 +5,6 @@
             <template v-slot:update>
                 <app-new-update :text="updateText" :update-count="newRewards" @reload="setPage(0, true)" />
             </template>
-
             <template v-slot:pagination v-if="showPagination && !initialLoad">
                 <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
             </template>
@@ -16,7 +15,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(i, index) in rewards" :key="index" class="transparent" flat>
-                    <table-address-rewards-row :reward="i" :reward-type="rewardsType" />
+                    <table-address-rewards-row v-if="i !== null" :reward="i" :reward-type="rewardsType" />
                 </v-card>
             </template>
         </table-txs>
@@ -29,7 +28,6 @@
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-// import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressRewardsHeader from '@app/modules/address/components/TableAddressRewardsHeader.vue'
 import TableAddressRewardsRow from '@app/modules/address/components/TableAddressRewardsRow.vue'
@@ -76,6 +74,9 @@ import { AddressEventType } from '@app/apollo/global/globalTypes'
             result({ data }) {
                 if (this.hasRewards) {
                     this.error = '' // clear the error
+                    if (this.isUncle) {
+                        console.log(data)
+                    }
                     if (this.initialLoad) {
                         this.showPagination = this.getRewards.nextKey != null
                         this.initialLoad = false
@@ -132,6 +133,8 @@ export default class AddressRewards extends Vue {
         if (!this.loading && this.hasRewards) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getRewards.transfers.length ? this.getRewards.transfers.length : start + this.maxItems
+            console.log(this.getRewards.transfers.slice(start, end))
+
             return this.getRewards.transfers.slice(start, end)
         }
         return []

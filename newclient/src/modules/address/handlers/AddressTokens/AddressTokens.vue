@@ -3,9 +3,9 @@
         <div v-if="!showUniqueNFT">
             <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
                 <!-- Notice new update-->
-                <!-- <template v-slot:update >
-                <notice-new-block @reload="setPage(0, true)" />
-            </template> -->
+                <template v-slot:update>
+                    <app-new-update :text="updateText" :update-count="newTokens" :hide-count="true" @reload="setPage(0, true)" />
+                </template>
                 <template v-slot:pagination v-if="showPagination && !initialLoad">
                     <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
                 </template>
@@ -39,7 +39,7 @@
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-// import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
+import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTokensRow from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableAddressTokensRowLoading from '@app/modules/address/components/TableAddressTokensRow.vue'
@@ -54,9 +54,8 @@ import {
     getOwnersERC721Tokens_getOwnersERC721Tokens as ERC721ContractTokensType,
     getOwnersERC721Tokens_getOwnersERC721Tokens_tokens as ERC721TokenType
 } from './apolloTypes/getOwnersERC721Tokens'
-
 import { IEthereumToken } from '@app/plugins/CoinData/models'
-
+import { AddressEventType } from '@app/apollo/global/globalTypes'
 /*
   DEV NOTES:
   - add on Error
@@ -68,6 +67,7 @@ interface NFTMap {
 
 @Component({
     components: {
+        AppNewUpdate,
         AppTableTitle,
         AppPaginate,
         TableTxs,
@@ -166,6 +166,7 @@ export default class AddressTokens extends Vue {
     @Prop(Number) maxItems!: number
     @Prop(String) address!: string
     @Prop({ type: String, default: 'eth' }) tokenType!: string
+    @Prop(Number) newTokens!: number
 
     /*
     ===================================================================================
@@ -239,6 +240,13 @@ export default class AddressTokens extends Vue {
         return this.tokenType === 'ERC721'
     }
 
+    get eventType(): AddressEventType {
+        return this.isERC20 ? AddressEventType.NEW_ERC20_TRANSFER : AddressEventType.NEW_ERC721_TRANSFER
+    }
+    get updateText(): string {
+        return `${this.$t('message.update.tokens')}`
+    }
+
     /*
     ===================================================================================
       Methods:
@@ -250,7 +258,9 @@ export default class AddressTokens extends Vue {
             this.index = 0
             this.initialLoad = true
             this.totalPages = 0
+            this.showPagination = false
             this.$apollo.queries.getTokens.refetch()
+            this.$emit('resetUpdateCount', this.eventType, true)
         } else {
             this.index = page
         }

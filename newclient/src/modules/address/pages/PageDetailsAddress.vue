@@ -76,8 +76,10 @@
                                     v-show="toggleERC20 === 0"
                                     :address="addressRef"
                                     :max-items="max"
+                                    :new-tokens="newERC20Transfers"
                                     token-type="ERC20"
                                     @totalERC20="setTotalTokens"
+                                    @resetUpdateCount="setNewEvent"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -114,7 +116,14 @@
                                 />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
-                                <address-tokens v-show="toggleERC721 === 0" :address="addressRef" :max-items="max" token-type="ERC721" />
+                                <address-tokens
+                                    v-show="toggleERC721 === 0"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    :new-tokens="newERC721Transfers"
+                                    token-type="ERC721"
+                                    @resetUpdateCount="setNewEvent"
+                                />
                             </v-slide-x-reverse-transition>
                         </div>
                     </keep-alive>
