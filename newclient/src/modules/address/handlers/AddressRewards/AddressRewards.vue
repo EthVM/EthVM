@@ -74,9 +74,6 @@ import { AddressEventType } from '@app/apollo/global/globalTypes'
             result({ data }) {
                 if (this.hasRewards) {
                     this.error = '' // clear the error
-                    if (this.isUncle) {
-                        console.log(data)
-                    }
                     if (this.initialLoad) {
                         this.showPagination = this.getRewards.nextKey != null
                         this.initialLoad = false
@@ -133,8 +130,6 @@ export default class AddressRewards extends Vue {
         if (!this.loading && this.hasRewards) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getRewards.transfers.length ? this.getRewards.transfers.length : start + this.maxItems
-            console.log(this.getRewards.transfers.slice(start, end))
-
             return this.getRewards.transfers.slice(start, end)
         }
         return []
