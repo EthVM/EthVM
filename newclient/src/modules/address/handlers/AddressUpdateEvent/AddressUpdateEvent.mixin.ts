@@ -16,6 +16,7 @@ import { addressEvent_addressEvent as EventSubscriptionType } from './apolloType
                     return this.skipEventSubscription
                 },
                 result({ data }) {
+                    this.addrBalanceChanged = true
                     this.setNewEvent(data.addressEvent.event)
                 },
                 error(error) {
@@ -39,6 +40,13 @@ export class AddressUpdateEvent extends Vue {
     newMinedBlocks = 0
     newMinedUncles = 0
 
+    addrBalanceChanged = false
+    /* Refetch Tokens Tables */
+    refetchERC20Balance = false
+    refetchERC20Transfers = false
+    refetchERC721Balance = false
+    refetchERC721Transfers = false
+
     /*
     ===================================================================================
       Computed
@@ -57,6 +65,18 @@ export class AddressUpdateEvent extends Vue {
         this.owner = _owner.toLowerCase()
     }
     setNewEvent(newEvent: AddressEventType | string, reset: boolean = false): void {
+        if (reset) {
+            this.addrBalanceChanged = false
+            if (newEvent === AddressEventType.NEW_ERC20_TRANSFER) {
+                this.refetchERC20Balance = true
+                this.refetchERC20Transfers = true
+            }
+            if (newEvent === AddressEventType.NEW_ERC721_TRANSFER) {
+                this.refetchERC721Balance = true
+                this.refetchERC721Transfers = true
+            }
+        }
+
         switch (true) {
             case newEvent === AddressEventType.NEW_ETH_TRANSFER:
                 reset ? (this.newETHTransfers = 0) : this.newETHTransfers++
@@ -76,5 +96,15 @@ export class AddressUpdateEvent extends Vue {
             default:
                 return
         }
+    }
+
+    resetBalance(): void {
+        this.addrBalanceChanged = false
+    }
+    resetBalanceRefetch(isERC20: boolean): void {
+        isERC20 ? (this.refetchERC20Balance = false) : (this.refetchERC721Balance = false)
+    }
+    resetTransfersRefetch(isERC20: boolean): void {
+        isERC20 ? (this.refetchERC20Transfers = false) : (this.refetchERC721Transfers = false)
     }
 }

@@ -151,6 +151,7 @@ export default class AddressTransers extends Vue {
     @Prop(String) address!: string
     @Prop({ type: String, default: 'eth' }) transfersType!: string
     @Prop(Number) newTransfers!: number
+    @Prop(Boolean) refetchTransfers?: boolean
 
     /*
     ===================================================================================
@@ -305,18 +306,21 @@ export default class AddressTransers extends Vue {
 
         this.index = page
     }
-
     /*
     ===================================================================================
       Watch
     ===================================================================================
     */
-    // @Watch('newBlock')
-    // onNewBlockChanged(newVal: number, oldVal: number): void {
-    //     if (newVal != oldVal && this.isHome) {
-    //         this.$apollo.queries.getAllEthTransfers.refresh()
-    //     }
-    // }
+
+    @Watch('refetchTransfers')
+    onRefetchTransfersChanged(newVal: boolean, oldVal: boolean): void {
+        if (newVal && newVal !== oldVal) {
+            if (!this.isETH) {
+                this.$apollo.queries.getTransfers.refetch()
+                this.$emit('resetTransfersRefetch')
+            }
+        }
+    }
 }
 </script>
 <style scoped lang="css">

@@ -101,6 +101,7 @@ interface NFTMap {
                         } else {
                             this.totalTokens = this.getTokens.length
                             this.$emit('totalERC20', this.totalTokens)
+                            this.$emit('loadingERC20Tokens', false)
                             if (this.totalTokens > this.maxItems) {
                                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                                 this.showPagination = true
@@ -124,7 +125,6 @@ interface NFTMap {
                     this.showPagination = false
                     this.initialLoad = true
                     this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getTokens.refetch()
                 }
             }
         },
@@ -167,6 +167,7 @@ export default class AddressTokens extends Vue {
     @Prop(String) address!: string
     @Prop({ type: String, default: 'eth' }) tokenType!: string
     @Prop(Number) newTokens!: number
+    @Prop(Boolean) refetchTokens!: boolean
 
     /*
     ===================================================================================
@@ -259,7 +260,6 @@ export default class AddressTokens extends Vue {
             this.initialLoad = true
             this.totalPages = 0
             this.showPagination = false
-            this.$apollo.queries.getTokens.refetch()
             this.$emit('resetUpdateCount', this.eventType, true)
         } else {
             this.index = page
@@ -332,6 +332,21 @@ export default class AddressTokens extends Vue {
     hideNFTTokens(): void {
         this.showUniqueNFT = false
         this.loadingUniqueNFT = true
+    }
+
+    /*
+    ===================================================================================
+      Watch
+    ===================================================================================
+    */
+
+    @Watch('refetchTokens')
+    onRefetchTokensChanged(newVal: boolean, oldVal: boolean): void {
+        if (newVal && newVal !== oldVal) {
+            this.$emit('loadingERC20Tokens', true)
+            this.$apollo.queries.getTokens.refetch()
+            this.$emit('resetBalanceRefetch')
+        }
     }
 }
 </script>

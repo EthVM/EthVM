@@ -16,6 +16,9 @@
                         :is-contractcreator="isContractCreator"
                         :is-contract="isContract"
                         :total-erc20-owned="totalERC20"
+                        :update-balance="addrBalanceChanged"
+                        :loading-tokens="loadingERC20Balance"
+                        @resetBalanceUpdate="resetBalance"
                     />
                 </v-flex>
             </v-layout>
@@ -67,8 +70,10 @@
                                     :address="addressRef"
                                     :max-items="max"
                                     :new-transfers="newERC20Transfers"
+                                    :refetch-transfers="refetchERC20Transfers"
                                     transfers-type="ERC20"
                                     @resetUpdateCount="setNewEvent"
+                                    @resetTransfersRefetch="resetTransfersRefetch(true)"
                                 />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
@@ -77,9 +82,12 @@
                                     :address="addressRef"
                                     :max-items="max"
                                     :new-tokens="newERC20Transfers"
+                                    :refetch-tokens="refetchERC20Balance"
                                     token-type="ERC20"
                                     @totalERC20="setTotalTokens"
                                     @resetUpdateCount="setNewEvent"
+                                    @loadingERC20Tokens="setLoadingERC20"
+                                    @resetBalanceRefetch="resetBalanceRefetch(true)"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -111,8 +119,10 @@
                                     :address="addressRef"
                                     :max-items="max"
                                     :new-transfers="newERC721Transfers"
+                                    :refetch-transfers="refetchERC20Transfers"
                                     transfers-type="ERC721"
                                     @resetUpdateCount="setNewEvent"
+                                    @resetTransfersRefetch="resetTransfersRefetch(false)"
                                 />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
@@ -121,8 +131,10 @@
                                     :address="addressRef"
                                     :max-items="max"
                                     :new-tokens="newERC721Transfers"
+                                    :refetch-tokens="refetchERC721Balance"
                                     token-type="ERC721"
                                     @resetUpdateCount="setNewEvent"
+                                    @resetBalanceRefetch="resetBalanceRefetch(false)"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -279,7 +291,6 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     */
     isContractCreator = false
     isContract = false
-    totalERC20 = 0
     error = ''
     activeTab = 'tab-0'
     toggleERC20 = 0
@@ -288,6 +299,10 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     hasGenesisRewards = false
     hasUncleRewards = false
     hasBlockRewards = false
+
+    /* ERC20 and ERC721 Refetc options */
+    totalERC20 = 0
+    loadingERC20Balance = true
 
     /*
     ===================================================================================
@@ -387,6 +402,10 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     }
     setTotalTokens(value: number): void {
         this.totalERC20 = value
+    }
+
+    setLoadingERC20(_value: boolean): void {
+        this.loadingERC20Balance = _value
     }
     /*
     ===================================================================================
