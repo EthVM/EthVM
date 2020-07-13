@@ -2,7 +2,7 @@
     <v-card color="white" flat class="pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
             <!-- Notice new update-->
-            <template v-slot:update>
+            <template v-slot:update v-if="!initialLoad">
                 <app-new-update :text="updateText" :update-count="newTransfers" @reload="setPage(0, true)" />
             </template>
             <template v-slot:pagination v-if="!isETH && showPagination && !initialLoad">
@@ -271,7 +271,9 @@ export default class AddressTransers extends Vue {
             this.isEnd = 0
             this.initialLoad = true
             this.showPagination = false
-            this.$apollo.queries.getTransfers.refetch()
+            if (this.isETH) {
+                this.$apollo.queries.getTransfers.refetch()
+            }
             this.$emit('resetUpdateCount', this.eventType, true)
         } else {
             if (page > this.isEnd && this.hasMore) {
@@ -279,9 +281,8 @@ export default class AddressTransers extends Vue {
                 if (this.isETH) {
                     queryName = 'getEthTransfersV2'
                 } else {
-                    queryName = this.isERC20 ? 'getAdrERC20Transfers' : 'getERC721Transfers'
+                    queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
                 }
-
                 this.$apollo.queries.getTransfers.fetchMore({
                     variables: {
                         hash: this.address,
@@ -316,8 +317,19 @@ export default class AddressTransers extends Vue {
     onRefetchTransfersChanged(newVal: boolean, oldVal: boolean): void {
         if (newVal && newVal !== oldVal) {
             if (!this.isETH) {
-                this.$apollo.queries.getTransfers.refetch()
-                this.$emit('resetTransfersRefetch')
+                this.isEnd = 0
+                this.initialLoad = true
+                this.showPagination = false
+                this.$apollo.queries.getTransfers
+                    .refetch()
+                    .then(data => {
+                        if (data) {
+                            this.$emit('resetTransfersRefetch')
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             }
         }
     }
