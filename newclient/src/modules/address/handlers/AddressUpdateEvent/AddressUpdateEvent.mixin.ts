@@ -76,7 +76,6 @@ export class AddressUpdateEvent extends Vue {
                 this.refetchERC721Transfers = true
             }
         }
-
         switch (true) {
             case newEvent === AddressEventType.NEW_ETH_TRANSFER:
                 reset ? (this.newETHTransfers = 0) : this.newETHTransfers++

@@ -256,10 +256,6 @@ export default class AddressTokens extends Vue {
 
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
-            this.index = 0
-            this.initialLoad = true
-            this.totalPages = 0
-            this.showPagination = false
             this.$emit('resetUpdateCount', this.eventType, true)
         } else {
             this.index = page
@@ -343,9 +339,23 @@ export default class AddressTokens extends Vue {
     @Watch('refetchTokens')
     onRefetchTokensChanged(newVal: boolean, oldVal: boolean): void {
         if (newVal && newVal !== oldVal) {
-            this.$emit('loadingERC20Tokens', true)
-            this.$apollo.queries.getTokens.refetch()
-            this.$emit('resetBalanceRefetch')
+            if (this.isERC20) {
+                this.$emit('loadingERC20Tokens', true)
+            }
+            this.index = 0
+            this.initialLoad = true
+            this.totalPages = 0
+            this.showPagination = false
+            this.$apollo.queries.getTokens
+                .refetch()
+                .then(data => {
+                    if (data) {
+                        this.$emit('resetBalanceRefetch')
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         }
     }
 }
