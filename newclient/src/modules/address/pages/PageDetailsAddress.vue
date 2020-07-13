@@ -119,7 +119,7 @@
                                     :address="addressRef"
                                     :max-items="max"
                                     :new-transfers="newERC721Transfers"
-                                    :refetch-transfers="refetchERC20Transfers"
+                                    :refetch-transfers="refetchERC721Transfers"
                                     transfers-type="ERC721"
                                     @resetUpdateCount="setNewEvent"
                                     @resetTransfersRefetch="resetTransfersRefetch(false)"
