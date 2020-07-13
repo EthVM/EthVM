@@ -320,7 +320,6 @@ export default class AddressTransers extends Vue {
                 this.isEnd = 0
                 this.initialLoad = true
                 this.showPagination = false
-                console.log('refetching transfers')
                 this.$apollo.queries.getTransfers
                     .refetch()
                     .then(data => {
