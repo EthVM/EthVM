@@ -38,16 +38,25 @@
         </v-layout>
 
         <!--
-    =====================================================================================
-      BLOCKS
-    =====================================================================================
-    -->
+        =====================================================================================
+          BLOCKS
+        =====================================================================================
+        -->
         <v-layout>
+            <!--
+            =====================================================================================
+              DESKTOP LAYOUT
+            =====================================================================================
+            -->
             <v-flex hidden-xs-only>
                 <v-layout :class="layoutPadding" row wrap justify-space-between>
-                    <!-- Ether Balance -->
+                    <!--
+                    =====================================================================================
+                      ETHER BALANCE
+                    =====================================================================================
+                    -->
                     <v-flex xs12 md4>
-                        <v-card class="primary white--text pl-2" flat>
+                        <v-card class="primary white--text pl-2 pr-2" flat>
                             <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
                             <v-card-title v-if="!loading" class="title font-weight-regular text-truncate pr-1"
                                 >{{ balance.value }} {{ $t(`common.${balance.unit}`) }}
@@ -65,16 +74,19 @@
                                     background-opacity="0.3"
                                     value="40"
                                     indeterminate
-                                    height="25"
-                                    class="ma-2"
+                                    height="21"
+                                    class="ma-0"
                                 />
                             </v-card-title>
                         </v-card>
                     </v-flex>
-                    <!-- End Ether Balance -->
-                    <!-- USD Value -->
+                    <!--
+                    =====================================================================================
+                      USD BALANCE
+                    =====================================================================================
+                    -->
                     <v-flex xs12 md4>
-                        <v-card class="error white--text pl-2" flat>
+                        <v-card class="error white--text pl-2 pr-2" flat>
                             <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = {{ exchangeRateFormatted }})</v-card-text>
                             <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">
                                 {{ balanceUsd.value }}
@@ -92,18 +104,21 @@
                                     background-opacity="0.3"
                                     value="40"
                                     indeterminate
-                                    height="25"
-                                    class="ma-2"
+                                    height="21"
+                                    class="ma-0"
                                 />
                             </v-card-title>
                         </v-card>
                     </v-flex>
-                    <!-- End USD Value -->
-                    <!-- Number of Tokens -->
+                    <!--
+                    =====================================================================================
+                      TOTAL TOKENS OWNED
+                    =====================================================================================
+                    -->
                     <v-flex xs12 md4>
-                        <v-card class="warning white--text pl-2" flat>
+                        <v-card class="warning white--text pl-2 pr-2" flat>
                             <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
-                            <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
+                            <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                             <v-card-title v-else>
                                 <v-progress-linear
                                     color="#fed18e"
@@ -111,17 +126,26 @@
                                     background-opacity="0.3"
                                     value="40"
                                     indeterminate
-                                    height="25"
-                                    class="ma-2"
+                                    height="21"
+                                    class="ma-0"
                                 />
                             </v-card-title>
                         </v-card>
                     </v-flex>
-                    <!-- End Number of Tokens -->
                 </v-layout>
             </v-flex>
+            <!--
+            =====================================================================================
+              MOBILE LAYOUT
+            =====================================================================================
+            -->
             <v-flex hidden-sm-and-up pt-0>
                 <div class="xs-overflow">
+                    <!--
+                    =====================================================================================
+                      ETHER BALANCE
+                    =====================================================================================
+                    -->
                     <v-card class="primary xs-div white--text">
                         <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
                         <v-card-title v-if="!loading" class="title font-weight-regular text-truncate pr-1"
@@ -145,7 +169,11 @@
                             />
                         </v-card-title>
                     </v-card>
-
+                    <!--
+                    =====================================================================================
+                      USD BALANCE
+                    =====================================================================================
+                    -->
                     <v-card class="error white--text xs-div" flat>
                         <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ exchangeRateFormatted }})</v-card-text>
                         <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">
@@ -169,10 +197,14 @@
                             />
                         </v-card-title>
                     </v-card>
-
+                    <!--
+                    =====================================================================================
+                      TOTAL TOKENS OWNED
+                    =====================================================================================
+                    -->
                     <v-card class="warning white--text xs-div" flat>
                         <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
-                        <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
+                        <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
                                 color="#fed18e"
@@ -219,7 +251,8 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
   */
 
     @Prop(Object) address!: Address
-    @Prop(Boolean) loading!: Address
+    @Prop(Boolean) loading!: boolean
+    @Prop(Boolean) loadingTokens!: boolean
     exchangeRatePrice = 150.345
 
     /*

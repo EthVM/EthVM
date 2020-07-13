@@ -214,7 +214,10 @@
             "tx": "new tx | new txs",
             "block": "new block | new blocks",
             "uncle": "new uncle | new uncles",
-            "pending": "new pending tx | new pending txs"
+            "pending": "new pending tx | new pending txs",
+            "erc20-transfer": "new ERC20 transfer| new ERC20 transfers",
+            "erc721-transfer": "new ERC721 transfer| new ERC721 transfers",
+            "tokens": "token balance changed, refresh"
         },
         "sec": "sec",
         "sec-ago": "sec ago",
