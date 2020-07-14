@@ -40,13 +40,14 @@ import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getBlockTransfers, getAllTxs } from './queryTransfers.graphql'
+import { getBlockTransfers, getAllTxs, newTransfersCompleteFeed } from './queryTransfers.graphql'
 import {
     getBlockTransfers_getBlockTransfers as TypeBlockTransfers,
     getBlockTransfers_getBlockTransfers_transfers as TypeTransfers
 } from './apolloTypes/getBlockTransfers'
+import { newTransfersCompleteFeed as TypeTransfersSubscribtion } from './apolloTypes/newTransfersCompleteFeed'
 import { getAllTxs_getAllEthTransfers as AllTxType } from './apolloTypes/getAllTxs'
-
+import { TransferType } from '@app/apollo/global/globalTypes'
 /*
   DEV NOTES:
   - add on Error
@@ -126,6 +127,23 @@ import { getAllTxs_getAllEthTransfers as AllTxType } from './apolloTypes/getAllT
                     this.error = this.error || this.$i18n.t('message.err')
                     this.initialLoad = true
                     this.$apollo.queries.getAllEthTransfers.refetch()
+                }
+            }
+        },
+        $subscribe: {
+            newTransfersCompleteFeed: {
+                query: newTransfersCompleteFeed,
+
+                skip() {
+                    return this.isBlock
+                },
+                result({ data }) {
+                    if (data.newTransfersCompleteFeed.type === TransferType.ETH && this.isHome) {
+                        this.$apollo.queries.getAllEthTransfers.refresh()
+                    }
+                },
+                error(error) {
+                    console.error(error)
                 }
             }
         }
@@ -259,12 +277,13 @@ export default class HomeTxs extends Vue {
       Watch
     ===================================================================================
     */
-    @Watch('newBlock')
-    onNewBlockChanged(newVal: number, oldVal: number): void {
-        if (newVal != oldVal && this.isHome) {
-            this.$apollo.queries.getAllEthTransfers.refresh()
-        }
-    }
+    // @Watch('lastProcessedTransfersBlock')
+    // onNewBlockChanged(newVal: number, oldVal: number | undefined): void {
+    //     if (newVal != oldVal && this.isHome) {
+    //         console.log('refresh')
+    //         this.$apollo.queries.getAllEthTransfers.refresh()
+    //     }
+    // }
 }
 </script>
 <style scoped lang="css">
