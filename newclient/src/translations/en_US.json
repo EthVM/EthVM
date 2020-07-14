@@ -151,7 +151,8 @@
         "quantity": "Quantity",
         "percentage": "Percentage",
         "eth-balance": "ETH Balance",
-        "balance": "Balance"
+        "balance": "Balance",
+        "close": "Close"
     },
 
     "usd": {
@@ -330,7 +331,8 @@
     "search": {
         "name": "Search",
         "default": "Search Block / Address / Tx",
-        "address-tx": "Tx Hash/Address"
+        "address-tx": "Tx Hash/Address",
+        "no-result": "ERROR: NO SEARCH RESULTS"
     },
 
     "filter": {

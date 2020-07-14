@@ -30,5 +30,5 @@ export interface getPendingTransactions {
 }
 
 export interface getPendingTransactionsVariables {
-  owner: string;
+  hash: string;
 }

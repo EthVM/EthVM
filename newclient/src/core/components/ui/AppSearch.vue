@@ -11,7 +11,15 @@
                         height="48"
                         append-icon="fa fa-chevron-down secondary--text"
                     />
-                    <v-text-field
+                    <v-autocomplete
+                        :prepend-inner-icon="getIcon"
+                        :items="items"
+                        v-model="searchInput"
+                        :search-input.sync="searchAutocomplete"
+                        append-icon=""
+                        @keyup.enter="onSearch"
+                    ></v-autocomplete>
+                    <!-- <v-text-field
                         v-if="phText === 'default'"
                         v-model="searchInput"
                         :placeholder="$t('search.default')"
@@ -39,7 +47,7 @@
                         class="ma-0"
                         height="34px"
                         @keyup.enter="onSearch"
-                    />
+                    /> -->
                 </v-layout>
             </v-card>
         </v-flex>
@@ -50,9 +58,9 @@
             <v-btn v-else depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey" @click="onSearch">{{ $t('search.name') }}</v-btn>
         </v-flex>
         <v-snackbar v-model="snackbar" :bottom="true" :right="true" :timeout="5000">
-            ERROR: NO SEARCH RESULTS
+            {{ $t('search.no-result') }}
             <v-btn color="primary" text @click="snackbar = false">
-                Close
+                {{ $t('common.close') }}
             </v-btn>
         </v-snackbar>
     </v-layout>
@@ -61,6 +69,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { eth } from '@app/core/helper'
+import { getTokensBeginsWith, getHashType } from '@app/core/components/handlers/appSearch.graphql'
 
 @Component
 export default class AppSearch extends Vue {
@@ -82,8 +91,9 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
-    @Watch('searchInput')
-    onSearchInputChange(newVal: string, oldVal: string): void {
+    @Watch('searchAutocomplete')
+    searchAutocomplete(newVal: string, oldVal: string): void {
+        console.error('newval', newVal, oldVal)
         if (newVal === null || newVal === '') {
             this.resetValues()
         }
@@ -95,26 +105,66 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
     onSearch(): void {
-        const route = this.selectValue === 'all' ? this.getSearchValue() : { name: this.selectValue, params: this.getParam(this.selectValue) }
-        this.$router.push(route)
+        console.log('hello', this.searchInput)
+        if (this.selectValue === 'all') {
+            ;/^[a-zA-Z]+$/.test(this.searchInput) ? this.getToken() : this.getHashType()
+        } else {
+            const route = { name: this.selectValue, params: this.getParam(this.selectValue) }
+            this.$router.push(route)
+            this.searchInput = ''
+        }
     }
 
     resetValues(): void {
         this.isValid = true
     }
 
-    getSearchValue(): {} {
+    getToken(): any {
+        this.$apollo
+            .query({
+                query: getTokensBeginsWith,
+                variables: {
+                    keyword: this.searchInput
+                }
+            })
+            .then(response => {
+                console.error('response', response)
+            })
+            .catch(err => {
+                console.error('err', err)
+            })
+    }
+
+    getHashType(): any {
         let routeName = ''
-        if (eth.isValidAddress(this.searchInput)) {
-            routeName = 'address'
-        } else if (eth.isValidHash(this.searchInput)) {
-            routeName = 'transaction'
-        } else if (eth.isValidBlockNumber(this.searchInput)) {
-            routeName = 'block'
-        } else {
-            this.snackbar = true
-        }
-        return { name: routeName, params: this.getParam(routeName) }
+        this.$apollo
+            .query({
+                query: getHashType,
+                variables: {
+                    hash: this.searchInput
+                }
+            })
+            .then(response => {
+                const hashType = response.data.getHashType
+                if (hashType.includes('ADDRESS')) {
+                    routeName = 'address'
+                } else if (hashType.includes('TX')) {
+                    routeName = 'transaction'
+                } else if (hashType.includes('TOKEN')) {
+                    routeName = 'token-detail'
+                } else if (hashType.includes('UNCLE')) {
+                    routeName = 'uncle'
+                } else if (hashType.includes('BLOCK')) {
+                    routeName = 'block'
+                } else {
+                    this.snackbar = true
+                }
+                this.$router.push({ name: routeName, params: this.getParam(routeName) })
+                this.searchInput = ''
+            })
+            .catch(err => {
+                this.snackbar = true
+            })
     }
 
     getParam(value): {} {
@@ -122,6 +172,8 @@ export default class AppSearch extends Vue {
             return { txRef: this.searchInput }
         } else if (value === 'token-detail' || value === 'address') {
             return { addressRef: this.searchInput }
+        } else if (value === 'uncle') {
+            return { uncleRef: this.searchInput }
         }
         return { blockRef: this.searchInput }
     }
@@ -132,13 +184,18 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
+    get items(): any[] {
+        return []
+    }
+
     get selectItems(): any[] {
         return [
             { text: this.$t('filter.all'), value: 'all' },
             { text: this.$t('kb.terms.block.term'), value: 'block' },
             { text: this.$tc('tx.name-short', 1), value: 'transaction' },
             { text: this.$tc('address.name', 1), value: 'address' },
-            { text: this.$tc('token.name', 1), value: 'token-detail' }
+            { text: this.$tc('token.name', 1), value: 'token-detail' },
+            { text: this.$tc('uncle.name', 1), value: 'uncle' }
         ]
     }
 

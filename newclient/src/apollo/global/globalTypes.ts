@@ -7,6 +7,15 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum HashType {
+  ADDRESS_HASH = "ADDRESS_HASH",
+  BLOCK_HASH = "BLOCK_HASH",
+  CODE_HASH = "CODE_HASH",
+  TOKEN_HASH = "TOKEN_HASH",
+  TX_HASH = "TX_HASH",
+  UNCLE_HASH = "UNCLE_HASH",
+}
+
 export enum TransferFilter {
   FROM = "FROM",
   TO = "TO",
