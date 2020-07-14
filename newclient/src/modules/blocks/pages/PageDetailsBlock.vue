@@ -14,7 +14,7 @@
       TX TABLE
     =====================================================================================
     -->
-        <block-txs v-if="isValid" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
+        <block-txs v-if="isValid && !isHash" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
     </v-container>
 </template>
 

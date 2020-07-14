@@ -39,12 +39,12 @@ export default new Router({
             name: 'block',
             props: true
         },
-        // {
-        //     path: '/block/hash/:blockRef',
-        //     component: PageDetailsBlock,
-        //     name: 'block',
-        //     props: true
-        // },
+        {
+            path: '/block/hash/:blockRef',
+            component: PageDetailsBlock,
+            name: 'blockHash',
+            props: true
+        },
         {
             path: '/txs',
             component: PageTxs,

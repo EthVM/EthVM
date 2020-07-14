@@ -22,7 +22,7 @@ import { Detail, Crumb } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
 import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { getBlockByNumber, getBlockByHash, getLastBlockNumber } from './blockDetails.graphql'
+import { getBlockByNumber, getBlockDetailsHash, getLastBlockNumber } from './blockDetails.graphql'
 import { BlockDetails as BlockDetailsType } from './apolloTypes/BlockDetails'
 import { getLastBlockNumber_getLatestBlockInfo as lastBlockType } from './apolloTypes/getLastBlockNumber'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
@@ -37,12 +37,14 @@ import BN from 'bignumber.js'
     apollo: {
         block: {
             query() {
-                return this.isHash ? getBlockByHash : getBlockByNumber
+                return this.isHash ? getBlockDetailsHash : getBlockByNumber
             },
+            fetchPolicy: 'network-only',
             variables() {
-                return this.isHash ? { blockRef: this.blockRef } : { blockRef: parseInt(this.blockRef) }
+                return { blockRef: this.isHash ? this.blockRef :  parseInt(this.blockRef) }
             },
-            update: data => data.getBlockByNumber || data.getBlockByHash
+            update: data => data.getBlockDetailsHash || data.getBlockByNumber,
+            deep: true
         },
         getLatestBlockInfo: {
             query: getLastBlockNumber,
@@ -87,6 +89,8 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
 
     get blockDetails(): Detail[] {
         let details: Detail[]
+
+        console.error('hello', this.block)
 
         if (this.loading || this.error) {
             details = [

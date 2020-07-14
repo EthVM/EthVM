@@ -8,47 +8,29 @@
                         :solo="true"
                         :items="selectItems"
                         v-model="selectValue"
+                        class="search-select"
                         height="48"
                         append-icon="fa fa-chevron-down secondary--text"
                     />
-                    <v-autocomplete
-                        :prepend-inner-icon="getIcon"
+                    <v-combobox
                         :items="items"
-                        v-model="searchInput"
                         :search-input.sync="searchAutocomplete"
-                        append-icon=""
-                        @keyup.enter="onSearch"
-                    ></v-autocomplete>
-                    <!-- <v-text-field
-                        v-if="phText === 'default'"
-                        v-model="searchInput"
-                        :placeholder="$t('search.default')"
                         :prepend-inner-icon="getIcon"
-                        color="primary"
+                        :placeholder="$t('search.default')"
+                        v-model="searchVal"
+                        :value="searchVal"
+                        item-value="keyword"
+                        item-text="keyword"
+                        hide-no-data
+                        clearable
                         solo
                         flat
-                        clearable
-                        spellcheck="false"
-                        class="ma-0"
+                        append-icon=""
                         height="48px"
                         @keyup.enter="onSearch"
                         @click:clear="resetValues"
-                    />
-                    <v-text-field
-                        v-if="phText === 'addressTxSearch'"
-                        :placeholder="$t('search.address-tx')"
-                        dense
-                        flat
-                        color="primary"
-                        solo
-                        clearable
-                        spellcheck="false"
-                        prepend-inner-icon="fa fa-search grey--text text--lighten-1 pr-4 pl-4"
-                        class="ma-0"
-                        height="34px"
-                        @keyup.enter="onSearch"
-                    /> -->
-                </v-layout>
+                    ></v-combobox>
+                    </v-layout>
             </v-card>
         </v-flex>
         <v-flex hidden-sm-and-down md4 class="search-button-container">
@@ -79,11 +61,13 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
-    searchInput = ''
+    searchVal = ''
     phText = 'default'
     isValid = true
     snackbar = false
     selectValue = 'all'
+    searchAutocomplete = ''
+    items = []
 
     /*
   ===================================================================================
@@ -92,8 +76,11 @@ export default class AppSearch extends Vue {
   */
 
     @Watch('searchAutocomplete')
-    searchAutocomplete(newVal: string, oldVal: string): void {
-        console.error('newval', newVal, oldVal)
+    search(newVal: string, oldVal: string): void {
+        if (newVal && this.onlyLetters(newVal)) {
+            this.getToken()
+        }
+
         if (newVal === null || newVal === '') {
             this.resetValues()
         }
@@ -104,35 +91,19 @@ export default class AppSearch extends Vue {
     Methods
   ===================================================================================
   */
-    onSearch(): void {
-        console.log('hello', this.searchInput)
+    onSearch(param): void {
+        console.error('adfads', this.searchVal)
         if (this.selectValue === 'all') {
-            ;/^[a-zA-Z]+$/.test(this.searchInput) ? this.getToken() : this.getHashType()
+            this.onlyLetters(this.searchVal) ? this.getToken() : this.getHashType()
         } else {
             const route = { name: this.selectValue, params: this.getParam(this.selectValue) }
             this.$router.push(route)
-            this.searchInput = ''
+            this.searchVal = ''
         }
     }
 
     resetValues(): void {
         this.isValid = true
-    }
-
-    getToken(): any {
-        this.$apollo
-            .query({
-                query: getTokensBeginsWith,
-                variables: {
-                    keyword: this.searchInput
-                }
-            })
-            .then(response => {
-                console.error('response', response)
-            })
-            .catch(err => {
-                console.error('err', err)
-            })
     }
 
     getHashType(): any {
@@ -141,10 +112,11 @@ export default class AppSearch extends Vue {
             .query({
                 query: getHashType,
                 variables: {
-                    hash: this.searchInput
+                    hash: this.searchVal
                 }
             })
             .then(response => {
+                console.error('response', response)
                 const hashType = response.data.getHashType
                 if (hashType.includes('ADDRESS')) {
                     routeName = 'address'
@@ -155,27 +127,50 @@ export default class AppSearch extends Vue {
                 } else if (hashType.includes('UNCLE')) {
                     routeName = 'uncle'
                 } else if (hashType.includes('BLOCK')) {
-                    routeName = 'block'
+                    routeName = 'blockHash'
                 } else {
                     this.snackbar = true
                 }
                 this.$router.push({ name: routeName, params: this.getParam(routeName) })
-                this.searchInput = ''
+                this.searchVal = ''
             })
             .catch(err => {
+                console.error('err', err)
+                // TODO: Change error message
                 this.snackbar = true
             })
     }
 
     getParam(value): {} {
         if (value === 'transaction') {
-            return { txRef: this.searchInput }
+            return { txRef: this.searchVal }
         } else if (value === 'token-detail' || value === 'address') {
-            return { addressRef: this.searchInput }
+            return { addressRef: this.searchVal }
         } else if (value === 'uncle') {
-            return { uncleRef: this.searchInput }
+            return { uncleRef: this.searchVal }
         }
-        return { blockRef: this.searchInput }
+        return { blockRef: this.searchVal }
+    }
+
+    getToken(): any {
+        this.$apollo
+            .query({
+                query: getTokensBeginsWith,
+                variables: {
+                    keyword: this.searchVal
+                }
+            })
+            .then(response => {
+                this.items = response.data.getTokensBeginsWith
+            })
+            .catch(err => {
+                // TODO: Change error message
+                this.snackbar = true
+            })
+    }
+
+    onlyLetters(param): boolean {
+        return /^[a-zA-Z]+$/.test(param) ? true : false
     }
 
     /*
@@ -183,10 +178,6 @@ export default class AppSearch extends Vue {
     Computed Values
   ===================================================================================
   */
-
-    get items(): any[] {
-        return []
-    }
 
     get selectItems(): any[] {
         return [
@@ -208,7 +199,7 @@ export default class AppSearch extends Vue {
 .app-search {
     .search-input-container {
         height: 48px;
-        .v-select {
+        .search-select {
             height: 100%;
             max-width: 117px;
             padding-top: 0;
@@ -251,6 +242,7 @@ export default class AppSearch extends Vue {
             }
         }
     }
+
     .search-button-container {
         max-width: 115px !important;
 
