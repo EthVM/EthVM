@@ -14,6 +14,7 @@
       TX TABLE
     =====================================================================================
     -->
+        <!-- TODO: Implement get block transfers by hash -->
         <block-txs v-if="isValid && !isHash" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
     </v-container>
 </template>
