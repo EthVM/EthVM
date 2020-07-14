@@ -7,6 +7,14 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum AddressEventType {
+  NEW_ERC20_TRANSFER = "NEW_ERC20_TRANSFER",
+  NEW_ERC721_TRANSFER = "NEW_ERC721_TRANSFER",
+  NEW_ETH_TRANSFER = "NEW_ETH_TRANSFER",
+  NEW_MINED_BLOCK = "NEW_MINED_BLOCK",
+  NEW_MINED_UNCLE = "NEW_MINED_UNCLE",
+}
+
 export enum HashType {
   ADDRESS_HASH = "ADDRESS_HASH",
   BLOCK_HASH = "BLOCK_HASH",

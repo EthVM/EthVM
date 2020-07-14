@@ -20,7 +20,7 @@
         <div v-else class="pb-1 pt-1">
             <slot name="title">
                 <div v-if="!hasError" class="pa-1">
-                    <v-card-title class="title font-weight-bold pl-4" v-html="title"></v-card-title>
+                    <v-card-title class="title font-weight-bold pl-4">{{ title }}</v-card-title>
                 </div>
             </slot>
             <v-divider class="lineGrey mt-1 mb-1" />

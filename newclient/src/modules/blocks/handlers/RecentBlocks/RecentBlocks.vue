@@ -61,7 +61,7 @@ interface BlockMap {
                 {
                     document: newBlockTable,
                     updateQuery: (previousResult, { subscriptionData }) => {
-                        if (subscriptionData.data.newBlockFeed) {
+                        if (previousResult && subscriptionData.data.newBlockFeed) {
                             const prevB = previousResult.getBlocksArrayByNumber
                             const newB = subscriptionData.data.newBlockFeed
                             newB.txFail = 0

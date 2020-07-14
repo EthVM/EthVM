@@ -16,6 +16,9 @@
                         :is-contractcreator="isContractCreator"
                         :is-contract="isContract"
                         :total-erc20-owned="totalERC20"
+                        :update-balance="addrBalanceChanged"
+                        :loading-tokens="loadingERC20Balance"
+                        @resetBalanceUpdate="resetBalance"
                     />
                 </v-flex>
             </v-layout>
@@ -46,7 +49,13 @@
                                 </v-flex>
                             </v-layout>
                             <v-slide-x-reverse-transition>
-                                <address-transfers v-show="toggleLastTx === 0" :address="addressRef" :max-items="max"></address-transfers>
+                                <address-transfers
+                                    v-show="toggleLastTx === 0"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    :new-transfers="newETHTransfers"
+                                    @resetUpdateCount="setNewEvent"
+                                ></address-transfers>
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
                                 <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" />
@@ -75,15 +84,29 @@
                                 </v-flex>
                             </v-layout>
                             <v-slide-x-reverse-transition>
-                                <address-transfers v-show="toggleERC20 === 1" :address="addressRef" :max-items="max" transfers-type="ERC20" />
+                                <address-transfers
+                                    v-show="toggleERC20 === 1"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    :new-transfers="newERC20Transfers"
+                                    :refetch-transfers="refetchERC20Transfers"
+                                    transfers-type="ERC20"
+                                    @resetUpdateCount="setNewEvent"
+                                    @resetTransfersRefetch="resetTransfersRefetch(true)"
+                                />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
                                 <address-tokens
                                     v-show="toggleERC20 === 0"
                                     :address="addressRef"
                                     :max-items="max"
+                                    :new-tokens="newERC20Transfers"
+                                    :refetch-tokens="refetchERC20Balance"
                                     token-type="ERC20"
                                     @totalERC20="setTotalTokens"
+                                    @resetUpdateCount="setNewEvent"
+                                    @loadingERC20Tokens="setLoadingERC20"
+                                    @resetBalanceRefetch="resetBalanceRefetch(true)"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -110,10 +133,28 @@
                                 </v-flex>
                             </v-layout>
                             <v-slide-x-reverse-transition>
-                                <address-transfers v-show="toggleERC721 === 1" :address="addressRef" :max-items="max" transfers-type="ERC721" />
+                                <address-transfers
+                                    v-show="toggleERC721 === 1"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    :new-transfers="newERC721Transfers"
+                                    :refetch-transfers="refetchERC721Transfers"
+                                    transfers-type="ERC721"
+                                    @resetUpdateCount="setNewEvent"
+                                    @resetTransfersRefetch="resetTransfersRefetch(false)"
+                                />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
-                                <address-tokens v-show="toggleERC721 === 0" :address="addressRef" :max-items="max" token-type="ERC721" />
+                                <address-tokens
+                                    v-show="toggleERC721 === 0"
+                                    :address="addressRef"
+                                    :max-items="max"
+                                    :new-tokens="newERC721Transfers"
+                                    :refetch-tokens="refetchERC721Balance"
+                                    token-type="ERC721"
+                                    @resetUpdateCount="setNewEvent"
+                                    @resetBalanceRefetch="resetBalanceRefetch(false)"
+                                />
                             </v-slide-x-reverse-transition>
                         </div>
                     </keep-alive>
@@ -163,24 +204,43 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
+                            <!--
+                            =====================================================================================
+                              BLOCK REWARDS TABLE
+                            =====================================================================================
+                            -->
                             <v-slide-x-reverse-transition>
                                 <address-rewards
                                     v-show="toggleMiner === 0"
                                     :address="addressRef"
                                     :max-items="max"
+                                    :new-rewards="newMinedBlocks"
                                     rewards-type="block"
                                     @blockRewards="setBlockRewards"
+                                    @resetUpdateCount="setNewEvent"
                                 />
                             </v-slide-x-reverse-transition>
+                            <!--
+                            =====================================================================================
+                              UNCLE REWARDS TABLE
+                            =====================================================================================
+                            -->
                             <v-slide-x-reverse-transition>
                                 <address-rewards
                                     v-show="toggleMiner === 1"
                                     :address="addressRef"
                                     :max-items="max"
+                                    :new-rewards="newMinedUncles"
                                     rewards-type="uncle"
                                     @uncleRewards="setUncleRewards"
+                                    @resetUpdateCount="setNewEvent"
                                 />
                             </v-slide-x-reverse-transition>
+                            <!--
+                            =====================================================================================
+                              GENESIS REWARDS TABLE
+                            =====================================================================================
+                            -->
                             <v-slide-x-reverse-transition>
                                 <address-rewards
                                     v-show="toggleMiner === 2"
@@ -210,7 +270,8 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
@@ -235,7 +296,7 @@ const MAX_ITEMS = 10
         AddressPendingTx
     }
 })
-export default class PageDetailsAddress extends Vue {
+export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     /*
     ===================================================================================
       Props
@@ -251,7 +312,6 @@ export default class PageDetailsAddress extends Vue {
     */
     isContractCreator = false
     isContract = false
-    totalERC20 = 0
     error = ''
     activeTab = 'tab-0'
     toggleERC20 = 0
@@ -261,6 +321,10 @@ export default class PageDetailsAddress extends Vue {
     hasGenesisRewards = false
     hasUncleRewards = false
     hasBlockRewards = false
+
+    /* ERC20 and ERC721 Refetc options */
+    totalERC20 = 0
+    loadingERC20Balance = true
 
     /*
     ===================================================================================
@@ -361,6 +425,10 @@ export default class PageDetailsAddress extends Vue {
     setTotalTokens(value: number): void {
         this.totalERC20 = value
     }
+
+    setLoadingERC20(_value: boolean): void {
+        this.loadingERC20Balance = _value
+    }
     /*
     ===================================================================================
       LifeCycle
@@ -370,8 +438,10 @@ export default class PageDetailsAddress extends Vue {
     created() {
         if (!this.isValid) {
             this.error = this.$i18n.t('message.invalid.addr').toString()
-            return
+        } else {
+            this.setEventVariables(this.addressRef)
         }
+
         window.scrollTo(0, 0)
     }
 }

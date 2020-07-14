@@ -2,9 +2,9 @@
     <v-card color="white" flat class="pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
             <!-- Notice new update-->
-            <!-- <template v-slot:update >
-                <notice-new-block @reload="setPage(0, true)" />
-            </template> -->
+            <template v-slot:update v-if="!initialLoad">
+                <app-new-update :text="updateText" :update-count="newTransfers" @reload="setPage(0, true)" />
+            </template>
             <template v-slot:pagination v-if="!isETH && showPagination && !initialLoad">
                 <app-paginate-has-more
                     v-if="showPagination && !initialLoad"
@@ -73,7 +73,7 @@
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-// import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
+import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
@@ -85,6 +85,8 @@ import { getAdrEthTransfers, getAdrERC20Transfers, getAdrERC721Transfers } from 
 import { getAdrEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAdrEthTransfers'
 import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAdrErc20Transfers'
 import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAdrERC721Transfers'
+import { AddressEventType } from '@app/apollo/global/globalTypes'
+
 /*
   DEV NOTES:
   - add on Error
@@ -93,6 +95,7 @@ import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from 
 
 @Component({
     components: {
+        AppNewUpdate,
         AppTableTitle,
         AppPaginateHasMore,
         TableTxs,
@@ -147,6 +150,8 @@ export default class AddressTransers extends Vue {
     @Prop({ type: Boolean, default: false }) isPending!: boolean
     @Prop(String) address!: string
     @Prop({ type: String, default: 'eth' }) transfersType!: string
+    @Prop(Number) newTransfers!: number
+    @Prop(Boolean) refetchTransfers?: boolean
 
     /*
     ===================================================================================
@@ -242,6 +247,18 @@ export default class AddressTransers extends Vue {
             }
         ]
     }
+    get eventType(): AddressEventType {
+        return this.isETH ? AddressEventType.NEW_ETH_TRANSFER : this.isERC20 ? AddressEventType.NEW_ERC20_TRANSFER : AddressEventType.NEW_ERC721_TRANSFER
+    }
+
+    get updateText(): string {
+        const plural = this.newTransfers > 1 ? 2 : 1
+        return this.isETH
+            ? `${this.$tc('message.update.tx', plural)}`
+            : this.isERC20
+            ? `${this.$tc('message.update.erc20-transfer', plural)}`
+            : `${this.$tc('message.update.erc721-transfer', plural)}`
+    }
 
     /*
     ===================================================================================
@@ -252,16 +269,20 @@ export default class AddressTransers extends Vue {
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
-            this.$apollo.queries.getTransfers.refetch()
+            this.initialLoad = true
+            this.showPagination = false
+            if (this.isETH) {
+                this.$apollo.queries.getTransfers.refetch()
+            }
+            this.$emit('resetUpdateCount', this.eventType, true)
         } else {
             if (page > this.isEnd && this.hasMore) {
                 let queryName!: string
                 if (this.isETH) {
                     queryName = 'getEthTransfersV2'
                 } else {
-                    queryName = this.isERC20 ? 'getAdrERC20Transfers' : 'getERC721Transfers'
+                    queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
                 }
-
                 this.$apollo.queries.getTransfers.fetchMore({
                     variables: {
                         hash: this.address,
@@ -286,18 +307,32 @@ export default class AddressTransers extends Vue {
 
         this.index = page
     }
-
     /*
     ===================================================================================
       Watch
     ===================================================================================
     */
-    // @Watch('newBlock')
-    // onNewBlockChanged(newVal: number, oldVal: number): void {
-    //     if (newVal != oldVal && this.isHome) {
-    //         this.$apollo.queries.getAllEthTransfers.refresh()
-    //     }
-    // }
+
+    @Watch('refetchTransfers')
+    onRefetchTransfersChanged(newVal: boolean, oldVal: boolean): void {
+        if (newVal && newVal !== oldVal) {
+            if (!this.isETH) {
+                this.isEnd = 0
+                this.initialLoad = true
+                this.showPagination = false
+                this.$apollo.queries.getTransfers
+                    .refetch()
+                    .then(data => {
+                        if (data) {
+                            this.$emit('resetTransfersRefetch')
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
+        }
+    }
 }
 </script>
 <style scoped lang="css">
