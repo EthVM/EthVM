@@ -200,6 +200,9 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get txObj(): any {
+        if (this.tx['transfer']) {
+            this.tx['transfer'].value = this.tx['value'] ? this.tx['value'] : null
+        }
         return this.tx['transfer'] ? this.tx['transfer'] : this.tx
     }
 
