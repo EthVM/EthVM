@@ -13,13 +13,13 @@
                         append-icon="fa fa-chevron-down secondary--text"
                     />
                     <v-combobox
+                        :loading="isLoading"
                         :items="items"
                         :search-input.sync="searchAutocomplete"
                         :prepend-inner-icon="getIcon"
                         :placeholder="$t('search.default')"
                         v-model="searchVal"
-                        :value="searchVal"
-                        item-value="keyword"
+                        item-value="contract"
                         item-text="keyword"
                         hide-no-data
                         clearable
@@ -29,8 +29,9 @@
                         height="48px"
                         @keyup.enter="onSearch"
                         @click:clear="resetValues"
+                        @change="onSelect"
                     ></v-combobox>
-                    </v-layout>
+                </v-layout>
             </v-card>
         </v-flex>
         <v-flex hidden-sm-and-down md4 class="search-button-container">
@@ -68,6 +69,7 @@ export default class AppSearch extends Vue {
     selectValue = 'all'
     searchAutocomplete = ''
     items = []
+    isLoading = false
 
     /*
   ===================================================================================
@@ -78,13 +80,14 @@ export default class AppSearch extends Vue {
     @Watch('searchAutocomplete')
     search(newVal: string, oldVal: string): void {
         if (newVal && this.onlyLetters(newVal)) {
-            this.getToken()
+            this.getToken(newVal)
         }
 
         if (newVal === null || newVal === '') {
             this.resetValues()
         }
     }
+    
 
     /*
   ===================================================================================
@@ -92,31 +95,31 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
     onSearch(param): void {
-        console.error('adfads', this.searchVal)
         if (this.selectValue === 'all') {
-            this.onlyLetters(this.searchVal) ? this.getToken() : this.getHashType()
+            this.onlyLetters(this.searchVal) ? this.getToken(this.searchVal) : this.getHashType()
         } else {
             const route = { name: this.selectValue, params: this.getParam(this.selectValue) }
             this.$router.push(route)
-            this.searchVal = ''
+            this.resetValues()
         }
     }
 
     resetValues(): void {
         this.isValid = true
+        this.searchVal = ''
     }
 
-    getHashType(): any {
+    getHashType(): void {
         let routeName = ''
+        this.isLoading = true
         this.$apollo
             .query({
                 query: getHashType,
-                variables: {
+                variables: {    
                     hash: this.searchVal
                 }
             })
             .then(response => {
-                console.error('response', response)
                 const hashType = response.data.getHashType
                 if (hashType.includes('ADDRESS')) {
                     routeName = 'address'
@@ -132,12 +135,14 @@ export default class AppSearch extends Vue {
                     this.snackbar = true
                 }
                 this.$router.push({ name: routeName, params: this.getParam(routeName) })
-                this.searchVal = ''
+                this.resetValues()
+                this.isLoading = false
             })
             .catch(err => {
-                console.error('err', err)
                 // TODO: Change error message
                 this.snackbar = true
+                this.isValid = false
+                this.isLoading = false
             })
     }
 
@@ -152,25 +157,38 @@ export default class AppSearch extends Vue {
         return { blockRef: this.searchVal }
     }
 
-    getToken(): any {
+    getToken(param): void {
+        this.isLoading = true
         this.$apollo
             .query({
                 query: getTokensBeginsWith,
                 variables: {
-                    keyword: this.searchVal
+                    keyword: param
                 }
             })
             .then(response => {
                 this.items = response.data.getTokensBeginsWith
+                this.isLoading = false
             })
             .catch(err => {
                 // TODO: Change error message
                 this.snackbar = true
+                this.isValid = false
+                this.isLoading = false
             })
     }
 
     onlyLetters(param): boolean {
         return /^[a-zA-Z]+$/.test(param) ? true : false
+    }
+
+    onSelect(param): void {
+        if (param && param.contract) {
+            const route = { name: 'token-detail', params: { addressRef: param.contract } }
+            this.$router.push(route)
+            param = {}
+            this.resetValues()
+        }
     }
 
     /*

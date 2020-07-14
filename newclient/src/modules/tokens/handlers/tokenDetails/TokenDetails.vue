@@ -81,11 +81,9 @@ const MAX_ITEMS = 10
             query() {
                 return this.isHolder ? getERC20TokenBalance : getTokenInfoByContract
             },
-
             variables() {
                 return { contract: this.addressRef, owner: this.holderAddress }
             },
-
             update: data => data.getERC20TokenBalance || data.getTokenInfoByContract
         }
     }

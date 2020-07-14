@@ -35,7 +35,7 @@ query getBlockByNumber($blockRef: Int!) {
     }
 }
 
-query getBlockDetailsHash($blockRef: String!) {
+query getBlockByHash($blockRef: String!) {
     getBlockByHash(hash: $blockRef) {
         ...BlockDetails
     }
