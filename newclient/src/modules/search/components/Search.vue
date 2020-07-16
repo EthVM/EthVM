@@ -1,5 +1,5 @@
 <template>
-    <v-layout align-center fill-height justify-end row height="48px" class="app-search pl-1">
+    <v-layout align-center fill-height justify-end row height="48px" class="module-search pl-1">
         <v-flex xs12 md12>
             <v-card flat class="search-input-container">
                 <v-layout fill-height align-center justify-end>
@@ -52,7 +52,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { eth } from '@app/core/helper'
-import { getTokensBeginsWith, getHashType } from '@app/core/components/handlers/appSearch.graphql'
+import { getTokensBeginsWith, getHashType } from '../handlers/appSearch.graphql'
 
 @Component
 export default class AppSearch extends Vue {
@@ -97,7 +97,7 @@ export default class AppSearch extends Vue {
         if (this.selectValue === 'all') {
             this.onlyLetters(this.searchVal) ? this.getToken(this.searchVal) : this.getHashType()
         } else {
-            const route = { name: this.selectValue, params: this.getParam(this.selectValue) }
+            const route = { name: this.selectValue, params: this.getParam(this.searchVal) }
             this.$router.push(route)
             this.resetValues()
         }
@@ -115,7 +115,7 @@ export default class AppSearch extends Vue {
             .query({
                 query: getHashType,
                 variables: {
-                    hash: this.searchVal
+                    hash: this.removeSpaces(this.searchVal)
                 }
             })
             .then(response => {
@@ -133,7 +133,7 @@ export default class AppSearch extends Vue {
                 } else {
                     this.snackbar = true
                 }
-                this.$router.push({ name: routeName, params: this.getParam(routeName) })
+                this.$router.push({ name: routeName, params: this.getParam(routeName) }).catch(() => {})
                 this.resetValues()
                 this.isLoading = false
             })
@@ -147,13 +147,13 @@ export default class AppSearch extends Vue {
 
     getParam(value): {} {
         if (value === 'transaction') {
-            return { txRef: this.searchVal }
+            return { txRef: this.removeSpaces(this.searchVal) }
         } else if (value === 'token-detail' || value === 'address') {
-            return { addressRef: this.searchVal }
+            return { addressRef: this.removeSpaces(this.searchVal) }
         } else if (value === 'uncle') {
-            return { uncleRef: this.searchVal }
+            return { uncleRef: this.removeSpaces(this.searchVal) }
         }
-        return { blockRef: this.searchVal }
+        return { blockRef: this.removeSpaces(this.searchVal) }
     }
 
     getToken(param): void {
@@ -162,7 +162,7 @@ export default class AppSearch extends Vue {
             .query({
                 query: getTokensBeginsWith,
                 variables: {
-                    keyword: param
+                    keyword: this.removeSpaces(param)
                 }
             })
             .then(response => {
@@ -183,11 +183,16 @@ export default class AppSearch extends Vue {
 
     onSelect(param): void {
         if (param && param.contract) {
-            const route = { name: 'token-detail', params: { addressRef: param.contract } }
-            this.$router.push(route)
+            const route = { name: 'token-detail', params: { addressRef: this.removeSpaces(param.contract) } }
+            this.$router.push(route).catch(() => {})
             param = {}
             this.resetValues()
         }
+    }
+
+    removeSpaces(val): string {
+        const noStr = val.replace(/ /g, '')
+        return noStr
     }
 
     /*
@@ -213,7 +218,7 @@ export default class AppSearch extends Vue {
 }
 </script>
 <style lang="scss">
-.app-search {
+.module-search {
     .search-input-container {
         height: 48px;
         .search-select {

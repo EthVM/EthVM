@@ -115,7 +115,7 @@
 
             <template v-slot:extension v-if="showSearch">
                 <v-layout row justify-center align-center>
-                    <v-flex xs11> <app-search /> </v-flex>
+                    <v-flex xs11> <search /> </v-flex>
                     <v-flex xs1>
                         <v-btn icon @click="showSearch = false">
                             <v-icon class="fas fa-times white--text" />
@@ -139,20 +139,20 @@
                     </v-layout>
                 </v-flex>
                 <v-spacer />
-                <v-flex xs9 sm7 md6> <app-search /> </v-flex>
+                <v-flex xs9 sm7 md6> <search /> </v-flex>
             </v-layout>
         </v-toolbar>
     </div>
 </template>
 
 <script lang="ts">
-import AppSearch from '@app/core/components/ui/AppSearch.vue'
+import Search from '@app/modules/search/components/Search.vue'
 import { NavMenuEntry } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
     components: {
-        AppSearch
+        Search
     }
 })
 export default class TheNavigationDrawer extends Vue {

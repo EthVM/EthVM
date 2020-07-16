@@ -174,7 +174,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                 },
                 {
                     title: this.$i18n.t('common.timestmp'),
-                    detail: this.$i18n.d(this.block.summary.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+                    detail: new Date(this.block.summary.timestamp * 1e3).toString()
                 },
                 {
                     title: this.$i18n.t('miner.name'),
