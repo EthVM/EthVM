@@ -1,6 +1,7 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
     =====================================================================================
       DETAILS LIST
@@ -13,12 +14,14 @@
       TX TABLE
     =====================================================================================
     -->
-        <block-txs v-if="isValid" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
+        <!-- TODO: Implement get block transfers by hash -->
+        <block-txs v-if="isValid && !isHash" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
     </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import BlockDetails from '@app/modules/blocks/handlers/BlockDetails/BlockDetails.vue'
 import BlockTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
@@ -32,6 +35,7 @@ const MAX_TXS = 10
 @Component({
     components: {
         AppBreadCrumbs,
+        AppError,
         AppDetailsList,
         BlockDetails,
         BlockTxs

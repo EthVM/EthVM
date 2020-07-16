@@ -1,6 +1,7 @@
 <template>
     <div>
         <app-bread-crumbs :new-items="crumbs" />
+        <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
     =====================================================================================
       BASIC VIEW
@@ -9,7 +10,7 @@
       Shows details pertinent to the token as a whole, with no holder-specific information
     =====================================================================================
     -->
-        <div v-if="!isHolder">
+        <div v-if="!isHolder && !hasError">
             <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" />
             <app-tabs v-if="!loading" :tabs="tabsTokenDetails">
                 <!--
@@ -38,7 +39,7 @@
       Shows holder details pertaining to particular token contract
     =====================================================================================
     -->
-        <div v-if="isHolder">
+        <div v-if="isHolder && !hasError">
             <token-details-list
                 :address-ref="addressRef"
                 :holder-details="tokenDetails"
@@ -51,6 +52,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import TokenDetailsList from '@app/modules/tokens/components/TokenDetails/TokenDetailsList.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
@@ -61,12 +63,14 @@ import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTa
 import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
 import { TokenDetails as TokenInfo } from './apolloTypes/TokenDetails'
+import { eth } from '@app/core/helper'
 
 const MAX_ITEMS = 10
 
 @Component({
     components: {
         AppBreadCrumbs,
+        AppError,
         TokenDetailsList,
         AppTabs,
         TokenTableHolders,
@@ -77,16 +81,27 @@ const MAX_ITEMS = 10
             query() {
                 return this.isHolder ? getERC20TokenBalance : getTokenInfoByContract
             },
-
             variables() {
                 return { contract: this.addressRef, owner: this.holderAddress }
             },
-
             update: data => data.getERC20TokenBalance || data.getTokenInfoByContract
         }
     }
 })
 export default class TokenDetails extends Vue {
+    /*
+    ===================================================================================
+      LifeCycle
+    ===================================================================================
+    */
+
+    created() {
+        if (!this.isValid) {
+            this.error = this.$i18n.t('message.invalid.token').toString()
+            return
+        }
+        window.scrollTo(0, 0)
+    }
     /*
   ===================================================================================
     Props
@@ -105,6 +120,7 @@ export default class TokenDetails extends Vue {
 
     tokenDetails!: TokenInfo | TokenOwnerInfo
     address = ''
+    error = ''
 
     /*
   ===================================================================================
@@ -167,6 +183,13 @@ export default class TokenDetails extends Vue {
     Computed Values
   ===================================================================================
   */
+    get isValid(): boolean {
+        return eth.isValidAddress(this.addressRef)
+    }
+
+    get hasError(): boolean {
+        return this.error !== ''
+    }
 
     get loading(): boolean | undefined {
         return this.$apollo.loading

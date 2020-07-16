@@ -114,8 +114,8 @@
     "miner": {
         "name": "Miner",
         "reward": {
-            "block": "Mined Blocks Rewads",
-            "uncle": "Mined Uncles Rewads",
+            "block": "Mined Blocks Rewards",
+            "uncle": "Mined Uncles Rewards",
             "genesis": "Genesis Rewards"
         },
         "reward-short": "Reward",
@@ -151,7 +151,8 @@
         "quantity": "Quantity",
         "percentage": "Percentage",
         "eth-balance": "ETH Balance",
-        "balance": "Balance"
+        "balance": "Balance",
+        "close": "Close"
     },
 
     "usd": {
@@ -334,7 +335,8 @@
     "search": {
         "name": "Search",
         "default": "Search Block / Address / Tx",
-        "address-tx": "Tx Hash/Address"
+        "address-tx": "Tx Hash/Address",
+        "no-result": "ERROR: NO SEARCH RESULTS"
     },
 
     "filter": {

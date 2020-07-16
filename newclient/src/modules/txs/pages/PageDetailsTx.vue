@@ -1,6 +1,7 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
     =====================================================================================
       TX DETAILS LIST
@@ -12,6 +13,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue' 
 import { eth } from '@app/core/helper'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -20,6 +22,7 @@ import TxDetails from '@app/modules/txs/handlers/TxDetails/TxDetails.vue'
 @Component({
     components: {
         AppBreadCrumbs,
+        AppError,
         TxDetails
     }
 })
@@ -64,6 +67,10 @@ export default class PageDetailsTxs extends Vue {
 
     get isValid(): boolean {
         return eth.isValidHash(this.txRef)
+    }
+
+    get hasError(): boolean {
+        return this.error !== ''
     }
 
     /*

@@ -15,6 +15,15 @@ export enum AddressEventType {
   NEW_MINED_UNCLE = "NEW_MINED_UNCLE",
 }
 
+export enum HashType {
+  ADDRESS_HASH = "ADDRESS_HASH",
+  BLOCK_HASH = "BLOCK_HASH",
+  CODE_HASH = "CODE_HASH",
+  TOKEN_HASH = "TOKEN_HASH",
+  TX_HASH = "TX_HASH",
+  UNCLE_HASH = "UNCLE_HASH",
+}
+
 export enum TransferFilter {
   FROM = "FROM",
   TO = "TO",

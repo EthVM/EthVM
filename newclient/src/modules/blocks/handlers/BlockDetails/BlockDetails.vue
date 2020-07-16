@@ -40,9 +40,9 @@ import BN from 'bignumber.js'
                 return this.isHash ? getBlockByHash : getBlockByNumber
             },
             variables() {
-                return this.isHash ? { blockRef: this.blockRef } : { blockRef: parseInt(this.blockRef) }
+                return { blockRef: this.isHash ? this.blockRef :  parseInt(this.blockRef) }
             },
-            update: data => data.getBlockByNumber || data.getBlockByHash
+            update: data => data.getBlockByHash || data.getBlockByNumber
         },
         getLatestBlockInfo: {
             query: getLastBlockNumber,
@@ -87,7 +87,6 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
 
     get blockDetails(): Detail[] {
         let details: Detail[]
-
         if (this.loading || this.error) {
             details = [
                 {
@@ -185,7 +184,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                     mono: true
                 },
                 {
-                    title: this.$i18n.t('miner.reward'),
+                    title: this.$i18n.t('miner.reward.block'),
                     detail: `${this.rewards.value} ${this.rewards.unit}`,
                     tooltip: `${this.rewards.tooltipText} ${this.$i18n.t('common.eth')}` || undefined
                 },
