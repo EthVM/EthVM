@@ -2,7 +2,7 @@
     <v-card color="white" flat class="pt-3 pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/txs">
             <template v-slot:update v-if="!isHome && !isBlock">
-                <notice-new-block @reload="setPage(0, true)" />
+                <app-new-update :text="$t('message.update.txs')" :update-count="newMinedTransfers" :hide-count="true" @reload="setPage(0, true)" />
             </template>
             <template v-slot:pagination v-if="showPagination && !initialLoad">
                 <app-paginate
@@ -36,7 +36,7 @@
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
+import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
@@ -59,7 +59,7 @@ import { TransferType } from '@app/apollo/global/globalTypes'
         AppTableTitle,
         AppPaginate,
         AppPaginateHasMore,
-        NoticeNewBlock,
+        AppNewUpdate,
         TableTxs
     },
     apollo: {
@@ -138,8 +138,12 @@ import { TransferType } from '@app/apollo/global/globalTypes'
                     return this.isBlock
                 },
                 result({ data }) {
-                    if (data.newTransfersCompleteFeed.type === TransferType.ETH && this.isHome) {
-                        this.$apollo.queries.getAllEthTransfers.refresh()
+                    if (data.newTransfersCompleteFeed.type === TransferType.ETH) {
+                        if (this.isHome) {
+                            this.$apollo.queries.getAllEthTransfers.refresh()
+                        } else {
+                            this.newMinedTransfers++
+                        }
                     }
                 },
                 error(error) {
@@ -149,7 +153,7 @@ import { TransferType } from '@app/apollo/global/globalTypes'
         }
     }
 })
-export default class HomeTxs extends Vue {
+export default class BlockTxs extends Vue {
     /*
     ===================================================================================
       Props
@@ -157,7 +161,6 @@ export default class HomeTxs extends Vue {
     */
 
     @Prop(Number) maxItems!: number
-    @Prop(Number) newBlock?: number
     @Prop({ type: String, default: 'home' }) pageType!: string
     @Prop(String) blockRef?: string
     @Prop({ type: Boolean, default: false }) isHash!: boolean
@@ -176,6 +179,7 @@ export default class HomeTxs extends Vue {
     index = 0
     totalPages = 0
     isEnd = 0
+    newMinedTransfers = 0
 
     /*
     ===================================================================================
@@ -219,7 +223,7 @@ export default class HomeTxs extends Vue {
             return this.totalPages > 1 ? true : false
         }
 
-        return true
+        return this.hasMore
     }
 
     get loading(): boolean {
@@ -230,7 +234,7 @@ export default class HomeTxs extends Vue {
     }
     get hasMore(): boolean {
         if (!this.isHome && !this.isBlock) {
-            return !(this.getAllEthTransfers.nextKey === null)
+            return this.getAllEthTransfers ? !(this.getAllEthTransfers.nextKey === null) : false
         }
         return false
     }
@@ -244,6 +248,9 @@ export default class HomeTxs extends Vue {
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
+            if (!this.isHome && !this.isBlock) {
+                this.newMinedTransfers = 0
+            }
             this.$apollo.queries.getAllEthTransfers.refetch()
         } else {
             if (!this.isBlock && page > this.isEnd && this.hasMore) {
@@ -271,19 +278,6 @@ export default class HomeTxs extends Vue {
 
         this.index = page
     }
-
-    /*
-    ===================================================================================
-      Watch
-    ===================================================================================
-    */
-    // @Watch('lastProcessedTransfersBlock')
-    // onNewBlockChanged(newVal: number, oldVal: number | undefined): void {
-    //     if (newVal != oldVal && this.isHome) {
-    //         console.log('refresh')
-    //         this.$apollo.queries.getAllEthTransfers.refresh()
-    //     }
-    // }
 }
 </script>
 <style scoped lang="css">

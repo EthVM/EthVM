@@ -217,7 +217,8 @@
             "pending": "new pending tx | new pending txs",
             "erc20-transfer": "new ERC20 transfer| new ERC20 transfers",
             "erc721-transfer": "new ERC721 transfer| new ERC721 transfers",
-            "tokens": "token balance changed, refresh"
+            "tokens": "token balance changed, refresh",
+            "txs": "new txs found, refresh"
         },
         "sec": "sec",
         "sec-ago": "sec ago",
