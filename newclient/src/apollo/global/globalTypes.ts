@@ -20,6 +20,12 @@ export enum TransferFilter {
   TO = "TO",
 }
 
+export enum TransferType {
+  ERC20 = "ERC20",
+  ERC721 = "ERC721",
+  ETH = "ETH",
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

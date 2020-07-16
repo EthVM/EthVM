@@ -25,3 +25,10 @@ query getAllTxs($_limit: Int, $_nextKey: String) {
         nextKey
     }
 }
+
+subscription newTransfersCompleteFeed {
+    newTransfersCompleteFeed {
+        block
+        type
+    }
+}
