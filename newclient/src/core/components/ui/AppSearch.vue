@@ -87,7 +87,6 @@ export default class AppSearch extends Vue {
             this.resetValues()
         }
     }
-    
 
     /*
   ===================================================================================
@@ -115,7 +114,7 @@ export default class AppSearch extends Vue {
         this.$apollo
             .query({
                 query: getHashType,
-                variables: {    
+                variables: {
                     hash: this.searchVal
                 }
             })

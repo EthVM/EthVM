@@ -40,7 +40,7 @@ import BN from 'bignumber.js'
                 return this.isHash ? getBlockByHash : getBlockByNumber
             },
             variables() {
-                return { blockRef: this.isHash ? this.blockRef :  parseInt(this.blockRef) }
+                return { blockRef: this.isHash ? this.blockRef : parseInt(this.blockRef) }
             },
             update: data => data.getBlockByHash || data.getBlockByNumber
         },

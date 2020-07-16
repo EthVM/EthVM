@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppError from '@app/core/components/ui/AppError.vue' 
+import AppError from '@app/core/components/ui/AppError.vue'
 import { eth } from '@app/core/helper'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
