@@ -2,7 +2,21 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import newBlockFeed from './newBlockFeed.graphql'
 import { newBlockFeed_newBlockFeed as newBlockFeedType } from './apolloTypes/newBlockFeed'
 
-@Component
+@Component({
+    apollo: {
+        $subscribe: {
+            addressEvent: {
+                query: newBlockFeed,
+                result({ data }) {
+                    this.newBlock = data.newBlockFeed
+                },
+                error(error) {
+                    console.error(error)
+                }
+            }
+        }
+    }
+})
 export class NewBlockSubscription extends Vue {
     /*
     ===================================================================================
@@ -11,26 +25,6 @@ export class NewBlockSubscription extends Vue {
     */
     newBlock: newBlockFeedType | null = null
 
-    /*
-    ===================================================================================
-      Lifecycle
-    ===================================================================================
-    */
-    created() {
-        const blockFeed = this.$apollo.subscribe({
-            query: newBlockFeed,
-            fetchPolicy: 'network-only'
-        })
-
-        blockFeed.subscribe({
-            next: data => {
-                this.newBlock = data.data.newBlockFeed
-            },
-            error(error) {
-                console.error(error)
-            }
-        })
-    }
     /*
     ===================================================================================
       Computed
