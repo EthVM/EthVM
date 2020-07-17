@@ -104,7 +104,10 @@ Vue.use(Vuetify, {
         bttnGrey: '#dee5f0',
         bttnToken: '#b4bfd2',
         bttnReport: '#1EEEA6',
-        linkBlue: '#3965e8'
+        linkBlue: '#3965e8',
+        primaryLight: '#465a9c',
+        errorLight: '#fe7665',
+        warningLight: '#fed18e'
 
         // used -->
         // background: String(colors.grey.darken3)
