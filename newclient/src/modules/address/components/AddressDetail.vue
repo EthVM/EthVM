@@ -1,5 +1,10 @@
 <template>
     <v-card color="white" flat>
+        <!--
+        =====================================================================================
+         ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
+        =====================================================================================
+        -->
         <v-layout :class="layoutPadding" grid-list-md align-start justify-start row fill-height>
             <v-flex shrink>
                 <v-layout align-start justify-center row fill-height pa-2>
@@ -69,7 +74,7 @@
                             </v-card-title>
                             <v-card-title v-else>
                                 <v-progress-linear
-                                    color="#465a9c"
+                                    color="primaryLight"
                                     background-color="white"
                                     background-opacity="0.3"
                                     value="40"
@@ -99,7 +104,7 @@
                             </v-card-title>
                             <v-card-title v-else>
                                 <v-progress-linear
-                                    color="#fe7665"
+                                    color="errorLight"
                                     background-color="white"
                                     background-opacity="0.3"
                                     value="40"
@@ -121,7 +126,7 @@
                             <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                             <v-card-title v-else>
                                 <v-progress-linear
-                                    color="#fed18e"
+                                    color="warningLight"
                                     background-color="white"
                                     background-opacity="0.3"
                                     value="40"
@@ -159,7 +164,7 @@
                         </v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
-                                color="#465a9c"
+                                color="primaryLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
@@ -187,7 +192,7 @@
                         </v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
-                                color="#fe7665"
+                                color="errorLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
@@ -207,7 +212,7 @@
                         <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
-                                color="#fed18e"
+                                color="warningLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"

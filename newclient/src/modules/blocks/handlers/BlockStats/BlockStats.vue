@@ -1,23 +1,38 @@
 <template>
     <v-layout row wrap justify-space-between mb-4>
         <v-flex xs12 sm6 md3>
-            <app-info-card :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" />
+            <app-info-card :is-loading="initialLoad" :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" />
         </v-flex>
         <v-flex xs12 sm6 md3>
             <app-info-card
                 :title="$t('block.time')"
                 :value="timestamp"
                 :is-date="!initialLoad"
+                :is-loading="initialLoad"
                 :metrics="$t('message.sec')"
                 color-type="success"
                 back-type="time-since"
             />
         </v-flex>
         <v-flex xs12 sm6 md3>
-            <app-info-card :title="$t('block.hash-rate')" :value="latestHashRate" :metrics="hashUnitLabel.th" color-type="warning" back-type="hash-rate" />
+            <app-info-card
+                :title="$t('block.hash-rate')"
+                :value="latestHashRate"
+                :metrics="hashUnitLabel.th"
+                :is-loading="initialLoad"
+                color-type="warning"
+                back-type="hash-rate"
+            />
         </v-flex>
         <v-flex xs12 sm6 md3>
-            <app-info-card :title="$t('diff.name')" :value="latestDifficulty" :metrics="''" color-type="error" back-type="difficulty" />
+            <app-info-card
+                :title="$t('diff.name')"
+                :value="latestDifficulty"
+                :metrics="''"
+                :is-loading="initialLoad"
+                color-type="error"
+                back-type="difficulty"
+            />
         </v-flex>
     </v-layout>
 </template>
@@ -40,9 +55,10 @@ import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './apollo
             result({ data }) {
                 if (data) {
                     if (this.initialLoad) {
+                        this.initialLoadedBlock = this.getLatestBlockInfo.number
                         this.initialLoad = false
+                        this.timestamp = new Date().toString()
                     }
-                    this.timestamp = new Date().toString()
                 }
             },
             error(error) {
@@ -59,6 +75,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     */
 
     @Prop(Number) newBlock?: number
+
     /*
     ===================================================================================
       Initial Data
@@ -72,6 +89,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
         gh: 'Gh/s',
         mh: 'Mh/s'
     }
+    initialLoadedBlock!: number
 
     /*
     ===================================================================================
@@ -79,12 +97,14 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    get loading(): boolean {
-        return this.initialLoad
-    }
-
     get latestBlockNumber(): string {
-        return this.getLatestBlockInfo ? this.formatNumber(this.getLatestBlockInfo.number) : ''
+        if (!this.newBlock && this.initialLoad) {
+            return ''
+        }
+        if (this.newBlock) {
+            return this.formatNumber(this.newBlock)
+        }
+        return this.formatNumber(this.initialLoadedBlock)
     }
 
     get latestHashRate(): string {
@@ -94,6 +114,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     get latestDifficulty(): string {
         return this.getLatestBlockInfo ? `${this.formatFloatingPointValue(new BN(this.getLatestBlockInfo.difficulty).div('1e12').decimalPlaces(2)).value}` : ''
     }
+
     /*
     ===================================================================================
       Watch
@@ -102,6 +123,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     @Watch('newBlock')
     onNewBlockChanged(newVal: number, oldVal: number): void {
         if (newVal && newVal != oldVal) {
+            this.timestamp = new Date().toString()
             this.$apollo.queries.getLatestBlockInfo.refetch()
         }
     }
