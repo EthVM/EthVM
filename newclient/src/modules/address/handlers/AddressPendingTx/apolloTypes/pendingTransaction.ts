@@ -11,6 +11,10 @@ export interface pendingTransaction_pendingTransaction {
   __typename: "PendingTransfer";
   transactionHash: string;
   txFee: string;
+  from: string;
+  to: string | null;
+  timestamp: number;
+  value: string;
 }
 
 export interface pendingTransaction {

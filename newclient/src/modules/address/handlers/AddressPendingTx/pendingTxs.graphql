@@ -1,13 +1,9 @@
-fragment PendingTxFragment on Tx {
-    from
-    to
-    timestamp
-    value
-}
-
 query getPendingTransactions($hash: String!) {
     getPendingTransactions(owner: $hash) {
-        ...PendingTxFragment
+        from
+        to
+        timestamp
+        value
         hash
         gasPrice
         gasUsed
@@ -18,6 +14,9 @@ subscription pendingTransaction($owner: String!) {
     pendingTransaction(owner: $owner) {
         transactionHash
         txFee
-        ...PendingTxFragment
+        from
+        to
+        timestamp
+        value
     }
 }
