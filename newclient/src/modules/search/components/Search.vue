@@ -7,7 +7,7 @@
                         :flat="true"
                         :solo="true"
                         :items="selectItems"
-                        v-model="selectValue"
+                        v-model="selectVal"
                         class="search-select"
                         height="48"
                         append-icon="fa fa-chevron-down secondary--text"
@@ -28,17 +28,14 @@
                         append-icon=""
                         height="48px"
                         @keyup.enter="onSearch"
-                        @click:clear="resetValues"
+                        @click:clear="searchVal = ''"
                         @change="onSelect"
                     ></v-combobox>
                 </v-layout>
             </v-card>
         </v-flex>
         <v-flex hidden-sm-and-down md4 class="search-button-container">
-            <v-btn v-if="phText === 'default'" depressed color="secondary" class="search-button text-capitalize ml-0" @click="onSearch">{{
-                $t('search.name')
-            }}</v-btn>
-            <v-btn v-else depressed outline class="search-button text-capitalize ml-0 primary--text lineGrey" @click="onSearch">{{ $t('search.name') }}</v-btn>
+            <v-btn depressed color="secondary" class="search-button text-capitalize ml-0" @click="onSearch">{{ $t('search.name') }}</v-btn>
         </v-flex>
         <v-snackbar v-model="snackbar" :bottom="true" :right="true" :timeout="5000">
             {{ $t('search.no-result') }}
@@ -50,26 +47,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import { eth } from '@app/core/helper'
-import { getTokensBeginsWith, getHashType } from '../handlers/appSearch.graphql'
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 
 @Component
-export default class AppSearch extends Vue {
+export default class Search extends Vue {
+    /*
+  ===================================================================================
+    Props
+  ===================================================================================
+  */
+    @Prop({ type: Array }) selectItems!: any[]
+    @Prop({ type: Array }) items!: any[]
+    @Prop({ type: Boolean }) isLoading!: string
+    @Prop({ type: Boolean }) hasError!: boolean
+
     /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
 
-    searchVal = ''
-    phText = 'default'
-    isValid = true
-    snackbar = false
-    selectValue = 'all'
     searchAutocomplete = ''
-    items = []
-    isLoading = false
+    searchVal = ''
+    selectVal = 'all'
+    snackbar = false
 
     /*
   ===================================================================================
@@ -77,14 +78,17 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
+    @Watch('hasError')
+    onError(newVal) {
+        if (newVal === true) {
+            this.snackbar = true
+        }
+    }
+
     @Watch('searchAutocomplete')
     search(newVal: string, oldVal: string): void {
-        if (newVal && this.onlyLetters(newVal)) {
-            this.getToken(newVal)
-        }
-
-        if (newVal === null || newVal === '') {
-            this.resetValues()
+        if (newVal && (this.selectVal === 'all' || this.selectVal === 'token-detail')) {
+            this.$emit('getToken', newVal)
         }
     }
 
@@ -93,106 +97,21 @@ export default class AppSearch extends Vue {
     Methods
   ===================================================================================
   */
-    onSearch(param): void {
-        if (this.selectValue === 'all') {
-            this.onlyLetters(this.searchVal) ? this.getToken(this.searchVal) : this.getHashType()
-        } else {
-            const route = { name: this.selectValue, params: this.getParam(this.searchVal) }
-            this.$router.push(route)
-            this.resetValues()
-        }
-    }
-
-    resetValues(): void {
-        this.isValid = true
-        this.searchVal = ''
-    }
-
-    getHashType(): void {
-        let routeName = ''
-        this.isLoading = true
-        this.$apollo
-            .query({
-                query: getHashType,
-                variables: {
-                    hash: this.removeSpaces(this.searchVal)
-                }
-            })
-            .then(response => {
-                const hashType = response.data.getHashType
-                if (hashType.includes('ADDRESS')) {
-                    routeName = 'address'
-                } else if (hashType.includes('TX')) {
-                    routeName = 'transaction'
-                } else if (hashType.includes('TOKEN')) {
-                    routeName = 'token-detail'
-                } else if (hashType.includes('UNCLE')) {
-                    routeName = 'uncle'
-                } else if (hashType.includes('BLOCK')) {
-                    routeName = 'blockHash'
-                } else {
-                    this.snackbar = true
-                }
-                this.$router.push({ name: routeName, params: this.getParam(routeName) }).catch(() => {})
-                this.resetValues()
-                this.isLoading = false
-            })
-            .catch(err => {
-                // TODO: Change error message
-                this.snackbar = true
-                this.isValid = false
-                this.isLoading = false
-            })
-    }
-
-    getParam(value): {} {
-        if (value === 'transaction') {
-            return { txRef: this.removeSpaces(this.searchVal) }
-        } else if (value === 'token-detail' || value === 'address') {
-            return { addressRef: this.removeSpaces(this.searchVal) }
-        } else if (value === 'uncle') {
-            return { uncleRef: this.removeSpaces(this.searchVal) }
-        }
-        return { blockRef: this.removeSpaces(this.searchVal) }
-    }
-
-    getToken(param): void {
-        this.isLoading = true
-        this.$apollo
-            .query({
-                query: getTokensBeginsWith,
-                variables: {
-                    keyword: this.removeSpaces(param)
-                }
-            })
-            .then(response => {
-                this.items = response.data.getTokensBeginsWith
-                this.isLoading = false
-            })
-            .catch(err => {
-                // TODO: Change error message
-                this.snackbar = true
-                this.isValid = false
-                this.isLoading = false
-            })
-    }
-
-    onlyLetters(param): boolean {
-        return /^[a-zA-Z]+$/.test(param) ? true : false
-    }
-
     onSelect(param): void {
-        if (param && param.contract) {
-            const route = { name: 'token-detail', params: { addressRef: this.removeSpaces(param.contract) } }
-            this.$router.push(route).catch(() => {})
-            param = {}
-            this.resetValues()
+        this.$emit('onSelect', param)
+    }
+
+    onSearch(param): void {
+        if (this.selectVal === 'all') {
+            this.$emit('getAllSearch', this.searchVal)
+        } else {
+            this.$emit('routeTo', this.selectVal, this.searchVal)
         }
     }
 
-    removeSpaces(val): string {
-        const noStr = val.replace(/ /g, '')
-        return noStr
+    resetValues() {
+        this.searchVal = ''
+        this.selectVal = 'all'
     }
 
     /*
@@ -201,19 +120,8 @@ export default class AppSearch extends Vue {
   ===================================================================================
   */
 
-    get selectItems(): any[] {
-        return [
-            { text: this.$t('filter.all'), value: 'all' },
-            { text: this.$t('kb.terms.block.term'), value: 'block' },
-            { text: this.$tc('tx.name-short', 1), value: 'transaction' },
-            { text: this.$tc('address.name', 1), value: 'address' },
-            { text: this.$tc('token.name', 1), value: 'token-detail' },
-            { text: this.$tc('uncle.name', 1), value: 'uncle' }
-        ]
-    }
-
     get getIcon(): string {
-        return this.isValid ? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
+        return !this.hasError ? 'fa fa-search grey--text text--lighten-1 pr-4 pl-4' : 'fa fa-search error--text pr-4 pl-4'
     }
 }
 </script>
