@@ -18,9 +18,7 @@
                     <v-flex xs6>
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="transaction.timestamp" class="info--text caption" />
-                            <v-btn class="ml-2 mr-1 more-btn" color="white" fab depressed>
-                                <p class="info--text title pb-2">...</p>
-                            </v-btn>
+                            <app-state-diff :state="state" />
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -148,9 +146,7 @@
                     <v-layout row align-center justify-end>
                         <v-icon v-if="transaction.status" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-                        <v-btn class="ml-3 mr-1 more-btn" color="white" fab depressed>
-                            <p class="info--text title pb-2">...</p>
-                        </v-btn>
+                        <app-state-diff :state="state" />
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -162,6 +158,7 @@
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
+import AppStateDiff from '@app/core/components/ui/AppStateDiff.vue'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
@@ -175,7 +172,8 @@ const TYPES = ['in', 'out', 'self']
     components: {
         AppTooltip,
         AppTimeAgo,
-        AppTransformHash
+        AppTransformHash,
+        AppStateDiff
     }
 })
 export default class TableTxsRow extends Mixins(NumberFormatMixin) {
@@ -191,9 +189,29 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     /*
     ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+
+    showState = false
+
+    /*
+    ===================================================================================
       Computed
     ===================================================================================
     */
+
+    get state(): object {
+        return !this.tx['transfer']
+            ? {}
+            : {
+                  status: this.txObj.status != null ? this.txObj.status : false,
+                  txFee: this.formatNonVariableEthValue(new BN(this.txObj.txFee)),
+                  value: this.formatNonVariableEthValue(new BN(this.txObj.value)),
+                  balBefore: this.formatNonVariableEthValue(new BN(this.tx['stateDiff'].from.before)),
+                  balAfter: this.formatNonVariableEthValue(new BN(this.tx['stateDiff'].from.after))
+              }
+    }
 
     get txStatusClass(): string {
         return this.txObj && this.txObj.status ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
@@ -201,6 +219,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     get txObj(): any {
         if (this.tx['transfer']) {
+            console.error('tx', this.tx)
             this.tx['transfer'].value = this.tx['value'] ? this.tx['value'] : null
         }
         return this.tx['transfer'] ? this.tx['transfer'] : this.tx

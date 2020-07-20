@@ -11,6 +11,11 @@ fragment TokenFragment on EthTokenInfo {
     decimals
 }
 
+fragment BalanceFragment on BalanceDiff {
+    before
+    after
+}
+
 query getAdrEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
     getEthTransfersV2(owner: $hash, filter: $filter, limit: $_limit, nextKey: $_nextKey) {
         transfers {
@@ -18,6 +23,14 @@ query getAdrEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $
                 ...TransferSummary
                 block
                 status
+            }
+            stateDiff {
+                to {
+                    ...BalanceFragment
+                }
+                from {
+                    ...BalanceFragment
+                }
             }
             value
         }
@@ -30,6 +43,14 @@ query getAdrERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
         transfers {
             transfer {
                 ...TransferSummary
+            }
+            stateDiff {
+                to {
+                    ...BalanceFragment
+                }
+                from {
+                    ...BalanceFragment
+                }
             }
             value
             contract

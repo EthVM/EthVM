@@ -20,9 +20,28 @@ export interface getAdrEthTransfers_getEthTransfersV2_transfers_transfer {
   status: boolean | null;
 }
 
+export interface getAdrEthTransfers_getEthTransfersV2_transfers_stateDiff_to {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAdrEthTransfers_getEthTransfersV2_transfers_stateDiff_from {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAdrEthTransfers_getEthTransfersV2_transfers_stateDiff {
+  __typename: "StateDiffChange";
+  to: getAdrEthTransfers_getEthTransfersV2_transfers_stateDiff_to;
+  from: getAdrEthTransfers_getEthTransfersV2_transfers_stateDiff_from | null;
+}
+
 export interface getAdrEthTransfers_getEthTransfersV2_transfers {
   __typename: "EthTransfer";
   transfer: getAdrEthTransfers_getEthTransfersV2_transfers_transfer;
+  stateDiff: getAdrEthTransfers_getEthTransfersV2_transfers_stateDiff | null;
   value: string;
 }
 
