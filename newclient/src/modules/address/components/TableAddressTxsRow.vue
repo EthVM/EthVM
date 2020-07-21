@@ -1,39 +1,79 @@
 <template>
     <v-layout>
         <!--
-      =====================================================================================
-        Mobile (XS)
-      =====================================================================================
-      -->
+        =====================================================================================
+          Mobile (XS)
+        =====================================================================================
+        -->
         <v-flex xs12 hidden-md-and-up>
             <div :class="txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
+                    <!--
+                    =====================================================================================
+                      ETH VALUE
+
+                      Responsive Tally:
+                      XS-SM: 6 (6)
+                    =====================================================================================
+                    -->
                     <v-flex xs6 pa-1>
-                        <p :class="[txObj.status ? 'black--text' : 'info--text', 'caption']">
-                            {{ amountSign }}{{ transaction.value.value }}
-                            {{ $t(`common.${transaction.value.unit}`) }}
-                            <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
+                        <p :class="trasferValueClass">
+                            {{ amountSign }}{{ transferValue.value }}
+                            {{ $t(`common.${transferValue.unit}`) }}
+                            <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
                         </p>
                     </v-flex>
+                    <!--
+                    =====================================================================================
+                      TIMESTAMP / BALANCE BREAKDOWN
+
+                      Responsive Tally:
+                      XS-SM: 12 (6)
+                    =====================================================================================
+                    -->
                     <v-flex xs6>
                         <v-layout row align-center justify-end>
-                            <app-time-ago :timestamp="transaction.timestamp" class="info--text caption" />
+                            <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
                             <v-btn class="ml-2 mr-1 more-btn" color="white" fab depressed>
                                 <p class="info--text title pb-2">...</p>
                             </v-btn>
                         </v-layout>
                     </v-flex>
+                    <!--
+                    =====================================================================================
+                      TRANSACTION # / HASH
+
+                      Responsive Tally:
+                      XS-SM: 24 (12)
+                    =====================================================================================
+                    -->
                     <v-flex xs12>
                         <v-layout row align-center justift-start pa-1>
                             <p class="info--text tx-string caption">{{ $tc('tx.hash', 1) }}:</p>
-                            <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+                            <app-transform-hash :hash="transfer.getHash()" :link="`/tx/${transfer.getHash()}`" />
                         </v-layout>
                     </v-flex>
+                    <!--
+                    =====================================================================================
+                      TYPE: Incoming / Outgoing / Self Sent
+
+                      Responsive Tally:
+                      XS-SM: 29 (5)
+                    =====================================================================================
+                    -->
                     <v-flex xs5 sm3 pa-1>
                         <v-card :color="typeColor" flat>
                             <p class="white--text text-xs-center caption pa-1">{{ typeString }}</p>
                         </v-card>
                     </v-flex>
+                    <!--
+                    =====================================================================================
+                      TYPE ADDRESS: Incoming / Outgoing / Self Sent addr
+
+                      Responsive Tally:
+                      XS-SM: 36 (7)
+                    =====================================================================================
+                    -->
                     <v-flex xs7 sm9 pa-1>
                         <app-transform-hash :hash="typeAddr" :link="`/address/${typeAddr}`" />
                     </v-flex>
@@ -41,27 +81,27 @@
             </div>
         </v-flex>
         <!--
-      =====================================================================================
-        Tablet/ Desktop (SM - XL)
-      =====================================================================================
-      -->
+        =====================================================================================
+          Tablet/ Desktop (SM - XL)
+        =====================================================================================
+        -->
         <v-flex hidden-sm-and-down sm12>
             <v-layout grid-list-xs row align-center justify-start fill-height>
                 <!--
-          =====================================================================================
-            TRANSACTION # / HASH
+                =====================================================================================
+                  TRANSACTION # / HASH
 
-            Responsive Tally:
-            MD: 5/12 (5)
-            Lg: 5/12 (5)
-          =====================================================================================
-          -->
+                  Responsive Tally:
+                  MD: 5/12 (5)
+                  Lg: 5/12 (5)
+                =====================================================================================
+                -->
                 <v-flex md5>
                     <v-layout row wrap align-center pl-3>
                         <v-flex sm12>
                             <v-layout row align-center justift-start pa-2>
                                 <p class="info--text tx-string">{{ $tc('tx.hash', 1) }}:</p>
-                                <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
+                                <app-transform-hash :hash="transfer.getHash()" :link="`/tx/${transfer.getHash()}`" />
                             </v-layout>
                         </v-flex>
                         <v-flex sm12 pt-0 pb-0>
@@ -79,74 +119,70 @@
                     </v-layout>
                 </v-flex>
                 <!--
-          =====================================================================================
-          ETH VALUE
+                =====================================================================================
+                  ETH VALUE
 
-          Responsive Tally:
-          MD: 8/12 (3)
-          LG: 7/2 (2)
-          =====================================================================================
-          -->
+                  Responsive Tally:
+                  MD: 8/12 (3)
+                  LG: 7/2 (2)
+                =====================================================================================
+                -->
                 <v-flex md3 lg2>
                     <v-layout row wrap align-center pl-1 pr->
                         <v-flex sm12>
-                            <p :class="[txObj.status ? 'black--text' : 'info--text']">
+                            <p :class="trasferValueClass">
                                 <span class="hidden-lg-and-up info--text pr-1">{{ $t('common.amount') }}:</span>
-                                {{ amountSign }}{{ transaction.value.value }}
-                                {{ $t(`common.${transaction.value.unit}`) }}
-                                <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
+                                {{ amountSign }}{{ transferValue.value }}
+                                {{ $t(`common.${transferValue.unit}`) }}
+                                <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
                             </p>
                         </v-flex>
                         <v-flex sm12 hidden-lg-and-up>
                             <p :class="[type === 'out' ? 'black--text' : 'info--text', 'text-truncate mb-0']">
-                                <span class="info--text pr-1">{{ $tc('tx.fee', 1) }}: </span><span v-if="transaction.status && type === 'out'">-</span
-                                >{{ transaction.fee.value }}
+                                <span class="info--text pr-1">{{ $tc('tx.fee', 1) }}: </span><span v-if="!transfer.getIsPending() && type === 'out'">-</span
+                                >{{ transferFee.value }}
                             </p>
                         </v-flex>
                     </v-layout>
                 </v-flex>
                 <!--
-          =====================================================================================
-            Tx Fee
+                =====================================================================================
+                  Tx Fee
 
-            Responsive Tally:
-            SM: 10/12 (0)
-            MD: 9/12 (0)
-            LG: 9/2 (2)
-          =====================================================================================
-          -->
+                  Responsive Tally:
+                  MD: 9/12 (0)
+                  LG: 9/2 (2)
+                =====================================================================================
+                -->
                 <v-flex hidden-md-and-down lg2>
                     <p :class="[type === 'out' ? 'black--text' : 'info--text', 'text-truncate mb-0']">
-                        <span v-if="transaction.status && type === 'out'">-</span>{{ transaction.fee.value }}
+                        <span v-if="hasFeeSign">-</span>{{ transferFee.value }}
                     </p>
                 </v-flex>
                 <!--
-          =====================================================================================
-            Age
+                =====================================================================================
+                  Age
 
-            Responsive Tally:
-            SM: 11/12 (1)
-            MD: 11/12 (2)
-            LG: 11/2 (2)
-          =====================================================================================
-          -->
+                  Responsive Tally:
+                  MD: 11/12 (2)
+                  LG: 11/2 (2)
+                =====================================================================================
+                -->
                 <v-flex md3 lg2>
-                    <app-time-ago :timestamp="transaction.timestamp" />
+                    <app-time-ago :timestamp="transfer.getTimestamp()" />
                 </v-flex>
-
                 <!--
-          =====================================================================================
-          More
+                =====================================================================================
+                  More
 
-          Responsive Tally:
-            SM: 12/12 (1)
-            MD: 12/12 (1)
-            LG: 12/12 (1)
-          =====================================================================================
-          -->
-                <v-flex v-if="!isPending" shrink>
+                  Responsive Tally:
+                  MD: 12/12 (1)
+                  LG: 12/12 (1)
+                =====================================================================================
+                -->
+                <v-flex v-if="!isPending && transfer.getStatus !== null" shrink>
                     <v-layout row align-center justify-end>
-                        <v-icon v-if="transaction.status" small class="txSuccess--text">fa fa-check-circle</v-icon>
+                        <v-icon v-if="transfer.getStatus" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
                         <v-btn class="ml-3 mr-1 more-btn" color="white" fab depressed>
                             <p class="info--text title pb-2">...</p>
@@ -166,9 +202,12 @@ import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
-import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
-import { getPendingTransactions as PendingTxType } from '@app/modules/address/handlers/AddressPendingTx/apolloTypes/getPendingTransactions'
+import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import BN from 'bignumber.js'
+import { isNetworkRequestInFlight } from 'apollo-client/core/networkStatus'
+import { pendingTransaction_pendingTransaction as PendingTransferType } from '@app/modules/address//handlers/AddressPendingTx/apolloTypes/pendingTransaction'
+import { getPendingTransactions_getPendingTransactions as PendingTxType } from '@app/modules/address/handlers/AddressPendingTx/apolloTypes/getPendingTransactions'
+import { getEthTransfersV2_getEthTransfersV2_transfers as TxType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getEthTransfersV2'
 const TYPES = ['in', 'out', 'self']
 
 @Component({
@@ -185,45 +224,30 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) tx!: TransferType | PendingTxType
+    @Prop(Object) tx!: TxType | PendingTxType | PendingTransferType
     @Prop(String) address!: string
-    @Prop({ type: Boolean, default: false }) isPending
+    @Prop({ type: Boolean, default: false }) isPending!: boolean
 
     /*
     ===================================================================================
       Computed
     ===================================================================================
     */
+    get transfer(): EthTransfer {
+        return new EthTransfer(this.tx)
+    }
 
     get txStatusClass(): string {
-        return this.txObj && this.txObj.status ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+        return this.transfer.getStatus() !== null ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
     }
 
-    get txObj(): any {
-        if (this.tx['transfer']) {
-            this.tx['transfer'].value = this.tx['value'] ? this.tx['value'] : null
-        }
-        return this.tx['transfer'] ? this.tx['transfer'] : this.tx
-    }
-
-    get transaction(): any {
-        return {
-            hash: this.txObj.transactionHash || this.txObj.hash,
-            from: this.txObj.from,
-            to: this.txObj.to,
-            timestamp: new Date(this.txObj.timestamp * 1e3),
-            fee: this.formatNonVariableEthValue(new BN(this.txObj.txFee)),
-            value: this.formatNonVariableEthValue(new BN(this.txObj.value)),
-            status: this.txObj.status != null ? this.txObj.status : false
-        }
-    }
     get isSmall(): boolean {
-        return this.$vuetify.breakpoint.name === 'sm'
+        return this.$vuetify.breakpoint.name === 'xs'
     }
 
     get type(): string {
-        const from = this.txObj.from.toLowerCase()
-        const to = this.txObj.to.toLowerCase()
+        const from = this.transfer.getFrom().toLowerCase()
+        const to = this.transfer.getTo().toLowerCase()
         const addr = this.address.toLowerCase()
 
         if (addr === from && addr === to) {
@@ -257,16 +281,16 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get typeAddr(): string {
         switch (this.type) {
             case TYPES[0]:
-                return this.txObj.from
+                return this.transfer.getFrom()
             case TYPES[1]:
-                return this.txObj.to
+                return this.transfer.getTo()
             default:
                 return this.address
         }
     }
 
     get amountSign(): string {
-        if (this.txObj.status) {
+        if (this.transfer.getStatus() !== null) {
             if (this.type === TYPES[0]) {
                 return '+'
             }
@@ -275,6 +299,24 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             }
         }
         return ''
+    }
+    get transferValue(): FormattedNumber {
+        return this.transfer.getValue()
+    }
+
+    get trasferValueClass(): string {
+        let textColor = 'black--text'
+        if (this.transfer.getStatus === null) {
+            textColor = 'info--text'
+        }
+        return this.isSmall ? `${textColor} caption` : textColor
+    }
+    get transferFee(): FormattedNumber {
+        return this.transfer.getFee()
+    }
+
+    get hasFeeSign(): boolean {
+        return this.transfer.getStatus() !== null && this.type === TYPES[1]
     }
 }
 </script>
