@@ -4,9 +4,9 @@ query getPendingTransactions($hash: String!) {
         to
         timestamp
         value
-        hash
+        gas
         gasPrice
-        gasUsed
+        hash
     }
 }
 

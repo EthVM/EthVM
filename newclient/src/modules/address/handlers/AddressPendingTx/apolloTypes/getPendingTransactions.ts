@@ -13,9 +13,9 @@ export interface getPendingTransactions_getPendingTransactions {
   to: string | null;
   timestamp: number | null;
   value: string;
-  hash: string;
+  gas: string;
   gasPrice: string;
-  gasUsed: string | null;
+  hash: string;
 }
 
 export interface getPendingTransactions {

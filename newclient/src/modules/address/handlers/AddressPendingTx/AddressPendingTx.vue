@@ -1,9 +1,9 @@
 <template>
     <v-card color="white" flat class="pb-2">
-        <app-table-title :has-pagination="showPagination" :title="getTitle" :page-type="pageType" page-link="">
-            <template v-slot:pagination v-if="showPagination">
+        <app-table-title :has-pagination="hasMore" :title="getTitle" :page-type="pageType" page-link="">
+            <template v-slot:pagination v-if="hasMore">
                 <app-paginate-has-more
-                    v-if="showPagination"
+                    v-if="hasMore"
                     :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
                     :has-more="hasMore"
                     :current-page="index"
@@ -18,7 +18,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in pendingTx" :key="index" class="transparent" flat>
-                    <table-address-txs-row :is-pending="true" :tx="tx" :address="address" />
+                    <table-address-txs-row :is-pending="true" :transfer="tx" :address="address" />
                 </v-card>
             </template>
         </table-txs>
@@ -36,7 +36,13 @@ import TableAddressTransfersRow from '@app/modules/address/components/TableAddre
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getPendingTransactions } from './pendingTxs.graphql'
-import { getPendingTransactions as PendingTxType } from './apolloTypes/getPendingTransactions'
+import { getPendingTransactions_getPendingTransactions as PendingTxType } from './apolloTypes/getPendingTransactions'
+import { pendingTransaction_pendingTransaction as PendingTransferType } from './apolloTypes/pendingTransaction'
+import { EthTransfer } from '@app/modules/address/models/EthTransfer'
+
+interface PendingMap {
+    [key: string]: EthTransfer
+}
 
 @Component({
     components: {
@@ -56,7 +62,16 @@ import { getPendingTransactions as PendingTxType } from './apolloTypes/getPendin
                     hash: this.address
                 }
             },
-            update: data => data.getPendingTransactions
+            update: data => data.getPendingTransactions,
+            result({ data }) {
+                this.error = ''
+                data.getPendingTransactions.forEach(i => {
+                    this.pendingMap[i.hash] = new EthTransfer(i)
+                })
+                if (this.hasMore) {
+                    // clear the error
+                }
+            }
         }
     }
 })
@@ -77,20 +92,24 @@ export default class AddressPendingTx extends Vue {
     index = 0
     /*isEnd -  Last Index loaded */
     isEnd = 0
-    showPagination = true
     pageType = 'address'
     getPendingTx!: PendingTxType[]
+    error = ''
+    pendingMap: PendingMap = {}
 
     /*
     ===================================================================================
       Computed
     ===================================================================================
     */
-    get pendingTx(): any[] {
+    get pendingTx(): EthTransfer[] {
         if (!this.loading && this.getPendingTx) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getPendingTx.length ? this.getPendingTx.length : start + this.maxItems
-            return this.getPendingTx.slice(start, end)
+            const transfers = this.getPendingTx.slice(start, end).map(i => {
+                return this.pendingMap[i.hash]
+            })
+            return transfers
         }
         return []
     }
@@ -123,7 +142,7 @@ export default class AddressPendingTx extends Vue {
 
     /*
     ===================================================================================
-      Methods: 
+      Methods:
     ===================================================================================
     */
 
