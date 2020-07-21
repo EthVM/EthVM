@@ -203,11 +203,6 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
-import BN from 'bignumber.js'
-import { isNetworkRequestInFlight } from 'apollo-client/core/networkStatus'
-import { pendingTransaction_pendingTransaction as PendingTransferType } from '@app/modules/address//handlers/AddressPendingTx/apolloTypes/pendingTransaction'
-import { getPendingTransactions_getPendingTransactions as PendingTxType } from '@app/modules/address/handlers/AddressPendingTx/apolloTypes/getPendingTransactions'
-import { getEthTransfersV2_getEthTransfersV2_transfers as TxType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getEthTransfersV2'
 const TYPES = ['in', 'out', 'self']
 
 @Component({
@@ -224,21 +219,22 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) tx!: TxType | PendingTxType | PendingTransferType
+    @Prop(Object) transfer!: EthTransfer
     @Prop(String) address!: string
     @Prop({ type: Boolean, default: false }) isPending!: boolean
+    @Prop(Boolean) isMined?: boolean
 
     /*
     ===================================================================================
       Computed
     ===================================================================================
     */
-    get transfer(): EthTransfer {
-        return new EthTransfer(this.tx)
-    }
 
     get txStatusClass(): string {
-        return this.transfer.getStatus() !== null ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+        if (this.transfer && this.transfer.getStatus() !== null) {
+            return this.transfer.getStatus() ? 'tx-status-sucess table-row-mobile' : 'tx-status-fail table-row-mobile'
+        }
+        return 'table-row-mobile'
     }
 
     get isSmall(): boolean {
@@ -306,7 +302,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     get trasferValueClass(): string {
         let textColor = 'black--text'
-        if (this.transfer.getStatus === null) {
+        if (this.transfer.getStatus() === null) {
             textColor = 'info--text'
         }
         return this.isSmall ? `${textColor} caption` : textColor
