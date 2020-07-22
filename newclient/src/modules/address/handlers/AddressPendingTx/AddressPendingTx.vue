@@ -35,7 +35,7 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getPendingTransactions } from './pendingTxs.graphql'
+import { getPendingTransactions, pendingTransaction } from './pendingTxs.graphql'
 import { getPendingTransactions_getPendingTransactions as PendingTxType } from './apolloTypes/getPendingTransactions'
 import { pendingTransaction_pendingTransaction as PendingTransferType } from './apolloTypes/pendingTransaction'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
@@ -63,11 +63,60 @@ interface PendingMap {
                 }
             },
             update: data => data.getPendingTransactions,
+            // subscribeToMore: {
+            //     document: pendingTransaction,
+            //     variables() {
+            //         return {
+            //             owner: this.address
+            //         }
+            //     },
+            //     updateQuery: (previousResult, { subscriptionData }) => {
+            //         console.log(subscriptionData)
+            //         return
+            //         // if (previousResult && subscriptionData.data.pendingTransaction) {
+            //         //     const prevB = previousResult.getBlocksArrayByNumber
+            //         //     const newB = subscriptionData.data.newBlockFeed
+            //         //     newB.txFail = 0
+            //         //     const index = prevB.findIndex(block => block.number === newB.number)
+            //         //     if (index != -1) {
+            //         //         prevB[index] = newB
+            //         //         return previousResult
+            //         //     }
+            //         //     return {
+            //         //         __typename: 'BlockSummary',
+            //         //         getBlocksArrayByNumber: [newB, ...prevB]
+            //         //     }
+            //         // }
+            //     }
+            // },
             result({ data }) {
                 this.error = ''
-                data.getPendingTransactions.forEach(i => {
+                this.getPendingTx.forEach(i => {
                     this.pendingMap[i.hash] = new EthTransfer(i)
                 })
+                if (this.initialLoad) {
+                    this.initialLoad = false
+                    console.log(this.initialLoad)
+                }
+            }
+        },
+        $subscribe: {
+            pendingTransaction: {
+                query: pendingTransaction,
+                variables() {
+                    return {
+                        owner: this.address
+                    }
+                },
+                // skip() {
+                //     return this.initialLoad
+                // },
+                result({ data }) {
+                    console.log(data)
+                },
+                error(error) {
+                    console.error(error)
+                }
             }
         }
     }
@@ -93,7 +142,7 @@ export default class AddressPendingTx extends Vue {
     getPendingTx!: PendingTxType[]
     error = ''
     pendingMap: PendingMap = {}
-
+    initialLoad = true
     /*
     ===================================================================================
       Computed
@@ -116,7 +165,7 @@ export default class AddressPendingTx extends Vue {
     }
 
     get loading(): boolean {
-        return this.$apollo.queries.getPendingTx.loading
+        return this.$apollo.queries.getPendingTx.loading || this.initialLoad
     }
 
     get message(): string {
