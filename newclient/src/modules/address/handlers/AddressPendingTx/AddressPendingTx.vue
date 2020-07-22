@@ -14,7 +14,7 @@
         </app-table-title>
         <table-txs :is-loading="loading" :table-message="message" :txs-data="pendingTx" :is-scroll-view="false">
             <template #header>
-                <table-address-txs-header :address="address" />
+                <table-address-txs-header :address="address" :is-pending="true" />
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in pendingTx" :key="index" class="transparent" flat>
@@ -68,9 +68,6 @@ interface PendingMap {
                 data.getPendingTransactions.forEach(i => {
                     this.pendingMap[i.hash] = new EthTransfer(i)
                 })
-                if (this.hasMore) {
-                    // clear the error
-                }
             }
         }
     }

@@ -34,9 +34,10 @@
                     <v-flex xs6>
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
-                            <v-btn class="ml-2 mr-1 more-btn" color="white" fab depressed>
+                            <v-btn v-if="!isPending" class="ml-2 mr-1 more-btn" color="white" fab depressed>
                                 <p class="info--text title pb-2">...</p>
                             </v-btn>
+                            <p v-if="isMined && isPending" class="caption primary--text blinking ml-2">Mined</p>
                         </v-layout>
                     </v-flex>
                     <!--
@@ -139,7 +140,7 @@
                         </v-flex>
                         <v-flex sm12 hidden-lg-and-up>
                             <p :class="[type === 'out' ? 'black--text' : 'info--text', 'text-truncate mb-0']">
-                                <span class="info--text pr-1">{{ $tc('tx.fee', 1) }}: </span><span v-if="!transfer.getIsPending() && type === 'out'">-</span
+                                <span class="info--text pr-1">{{ feeString }}: </span><span v-if="!transfer.getIsPending() && type === 'out'">-</span
                                 >{{ transferFee.value }}
                             </p>
                         </v-flex>
@@ -189,6 +190,9 @@
                         </v-btn>
                     </v-layout>
                 </v-flex>
+                <v-flex v-else shrink>
+                    <p v-if="isMined" class="caption primary--text blinking">Mined</p>
+                </v-flex>
             </v-layout>
             <v-divider class="mb-2 mt-2" />
         </v-flex>
@@ -222,7 +226,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     @Prop(Object) transfer!: EthTransfer
     @Prop(String) address!: string
     @Prop({ type: Boolean, default: false }) isPending!: boolean
-    @Prop(Boolean) isMined?: boolean
 
     /*
     ===================================================================================
@@ -310,9 +313,16 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get transferFee(): FormattedNumber {
         return this.transfer.getFee()
     }
+    get feeString(): string {
+        return this.isPending ? `${this.$t('tx.estimated-fee')}` : `${this.$tc('tx.fee', 1)}`
+    }
 
     get hasFeeSign(): boolean {
         return this.transfer.getStatus() !== null && this.type === TYPES[1]
+    }
+
+    get isMined(): boolean {
+        return !this.transfer.getIsPending()
     }
 }
 </script>
@@ -340,5 +350,14 @@ p {
 .more-btn {
     height: 20px;
     width: 20px;
+}
+.blinking {
+    animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }
 </style>
