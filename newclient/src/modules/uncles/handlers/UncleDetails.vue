@@ -148,7 +148,7 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
                 },
                 {
                     title: this.$i18n.t('common.timestmp'),
-                    detail: this.$i18n.d(this.uncle.block.summary.timestamp, 'long', this.$i18n.locale.replace('_', '-'))
+                    detail: new Date(this.uncle.block.summary.timestamp * 1e3).toString()
                 },
                 {
                     title: this.$i18n.t('common.sha'),
