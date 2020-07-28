@@ -1,9 +1,8 @@
 <template>
     <v-card color="white" flat class="pb-2">
-        <app-table-title :has-pagination="hasMore" :title="getTitle" :page-type="pageType" page-link="">
-            <template v-slot:pagination v-if="hasMore">
+        <app-table-title :has-pagination="showPagination" :title="getTitle" :page-type="pageType" page-link="">
+            <template v-slot:pagination v-if="showPagination">
                 <app-paginate-has-more
-                    v-if="hasMore"
                     :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
                     :has-more="hasMore"
                     :current-page="index"
@@ -39,6 +38,8 @@ import { getPendingTransactions, pendingTransaction } from './pendingTxs.graphql
 import { getPendingTransactions_getPendingTransactions as PendingTxType } from './apolloTypes/getPendingTransactions'
 import { pendingTransaction_pendingTransaction as PendingTransferType } from './apolloTypes/pendingTransaction'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
+import { throwError } from 'rxjs'
+import { networkInterfaces } from 'os'
 
 interface PendingMap {
     [key: string]: EthTransfer
@@ -62,60 +63,36 @@ interface PendingMap {
                     hash: this.address
                 }
             },
-            update: data => data.getPendingTransactions,
-            // subscribeToMore: {
-            //     document: pendingTransaction,
-            //     variables() {
-            //         return {
-            //             owner: this.address
-            //         }
-            //     },
-            //     updateQuery: (previousResult, { subscriptionData }) => {
-            //         console.log(subscriptionData)
-            //         return
-            //         // if (previousResult && subscriptionData.data.pendingTransaction) {
-            //         //     const prevB = previousResult.getBlocksArrayByNumber
-            //         //     const newB = subscriptionData.data.newBlockFeed
-            //         //     newB.txFail = 0
-            //         //     const index = prevB.findIndex(block => block.number === newB.number)
-            //         //     if (index != -1) {
-            //         //         prevB[index] = newB
-            //         //         return previousResult
-            //         //     }
-            //         //     return {
-            //         //         __typename: 'BlockSummary',
-            //         //         getBlocksArrayByNumber: [newB, ...prevB]
-            //         //     }
-            //         // }
-            //     }
-            // },
-            result({ data }) {
-                this.error = ''
-                this.getPendingTx.forEach(i => {
-                    this.pendingMap[i.hash] = new EthTransfer(i)
-                })
-                if (this.initialLoad) {
-                    this.initialLoad = false
-                    console.log(this.initialLoad)
-                }
-            }
-        },
-        $subscribe: {
-            pendingTransaction: {
-                query: pendingTransaction,
+            deep: true,
+            update: data => {
+                return data.getPendingTransactions
+            },
+            subscribeToMore: {
+                document: pendingTransaction,
                 variables() {
                     return {
                         owner: this.address
                     }
                 },
-                // skip() {
-                //     return this.initialLoad
-                // },
-                result({ data }) {
-                    console.log(data)
-                },
-                error(error) {
-                    console.error(error)
+                updateQuery(previousResult, { subscriptionData }) {
+                    if (!this.initialLoad && previousResult && subscriptionData.data.pendingTransaction) {
+                        const prevTx = previousResult.getPendingTransactions
+                        const newTx = subscriptionData.data.pendingTransaction
+                        this.insertItem(newTx, prevTx)
+                        this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
+                        return prevTx
+                    }
+                    return
+                }
+            },
+            result({ data }) {
+                this.error = ''
+                if (this.initialLoad) {
+                    this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))
+                    this.getPendingTx.forEach(i => {
+                        this.pendingMap[i.hash] = new EthTransfer(i)
+                    })
+                    this.initialLoad = false
                 }
             }
         }
@@ -139,7 +116,7 @@ export default class AddressPendingTx extends Vue {
     /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
-    getPendingTx!: PendingTxType[]
+    getPendingTx!: (PendingTransferType | PendingTxType)[]
     error = ''
     pendingMap: PendingMap = {}
     initialLoad = true
@@ -152,10 +129,10 @@ export default class AddressPendingTx extends Vue {
         if (!this.loading && this.getPendingTx) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getPendingTx.length ? this.getPendingTx.length : start + this.maxItems
-            const transfers = this.getPendingTx.slice(start, end).map(i => {
-                return this.pendingMap[i.hash]
+            return this.getPendingTx.slice(start, end).map(i => {
+                const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
+                return this.pendingMap[hash]
             })
-            return transfers
         }
         return []
     }
@@ -186,6 +163,10 @@ export default class AddressPendingTx extends Vue {
         return this.isEnd + 1 < this.totalPages
     }
 
+    get showPagination(): boolean {
+        return this.totalPages > 1
+    }
+
     /*
     ===================================================================================
       Methods:
@@ -201,6 +182,49 @@ export default class AddressPendingTx extends Vue {
             }
         }
         this.index = page
+    }
+
+    /*
+    Desc: This method inserts new transfer into an array in sorted manner.
+    Assumptions:
+        - Array is already presorted.
+        - Most of the new pending transfers will come as soon as they are seen and processed, according to the timestamp.
+        - Case I: if first item in the array, has smaller timestamp item will be inserted in front of the array
+        - Case II: Items can come in unsorted, as this depends on how busy the account is; in this case binary index search will be performed and item will be inserted accordignly
+     */
+    insertItem(item: PendingTransferType, transfers: (PendingTransferType | PendingTxType)[]): void {
+        const itemTime = item.timestamp
+        if (transfers.length === 0) {
+            transfers.push(item)
+        } else if (transfers[0].timestamp !== null && transfers[0].timestamp <= itemTime) {
+            transfers.unshift(item)
+        } else {
+            let searchIndex = true
+            let start = 0
+            let end = transfers.length
+            while (searchIndex) {
+                const mIndex = new BN(end + start).idiv(2).toNumber()
+                const midTime = transfers[mIndex].timestamp
+                if (midTime === null) {
+                    end === transfers.length
+                    searchIndex = false
+                } else if (end - start === 1) {
+                    searchIndex = false
+                } else {
+                    if (midTime === itemTime) {
+                        end = mIndex
+                        searchIndex = false
+                    } else if (midTime < itemTime) {
+                        end = mIndex
+                    } else {
+                        start = mIndex
+                    }
+                }
+            }
+            const startA = transfers.slice(0, end)
+            const startB = transfers.slice(end, transfers.length)
+            transfers = [...startA, item, ...startB]
+        }
     }
 }
 </script>

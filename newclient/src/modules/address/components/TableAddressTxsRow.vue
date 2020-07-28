@@ -181,9 +181,9 @@
                   LG: 12/12 (1)
                 =====================================================================================
                 -->
-                <v-flex v-if="!isPending && transfer.getStatus !== null" shrink>
+                <v-flex v-if="!isPending && transfer.getStatus() !== null" shrink>
                     <v-layout row align-center justify-end>
-                        <v-icon v-if="transfer.getStatus" small class="txSuccess--text">fa fa-check-circle</v-icon>
+                        <v-icon v-if="transfer.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
                         <v-btn class="ml-3 mr-1 more-btn" color="white" fab depressed>
                             <p class="info--text title pb-2">...</p>
@@ -305,6 +305,10 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     get trasferValueClass(): string {
         let textColor = 'black--text'
+
+        // if (this.isPending) {
+        //     console.log(this.transfer)
+        // }
         if (this.transfer.getStatus() === null) {
             textColor = 'info--text'
         }
