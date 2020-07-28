@@ -67,32 +67,35 @@ interface PendingMap {
             update: data => {
                 return data.getPendingTransactions
             },
-            subscribeToMore: {
-                document: pendingTransaction,
+            result({ data }) {
+                this.error = ''
+                if (this.initialLoad) {
+                    this.pendingSorted = this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))
+                    this.getPendingTx.forEach(i => {
+                        this.pendingMap[i.hash] = new EthTransfer(i)
+                    })
+                    this.initialLoad = false
+                }
+            }
+        },
+        $subscribe: {
+            newPendingTransfer: {
+                query: pendingTransaction,
                 variables() {
                     return {
                         owner: this.address
                     }
                 },
-                updateQuery(previousResult, { subscriptionData }) {
-                    if (!this.initialLoad && previousResult && subscriptionData.data.pendingTransaction) {
-                        const prevTx = previousResult.getPendingTransactions
-                        const newTx = subscriptionData.data.pendingTransaction
-                        this.insertItem(newTx, prevTx)
-                        this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
-                        return prevTx
-                    }
-                    return
-                }
-            },
-            result({ data }) {
-                this.error = ''
-                if (this.initialLoad) {
-                    this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))
-                    this.getPendingTx.forEach(i => {
-                        this.pendingMap[i.hash] = new EthTransfer(i)
-                    })
-                    this.initialLoad = false
+                skip() {
+                    return this.loading
+                },
+                result({ data }) {
+                    const newTx = data.pendingTransaction
+                    this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
+                    this.insertItem(newTx, this.pendingSorted)
+                },
+                error(error) {
+                    console.error(error)
                 }
             }
         }
@@ -116,7 +119,8 @@ export default class AddressPendingTx extends Vue {
     /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
-    getPendingTx!: (PendingTransferType | PendingTxType)[]
+    getPendingTx!: PendingTxType[]
+    pendingSorted!: (PendingTransferType | PendingTxType)[]
     error = ''
     pendingMap: PendingMap = {}
     initialLoad = true
@@ -126,10 +130,10 @@ export default class AddressPendingTx extends Vue {
     ===================================================================================
     */
     get pendingTx(): EthTransfer[] {
-        if (!this.loading && this.getPendingTx) {
+        if (!this.loading && this.pendingSorted) {
             const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.getPendingTx.length ? this.getPendingTx.length : start + this.maxItems
-            return this.getPendingTx.slice(start, end).map(i => {
+            const end = start + this.maxItems > this.getPendingTx.length ? this.pendingSorted.length : start + this.maxItems
+            return this.pendingSorted.slice(start, end).map(i => {
                 const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
                 return this.pendingMap[hash]
             })
