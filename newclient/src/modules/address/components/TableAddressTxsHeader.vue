@@ -12,7 +12,7 @@
             <h5>{{ $t('common.amount') }}</h5>
         </v-flex>
         <v-flex sm2 hidden-md-and-down>
-            <h5 class="hidden-md-and-down">{{ $tc('tx.fee', 1) }}</h5>
+            <h5 class="hidden-md-and-down">{{ feeString }}</h5>
         </v-flex>
         <v-flex md3 lg2>
             <h5>{{ $t('common.age') }}</h5>
@@ -22,8 +22,24 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
-export default class TableAddressTxsHeader extends Vue {}
+export default class TableAddressTxsHeader extends Vue {
+    /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
+    @Prop({ type: Boolean, default: false }) isPending!: boolean
+
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+    get feeString(): string {
+        return this.isPending ? `${this.$t('tx.estimated-fee')}` : `${this.$tc('tx.fee', 1)}`
+    }
+}
 </script>

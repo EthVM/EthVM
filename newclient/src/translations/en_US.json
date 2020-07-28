@@ -40,6 +40,7 @@
         "last": "Last Transactions",
         "hash": "Tx # | Transaction #",
         "fee": "Tx Fee | Txs Fees",
+        "estimated-fee": "Estimated Fee",
         "history": "Transactions History",
         "total": "Total Txs",
         "success": "Successful Tx | Successful Txs",

@@ -1,24 +1,26 @@
-fragment TxDetails on Tx {
-  blockHash
-  blockNumber
-  from
-  gas
-  gasPrice
-  gasUsed
-  timestamp
-  hash
-  input
-  status
-  input
-  nonce
-  to
-  transactionIndex
-  value
-  replacedBy
+query getPendingTransactions($hash: String!) {
+    getPendingTransactions(owner: $hash) {
+        from
+        to
+        timestamp
+        value
+        gas
+        gasPrice
+        hash
+    }
 }
 
-query getPendingTransactions($hash: String!) {
-  getPendingTransactions(owner: $hash) {
-    ...TxDetails
-  }
+subscription pendingTransaction($owner: String!) {
+    pendingTransaction(owner: $owner) {
+        transactionHash
+        txFee
+        from
+        to
+        timestamp
+        value
+    }
+}
+
+subscription pendingMined($hash: String!) {
+    transactionEvent(hash: $hash)
 }

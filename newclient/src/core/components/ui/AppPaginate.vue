@@ -141,7 +141,7 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
      */
 
     get showText(): string {
-        return this.hasInput ? `${this.$t('message.page')} ${this.totalFormatted}` : `${this.pageDisplay}${this.$t('message.page')} ${this.totalFormatted}`
+        return this.hasInput ? `${this.$t('message.page')} ${this.totalFormatted}` : `${this.pageDisplay} ${this.$t('message.page')} ${this.totalFormatted}`
     }
     get pageDisplay(): string {
         return new BigNumber(this.currentPage + 1).toFixed()
