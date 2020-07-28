@@ -95,7 +95,6 @@ interface PendingMap {
                         const newTx = data.pendingTransaction
                         this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
                         this.insertItem(newTx, this.pendingSorted)
-                        console.log(newTx)
                         this.createSubscription(newTx.transactionHash)
                     }
                 },
@@ -138,13 +137,15 @@ export default class AddressPendingTx extends Vue {
         if (!this.loading && this.pendingSorted) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getPendingTx.length ? this.pendingSorted.length : start + this.maxItems
-            return this.pendingSorted.slice(start, end).map(i => {
-                const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
-                if (!this.pendingMap[hash]) {
-                    console.log(hash)
-                }
-                return this.pendingMap[hash]
-            })
+            return this.pendingSorted
+                .slice(start, end)
+                .map(i => {
+                    const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
+                    return this.pendingMap[hash]
+                })
+                .filter(i => {
+                    return i ? true : false
+                })
         }
         return []
     }
@@ -240,23 +241,25 @@ export default class AddressPendingTx extends Vue {
     }
 
     createSubscription(_hash: string): void {
-        console.log(_hash)
-        const observer = this.$apollo.subscribe({
-            query: pendingMined,
-            variables: {
-                hash: _hash
-            }
-        })
-
-        const a = observer.subscribe({
-            next: data => {
-                this.markMined(_hash)
-                a.unsubscribe()
-            },
-            error(error) {
-                console.error(error)
-            }
-        })
+        if (_hash) {
+            const observer = this.$apollo.subscribe({
+                query: pendingMined,
+                variables: {
+                    hash: _hash
+                }
+            })
+            const a = observer.subscribe({
+                next: data => {
+                    this.markMined(_hash)
+                    a.unsubscribe()
+                },
+                error(error) {
+                    console.error(error)
+                }
+            })
+        } else {
+            console.log('not defined', _hash)
+        }
     }
     /*
     Desc:
