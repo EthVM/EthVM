@@ -17,7 +17,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in pendingTx" :key="index" class="transparent" flat>
-                    <table-address-txs-row :is-pending="true" :transfer="tx" :address="address" />
+                    <table-address-txs-row v-if="tx" :is-pending="true" :transfer="tx" :address="address" />
                 </v-card>
             </template>
         </table-txs>
@@ -140,6 +140,9 @@ export default class AddressPendingTx extends Vue {
             const end = start + this.maxItems > this.getPendingTx.length ? this.pendingSorted.length : start + this.maxItems
             return this.pendingSorted.slice(start, end).map(i => {
                 const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
+                if (!this.pendingMap[hash]) {
+                    console.log(hash)
+                }
                 return this.pendingMap[hash]
             })
         }
@@ -244,11 +247,11 @@ export default class AddressPendingTx extends Vue {
                 hash: _hash
             }
         })
-        observer.subscribe({
+
+        const a = observer.subscribe({
             next: data => {
-                console.log('mined')
-                console.log(data)
                 this.markMined(_hash)
+                a.unsubscribe()
             },
             error(error) {
                 console.error(error)
