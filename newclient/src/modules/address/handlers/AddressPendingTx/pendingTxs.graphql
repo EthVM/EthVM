@@ -20,3 +20,7 @@ subscription pendingTransaction($owner: String!) {
         value
     }
 }
+
+subscription pendingMined($hash: String!) {
+    transactionEvent(hash: $hash)
+}

@@ -34,7 +34,7 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getPendingTransactions, pendingTransaction } from './pendingTxs.graphql'
+import { getPendingTransactions, pendingTransaction, pendingMined } from './pendingTxs.graphql'
 import { getPendingTransactions_getPendingTransactions as PendingTxType } from './apolloTypes/getPendingTransactions'
 import { pendingTransaction_pendingTransaction as PendingTransferType } from './apolloTypes/pendingTransaction'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
@@ -73,6 +73,7 @@ interface PendingMap {
                     this.pendingSorted = this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))
                     this.getPendingTx.forEach(i => {
                         this.pendingMap[i.hash] = new EthTransfer(i)
+                        this.createSubscription(i.hash)
                     })
                     this.initialLoad = false
                 }
@@ -90,9 +91,13 @@ interface PendingMap {
                     return this.loading
                 },
                 result({ data }) {
-                    const newTx = data.pendingTransaction
-                    this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
-                    this.insertItem(newTx, this.pendingSorted)
+                    if (data && data.pendingTransaction) {
+                        const newTx = data.pendingTransaction
+                        this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
+                        this.insertItem(newTx, this.pendingSorted)
+                        console.log(newTx)
+                        this.createSubscription(newTx.transactionHash)
+                    }
                 },
                 error(error) {
                     console.error(error)
@@ -229,6 +234,49 @@ export default class AddressPendingTx extends Vue {
             const startB = transfers.slice(end, transfers.length)
             transfers = [...startA, item, ...startB]
         }
+    }
+
+    createSubscription(_hash: string): void {
+        console.log(_hash)
+        const observer = this.$apollo.subscribe({
+            query: pendingMined,
+            variables: {
+                hash: _hash
+            }
+        })
+        observer.subscribe({
+            next: data => {
+                console.log('mined')
+                console.log(data)
+                this.markMined(_hash)
+            },
+            error(error) {
+                console.error(error)
+            }
+        })
+    }
+    /*
+    Desc:
+      - Marks a transfer as mined
+      - After 10 seconds:
+          - it finds transfer index
+          - deletes transfer
+          - checks whether or not to edit pagination indexes
+
+     */
+
+    markMined(hash: string): void {
+        this.pendingMap[hash].setPending(false)
+        setTimeout(() => {
+            const index = this.pendingSorted
+                .map(item => {
+                    return item.__typename === 'Tx' ? item.hash : item.transactionHash
+                })
+                .indexOf(hash)
+            if (index >= 0) {
+                this.pendingSorted.splice(index, 1)
+            }
+        }, 10000)
     }
 }
 </script>
