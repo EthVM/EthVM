@@ -2,11 +2,11 @@
     <v-card color="white" flat class="pb-2">
         <app-table-title :has-pagination="showPagination" :title="getTitle" :page-type="pageType" page-link="">
             <template v-slot:pagination v-if="showPagination">
-                <app-paginate-has-more
+                <app-paginate
                     :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
-                    :has-more="hasMore"
+                    :total="totalPages"
                     :current-page="index"
-                    :loading="loading"
+                    :has-input="false"
                     @newPage="setPage"
                 />
             </template>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableAddressTxsHeader from '@app/modules/address/components/TableAddressTxsHeader.vue'
@@ -53,7 +53,7 @@ interface PendingMap {
         TableAddressTxsHeader,
         TableAddressTokensHeader,
         TableAddressTransfersRow,
-        AppPaginateHasMore
+        AppPaginate
     },
     apollo: {
         getPendingTx: {
@@ -70,7 +70,7 @@ interface PendingMap {
             result({ data }) {
                 this.error = ''
                 if (this.initialLoad) {
-                    this.pendingSorted = this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))
+                    this.pendingSorted = [...this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))]
                     this.getPendingTx.forEach(i => {
                         this.pendingMap[i.hash] = new EthTransfer(i)
                         this.createSubscription(i.hash)
@@ -94,7 +94,7 @@ interface PendingMap {
                     if (data && data.pendingTransaction) {
                         const newTx = data.pendingTransaction
                         this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
-                        this.insertItem(newTx, this.pendingSorted)
+                        this.insertItem(newTx)
                         this.createSubscription(newTx.transactionHash)
                     }
                 },
@@ -120,11 +120,9 @@ export default class AddressPendingTx extends Vue {
   ===================================================================================
   */
     index = 0
-    /*isEnd -  Last Index loaded */
-    isEnd = 0
     pageType = 'address'
     getPendingTx!: PendingTxType[]
-    pendingSorted!: (PendingTransferType | PendingTxType)[]
+    pendingSorted: (PendingTransferType | PendingTxType)[] = []
     error = ''
     pendingMap: PendingMap = {}
     initialLoad = true
@@ -136,7 +134,7 @@ export default class AddressPendingTx extends Vue {
     get pendingTx(): EthTransfer[] {
         if (!this.loading && this.pendingSorted) {
             const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.getPendingTx.length ? this.pendingSorted.length : start + this.maxItems
+            const end = start + this.maxItems > this.pendingSorted.length ? this.pendingSorted.length : start + this.maxItems
             return this.pendingSorted
                 .slice(start, end)
                 .map(i => {
@@ -166,14 +164,14 @@ export default class AddressPendingTx extends Vue {
     }
 
     get totalPages(): number {
-        if (this.getPendingTx) {
-            return Math.ceil(new BN(this.getPendingTx.length).div(this.maxItems).toNumber())
+        if (this.pendingSorted) {
+            return Math.ceil(new BN(this.pendingSorted.length).div(this.maxItems).toNumber())
         }
         return 0
     }
 
     get hasMore(): boolean {
-        return this.isEnd + 1 < this.totalPages
+        return this.index + 1 < this.totalPages
     }
 
     get showPagination(): boolean {
@@ -186,15 +184,10 @@ export default class AddressPendingTx extends Vue {
     ===================================================================================
     */
 
-    setPage(page: number, reset: boolean = false): void {
-        if (reset) {
-            this.isEnd = 0
-        } else {
-            if (page > this.isEnd && this.hasMore) {
-                this.isEnd = page
-            }
+    setPage(page: number): void {
+        if (page < this.index || this.hasMore) {
+            this.index = page
         }
-        this.index = page
     }
 
     /*
@@ -205,21 +198,21 @@ export default class AddressPendingTx extends Vue {
         - Case I: if first item in the array, has smaller timestamp item will be inserted in front of the array
         - Case II: Items can come in unsorted, as this depends on how busy the account is; in this case binary index search will be performed and item will be inserted accordignly
      */
-    insertItem(item: PendingTransferType, transfers: (PendingTransferType | PendingTxType)[]): void {
+    insertItem(item: PendingTransferType): void {
         const itemTime = item.timestamp
-        if (transfers.length === 0) {
-            transfers.push(item)
-        } else if (transfers[0].timestamp !== null && transfers[0].timestamp <= itemTime) {
-            transfers.unshift(item)
+        if (this.pendingSorted.length === 0) {
+            this.$set(this.pendingSorted, 0, item)
+        } else if (this.pendingSorted[0].timestamp !== null && this.pendingSorted[0].timestamp <= itemTime) {
+            this.pendingSorted.splice(0, 0, item)
         } else {
             let searchIndex = true
             let start = 0
-            let end = transfers.length
+            let end = this.pendingSorted.length
             while (searchIndex) {
                 const mIndex = new BN(end + start).idiv(2).toNumber()
-                const midTime = transfers[mIndex].timestamp
+                const midTime = this.pendingSorted[mIndex].timestamp
                 if (midTime === null) {
-                    end === transfers.length
+                    end === this.pendingSorted.length
                     searchIndex = false
                 } else if (end - start === 1) {
                     searchIndex = false
@@ -234,9 +227,7 @@ export default class AddressPendingTx extends Vue {
                     }
                 }
             }
-            const startA = transfers.slice(0, end)
-            const startB = transfers.slice(end, transfers.length)
-            transfers = [...startA, item, ...startB]
+            this.pendingSorted.splice(end, 0, item)
         }
     }
 
@@ -281,7 +272,11 @@ export default class AddressPendingTx extends Vue {
                 .indexOf(hash)
             if (index >= 0) {
                 this.pendingSorted.splice(index, 1)
+                if (this.totalPages < this.index + 1) {
+                    this.index = this.totalPages - 1
+                }
             }
+            /* Check Pagination View: */
         }, 10000)
     }
 }
