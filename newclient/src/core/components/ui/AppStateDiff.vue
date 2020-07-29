@@ -3,6 +3,11 @@
         <v-btn slot="activator" class="ml-3 mr-1 more-btn" color="white" fab depressed>
             <p class="info--text title pb-2">...</p>
         </v-btn>
+        <v-card>
+          <v-card-title>
+            Hello
+          </v-card-title>
+        </v-card>
     </v-dialog>
 </template>
 
