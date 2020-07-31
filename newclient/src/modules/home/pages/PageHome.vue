@@ -13,18 +13,18 @@
       Live Charts
     =====================================================================================
     -->
-        <!-- <v-layout row wrap justify-center mb-4 fill-height>
-      <v-flex xs12 md6>
-        <v-card flat color="white" height="100%">
-          <chart-live-txs />
-        </v-card>
-      </v-flex>
-      <v-flex xs12 md6>
-        <v-card flat color="white" height="100%">
-          <chart-live-tx-fees />
-        </v-card>
-      </v-flex>
-    </v-layout> -->
+        <v-layout row wrap justify-center mb-4 fill-height>
+            <v-flex xs12 md6>
+                <v-card flat color="white" height="100%">
+                    <chart />
+                </v-card>
+            </v-flex>
+            <v-flex xs12 md6>
+                <v-card flat color="white" height="100%">
+                    <chart />
+                </v-card>
+            </v-flex>
+        </v-layout>
         <!--
     =====================================================================================
       Latest Blocks
@@ -51,6 +51,7 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import BlockStats from '@app/modules/blocks/handlers/BlockStats/BlockStats.vue'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
+import Chart from '@app/modules/charts/components/Chart.vue'
 // import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 // import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks.vue'
@@ -66,7 +67,8 @@ const MAX_ITEMS = 10
         // ChartLiveTxFees,
         // ChartLiveTxs,
         RecentBlocks,
-        HomeTxs
+        HomeTxs,
+        Chart
     }
 })
 export default class PageHome extends Mixins(NewBlockSubscription) {
