@@ -158,7 +158,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                 },
                 {
                     title: this.$i18n.t('common.timestmp'),
-                    detail: this.transaction.timestamp !== null ? this.$i18n.d(this.transaction.timestamp, 'long', this.$i18n.locale.replace('_', '-')) : ''
+                    detail: this.transaction.timestamp !== null ? new Date(this.transaction.timestamp * 1e3).toString() : ''
                 },
                 {
                     title: this.$i18n.t('tx.from'),

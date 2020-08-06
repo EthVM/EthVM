@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import { State } from '@app/core/components/props'
+// import { State } from '@app/core/components/props'
 
 @Component
 export default class AppStateDiff extends Vue {
@@ -23,7 +23,7 @@ export default class AppStateDiff extends Vue {
   ===================================================================================
   */
 
-    @Prop(Object) state!: State
+    // @Prop(Object) state!: State
 
     /*
   ===================================================================================
@@ -50,7 +50,7 @@ export default class AppStateDiff extends Vue {
   */
 
     mounted() {
-        console.log('mounted', this.state)
+        // console.log('mounted', this.state)
     }
 }
 </script>

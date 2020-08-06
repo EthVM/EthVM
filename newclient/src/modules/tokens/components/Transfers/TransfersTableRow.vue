@@ -138,7 +138,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
     }
 
     get date(): Date {
-        return new Date(this.transfer.transfer.timestamp)
+        return new Date(this.transfer.transfer.timestamp * 1e3)
     }
 
     get symbolFormatted(): string | undefined {

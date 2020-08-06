@@ -59,7 +59,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
-                    <table-address-txs-row v-if="isETH" :tx="tx" :is-pending="false" :address="address" />
+                    <table-address-txs-row v-if="isETH" :transfer="tx" :is-pending="false" :address="address" />
                     <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" />
                 </v-card>
             </template>
@@ -86,6 +86,7 @@ import { getAdrEthTransfers_getEthTransfersV2 as EthTransfersType } from './apol
 import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAdrErc20Transfers'
 import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAdrERC721Transfers'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
+import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 
 /*
   DEV NOTES:
@@ -125,6 +126,11 @@ import { AddressEventType } from '@app/apollo/global/globalTypes'
             result({ data }) {
                 if (this.hasTransfers) {
                     this.error = '' // clear the error
+                    if (data.getEthTransfersV2 && data.getEthTransfersV2.transfers) {
+                        this.ethTransfers = data.getEthTransfersV2.transfers.map(item => {
+                            return new EthTransfer(item)
+                        })
+                    }
                     if (this.initialLoad) {
                         this.showPagination = this.getTransfers.nextKey != null
                         this.initialLoad = false
@@ -170,6 +176,7 @@ export default class AddressTransers extends Vue {
     pageType = 'address'
     filter = null
     getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
+    ethTransfers!: EthTransfer[]
 
     /*
     ===================================================================================
@@ -178,9 +185,13 @@ export default class AddressTransers extends Vue {
     */
 
     get transfers(): any[] {
-        if (!this.loading && this.hasTransfers) {
+        if (this.hasTransfers) {
+            console.error('address transfer', this.getTransfers)
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
+            if (this.isETH) {
+                return this.ethTransfers.slice(start, end)
+            }
             return this.getTransfers.transfers.slice(start, end)
         }
         return []
@@ -210,7 +221,7 @@ export default class AddressTransers extends Vue {
     }
 
     get loading(): boolean {
-        return this.$apollo.queries.getTransfers.loading
+        return this.$apollo.queries.getTransfers.loading || this.initialLoad
     }
     get hasMore(): boolean {
         return this.getTransfers && this.getTransfers.nextKey != null

@@ -1,6 +1,8 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-error v-if="hasError" :has-error="hasError" :message="error" />
+
         <!--
     =====================================================================================
       UNCLE DETAILS LIST
@@ -12,6 +14,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 import { eth } from '@app/core/helper'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -20,6 +23,7 @@ import UncleDetails from '@app/modules/uncles/handlers/UncleDetails.vue'
 @Component({
     components: {
         AppBreadCrumbs,
+        AppError,
         UncleDetails
     }
 })
@@ -69,6 +73,10 @@ export default class PageDetailsUncle extends Vue {
      */
     get isValid(): boolean {
         return eth.isValidHash(this.uncleRef)
+    }
+
+    get hasError(): boolean {
+        return this.error !== ''
     }
 
     /**
