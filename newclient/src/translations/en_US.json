@@ -58,7 +58,9 @@
             "self": "Self Sent",
             "in": "Incoming from",
             "out": "Outgoing to",
-            "internal": "Internal Transfer"
+            "internal": "Internal Transfer",
+            "fail": "Failed Transaction",
+            "success": "Successful Transaction"
         }
     },
 
@@ -609,5 +611,11 @@
         "TOKEN_TRANSFER": "transfer",
         "erc20": "ERC20 Transfers",
         "erc721": "ERC721 Transfers"
+    },
+    "state": {
+        "bal-before": "Balance Before",
+        "bal-after": "Balance After",
+        "val-sent": "Value Sent"
+        
     }
 }

@@ -222,23 +222,23 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-   /*
+    /*
     ===================================================================================
       Computed
     ===================================================================================
     */
-    // get state(): object {
-        // console.error("this", this.transfer)
-        // return !this.tx['transfer']
-        //     ? {}
-        //     : {
-        //           status: this.txObj.status != null ? this.txObj.status : false,
-        //           txFee: this.formatNonVariableEthValue(new BN(this.txObj.txFee)),
-        //           value: this.formatNonVariableEthValue(new BN(this.txObj.value)),
-        //           balBefore: this.formatNonVariableEthValue(new BN(this.tx['stateDiff'].from.before)),
-        //           balAfter: this.formatNonVariableEthValue(new BN(this.tx['stateDiff'].from.after))
-        //       }
-    // }
+    get state(): object {
+        return {
+            type: this.type,
+            status: this.transfer.getStatus(),
+            balAfter: this.transfer.getBalAfter(this.type),
+            data: [
+                { name: `${this.$t('state.bal-before')}`, value: this.transfer.getBalBefore(this.type) },
+                { name: `${this.$tc('tx.fee', 1)}`, value: this.transfer.getFee() },
+                { name: `${this.$t('state.val-sent')}`, value: this.transfer.getValue() }
+            ]
+        }
+    }
 
     get txStatusClass(): string {
         if (this.transfer && this.transfer.getStatus() !== null) {
