@@ -3,7 +3,7 @@
         <v-btn slot="activator" class="ml-3 mr-1 more-btn" color="white" fab depressed>
             <p class="info--text title pb-2">...</p>
         </v-btn>
-        <v-card>
+        <v-card class="overflow-hidden">
             <v-card-title class="pb-0">
                 <v-flex>
                     <v-layout row align-center justify-space-between>
@@ -87,7 +87,7 @@ export default class AppStateDiff extends Vue {
         switch (this.state.status as any) {
             case true:
                 return 'txSuccess--text'
-            case null:
+            case false:
                 return 'txFail--text'
             default:
                 return 'info--text'
@@ -98,7 +98,7 @@ export default class AppStateDiff extends Vue {
         switch (this.state.status as any) {
             case true:
                 return `${this.$t('tx.type.success')}`
-            case null:
+            case false:
                 return `${this.$t('tx.type.fail')}`
             default:
                 return ''

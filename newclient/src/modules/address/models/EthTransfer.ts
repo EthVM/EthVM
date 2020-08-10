@@ -1,7 +1,7 @@
 import { pendingTransaction_pendingTransaction as PendingTransferType } from '@app/modules/address//handlers/AddressPendingTx/apolloTypes/pendingTransaction'
 import { getPendingTransactions_getPendingTransactions as PendingTxType } from '@app/modules/address/handlers/AddressPendingTx/apolloTypes/getPendingTransactions'
 import { getEthTransfersV2_getEthTransfersV2_transfers as TxType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getEthTransfersV2'
-import { StateDiff as StateDiff } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/StateDiff'
+import { StateDiff } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/StateDiff'
 import BN from 'bignumber.js'
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
@@ -80,15 +80,23 @@ export class EthTransfer implements Transfer {
       State Balance
     ===================================================================================
     */
-    getBalBefore(type: string): FormattedNumber | null {
-        const types = ['in', 'out']
-        if (!this.stateDiff) { return null}
-        return (type === types[1] && this.stateDiff.from) ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.before))  : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.before))
+    getBalBefore(type: string): FormattedNumber {
+        const types = ['in', 'out', 'self']
+        if (!this.stateDiff) {
+            return { value: '0' }
+        }
+        return type === types[1] && this.stateDiff.from
+            ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.before))
+            : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.before))
     }
 
-    getBalAfter(type: string): FormattedNumber | null {
-        const types = ['in', 'out']
-        if (!this.stateDiff) { return null}
-        return (type === types[1] && this.stateDiff.from) ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.after))  : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.after))
+    getBalAfter(type: string): FormattedNumber {
+        const types = ['in', 'out', 'self']
+        if (!this.stateDiff) {
+            return { value: '0' }
+        }
+        return type === types[1] && this.stateDiff.from
+            ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.after))
+            : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.after))
     }
 }

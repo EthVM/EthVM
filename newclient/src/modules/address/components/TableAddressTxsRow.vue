@@ -16,7 +16,7 @@
                     =====================================================================================
                     -->
                     <v-flex xs6 pa-1>
-                        <p :class="trasferValueClass">
+                        <p :class="transferValueClass">
                             {{ amountSign }}{{ transferValue.value }}
                             {{ $t(`common.${transferValue.unit}`) }}
                             <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
@@ -125,7 +125,7 @@
                 <v-flex md3 lg2>
                     <v-layout row wrap align-center pl-1 pr->
                         <v-flex sm12>
-                            <p :class="trasferValueClass">
+                            <p :class="transferValueClass">
                                 <span class="hidden-lg-and-up info--text pr-1">{{ $t('common.amount') }}:</span>
                                 {{ amountSign }}{{ transferValue.value }}
                                 {{ $t(`common.${transferValue.unit}`) }}
@@ -228,16 +228,33 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     get state(): object {
+        const stateData = [{ name: `${this.$t('state.bal-before')}`, value: this.transfer.getBalBefore(this.type) }]
+        if (this.type !== TYPES[0]) {
+            stateData.push({ name: `${this.$tc('tx.fee', 1)}`, value: this.transfer.getFee() })
+        }
+        stateData.push({ name: this.getValueTitle, value: this.transfer.getValue() })
         return {
             type: this.type,
             status: this.transfer.getStatus(),
             balAfter: this.transfer.getBalAfter(this.type),
-            data: [
-                { name: `${this.$t('state.bal-before')}`, value: this.transfer.getBalBefore(this.type) },
-                { name: `${this.$tc('tx.fee', 1)}`, value: this.transfer.getFee() },
-                { name: `${this.$t('state.val-sent')}`, value: this.transfer.getValue() }
-            ]
+            data: stateData
         }
+    }
+
+    get getValueTitle(): string {
+        if (this.type === TYPES[0]) {
+            if (this.transfer.getStatus() === false) {
+                return `${this.$t('state.actual-sent')}`
+            }
+            return `${this.$t('state.val-sent')}`
+        }
+        if (this.type === TYPES[1]) {
+            if (this.transfer.getStatus() === false) {
+                return `${this.$t('state.actual-received')}`
+            }
+            return `${this.$t('state.val-received')}`
+        }
+        return `${this.$t('state.actual-sent-received')}`
     }
 
     get txStatusClass(): string {
@@ -304,7 +321,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get transferValue(): FormattedNumber {
         return this.transfer.getValue()
     }
-    get trasferValueClass(): string {
+    get transferValueClass(): string {
         let textColor = 'black--text'
         // if (this.isPending) {
         //     console.log(this.transfer)

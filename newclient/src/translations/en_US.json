@@ -615,7 +615,11 @@
     "state": {
         "bal-before": "Balance Before",
         "bal-after": "Balance After",
-        "val-sent": "Value Sent"
+        "val-sent": "Value Sent",
+        "actual-sent": "Actual Value Sent",
+        "val-received": "Value Received",
+        "actual-received": "Actual Value Received",
+        "actual-sent-received": "Actual Value Sent/Recieved"
         
     }
 }
