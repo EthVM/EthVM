@@ -34,7 +34,6 @@
                             <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
                             <app-state-diff :state="state" class="ml-2 mr-1" />
                             <p v-if="isMined && isPending" class="caption primary--text blinking ml-2">Mined</p>
-                            <app-state-diff :state="state" class="ml-3 mr-1" />
                         </v-layout>
                     </v-flex>
                     <!--

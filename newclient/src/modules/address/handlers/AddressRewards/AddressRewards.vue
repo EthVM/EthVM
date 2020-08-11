@@ -15,7 +15,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(i, index) in rewards" :key="index" class="transparent" flat>
-                    <table-address-rewards-row v-if="i !== null" :reward="i" :reward-type="rewardsType" />
+                    <table-address-rewards-row v-if="i !== null" :reward="i" :reward-type="rewardsType"  />
                 </v-card>
             </template>
         </table-txs>

@@ -7,7 +7,7 @@
             <v-card-title class="pb-0">
                 <v-flex>
                     <v-layout row align-center justify-space-between>
-                        <div :class="[titleColor, 'font-weight-bold', 'state-title']">{{ status }}</div>
+                        <div :class="[titleColor, 'font-weight-bold', 'state-title']">{{ state.status ? status : state.title }}</div>
                     </v-layout>
                 </v-flex>
                 <v-btn class="close-btn" icon @click="showDialog = false">
@@ -71,16 +71,6 @@ export default class AppStateDiff extends Vue {
 
     /*
   ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-    mounted() {
-        // console.log('mounted', this.state)
-    }
-
-    /*
-  ===================================================================================
     Computed
   ===================================================================================
   */
@@ -105,12 +95,6 @@ export default class AppStateDiff extends Vue {
             default:
                 return ''
         }
-    }
-
-    get stateData(): [] {
-        const data = []
-
-        return []
     }
 
     /*

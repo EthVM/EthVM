@@ -51,7 +51,7 @@
                             + {{ miningReward.value }} {{ $t(`common.${miningReward.unit}`) }}
                             <app-tooltip v-if="miningReward.tooltipText" :text="`${miningReward.tooltipText} ${$t('common.eth')}`" />
                         </p>
-                        <app-state-diff :state="state" class="ml-3 mr-1" />
+                        <block-uncle-rewards :state="state" class="ml-3 mr-1" />
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -62,10 +62,10 @@
 
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
-import AppStateDiff from '@app/core/components/ui/AppStateDiff.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import BlockUncleRewards from '@app/modules/address/handlers/AddressRewards/BlockUncleRewards.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
@@ -76,7 +76,7 @@ import BN from 'bignumber.js'
         AppTooltip,
         AppTimeAgo,
         AppTransformHash,
-        AppStateDiff
+        BlockUncleRewards
     }
 })
 export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
@@ -107,7 +107,8 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
             })
         }
         return {
-            status: true,
+            blockNumber: this.isBlock ? this.reward.transfer.block : null,
+            title: this.isBlock ? `${this.$t('state.block-rewards')}` : `${this.$t('state.uncle-rewards')}`,
             balAfter: this.getBalAfter(),
             data: stateData
         }
@@ -144,17 +145,17 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     getBalBefore(): FormattedNumber {
-        if (!this.reward.stateDiff) {
+        if (!this.reward.stateDiff.to) {
             return { value: '0' }
         }
-        return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.from.before))
+        return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.to.before))
     }
 
     getBalAfter(): FormattedNumber {
-        if (!this.reward.stateDiff) {
+        if (!this.reward.stateDiff.to) {
             return { value: '0' }
         }
-        return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.from.after))
+        return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.to.after))
     }
 }
 </script>

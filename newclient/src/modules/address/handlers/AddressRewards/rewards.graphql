@@ -41,3 +41,13 @@ query getAddrRewardsGenesis($hash: String!, $_limit: Int, $_nextKey: String) {
         ...RewardSummary
     }
 }
+
+query getBlockUncleRewards($blockRef: Int!) {
+    getBlockByNumber(number: $blockRef) {
+        summary {
+            rewards {
+                uncles
+            }
+        }
+    }
+}

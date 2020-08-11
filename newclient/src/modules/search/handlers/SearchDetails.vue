@@ -75,7 +75,7 @@ export default class SearchDetails extends Vue {
                 this.routeTo(routeName, param)
                 this.isLoading = false
             })
-            .catch(err => {
+            .catch(error => {
                 // TODO: Change error message
                 this.hasError = true
                 this.isLoading = false
@@ -127,7 +127,7 @@ export default class SearchDetails extends Vue {
                 this.isLoading = false
                 this.$refs.search.resetValues()
             })
-            .catch(err => {
+            .catch(error => {
                 // TODO: Change error message
                 this.hasError = true
                 this.isLoading = false

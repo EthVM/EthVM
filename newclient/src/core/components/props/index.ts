@@ -48,10 +48,8 @@ export interface Crumb {
 
 export interface State {
     status?: string
-    balBefore: string
     balAfter: string
-    txFee?: string
-    value?: string | object
-    blockReward?: string
-    uncleReward?: string
+    data: object[]
+    title?: string
+    blockNumber?: number
 }

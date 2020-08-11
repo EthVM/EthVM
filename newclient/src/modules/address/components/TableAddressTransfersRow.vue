@@ -213,10 +213,13 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get state(): object {
         return {
             status: true,
-            balAfter: this.getBalAfter(),
+            balAfter: this.getStateVal(this.getBalAfter()),
             data: [
-                { name: `${this.$t('state.bal-before')}`, value: this.getBalBefore() },
-                { name: this.getValueTitle, value: { value: this.formatFloatingPointValue(this.getValue()).value, unit: this.transfer.tokenInfo.symbol } }
+                { name: `${this.$t('state.bal-before')}`, value: this.getStateVal(this.getBalBefore()) },
+                {
+                    name: this.getValueTitle,
+                    value: this.getStateVal(this.getValue(this.transfer.value))
+                }
             ]
         }
     }
@@ -250,7 +253,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     get amount(): FormattedNumber | string {
         if (this.isErc20) {
-            return this.formatFloatingPointValue(this.getValue())
+            return this.formatFloatingPointValue(this.getValue(this.transfer.value))
         }
         return this.formatNumber(new BN(this.transfer.token).toNumber())
     }
@@ -318,30 +321,38 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    getValue(): BN {
-        let n = new BN(this.transfer.value)
+    getValue(value): BN {
+        let n = new BN(value)
         if (this.transfer.tokenInfo.decimals) {
             n = n.div(new BN(10).pow(this.transfer.tokenInfo.decimals))
         }
         return n
     }
 
-    getBalBefore(): FormattedNumber {
+    getBalBefore(): BN | string {
         if (!this.transfer.stateDiff) {
-            return { value: '0' }
+            return '0'
         }
+
         return this.type === TYPES[0] && this.transfer.stateDiff.from
-            ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.transfer.stateDiff.from.before))
-            : NumberFormatHelper.formatNonVariableEthValue(new BN(this.transfer.stateDiff.to.before))
+            ? this.getValue(this.transfer.stateDiff.from.before)
+            : this.getValue(this.transfer.stateDiff.to.before)
     }
 
-    getBalAfter(): FormattedNumber {
+    getBalAfter(): BN | string {
         if (!this.transfer.stateDiff) {
-            return { value: '0' }
+            return '0'
         }
         return this.type === TYPES[0] && this.transfer.stateDiff.from
-            ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.transfer.stateDiff.from.after))
-            : NumberFormatHelper.formatNonVariableEthValue(new BN(this.transfer.stateDiff.to.after))
+            ? this.getValue(this.transfer.stateDiff.from.after)
+            : this.getValue(this.transfer.stateDiff.to.after)
+    }
+
+    getStateVal(val): object {
+        return {
+            value: this.formatFloatingPointValue(val).value,
+            unit: this.transfer.tokenInfo.symbol
+        }
     }
 }
 </script>

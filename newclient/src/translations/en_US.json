@@ -621,6 +621,8 @@
         "actual-received": "Actual Value Received",
         "actual-sent-received": "Actual Value Sent/Recieved",
         "fee-rewards": "Tx Fees Rewards",
-        "including-uncle": "Including Uncle Reward?"
+        "including-uncle": "Including Uncle Reward?",
+        "block-rewards": "Block Rewards",
+        "uncle-rewards": "Uncle Rewards"
     }
 }
