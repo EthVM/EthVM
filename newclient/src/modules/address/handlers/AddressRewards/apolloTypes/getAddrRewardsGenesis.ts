@@ -11,11 +11,31 @@ export interface getAddrRewardsGenesis_getGenesisRewards_transfers_transfer {
   __typename: "Transfer";
   block: number;
   timestamp: number;
+  txFee: string;
+}
+
+export interface getAddrRewardsGenesis_getGenesisRewards_transfers_stateDiff_to {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAddrRewardsGenesis_getGenesisRewards_transfers_stateDiff_from {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAddrRewardsGenesis_getGenesisRewards_transfers_stateDiff {
+  __typename: "StateDiffChange";
+  to: getAddrRewardsGenesis_getGenesisRewards_transfers_stateDiff_to;
+  from: getAddrRewardsGenesis_getGenesisRewards_transfers_stateDiff_from | null;
 }
 
 export interface getAddrRewardsGenesis_getGenesisRewards_transfers {
   __typename: "EthTransfer";
   transfer: getAddrRewardsGenesis_getGenesisRewards_transfers_transfer;
+  stateDiff: getAddrRewardsGenesis_getGenesisRewards_transfers_stateDiff | null;
   value: string;
 }
 

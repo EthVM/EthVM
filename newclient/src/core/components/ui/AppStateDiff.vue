@@ -19,7 +19,7 @@
                     <v-layout v-for="(data, i) in state.data" :key="i" row align-center justify-space-between>
                         <p>{{ data.name }}</p>
                         <p v-if="data.value" class="text-uppercase">
-                            <span v-if="showMinus(data.name)">-</span>
+                            <span v-if="showMinus(data.name)">{{ showMinus(data.name) }}</span>
                             {{ data.value.value }} {{ data.value.unit }}
                         </p>
                     </v-layout>
@@ -38,7 +38,9 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State } from '@app/core/components/props'
 
-const TYPES = ['Tx Fee', 'Value Sent']
+const minusTYPES = ['Tx Fee', 'Value Sent']
+const plusTYPES = ['Total Block Reward', 'Tx Fees Rewards', 'Uncle Reward', 'Including Uncle Reward?']
+
 @Component
 export default class AppStateDiff extends Vue {
     /*
@@ -74,7 +76,7 @@ export default class AppStateDiff extends Vue {
   */
 
     mounted() {
-        console.log('mounted', this.state)
+        // console.log('mounted', this.state)
     }
 
     /*
@@ -117,8 +119,11 @@ export default class AppStateDiff extends Vue {
   ===================================================================================
   */
     showMinus(name) {
-        if (TYPES.indexOf(name) > -1) {
-            return true
+        if (minusTYPES.indexOf(name) > -1) {
+            return '-'
+        }
+        if (plusTYPES.indexOf(name) > -1) {
+            return '+'
         }
     }
 }

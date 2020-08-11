@@ -212,7 +212,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     */
     get state(): object {
         return {
-            type: this.type,
             status: true,
             balAfter: this.getBalAfter(),
             data: [

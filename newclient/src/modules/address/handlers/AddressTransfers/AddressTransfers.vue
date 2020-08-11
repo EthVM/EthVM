@@ -186,7 +186,6 @@ export default class AddressTransers extends Vue {
 
     get transfers(): any[] {
         if (this.hasTransfers) {
-            console.error('address transfer', this.getTransfers)
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
             if (this.isETH) {

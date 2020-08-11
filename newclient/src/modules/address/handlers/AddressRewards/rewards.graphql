@@ -1,8 +1,23 @@
+
+fragment BalanceFragment on BalanceDiff {
+    before
+    after
+}
+
 fragment RewardSummary on ETHTransfers {
     transfers {
         transfer {
             block
             timestamp
+            txFee
+        }
+        stateDiff {
+            to {
+                ...BalanceFragment
+            }
+            from {
+                ...BalanceFragment
+            }
         }
         value
     }
