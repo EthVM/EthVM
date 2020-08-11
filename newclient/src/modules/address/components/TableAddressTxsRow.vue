@@ -36,7 +36,7 @@
                                 <p class="info--text title pb-2">...</p>
                             </v-btn>
                             <p v-if="isMined && isPending" class="caption primary--text blinking ml-2">Mined</p>
-                            <app-state-diff :state="state" />
+                            <app-state-diff :state="state" class="ml-3 mr-1" />
                         </v-layout>
                     </v-flex>
                     <!--
@@ -176,7 +176,7 @@
                     <v-layout row align-center justify-end>
                         <v-icon v-if="transfer.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-                        <app-state-diff :state="state" />
+                        <app-state-diff :state="state" class="ml-3 mr-1" />
                     </v-layout>
                 </v-flex>
                 <v-flex v-else shrink>
@@ -234,7 +234,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         }
         stateData.push({ name: this.getValueTitle, value: this.transfer.getValue() })
         return {
-            type: this.type,
             status: this.transfer.getStatus(),
             balAfter: this.transfer.getBalAfter(this.type),
             data: stateData

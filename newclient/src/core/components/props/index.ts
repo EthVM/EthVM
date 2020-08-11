@@ -51,7 +51,7 @@ export interface State {
     balBefore: string
     balAfter: string
     txFee?: string
-    value?: string
+    value?: string | object
     blockReward?: string
     uncleReward?: string
 }

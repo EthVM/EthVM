@@ -1,6 +1,6 @@
 <template>
     <v-dialog :hide-overlay="true" v-model="showDialog" justify-end width="300" origin="right">
-        <v-btn slot="activator" class="ml-3 mr-1 more-btn" color="white" fab depressed>
+        <v-btn slot="activator" class="more-btn" color="white" fab depressed>
             <p class="info--text title pb-2">...</p>
         </v-btn>
         <v-card class="overflow-hidden">
@@ -26,7 +26,7 @@
                     <hr class="my-2 divider" />
                     <v-layout v-if="state.balAfter" row align-center justify-space-between>
                         <p>{{ $t('state.bal-after') }}</p>
-                        <p>{{ state.balAfter.value }} {{ state.balAfter.unit }}</p>
+                        <p class="text-uppercase">{{ state.balAfter.value }} {{ state.balAfter.unit }}</p>
                     </v-layout>
                 </v-flex>
             </v-card-text>

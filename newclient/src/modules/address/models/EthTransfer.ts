@@ -81,21 +81,21 @@ export class EthTransfer implements Transfer {
     ===================================================================================
     */
     getBalBefore(type: string): FormattedNumber {
-        const types = ['in', 'out', 'self']
+        const types = ['out', 'in', 'self']
         if (!this.stateDiff) {
             return { value: '0' }
         }
-        return type === types[1] && this.stateDiff.from
+        return type === types[0] && this.stateDiff.from
             ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.before))
             : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.before))
     }
 
     getBalAfter(type: string): FormattedNumber {
-        const types = ['in', 'out', 'self']
+        const types = ['out', 'in', 'self']
         if (!this.stateDiff) {
             return { value: '0' }
         }
-        return type === types[1] && this.stateDiff.from
+        return type === types[0] && this.stateDiff.from
             ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.after))
             : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.after))
     }
