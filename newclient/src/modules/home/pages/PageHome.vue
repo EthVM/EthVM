@@ -16,12 +16,20 @@
         <v-layout row wrap justify-center mb-4 fill-height>
             <v-flex xs12 md6>
                 <v-card flat color="white" height="100%">
-                    <chart />
+                    <home-gas-price-chart />
                 </v-card>
             </v-flex>
             <v-flex xs12 md6>
                 <v-card flat color="white" height="100%">
-                    <chart />
+                    <!-- <chart
+                        key-val="GAS_PRICE_AVG"
+                        class="box"
+                        :start="5"
+                        scale="minutes"
+                        label-val="avg gas price"
+                        :color="chartColors.green"
+                        :transform="toGwei"
+                    ></chart> -->
                 </v-card>
             </v-flex>
         </v-layout>
@@ -51,13 +59,13 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import BlockStats from '@app/modules/blocks/handlers/BlockStats/BlockStats.vue'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
-import Chart from '@app/modules/charts/components/Chart.vue'
+import HomeGasPriceChart from '@app/modules/charts/handlers/HomeGasPriceChart.vue'
 // import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
 // import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
 import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks.vue'
 import HomeTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
 import { Component, Mixins } from 'vue-property-decorator'
-
+import { fromWei, toBN } from 'web3-utils'
 const MAX_ITEMS = 10
 
 @Component({
@@ -68,7 +76,7 @@ const MAX_ITEMS = 10
         // ChartLiveTxs,
         RecentBlocks,
         HomeTxs,
-        Chart
+        HomeGasPriceChart
     }
 })
 export default class PageHome extends Mixins(NewBlockSubscription) {

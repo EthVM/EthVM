@@ -1,0 +1,20 @@
+query getTimeseriesData($key: String!, $scale: TimeseriesScale!, $fromT: Int!, $toT: Int, $nextKey: String) {
+    getTimeseriesData(key: $key, scale: $scale, fromT: $fromT, toT: $toT, nextKey: $nextKey) {
+        items {
+            value
+            timestamp
+        }
+        nextKey
+    }
+}
+
+subscription timeseriesEthAvg($key: String!, $scale: TimeseriesScale!) {
+    timeseriesEvent(key: $key, scale: $scale) {
+        key
+        scale
+        item {
+            value
+            timestamp
+        }
+    }
+}

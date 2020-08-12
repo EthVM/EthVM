@@ -24,6 +24,13 @@ export enum HashType {
   UNCLE_HASH = "UNCLE_HASH",
 }
 
+export enum TimeseriesScale {
+  days = "days",
+  hours = "hours",
+  minutes = "minutes",
+  seconds = "seconds",
+}
+
 export enum TransferFilter {
   FROM = "FROM",
   TO = "TO",

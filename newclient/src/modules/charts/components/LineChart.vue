@@ -1,12 +1,23 @@
 <script lang="ts">
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Line, mixins as chartMixins } from 'vue-chartjs'
-import { ChartData, ChartOptions } from 'chart.js'
+import { ChartData, ChartOptions } from '@app/modules/charts/models'
 
 @Component
 export default class LineChart extends Mixins(Line, chartMixins.reactiveProp) {
-    @Prop({ type: Object }) chartData!: ChartData
+    /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
+    @Prop({ type: Object, default: null }) chartData!: ChartData
     @Prop({ type: Object }) chartOptions?: ChartOptions
+
+    /*
+    ===================================================================================
+      Initial Data - For content loading
+    ===================================================================================
+    */
 
     dataLoading: ChartData = {
         labels: [1, 2, 3, 4, 5, 6, 7],
@@ -28,6 +39,7 @@ export default class LineChart extends Mixins(Line, chartMixins.reactiveProp) {
         ]
     }
     optionsLoading: ChartOptions = {
+        responsive: true,
         tooltips: {
             enabled: false,
             label: '#fcba03'
@@ -42,6 +54,11 @@ export default class LineChart extends Mixins(Line, chartMixins.reactiveProp) {
             ]
         }
     }
+    /*
+    ===================================================================================
+     Lifecycle
+    ===================================================================================
+    */
 
     mounted() {
         if (!this.chartData) {
@@ -49,6 +66,15 @@ export default class LineChart extends Mixins(Line, chartMixins.reactiveProp) {
         } else {
             this.renderChart(this.chartData, this.chartOptions)
         }
+    }
+    /*
+    ===================================================================================
+      Watch
+    ===================================================================================
+    */
+    @Watch('chartData')
+    onChartDataChanged(newVal: string, oldVal: string): void {
+        this.renderChart(this.chartData, this.chartOptions)
     }
 }
 </script>

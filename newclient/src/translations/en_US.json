@@ -247,6 +247,21 @@
                 "success-fail": "Successful and Failed Txs"
             }
         },
+        "gas-price-live": {
+            "title": "Recent Gas Price",
+            "description": "Minimum, average and maximum gas price per transaction in GWEI for the last 10 minutes",
+            "label": {
+                "min": "Minimum Gas Price",
+                "max": "Maximum Gas Price",
+                "avg": "Average Gas Price"
+            },
+            "label-y": "Gas Price (GWEI)",
+            "footenotes": {
+                "min": "Min",
+                "max": "Max",
+                "avg": "Avg"
+            }
+        },
         "tx-costs": {
             "title": "Tx Fees and Gas Price",
             "description": "Average transaction fees and average gas price in the last 10 blocks."
