@@ -1,6 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { TimeseriesKey, TimeseriesValueType, DataPoint } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
+import { timeseriesEthAvgVariables } from '@app/modules/charts/handlers/apolloTypes/timeseriesEthAvg'
 import moment from 'moment'
 
 import {
@@ -34,6 +35,28 @@ export class ChartDataMixin extends Vue {
                 .add(START * -1, _scale)
                 .unix()
         }
+    }
+
+    getSubscriptionVars(_key: TimeseriesKey, _scale: TimeseriesScale): timeseriesEthAvgVariables {
+        return {
+            key: _key,
+            scale: _scale
+        }
+    }
+
+    addSubscriptionItem(newItem: TimeseriesItemsTypes, _items: TimeseriesItemsTypes[]): TimeseriesItemsTypes[] {
+        let isNew = true
+        _items.forEach((item, index) => {
+            if (!isNew) return
+            if (item.timestamp === newItem.timestamp) {
+                _items.splice(index, 1, newItem)
+                isNew = false
+            }
+        })
+        if (isNew) {
+            _items.push(newItem)
+        }
+        return _items
     }
 
     /**

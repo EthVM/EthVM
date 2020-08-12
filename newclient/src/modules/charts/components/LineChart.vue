@@ -54,6 +54,7 @@ export default class LineChart extends Mixins(Line, chartMixins.reactiveProp) {
             ]
         }
     }
+
     /*
     ===================================================================================
      Lifecycle
@@ -69,12 +70,24 @@ export default class LineChart extends Mixins(Line, chartMixins.reactiveProp) {
     }
     /*
     ===================================================================================
+      Computed
+    ===================================================================================
+    */
+    get isLoading(): boolean {
+        return this.chartData === null
+    }
+    /*
+    ===================================================================================
       Watch
     ===================================================================================
     */
-    @Watch('chartData')
-    onChartDataChanged(newVal: string, oldVal: string): void {
-        this.renderChart(this.chartData, this.chartOptions)
+    @Watch('isLoading')
+    onIsLoadingChanged(newVal: boolean, oldVal: boolean): void {
+        if (!newVal && newVal !== oldVal) {
+            console.log('new ', newVal, ' oldVal ', oldVal)
+            console.log(this.chartData.datasets)
+            this.renderChart(this.chartData, this.chartOptions)
+        }
     }
 }
 </script>

@@ -18,15 +18,17 @@ import { ChartDataMixin } from '@app/modules/charts/mixins/ChartDataMixin.mixin'
 import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValueType } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
 import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
-import { getTimeseriesData } from '@app/modules/charts/handlers/timeseriesData.graphql'
+import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
 import { Footnote } from '@app/core/components/props'
 
 const START = 10
 const SCALE = TimeseriesScale.minutes
 const VALUE_TYPE = TimeseriesValueType.NUMBER
 
-const KEY_TX_PEN = TimeseriesKey.PENDING_TX_COUNT_AVG
-const KEY_TX_TOTAL = TimeseriesKey.TX_COUNT_AVG
+const KEY_TX_PEN = TimeseriesKey.PENDING_TX_COUNT_TOTAL
+const KEY_TX_TOTAL = TimeseriesKey.TX_COUNT_TOTAL
+
+const MAX_ITEMS = 10
 
 @Component({
     components: {
@@ -38,9 +40,35 @@ const KEY_TX_TOTAL = TimeseriesKey.TX_COUNT_AVG
             variables() {
                 return this.getQueryVars(KEY_TX_TOTAL, SCALE, START)
             },
+            subscribeToMore: {
+                document: timeseriesEthAvg,
+                variables() {
+                    return this.getSubscriptionVars(KEY_TX_TOTAL, SCALE)
+                },
+                updateQuery(previousResult, { subscriptionData }) {
+                    if (previousResult && subscriptionData.data.timeseriesEvent) {
+                        const prevItems = previousResult.getTimeseriesData.items
+                        const newItem = subscriptionData.data.timeseriesEvent.item
+                        if (!newItem) {
+                            return previousResult
+                        }
+                        const newItems = this.addSubscriptionItem(newItem, prevItems)
+                        if (newItems.length > MAX_ITEMS) {
+                            newItems.slice(1)
+                        }
+                        return {
+                            getTimeseriesData: {
+                                __typename: previousResult.getTimeseriesData.__typename,
+                                items: [...newItems],
+                                nextKey: previousResult.getTimeseriesData.nextKey
+                            }
+                        }
+                    }
+                }
+            },
             update: data => data.getTimeseriesData.items,
             result({ data }) {
-                this.txTotalDataSet = this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)
+                this.txTotalDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
             }
         },
         dataTxPen: {
@@ -48,9 +76,36 @@ const KEY_TX_TOTAL = TimeseriesKey.TX_COUNT_AVG
             variables() {
                 return this.getQueryVars(KEY_TX_PEN, SCALE, START)
             },
+            subscribeToMore: {
+                document: timeseriesEthAvg,
+                variables() {
+                    return this.getSubscriptionVars(KEY_TX_PEN, SCALE)
+                },
+                updateQuery(previousResult, { subscriptionData }) {
+                    if (previousResult && subscriptionData.data.timeseriesEvent) {
+                        const prevItems = previousResult.getTimeseriesData.items
+                        const newItem = subscriptionData.data.timeseriesEvent.item
+                        if (!newItem) {
+                            return previousResult
+                        }
+                        const newItems = this.addSubscriptionItem(newItem, prevItems)
+                        if (newItems.length > MAX_ITEMS) {
+                            newItems.slice(1)
+                        }
+
+                        return {
+                            getTimeseriesData: {
+                                __typename: previousResult.getTimeseriesData.__typename,
+                                items: [...newItems],
+                                nextKey: previousResult.getTimeseriesData.nextKey
+                            }
+                        }
+                    }
+                }
+            },
             update: data => data.getTimeseriesData.items,
             result({ data }) {
-                this.txPenDataSet = this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)
+                this.txPenDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
             }
         }
     }
