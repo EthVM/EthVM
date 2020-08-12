@@ -239,13 +239,13 @@
         "name": "Charts",
         "live": "Live Data",
         "tx-summary": {
-            "title": "Tx Summary",
-            "description": "Successful, failed, and pending transactions in the last 10 blocks.",
-            "description-no-pending": "Successful and failed transactions in the last 10 blocks.",
+            "title": "Transaction Summary",
+            "description": "Average Number of Mined and new pending transactions in the last 10 minutes.",
             "label": {
-                "pen": "Pending Txs",
-                "success-fail": "Successful and Failed Txs"
-            }
+                "pen": "New Pending Txs",
+                "total": "Mined Txs"
+            },
+            "label-y": "Txs Count"
         },
         "gas-price-live": {
             "title": "Recent Gas Price",

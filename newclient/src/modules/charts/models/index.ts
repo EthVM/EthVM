@@ -18,7 +18,8 @@ export enum TimeseriesKey {
 export enum TimeseriesValueType {
     GWEI = 'GWEI',
     USD = 'USD',
-    ETH = 'ETH'
+    ETH = 'ETH',
+    NUMBER = 'NUMBER'
 }
 
 export interface DataPoint {

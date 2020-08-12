@@ -21,15 +21,7 @@
             </v-flex>
             <v-flex xs12 md6>
                 <v-card flat color="white" height="100%">
-                    <!-- <chart
-                        key-val="GAS_PRICE_AVG"
-                        class="box"
-                        :start="5"
-                        scale="minutes"
-                        label-val="avg gas price"
-                        :color="chartColors.green"
-                        :transform="toGwei"
-                    ></chart> -->
+                    <home-tx-chart />
                 </v-card>
             </v-flex>
         </v-layout>
@@ -60,8 +52,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import BlockStats from '@app/modules/blocks/handlers/BlockStats/BlockStats.vue'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 import HomeGasPriceChart from '@app/modules/charts/handlers/HomeGasPriceChart.vue'
-// import ChartLiveTxFees from '@app/modules/charts/components/live/ChartLiveTxFees.vue'
-// import ChartLiveTxs from '@app/modules/charts/components/live/ChartLiveTxs.vue'
+import HomeTxChart from '@app/modules/charts/handlers/HomeTxChart.vue'
 import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks.vue'
 import HomeTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
 import { Component, Mixins } from 'vue-property-decorator'
@@ -72,11 +63,10 @@ const MAX_ITEMS = 10
     components: {
         AppBreadCrumbs,
         BlockStats,
-        // ChartLiveTxFees,
-        // ChartLiveTxs,
         RecentBlocks,
         HomeTxs,
-        HomeGasPriceChart
+        HomeGasPriceChart,
+        HomeTxChart
     }
 })
 export default class PageHome extends Mixins(NewBlockSubscription) {

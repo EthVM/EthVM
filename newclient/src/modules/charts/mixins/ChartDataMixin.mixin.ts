@@ -67,12 +67,14 @@ export class ChartDataMixin extends Vue {
         })
     }
 
-    getFormat(valueType: TimeseriesValueType, value: string) {
+    getFormat(valueType: TimeseriesValueType, value: string): string {
         switch (valueType) {
             case TimeseriesValueType.GWEI:
                 return this.toGwei(value)
             case TimeseriesValueType.USD:
                 return this.toUSDT(value)
+            case TimeseriesValueType.NUMBER:
+                return value.toString()
             default:
                 return this.toEth(value)
         }

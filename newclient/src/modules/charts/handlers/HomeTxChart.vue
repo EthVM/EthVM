@@ -23,69 +23,49 @@ import { Footnote } from '@app/core/components/props'
 
 const START = 10
 const SCALE = TimeseriesScale.minutes
-const VALUE_TYPE = TimeseriesValueType.GWEI
-const KEY_GAS_MIN = TimeseriesKey.GAS_PRICE_MIN
-const KEY_GAS_MAX = TimeseriesKey.GAS_PRICE_MAX
-const KEY_GAS_AVG = TimeseriesKey.GAS_PRICE_AVG
+const VALUE_TYPE = TimeseriesValueType.NUMBER
+
+const KEY_TX_PEN = TimeseriesKey.PENDING_TX_COUNT_AVG
+const KEY_TX_TOTAL = TimeseriesKey.TX_COUNT_AVG
 
 @Component({
     components: {
         Chart
     },
     apollo: {
-        dataGasMin: {
+        dataTxTotal: {
             query: getTimeseriesData,
             variables() {
-                return this.getQueryVars(KEY_GAS_MIN, SCALE, START)
+                return this.getQueryVars(KEY_TX_TOTAL, SCALE, START)
             },
             update: data => data.getTimeseriesData.items,
             result({ data }) {
-                this.gasMinDataSet = this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)
+                this.txTotalDataSet = this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)
             }
         },
-        dataGasMax: {
+        dataTxPen: {
             query: getTimeseriesData,
             variables() {
-                return this.getQueryVars(KEY_GAS_MAX, SCALE, START)
+                return this.getQueryVars(KEY_TX_PEN, SCALE, START)
             },
             update: data => data.getTimeseriesData.items,
             result({ data }) {
-                this.gasMaxDataSet = this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)
-            }
-        },
-        dataGasAvg: {
-            query: getTimeseriesData,
-            variables() {
-                return this.getQueryVars(KEY_GAS_AVG, SCALE, START)
-            },
-            update: data => data.getTimeseriesData.items,
-            result({ data }) {
-                this.gasAvgDataSet = this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)
+                this.txPenDataSet = this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)
             }
         }
     }
 })
-export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
-    /*
-    ===================================================================================
-      Props
-    ===================================================================================
-    */
-
-    @Prop(Number) maxItems!: number
-
+export default class HomeTxChart extends Mixins(ChartDataMixin) {
     /*
     ===================================================================================
      Initial Data
     ===================================================================================
     */
 
-    dataGasMin!: GetTimeseriesDataType
-    dataGasMax!: GetTimeseriesDataType
-    dataGasAvg!: GetTimeseriesDataType
-    gasMinDataSet: DataPoint[] = []
-    gasMaxDataSet: DataPoint[] = []
-    gasAvgDataSet: DataPoint[] = []
+    dataTxTotal!: GetTimeseriesDataType
+    dataTxPen!: GetTimeseriesDataType
+    txTotalDataSet: DataPoint[] = []
+    txPenDataSet: DataPoint[] = []
 
     /*
     ===================================================================================
@@ -94,40 +74,30 @@ export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
     */
 
     get title(): string {
-        return `${this.$t('charts.gas-price-live.title')}`
+        return `${this.$t('charts.tx-summary.title')}`
     }
     get description(): string {
-        return `${this.$t('charts.gas-price-live.description')}`
+        return `${this.$t('charts.tx-summary.description')}`
     }
 
     get chartData(): ChartData | null {
         const _datasets: Dataset[] = []
-        if (this.gasMinDataSet) {
+        if (this.txTotalDataSet) {
             _datasets.push({
-                data: this.gasMinDataSet,
-                label: `${this.$t('charts.gas-price-live.label.min')}`,
+                data: this.txTotalDataSet,
+                label: `${this.$t('charts.tx-summary.label.total')}`,
+                borderColor: '#00b173',
+                backgroundColor: '#00b173',
+                borderWidth: 2,
+                fill: false
+            })
+        }
+        if (this.txPenDataSet) {
+            _datasets.push({
+                data: this.txPenDataSet,
+                label: `${this.$t('charts.tx-summary.label.pen')}`,
                 borderColor: '#8391a8',
                 backgroundColor: '#8391a8',
-                borderWidth: 2,
-                fill: false
-            })
-        }
-        if (this.gasAvgDataSet) {
-            _datasets.push({
-                data: this.gasAvgDataSet,
-                label: `${this.$t('charts.gas-price-live.label.avg')}`,
-                borderColor: '#3d55a5',
-                backgroundColor: '#3d55a5',
-                borderWidth: 2,
-                fill: false
-            })
-        }
-        if (this.gasMaxDataSet) {
-            _datasets.push({
-                data: this.gasMaxDataSet,
-                label: `${this.$t('charts.gas-price-live.label.max')}`,
-                borderColor: '#fed9a1',
-                backgroundColor: '#fed9a1',
                 borderWidth: 2,
                 fill: false
             })
@@ -174,10 +144,10 @@ export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: `${this.$t('charts.gas-price-live.label-y')}`
+                            labelString: `${this.$t('charts.tx-summary.label-y')}`
                         },
                         ticks: {
-                            beginAtZero: false,
+                            beginAtZero: true,
                             source: 'auto',
                             callback: function (dataLabel, index) {
                                 return index % 2 === 0 ? dataLabel : ''
@@ -191,18 +161,13 @@ export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
     get footnotes(): Footnote[] {
         return [
             {
-                color: 'primary',
-                text: `${this.$t('charts.gas-price-live.footenotes.avg')}`,
-                icon: 'fa fa-circle'
-            },
-            {
                 color: 'info',
-                text: `${this.$t('charts.gas-price-live.footenotes.min')}`,
+                text: `${this.$t('charts.tx-summary.label.pen')}`,
                 icon: 'fa fa-circle'
             },
             {
-                color: 'txPen',
-                text: `${this.$t('charts.gas-price-live.footenotes.max')}`,
+                color: 'txSuccess',
+                text: `${this.$t('charts.tx-summary.label.total')}`,
                 icon: 'fa fa-circle'
             }
         ]
