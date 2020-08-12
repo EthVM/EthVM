@@ -126,7 +126,7 @@ export class NumberFormatHelper {
          * Case V: value < 0.0000001
          * Return: string "< 0.0000001" and tooltip with full value
          */
-        return { value: '< 0.0000001', tooltipText: value.toFormat() }
+        return { value: '< 0.0000001', tooltipText: dps ? value.toFormat() : undefined }
     }
 
     /**
