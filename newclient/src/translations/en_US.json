@@ -262,61 +262,53 @@
                 "avg": "Avg"
             }
         },
-        "tx-costs": {
-            "title": "Tx Fees and Gas Price",
-            "description": "Average transaction fees and average gas price in the last 10 blocks."
+        "tx-count-avg": {
+            "title": "Average Transactions Count",
+            "description": "Average number of transactions",
+            "label": "Txs Count"
         },
-        "block-diff": {
-            "title": "Block Difficulty",
-            "description": "Average Block Difficulty"
+        "tx-count-total": {
+            "title": "Total Transactions Count",
+            "description": "Total number of transactions",
+            "label": "Txs Count"
         },
-        "block-size": {
-            "title": "Block Size",
-            "description": "Average Block Size"
+        "tx-count-min": {
+            "title": "Minimum Transactions Count",
+            "description": "Minimum number of transactions",
+            "label": "Min Txs "
         },
-        "block-time": {
-            "title": "Block Time",
-            "description": "Average Block Time"
+        "tx-count-max": {
+            "title": "Maximum Transactions Count",
+            "description": "Maximum number of transactions",
+            "label": "Max Txs "
         },
-        "gas-limit": {
-            "title": "Gas Limit",
-            "description": "Average Gas Limit"
+        "pending-tx-count-avg": {
+            "title": "Average Pending Transactions ",
+            "description": "Average number of pending transactions",
+            "label": "Txs Count"
         },
-        "gas-price": {
-            "title": "Gas Price",
-            "description": "Average Gas Price"
+        "pending-tx-count-total": {
+            "title": "Total Pending Transactions ",
+            "description": "Total number of pending transactions",
+            "label": "Txs Count"
         },
-        "hash-rate": {
-            "title": "Hash Rate",
-            "description": "Average Hash Rate"
+
+        "gas-price-avg": {
+            "title": "Average Gas Price ",
+            "description": "Average Gas Price (GWEI)",
+            "label": "Gas Price (GWEI)"
         },
-        "tx-fail": {
-            "title": "Failed Txs",
-            "description": "Number of Failed Transactions"
+        "gas-price-min": {
+            "title": "Minimum Gas Price ",
+            "description": "Minimum Gas Price (GWEI)",
+            "label": "Gas Price (GWEI)"
         },
-        "tx-fees": {
-            "title": "Transactions Fees",
-            "description": "Average Transactions Fees"
+        "gas-price-max": {
+            "title": "Maximum Gas Price ",
+            "description": "Maximum Gas Price (GWEI)",
+            "label": "Gas Price (GWEI)"
         },
-        "tx-pending": {
-            "title": "Pending Txs",
-            "description": "Average Number of pending transactions"
-        },
-        "tx-success": {
-            "title": "Successful Txs",
-            "description": "Number of Successful Transactions"
-        },
-        "uncles-number": {
-            "title": "Uncles per Day",
-            "description": "Total Number of Uncles per Day"
-        },
-        "mining-rewards": {
-            "title": "Mining Rewards",
-            "description": "Average Mining Rewards"
-        },
-        "top-miners": {
-            "title": "Top Miners"
-        },
+
         "states": {
             "all": "All",
             "week": "week | 1W",

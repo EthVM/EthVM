@@ -47,7 +47,9 @@ export class ChartDataMixin extends Vue {
     addSubscriptionItem(newItem: TimeseriesItemsTypes, _items: TimeseriesItemsTypes[]): TimeseriesItemsTypes[] {
         let isNew = true
         _items.forEach((item, index) => {
-            if (!isNew) return
+            if (!isNew) {
+                return
+            }
             if (item.timestamp === newItem.timestamp) {
                 _items.splice(index, 1, newItem)
                 isNew = false
