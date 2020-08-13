@@ -11,7 +11,7 @@ const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" 
 const PageDetailsTxs = () => import(/* webpackChunkName: "page-details-txs" */ '@app/modules/txs/pages/PageDetailsTx.vue')
 const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr" */ '@app/modules/address/pages/PageDetailsAddress.vue')
 const PageChartsList = () => import(/* webpackChunkName: "page-charts" */ '@app/modules/charts/pages/PageChartsList.vue')
-// const PageDetailsChart = () => import(/* webpackChunkName: "page-details-chart" */ '@app/modules/charts/pages/PageDetailsChart.vue')
+const PageUniqueChart = () => import(/* webpackChunkName: "page-details-chart" */ '@app/modules/charts/pages/PageUniqueChart.vue')
 const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" */ '@app/modules/uncles/pages/PageDetailsUncle.vue')
 const PageDetailsToken = () => import(/* webpackChunkName: "page-details-token" */ '@app/modules/tokens/pages/PageDetailsToken.vue')
 const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modules/tokens/pages/PageTokes.vue')
@@ -84,12 +84,12 @@ export default new Router({
             name: 'charts',
             props: true
         },
-        // {
-        //   path: '/chart/:chartRef',
-        //   component: PageDetailsChart,
-        //   name: 'chart-detail',
-        //   props: true
-        // },
+        {
+            path: '/chart/:chartRef',
+            component: PageUniqueChart,
+            name: 'chart-detail',
+            props: true
+        },
         {
             path: '/token/:addressRef',
             component: PageDetailsToken,
