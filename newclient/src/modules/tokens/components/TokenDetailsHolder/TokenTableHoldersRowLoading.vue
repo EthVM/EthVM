@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-layout
-            :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile ma-2' : 'pl-3 pr-3 pt-2']"
+            :class="[$vuetify.breakpoint.name === 'sm' ? 'table-row-mobile ma-2' : 'pl-3 pr-3 pt-2']"
             grid-list-xs
             row
             wrap
@@ -19,7 +19,7 @@
                 <v-flex xs12 class="table-row-loading"></v-flex>
             </v-flex>
         </v-layout>
-        <v-divider class="mb-2 mt-2 hidden-xs-only" />
+        <v-divider class="mb-2 mt-2 hidden-sm-and-down" />
     </div>
 </template>
 

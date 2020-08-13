@@ -43,7 +43,7 @@ export default class AppFootnotes extends Vue {
     }
 
     get isMobile(): boolean {
-        return this.$vuetify.breakpoint.name === 'xs'
+        return this.$vuetify.breakpoint.name === 'sm'
     }
 }
 </script>

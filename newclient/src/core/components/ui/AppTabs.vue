@@ -6,7 +6,7 @@
       Mobile
     =====================================================================================
     -->
-            <v-flex hidden-sm-and-up>
+            <v-flex hidden-md-and-up>
                 <div class="mobile-select-tab">
                     <v-select
                         v-model="activeTabId"
@@ -28,7 +28,7 @@
       Desktop
     =====================================================================================
     -->
-            <v-flex hidden-xs-only pa-0>
+            <v-flex hidden-sm-and-down pa-0>
                 <v-tabs
                     v-model="activeTab"
                     :class="{ 'pl-0 pr-0': $vuetify.breakpoint.smAndDown, 'pt-1': $vuetify.breakpoint.mdAndUp }"

@@ -50,14 +50,14 @@
             <v-flex v-if="!detail.txInput" xs1 pt-0 pb-0 pl-1>
                 <app-copy-to-clip v-if="detail.copy" :value-to-copy="detail.detail" />
             </v-flex>
-            <v-flex v-if="detail.txInput" hidden-xs-only sm9 md10>
+            <v-flex v-if="detail.txInput" hidden-sm-and-down sm9 md10>
                 <div class="data-input pa-3">
                     <p v-for="(item, index) in detail.txInput" :key="index" class="mb-2">{{ item }}</p>
                 </div>
             </v-flex>
         </v-layout>
         <v-layout v-if="detail.txInput" align-start justify-start row class="mr-2 ml-2">
-            <v-flex xs12 hidden-sm-and-up pt-0>
+            <v-flex xs12 hidden-md-and-up pt-0>
                 <div class="data-input pa-3">
                     <p v-for="(item, index) in detail.txInput" :key="index" class="mb-2">{{ item }}</p>
                 </div>

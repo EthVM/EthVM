@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-layout
-            :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : 'pa-2']"
+            :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : 'pa-2']"
             grid-list-xs
             row
             wrap

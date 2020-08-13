@@ -3,10 +3,10 @@
         <v-layout d-block>
             <!--
       =====================================================================================
-        Mobile (XS)
+        Mobile (SM)
       =====================================================================================
       -->
-            <v-flex xs12 hidden-sm-and-up>
+            <v-flex xs12 hidden-md-and-up>
                 <div class="table-row-mobile">
                     <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
                         <v-flex xs6 pa-1>
@@ -51,7 +51,7 @@
         Tablet/ Desktop (SM - XL)
       =====================================================================================
       -->
-            <v-flex hidden-xs-only sm12>
+            <v-flex hidden-sm-and-down sm12>
                 <!--
         =====================================================================================
           Block Info
