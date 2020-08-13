@@ -104,7 +104,7 @@ export default class AppTabs extends Vue {
   */
 
     get tabContainerClass(): string {
-        return this.$vuetify.breakpoint.name === 'xs' ? 'pa-0' : 'pa-2'
+        return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm' ? 'pa-0' : 'pa-2'
     }
 }
 </script>

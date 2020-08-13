@@ -241,7 +241,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get isSmall(): boolean {
-        return this.$vuetify.breakpoint.name === 'xs'
+        return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm'
     }
 
     get type(): string {

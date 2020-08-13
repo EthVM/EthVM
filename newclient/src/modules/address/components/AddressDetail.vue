@@ -278,7 +278,7 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
         const brkPoint = this.$vuetify.breakpoint.name
 
         switch (brkPoint) {
-            case 'xs':
+            case 'xs' || 'sm':
                 return 'pa-2'
             default:
                 return 'pl-3 pr-3 pt-0 pb-2'

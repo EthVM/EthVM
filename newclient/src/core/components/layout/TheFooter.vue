@@ -15,7 +15,7 @@
                 <v-card flat>
                     <v-layout row pa-0 align-center>
                         <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.discover') }}</v-card-title>
-                        <v-flex hidden-sm-and-up pa-0>
+                        <v-flex hidden-md-and-up pa-0>
                             <app-language />
                         </v-flex>
                     </v-layout>
@@ -85,7 +85,7 @@
       -->
             <v-flex :class="flexClass" xs12 sm4 md5>
                 <v-layout column justify-end align-end fill-height class="pb-3">
-                    <v-flex hidden-xs-only md12 pa-1>
+                    <v-flex hidden-sm-and-down md12 pa-1>
                         <app-language />
                     </v-flex>
                     <v-flex xs12>
