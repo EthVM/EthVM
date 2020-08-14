@@ -308,15 +308,13 @@
             "description": "Maximum Gas Price (GWEI)",
             "label": "Gas Price (GWEI)"
         },
-
         "states": {
             "all": "All",
-            "week": "week | 1W",
-            "week-two": "2 weeks | 2W",
-            "month": "month | 1M",
-            "month-three": "3 Months | 3M",
-            "month-six": "6 Month | 6M",
+            "hour": "hour | 1H",
             "day": "day | 1D",
+            "week": "week | 1W",
+            "month": "month | 1M",
+            "month-six": "6 months | 6M",
             "year": "year | 1Y"
         },
         "captions": {

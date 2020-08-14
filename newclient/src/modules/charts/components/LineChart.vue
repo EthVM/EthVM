@@ -84,10 +84,13 @@ export default class LineChart extends Mixins(Line, chartMixins.reactiveProp) {
     @Watch('isLoading')
     onIsLoadingChanged(newVal: boolean, oldVal: boolean): void {
         if (!newVal && newVal !== oldVal) {
-            console.log('new ', newVal, ' oldVal ', oldVal)
-            console.log(this.chartData.datasets)
             this.renderChart(this.chartData, this.chartOptions)
         }
+    }
+
+    @Watch('chartOptions')
+    onChartOptionsChanged(newVal: boolean, oldVal: boolean): void {
+        this.renderChart(this.chartData, this.chartOptions)
     }
 }
 </script>
