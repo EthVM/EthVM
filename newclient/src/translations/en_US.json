@@ -240,7 +240,7 @@
         "live": "Live Data",
         "tx-summary": {
             "title": "Transaction Summary",
-            "description": "Average Number of Mined and new pending transactions in the last 10 minutes.",
+            "description": "Average number of mined and new pending transactions in the last 10 minutes",
             "label": {
                 "pen": "New Pending Txs",
                 "total": "Mined Txs"
