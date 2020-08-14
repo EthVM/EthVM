@@ -1,6 +1,13 @@
 <template>
     <div>
-        <chart :chart-title="title" :chart-description="description" :datacollection="chartData" :chart-options="chartOptions" @timeFrame="setTimeFrame" />
+        <chart
+            :chart-title="title"
+            :chart-description="description"
+            :datacollection="chartData"
+            :chart-options="chartOptions"
+            :is-pending="isPending"
+            @timeFrame="setTimeFrame"
+        />
     </div>
 </template>
 
@@ -199,6 +206,9 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     }
     get value_type(): TimeseriesValue {
         return TimeseriesValueKey[this.chartKey]
+    }
+    get isPending(): boolean {
+        return this.chartKey === TimeseriesKey.PENDING_TX_COUNT_AVG || this.chartKey === TimeseriesKey.PENDING_TX_COUNT_TOTAL
     }
 
     get chartData(): ChartData | null {

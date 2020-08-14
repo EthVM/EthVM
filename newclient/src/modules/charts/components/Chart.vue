@@ -28,16 +28,16 @@
                     <button :class="[toggleData === 1 ? 'active-button' : 'button']" flat small @click="setTimeFrame(1)">
                         {{ $tc('charts.states.day', 2) }}
                     </button>
-                    <button :class="[toggleData === 2 ? 'active-button' : 'button']" flat small @click="setTimeFrame(2)">
+                    <button v-if="!isPending" :class="[toggleData === 2 ? 'active-button' : 'button']" flat small @click="setTimeFrame(2)">
                         {{ $tc('charts.states.week', 2) }}
                     </button>
-                    <button :class="[toggleData === 3 ? 'active-button' : 'button']" flat small @click="setTimeFrame(3)">
+                    <button v-if="!isPending" :class="[toggleData === 3 ? 'active-button' : 'button']" flat small @click="setTimeFrame(3)">
                         {{ $tc('charts.states.month', 2) }}
                     </button>
-                    <button :class="[toggleData === 4 ? 'active-button' : 'button']" flat small @click="setTimeFrame(4)">
+                    <button v-if="!isPending" :class="[toggleData === 4 ? 'active-button' : 'button']" flat small @click="setTimeFrame(4)">
                         {{ $tc('charts.states.month-six', 2) }}
                     </button>
-                    <button :class="[toggleData === 5 ? 'active-button' : 'button']" flat small @click="setTimeFrame(5)">
+                    <button v-if="!isPending" :class="[toggleData === 5 ? 'active-button' : 'button']" flat small @click="setTimeFrame(5)">
                         {{ $tc('charts.states.year', 2) }}
                     </button>
                     <!-- <button :class="[toggleData === 6 ? 'active-button' : 'button']" flat small @click="setTimeFrame(7)">
@@ -161,6 +161,7 @@ export default class Chart extends Vue {
     @Prop({ type: Object, default: null }) datacollection!: ChartData
     @Prop({ type: Object }) chartOptions!: ChartOptions
     @Prop({ type: Boolean, default: true }) showTimeOptions!: boolean
+    @Prop({ type: Boolean, default: false }) isPending!: boolean
 
     /*
     ===================================================================================
