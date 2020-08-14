@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :class="[$vuetify.breakpoint.name === 'sm' ? 'table-row-mobile ma-2' : '']">
+        <div :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'table-row-mobile ma-2' : '']">
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-4 pt-2">
                 <v-flex xs4 sm2>
                     <v-progress-linear color="lineGrey" value="40" indeterminate height="15" class="ma-2" />

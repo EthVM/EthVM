@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-2 pr-2 pt-2">
-            <v-flex :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']" xs7 sm6 md7>
+            <v-flex :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'pr-3' : 'pr-5']" xs7 sm6 md7>
                 <v-layout hidden-xs-only row align-center justift-start pa-2>
                     <v-flex xs12 class="table-row-loading"></v-flex>
                 </v-layout>

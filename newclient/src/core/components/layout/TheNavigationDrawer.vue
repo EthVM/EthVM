@@ -83,7 +83,7 @@
     -->
 
         <v-toolbar
-            v-if="$vuetify.breakpoint.name === 'sm'"
+            v-if="$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs'"
             :scroll-threshold="75"
             :extended="showSearch"
             color="primary"
