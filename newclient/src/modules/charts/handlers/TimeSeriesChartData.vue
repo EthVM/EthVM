@@ -14,7 +14,8 @@ import {
     ChartData,
     Dataset,
     ChartOptions,
-    TimeseriesValueType,
+    TimeseriesValue,
+    TimeseriesValueKey,
     TimeOptions,
     ComponentDataInterface
 } from '@app/modules/charts/models'
@@ -159,7 +160,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
             },
             update: data => data.getTimeseriesData.items,
             result({ data }) {
-                this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.VALUE_TYPE)]
+                this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.value_type)]
             }
         }
     }
@@ -175,7 +176,6 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     getChartData!: GetTimeseriesDataType
     chartDataSet: DataPoint[] = []
     scale = DEFAULT_DATA[0].scale
-    VALUE_TYPE = TimeseriesValueType.NUMBER
     maxItems = DEFAULT_DATA[0].max_items
     start = DEFAULT_DATA[0].start
     timeOptions = DEFAULT_DATA[0].timeOptions
@@ -196,6 +196,9 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     }
     get description(): string {
         return `${this.$t(`charts.${this.chartID}.description`)}`
+    }
+    get value_type(): TimeseriesValue {
+        return TimeseriesValueKey[this.chartKey]
     }
 
     get chartData(): ChartData | null {

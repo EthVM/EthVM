@@ -15,7 +15,7 @@
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartDataMixin } from '@app/modules/charts/mixins/ChartDataMixin.mixin'
-import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValueType } from '@app/modules/charts/models'
+import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValue } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
 import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
@@ -23,11 +23,9 @@ import { Footnote } from '@app/core/components/props'
 
 const START = 10
 const SCALE = TimeseriesScale.minutes
-const VALUE_TYPE = TimeseriesValueType.NUMBER
-
+const VALUE_TYPE = TimeseriesValue.NUMBER
 const KEY_TX_PEN = TimeseriesKey.PENDING_TX_COUNT_TOTAL
 const KEY_TX_TOTAL = TimeseriesKey.TX_COUNT_TOTAL
-
 const MAX_ITEMS = 10
 
 @Component({
@@ -203,9 +201,27 @@ export default class HomeTxChart extends Mixins(ChartDataMixin) {
                         },
                         ticks: {
                             beginAtZero: true,
-                            source: 'auto',
-                            callback: function (dataLabel, index) {
-                                return index % 2 === 0 ? dataLabel : ''
+                            source: 'data',
+                            callback: function (value) {
+                                const ranges = [
+                                    { divider: 1e9, suffix: 'B' },
+                                    { divider: 1e6, suffix: 'M' },
+                                    {
+                                        divider: 1e3,
+                                        suffix: 'k'
+                                    }
+                                ]
+
+                                function formatNumber(n) {
+                                    for (let i = 0; i < ranges.length; i++) {
+                                        if (n >= ranges[i].divider) {
+                                            return (n / ranges[i].divider).toString() + ranges[i].suffix
+                                        }
+                                    }
+                                    return n
+                                }
+
+                                return formatNumber(value)
                             }
                         }
                     }

@@ -15,7 +15,7 @@
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartDataMixin } from '@app/modules/charts/mixins/ChartDataMixin.mixin'
-import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValueType } from '@app/modules/charts/models'
+import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValue } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
 import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
@@ -23,7 +23,7 @@ import { Footnote } from '@app/core/components/props'
 
 const START = 10
 const SCALE = TimeseriesScale.minutes
-const VALUE_TYPE = TimeseriesValueType.GWEI
+const VALUE_TYPE = TimeseriesValue.GWEI
 const KEY_GAS_MIN = TimeseriesKey.GAS_PRICE_MIN
 const KEY_GAS_MAX = TimeseriesKey.GAS_PRICE_MAX
 const KEY_GAS_AVG = TimeseriesKey.GAS_PRICE_AVG
@@ -256,10 +256,27 @@ export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
                             labelString: `${this.$t('charts.gas-price-live.label-y')}`
                         },
                         ticks: {
-                            beginAtZero: false,
-                            source: 'auto',
-                            callback: function (dataLabel, index) {
-                                return index % 2 === 0 ? dataLabel : ''
+                            beginAtZero: true,
+                            callback: function (value) {
+                                const ranges = [
+                                    { divider: 1e9, suffix: 'B' },
+                                    { divider: 1e6, suffix: 'M' },
+                                    {
+                                        divider: 1e3,
+                                        suffix: 'k'
+                                    }
+                                ]
+
+                                function formatNumber(n) {
+                                    for (let i = 0; i < ranges.length; i++) {
+                                        if (n >= ranges[i].divider) {
+                                            return (n / ranges[i].divider).toString() + ranges[i].suffix
+                                        }
+                                    }
+                                    return n
+                                }
+
+                                return formatNumber(value)
                             }
                         }
                     }

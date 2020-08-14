@@ -15,12 +15,23 @@ export enum TimeseriesKey {
     ACCOUNT_BALANCE_PREFIX_MIN = 'ACCOUNT_BALANCE_PREFIX_MIN',
     ACCOUNT_BALANCE_PREFIX_MAX = 'ACCOUNT_BALANCE_PREFIX_MAX'
 }
-
-export enum TimeseriesValueType {
+export enum TimeseriesValue {
     GWEI = 'GWEI',
     USD = 'USD',
     ETH = 'ETH',
     NUMBER = 'NUMBER'
+}
+
+export const TimeseriesValueKey = {
+    TX_COUNT_AVG: TimeseriesValue.NUMBER,
+    TX_COUNT_TOTAL: TimeseriesValue.NUMBER,
+    TX_COUNT_MIN: TimeseriesValue.NUMBER,
+    TX_COUNT_MAX: TimeseriesValue.NUMBER,
+    PENDING_TX_COUNT_AVG: TimeseriesValue.NUMBER,
+    PENDING_TX_COUNT_TOTAL: TimeseriesValue.NUMBER,
+    GAS_PRICE_AVG: TimeseriesValue.GWEI,
+    GAS_PRICE_MIN: TimeseriesValue.GWEI,
+    GAS_PRICE_MAX: TimeseriesValue.GWEI
 }
 
 export interface DataPoint {

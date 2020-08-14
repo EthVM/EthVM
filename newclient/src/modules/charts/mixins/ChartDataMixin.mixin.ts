@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { TimeseriesKey, TimeseriesValueType, DataPoint } from '@app/modules/charts/models'
+import { TimeseriesKey, TimeseriesValue, DataPoint } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
 import { timeseriesEthAvgVariables } from '@app/modules/charts/handlers/apolloTypes/timeseriesEthAvg'
 import moment from 'moment'
@@ -83,7 +83,7 @@ export class ChartDataMixin extends Vue {
         }
     }
 
-    mapItemsToDataSet(items: TimeseriesItemsTypes[], valueType: TimeseriesValueType): DataPoint[] {
+    mapItemsToDataSet(items: TimeseriesItemsTypes[], valueType: TimeseriesValue): DataPoint[] {
         return items.map(item => {
             return {
                 x: moment.unix(item.timestamp),
@@ -92,13 +92,13 @@ export class ChartDataMixin extends Vue {
         })
     }
 
-    getFormat(valueType: TimeseriesValueType, value: string): string {
+    getFormat(valueType: TimeseriesValue, value: string): string {
         switch (valueType) {
-            case TimeseriesValueType.GWEI:
+            case TimeseriesValue.GWEI:
                 return this.toGwei(value)
-            case TimeseriesValueType.USD:
+            case TimeseriesValue.USD:
                 return this.toUSDT(value)
-            case TimeseriesValueType.NUMBER:
+            case TimeseriesValue.NUMBER:
                 return value.toString()
             default:
                 return this.toEth(value)

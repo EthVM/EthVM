@@ -201,6 +201,9 @@ export default class Chart extends Vue {
         }
     }
     get description(): string {
+        if (!this.showTimeOptions) {
+            return this.chartDescription
+        }
         const time = `charts.states.${TIME_TRANSLATION[this.toggleData]}`
         return `${this.chartDescription} ${this.$t('charts.captions.other')} ${this.$tc(time, 1)}`
     }
