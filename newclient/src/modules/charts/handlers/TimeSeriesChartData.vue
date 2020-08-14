@@ -8,29 +8,20 @@
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartDataMixin } from '@app/modules/charts/mixins/ChartDataMixin.mixin'
-import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValueType } from '@app/modules/charts/models'
+import {
+    TimeseriesKey,
+    DataPoint,
+    ChartData,
+    Dataset,
+    ChartOptions,
+    TimeseriesValueType,
+    TimeOptions,
+    ComponentDataInterface
+} from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
 import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
 import { Footnote } from '@app/core/components/props'
-
-interface TimeOptions {
-    unit: string
-    displayFormats: {
-        minute?: string
-        day?: string
-    }
-    stepSize: number
-}
-interface ComponentDataInterface {
-    [key: number]: {
-        id: string
-        scale: TimeseriesScale
-        start: number
-        max_items: number
-        timeOptions: TimeOptions
-    }
-}
 
 /**
  * Defualt values time frame options
@@ -212,7 +203,7 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
         if (this.chartDataSet) {
             _datasets.push({
                 data: this.chartDataSet,
-                label: `${this.$t(`charts.${this.chartID}.label.total`)}`,
+                label: `${this.$t(`charts.${this.chartID}.label`)}`,
                 backgroundColor: 'rgba(118, 221, 251, 0.2)',
                 borderColor: '#2c82be',
                 borderWidth: 2
