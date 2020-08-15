@@ -22,8 +22,7 @@
                 =====================================================================================
                 -->
                 <v-flex v-if="!isGenesis" md4>
-                    <router-link v-if="isBlock" :to="`/block/number/${reward.transfer.block}`" class="black--text"> {{ reward.transfer.block }}</router-link>
-                    <p v-else>{{ reward.transfer.block }}</p>
+                    <router-link :to="`/block/number/${reward.transfer.block}`" class="black--text"> {{ reward.transfer.block }}</router-link>
                 </v-flex>
                 <!--
                 =====================================================================================

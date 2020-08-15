@@ -1,42 +1,17 @@
 <template>
-    <transition name="fade">
-        <v-footer v-if="show" fixed color="transparent" height="auto">
-            <v-layout>
-                <v-flex xs12>
-                    <transition-group name="fade" group mode="out-in">
-                        <v-card key="large" :class="hide ? 'footer-hidden' : ''" class="footer-content" color="sync" flat>
-                            <v-layout row wrap class="pl-4 pr-4 pt-3 pb-3" align-center justify-center>
-                                <v-flex shrink pl-2 pr-2>
-                                    <v-img :src="require('@/assets/icon-warning.png')" width="30px" height="30px" contain />
-                                </v-flex>
-                                <v-flex grow>
-                                    <p v-for="(message, i) in messages" :key="i" class="black--text font-italic">{{ message }}</p>
-                                </v-flex>
-                                <v-flex shrink>
-                                    <v-btn outline color="primary" class="text-capitalize" @click="hide = true">Got It</v-btn>
-                                </v-flex>
-                            </v-layout>
-                        </v-card>
-                        <v-layout v-if="hide" key="small" align-center justify-end>
-                            <v-tooltip left>
-                                <template v-slot:activator="{ on }">
-                                    <v-img
-                                        :src="require('@/assets/icon-warning-outline.png')"
-                                        max-width="50px"
-                                        height="50px"
-                                        contain
-                                        @click="hide = false"
-                                        v-on="on"
-                                    />
-                                </template>
-                                <span>{{ $t('btn.details') }}</span>
-                            </v-tooltip>
-                        </v-layout>
-                    </transition-group>
-                </v-flex>
-            </v-layout>
-        </v-footer>
-    </transition>
+    <v-snackbar v-model="show" :bottom="true" :timeout="0" :auto-height="true" class="app-message" color="sync">
+        <v-layout class="px-3 py-3" row wrap align-center justify-center>
+            <v-flex shrink pl-2 pr-2>
+                <v-img :src="require('@/assets/icon-warning.png')" width="30px" height="30px" contain />
+            </v-flex>
+            <v-flex :class="[$vuetify.breakpoint.xsOnly ? 'text-xs-center py-3' : '']" grow>
+                <p v-for="(message, i) in messages" :key="i" class="black--text font-italic">{{ message }}</p>
+            </v-flex>
+            <v-flex shrink>
+                <v-btn outline color="primary" class="text-capitalize px-4 py-2 ml-0" @click="show = false">Got It</v-btn>
+            </v-flex>
+        </v-layout>
+    </v-snackbar>
 </template>
 
 <script lang="ts">
@@ -71,7 +46,7 @@ export default class AppMessage extends Vue {
     show: boolean = false
     messages: TranslateResult[] = new Array()
     debouncedShow = debounce(this.setShow, 1000)
-    debouncedMess = debounce(this.setMess, 1000)
+    debouncedMess = debounce(this.setMessage, 1000)
 
     /*
   ===================================================================================
@@ -114,7 +89,7 @@ export default class AppMessage extends Vue {
         this.show = this.syncing || this.connected || false
     }
 
-    setMess(): void {
+    setMessage(): void {
         this.messages = []
         if (this.syncing) {
             this.messages.push(this.$t('message.sync.main'))
@@ -126,18 +101,10 @@ export default class AppMessage extends Vue {
 }
 </script>
 
-<style lang="css">
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    transform: translateY(30px);
-}
-
-.footer-content {
-    transition: all 0.5s ease;
-    bottom: 0px;
-}
-
-.footer-hidden {
-    bottom: -300px;
-    transition: all 0.5s ease-in;
+<style lang="scss">
+.app-message {
+    .v-snack__wrapper {
+        min-width: 100%;
+    }
 }
 </style>
