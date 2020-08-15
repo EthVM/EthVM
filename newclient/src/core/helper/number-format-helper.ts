@@ -194,11 +194,11 @@ export class NumberFormatHelper {
         }
 
         /**
-         * Case VII: 100,000 <= X < 1 mill
-         * Return: rounded number to 4 dps
+         * Case VII: 1 mill <= X < 1 Bill
+         * Return: rounded number to 0 dps
          */
         if (ethBN.isLessThan(OneBillion)) {
-            return { ...this.getRoundNumber(value, 0, dps), unit }
+            return { ...this.getRoundNumber(ethBN, 0, dps), unit }
         }
 
         /**
