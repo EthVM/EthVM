@@ -1,14 +1,14 @@
 <template>
     <v-dialog :hide-overlay="true" v-model="showDialog" justify-end width="300" origin="right">
-        <v-btn slot="activator" class="more-btn" color="white" fab depressed>
+        <v-btn slot="activator" :small="true" class="more-btn" color="white" fab depressed>
             <p class="info--text subheading pb-2">...</p>
         </v-btn>
         <v-card class="overflow-hidden">
-            <v-card-text class="py-0">
+            <v-card-text class="py-0 pr-0">
                 <v-flex>
                     <v-layout row align-center justify-space-between>
                         <div :class="[titleColor, 'font-weight-bold']">{{ state.status ? status : state.title }}</div>
-                        <v-btn class="pl-5" icon @click="showDialog = false">
+                        <v-btn :small="true" icon @click="showDialog = false">
                             <v-icon class="fas fa-times info--text body-1" />
                         </v-btn>
                     </v-layout>
@@ -116,6 +116,11 @@ export default class AppStateDiff extends Vue {
 <style lang="scss" scoped>
 .v-dialog__content {
     justify-content: flex-end;
+
+    .more-btn {
+        height: 25px;
+        width: 25px;
+    }
 
     .v-card {
         border-radius: 2px;
