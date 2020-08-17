@@ -5,7 +5,29 @@
           Mobile (XS)
         =====================================================================================
         -->
-        <v-flex xs12 hidden-md-and-up> </v-flex>
+        <v-flex xs12 hidden-md-and-up>
+            <v-layout grid-list-xs row align-center justify-start fill-height pl-3 pr-3>
+                <v-flex v-if="!isGenesis" sm4>
+                    <router-link :to="`/block/number/${reward.transfer.block}`" class="black--text"> {{ reward.transfer.block }}</router-link>
+                </v-flex>
+                <v-flex sm4>
+                    <app-time-ago v-if="rewardTimestamp" :timestamp="rewardTimestamp" />
+                </v-flex>
+                <v-spacer v-if="isGenesis" />
+                <v-flex sm4>
+                    <v-layout v-if="miningReward" row align-center justify-space-between pl-2>
+                        <p>
+                            + {{ miningReward.value }} {{ $t(`common.${miningReward.unit}`) }}
+                            <app-tooltip v-if="miningReward.tooltipText" :text="`${miningReward.tooltipText} ${$t('common.eth')}`" />
+                        </p>
+                        <v-btn class="ml-3 mr-1 more-btn" color="white" fab depressed>
+                            <p class="info--text title pb-2">...</p>
+                        </v-btn>
+                    </v-layout>
+                </v-flex>
+            </v-layout>
+            <v-divider class="mb-2 mt-2" />
+        </v-flex>
         <!--
         =====================================================================================
           Tablet/ Desktop (SM - XL)
