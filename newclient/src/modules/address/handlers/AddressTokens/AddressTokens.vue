@@ -217,7 +217,11 @@ export default class AddressTokens extends Vue {
 
     get message(): string {
         if (!this.initialLoad && this.hasTokens && this.getTokens.length === 0) {
+            if (this.isNFT) {
+                return `${this.$t('message.transfer.no-nft')}`
+            }
             return `${this.$t('message.transfer.no-all')}`
+
         }
         if (this.error != '') {
             return this.error
