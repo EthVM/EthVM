@@ -13,7 +13,7 @@
 
         <!-- Table Header -->
         <div v-if="!hasError">
-            <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-xs-only" height="40px">
+            <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-sm-and-down" height="40px">
                 <v-layout align-center justify-start row fill-height pr-3>
                     <v-flex sm6>
                         <h5>{{ $tc('address.name', 1) }}</h5>
