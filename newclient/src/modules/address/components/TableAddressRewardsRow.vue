@@ -100,7 +100,6 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
             { name: this.isUncle ? `${this.$t('uncle.reward')}` : `${this.$t('block.total-reward')}`, value: this.miningReward }
         ]
         if (this.isBlock) {
-            console.error('this', this.reward)
             stateData.push({
                 name: `${this.$t('state.fee-rewards')}`,
                 value: NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.transfer.txFee))
@@ -108,7 +107,7 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
         }
         return {
             blockNumber: this.isBlock ? this.reward.transfer.block : null,
-            title: this.isBlock ? `${this.$t('state.block-rewards')}` : `${this.$t('state.uncle-rewards')}`,
+            title: `${this.reward.transfer.block}` + ' ' + (this.isBlock ? `${this.$t('state.block-rewards')}` : `${this.$t('state.uncle-rewards')}`),
             balAfter: this.getBalAfter(),
             data: stateData
         }
