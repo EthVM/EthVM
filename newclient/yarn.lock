@@ -7207,10 +7207,15 @@ moment@2.24.0:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
-moment@^2.10.2, moment@^2.22.1, moment@^2.25.3:
+moment@^2.10.2, moment@^2.22.1:
   version "2.25.3"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.25.3.tgz#252ff41319cf41e47761a1a88cab30edfe9808c0"
   integrity sha512-PuYv0PHxZvzc15Sp8ybUCoQ+xpyPWvjOuK72a5ovzp2LI32rJXOiIfyoFoYvG3s6EwwrdkMyWuRiEHSZRLJNdg==
+
+moment@^2.27.0:
+  version "2.27.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
+  integrity sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -10730,6 +10735,11 @@ vue-apollo@^3.0.3:
     chalk "^2.4.2"
     serialize-javascript "^2.1.0"
     throttle-debounce "^2.1.0"
+
+vue-chartjs-typescript@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/vue-chartjs-typescript/-/vue-chartjs-typescript-3.3.3.tgz#73584e642c1ce71ce7e657face5a29c22d8d2249"
+  integrity sha512-f1h+V8Qm12jxEhWn/ySoMf2ztj3T2Njmvz8vMbO9Cme0a9Oa18VaA6C+o/e6lJ5j6RPYGj+lAH5WntM5SBx+VQ==
 
 vue-chartjs@^3.5.0:
   version "3.5.0"
