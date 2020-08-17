@@ -1,20 +1,20 @@
 <template>
     <v-dialog :hide-overlay="true" v-model="showDialog" justify-end width="300" origin="right">
         <v-btn slot="activator" class="more-btn" color="white" fab depressed>
-            <p class="info--text title pb-2">...</p>
+            <p class="info--text subheading pb-2">...</p>
         </v-btn>
         <v-card class="overflow-hidden">
-            <v-card-title class="pb-0">
+            <v-card-text class="py-0">
                 <v-flex>
                     <v-layout row align-center justify-space-between>
-                        <div :class="[titleColor, 'font-weight-bold', 'state-title']">{{ state.status ? status : state.title }}</div>
+                        <div :class="[titleColor, 'font-weight-bold']">{{ state.status ? status : state.title }}</div>
+                        <v-btn class="pl-5" icon @click="showDialog = false">
+                            <v-icon class="fas fa-times info--text body-1" />
+                        </v-btn>
                     </v-layout>
                 </v-flex>
-                <v-btn class="close-btn" icon @click="showDialog = false">
-                    <v-icon class="fas fa-times info--text" />
-                </v-btn>
-            </v-card-title>
-            <v-card-text class="pt-2">
+            </v-card-text>
+            <v-card-text class="pt-2 caption">
                 <v-flex>
                     <v-layout v-for="(data, i) in state.data" :key="i" row align-center justify-space-between>
                         <p>{{ data.name }}</p>
@@ -121,23 +121,10 @@ export default class AppStateDiff extends Vue {
         border-radius: 2px;
         border: solid 1px #b4bfd2;
 
-        .close-btn {
-            position: absolute;
-            right: -12px;
-            top: -7px;
-            .v-icon {
-                font-size: 14px;
-            }
-        }
-
         .divider {
             background-color: #000;
             border: 0;
             height: 1px;
-        }
-
-        .state-title {
-            font-size: 16px;
         }
     }
 }

@@ -225,10 +225,10 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get getValueTitle(): string {
-        if (this.type === TYPES[0]) {
+        if (this.type === TYPES[1]) {
             return `${this.$t('state.val-sent')}`
         }
-        if (this.type === TYPES[1]) {
+        if (this.type === TYPES[0]) {
             return `${this.$t('state.val-received')}`
         }
         return `${this.$t('state.actual-sent-received')}`
