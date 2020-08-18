@@ -221,7 +221,6 @@ export default class AddressTokens extends Vue {
                 return `${this.$t('message.transfer.no-nft')}`
             }
             return `${this.$t('message.transfer.no-all')}`
-
         }
         if (this.error != '') {
             return this.error
