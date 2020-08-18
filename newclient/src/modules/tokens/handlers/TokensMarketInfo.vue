@@ -32,33 +32,48 @@
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-// import NoticeNewBlock from '@app/modules/blocks/components/NoticeNewBlock.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableTokensHeader from '@app/modules/tokens/components/TableTokensHeader.vue'
 import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
-import { IEthereumToken } from '@app/plugins/CoinData/models'
-import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
+import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 
+const MAX_TOKENS = 200
+
+const KEY_VOLUME = 'total_volume'
+const KEY_SYMBOL = 'symbol'
+const KEY_PRICE = 'current_price'
+const KEY_MARKET_CAP = 'market_cap'
+
 interface TokensSortedInterface {
-    ascend: IEthereumToken[] | null
-    desend: IEthereumToken[] | null
+    ascend: TokenMarketData[] | null
+    desend: TokenMarketData[] | null
 }
 
 class TokensSorted implements TokensSortedInterface {
     /* Properties: */
-    ascend: IEthereumToken[]
-    desend: IEthereumToken[]
+    ascend: TokenMarketData[]
+    desend: TokenMarketData[]
 
     /* Constructor: */
-    constructor(data: IEthereumToken[], sortKey: string) {
+    constructor(data: TokenMarketData[], sortKey: string) {
         this.desend = this.sortByKeyDesend([...data], sortKey)
+        if (this.desend.length > MAX_TOKENS) {
+            this.desend = this.desend.slice(0, MAX_TOKENS)
+        }
         this.ascend = [...this.desend].reverse()
     }
     /* Method to sort object array in desending order by Key: */
-    sortByKeyDesend(data: IEthereumToken[], key: string) {
+    sortByKeyDesend(data: TokenMarketData[], key: string) {
         return data.sort((x, y) => (y[key] < x[key] ? -1 : y[key] > x[key] ? 1 : 0))
+    }
+    getAscend(): TokenMarketData[] {
+        return this.ascend
+    }
+    getDesend(): TokenMarketData[] {
+        return this.desend
     }
 }
 
@@ -102,7 +117,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     totalPages = 3
     totalTokens = 0
     isSortedBy = FILTER_VALUES[0]
-    tokensData: IEthereumToken[] | null = null
+    tokensData: TokenMarketData[] | null = null
     tokensByMarket!: TokensSorted
     tokensBySymbol!: TokensSorted
     tokensByPrice!: TokensSorted
@@ -114,7 +129,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     ===================================================================================
     */
 
-    get showTokens(): IEthereumToken[] {
+    get showTokens(): TokenMarketData[] {
         const start = this.index * this.maxItems
         if (!this.initialLoad && this.tokensData) {
             const end = start + this.maxItems > this.tokensData.length ? this.tokensData.length : start + this.maxItems
@@ -148,16 +163,16 @@ export default class AddressTokens extends Mixins(CoinData) {
         if (!this.error) {
             if (sort === FILTER_VALUES[0] || sort === FILTER_VALUES[1]) {
                 /* Sort By Symbol: */
-                this.tokensData = sort.includes('high') ? this.tokensBySymbol.ascend : this.tokensBySymbol.desend
+                this.tokensData = sort.includes('high') ? this.tokensBySymbol.getAscend() : this.tokensBySymbol.getDesend()
             } else if (sort === FILTER_VALUES[2] || sort === FILTER_VALUES[3]) {
                 /* Sort By Price: */
-                this.tokensData = sort.includes('high') ? this.tokensByPrice.desend : this.tokensByPrice.ascend
+                this.tokensData = sort.includes('high') ? this.tokensByPrice.getDesend() : this.tokensByPrice.getAscend()
             } else if (sort === FILTER_VALUES[4] || sort === FILTER_VALUES[5]) {
                 /* Sort By Volume: */
-                this.tokensData = sort.includes('high') ? this.tokensByVolume.desend : this.tokensByVolume.ascend
+                this.tokensData = sort.includes('high') ? this.tokensByVolume.getDesend() : this.tokensByVolume.getAscend()
             } else {
                 /* Sort By Market Cap: */
-                this.tokensData = sort.includes('high') ? this.tokensByMarket.desend : this.tokensByMarket.ascend
+                this.tokensData = sort.includes('high') ? this.tokensByMarket.getDesend() : this.tokensByMarket.getAscend()
             }
         }
     }
@@ -174,31 +189,56 @@ export default class AddressTokens extends Mixins(CoinData) {
 
     /*
     ===================================================================================
+      Watch:
+    ===================================================================================
+    */
+    @Watch('isLoadingTokensMarketData')
+    onisLoadingTokensMarketData(newVal: boolean, oldVal: boolean) {
+        if (!newVal) {
+            const marketData = this.getEthereumTokens()
+            if (marketData !== false) {
+                this.tokensByVolume = new TokensSorted(marketData, KEY_VOLUME)
+                this.tokensByMarket = new TokensSorted(marketData, KEY_MARKET_CAP)
+                this.tokensBySymbol = new TokensSorted(marketData, KEY_SYMBOL)
+                this.tokensByPrice = new TokensSorted(marketData, KEY_PRICE)
+                this.sortTokens(this.isSortedBy)
+                this.totalTokens = marketData.length
+                this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
+                this.initialLoad = false
+            } else {
+                this.error = `${this.$t('message.no-data')}`
+            }
+        }
+    }
+
+    /*
+    ===================================================================================
       LifeCycle:
     ===================================================================================
     */
-    mounted() {
-        if (this.tokensData === null) {
-            this.$CD
-                .getEthereumTokens()
-                .then(data => {
-                    if (data && data.length > 0) {
-                        this.tokensByVolume = new TokensSorted(data, 'volume')
-                        this.tokensByMarket = new TokensSorted(data, 'marketCap')
-                        this.tokensBySymbol = new TokensSorted(data, 'symbol')
-                        this.tokensByPrice = new TokensSorted(data, 'price')
-                        this.sortTokens(this.isSortedBy)
-                        this.initialLoad = false
-                        this.totalTokens = data.length
-                        this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
-                    }
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.error = `${this.$t('message.no-data')}`
-                })
-        }
-    }
+    // mounted() {
+    //     if (this.tokensData === null) {
+    //         const tokenMarketData
+    //         this.$CD
+    //             .getEthereumTokens()
+    //             .then(data => {
+    //                 if (data && data.length > 0) {
+    //                     this.tokensByVolume = new TokensSorted(data, 'volume')
+    //                     this.tokensByMarket = new TokensSorted(data, 'marketCap')
+    //                     this.tokensBySymbol = new TokensSorted(data, 'symbol')
+    //                     this.tokensByPrice = new TokensSorted(data, 'price')
+    //                     this.sortTokens(this.isSortedBy)
+    //                     this.initialLoad = false
+    //                     this.totalTokens = data.length
+    //                     this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 console.log(error)
+    //                 this.error = `${this.$t('message.no-data')}`
+    //             })
+    //     }
+    // }
 }
 </script>
 <style scoped lang="css">
