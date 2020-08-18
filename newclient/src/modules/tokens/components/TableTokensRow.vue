@@ -183,7 +183,7 @@ import BN from 'bignumber.js'
 @Component({
     components: { AppTooltip }
 })
-export default class TokenTableRow extends NumberFormatMixin {
+export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     /*
   ===================================================================================
     Props

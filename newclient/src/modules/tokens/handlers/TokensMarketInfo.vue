@@ -37,7 +37,8 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import TableTokensHeader from '@app/modules/tokens/components/TableTokensHeader.vue'
 import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
 import { IEthereumToken } from '@app/plugins/CoinData/models'
-import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
+import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import BN from 'bignumber.js'
 
 interface TokensSortedInterface {
@@ -77,7 +78,7 @@ const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volu
         TableTokensRow
     }
 })
-export default class AddressTokens extends Vue {
+export default class AddressTokens extends Mixins(CoinData) {
     /*
     ===================================================================================
       Props
