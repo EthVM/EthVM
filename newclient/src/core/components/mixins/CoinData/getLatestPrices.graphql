@@ -8,7 +8,6 @@ query getLatestPrices {
         current_price
         market_cap
         total_volume
-
         price_change_24h
         total_supply
     }

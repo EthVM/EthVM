@@ -45,7 +45,7 @@ import TableAddressTokensRow from '@app/modules/address/components/TableAddressT
 import TableAddressTokensRowLoading from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import TableAddressUniqueNft from '@app/modules/address/components/TableAddressUniqueNft.vue'
-import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances } from './tokens.graphql'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './apolloTypes/getOwnersERC20Tokens'
@@ -54,7 +54,8 @@ import {
     getOwnersERC721Tokens_getOwnersERC721Tokens as ERC721ContractTokensType,
     getOwnersERC721Tokens_getOwnersERC721Tokens_tokens as ERC721TokenType
 } from './apolloTypes/getOwnersERC721Tokens'
-import { IEthereumToken } from '@app/plugins/CoinData/models'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
+import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 /*
   DEV NOTES:
@@ -106,17 +107,6 @@ interface NFTMap {
                                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                                 this.showPagination = true
                             }
-                            const contracts = this.getTokens.map(token => token.tokenInfo.contract)
-                            this.$CD
-                                .getEthereumTokensMap(contracts)
-                                .then(data => {
-                                    this.tokenPrices = data
-                                    this.initialLoad = false
-                                })
-                                .catch(error => {
-                                    console.log(error)
-                                    this.initialLoad = false
-                                })
                         }
                     }
                     this.initialLoad = false
@@ -156,7 +146,7 @@ interface NFTMap {
         }
     }
 })
-export default class AddressTokens extends Vue {
+export default class AddressTokens extends Mixins(CoinData) {
     /*
     ===================================================================================
       Props
@@ -188,7 +178,6 @@ export default class AddressTokens extends Vue {
     hasNext!: string | null
     totalERC20 = 0
     totalERC721 = 0
-    tokenPrices: Map<string, IEthereumToken> | false = false
 
     /* Unique NFT List for contract */
     getOwnersERC721Tokens!: ERC721ContractTokensType
@@ -213,6 +202,18 @@ export default class AddressTokens extends Vue {
             return this.getTokens.slice(start, end)
         }
         return []
+    }
+    get tokenPrices(): Map<string, TokenMarketData> | false {
+        if (!this.initialLoad && this.isERC20) {
+            const contracts: string[] = []
+            this.getTokens.forEach(token => {
+                contracts.push(token.tokenInfo.contract)
+            })
+            if (contracts.length > 0) {
+                return this.getEthereumTokensMap(contracts)
+            }
+        }
+        return false
     }
 
     get message(): string {
@@ -285,7 +286,7 @@ export default class AddressTokens extends Vue {
         })
     }
 
-    getUSDInfo(contract: string): IEthereumToken | undefined {
+    getUSDInfo(contract: string): TokenMarketData | undefined {
         if (!this.initialLoad && this.tokenPrices && this.tokenPrices.has(contract)) {
             return this.tokenPrices.get(contract)
         }
