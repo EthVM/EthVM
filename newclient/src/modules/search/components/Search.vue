@@ -48,6 +48,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
+const selectTypes = ['all', 'token-detail']
 
 @Component
 export default class Search extends Vue {
@@ -69,8 +70,9 @@ export default class Search extends Vue {
 
     searchAutocomplete = ''
     searchVal = ''
-    selectVal = 'all'
+    selectVal = selectTypes[0]
     snackbar = false
+    searchTimeout = 0
 
     /*
   ===================================================================================
@@ -87,7 +89,7 @@ export default class Search extends Vue {
 
     @Watch('searchAutocomplete')
     search(newVal: string, oldVal: string): void {
-        if (newVal && (this.selectVal === 'all' || this.selectVal === 'token-detail')) {
+        if (newVal && (this.selectVal === selectTypes[0] || this.selectVal === selectTypes[1])) {
             this.$emit('getToken', newVal)
         }
     }
@@ -102,8 +104,11 @@ export default class Search extends Vue {
     }
 
     onSearch(param): void {
-        if (this.selectVal === 'all') {
-            this.$emit('getAllSearch', this.searchVal)
+        if (this.selectVal === selectTypes[0]) {
+            clearTimeout(this.searchTimeout)
+            this.searchTimeout = window.setTimeout(() => {
+                this.$emit('getAllSearch', this.searchVal)
+            }, 500)
         } else {
             this.$emit('routeTo', this.selectVal, this.searchVal)
         }
@@ -111,7 +116,7 @@ export default class Search extends Vue {
 
     resetValues() {
         this.searchVal = ''
-        this.selectVal = 'all'
+        this.selectVal = selectTypes[0]
     }
 
     /*
