@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :hide-overlay="true" v-model="showDialog" justify-end width="300" origin="right">
+    <v-dialog :hide-overlay="true" v-model="showDialog" justify-end width="300" origin="right" class="app-state-diff">
         <v-btn slot="activator" :small="true" class="more-btn" color="white" fab depressed>
             <p class="info--text subheading pb-2">...</p>
         </v-btn>
@@ -7,7 +7,7 @@
             <v-card-text class="py-0 pr-0">
                 <v-flex>
                     <v-layout row align-center justify-space-between>
-                        <div :class="[titleColor, 'font-weight-bold']">{{ state.status ? status : state.title }}</div>
+                        <div :class="[titleColor, 'font-weight-bold']">{{ state.title ? state.title : status }}</div>
                         <v-btn :small="true" icon @click="showDialog = false">
                             <v-icon class="fas fa-times info--text body-1" />
                         </v-btn>
@@ -90,10 +90,8 @@ export default class AppStateDiff extends Vue {
         switch (this.state.status as any) {
             case true:
                 return `${this.$t('tx.type.success')}`
-            case false:
-                return `${this.$t('tx.type.fail')}`
             default:
-                return ''
+                return `${this.$t('tx.type.fail')}`
         }
     }
 
@@ -114,22 +112,24 @@ export default class AppStateDiff extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.v-dialog__content {
-    justify-content: flex-end;
-
+.app-state-diff {
     .more-btn {
         height: 25px;
         width: 25px;
     }
 
-    .v-card {
-        border-radius: 2px;
-        border: solid 1px #b4bfd2;
+    .v-dialog__content {
+        justify-content: flex-end;
 
-        .divider {
-            background-color: #000;
-            border: 0;
-            height: 1px;
+        .v-card {
+            border-radius: 2px;
+            border: solid 1px #b4bfd2;
+
+            .divider {
+                background-color: #000;
+                border: 0;
+                height: 1px;
+            }
         }
     }
 }

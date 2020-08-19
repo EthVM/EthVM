@@ -163,7 +163,7 @@
           =====================================================================================
           -->
                 <v-flex md2>
-                    <v-layout row wrap align-center justify-space-between pr-3>
+                    <v-layout row flex-nowrap align-center justify-space-between pr-3>
                         <app-time-ago :timestamp="tokenTransfer.timestamp" />
                         <app-state-diff v-if="isErc20" :state="state" />
                     </v-layout>

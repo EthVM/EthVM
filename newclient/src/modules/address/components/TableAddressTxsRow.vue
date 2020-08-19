@@ -32,7 +32,7 @@
                     <v-flex xs6>
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
-                            <app-state-diff :state="state" class="ml-2 mr-1" />
+                            <app-state-diff v-if="!isPending" :state="state" class="ml-2 mr-1" />
                             <p v-if="isMined && isPending" class="caption primary--text blinking ml-2">Mined</p>
                         </v-layout>
                     </v-flex>
