@@ -206,7 +206,6 @@ export default class TokenTableRow extends Mixins(NumberFormatMixin) {
 
     get tokenPrice(): FormattedNumber {
         const price = this.token.current_price || 0
-        console.log(this.formatUsdValue(new BN(price)).value)
         return this.formatUsdValue(new BN(price))
     }
     get percentageChange(): FormattedNumber {
