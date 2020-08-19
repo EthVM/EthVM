@@ -9,8 +9,19 @@
             <v-flex hidden-sm-and-down md4>
                 <!-- Search Bar -->
             </v-flex>
-            <v-flex xs12 md4>
-                <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+            <v-flex xs12 sm12 md4>
+                <v-layout d-flex column align-end>
+                    <token-filter @filterMobile="sortTokens" />
+                    <app-paginate
+                        :total="totalPages"
+                        :current-page="index"
+                        :has-input="true"
+                        :has-first="true"
+                        :has-last="true"
+                        class="pb-2"
+                        @newPage="setPage"
+                    />
+                </v-layout>
             </v-flex>
         </v-layout>
         <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="showTokens" :is-scroll-view="false">
@@ -30,6 +41,7 @@
 </template>
 
 <script lang="ts">
+import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
@@ -90,7 +102,8 @@ const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volu
         AppPaginate,
         TableTxs,
         TableTokensHeader,
-        TableTokensRow
+        TableTokensRow,
+        TokenFilter
     }
 })
 export default class AddressTokens extends Mixins(CoinData) {

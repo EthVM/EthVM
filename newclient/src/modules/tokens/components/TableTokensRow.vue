@@ -6,7 +6,7 @@
               Mobile (XS - SM)
             =====================================================================================
             -->
-            <v-flex xs12 hidden-sm-and-up>
+            <v-flex xs12 hidden-md-and-up>
                 <div class="token-mobile">
                     <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-3 pr-3 pt-2 pb-2">
                         <!--
