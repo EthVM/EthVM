@@ -11,7 +11,7 @@
         </app-table-title>
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :txs-data="rewards" :is-scroll-view="false" table-message="">
             <template #header>
-                <table-address-rewards-header :is-genesis="isGenesis" />
+                <table-address-rewards-header :is-genesis="isGenesis" hidden-sm-and-down />
             </template>
             <template #rows>
                 <v-card v-for="(i, index) in rewards" :key="index" class="transparent" flat>
