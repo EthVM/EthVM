@@ -11,13 +11,12 @@
                     <!--
                     =====================================================================================
                       ETH VALUE
-
                       Responsive Tally:
                       XS-SM: 6 (6)
                     =====================================================================================
                     -->
                     <v-flex xs6 pa-1>
-                        <p :class="trasferValueClass">
+                        <p :class="transferValueClass">
                             {{ amountSign }}{{ transferValue.value }}
                             {{ $t(`common.${transferValue.unit}`) }}
                             <app-tooltip v-if="transferValue.tooltipText" :text="`${transferValue.tooltipText} ${$t('common.eth')}`" />
@@ -26,7 +25,6 @@
                     <!--
                     =====================================================================================
                       TIMESTAMP / BALANCE BREAKDOWN
-
                       Responsive Tally:
                       XS-SM: 12 (6)
                     =====================================================================================
@@ -34,16 +32,13 @@
                     <v-flex xs6>
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
-                            <v-btn v-if="!isPending" class="ml-2 mr-1 more-btn" color="white" fab depressed>
-                                <p class="info--text title pb-2">...</p>
-                            </v-btn>
+                            <app-state-diff v-if="!isPending" :state="state" class="ml-2 mr-1" />
                             <p v-if="isMined && isPending" class="caption primary--text blinking ml-2">Mined</p>
                         </v-layout>
                     </v-flex>
                     <!--
                     =====================================================================================
                       TRANSACTION # / HASH
-
                       Responsive Tally:
                       XS-SM: 24 (12)
                     =====================================================================================
@@ -57,7 +52,6 @@
                     <!--
                     =====================================================================================
                       TYPE: Incoming / Outgoing / Self Sent
-
                       Responsive Tally:
                       XS-SM: 29 (5)
                     =====================================================================================
@@ -70,7 +64,6 @@
                     <!--
                     =====================================================================================
                       TYPE ADDRESS: Incoming / Outgoing / Self Sent addr
-
                       Responsive Tally:
                       XS-SM: 36 (7)
                     =====================================================================================
@@ -91,7 +84,6 @@
                 <!--
                 =====================================================================================
                   TRANSACTION # / HASH
-
                   Responsive Tally:
                   MD: 5/12 (5)
                   Lg: 5/12 (5)
@@ -122,7 +114,6 @@
                 <!--
                 =====================================================================================
                   ETH VALUE
-
                   Responsive Tally:
                   MD: 8/12 (3)
                   LG: 7/2 (2)
@@ -131,7 +122,7 @@
                 <v-flex md3 lg2>
                     <v-layout row wrap align-center pl-1 pr->
                         <v-flex sm12>
-                            <p :class="trasferValueClass">
+                            <p :class="transferValueClass">
                                 <span class="hidden-lg-and-up info--text pr-1">{{ $t('common.amount') }}:</span>
                                 {{ amountSign }}{{ transferValue.value }}
                                 {{ $t(`common.${transferValue.unit}`) }}
@@ -149,7 +140,6 @@
                 <!--
                 =====================================================================================
                   Tx Fee
-
                   Responsive Tally:
                   MD: 9/12 (0)
                   LG: 9/2 (2)
@@ -163,7 +153,6 @@
                 <!--
                 =====================================================================================
                   Age
-
                   Responsive Tally:
                   MD: 11/12 (2)
                   LG: 11/2 (2)
@@ -175,7 +164,6 @@
                 <!--
                 =====================================================================================
                   More
-
                   Responsive Tally:
                   MD: 12/12 (1)
                   LG: 12/12 (1)
@@ -185,9 +173,7 @@
                     <v-layout row align-center justify-end>
                         <v-icon v-if="transfer.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-                        <v-btn class="ml-3 mr-1 more-btn" color="white" fab depressed>
-                            <p class="info--text title pb-2">...</p>
-                        </v-btn>
+                        <app-state-diff :state="state" class="ml-3 mr-1" />
                     </v-layout>
                 </v-flex>
                 <v-flex v-else shrink>
@@ -201,19 +187,21 @@
 
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import AppStateDiff from '@app/core/components/ui/AppStateDiff.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
-const TYPES = ['in', 'out', 'self']
 
+const TYPES = ['in', 'out', 'self']
 @Component({
     components: {
         AppTooltip,
         AppTimeAgo,
-        AppTransformHash
+        AppTransformHash,
+        AppStateDiff
     }
 })
 export default class TableTxsRow extends Mixins(NumberFormatMixin) {
@@ -222,16 +210,48 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
       Props
     ===================================================================================
     */
-
     @Prop(Object) transfer!: EthTransfer
     @Prop(String) address!: string
     @Prop({ type: Boolean, default: false }) isPending!: boolean
+    /*
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
     /*
     ===================================================================================
       Computed
     ===================================================================================
     */
+    get state(): object {
+        const stateData = [{ name: `${this.$t('state.bal-before')}`, value: this.transfer.getBalBefore(this.type) }]
+        if (this.type !== TYPES[0]) {
+            stateData.push({ name: `${this.$tc('tx.fee', 1)}`, value: this.transfer.getFee() })
+        }
+        stateData.push({ name: this.getValueTitle, value: this.transfer.getValue() })
+        return {
+            status: this.transfer.getStatus(),
+            balAfter: this.transfer.getBalAfter(this.type),
+            data: stateData
+        }
+    }
+
+    get getValueTitle(): string {
+        if (this.type === TYPES[1]) {
+            if (this.transfer.getStatus() === false) {
+                return `${this.$t('state.actual-sent')}`
+            }
+            return `${this.$t('state.val-sent')}`
+        }
+        if (this.type === TYPES[0]) {
+            if (this.transfer.getStatus() === false) {
+                return `${this.$t('state.actual-received')}`
+            }
+            return `${this.$t('state.val-received')}`
+        }
+        return `${this.$t('state.actual-sent-received')}`
+    }
 
     get txStatusClass(): string {
         if (this.transfer && this.transfer.getStatus() !== null) {
@@ -239,16 +259,13 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         }
         return 'table-row-mobile'
     }
-
     get isSmall(): boolean {
         return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm'
     }
-
     get type(): string {
         const from = this.transfer.getFrom().toLowerCase()
         const to = this.transfer.getTo().toLowerCase()
         const addr = this.address.toLowerCase()
-
         if (addr === from && addr === to) {
             return TYPES[2]
         } else if (addr === from) {
@@ -256,7 +273,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         }
         return TYPES[0]
     }
-
     get typeString(): string {
         switch (this.type) {
             case TYPES[0]:
@@ -287,7 +303,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
                 return this.address
         }
     }
-
     get amountSign(): string {
         if (this.transfer.getStatus() !== null) {
             if (this.type === TYPES[0]) {
@@ -302,10 +317,8 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get transferValue(): FormattedNumber {
         return this.transfer.getValue()
     }
-
-    get trasferValueClass(): string {
+    get transferValueClass(): string {
         let textColor = 'black--text'
-
         // if (this.isPending) {
         //     console.log(this.transfer)
         // }
@@ -320,11 +333,9 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get feeString(): string {
         return this.isPending ? `${this.$t('tx.estimated-fee')}` : `${this.$tc('tx.fee', 1)}`
     }
-
     get hasFeeSign(): boolean {
         return this.transfer.getStatus() !== null && this.type === TYPES[1]
     }
-
     get isMined(): boolean {
         return !this.transfer.getIsPending()
     }
@@ -335,16 +346,13 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 .table-row-mobile {
     border: 1px solid #b4bfd2;
 }
-
 p {
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
-
 .tx-status-fail {
     border-left: 2px solid #fe1377;
 }
-
 .tx-status-sucess {
     border-left: 2px solid #40ce9c;
 }
@@ -358,7 +366,6 @@ p {
 .blinking {
     animation: blinker 2s linear infinite;
 }
-
 @keyframes blinker {
     50% {
         opacity: 0;

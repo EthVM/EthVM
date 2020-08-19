@@ -16,6 +16,16 @@ query getERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
             transfer {
                 ...TransferSummary
             }
+            stateDiff {
+                to {
+                    before
+                    after
+                }
+                from {
+                    before
+                    after
+                }
+            }
             value
         }
         nextKey

@@ -16,6 +16,24 @@ export interface getAdrERC20Transfers_getERC20Transfers_transfers_transfer {
   txFee: string;
 }
 
+export interface getAdrERC20Transfers_getERC20Transfers_transfers_stateDiff_to {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAdrERC20Transfers_getERC20Transfers_transfers_stateDiff_from {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAdrERC20Transfers_getERC20Transfers_transfers_stateDiff {
+  __typename: "StateDiffChange";
+  to: getAdrERC20Transfers_getERC20Transfers_transfers_stateDiff_to;
+  from: getAdrERC20Transfers_getERC20Transfers_transfers_stateDiff_from | null;
+}
+
 export interface getAdrERC20Transfers_getERC20Transfers_transfers_tokenInfo {
   __typename: "EthTokenInfo";
   name: string | null;
@@ -26,6 +44,7 @@ export interface getAdrERC20Transfers_getERC20Transfers_transfers_tokenInfo {
 export interface getAdrERC20Transfers_getERC20Transfers_transfers {
   __typename: "ERC20Transfer";
   transfer: getAdrERC20Transfers_getERC20Transfers_transfers_transfer;
+  stateDiff: getAdrERC20Transfers_getERC20Transfers_transfers_stateDiff | null;
   value: string;
   contract: string;
   tokenInfo: getAdrERC20Transfers_getERC20Transfers_transfers_tokenInfo;

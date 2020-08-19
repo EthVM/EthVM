@@ -12,9 +12,7 @@
                     <v-flex xs7 pa-1>
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="tokenTransfer.timestamp" />
-                            <v-btn class="ml-2 mr-1 more-btn" color="white" fab depressed>
-                                <p class="info--text title pb-2">...</p>
-                            </v-btn>
+                            <app-state-diff v-if="isErc20" :state="state" class="ml-2 mr-1" />
                         </v-layout>
                     </v-flex>
                     <v-flex xs2 sm1>
@@ -165,11 +163,9 @@
           =====================================================================================
           -->
                 <v-flex md2>
-                    <v-layout row wrap align-center justify-space-between pr-3>
+                    <v-layout row flex-nowrap align-center justify-space-between pr-3>
                         <app-time-ago :timestamp="tokenTransfer.timestamp" />
-                        <v-btn class="more-btn" color="white" fab depressed>
-                            <p class="info--text title pb-2">...</p>
-                        </v-btn>
+                        <app-state-diff v-if="isErc20" :state="state" />
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -180,11 +176,12 @@
 
 <script lang="ts">
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import AppStateDiff from '@app/core/components/ui/AppStateDiff.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import BN from 'bignumber.js'
 const TYPES = ['in', 'out', 'self']
@@ -193,7 +190,8 @@ const TYPES = ['in', 'out', 'self']
     components: {
         AppTooltip,
         AppTimeAgo,
-        AppTransformHash
+        AppTransformHash,
+        AppStateDiff
     }
 })
 export default class TableTxsRow extends Mixins(NumberFormatMixin) {
@@ -212,6 +210,29 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
       Computed
     ===================================================================================
     */
+    get state(): object {
+        return {
+            status: true,
+            balAfter: this.getStateVal(this.getBalAfter()),
+            data: [
+                { name: `${this.$t('state.bal-before')}`, value: this.getStateVal(this.getBalBefore()) },
+                {
+                    name: this.getValueTitle,
+                    value: this.getStateVal(this.getValue(this.transfer.value))
+                }
+            ]
+        }
+    }
+
+    get getValueTitle(): string {
+        if (this.type === TYPES[1]) {
+            return `${this.$t('state.val-sent')}`
+        }
+        if (this.type === TYPES[0]) {
+            return `${this.$t('state.val-received')}`
+        }
+        return `${this.$t('state.actual-sent-received')}`
+    }
 
     get tokenTransfer(): any {
         return {
@@ -232,7 +253,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     get amount(): FormattedNumber | string {
         if (this.isErc20) {
-            return this.formatFloatingPointValue(this.getValue())
+            return this.formatFloatingPointValue(this.getValue(this.transfer.value))
         }
         return this.formatNumber(new BN(this.transfer.token).toNumber())
     }
@@ -300,12 +321,38 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    getValue(): BN {
-        let n = new BN(this.transfer.value)
+    getValue(value): BN {
+        let n = new BN(value)
         if (this.transfer.tokenInfo.decimals) {
             n = n.div(new BN(10).pow(this.transfer.tokenInfo.decimals))
         }
         return n
+    }
+
+    getBalBefore(): BN | string {
+        if (!this.transfer.stateDiff) {
+            return '0'
+        }
+
+        return this.type === TYPES[0] && this.transfer.stateDiff.from
+            ? this.getValue(this.transfer.stateDiff.from.before)
+            : this.getValue(this.transfer.stateDiff.to.before)
+    }
+
+    getBalAfter(): BN | string {
+        if (!this.transfer.stateDiff) {
+            return '0'
+        }
+        return this.type === TYPES[0] && this.transfer.stateDiff.from
+            ? this.getValue(this.transfer.stateDiff.from.after)
+            : this.getValue(this.transfer.stateDiff.to.after)
+    }
+
+    getStateVal(val): object {
+        return {
+            value: this.formatFloatingPointValue(val).value,
+            unit: this.transfer.tokenInfo.symbol
+        }
     }
 }
 </script>

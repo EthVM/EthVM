@@ -16,9 +16,7 @@
                             </p>
                             <div class="d-flex align-center">
                                 <app-time-ago v-if="rewardTimestamp" :timestamp="rewardTimestamp" />
-                                <v-btn class="ml-2 mr-1 more-btn" color="white" fab depressed>
-                                    <p class="info--text title pb-2">...</p>
-                                </v-btn>
+                                <block-uncle-rewards :state="state" class="ml-2 mr-1" />
                             </div>
                         </v-layout>
                     </v-flex>
@@ -72,9 +70,7 @@
                             + {{ miningReward.value }} {{ $t(`common.${miningReward.unit}`) }}
                             <app-tooltip v-if="miningReward.tooltipText" :text="`${miningReward.tooltipText} ${$t('common.eth')}`" />
                         </p>
-                        <v-btn class="ml-3 mr-1 more-btn" color="white" fab depressed>
-                            <p class="info--text title pb-2">...</p>
-                        </v-btn>
+                        <block-uncle-rewards :state="state" class="ml-3 mr-1" />
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -88,15 +84,17 @@ import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import BlockUncleRewards from '@app/modules/address/handlers/AddressRewards/BlockUncleRewards.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import BN from 'bignumber.js'
 @Component({
     components: {
         AppTooltip,
         AppTimeAgo,
-        AppTransformHash
+        AppTransformHash,
+        BlockUncleRewards
     }
 })
 export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
@@ -112,6 +110,26 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
       Computed
     ===================================================================================
     */
+
+    get state(): object {
+        const stateData = [
+            { name: `${this.$t('state.bal-before')}`, value: this.getBalBefore() },
+            { name: this.isUncle ? `${this.$t('uncle.reward')}` : `${this.$t('block.total-reward')}`, value: this.miningReward }
+        ]
+        if (this.isBlock) {
+            stateData.push({
+                name: `${this.$t('state.fee-rewards')}`,
+                value: NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.transfer.txFee))
+            })
+        }
+        return {
+            blockNumber: this.isBlock ? this.reward.transfer.block : null,
+            title: `${this.reward.transfer.block}` + ' ' + (this.isBlock ? `${this.$t('state.block-rewards')}` : `${this.$t('state.uncle-rewards')}`),
+            balAfter: this.getBalAfter(),
+            data: stateData
+        }
+    }
+
     get miningReward(): FormattedNumber | null {
         if (this.reward) {
             const _reward = new BN(this.reward.value)
@@ -130,6 +148,28 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
     }
     get isBlock(): boolean {
         return this.rewardType === 'block'
+    }
+
+    get isUncle(): boolean {
+        return this.rewardType === 'uncle'
+    }
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    getBalBefore(): FormattedNumber {
+        if (!this.reward.stateDiff.to) {
+            return { value: '0' }
+        }
+        return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.to.before))
+    }
+
+    getBalAfter(): FormattedNumber {
+        if (!this.reward.stateDiff.to) {
+            return { value: '0' }
+        }
+        return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.to.after))
     }
 }
 </script>
