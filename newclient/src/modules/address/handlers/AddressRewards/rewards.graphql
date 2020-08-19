@@ -1,8 +1,23 @@
+
+fragment BalanceFragment on BalanceDiff {
+    before
+    after
+}
+
 fragment RewardSummary on ETHTransfers {
     transfers {
         transfer {
             block
             timestamp
+            txFee
+        }
+        stateDiff {
+            to {
+                ...BalanceFragment
+            }
+            from {
+                ...BalanceFragment
+            }
         }
         value
     }
@@ -24,5 +39,15 @@ query getAddrRewardsUncle($hash: String!, $_limit: Int, $_nextKey: String) {
 query getAddrRewardsGenesis($hash: String!, $_limit: Int, $_nextKey: String) {
     getGenesisRewards(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
         ...RewardSummary
+    }
+}
+
+query getBlockUncleRewards($blockRef: Int!) {
+    getBlockByNumber(number: $blockRef) {
+        summary {
+            rewards {
+                uncles
+            }
+        }
     }
 }

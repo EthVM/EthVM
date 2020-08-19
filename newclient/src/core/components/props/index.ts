@@ -45,3 +45,11 @@ export interface Crumb {
     link?: string
     hash?: string
 }
+
+export interface State {
+    status?: string
+    balAfter: string
+    data: object[]
+    title?: string
+    blockNumber?: number
+}

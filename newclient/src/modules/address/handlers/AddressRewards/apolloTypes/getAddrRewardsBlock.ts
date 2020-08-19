@@ -11,11 +11,31 @@ export interface getAddrRewardsBlock_getBlockRewards_transfers_transfer {
   __typename: "Transfer";
   block: number;
   timestamp: number;
+  txFee: string;
+}
+
+export interface getAddrRewardsBlock_getBlockRewards_transfers_stateDiff_to {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAddrRewardsBlock_getBlockRewards_transfers_stateDiff_from {
+  __typename: "BalanceDiff";
+  before: string;
+  after: string;
+}
+
+export interface getAddrRewardsBlock_getBlockRewards_transfers_stateDiff {
+  __typename: "StateDiffChange";
+  to: getAddrRewardsBlock_getBlockRewards_transfers_stateDiff_to;
+  from: getAddrRewardsBlock_getBlockRewards_transfers_stateDiff_from | null;
 }
 
 export interface getAddrRewardsBlock_getBlockRewards_transfers {
   __typename: "EthTransfer";
   transfer: getAddrRewardsBlock_getBlockRewards_transfers_transfer;
+  stateDiff: getAddrRewardsBlock_getBlockRewards_transfers_stateDiff | null;
   value: string;
 }
 

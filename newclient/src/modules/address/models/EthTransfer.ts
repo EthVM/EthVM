@@ -1,6 +1,7 @@
 import { pendingTransaction_pendingTransaction as PendingTransferType } from '@app/modules/address//handlers/AddressPendingTx/apolloTypes/pendingTransaction'
 import { getPendingTransactions_getPendingTransactions as PendingTxType } from '@app/modules/address/handlers/AddressPendingTx/apolloTypes/getPendingTransactions'
 import { getEthTransfersV2_getEthTransfersV2_transfers as TxType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getEthTransfersV2'
+import { StateDiff } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/StateDiff'
 import BN from 'bignumber.js'
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
@@ -11,11 +12,13 @@ interface Transfer {
 
 export class EthTransfer implements Transfer {
     transfer: TxType | PendingTransferType | PendingTxType
+    stateDiff: StateDiff
     isPending: boolean
 
     constructor(transferData: TxType | PendingTransferType | PendingTxType) {
         this.isPending = transferData.__typename === 'EthTransfer' ? false : true
         this.transfer = transferData
+        this.stateDiff = transferData['stateDiff']
     }
 
     getHash(): string {
@@ -70,5 +73,30 @@ export class EthTransfer implements Transfer {
 
     setPending(pending: boolean): void {
         this.isPending = pending
+    }
+
+    /*
+    ===================================================================================
+      State Balance
+    ===================================================================================
+    */
+    getBalBefore(type: string): FormattedNumber {
+        const types = ['out', 'in', 'self']
+        if (!this.stateDiff) {
+            return { value: '0' }
+        }
+        return type === types[0] && this.stateDiff.from
+            ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.before))
+            : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.before))
+    }
+
+    getBalAfter(type: string): FormattedNumber {
+        const types = ['out', 'in', 'self']
+        if (!this.stateDiff) {
+            return { value: '0' }
+        }
+        return type === types[0] && this.stateDiff.from
+            ? NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.from.after))
+            : NumberFormatHelper.formatNonVariableEthValue(new BN(this.stateDiff.to.after))
     }
 }
