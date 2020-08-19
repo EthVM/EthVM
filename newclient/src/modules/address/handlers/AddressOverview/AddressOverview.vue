@@ -1,12 +1,12 @@
 <template>
     <div>
-        <address-detail v-if="!hasError" :address="addressDetails" :loading="loading" :loading-tokens="loadingTokens" />
+        <address-detail v-if="!hasError" :address="addressDetails" :loading="loading" :loading-tokens="loadingTokens" :ether-price="ethPrice" />
         <v-card v-else> {{ error }} </v-card>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
@@ -15,6 +15,7 @@ import { getEthBalance_getEthBalance as BalanceType } from './apolloTypes/getEth
 import { Address } from '@app/modules/address/components/props'
 import AddressDetail from '@app/modules/address/components/AddressDetail.vue'
 import BN from 'bignumber.js'
+import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 
 @Component({
     components: {
@@ -39,7 +40,7 @@ import BN from 'bignumber.js'
         }
     }
 })
-export default class AddressOverview extends Vue {
+export default class AddressOverview extends Mixins(CoinData) {
     /*
     ===================================================================================
       Props

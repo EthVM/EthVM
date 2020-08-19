@@ -22,7 +22,8 @@ import BN from 'bignumber.js'
 import { ConfigHelper } from '@app/core/helper/config-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
-import { IEthereumToken } from '@app/plugins/CoinData/models'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
+import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
 import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
 
@@ -31,7 +32,7 @@ import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDet
         AppDetailsList
     }
 })
-export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
+export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData) {
     /*
   ===================================================================================
     Props
@@ -63,30 +64,37 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     //     twitter: 'fab fa-twitter',
     //     youtube: 'fab fa-youtube'
     // }
-    tokenData: IEthereumToken | null = null
+    // tokenData: TokenMarketData | null = null
     isRopsten = ConfigHelper.isRopsten
     /*
   ===================================================================================
         LifeCycle:
   ===================================================================================
     */
-    mounted() {
-        if (this.addressRef) {
-            this.$CD
-                .getEthereumTokenByContract(this.addressRef)
-                .then(data => {
-                    this.tokenData = data ? data : null
-                })
-                .catch(error => {
-                    this.error = `${this.$t('message.no-data')}`
-                })
-        }
-    }
+    // mounted() {
+    //     if (this.addressRef) {
+    //         this.$CD
+    //             .getEthereumTokenByContract(this.addressRef)
+    //             .then(data => {
+    //                 this.tokenData = data ? data : null
+    //             })
+    //             .catch(error => {
+    //                 this.error = `${this.$t('message.no-data')}`
+    //             })
+    //     }
+    // }
     /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
+
+    get tokenData(): TokenMarketData | false {
+        if (this.addressRef) {
+            return this.getEthereumTokenByContract(this.addressRef)
+        }
+        return false
+    }
 
     /**
      * Create properly-formatted title from tokenDetails
@@ -183,9 +191,9 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     get priceDetail(): Detail {
         const detail: Detail = { title: this.$i18n.tc('price.name', 1) }
         if (!this.isLoading && this.tokenData) {
-            const priceFormatted = this.formatUsdValue(new BN(this.tokenData.price))
+            const priceFormatted = this.formatUsdValue(new BN(this.tokenData.current_price || 0))
             detail.detail = priceFormatted.value
-            detail.priceChange = this.formatPercentageValue(new BN(this.tokenData.percentChange24h)).value
+            detail.priceChange = this.formatPercentageValue(new BN(this.tokenData.price_change_24h || 0)).value
             if (priceFormatted.tooltipText) {
                 detail.tooltip = priceFormatted.tooltipText
             }
@@ -194,9 +202,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     }
 
     get supplyDetail(): Detail {
+        let supply: number | undefined = undefined
+        if (this.tokenData && this.tokenData.total_supply) {
+            supply = new BN(this.tokenData.total_supply).toNumber()
+        }
         return {
             title: this.$i18n.t('token.supply'),
-            detail: !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply ? this.tokenDetails.totalSupply : undefined
+            detail: !this.isLoading && supply ? this.formatNumber(supply) : undefined
             // tooltip:
             //     !this.isLoading && this.tokenDetails && this.tokenDetails.totalSupply && this.tokenDetails.totalSupplyFormatted.tooltipText
             //         ? this.tokenDetails.totalSupplyFormatted.tooltipText
@@ -207,14 +219,14 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
     get marketCapDetail(): Detail {
         return {
             title: this.$i18n.t('token.market'),
-            detail: !this.isLoading && this.tokenData && this.tokenData.marketCap ? this.formatNumber(this.tokenData.marketCap) : undefined
+            detail: !this.isLoading && this.tokenData && this.tokenData.market_cap ? this.formatNumber(this.tokenData.market_cap) : undefined
         }
     }
 
     get volumeDetail(): Detail {
         return {
             title: this.$i18n.t('token.volume'),
-            detail: !this.isLoading && this.tokenData && this.tokenData.volume ? this.formatNumber(this.tokenData.volume) : undefined
+            detail: !this.isLoading && this.tokenData && this.tokenData.total_volume ? this.formatNumber(this.tokenData.total_volume) : undefined
         }
     }
 
@@ -319,8 +331,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin) {
             n = n.div(new BN(10).pow(decimals))
         }
 
-        return this.holderDetails.balance && this.tokenData && this.tokenData.price
-            ? this.formatUsdValue(n.multipliedBy(this.tokenData.price)).value
+        return this.holderDetails.balance && this.tokenData && this.tokenData.current_price
+            ? this.formatUsdValue(n.multipliedBy(this.tokenData.current_price)).value
             : undefined
     }
 
