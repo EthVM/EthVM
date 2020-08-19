@@ -44,7 +44,17 @@ export class CoinData extends Vue {
     getLatestPrices!: TokenMarketData[]
     tokensMarketInfo = new Map<string, TokenMarketData>()
     isLoadingTokensMarketData = true
-    etherPrice!: number
+    etherPrice: number = 0
+
+    /*
+    ===================================================================================
+     Computed
+    ===================================================================================
+    */
+
+    get ethPrice(): number | undefined {
+        return this.isLoadingTokensMarketData || this.etherPrice === 0 ? undefined : this.etherPrice
+    }
 
     /*
     ===================================================================================

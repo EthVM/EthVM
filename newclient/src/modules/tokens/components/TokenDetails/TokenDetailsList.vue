@@ -91,7 +91,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
 
     get tokenData(): TokenMarketData | false {
         if (this.addressRef) {
-            console.log(this.getEthereumTokenByContract(this.addressRef))
             return this.getEthereumTokenByContract(this.addressRef)
         }
         return false
