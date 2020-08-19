@@ -19,8 +19,8 @@
                         -->
                         <v-flex xs2 pl-1 pr-1>
                             <div class="token-image-mobile">
-                                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
-                                <v-img v-else :src="token.image" contain />
+                                <!-- <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
+                                <v-img v-else :src="token.image" contain /> -->
                             </div>
                         </v-flex>
                         <!--
@@ -178,19 +178,21 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
-import { IEthereumToken } from '@app/plugins/CoinData/models'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
+
 import BN from 'bignumber.js'
+
 @Component({
     components: { AppTooltip }
 })
-export default class TokenTableRow extends NumberFormatMixin {
+export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     /*
   ===================================================================================
     Props
   ===================================================================================
   */
 
-    @Prop(Object) token!: IEthereumToken
+    @Prop(Object) token!: TokenMarketData
 
     /*
   ===================================================================================
@@ -203,37 +205,44 @@ export default class TokenTableRow extends NumberFormatMixin {
     }
 
     get tokenPrice(): FormattedNumber {
-        return this.formatUsdValue(new BN(this.token.price))
+        const price = this.token.current_price || 0
+        return this.formatUsdValue(new BN(price))
     }
     get percentageChange(): FormattedNumber {
-        return this.formatPercentageValue(new BN(this.token.percentChange24h))
+        const change = this.token.price_change_24h || 0
+        return this.formatPercentageValue(new BN(change))
     }
 
     get priceChangeSymbol(): string {
-        if (this.token.percentChange24h > 0) {
+        const change = this.token.price_change_24h || 0
+        if (change > 0) {
             return '+'
         }
-        if (this.token.percentChange24h < 0) {
+        if (change < 0) {
             return '-'
         }
         return ''
     }
     get priceChangeClass(): string {
-        if (this.token.percentChange24h > 0) {
+        const change = this.token.price_change_24h || 0
+
+        if (change > 0) {
             return 'txSuccess--text pl-3'
         }
-        if (this.token.percentChange24h < 0) {
+        if (change < 0) {
             return 'txFail--text pl-3'
         }
         return 'black--text pl-3'
     }
 
     get tokenVolume(): FormattedNumber {
-        return this.formatIntegerValue(new BN(this.token.volume))
+        const volume = this.token.total_volume || 0
+        return this.formatIntegerValue(new BN(volume))
     }
 
     get tokenMarket(): FormattedNumber {
-        return this.formatIntegerValue(new BN(this.token.marketCap))
+        const marketCap = this.token.market_cap || 0
+        return this.formatIntegerValue(new BN(marketCap))
     }
 }
 </script>

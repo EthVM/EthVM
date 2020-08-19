@@ -22,7 +22,7 @@
                 <slot name="pagination" />
             </v-flex>
             <v-flex v-if="hasPagination" xs12 hidden-md-and-up>
-                <v-layout align-center justify-center pa-2>
+                <v-layout align-center justify-end pa-2>
                     <slot name="pagination" />
                 </v-layout>
             </v-flex>
