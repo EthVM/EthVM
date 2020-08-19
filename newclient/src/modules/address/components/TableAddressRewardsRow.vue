@@ -6,43 +6,30 @@
         =====================================================================================
         -->
         <v-flex xs12 hidden-md-and-up>
-            <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
-                <v-flex xs6 pa-1>
-                    <router-link :to="`/block/number${transferObj.block}`" class="black--text font-weight-medium pb-1"
-                        >{{ $t('block.number') }} {{ transaction.block }}</router-link
-                    >
-                </v-flex>
-                <v-flex xs6 pr-44>
-                    <v-layout row justify-end>
-                        <app-time-ago :timestamp="transaction.timestamp" />
-                    </v-layout>
-                </v-flex>
-                <v-flex xs2 pa-1>
-                    <p class="info--text psmall">{{ $tc('tx.hash', 1) }}:</p>
-                </v-flex>
-                <v-flex xs10 pa-1>
-                    <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
-                </v-flex>
-                <v-flex xs12 pa-1>
-                    <v-layout row pa-2>
-                        <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
-                        <app-transform-hash :hash="transaction.from" :italic="true" :link="`/address/${transaction.from}`" />
-                        <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
-                        <!-- <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :italic="true" :link="`/address/${tx.creates}`" /> -->
-                        <app-transform-hash :hash="transaction.to" :italic="true" :link="`/address/${transaction.to}`" />
-                    </v-layout>
-                </v-flex>
-                <v-flex shrink pa-1>
-                    <p class="info--text psmall">{{ $t('common.amount') }}:</p>
-                </v-flex>
-                <v-flex shrink pa-1>
-                    <p class="black--text align-center">
-                        {{ transaction.value.value }}
-                        {{ $t(`common.${transaction.value.unit}`) }}
-                        <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
-                    </p>
-                </v-flex>
-            </v-layout>
+            <div class="table-row-mobile">
+                <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pa-3">
+                    <v-flex xs12 px-3 pt-2>
+                        <v-layout row align-center justify-space-between>
+                            <p v-if="miningReward">
+                                + {{ miningReward.value }} {{ $t(`common.${miningReward.unit}`) }}
+                                <app-tooltip v-if="miningReward.tooltipText" :text="`${miningReward.tooltipText} ${$t('common.eth')}`" />
+                            </p>
+                            <div class="d-flex align-center">
+                                <app-time-ago v-if="rewardTimestamp" :timestamp="rewardTimestamp" />
+                                <v-btn class="ml-2 mr-1 more-btn" color="white" fab depressed>
+                                    <p class="info--text title pb-2">...</p>
+                                </v-btn>
+                            </div>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex v-if="!isGenesis" xs12 pb-2 px-3 pt-2>
+                        <v-layout align-center row>
+                            <p class="info--text tx-string caption">{{ $t('block.number') }}:</p>
+                            <router-link :to="`/block/number/${reward.transfer.block}`"> {{ reward.transfer.block }}</router-link>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </div>
         </v-flex>
         <!--
         =====================================================================================
@@ -54,7 +41,6 @@
                 <!--
                 =====================================================================================
                   BLOCK INFO
-
                   Responsive Tally:
                   MD: 4/12 (4)
                 =====================================================================================
@@ -65,7 +51,6 @@
                 <!--
                 =====================================================================================
                   AGE
-
                   Responsive Tally:
                   MD: 8/12 (4)
                 =====================================================================================
@@ -77,7 +62,6 @@
                 <!--
                 =====================================================================================
                   REWARDS
-
                   Responsive Tally:
                   MD: 4/12 (3)
                 =====================================================================================
@@ -108,7 +92,6 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import BN from 'bignumber.js'
-
 @Component({
     components: {
         AppTooltip,
@@ -122,16 +105,13 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
       Props
     ===================================================================================
     */
-
     @Prop(Object) reward!: any
     @Prop(String) rewardType!: string
-
     /*
     ===================================================================================
       Computed
     ===================================================================================
     */
-
     get miningReward(): FormattedNumber | null {
         if (this.reward) {
             const _reward = new BN(this.reward.value)
@@ -145,11 +125,9 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
         }
         return null
     }
-
     get isGenesis(): boolean {
         return this.rewardType === 'genesis'
     }
-
     get isBlock(): boolean {
         return this.rewardType === 'block'
     }
@@ -160,16 +138,13 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
 .table-row-mobile {
     border: 1px solid #b4bfd2;
 }
-
 p {
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
-
 .tx-string {
     min-width: 3em;
 }
-
 .more-btn {
     height: 20px;
     width: 20px;
