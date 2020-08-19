@@ -5,7 +5,30 @@
           Mobile (XS)
         =====================================================================================
         -->
-        <v-flex xs12 hidden-md-and-up> </v-flex>
+        <v-flex xs12 hidden-md-and-up>
+            <div class="table-row-mobile">
+                <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pa-3">
+                    <v-flex xs12 px-3 pt-2>
+                        <v-layout row align-center justify-space-between>
+                            <p v-if="miningReward">
+                                + {{ miningReward.value }} {{ $t(`common.${miningReward.unit}`) }}
+                                <app-tooltip v-if="miningReward.tooltipText" :text="`${miningReward.tooltipText} ${$t('common.eth')}`" />
+                            </p>
+                            <div class="d-flex align-center">
+                                <app-time-ago v-if="rewardTimestamp" :timestamp="rewardTimestamp" />
+                                <block-uncle-rewards :state="state" class="ml-2 mr-1" />
+                            </div>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex v-if="!isGenesis" xs12 pb-2 px-3 pt-2>
+                        <v-layout align-center row>
+                            <p class="info--text tx-string caption">{{ $t('block.number') }}:</p>
+                            <router-link :to="`/block/number/${reward.transfer.block}`"> {{ reward.transfer.block }}</router-link>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </div>
+        </v-flex>
         <!--
         =====================================================================================
           Tablet/ Desktop (SM - XL)
@@ -16,7 +39,6 @@
                 <!--
                 =====================================================================================
                   BLOCK INFO
-
                   Responsive Tally:
                   MD: 4/12 (4)
                 =====================================================================================
@@ -27,7 +49,6 @@
                 <!--
                 =====================================================================================
                   AGE
-
                   Responsive Tally:
                   MD: 8/12 (4)
                 =====================================================================================
@@ -39,7 +60,6 @@
                 <!--
                 =====================================================================================
                   REWARDS
-
                   Responsive Tally:
                   MD: 4/12 (3)
                 =====================================================================================
@@ -69,7 +89,6 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import BN from 'bignumber.js'
-
 @Component({
     components: {
         AppTooltip,
@@ -84,10 +103,8 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
       Props
     ===================================================================================
     */
-
     @Prop(Object) reward!: any
     @Prop(String) rewardType!: string
-
     /*
     ===================================================================================
       Computed
@@ -126,11 +143,9 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
         }
         return null
     }
-
     get isGenesis(): boolean {
         return this.rewardType === 'genesis'
     }
-
     get isBlock(): boolean {
         return this.rewardType === 'block'
     }
@@ -163,16 +178,13 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
 .table-row-mobile {
     border: 1px solid #b4bfd2;
 }
-
 p {
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
-
 .tx-string {
     min-width: 3em;
 }
-
 .more-btn {
     height: 20px;
     width: 20px;

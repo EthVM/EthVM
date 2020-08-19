@@ -181,6 +181,7 @@
             "no-pending": "There are no pending transactions"
         },
         "transfer": {
+            "no-nft": "This address does not hold any NFTs",
             "no-all": "This address does not have any transfer history",
             "no-in": "This address does not have incoming transfers",
             "no-out": "This address does not have outgoing transfers"

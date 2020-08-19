@@ -19,7 +19,6 @@ import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
 import * as Sentry from '@sentry/browser'
 import Vue from 'vue'
-import { CoinData } from './plugins'
 
 /*
   ===================================================================================
@@ -28,16 +27,11 @@ import { CoinData } from './plugins'
 */
 Vue.config.productionTip = false
 
-// -------------------------------------------------------
-//    APIs: CoinData
-// -------------------------------------------------------
-const coinData = new CoinData()
-Vue.use(coinData, {
-    ttl: 10000
-})
-// -------------------------------------------------------
-//    APIs: Apollo (GraphQL)
-// -------------------------------------------------------
+/*
+  ===================================================================================
+    APIs: Apollo (GraphQL)
+  ===================================================================================
+*/
 
 const httpLink = new HttpLink({
     uri: configs.APOLLO_HTTP

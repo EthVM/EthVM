@@ -176,13 +176,7 @@
                         </v-flex>
                         <v-spacer v-else />
                         <v-flex v-if="!isErc20" shrink>
-                            <v-btn
-                                outline
-                                color="secondary"
-                                class="text-capitalize"
-                                @click="$emit('showNft', token.tokenInfo.contract, token.tokenInfo.name)"
-                                >{{ $t('btn.view-all') }}</v-btn
-                            >
+                            <v-btn outline color="secondary" class="text-capitalize" @click="showNft()">{{ $t('btn.view-all') }}</v-btn>
                         </v-flex>
                     </v-layout>
                     <v-divider />
@@ -199,7 +193,7 @@ import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { ObjectCache } from 'apollo-cache-inmemory'
-import { IEthereumToken } from '@app/plugins/CoinData/models'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC721Balances'
 import BN from 'bignumber.js'
@@ -220,7 +214,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     @Prop(Object) token!: ERC20TokenType | ERC721TokenType
     @Prop(String) holder!: string
     @Prop(Boolean) isErc20!: boolean
-    @Prop(Object) tokenPriceInfo!: IEthereumToken | undefined
+    @Prop(Object) tokenPriceInfo!: TokenMarketData | undefined
 
     /*
     ===================================================================================
@@ -251,20 +245,22 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get currPrice(): FormattedNumber {
-        return this.tokenPriceInfo && this.tokenPriceInfo.price ? this.formatUsdValue(new BN(this.tokenPriceInfo.price)) : this.formatUsdValue(new BN(0))
+        return this.tokenPriceInfo && this.tokenPriceInfo.current_price
+            ? this.formatUsdValue(new BN(this.tokenPriceInfo.current_price))
+            : this.formatUsdValue(new BN(0))
     }
 
     get usdValueFormatted(): FormattedNumber {
-        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.price) {
-            return this.formatUsdValue(new BN(this.tokenPriceInfo.price).multipliedBy(this.getValue()))
+        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.current_price) {
+            return this.formatUsdValue(new BN(this.tokenPriceInfo.current_price).multipliedBy(this.getValue()))
         }
         return this.formatUsdValue(new BN(0))
     }
 
     get change(): number {
-        if (!this.tokenPriceInfo || this.tokenPriceInfo.percentChange24h === 0) {
+        if (!this.tokenPriceInfo || !this.tokenPriceInfo.price_change_24h || this.tokenPriceInfo.price_change_24h === 0) {
             return 0
-        } else if (this.tokenPriceInfo.percentChange24h > 0) {
+        } else if (this.tokenPriceInfo.price_change_24h > 0) {
             return 1
         }
         return -1
@@ -280,7 +276,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get priceChangeFormatted(): FormattedNumber | null {
-        return this.tokenPriceInfo ? this.formatPercentageValue(new BN(this.tokenPriceInfo.percentChange24h)) : null
+        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_24h ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_24h)) : null
     }
 
     /*
@@ -297,6 +293,10 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
             return n
         }
         return new BN(this.token.balance)
+    }
+
+    showNft(): void {
+        this.$emit('showNft', this.token.tokenInfo.contract, this.token.tokenInfo.name)
     }
 }
 </script>

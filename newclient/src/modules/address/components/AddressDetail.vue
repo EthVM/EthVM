@@ -92,8 +92,8 @@
                     -->
                     <v-flex xs12 md4>
                         <v-card class="error white--text pl-2 pr-2" flat>
-                            <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = {{ exchangeRateFormatted }})</v-card-text>
-                            <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">
+                            <v-card-text class="pb-0">{{ $t('usd.value') }} {{ usdBalanceString }}</v-card-text>
+                            <v-card-title v-if="!loadingUSD" class="title font-weight-regular text-truncate">
                                 {{ balanceUsd.value }}
                                 <v-tooltip v-if="balanceUsd.tooltipText" bottom>
                                     <template #activator="data">
@@ -180,8 +180,8 @@
                     =====================================================================================
                     -->
                     <v-card class="error white--text xs-div" flat>
-                        <v-card-text class="pb-0">{{ $t('usd.value') }} (1{{ $t('common.eth') }} = ${{ exchangeRateFormatted }})</v-card-text>
-                        <v-card-title v-if="!loading" class="title font-weight-regular text-truncate">
+                        <v-card-text class="pb-0">{{ $t('usd.value') }} {{ usdBalanceString }}</v-card-text>
+                        <v-card-title v-if="!loadingUSD" class="title font-weight-regular text-truncate">
                             {{ balanceUsd.value }}
                             <v-tooltip v-if="balanceUsd.tooltipText" bottom>
                                 <template #activator="data">
@@ -258,7 +258,7 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     @Prop(Object) address!: Address
     @Prop(Boolean) loading!: boolean
     @Prop(Boolean) loadingTokens!: boolean
-    exchangeRatePrice = 150.345
+    @Prop(Number) etherPrice!: number
 
     /*
   ===================================================================================
@@ -289,13 +289,27 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
         return this.formatVariableUnitEthValue(new BN(this.address.balance))
     }
     get balanceUsd(): FormattedNumber {
-        const balanceEth = eth.toEthFromWei(this.address.balance)
-        const balanceUsd = new BN(balanceEth).multipliedBy(new BN(this.exchangeRatePrice))
-        return this.formatUsdValue(balanceUsd)
+        if (!this.loadingUSD) {
+            const balanceEth = eth.toEthFromWei(this.address.balance)
+            const balanceUsd = new BN(balanceEth).multipliedBy(new BN(this.etherPrice))
+            return this.formatUsdValue(balanceUsd)
+        }
+        return this.formatUsdValue(new BN(0))
     }
 
     get exchangeRateFormatted(): string {
-        return this.formatUsdValue(new BN(this.exchangeRatePrice)).value
+        if (!this.loadingUSD) {
+            return this.formatUsdValue(new BN(this.etherPrice)).value
+        }
+        return '0'
+    }
+
+    get usdBalanceString(): string {
+        return this.loadingUSD ? '' : `(1 ${this.$t('common.eth')} = ${this.exchangeRateFormatted})`
+    }
+
+    get loadingUSD(): boolean {
+        return this.etherPrice === undefined
     }
 }
 </script>

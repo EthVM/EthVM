@@ -7,7 +7,7 @@
       -->
         <v-flex xs12 hidden-md-and-up>
             <div class="table-row-mobile">
-                <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
+                <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pa-3">
                     <v-flex xs5 pa-1> </v-flex>
                     <v-flex xs7 pa-1>
                         <v-layout row align-center justify-end>
