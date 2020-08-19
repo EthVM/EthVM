@@ -334,7 +334,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             return '0'
         }
 
-        return this.type === TYPES[0] && this.transfer.stateDiff.from
+        return this.type === TYPES[1] && this.transfer.stateDiff.from
             ? this.getValue(this.transfer.stateDiff.from.before)
             : this.getValue(this.transfer.stateDiff.to.before)
     }
@@ -343,7 +343,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         if (!this.transfer.stateDiff) {
             return '0'
         }
-        return this.type === TYPES[0] && this.transfer.stateDiff.from
+        return this.type === TYPES[1] && this.transfer.stateDiff.from
             ? this.getValue(this.transfer.stateDiff.from.after)
             : this.getValue(this.transfer.stateDiff.to.after)
     }
