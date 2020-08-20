@@ -1,6 +1,6 @@
 <template>
     <div class="hidden-md-and-up">
-        <v-btn slot="activator" block outline large color="secondary" class="text-capitalize pl-1 pr-1" small @click.native.stop="dialog = true">
+        <v-btn slot="activator" block outline large color="secondary" class="text-capitalize pl-2 pr-2" small @click.native.stop="dialog = true">
             <v-layout row justify-start align-center>
                 <v-flex xs2>
                     <p class="body-2 mb-0 font-weight-regular">{{ $t('filter.name') }}:</p>
@@ -50,6 +50,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
 
 @Component
 export default class TokenFilter extends Vue {
@@ -65,22 +66,22 @@ export default class TokenFilter extends Vue {
     get items() {
         return [
             {
-                _id: 0,
+                _id: FILTER_VALUES[0],
                 category: this.$i18n.tc('price.name', 1),
                 filter: this.$i18n.t('filter.high')
             },
             {
-                _id: 1,
+                _id: FILTER_VALUES[1],
                 category: this.$i18n.tc('price.name', 1),
                 filter: this.$i18n.t('filter.low')
             },
             {
-                _id: 4,
+                _id: FILTER_VALUES[6],
                 category: this.$i18n.t('token.market'),
                 filter: this.$i18n.t('filter.high')
             },
             {
-                _id: 5,
+                _id: FILTER_VALUES[7],
                 category: this.$i18n.t('token.market'),
                 filter: this.$i18n.t('filter.low')
             }

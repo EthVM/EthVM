@@ -26,23 +26,7 @@
             wrap
             pa-3
         >
-            <v-layout align-center px-2>
-                <p class="pr-2 info--text">{{ $t('filter.name') }}</p>
-                <v-card flat class="tx-filter-select-container pl-2" height="36px">
-                    <v-select
-                        v-model="filter"
-                        :items="options"
-                        solo
-                        flat
-                        hide-details
-                        class="primary body-1"
-                        item-text="text"
-                        item-value="value"
-                        height="32px"
-                    />
-                </v-card>
-            </v-layout>
-
+            <app-filter :options="options" @onFilterChange="onFilterChange" />
             <app-paginate-has-more
                 v-if="showPagination && !initialLoad"
                 :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
@@ -71,6 +55,7 @@
 </template>
 
 <script lang="ts">
+import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
@@ -98,6 +83,7 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
     components: {
         AppNewUpdate,
         AppTableTitle,
+        AppFilter,
         AppPaginateHasMore,
         TableTxs,
         TableAddressTxsRow,
@@ -169,12 +155,12 @@ export default class AddressTransers extends Vue {
     syncing?: boolean = false
     initialLoad = true
     showPagination = false
+    filter = null
     index = 0
     totalPages = 0
     /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
-    filter = null
     getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
     ethTransfers!: EthTransfer[]
 
@@ -276,6 +262,10 @@ export default class AddressTransers extends Vue {
     ===================================================================================
     */
 
+    onFilterChange(filter) {
+        this.filter = filter
+    }
+
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
@@ -346,10 +336,6 @@ export default class AddressTransers extends Vue {
 }
 </script>
 <style scoped lang="css">
-.tx-filter-select-container {
-    border: solid 1px #efefef;
-    padding-top: 1px;
-}
 .tx-status {
     min-width: 60px;
 }
