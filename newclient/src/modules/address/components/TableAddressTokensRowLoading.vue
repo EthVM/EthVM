@@ -2,10 +2,10 @@
     <v-layout>
         <!--
         =====================================================================================
-          Mobile  (xs)
+          Mobile  (sm)
         =====================================================================================
       -->
-        <v-flex xs12 hidden-sm-and-up>
+        <v-flex xs12 hidden-md-and-up>
             <div class="token-mobile">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height pa-1>
                     <v-flex xs2>
@@ -37,7 +37,7 @@
           Desktop (SM-LG)
         =====================================================================================
        -->
-        <v-flex hidden-xs-only sm12>
+        <v-flex hidden-sm-and-down sm12>
             <!-- Standard layout -->
             <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-2">
                 <v-flex :sm6="isRopsten" sm4 class="pt-0 pb-0">
@@ -49,13 +49,22 @@
                     </v-layout>
                 </v-flex>
                 <v-flex :sm6="isRopsten" sm3 class="pt-0 pb-0">
-                    <div :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' }" class="table-row-loading"></div>
+                    <div
+                        :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'sm' }"
+                        class="table-row-loading"
+                    ></div>
                 </v-flex>
                 <v-flex v-if="!isRopsten" sm3 class="pt-0 pb-0">
-                    <div :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' }" class="table-row-loading"></div>
+                    <div
+                        :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'sm' }"
+                        class="table-row-loading"
+                    ></div>
                 </v-flex>
                 <v-flex v-if="!isRopsten" sm2 class="pt-0 pb-0">
-                    <div :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' }" class="table-row-loading"></div>
+                    <div
+                        :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'sm' }"
+                        class="table-row-loading"
+                    ></div>
                 </v-flex>
             </v-layout>
             <v-divider class="mb-2 mt-2" />

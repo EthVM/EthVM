@@ -2,7 +2,7 @@
     <v-layout>
         <!--
         =====================================================================================
-          Mobile (XS)
+          Mobile (SM)
         =====================================================================================
         -->
         <v-flex xs12 hidden-md-and-up>
@@ -260,7 +260,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         return 'table-row-mobile'
     }
     get isSmall(): boolean {
-        return this.$vuetify.breakpoint.name === 'xs'
+        return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm'
     }
     get type(): string {
         const from = this.transfer.getFrom().toLowerCase()

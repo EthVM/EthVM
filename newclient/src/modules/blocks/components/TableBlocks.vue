@@ -12,7 +12,7 @@
     =====================================================================================
     -->
         <v-layout pl-2 pr-2>
-            <v-flex hidden-xs-only sm12>
+            <v-flex hidden-sm-and-down sm12>
                 <v-card v-if="!hasMessage" color="primary" flat class="white--text pl-3 table-blocks-header-card" height="40px">
                     <v-layout align-center justify-start row fill-height pr-3>
                         <v-flex sm2>

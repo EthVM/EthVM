@@ -5,10 +5,10 @@
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <v-flex hidden-xs-only>
+        <v-flex hidden-sm-and-down>
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <!-- Column 1: Tx Info -->
-                <v-flex :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']" sm6 md7>
+                <v-flex :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'pr-3' : 'pr-5']" sm6 md7>
                     <v-layout row align-center justift-start pa-2>
                         <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
                         <app-transform-hash :hash="transfer.transfer.transactionHash" :link="`/tx/${transfer.transfer.transactionHash}`" />
@@ -49,10 +49,10 @@
         </v-flex>
         <!--
     =====================================================================================
-      Mobile (XS)
+      Mobile (XS-SM)
     =====================================================================================
     -->
-        <v-flex xs12 hidden-sm-and-up>
+        <v-flex xs12 hidden-md-and-up>
             <div class="table-row-mobile mb-2">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs7>

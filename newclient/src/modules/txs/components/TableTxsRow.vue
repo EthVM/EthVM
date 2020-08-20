@@ -2,10 +2,10 @@
     <v-layout>
         <!--
       =====================================================================================
-        Mobile (XS)
+        Mobile (XS-SM)
       =====================================================================================
       -->
-        <v-flex xs12 hidden-sm-and-up>
+        <v-flex xs12 hidden-md-and-up>
             <div :class="txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs6 pa-1>
@@ -51,7 +51,7 @@
         Tablet/ Desktop (SM - XL)
       =====================================================================================
       -->
-        <v-flex hidden-xs-only sm12>
+        <v-flex hidden-sm-and-down sm12>
             <v-layout grid-list-xs row align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <!--
           =====================================================================================

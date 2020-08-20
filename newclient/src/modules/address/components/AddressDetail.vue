@@ -16,7 +16,7 @@
                     <v-flex xs12>
                         <v-layout row wrap align-center justify-space-between>
                             <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2">{{ title }}</v-card-title>
-                            <v-layout hidden-xs-only align-center justify-start row fill-height pt-2>
+                            <v-layout hidden-sm-and-down align-center justify-start row fill-height pt-2>
                                 <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
                                 <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
                             </v-layout>
@@ -29,7 +29,7 @@
                             <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ address.hash }}</p>
                         </v-layout>
                     </v-flex>
-                    <v-flex v-if="hasChips" xs12 hidden-sm-and-up>
+                    <v-flex v-if="hasChips" xs12 hidden-md-and-up>
                         <v-layout align-center justify-start row fill-height pt-2>
                             <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
                             <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
@@ -53,7 +53,7 @@
               DESKTOP LAYOUT
             =====================================================================================
             -->
-            <v-flex hidden-xs-only>
+            <v-flex hidden-sm-and-down>
                 <v-layout :class="layoutPadding" row wrap justify-space-between>
                     <!--
                     =====================================================================================
@@ -144,7 +144,7 @@
               MOBILE LAYOUT
             =====================================================================================
             -->
-            <v-flex hidden-sm-and-up pt-0>
+            <v-flex hidden-md-and-up pt-0>
                 <div class="xs-overflow">
                     <!--
                     =====================================================================================
@@ -278,7 +278,7 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
         const brkPoint = this.$vuetify.breakpoint.name
 
         switch (brkPoint) {
-            case 'xs':
+            case 'xs' || 'sm':
                 return 'pa-2'
             default:
                 return 'pl-3 pr-3 pt-0 pb-2'

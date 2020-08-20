@@ -20,7 +20,7 @@
             v-if="isETH"
             :column="$vuetify.breakpoint.smAndDown"
             :align-center="$vuetify.breakpoint.mdAndUp"
-            :align-baseline="$vuetify.breakpoint.smAndDown"
+            :align-end="$vuetify.breakpoint.smAndDown"
             d-flex
             justify-space-between
             wrap

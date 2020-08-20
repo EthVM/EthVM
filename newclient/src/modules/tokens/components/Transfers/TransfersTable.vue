@@ -12,9 +12,9 @@
 
         <!-- Table Header -->
         <div v-if="!hasError">
-            <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-xs-only" height="40px">
+            <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-sm-and-down" height="40px">
                 <v-layout align-center justify-start row fill-height pr-2>
-                    <v-flex :class="[$vuetify.breakpoint.name === 'sm' ? 'pr-3' : 'pr-5']" sm6 md7>
+                    <v-flex :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'pr-3' : 'pr-5']" sm6 md7>
                         <h5>{{ $tc('tx.hash', 1) }}</h5>
                     </v-flex>
                     <v-flex sm2>
@@ -30,7 +30,11 @@
             <!-- Start Rows -->
             <div v-if="loading">
                 <v-flex sm12>
-                    <div v-for="i in maxItems" :key="i" :class="[$vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : '']">
+                    <div
+                        v-for="i in maxItems"
+                        :key="i"
+                        :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : '']"
+                    >
                         <transfers-table-row-loading />
                     </div>
                 </v-flex>
