@@ -1,6 +1,5 @@
 <template>
     <div>
-        <v-progress-linear v-if="isLoading" color="blue" indeterminate class="mt-0" />
         <!-- <app-error :has-error="hasMessage" :message="tableMessage" class="mb-4" /> -->
 
         <!--
@@ -53,13 +52,14 @@
                     </v-flex>
                     <v-flex v-else xs12>
                         <div v-for="i in maxItems" :key="i">
-                            <table-txs-row-loading />
+                            <app-table-row-loading />
                         </div>
                     </v-flex>
                 </v-layout>
             </v-card>
             <v-card v-else flat>
                 <v-card-title>{{ tableMessage }} </v-card-title>
+                <v-divider class="ma-2 hidden-sm-and-down" />
             </v-card>
         </div>
     </div>
@@ -67,7 +67,7 @@
 
 <script lang="ts">
 import TableTxsRow from '@app/modules/txs/components/TableTxsRow.vue'
-import TableTxsRowLoading from '@app/modules/txs/components/TableTxsRowLoading.vue'
+import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Footnote } from '@app/core/components/props'
 const SCROLLVIEW = 'max-height: 450px'
@@ -81,7 +81,7 @@ const SCROLLVIEW = 'max-height: 450px'
 @Component({
     components: {
         TableTxsRow,
-        TableTxsRowLoading
+        AppTableRowLoading
     }
 })
 export default class TableTxs extends Vue {
