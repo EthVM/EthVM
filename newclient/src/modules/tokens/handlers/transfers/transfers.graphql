@@ -10,8 +10,8 @@ fragment TokenFragment on EthTokenInfo {
     symbol
     decimals
 }
-query getERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
-    getERC20Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+query getERC20TokenTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getERC20TokenTransfers(contract: $hash, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {
                 ...TransferSummary

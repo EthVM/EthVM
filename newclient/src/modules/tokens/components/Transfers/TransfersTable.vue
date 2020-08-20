@@ -64,7 +64,7 @@ import TransfersTableRow from './TransfersTableRow.vue'
 import TransfersTableRowLoading from './TransfersTableRowLoading.vue'
 import BigNumber from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import { getERC20Transfers } from '@app/modules/tokens/handlers/transfers/transfers.graphql'
+import { getERC20TokenTransfers } from '@app/modules/tokens/handlers/transfers/transfers.graphql'
 import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20Transfers'
 
 const MAX_ITEMS = 10
@@ -80,13 +80,13 @@ const MAX_ITEMS = 10
     },
     apollo: {
         getTransfers: {
-            query: getERC20Transfers,
+            query: getERC20TokenTransfers,
             fetchPolicy: 'network-only',
             variables() {
                 return { hash: this.address, _limit: this.maxItems }
             },
             deep: true,
-            update: data => data.getERC20Transfers,
+            update: data => data.getERC20TokenTransfers,
             result({ data }) {
                 if (this.hasItems) {
                     this.error = ''
@@ -138,7 +138,7 @@ export default class TransfersTable extends Vue {
             this.$apollo.queries.getTransfers.refetch()
         } else {
             if (page > this.isEnd && this.hasMore) {
-                const queryName = 'getERC20Transfers'
+                const queryName = 'getERC20TokenTransfers'
 
                 this.$apollo.queries.getTransfers.fetchMore({
                     variables: {
