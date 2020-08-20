@@ -9,7 +9,7 @@
                     <v-layout row align-center justify-space-between>
                         <div :class="[titleColor, 'font-weight-bold']">{{ state.title ? state.title : status }}</div>
                         <v-btn :small="true" icon @click="showDialog = false">
-                            <v-icon class="fas fa-times info--text body-1" />
+                            <v-icon class="fas fa-times info--text close-icon" />
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -112,6 +112,9 @@ export default class AppStateDiff extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.close-icon {
+    font-size: 14px;
+}
 .app-state-diff {
     .more-btn {
         height: 25px;

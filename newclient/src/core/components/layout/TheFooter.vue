@@ -55,7 +55,8 @@
                             class="text-lowercase font-weight-regular donation-btn"
                             href="https://ethvm.com/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
                         >
-                            <v-icon class="secondary--text fab fa-ethereum pr-2" /> {{ $t('common.eth') }} - {{ $t('footer.ens') }}
+                            <v-icon class="secondary--text fab fa-ethereum pr-2 asset-icon" /> <span class="text-uppercase pr-1">{{ $t('common.eth') }}</span> -
+                            {{ $t('footer.ens') }}
                         </v-btn>
                         <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
                     </v-layout>
@@ -66,8 +67,8 @@
                             class="text-lowercase font-weight-regular donation-btn"
                             href="https://www.blockchain.com/btc/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                         >
-                            <v-icon class="secondary--text fab fa-btc pr-2" />
-                            {{ $t('footer.btc') }} - blockchain.com
+                            <v-icon class="secondary--text fab fa-btc pr-2 asset-icon" />
+                            <span class="text-uppercase pr-1">{{ $t('footer.btc') }}</span> - Bitcoin
                         </v-btn>
                         <app-copy-to-clip :value-to-copy="btcAddr"></app-copy-to-clip>
                     </v-layout>
@@ -149,5 +150,8 @@ export default class TheFooter extends Vue {
 <style scoped lang="css">
 .donation-btn {
     width: 200px;
+}
+.asset-icon {
+    font-size: 14px;
 }
 </style>
