@@ -3,10 +3,10 @@
         <v-layout d-block>
             <!--
         =====================================================================================
-          Mobile (XS)
+          Mobile (XS-SM)
         =====================================================================================
       -->
-            <v-flex xs12 hidden-sm-and-up>
+            <v-flex xs12 hidden-md-and-up>
                 <div class="table-row-mobile">
                     <v-layout grid-list-xs row wrap align-center justify-center class="pa-3">
                         <v-flex xs12>
@@ -41,7 +41,7 @@
           Desktop (SM-LG)
         =====================================================================================
       -->
-            <v-flex hidden-xs-only>
+            <v-flex hidden-sm-and-down>
                 <v-layout align-center justify-start row fill-height pa-3>
                     <!-- Column 1: Holders Address -->
                     <v-flex sm6 pr-4>

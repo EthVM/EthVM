@@ -2,10 +2,10 @@
     <v-layout>
         <!--
         =====================================================================================
-          Mobile (XS)
+          Mobile (XS-SM)
         =====================================================================================
       -->
-        <v-flex xs12 hidden-sm-and-up>
+        <v-flex xs12 hidden-md-and-up>
             <div class="table-row-loading-mobile mr-1 ml-1">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pr-2 pl-2">
                     <v-flex xs2>
@@ -30,7 +30,7 @@
           Desktop (SM-LG)
         =====================================================================================
       -->
-        <v-flex hidden-xs-only sm12>
+        <v-flex hidden-sm-and-down sm12>
             <v-layout grid-list-xs row align-center justify-start fill-height class="pr-3 pt-1">
                 <v-flex sm1>
                     <div class="token-image">
