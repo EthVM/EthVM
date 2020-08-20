@@ -17,10 +17,10 @@
                           XS: 4/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex xs2 pl-1 pr-1>
+                        <v-flex xs2 pl-1 pr-1 d-flex justify-center>
                             <div class="token-image-mobile">
-                                <!-- <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
-                                <v-img v-else :src="token.image" contain /> -->
+                                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
+                                <v-img v-else :src="token.image" contain />
                             </div>
                         </v-flex>
                         <!--

@@ -19,7 +19,13 @@
                 </v-card>
             </template>
         </table-txs>
-        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
+        <v-layout
+            v-if="showPagination && !initialLoad"
+            :justify-end="$vuetify.breakpoint.mdAndUp"
+            :justify-center="$vuetify.breakpoint.smAndDown"
+            row
+            class="pb-1 pr-3 pl-2"
+        >
             <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
         </v-layout>
     </v-card>

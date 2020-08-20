@@ -37,7 +37,7 @@
         "pending-short": "Pending Tx | Pending Txs",
         "mined": "Mined Transactions",
         "detail": "Transaction Details",
-        "last": "Last Transactions",
+        "last": "Last Transactions | Last Txs",
         "hash": "Tx # | Transaction #",
         "fee": "Tx Fee | Txs Fees",
         "estimated-fee": "Estimated Fee",
@@ -90,7 +90,8 @@
         "circSupply": "Circulating Supply",
         "total": "Total of ",
         "per": "per",
-        "filtered": "Filtered by Holder"
+        "filtered": "Filtered by Holder",
+        "sort-by": "Sort by"
     },
 
     "address": {

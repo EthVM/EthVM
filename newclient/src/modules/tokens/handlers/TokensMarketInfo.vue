@@ -1,17 +1,23 @@
 <template>
     <v-card color="white" flat class="pb-2">
-        <app-table-title :title="getTitle" :has-pagination="false" :page-type="pageType" page-link="" />
+        <app-table-title
+            :title-caption="$vuetify.breakpoint.smAndDown ? 'Top 200 tokens' : ''"
+            :title="getTitle"
+            :has-pagination="false"
+            :page-type="pageType"
+            page-link=""
+        />
         <v-divider />
         <v-layout v-if="showPagination && !initialLoad" row wrap align-center justify-space-between pl-3 pr-3>
-            <v-flex xs12 md4>
+            <v-flex xs12 md4 hidden-sm-and-down>
                 <p class="info--text">Top 200 tokens</p>
             </v-flex>
             <v-flex hidden-sm-and-down md4>
                 <!-- Search Bar -->
             </v-flex>
             <v-flex xs12 sm12 md4>
-                <v-layout d-flex column align-end>
-                    <token-filter @filterMobile="sortTokens" />
+                <v-layout :align-end="$vuetify.breakpoint.mdAndUp" :align-center="$vuetify.breakpoint.smAndDown" d-flex column>
+                    <app-filter :options="options" :show-desktop="false" :is-sort="true" @onFilterChange="sortTokens" />
                     <app-paginate
                         :total="totalPages"
                         :current-page="index"
@@ -41,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import TokenFilter from '@app/modules/tokens/components/TokenFilter.vue'
+import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
@@ -103,7 +109,7 @@ const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volu
         TableTxs,
         TableTokensHeader,
         TableTokensRow,
-        TokenFilter
+        AppFilter
     }
 })
 export default class AddressTokens extends Mixins(CoinData) {
@@ -141,6 +147,51 @@ export default class AddressTokens extends Mixins(CoinData) {
       Computed
     ===================================================================================
     */
+
+    get options() {
+        return [
+            {
+                value: FILTER_VALUES[0],
+                text: this.$i18n.tc('token.name', 1),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[1],
+                text: this.$i18n.tc('token.name', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[2],
+                text: this.$i18n.tc('price.name', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[3],
+                text: this.$i18n.tc('price.name', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[4],
+                text: this.$i18n.tc('token.volume', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[5],
+                text: this.$i18n.tc('token.volume', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[6],
+                text: this.$i18n.t('token.market'),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[7],
+                text: this.$i18n.t('token.market'),
+                filter: this.$i18n.t('filter.low')
+            }
+        ]
+    }
 
     get showTokens(): TokenMarketData[] {
         const start = this.index * this.maxItems
