@@ -11,7 +11,7 @@
                 />
             </template>
         </app-table-title>
-        <table-txs :is-loading="loading" :table-message="message" :txs-data="pendingTx" :is-scroll-view="false">
+        <table-txs :max-items="maxItems" :is-loading="loading" :table-message="message" :txs-data="pendingTx" :is-scroll-view="false">
             <template #header>
                 <table-address-txs-header :address="address" :is-pending="true" />
             </template>

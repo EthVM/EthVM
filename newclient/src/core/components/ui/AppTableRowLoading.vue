@@ -5,8 +5,8 @@
                 <v-flex xs12>
                     <v-progress-linear color="lineGrey" value="40" indeterminate height="15" class="ma-2" />
                 </v-flex>
-                <v-flex v-if="$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs'" xs12>
-                    <v-progress-linear color="lineGrey" value="40" indeterminate height="15" class="ma-2" />
+                <v-flex v-if="$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs'" xs12 pt-0>
+                    <v-progress-linear color="lineGrey" value="40" indeterminate height="15" class="mr-2 ml-2 mb-2 mt-0" />
                 </v-flex>
             </v-layout>
             <v-divider class="mb-2 mt-2 hidden-sm-and-down" />
