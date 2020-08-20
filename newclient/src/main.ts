@@ -10,9 +10,9 @@ import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { onError } from 'apollo-link-error'
 /* Other */
 import Vuetify from 'vuetify/lib'
-import 'vuetify/src/stylus/app.styl'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@app/assets/fonts/google-fonts.css'
+import 'vuetify/dist/vuetify.min.css'
 import configs from './configs'
 import router from '@app/core/router'
 import App from '@app/modules/App.vue'
@@ -107,10 +107,12 @@ Vue.use(Vuetify, {
         // used -->
         // background: String(colors.grey.darken3)
     },
-    iconfont: 'fa', // use font awesome icons,
+    // iconfont: 'fa', // use font awesome icons,
     icons: {
-        expand: 'fa-chevron-down fa-1x',
-        dropdown: 'fa-caret-down fa-1x'
+        iconfont: 'fa',
+        expand: 'fas fa-chevron-down small-global-icon-font',
+        dropdown: 'fas fa-angle-down small-global-icon-font',
+        close: 'fas fa-times small-global-icon-font'
     }
 })
 

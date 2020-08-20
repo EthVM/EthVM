@@ -1,7 +1,7 @@
 <template>
     <v-btn v-if="display" class="new-block-alert text-capitalize ma-0" flat @click="onReload">
         {{ buttonText }}
-        <v-icon class="ml-1 secondary--text fas fa-sync fa-1x fa-rotate-90"></v-icon>
+        <v-icon class="ml-2 secondary--text fas fa-sync small-global-icon-font"></v-icon>
     </v-btn>
 </template>
 

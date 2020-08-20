@@ -7,7 +7,8 @@ h3 {
     font-weight: 400;
 }
 
-h3 {}
+h3 {
+}
 
 a:link {
     text-decoration: none;
@@ -24,14 +25,12 @@ a:link {
 /* Mono Spaced Font: */
 
 .font-mono {
-  font-family: 'Roboto Mono', sans-serif;
+    font-family: 'Roboto Mono', sans-serif;
 }
 
-
-
 p {
-  margin-bottom: 0px;
-  padding-bottom: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
 }
 
 /* SEARCH COMPONENT: */
@@ -71,26 +70,28 @@ p {
 
 .list-enter,
 .list-leave-to
-/* .list-leave-active below version 2.1.8 */
-
-    {
+/* .list-leave-active below version 2.1.8 */ {
     opacity: 0;
     transform: translateY(30px);
 }
 
 /* loading placeholders */
 .table-row-loading {
-  background: #e6e6e6;
-  height: 12px;
-  border-radius: 2px;
+    background: #e6e6e6;
+    height: 12px;
+    border-radius: 2px;
 }
 
 /* token images */
 .token-image {
-  width: 25px;
-  min-width: 20px;
-  margin: 0.5em 1em;
+    width: 25px;
+    min-width: 20px;
+    margin: 0.5em 1em;
 }
 .token-image-mobile {
-  width: 36px;
+    width: 36px;
+}
+
+.small-global-icon-font {
+    font-size: 14px;
 }

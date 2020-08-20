@@ -1,19 +1,18 @@
 <template>
     <div id="nav">
         <!--
-    =====================================================================================
-      NAVIGATION DRAWER
-    =====================================================================================
-    -->
-
+        =====================================================================================
+          NAVIGATION DRAWER
+        =====================================================================================
+        -->
         <v-navigation-drawer v-model="drawer" :mini-variant="mini" class="primary elevation-3 pt-3" app mini-variant-width="100px">
             <v-layout column fill-height>
                 <v-flex>
                     <!--
-          =====================================================================================
-            LOGO
-          =====================================================================================
-          -->
+                    =====================================================================================
+                      LOGO
+                    =====================================================================================
+                    -->
                     <v-layout v-if="mini" column>
                         <v-img :src="require('@/assets/logo-compact.png')" height="70px" max-width="80px" contain class="mb-2 mt-2"></v-img>
                         <v-img :src="require('@/assets/alpha.png')" height="18px" max-width="80px" contain class="mb-2"></v-img>
@@ -24,10 +23,10 @@
                     </v-layout>
 
                     <!--
-          =====================================================================================
-            DRAWER ENTRIES
-          =====================================================================================
-          -->
+                    =====================================================================================
+                      DRAWER ENTRIES
+                    =====================================================================================
+                    -->
                     <v-list v-for="(item, index) in items" :key="index" v-model="item.active" class="pa-0" two-line>
                         <v-list-tile v-if="!item.links" :to="item.header.routerLink" class="nav--text pb-1" active-class="white--text accent">
                             <v-layout row align-center justify-start fill-height>
@@ -62,10 +61,10 @@
                 </v-flex>
                 <v-spacer />
                 <!--
-        =====================================================================================
-          REPORT BUTTON
-        =====================================================================================
-        -->
+                =====================================================================================
+                  REPORT BUTTON
+                =====================================================================================
+                -->
                 <v-flex v-if="!mini">
                     <v-layout align-center justify-end column fill-height pa-4>
                         <p class="white--text text-xs-center pb-2">{{ $t('message.report') }}</p>
@@ -77,10 +76,10 @@
             </v-layout>
         </v-navigation-drawer>
         <!--
-    =====================================================================================
-      TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Mobile
-    =====================================================================================
-    -->
+        =====================================================================================
+          TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Mobile
+        =====================================================================================
+        -->
 
         <v-toolbar
             v-if="$vuetify.breakpoint.name === 'xs'"
@@ -125,10 +124,10 @@
             </template>
         </v-toolbar>
         <!--
-    =====================================================================================
-      TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Desktop
-    =====================================================================================
-    -->
+        =====================================================================================
+          TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Desktop
+        =====================================================================================
+        -->
         <v-toolbar v-else color="white" app fixed clipped flat height="77px">
             <v-layout align-center row fill-height>
                 <v-flex xs1>
@@ -199,20 +198,21 @@ export default class TheNavigationDrawer extends Vue {
             {
                 header: {
                     icon: 'fa fa-cubes',
-                    text: this.$i18n.tc('block.name', 2)
-                },
-                links: [
-                    {
-                        text: this.$i18n.t('btn.view-all'),
-                        routerLink: '/blocks',
-                        name: 'blocks'
-                    },
-                    {
-                        text: this.$i18n.tc('uncle.name', 2),
-                        routerLink: '/uncles',
-                        name: 'uncles'
-                    }
-                ]
+                    text: this.$i18n.tc('block.name', 2),
+                    routerLink: '/blocks'
+                }
+                // links: [
+                //     {
+                //         text: this.$i18n.t('btn.view-all'),
+                //         routerLink: '/blocks',
+                //         name: 'blocks'
+                //     },
+                //     {
+                //         text: this.$i18n.tc('uncle.name', 2),
+                //         routerLink: '/uncles',
+                //         name: 'uncles'
+                //     }
+                // ]
             },
             {
                 header: {
