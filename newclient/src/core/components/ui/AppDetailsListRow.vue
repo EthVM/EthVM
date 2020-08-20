@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-layout align-start justify-start row class="pa-2 mr-2 ml-2">
+        <v-layout align-center justify-start row class="ma-2">
             <!--
       =====================================================================================
         DETAIL TITLE
@@ -16,7 +16,11 @@
       -->
             <v-flex v-if="!detail.txInput" xs7 sm8 md9 pr-0>
                 <div v-if="isLoading">
-                    <v-flex xs12 class="table-row-loading"></v-flex>
+                    <v-layout align-center justify-start mr-2>
+                        <v-flex xs12 pa-0>
+                            <v-progress-linear color="lineGrey" value="40" indeterminate height="16" class="ma-0" />
+                        </v-flex>
+                    </v-layout>
                 </div>
                 <div v-else>
                     <div v-if="!isMono">
