@@ -103,13 +103,13 @@ interface NFTMap {
                             this.totalTokens = this.getTokens.length
                             this.$emit('totalERC20', this.totalTokens)
                             this.$emit('loadingERC20Tokens', false)
+                            this.initialLoad = false
                             if (this.totalTokens > this.maxItems) {
                                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                                 this.showPagination = true
                             }
                         }
                     }
-                    this.initialLoad = false
                 } else {
                     console.log('error failed no data: ', data)
                     this.showPagination = false

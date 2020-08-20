@@ -43,7 +43,7 @@
                 </v-flex>
                 <div v-if="isLoading" xs12>
                     <div v-for="i in maxItems" :key="i">
-                        <table-blocks-row-loading />
+                        <app-table-row-loading />
                     </div>
                 </div>
             </v-layout>
@@ -54,16 +54,15 @@
 <script lang="ts">
 import AppFootnotes from '@app/core/components/ui/AppFootnotes.vue'
 import TableBlocksRow from '@app/modules/blocks/components/TableBlocksRow.vue'
-import TableBlocksRowLoading from '@app/modules/blocks/components/TableBlocksRowLoading.vue'
+import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 const SCROLLVIEW = 'max-height: 450px'
 
 @Component({
     components: {
         AppFootnotes,
-
         TableBlocksRow,
-        TableBlocksRowLoading
+        AppTableRowLoading
     }
 })
 export default class TableBlocks extends Vue {

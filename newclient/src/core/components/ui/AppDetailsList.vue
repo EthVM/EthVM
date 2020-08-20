@@ -12,14 +12,16 @@
     =====================================================================================
     -->
         <div v-if="isLoading && !hasError">
-            <v-card-title class="title font-weight-bold pl-4">
-                <div class="details-list-title-loading"></div>
-            </v-card-title>
+            <v-layout pa-2>
+                <v-flex xs5 sm4>
+                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
+                </v-flex>
+            </v-layout>
             <v-divider class="lineGrey mt-1 mb-1" />
         </div>
         <div v-else class="pb-1 pt-1">
             <slot name="title">
-                <div v-if="!hasError" class="pa-1">
+                <div class="pa-1">
                     <v-card-title class="title font-weight-bold pl-4">{{ title }}</v-card-title>
                 </div>
             </slot>
@@ -36,7 +38,6 @@
 
     =====================================================================================
     -->
-        <v-progress-linear v-if="isLoading && !hasError" color="blue" indeterminate />
         <app-error :has-error="hasError" :message="error" class="mb-4" />
         <!--
     =====================================================================================
