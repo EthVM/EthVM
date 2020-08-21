@@ -220,6 +220,7 @@
                                     rewards-type="block"
                                     @blockRewards="setBlockRewards"
                                     @resetUpdateCount="setNewEvent"
+                                    @errorRewards="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <!--
@@ -236,6 +237,7 @@
                                     rewards-type="uncle"
                                     @uncleRewards="setUncleRewards"
                                     @resetUpdateCount="setNewEvent"
+                                    @errorRewards="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <!--
@@ -250,6 +252,7 @@
                                     :max-items="max"
                                     rewards-type="genesis"
                                     @genesisRewards="setGenesisRewards"
+                                    @errorRewards="setError"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>

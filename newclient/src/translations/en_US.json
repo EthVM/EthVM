@@ -171,7 +171,8 @@
         "error": {
             "address": {
                 "balance": "Something went wrong while retrieving Address ETH Balance.",
-                "pending": "Something went wrong while retrieving Address Pending Tx"
+                "pending": "Something went wrong while retrieving Address Pending Tx.",
+                "block-rewards": "Something went wrong while retrieving Address Block Rewards."
             }
         },
         "tx": {

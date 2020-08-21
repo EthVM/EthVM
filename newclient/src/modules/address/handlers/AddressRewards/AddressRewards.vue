@@ -39,6 +39,7 @@ import { getAddrRewardsGenesis_getGenesisRewards as RewardsGenesisType } from '.
 import { RewardSummary_transfers as RewardType } from './apolloTypes/RewardSummary'
 import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
+import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 /*
   DEV NOTES:
   - add on Error
@@ -73,7 +74,7 @@ import { AddressEventType } from '@app/apollo/global/globalTypes'
             update: data => data.getBlockRewards || data.getUncleRewards || data.getGenesisRewards,
             result({ data }) {
                 if (this.hasRewards) {
-                    this.error = '' // clear the error
+                    this.emitErrorState(false)
                     if (this.initialLoad) {
                         this.showPagination = this.getRewards.nextKey != null
                         this.initialLoad = false
@@ -82,12 +83,14 @@ import { AddressEventType } from '@app/apollo/global/globalTypes'
                         }
                     }
                 } else {
-                    console.log('error failed no data: ', data)
+                    this.emitErrorState(true)
                     this.showPagination = false
                     this.initialLoad = true
                     this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getRewards.refetch()
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
             }
         }
     }
@@ -119,6 +122,7 @@ export default class AddressRewards extends Vue {
     isEnd = 0
     pageType = 'address'
     getRewards!: RewardsBlockType | RewardsUncleType | RewardsGenesisType
+    hasError = false
 
     /*
     ===================================================================================
@@ -227,6 +231,10 @@ export default class AddressRewards extends Vue {
         } else {
             this.$emit('genesisRewards', true)
         }
+    }
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorRewards', this.hasError, ErrorMessage.rewards)
     }
 
     /*
