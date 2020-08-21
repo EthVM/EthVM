@@ -196,7 +196,6 @@ export default class AddressTokens extends Mixins(CoinData) {
     onisLoadingTokensMarketData(newVal: boolean, oldVal: boolean) {
         if (!newVal) {
             const marketData = this.getEthereumTokens()
-            // marketData sort by Price High to low , slice it to 200
             if (marketData !== false) {
                 this.tokensByVolume = new TokensSorted(marketData, KEY_VOLUME)
                 this.tokensByMarket = new TokensSorted(marketData, KEY_MARKET_CAP)
