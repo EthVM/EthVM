@@ -60,7 +60,7 @@
                                 ></address-transfers>
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
-                                <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" />
+                                <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" @errorPending="setError" />
                             </v-slide-x-reverse-transition>
                         </div>
                     </keep-alive>

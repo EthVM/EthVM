@@ -170,7 +170,8 @@
         "err": "Error",
         "error": {
             "address": {
-                "balance": "Something went wrong while retrieving Address ETH Balance."
+                "balance": "Something went wrong while retrieving Address ETH Balance.",
+                "pending": "Something went wrong while retrieving Address Pending Tx"
             }
         },
         "tx": {
