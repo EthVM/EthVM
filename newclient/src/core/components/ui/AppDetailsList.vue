@@ -198,7 +198,7 @@ export default class AppDetailsList extends Vue {
   */
 
     /**
-     * Removes empty or undefined data
+     * Removes empty or undefined details
      *
      * @return {Array}
      */

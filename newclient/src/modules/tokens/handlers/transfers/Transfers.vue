@@ -37,7 +37,6 @@ const MAX_ITEMS = 10
             deep: true,
             update: data => data.getERC20TokenTransfers,
             result({ data }) {
-                // console.error('data', data)
                 if (this.hasItems) {
                     this.error = ''
                     if (this.initialLoad) {
