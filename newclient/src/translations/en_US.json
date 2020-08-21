@@ -172,12 +172,16 @@
         "err": "Error",
         "error": {
             "address": {
-                "balance": "Something went wrong while retrieving Address ETH Balance.",
-                "pending": "Something went wrong while retrieving Address Pending Tx.",
-                "block-rewards": "Something went wrong while retrieving Address Block Rewards.",
+                "balance": "Something went wrong while retrieving Aadress's ETH balance.",
+                "pending": "Something went wrong while retrieving Address's pending transactions.",
+                "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
-                "erc721": "Something went wrong while retrieving ERC721 balances."
-            }
+                "erc721": "Something went wrong while retrieving NFTs balances.",
+                "transfers-eth": "Somethign went wrong rettrieving Address transactions."
+            },
+
+            "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
+            "transfers-erc20": "Somethign went wrong rettrieving Address ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "This address does not have any transaction history",

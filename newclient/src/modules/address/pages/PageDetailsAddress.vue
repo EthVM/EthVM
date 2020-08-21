@@ -57,6 +57,7 @@
                                     :max-items="max"
                                     :new-transfers="newETHTransfers"
                                     @resetUpdateCount="setNewEvent"
+                                    @errorTransfers="setError"
                                 ></address-transfers>
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
@@ -95,6 +96,7 @@
                                     transfers-type="ERC20"
                                     @resetUpdateCount="setNewEvent"
                                     @resetTransfersRefetch="resetTransfersRefetch(true)"
+                                    @errorTransfers="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
@@ -145,6 +147,7 @@
                                     transfers-type="ERC721"
                                     @resetUpdateCount="setNewEvent"
                                     @resetTransfersRefetch="resetTransfersRefetch(false)"
+                                    @errorTransfers="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
