@@ -1,5 +1,10 @@
 <template>
-    <v-btn v-if="display" class="new-block-alert text-capitalize ma-0" flat @click="onReload">
+    <v-btn
+        v-if="display"
+        :class="['new-block-alert', 'text-capitalize', 'ma-0', $vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'caption' : '']"
+        flat
+        @click="onReload"
+    >
         {{ buttonText }}
         <v-icon class="ml-2 secondary--text fas fa-sync small-global-icon-font"></v-icon>
     </v-btn>

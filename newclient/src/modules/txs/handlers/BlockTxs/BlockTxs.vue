@@ -17,7 +17,13 @@
                 <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" /> </template
         ></app-table-title>
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transactions" :is-scroll-view="isHome" />
-        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
+        <v-layout
+            v-if="showPagination && !initialLoad"
+            :justify-end="$vuetify.breakpoint.mdAndUp"
+            :justify-center="$vuetify.breakpoint.smAndDown"
+            row
+            class="pb-1 pr-3 pl-2"
+        >
             <app-paginate
                 v-if="isBlock"
                 :total="totalPages"
@@ -213,7 +219,7 @@ export default class BlockTxs extends Vue {
     }
 
     get getTitle(): string {
-        return this.isBlock ? `${this.$t('block.txs')}` : `${this.$t('tx.last')}`
+        return this.isBlock ? `${this.$t('block.txs')}` : `${this.$tc('tx.last', 1)}`
     }
     get showPagination(): boolean {
         if (this.isHome) {

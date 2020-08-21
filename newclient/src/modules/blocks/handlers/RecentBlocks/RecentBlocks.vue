@@ -15,7 +15,13 @@
                 /> </template
         ></app-table-title>
         <table-blocks :max-items="maxItems" :index="0" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="isHome" />
-        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
+        <v-layout
+            v-if="showPagination && !initialLoad"
+            :justify-end="$vuetify.breakpoint.mdAndUp"
+            :justify-center="$vuetify.breakpoint.smAndDown"
+            row
+            class="pb-1 pr-3 pl-2"
+        >
             <app-paginate :total="totalPages" :current-page="currentPage" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
     </v-card>

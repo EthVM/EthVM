@@ -11,7 +11,7 @@
         </v-layout>
         <v-layout v-else align-center row wrap fill-height pa-2>
             <v-flex grow class="title-live">
-                <v-layout align-center justify-start row wrap pa-2>
+                <v-layout align-center justify-start row wrap pa-1>
                     <v-card-title class="title font-weight-bold pl-1">{{ title }} </v-card-title>
                     <p v-if="hasCaption" class="info--text pl-1">{{ titleCaption }}</p>
                     <slot name="update" />
@@ -22,7 +22,7 @@
                 <slot name="pagination" />
             </v-flex>
             <v-flex v-if="hasPagination" xs12 hidden-md-and-up>
-                <v-layout align-center justify-end pa-2>
+                <v-layout align-center justify-center pa-2>
                     <slot name="pagination" />
                 </v-layout>
             </v-flex>
