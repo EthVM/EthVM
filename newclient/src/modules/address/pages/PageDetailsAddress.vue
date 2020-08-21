@@ -109,6 +109,7 @@
                                     @resetUpdateCount="setNewEvent"
                                     @loadingERC20Tokens="setLoadingERC20"
                                     @resetBalanceRefetch="resetBalanceRefetch(true)"
+                                    @errorTokenBalance="setError"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -156,6 +157,7 @@
                                     token-type="ERC721"
                                     @resetUpdateCount="setNewEvent"
                                     @resetBalanceRefetch="resetBalanceRefetch(false)"
+                                    @errorTokenBalance="setError"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>

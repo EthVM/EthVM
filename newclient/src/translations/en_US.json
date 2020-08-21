@@ -172,7 +172,9 @@
             "address": {
                 "balance": "Something went wrong while retrieving Address ETH Balance.",
                 "pending": "Something went wrong while retrieving Address Pending Tx.",
-                "block-rewards": "Something went wrong while retrieving Address Block Rewards."
+                "block-rewards": "Something went wrong while retrieving Address Block Rewards.",
+                "erc20": "Something went wrong while retrieving ERC20 balances.",
+                "erc721": "Something went wrong while retrieving ERC721 balances."
             }
         },
         "tx": {
