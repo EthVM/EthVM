@@ -107,7 +107,6 @@ export default class TransfersTable extends Vue {
         ===================================================================================
         */
     get hasError(): boolean {
-        console.error('hasItems', this.hasItems, this.index)
         return !!this.error && this.error !== ''
     }
 }

@@ -87,7 +87,6 @@ export default class Transfers extends Vue {
         */
 
     setPage(page: number, reset: boolean = false): void {
-        console.error('page', page)
         if (reset) {
             this.isEnd = 0
             this.$apollo.queries.getTransfers.refetch()
@@ -124,9 +123,7 @@ export default class Transfers extends Vue {
         ===================================================================================
         */
     get transferData(): any[] {
-        console.error('this', this.getTransfers, this.hasItems)
         if (this.getTransfers && this.getTransfers.transfers) {
-            console.error('this', this.getTransfers.transfers)
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
             return this.getTransfers.transfers.slice(start, end)
