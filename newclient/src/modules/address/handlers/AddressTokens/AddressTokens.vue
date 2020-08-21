@@ -139,15 +139,12 @@ interface NFTMap {
             update: data => data.getOwnersERC721Tokens,
             result({ data }) {
                 if (this.getOwnersERC721Tokens.tokens) {
-                    console.log(this.getOwnersERC721Tokens.tokens)
                     if (this.getOwnersERC721Tokens.nextKey) {
-                        console.log('fetching again')
                         this.fetchMoreUniqueNFT()
                     } else {
                         this.uniqueNFTMap[this.requestContract] = this.getOwnersERC721Tokens.tokens
                         this.uniqueNFT = this.uniqueNFTMap[this.requestContract]
                         this.loadingUniqueNFT = false
-                        console.log('hello')
                         this.emitErrorState(false)
                         this.skipGetUniqueTokens = true
                     }
