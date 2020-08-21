@@ -282,7 +282,7 @@ import AppError from '@app/core/components/ui/AppError.vue'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
@@ -474,6 +474,16 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
         }
 
         window.scrollTo(0, 0)
+    }
+
+    /*
+    ===================================================================================
+      Watch
+    ===================================================================================
+    */
+    @Watch('hasUpdateError')
+    onHasUpdateErrorChanged(newVal: boolean): void {
+        this.setError(newVal, ErrorMessage.updateEvent)
     }
 }
 </script>

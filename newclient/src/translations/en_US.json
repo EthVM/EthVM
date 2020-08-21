@@ -177,7 +177,8 @@
                 "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
                 "erc721": "Something went wrong while retrieving NFTs balances.",
-                "transfers-eth": "Somethign went wrong rettrieving Address transactions."
+                "transfers-eth": "Something went wrong rettrieving Address transactions.",
+                "update-event": "Something went wrong during Address update."
             },
 
             "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",

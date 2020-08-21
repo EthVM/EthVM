@@ -17,10 +17,15 @@ import { addressEvent_addressEvent as EventSubscriptionType } from './apolloType
                 },
                 result({ data }) {
                     this.addrBalanceChanged = true
-                    this.setNewEvent(data.addressEvent.event)
+                    try {
+                        this.setNewEvent(data.addressEvent.event)
+                        this.hasUpdateError = false
+                    } catch (error) {
+                        this.hasUpdateError = true
+                    }
                 },
                 error(error) {
-                    console.error(error)
+                    this.hasUpdateError = true
                 }
             }
         }
@@ -46,6 +51,7 @@ export class AddressUpdateEvent extends Vue {
     refetchERC20Transfers = false
     refetchERC721Balance = false
     refetchERC721Transfers = false
+    hasUpdateError = false
 
     /*
     ===================================================================================
