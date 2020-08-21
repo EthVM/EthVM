@@ -43,7 +43,7 @@
                 <v-card v-if="!hasItems" flat>
                     <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
                 </v-card>
-                <v-card v-for="(transfer, index) in transferData" v-else :key="index" color="white" class="transparent" flat>
+                <v-card v-for="(transfer, index) in transfers" v-else :key="index" color="white" class="transparent" flat>
                     <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" />
                 </v-card>
                 <!-- End Rows -->
@@ -62,10 +62,7 @@ import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import TransfersTableRow from './TransfersTableRow.vue'
 import TransfersTableRowLoading from './TransfersTableRowLoading.vue'
-import BigNumber from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import { getERC20TokenTransfers } from '@app/modules/tokens/handlers/transfers/transfers.graphql'
-import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20Transfers'
 
 const MAX_ITEMS = 10
 
@@ -77,31 +74,6 @@ const MAX_ITEMS = 10
         TransfersTableRowLoading,
         AppPaginateHasMore,
         AppPaginate
-    },
-    apollo: {
-        getTransfers: {
-            query: getERC20TokenTransfers,
-            fetchPolicy: 'network-only',
-            variables() {
-                return { hash: this.address, _limit: this.maxItems }
-            },
-            deep: true,
-            update: data => data.getERC20TokenTransfers,
-            result({ data }) {
-                if (this.hasItems) {
-                    this.error = ''
-                    if (this.initialLoad) {
-                        this.showPagination = this.hasMore
-                        this.initialLoad = false
-                    }
-                } else {
-                    this.showPagination = false
-                    this.initialLoad = true
-                    this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getTransfers.refetch()
-                }
-            }
-        }
     }
 })
 export default class TransfersTable extends Vue {
@@ -110,22 +82,16 @@ export default class TransfersTable extends Vue {
           Props
         ===================================================================================
         */
-
-    @Prop(String) address!: string
-    @Prop(String) pageType!: string
+    @Prop(Array) transfers!: any[]
+    @Prop(Boolean) hasItems!: boolean
+    @Prop(Boolean) hasMore!: boolean
+    @Prop(Boolean) showPagination!: boolean
+    @Prop(Boolean) loading!: boolean
     @Prop(Number) decimals?: number
-    // @Prop(String) holder?: string
     @Prop(String) symbol?: string
-
-    getTransfers!: ERC20TransfersType
-    error?: string
-    page?: number
-    index = 0
-    showPagination = false
-    /*isEnd -  Last Index loaded */
-    isEnd = 0
-    initialLoad = true
-
+    @Prop(String) error?: string
+    @Prop(Number) maxItems!: number
+    @Prop(Number) index!: number
     /*
         ===================================================================================
           Methods
@@ -133,83 +99,16 @@ export default class TransfersTable extends Vue {
         */
 
     setPage(page: number, reset: boolean = false): void {
-        if (reset) {
-            this.isEnd = 0
-            this.$apollo.queries.getTransfers.refetch()
-        } else {
-            if (page > this.isEnd && this.hasMore) {
-                const queryName = 'getERC20TokenTransfers'
-
-                this.$apollo.queries.getTransfers.fetchMore({
-                    variables: {
-                        hash: this.address,
-                        _limit: 10,
-                        _nextKey: this.getTransfers.nextKey
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        this.isEnd = page
-                        const newT = fetchMoreResult[queryName].transfers
-                        const prevT = previousResult[queryName].transfers
-                        return {
-                            [queryName]: {
-                                nextKey: fetchMoreResult[queryName].nextKey,
-                                transfers: [...prevT, ...newT],
-                                __typename: fetchMoreResult[queryName].__typename
-                            }
-                        }
-                    }
-                })
-            }
-        }
-        this.index = page
+        this.$emit('setPage', page, reset)
     }
     /*
         ===================================================================================
           Computed Values
         ===================================================================================
         */
-    get transferData(): any[] {
-        if (this.getTransfers.transfers) {
-            const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.getTransfers.transfers.length ? this.getTransfers.transfers.length : start + this.maxItems
-            return this.getTransfers.transfers.slice(start, end)
-        }
-        return []
-    }
-
-    get hasMore(): boolean {
-        return this.getTransfers.nextKey !== null
-    }
-
-    get isToken(): boolean {
-        return this.pageType === 'token'
-    }
-
-    // get isTokenHolder(): boolean {
-    //     return this.pageType === 'tokenHolder'
-    // }
-
-    get transfers() {
-        return this.getTransfers ? this.getTransfers.transfers || [] : []
-    }
-
-    get loading() {
-        return this.$apollo.loading
-    }
-
     get hasError(): boolean {
+        console.error('hasItems', this.hasItems, this.index)
         return !!this.error && this.error !== ''
-    }
-
-    get hasItems(): boolean {
-        return !!(this.getTransfers && this.getTransfers.transfers.length)
-    }
-
-    /**
-     * @return {Number} - MAX_ITEMS per pagination page
-     */
-    get maxItems(): number {
-        return MAX_ITEMS
     }
 }
 </script>

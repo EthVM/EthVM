@@ -19,7 +19,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <transfers-table :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" />
+                    <transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" />
                 </v-tab-item>
                 <!--
         =====================================================================================
@@ -59,7 +59,7 @@ import { Crumb, Tab } from '@app/core/components/props'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
-import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
+import Transfers from '@app/modules/tokens/handlers/transfers/Transfers.vue'
 import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
 import { TokenDetails as TokenInfo } from './apolloTypes/TokenDetails'
@@ -74,7 +74,7 @@ const MAX_ITEMS = 10
         TokenDetailsList,
         AppTabs,
         TokenTableHolders,
-        TransfersTable
+        Transfers
     },
     apollo: {
         tokenDetails: {

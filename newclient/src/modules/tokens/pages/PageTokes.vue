@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import TokensMarketInfoTable from '@app/modules/tokens/handlers/TokensMarketInfo.vue'
+import TokensMarketInfoTable from '@app/modules/tokens/handlers/tokensMarketInfo/TokensMarketInfo.vue'
 import { Crumb } from '@app/core/components/props'
 // import { TokenExchange } from '@app/modules/tokens/props'
 // import { ConfigHelper } from '@app/core/helper/config-helper'
