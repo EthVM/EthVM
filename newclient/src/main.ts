@@ -112,7 +112,8 @@ Vue.use(Vuetify, {
         iconfont: 'fa',
         expand: 'fas fa-chevron-down small-global-icon-font',
         dropdown: 'fas fa-angle-down small-global-icon-font',
-        close: 'fas fa-times small-global-icon-font'
+        close: 'fas fa-times small-global-icon-font',
+        clear: 'fas fa-times'
     }
 })
 

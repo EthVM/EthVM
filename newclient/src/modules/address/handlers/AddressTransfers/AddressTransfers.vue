@@ -16,33 +16,8 @@
                 />
             </template>
         </app-table-title>
-        <v-layout
-            v-if="isETH"
-            :column="$vuetify.breakpoint.smAndDown"
-            :align-center="$vuetify.breakpoint.mdAndUp"
-            :align-end="$vuetify.breakpoint.smAndDown"
-            d-flex
-            justify-space-between
-            wrap
-            pa-3
-        >
-            <v-layout align-center px-2>
-                <p class="pr-2 info--text">{{ $t('filter.name') }}</p>
-                <v-card flat class="tx-filter-select-container pl-2" height="36px">
-                    <v-select
-                        v-model="filter"
-                        :items="options"
-                        solo
-                        flat
-                        hide-details
-                        class="primary body-1"
-                        item-text="text"
-                        item-value="value"
-                        height="32px"
-                    />
-                </v-card>
-            </v-layout>
-
+        <v-layout v-if="isETH" :column="$vuetify.breakpoint.xs" :align-center="true" d-flex justify-space-between wrap pa-3>
+            <app-filter :options="options" :show-desktop="true" :is-sort="false" @onSelectChange="onFilterChange" />
             <app-paginate-has-more
                 v-if="showPagination && !initialLoad"
                 :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
@@ -64,13 +39,20 @@
                 </v-card>
             </template>
         </table-txs>
-        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
+        <v-layout
+            v-if="showPagination && !initialLoad"
+            :justify-end="$vuetify.breakpoint.mdAndUp"
+            :justify-center="$vuetify.breakpoint.smAndDown"
+            row
+            class="pb-3 pr-3 pl-2"
+        >
             <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
         </v-layout>
     </v-card>
 </template>
 
 <script lang="ts">
+import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
@@ -98,6 +80,7 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
     components: {
         AppNewUpdate,
         AppTableTitle,
+        AppFilter,
         AppPaginateHasMore,
         TableTxs,
         TableAddressTxsRow,
@@ -169,12 +152,12 @@ export default class AddressTransers extends Vue {
     syncing?: boolean = false
     initialLoad = true
     showPagination = false
+    filter = null
     index = 0
     totalPages = 0
     /*isEnd -  Last Index loaded */
     isEnd = 0
     pageType = 'address'
-    filter = null
     getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
     ethTransfers!: EthTransfer[]
 
@@ -211,7 +194,7 @@ export default class AddressTransers extends Vue {
 
     get getTitle(): string {
         if (this.isETH) {
-            return !this.isPending ? `${this.$t('tx.last')}` : `${this.$t('tx.pendign')}`
+            return !this.isPending ? `${this.$tc('tx.last', 2)}` : `${this.$t('tx.pending')}`
         }
         if (this.isERC20) {
             return `${this.$t('transfer.erc20')}`
@@ -275,6 +258,10 @@ export default class AddressTransers extends Vue {
       Methods:
     ===================================================================================
     */
+
+    onFilterChange(filter) {
+        this.filter = filter
+    }
 
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
@@ -346,10 +333,6 @@ export default class AddressTransers extends Vue {
 }
 </script>
 <style scoped lang="css">
-.tx-filter-select-container {
-    border: solid 1px #efefef;
-    padding-top: 1px;
-}
 .tx-status {
     min-width: 60px;
 }
