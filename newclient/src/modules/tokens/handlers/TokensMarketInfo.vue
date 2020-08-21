@@ -10,7 +10,7 @@
         <v-divider />
         <v-layout v-if="showPagination && !initialLoad" row wrap align-center justify-space-between pl-3 pr-3>
             <v-flex xs12 md4 hidden-sm-and-down>
-                <p class="info--text">Top 200 tokens</p>
+                <p class="info--text">{{ $t('token.top-200') }}</p>
             </v-flex>
             <v-flex hidden-sm-and-down md4>
                 <!-- Search Bar -->
@@ -141,7 +141,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     index = 0
     totalPages = 3
     totalTokens = 0
-    isSortedBy = FILTER_VALUES[0]
+    isSortedBy = FILTER_VALUES[2]
     tokensData: TokenMarketData[] | null = null
     tokensByMarket!: TokensSorted
     tokensBySymbol!: TokensSorted

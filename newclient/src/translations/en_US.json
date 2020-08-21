@@ -65,6 +65,7 @@
     },
 
     "token": {
+        "top-200": "Top 200 tokens",
         "erc20": "ERC20 Tokens",
         "erc721": "ERC721 Tokens",
         "nft": "NFTs",
