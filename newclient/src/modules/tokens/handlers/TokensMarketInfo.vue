@@ -17,7 +17,7 @@
             </v-flex>
             <v-flex xs12 sm12 md4>
                 <v-layout :align-end="$vuetify.breakpoint.mdAndUp" :align-center="$vuetify.breakpoint.smAndDown" d-flex column>
-                    <app-filter :options="options" :show-desktop="false" :is-sort="true" @onFilterChange="sortTokens" />
+                    <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
                     <app-paginate
                         :total="totalPages"
                         :current-page="index"
@@ -40,7 +40,13 @@
                 </v-card>
             </template>
         </table-txs>
-        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-3 pr-4">
+        <v-layout
+            v-if="showPagination && !initialLoad"
+            :justify-end="$vuetify.breakpoint.mdAndUp"
+            :justify-center="$vuetify.breakpoint.smAndDown"
+            row
+            class="pb-3 pr-4"
+        >
             <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
     </v-card>
@@ -163,7 +169,7 @@ export default class AddressTokens extends Mixins(CoinData) {
             {
                 value: FILTER_VALUES[2],
                 text: this.$i18n.tc('price.name', 1),
-                filter: this.$i18n.t('filter.low')
+                filter: this.$i18n.t('filter.high')
             },
             {
                 value: FILTER_VALUES[3],
@@ -173,7 +179,7 @@ export default class AddressTokens extends Mixins(CoinData) {
             {
                 value: FILTER_VALUES[4],
                 text: this.$i18n.tc('token.volume', 1),
-                filter: this.$i18n.t('filter.low')
+                filter: this.$i18n.t('filter.high')
             },
             {
                 value: FILTER_VALUES[5],

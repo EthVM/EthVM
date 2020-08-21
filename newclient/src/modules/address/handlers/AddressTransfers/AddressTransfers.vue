@@ -260,7 +260,7 @@ export default class AddressTransers extends Vue {
     */
 
     onFilterChange(filter) {
-        this.filter = filter.value
+        this.filter = filter
     }
 
     setPage(page: number, reset: boolean = false): void {

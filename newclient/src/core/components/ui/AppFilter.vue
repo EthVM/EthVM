@@ -8,8 +8,16 @@
                     </v-flex>
                     <v-spacer />
                     <v-flex>
-                        <p class="body-2 mb-0 font-weight-regular text-xs-right">
-                            {{ selected.text }} {{ selected.filter ? '(' + selected.filter + ')' : '' }}
+                        <p class="body-2 mb-0 font-weight-regular text-xs-right d-flex justify-end">
+                            {{ selected.text }}
+                            <v-img
+                                v-if="selected.filter"
+                                :class="getImgClass(selected.value)"
+                                :src="require('@/assets/graph.svg')"
+                                height="18px"
+                                max-width="18px"
+                                contain
+                            ></v-img>
                         </p>
                     </v-flex>
                     <v-flex xs1 pr-4>
@@ -17,7 +25,7 @@
                     </v-flex>
                 </v-layout>
             </v-btn>
-            <v-dialog v-model="dialog" full-width>
+            <v-dialog v-model="dialog" content-class="filter-dialog" full-width>
                 <v-card>
                     <v-layout row class="pl-3 pr-3 pt-3">
                         <v-flex>
@@ -35,9 +43,12 @@
                         <v-list-tile v-for="(option, index) in options" :key="index" class="pl-0" @click="setSelected(option)">
                             <v-layout row justify-start align-center fill-height>
                                 <v-flex xs5>
-                                    <v-card-title :class="[selected.value === option.value ? 'black--text' : 'info--text']"
-                                        >{{ option.text }}{{ isSort ? ':' : '' }}</v-card-title
-                                    >
+                                    <v-layout row justify-start align-center>
+                                        <v-card-title :class="[selected.value === option.value ? 'black--text' : 'info--text']"
+                                            >{{ option.text }}{{ isSort ? ':' : '' }}</v-card-title
+                                        >
+                                        <v-icon v-if="!option.filter && option.value === selected.value" class="txSuccess--text fa fa-check-circle" />
+                                    </v-layout>
                                 </v-flex>
                                 <v-flex v-if="option.filter" xs7>
                                     <v-layout row justify-start align-center>
@@ -123,7 +134,11 @@ export default class AppFilter extends Vue {
     Methods
   ===================================================================================
   */
-
+    getImgClass(value: string) {
+        if (value.includes('low')) {
+            return 'ascendingImg'
+        }
+    }
     setSelected(option: object) {
         this.selected = option
         this.dialog = false
@@ -135,12 +150,10 @@ export default class AppFilter extends Vue {
   ===================================================================================
   */
     @Watch('selected')
-    onSelectChange(newVal: string, oldVal: string) {
-        console.error('newVal', newVal)
+    onSelectChange(newVal: object, oldVal: object) {
         if (newVal && newVal !== oldVal) {
-            this.$emit('onSelectChange', newVal)
+            this.$emit('onSelectChange', newVal['value'])
         }
-        console.error('newval', newVal)
     }
 }
 </script>
@@ -158,5 +171,15 @@ export default class AppFilter extends Vue {
 
 .filter-container {
     width: 100%;
+}
+
+.filter-dialog {
+    a:hover {
+        text-decoration: none !important;
+    }
+}
+
+.ascendingImg {
+    transform: scaleX(-1);
 }
 </style>
