@@ -19,7 +19,7 @@
                         -->
                         <v-flex xs2 pl-1 pr-1 d-flex justify-center>
                             <div class="token-image-mobile">
-                                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" contain />
+                                <v-img v-if="!token.image || token.image.includes('missing')" :src="require('@/assets/icon-token.png')" contain />
                                 <v-img v-else :src="token.image" contain />
                             </div>
                         </v-flex>
@@ -99,7 +99,14 @@
                         -->
                         <v-flex md4>
                             <v-layout grid-list-xs row align-center justify-start fill-height>
-                                <v-img v-if="!token.image" :src="require('@/assets/icon-token.png')" height="25px" max-width="25px" contain class="ml-3 mr-2" />
+                                <v-img
+                                    v-if="!token.image || token.image.includes('missing')"
+                                    :src="require('@/assets/icon-token.png')"
+                                    height="25px"
+                                    max-width="25px"
+                                    contain
+                                    class="ml-3 mr-2"
+                                />
                                 <v-img v-else :src="token.image" height="25px" max-width="25px" contain class="ml-3 mr-2" />
                                 <router-link :to="tokenLink" class="info--text caption">
                                     <span v-if="token.symbol" class="black--text text-uppercase font-weight-medium"> {{ token.symbol }} - </span>

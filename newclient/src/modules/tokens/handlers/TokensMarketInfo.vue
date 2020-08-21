@@ -267,12 +267,13 @@ export default class AddressTokens extends Mixins(CoinData) {
         if (!newVal) {
             const marketData = this.getEthereumTokens()
             if (marketData !== false) {
-                this.tokensByVolume = new TokensSorted(marketData, KEY_VOLUME)
-                this.tokensByMarket = new TokensSorted(marketData, KEY_MARKET_CAP)
-                this.tokensBySymbol = new TokensSorted(marketData, KEY_SYMBOL)
-                this.tokensByPrice = new TokensSorted(marketData, KEY_PRICE)
+                const marketDataByPrice = new TokensSorted(marketData, KEY_PRICE).getAscend()
+                this.tokensByVolume = new TokensSorted(marketDataByPrice, KEY_VOLUME)
+                this.tokensByMarket = new TokensSorted(marketDataByPrice, KEY_MARKET_CAP)
+                this.tokensBySymbol = new TokensSorted(marketDataByPrice, KEY_SYMBOL)
+                this.tokensByPrice = new TokensSorted(marketDataByPrice, KEY_PRICE)
                 this.sortTokens(this.isSortedBy)
-                this.totalTokens = marketData.length
+                this.totalTokens = marketDataByPrice.length
                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                 this.initialLoad = false
             } else {
