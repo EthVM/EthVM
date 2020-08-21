@@ -5,7 +5,14 @@
             <v-progress-linear color="blue" indeterminate />
         </v-flex>
         <!-- Pagination -->
-        <v-layout v-if="showPagination" row fill-height justify-end class="pb-1 pr-2 pl-2">
+        <v-layout
+            v-if="showPagination"
+            :justify-end="$vuetify.breakpoint.mdAndUp"
+            :justify-center="$vuetify.breakpoint.smAndDown"
+            row
+            fill-height
+            class="pb-1 pr-2 pl-2"
+        >
             <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading" @newPage="setPage" />
         </v-layout>
         <!-- End Pagination -->
@@ -47,7 +54,13 @@
                     <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" />
                 </v-card>
                 <!-- End Rows -->
-                <v-layout v-if="showPagination" justify-end row class="pb-1 pr-2 pl-2">
+                <v-layout
+                    v-if="showPagination"
+                    :justify-end="$vuetify.breakpoint.mdAndUp"
+                    :justify-center="$vuetify.breakpoint.smAndDown"
+                    row
+                    class="pb-1 pr-2 pl-2"
+                >
                     <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading" @newPage="setPage" />
                 </v-layout>
             </div>

@@ -28,7 +28,13 @@
                     </v-card>
                 </template>
             </table-txs>
-            <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-1 pr-3 pl-2">
+            <v-layout
+                v-if="showPagination && !initialLoad"
+                :justify-end="$vuetify.breakpoint.mdAndUp"
+                :justify-center="$vuetify.breakpoint.smAndDown"
+                row
+                class="pb-1 pr-3 pl-2"
+            >
                 <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
             </v-layout>
         </div>

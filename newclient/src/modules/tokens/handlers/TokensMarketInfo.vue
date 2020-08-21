@@ -1,16 +1,33 @@
 <template>
     <v-card color="white" flat class="pb-2">
-        <app-table-title :title="getTitle" :has-pagination="false" :page-type="pageType" page-link="" />
+        <app-table-title
+            :title-caption="$vuetify.breakpoint.smAndDown ? 'Top 200 tokens' : ''"
+            :title="getTitle"
+            :has-pagination="false"
+            :page-type="pageType"
+            page-link=""
+        />
         <v-divider />
         <v-layout v-if="showPagination && !initialLoad" row wrap align-center justify-space-between pl-3 pr-3>
-            <v-flex xs12 md4>
-                <p class="info--text">Top 200 tokens</p>
+            <v-flex xs12 md4 hidden-sm-and-down>
+                <p class="info--text">{{ $t('token.top-200') }}</p>
             </v-flex>
             <v-flex hidden-sm-and-down md4>
                 <!-- Search Bar -->
             </v-flex>
-            <v-flex xs12 md4>
-                <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+            <v-flex xs12 sm12 md4>
+                <v-layout :align-end="$vuetify.breakpoint.mdAndUp" :align-center="$vuetify.breakpoint.smAndDown" d-flex column>
+                    <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
+                    <app-paginate
+                        :total="totalPages"
+                        :current-page="index"
+                        :has-input="true"
+                        :has-first="true"
+                        :has-last="true"
+                        class="pb-2"
+                        @newPage="setPage"
+                    />
+                </v-layout>
             </v-flex>
         </v-layout>
         <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="showTokens" :is-scroll-view="false">
@@ -23,13 +40,20 @@
                 </v-card>
             </template>
         </table-txs>
-        <v-layout v-if="showPagination && !initialLoad" justify-end row class="pb-3 pr-4">
+        <v-layout
+            v-if="showPagination && !initialLoad"
+            :justify-end="$vuetify.breakpoint.mdAndUp"
+            :justify-center="$vuetify.breakpoint.smAndDown"
+            row
+            class="pb-3 pr-4"
+        >
             <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
     </v-card>
 </template>
 
 <script lang="ts">
+import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
@@ -90,7 +114,8 @@ const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volu
         AppPaginate,
         TableTxs,
         TableTokensHeader,
-        TableTokensRow
+        TableTokensRow,
+        AppFilter
     }
 })
 export default class AddressTokens extends Mixins(CoinData) {
@@ -116,7 +141,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     index = 0
     totalPages = 3
     totalTokens = 0
-    isSortedBy = FILTER_VALUES[0]
+    isSortedBy = FILTER_VALUES[2]
     tokensData: TokenMarketData[] | null = null
     tokensByMarket!: TokensSorted
     tokensBySymbol!: TokensSorted
@@ -128,6 +153,51 @@ export default class AddressTokens extends Mixins(CoinData) {
       Computed
     ===================================================================================
     */
+
+    get options() {
+        return [
+            {
+                value: FILTER_VALUES[0],
+                text: this.$i18n.tc('token.name', 1),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[1],
+                text: this.$i18n.tc('token.name', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[2],
+                text: this.$i18n.tc('price.name', 1),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[3],
+                text: this.$i18n.tc('price.name', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[4],
+                text: this.$i18n.tc('token.volume', 1),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[5],
+                text: this.$i18n.tc('token.volume', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[6],
+                text: this.$i18n.t('token.market'),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[7],
+                text: this.$i18n.t('token.market'),
+                filter: this.$i18n.t('filter.low')
+            }
+        ]
+    }
 
     get showTokens(): TokenMarketData[] {
         const start = this.index * this.maxItems
@@ -197,12 +267,13 @@ export default class AddressTokens extends Mixins(CoinData) {
         if (!newVal) {
             const marketData = this.getEthereumTokens()
             if (marketData !== false) {
-                this.tokensByVolume = new TokensSorted(marketData, KEY_VOLUME)
-                this.tokensByMarket = new TokensSorted(marketData, KEY_MARKET_CAP)
-                this.tokensBySymbol = new TokensSorted(marketData, KEY_SYMBOL)
-                this.tokensByPrice = new TokensSorted(marketData, KEY_PRICE)
+                const marketDataByPrice = new TokensSorted(marketData, KEY_PRICE).getAscend()
+                this.tokensByVolume = new TokensSorted(marketDataByPrice, KEY_VOLUME)
+                this.tokensByMarket = new TokensSorted(marketDataByPrice, KEY_MARKET_CAP)
+                this.tokensBySymbol = new TokensSorted(marketDataByPrice, KEY_SYMBOL)
+                this.tokensByPrice = new TokensSorted(marketDataByPrice, KEY_PRICE)
                 this.sortTokens(this.isSortedBy)
-                this.totalTokens = marketData.length
+                this.totalTokens = marketDataByPrice.length
                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                 this.initialLoad = false
             } else {
