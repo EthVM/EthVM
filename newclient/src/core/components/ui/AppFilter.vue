@@ -7,17 +7,11 @@
                         <p class="body-2 mb-0 font-weight-regular">{{ isSort ? $t('token.sort-by') : $t('filter.name') }}:</p>
                     </v-flex>
                     <v-spacer />
-                    <v-flex>
-                        <p class="body-2 mb-0 font-weight-regular text-xs-right d-flex justify-end">
+                    <v-flex d-flex justify-end align-center>
+                        <p class="body-2 mb-0 font-weight-regular text-xs-right">
                             {{ selected.text }}
-                            <v-img
-                                v-if="selected.filter"
-                                :class="getImgClass(selected.value)"
-                                :src="require('@/assets/graph.svg')"
-                                height="18px"
-                                max-width="18px"
-                                contain
-                            ></v-img>
+                            <i v-if="selected.filter && selected.value.includes('low')" class="fas fa-sort-amount-up" />
+                            <i v-if="selected.filter && selected.value.includes('high')" class="fas fa-sort-amount-down" />
                         </p>
                     </v-flex>
                     <v-flex xs1 pr-4>
@@ -134,11 +128,6 @@ export default class AppFilter extends Vue {
     Methods
   ===================================================================================
   */
-    getImgClass(value: string) {
-        if (value.includes('low')) {
-            return 'ascendingImg'
-        }
-    }
     setSelected(option: object) {
         this.selected = option
         this.dialog = false
@@ -177,9 +166,5 @@ export default class AppFilter extends Vue {
     a:hover {
         text-decoration: none !important;
     }
-}
-
-.ascendingImg {
-    transform: scaleX(-1);
 }
 </style>
