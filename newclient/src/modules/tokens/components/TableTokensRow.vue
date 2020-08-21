@@ -59,8 +59,8 @@
                                 <v-flex shrink pt-0 pb-0>
                                     <p class="info--text cap-text pl-1">{{ $t('token.volume') }}</p>
                                     <p class="black--text pl-1">
-                                        {{ tokenMarket.value }}
-                                        <app-tooltip v-if="tokenMarket.tooltipText" :text="tokenMarket.tooltipText" />
+                                        {{ tokenVolume.value }}
+                                        <app-tooltip v-if="tokenVolume.tooltipText" :text="tokenVolume.tooltipText" />
                                     </p>
                                 </v-flex>
                             </v-layout>
