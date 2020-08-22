@@ -6,7 +6,7 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
-            <app-details-list :details="blockDetails" :is-loading="loading" :error="error" :max-items="9" class="mb-4">
+            <app-details-list :details="blockDetails" :is-loading="loading" :max-items="9" :is-block="true" class="mb-4">
                 <template v-slot:title>
                     <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncleHashes" />
                 </template>
@@ -28,6 +28,8 @@ import { getLastBlockNumber_getLatestBlockInfo as lastBlockType } from './apollo
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 import BN from 'bignumber.js'
+import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
+import newBlockFeed from '../../NewBlockSubscription/newBlockFeed.graphql'
 
 @Component({
     components: {
@@ -39,10 +41,29 @@ import BN from 'bignumber.js'
             query() {
                 return this.isHash ? getBlockByHash : getBlockByNumber
             },
+            fetchPolicy: 'network-only',
             variables() {
                 return { blockRef: this.isHash ? this.blockRef : parseInt(this.blockRef) }
             },
-            update: data => data.getBlockByHash || data.getBlockByNumber
+            skip() {
+                return this.subscribed
+            },
+            update: data => data.getBlockByHash || data.getBlockByNumber,
+            result({ data }) {
+                console.log(data)
+                if (this.block) {
+                    console.log('here', this.block)
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                const newError = JSON.stringify(error.message)
+                if (newError.includes('Block not found') && !this.isHash && !this.subscribed) {
+                    this.startSubscription()
+                } else {
+                    this.emitErrorState(true)
+                }
+            }
         },
         getLatestBlockInfo: {
             query: getLastBlockNumber,
@@ -66,10 +87,12 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     ===================================================================================
     */
 
-    error = ''
+    hasError = false
     syncing: undefined
     block!: BlockDetailsType
     getLatestBlockInfo!: lastBlockType
+    skipDetailsFetch = false
+    subscribed = false
 
     /*
     ===================================================================================
@@ -78,7 +101,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     */
 
     get loading(): boolean | undefined {
-        return this.$apollo.queries.block.loading
+        return this.hasError ? this.hasError : this.$apollo.queries.block.loading || this.subscribed
     }
 
     get uncleHashes(): (string | null)[] {
@@ -87,7 +110,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
 
     get blockDetails(): Detail[] {
         let details: Detail[]
-        if (this.loading || this.error) {
+        if (this.loading) {
             details = [
                 {
                     title: this.$i18n.t('common.height')
@@ -105,7 +128,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                     title: this.$i18n.t('common.timestmp')
                 },
                 {
-                    title: this.$i18n.t('miner.reward')
+                    title: this.$i18n.t('miner.total-rewards')
                 },
                 {
                     title: this.$i18n.t('uncle.reward')
@@ -115,42 +138,6 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                 },
                 {
                     title: this.$i18n.t('diff.name')
-                },
-                {
-                    title: this.$i18n.t('diff.total')
-                },
-                {
-                    title: this.$i18n.t('common.size')
-                },
-                {
-                    title: this.$i18n.t('common.nonce')
-                },
-                {
-                    title: this.$i18n.t('block.state-root')
-                },
-                {
-                    title: this.$i18n.t('block.data')
-                },
-                {
-                    title: this.$i18n.tc('tx.fee', 2)
-                },
-                {
-                    title: this.$i18n.t('gas.limit')
-                },
-                {
-                    title: this.$i18n.t('gas.used')
-                },
-                {
-                    title: this.$i18n.t('block.logs')
-                },
-                {
-                    title: this.$i18n.t('tx.root')
-                },
-                {
-                    title: this.$i18n.t('block.rcpt-root')
-                },
-                {
-                    title: `${this.$i18n.tc('uncle.name', 2)} ${this.$i18n.t('common.sha')}`
                 }
             ]
         } else {
@@ -184,7 +171,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                     mono: true
                 },
                 {
-                    title: this.$i18n.t('miner.reward.block'),
+                    title: this.$i18n.t('miner.total-rewards'),
                     detail: `${this.rewards.value} ${this.rewards.unit}`,
                     tooltip: `${this.rewards.tooltipText} ${this.$i18n.t('common.eth')}` || undefined
                 },
@@ -297,15 +284,34 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
         }
         return ''
     }
+    /*
+    ===================================================================================
+     Methods
+    ===================================================================================
+    */
+    startSubscription(): void {
+        this.subscribed = true
+        const observer = this.$apollo.subscribe({
+            query: newBlockFeed
+        })
+        const a = observer.subscribe({
+            next: data => {
+                console.log(data)
+                if (this.blockRef === data.data.newBlockFeed.number.toString()) {
+                    a.unsubscribe()
+                    this.subscribed = false
+                }
+            },
+            error: error => {
+                this.emitErrorState(true)
+            }
+        })
+    }
 
-    /**
-     * Determines whether or not component has an error.
-     * If error property is empty string, there is no error.
-     *
-     * @return {Boolean} - Whether or not error exists
-     */
-    get hasError(): boolean {
-        return this.error !== ''
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        console.log(this.hasError)
+        this.$emit('errorDetails', this.hasError, ErrorMessageBlock.details)
     }
 }
 </script>

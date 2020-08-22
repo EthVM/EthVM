@@ -11,10 +11,16 @@
 
     =====================================================================================
     -->
-        <div v-if="isLoading && !hasError">
-            <v-layout pa-2>
-                <v-flex xs5 sm4>
+        <div v-if="isLoading">
+            <v-layout pa-2 align-center justify-start>
+                <v-flex v-if="!isBlock" xs5 sm4>
                     <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
+                </v-flex>
+                <v-flex v-else xs10 sm11>
+                    <v-card-title class="title font-weight-bold pl-4">{{ $t('message.not-mined') }}</v-card-title>
+                </v-flex>
+                <v-flex xs2 sm1>
+                    <v-progress-circular :size="20" color="secondary" indeterminate></v-progress-circular>
                 </v-flex>
             </v-layout>
             <v-divider class="lineGrey mt-1 mb-1" />
@@ -27,18 +33,6 @@
             </slot>
             <v-divider class="lineGrey mt-1 mb-1" />
         </div>
-
-        <!--
-    =====================================================================================
-
-      LOADING/ERROR
-
-      If isLoading, show v-progress-linear bar
-      If hasError, show AppError
-
-    =====================================================================================
-    -->
-        <app-error :has-error="hasError" :message="error" class="mb-4" />
         <!--
     =====================================================================================
 
@@ -52,11 +46,11 @@
 
     =====================================================================================
     -->
-        <div v-if="!hasError">
-            <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'tableGrey']">
-                <app-details-list-row :detail="item" :is-loading="isLoading" />
-            </div>
+
+        <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'tableGrey']">
+            <app-details-list-row :detail="item" :is-loading="isLoading" />
         </div>
+
         <!--
     =====================================================================================
 
@@ -67,7 +61,7 @@
 
     =====================================================================================
     -->
-        <v-slide-y-transition v-if="!hasError && showMore" group>
+        <v-slide-y-transition v-if="!isLoading && showMore" group>
             <div v-for="(item, index) in moreDetails" :key="calculateKey(index)" :class="[getColor(index) ? '' : 'tableGrey']">
                 <app-details-list-row :detail="item" :is-loading="isLoading" />
             </div>
@@ -82,41 +76,39 @@
 <script lang="ts">
 import { Detail } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import AppError from '@app/core/components/ui/AppError.vue'
 import AppDetailsListRow from '@app/core/components/ui/AppDetailsListRow.vue'
 
 @Component({
     components: {
-        AppError,
         AppDetailsListRow
     }
 })
 export default class AppDetailsList extends Vue {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
     @Prop(String) title!: string
     @Prop(Array) details!: Detail[]
     @Prop(Boolean) isLoading!: boolean
-    @Prop(String) error!: string
     @Prop({ type: Number, default: 99 }) maxItems!: number
+    @Prop({ type: Boolean, default: false }) isBlock!: boolean
 
     /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
     showMore = false // Whether or not to show "more" details
 
     /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
     /**
      * Calculate the key for the v-for directive.
@@ -147,16 +139,6 @@ export default class AppDetailsList extends Vue {
     Computed Values
   ===================================================================================
   */
-
-    /**
-     * Determines whether or not component has an error.
-     * If error property is empty string, there is no error.
-     *
-     * @return {Boolean} - Whether or not error exists
-     */
-    get hasError(): boolean {
-        return this.error !== ''
-    }
 
     /**
      * Returns a new array of "basic" details.

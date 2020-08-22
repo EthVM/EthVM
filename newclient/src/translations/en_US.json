@@ -124,6 +124,7 @@
             "genesis": "Genesis Rewards"
         },
         "reward-short": "Reward",
+        "total-rewards": "Total Rewards",
         "history": "Mining History"
     },
 
@@ -172,13 +173,16 @@
         "err": "Error",
         "error": {
             "address": {
-                "balance": "Something went wrong while retrieving Aadress's ETH balance.",
+                "balance": "Something went wrong while retrieving Address's ETH balance.",
                 "pending": "Something went wrong while retrieving Address's pending transactions.",
                 "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
                 "erc721": "Something went wrong while retrieving NFTs balances.",
                 "transfers-eth": "Something went wrong rettrieving Address transactions.",
                 "update-event": "Something went wrong during Address update."
+            },
+            "block": {
+                "detail": "Something went wrong while retrieving Block Details"
             },
 
             "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
