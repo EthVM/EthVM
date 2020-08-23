@@ -8,7 +8,13 @@
         <v-flex xs12>
             <app-details-list :details="blockDetails" :is-loading="loading" :max-items="9" :is-block="true" class="mb-4">
                 <template v-slot:title>
-                    <block-details-title :next-block="nextBlock" :prev-block="previousBlock" :uncles="uncleHashes" />
+                    <block-details-title
+                        :next-block="nextBlock"
+                        :prev-block="previousBlock"
+                        :uncles="uncleHashes"
+                        :loading="loading"
+                        :is-subscribed="subscribed"
+                    />
                 </template>
             </app-details-list>
         </v-flex>
@@ -50,9 +56,8 @@ import newBlockFeed from '../../NewBlockSubscription/newBlockFeed.graphql'
             },
             update: data => data.getBlockByHash || data.getBlockByNumber,
             result({ data }) {
-                console.log(data)
                 if (this.block) {
-                    console.log('here', this.block)
+                    this.$emit('isMined', true)
                     this.emitErrorState(false)
                 }
             },
@@ -270,7 +275,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
         return undefined
     }
     get nextBlock(): String | null {
-        const next = this.block.summary.number + 1
+        const next = this.block ? this.block.summary.number + 1 : -1
         if (this.lastBlock && this.lastBlock >= next) {
             return `/block/number/${next}`
         }
@@ -278,7 +283,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     }
 
     get previousBlock(): string {
-        const prev = this.block.summary.number - 1
+        const prev = this.block ? this.block.summary.number - 1 : -1
         if (prev >= 0) {
             return `/block/number/${prev}`
         }
@@ -296,7 +301,6 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
         })
         const a = observer.subscribe({
             next: data => {
-                console.log(data)
                 if (this.blockRef === data.data.newBlockFeed.number.toString()) {
                     a.unsubscribe()
                     this.subscribed = false
@@ -310,7 +314,6 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
 
     emitErrorState(val: boolean): void {
         this.hasError = val
-        console.log(this.hasError)
         this.$emit('errorDetails', this.hasError, ErrorMessageBlock.details)
     }
 }

@@ -11,27 +11,23 @@
 
     =====================================================================================
     -->
-        <div v-if="isLoading">
-            <v-layout pa-2 align-center justify-start>
-                <v-flex v-if="!isBlock" xs5 sm4>
-                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
-                </v-flex>
-                <v-flex v-else xs10 sm11>
-                    <v-card-title class="title font-weight-bold pl-4">{{ $t('message.not-mined') }}</v-card-title>
-                </v-flex>
-                <v-flex xs2 sm1>
-                    <v-progress-circular :size="20" color="secondary" indeterminate></v-progress-circular>
-                </v-flex>
-            </v-layout>
-            <v-divider class="lineGrey mt-1 mb-1" />
-        </div>
-        <div v-else class="pb-1 pt-1">
+        <div>
             <slot name="title">
-                <div class="pa-1">
-                    <v-card-title class="title font-weight-bold pl-4">{{ title }}</v-card-title>
+                <div v-if="isLoading">
+                    <v-layout pa-2 align-center justify-start>
+                        <v-flex xs5 sm4>
+                            <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
+                        </v-flex>
+                    </v-layout>
+                    <v-divider class="lineGrey mt-1 mb-1" />
+                </div>
+                <div v-else class="pb-1 pt-1">
+                    <div class="pa-1">
+                        <v-card-title class="title font-weight-bold pl-4">{{ title }}</v-card-title>
+                    </div>
+                    <v-divider class="lineGrey mt-1 mb-1" />
                 </div>
             </slot>
-            <v-divider class="lineGrey mt-1 mb-1" />
         </div>
         <!--
     =====================================================================================
@@ -94,7 +90,6 @@ export default class AppDetailsList extends Vue {
     @Prop(Array) details!: Detail[]
     @Prop(Boolean) isLoading!: boolean
     @Prop({ type: Number, default: 99 }) maxItems!: number
-    @Prop({ type: Boolean, default: false }) isBlock!: boolean
 
     /*
     ===================================================================================

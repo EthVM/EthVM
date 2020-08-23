@@ -9,7 +9,7 @@
       DETAILS LIST
     =====================================================================================
     -->
-        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" @errorDetails="setError" />
+        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" @errorDetails="setError" @isMined="setIsMined" />
 
         <!--
     =====================================================================================
@@ -17,7 +17,7 @@
     =====================================================================================
     -->
         <!-- TODO: Implement get block transfers by hash -->
-        <block-txs v-if="isValid && !isHash" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
+        <block-txs v-if="isValid && !isHash" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" :is-mined="isMined" page-type="blockDetails" />
     </v-container>
 </template>
 
@@ -62,6 +62,7 @@ export default class PageDetailsBlock extends Vue {
     */
 
     errorMessages: ErrorMessageBlock[] = []
+    isMined = false
 
     /*
     ===================================================================================
@@ -78,6 +79,10 @@ export default class PageDetailsBlock extends Vue {
       Methods
     ===================================================================================
     */
+
+    setIsMined(value: boolean): void {
+        this.isMined = true
+    }
 
     setError(hasError: boolean, message: ErrorMessageBlock): void {
         if (hasError) {
