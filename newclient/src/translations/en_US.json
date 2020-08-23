@@ -182,9 +182,9 @@
                 "update-event": "Something went wrong during Address update."
             },
             "block": {
-                "detail": "Something went wrong while retrieving Block Details"
+                "detail": "Something went wrong while retrieving block details"
             },
-
+            "txs": "Something went wrong while retrieving transactions",
             "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
             "transfers-erc20": "Somethign went wrong rettrieving Address ERC20 tokens transfers."
         },

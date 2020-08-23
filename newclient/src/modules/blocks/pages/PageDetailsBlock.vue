@@ -17,7 +17,15 @@
     =====================================================================================
     -->
         <!-- TODO: Implement get block transfers by hash -->
-        <block-txs v-if="isValid && !isHash" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" :is-mined="isMined" page-type="blockDetails" />
+        <block-txs
+            v-if="isValid && !isHash"
+            :max-items="maxItems"
+            :block-ref="blockRef"
+            :is-hash="isHash"
+            :is-mined="isMined"
+            page-type="blockDetails"
+            @errorTxs="setError"
+        />
     </v-container>
 </template>
 
