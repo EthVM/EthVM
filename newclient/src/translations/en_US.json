@@ -184,7 +184,8 @@
             "block": {
                 "detail": "Something went wrong while retrieving block details.",
                 "list": "Something went wrong while retrieving block list.",
-                "stats": "Something went wrong while retrieving block statistics."
+                "stats": "Something went wrong while retrieving block statistics.",
+                "subscription": "Something went wrong during new block update."
             },
             "txs": "Something went wrong while retrieving transactions.",
             "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",

@@ -18,7 +18,7 @@ import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/n
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks.vue'
 import { Crumb } from '@app/core/components/props'
-import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Vue, Component, Mixins, Watch } from 'vue-property-decorator'
 import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 const MAX_ITEMS = 10
@@ -76,6 +76,10 @@ export default class PageBlocks extends Mixins(NewBlockSubscription) {
                 }
             }
         }
+    }
+    @Watch('hasNewBlockUpdateError')
+    onHasNewBlockUpdateErrorChanged(newVal: boolean): void {
+        this.setError(newVal, ErrorMessageBlock.subscription)
     }
 }
 </script>
