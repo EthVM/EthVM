@@ -1,11 +1,11 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-message :messages="errorMessages" />
         <block-stats :new-block="newBlockNumber" />
-
         <v-layout row wrap justify-center mb-4>
             <v-flex xs12>
-                <recent-blocks :max-items="max" page-type="blocks" />
+                <recent-blocks :max-items="max" page-type="blocks" @errorBlocksList="setError" />
             </v-flex>
         </v-layout>
     </v-container>
@@ -15,26 +15,35 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import BlockStats from '@app/modules/blocks/handlers/BlockStats/BlockStats.vue'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
-
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks.vue'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 const MAX_ITEMS = 10
 
 @Component({
     components: {
         AppBreadCrumbs,
+        AppMessage,
         BlockStats,
         RecentBlocks
     }
 })
 export default class PageBlocks extends Mixins(NewBlockSubscription) {
     /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+    errorMessages: ErrorMessageBlock[] = []
+
+    /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
     get crumbs(): Crumb[] {
         return [
@@ -46,6 +55,27 @@ export default class PageBlocks extends Mixins(NewBlockSubscription) {
 
     get max(): number {
         return MAX_ITEMS
+    }
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+    setError(hasError: boolean, message: ErrorMessageBlock): void {
+        if (hasError) {
+            if (!this.errorMessages.includes(message)) {
+                this.errorMessages.push(message)
+            }
+        } else {
+            if (this.errorMessages.length > 0) {
+                const index = this.errorMessages.indexOf(message)
+                if (index > -1) {
+                    this.errorMessages.splice(index, 1)
+                }
+            }
+        }
     }
 }
 </script>
