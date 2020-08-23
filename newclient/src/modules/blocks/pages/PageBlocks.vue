@@ -2,7 +2,7 @@
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
         <app-message :messages="errorMessages" />
-        <block-stats :new-block="newBlockNumber" />
+        <block-stats :new-block="newBlockNumber" @errorBlockStats="setError" />
         <v-layout row wrap justify-center mb-4>
             <v-flex xs12>
                 <recent-blocks :max-items="max" page-type="blocks" @errorBlocksList="setError" />
