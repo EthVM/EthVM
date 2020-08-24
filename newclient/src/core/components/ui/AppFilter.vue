@@ -103,7 +103,7 @@ export default class AppFilter extends Vue {
   ===================================================================================
   */
 
-    selected = this.options[0]
+    selected = this.isSort ? this.options[2] : this.options[0]
     // category = this.options[0].category
     dialog = false
 
