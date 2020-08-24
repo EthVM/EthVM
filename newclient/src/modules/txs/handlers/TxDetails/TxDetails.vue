@@ -6,7 +6,7 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
-            <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :error="error" :max-items="7" />
+            <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :max-items="7" />
         </v-flex>
     </v-layout>
 </template>
@@ -20,7 +20,7 @@ import { TxDetails as TxDetailsType } from './apolloTypes/TxDetails'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import BN from 'bignumber.js'
-
+import { ErrorMessageTx } from '@app/modules/txs/models/ErrorMessagesForTx'
 @Component({
     components: {
         AppDetailsList
@@ -32,7 +32,20 @@ import BN from 'bignumber.js'
                 return { hash: this.txRef }
             },
             fetchPolicy: 'cache-and-network',
-            update: data => data.getTransactionByHash
+            update: data => data.getTransactionByHash,
+            result({ data }) {
+                if (data && data.getTransactionByHash) {
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                const newError = JSON.stringify(error.message)
+                if (newError.includes('Cannot return null for non-nullable field Query.getTransactionByHash')) {
+                    this.emitErrorState(true, true)
+                } else {
+                    this.emitErrorState(true)
+                }
+            }
         }
     }
 })
@@ -51,7 +64,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
   ===================================================================================
   */
 
-    error = ''
+    hasError = false
     transaction!: TxDetailsType
 
     /*
@@ -74,6 +87,11 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
    Methods
  ===================================================================================
  */
+    emitErrorState(val: boolean, hashNotFound = false): void {
+        this.hasError = val
+        const mess = hashNotFound ? ErrorMessageTx.notFound : ErrorMessageTx.details
+        this.$emit('errorDetails', this.hasError, mess)
+    }
 
     /**
      * Return properly-formatted Detail for "to" row in list component.
@@ -81,19 +99,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      * @return {Detail}
      */
     toDetail(transaction: TxDetailsType): Detail {
-        // TODO need tx receipt
-        // const { receipt } = transaction
-
-        // if (receipt && receipt.contractAddress) {
-        //     return {
-        //         title: `${this.$i18n.t('tx.to')} ${this.$i18n.tc('contract.name', 1).toString()}`,
-        //         detail: receipt.contractAddress,
-        //         copy: true,
-        //         link: `/address/${receipt.contractAddress}`,
-        //         mono: true
-        //     }
-        // }
-
         return {
             title: this.$i18n.t('tx.to').toString(),
             detail: transaction.to!,
@@ -109,7 +114,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      */
     get txDetails(): Detail[] {
         let details: Detail[]
-        if (this.isLoading || this.error) {
+        if (this.isLoading) {
             details = [
                 {
                     title: this.$i18n.t('block.number')
@@ -172,7 +177,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     detail: `${this.txAmount.value} ${this.txAmount.unit}`,
                     tooltip: this.txAmount.tooltipText ? `${this.txAmount.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
-                this.toDetail(this.transaction),
                 {
                     title: this.$i18n.t('tx.status'),
                     detail: `${this.$i18n.tc('tx.' + this.txStatus, 1)}`
@@ -209,6 +213,9 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     // txInput: this.inputFormatted
                 }
             ]
+            if (this.transaction.to) {
+                details.splice(5, 0, this.toDetail(this.transaction))
+            }
         }
 
         return details
@@ -220,7 +227,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      * @return {Boolean}
      */
     get isLoading(): boolean | undefined {
-        return this.$apollo.queries.transaction.loading
+        return this.$apollo.queries.transaction.loading || this.hasError
     }
     /**
      * Formats the transaction value to ETH.

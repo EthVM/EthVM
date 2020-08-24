@@ -124,6 +124,7 @@
             "genesis": "Genesis Rewards"
         },
         "reward-short": "Reward",
+        "total-rewards": "Total Rewards",
         "history": "Mining History"
     },
 
@@ -170,6 +171,33 @@
         "disconnected": "Disconnected from the server. Attempting to connect...",
         "no-data": "Oops something went wrong, no data from server :(",
         "err": "Error",
+        "error": {
+            "address": {
+                "balance": "Something went wrong while retrieving Address's ETH balance.",
+                "pending": "Something went wrong while retrieving Address's pending transactions.",
+                "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
+                "erc20": "Something went wrong while retrieving ERC20 balances.",
+                "erc721": "Something went wrong while retrieving NFTs balances.",
+                "transfers-eth": "Something went wrong rettrieving Address transactions.",
+                "update-event": "Something went wrong during Address update."
+            },
+            "block": {
+                "detail": "Something went wrong while retrieving block details.",
+                "list": "Something went wrong while retrieving block list.",
+                "stats": "Something went wrong while retrieving block statistics.",
+                "subscription": "Something went wrong during new block update."
+            },
+            "tx": {
+                "detail": "Something went wrong while retrieving transaction details."
+            },
+            "uncle": {
+                "detail": "Something went wrong while retrieving uncle details.",
+                "not-found": "This uncle does not exist."
+            },
+            "txs": "Something went wrong while retrieving transactions.",
+            "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
+            "transfers-erc20": "Somethign went wrong rettrieving Address ERC20 tokens transfers."
+        },
         "tx": {
             "no-all": "This address does not have any transaction history",
             "no-in": "This address does not have incoming transactions",
@@ -205,8 +233,8 @@
         },
         "not-found": "Oops! Page Not Found :(",
         "welcome": {
-            "title": "Welcome to EthVM Alpha!",
-            "text1": "We are now on Ethereum ropsten, so have a look around and let us know about any bugs or feature requests at ",
+            "title": "Welcome to EthVM Beta!",
+            "text1": "We are showing Ethereum Mainnet data, so have a look around and let us know about any bugs or feature requests at ",
             "text2": ", or go to ",
             "text3": "for updates and to contribute. ",
             "text4": "The EthVM team is looking forward to building useful blockchain tools together with our community!",
@@ -366,10 +394,11 @@
         "donate": "Donate",
         "btc": "BTC",
         "ens": "mewtopia.eth",
-        "copy": "Copyright 2020 All rights reserved by ",
-        "mew": "MyEtherWallet Inc",
+        "copy": "2020 ",
+        "mew": "MyEtherWallet Inc. All rights reserved. ",
         "copy-eth-addr": "Copy ETH address",
-        "copy-btc-addr": "Copy BTC address"
+        "copy-btc-addr": "Copy BTC address",
+        "pricing": "Pricing taken from"
     },
 
     "home": "Home",

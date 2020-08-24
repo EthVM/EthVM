@@ -1,7 +1,6 @@
 <template>
     <div>
-        <address-detail v-if="!hasError" :address="addressDetails" :loading="loading" :loading-tokens="loadingTokens" :ether-price="ethPrice" />
-        <v-card v-else> {{ error }} </v-card>
+        <address-detail :address="addressDetails" :loading="loading" :loading-tokens="loadingTokens" :ether-price="ethPrice" />
     </div>
 </template>
 
@@ -16,6 +15,8 @@ import { Address } from '@app/modules/address/components/props'
 import AddressDetail from '@app/modules/address/components/AddressDetail.vue'
 import BN from 'bignumber.js'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
+import { watch } from 'fs'
+import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 
 @Component({
     components: {
@@ -27,16 +28,21 @@ import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
             variables() {
                 return { hash: this.address }
             },
-            update: data => data.getEthBalance
-            // result(data) {
-            //     console.log(data)
-            //     if (data.data && data.data.getEthBalance) {
-            //         this.error = ''
-            //         //Fetch USD Value update
-            //     } else {
-            //         this.error = 'error'
-            //     }
-            // }
+            update: data => data.getEthBalance,
+            result(data) {
+                if (data.data && data.data.getEthBalance) {
+                    this.hasError = false
+                    this.emitErrorState()
+                } else {
+                    this.hasError = true
+                    this.emitErrorState()
+                }
+            },
+            error(error) {
+                this.hasError = true
+                this.emitErrorState()
+                /*Sentry */
+            }
         }
     }
 })
@@ -60,7 +66,7 @@ export default class AddressOverview extends Mixins(CoinData) {
     ===================================================================================
     */
     getEthBalance!: BalanceType
-    error = ''
+    hasError = false
 
     /*
     ===================================================================================
@@ -78,17 +84,22 @@ export default class AddressOverview extends Mixins(CoinData) {
         }
     }
 
-    get hasError(): boolean {
-        return !(this.error === '')
-    }
-
     get loading(): boolean {
-        return this.$apollo.queries.getEthBalance.loading
+        return this.hasError ? true : this.$apollo.queries.getEthBalance.loading
     }
 
     /*
     ===================================================================================
-      Computed Values
+      Methods
+    ===================================================================================
+    */
+    emitErrorState(): void {
+        this.$emit('errorBalance', this.hasError, ErrorMessage.balance)
+    }
+
+    /*
+    ===================================================================================
+     Watch
     ===================================================================================
     */
     @Watch('updateBalance')

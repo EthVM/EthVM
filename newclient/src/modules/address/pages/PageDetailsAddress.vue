@@ -8,6 +8,7 @@
         =====================================================================================
         -->
         <div v-else>
+            <app-message :messages="errorMessages" />
             <v-layout row wrap justify-start class="mb-4">
                 <v-flex xs12>
                     <address-overview
@@ -19,6 +20,7 @@
                         :update-balance="addrBalanceChanged"
                         :loading-tokens="loadingERC20Balance"
                         @resetBalanceUpdate="resetBalance"
+                        @errorBalance="setError"
                     />
                 </v-flex>
             </v-layout>
@@ -55,10 +57,11 @@
                                     :max-items="max"
                                     :new-transfers="newETHTransfers"
                                     @resetUpdateCount="setNewEvent"
+                                    @errorTransfers="setError"
                                 ></address-transfers>
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
-                                <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" />
+                                <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" @errorPending="setError" />
                             </v-slide-x-reverse-transition>
                         </div>
                     </keep-alive>
@@ -93,6 +96,7 @@
                                     transfers-type="ERC20"
                                     @resetUpdateCount="setNewEvent"
                                     @resetTransfersRefetch="resetTransfersRefetch(true)"
+                                    @errorTransfers="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
@@ -107,6 +111,7 @@
                                     @resetUpdateCount="setNewEvent"
                                     @loadingERC20Tokens="setLoadingERC20"
                                     @resetBalanceRefetch="resetBalanceRefetch(true)"
+                                    @errorTokenBalance="setError"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -142,6 +147,7 @@
                                     transfers-type="ERC721"
                                     @resetUpdateCount="setNewEvent"
                                     @resetTransfersRefetch="resetTransfersRefetch(false)"
+                                    @errorTransfers="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <v-slide-x-reverse-transition>
@@ -154,6 +160,7 @@
                                     token-type="ERC721"
                                     @resetUpdateCount="setNewEvent"
                                     @resetBalanceRefetch="resetBalanceRefetch(false)"
+                                    @errorTokenBalance="setError"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -218,6 +225,7 @@
                                     rewards-type="block"
                                     @blockRewards="setBlockRewards"
                                     @resetUpdateCount="setNewEvent"
+                                    @errorRewards="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <!--
@@ -234,6 +242,7 @@
                                     rewards-type="uncle"
                                     @uncleRewards="setUncleRewards"
                                     @resetUpdateCount="setNewEvent"
+                                    @errorRewards="setError"
                                 />
                             </v-slide-x-reverse-transition>
                             <!--
@@ -248,6 +257,7 @@
                                     :max-items="max"
                                     rewards-type="genesis"
                                     @genesisRewards="setGenesisRewards"
+                                    @errorRewards="setError"
                                 />
                             </v-slide-x-reverse-transition>
                         </div>
@@ -269,9 +279,10 @@
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
@@ -281,6 +292,8 @@ import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/Add
 import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
 import AddressRewards from '@app/modules/address/handlers/AddressRewards/AddressRewards.vue'
 import { Address } from '@app/modules/address/components/props'
+import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
+
 const MAX_ITEMS = 10
 
 @Component({
@@ -288,6 +301,7 @@ const MAX_ITEMS = 10
         AppInfoLoad,
         AppBreadCrumbs,
         AppError,
+        AppMessage,
         AddressOverview,
         AppTabs,
         AddressTransfers,
@@ -321,6 +335,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     hasGenesisRewards = false
     hasUncleRewards = false
     hasBlockRewards = false
+    errorMessages: ErrorMessage[] = []
 
     /* ERC20 and ERC721 Refetc options */
     totalERC20 = 0
@@ -429,6 +444,22 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     setLoadingERC20(_value: boolean): void {
         this.loadingERC20Balance = _value
     }
+
+    /* Errors Events :*/
+    setError(hasError: boolean, message: ErrorMessage): void {
+        if (hasError) {
+            if (!this.errorMessages.includes(message)) {
+                this.errorMessages.push(message)
+            }
+        } else {
+            if (this.errorMessages.length > 0) {
+                const index = this.errorMessages.indexOf(message)
+                if (index > -1) {
+                    this.errorMessages.splice(index, 1)
+                }
+            }
+        }
+    }
     /*
     ===================================================================================
       LifeCycle
@@ -443,6 +474,16 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
         }
 
         window.scrollTo(0, 0)
+    }
+
+    /*
+    ===================================================================================
+      Watch
+    ===================================================================================
+    */
+    @Watch('hasUpdateError')
+    onHasUpdateErrorChanged(newVal: boolean): void {
+        this.setError(newVal, ErrorMessage.updateEvent)
     }
 }
 </script>

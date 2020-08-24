@@ -1,10 +1,10 @@
 <template>
     <v-flex xs12>
-        <v-layout row wrap align-center justify-start mt-1 mb-1>
+        <v-layout v-if="!loading" row wrap align-center justify-start mt-1 mb-1>
             <!-- Previous Block -->
             <v-flex xs2 sm1>
                 <v-layout v-if="prevBlock != ''" align-center justify-start>
-                    <v-btn :to="prevBlock" flat color="primary" class="black--text" icon @click="reload()"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
+                    <v-btn :to="prevBlock" flat color="secondary" class="black--text" icon @click="reload()"> <v-icon>fas fa-angle-left</v-icon> </v-btn>
                 </v-layout>
             </v-flex>
             <!-- Title -->
@@ -36,10 +36,23 @@
             <!-- Next Block -->
             <v-flex v-if="nextBlock != ''" xs2 sm1>
                 <v-layout align-center justify-end>
-                    <v-btn :to="nextBlock" flat color="primary" class="black--text" icon> <v-icon>fas fa-angle-right</v-icon> </v-btn>
+                    <v-btn :to="nextBlock" flat color="secondary" class="black--text" icon> <v-icon>fas fa-angle-right</v-icon> </v-btn>
                 </v-layout>
             </v-flex>
         </v-layout>
+        <div v-else>
+            <v-layout align-center justify-space-between>
+                <v-flex v-if="!isSubscribed" xs5 sm4>
+                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
+                </v-flex>
+                <v-flex v-if="isSubscribed" xs8 sm11>
+                    <v-card-title class="title font-weight-bold pl-4">{{ $t('message.not-mined') }}</v-card-title>
+                </v-flex>
+                <v-flex v-if="isSubscribed" xs2 sm1>
+                    <v-progress-circular :size="20" color="secondary" indeterminate></v-progress-circular>
+                </v-flex>
+            </v-layout>
+        </div>
     </v-flex>
 </template>
 
@@ -62,6 +75,8 @@ export default class BlockDetailsTitle extends Vue {
     @Prop(String) nextBlock!: string
     @Prop(String) prevBlock!: string
     @Prop(Array) uncles!: string[]
+    @Prop({ type: Boolean, default: true }) loading!: boolean
+    @Prop({ type: Boolean, default: false }) isSubscribed!: boolean
 
     /*
   ===================================================================================

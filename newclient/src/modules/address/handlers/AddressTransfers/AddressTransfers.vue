@@ -69,12 +69,7 @@ import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './
 import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAdrERC721Transfers'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
-
-/*
-  DEV NOTES:
-  - add on Error
-  - add messages if Error to be displayed in Table
-*/
+import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 
 @Component({
     components: {
@@ -108,21 +103,25 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
             update: data => data.getEthTransfersV2 || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
-                    this.error = '' // clear the error
-                    if (data.getEthTransfersV2 && data.getEthTransfersV2.transfers) {
-                        this.ethTransfers = data.getEthTransfersV2.transfers.map(item => {
-                            return new EthTransfer(item)
-                        })
-                    }
-                    if (this.initialLoad) {
-                        this.showPagination = this.getTransfers.nextKey != null
-                        this.initialLoad = false
+                    try {
+                        if (data.getEthTransfersV2 && data.getEthTransfersV2.transfers) {
+                            this.ethTransfers = data.getEthTransfersV2.transfers.map(item => {
+                                return new EthTransfer(item)
+                            })
+                        }
+                        if (this.initialLoad) {
+                            this.showPagination = this.getTransfers.nextKey != null
+                            this.initialLoad = false
+                        }
+                        this.emitErrorState(false)
+                    } catch (error) {
+                        this.initialLoad = true
+                        this.emitErrorState(true)
                     }
                 } else {
-                    console.log('error failed no data: ', data)
+                    this.emitErrorState(true)
                     this.showPagination = false
                     this.initialLoad = true
-                    this.error = this.error || this.$i18n.t('message.err')
                 }
             }
         }
@@ -148,7 +147,6 @@ export default class AddressTransers extends Vue {
     ===================================================================================
     */
 
-    error = ''
     syncing?: boolean = false
     initialLoad = true
     showPagination = false
@@ -160,6 +158,7 @@ export default class AddressTransers extends Vue {
     pageType = 'address'
     getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
     ethTransfers!: EthTransfer[]
+    hasError = false
 
     /*
     ===================================================================================
@@ -185,9 +184,6 @@ export default class AddressTransers extends Vue {
                 return `${this.$t('message.tx.no-all')}`
             }
             return `${this.$t('message.transfer.no-all')}`
-        }
-        if (this.error != '') {
-            return this.error
         }
         return ''
     }
@@ -304,6 +300,11 @@ export default class AddressTransers extends Vue {
 
         this.index = page
     }
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        const errorType = this.isETH ? ErrorMessage.transfersETH : this.isERC20 ? ErrorMessage.transfersERC20 : ErrorMessage.transfersERC721
+        this.$emit('errorTransfers', this.hasError, errorType)
+    }
     /*
     ===================================================================================
       Watch
@@ -325,7 +326,7 @@ export default class AddressTransers extends Vue {
                         }
                     })
                     .catch(error => {
-                        console.log(error)
+                        this.emitErrorState(true)
                     })
             }
         }

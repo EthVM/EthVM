@@ -1,14 +1,14 @@
 <template>
     <v-layout row wrap justify-space-between mb-4>
         <v-flex xs12 sm6 md3>
-            <app-info-card :is-loading="initialLoad" :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" />
+            <app-info-card :is-loading="loading" :title="$t('block.last-n')" :value="latestBlockNumber" color-type="primary" back-type="last-block" />
         </v-flex>
         <v-flex xs12 sm6 md3>
             <app-info-card
                 :title="$t('block.time')"
                 :value="timestamp"
-                :is-date="!initialLoad"
-                :is-loading="initialLoad"
+                :is-date="!loading"
+                :is-loading="loading"
                 :metrics="$t('message.sec')"
                 color-type="success"
                 back-type="time-since"
@@ -19,20 +19,13 @@
                 :title="$t('block.hash-rate')"
                 :value="latestHashRate"
                 :metrics="hashUnitLabel.th"
-                :is-loading="initialLoad"
+                :is-loading="loading"
                 color-type="warning"
                 back-type="hash-rate"
             />
         </v-flex>
         <v-flex xs12 sm6 md3>
-            <app-info-card
-                :title="$t('diff.name')"
-                :value="latestDifficulty"
-                :metrics="''"
-                :is-loading="initialLoad"
-                color-type="error"
-                back-type="difficulty"
-            />
+            <app-info-card :title="$t('diff.name')" :value="latestDifficulty" :metrics="''" :is-loading="loading" color-type="error" back-type="difficulty" />
         </v-flex>
     </v-layout>
 </template>
@@ -44,6 +37,7 @@ import { getLatestBlockInfo } from './stats.graphql'
 import BN from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './apolloTypes/getLatestBlockInfo'
+import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 @Component({
     components: {
@@ -54,6 +48,7 @@ import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './apollo
             query: getLatestBlockInfo,
             result({ data }) {
                 if (data) {
+                    this.emitErrorState(false)
                     if (this.initialLoad) {
                         this.initialLoadedBlock = this.getLatestBlockInfo.number
                         this.initialLoad = false
@@ -62,7 +57,7 @@ import { getLatestBlockInfo_getLatestBlockInfo as BlockInfoType } from './apollo
                 }
             },
             error(error) {
-                this.error = JSON.stringify(error.message)
+                this.emitErrorState(true)
             }
         }
     }
@@ -90,6 +85,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
         mh: 'Mh/s'
     }
     initialLoadedBlock!: number
+    hasError = false
 
     /*
     ===================================================================================
@@ -98,7 +94,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     */
 
     get latestBlockNumber(): string {
-        if (!this.newBlock && this.initialLoad) {
+        if (this.loading) {
             return ''
         }
         if (this.newBlock) {
@@ -113,6 +109,18 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
 
     get latestDifficulty(): string {
         return this.getLatestBlockInfo ? `${this.formatFloatingPointValue(new BN(this.getLatestBlockInfo.difficulty).div('1e12').decimalPlaces(2)).value}` : ''
+    }
+    get loading(): boolean {
+        return this.initialLoad || this.hasError
+    }
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorBlockStats', this.hasError, ErrorMessageBlock.stats)
     }
 
     /*

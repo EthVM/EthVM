@@ -1,17 +1,24 @@
 <template>
-    <v-snackbar v-model="show" :bottom="true" :timeout="0" :auto-height="true" class="app-message" color="sync">
-        <v-layout class="px-3 py-3" row wrap align-center justify-center>
-            <v-flex shrink pl-2 pr-2>
-                <v-img :src="require('@/assets/icon-warning.png')" width="30px" height="30px" contain />
-            </v-flex>
-            <v-flex :class="[$vuetify.breakpoint.xsOnly ? 'text-xs-center py-3' : '']" grow>
-                <p v-for="(message, i) in messages" :key="i" class="black--text font-italic">{{ message }}</p>
-            </v-flex>
-            <v-flex shrink>
-                <v-btn outline color="primary" class="text-capitalize px-4 py-2 ml-0" @click="show = false">Got It</v-btn>
-            </v-flex>
-        </v-layout>
-    </v-snackbar>
+    <div>
+        <v-snackbar v-model="showLarge" :bottom="true" :timeout="0" :auto-height="true" class="app-message" color="sync">
+            <v-layout class="pa-1" row wrap align-center justify-center>
+                <v-flex shrink pl-2 pr-2>
+                    <v-img :src="require('@/assets/icon-warning.png')" width="30px" height="30px" contain />
+                </v-flex>
+                <v-flex :class="[$vuetify.breakpoint.xsOnly ? 'text-xs-center py-3' : '']" grow>
+                    <p v-for="(message, i) in messages" :key="i" class="black--text font-italic">{{ $t(message) }}</p>
+                </v-flex>
+                <v-flex shrink>
+                    <v-btn outline color="primary" class="text-capitalize px-4 py-2 ml-0" @click="debouncedSetSmall()">Got It</v-btn>
+                </v-flex>
+            </v-layout>
+        </v-snackbar>
+        <v-fab-transition>
+            <v-btn v-show="isSmall && showErrors" color="transparent" fab icon fixed bottom right @click="debouncedSetLarge()">
+                <v-img :src="require('@/assets/icon-warning-outline.png')" height="56px" max-width="56px" contain class="mb-2 mt-2"></v-img>
+            </v-btn>
+        </v-fab-transition>
+    </div>
 </template>
 
 <script lang="ts">
@@ -28,75 +35,78 @@ import { setTimeout } from 'timers'
 @Component
 export default class AppMessage extends Vue {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
-    @Prop(Boolean) syncing?: boolean
-    @Prop(Boolean) connected?: boolean
-
-    /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
-
-    hide: boolean = false
-    show: boolean = false
-    messages: TranslateResult[] = new Array()
-    debouncedShow = debounce(this.setShow, 1000)
-    debouncedMess = debounce(this.setMessage, 1000)
+    @Prop(Array) messages!: string[]
 
     /*
-  ===================================================================================
-    LifeCycle
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
-    created() {
-        if (this.syncing || this.connected) {
-            this.debouncedShow()
-            this.debouncedMess()
+    isLarge: boolean = false
+    isSmall: boolean = false
+    debouncedSmall = debounce(this.setIsSmall, 400)
+    debouncedLarge = debounce(this.setIsLarge, 400)
+
+    /*
+    ===================================================================================
+      Watch
+    ===================================================================================
+    */
+
+    @Watch('showErrors')
+    onShowErrorsChanged(newVal: boolean, oldVal: boolean): void {
+        if (newVal && newVal != oldVal) {
+            this.debouncedSetSmall()
+        }
+        if (!newVal && newVal != oldVal) {
+            this.hideAll()
         }
     }
 
     /*
-  ===================================================================================
-    Watch
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
 
-    @Watch('syncing')
-    onSyncingChanged(): void {
-        this.debouncedShow()
-        this.debouncedMess()
+    get showErrors(): boolean {
+        return this.messages && this.messages.length > 0
     }
-
-    @Watch('connected')
-    onConnectedChanged(): void {
-        this.debouncedShow()
-        this.debouncedMess()
+    get showLarge(): boolean {
+        return this.isLarge && this.showErrors
     }
 
     /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
 
-    setShow(): void {
-        this.show = this.syncing || this.connected || false
+    debouncedSetSmall(): void {
+        this.isLarge = false
+        this.debouncedSmall()
     }
 
-    setMessage(): void {
-        this.messages = []
-        if (this.syncing) {
-            this.messages.push(this.$t('message.sync.main'))
-        }
-        if (this.connected) {
-            this.messages.push(this.$t('message.disconnected'))
-        }
+    debouncedSetLarge(): void {
+        this.isSmall = false
+        this.debouncedLarge()
+    }
+    setIsSmall(): void {
+        this.isSmall = true
+    }
+    setIsLarge(): void {
+        this.isLarge = true
+    }
+
+    hideAll(): void {
+        this.isLarge = false
+        this.isSmall = false
     }
 }
 </script>

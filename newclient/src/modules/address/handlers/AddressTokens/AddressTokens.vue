@@ -63,6 +63,7 @@ import {
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
+import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 /*
   DEV NOTES:
   - add on Error
@@ -100,7 +101,7 @@ interface NFTMap {
             },
             result({ data }) {
                 if (this.hasTokens) {
-                    this.error = '' // clear the error
+                    this.emitErrorState(false)
                     if (this.isERC20) {
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
@@ -115,13 +116,17 @@ interface NFTMap {
                                 this.showPagination = true
                             }
                         }
+                    } else {
+                        this.initialLoad = false
                     }
                 } else {
-                    console.log('error failed no data: ', data)
+                    this.emitErrorState(true)
                     this.showPagination = false
                     this.initialLoad = true
-                    this.error = this.error || this.$i18n.t('message.err')
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
             }
         },
 
@@ -145,9 +150,15 @@ interface NFTMap {
                         this.uniqueNFTMap[this.requestContract] = this.getOwnersERC721Tokens.tokens
                         this.uniqueNFT = this.uniqueNFTMap[this.requestContract]
                         this.loadingUniqueNFT = false
+                        this.emitErrorState(false)
                         this.skipGetUniqueTokens = true
                     }
+                } else {
+                    this.emitErrorState(true)
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
             }
         }
     }
@@ -171,7 +182,6 @@ export default class AddressTokens extends Mixins(CoinData) {
     ===================================================================================
     */
 
-    error = ''
     syncing?: boolean = false
     initialLoad = true
     showPagination = false
@@ -194,6 +204,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     requestContract = ''
     requestContractName = ''
     skipGetUniqueTokens = true
+    hasError = false
 
     /*
     ===================================================================================
@@ -228,9 +239,6 @@ export default class AddressTokens extends Mixins(CoinData) {
                 return `${this.$t('message.transfer.no-nft')}`
             }
             return `${this.$t('message.transfer.no-all')}`
-        }
-        if (this.error != '') {
-            return this.error
         }
         return ''
     }
@@ -340,6 +348,12 @@ export default class AddressTokens extends Mixins(CoinData) {
         this.loadingUniqueNFT = true
     }
 
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        const errorType = this.isERC20 ? ErrorMessage.tokensERC20 : ErrorMessage.tokens721
+        this.$emit('errorTokenBalance', this.hasError, errorType)
+    }
+
     /*
     ===================================================================================
       Watch
@@ -364,7 +378,7 @@ export default class AddressTokens extends Mixins(CoinData) {
                     }
                 })
                 .catch(error => {
-                    console.log(error)
+                    this.emitErrorState(true)
                 })
         }
     }
