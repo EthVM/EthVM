@@ -43,11 +43,6 @@ const MAX_ITEMS = 10
                         this.showPagination = this.hasMore
                         this.initialLoad = false
                     }
-                } else {
-                    this.showPagination = false
-                    this.initialLoad = true
-                    this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.getTransfers.refetch()
                 }
             }
         }
