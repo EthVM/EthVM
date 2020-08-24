@@ -2,47 +2,51 @@
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
+        <app-message :messages="errorMessages" />
 
         <!--
     =====================================================================================
       UNCLE DETAILS LIST
     =====================================================================================
     -->
-        <uncle-details v-if="isValid" :uncle-ref="uncleRef" />
+        <uncle-details v-if="isValid && !hasError" :uncle-ref="uncleRef" @errorDetails="setError" />
     </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import { eth } from '@app/core/helper'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import UncleDetails from '@app/modules/uncles/handlers/UncleDetails.vue'
-
+import { ErrorMessageUncle } from '@app/modules/uncles/models/ErrorMessagesForUncle'
 @Component({
     components: {
         AppBreadCrumbs,
         AppError,
+        AppMessage,
         UncleDetails
     }
 })
 export default class PageDetailsUncle extends Vue {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
     @Prop({ type: String }) uncleRef!: string
 
     /*
-  ===================================================================================
-    Initial Data
-  ===================================================================================
-  */
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
 
     error = ''
+    errorMessages: ErrorMessageUncle[] = []
 
     /*
     ===================================================================================
@@ -62,10 +66,10 @@ export default class PageDetailsUncle extends Vue {
     }
 
     /*
-  ===================================================================================
-    Computed
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
     /**
      * Determines whether or not the uncleRef is valid.
      *
@@ -96,6 +100,30 @@ export default class PageDetailsUncle extends Vue {
                 hash: this.uncleRef
             }
         ]
+    }
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+    setError(hasError: boolean, message: ErrorMessageUncle): void {
+        if (hasError) {
+            if (message === ErrorMessageUncle.notFound) {
+                this.error = this.$i18n.t(message).toString()
+            } else {
+                if (!this.errorMessages.includes(message)) {
+                    this.errorMessages.push(message)
+                }
+            }
+        } else {
+            if (this.errorMessages.length > 0) {
+                const index = this.errorMessages.indexOf(message)
+                if (index > -1) {
+                    this.errorMessages.splice(index, 1)
+                }
+            }
+        }
     }
 }
 </script>

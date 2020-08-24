@@ -190,6 +190,10 @@
             "tx": {
                 "detail": "Something went wrong while retrieving transaction details."
             },
+            "uncle": {
+                "detail": "Something went wrong while retrieving uncle details.",
+                "not-found": "This uncle does not exist."
+            },
             "txs": "Something went wrong while retrieving transactions.",
             "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
             "transfers-erc20": "Somethign went wrong rettrieving Address ERC20 tokens transfers."

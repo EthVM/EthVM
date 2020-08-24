@@ -6,7 +6,7 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
-            <app-details-list :title="title" :details="uncleDetails" :is-loading="loading" :error="error" />
+            <app-details-list :title="title" :details="uncleDetails" :is-loading="loading" />
         </v-flex>
     </v-layout>
 </template>
@@ -18,6 +18,7 @@ import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { getUncleByHash } from './uncleDetails.graphql'
 import { UncleDetails as UncleDetailsType } from './apolloTypes/UncleDetails'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { ErrorMessageUncle } from '@app/modules/uncles/models/ErrorMessagesForUncle'
 
 @Component({
     components: {
@@ -29,7 +30,20 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
             variables() {
                 return { hash: this.uncleRef }
             },
-            update: data => data.getUncleByHash
+            update: data => data.getUncleByHash,
+            result({ data }) {
+                if (data && data.getUncleByHash) {
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                const newError = JSON.stringify(error.message)
+                if (newError.includes('Uncle not found')) {
+                    this.emitErrorState(true, true)
+                } else {
+                    this.emitErrorState(true)
+                }
+            }
         }
     }
 })
@@ -48,9 +62,8 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
   ===================================================================================
   */
 
-    uncle?: UncleDetailsType
-    error = ''
-
+    uncle!: UncleDetailsType
+    hasError = false
     /*
   ===================================================================================
     Computed
@@ -74,7 +87,7 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
      */
     get uncleDetails(): Detail[] {
         let details: Detail[]
-        if (this.loading || this.error) {
+        if (this.loading) {
             details = [
                 {
                     title: this.$i18n.t('uncle.height')
@@ -108,11 +121,6 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
                 }
             ]
         } else {
-            // not too sure if we still need this check
-            if (!this.uncle) {
-                this.error = this.$i18n.t('message.invalid.uncle').toString()
-                return []
-            }
             details = [
                 {
                     title: this.$i18n.t('uncle.height'),
@@ -176,7 +184,19 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
      * @return {Boolean}
      */
     get loading(): boolean | undefined {
-        return this.$apollo.queries.uncle.loading
+        return this.$apollo.queries.uncle.loading || this.hasError
+    }
+
+    /*
+  ===================================================================================
+    Methods:
+  ===================================================================================
+  */
+
+    emitErrorState(val: boolean, hashNotFound = false): void {
+        this.hasError = val
+        const mess = hashNotFound ? ErrorMessageUncle.notFound : ErrorMessageUncle.details
+        this.$emit('errorDetails', this.hasError, mess)
     }
 }
 </script>
