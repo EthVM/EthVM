@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/EthVM/ethvm/master/.github/assets/logo.png" alt="ethvm-logo">
   <p>:zap: EthVM: An Open Source Proccessing Engine and Block Explorer for Ethereum, based on Apache Kafka :zap:</p>
-  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a> / <a href="http://nestjs.com/">NestJS</a> / <a href="https://kafka.apache.org/">Apache Kafka</a> / <a href="https://github.com/paritytech/parity-ethereum">Parity</a> / <a href="https://www.postgresql.org">Postgres</a> 
+  <p>Powered by <a href="https://www.typescriptlang.org/">TypeScript</a> / <a href="https://vuejs.org/">VueJS</a>  
   <p><a href="https://travis-ci.org/EthVM/EthVM.svg?branch=develop""><img src="https://travis-ci.org/EthVM/EthVM.svg?branch=develop"/></a></p>
 </div>
 
@@ -17,52 +17,32 @@
   <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/capture-5.png" width="100" />
 </p>
 
-## Warning
-
-**We are on active development!**
-
-We are currently removing Kafka and other core parts, as well as, refatcoring front end. Mostly likely starting mid May, project will not bahave as expected. Tentative date for the project to be fully functional and have approrpiate documentation is in Mid June.
-
-Documentation is deprecated.
-
 ## About
 
 ### What is EthVM?
-
-EthVM is an open-source Blockchain Explorer focused mainly on [Ethereum](https://www.ethereum.org/) (although other networks and forks will be supported over time) under the [SSPL license](https://www.mongodb.com/licensing/server-side-public-license) (a small variation of the GNU Affero License v3) and written in a mixture of different languages.
-
-You can use EthVM as a tool to explore your custom private network or the existing public ones or as a ETL (Extract, Transform, Load) platform to perform different analysis on the data.
+EthVM is an open-source [Ethereum](https://www.ethereum.org/) Blockchain Data Processing and Analytics Engine with a client-side Block Explorer, although other networks and forks will be supported over time. EthVM is build by [MyEtherWallet](https://github.com/MyEtherWallet) team and is secured under the [SSPL license](https://www.mongodb.com/licensing/server-side-public-license) (a small variation of the GNU Affero License v3) and is written in a mixture of different languages.
 
 Our core infrastructure is based on well known languages:
 
-- [TypeScript](https://www.typescriptlang.org/)
-- [Kotlin](https://kotlinlang.org/)
+- [TypeScript](https://www.typescriptlang.org/) (Block Explorer)
+- Javascript (API/Processor)
 
 And also is backed by popular frameworks:
 
-- [Apache Kafka](https://kafka.apache.org/) = [Kafka Connect](https://docs.confluent.io/current/connect/index.html) + [Kafka Schema Registry](https://docs.confluent.io/current/schema-registry/docs/index.html) + [Avro](https://avro.apache.org/)
 - [VueJs](https://vuejs.org/)
-- [NestJS](https://nestjs.com/)
+- [Apollo Graphql](https://www.apollographql.com/)
+- [Serverless](https://www.serverless.com/)
+- [DynamoDB](https://aws.amazon.com/dynamodb/)
 
-We have choosen the above technologies to allow a wider range of people to contribute to the project regardless of the programming level.
+Our Block Explorer is currently in Beta right now. You can check it out live at [www.ethvm.com](https://www.ethvm.com/) and read more about it [here](https://medium.com/myetherwallet/introducing-mews-ethereum-blockchain-explorer-ethvm-beta-78e5b849e2fc). We are currently focused on bug fixes while we work on adding new features in the near future. If you have any questions or requests, feel free to open an issue or send us an email at *dev@ethvm.com*. 
 
-### Why Apache Kafka?
-
-As the [official website](https://kafka.apache.org/) states:
-
-> Kafka is used for building real-time data pipelines and streaming apps. It is horizontally scalable, fault-tolerant, wicked fast, and runs in production in thousands of companies.
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/EthVM/ethvm/develop/.github/assets/ethvm-diagram.jpg" alt="EthVM with Apache Kafka" width="500" />
-</div>
-
-We believe that it fits quite nicely within the needs that a Block Explorer typically may have. On the other side, and by fully embracing the Kafka ecosystem, we allow to export the processed information very easily to other platforms.
 
 ## Getting Started
 
-For more information on how you can setup your environment and start developing, we recommend you to visit our [Wiki](https://github.com/EthVM/ethvm/wiki/)!
+Right now you can only view EthVM’s Block Explorer (front-end) code. We will be merging the api and processor into the same repo within a couple of weeks, so you can inspect the entire project after the merge. 
 
-**NOTE**: Please, don't run the code blindly as there are a couple of steps you need to be aware of!
+You can run  `yarn start:dev` within the newclient folder, but you will not be able to propagate any data to the front-end, since the api code base has yet to be merged. However, you can still check out the front-end, and we greatly appreciate any PRs that can improve on code readability - including commentary and structure!
+
 
 ## Contributing
 
@@ -71,6 +51,20 @@ We welcome every kind of contribution, so, please see [CONTRIBUTING](.github/CON
 ## Stay in touch!
 
 We have created our `EthVM - Devs` [Telegram channel](https://t.me/ethvm), feel free to join and hang out!
+You can also reach out to us on [Twitter](https://twitter.com/Eth_VM) and [Reddit](https://www.reddit.com/r/ethvm/).
+
+## About [MyEtherWallet](https://github.com/MyEtherWallet) Inc
+
+EthVM is backed by the team of [MyEtherWallet](https://github.com/MyEtherWallet) (MEW), Ethereum’s original wallet. The MEW team is a group of Ethereum-enthusiasts dedicated to building open-source, intuitive products for the Ethereum community. Our team is committed to providing safe spaces for users to view and interact with their funds, without having to worry about who has access to their information and data. 
+
+All of our products are completely open-source and available on GitHub for review:
+
+[MyEtherWallet Inc](https://github.com/MyEtherWallet/MyEtherWallet)
+
+[Knowledge Base](https://github.com/MyEtherWallet/knowledge-base)
+
+[MEWconnect Protocol](https://github.com/MyEtherWallet/MEWconnect)
+
 
 ## License
 
