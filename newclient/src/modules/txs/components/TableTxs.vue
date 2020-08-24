@@ -9,7 +9,7 @@
     -->
         <v-layout pl-2 pr-2>
             <v-flex hidden-sm-and-down sm12>
-                <v-card :color="headerColor" flat class="white--text" height="40px">
+                <v-card color="info" flat class="white--text" height="40px">
                     <slot name="header">
                         <v-layout align-center justify-start row fill-height pl-3 pr-2>
                             <v-flex sm2 lg1>
@@ -117,9 +117,6 @@ export default class TableTxs extends Vue {
         return this.isScrollView ? SCROLLVIEW : ''
     }
 
-    get headerColor(): string {
-        return this.isAddress ? 'primary' : 'info'
-    }
     get displayData(): any[] {
         if (this.txsData) {
             const start = this.index * this.maxItems
