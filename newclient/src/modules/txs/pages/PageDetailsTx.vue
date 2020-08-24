@@ -1,28 +1,32 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-message :messages="errorMessages" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
-    =====================================================================================
-      TX DETAILS LIST
-    =====================================================================================
-    -->
-        <tx-details v-if="isValid" :tx-ref="txRef" />
+        =====================================================================================
+          TX DETAILS LIST
+        =====================================================================================
+        -->
+        <tx-details v-if="isValid && !hasError" :tx-ref="txRef" @errorDetails="setError" />
     </v-container>
 </template>
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import { eth } from '@app/core/helper'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import TxDetails from '@app/modules/txs/handlers/TxDetails/TxDetails.vue'
+import { ErrorMessageTx } from '@app/modules/txs/models/ErrorMessagesForTx'
 
 @Component({
     components: {
         AppBreadCrumbs,
         AppError,
+        AppMessage,
         TxDetails
     }
 })
@@ -40,7 +44,7 @@ export default class PageDetailsTxs extends Vue {
     Initial Data
   ===================================================================================
   */
-    // TODO: plug this error somewhere
+    errorMessages: ErrorMessageTx[] = []
     error = ''
 
     /*
@@ -96,6 +100,24 @@ export default class PageDetailsTxs extends Vue {
                 hash: this.txRef
             }
         ]
+    }
+    setError(hasError: boolean, message: ErrorMessageTx): void {
+        if (hasError) {
+            if (message === ErrorMessageTx.notFound) {
+                this.error = this.$i18n.t(message).toString()
+            } else {
+                if (!this.errorMessages.includes(message)) {
+                    this.errorMessages.push(message)
+                }
+            }
+        } else {
+            if (this.errorMessages.length > 0) {
+                const index = this.errorMessages.indexOf(message)
+                if (index > -1) {
+                    this.errorMessages.splice(index, 1)
+                }
+            }
+        }
     }
 }
 </script>
