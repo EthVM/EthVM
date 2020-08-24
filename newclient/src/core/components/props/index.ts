@@ -36,7 +36,7 @@ export interface Detail {
     copy?: boolean
     txInput?: string[]
     mono?: boolean
-    priceChange?: string
+    priceChange?: number | null
     tooltip?: string
 }
 
