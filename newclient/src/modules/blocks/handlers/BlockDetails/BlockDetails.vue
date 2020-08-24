@@ -301,7 +301,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
         })
         const a = observer.subscribe({
             next: data => {
-                if (this.blockRef === data.data.newBlockFeed.number.toString()) {
+                if (new BN(data.data.newBlockFeed.number).isGreaterThanOrEqualTo(new BN(this.blockRef))) {
                     a.unsubscribe()
                     this.subscribed = false
                 }
