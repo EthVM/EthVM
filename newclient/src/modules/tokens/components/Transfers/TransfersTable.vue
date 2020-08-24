@@ -28,7 +28,7 @@
                         <h5>{{ $t('common.age') }}</h5>
                     </v-flex>
                     <v-flex sm2>
-                        <h5>{{ $t('common.quantity') }}</h5>
+                        <h5>{{ $t('common.quantity-id') }}</h5>
                     </v-flex>
                 </v-layout>
             </v-card>

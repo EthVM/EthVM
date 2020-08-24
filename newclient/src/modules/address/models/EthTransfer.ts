@@ -7,6 +7,7 @@ import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-for
 
 interface Transfer {
     transfer: TxType | PendingTransferType | PendingTxType
+    stateDiff: object
     isPending: boolean
 }
 

@@ -80,7 +80,7 @@
                     </v-flex>
                     <v-flex xs12>
                         <p class="pb-0">
-                            <span class="info--text">{{ $t('common.quantity') }}:</span> {{ transferValue.value }} {{ units }}
+                            <span class="info--text">{{ $t('common.quantity-id') }}:</span> {{ transferValue.value }} {{ units }}
                             <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
                         </p>
                     </v-flex>

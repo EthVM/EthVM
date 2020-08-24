@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-details-list :title="title" :details="details" :is-loading="isLoading" :error="error" class="mb-4">
+        <app-details-list :title="title" :details="details" :is-loading="isLoading" class="mb-4">
             <template v-slot:title>
                 <v-layout grid-list-xs row align-center justify-start fill-height pl-4 pr-2 pt-2 pb-2>
                     <div class="token-image">

@@ -155,6 +155,7 @@
         "pending": "Pending",
         "amount": "Amount",
         "quantity": "Quantity",
+        "quantity-id": "Quantity/ID",
         "percentage": "Percentage",
         "eth-balance": "ETH Balance",
         "balance": "Balance",
