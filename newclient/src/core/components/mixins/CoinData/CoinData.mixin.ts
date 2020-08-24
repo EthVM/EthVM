@@ -63,7 +63,6 @@ export class CoinData extends Vue {
     */
     getEthereumTokens(): TokenMarketData[] | false {
         if (!this.isLoadingTokensMarketData && this.getLatestPrices.length > 0) {
-            console.log(this.getLatestPrices)
             return this.getLatestPrices
         }
         return false
