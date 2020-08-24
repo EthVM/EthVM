@@ -366,10 +366,11 @@
         "donate": "Donate",
         "btc": "BTC",
         "ens": "mewtopia.eth",
-        "copy": "Copyright 2020 All rights reserved by ",
-        "mew": "MyEtherWallet Inc",
+        "copy": "2020 ",
+        "mew": "MyEtherWallet Inc. All rights reserved. ",
         "copy-eth-addr": "Copy ETH address",
-        "copy-btc-addr": "Copy BTC address"
+        "copy-btc-addr": "Copy BTC address",
+        "pricing": "Pricing taken from"
     },
 
     "home": "Home",

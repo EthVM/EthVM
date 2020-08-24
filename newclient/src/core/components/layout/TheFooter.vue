@@ -105,6 +105,14 @@
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
+                        <v-layout align-end justify-end fill-height pr-3 pb-1>
+                            <p class="info--text text-xs-right caption">
+                                {{ $t('footer.pricing') }} <router-link to="https://www.coingecko.com/">Coingecko</router-link>
+                            </p>
+                            .
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs12>
                         <v-layout align-end justify-end fill-height pr-3>
                             <p class="info--text text-xs-right caption">© {{ $t('footer.copy') }} {{ $t('footer.mew') }}</p>
                         </v-layout>
