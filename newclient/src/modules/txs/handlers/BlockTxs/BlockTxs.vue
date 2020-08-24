@@ -54,11 +54,7 @@ import {
 import { newTransfersCompleteFeed as TypeTransfersSubscribtion } from './apolloTypes/newTransfersCompleteFeed'
 import { getAllTxs_getAllEthTransfers as AllTxType } from './apolloTypes/getAllTxs'
 import { TransferType } from '@app/apollo/global/globalTypes'
-/*
-  DEV NOTES:
-  - add on Error
-  - add messages if Error to be displayed in Table
-*/
+import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 @Component({
     components: {
@@ -73,43 +69,22 @@ import { TransferType } from '@app/apollo/global/globalTypes'
             query: getBlockTransfers,
             fetchPolicy: 'network-only',
             skip() {
-                return !this.isBlock
+                return this.skipBlockTxs
             },
             variables() {
                 return this.blockRef ? { _number: parseInt(this.blockRef) } : undefined
             },
             result({ data }) {
                 if (data && data.getBlockTransfers) {
-                    this.error = '' // clear the error
-                    this.initialLoad = false
                     if (data.getBlockTransfers.transfers.length > 0) {
                         this.totalPages = Math.ceil(new BN(data.getBlockTransfers.transfers.length).div(this.maxItems).toNumber())
                     }
-                } else {
-                    this.error = this.error || this.$i18n.t('message.err')
+                    this.emitErrorState(false)
+                    this.initialLoad = false
                 }
             },
-
-            error({ graphQLErrors, networkError }) {
-                const self = this
-
-                if (graphQLErrors) {
-                    graphQLErrors.forEach(error => {
-                        switch (error.message) {
-                            case 'Currently syncing':
-                                // TODO handle this better with custom code or something
-                                self.syncing = true
-                                break
-                            default:
-                            // do nothing
-                        }
-                    })
-                }
-
-                // TODO refine
-                if (networkError) {
-                    this.error = this.$i18n.t('message.no-data')
-                }
+            error(error) {
+                this.emitErrorState(true)
             }
         },
         getAllEthTransfers: {
@@ -126,14 +101,14 @@ import { TransferType } from '@app/apollo/global/globalTypes'
             },
             result({ data }) {
                 if (data && data.getAllEthTransfers && data.getAllEthTransfers.transfers) {
-                    this.error = '' // clear the error
                     this.initialLoad = false
+                    this.emitErrorState(false)
                 } else {
-                    console.log('error failed no data: ', data)
-                    this.error = this.error || this.$i18n.t('message.err')
-                    this.initialLoad = true
-                    this.$apollo.queries.getAllEthTransfers.refetch()
+                    this.emitErrorState(true)
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
             }
         },
         $subscribe: {
@@ -147,13 +122,14 @@ import { TransferType } from '@app/apollo/global/globalTypes'
                     if (data.newTransfersCompleteFeed.type === TransferType.ETH) {
                         if (this.isHome) {
                             this.$apollo.queries.getAllEthTransfers.refresh()
+                            this.emitErrorState(false)
                         } else {
                             this.newMinedTransfers++
                         }
                     }
                 },
                 error(error) {
-                    console.error(error)
+                    this.emitErrorState(true)
                 }
             }
         }
@@ -169,7 +145,7 @@ export default class BlockTxs extends Vue {
     @Prop(Number) maxItems!: number
     @Prop({ type: String, default: 'home' }) pageType!: string
     @Prop(String) blockRef?: string
-    @Prop({ type: Boolean, default: false }) isHash!: boolean
+    @Prop({ type: Boolean, default: false }) isMined!: boolean
 
     /*
     ===================================================================================
@@ -178,14 +154,13 @@ export default class BlockTxs extends Vue {
     */
 
     initialLoad = true
-    error = ''
-    syncing?: boolean = false
     getBlockTransfers!: TypeBlockTransfers
     getAllEthTransfers!: AllTxType
     index = 0
     totalPages = 0
     isEnd = 0
     newMinedTransfers = 0
+    hasError = false
 
     /*
     ===================================================================================
@@ -204,10 +179,13 @@ export default class BlockTxs extends Vue {
     }
 
     get message(): string {
+        if (this.loading) {
+            return ''
+        }
         if (this.isBlock && this.transactions.length === 0) {
             return `${this.$t('message.tx.no-in-block')}`
         }
-        return !this.transactions.length && !this.loading ? 'error' : ''
+        return ''
     }
 
     get isHome(): boolean {
@@ -216,6 +194,9 @@ export default class BlockTxs extends Vue {
 
     get isBlock(): boolean {
         return this.pageType === 'blockDetails'
+    }
+    get skipBlockTxs(): boolean {
+        return !(this.isBlock && this.isMined)
     }
 
     get getTitle(): string {
@@ -233,8 +214,11 @@ export default class BlockTxs extends Vue {
     }
 
     get loading(): boolean {
+        if (this.hasError) {
+            return true
+        }
         if (this.isBlock || this.isHome) {
-            return this.initialLoad
+            return this.initialLoad || this.$apollo.queries.getBlockTransfers.loading
         }
         return this.$apollo.queries.getAllEthTransfers.loading
     }
@@ -283,6 +267,22 @@ export default class BlockTxs extends Vue {
         }
 
         this.index = page
+    }
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)
+    }
+    /*
+    ===================================================================================
+      Watch:
+    ===================================================================================
+    */
+    @Watch('blockRef')
+    onBlockRefChanged(newVal: string, oldVal: string) {
+        if (newVal !== oldVal) {
+            this.initialLoad = true
+            this.hasError = false
+        }
     }
 }
 </script>

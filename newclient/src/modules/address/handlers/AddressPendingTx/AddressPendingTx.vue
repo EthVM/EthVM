@@ -40,6 +40,7 @@ import { pendingTransaction_pendingTransaction as PendingTransferType } from './
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { throwError } from 'rxjs'
 import { networkInterfaces } from 'os'
+import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 
 interface PendingMap {
     [key: string]: EthTransfer
@@ -68,15 +69,26 @@ interface PendingMap {
                 return data.getPendingTransactions
             },
             result({ data }) {
-                this.error = ''
-                if (this.initialLoad) {
-                    this.pendingSorted = [...this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))]
-                    this.getPendingTx.forEach(i => {
-                        this.pendingMap[i.hash] = new EthTransfer(i)
-                        this.createSubscription(i.hash)
-                    })
-                    this.initialLoad = false
+                if (data.getPendingTransactions) {
+                    this.emitErrorState(false)
+                    if (this.initialLoad) {
+                        try {
+                            this.pendingSorted = [...this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))]
+                            this.getPendingTx.forEach(i => {
+                                this.pendingMap[i.hash] = new EthTransfer(i)
+                                this.createSubscription(i.hash)
+                            })
+                            this.initialLoad = false
+                        } catch (error) {
+                            this.emitErrorState(true)
+                        }
+                    }
+                } else {
+                    this.emitErrorState(true)
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
             }
         },
         $subscribe: {
@@ -92,14 +104,20 @@ interface PendingMap {
                 },
                 result({ data }) {
                     if (data && data.pendingTransaction) {
-                        const newTx = data.pendingTransaction
-                        this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
-                        this.insertItem(newTx)
-                        this.createSubscription(newTx.transactionHash)
+                        try {
+                            const newTx = data.pendingTransaction
+                            this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
+                            this.insertItem(newTx)
+                            this.createSubscription(newTx.transactionHash)
+                        } catch (error) {
+                            this.emitErrorState(true)
+                        }
+                    } else {
+                        this.emitErrorState(true)
                     }
                 },
                 error(error) {
-                    console.error(error)
+                    this.emitErrorState(true)
                 }
             }
         }
@@ -123,9 +141,9 @@ export default class AddressPendingTx extends Vue {
     pageType = 'address'
     getPendingTx!: PendingTxType[]
     pendingSorted: (PendingTransferType | PendingTxType)[] = []
-    error = ''
     pendingMap: PendingMap = {}
     initialLoad = true
+    hasError = false
     /*
     ===================================================================================
       Computed
@@ -133,17 +151,21 @@ export default class AddressPendingTx extends Vue {
     */
     get pendingTx(): EthTransfer[] {
         if (!this.loading && this.pendingSorted) {
-            const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.pendingSorted.length ? this.pendingSorted.length : start + this.maxItems
-            return this.pendingSorted
-                .slice(start, end)
-                .map(i => {
-                    const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
-                    return this.pendingMap[hash]
-                })
-                .filter(i => {
-                    return i ? true : false
-                })
+            try {
+                const start = this.index * this.maxItems
+                const end = start + this.maxItems > this.pendingSorted.length ? this.pendingSorted.length : start + this.maxItems
+                return this.pendingSorted
+                    .slice(start, end)
+                    .map(i => {
+                        const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
+                        return this.pendingMap[hash]
+                    })
+                    .filter(i => {
+                        return i ? true : false
+                    })
+            } catch (error) {
+                this.emitErrorState(true)
+            }
         }
         return []
     }
@@ -244,8 +266,8 @@ export default class AddressPendingTx extends Vue {
                     this.markMined(_hash)
                     a.unsubscribe()
                 },
-                error(error) {
-                    console.error(error)
+                error: error => {
+                    this.emitErrorState(true)
                 }
             })
         } else {
@@ -278,6 +300,11 @@ export default class AddressPendingTx extends Vue {
             }
             /* Check Pagination View: */
         }, 10000)
+    }
+
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorPending', this.hasError, ErrorMessage.pending)
     }
 }
 </script>

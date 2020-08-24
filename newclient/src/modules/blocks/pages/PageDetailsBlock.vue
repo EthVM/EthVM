@@ -1,13 +1,15 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
-        <app-error v-if="hasError" :has-error="hasError" :message="error" />
+        <app-error v-if="hasError" :has-error="hasError" :message="$t('message.invalid.block')" />
+        <app-message :messages="errorMessages" />
+
         <!--
     =====================================================================================
       DETAILS LIST
     =====================================================================================
     -->
-        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" />
+        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" @errorDetails="setError" @isMined="setIsMined" />
 
         <!--
     =====================================================================================
@@ -15,7 +17,15 @@
     =====================================================================================
     -->
         <!-- TODO: Implement get block transfers by hash -->
-        <block-txs v-if="isValid && !isHash" :max-items="maxItems" :block-ref="blockRef" :is-hash="isHash" page-type="blockDetails" />
+        <block-txs
+            v-if="isValid && !isHash"
+            :max-items="maxItems"
+            :block-ref="blockRef"
+            :is-hash="isHash"
+            :is-mined="isMined"
+            page-type="blockDetails"
+            @errorTxs="setError"
+        />
     </v-container>
 </template>
 
@@ -23,12 +33,14 @@
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import BlockDetails from '@app/modules/blocks/handlers/BlockDetails/BlockDetails.vue'
 import BlockTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
 import { eth } from '@app/core/helper'
 import { Detail, Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import BN from 'bignumber.js'
+import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 const MAX_TXS = 10
 
@@ -37,6 +49,7 @@ const MAX_TXS = 10
         AppBreadCrumbs,
         AppError,
         AppDetailsList,
+        AppMessage,
         BlockDetails,
         BlockTxs
     }
@@ -56,7 +69,8 @@ export default class PageDetailsBlock extends Vue {
     ===================================================================================
     */
 
-    error = ''
+    errorMessages: ErrorMessageBlock[] = []
+    isMined = false
 
     /*
     ===================================================================================
@@ -65,13 +79,6 @@ export default class PageDetailsBlock extends Vue {
     */
 
     created() {
-        // Check that current block ref is valid one
-
-        if (!this.isValid) {
-            this.error = this.$i18n.t('message.invalid.block').toString()
-            return
-        }
-
         window.scrollTo(0, 0)
     }
 
@@ -81,6 +88,25 @@ export default class PageDetailsBlock extends Vue {
     ===================================================================================
     */
 
+    setIsMined(value: boolean): void {
+        this.isMined = true
+    }
+
+    setError(hasError: boolean, message: ErrorMessageBlock): void {
+        if (hasError) {
+            if (!this.errorMessages.includes(message)) {
+                this.errorMessages.push(message)
+            }
+        } else {
+            if (this.errorMessages.length > 0) {
+                const index = this.errorMessages.indexOf(message)
+                if (index > -1) {
+                    this.errorMessages.splice(index, 1)
+                }
+            }
+        }
+    }
+
     /*
     ===================================================================================
       Computed
@@ -88,7 +114,7 @@ export default class PageDetailsBlock extends Vue {
     */
 
     get hasError(): boolean {
-        return this.error !== ''
+        return !this.isValid
     }
 
     get isValid(): boolean {

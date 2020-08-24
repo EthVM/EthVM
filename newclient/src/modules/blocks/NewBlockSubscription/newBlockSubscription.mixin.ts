@@ -8,10 +8,11 @@ import { newBlockFeed_newBlockFeed as newBlockFeedType } from './apolloTypes/new
             addressEvent: {
                 query: newBlockFeed,
                 result({ data }) {
+                    this.hasNewBlockUpdateError = false
                     this.newBlock = data.newBlockFeed
                 },
-                error(error) {
-                    console.error(error)
+                error() {
+                    this.hasNewBlockUpdateError = true
                 }
             }
         }
@@ -24,7 +25,7 @@ export class NewBlockSubscription extends Vue {
     ===================================================================================
     */
     newBlock: newBlockFeedType | null = null
-
+    hasNewBlockUpdateError = false
     /*
     ===================================================================================
       Computed

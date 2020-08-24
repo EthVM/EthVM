@@ -43,8 +43,8 @@ const wsLink = new WebSocketLink(subscriptionClient)
 
 //For Development use Only:
 const onErrorLink = onError(({ graphQLErrors }) => {
-    // Log every GraphQL errors
-    if (graphQLErrors) {
+    // Log every GraphQL errors in develop
+    if (graphQLErrors && process.env.NODE_ENV !== 'production') {
         graphQLErrors.map(({ message, locations, path }) => console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`))
     }
 })

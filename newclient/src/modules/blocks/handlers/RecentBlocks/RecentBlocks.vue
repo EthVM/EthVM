@@ -36,12 +36,7 @@ import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getBlocksArrayByNumber, newBlockTable } from './recentBlocks.graphql'
 import { getBlocksArrayByNumber_getBlocksArrayByNumber as TypeBlocks } from './apolloTypes/getBlocksArrayByNumber'
-
-/*
-  DEV NOTES:
-  - add on Error
-  - add messages if Error to be displayed in Table
-*/
+import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 interface BlockMap {
     [key: number]: TypeBlocks
@@ -67,19 +62,23 @@ interface BlockMap {
                 {
                     document: newBlockTable,
                     updateQuery: (previousResult, { subscriptionData }) => {
-                        if (previousResult && subscriptionData.data.newBlockFeed) {
-                            const prevB = previousResult.getBlocksArrayByNumber
-                            const newB = subscriptionData.data.newBlockFeed
-                            newB.txFail = 0
-                            const index = prevB.findIndex(block => block.number === newB.number)
-                            if (index != -1) {
-                                prevB[index] = newB
-                                return previousResult
+                        try {
+                            if (previousResult && subscriptionData.data.newBlockFeed) {
+                                const prevB = previousResult.getBlocksArrayByNumber
+                                const newB = subscriptionData.data.newBlockFeed
+                                newB.txFail = 0
+                                const index = prevB.findIndex(block => block.number === newB.number)
+                                if (index != -1) {
+                                    prevB[index] = newB
+                                    return previousResult
+                                }
+                                return {
+                                    __typename: 'BlockSummary',
+                                    getBlocksArrayByNumber: [newB, ...prevB]
+                                }
                             }
-                            return {
-                                __typename: 'BlockSummary',
-                                getBlocksArrayByNumber: [newB, ...prevB]
-                            }
+                        } catch {
+                            //Sentry
                         }
                     }
                 }
@@ -87,7 +86,7 @@ interface BlockMap {
 
             result({ data }) {
                 if (data && data.getBlocksArrayByNumber) {
-                    this.error = '' // clear the error
+                    this.emitErrorState(false)
                     if (this.initialLoad) {
                         this.startBlock = data.getBlocksArrayByNumber[0].number
                         this.index = 0
@@ -98,10 +97,12 @@ interface BlockMap {
                         if (this.getBlocksArrayByNumber[0].number - this.getBlocksArrayByNumber[1].number > 1) {
                             this.$apollo.queries.getBlocksArrayByNumber.refetch()
                         }
-                    } else {
-                        this.error = this.error || this.$i18n.t('message.err')
                     }
                 }
+            },
+            error(error) {
+                this.initialLoad = true
+                this.emitErrorState(true)
             }
         }
     }
@@ -123,7 +124,7 @@ export default class RecentBlocks extends Vue {
     */
 
     initialLoad = true
-    error = ''
+    hasError = false
     syncing?: boolean = false
     getBlocksArrayByNumber!: TypeBlocks
     indexedBlocks: BlockMap = {}
@@ -157,6 +158,9 @@ export default class RecentBlocks extends Vue {
         return titles[this.pageType]
     }
     get loading(): boolean {
+        if (this.hasError) {
+            return true
+        }
         if (this.isHome) {
             return this.initialLoad
         }
@@ -198,6 +202,10 @@ export default class RecentBlocks extends Vue {
                 })
             }
         }
+    }
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorBlocksList', this.hasError, ErrorMessageBlock.list)
     }
     /*
     ===================================================================================
