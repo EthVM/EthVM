@@ -217,20 +217,21 @@ export default class TheNavigationDrawer extends Vue {
             {
                 header: {
                     text: this.$i18n.tc('tx.name', 2),
-                    icon: 'fas fa-exchange-alt'
-                },
-                links: [
-                    {
-                        text: this.$i18n.t('tx.mined'),
-                        routerLink: '/txs',
-                        name: 'transactions'
-                    }
-                    // {
-                    //   text: this.$i18n.tc('tx.pending', 2),
-                    //   routerLink: '/pending-txs',
-                    //   name: 'pending'
-                    // }
-                ]
+                    icon: 'fas fa-exchange-alt',
+                    routerLink: '/txs'
+                }
+                // links: [
+                //     {
+                //         text: this.$i18n.t('tx.mined'),
+                //         routerLink: '/txs',
+                //         name: 'transactions'
+                //     }
+                // {
+                //   text: this.$i18n.tc('tx.pending', 2),
+                //   routerLink: '/pending-txs',
+                //   name: 'pending'
+                // }
+                // ]
             },
             {
                 header: {
