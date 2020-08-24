@@ -155,8 +155,8 @@ export default class Transfers extends Vue {
             this.$apollo.queries.getERC721Transfers.refetch()
         } else {
             if (page > this.isEnd && this.hasMore) {
-                this.getERC20Transfer(page)
-                this.getERC721Transfer(page)
+                this.hasMoreERC20Transfers ? this.getERC20Transfer(page) : null
+                this.hasMoreERC721Transfers ? this.getERC721Transfer(page) : null
             }
         }
         this.index = page
