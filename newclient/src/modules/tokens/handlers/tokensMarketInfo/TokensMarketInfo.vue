@@ -132,7 +132,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     index = 0
     totalPages = 3
     totalTokens = 0
-    isSortedBy = FILTER_VALUES[2]
+    isSortedBy = FILTER_VALUES[6]
     tokensData: TokenMarketData[] | null = null
     tokensByMarket!: TokensSorted
     tokensBySymbol!: TokensSorted
