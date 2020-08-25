@@ -42,7 +42,7 @@ interface Transfer {
             deep: true,
             update: data => data.getERC20TokenTransfers,
             result({ data }) {
-                if (this.hasItems) {
+                if (data && data.getERC20TokenTransfers) {
                     if (this.initialLoad) {
                         this.showPagination = this.hasMore
                         this.initialLoad = false
@@ -59,7 +59,7 @@ interface Transfer {
             deep: true,
             update: data => data.getERC721TokenTransfers,
             result({ data }) {
-                if (this.hasItems) {
+                if (data && data.getERC721TokenTransfer ) {
                     if (this.initialLoad) {
                         this.showPagination = this.hasMore
                         this.initialLoad = false
@@ -94,7 +94,7 @@ export default class Transfers extends Vue {
     /*isEnd -  Last Index loaded */
     isEnd = 0
     initialLoad = true
-
+    remainingData: Array<Transfer> = []
     /*
         ===================================================================================
           Methods
@@ -149,6 +149,10 @@ export default class Transfers extends Vue {
     }
 
     setPage(page: number, reset: boolean = false): void {
+        // if (this.remainingData.length > 0) {
+
+        // }
+        console.error('page', page)
         if (reset) {
             this.isEnd = 0
             this.$apollo.queries.getERC20Transfers.refetch()
@@ -183,6 +187,10 @@ export default class Transfers extends Vue {
             }
             const start = this.index * this.maxItems
             const end = start + this.maxItems > data.length ? data.length : start + this.maxItems
+            // console.error('start', start, end, this.index, data.length)
+            // if (data.length > end) {
+            //     this.remainingData = data.slice(end, data.length)
+            // }
             return data.slice(start, end)
         }
         return []

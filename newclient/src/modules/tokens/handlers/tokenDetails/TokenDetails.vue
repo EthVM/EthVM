@@ -64,6 +64,7 @@ import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/token
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
 import { TokenDetails as TokenInfo } from './apolloTypes/TokenDetails'
 import { eth } from '@app/core/helper'
+import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 const MAX_ITEMS = 10
 

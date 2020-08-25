@@ -1,7 +1,7 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
-        <app-error v-if="hasError" :has-error="hasError" :message="$t('message.invalid.block')" />
+        <app-error :has-error="hasError" :message="$t('message.invalid.block')" />
         <app-message :messages="errorMessages" />
 
         <!--

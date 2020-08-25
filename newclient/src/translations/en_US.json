@@ -195,9 +195,13 @@
                 "detail": "Something went wrong while retrieving uncle details.",
                 "not-found": "This uncle does not exist."
             },
+            "tokens": {
+                "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
+                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers."
+            },
             "txs": "Something went wrong while retrieving transactions.",
-            "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
-            "transfers-erc20": "Somethign went wrong rettrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
+            "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "This address does not have any transaction history",

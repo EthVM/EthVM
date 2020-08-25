@@ -144,6 +144,7 @@ export default class AppDetailsList extends Vue {
      */
     get basicDetails(): Detail[] {
         const newDetails = this.removeUndefined(this.details)
+        console.error('basic details', newDetails)
         return newDetails.slice(0, this.maxItems)
     }
 
@@ -156,6 +157,7 @@ export default class AppDetailsList extends Vue {
      */
     get moreDetails(): Detail[] {
         const newDetails = this.removeUndefined(this.details)
+        console.error('more details', newDetails)
         return newDetails.splice(this.maxItems)
     }
 
@@ -181,8 +183,9 @@ export default class AppDetailsList extends Vue {
      */
     removeUndefined(details): [] {
         details.forEach((item, index) => {
-            if (!item.detail) {
+            if (!item.detail || item.detail === undefined) {
                 details.splice(index, 1)
+                // console.error('item', details)
             }
         })
         return details
