@@ -22,6 +22,7 @@ import { addressEvent_addressEvent as EventSubscriptionType } from './apolloType
                         this.hasUpdateError = false
                     } catch (error) {
                         this.hasUpdateError = true
+                        throw error
                     }
                 },
                 error(error) {

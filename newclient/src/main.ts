@@ -54,7 +54,12 @@ const onErrorLink = onError(({ graphQLErrors }) => {
     if (graphQLErrors && process.env.NODE_ENV === 'production') {
         graphQLErrors.map(({ message, locations, path }) => {
             const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            Sentry.captureException(newError)
+            const blockNotMined = 'Block not found'
+            const txDoNotExists = 'Cannot return null for non-nullable field Query.getTransactionByHash'
+            const uncleNotFound = 'Uncle not found'
+            if (!newError.includes(blockNotMined || txDoNotExists || uncleNotFound)) {
+                Sentry.captureException(newError)
+            }
         })
     }
 })

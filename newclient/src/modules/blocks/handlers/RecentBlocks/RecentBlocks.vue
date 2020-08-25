@@ -78,7 +78,7 @@ interface BlockMap {
                                 }
                             }
                         } catch {
-                            //Sentry
+                            throw error
                         }
                     }
                 }
