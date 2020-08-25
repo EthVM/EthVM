@@ -57,7 +57,7 @@ const onErrorLink = onError(({ graphQLErrors }) => {
             const blockNotMined = 'Block not found'
             const txDoNotExists = 'Cannot return null for non-nullable field Query.getTransactionByHash'
             const uncleNotFound = 'Uncle not found'
-            if (!newError.includes(blockNotMined || txDoNotExists || uncleNotFound)) {
+            if (!message.includes(blockNotMined || txDoNotExists || uncleNotFound)) {
                 Sentry.captureException(newError)
             }
         })
