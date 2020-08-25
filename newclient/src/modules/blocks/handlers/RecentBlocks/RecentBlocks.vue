@@ -77,7 +77,7 @@ interface BlockMap {
                                     getBlocksArrayByNumber: [newB, ...prevB]
                                 }
                             }
-                        } catch {
+                        } catch (error) {
                             throw error
                         }
                     }
