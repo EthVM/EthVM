@@ -24,7 +24,8 @@
     },
     "dependencies": {
         "@babel/core": "^7.4.5",
-        "@sentry/browser": "4.6.4",
+        "@sentry/browser": "^5.21.4",
+        "@sentry/integrations": "^5.21.4",
         "apollo-cache-inmemory": "^1.6.5",
         "apollo-client": "^2.6.8",
         "apollo-link": "^1.2.14",
