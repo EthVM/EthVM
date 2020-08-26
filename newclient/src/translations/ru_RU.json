@@ -54,8 +54,8 @@
         "method": "ID Метода",
         "type": {
             "self": "Tx Себе",
-            "in": "Входящий с",
-            "out": "Outgoing to",
+            "in": "Входящая с",
+            "out": "Исходящая на",
             "internal": "Внутренний перевод",
             "fail": "Неудачная транзакция",
             "success": "Успешная транзакция"
@@ -112,8 +112,8 @@
     "miner": {
         "name": "Майнер",
         "reward": {
-            "block": "Mined Blocks Rewards",
-            "uncle": "Mined Uncles Rewards",
+            "block": "Награда за добытые блоки",
+            "uncle": "Награда за добытые Uncle-блоки",
             "genesis": "Genesis Rewards"
         },
         "reward-short": "Вознаграждение",
@@ -161,7 +161,7 @@
         "err": "Ошибка",
         "error": {
             "address": {
-                "balance": "Something went wrong while retrieving Address's ETH balance.",
+                "balance": "Что-то пошло не так при получении баланса ETH Адреса.",
                 "pending": "Something went wrong while retrieving Address's pending transactions.",
                 "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
