@@ -26,6 +26,7 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
 import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 
 @Component({
     components: {
@@ -48,7 +49,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     Initial Values
   ===================================================================================
   */
-    error = ''
+    hasError = false
     // icons = {
     //     blog: 'fab fa-ethereum',
     //     chat: 'fab fa-ethereum',
@@ -83,6 +84,17 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     //             })
     //     }
     // }
+
+    /*
+    ===================================================================================
+      Methods:
+    ===================================================================================
+    */
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorTransfers', this.hasError, false, ErrorMessageToken.tokenOwner)
+    }
+
     /*
   ===================================================================================
     Computed Values
@@ -91,7 +103,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
 
     get tokenData(): TokenMarketData | false {
         if (this.addressRef) {
-            return this.getEthereumTokenByContract(this.addressRef)
+            try {
+                return this.getEthereumTokenByContract(this.addressRef)
+            } catch (error) {
+                this.emitErrorState(true)
+            }
         }
         return false
     }

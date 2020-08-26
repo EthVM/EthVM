@@ -1,7 +1,6 @@
 <template>
     <div>
         <app-bread-crumbs :new-items="crumbs" />
-        <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
     =====================================================================================
       BASIC VIEW
@@ -11,7 +10,7 @@
     =====================================================================================
     -->
         <div v-if="!isHolder && !hasError">
-            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" />
+            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" @errorDetails="emitErrorState" />
             <app-tabs v-if="!loading" :tabs="tabsTokenDetails">
                 <!--
         =====================================================================================
@@ -19,7 +18,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" />
+                    <transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
                 </v-tab-item>
                 <!--
         =====================================================================================
@@ -27,7 +26,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-1">
-                    <token-table-holders :address-ref="addressRef" :decimals="decimals" />
+                    <token-table-holders :address-ref="addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
                 </v-tab-item>
             </app-tabs>
         </div>
@@ -45,6 +44,7 @@
                 :holder-details="tokenDetails"
                 :token-details="tokenDetails ? tokenDetails.tokenInfo : {}"
                 :is-loading="loading"
+                @errorDetails="emitErrorState"
             />
         </div>
     </div>
@@ -278,10 +278,10 @@ export default class TokenDetails extends Vue {
   ===================================================================================
   */
 
-    emitErrorState(val: boolean, hashNotFound = false): void {
+    emitErrorState(val: boolean, hashNotFound = false, message: ErrorMessageToken): void {
         this.hasError = val
-        const message = hashNotFound ? ErrorMessageToken.notFound : ErrorMessageToken.details
-        this.$emit('errorDetails', this.hasError, message)
+        const mess = message ? message : hashNotFound ? ErrorMessageToken.notFound : ErrorMessageToken.details
+        this.$emit('errorDetails', this.hasError, mess)
     }
 }
 </script>

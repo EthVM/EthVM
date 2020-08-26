@@ -199,7 +199,10 @@
                 "detail": "Something went wrong while retrieving token details.",
                 "not-found": "This token contract does not exist.",
                 "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
-                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers."
+                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
+                "token-owner": "Something went wrong retrieving Token owners",
+                "token-details": "Something went wrong retrieving Token details",
+                "token-market": "Something went wrong retrieving Token market data"
             },
             "txs": "Something went wrong while retrieving transactions.",
             "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",

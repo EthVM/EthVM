@@ -20,6 +20,7 @@ import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTa
 import { getERC20TokenTransfers, getERC721TokenTransfers } from '@app/modules/tokens/handlers/transfers/transfers.graphql'
 import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20Transfers'
 import { getERC721TokenTransfers_getERC721TokenTransfers as ERC721TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC721TokenTransfers'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 
 const MAX_ITEMS = 10
 
@@ -43,11 +44,15 @@ interface Transfer {
             update: data => data.getERC20TokenTransfers,
             result({ data }) {
                 if (data && data.getERC20TokenTransfers) {
+                    this.emitErrorState(false)
                     if (this.initialLoad) {
                         this.showPagination = this.hasMore
                         this.initialLoad = false
                     }
                 }
+            },
+            error(error) {
+                this.emitErrorState(true, true)
             }
         },
         getERC721Transfers: {
@@ -60,11 +65,15 @@ interface Transfer {
             update: data => data.getERC721TokenTransfers,
             result({ data }) {
                 if (data && data.getERC721TokenTransfer) {
+                    this.emitErrorState(false)
                     if (this.initialLoad) {
                         this.showPagination = this.hasMore
                         this.initialLoad = false
                     }
                 }
+            },
+            error(error) {
+                this.emitErrorState(true, false)
             }
         }
     }
@@ -95,11 +104,18 @@ export default class Transfers extends Vue {
     isEnd = 0
     initialLoad = true
     remainingData: Array<Transfer> = []
+    hasError = false
     /*
         ===================================================================================
           Methods
         ===================================================================================
         */
+    emitErrorState(val: boolean, isErc20 = false): void {
+        this.hasError = val
+        const message = isErc20 ? ErrorMessageToken.erc20Transfers : ErrorMessageToken.erc721Transfers
+        this.$emit('errorDetails', this.hasError, false, message)
+    }
+
     getERC20Transfer(page: number) {
         const queryName = 'getERC20TokenTransfers'
 

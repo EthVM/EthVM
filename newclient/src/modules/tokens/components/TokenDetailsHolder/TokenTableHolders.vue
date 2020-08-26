@@ -4,7 +4,6 @@
         <v-flex v-if="loading" xs12>
             <v-progress-linear color="blue" indeterminate />
         </v-flex>
-        <app-error :has-error="hasError" :message="error" class="mb-4" />
         <!-- Pagination -->
         <v-layout v-if="showPagination" row fill-height justify-end class="pb-1 pr-2 pl-2">
             <app-paginate-has-more :has-more="hasMore" :current-page="index" @newPage="setPage" />
@@ -57,15 +56,14 @@ import TokenTableHoldersRow from '@app/modules/tokens/components/TokenDetailsHol
 import TokenTableHoldersRowLoading from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHoldersRowLoading.vue'
 import { getERC20TokenOwners } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
 import { ERC20TokenOwners as TokenOwners } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwners'
-import AppError from '@app/core/components/ui/AppError.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 
 const MAX_ITEMS = 10
 @Component({
     components: {
         AppPaginateHasMore,
         AppPaginate,
-        AppError,
         TokenTableHoldersRow,
         TokenTableHoldersRowLoading
     },
@@ -83,7 +81,9 @@ const MAX_ITEMS = 10
             update: data => data.getERC20TokenOwners,
             result({ data }) {
                 if (this.hasItems) {
-                    this.error = ''
+                    if (data.getERC20TokenOwners) {
+                        this.emitErrorState(false)
+                    }
                     if (this.initialLoad) {
                         this.showPagination = this.hasMore
                         this.initialLoad = false
@@ -91,8 +91,7 @@ const MAX_ITEMS = 10
                 } else {
                     this.showPagination = false
                     this.initialLoad = true
-                    this.error = this.error || this.$i18n.t('message.err')
-                    this.$apollo.queries.holdersPage.refetch()
+                    this.emitErrorState(true)
                 }
             }
         }
@@ -109,7 +108,7 @@ export default class TokenTableHolders extends Vue {
     @Prop(Number) decimals?: number
 
     holdersPage!: TokenOwners
-    error = ''
+    hasError = false
     page?: number
     showPagination = false
     index = 0
@@ -121,6 +120,11 @@ export default class TokenTableHolders extends Vue {
       Methods
     ===================================================================================
     */
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorTransfers', this.hasError, false, ErrorMessageToken.tokenOwner)
+    }
+
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
@@ -174,10 +178,6 @@ export default class TokenTableHolders extends Vue {
 
     get loading(): boolean {
         return this.$apollo.loading
-    }
-
-    get hasError(): boolean {
-        return !!this.error && this.error !== ''
     }
 
     get hasItems(): boolean {
