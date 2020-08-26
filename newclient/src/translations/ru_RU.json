@@ -161,11 +161,11 @@
         "err": "Ошибка",
         "error": {
             "address": {
-                "balance": "Что-то пошло не так при получении баланса ETH Адреса.",
-                "pending": "Something went wrong while retrieving Address's pending transactions.",
+                "balance": "Что-то пошло не так при получении ETH баланса Адреса.",
+                "pending": "Что-то пошло не так при получении ожидающих транзакций Адреса.",
                 "block-rewards": "Что-то пошло не так при получении вознаграждений блока Адреса.",
-                "erc20": "Something went wrong while retrieving ERC20 balances.",
-                "erc721": "Something went wrong while retrieving NFTs balances.",
+                "erc20": "Что-то пошло не так при получении балансов ERC20.",
+                "erc721": "Что-то пошло не так при получении балансов NFT.",
                 "transfers-eth": "Something went wrong rettrieving Address transactions.",
                 "update-event": "Something went wrong during Address update."
             },
