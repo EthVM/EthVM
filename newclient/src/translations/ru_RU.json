@@ -114,7 +114,7 @@
         "reward": {
             "block": "Вознаграждение Добытых Блоков",
             "uncle": "Вознаграждение Добытых Uncle-Блоков",
-            "genesis": "Genesis Rewards"
+            "genesis": "Вознаграждение за основание"
         },
         "reward-short": "Вознаграждение",
         "total-rewards": "Сумма Вознаграждений",
@@ -163,7 +163,7 @@
             "address": {
                 "balance": "Что-то пошло не так при получении баланса ETH Адреса.",
                 "pending": "Something went wrong while retrieving Address's pending transactions.",
-                "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
+                "block-rewards": "Что-то пошло не так при получении вознаграждений блока Адреса.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
                 "erc721": "Something went wrong while retrieving NFTs balances.",
                 "transfers-eth": "Something went wrong rettrieving Address transactions.",
@@ -638,8 +638,8 @@
         "actual-received": "Получено",
         "actual-sent-received": "Отправлено/Получено",
         "fee-rewards": "Вознаграждение комиссий Tx",
-        "including-uncle": "Включая награду за Uncle-блок?",
-        "block-rewards": "Награда за Блок",
-        "uncle-rewards": "Награда за Uncle-Блок"
+        "including-uncle": "Включая вознаграждение за Uncle-блок?",
+        "block-rewards": "Вознаграждение за блок",
+        "uncle-rewards": "Вознаграждение Uncle-Блока"
     }
 }
