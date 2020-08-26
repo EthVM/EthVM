@@ -167,7 +167,7 @@
                 "erc20": "Что-то пошло не так при получении балансов ERC20.",
                 "erc721": "Что-то пошло не так при получении балансов NFT.",
                 "transfers-eth": "Something went wrong rettrieving Address transactions.",
-                "update-event": "Something went wrong during Address update."
+                "update-event": "Что-то пошло не так во время обновления данных Адреса."
             },
             "block": {
                 "detail": "Something went wrong while retrieving block details.",
@@ -182,7 +182,7 @@
                 "detail": "Something went wrong while retrieving uncle details.",
                 "not-found": "Этот Uncle-блок не существует."
             },
-            "txs": "Something went wrong while retrieving transactions.",
+            "txs": "Что-то пошло не так при получении транзакций.",
             "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
             "transfers-erc20": "Somethign went wrong rettrieving Address ERC20 tokens transfers."
         },
