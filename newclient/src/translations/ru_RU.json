@@ -112,12 +112,12 @@
     "miner": {
         "name": "Майнер",
         "reward": {
-            "block": "Награда за добытые блоки",
-            "uncle": "Награда за добытые Uncle-блоки",
+            "block": "Вознаграждение Добытых Блоков",
+            "uncle": "Вознаграждение Добытых Uncle-Блоков",
             "genesis": "Genesis Rewards"
         },
         "reward-short": "Вознаграждение",
-        "total-rewards": "Всего Наград",
+        "total-rewards": "Сумма Вознаграждений",
         "history": "История Майнинга"
     },
     "diff": {
@@ -180,7 +180,7 @@
             },
             "uncle": {
                 "detail": "Something went wrong while retrieving uncle details.",
-                "not-found": "This uncle does not exist."
+                "not-found": "Этот Uncle-блок не существует."
             },
             "txs": "Something went wrong while retrieving transactions.",
             "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
@@ -261,10 +261,10 @@
         "live": "Данные в реальном времени",
         "tx-summary": {
             "title": "Сводка транзакции",
-            "description": "Average number of mined and new pending transactions in the last 10 minutes",
+            "description": "Среднее количество подтвержденных и новых ожидающих транзакций за последние 10 минут",
             "label": {
                 "pen": "Новые ожидающие Txs",
-                "total": "Mined Txs"
+                "total": "Подтвержденные Тхs"
             },
             "label-y": "Количество Txs"
         },
@@ -637,8 +637,8 @@
         "val-received": "Получено",
         "actual-received": "Получено",
         "actual-sent-received": "Отправлено/Получено",
-        "fee-rewards": "Награды за комиссии Tx",
-        "including-uncle": "Including Uncle Reward?",
+        "fee-rewards": "Вознаграждение комиссий Tx",
+        "including-uncle": "Включая награду за Uncle-блок?",
         "block-rewards": "Награда за Блок",
         "uncle-rewards": "Награда за Uncle-Блок"
     }
