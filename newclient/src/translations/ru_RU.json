@@ -638,8 +638,8 @@
         "actual-received": "Получено",
         "actual-sent-received": "Отправлено/Получено",
         "fee-rewards": "Вознаграждение комиссий Tx",
-        "including-uncle": "Включая вознаграждение за Uncle-блок?",
-        "block-rewards": "Вознаграждение за блок",
+        "including-uncle": "Включая вознаграждение за Uncle-Блок?",
+        "block-rewards": "Вознаграждение за Блок",
         "uncle-rewards": "Вознаграждение за Uncle-Блок"
     }
 }
