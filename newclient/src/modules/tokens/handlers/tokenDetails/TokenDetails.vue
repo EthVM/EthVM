@@ -64,7 +64,7 @@ import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/token
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
 import { TokenDetails as TokenInfo } from './apolloTypes/TokenDetails'
 import { eth } from '@app/core/helper'
-import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 
 const MAX_ITEMS = 10
 
@@ -85,7 +85,20 @@ const MAX_ITEMS = 10
             variables() {
                 return { contract: this.addressRef, owner: this.holderAddress }
             },
-            update: data => data.getERC20TokenBalance || data.getTokenInfoByContract
+            update: data => data.getERC20TokenBalance || data.getTokenInfoByContract,
+            result({ data }) {
+                if (data && (data.getERC20TokenBalance || data.getTokenInfoByContract)) {
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                const newError = JSON.stringify(error.message)
+                if (newError.includes('Token not found')) {
+                    this.emitErrorState(true, true)
+                } else {
+                    this.emitErrorState(true)
+                }
+            }
         }
     }
 })
@@ -122,6 +135,7 @@ export default class TokenDetails extends Vue {
     tokenDetails!: TokenInfo | TokenOwnerInfo
     address = ''
     error = ''
+    hasError = false
 
     /*
   ===================================================================================
@@ -186,10 +200,6 @@ export default class TokenDetails extends Vue {
   */
     get isValid(): boolean {
         return eth.isValidAddress(this.addressRef)
-    }
-
-    get hasError(): boolean {
-        return this.error !== ''
     }
 
     get loading(): boolean | undefined {
@@ -260,6 +270,18 @@ export default class TokenDetails extends Vue {
             }
         ]
         return tabs
+    }
+
+    /*
+  ===================================================================================
+    Methods:
+  ===================================================================================
+  */
+
+    emitErrorState(val: boolean, hashNotFound = false): void {
+        this.hasError = val
+        const message = hashNotFound ? ErrorMessageToken.notFound : ErrorMessageToken.details
+        this.$emit('errorDetails', this.hasError, message)
     }
 }
 </script>

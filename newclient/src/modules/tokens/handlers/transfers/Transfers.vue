@@ -59,7 +59,7 @@ interface Transfer {
             deep: true,
             update: data => data.getERC721TokenTransfers,
             result({ data }) {
-                if (data && data.getERC721TokenTransfer ) {
+                if (data && data.getERC721TokenTransfer) {
                     if (this.initialLoad) {
                         this.showPagination = this.hasMore
                         this.initialLoad = false

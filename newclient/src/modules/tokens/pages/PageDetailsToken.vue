@@ -1,12 +1,15 @@
 <template>
     <v-container grid-list-lg>
-        <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" />
+        <app-error v-if="hasError" :has-error="hasError" :message="error" />
+        <app-message :messages="errorMessages" />
+        <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" @errorDetails="setError" />
     </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import TokenDetails from '@app/modules/tokens/handlers/tokenDetails/TokenDetails.vue'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 
 @Component({
     components: {
@@ -30,7 +33,8 @@ export default class PageDetailsToken extends Vue {
     // Holder //
     isHolder = false // Whether or not "holder" is included in query params to display view accordingly
     holderAddress?: string = '' // Address of current token holder, if applicable
-
+    error = ''
+    errorMessages: ErrorMessageToken[] = []
     /*
   ===================================================================================
     Lifecycle
@@ -71,6 +75,41 @@ export default class PageDetailsToken extends Vue {
             this.holderAddress = undefined
         }
         window.scrollTo(0, 0)
+    }
+
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+
+    get hasError(): boolean {
+        return this.error !== ''
+    }
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+    setError(hasError: boolean, message: ErrorMessageToken): void {
+        if (hasError) {
+            if (message === ErrorMessageToken.notFound) {
+                this.error = this.$i18n.t(message).toString()
+            } else {
+                if (!this.errorMessages.includes(message)) {
+                    this.errorMessages.push(message)
+                }
+            }
+        } else {
+            if (this.errorMessages.length > 0) {
+                const index = this.errorMessages.indexOf(message)
+                if (index > -1) {
+                    this.errorMessages.splice(index, 1)
+                }
+            }
+        }
     }
 }
 </script>

@@ -196,6 +196,8 @@
                 "not-found": "This uncle does not exist."
             },
             "tokens": {
+                "detail": "Something went wrong while retrieving token details.",
+                "not-found": "This token contract does not exist.",
                 "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
                 "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers."
             },
