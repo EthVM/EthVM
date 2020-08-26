@@ -54,7 +54,7 @@
         "method": "ID Метода",
         "type": {
             "self": "Tx Себе",
-            "in": "Incoming from",
+            "in": "Входящий с",
             "out": "Outgoing to",
             "internal": "Внутренний перевод",
             "fail": "Неудачная транзакция",
