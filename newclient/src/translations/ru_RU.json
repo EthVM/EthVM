@@ -200,9 +200,9 @@
         },
         "transfer": {
             "no-nft": "Этот адрес не держит NFTs",
-            "no-all": "This address does not have any transfer history",
-            "no-in": "This address does not have incoming transfers",
-            "no-out": "This address does not have outgoing transfers"
+            "no-all": "Этот адрес не имеет истории переводов",
+            "no-in": "Этот адрес не имеет входящих переводов",
+            "no-out": "Этот адрес не имеет исходящих переводов"
         },
         "load": "Загрузка",
         "load-block-tx": "Загрузка транзакций блока",
@@ -239,13 +239,13 @@
             "uncle": "новый uncle блок | новые uncle блоки",
             "pending": "новая ожидающая tx | новых ожидающих txs",
             "erc20-transfer": "новый ERC20 перевод | новых ERC20 переводов",
-            "erc721-transfer": "new ERC721 transfer| new ERC721 transfers",
+            "erc721-transfer": "новая передача ERC721 | новые переводы ERC721",
             "tokens": "token balance changed, refresh",
             "txs": "new txs found, refresh"
         },
         "sec": "сек.",
-        "sec-ago": "sec ago",
-        "page": "out of",
+        "sec-ago": "сек. назад",
+        "page": "из",
         "uncle": {
             "no-uncles": "Нет Uncle Блоков"
         },
@@ -260,47 +260,47 @@
         "name": "Графики",
         "live": "Данные в реальном времени",
         "tx-summary": {
-            "title": "Transaction Summary",
+            "title": "Сводка транзакции",
             "description": "Average number of mined and new pending transactions in the last 10 minutes",
             "label": {
-                "pen": "New Pending Txs",
+                "pen": "Новые ожидающие Txs",
                 "total": "Mined Txs"
             },
-            "label-y": "Txs Count"
+            "label-y": "Количество Txs"
         },
         "gas-price-live": {
             "title": "Recent Gas Price",
             "description": "Minimum, average and maximum gas price per transaction in GWEI for the last 10 minutes",
             "label": {
-                "min": "Minimum Gas Price",
-                "max": "Maximum Gas Price",
+                "min": "Минимальная цена за газ",
+                "max": "Максимальная цена за газ",
                 "avg": "Сред. Цена Газа"
             },
-            "label-y": "Gas Price (GWEI)",
+            "label-y": "Цена газа (Gwei)",
             "footenotes": {
-                "min": "Min",
+                "min": "Мин.",
                 "max": "Макс.",
-                "avg": "Avg"
+                "avg": "Сред."
             }
         },
         "tx-count-avg": {
-            "title": "Average Transactions Count",
-            "description": "Average number of transactions",
-            "label": "Txs Count"
+            "title": "Среднее количество транзакций",
+            "description": "Среднее количество транзакций",
+            "label": "Количество Txs"
         },
         "tx-count-total": {
-            "title": "Total Transactions Count",
-            "description": "Total number of transactions",
-            "label": "Txs Count"
+            "title": "Среднее количество транзакций",
+            "description": "Общее количество транзакций",
+            "label": "Количество Txs"
         },
         "tx-count-min": {
-            "title": "Minimum Transactions Count",
-            "description": "Minimum number of transactions",
-            "label": "Min Txs "
+            "title": "Минимальное количество транзакций",
+            "description": "Минимальное количество транзакций",
+            "label": "Мин. Txs "
         },
         "tx-count-max": {
-            "title": "Maximum Transactions Count",
-            "description": "Maximum number of transactions",
+            "title": "Максимальное количество транзакций",
+            "description": "Максимальное количество транзакций",
             "label": "Max Txs "
         },
         "pending-tx-count-avg": {
@@ -472,7 +472,7 @@
             },
             "ethreum": {
                 "term": "Ethereum (Эфириум)",
-                "def": "Decentralized blockchain platform enabled with a software language for building applications and creating contracts. Ethereum is the network, ETH/Ether is the currency."
+                "def": "Децентрализованная блокчейн-платформа, приспособленная с помощью языка программирования для построения приложений и создания контрактов. Ethereum- это сеть, ETH/Ether- это валюта."
             },
             "evm": {
                 "term": "EVM",
@@ -619,24 +619,24 @@
         }
     },
     "transfer": {
-        "name": "Transfer | Transfers",
+        "name": "Перевод | Переводы",
         "internal": "Внутренние переводы",
         "INTERNAL_TX": "call",
         "CONTRACT_CREATION": "создано",
         "CONTRACT_DESTRUCTION": "уничтожить",
         "empty": "Нет переводов",
         "TOKEN_TRANSFER": "Перевод",
-        "erc20": "ERC20 Transfers",
-        "erc721": "ERC721 Transfers"
+        "erc20": "Переводы ERC20",
+        "erc721": "Переводы ERC721"
     },
     "state": {
-        "bal-before": "Balance Before",
-        "bal-after": "Balance After",
-        "val-sent": "Value Sent",
-        "actual-sent": "Actual Value Sent",
-        "val-received": "Value Received",
-        "actual-received": "Actual Value Received",
-        "actual-sent-received": "Actual Value Sent/Recieved",
+        "bal-before": "Баланс до",
+        "bal-after": "Баланс после",
+        "val-sent": "Отправлено",
+        "actual-sent": "Отправлено",
+        "val-received": "Получено",
+        "actual-received": "Получено",
+        "actual-sent-received": "Отправлено/Получено",
         "fee-rewards": "Tx Fees Rewards",
         "including-uncle": "Including Uncle Reward?",
         "block-rewards": "Block Rewards",
