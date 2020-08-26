@@ -170,16 +170,16 @@
                 "update-event": "Что-то пошло не так во время обновления данных Адреса."
             },
             "block": {
-                "detail": "Something went wrong while retrieving block details.",
-                "list": "Something went wrong while retrieving block list.",
-                "stats": "Something went wrong while retrieving block statistics.",
-                "subscription": "Something went wrong during new block update."
+                "detail": "Что-то пошло не так при получении деталей блока.",
+                "list": "Что-то пошло не так при получении списка блоков.",
+                "stats": "Что-то пошло не так при получении статистики блока.",
+                "subscription": "Что-то пошло не так во время обновления данных нового блока."
             },
             "tx": {
-                "detail": "Something went wrong while retrieving transaction details."
+                "detail": "Что-то пошло не так при получении деталей транзакции."
             },
             "uncle": {
-                "detail": "Something went wrong while retrieving uncle details.",
+                "detail": "Что-то пошло не так при получении деталей Uncle-блока.",
                 "not-found": "Этот Uncle-блок не существует."
             },
             "txs": "Что-то пошло не так при получении транзакций.",
