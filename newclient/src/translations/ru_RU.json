@@ -117,7 +117,7 @@
             "genesis": "Genesis Rewards"
         },
         "reward-short": "Вознаграждение",
-        "total-rewards": "Total Rewards",
+        "total-rewards": "Всего Наград",
         "history": "История Майнинга"
     },
     "diff": {
@@ -240,8 +240,8 @@
             "pending": "новая ожидающая tx | новых ожидающих txs",
             "erc20-transfer": "новый ERC20 перевод | новых ERC20 переводов",
             "erc721-transfer": "новая передача ERC721 | новые переводы ERC721",
-            "tokens": "token balance changed, refresh",
-            "txs": "new txs found, refresh"
+            "tokens": "баланс токенов изменен, обновить",
+            "txs": "найдены новые txs, обновить"
         },
         "sec": "сек.",
         "sec-ago": "сек. назад",
@@ -269,8 +269,8 @@
             "label-y": "Количество Txs"
         },
         "gas-price-live": {
-            "title": "Recent Gas Price",
-            "description": "Minimum, average and maximum gas price per transaction in GWEI for the last 10 minutes",
+            "title": "Последнии цены на газ",
+            "description": "Минимальная, средняя и максимальная цена на газ в GWEI за последние 10 минут",
             "label": {
                 "min": "Минимальная цена за газ",
                 "max": "Максимальная цена за газ",
@@ -301,40 +301,40 @@
         "tx-count-max": {
             "title": "Максимальное количество транзакций",
             "description": "Максимальное количество транзакций",
-            "label": "Max Txs "
+            "label": "Макс. Txs "
         },
         "pending-tx-count-avg": {
-            "title": "Average Pending Transactions ",
-            "description": "Average number of pending transactions",
-            "label": "Txs Count"
+            "title": "Среднее Количество Ожидающих Транзакций ",
+            "description": "Среднее количество ожидающих транзакций",
+            "label": "Количество Txs"
         },
         "pending-tx-count-total": {
-            "title": "Total Pending Transactions ",
-            "description": "Total number of pending transactions",
-            "label": "Txs Count"
+            "title": "Всего ожидающих транзакций ",
+            "description": "Общее количество ожидающих транзакций",
+            "label": "Количество Txs"
         },
         "gas-price-avg": {
             "title": "Сред. Цена Газа ",
             "description": "Средняя Цена Газа (GWEI)",
-            "label": "Gas Price (GWEI)"
+            "label": "Цена газа (Gwei)"
         },
         "gas-price-min": {
-            "title": "Minimum Gas Price ",
-            "description": "Minimum Gas Price (GWEI)",
-            "label": "Gas Price (GWEI)"
+            "title": "Минимальная цена за газ ",
+            "description": "Минимальная цена за газ (GWEI)",
+            "label": "Цена газа (Gwei)"
         },
         "gas-price-max": {
-            "title": "Maximum Gas Price ",
-            "description": "Maximum Gas Price (GWEI)",
-            "label": "Gas Price (GWEI)"
+            "title": "Максимальная цена за газ ",
+            "description": "Максимальная цена за газ (GWEI)",
+            "label": "Цена газа (Gwei)"
         },
         "states": {
             "all": "Все",
-            "hour": "hour | 1H",
+            "hour": "час | 1Ч",
             "day": "день | 1Д",
             "week": "неделя | 1Н",
             "month": "месяц | 1M",
-            "month-six": "6 months | 6M",
+            "month-six": "6 месяцев | 6М",
             "year": "год | 1Г"
         },
         "captions": {
@@ -361,7 +361,7 @@
         "name": "Поиск",
         "default": "Поиск: Блок / Адрес / Тх",
         "address-tx": "Хэш Тx/Адреса",
-        "no-result": "ERROR: NO SEARCH RESULTS"
+        "no-result": "ОШИБКА: НЕТ РЕЗУЛЬТАТОВ"
     },
     "filter": {
         "name": "Фильтр",
@@ -371,7 +371,7 @@
         "in": "Входящие",
         "high": "От высокой к низкой",
         "low": "От низкой к высокой",
-        "page": "Page"
+        "page": "Страница"
     },
     "footer": {
         "discover": "Узнать",
@@ -379,7 +379,7 @@
         "btc": "BTC",
         "ens": "mewtopia.eth",
         "copy": "2020 ",
-        "mew": "MyEtherWallet Inc. All rights reserved. ",
+        "mew": "MyEtherWallet Inc. Все права защищены. ",
         "copy-eth-addr": "Копировать ETH адрес",
         "copy-btc-addr": "Копировать BTC адрес",
         "pricing": "Расценки взяты из"
@@ -637,9 +637,9 @@
         "val-received": "Получено",
         "actual-received": "Получено",
         "actual-sent-received": "Отправлено/Получено",
-        "fee-rewards": "Tx Fees Rewards",
+        "fee-rewards": "Награды за комиссии Tx",
         "including-uncle": "Including Uncle Reward?",
-        "block-rewards": "Block Rewards",
-        "uncle-rewards": "Uncle Rewards"
+        "block-rewards": "Награда за Блок",
+        "uncle-rewards": "Награда за Uncle-Блок"
     }
 }
