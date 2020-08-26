@@ -35,10 +35,10 @@
         "pending-short": "Ожидающая Тх | Ожидающие Txs",
         "mined": "Подтвержденные транзакции",
         "detail": "Детали Транзакции",
-        "last": "Last Transactions | Last Txs",
+        "last": "Последние транзакции | Последние Txs",
         "hash": "№ Тх | № Транзакции",
         "fee": "Комиссия Tx | Комиссии Txs",
-        "estimated-fee": "Estimated Fee",
+        "estimated-fee": "Примерная комиссия",
         "history": "История Транзакций",
         "total": "Всего Txs",
         "success": "Успешная Tx | Успешные Txs",
@@ -56,21 +56,21 @@
             "self": "Tx Себе",
             "in": "Incoming from",
             "out": "Outgoing to",
-            "internal": "Internal Transfer",
-            "fail": "Failed Transaction",
-            "success": "Successful Transaction"
+            "internal": "Внутренний перевод",
+            "fail": "Неудачная транзакция",
+            "success": "Успешная транзакция"
         }
     },
     "token": {
-        "top-200": "Top 200 tokens",
-        "erc20": "ERC20 Tokens",
-        "erc721": "ERC721 Tokens",
+        "top-200": "Топ 200 токенов",
+        "erc20": "ERC20 Токены",
+        "erc721": "ERC721 Токены",
         "nft": "NFTs",
         "name": "Токен | Токены",
         "detail": "Детали Токена",
         "empty": "Нет Токенов",
         "decimals": "Десятичные Знаки",
-        "number": "Total ERC20 Tokens ",
+        "number": "Всего  ERC20 Токенов  ",
         "tokenName": "Имя Токена",
         "supply": "Общее Предложение",
         "holder": "Владелец",
@@ -199,7 +199,7 @@
             "no-pending": "Нет ожидающих транзакций"
         },
         "transfer": {
-            "no-nft": "This address does not hold any NFTs",
+            "no-nft": "Этот адрес не держит NFTs",
             "no-all": "This address does not have any transfer history",
             "no-in": "This address does not have incoming transfers",
             "no-out": "This address does not have outgoing transfers"
@@ -222,7 +222,7 @@
         "not-found": "Страница не найдена :(",
         "welcome": {
             "title": "Добро пожаловать в EthVM Beta!",
-            "text1": "We are showing Ethereum Mainnet data, so have a look around and let us know about any bugs or feature requests at ",
+            "text1": "Мы показываем информацию о Ethereum - Mainnet: теперь вы можете попробовать все функции и сообщить нам о любых ошибках, пожеланиях и предложениях сюда ",
             "text2": "или посетите ",
             "text3": "что бы узнать больше об обновлениях или внести свои вклад в систему EthVM",
             "text4": "Команда EthVM будет рада сотрудничеству с нашим сообществом пользователей и разработчиков в создании полезных инструментов для блокчейна!",
@@ -237,8 +237,8 @@
             "tx": "Новая Tx | Новых Txs",
             "block": "новый блок | новых блоков",
             "uncle": "новый uncle блок | новые uncle блоки",
-            "pending": "new pending tx | new pending txs",
-            "erc20-transfer": "new ERC20 transfer| new ERC20 transfers",
+            "pending": "новая ожидающая tx | новых ожидающих txs",
+            "erc20-transfer": "новый ERC20 перевод | новых ERC20 переводов",
             "erc721-transfer": "new ERC721 transfer| new ERC721 transfers",
             "tokens": "token balance changed, refresh",
             "txs": "new txs found, refresh"
