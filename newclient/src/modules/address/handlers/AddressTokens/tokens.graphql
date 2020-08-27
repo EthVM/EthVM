@@ -36,3 +36,23 @@ query getOwnersERC721Tokens($hash: String!, $tokenContract: String, $_nextKey: S
         nextKey
     }
 }
+
+query getNFTcontractsMeta($address: String!) {
+    getNFTcontractsMeta(address: $address) @rest(type: "AddressNFTcontracts", path: "/dev/nft?{args}") {
+        tokenContracts @type(name: "NFTContract") {
+            contractIdAddress
+            owned_asset_count
+            name
+            contractImage
+            primary_asset_contracts @type(name: "PrimaryAssetContract") {
+                address
+                name
+                symbol
+                total_supply
+                description
+                external_link
+                image_url
+            }
+        }
+    }
+}

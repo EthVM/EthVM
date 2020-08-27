@@ -53,7 +53,7 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressUniqueNft from '@app/modules/address/components/TableAddressUniqueNft.vue'
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances } from './tokens.graphql'
+import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances, getNFTcontractsMeta } from './tokens.graphql'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721BalanceType } from './apolloTypes/getOwnersERC721Balances'
 import {
@@ -159,6 +159,18 @@ interface NFTMap {
             },
             error(error) {
                 this.emitErrorState(true)
+            }
+        },
+        getNFTcontractsMeta: {
+            query: getNFTcontractsMeta,
+            variables() {
+                return {
+                    address: this.address
+                }
+            },
+            client: 'OpenSeaClient',
+            result({ data }) {
+                console.log('fetchedd from rest', data)
             }
         }
     }
