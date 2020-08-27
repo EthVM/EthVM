@@ -21,6 +21,9 @@ type AddressNFTcontracts {
     tokenContracts: [NFTContract]
 }
 
-type Query {
-    getNFTcontractsMeta: AddressNFTcontracts!
+extend type Query {
+    getNFTcontractsMeta(address: String!): AddressNFTcontracts!
 }
+
+directive @rest(type: String!, path: String!, method: String, endpoint: String, bodyKey: String = "input") on FIELD
+directive @type(name: String!) on FIELD

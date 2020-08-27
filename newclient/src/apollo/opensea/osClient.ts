@@ -1,4 +1,4 @@
-import { AddressNFTcontracts, NFTContract, Query } from './schema.graphql'
+import { AddressNFTcontracts, NFTContract, Query, rest, type } from './schema.graphql'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import ApolloClient from 'apollo-client'
 import { RestLink } from 'apollo-link-rest'
@@ -8,7 +8,7 @@ enum TypeNames {
     AddressNFTcontracts = 'AddressNFTcontracts'
 }
 
-const OpenSeaTypeDef = `${AddressNFTcontracts} ${NFTContract} ${Query}`
+const OpenSeaTypeDef = `${AddressNFTcontracts} ${NFTContract} ${Query} ${rest} ${type}`
 
 const transformAddressNFTcontracts = (data: any) => {
     if (data.tokenContracts && data.address && data.tokenContracts.length > 0) {
