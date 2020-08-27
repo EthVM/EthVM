@@ -1,5 +1,5 @@
 type PrimaryAssetContract {
-    address: String
+    address: String!
     name: String
     symbol: String
     total_supply: Int
@@ -8,12 +8,12 @@ type PrimaryAssetContract {
     image_url: String
 }
 type NFTContract {
-    contractIdAddress: String
+    contractIdAddress: String!
     owned_asset_count: Int!
     name: String
     description: String
     contractImage: String
-    primary_asset_contracts: [PrimaryAssetContract]
+    primary_asset_contracts: [PrimaryAssetContract!]
 }
 
 type AddressNFTcontracts {

@@ -29,6 +29,8 @@
                     <h5>{{ $t('token.tokenName') }}</h5>
                 </v-layout>
             </v-flex>
+
+            <v-flex v-if="!isErc20" md2 />
             <v-flex md3>
                 <h5>{{ text }}</h5>
             </v-flex>
@@ -38,7 +40,6 @@
             <v-flex v-if="isErc20" md2>
                 <h5>{{ $t('token.change') }}</h5>
             </v-flex>
-            <v-spacer v-else />
         </v-layout>
     </div>
 </template>
@@ -63,7 +64,7 @@ export default class TableAddressTokensHeader extends Vue {
    */
 
     get text(): string {
-        return this.isErc20 ? `${this.$t('common.amount')}` : 'Total Tokens'
+        return this.isErc20 ? `${this.$t('common.amount')}` : `${this.$t('token.total-tokens')}`
     }
 }
 </script>

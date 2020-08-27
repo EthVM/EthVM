@@ -44,10 +44,18 @@
                                     =====================================================================================
                                     -->
                                     <v-flex xs8 pa-1>
-                                        <div v-if="token.tokenInfo.name || token.tokenInfo.symbol" class="black--text subtitle-2 font-weight-medium">
-                                            <p v-if="token.tokenInfo.name">{{ token.tokenInfo.name }}</p>
-                                            <p v-else class="text-uppercase">{{ token.tokenInfo.symbol }}</p>
-                                        </div>
+                                        <v-layout row align-center justify-start pa-2>
+                                            <div class="black--text subtitle-2 font-weight-medium">
+                                                <p v-if="name">{{ name }}</p>
+                                                <p v-else-if="!name && symbolString" class="text-uppercase">{{ symbolString }}</p>
+                                                <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
+                                            </div>
+                                            <app-transform-hash
+                                                v-if="!name && !symbolString"
+                                                :hash="token.tokenInfo.contract"
+                                                :link="`/address/${token.tokenInfo.contract}`"
+                                            />
+                                        </v-layout>
                                     </v-flex>
                                     <!--
                                     =====================================================================================
@@ -76,10 +84,9 @@
                                     <v-flex xs12 pa-1>
                                         <p class="info--text mb-2">
                                             {{ $t('common.amount') }}:
-                                            <span class="black--text"> {{ balance.value }}</span>
-                                            <span v-if="isErc20 && token.tokenInfo.symbol" class="info--text caption pl-1 pr-1">{{
-                                                token.tokenInfo.symbol
-                                            }}</span>
+                                            <span v-if="isErc20" class="black--text"> {{ balance.value }}</span>
+                                            <span v-else class="black--text"> {{ balance }}</span>
+                                            <span v-if="isErc20 && symbolString" class="info--text caption pl-1 pr-1">{{ symbolString }}</span>
                                             <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" pl-1 />
                                         </p>
                                         <p v-if="isErc20" class="info--text mb-2">
@@ -116,14 +123,16 @@
                                 <div class="token-image">
                                     <v-img :src="image" contain />
                                 </div>
-                                <div v-if="token.tokenInfo.name || token.tokenInfo.symbol" class="black--text subtitle-2 font-weight-medium">
-                                    <p v-if="token.tokenInfo.name">{{ token.tokenInfo.name }}</p>
-                                    <p v-else class="text-uppercase">{{ token.tokenInfo.symbol }}</p>
+                                <div v-if="name || symbolString" class="black--text subtitle-2 font-weight-medium">
+                                    <p v-if="name">{{ name }}</p>
+                                    <p v-else class="text-uppercase">{{ symbolString }}</p>
                                 </div>
-                                <v-layout v-else row align-center justift-start pa-1>
-                                    <p class="info--text contract-string caption mr-1">{{ $tc('contract.name', 1) }}:</p>
-                                    <app-transform-hash :hash="token.tokenInfo.contract" :link="`/address/${token.tokenInfo.contract}`" />
-                                </v-layout>
+                                <p v-else class="info--text contract-string mr-1">{{ $tc('contract.name', 1) }}:</p>
+                                <app-transform-hash
+                                    v-if="!name && !symbolString"
+                                    :hash="token.tokenInfo.contract"
+                                    :link="`/address/${token.tokenInfo.contract}`"
+                                />
                             </v-layout>
                         </v-flex>
                         <!--
@@ -134,10 +143,11 @@
                           MD: 7/12 (3)
                         =====================================================================================
                         -->
+                        <v-flex v-if="!isErc20" md2 />
                         <v-flex md3>
                             <p v-if="isErc20" class="black--text">
                                 {{ balance.value }}
-                                <span v-if="isErc20 && token.tokenInfo.symbol" class="info--text caption pr-1">{{ token.tokenInfo.symbol }}</span>
+                                <span v-if="isErc20 && symbolString" class="info--text caption pr-1">{{ symbolString }}</span>
                                 <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
                             </p>
                             <p v-else class="black--text">{{ balance }}</p>
@@ -196,6 +206,7 @@ import { ObjectCache } from 'apollo-cache-inmemory'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC721Balances'
+import { getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts as NFTMetaType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getNFTcontractsMeta'
 import BN from 'bignumber.js'
 
 @Component({
@@ -215,6 +226,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     @Prop(String) holder!: string
     @Prop(Boolean) isErc20!: boolean
     @Prop(Object) tokenPriceInfo!: TokenMarketData | undefined
+    @Prop(Object) nftMeta!: NFTMetaType | undefined
 
     /*
     ===================================================================================
@@ -226,6 +238,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
         if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image) {
             return this.tokenPriceInfo.image
         }
+        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url) {
+            return this.nftMeta.image_url
+        }
         return require('@/assets/icon-token.png')
     }
 
@@ -236,9 +251,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
         return this.formatNumber(new BN(this.token.balance).toNumber())
     }
 
-    get symbolString(): string {
-        return this.token.tokenInfo.symbol ? this.token.tokenInfo.symbol : `${this.$tc('token.name', 2)}`
-    }
+    // get symbolString(): string {
+    //     return this.token.tokenInfo.symbol ? this.token.tokenInfo.symbol : `${this.$tc('token.name', 2)}`
+    // }
 
     get tokenLink(): string {
         return `/token/${this.token.tokenInfo.contract}?holder=${this.holder}`
@@ -277,6 +292,32 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
 
     get priceChangeFormatted(): FormattedNumber | null {
         return this.tokenPriceInfo && this.tokenPriceInfo.price_change_24h ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_24h)) : null
+    }
+
+    get name(): string | undefined {
+        if (this.token.tokenInfo.name === null || this.token.tokenInfo.name === 'UNKNOWN') {
+            if (!this.isErc20 && this.nftMeta && this.nftMeta.name) {
+                return this.nftMeta.name
+            }
+            if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.name) {
+                return this.tokenPriceInfo.name
+            }
+            return undefined
+        }
+        return this.token.tokenInfo.name
+    }
+
+    get symbolString(): string | undefined {
+        if (this.token.tokenInfo.symbol === null || this.token.tokenInfo.symbol === 'UNKN') {
+            if (!this.isErc20 && this.nftMeta && this.nftMeta.symbol) {
+                return this.nftMeta.symbol
+            }
+            if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.symbol) {
+                return this.tokenPriceInfo.symbol
+            }
+            return undefined
+        }
+        return this.token.tokenInfo.symbol
     }
 
     /*

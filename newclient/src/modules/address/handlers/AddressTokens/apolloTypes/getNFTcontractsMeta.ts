@@ -9,7 +9,7 @@
 
 export interface getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts {
   __typename: "PrimaryAssetContract";
-  address: string | null;
+  address: string;
   name: string | null;
   symbol: string | null;
   total_supply: number | null;
@@ -20,11 +20,11 @@ export interface getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_
 
 export interface getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts {
   __typename: "NFTContract";
-  contractIdAddress: string | null;
+  contractIdAddress: string;
   owned_asset_count: number;
   name: string | null;
   contractImage: string | null;
-  primary_asset_contracts: (getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts | null)[] | null;
+  primary_asset_contracts: getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts[] | null;
 }
 
 export interface getNFTcontractsMeta_getNFTcontractsMeta {
