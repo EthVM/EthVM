@@ -149,19 +149,21 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
      * Get details list for token detail view
      */
     get tokenDetailsList(): Detail[] {
-        const details = [this.contractDetail, this.contractDecimalsDetail]
-        if (this.holderDetails && this.holderDetails.owner) {
+        const details = [this.contractDetail]
+        this.contractDecimalsDetail.detail ? details.push(this.contractDecimalsDetail) : null
+        if (this.holderDetails && this.holderDetails.owner && this.contractOwnerDetail.detail) {
             details.push(this.contractOwnerDetail)
         }
         if (!this.holderDetails) {
             // details.push(this.totalHoldersDetail)
         }
-        if (!this.isRopsten) {
+        if (!this.isRopsten && this.priceDetail.detail) {
             details.push(this.priceDetail)
         }
-        details.push(this.supplyDetail)
+        this.supplyDetail.detail ? details.push(this.supplyDetail) : null
         if (!this.isRopsten) {
-            details.push(this.marketCapDetail, this.volumeDetail)
+            this.marketCapDetail.detail ? details.push(this.marketCapDetail) : null
+            this.volumeDetail.detail ? details.push(this.volumeDetail) : null
         }
         // details.push(this.websiteDetail, this.supportDetail, this.socialDetail)
         return details

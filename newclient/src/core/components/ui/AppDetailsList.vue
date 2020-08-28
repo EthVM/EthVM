@@ -143,8 +143,7 @@ export default class AppDetailsList extends Vue {
      * @return {Detail[]}
      */
     get basicDetails(): Detail[] {
-        const newDetails = this.removeUndefined(this.details)
-        return newDetails.slice(0, this.maxItems)
+        return this.details.slice(0, this.maxItems)
     }
 
     /**
@@ -155,8 +154,7 @@ export default class AppDetailsList extends Vue {
      * @return {Detail[]}
      */
     get moreDetails(): Detail[] {
-        const newDetails = this.removeUndefined(this.details)
-        return newDetails.splice(this.maxItems)
+        return this.details.splice(this.maxItems)
     }
 
     /**
@@ -166,26 +164,6 @@ export default class AppDetailsList extends Vue {
      */
     get hasMore(): boolean {
         return this.moreDetails.length > 0
-    }
-
-    /*
-  ===================================================================================
-    Methods
-  ===================================================================================
-  */
-
-    /**
-     * Removes empty or undefined details
-     *
-     * @return {Array}
-     */
-    removeUndefined(details): [] {
-        details.forEach((item, index) => {
-            if (!item.detail || item.detail === undefined) {
-                details.splice(index, 1)
-            }
-        })
-        return details
     }
 }
 </script>
