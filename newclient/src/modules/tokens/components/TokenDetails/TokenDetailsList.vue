@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-details-list :title="title" :details="details" :is-loading="isLoading" class="mb-4">
+        <app-details-list :title="title" :details="details" :is-loading="isLoading || hasError" class="mb-4">
             <template v-slot:title>
                 <v-layout grid-list-xs row align-center justify-start fill-height pl-4 pr-2 pt-2 pb-2>
                     <div class="token-image">
@@ -49,7 +49,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     Initial Values
   ===================================================================================
   */
-    hasError = false
     // icons = {
     //     blog: 'fab fa-ethereum',
     //     chat: 'fab fa-ethereum',
@@ -67,6 +66,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     // }
     // tokenData: TokenMarketData | null = null
     isRopsten = ConfigHelper.isRopsten
+    hasError = false
     /*
   ===================================================================================
         LifeCycle:
@@ -92,7 +92,8 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     */
     emitErrorState(val: boolean): void {
         this.hasError = val
-        this.$emit('errorTransfers', this.hasError, false, ErrorMessageToken.tokenOwner)
+        console.error('token details list', val)
+        this.$emit('errorDetails', val, ErrorMessageToken.details)
     }
 
     /*
@@ -104,6 +105,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     get tokenData(): TokenMarketData | false {
         if (this.addressRef) {
             try {
+                this.emitErrorState(false)
                 return this.getEthereumTokenByContract(this.addressRef)
             } catch (error) {
                 this.emitErrorState(true)

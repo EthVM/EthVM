@@ -1,7 +1,6 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
-        <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <app-message :messages="errorMessages" />
         <v-card v-if="isRopsten" :class="{ 'pa-1': $vuetify.breakpoint.xsOnly, 'pa-3': $vuetify.breakpoint.smOnly, 'pa-5': $vuetify.breakpoint.mdAndUp }" flat>
             <v-layout align-center justify-center column class="mb-4">
@@ -20,7 +19,7 @@
                 </v-layout>
             </v-layout>
         </v-card>
-        <tokens-market-info-table v-else :max-items="maxItems" />
+        <tokens-market-info-table v-else :max-items="maxItems" @errorDetails="setError" />
     </v-container>
 </template>
 
@@ -32,13 +31,15 @@ import { Crumb } from '@app/core/components/props'
 // import { ConfigHelper } from '@app/core/helper/config-helper'
 import { Component, Vue } from 'vue-property-decorator'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
 
 const MAX_ITEMS = 20
 
 @Component({
     components: {
         AppBreadCrumbs,
-        TokensMarketInfoTable
+        TokensMarketInfoTable,
+        AppMessage
     }
 })
 export default class PageTokens extends Vue {
@@ -50,7 +51,6 @@ export default class PageTokens extends Vue {
 
     // isRopsten = ConfigHelper.isRopsten
     isRopsten = false
-    error = ''
     errorMessages: ErrorMessageToken[] = []
 
     /*
@@ -68,11 +68,6 @@ export default class PageTokens extends Vue {
     Computed Values
   ===================================================================================
   */
-
-    get hasError(): boolean {
-        return this.error !== ''
-    }
-
     /**
      * Returns breadcrumbs entry for this particular view.
      * Required for AppBreadCrumbs
@@ -99,12 +94,8 @@ export default class PageTokens extends Vue {
 
     setError(hasError: boolean, message: ErrorMessageToken): void {
         if (hasError) {
-            if (message === ErrorMessageToken.notFound) {
-                this.error = this.$i18n.t(message).toString()
-            } else {
-                if (!this.errorMessages.includes(message)) {
-                    this.errorMessages.push(message)
-                }
+            if (!this.errorMessages.includes(message)) {
+                this.errorMessages.push(message)
             }
         } else {
             if (this.errorMessages.length > 0) {

@@ -1,7 +1,7 @@
 <template>
     <transfers-table
         :transfers="transferData"
-        :loading="loading"
+        :loading="loading || hasError"
         :show-pagination="showPagination"
         :decimals="decimals"
         :symbol="symbol"
@@ -9,6 +9,7 @@
         :has-more="hasMore"
         :has-items="hasItems"
         :index="index"
+        :has-error="hasError"
         @setPage="setPage"
     />
 </template>
@@ -113,7 +114,7 @@ export default class Transfers extends Vue {
     emitErrorState(val: boolean, isErc20 = false): void {
         this.hasError = val
         const message = isErc20 ? ErrorMessageToken.erc20Transfers : ErrorMessageToken.erc721Transfers
-        this.$emit('errorDetails', this.hasError, false, message)
+        this.$emit('errorDetails', val, message)
     }
 
     getERC20Transfer(page: number) {

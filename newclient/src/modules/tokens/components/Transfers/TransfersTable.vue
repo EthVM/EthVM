@@ -1,7 +1,7 @@
 <template>
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
         <!-- LOADING / ERROR -->
-        <v-flex v-if="loading" xs12>
+        <v-flex v-if="loading || hasError" xs12>
             <v-progress-linear color="blue" indeterminate />
         </v-flex>
         <!-- Pagination -->
@@ -13,7 +13,7 @@
             fill-height
             class="pb-1 pr-2 pl-2"
         >
-            <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading" @newPage="setPage" />
+            <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading || hasError" @newPage="setPage" />
         </v-layout>
         <!-- End Pagination -->
 
@@ -35,7 +35,7 @@
             <!-- End Table Header -->
 
             <!-- Start Rows -->
-            <div v-if="loading">
+            <div v-if="loading || hasError">
                 <v-flex sm12>
                     <div
                         v-for="i in maxItems"
@@ -61,7 +61,7 @@
                     row
                     class="pb-1 pr-2 pl-2"
                 >
-                    <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading" @newPage="setPage" />
+                    <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading || hasError" @newPage="setPage" />
                 </v-layout>
             </div>
         </div>
@@ -72,7 +72,6 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-import AppError from '@app/core/components/ui/AppError.vue'
 import TransfersTableRow from './TransfersTableRow.vue'
 import TransfersTableRowLoading from './TransfersTableRowLoading.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
@@ -82,7 +81,6 @@ const MAX_ITEMS = 10
 @Component({
     components: {
         AppTimeAgo,
-        AppError,
         TransfersTableRow,
         TransfersTableRowLoading,
         AppPaginateHasMore,
@@ -102,7 +100,7 @@ export default class TransfersTable extends Vue {
     @Prop(Boolean) loading!: boolean
     @Prop(Number) decimals?: number
     @Prop(String) symbol?: string
-    @Prop(String) error?: string
+    @Prop(Boolean) hasError!: boolean
     @Prop(Number) maxItems!: number
     @Prop(Number) index!: number
     /*
@@ -113,14 +111,6 @@ export default class TransfersTable extends Vue {
 
     setPage(page: number, reset: boolean = false): void {
         this.$emit('setPage', page, reset)
-    }
-    /*
-        ===================================================================================
-          Computed Values
-        ===================================================================================
-        */
-    get hasError(): boolean {
-        return !!this.error && this.error !== ''
     }
 }
 </script>

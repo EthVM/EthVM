@@ -1,6 +1,6 @@
 <template>
     <v-container grid-list-lg>
-        <app-error v-if="hasError" :has-error="hasError" :message="error" />
+        <app-error v-if="error" :has-error="hasError" :message="error" />
         <app-message :messages="errorMessages" />
         <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" @errorDetails="setError" />
     </v-container>
@@ -10,10 +10,14 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import TokenDetails from '@app/modules/tokens/handlers/tokenDetails/TokenDetails.vue'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 
 @Component({
     components: {
-        TokenDetails
+        TokenDetails,
+        AppMessage,
+        AppError
     }
 })
 export default class PageDetailsToken extends Vue {
@@ -34,6 +38,7 @@ export default class PageDetailsToken extends Vue {
     isHolder = false // Whether or not "holder" is included in query params to display view accordingly
     holderAddress?: string = '' // Address of current token holder, if applicable
     error = ''
+    hasError = false
     errorMessages: ErrorMessageToken[] = []
     /*
   ===================================================================================
@@ -76,17 +81,6 @@ export default class PageDetailsToken extends Vue {
         }
         window.scrollTo(0, 0)
     }
-
-    /*
-    ===================================================================================
-      Computed
-    ===================================================================================
-    */
-
-    get hasError(): boolean {
-        return this.error !== ''
-    }
-
     /*
     ===================================================================================
       Methods
@@ -94,8 +88,9 @@ export default class PageDetailsToken extends Vue {
     */
 
     setError(hasError: boolean, message: ErrorMessageToken): void {
+        this.hasError = hasError
         if (hasError) {
-            if (message === ErrorMessageToken.notFound) {
+            if (message === ErrorMessageToken.invalid) {
                 this.error = this.$i18n.t(message).toString()
             } else {
                 if (!this.errorMessages.includes(message)) {

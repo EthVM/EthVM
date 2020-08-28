@@ -1,7 +1,7 @@
 <template>
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
         <!-- LOADING / ERROR -->
-        <v-flex v-if="loading" xs12>
+        <v-flex v-if="loading || hasError" xs12>
             <v-progress-linear color="blue" indeterminate />
         </v-flex>
         <!-- Pagination -->
@@ -28,7 +28,7 @@
             <!-- End Table Header -->
 
             <!-- Start Rows -->
-            <v-card v-if="loading" flat>
+            <v-card v-if="loading || hasError" flat>
                 <v-flex xs12>
                     <div v-for="i in maxItems" :key="i">
                         <token-table-holders-row-loading />
@@ -93,6 +93,9 @@ const MAX_ITEMS = 10
                     this.initialLoad = true
                     this.emitErrorState(true)
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
             }
         }
     }
@@ -122,7 +125,7 @@ export default class TokenTableHolders extends Vue {
     */
     emitErrorState(val: boolean): void {
         this.hasError = val
-        this.$emit('errorTransfers', this.hasError, false, ErrorMessageToken.tokenOwner)
+        this.$emit('errorDetails', this.hasError, ErrorMessageToken.tokenOwner)
     }
 
     setPage(page: number, reset: boolean = false): void {
