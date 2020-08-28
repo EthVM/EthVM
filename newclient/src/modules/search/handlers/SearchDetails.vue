@@ -1,27 +1,21 @@
 <template>
-    <v-container class="ma-0 pa-0">
-        <app-message :messages="errorMessages" />
-        <search
-            ref="search"
-            :items="items"
-            :is-loading="isLoading"
-            :select-items="selectItems"
-            :has-error="hasError"
-            @onSelect="onSelect"
-            @getToken="getToken"
-            @getAllSearch="getAllSearch"
-            @routeTo="routeTo"
-        />
-    </v-container>
+    <search
+        ref="search"
+        :items="items"
+        :is-loading="isLoading"
+        :select-items="selectItems"
+        :has-error="hasError"
+        @onSelect="onSelect"
+        @getToken="getToken"
+        @getAllSearch="getAllSearch"
+        @routeTo="routeTo"
+    />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { getTokensBeginsWith, getHashType } from '@app/modules/search/handlers/searchDetails.graphql'
 import Search from '@app/modules/search/components/Search.vue'
-import { ErrorMessageSearch } from '@app/modules/search/models/ErrorMessageForSearch'
-import AppMessage from '@app/core/components/ui/AppMessage.vue'
-import AppError from '@app/core/components/ui/AppError.vue'
 
 interface SearchRef extends Vue {
     resetValues(): void
@@ -29,9 +23,7 @@ interface SearchRef extends Vue {
 
 @Component({
     components: {
-        Search,
-        AppMessage,
-        AppError
+        Search
     }
 })
 export default class SearchDetails extends Vue {
@@ -47,29 +39,12 @@ export default class SearchDetails extends Vue {
     searchAutocomplete = ''
     items = []
     isLoading = false
-    errorMessages: ErrorMessageSearch[] = []
 
     /*
   ===================================================================================
     Methods
   ===================================================================================
   */
-    setError(hasError: boolean, message: ErrorMessageSearch): void {
-        this.hasError = hasError
-        if (hasError) {
-            if (!this.errorMessages.includes(message)) {
-                this.errorMessages.push(message)
-            }
-        } else {
-            if (this.errorMessages.length > 0) {
-                const index = this.errorMessages.indexOf(message)
-                if (index > -1) {
-                    this.errorMessages.splice(index, 1)
-                }
-            }
-        }
-    }
-
     getHashType(param): void {
         let routeName = ''
         this.isLoading = true
@@ -94,16 +69,21 @@ export default class SearchDetails extends Vue {
                 } else if (hashType.includes('BLOCK')) {
                     routeName = 'blockHash'
                 } else {
-                    this.setError(true, ErrorMessageSearch.notFound)
+                    this.routeToNotFound(param)
                 }
                 this.routeTo(routeName, param)
                 this.isLoading = false
             })
             .catch(error => {
-                console.error('adfadsf', error)
-                this.setError(true, ErrorMessageSearch.invalid)
+                this.routeToNotFound(param)
+                this.hasError = true
                 this.isLoading = false
             })
+    }
+
+    routeToNotFound(searchVal): void {
+        const route = { name: 'search-not-found', params: { searchTerm: searchVal } }
+        this.$router.push(route).catch(() => {})
     }
 
     routeTo(selectVal, searchVal): void {
@@ -146,14 +126,15 @@ export default class SearchDetails extends Vue {
                     this.routeToToken(this.items[0]['contract'])
                 }
                 if (this.items.length === 0) {
-                    this.setError(true, ErrorMessageSearch.notFound)
+                    this.routeToNotFound(param)
+                    this.hasError = true
                 }
                 this.isLoading = false
                 this.$refs.search.resetValues()
             })
             .catch(error => {
-                console.error('adzzzzzfadsf', error)
-                this.setError(true, ErrorMessageSearch.notFound)
+                this.routeToNotFound(param)
+                this.hasError = true
                 this.isLoading = false
             })
     }

@@ -205,8 +205,10 @@
                 "token-market": "Something went wrong retrieving Token Market data"
             },
             "search": {
-                "not-found": "No Search Results",
-                "invalid-hash": "Invalid Hash"
+                "you-entered": "You entered",
+                "invalid": "Sorry! This is an invalid search string.",
+                "is-bug": "If you think this is a bug, please {let-us-know}.",
+                "let-us-know": "let us know"
             },
             "txs": "Something went wrong while retrieving transactions.",
             "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
