@@ -5,5 +5,5 @@ export enum ErrorMessageToken {
     notFound = 'message.error.tokens.not-found',
     tokenOwner = 'message.error.tokens.token-owner',
     tokenMarket = 'message.error.tokens.token-market',
-    invalid = 'message.invalid.toke'
+    invalid = 'message.invalid.token'
 }

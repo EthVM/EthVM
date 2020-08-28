@@ -47,7 +47,7 @@ interface Transfer {
                 if (data && data.getERC20TokenTransfers) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMore
+                        this.showPagination = this.hasMoreERC20Transfers
                         this.initialLoad = false
                     }
                 }
@@ -68,7 +68,7 @@ interface Transfer {
                 if (data && data.getERC721TokenTransfer) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMore
+                        this.showPagination = this.hasMoreERC721Transfers
                         this.initialLoad = false
                     }
                 }
@@ -104,7 +104,6 @@ export default class Transfers extends Vue {
     /*isEnd -  Last Index loaded */
     isEnd = 0
     initialLoad = true
-    remainingData: Array<Transfer> = []
     hasError = false
     /*
         ===================================================================================
@@ -166,16 +165,12 @@ export default class Transfers extends Vue {
     }
 
     setPage(page: number, reset: boolean = false): void {
-        // if (this.remainingData.length > 0) {
-
-        // }
-        console.error('page', page)
         if (reset) {
             this.isEnd = 0
             this.$apollo.queries.getERC20Transfers.refetch()
             this.$apollo.queries.getERC721Transfers.refetch()
         } else {
-            if (page > this.isEnd && this.hasMore) {
+            if (page > this.isEnd) {
                 this.hasMoreERC20Transfers ? this.getERC20Transfer(page) : null
                 this.hasMoreERC721Transfers ? this.getERC721Transfer(page) : null
             }
@@ -204,10 +199,6 @@ export default class Transfers extends Vue {
             }
             const start = this.index * this.maxItems
             const end = start + this.maxItems > data.length ? data.length : start + this.maxItems
-            // console.error('start', start, end, this.index, data.length)
-            // if (data.length > end) {
-            //     this.remainingData = data.slice(end, data.length)
-            // }
             return data.slice(start, end)
         }
         return []

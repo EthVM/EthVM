@@ -1,8 +1,8 @@
 <template>
     <v-container grid-list-lg>
+        <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" @errorDetails="setError" />
         <app-error v-if="error" :has-error="hasError" :message="error" />
         <app-message :messages="errorMessages" />
-        <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" @errorDetails="setError" />
     </v-container>
 </template>
 

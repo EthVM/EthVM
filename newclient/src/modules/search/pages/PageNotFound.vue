@@ -37,10 +37,5 @@ export default class PageNotFound extends Vue {
   ===================================================================================
   */
     supportEmail = 'support@ethvm.com'
-
-
-    mounted() {
-        console.error('search', this.searchTerm)
-    }
 }
 </script>

@@ -92,7 +92,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     */
     emitErrorState(val: boolean): void {
         this.hasError = val
-        console.error('token details list', val)
         this.$emit('errorDetails', val, ErrorMessageToken.details)
     }
 
