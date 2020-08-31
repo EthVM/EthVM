@@ -38,14 +38,14 @@
 
                 <!-- Column 3: Quantity -->
                 <v-flex sm2>
-                    <div class="d-flex">
-                        <app-transform-hash v-if="isERC721 && transfer.token" :hash="transfer.token" :italic="false" />
-                        <app-tooltip v-if="transfer.token && isERC721" :text="transfer.token" />
-                        <p v-if="!isERC721">
-                            {{ transferValue.value }} {{ units }}
-                            <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
-                        </p>
+                    <div v-if="isERC721" class="d-flex">
+                        <app-transform-hash v-if="transfer.token" :hash="transfer.token" :italic="false" />
+                        <app-tooltip v-if="transfer.token" :text="transfer.token" />
                     </div>
+                    <p v-else>
+                        {{ transferValue.value }} {{ units }}
+                        <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
+                    </p>
                 </v-flex>
                 <!-- End Column 3 -->
             </v-layout>
