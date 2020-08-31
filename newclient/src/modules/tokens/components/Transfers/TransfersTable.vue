@@ -28,7 +28,8 @@
                         <h5>{{ $t('common.age') }}</h5>
                     </v-flex>
                     <v-flex sm2>
-                        <h5>{{ $t('common.quantity-id') }}</h5>
+                        <h5 v-if="!isERC721">{{ $t('common.quantity') }}</h5>
+                        <h5 v-else>{{ $t('common.id') }}</h5>
                     </v-flex>
                 </v-layout>
             </v-card>
@@ -51,7 +52,7 @@
                     <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
                 </v-card>
                 <v-card v-for="(transfer, index) in transfers" v-else :key="index" color="white" class="transparent" flat>
-                    <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" />
+                    <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" :transfer-type="transferType" />
                 </v-card>
                 <!-- End Rows -->
                 <v-layout
@@ -77,6 +78,7 @@ import TransfersTableRowLoading from './TransfersTableRowLoading.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 
 const MAX_ITEMS = 10
+const TYPES = ['ERC20', 'ERC721']
 
 @Component({
     components: {
@@ -103,14 +105,24 @@ export default class TransfersTable extends Vue {
     @Prop(Boolean) hasError!: boolean
     @Prop(Number) maxItems!: number
     @Prop(Number) index!: number
+    @Prop(String) transferType!: string
     /*
-        ===================================================================================
-          Methods
-        ===================================================================================
-        */
+    ===================================================================================
+        Methods
+    ===================================================================================
+    */
 
     setPage(page: number, reset: boolean = false): void {
         this.$emit('setPage', page, reset)
+    }
+
+    /*
+    ===================================================================================
+        Computed Values
+    ===================================================================================
+    */
+    get isERC721() {
+        return this.transferType === TYPES[1]
     }
 }
 </script>

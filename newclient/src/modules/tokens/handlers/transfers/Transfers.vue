@@ -10,6 +10,7 @@
         :has-items="hasItems"
         :index="index"
         :has-error="hasError"
+        :transfer-type="transferType"
         @setPage="setPage"
     />
 </template>
@@ -22,6 +23,7 @@ import { getERC20TokenTransfers, getERC721TokenTransfers } from '@app/modules/to
 import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20Transfers'
 import { getERC721TokenTransfers_getERC721TokenTransfers as ERC721TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC721TokenTransfers'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
+const TYPES = ['ERC20', 'ERC721']
 
 const MAX_ITEMS = 10
 
@@ -105,6 +107,7 @@ export default class Transfers extends Vue {
     isEnd = 0
     initialLoad = true
     hasError = false
+    transferType = ''
     /*
         ===================================================================================
           Methods
@@ -183,7 +186,7 @@ export default class Transfers extends Vue {
         ===================================================================================
         */
     get hasERC721Transfers() {
-        return this.getERC721Transfers && this.getERC721Transfers.transfers
+        return this.getERC721Transfers && this.getERC721Transfers.transfers && this.getERC721Transfers.transfers.length > 0
     }
 
     get transferData(): any[] {
@@ -196,6 +199,7 @@ export default class Transfers extends Vue {
                 this.getERC721Transfers.transfers.forEach(transfer => {
                     transfer ? data.push(transfer) : null
                 })
+                this.transferType = TYPES[1]
             }
             const start = this.index * this.maxItems
             const end = start + this.maxItems > data.length ? data.length : start + this.maxItems

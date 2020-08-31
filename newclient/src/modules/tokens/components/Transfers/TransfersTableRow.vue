@@ -38,10 +38,14 @@
 
                 <!-- Column 3: Quantity -->
                 <v-flex sm2>
-                    <p>
-                        {{ transferValue.value }} {{ units }}
-                        <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
-                    </p>
+                    <div class="d-flex">
+                        <app-transform-hash v-if="isERC721 && transfer.token" :hash="transfer.token" :italic="false" />
+                        <app-tooltip v-if="transfer.token && isERC721" :text="transfer.token" />
+                        <p v-if="!isERC721">
+                            {{ transferValue.value }} {{ units }}
+                            <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
+                        </p>
+                    </div>
                 </v-flex>
                 <!-- End Column 3 -->
             </v-layout>
@@ -79,8 +83,14 @@
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
-                        <p class="pb-0">
-                            <span class="info--text">{{ $t('common.quantity-id') }}:</span> {{ transferValue.value }} {{ units }}
+                        <v-layout v-if="isERC721" row pa-2>
+                            <span class="info--text">{{ $t('common.id') }}:</span>
+                            <app-transform-hash v-if="isERC721 && transfer.token" :hash="transfer.token" :italic="false" />
+                            <app-tooltip v-if="transfer.token" :text="transfer.token" />
+                        </v-layout>
+                        <p v-else class="pb-0">
+                            <span class="info--text">{{ $t('common.quantity') }}:</span>
+                            <span>{{ transferValue.value }} {{ units }}</span>
                             <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
                         </p>
                     </v-flex>
@@ -99,6 +109,7 @@ import BigNumber from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+const TYPES = ['ERC20', 'ERC721']
 
 @Component({
     components: {
@@ -116,10 +127,10 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
     @Prop(Object) transfer!: any
     @Prop(Number) decimals?: number
     @Prop(String) symbol?: string
-
+    @Prop(String) transferType!: string
     /*
     ===================================================================================
-      Methods
+      Computed
     ===================================================================================
     */
 
@@ -151,6 +162,10 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
             return undefined
         }
         return `${tooltipText} ${this.symbolFormatted}`
+    }
+
+    get isERC721() {
+        return this.transferType === TYPES[1]
     }
 }
 </script>

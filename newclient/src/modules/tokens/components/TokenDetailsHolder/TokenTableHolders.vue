@@ -91,7 +91,6 @@ const MAX_ITEMS = 10
                 } else {
                     this.showPagination = false
                     this.initialLoad = true
-                    this.emitErrorState(true)
                 }
             },
             error(error) {

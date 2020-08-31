@@ -9,7 +9,7 @@
       Shows details pertinent to the token as a whole, with no holder-specific information
     =====================================================================================
     -->
-        <div v-if="!isHolder && !hasError">
+        <div v-if="!isHolder">
             <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading || hasError" @errorDetails="emitErrorState" />
             <app-tabs v-if="!loading" :tabs="tabsTokenDetails">
                 <!--
@@ -38,7 +38,7 @@
       Shows holder details pertaining to particular token contract
     =====================================================================================
     -->
-        <div v-if="isHolder && !hasError">
+        <div v-if="isHolder">
             <token-details-list
                 :address-ref="addressRef"
                 :holder-details="tokenDetails"
