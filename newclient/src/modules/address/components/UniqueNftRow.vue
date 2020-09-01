@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="!loading" class="token-container pa-3">
-            <v-img :src="image" :placeholder="require('@/assets/icon-token.png')" :height="maxHeight" max-width="180x" contain @error="nftImageLoadFail" />
+            <v-img :src="image" :height="maxHeight" max-width="180x" contain @error="nftImageLoadFail" />
             <p class="caption text-xs-center mt-3 text-truncate">ID: {{ getTokenID(token) }}</p>
         </div>
 
