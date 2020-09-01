@@ -246,14 +246,14 @@
         },
         "report": "Find any bugs or have suggestions?",
         "update": {
-            "tx": "New tx | New txs",
-            "block": "new block | new blocks",
-            "uncle": "new uncle | new uncles",
-            "pending": "new pending tx | new pending txs",
-            "erc20-transfer": "new ERC20 transfer | new ERC20 transfers",
-            "erc721-transfer": "new ERC721 transfer | new ERC721 transfers",
-            "tokens": "token balance changed, refresh",
-            "txs": "new txs found, refresh"
+            "tx": "New Tx | New Txs",
+            "block": "New Block | New Blocks",
+            "uncle": "New Uncle | New Uncles",
+            "pending": "New Pending Tx | New Pending Txs",
+            "erc20-transfer": "New ERC20 Transfer | New ERC20 Transfers",
+            "erc721-transfer": "New ERC721 Transfer | New ERC721 Transfers",
+            "tokens": "Token's Balance Changed, Refresh",
+            "txs": "New Txs Found, Refresh"
         },
         "sec": "sec",
         "sec-ago": "sec ago",
