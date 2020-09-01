@@ -246,7 +246,7 @@
         },
         "report": "Find any bugs or have suggestions?",
         "update": {
-            "tx": "New tx | New txs",
+            "tx": "New Tx | New Txs",
             "block": "new block | new blocks",
             "uncle": "new uncle | new uncles",
             "pending": "new pending tx | new pending txs",
