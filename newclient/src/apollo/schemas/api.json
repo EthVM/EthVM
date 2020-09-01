@@ -432,16 +432,6 @@
                 "defaultValue": null
               },
               {
-                "name": "limit",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
                 "name": "nextKey",
                 "description": null,
                 "type": {
