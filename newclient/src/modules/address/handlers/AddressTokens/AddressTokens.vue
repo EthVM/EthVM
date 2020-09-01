@@ -352,6 +352,7 @@ export default class AddressTokens extends Mixins(CoinData) {
         this.requestContractName = name ? name : contract
         if (contract) {
             if (this.uniqueNFTMap && this.uniqueNFTMap[contract]) {
+                this.requestContract = contract
                 this.uniqueNFT = this.uniqueNFTMap[contract]
                 this.loadingUniqueNFT = false
                 this.showUniqueNFT = true
