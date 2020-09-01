@@ -39,7 +39,14 @@
                 <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
             </v-layout>
         </div>
-        <table-address-unique-nft v-else :contract-name="requestContractName" :tokens="uniqueNFT" :loading="loadingUniqueNFT" @hideNFT="hideNFTTokens" />
+        <table-address-unique-nft
+            v-else
+            :contract-name="requestContractName"
+            :contract="requestContract"
+            :tokens="uniqueNFT"
+            :loading="loadingUniqueNFT"
+            @hideNFT="hideNFTTokens"
+        />
     </v-card>
 </template>
 
@@ -220,6 +227,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     getNFTcontractsMeta!: getNFTcontractsMetaType
     loadingMeta = true
     nftMeta: NFTMetaMap = {}
+
     /* Unique NFT List for contract */
     getOwnersERC721Tokens!: ERC721ContractTokensType
     uniqueNFTMap: NFTMap = {}
@@ -349,8 +357,8 @@ export default class AddressTokens extends Mixins(CoinData) {
                 this.showUniqueNFT = true
             } else {
                 /* Load Tokens */
-                this.showUniqueNFT = true
                 this.requestContract = contract
+                this.showUniqueNFT = true
                 this.loadingUniqueNFT = true
                 this.skipGetUniqueTokens = false
             }

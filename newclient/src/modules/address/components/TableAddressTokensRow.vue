@@ -43,7 +43,21 @@
                                       XS: 9/12 (9)
                                     =====================================================================================
                                     -->
-                                    <v-flex xs8 pa-1>
+                                    <v-flex v-if="isErc20" xs8 pa-1>
+                                        <v-layout row align-center justify-start pa-2>
+                                            <div class="black--text subtitle-2 font-weight-medium">
+                                                <p v-if="name">{{ name }}</p>
+                                                <p v-else-if="!name && symbolString" class="text-uppercase">{{ symbolString }}</p>
+                                                <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
+                                            </div>
+                                            <app-transform-hash
+                                                v-if="!name && !symbolString"
+                                                :hash="token.tokenInfo.contract"
+                                                :link="`/address/${token.tokenInfo.contract}`"
+                                            />
+                                        </v-layout>
+                                    </v-flex>
+                                    <v-flex v-else xs12 pa-1>
                                         <v-layout row align-center justify-start pa-2>
                                             <div class="black--text subtitle-2 font-weight-medium">
                                                 <p v-if="name">{{ name }}</p>
@@ -99,6 +113,11 @@
                                         </p>
                                     </v-flex>
                                 </v-layout>
+                            </v-flex>
+                            <v-flex v-if="!isErc20" shrink>
+                                <v-btn outline small fab color="bttnToken" @click="showNft()">
+                                    <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
+                                </v-btn>
                             </v-flex>
                         </v-layout>
                     </div>
