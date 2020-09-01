@@ -62,13 +62,13 @@
         }
     },
     "token": {
-        "top-200": "Top 200 tokens",
+        "top-200": "Top 200 Tokens",
         "erc20": "ERC20 Tokens",
         "erc721": "ERC721 Tokens",
         "nft": "NFTs",
         "name": "Token | Tokens",
         "detail": "Token Details",
-        "empty": "No tokens",
+        "empty": "No Tokens",
         "decimals": "Decimals",
         "number": "Total ERC20 Tokens ",
         "tokenName": "Token Name",
@@ -166,7 +166,7 @@
                 "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
                 "erc721": "Something went wrong while retrieving NFTs balances.",
-                "transfers-eth": "Something went wrong rettrieving Address transactions.",
+                "transfers-eth": "Something went wrong retrieving Address transactions.",
                 "update-event": "Something went wrong during Address update."
             },
             "block": {
@@ -183,8 +183,8 @@
                 "not-found": "This uncle does not exist."
             },
             "txs": "Something went wrong while retrieving transactions.",
-            "transfers-erc721": "Somethign went wrong rettrieving Address NFTs transfers.",
-            "transfers-erc20": "Somethign went wrong rettrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Somethign went wrong retrieving Address NFTs transfers.",
+            "transfers-erc20": "Somethign went wrong retrieving Address ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "This address does not have any transaction history",
@@ -234,12 +234,12 @@
         },
         "report": "Find any bugs or have suggestions?",
         "update": {
-            "tx": "new tx | new txs",
+            "tx": "New tx | New txs",
             "block": "new block | new blocks",
             "uncle": "new uncle | new uncles",
             "pending": "new pending tx | new pending txs",
-            "erc20-transfer": "new ERC20 transfer| new ERC20 transfers",
-            "erc721-transfer": "new ERC721 transfer| new ERC721 transfers",
+            "erc20-transfer": "new ERC20 transfer | new ERC20 transfers",
+            "erc721-transfer": "new ERC721 transfer | new ERC721 transfers",
             "tokens": "token balance changed, refresh",
             "txs": "new txs found, refresh"
         },
