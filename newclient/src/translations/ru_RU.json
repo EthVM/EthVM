@@ -62,13 +62,13 @@
         }
     },
     "token": {
-        "top-200": "Top 200 Tokens",
+        "top-200": "Топ 200 Токенов",
         "erc20": "ERC20 Токены",
         "erc721": "ERC721 Токены",
         "nft": "NFTs",
         "name": "Токен | Токены",
         "detail": "Детали Токена",
-        "empty": "No Tokens",
+        "empty": "Нет Токенов",
         "decimals": "Десятичные Знаки",
         "number": "Всего  ERC20 Токенов  ",
         "tokenName": "Имя Токена",
@@ -166,7 +166,7 @@
                 "block-rewards": "Что-то пошло не так при получении вознаграждений блока Адреса.",
                 "erc20": "Что-то пошло не так при получении балансов ERC20.",
                 "erc721": "Что-то пошло не так при получении балансов NFT.",
-                "transfers-eth": "Something went wrong retrieving Address transactions.",
+                "transfers-eth": "Что-то пошло не так при получении ожидающих транзакций Адреса.",
                 "update-event": "Что-то пошло не так во время обновления данных Адреса."
             },
             "block": {
@@ -234,12 +234,12 @@
         },
         "report": "Нашли какие-либо ошибки или есть предложения?",
         "update": {
-            "tx": "New tx | New txs",
+            "tx": "New Tx | New Txs",
             "block": "новый блок | новых блоков",
             "uncle": "новый uncle блок | новые uncle блоки",
             "pending": "новая ожидающая tx | новых ожидающих txs",
-            "erc20-transfer": "new ERC20 transfer | new ERC20 transfers",
-            "erc721-transfer": "new ERC721 transfer | new ERC721 transfers",
+            "erc20-transfer": "новый ERC20 перевод | новых ERC20 переводов",
+            "erc721-transfer": "новый ERC20 перевод | новых ERC20 переводов",
             "tokens": "баланс токенов изменен, обновить",
             "txs": "найдены новые txs, обновить"
         },
