@@ -83,13 +83,21 @@ export default class SearchDetails extends Vue {
     }
 
     routeTo(selectVal, searchVal): void {
-        const route = { name: selectVal, params: this.getParam(selectVal, searchVal) }
+        const route = { name: this.getSelectVal(selectVal, searchVal), params: this.getParam(selectVal, searchVal) }
         this.$router.push(route).catch(() => {})
     }
 
     routeToToken(param): void {
         const route = { name: 'token-detail', params: { addressRef: this.removeSpaces(param) } }
         this.$router.push(route).catch(() => {})
+    }
+
+    getSelectVal(selectVal, searchVal) {
+        const isNum = /^\d+$/.test(searchVal)
+        if (selectVal === 'block' && !isNum) {
+            return 'blockHash'
+        }
+        return selectVal
     }
 
     getParam(selectVal, searchVal): {} {
