@@ -31,14 +31,14 @@
                             <span class="pr-1">{{ detail.detail }}</span>
                             <app-tooltip v-if="detail.tooltip" :text="detail.tooltip" />
                             <v-layout
-                                v-if="detail.priceChange"
+                                v-if="detail.priceChange && percentageChange.value"
                                 :class="[detail.tooltip ? 'pl-3' : 'pl-2', priceChangeClass, 'price-container', 'font-weight-medium']"
                                 row
                                 wrap
                                 align-center
                                 justify-start
                             >
-                                (<span class="pl-1">{{ detail.priceChange }}%</span>
+                                (<span class="pl-1">{{ percentageChange.value }}%</span>
                                 <v-img v-if="priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="16px" max-width="16px" contain></v-img>
                                 <v-img v-if="priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="16px" max-width="16px" contain></v-img>
                                 )
@@ -71,12 +71,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import { Detail } from '@app/core/components/props'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import BN from 'bignumber.js'
+import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 @Component({
     components: {
@@ -85,7 +87,7 @@ import BN from 'bignumber.js'
         AppTransformHash
     }
 })
-export default class AppDetailsListRow extends Vue {
+export default class AppDetailsListRow extends Mixins(NumberFormatMixin) {
     /*
   ===================================================================================
     Props
@@ -101,21 +103,28 @@ export default class AppDetailsListRow extends Vue {
   ===================================================================================
   */
 
+    get percentageChange(): FormattedNumber {
+        const change = this.detail.priceChange || 0
+        return this.formatPercentageValue(new BN(change))
+    }
+
     get priceChangeSymbol() {
-        if (this.detail.priceChange && new BN(this.detail.priceChange).gt(0)) {
+        const change = this.detail.priceChange || 0
+        if (change > 0) {
             return '+'
         }
-        if (this.detail.priceChange && new BN(this.detail.priceChange).lt(0)) {
+        if (change < 0) {
             return '-'
         }
         return ''
     }
 
     get priceChangeClass(): string {
-        if (this.detail.priceChange && new BN(this.detail.priceChange).gt(0)) {
+        const change = this.detail.priceChange || 0
+        if (change > 0) {
             return 'txSuccess--text'
         }
-        if (this.detail.priceChange && new BN(this.detail.priceChange).lt(0)) {
+        if (change < 0) {
             return 'txFail--text'
         }
         return 'black--text'
