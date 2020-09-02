@@ -1,9 +1,5 @@
 <template>
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
-        <!-- LOADING / ERROR -->
-        <v-flex v-if="loading || hasError" xs12>
-            <v-progress-linear color="blue" indeterminate />
-        </v-flex>
         <!-- Pagination -->
         <v-layout
             v-if="showPagination"
@@ -43,7 +39,7 @@
                         :key="i"
                         :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : '']"
                     >
-                        <transfers-table-row-loading />
+                        <app-table-row-loading />
                     </div>
                 </v-flex>
             </div>
@@ -74,8 +70,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import TransfersTableRow from './TransfersTableRow.vue'
-import TransfersTableRowLoading from './TransfersTableRowLoading.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
 
 const MAX_ITEMS = 10
 const TYPES = ['ERC20', 'ERC721']
@@ -84,9 +80,9 @@ const TYPES = ['ERC20', 'ERC721']
     components: {
         AppTimeAgo,
         TransfersTableRow,
-        TransfersTableRowLoading,
         AppPaginateHasMore,
-        AppPaginate
+        AppPaginate,
+        AppTableRowLoading
     }
 })
 export default class TransfersTable extends Vue {

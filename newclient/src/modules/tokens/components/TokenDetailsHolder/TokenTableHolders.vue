@@ -1,9 +1,13 @@
 <template>
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
+<<<<<<< Updated upstream
         <!-- LOADING / ERROR -->
         <v-flex v-if="loading || hasError" xs12>
             <v-progress-linear color="blue" indeterminate />
         </v-flex>
+=======
+        <app-error :has-error="hasError" :message="error" class="mb-4" />
+>>>>>>> Stashed changes
         <!-- Pagination -->
         <v-layout v-if="showPagination" row fill-height justify-end class="pb-1 pr-2 pl-2">
             <app-paginate-has-more :has-more="hasMore" :current-page="index" @newPage="setPage" />
@@ -31,7 +35,7 @@
             <v-card v-if="loading || hasError" flat>
                 <v-flex xs12>
                     <div v-for="i in maxItems" :key="i">
-                        <token-table-holders-row-loading />
+                        <app-table-row-loading />
                     </div>
                 </v-flex>
             </v-card>
@@ -53,11 +57,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenTableHoldersRow from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHoldersRow.vue'
-import TokenTableHoldersRowLoading from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHoldersRowLoading.vue'
 import { getERC20TokenOwners } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
 import { ERC20TokenOwners as TokenOwners } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwners'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
+import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
 
 const MAX_ITEMS = 10
 @Component({
@@ -65,7 +69,7 @@ const MAX_ITEMS = 10
         AppPaginateHasMore,
         AppPaginate,
         TokenTableHoldersRow,
-        TokenTableHoldersRowLoading
+        AppTableRowLoading
     },
     apollo: {
         holdersPage: {
