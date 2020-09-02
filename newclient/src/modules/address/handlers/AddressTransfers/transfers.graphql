@@ -16,7 +16,7 @@ fragment BalanceFragment on BalanceDiff {
     after
 }
 
-query getAdrEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
+query getAddressEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
     getEthTransfersV2(owner: $hash, filter: $filter, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {
@@ -38,7 +38,7 @@ query getAdrEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $
     }
 }
 
-query getAdrERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+query getAddressERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
     getERC20Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {
@@ -62,7 +62,7 @@ query getAdrERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
     }
 }
 
-query getAdrERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+query getAddressERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
     getERC721Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {

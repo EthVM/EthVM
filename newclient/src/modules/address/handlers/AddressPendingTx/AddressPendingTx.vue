@@ -41,6 +41,7 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { throwError } from 'rxjs'
 import { networkInterfaces } from 'os'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
+import { onError } from 'apollo-link-error'
 
 interface PendingMap {
     [key: string]: EthTransfer
@@ -81,6 +82,7 @@ interface PendingMap {
                             this.initialLoad = false
                         } catch (error) {
                             this.emitErrorState(true)
+                            throw error
                         }
                     }
                 } else {
@@ -111,6 +113,7 @@ interface PendingMap {
                             this.createSubscription(newTx.transactionHash)
                         } catch (error) {
                             this.emitErrorState(true)
+                            throw error
                         }
                     } else {
                         this.emitErrorState(true)
@@ -165,6 +168,7 @@ export default class AddressPendingTx extends Vue {
                     })
             } catch (error) {
                 this.emitErrorState(true)
+                throw error
             }
         }
         return []

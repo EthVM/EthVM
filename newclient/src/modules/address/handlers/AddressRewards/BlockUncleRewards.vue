@@ -11,6 +11,7 @@ import { getBlockUncleRewards } from './rewards.graphql'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import BN from 'bignumber.js'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import { throwError } from 'rxjs'
 
 @Component({
     components: {
@@ -62,7 +63,7 @@ export default class BlockUncleRewards extends Mixins(NumberFormatMixin) {
                 }
             })
             .catch(error => {
-                console.log('error', error)
+                throw error
             })
     }
 }

@@ -212,7 +212,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
         if (!this.isLoading && this.tokenData) {
             const priceFormatted = this.formatUsdValue(new BN(this.tokenData.current_price || 0))
             detail.detail = priceFormatted.value
-            detail.priceChange = this.formatPercentageValue(new BN(this.tokenData.price_change_24h || 0)).value
+            detail.priceChange = this.tokenData.price_change_24h
             if (priceFormatted.tooltipText) {
                 detail.tooltip = priceFormatted.tooltipText
             }

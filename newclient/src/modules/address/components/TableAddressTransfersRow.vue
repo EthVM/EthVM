@@ -25,10 +25,14 @@
                     <v-flex xs10 sm11 pa-0>
                         <v-layout grid-list-xs row wrap align-center justify-start fill-height pb-2 pl-3>
                             <v-flex xs12 pb-1>
-                                <div v-if="tokenTransfer.name !== '' || tokenTransfer.symbol" class="black--text subtitle-2 font-weight-medium">
+                                <router-link
+                                    v-if="tokenTransfer.name !== '' || tokenTransfer.symbol"
+                                    :to="`/token/${transfer.contract}`"
+                                    class="black--text subtitle-2 font-weight-medium"
+                                >
                                     <p v-if="tokenTransfer.name">{{ tokenTransfer.name }}</p>
                                     <p v-else class="text-uppercase">{{ tokenTransfer.symbol }}</p>
-                                </div>
+                                </router-link>
                                 <v-layout v-else row align-center justift-start pa-1>
                                     <p class="info--text contract-string caption mr-1">{{ $tc('contract.name', 1) }}:</p>
                                     <app-transform-hash :hash="transfer.contract" :link="`/address/${transfer.contract}`" />
@@ -90,10 +94,10 @@
                         <div class="token-image">
                             <v-img :src="image" contain />
                         </div>
-                        <div v-if="tokenTransfer.name !== '' || tokenTransfer.symbol" class="black--text">
+                        <router-link v-if="tokenTransfer.name !== '' || tokenTransfer.symbol" :to="`/token/${transfer.contract}`" class="black--text">
                             <p v-if="tokenTransfer.name">{{ tokenTransfer.name }}</p>
                             <p v-else class="text-uppercase caption">{{ tokenTransfer.symbol }}</p>
-                        </div>
+                        </router-link>
                         <app-transform-hash v-else :hash="transfer.contract" :link="`/address/${transfer.contract}`" />
                     </v-layout>
                 </v-flex>
@@ -183,6 +187,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import BN from 'bignumber.js'
 const TYPES = ['in', 'out', 'self']
 
@@ -203,6 +208,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     @Prop(Object) transfer!: any
     @Prop(String) address!: string
+    @Prop(Object) tokenImage!: TokenMarketData | undefined
     @Prop(Boolean) isErc20!: boolean
 
     /*
@@ -236,7 +242,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     get tokenTransfer(): any {
         return {
-            image: null,
+            image: this.tokenImage ? this.tokenImage.image : null,
             symbol: this.transfer.tokenInfo.symbol,
             contract: this.transfer.contract,
             hash: this.transfer.transfer.transactionHash,

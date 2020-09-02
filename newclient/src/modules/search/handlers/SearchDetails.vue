@@ -78,6 +78,7 @@ export default class SearchDetails extends Vue {
                 this.routeToNotFound(param)
                 this.hasError = true
                 this.isLoading = false
+                throw error
             })
     }
 
@@ -136,6 +137,7 @@ export default class SearchDetails extends Vue {
                 this.routeToNotFound(param)
                 this.hasError = true
                 this.isLoading = false
+                throw error
             })
     }
 

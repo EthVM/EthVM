@@ -65,13 +65,13 @@
     },
 
     "token": {
-        "top-200": "Top 200 tokens",
+        "top-200": "Top 200 Tokens",
         "erc20": "ERC20 Tokens",
         "erc721": "ERC721 Tokens",
         "nft": "NFTs",
         "name": "Token | Tokens",
         "detail": "Token Details",
-        "empty": "No tokens",
+        "empty": "No Tokens",
         "decimals": "Decimals",
         "number": "Total ERC20 Tokens ",
         "tokenName": "Token Name",
@@ -92,7 +92,8 @@
         "total": "Total of ",
         "per": "per",
         "filtered": "Filtered by Holder",
-        "sort-by": "Sort by"
+        "sort-by": "Sort by",
+        "total-tokens": "Total Tokens"
     },
 
     "address": {
@@ -179,7 +180,7 @@
                 "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
                 "erc721": "Something went wrong while retrieving NFTs balances.",
-                "transfers-eth": "Something went wrong rettrieving Address transactions.",
+                "transfers-eth": "Something went wrong retrieving Address transactions.",
                 "update-event": "Something went wrong during Address update."
             },
             "block": {
@@ -262,14 +263,14 @@
         },
         "report": "Find any bugs or have suggestions?",
         "update": {
-            "tx": "new tx | new txs",
-            "block": "new block | new blocks",
-            "uncle": "new uncle | new uncles",
-            "pending": "new pending tx | new pending txs",
-            "erc20-transfer": "new ERC20 transfer| new ERC20 transfers",
-            "erc721-transfer": "new ERC721 transfer| new ERC721 transfers",
-            "tokens": "token balance changed, refresh",
-            "txs": "new txs found, refresh"
+            "tx": "New Tx | New Txs",
+            "block": "New Block | New Blocks",
+            "uncle": "New Uncle | New Uncles",
+            "pending": "New Pending Tx | New Pending Txs",
+            "erc20-transfer": "New ERC20 Transfer | New ERC20 Transfers",
+            "erc721-transfer": "New ERC721 Transfer | New ERC721 Transfers",
+            "tokens": "Token's Balance Changed, Refresh",
+            "txs": "New Txs Found, Refresh"
         },
         "sec": "sec",
         "sec-ago": "sec ago",
