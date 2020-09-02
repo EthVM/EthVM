@@ -89,7 +89,10 @@ export default class SearchDetails extends Vue {
 
     routeToToken(param): void {
         const route = { name: 'token-detail', params: { addressRef: this.removeSpaces(param) } }
-        this.$router.push(route).catch(() => {})
+        this.$router
+            .push(route)
+            .then(() => this.$refs.search.resetValues())
+            .catch(() => {})
     }
 
     getSelectVal(selectVal, searchVal) {
@@ -133,7 +136,6 @@ export default class SearchDetails extends Vue {
                     this.hasError = true
                 }
                 this.isLoading = false
-                this.$refs.search.resetValues()
             })
             .catch(error => {
                 // TODO: Change error message
