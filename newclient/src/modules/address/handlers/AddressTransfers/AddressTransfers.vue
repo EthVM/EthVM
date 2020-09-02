@@ -117,12 +117,14 @@ import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
                     } catch (error) {
                         this.initialLoad = true
                         this.emitErrorState(true)
+                        throw error
                     }
-                } else {
-                    this.emitErrorState(true)
-                    this.showPagination = false
-                    this.initialLoad = true
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
+                this.showPagination = false
+                this.initialLoad = true
             }
         }
     }

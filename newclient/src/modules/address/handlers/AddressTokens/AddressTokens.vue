@@ -170,6 +170,7 @@ interface NFTMetaMap {
                     }
                 } else {
                     this.emitErrorState(true)
+                    throw new Error('etOwnersERC721Tokens.tokens returns null')
                 }
             },
             error(error) {
@@ -445,6 +446,7 @@ export default class AddressTokens extends Mixins(CoinData) {
                 })
                 .catch(error => {
                     this.emitErrorState(true)
+                    throw error
                 })
         }
     }

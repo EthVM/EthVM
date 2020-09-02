@@ -19,6 +19,7 @@ import router from '@app/core/router'
 import App from '@app/modules/App.vue'
 import i18n from '@app/translations'
 import * as Sentry from '@sentry/browser'
+import { Vue as VueIntegration } from '@sentry/integrations'
 import Vue from 'vue'
 
 /*
@@ -46,7 +47,21 @@ const wsLink = new WebSocketLink(subscriptionClient)
 const onErrorLink = onError(({ graphQLErrors }) => {
     // Log every GraphQL errors in develop
     if (graphQLErrors && process.env.NODE_ENV !== 'production') {
-        graphQLErrors.map(({ message, locations, path }) => console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`))
+        graphQLErrors.map(({ message, locations, path }) => {
+            const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            console.log(newError)
+        })
+    }
+    if (graphQLErrors && process.env.NODE_ENV === 'production') {
+        graphQLErrors.map(({ message, locations, path }) => {
+            const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            const blockNotMined = 'Block not found'
+            const txDoNotExists = 'Cannot return null for non-nullable field Query.getTransactionByHash'
+            const uncleNotFound = 'Uncle not found'
+            if (!message.includes(blockNotMined || txDoNotExists || uncleNotFound)) {
+                Sentry.captureException(newError)
+            }
+        })
     }
 })
 const link = split(
@@ -147,10 +162,8 @@ new Vue({
 */
 
 const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
-if (sentryToken) {
-    Sentry.init({
-        dsn: sentryToken,
-        integrations: [new Sentry.Integrations.Vue({ Vue })],
-        maxBreadcrumbs: 0
-    })
-}
+
+Sentry.init({
+    dsn: sentryToken,
+    integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })]
+})
