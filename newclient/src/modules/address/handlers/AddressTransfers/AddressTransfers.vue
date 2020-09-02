@@ -17,7 +17,13 @@
             </template>
         </app-table-title>
         <v-layout v-if="isETH" :column="$vuetify.breakpoint.xs" :align-center="true" d-flex justify-space-between wrap pa-3>
-            <app-filter :options="options" :show-desktop="true" :is-sort="false" @onSelectChange="onFilterChange" />
+            <app-filter
+                v-if="!loading && getTransfers.transfers.length > 0"
+                :options="options"
+                :show-desktop="true"
+                :is-sort="false"
+                @onSelectChange="onFilterChange"
+            />
             <app-paginate-has-more
                 v-if="showPagination && !initialLoad"
                 :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
@@ -258,6 +264,7 @@ export default class AddressTransers extends Vue {
     */
 
     onFilterChange(filter) {
+        this.setPage(0, true)
         this.filter = filter
     }
 
