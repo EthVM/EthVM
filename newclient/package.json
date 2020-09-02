@@ -1,6 +1,6 @@
 {
     "name": "ethvm",
-    "version": "0.5.1",
+    "version": "0.0.1",
     "description": "EthVM: Open source Ethereum networks explorer",
     "author": "EthVM Team",
     "private": true,
@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@babel/core": "^7.4.5",
-        "@sentry/browser": "^5.21.4",
+        "@sentry/browser": "5.22.3",
         "@sentry/integrations": "^5.21.4",
         "apollo-cache-inmemory": "^1.6.5",
         "apollo-client": "^2.6.8",
