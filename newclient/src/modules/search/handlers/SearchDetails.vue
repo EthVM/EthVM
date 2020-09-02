@@ -76,9 +76,9 @@ export default class SearchDetails extends Vue {
                 this.isLoading = false
             })
             .catch(error => {
-                // TODO: Change error message
                 this.hasError = true
                 this.isLoading = false
+                throw error
             })
     }
 
@@ -128,9 +128,9 @@ export default class SearchDetails extends Vue {
                 this.$refs.search.resetValues()
             })
             .catch(error => {
-                // TODO: Change error message
                 this.hasError = true
                 this.isLoading = false
+                throw error
             })
     }
 
