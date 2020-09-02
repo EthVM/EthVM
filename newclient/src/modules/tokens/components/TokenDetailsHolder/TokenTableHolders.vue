@@ -1,6 +1,5 @@
 <template>
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
-        <app-error :has-error="hasError" :message="error" class="mb-4" />
         <!-- Pagination -->
         <v-layout v-if="showPagination" row fill-height justify-end class="pb-1 pr-2 pl-2">
             <app-paginate-has-more :has-more="hasMore" :current-page="index" @newPage="setPage" />
