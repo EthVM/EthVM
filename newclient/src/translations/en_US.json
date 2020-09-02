@@ -156,6 +156,7 @@
         "pending": "Pending",
         "amount": "Amount",
         "quantity": "Quantity",
+        "id": "ID",
         "percentage": "Percentage",
         "eth-balance": "ETH Balance",
         "balance": "Balance",
@@ -195,9 +196,24 @@
                 "detail": "Something went wrong while retrieving uncle details.",
                 "not-found": "This uncle does not exist."
             },
+            "tokens": {
+                "detail": "Something went wrong while retrieving token details.",
+                "not-found": "This token contract does not exist.",
+                "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
+                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
+                "token-owner": "Something went wrong retrieving Token owners",
+                "token-details": "Something went wrong retrieving Token details",
+                "token-market": "Something went wrong retrieving Token Market data"
+            },
+            "search": {
+                "you-entered": "You entered",
+                "invalid": "Sorry! This is an invalid search string.",
+                "is-bug": "If you think this is a bug, please {let-us-know}.",
+                "let-us-know": "let us know"
+            },
             "txs": "Something went wrong while retrieving transactions.",
-            "transfers-erc721": "Somethign went wrong retrieving Address NFTs transfers.",
-            "transfers-erc20": "Somethign went wrong retrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
+            "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "This address does not have any transaction history",
@@ -375,8 +391,7 @@
     "search": {
         "name": "Search",
         "default": "Search Block / Address / Tx",
-        "address-tx": "Tx Hash/Address",
-        "no-result": "ERROR: NO SEARCH RESULTS"
+        "address-tx": "Tx Hash/Address"
     },
 
     "filter": {

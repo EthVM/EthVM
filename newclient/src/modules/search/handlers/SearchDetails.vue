@@ -45,7 +45,6 @@ export default class SearchDetails extends Vue {
     Methods
   ===================================================================================
   */
-
     getHashType(param): void {
         let routeName = ''
         this.isLoading = true
@@ -70,16 +69,22 @@ export default class SearchDetails extends Vue {
                 } else if (hashType.includes('BLOCK')) {
                     routeName = 'blockHash'
                 } else {
-                    this.hasError = true
+                    this.routeToNotFound(param)
                 }
                 this.routeTo(routeName, param)
                 this.isLoading = false
             })
             .catch(error => {
+                this.routeToNotFound(param)
                 this.hasError = true
                 this.isLoading = false
                 throw error
             })
+    }
+
+    routeToNotFound(searchVal): void {
+        const route = { name: 'search-not-found', params: { searchTerm: searchVal } }
+        this.$router.push(route).catch(() => {})
     }
 
     routeTo(selectVal, searchVal): void {
@@ -122,12 +127,14 @@ export default class SearchDetails extends Vue {
                     this.routeToToken(this.items[0]['contract'])
                 }
                 if (this.items.length === 0) {
+                    this.routeToNotFound(param)
                     this.hasError = true
                 }
                 this.isLoading = false
                 this.$refs.search.resetValues()
             })
             .catch(error => {
+                this.routeToNotFound(param)
                 this.hasError = true
                 this.isLoading = false
                 throw error

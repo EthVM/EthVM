@@ -16,28 +16,9 @@ export interface getERC20TokenTransfers_getERC20TokenTransfers_transfers_transfe
   txFee: string;
 }
 
-export interface getERC20TokenTransfers_getERC20TokenTransfers_transfers_stateDiff_to {
-  __typename: "BalanceDiff";
-  before: string;
-  after: string;
-}
-
-export interface getERC20TokenTransfers_getERC20TokenTransfers_transfers_stateDiff_from {
-  __typename: "BalanceDiff";
-  before: string;
-  after: string;
-}
-
-export interface getERC20TokenTransfers_getERC20TokenTransfers_transfers_stateDiff {
-  __typename: "StateDiffChange";
-  to: getERC20TokenTransfers_getERC20TokenTransfers_transfers_stateDiff_to;
-  from: getERC20TokenTransfers_getERC20TokenTransfers_transfers_stateDiff_from | null;
-}
-
 export interface getERC20TokenTransfers_getERC20TokenTransfers_transfers {
   __typename: "ERC20Transfer";
   transfer: getERC20TokenTransfers_getERC20TokenTransfers_transfers_transfer;
-  stateDiff: getERC20TokenTransfers_getERC20TokenTransfers_transfers_stateDiff | null;
   value: string;
 }
 
