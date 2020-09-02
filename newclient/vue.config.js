@@ -41,16 +41,16 @@ const webpackProduction = {
     // }
 }
 
-const publicUrl = process.env.VUE_APP_PUBLIC_URL
+// const publicUrl = process.env.VUE_APP_PUBLIC_URL
 
-const devServer = {
-    disableHostCheck: true,
-    noInfo: true
-}
+// const devServer = {
+//     disableHostCheck: true,
+//     noInfo: true
+// }
 
-if (publicUrl) {
-    devServer.public = publicUrl // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
-}
+// if (publicUrl) {
+//     devServer.public = publicUrl // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
+// }
 
 module.exports = {
     chainWebpack: config => {
@@ -75,6 +75,6 @@ module.exports = {
             .end()
     },
     configureWebpack: process.env.NODE_ENV === 'production' ? merge(webpackCommon, webpackProduction) : webpackCommon,
-    productionSourceMap: false,
-    devServer
+    productionSourceMap: false
+    // devServer
 }

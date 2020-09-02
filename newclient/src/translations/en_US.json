@@ -410,8 +410,8 @@
         "donate": "Donate",
         "btc": "BTC",
         "ens": "mewtopia.eth",
-        "copy": "2020 ",
-        "mew": "MyEtherWallet Inc. All rights reserved. ",
+        "copy": "2020 MyEtherWallet Inc. ",
+        "mew": "All rights reserved. ",
         "copy-eth-addr": "Copy ETH address",
         "copy-btc-addr": "Copy BTC address",
         "pricing": "Pricing taken from"
