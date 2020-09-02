@@ -21,7 +21,6 @@ const ETHER_ID = 'ethereum'
                     data.getLatestPrices.forEach((token, index) => {
                         if (token.id === ETHER_ID) {
                             this.etherPrice = token.current_price
-                            this.getLatestPrices.splice(index, 1)
                         } else if (this.hasData(token)) {
                             this.tokensMarketInfo.set(token.contract.toLowerCase(), token)
                         } else {
@@ -63,7 +62,7 @@ export class CoinData extends Vue {
     */
     getEthereumTokens(): TokenMarketData[] | false {
         if (!this.isLoadingTokensMarketData && this.getLatestPrices.length > 0) {
-            return this.getLatestPrices
+            return this.getLatestPrices.filter(item => item.id !== ETHER_ID)
         }
         return false
     }
