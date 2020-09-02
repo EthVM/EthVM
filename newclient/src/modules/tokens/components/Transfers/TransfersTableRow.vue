@@ -38,13 +38,10 @@
 
                 <!-- Column 3: Quantity -->
                 <v-flex sm2>
-                    <div v-if="isERC721" class="d-flex">
-                        <app-transform-hash v-if="transfer.token" :hash="transfer.token" :italic="false" />
-                        <app-tooltip v-if="transfer.token" :text="transfer.token" />
-                    </div>
-                    <p v-else>
-                        {{ transferValue.value }} {{ units }}
-                        <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
+                    <p>
+                        <span v-if="isERC721" class="text-truncate">{{ getTokenID }}</span>
+                        <span v-else>{{ transferValue.value }} {{ units }} </span>
+                        <app-tooltip v-if="transferValueTooltip && !isERC721" :text="transferValueTooltip" />
                     </p>
                 </v-flex>
                 <!-- End Column 3 -->
@@ -83,15 +80,11 @@
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
-                        <v-layout v-if="isERC721" row pa-2>
-                            <span class="info--text">{{ $t('common.id') }}:</span>
-                            <app-transform-hash v-if="isERC721 && transfer.token" :hash="transfer.token" :italic="false" />
-                            <app-tooltip v-if="transfer.token" :text="transfer.token" />
-                        </v-layout>
-                        <p v-else class="pb-0">
-                            <span class="info--text">{{ $t('common.quantity') }}:</span>
-                            <span>{{ transferValue.value }} {{ units }}</span>
-                            <app-tooltip v-if="transferValueTooltip" :text="transferValueTooltip" />
+                        <p class="pb-0">
+                            <span class="info--text">{{ isERC721 ? $t('common.id') : $t('common.quantity') }}:</span>
+                            <span v-if="isERC721" class="text-truncate">{{ getTokenID }}</span>
+                            <span v-else>{{ transferValue.value }} {{ units }}</span>
+                            <app-tooltip v-if="transferValueTooltip && !isERC721" :text="transferValueTooltip" />
                         </p>
                     </v-flex>
                 </v-layout>
@@ -109,6 +102,10 @@ import BigNumber from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import { getERC721TokenTransfers_getERC721TokenTransfers_transfers as ERC721TokenTransfer } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC721TokenTransfers'
+import { getERC20TokenTransfers_getERC20TokenTransfers_transfers as ERC20TokenTransfer } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20TokenTransfers'
+import BN from 'bignumber.js'
+
 const TYPES = ['ERC20', 'ERC721']
 
 @Component({
@@ -124,7 +121,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
      Props
    ===================================================================================
    */
-    @Prop(Object) transfer!: any
+    @Prop(Object) transfer!: ERC721TokenTransfer | ERC20TokenTransfer
     @Prop(Number) decimals?: number
     @Prop(String) symbol?: string
     @Prop(String) transferType!: string
@@ -135,7 +132,7 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
     */
 
     get transferValue(): FormattedNumber {
-        let n = new BigNumber(this.transfer.value) || new BigNumber(0)
+        let n = new BigNumber(this.transfer['value']) || new BigNumber(0)
 
         // Must be a token transfer
         if (this.decimals) {
@@ -166,6 +163,10 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
 
     get isERC721() {
         return this.transferType === TYPES[1]
+    }
+
+    get getTokenID() {
+        return new BN(this.transfer['token']).toString()
     }
 }
 </script>
