@@ -98,7 +98,9 @@ export default class Search extends Vue {
                 this.$emit('getAllSearch', this.searchVal)
             }, 500)
         } else {
-            this.$emit('routeTo', this.selectVal, this.searchVal)
+            this.searchTimeout = window.setTimeout(() => {
+                this.$emit('routeTo', this.selectVal, this.searchVal)
+            }, 500)
         }
     }
 
