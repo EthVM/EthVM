@@ -8,6 +8,7 @@ import { getMainDefinition } from 'apollo-utilities'
 import VueApollo from 'vue-apollo'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { onError } from 'apollo-link-error'
+import { OpenSeaClient } from './apollo/opensea/osClient'
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -67,6 +68,10 @@ const apolloClient = new ApolloClient({
 })
 
 const apolloProvider = new VueApollo({
+    clients: {
+        apolloClient,
+        OpenSeaClient
+    },
     defaultClient: apolloClient
 })
 

@@ -3,25 +3,26 @@
         <div v-if="!showUniqueNFT">
             <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
                 <!-- Notice new update-->
-                <template v-slot:update v-if="!initialLoad">
+                <template v-slot:update v-if="!loading">
                     <app-new-update :text="updateText" :update-count="newTokens" :hide-count="true" @reload="setPage(0, true)" />
                 </template>
-                <template v-slot:pagination v-if="showPagination && !initialLoad">
+                <template v-slot:pagination v-if="showPagination && !loading">
                     <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
                 </template>
             </app-table-title>
-            <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="tokens" :is-scroll-view="false">
+            <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="tokens" :is-scroll-view="false">
                 <template #header>
                     <table-address-tokens-header :is-erc20="isERC20" :is-transfers="false" />
                 </template>
                 <template #rows>
                     <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
                         <table-address-tokens-row
-                            v-if="!initialLoad"
+                            v-if="!loading"
                             :token="token"
                             :is-erc20="isERC20"
                             :holder="address"
                             :token-price-info="getUSDInfo(token.tokenInfo.contract)"
+                            :nft-meta="getContractMeta(token.tokenInfo.contract)"
                             @showNft="showNftTokens"
                         />
                         <table-address-tokens-row-loading v-else />
@@ -29,7 +30,7 @@
                 </template>
             </table-txs>
             <v-layout
-                v-if="showPagination && !initialLoad"
+                v-if="showPagination && !loading"
                 :justify-end="$vuetify.breakpoint.mdAndUp"
                 :justify-center="$vuetify.breakpoint.smAndDown"
                 row
@@ -38,7 +39,14 @@
                 <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
             </v-layout>
         </div>
-        <table-address-unique-nft v-else :contract-name="requestContractName" :tokens="uniqueNFT" :loading="loadingUniqueNFT" @hideNFT="hideNFTTokens" />
+        <table-address-unique-nft
+            v-else
+            :contract-name="requestContractName"
+            :contract="requestContract"
+            :tokens="uniqueNFT"
+            :loading="loadingUniqueNFT"
+            @hideNFT="hideNFTTokens"
+        />
     </v-card>
 </template>
 
@@ -53,13 +61,17 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressUniqueNft from '@app/modules/address/components/TableAddressUniqueNft.vue'
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances } from './tokens.graphql'
+import { getOwnersERC20Tokens, getOwnersERC721Tokens, getOwnersERC721Balances, getNFTcontractsMeta } from './tokens.graphql'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from './apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721BalanceType } from './apolloTypes/getOwnersERC721Balances'
 import {
     getOwnersERC721Tokens_getOwnersERC721Tokens as ERC721ContractTokensType,
     getOwnersERC721Tokens_getOwnersERC721Tokens_tokens as ERC721TokenType
 } from './apolloTypes/getOwnersERC721Tokens'
+import {
+    getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts as NFTMetaType,
+    getNFTcontractsMeta_getNFTcontractsMeta as getNFTcontractsMetaType
+} from './apolloTypes/getNFTcontractsMeta'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
@@ -71,6 +83,9 @@ import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 */
 interface NFTMap {
     [key: string]: ERC721TokenType[]
+}
+interface NFTMetaMap {
+    [key: string]: NFTMetaType
 }
 
 @Component({
@@ -160,6 +175,19 @@ interface NFTMap {
             error(error) {
                 this.emitErrorState(true)
             }
+        },
+        getNFTcontractsMeta: {
+            query: getNFTcontractsMeta,
+            variables() {
+                return {
+                    address: this.address
+                }
+            },
+            client: 'OpenSeaClient',
+            update: data => data.getNFTcontractsMeta,
+            result({ data }) {
+                this.createNFTMetaMap()
+            }
         }
     }
 })
@@ -195,6 +223,11 @@ export default class AddressTokens extends Mixins(CoinData) {
     totalERC20 = 0
     totalERC721 = 0
 
+    /* NFT Meta Info */
+    getNFTcontractsMeta!: getNFTcontractsMetaType
+    loadingMeta = true
+    nftMeta: NFTMetaMap = {}
+
     /* Unique NFT List for contract */
     getOwnersERC721Tokens!: ERC721ContractTokensType
     uniqueNFTMap: NFTMap = {}
@@ -212,16 +245,23 @@ export default class AddressTokens extends Mixins(CoinData) {
     ===================================================================================
     */
 
+    get loading(): boolean {
+        if (this.isNFT) {
+            return this.initialLoad || this.loadingMeta
+        }
+        return this.initialLoad
+    }
+
     get tokens(): ERC20TokensType[] | ERC721BalanceType[] {
         const start = this.index * this.maxItems
-        if (!this.initialLoad && this.hasTokens) {
+        if (!this.loading && this.hasTokens) {
             const end = start + this.maxItems > this.getTokens.length ? this.getTokens.length : start + this.maxItems
             return this.getTokens.slice(start, end)
         }
         return []
     }
     get tokenPrices(): Map<string, TokenMarketData> | false {
-        if (!this.initialLoad && this.isERC20) {
+        if (!this.loading && this.isERC20) {
             const contracts: string[] = []
             this.getTokens.forEach(token => {
                 contracts.push(token.tokenInfo.contract)
@@ -234,7 +274,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     }
 
     get message(): string {
-        if (!this.initialLoad && this.hasTokens && this.getTokens.length === 0) {
+        if (!this.loading && this.hasTokens && this.getTokens.length === 0) {
             if (this.isNFT) {
                 return `${this.$t('message.transfer.no-nft')}`
             }
@@ -301,7 +341,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     }
 
     getUSDInfo(contract: string): TokenMarketData | undefined {
-        if (!this.initialLoad && this.tokenPrices && this.tokenPrices.has(contract)) {
+        if (!this.loading && this.tokenPrices && this.tokenPrices.has(contract)) {
             return this.tokenPrices.get(contract)
         }
         return undefined
@@ -312,13 +352,14 @@ export default class AddressTokens extends Mixins(CoinData) {
         this.requestContractName = name ? name : contract
         if (contract) {
             if (this.uniqueNFTMap && this.uniqueNFTMap[contract]) {
+                this.requestContract = contract
                 this.uniqueNFT = this.uniqueNFTMap[contract]
                 this.loadingUniqueNFT = false
                 this.showUniqueNFT = true
             } else {
                 /* Load Tokens */
-                this.showUniqueNFT = true
                 this.requestContract = contract
+                this.showUniqueNFT = true
                 this.loadingUniqueNFT = true
                 this.skipGetUniqueTokens = false
             }
@@ -354,6 +395,27 @@ export default class AddressTokens extends Mixins(CoinData) {
         this.$emit('errorTokenBalance', this.hasError, errorType)
     }
 
+    createNFTMetaMap(): void {
+        const contracts = this.getNFTcontractsMeta.tokenContracts
+        if (contracts && contracts.length > 0) {
+            contracts.forEach(contract => {
+                if (contract && contract.primary_asset_contracts) {
+                    contract.primary_asset_contracts.forEach(asset => {
+                        this.nftMeta[asset.address] = asset
+                    })
+                }
+            })
+        }
+        this.loadingMeta = false
+    }
+
+    getContractMeta(contract): NFTMetaType | undefined {
+        if (this.isNFT) {
+            return this.nftMeta[contract]
+        }
+        return undefined
+    }
+
     /*
     ===================================================================================
       Watch
@@ -365,6 +427,10 @@ export default class AddressTokens extends Mixins(CoinData) {
         if (newVal && newVal !== oldVal) {
             if (this.isERC20) {
                 this.$emit('loadingERC20Tokens', true)
+            }
+            if (this.isNFT) {
+                this.loadingMeta = true
+                this.$apollo.queries.getNFTcontractsMeta.refetch()
             }
             this.index = 0
             this.initialLoad = true
