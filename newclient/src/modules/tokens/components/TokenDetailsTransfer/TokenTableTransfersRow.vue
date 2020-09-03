@@ -102,8 +102,8 @@ import BigNumber from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
-import { getERC721TokenTransfers_getERC721TokenTransfers_transfers as ERC721TokenTransfer } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC721TokenTransfers'
-import { getERC20TokenTransfers_getERC20TokenTransfers_transfers as ERC20TokenTransfer } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20TokenTransfers'
+import { getERC721TokenTransfers_getERC721TokenTransfers_transfers as ERC721TokenTransfer } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC721TokenTransfers'
+import { getERC20TokenTransfers_getERC20TokenTransfers_transfers as ERC20TokenTransfer } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC20TokenTransfers'
 import BN from 'bignumber.js'
 
 const TYPES = ['ERC20', 'ERC721']
@@ -115,7 +115,7 @@ const TYPES = ['ERC20', 'ERC721']
         AppTooltip
     }
 })
-export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
+export default class TokenTableTransfersRow extends Mixins(NumberFormatMixin) {
     /*
    ===================================================================================
      Props

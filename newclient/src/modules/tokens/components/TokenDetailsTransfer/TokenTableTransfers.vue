@@ -69,7 +69,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-import TransfersTableRow from './TransfersTableRow.vue'
+import TransfersTableRow from './TokenTableTransfersRow.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
 
@@ -85,7 +85,7 @@ const TYPES = ['ERC20', 'ERC721']
         AppTableRowLoading
     }
 })
-export default class TransfersTable extends Vue {
+export default class TokenTableTransfers extends Vue {
     /*
         ===================================================================================
           Props

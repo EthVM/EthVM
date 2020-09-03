@@ -43,7 +43,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     @Prop(String) addressRef!: string // Token contract address
     @Prop(Object) tokenDetails!: TokenInfo
     @Prop(Boolean) isLoading!: boolean
-    @Prop(Object) holderDetails!: TokenOwnerInfo
+    @Prop(Object) holderDetails?: TokenOwnerInfo
     /*
   ===================================================================================
     Initial Values
@@ -355,13 +355,16 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
             : undefined
     }
 
-    get balance(): FormattedNumber {
+    get balance(): FormattedNumber | number {
         const decimals = this.tokenDetails.decimals
-        let n = new BN(this.holderDetails.balance)
-        if (decimals) {
-            n = n.div(new BN(10).pow(decimals))
+        if (this.holderDetails) {
+            let n = new BN(this.holderDetails.balance)
+            if (decimals) {
+                n = n.div(new BN(10).pow(decimals))
+            }
+            return this.formatFloatingPointValue(n)
         }
-        return this.formatFloatingPointValue(n)
+        return 0
     }
 }
 </script>

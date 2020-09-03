@@ -1,7 +1,7 @@
 <template>
-    <transfers-table
+    <token-table-transfers
         :transfers="transferData"
-        :loading="loading || hasError"
+        :loading="loading"
         :show-pagination="showPagination"
         :decimals="decimals"
         :symbol="symbol"
@@ -18,10 +18,10 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
-import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
-import { getERC20TokenTransfers, getERC721TokenTransfers } from '@app/modules/tokens/handlers/transfers/transfers.graphql'
-import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20Transfers'
-import { getERC721TokenTransfers_getERC721TokenTransfers as ERC721TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC721TokenTransfers'
+import TokenTableTransfers from '@app/modules/tokens/components/TokenDetailsTransfer/TokenTableTransfers.vue'
+import { getERC20TokenTransfers, getERC721TokenTransfers } from '@app/modules/tokens/handlers/tokenTransfers/tokenTransfers.graphql'
+import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC20Transfers'
+import { getERC721TokenTransfers_getERC721TokenTransfers as ERC721TransfersType } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC721TokenTransfers'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 const TYPES = ['ERC20', 'ERC721']
 
@@ -34,7 +34,7 @@ interface Transfer {
 
 @Component({
     components: {
-        TransfersTable
+        TokenTableTransfers
     },
     apollo: {
         getERC20Transfers: {
@@ -81,7 +81,7 @@ interface Transfer {
         }
     }
 })
-export default class Transfers extends Vue {
+export default class TokenTransfers extends Vue {
     /*
         ===================================================================================
           Props
