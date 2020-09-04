@@ -11,7 +11,7 @@
     -->
         <div v-if="!isHolder">
             <token-details-list
-                :holder-details="[]"
+                :holder-details="{}"
                 :address-ref="addressRef"
                 :token-details="tokenDetails"
                 :is-loading="loading || hasError"

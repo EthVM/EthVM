@@ -10,6 +10,7 @@
         :index="index"
         :has-error="hasError"
         :address-ref="addressRef"
+        :holder-type="holderType"
         @setPage="setPage"
     />
 </template>
@@ -17,10 +18,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getERC20TokenOwners } from '@app/modules/tokens/handlers/tokenHolders/tokenHolders.graphql'
-import { ERC20TokenOwners as TokenOwners } from '@app/modules/tokens/handlers/tokenHolders/apolloTypes/ERC20TokenOwners'
+import { getERC20TokenOwners, getERC721TokenOwners } from '@app/modules/tokens/handlers/tokenHolders/tokenHolders.graphql'
+import { ERC20TokenOwners } from '@app/modules/tokens/handlers/tokenHolders/apolloTypes/ERC20TokenOwners'
+import { ERC721TokenOwners } from '@app/modules/tokens/handlers/tokenHolders/apolloTypes/ERC721TokenOwners'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
+const TYPES = ['ERC20', 'ERC721']
 
 const MAX_ITEMS = 10
 @Component({
@@ -28,7 +31,7 @@ const MAX_ITEMS = 10
         TokenTableHolders
     },
     apollo: {
-        holdersPage: {
+        erc20TokenHolders: {
             query: getERC20TokenOwners,
             fetchPolicy: 'network-only',
             variables() {
@@ -56,6 +59,35 @@ const MAX_ITEMS = 10
             error(error) {
                 this.emitErrorState(true)
             }
+        },
+        erc721TokenHolders: {
+            query: getERC721TokenOwners,
+            fetchPolicy: 'network-only',
+            variables() {
+                return {
+                    contract: this.addressRef,
+                    _limit: this.maxItems
+                }
+            },
+            deep: true,
+            update: data => data.getERC721TokenOwners,
+            result({ data }) {
+                if (this.hasItems) {
+                    if (data.getERC721TokenOwners) {
+                        this.emitErrorState(false)
+                    }
+                    if (this.initialLoad) {
+                        this.showPagination = this.hasMore
+                        this.initialLoad = false
+                    }
+                } else {
+                    this.showPagination = false
+                    this.initialLoad = true
+                }
+            },
+            error(error) {
+                this.emitErrorState(true)
+            }
         }
     }
 })
@@ -69,13 +101,15 @@ export default class TokenHolders extends Vue {
     @Prop(String) addressRef!: string
     @Prop(Number) decimals?: number
 
-    holdersPage!: TokenOwners
+    erc20TokenHolders!: ERC20TokenOwners
+    erc721TokenHolders!: ERC721TokenOwners
     hasError = false
     page?: number
     showPagination = false
     index = 0
     isEnd = 0
     initialLoad = true
+    holderType = TYPES[0]
 
     /*
     ===================================================================================
@@ -87,33 +121,62 @@ export default class TokenHolders extends Vue {
         this.$emit('errorDetails', this.hasError, ErrorMessageToken.tokenOwner)
     }
 
+    getERC20Holders(page: number) {
+        const queryName = 'getERC20TokenOwners'
+
+        this.$apollo.queries.erc20TokenHolders.fetchMore({
+            variables: {
+                contract: this.addressRef,
+                _limit: this.maxItems,
+                _nextKey: this.erc20TokenHolders.nextKey
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                this.isEnd = page
+                const newT = fetchMoreResult[queryName].owners
+                const prevT = previousResult[queryName].owners
+                return {
+                    [queryName]: {
+                        nextKey: fetchMoreResult[queryName].nextKey,
+                        owners: [...prevT, ...newT],
+                        __typename: fetchMoreResult[queryName].__typename
+                    }
+                }
+            }
+        })
+    }
+
+    getERC721Holders(page: number) {
+        const queryName = 'getERC721TokenOwners'
+
+        this.$apollo.queries.erc721TokenHolders.fetchMore({
+            variables: {
+                contract: this.addressRef,
+                _limit: this.maxItems,
+                _nextKey: this.erc721TokenHolders.nextKey
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                this.isEnd = page
+                const newT = fetchMoreResult[queryName].owners
+                const prevT = previousResult[queryName].owners
+                return {
+                    [queryName]: {
+                        nextKey: fetchMoreResult[queryName].nextKey,
+                        owners: [...prevT, ...newT],
+                        __typename: fetchMoreResult[queryName].__typename
+                    }
+                }
+            }
+        })
+    }
+
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
-            this.$apollo.queries.holdersPage.refetch()
+            this.$apollo.queries.erc20TokenHolders.refetch()
         } else {
             if (page > this.isEnd && this.hasMore) {
-                const queryName = 'getERC20TokenOwners'
-
-                this.$apollo.queries.holdersPage.fetchMore({
-                    variables: {
-                        contract: this.addressRef,
-                        _limit: this.maxItems,
-                        _nextKey: this.holdersPage.nextKey
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        this.isEnd = page
-                        const newT = fetchMoreResult[queryName].owners
-                        const prevT = previousResult[queryName].owners
-                        return {
-                            [queryName]: {
-                                nextKey: fetchMoreResult[queryName].nextKey,
-                                owners: [...prevT, ...newT],
-                                __typename: fetchMoreResult[queryName].__typename
-                            }
-                        }
-                    }
-                })
+                this.hasMoreERC20Holders ? this.getERC20Holders(page) : null
+                this.hasMoreERC721Holders ? this.getERC721Holders(page) : null
             }
         }
         this.index = page
@@ -125,11 +188,17 @@ export default class TokenHolders extends Vue {
     ===================================================================================
     */
 
+    get hasERC721Owners() {
+        return this.erc721TokenHolders && this.erc721TokenHolders.owners && this.erc721TokenHolders.owners.length > 0
+    }
+
     get holders(): any[] {
-        if (this.holdersPage && this.holdersPage) {
+        if ((this.erc20TokenHolders && this.erc20TokenHolders.owners) || (this.erc721TokenHolders && this.erc721TokenHolders.owners)) {
+            const data = this.hasERC721Owners ? this.erc721TokenHolders.owners : this.erc20TokenHolders.owners
+            this.holderType = this.hasERC721Owners ? TYPES[1] : TYPES[0]
             const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.holdersPage.owners.length ? this.holdersPage.owners.length : start + this.maxItems
-            return this.holdersPage.owners.slice(start, end)
+            const end = start + this.maxItems > data.length ? data.length : start + this.maxItems
+            return data.slice(start, end)
         }
         return []
     }
@@ -143,11 +212,19 @@ export default class TokenHolders extends Vue {
     }
 
     get hasItems(): boolean {
-        return !!(this.holdersPage && this.holdersPage.owners.length)
+        return !!(this.holders && this.holders.length)
+    }
+
+    get hasMoreERC20Holders(): boolean {
+        return this.erc20TokenHolders && this.erc20TokenHolders.nextKey !== null
+    }
+
+    get hasMoreERC721Holders(): boolean {
+        return this.erc721TokenHolders && this.erc721TokenHolders.nextKey !== null
     }
 
     get hasMore(): boolean {
-        return this.holdersPage && this.holdersPage.nextKey !== null
+        return this.hasMoreERC20Holders || this.hasMoreERC721Holders
     }
 }
 </script>

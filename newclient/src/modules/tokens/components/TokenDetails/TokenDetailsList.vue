@@ -355,16 +355,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
             : undefined
     }
 
-    get balance(): FormattedNumber | number {
+    get balance(): FormattedNumber {
         const decimals = this.tokenDetails.decimals
-        if (this.holderDetails) {
-            let n = new BN(this.holderDetails.balance)
-            if (decimals) {
-                n = n.div(new BN(10).pow(decimals))
-            }
-            return this.formatFloatingPointValue(n)
+        let n = new BN(this.holderDetails ? this.holderDetails.balance : 0)
+        if (decimals) {
+            n = n.div(new BN(10).pow(decimals))
         }
-        return 0
+        return this.formatFloatingPointValue(n)
     }
 }
 </script>

@@ -27,11 +27,6 @@ const TYPES = ['ERC20', 'ERC721']
 
 const MAX_ITEMS = 10
 
-interface Transfer {
-    transfer: object
-    value?: string
-}
-
 @Component({
     components: {
         TokenTableTransfers
@@ -107,7 +102,7 @@ export default class TokenTransfers extends Vue {
     isEnd = 0
     initialLoad = true
     hasError = false
-    transferType = ''
+    transferType = TYPES[0]
     /*
         ===================================================================================
           Methods
@@ -190,17 +185,9 @@ export default class TokenTransfers extends Vue {
     }
 
     get transferData(): any[] {
-        if (this.getERC20Transfers && this.getERC20Transfers.transfers) {
-            const data: Array<Transfer> = []
-            this.getERC20Transfers.transfers.forEach(transfer => {
-                transfer ? data.push(transfer) : null
-            })
-            if (this.hasERC721Transfers) {
-                this.getERC721Transfers.transfers.forEach(transfer => {
-                    transfer ? data.push(transfer) : null
-                })
-                this.transferType = TYPES[1]
-            }
+        if ((this.getERC20Transfers && this.getERC20Transfers.transfers) || (this.getERC721Transfers && this.getERC721Transfers.transfers)) {
+            const data = this.hasERC721Transfers ? this.getERC721Transfers.transfers : this.getERC20Transfers.transfers
+            this.transferType = this.hasERC721Transfers ? TYPES[1] : TYPES[0]
             const start = this.index * this.maxItems
             const end = start + this.maxItems > data.length ? data.length : start + this.maxItems
             return data.slice(start, end)

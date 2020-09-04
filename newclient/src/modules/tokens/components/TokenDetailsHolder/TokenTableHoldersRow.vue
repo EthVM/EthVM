@@ -17,9 +17,9 @@
                         </v-flex>
                         <v-flex xs12>
                             <v-layout row align-center justify-start pa-2>
-                                <p class="info--text pr-2">{{ $t('common.quantity') }}:</p>
+                                <p class="info--text pr-2">{{ isERC721 ? $t('common.id') : $t('common.quantity') }}:</p>
                                 <p>
-                                    {{ balance.value }}
+                                    {{ isERC721 ? getTokenID : balance.value }}
                                     <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
                                 </p>
                             </v-layout>
@@ -52,7 +52,7 @@
                     <!-- Column 2: Balance -->
                     <v-flex sm3 md4>
                         <p class="mb-0 ml-2">
-                            {{ balance.value }}
+                            {{ isERC721 ? getTokenID : balance.value }}
                             <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
                         </p>
                     </v-flex>
@@ -61,8 +61,8 @@
                     <!-- Column 3: Share -->
                     <v-flex sm3 md2>
                         <p class="mb-0 ml-2">
-                            {{ share.value }}%
-                            <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+                            {{ isERC721 ? totalSupply : share.value }}<span v-if="!isERC721">%</span>
+                            <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
                         </p>
                     </v-flex>
                     <!-- End Column 3 -->
@@ -82,6 +82,7 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import BigNumber from 'bignumber.js'
+const TYPES = ['ERC20', 'ERC721']
 
 @Component({
     components: {
@@ -99,6 +100,8 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
     @Prop(Object) holder!: TokenOwnerInfo
     @Prop(String) tokenAddress!: string
     @Prop(Number) decimals?: number
+    @Prop(String) holderType!: string
+
     /*
   ===================================================================================
     Computed
@@ -136,6 +139,22 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
     get balance(): FormattedNumber {
         const balanceBN = this.decimals ? new BigNumber(this.holder.balance).div(new BN(10).pow(this.decimals)) : new BigNumber(this.holder.balance)
         return this.formatFloatingPointValue(balanceBN)
+    }
+
+    get isERC721(): boolean {
+        return this.holderType === TYPES[1]
+    }
+
+    get getTokenID(): string {
+        return new BN(this.holder['token']).toString()
+    }
+
+    get totalSupply(): string {
+        if (this.holder && this.holder.tokenInfo && this.holder.tokenInfo.totalSupply) {
+            const supply = new BN(this.holder.tokenInfo.totalSupply).toNumber()
+            return this.formatNumber(supply)
+        }
+        return '0'
     }
 }
 </script>

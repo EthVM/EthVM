@@ -2,7 +2,7 @@
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
         <!-- Pagination -->
         <v-layout v-if="showPagination" row fill-height justify-end class="pb-1 pr-2 pl-2">
-            <app-paginate-has-more :has-more="hasMore" :current-page="index" @newPage="setPage" />
+            <app-paginate-has-more :loading="loading" :has-more="hasMore" :current-page="index" @newPage="setPage" />
         </v-layout>
         <!-- End Pagination -->
 
@@ -14,10 +14,10 @@
                         <h5>{{ $tc('address.name', 1) }}</h5>
                     </v-flex>
                     <v-flex sm3 md4>
-                        <h5>{{ $t('common.quantity') }}</h5>
+                        <h5>{{ isERC721 ? $t('common.id') : $t('common.quantity') }}</h5>
                     </v-flex>
                     <v-flex sm3 md2>
-                        <h5>{{ $t('common.percentage') }}</h5>
+                        <h5>{{ isERC721 ? $t('token.supply') : $t('common.percentage') }}</h5>
                     </v-flex>
                 </v-layout>
             </v-card>
@@ -36,7 +36,7 @@
                     <v-card-text class="text-xs-center secondary--text">{{ $t('message.token.no-holders') }}</v-card-text>
                 </v-card>
                 <div v-for="(holder, i) in holders" v-else :key="i">
-                    <token-table-holders-row :holder="holder" :token-address="addressRef" :decimals="decimals" />
+                    <token-table-holders-row :holder="holder" :token-address="addressRef" :decimals="decimals" :holder-type="holderType" />
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@ import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TokenTableHoldersRow from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHoldersRow.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
-
+const TYPES = ['ERC20', 'ERC721']
 const MAX_ITEMS = 10
 @Component({
     components: {
@@ -77,7 +77,16 @@ export default class TokenTableHolders extends Vue {
     @Prop(Number) maxItems!: number
     @Prop(Number) index!: number
     @Prop(String) addressRef!: string
+    @Prop(String) holderType!: string
 
+    /*
+  ===================================================================================
+    Computed
+  ===================================================================================
+  */
+    get isERC721() {
+        return this.holderType === TYPES[1]
+    }
     /*
     ===================================================================================
       Methods
