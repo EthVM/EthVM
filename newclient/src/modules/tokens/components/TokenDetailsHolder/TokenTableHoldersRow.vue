@@ -9,10 +9,10 @@
             <v-flex xs12 hidden-md-and-up>
                 <div class="table-row-mobile">
                     <v-layout grid-list-xs row wrap align-center justify-center class="pa-3">
-                        <v-flex v-if="isERC721" xs1 sm1>
+                        <v-flex v-if="isERC721" xs2 sm1>
                             <v-img :src="image" align-center justify-start max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
                         </v-flex>
-                        <v-flex :xs11="isERC721" :sm11="isERC721">
+                        <v-flex :xs10="isERC721" :sm11="isERC721">
                             <v-flex xs12>
                                 <v-layout row align-center justify-start pa-2>
                                     <p class="info--text pr-2">{{ $t('token.holder') }}:</p>
