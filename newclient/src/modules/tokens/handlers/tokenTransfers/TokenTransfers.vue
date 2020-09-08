@@ -184,8 +184,12 @@ export default class TokenTransfers extends Vue {
         return this.getERC721Transfers && this.getERC721Transfers.transfers && this.getERC721Transfers.transfers.length > 0
     }
 
+    get hasERC20Transfers() {
+        return this.getERC20Transfers && this.getERC20Transfers.transfers
+    }
+
     get transferData(): any[] {
-        if ((this.getERC20Transfers && this.getERC20Transfers.transfers) || (this.getERC721Transfers && this.getERC721Transfers.transfers)) {
+        if (this.hasERC20Transfers && this.getERC721Transfers) {
             const data = this.hasERC721Transfers ? this.getERC721Transfers.transfers : this.getERC20Transfers.transfers
             this.transferType = this.hasERC721Transfers ? TYPES[1] : TYPES[0]
             const start = this.index * this.maxItems

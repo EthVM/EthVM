@@ -192,8 +192,12 @@ export default class TokenHolders extends Vue {
         return this.erc721TokenHolders && this.erc721TokenHolders.owners && this.erc721TokenHolders.owners.length > 0
     }
 
+    get hasERC20Owners() {
+        return this.erc20TokenHolders && this.erc20TokenHolders.owners
+    }
+
     get holders(): any[] {
-        if ((this.erc20TokenHolders && this.erc20TokenHolders.owners) || (this.erc721TokenHolders && this.erc721TokenHolders.owners)) {
+        if (this.hasERC20Owners && this.erc721TokenHolders) {
             const data = this.hasERC721Owners ? this.erc721TokenHolders.owners : this.erc20TokenHolders.owners
             this.holderType = this.hasERC721Owners ? TYPES[1] : TYPES[0]
             const start = this.index * this.maxItems
