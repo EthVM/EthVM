@@ -89,7 +89,8 @@
         "total": "Всего ",
         "per": "за",
         "filtered": "Отфильтровано по Владельцу",
-        "sort-by": "Сортировка"
+        "sort-by": "Сортировка",
+        "total-tokens": "Total Tokens"
     },
     "address": {
         "name": "Адрес | Адреса"
@@ -145,6 +146,7 @@
         "pending": "Ожидающая",
         "amount": "Сумма",
         "quantity": "Количество",
+        "id": "ID",
         "percentage": "Процент",
         "eth-balance": "Баланс ETH",
         "balance": "Баланс",
@@ -182,9 +184,24 @@
                 "detail": "Что-то пошло не так при получении деталей Uncle-блока.",
                 "not-found": "Этот Uncle-блок не существует."
             },
+            "tokens": {
+                "detail": "Something went wrong while retrieving token details.",
+                "not-found": "This token contract does not exist.",
+                "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
+                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
+                "token-owner": "Something went wrong retrieving Token owners",
+                "token-details": "Something went wrong retrieving Token details",
+                "token-market": "Something went wrong retrieving Token Market data"
+            },
+            "search": {
+                "you-entered": "You entered",
+                "invalid": "Sorry! This is an invalid search string.",
+                "is-bug": "If you think this is a bug, please {let-us-know}.",
+                "let-us-know": "let us know"
+            },
             "txs": "Что-то пошло не так при получении транзакций.",
-            "transfers-erc721": "Somethign went wrong retrieving Address NFTs transfers.",
-            "transfers-erc20": "Somethign went wrong retrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
+            "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "Этот адрес не имеет истории транзакций",
@@ -360,8 +377,7 @@
     "search": {
         "name": "Поиск",
         "default": "Поиск: Блок / Адрес / Тх",
-        "address-tx": "Хэш Тx/Адреса",
-        "no-result": "ОШИБКА: НЕТ РЕЗУЛЬТАТОВ"
+        "address-tx": "Хэш Тx/Адреса"
     },
     "filter": {
         "name": "Фильтр",
@@ -378,8 +394,8 @@
         "donate": "Вклад в развитие",
         "btc": "BTC",
         "ens": "mewtopia.eth",
-        "copy": "2020 ",
-        "mew": "MyEtherWallet Inc. Все права защищены. ",
+        "copy": "2020 MyEtherWallet Inc. ",
+        "mew": "All rights reserved. ",
         "copy-eth-addr": "Копировать ETH адрес",
         "copy-btc-addr": "Копировать BTC адрес",
         "pricing": "Расценки взяты из"
