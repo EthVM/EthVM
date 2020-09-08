@@ -9,29 +9,34 @@
             <v-flex xs12 hidden-md-and-up>
                 <div class="table-row-mobile">
                     <v-layout grid-list-xs row wrap align-center justify-center class="pa-3">
-                        <v-flex xs12>
-                            <v-layout row align-center justify-start pa-2>
-                                <p class="info--text pr-2">Holder:</p>
-                                <app-transform-hash :hash="holder.owner" :link="holderLink" />
-                            </v-layout>
+                        <v-flex v-if="isERC721" xs1 sm1>
+                            <v-img :src="image" align-center justify-start max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
                         </v-flex>
-                        <v-flex xs12>
-                            <v-layout row align-center justify-start pa-2>
-                                <p class="info--text pr-2">{{ isERC721 ? $t('common.id') : $t('common.quantity') }}:</p>
-                                <p>
-                                    {{ isERC721 ? getTokenID : balance.value }}
-                                    <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
-                                </p>
-                            </v-layout>
-                        </v-flex>
-                        <v-flex xs12>
-                            <v-layout row align-center justify-start pa-2>
-                                <p class="info--text pr-2">{{ $t('common.percentage') }}:</p>
-                                <p>
-                                    {{ share.value }}%
-                                    <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
-                                </p>
-                            </v-layout>
+                        <v-flex :xs11="isERC721" :sm11="isERC721">
+                            <v-flex xs12>
+                                <v-layout row align-center justify-start pa-2>
+                                    <p class="info--text pr-2">{{ $t('token.holder') }}:</p>
+                                    <app-transform-hash :hash="holder.owner" :link="holderLink" />
+                                </v-layout>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-layout row align-center justify-start pa-2>
+                                    <p class="info--text pr-2">{{ isERC721 ? $t('common.id') : $t('common.quantity') }}:</p>
+                                    <p>
+                                        {{ isERC721 ? getTokenID : balance.value }}
+                                        <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
+                                    </p>
+                                </v-layout>
+                            </v-flex>
+                            <v-flex v-if="!isERC721" xs12>
+                                <v-layout row align-center justify-start pa-2>
+                                    <p class="info--text pr-2">{{ $t('common.percentage') }}:</p>
+                                    <p>
+                                        {{ share.value }}%
+                                        <app-tooltip v-if="share.tooltipText" :text="share.tooltipText" />
+                                    </p>
+                                </v-layout>
+                            </v-flex>
                         </v-flex>
                     </v-layout>
                 </div>
@@ -50,7 +55,7 @@
                     <!-- End Column 1 -->
 
                     <!-- Column 2: Balance -->
-                    <v-flex sm3 md4>
+                    <v-flex sm1md4>
                         <p class="mb-0 ml-2">
                             {{ isERC721 ? getTokenID : balance.value }}
                             <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
@@ -58,12 +63,18 @@
                     </v-flex>
                     <!-- End Column 2 -->
 
-                    <!-- Column 3: Share -->
-                    <v-flex sm3 md2>
+                    <!-- Column 3: Share (ERC20)-->
+                    <v-flex v-if="!isERC721" sm3 md2>
                         <p class="mb-0 ml-2">
-                            {{ isERC721 ? totalSupply : share.value }}<span v-if="!isERC721">%</span>
+                            {{ share.value }}%
                             <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
                         </p>
+                    </v-flex>
+                    <!-- End Column 3 -->
+
+                    <!-- Column 3: Token Image (ERC721) -->
+                    <v-flex v-if="isERC721" sm3 md2>
+                        <v-img :src="image" align-center justify-start max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
                     </v-flex>
                     <!-- End Column 3 -->
                 </v-layout>
@@ -82,6 +93,7 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import BigNumber from 'bignumber.js'
+import configs from '@app/configs'
 const TYPES = ['ERC20', 'ERC721']
 
 @Component({
@@ -103,10 +115,24 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
     @Prop(String) holderType!: string
 
     /*
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+    imageExists = true
+
+    /*
   ===================================================================================
     Computed
   ===================================================================================
   */
+
+    get image(): string {
+        if (this.holder && this.imageExists) {
+            return `${configs.OPENSEA}/dev/getImage?contract=${this.holder.tokenInfo.contract}&tokenId=${this.getTokenID}`
+        }
+        return require('@/assets/icon-token.png')
+    }
 
     /**
      * Format url to token details -> holder view
@@ -155,6 +181,15 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
             return this.formatNumber(supply)
         }
         return '0'
+    }
+
+    /*
+    ===================================================================================
+     Methods
+    ===================================================================================
+    */
+    onImageLoadFail(index): void {
+        this.imageExists = false
     }
 }
 </script>

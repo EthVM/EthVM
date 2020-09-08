@@ -173,7 +173,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
      */
     get holderDetailsList(): Detail[] {
         const details = [this.holderDetail, this.holderBalanceDetail]
-        if (!this.isRopsten) {
+        if (!this.isRopsten && this.holderUsdDetail.detail) {
             details.push(this.holderUsdDetail)
         }
         // details.push(this.holderTransfersDetail)
@@ -309,7 +309,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     }
 
     get holderBalanceDetail(): Detail {
-        const detail: Detail = { title: this.$t('common.balance') }
+        const detail: Detail = { title: this.$t('common.balance-id') }
         if (!this.isLoading && this.tokenDetails && this.holderDetails) {
             const symbol = this.tokenDetails.symbol === null ? '' : ` ${this.tokenDetails.symbol.toUpperCase()}`
             detail.detail = `${this.balance.value}${symbol}`

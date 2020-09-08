@@ -17,7 +17,7 @@
                         <h5>{{ isERC721 ? $t('common.id') : $t('common.quantity') }}</h5>
                     </v-flex>
                     <v-flex sm3 md2>
-                        <h5>{{ isERC721 ? $t('token.supply') : $t('common.percentage') }}</h5>
+                        <h5>{{ isERC721 ? $t('token.image') : $t('common.percentage') }}</h5>
                     </v-flex>
                 </v-layout>
             </v-card>
