@@ -1,0 +1,101 @@
+.container {
+    font-family: 'Roboto', sans-serif;
+}
+
+h2,
+h3 {
+    font-weight: 400;
+}
+
+h3 {
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.navlist {
+    height: 66px;
+}
+
+.theme--light.v-icon {
+    color: inherit;
+}
+
+/* Mono Spaced Font: */
+
+.font-mono {
+    font-family: 'Roboto Mono', sans-serif;
+}
+
+p {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+/* SEARCH COMPONENT: */
+
+.search-button {
+    height: 48px;
+    width: 115px;
+    color: white;
+}
+
+.v-input__slot {
+    margin-bottom: 0px;
+}
+
+.v-text-field.v-text-field--solo .v-input__control {
+    min-height: 32px;
+}
+
+.psmall {
+    padding-bottom: 10px;
+}
+
+.v-tabs__item:not(.v-tabs__item--active) {
+    opacity: 1;
+}
+
+.break-string {
+    overflow-wrap: break-word;
+}
+
+/* Transitions */
+
+.list-enter-active,
+.list-leave-active {
+    transition: all 1s;
+}
+
+.list-enter,
+.list-leave-to
+/* .list-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+/* loading placeholders */
+.table-row-loading {
+    background: #e6e6e6;
+    height: 12px;
+    border-radius: 2px;
+}
+
+/* token images */
+.token-image {
+    width: 25px;
+    min-width: 20px;
+    margin: 0.5em 1em;
+}
+.token-image-mobile {
+    width: 36px;
+}
+
+.small-global-icon-font {
+    font-size: 14px;
+}

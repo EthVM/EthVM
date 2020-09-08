@@ -1,0 +1,26 @@
+query getPendingTransactions($hash: String!) {
+    getPendingTransactions(owner: $hash) {
+        from
+        to
+        timestamp
+        value
+        gas
+        gasPrice
+        hash
+    }
+}
+
+subscription pendingTransaction($owner: String!) {
+    pendingTransaction(owner: $owner) {
+        transactionHash
+        txFee
+        from
+        to
+        timestamp
+        value
+    }
+}
+
+subscription pendingMined($hash: String!) {
+    transactionEvent(hash: $hash)
+}

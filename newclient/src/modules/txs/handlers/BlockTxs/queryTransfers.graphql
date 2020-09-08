@@ -1,0 +1,34 @@
+fragment TxSummary on ETHTransfers {
+    transfers {
+        transfer {
+            transactionHash
+            to
+            block
+            timestamp
+            from
+            txFee
+            status
+        }
+        value
+    }
+}
+
+query getBlockTransfers($_number: Int) {
+    getBlockTransfers(number: $_number) {
+        ...TxSummary
+    }
+}
+
+query getAllTxs($_limit: Int, $_nextKey: String) {
+    getAllEthTransfers(limit: $_limit, nextKey: $_nextKey) {
+        ...TxSummary
+        nextKey
+    }
+}
+
+subscription newTransfersCompleteFeed {
+    newTransfersCompleteFeed {
+        block
+        type
+    }
+}

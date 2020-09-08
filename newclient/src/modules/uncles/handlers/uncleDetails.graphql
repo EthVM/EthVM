@@ -1,0 +1,41 @@
+fragment UncleDetails on Uncle {
+  block {
+      summary {
+        number
+        miner
+        txCount
+        timestamp
+        uncles
+        rewards {
+            txFees
+            total
+            uncles
+        }
+        txFail
+    }
+    hash
+    parentHash
+    nonce
+    sha3Uncles
+    logsBloom
+    transactionsRoot
+    stateRoot
+    receiptsRoot
+    difficulty
+    totalDifficulty
+    extraData
+    size
+    gasLimit
+    gasUsed
+    transactions
+  }
+  parentHash
+  parentBlockNumber
+  unclePosition
+}
+
+query getUncleByHash($hash: String!) {
+  getUncleByHash(hash: $hash) {
+    ...UncleDetails
+  }
+}

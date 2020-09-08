@@ -1,0 +1,58 @@
+fragment TokenFragment on EthTokenInfo {
+    name
+    symbol
+    decimals
+}
+
+query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {
+    getOwnersERC20Tokens(owner: $hash, nextKey: $_nextKey) {
+        owners {
+            tokenInfo {
+                ...TokenFragment
+                contract
+            }
+            balance
+        }
+        nextKey
+    }
+}
+
+query getOwnersERC721Balances($hash: String!) {
+    getOwnersERC721Balances(owner: $hash) {
+        balance
+        tokenInfo {
+            name
+            symbol
+            contract
+        }
+    }
+}
+
+query getOwnersERC721Tokens($hash: String!, $tokenContract: String, $_nextKey: String) {
+    getOwnersERC721Tokens(owner: $hash, contract: $tokenContract, nextKey: $_nextKey) {
+        tokens {
+            token
+        }
+        nextKey
+    }
+}
+
+query getNFTcontractsMeta($address: String!) {
+    getNFTcontractsMeta(address: $address) @rest(type: "AddressNFTcontracts", path: "/dev/nft?{args}") {
+        tokenContracts @type(name: "NFTContract") {
+            contractIdAddress
+            owned_asset_count
+            name
+            contractImage
+            primary_asset_contracts @type(name: "PrimaryAssetContract") {
+                address
+                name
+                symbol
+                total_supply
+                description
+                external_link
+                image_url
+            }
+        }
+    }
+}
