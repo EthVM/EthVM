@@ -45,7 +45,6 @@ export default class SearchDetails extends Vue {
     Methods
   ===================================================================================
   */
-
     getHashType(param): void {
         let routeName = ''
         this.isLoading = true
@@ -70,26 +69,43 @@ export default class SearchDetails extends Vue {
                 } else if (hashType.includes('BLOCK')) {
                     routeName = 'blockHash'
                 } else {
-                    this.hasError = true
+                    this.routeToNotFound(param)
                 }
                 this.routeTo(routeName, param)
                 this.isLoading = false
             })
             .catch(error => {
-                // TODO: Change error message
+                this.routeToNotFound(param)
                 this.hasError = true
                 this.isLoading = false
+                throw error
             })
     }
 
+    routeToNotFound(searchVal): void {
+        const route = { name: 'search-not-found', params: { searchTerm: searchVal } }
+        this.$router.push(route).catch(() => {})
+    }
+
     routeTo(selectVal, searchVal): void {
-        const route = { name: selectVal, params: this.getParam(selectVal, searchVal) }
+        const route = { name: this.getSelectVal(selectVal, searchVal), params: this.getParam(selectVal, searchVal) }
         this.$router.push(route).catch(() => {})
     }
 
     routeToToken(param): void {
         const route = { name: 'token-detail', params: { addressRef: this.removeSpaces(param) } }
-        this.$router.push(route).catch(() => {})
+        this.$router
+            .push(route)
+            .then(() => this.$refs.search.resetValues())
+            .catch(() => {})
+    }
+
+    getSelectVal(selectVal, searchVal) {
+        const isNum = /^\d+$/.test(searchVal)
+        if (selectVal === 'block' && !isNum) {
+            return 'blockHash'
+        }
+        return selectVal
     }
 
     getParam(selectVal, searchVal): {} {
@@ -122,15 +138,16 @@ export default class SearchDetails extends Vue {
                     this.routeToToken(this.items[0]['contract'])
                 }
                 if (this.items.length === 0) {
+                    this.routeToNotFound(param)
                     this.hasError = true
                 }
                 this.isLoading = false
-                this.$refs.search.resetValues()
             })
             .catch(error => {
-                // TODO: Change error message
+                this.routeToNotFound(param)
                 this.hasError = true
                 this.isLoading = false
+                throw error
             })
     }
 

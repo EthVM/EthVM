@@ -1,7 +1,6 @@
 <template>
     <div>
         <app-bread-crumbs :new-items="crumbs" />
-        <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
     =====================================================================================
       BASIC VIEW
@@ -10,8 +9,8 @@
       Shows details pertinent to the token as a whole, with no holder-specific information
     =====================================================================================
     -->
-        <div v-if="!isHolder && !hasError">
-            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading" />
+        <div v-if="!isHolder">
+            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading || hasError" @errorDetails="emitErrorState" />
             <app-tabs v-if="!loading" :tabs="tabsTokenDetails">
                 <!--
         =====================================================================================
@@ -19,7 +18,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" />
+                    <transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
                 </v-tab-item>
                 <!--
         =====================================================================================
@@ -27,7 +26,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-1">
-                    <token-table-holders :address-ref="addressRef" :decimals="decimals" />
+                    <token-table-holders :address-ref="addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
                 </v-tab-item>
             </app-tabs>
         </div>
@@ -39,12 +38,13 @@
       Shows holder details pertaining to particular token contract
     =====================================================================================
     -->
-        <div v-if="isHolder && !hasError">
+        <div v-if="isHolder">
             <token-details-list
                 :address-ref="addressRef"
                 :holder-details="tokenDetails"
                 :token-details="tokenDetails ? tokenDetails.tokenInfo : {}"
-                :is-loading="loading"
+                :is-loading="loading || hasError"
+                @errorDetails="emitErrorState"
             />
         </div>
     </div>
@@ -52,7 +52,6 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
-import AppError from '@app/core/components/ui/AppError.vue'
 import TokenDetailsList from '@app/modules/tokens/components/TokenDetails/TokenDetailsList.vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
@@ -64,13 +63,13 @@ import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/token
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
 import { TokenDetails as TokenInfo } from './apolloTypes/TokenDetails'
 import { eth } from '@app/core/helper'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 
 const MAX_ITEMS = 10
 
 @Component({
     components: {
         AppBreadCrumbs,
-        AppError,
         TokenDetailsList,
         AppTabs,
         TokenTableHolders,
@@ -84,7 +83,20 @@ const MAX_ITEMS = 10
             variables() {
                 return { contract: this.addressRef, owner: this.holderAddress }
             },
-            update: data => data.getERC20TokenBalance || data.getTokenInfoByContract
+            update: data => data.getERC20TokenBalance || data.getTokenInfoByContract,
+            result({ data }) {
+                if (data && (data.getERC20TokenBalance || data.getTokenInfoByContract)) {
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                const newError = JSON.stringify(error.message)
+                if (newError.includes('Token not found')) {
+                    this.emitErrorState(true, ErrorMessageToken.notFound)
+                } else {
+                    this.emitErrorState(true, ErrorMessageToken.details)
+                }
+            }
         }
     }
 })
@@ -97,7 +109,8 @@ export default class TokenDetails extends Vue {
 
     created() {
         if (!this.isValid) {
-            this.error = this.$i18n.t('message.invalid.token').toString()
+            this.hasError = true
+            this.emitErrorState(true, ErrorMessageToken.invalid)
             return
         }
         window.scrollTo(0, 0)
@@ -120,7 +133,7 @@ export default class TokenDetails extends Vue {
 
     tokenDetails!: TokenInfo | TokenOwnerInfo
     address = ''
-    error = ''
+    hasError = false
 
     /*
   ===================================================================================
@@ -185,10 +198,6 @@ export default class TokenDetails extends Vue {
   */
     get isValid(): boolean {
         return eth.isValidAddress(this.addressRef)
-    }
-
-    get hasError(): boolean {
-        return this.error !== ''
     }
 
     get loading(): boolean | undefined {
@@ -259,6 +268,17 @@ export default class TokenDetails extends Vue {
             }
         ]
         return tabs
+    }
+
+    /*
+  ===================================================================================
+    Methods:
+  ===================================================================================
+  */
+
+    emitErrorState(val: boolean, message: ErrorMessageToken): void {
+        this.hasError = val
+        this.$emit('errorDetails', this.hasError, message)
     }
 }
 </script>

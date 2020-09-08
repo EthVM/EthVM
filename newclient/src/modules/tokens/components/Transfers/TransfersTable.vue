@@ -1,9 +1,5 @@
 <template>
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
-        <!-- LOADING / ERROR -->
-        <v-flex v-if="loading" xs12>
-            <v-progress-linear color="blue" indeterminate />
-        </v-flex>
         <!-- Pagination -->
         <v-layout
             v-if="showPagination"
@@ -13,7 +9,7 @@
             fill-height
             class="pb-1 pr-2 pl-2"
         >
-            <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading" @newPage="setPage" />
+            <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading || hasError" @newPage="setPage" />
         </v-layout>
         <!-- End Pagination -->
 
@@ -28,21 +24,22 @@
                         <h5>{{ $t('common.age') }}</h5>
                     </v-flex>
                     <v-flex sm2>
-                        <h5>{{ $t('common.quantity') }}</h5>
+                        <h5 v-if="!isERC721">{{ $t('common.quantity') }}</h5>
+                        <h5 v-else>{{ $t('common.id') }}</h5>
                     </v-flex>
                 </v-layout>
             </v-card>
             <!-- End Table Header -->
 
             <!-- Start Rows -->
-            <div v-if="loading">
+            <div v-if="loading || hasError">
                 <v-flex sm12>
                     <div
                         v-for="i in maxItems"
                         :key="i"
                         :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'table-row-mobile mb-2' : '']"
                     >
-                        <transfers-table-row-loading />
+                        <app-table-row-loading />
                     </div>
                 </v-flex>
             </div>
@@ -51,7 +48,7 @@
                     <v-card-text class="text-xs-center secondary--text">{{ $t('transfer.empty') }}</v-card-text>
                 </v-card>
                 <v-card v-for="(transfer, index) in transfers" v-else :key="index" color="white" class="transparent" flat>
-                    <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" />
+                    <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" :transfer-type="transferType" />
                 </v-card>
                 <!-- End Rows -->
                 <v-layout
@@ -61,7 +58,7 @@
                     row
                     class="pb-1 pr-2 pl-2"
                 >
-                    <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading" @newPage="setPage" />
+                    <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading || hasError" @newPage="setPage" />
                 </v-layout>
             </div>
         </div>
@@ -72,21 +69,20 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-import AppError from '@app/core/components/ui/AppError.vue'
 import TransfersTableRow from './TransfersTableRow.vue'
-import TransfersTableRowLoading from './TransfersTableRowLoading.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
 
 const MAX_ITEMS = 10
+const TYPES = ['ERC20', 'ERC721']
 
 @Component({
     components: {
         AppTimeAgo,
-        AppError,
         TransfersTableRow,
-        TransfersTableRowLoading,
         AppPaginateHasMore,
-        AppPaginate
+        AppPaginate,
+        AppTableRowLoading
     }
 })
 export default class TransfersTable extends Vue {
@@ -102,25 +98,27 @@ export default class TransfersTable extends Vue {
     @Prop(Boolean) loading!: boolean
     @Prop(Number) decimals?: number
     @Prop(String) symbol?: string
-    @Prop(String) error?: string
+    @Prop(Boolean) hasError!: boolean
     @Prop(Number) maxItems!: number
     @Prop(Number) index!: number
+    @Prop(String) transferType!: string
     /*
-        ===================================================================================
-          Methods
-        ===================================================================================
-        */
+    ===================================================================================
+        Methods
+    ===================================================================================
+    */
 
     setPage(page: number, reset: boolean = false): void {
         this.$emit('setPage', page, reset)
     }
+
     /*
-        ===================================================================================
-          Computed Values
-        ===================================================================================
-        */
-    get hasError(): boolean {
-        return !!this.error && this.error !== ''
+    ===================================================================================
+        Computed Values
+    ===================================================================================
+    */
+    get isERC721() {
+        return this.transferType === TYPES[1]
     }
 }
 </script>

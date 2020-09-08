@@ -5,28 +5,38 @@ fragment TransferSummary on Transfer {
     to
     txFee
 }
-fragment TokenFragment on EthTokenInfo {
+fragment TokenInfo on EthTokenInfo {
     name
     symbol
     decimals
+    totalSupply
+    contract
 }
+
 query getERC20TokenTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
     getERC20TokenTransfers(contract: $hash, limit: $_limit, nextKey: $_nextKey) {
         transfers {
             transfer {
                 ...TransferSummary
             }
-            stateDiff {
-                to {
-                    before
-                    after
-                }
-                from {
-                    before
-                    after
-                }
-            }
             value
+        }
+        nextKey
+    }
+}
+
+
+query getERC721TokenTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getERC721TokenTransfers(contract: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            transfer {
+                ...TransferSummary
+            }
+            token
+            contract
+            tokenInfo {
+                ...TokenInfo
+            }
         }
         nextKey
     }

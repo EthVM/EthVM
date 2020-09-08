@@ -31,9 +31,9 @@
                 </v-layout>
             </v-flex>
         </v-layout>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad" :table-message="message" :txs-data="showTokens" :is-scroll-view="false">
+        <table-txs :max-items="maxItems" :index="index" :is-loading="initialLoad || hasError" :txs-data="showTokens" :is-scroll-view="false">
             <template #header>
-                <table-tokens-header :sort="isSortedBy" :error="error" :loading="initialLoad" @sortBy="sortTokens" />
+                <table-tokens-header :sort="isSortedBy" :loading="initialLoad || hasError" @sortBy="sortTokens" />
             </template>
             <template #rows>
                 <v-card v-for="(token, index) in showTokens" :key="index" class="transparent" flat>
@@ -63,6 +63,7 @@ import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 import BN from 'bignumber.js'
 const MAX_TOKENS = 200
 const KEY_VOLUME = 'total_volume'
@@ -96,11 +97,6 @@ class TokensSorted implements TokensSortedInterface {
         return this.desend
     }
 }
-/*
-  DEV NOTES:
-  - add on Error
-  - add messages if Error to be displayed in Table
-*/
 const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
 @Component({
     components: {
@@ -126,7 +122,7 @@ export default class AddressTokens extends Mixins(CoinData) {
      Initial Data
     ===================================================================================
     */
-    error = ''
+    hasError = false
     pageType = 'tokens'
     initialLoad = true
     index = 0
@@ -198,12 +194,6 @@ export default class AddressTokens extends Mixins(CoinData) {
     get showPagination(): boolean {
         return this.totalPages > 1
     }
-    get message(): string {
-        if (this.error != '') {
-            return this.error
-        }
-        return ''
-    }
     get getTitle(): string {
         return `${this.$tc('token.name', 2)}`
     }
@@ -215,7 +205,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     sortTokens(sort: string): void {
         this.isSortedBy = sort
         this.index = 0
-        if (!this.error) {
+        if (!this.hasError) {
             if (sort === FILTER_VALUES[0] || sort === FILTER_VALUES[1]) {
                 /* Sort By Symbol: */
                 this.tokensData = sort.includes('high') ? this.tokensBySymbol.getAscend() : this.tokensBySymbol.getDesend()
@@ -240,6 +230,11 @@ export default class AddressTokens extends Mixins(CoinData) {
             this.index = page
         }
     }
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorTransfers', val, ErrorMessageToken.tokenMarket)
+    }
+
     /*
     ===================================================================================
       Watch:
@@ -250,7 +245,7 @@ export default class AddressTokens extends Mixins(CoinData) {
         if (!newVal) {
             const marketData = this.getEthereumTokens()
             if (marketData !== false) {
-                const marketDataByPrice = new TokensSorted(marketData, KEY_PRICE).getAscend()
+                const marketDataByPrice = new TokensSorted(marketData, KEY_MARKET_CAP).getAscend()
                 this.tokensByVolume = new TokensSorted(marketDataByPrice, KEY_VOLUME)
                 this.tokensByMarket = new TokensSorted(marketDataByPrice, KEY_MARKET_CAP)
                 this.tokensBySymbol = new TokensSorted(marketDataByPrice, KEY_SYMBOL)
@@ -259,8 +254,9 @@ export default class AddressTokens extends Mixins(CoinData) {
                 this.totalTokens = marketDataByPrice.length
                 this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
                 this.initialLoad = false
+                this.emitErrorState(false)
             } else {
-                this.error = `${this.$t('message.no-data')}`
+                this.emitErrorState(true)
             }
         }
     }

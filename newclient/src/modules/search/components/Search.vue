@@ -37,17 +37,12 @@
         <v-flex hidden-sm-and-down md4 class="search-button-container">
             <v-btn depressed color="secondary" class="search-button text-capitalize ml-0" @click="onSearch">{{ $t('search.name') }}</v-btn>
         </v-flex>
-        <v-snackbar v-model="snackbar" :bottom="true" :right="true" :timeout="5000">
-            {{ $t('search.no-result') }}
-            <v-btn color="primary" text @click="snackbar = false">
-                {{ $t('common.close') }}
-            </v-btn>
-        </v-snackbar>
     </v-layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
+
 const selectTypes = ['all', 'token-detail']
 
 @Component
@@ -80,13 +75,6 @@ export default class Search extends Vue {
   ===================================================================================
   */
 
-    @Watch('hasError')
-    onError(newVal) {
-        if (newVal === true) {
-            this.snackbar = true
-        }
-    }
-
     @Watch('searchAutocomplete')
     search(newVal: string, oldVal: string): void {
         if (newVal && (this.selectVal === selectTypes[0] || this.selectVal === selectTypes[1])) {
@@ -110,7 +98,9 @@ export default class Search extends Vue {
                 this.$emit('getAllSearch', this.searchVal)
             }, 500)
         } else {
-            this.$emit('routeTo', this.selectVal, this.searchVal)
+            this.searchTimeout = window.setTimeout(() => {
+                this.$emit('routeTo', this.selectVal, this.searchVal)
+            }, 500)
         }
     }
 

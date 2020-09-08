@@ -1,12 +1,15 @@
 import { pendingTransaction_pendingTransaction as PendingTransferType } from '@app/modules/address//handlers/AddressPendingTx/apolloTypes/pendingTransaction'
 import { getPendingTransactions_getPendingTransactions as PendingTxType } from '@app/modules/address/handlers/AddressPendingTx/apolloTypes/getPendingTransactions'
-import { getEthTransfersV2_getEthTransfersV2_transfers as TxType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getEthTransfersV2'
-import { StateDiff } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/StateDiff'
+import {
+    getAddressEthTransfers_getEthTransfersV2_transfers as TxType,
+    getAddressEthTransfers_getEthTransfersV2_transfers_stateDiff as StateDiff
+} from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getAddressEthTransfers'
 import BN from 'bignumber.js'
 import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 
 interface Transfer {
     transfer: TxType | PendingTransferType | PendingTxType
+    stateDiff: object
     isPending: boolean
 }
 

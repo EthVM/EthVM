@@ -17,7 +17,13 @@
             </template>
         </app-table-title>
         <v-layout v-if="isETH" :column="$vuetify.breakpoint.xs" :align-center="true" d-flex justify-space-between wrap pa-3>
-            <app-filter :options="options" :show-desktop="true" :is-sort="false" @onSelectChange="onFilterChange" />
+            <app-filter
+                v-if="!loading && getTransfers.transfers.length > 0"
+                :options="options"
+                :show-desktop="true"
+                :is-sort="false"
+                @onSelectChange="onFilterChange"
+            />
             <app-paginate-has-more
                 v-if="showPagination && !initialLoad"
                 :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
@@ -35,7 +41,7 @@
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
                     <table-address-txs-row v-if="isETH" :transfer="tx" :is-pending="false" :address="address" />
-                    <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" />
+                    <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" :token-image="getImg(tx.contract)" />
                 </v-card>
             </template>
         </table-txs>
@@ -61,15 +67,17 @@ import TableAddressTxsHeader from '@app/modules/address/components/TableAddressT
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
-import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Vue, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getAdrEthTransfers, getAdrERC20Transfers, getAdrERC721Transfers } from './transfers.graphql'
-import { getAdrEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAdrEthTransfers'
-import { getAdrERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAdrErc20Transfers'
-import { getAdrERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAdrERC721Transfers'
+import { getAddressEthTransfers, getAddressERC20Transfers, getAddressERC721Transfers } from './transfers.graphql'
+import { getAddressEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAddressEthTransfers'
+import { getAddressERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAddressErc20Transfers'
+import { getAddressERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAddressERC721Transfers'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
+import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 
 @Component({
     components: {
@@ -87,9 +95,9 @@ import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
         getTransfers: {
             query() {
                 if (this.isETH) {
-                    return getAdrEthTransfers
+                    return getAddressEthTransfers
                 }
-                return this.isERC20 ? getAdrERC20Transfers : getAdrERC721Transfers
+                return this.isERC20 ? getAddressERC20Transfers : getAddressERC721Transfers
             },
             fetchPolicy: 'network-only',
             variables() {
@@ -117,17 +125,19 @@ import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
                     } catch (error) {
                         this.initialLoad = true
                         this.emitErrorState(true)
+                        throw error
                     }
-                } else {
-                    this.emitErrorState(true)
-                    this.showPagination = false
-                    this.initialLoad = true
                 }
+            },
+            error(error) {
+                this.emitErrorState(true)
+                this.showPagination = false
+                this.initialLoad = true
             }
         }
     }
 })
-export default class AddressTransers extends Vue {
+export default class AddressTransers extends Mixins(CoinData) {
     /*
     ===================================================================================
       Props
@@ -249,13 +259,35 @@ export default class AddressTransers extends Vue {
             : `${this.$tc('message.update.erc721-transfer', plural)}`
     }
 
+    get tokenImg(): Map<string, TokenMarketData> | false {
+        if (!this.initialLoad && this.isERC20) {
+            const contracts: string[] = []
+            this.getTransfers.transfers.forEach(token => {
+                contracts.push(token.contract)
+            })
+            if (contracts.length > 0) {
+                return this.getEthereumTokensMap(contracts)
+            }
+        }
+        return false
+    }
+
     /*
     ===================================================================================
       Methods:
     ===================================================================================
     */
 
+    getImg(contract: string): TokenMarketData | undefined {
+        if (!this.initialLoad && this.tokenImg && this.tokenImg.has(contract) && this.isERC20) {
+            const token = this.tokenImg.get(contract)
+            return this.tokenImg.get(contract)
+        }
+        return undefined
+    }
+
     onFilterChange(filter) {
+        this.setPage(0, true)
         this.filter = filter
     }
 

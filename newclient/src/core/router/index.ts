@@ -18,6 +18,7 @@ const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modu
 const PageKnowledgeBase = () => import(/* webpackChunkName: "page-kb" */ '@app/modules/other/pages/PageKnowledgeBase.vue')
 const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp" */ '@app/modules/other/pages/PagePrivacyPolicy.vue')
 const PageNotFound = () => import(/* webpackChunkName: "page-not-found" */ '@app/modules/other/pages/PageNotFound.vue')
+const PageSearchNotFound = () => import(/* webpackChunkName: "page-search-not-found" */ '@app/modules/search/pages/PageNotFound.vue')
 
 Vue.use(Router)
 
@@ -120,6 +121,12 @@ export default new Router({
             path: '/404',
             component: PageNotFound,
             name: 'notFound'
+        },
+        {
+            path: '/search/not_found/:searchTerm',
+            component: PageSearchNotFound,
+            name: 'search-not-found',
+            props: true
         },
         {
             path: '*',

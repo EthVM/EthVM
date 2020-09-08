@@ -11,7 +11,7 @@
         MD: 3/12 (3)
       =====================================================================================
       -->
-            <v-flex :class="flexClass" xs12 sm3>
+            <v-flex :class="flexClass" xs12 sm6 md3>
                 <v-card flat>
                     <v-layout row pa-0 align-center>
                         <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.discover') }}</v-card-title>
@@ -40,13 +40,10 @@
         MD: 8/12 (5)
       =====================================================================================
       -->
-            <v-flex :class="flexClass" xs12 sm5 md4>
+            <v-flex :class="flexClass" xs12 sm6 md3>
                 <v-card flat>
                     <v-layout row pa-0 align-center>
                         <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.donate') }}</v-card-title>
-                        <!-- <v-flex hidden-xs-only hidden-md-and-up pa-0>
-              <app-language />
-            </v-flex> -->
                     </v-layout>
                     <v-layout row justify-start align-center>
                         <v-btn
@@ -74,9 +71,40 @@
                     </v-layout>
                 </v-card>
             </v-flex>
+            <v-flex :class="flexClass" xs12 sm6 md3>
+                <v-card flat>
+                    <v-layout row wrap justify-start align-center fill-height>
+                        <v-card-title class="title font-weight-bold pb-2">Social</v-card-title>
+                        <v-flex xs12>
+                            <v-layout row justify-start align-center fill-height pa-1>
+                                <v-btn href="https://www.reddit.com/r/ethvm" icon class="ma-1">
+                                    <v-icon small class="fab fa-reddit grey--text"></v-icon>
+                                </v-btn>
+                                <v-btn href="https://twitter.com/Eth_VM" icon class="ma-1"> <v-icon small class="fab fa-twitter grey--text"></v-icon> </v-btn>
+                                <v-btn href="https://github.com/EthVM" icon class="ma-1"> <v-icon small class="fab fa-github grey--text"></v-icon> </v-btn>
+                                <v-btn href="https://medium.com/@myetherwallet" icon class="ma-1">
+                                    <v-icon small class="fab fa-medium-m grey--text"></v-icon>
+                                </v-btn>
+                            </v-layout>
+                        </v-flex>
+                        <v-flex xs12>
+                            <v-layout justify-start align-center fill-height pa-2>
+                                <p class="info--text text-xs-left caption pl-2">
+                                    {{ $t('footer.pricing') }} <router-link to="https://www.coingecko.com/">Coingecko.</router-link>
+                                </p>
+                            </v-layout>
+                        </v-flex>
+                        <v-flex xs12>
+                            <v-layout justify-start align-start pa-2>
+                                <v-img :src="require('@/assets/powered-by-MEW.png')" class="ml-2" height="20px" max-width="130px" contain></v-img>
+                            </v-layout>
+                        </v-flex>
+                    </v-layout>
+                </v-card>
+            </v-flex>
             <!--
       =====================================================================================
-        Donate
+        Language
 
         Responsive Tally:
         XS:36/12 (12)
@@ -84,37 +112,24 @@
         MD: 14/12 (4)
       =====================================================================================
       -->
-            <v-flex :class="flexClass" xs12 sm4 md5>
+            <v-flex :class="flexClass" xs12 sm6 md3>
                 <v-layout column justify-end align-end fill-height class="pb-3">
                     <v-flex hidden-sm-and-down md12 pa-1>
                         <app-language />
                     </v-flex>
                     <v-flex xs12>
-                        <v-layout row justify-end align-end fill-height pa-1>
-                            <v-btn href="https://www.reddit.com/r/ethvm" icon class="ma-1"> <v-icon small class="fab fa-reddit grey--text"></v-icon> </v-btn>
-                            <v-btn href="https://twitter.com/Eth_VM" icon class="ma-1"> <v-icon small class="fab fa-twitter grey--text"></v-icon> </v-btn>
-                            <v-btn href="https://github.com/EthVM" icon class="ma-1"> <v-icon small class="fab fa-github grey--text"></v-icon> </v-btn>
-                            <v-btn href="https://medium.com/@myetherwallet" icon class="ma-1">
-                                <v-icon small class="fab fa-medium-m grey--text"></v-icon>
-                            </v-btn>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-layout align-end justify-end fill-height pa-2>
-                            <v-img :src="require('@/assets/powered-by-MEW.png')" height="20px" width="160px" contain></v-img>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-layout align-end justify-end fill-height pr-3 pb-1>
-                            <p class="info--text text-xs-right caption">
-                                {{ $t('footer.pricing') }} <router-link to="https://www.coingecko.com/">Coingecko</router-link>
-                            </p>
-                            .
+                        <v-layout align-end justify-end fill-height pr-3>
+                            <p class="info--text text-xs-right caption">Beta: 0.0.1</p>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
                         <v-layout align-end justify-end fill-height pr-3>
-                            <p class="info--text text-xs-right caption">© {{ $t('footer.copy') }} {{ $t('footer.mew') }}</p>
+                            <p class="info--text text-xs-right caption">© {{ $t('footer.copy') }}</p>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-layout align-end justify-end fill-height pr-3>
+                            <p class="info--text text-xs-right caption">{{ $t('footer.mew') }}</p>
                         </v-layout>
                     </v-flex>
                 </v-layout>

@@ -77,8 +77,8 @@ interface BlockMap {
                                     getBlocksArrayByNumber: [newB, ...prevB]
                                 }
                             }
-                        } catch {
-                            //Sentry
+                        } catch (error) {
+                            throw error
                         }
                     }
                 }

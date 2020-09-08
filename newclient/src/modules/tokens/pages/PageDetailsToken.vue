@@ -1,16 +1,23 @@
 <template>
     <v-container grid-list-lg>
-        <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" />
+        <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" @errorDetails="setError" />
+        <app-error v-if="error" :has-error="hasError" :message="error" />
+        <app-message :messages="errorMessages" />
     </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import TokenDetails from '@app/modules/tokens/handlers/tokenDetails/TokenDetails.vue'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
+import AppMessage from '@app/core/components/ui/AppMessage.vue'
+import AppError from '@app/core/components/ui/AppError.vue'
 
 @Component({
     components: {
-        TokenDetails
+        TokenDetails,
+        AppMessage,
+        AppError
     }
 })
 export default class PageDetailsToken extends Vue {
@@ -30,7 +37,9 @@ export default class PageDetailsToken extends Vue {
     // Holder //
     isHolder = false // Whether or not "holder" is included in query params to display view accordingly
     holderAddress?: string = '' // Address of current token holder, if applicable
-
+    error = ''
+    hasError = false
+    errorMessages: ErrorMessageToken[] = []
     /*
   ===================================================================================
     Lifecycle
@@ -71,6 +80,31 @@ export default class PageDetailsToken extends Vue {
             this.holderAddress = undefined
         }
         window.scrollTo(0, 0)
+    }
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+
+    setError(hasError: boolean, message: ErrorMessageToken): void {
+        this.hasError = hasError
+        if (hasError) {
+            if (message === ErrorMessageToken.invalid) {
+                this.error = this.$i18n.t(message).toString()
+            } else {
+                if (!this.errorMessages.includes(message)) {
+                    this.errorMessages.push(message)
+                }
+            }
+        } else {
+            if (this.errorMessages.length > 0) {
+                const index = this.errorMessages.indexOf(message)
+                if (index > -1) {
+                    this.errorMessages.splice(index, 1)
+                }
+            }
+        }
     }
 }
 </script>

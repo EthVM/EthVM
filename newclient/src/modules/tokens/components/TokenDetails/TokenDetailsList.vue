@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-details-list :title="title" :details="details" :is-loading="isLoading" :error="error" class="mb-4">
+        <app-details-list :title="title" :details="details" :is-loading="isLoading || hasError" class="mb-4">
             <template v-slot:title>
                 <v-layout grid-list-xs row align-center justify-start fill-height pl-4 pr-2 pt-2 pb-2>
                     <div class="token-image">
@@ -26,6 +26,7 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
 import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
+import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 
 @Component({
     components: {
@@ -48,7 +49,6 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     Initial Values
   ===================================================================================
   */
-    error = ''
     // icons = {
     //     blog: 'fab fa-ethereum',
     //     chat: 'fab fa-ethereum',
@@ -66,6 +66,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     // }
     // tokenData: TokenMarketData | null = null
     isRopsten = ConfigHelper.isRopsten
+    hasError = false
     /*
   ===================================================================================
         LifeCycle:
@@ -83,6 +84,17 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     //             })
     //     }
     // }
+
+    /*
+    ===================================================================================
+      Methods:
+    ===================================================================================
+    */
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        this.$emit('errorDetails', val, ErrorMessageToken.details)
+    }
+
     /*
   ===================================================================================
     Computed Values
@@ -91,7 +103,12 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
 
     get tokenData(): TokenMarketData | false {
         if (this.addressRef) {
-            return this.getEthereumTokenByContract(this.addressRef)
+            try {
+                this.emitErrorState(false)
+                return this.getEthereumTokenByContract(this.addressRef)
+            } catch (error) {
+                this.emitErrorState(true)
+            }
         }
         return false
     }
@@ -131,19 +148,21 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
      * Get details list for token detail view
      */
     get tokenDetailsList(): Detail[] {
-        const details = [this.contractDetail, this.contractDecimalsDetail]
-        if (this.holderDetails && this.holderDetails.owner) {
+        const details = [this.contractDetail]
+        this.contractDecimalsDetail.detail ? details.push(this.contractDecimalsDetail) : null
+        if (this.holderDetails && this.holderDetails.owner && this.contractOwnerDetail.detail) {
             details.push(this.contractOwnerDetail)
         }
         if (!this.holderDetails) {
             // details.push(this.totalHoldersDetail)
         }
-        if (!this.isRopsten) {
+        if (!this.isRopsten && this.priceDetail.detail) {
             details.push(this.priceDetail)
         }
-        details.push(this.supplyDetail)
+        this.supplyDetail.detail ? details.push(this.supplyDetail) : null
         if (!this.isRopsten) {
-            details.push(this.marketCapDetail, this.volumeDetail)
+            this.marketCapDetail.detail ? details.push(this.marketCapDetail) : null
+            this.volumeDetail.detail ? details.push(this.volumeDetail) : null
         }
         // details.push(this.websiteDetail, this.supportDetail, this.socialDetail)
         return details
@@ -193,7 +212,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
         if (!this.isLoading && this.tokenData) {
             const priceFormatted = this.formatUsdValue(new BN(this.tokenData.current_price || 0))
             detail.detail = priceFormatted.value
-            detail.priceChange = this.formatPercentageValue(new BN(this.tokenData.price_change_24h || 0)).value
+            detail.priceChange = this.tokenData.price_change_24h
             if (priceFormatted.tooltipText) {
                 detail.tooltip = priceFormatted.tooltipText
             }
