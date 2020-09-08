@@ -90,7 +90,7 @@
         "per": "за",
         "filtered": "Отфильтровано по Владельцу",
         "sort-by": "Сортировка",
-        "total-tokens": "Total Tokens"
+        "total-tokens": "Всего Токенов"
     },
     "address": {
         "name": "Адрес | Адреса"
@@ -251,9 +251,9 @@
         },
         "report": "Нашли какие-либо ошибки или есть предложения?",
         "update": {
-            "tx": "New Tx | New Txs",
-            "block": "New Block | New Blocks",
-            "uncle": "New Uncle | New Uncles",
+            "tx": "Новая Tx | Новых Txs",
+            "block": "Новый блок | Новых Блоков",
+            "uncle": "Новый Uncle Блок | Новые Uncle Блоки",
             "pending": "New Pending Tx | New Pending Txs",
             "erc20-transfer": "New ERC20 Transfer | New ERC20 Transfers",
             "erc721-transfer": "New ERC721 Transfer | New ERC721 Transfers",
