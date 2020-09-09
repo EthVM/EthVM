@@ -97,7 +97,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
         if (this.loading) {
             return ''
         }
-        if (this.newBlock) {
+        if (this.newBlock && new BN(this.newBlock).isGreaterThan(new BN(this.initialLoadedBlock))) {
             return this.formatNumber(this.newBlock)
         }
         return this.formatNumber(this.initialLoadedBlock)
