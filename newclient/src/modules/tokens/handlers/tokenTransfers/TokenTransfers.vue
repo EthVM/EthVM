@@ -44,7 +44,6 @@ const MAX_ITEMS = 10
                 if (data && data.getERC20TokenTransfers) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMoreERC20Transfers
                         this.initialLoad = false
                     }
                 }
@@ -65,7 +64,6 @@ const MAX_ITEMS = 10
                 if (data && data.getERC721TokenTransfer) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMoreERC721Transfers
                         this.initialLoad = false
                     }
                 }
@@ -97,7 +95,6 @@ export default class TokenTransfers extends Vue {
     getERC20Transfers!: ERC20TransfersType
     page?: number
     index = 0
-    showPagination = false
     /*isEnd -  Last Index loaded */
     isEnd = 0
     initialLoad = true
@@ -180,6 +177,10 @@ export default class TokenTransfers extends Vue {
           Computed Values
         ===================================================================================
         */
+    get showPagination() {
+        return this.hasMoreERC721Transfers || this.hasERC20Transfers
+    }
+
     get hasERC721Transfers() {
         return this.getERC721Transfers && this.getERC721Transfers.transfers && this.getERC721Transfers.transfers.length > 0
     }

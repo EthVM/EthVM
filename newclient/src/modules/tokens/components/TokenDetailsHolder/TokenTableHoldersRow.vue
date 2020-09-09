@@ -141,7 +141,7 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
      * @return {String}        [description]
      */
     get holderLink(): string {
-        return `/token/${this.tokenAddress}?holder=${this.holder.owner}`
+        return `/address/${this.holder.owner}`
     }
 
     /**

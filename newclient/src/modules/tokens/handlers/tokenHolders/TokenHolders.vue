@@ -48,7 +48,6 @@ const MAX_ITEMS = 10
                         this.emitErrorState(false)
                     }
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMore
                         this.initialLoad = false
                     }
                 } else {
@@ -77,7 +76,6 @@ const MAX_ITEMS = 10
                         this.emitErrorState(false)
                     }
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMore
                         this.initialLoad = false
                     }
                 } else {
@@ -105,7 +103,6 @@ export default class TokenHolders extends Vue {
     erc721TokenHolders!: ERC721TokenOwners
     hasError = false
     page?: number
-    showPagination = false
     index = 0
     isEnd = 0
     initialLoad = true
@@ -187,6 +184,10 @@ export default class TokenHolders extends Vue {
       Computed Values
     ===================================================================================
     */
+
+    get showPagination() {
+        return this.hasMoreERC20Holders || this.hasMoreERC721Holders
+    }
 
     get hasERC721Owners() {
         return this.erc721TokenHolders && this.erc721TokenHolders.owners && this.erc721TokenHolders.owners.length > 0

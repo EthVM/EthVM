@@ -309,7 +309,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     }
 
     get holderBalanceDetail(): Detail {
-        const detail: Detail = { title: this.$t('common.balance-id') }
+        const detail: Detail = { title: this.$t('common.balance') }
         if (!this.isLoading && this.tokenDetails && this.holderDetails) {
             const symbol = this.tokenDetails.symbol === null ? '' : ` ${this.tokenDetails.symbol.toUpperCase()}`
             detail.detail = `${this.balance.value}${symbol}`

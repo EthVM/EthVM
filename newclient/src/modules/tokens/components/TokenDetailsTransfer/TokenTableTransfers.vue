@@ -27,6 +27,9 @@
                         <h5 v-if="!isERC721">{{ $t('common.quantity') }}</h5>
                         <h5 v-else>{{ $t('common.id') }}</h5>
                     </v-flex>
+                    <v-flex v-if="isERC721" sm2>
+                        <h5>{{ $t('token.image') }}</h5>
+                    </v-flex>
                 </v-layout>
             </v-card>
             <!-- End Table Header -->
