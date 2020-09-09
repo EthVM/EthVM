@@ -6,13 +6,18 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
-            <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :max-items="7" />
+            <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :max-items="7">
+                <template v-slot:title v-if="!isLoading">
+                    <tx-details-title :status="titleStatus" />
+                </template>
+            </app-details-list>
         </v-flex>
     </v-layout>
 </template>
 
 <script lang="ts">
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import TxDetailsTitle from '@app/modules/txs/components/TxDetailsTitle.vue'
 import { Detail } from '@app/core/components/props'
 import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { getTransactionByHash } from './txDetails.graphql'
@@ -20,10 +25,12 @@ import { TxDetails as TxDetailsType } from './apolloTypes/TxDetails'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import BN from 'bignumber.js'
-import { ErrorMessageTx } from '@app/modules/txs/models/ErrorMessagesForTx'
+import { ErrorMessageTx, TxStatus } from '@app/modules/txs/models/ErrorMessagesForTx'
+
 @Component({
     components: {
-        AppDetailsList
+        AppDetailsList,
+        TxDetailsTitle
     },
     apollo: {
         transaction: {
@@ -151,11 +158,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             // const receipt = transaction.receipt!
             details = [
                 {
-                    title: this.$i18n.t('block.number'),
-                    detail: this.formatNumber(this.transaction.blockNumber || 0),
-                    link: `/block/number/${this.transaction.blockNumber}`
-                },
-                {
                     title: this.$i18n.t('common.hash'),
                     detail: this.transaction.hash,
                     copy: true,
@@ -178,8 +180,11 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     tooltip: this.txAmount.tooltipText ? `${this.txAmount.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
                 {
-                    title: this.$i18n.t('tx.status'),
-                    detail: `${this.$i18n.tc('tx.' + this.txStatus, 1)}`
+                    title: this.$i18n.t(this.statusString),
+                    detail: this.transaction.replacedBy !== null ? this.transaction.replacedBy : `${this.$i18n.tc('tx.' + this.txStatus, 1)}`,
+                    copy: this.isReplaced ? true : undefined,
+                    link: this.transaction.replacedBy ? `/tx/${this.transaction.from}` : undefined,
+                    mono: this.isReplaced ? true : undefined
                 },
                 // TODO need tx fee or do we calculate it ourselves ?
                 {
@@ -215,6 +220,14 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             ]
             if (this.transaction.to) {
                 details.splice(5, 0, this.toDetail(this.transaction))
+            }
+            if (this.txStatus !== 'pending' || this.isReplaced) {
+                const block = {
+                    title: this.$i18n.t('block.number'),
+                    detail: this.formatNumber(this.transaction.blockNumber || 0),
+                    link: `/block/number/${this.transaction.blockNumber}`
+                }
+                details.splice(0, 0, block)
             }
         }
 
@@ -259,6 +272,27 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             return 'success'
         }
         return 'pending'
+    }
+    get statusString(): string {
+        return this.isReplaced ? 'tx.replaced' : 'tx.status'
+    }
+
+    get isReplaced(): boolean {
+        return this.transaction && this.transaction.replacedBy !== null
+    }
+
+    get titleStatus(): TxStatus {
+        if (!this.isReplaced && this.transaction) {
+            switch (this.transaction.status) {
+                case '0x0':
+                    return TxStatus.failed
+                case '0x1':
+                    return TxStatus.success
+                default:
+                    return TxStatus.pending
+            }
+        }
+        return TxStatus.replaced
     }
     /**
      * Calculate the transaction fee.

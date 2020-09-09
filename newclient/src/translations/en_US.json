@@ -54,6 +54,7 @@
         "input": "Input Data",
         "func": "Function",
         "method": "Method ID",
+        "replaced": "Replaced by",
         "type": {
             "self": "Self Sent",
             "in": "Incoming from",
@@ -154,6 +155,7 @@
         "success": "Successful",
         "fail": "Failed",
         "pending": "Pending",
+        "replaced": "Replaced",
         "amount": "Amount",
         "quantity": "Quantity",
         "id": "ID",
