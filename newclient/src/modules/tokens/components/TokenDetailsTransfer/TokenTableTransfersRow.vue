@@ -8,7 +8,7 @@
         <v-flex hidden-sm-and-down>
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <!-- Column 1: Tx Info -->
-                <v-flex :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'pr-3' : 'pr-5']" md6>
+                <v-flex :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'pr-3' : 'pr-5']" :md6="isERC721" :md7="!isERC721">
                     <v-layout row align-center justift-start pa-2>
                         <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
                         <app-transform-hash :hash="transfer.transfer.transactionHash" :link="`/tx/${transfer.transfer.transactionHash}`" />

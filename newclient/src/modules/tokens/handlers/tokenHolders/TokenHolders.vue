@@ -51,7 +51,6 @@ const MAX_ITEMS = 10
                         this.initialLoad = false
                     }
                 } else {
-                    this.showPagination = false
                     this.initialLoad = true
                 }
             },
@@ -79,7 +78,6 @@ const MAX_ITEMS = 10
                         this.initialLoad = false
                     }
                 } else {
-                    this.showPagination = false
                     this.initialLoad = true
                 }
             },
@@ -185,7 +183,7 @@ export default class TokenHolders extends Vue {
     ===================================================================================
     */
 
-    get showPagination() {
+    get showPagination(): boolean {
         return this.hasMoreERC20Holders || this.hasMoreERC721Holders
     }
 

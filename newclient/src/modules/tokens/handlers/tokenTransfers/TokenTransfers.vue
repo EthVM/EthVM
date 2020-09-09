@@ -177,8 +177,8 @@ export default class TokenTransfers extends Vue {
           Computed Values
         ===================================================================================
         */
-    get showPagination() {
-        return this.hasMoreERC721Transfers || this.hasERC20Transfers
+    get showPagination(): boolean {
+        return this.hasMoreERC721Transfers || this.hasMoreERC20Transfers
     }
 
     get hasERC721Transfers() {
