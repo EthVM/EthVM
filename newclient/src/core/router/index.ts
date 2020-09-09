@@ -58,9 +58,9 @@ export default new Router({
             props: true
         },
         {
-          path: '/pending-txs',
-          component: PagePendingTxs,
-          name: 'pending'
+            path: '/pending-txs',
+            component: PagePendingTxs,
+            name: 'pending'
         },
         // {
         //   path: '/uncles',
