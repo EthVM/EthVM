@@ -185,8 +185,8 @@
                 "not-found": "Этот Uncle-блок не существует."
             },
             "tokens": {
-                "detail": "Something went wrong while retrieving token details.",
-                "not-found": "This token contract does not exist.",
+                "detail": "Что-то пошло не так при получении деталей токена.",
+                "not-found": "Этот контракт токена не существует.",
                 "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
                 "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
                 "token-owner": "Something went wrong retrieving Token owners",
@@ -195,7 +195,7 @@
             },
             "search": {
                 "you-entered": "You entered",
-                "invalid": "Sorry! This is an invalid search string.",
+                "invalid": "Извините! Это неправильный поисковый запрос.",
                 "is-bug": "Если вы считаете, что это ошибка, пожалуйста, {let-us-know}.",
                 "let-us-know": "дайте нам знать"
             },
