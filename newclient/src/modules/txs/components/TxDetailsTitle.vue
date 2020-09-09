@@ -42,13 +42,13 @@ export default class TxDetailsTitle extends Vue {
     get statusClass(): string {
         switch (this.status) {
             case TxStatus.success:
-                return 'chip success'
+                return 'chip status-success'
             case TxStatus.failed:
-                return 'chip fail'
+                return 'chip status-fail'
             case TxStatus.pending:
-                return 'chip pending'
+                return 'chip status-pending blinking '
             default:
-                return 'chip replaced'
+                return 'chip status-replaced'
         }
     }
 }
@@ -62,21 +62,29 @@ export default class TxDetailsTitle extends Vue {
     padding: 5px 10px;
 }
 
-.success {
+.status-success {
     border-color: #40ce9c;
     color: #40ce9c;
 }
-.fail {
+.status-fail {
     border-color: #fe1377;
     color: #fe1377;
 }
 
-.replaced {
+.status-replaced {
     border-color: #8391a8;
     color: #8391a8;
 }
-.pending {
+.status-pending {
     border-color: #eea66b;
     color: #eea66b;
+}
+.blinking {
+    animation: blinker 2s linear infinite;
+}
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }
 </style>
