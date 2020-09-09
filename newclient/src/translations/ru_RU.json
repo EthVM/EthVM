@@ -194,14 +194,14 @@
                 "token-market": "Что-то пошло не так при получении данных Рынка Токена"
             },
             "search": {
-                "you-entered": "You entered",
+                "you-entered": "Вы ввели",
                 "invalid": "Извините! Это неправильный поисковый запрос.",
                 "is-bug": "Если вы считаете, что это ошибка, пожалуйста, {let-us-know}.",
                 "let-us-know": "дайте нам знать"
             },
             "txs": "Что-то пошло не так при получении транзакций.",
-            "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
-            "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Что-то пошло не так при получении Адреса переводов токенов NFT.",
+            "transfers-erc20": "Что-то пошло не так при получении Адреса переводов токенов ERC20."
         },
         "tx": {
             "no-all": "Этот адрес не имеет истории транзакций",
