@@ -646,14 +646,14 @@
         "erc721": "Переводы ERC721"
     },
     "state": {
-        "bal-before": "Баланс до",
-        "bal-after": "Баланс после",
+        "bal-before": "Баланс До",
+        "bal-after": "Баланс После",
         "val-sent": "Отправлено",
         "actual-sent": "Отправлено",
         "val-received": "Получено",
         "actual-received": "Получено",
         "actual-sent-received": "Отправлено/Получено",
-        "fee-rewards": "Вознаграждение комиссий Tx",
+        "fee-rewards": "Вознаграждение Комиссий Tx",
         "including-uncle": "Включая вознаграждение за Uncle-Блок?",
         "block-rewards": "Вознаграждение за Блок",
         "uncle-rewards": "Вознаграждение за Uncle-Блок"
