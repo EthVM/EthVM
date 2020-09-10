@@ -326,19 +326,19 @@
             "label": "Количество Txs"
         },
         "pending-tx-count-total": {
-            "title": "Всего ожидающих транзакций ",
+            "title": "Всего Ожидающих Транзакций ",
             "description": "Общее количество ожидающих транзакций",
             "label": "Количество Txs"
         },
         "gas-price-avg": {
             "title": "Сред. Цена Газа ",
             "description": "Средняя Цена Газа (GWEI)",
-            "label": "Цена газа (Gwei)"
+            "label": "Цена Газа (Gwei)"
         },
         "gas-price-min": {
-            "title": "Минимальная цена за газ ",
-            "description": "Минимальная цена за газ (GWEI)",
-            "label": "Цена газа (Gwei)"
+            "title": "Минимальная Цена Газа ",
+            "description": "Минимальная Цена Газа (GWEI)",
+            "label": "Цена Газа (Gwei)"
         },
         "gas-price-max": {
             "title": "Максимальная цена за газ ",
