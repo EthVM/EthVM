@@ -64,7 +64,7 @@ const MAX_ITEMS = 10
                     }
                 }
             },
-            update: data => data.getTimeseriesData.items,
+            update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
                 this.txTotalDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
             }
@@ -101,7 +101,7 @@ const MAX_ITEMS = 10
                     }
                 }
             },
-            update: data => data.getTimeseriesData.items,
+            update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
                 this.txPenDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
             }
