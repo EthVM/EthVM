@@ -1,21 +1,28 @@
 <template>
     <v-card color="white" flat class="pb-2">
         <app-table-title
-            :title-caption="$vuetify.breakpoint.smAndDown ? $t('token.top-200') : ''"
+            :title-caption="$t('token.top-200')"
             :title="getTitle"
-            :has-pagination="false"
+            :has-pagination="$vuetify.breakpoint.smAndDown ? false : true"
             :page-type="pageType"
             page-link=""
-        />
-        <v-divider />
+            class="pl-2"
+        >
+            <template v-slot:pagination>
+                <app-paginate
+                    v-if="showPagination"
+                    :total="totalPages"
+                    :current-page="index"
+                    :has-input="true"
+                    :has-first="true"
+                    :has-last="true"
+                    class="pb-2"
+                    @newPage="setPage"
+                />
+            </template>
+        </app-table-title>
         <v-layout v-if="!initialLoad" row wrap align-center justify-space-between pl-3 pr-3>
-            <v-flex xs12 md4 hidden-sm-and-down>
-                <p class="info--text">{{ $t('token.top-200') }}</p>
-            </v-flex>
-            <v-flex hidden-sm-and-down md4>
-                <!-- Search Bar -->
-            </v-flex>
-            <v-flex xs12 sm12 md4>
+            <v-flex xs12 sm12 hidden-md-and-up>
                 <v-layout :align-end="$vuetify.breakpoint.mdAndUp" :align-center="$vuetify.breakpoint.smAndDown" d-flex column>
                     <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
                     <app-paginate
