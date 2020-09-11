@@ -157,13 +157,13 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                 },
                 {
                     title: this.$i18n.t('common.amount'),
-                    detail: `${this.txAmount.value} ${this.txAmount.unit}`,
+                    detail: `${this.txAmount.value} ${this.$t(`common.${this.txAmount.unit}`)}`,
                     tooltip: this.txAmount.tooltipText ? `${this.txAmount.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
 
                 {
                     title: this.$i18n.tc(this.pendingString, 1),
-                    detail: `${this.txFee.value} ${this.$i18n.t('common.eth')}`,
+                    detail: `${this.txFee.value} ${this.$t(`common.${this.txFee.unit}`)}`,
                     tooltip: this.txFee.tooltipText ? `${this.txFee.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
                 {
@@ -178,7 +178,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
 
                 {
                     title: this.$i18n.t('gas.price'),
-                    detail: `${this.gasPrice.value} ${this.gasPrice.unit}`,
+                    detail: `${this.gasPrice.value} ${this.$t(`common.${this.gasPrice.unit}`)}`,
                     tooltip: this.gasPrice.tooltipText ? `${this.gasPrice.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
                 {
