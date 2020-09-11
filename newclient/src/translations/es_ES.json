@@ -189,9 +189,9 @@
                 "not-found": "This token contract does not exist.",
                 "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
                 "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
-                "token-owner": "Something went wrong retrieving Token owners",
-                "token-details": "Something went wrong retrieving Token details",
-                "token-market": "Something went wrong retrieving Token Market data"
+                "token-owner": "Something went wrong retrieving Token owners.",
+                "token-details": "Something went wrong retrieving Token details.",
+                "token-market": "Something went wrong retrieving Token Market data."
             },
             "search": {
                 "you-entered": "You entered",
@@ -419,7 +419,7 @@
         },
         "reddit": {
             "title": "Reddit",
-            "text": "Visit our reddit thread."
+            "text": "Visit our Reddit thread."
         },
         "disclaimer": {
             "name": "Disclaimer",
@@ -459,8 +459,8 @@
                 "def": "Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
             },
             "dapp": {
-                "term": "dApp",
-                "def": "Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+                "term": "DApp",
+                "def": "Abbreviation for decentralized application. DApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
             },
             "decentralization": {
                 "term": "Decentralization",
