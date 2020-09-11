@@ -149,16 +149,26 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     mono: true
                 },
                 {
+                    title: this.$i18n.t('tx.to').toString(),
+                    detail: this.transaction.to ? this.transaction.to : this.$t('contract.creation').toString(),
+                    copy: this.transaction.to !== null,
+                    link: this.transaction.to !== null ? `/address/${this.transaction.to!}` : undefined,
+                    mono: this.transaction.to !== null
+                },
+                {
                     title: this.$i18n.t('common.amount'),
                     detail: `${this.txAmount.value} ${this.txAmount.unit}`,
                     tooltip: this.txAmount.tooltipText ? `${this.txAmount.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
 
-                // TODO need tx fee or do we calculate it ourselves ?
                 {
                     title: this.$i18n.tc(this.pendingString, 1),
                     detail: `${this.txFee.value} ${this.$i18n.t('common.eth')}`,
                     tooltip: this.txFee.tooltipText ? `${this.txFee.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
+                },
+                {
+                    title: this.$i18n.t('tx.status'),
+                    detail: `${this.$i18n.tc('tx.' + this.txStatus, 1)}`
                 },
                 {
                     title: this.$i18n.t('gas.limit'),
@@ -181,23 +191,13 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     detail: this.transaction.nonce
                     // tooltip: this.transaction.nonce.tooltipText ? `${this.transaction.nonce.tooltipText}` : undefined
                 },
-                {
-                    title: this.$i18n.t(this.statusString),
-                    detail: this.transaction.replacedBy !== null ? this.transaction.replacedBy : `${this.$i18n.tc('tx.' + this.txStatus, 1)}`,
-                    copy: this.isReplaced ? true : undefined,
-                    link: this.transaction.replacedBy ? `/tx/${this.transaction.from}` : undefined,
-                    mono: this.isReplaced ? true : undefined
-                },
+
                 {
                     title: this.$i18n.t('tx.input'),
                     detail: this.transaction.input
                     // txInput: this.inputFormatted
                 }
             ]
-
-            if (this.transaction.to) {
-                details.splice(2, 0, this.toDetail(this.transaction))
-            }
             if (this.txStatus !== 'pending' && !this.isReplaced) {
                 const time = {
                     title: this.$i18n.t('common.timestmp'),
@@ -206,13 +206,23 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                 details.splice(1, 0, time)
             }
 
-            if (this.txStatus !== 'pending' || this.isReplaced) {
+            if (this.txStatus !== 'pending' && !this.isReplaced) {
                 const block = {
                     title: this.$i18n.t('block.number'),
                     detail: this.formatNumber(this.transaction.blockNumber || 0),
                     link: `/block/number/${this.transaction.blockNumber}`
                 }
                 details.splice(0, 0, block)
+            }
+            if (this.transaction.replacedBy !== null) {
+                const replaced = {
+                    title: this.$i18n.t('tx.replaced'),
+                    detail: this.transaction.replacedBy,
+                    copy: true,
+                    link: this.transaction.replacedBy,
+                    mono: true
+                }
+                details.splice(1, 0, replaced)
             }
         }
 
@@ -249,6 +259,9 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      * @return {String}
      */
     get txStatus(): string {
+        if (this.isReplaced) {
+            return 'replaced-tx'
+        }
         const statuses = ['0x0', '0x1']
         if (this.transaction.status === statuses[0]) {
             return 'failed'
@@ -257,9 +270,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             return 'success'
         }
         return 'pending'
-    }
-    get statusString(): string {
-        return this.isReplaced ? 'tx.replaced' : 'tx.status'
     }
 
     get isReplaced(): boolean {
@@ -299,7 +309,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
     }
 
     get pendingString(): string {
-        return !this.isReplaced && this.txStatus !== 'pending' ? 'tx.fee' : 'tx.estimated-fee'
+        return !this.isReplaced && this.txStatus === 'pending' ? 'tx.estimated-fee' : 'tx.fee'
     }
     /*
     ===================================================================================
@@ -329,21 +339,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
         this.hasError = val
         const mess = hashNotFound ? ErrorMessageTx.notFound : ErrorMessageTx.details
         this.$emit('errorDetails', this.hasError, mess)
-    }
-
-    /**
-     * Return properly-formatted Detail for "to" row in list component.
-     *
-     * @return {Detail}
-     */
-    toDetail(transaction: TxDetailsType): Detail {
-        return {
-            title: this.$i18n.t('tx.to').toString(),
-            detail: transaction.to!,
-            copy: true,
-            link: `/address/${transaction.to!}`,
-            mono: true
-        }
     }
 
     // TODO Figure out if we stil need this
