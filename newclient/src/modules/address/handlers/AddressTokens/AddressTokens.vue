@@ -400,7 +400,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     }
 
     createNFTMetaMap(): void {
-        const contracts = this.getNFTcontractsMeta.tokenContracts
+        const contracts = this.getNFTcontractsMeta ? this.getNFTcontractsMeta.tokenContracts : null
         if (contracts && contracts.length > 0) {
             contracts.forEach(contract => {
                 if (contract && contract.primary_asset_contracts) {
