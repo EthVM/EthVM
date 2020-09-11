@@ -41,20 +41,21 @@ export default class UniqueNftRow extends Vue {
       Initial Data
     ===================================================================================
     */
-    imageExhists = true
+    imageExists = true
     /*
     ===================================================================================
      Computed
     ===================================================================================
     */
     get image(): string {
-        if (!this.loading && this.token && this.imageExhists) {
-            return `${configs.OPENSEA}/dev/getImage?contract=${this.contract}&tokenId=${this.getTokenID(this.token).toString()}`
+        if (!this.loading && this.token && this.imageExists) {
+            const tknImage = `${configs.OPENSEA}/dev/getImage?contract=${this.contract}&tokenId=${this.getTokenID(this.token).toString()}`
+            return tknImage ? tknImage : require('@/assets/icon-token.png')
         }
         return this.contractDefaultImage === '' ? require('@/assets/icon-token.png') : this.contractDefaultImage
     }
     get maxHeight(): string {
-        return this.imageExhists ? '180px' : '100px'
+        return this.imageExists ? '180px' : '100px'
     }
 
     /*
@@ -67,7 +68,7 @@ export default class UniqueNftRow extends Vue {
     }
 
     nftImageLoadFail(index): void {
-        this.imageExhists = false
+        this.imageExists = false
     }
 }
 </script>
