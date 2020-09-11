@@ -2,9 +2,7 @@
     <div class="pb-1 pt-1">
         <v-layout align-center justify-start class="pa-1">
             <v-card-title align-center justify-start class="title font-weight-bold pl-4">{{ title }}</v-card-title>
-            <div :class="statusClass">
-                <p class="caption text-lowercase">{{ $t(status) }}</p>
-            </div>
+            <app-tooltip :text="$t(status)" :icon-color="statusColor" :spin="statusSpin" :icon-type="statusIcon" />
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
     </div>
@@ -13,11 +11,13 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
+import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { TxStatus } from '@app/modules/txs/models/ErrorMessagesForTx'
 
 @Component({
     components: {
-        AppTransformHash
+        AppTransformHash,
+        AppTooltip
     }
 })
 export default class TxDetailsTitle extends Vue {
@@ -38,18 +38,33 @@ export default class TxDetailsTitle extends Vue {
     get title(): string {
         return this.$i18n.t('tx.detail').toString()
     }
-
-    get statusClass(): string {
+    get statusIcon(): string {
         switch (this.status) {
             case TxStatus.success:
-                return 'chip status-success'
+                return 'fa fa-check-circle'
             case TxStatus.failed:
-                return 'chip status-fail'
+                return 'fa fa-times-circle'
             case TxStatus.pending:
-                return 'chip status-pending blinking '
+                return 'fas fa-circle-notch'
             default:
-                return 'chip status-replaced'
+                return 'fa fa-retweet'
         }
+    }
+
+    get statusColor(): string {
+        switch (this.status) {
+            case TxStatus.success:
+                return 'txSuccess'
+            case TxStatus.failed:
+                return 'txFail'
+            case TxStatus.pending:
+                return 'txPen'
+            default:
+                return 'info'
+        }
+    }
+    get statusSpin(): boolean {
+        return this.status === TxStatus.pending
     }
 }
 </script>
@@ -78,13 +93,5 @@ export default class TxDetailsTitle extends Vue {
 .status-pending {
     border-color: #eea66b;
     color: #eea66b;
-}
-.blinking {
-    animation: blinker 2s linear infinite;
-}
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
 }
 </style>
