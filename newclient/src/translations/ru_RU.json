@@ -189,9 +189,9 @@
                 "not-found": "Этот контракт токена не существует.",
                 "transfers-erc721": "Что-то пошло не так при получении переводов Токенов NFT.",
                 "transfers-erc20": "Что-то пошло не так при получении переводов Токенов ERC20.",
-                "token-owner": "Что-то пошло не так при получении владельцев Токена",
-                "token-details": "Что-то пошло не так при получении деталей Токена",
-                "token-market": "Что-то пошло не так при получении данных Рынка Токена"
+                "token-owner": "Something went wrong retrieving Token owners.",
+                "token-details": "Something went wrong retrieving Token details.",
+                "token-market": "Something went wrong retrieving Token Market data."
             },
             "search": {
                 "you-entered": "Вы ввели",
@@ -419,7 +419,7 @@
         },
         "reddit": {
             "title": "Reddit",
-            "text": "Посетите нашу ленту в reddit."
+            "text": "Visit our Reddit thread."
         },
         "disclaimer": {
             "name": "Условия Предоставления",
@@ -460,7 +460,7 @@
             },
             "dapp": {
                 "term": "DApp",
-                "def": "Аббревиатура для децентрализованного приложения. dApps - это приложения с открытым исходным кодом, не контролируемые какой-либо централизованной организацией, обеспечивающие прямое взаимодействие между пользователями без доверенной третьей стороны."
+                "def": "Abbreviation for decentralized application. DApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
             },
             "decentralization": {
                 "term": "Децентрализация",
