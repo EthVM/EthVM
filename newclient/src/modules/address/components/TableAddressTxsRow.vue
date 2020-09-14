@@ -232,7 +232,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         }
         stateData.push({
             name: this.getValueTitle,
-            value: this.transfer.getStatus() !== true ? NumberFormatHelper.formatNonVariableEthValue(new BN(0)) : this.transfer.getValue()
+            value: this.transfer.getStatus() === false ? NumberFormatHelper.formatNonVariableEthValue(new BN(0)) : this.transfer.getValue()
         })
         return {
             status: this.transfer.getStatus(),
