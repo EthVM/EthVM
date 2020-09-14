@@ -6,24 +6,31 @@
     -->
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
-            <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :max-items="7" />
+            <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :max-items="7">
+                <template v-slot:title v-if="!isLoading">
+                    <tx-details-title :status="titleStatus" />
+                </template>
+            </app-details-list>
         </v-flex>
     </v-layout>
 </template>
 
 <script lang="ts">
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import TxDetailsTitle from '@app/modules/txs/components/TxDetailsTitle.vue'
 import { Detail } from '@app/core/components/props'
 import { Mixins, Component, Prop } from 'vue-property-decorator'
-import { getTransactionByHash } from './txDetails.graphql'
+import { getTransactionByHash, transactionEvent } from './txDetails.graphql'
 import { TxDetails as TxDetailsType } from './apolloTypes/TxDetails'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import BN from 'bignumber.js'
-import { ErrorMessageTx } from '@app/modules/txs/models/ErrorMessagesForTx'
+import { ErrorMessageTx, TxStatus } from '@app/modules/txs/models/ErrorMessagesForTx'
+
 @Component({
     components: {
-        AppDetailsList
+        AppDetailsList,
+        TxDetailsTitle
     },
     apollo: {
         transaction: {
@@ -35,6 +42,9 @@ import { ErrorMessageTx } from '@app/modules/txs/models/ErrorMessagesForTx'
             update: data => data.getTransactionByHash,
             result({ data }) {
                 if (data && data.getTransactionByHash) {
+                    if (!this.isReplaced && this.txStatus === 'pending' && !this.subscribed) {
+                        this.startSubscription()
+                    }
                     this.emitErrorState(false)
                 }
             },
@@ -66,6 +76,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
 
     hasError = false
     transaction!: TxDetailsType
+    subscribed = false
 
     /*
   ===================================================================================
@@ -80,32 +91,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      */
     get title(): string {
         return this.$i18n.t('tx.detail').toString()
-    }
-
-    /*
- ===================================================================================
-   Methods
- ===================================================================================
- */
-    emitErrorState(val: boolean, hashNotFound = false): void {
-        this.hasError = val
-        const mess = hashNotFound ? ErrorMessageTx.notFound : ErrorMessageTx.details
-        this.$emit('errorDetails', this.hasError, mess)
-    }
-
-    /**
-     * Return properly-formatted Detail for "to" row in list component.
-     *
-     * @return {Detail}
-     */
-    toDetail(transaction: TxDetailsType): Detail {
-        return {
-            title: this.$i18n.t('tx.to').toString(),
-            detail: transaction.to!,
-            copy: true,
-            link: `/address/${transaction.to!}`,
-            mono: true
-        }
     }
 
     /**
@@ -151,19 +136,10 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             // const receipt = transaction.receipt!
             details = [
                 {
-                    title: this.$i18n.t('block.number'),
-                    detail: this.formatNumber(this.transaction.blockNumber || 0),
-                    link: `/block/number/${this.transaction.blockNumber}`
-                },
-                {
                     title: this.$i18n.t('common.hash'),
                     detail: this.transaction.hash,
                     copy: true,
                     mono: true
-                },
-                {
-                    title: this.$i18n.t('common.timestmp'),
-                    detail: this.transaction.timestamp !== null ? new Date(this.transaction.timestamp * 1e3).toString() : ''
                 },
                 {
                     title: this.$i18n.t('tx.from'),
@@ -173,24 +149,37 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     mono: true
                 },
                 {
+                    title: this.$i18n.t('tx.to').toString(),
+                    detail: this.transaction.to ? this.transaction.to : this.$t('contract.creation').toString(),
+                    copy: this.transaction.to !== null,
+                    link: this.transaction.to !== null ? `/address/${this.transaction.to!}` : undefined,
+                    mono: this.transaction.to !== null
+                },
+                {
                     title: this.$i18n.t('common.amount'),
-                    detail: `${this.txAmount.value} ${this.txAmount.unit}`,
+                    detail: `${this.txAmount.value} ${this.$t(`common.${this.txAmount.unit}`)}`,
                     tooltip: this.txAmount.tooltipText ? `${this.txAmount.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
+                },
+
+                {
+                    title: this.$i18n.tc(this.pendingString, 1),
+                    detail: `${this.txFee.value} ${this.$t(`common.${this.txFee.unit}`)}`,
+                    tooltip: this.txFee.tooltipText ? `${this.txFee.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
                 {
                     title: this.$i18n.t('tx.status'),
                     detail: `${this.$i18n.tc('tx.' + this.txStatus, 1)}`
                 },
-                // TODO need tx fee or do we calculate it ourselves ?
-                {
-                    title: this.$i18n.tc('tx.fee', 2),
-                    detail: `${this.txFee.value} ${this.$i18n.t('common.eth')}`,
-                    tooltip: this.txFee.tooltipText ? `${this.txFee.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
-                },
                 {
                     title: this.$i18n.t('gas.limit'),
                     detail: this.formatNumber(new BN(this.transaction.gas).toNumber())
                     // tooltip: this.transaction.gasFormatted.tooltipText ? `${this.transaction.gasFormatted.tooltipText}` : undefined
+                },
+
+                {
+                    title: this.$i18n.t('gas.price'),
+                    detail: `${this.gasPrice.value} ${this.$t(`common.${this.gasPrice.unit}`)}`,
+                    tooltip: this.gasPrice.tooltipText ? `${this.gasPrice.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
                 },
                 {
                     title: this.$i18n.t('gas.used'),
@@ -198,23 +187,42 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     // tooltip: receipt && receipt.gasUsedFormatted.tooltipText ? `${receipt.gasUsedFormatted.tooltipText}` : undefined
                 },
                 {
-                    title: this.$i18n.t('gas.price'),
-                    detail: `${this.gasPrice.value} ${this.gasPrice.unit}`,
-                    tooltip: this.gasPrice.tooltipText ? `${this.gasPrice.tooltipText} ${this.$i18n.t('common.eth')}` : undefined
-                },
-                {
                     title: this.$i18n.t('common.nonce'),
                     detail: this.transaction.nonce
                     // tooltip: this.transaction.nonce.tooltipText ? `${this.transaction.nonce.tooltipText}` : undefined
                 },
+
                 {
                     title: this.$i18n.t('tx.input'),
                     detail: this.transaction.input
                     // txInput: this.inputFormatted
                 }
             ]
-            if (this.transaction.to) {
-                details.splice(5, 0, this.toDetail(this.transaction))
+            if (this.txStatus !== 'pending' && !this.isReplaced) {
+                const time = {
+                    title: this.$i18n.t('common.timestmp'),
+                    detail: this.transaction.timestamp !== null ? new Date(this.transaction.timestamp * 1e3).toString() : ''
+                }
+                details.splice(1, 0, time)
+            }
+
+            if (this.txStatus !== 'pending' && !this.isReplaced) {
+                const block = {
+                    title: this.$i18n.t('block.number'),
+                    detail: this.formatNumber(this.transaction.blockNumber || 0),
+                    link: `/block/number/${this.transaction.blockNumber}`
+                }
+                details.splice(0, 0, block)
+            }
+            if (this.transaction.replacedBy !== null) {
+                const replaced = {
+                    title: this.$i18n.t('tx.replaced'),
+                    detail: this.transaction.replacedBy,
+                    copy: true,
+                    link: this.transaction.replacedBy,
+                    mono: true
+                }
+                details.splice(1, 0, replaced)
             }
         }
 
@@ -251,6 +259,9 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      * @return {String}
      */
     get txStatus(): string {
+        if (this.isReplaced) {
+            return 'replaced-tx'
+        }
         const statuses = ['0x0', '0x1']
         if (this.transaction.status === statuses[0]) {
             return 'failed'
@@ -259,6 +270,24 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             return 'success'
         }
         return 'pending'
+    }
+
+    get isReplaced(): boolean {
+        return this.transaction && this.transaction.replacedBy !== null
+    }
+
+    get titleStatus(): TxStatus {
+        if (!this.isReplaced && this.transaction) {
+            switch (this.transaction.status) {
+                case '0x0':
+                    return TxStatus.failed
+                case '0x1':
+                    return TxStatus.success
+                default:
+                    return TxStatus.pending
+            }
+        }
+        return TxStatus.replaced
     }
     /**
      * Calculate the transaction fee.
@@ -272,7 +301,44 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             const fee = price.times(used)
             return this.formatVariableUnitEthValue(fee)
         }
+        if (!this.isReplaced && this.txStatus === 'pending') {
+            const fee = new BN(this.transaction.gas).multipliedBy(this.transaction.gasPrice)
+            return this.formatVariableUnitEthValue(fee)
+        }
         return { value: '0' }
+    }
+
+    get pendingString(): string {
+        return !this.isReplaced && this.txStatus === 'pending' ? 'tx.estimated-fee' : 'tx.fee'
+    }
+    /*
+    ===================================================================================
+     Methods
+    ===================================================================================
+    */
+
+    startSubscription(): void {
+        const _hash = this.transaction.hash
+        const observer = this.$apollo.subscribe({
+            query: transactionEvent,
+            variables: {
+                hash: _hash
+            }
+        })
+        const a = observer.subscribe({
+            next: data => {
+                a.unsubscribe()
+                this.$apollo.queries.transaction.refetch()
+            },
+            error: error => {
+                this.emitErrorState(true)
+            }
+        })
+    }
+    emitErrorState(val: boolean, hashNotFound = false): void {
+        this.hasError = val
+        const mess = hashNotFound ? ErrorMessageTx.notFound : ErrorMessageTx.details
+        this.$emit('errorDetails', this.hasError, mess)
     }
 
     // TODO Figure out if we stil need this
