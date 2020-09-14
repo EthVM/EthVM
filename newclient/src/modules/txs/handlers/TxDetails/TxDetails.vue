@@ -26,6 +26,7 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { ErrorMessageTx, TxStatus } from '@app/modules/txs/models/ErrorMessagesForTx'
+import { FormattedNumberUnit } from '@app/core/helper/number-format-helper'
 
 @Component({
     components: {
@@ -305,7 +306,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             const fee = new BN(this.transaction.gas).multipliedBy(this.transaction.gasPrice)
             return this.formatVariableUnitEthValue(fee)
         }
-        return { value: '0' }
+        return { value: '0', unit: FormattedNumberUnit.ETH }
     }
 
     get pendingString(): string {
