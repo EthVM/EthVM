@@ -192,8 +192,9 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { FormattedNumber } from '@app/core/helper/number-format-helper'
+import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-format-helper'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
+import BN from 'bignumber.js'
 
 const TYPES = ['in', 'out', 'self']
 @Component({
@@ -229,7 +230,10 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         if (this.type !== TYPES[0]) {
             stateData.push({ name: `${this.$tc('tx.fee', 1)}`, value: this.transfer.getFee() })
         }
-        stateData.push({ name: this.getValueTitle, value: this.transfer.getValue() })
+        stateData.push({
+            name: this.getValueTitle,
+            value: this.transfer.getStatus() === false ? NumberFormatHelper.formatNonVariableEthValue(new BN(0)) : this.transfer.getValue()
+        })
         return {
             status: this.transfer.getStatus(),
             balAfter: this.transfer.getBalAfter(this.type),
