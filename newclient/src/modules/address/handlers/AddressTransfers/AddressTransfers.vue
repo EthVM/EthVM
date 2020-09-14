@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white" flat class="pb-2" transition="slide-x-reverse-transition">
+    <v-card color="white" flat class="pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
             <!-- Notice new update-->
             <template v-slot:update v-if="!initialLoad">
