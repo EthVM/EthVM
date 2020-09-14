@@ -43,6 +43,7 @@
         "total": "Всего Txs",
         "success": "Успешная Tx | Успешные Txs",
         "failed": "Неудачная Tx | Неудачные Txs",
+        "replaced-tx": "Replaced Tx | Replaced Txs",
         "for-tx": "Для Tx",
         "cost": "Стоимость Tx",
         "root": "Корень Транзакций",
@@ -52,6 +53,7 @@
         "input": "Вводные Данные",
         "func": "Функция",
         "method": "ID Метода",
+        "replaced": "Replaced by",
         "type": {
             "self": "Tx Себе",
             "in": "Входящая с",
@@ -100,7 +102,8 @@
         "creator": "Создатель Контракта",
         "hash": "Контракт #",
         "created": "Время создания",
-        "total": "Всего"
+        "total": "Всего",
+        "creation": "Contract Creation"
     },
     "gas": {
         "name": "Газ",
@@ -144,6 +147,7 @@
         "success": "Успешная",
         "fail": "Неудачная",
         "pending": "Ожидающая",
+        "replaced": "Replaced",
         "amount": "Сумма",
         "quantity": "Количество",
         "id": "ID",
