@@ -6,9 +6,9 @@
       =====================================================================================
       -->
         <v-flex xs12 hidden-md-and-up>
-            <div :class="txStatusClass">
+            <div :class="isPending ? 'table-row-mobile' : txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
-                    <v-flex xs6 pa-1>
+                    <v-flex v-if="!isPending" xs6 pa-1>
                         <router-link :to="`/block/number${transferObj.block}`" class="black--text font-weight-medium pb-1"
                             >{{ $t('block.number') }} {{ transaction.block }}</router-link
                         >
@@ -63,7 +63,7 @@
             LG: 1/12 (1)
           =====================================================================================
           -->
-                <v-flex sm2 lg1>
+                <v-flex v-if="!isPending" sm2 lg1>
                     <router-link :to="`/block/number/${transferObj.block}`" class="black--text text-truncate font-italic psmall">{{
                         transaction.block
                     }}</router-link>
@@ -174,6 +174,8 @@ import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { Tx } from './props'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import { TxSummary_transfers_transfer as TransferObj } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
+import { pendingTx_pendingTransaction as PendingTx } from '@app/modules/txs/handlers/PendingTxs/apolloTypes/pendingTx'
+
 import BN from 'bignumber.js'
 
 @Component({
@@ -208,15 +210,17 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get transaction(): Tx {
+        const tx = this.isPending ? this.tx : this.transferObj
+        console.error('this', tx)
         return {
-            hash: this.transferObj.transactionHash,
-            block: this.formatNumber(this.transferObj.block),
-            from: this.transferObj.from,
-            to: this.transferObj.to,
-            timestamp: new Date(this.transferObj.timestamp * 1e3),
-            fee: this.formatNonVariableEthValue(new BN(this.transferObj.txFee)),
+            hash: tx.transactionHash,
+            block: this.formatNumber(tx.block),
+            from: tx.from,
+            to: tx.to,
+            timestamp: new Date(tx.timestamp * 1e3),
+            fee: this.formatNonVariableEthValue(new BN(tx.txFee)),
             value: this.formatNonVariableEthValue(new BN(this.tx ? this.tx.value : '')),
-            status: this.transferObj.status != null ? this.transferObj.status : false
+            status: tx.status != null ? tx.status : false
         }
     }
 

@@ -1,22 +1,21 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-2">
-        <!-- <app-table-title :title="$tc('tx.pending', 2)" :has-pagination="showPagination" :page-type="pageType" page-link="/txs">
-            <template v-slot:update v-if="!isHome && !isBlock">
+        <app-table-title :title="$tc('tx.pending', 2)" :has-pagination="showPagination" page-type="pending" page-link="/pending-txs">
+            <!-- <template v-slot:update v-if="!isHome && !isBlock">
                 <app-new-update :text="$t('message.update.txs')" :update-count="newMinedTransfers" :hide-count="true" @reload="setPage(0, true)" />
-            </template>
+            </template> -->
             <template v-slot:pagination v-if="showPagination && !initialLoad">
-                <app-paginate
-                    v-if="isBlock"
-                    :total="totalPages"
-                    :current-page="index"
-                    :has-input="isBlock"
-                    :has-first="isBlock"
-                    :has-last="isBlock"
-                    @newPage="setPage"
-                />
-                <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" /> </template
+                <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" /></template
         ></app-table-title>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transactions" :is-scroll-view="isHome" />
+        <table-txs
+            :max-items="maxItems"
+            :index="index"
+            :is-loading="loading"
+            :table-message="message"
+            :txs-data="pendingTxs"
+            :is-scroll-view="false"
+            :pending="true"
+        />
         <v-layout
             v-if="showPagination && !initialLoad"
             :justify-end="$vuetify.breakpoint.mdAndUp"
@@ -24,17 +23,8 @@
             row
             class="pb-1 pr-3 pl-2"
         >
-            <app-paginate
-                v-if="isBlock"
-                :total="totalPages"
-                :current-page="index"
-                :has-input="isBlock"
-                :has-first="isBlock"
-                :has-last="isBlock"
-                @newPage="setPage"
-            />
-            <app-paginate-has-more v-else :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
-        </v-layout> -->
+            <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+        </v-layout>
     </v-card>
 </template>
 
@@ -46,15 +36,10 @@ import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getBlockTransfers, getAllTxs, newTransfersCompleteFeed } from './queryTransfers.graphql'
-import {
-    getBlockTransfers_getBlockTransfers as TypeBlockTransfers,
-    getBlockTransfers_getBlockTransfers_transfers as TypeTransfers
-} from './apolloTypes/getBlockTransfers'
-import { newTransfersCompleteFeed as TypeTransfersSubscribtion } from './apolloTypes/newTransfersCompleteFeed'
-import { getAllTxs_getAllEthTransfers as AllTxType } from './apolloTypes/getAllTxs'
-import { TransferType } from '@app/apollo/global/globalTypes'
-import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
+import { pendingTx } from './pendingTxs.graphql'
+import { pendingTx as PendingTxType } from './apolloTypes/pendingTx'
+// import { TransferType } from '@app/apollo/global/globalTypes'
+// import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
 @Component({
     components: {
@@ -65,77 +50,24 @@ import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBl
         TableTxs
     },
     apollo: {
-        getBlockTransfers: {
-            query: getBlockTransfers,
-            fetchPolicy: 'network-only',
-            skip() {
-                return this.skipBlockTxs
-            },
-            variables() {
-                return this.blockRef ? { _number: parseInt(this.blockRef) } : undefined
-            },
-            result({ data }) {
-                if (data && data.getBlockTransfers) {
-                    if (data.getBlockTransfers.transfers.length > 0) {
-                        this.totalPages = Math.ceil(new BN(data.getBlockTransfers.transfers.length).div(this.maxItems).toNumber())
-                    }
-                    this.emitErrorState(false)
-                    this.initialLoad = false
-                }
-            },
-            error(error) {
-                this.emitErrorState(true)
-            }
-        },
-        getAllEthTransfers: {
-            query: getAllTxs,
-            fetchPolicy: 'network-only',
-            variables() {
-                return {
-                    _limit: this.maxItems,
-                    _nextKey: null
-                }
-            },
-            skip() {
-                return this.isBlock
-            },
-            result({ data }) {
-                if (data && data.getAllEthTransfers && data.getAllEthTransfers.transfers) {
-                    this.initialLoad = false
-                    this.emitErrorState(false)
-                } else {
-                    this.emitErrorState(true)
-                }
-            },
-            error(error) {
-                this.emitErrorState(true)
-            }
-        },
         $subscribe: {
-            newTransfersCompleteFeed: {
-                query: newTransfersCompleteFeed,
-
-                skip() {
-                    return this.isBlock
-                },
+            NewPendingTx: {
+                query: pendingTx,
                 result({ data }) {
-                    if (data.newTransfersCompleteFeed.type === TransferType.ETH) {
-                        if (this.isHome) {
-                            this.$apollo.queries.getAllEthTransfers.refresh()
-                            this.emitErrorState(false)
-                        } else {
-                            this.newMinedTransfers++
-                        }
+                    if (data.pendingTransaction) {
+                        this.pendingTxs.push(data.pendingTransaction)
                     }
+                    console.error('data', this.pendingTxs)
                 },
                 error(error) {
+                    console.error('error', error)
                     this.emitErrorState(true)
                 }
             }
         }
     }
 })
-export default class BlockTxs extends Vue {
+export default class PendingTxs extends Vue {
     /*
     ===================================================================================
       Props
@@ -143,19 +75,13 @@ export default class BlockTxs extends Vue {
     */
 
     @Prop(Number) maxItems!: number
-    @Prop({ type: String, default: 'home' }) pageType!: string
-    @Prop(String) blockRef?: string
-    @Prop({ type: Boolean, default: false }) isMined!: boolean
-
     /*
     ===================================================================================
      Initial Data
     ===================================================================================
     */
-
+    pendingTxs = []
     initialLoad = true
-    getBlockTransfers!: TypeBlockTransfers
-    getAllEthTransfers!: AllTxType
     index = 0
     totalPages = 0
     isEnd = 0
@@ -168,48 +94,41 @@ export default class BlockTxs extends Vue {
     ===================================================================================
     */
 
-    get transactions(): (TypeTransfers | null)[] | [] {
-        if (this.isBlock && this.getBlockTransfers && this.getBlockTransfers.transfers !== null) {
-            return this.getBlockTransfers.transfers
-        }
-        if (!this.isBlock && this.getAllEthTransfers && this.getAllEthTransfers.transfers !== null) {
-            return this.getAllEthTransfers.transfers
-        }
-        return []
-    }
+    // get transactions(): (TypeTransfers | null)[] | [] {
+    //     if (this.isBlock && this.getBlockTransfers && this.getBlockTransfers.transfers !== null) {
+    //         return this.getBlockTransfers.transfers
+    //     }
+    //     if (!this.isBlock && this.getAllEthTransfers && this.getAllEthTransfers.transfers !== null) {
+    //         return this.getAllEthTransfers.transfers
+    //     }
+    //     return []
+    // }
 
     get message(): string {
         if (this.loading) {
             return ''
         }
-        if (this.isBlock && this.transactions.length === 0) {
-            return `${this.$t('message.tx.no-in-block')}`
-        }
+        // if (this.isBlock && this.transactions.length === 0) {
+        //     return `${this.$t('message.tx.no-in-block')}`
+        // }
         return ''
     }
 
-    get isHome(): boolean {
-        return this.pageType === 'home'
-    }
+    // get isHome(): boolean {
+    //     return this.pageType === 'home'
+    // }
 
-    get isBlock(): boolean {
-        return this.pageType === 'blockDetails'
-    }
-    get skipBlockTxs(): boolean {
-        return !(this.isBlock && this.isMined)
-    }
+    // get isBlock(): boolean {
+    //     return this.pageType === 'blockDetails'
+    // }
+    // get skipBlockTxs(): boolean {
+    //     return !(this.isBlock && this.isMined)
+    // }
 
-    get getTitle(): string {
-        return this.isBlock ? `${this.$t('block.txs')}` : `${this.$tc('tx.last', 1)}`
-    }
+    // get getTitle(): string {
+    //     return this.isBlock ? `${this.$t('block.txs')}` : `${this.$tc('tx.last', 1)}`
+    // }
     get showPagination(): boolean {
-        if (this.isHome) {
-            return false
-        }
-        if (this.isBlock) {
-            return this.totalPages > 1 ? true : false
-        }
-
         return this.hasMore
     }
 
@@ -217,14 +136,11 @@ export default class BlockTxs extends Vue {
         if (this.hasError) {
             return true
         }
-        if (this.isBlock || this.isHome) {
-            return this.initialLoad || this.$apollo.queries.getBlockTransfers.loading
-        }
-        return this.$apollo.queries.getAllEthTransfers.loading
+        return false
     }
     get hasMore(): boolean {
-        if (!this.isHome && !this.isBlock) {
-            return this.getAllEthTransfers ? !(this.getAllEthTransfers.nextKey === null) : false
+        if (this.pendingTxs.length > this.maxItems) {
+            return true
         }
         return false
     }
@@ -235,55 +151,55 @@ export default class BlockTxs extends Vue {
     ===================================================================================
     */
 
-    setPage(page: number, reset: boolean = false): void {
-        if (reset) {
-            this.isEnd = 0
-            if (!this.isHome && !this.isBlock) {
-                this.newMinedTransfers = 0
-            }
-            this.$apollo.queries.getAllEthTransfers.refetch()
-        } else {
-            if (!this.isBlock && page > this.isEnd && this.hasMore) {
-                this.$apollo.queries.getAllEthTransfers.fetchMore({
-                    variables: {
-                        _limit: this.maxItems,
-                        _nextKey: this.getAllEthTransfers.nextKey
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        this.isEnd = page
-                        const newT = fetchMoreResult.getAllEthTransfers.transfers
-                        const prevT = previousResult.getAllEthTransfers.transfers
-                        return {
-                            ...previousResult,
-                            getAllEthTransfers: {
-                                __typename: previousResult.getAllEthTransfers.__typename,
-                                nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
-                                transfers: [...prevT, ...newT]
-                            }
-                        }
-                    }
-                })
-            }
-        }
+    // setPage(page: number, reset: boolean = false): void {
+    //     if (reset) {
+    //         this.isEnd = 0
+    //         if (!this.isHome && !this.isBlock) {
+    //             this.newMinedTransfers = 0
+    //         }
+    //         this.$apollo.queries.getAllEthTransfers.refetch()
+    //     } else {
+    //         if (!this.isBlock && page > this.isEnd && this.hasMore) {
+    //             this.$apollo.queries.getAllEthTransfers.fetchMore({
+    //                 variables: {
+    //                     _limit: this.maxItems,
+    //                     _nextKey: this.getAllEthTransfers.nextKey
+    //                 },
+    //                 updateQuery: (previousResult, { fetchMoreResult }) => {
+    //                     this.isEnd = page
+    //                     const newT = fetchMoreResult.getAllEthTransfers.transfers
+    //                     const prevT = previousResult.getAllEthTransfers.transfers
+    //                     return {
+    //                         ...previousResult,
+    //                         getAllEthTransfers: {
+    //                             __typename: previousResult.getAllEthTransfers.__typename,
+    //                             nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
+    //                             transfers: [...prevT, ...newT]
+    //                         }
+    //                     }
+    //                 }
+    //             })
+    //         }
+    //     }
 
-        this.index = page
-    }
-    emitErrorState(val: boolean): void {
-        this.hasError = val
-        this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)
-    }
+    //     this.index = page
+    // }
+    // emitErrorState(val: boolean): void {
+    //     this.hasError = val
+    //     this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)
+    // }
     /*
     ===================================================================================
       Watch:
     ===================================================================================
     */
-    @Watch('blockRef')
-    onBlockRefChanged(newVal: string, oldVal: string) {
-        if (newVal !== oldVal) {
-            this.initialLoad = true
-            this.hasError = false
-        }
-    }
+    // @Watch('blockRef')
+    // onBlockRefChanged(newVal: string, oldVal: string) {
+    //     if (newVal !== oldVal) {
+    //         this.initialLoad = true
+    //         this.hasError = false
+    //     }
+    // }
 }
 </script>
 <style scoped lang="css">
