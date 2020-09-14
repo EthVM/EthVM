@@ -211,16 +211,15 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
 
     get transaction(): Tx {
         const tx = this.isPending ? this.tx : this.transferObj
-        console.error('this', tx)
         return {
-            hash: tx.transactionHash,
-            block: this.formatNumber(tx.block),
-            from: tx.from,
-            to: tx.to,
-            timestamp: new Date(tx.timestamp * 1e3),
-            fee: this.formatNonVariableEthValue(new BN(tx.txFee)),
+            hash: tx['transactionHash'],
+            block: this.formatNumber(tx['block']),
+            from: tx['from'],
+            to: tx['to'],
+            timestamp: new Date(tx['timestamp'] * 1e3),
+            fee: this.formatNonVariableEthValue(new BN(tx['txFee'])),
             value: this.formatNonVariableEthValue(new BN(this.tx ? this.tx.value : '')),
-            status: tx.status != null ? tx.status : false
+            status: tx['status'] != null ? tx['status'] : false
         }
     }
 
