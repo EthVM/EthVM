@@ -38,8 +38,8 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State } from '@app/core/components/props'
 
-const minusTYPES = ['Tx Fee', 'Value Sent']
-const plusTYPES = ['Total Block Reward', 'Tx Fees Rewards', 'Uncle Reward', 'Including Uncle Reward?']
+const minusTypes = ['Tx Fee', 'Value Sent']
+const plusTypes = ['Total Block Reward', 'Tx Fees Rewards', 'Uncle Reward', 'Including Uncle Reward?']
 
 @Component
 export default class AppStateDiff extends Vue {
@@ -101,10 +101,10 @@ export default class AppStateDiff extends Vue {
   ===================================================================================
   */
     showMinus(name) {
-        if (minusTYPES.indexOf(name) > -1) {
+        if (minusTypes.indexOf(name) > -1) {
             return '-'
         }
-        if (plusTYPES.indexOf(name) > -1) {
+        if (plusTypes.indexOf(name) > -1) {
             return '+'
         }
     }
