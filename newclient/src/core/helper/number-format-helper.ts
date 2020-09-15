@@ -285,12 +285,12 @@ export class NumberFormatHelper {
          */
 
         if (gweiBN.isLessThan(OneMillion)) {
-            return { ...this.formatFloatingPointValue(gweiBN), unit }
+            return { ...this.formatFloatingPointValue(gweiBN), unit, tooltipText: `${new EthValue(value).toEthBN().toFixed()}` }
         }
 
         /**
          * Case IV: x >= 1 mill
-         * Return: number in wei and show tooltip with Gwei value
+         * Return: number in eth and show tooltip with Gwei value
          */
         return {
             ...this.formatNonVariableEthValue(value),
