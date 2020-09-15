@@ -173,7 +173,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
      */
     get holderDetailsList(): Detail[] {
         const details = [this.holderDetail, this.holderBalanceDetail]
-        if (!this.isRopsten) {
+        if (!this.isRopsten && this.holderUsdDetail.detail) {
             details.push(this.holderUsdDetail)
         }
         // details.push(this.holderTransfersDetail)
