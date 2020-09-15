@@ -50,7 +50,7 @@ import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBl
                 if (data) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.initialLoadedBlock = this.getLatestBlockInfo.number
+                        this.initialLoadedBlock = this.getLatestBlockInfo ? this.getLatestBlockInfo.number : null
                         this.initialLoad = false
                         this.timestamp = new Date().toString()
                     }

@@ -16,11 +16,10 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { getTokensBeginsWith, getHashType } from '@app/modules/search/handlers/searchDetails.graphql'
 import Search from '@app/modules/search/components/Search.vue'
-
+import { eth } from '@app/core/helper'
 interface SearchRef extends Vue {
     resetValues(): void
 }
-
 @Component({
     components: {
         Search
@@ -39,16 +38,27 @@ export default class SearchDetails extends Vue {
     searchAutocomplete = ''
     items = []
     isLoading = false
-
     /*
   ===================================================================================
     Methods
   ===================================================================================
   */
+    setError(param): void {
+        this.routeToNotFound(param)
+        this.hasError = true
+        this.isLoading = false
+    }
+    isValidHash(param): boolean {
+        return eth.isValidHash(this.removeSpaces(param))
+    }
     getHashType(param): void {
         let routeName = ''
         this.isLoading = true
         this.hasError = false
+        if (!this.isValidHash(param)) {
+            this.setError(param)
+            return
+        }
         this.$apollo
             .query({
                 query: getHashType,
@@ -69,29 +79,24 @@ export default class SearchDetails extends Vue {
                 } else if (hashType.includes('BLOCK')) {
                     routeName = 'blockHash'
                 } else {
-                    this.routeToNotFound(param)
+                    this.setError(param)
                 }
                 this.routeTo(routeName, param)
                 this.isLoading = false
             })
             .catch(error => {
-                this.routeToNotFound(param)
-                this.hasError = true
-                this.isLoading = false
+                this.setError(param)
                 throw error
             })
     }
-
     routeToNotFound(searchVal): void {
         const route = { name: 'search-not-found', params: { searchTerm: searchVal } }
         this.$router.push(route).catch(() => {})
     }
-
     routeTo(selectVal, searchVal): void {
         const route = { name: this.getSelectVal(selectVal, searchVal), params: this.getParam(selectVal, searchVal) }
         this.$router.push(route).catch(() => {})
     }
-
     routeToToken(param): void {
         const route = { name: 'token-detail', params: { addressRef: this.removeSpaces(param) } }
         this.$router
@@ -99,7 +104,6 @@ export default class SearchDetails extends Vue {
             .then(() => this.$refs.search.resetValues())
             .catch(() => {})
     }
-
     getSelectVal(selectVal, searchVal) {
         const isNum = /^\d+$/.test(searchVal)
         if (selectVal === 'block' && !isNum) {
@@ -107,7 +111,6 @@ export default class SearchDetails extends Vue {
         }
         return selectVal
     }
-
     getParam(selectVal, searchVal): {} {
         if (selectVal === 'transaction') {
             return { txRef: this.removeSpaces(searchVal) }
@@ -118,7 +121,6 @@ export default class SearchDetails extends Vue {
         }
         return { blockRef: this.removeSpaces(searchVal) }
     }
-
     getToken(param): void {
         if (!this.onlyLetters(param)) {
             return
@@ -138,50 +140,41 @@ export default class SearchDetails extends Vue {
                     this.routeToToken(this.items[0]['contract'])
                 }
                 if (this.items.length === 0) {
-                    this.routeToNotFound(param)
-                    this.hasError = true
+                    this.setError(param)
                 }
                 this.isLoading = false
             })
             .catch(error => {
-                this.routeToNotFound(param)
-                this.hasError = true
-                this.isLoading = false
+                this.setError(param)
                 throw error
             })
     }
-
     getAllSearch(param): void {
         if (param && param.contract) {
             this.routeToToken(param.contract)
         }
         this.onlyLetters(param) ? this.getToken(param) : this.getHashType(param)
     }
-
     onSelect(param): void {
         if (param && param.contract) {
             this.routeToToken(param.contract)
         }
     }
-
     removeSpaces(val): string {
         if (val) {
             return val.replace(/ /g, '')
         }
         return ''
     }
-
     onlyLetters(param): boolean {
         const value = this.removeSpaces(param)
         return /^[a-zA-Z]+$/.test(value) ? true : false
     }
-
     /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
-
     get selectItems(): any[] {
         return [
             { text: this.$t('filter.all'), value: 'all' },

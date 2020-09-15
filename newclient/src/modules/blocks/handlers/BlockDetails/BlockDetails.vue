@@ -270,7 +270,8 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     }
     get lastBlock(): number | undefined {
         if (!this.$apollo.queries.getLatestBlockInfo.loading) {
-            return this.newBlockNumber ? this.newBlockNumber : this.getLatestBlockInfo.number
+            const latestBlockNum = this.getLatestBlockInfo ? this.getLatestBlockInfo.number : undefined
+            return this.newBlockNumber ? this.newBlockNumber : latestBlockNum
         }
         return undefined
     }

@@ -112,7 +112,10 @@ interface NFTMetaMap {
             },
             deep: true,
             update(data) {
-                return this.isERC20 ? data.getOwnersERC20Tokens.owners : data.getOwnersERC721Balances
+                if (this.isERC20) {
+                    return data.getOwnersERC20Tokens ? data.getOwnersERC20Tokens.owners : null
+                }
+                return data.getOwnersERC721Balances
             },
             result({ data }) {
                 if (this.hasTokens) {
@@ -397,7 +400,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     }
 
     createNFTMetaMap(): void {
-        const contracts = this.getNFTcontractsMeta.tokenContracts
+        const contracts = this.getNFTcontractsMeta ? this.getNFTcontractsMeta.tokenContracts : null
         if (contracts && contracts.length > 0) {
             contracts.forEach(contract => {
                 if (contract && contract.primary_asset_contracts) {
