@@ -84,7 +84,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
         gh: 'Gh/s',
         mh: 'Mh/s'
     }
-    initialLoadedBlock!: number
+    initialLoadedBlock: number = 0
     hasError = false
 
     /*
