@@ -95,7 +95,8 @@
         "per": "per",
         "filtered": "Filtered by Holder",
         "sort-by": "Sort by",
-        "total-tokens": "Total Tokens"
+        "total-tokens": "Total Tokens",
+        "image": "Image"
     },
 
     "address": {
