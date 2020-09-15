@@ -92,7 +92,8 @@
         "per": "за",
         "filtered": "Отфильтровано по Владельцу",
         "sort-by": "Сортировка",
-        "total-tokens": "Всего Токенов"
+        "total-tokens": "Всего Токенов",
+        "image": "Image"
     },
     "address": {
         "name": "Адрес | Адреса"
