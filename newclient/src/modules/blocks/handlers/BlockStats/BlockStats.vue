@@ -48,12 +48,12 @@ import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBl
             query: getLatestBlockInfo,
             result({ data }) {
                 if (data) {
-                    this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.initialLoadedBlock = this.getLatestBlockInfo.number
                         this.initialLoad = false
-                        this.timestamp = new Date().toString()
                     }
+                    this.initialLoadedBlock = this.getLatestBlockInfo.number
+                    this.timestamp = new Date().toString()
+                    this.emitErrorState(false)
                 }
             },
             error(error) {
@@ -97,9 +97,6 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
         if (this.loading) {
             return ''
         }
-        if (this.newBlock && new BN(this.newBlock).isGreaterThan(new BN(this.initialLoadedBlock))) {
-            return this.formatNumber(this.newBlock)
-        }
         return this.formatNumber(this.initialLoadedBlock)
     }
 
@@ -130,8 +127,7 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
     */
     @Watch('newBlock')
     onNewBlockChanged(newVal: number, oldVal: number): void {
-        if (newVal && newVal != oldVal) {
-            this.timestamp = new Date().toString()
+        if (newVal && newVal != oldVal && newVal > this.initialLoadedBlock) {
             this.$apollo.queries.getLatestBlockInfo.refetch()
         }
     }
