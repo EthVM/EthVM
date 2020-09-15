@@ -252,7 +252,7 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      * @return {FormattedNumber}
      */
     get gasPrice(): FormattedNumber {
-        return this.formatVariableUnitEthValue(new BN(this.transaction.gasPrice))
+        return this.formatNonVariableGWeiValue(new BN(this.transaction.gasPrice))
     }
     /**
      * Gets the tx status.
