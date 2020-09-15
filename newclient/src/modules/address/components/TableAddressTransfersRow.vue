@@ -189,6 +189,8 @@ import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-for
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import BN from 'bignumber.js'
+import configs from '@app/configs'
+
 const TYPES = ['in', 'out', 'self']
 
 @Component({
@@ -210,6 +212,14 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     @Prop(String) address!: string
     @Prop(Object) tokenImage!: TokenMarketData | undefined
     @Prop(Boolean) isErc20!: boolean
+
+    /*
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+
+    imageExhists = true
 
     /*
     ===================================================================================
@@ -254,7 +264,13 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
     /*NOTE:  Add Token Image from tokens, when implemented */
     get image(): any {
-        return this.tokenTransfer.image || require('@/assets/icon-token.png')
+        if (this.isErc20) {
+            return this.tokenTransfer.image || require('@/assets/icon-token.png')
+        }
+        if (this.imageExhists && this.transfer) {
+            return `${configs.OPENSEA}/dev/getImage?contract=${this.transfer.contract}&tokenId=${this.getTokenID().toString()}`
+        }
+        return require('@/assets/icon-token.png')
     }
 
     get amount(): FormattedNumber | string {
@@ -359,6 +375,9 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             value: this.formatFloatingPointValue(val).value,
             unit: this.transfer.tokenInfo.symbol
         }
+    }
+    getTokenID(): string {
+        return new BN(this.transfer.token).toString()
     }
 }
 </script>
