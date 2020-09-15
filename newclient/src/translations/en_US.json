@@ -255,7 +255,7 @@
         },
         "not-found": "Oops! Page Not Found :(",
         "welcome": {
-            "title": "Welcome to EthVM Beta!",
+            "title": "Welcome to EthVM!",
             "text1": "We are showing Ethereum Mainnet data, so have a look around and let us know about any bugs or feature requests at ",
             "text2": ", or go to ",
             "text3": "for updates and to contribute. ",
