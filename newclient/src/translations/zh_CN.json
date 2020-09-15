@@ -43,6 +43,7 @@
         "total": "Total Txs",
         "success": "Successful Tx | Successful Txs",
         "failed": "Failed Tx | Failed Txs",
+        "replaced-tx": "Replaced Tx | Replaced Txs",
         "for-tx": "For Tx",
         "cost": "Tx Cost",
         "root": "Transactions Root",
@@ -52,6 +53,7 @@
         "input": "Input Data",
         "func": "Function",
         "method": "Method ID",
+        "replaced": "Replaced by",
         "type": {
             "self": "Self Sent",
             "in": "Incoming from",
@@ -90,7 +92,8 @@
         "per": "per",
         "filtered": "Filtered by Holder",
         "sort-by": "Sort by",
-        "total-tokens": "Total Tokens"
+        "total-tokens": "Total Tokens",
+        "image": "Image"
     },
     "address": {
         "name": "Address | Addresses"
@@ -100,7 +103,8 @@
         "creator": "Contract Creator",
         "hash": "Contract #",
         "created": "Created at",
-        "total": "Total"
+        "total": "Total",
+        "creation": "Contract Creation"
     },
     "gas": {
         "name": "Gas",
@@ -144,6 +148,7 @@
         "success": "Successful",
         "fail": "Failed",
         "pending": "Pending",
+        "replaced": "Replaced",
         "amount": "Amount",
         "quantity": "Quantity",
         "id": "ID",
@@ -238,7 +243,7 @@
         },
         "not-found": "Oops! Page Not Found :(",
         "welcome": {
-            "title": "Welcome to EthVM Beta!",
+            "title": "Welcome to EthVM!",
             "text1": "We are showing Ethereum Mainnet data, so have a look around and let us know about any bugs or feature requests at ",
             "text2": ", or go to ",
             "text3": "for updates and to contribute. ",
