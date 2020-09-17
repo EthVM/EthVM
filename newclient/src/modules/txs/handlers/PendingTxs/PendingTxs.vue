@@ -28,7 +28,6 @@
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
@@ -40,7 +39,6 @@ import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForT
     components: {
         AppTableTitle,
         AppPaginate,
-        AppPaginateHasMore,
         TableTxs
     },
     apollo: {
