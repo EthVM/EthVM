@@ -54,7 +54,7 @@ export default class PageTxs extends Vue {
     get crumbs(): Crumb[] {
         return [
             {
-                text: this.$t('tx.mined')
+                text: this.$t('tx.mined-tx')
             }
         ]
     }

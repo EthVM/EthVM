@@ -12,7 +12,7 @@
                         <router-link v-if="!isPending" :to="`/block/number${transferObj.block}`" class="black--text font-weight-medium pb-1"
                             >{{ $t('block.number') }} {{ transaction.block }}</router-link
                         >
-                        <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
+                        <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>
                     </v-flex>
                     <v-flex xs6 pr-44>
                         <v-layout row justify-end>
@@ -165,7 +165,7 @@
             MINED INDICATOR
           =====================================================================================
           -->
-                <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
+                <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>
             </v-layout>
             <v-divider class="mb-2 mt-2" />
         </v-flex>

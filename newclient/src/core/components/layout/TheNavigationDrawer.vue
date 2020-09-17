@@ -222,7 +222,7 @@ export default class TheNavigationDrawer extends Vue {
                 },
                 links: [
                     {
-                        text: this.$i18n.t('tx.mined'),
+                        text: this.$i18n.t('tx.mined-tx'),
                         routerLink: '/txs',
                         name: 'transactions'
                     },
