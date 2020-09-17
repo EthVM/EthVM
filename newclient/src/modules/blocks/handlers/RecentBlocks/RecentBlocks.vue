@@ -190,7 +190,7 @@ export default class RecentBlocks extends Vue {
             this.$apollo.queries.getBlocksArrayByNumber.refetch()
         } else {
             const from = this.startBlock - this.maxItems * this.index
-            if (from > 0 && !this.indexedBlocks[this.index]) {
+            if (from >= 0 && !this.indexedBlocks[this.index]) {
                 this.$apollo.queries.getBlocksArrayByNumber.fetchMore({
                     variables: {
                         fromBlock: from,
