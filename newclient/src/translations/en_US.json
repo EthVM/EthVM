@@ -190,7 +190,8 @@
                 "subscription": "Something went wrong during new block update."
             },
             "tx": {
-                "detail": "Something went wrong while retrieving transaction details."
+                "detail": "Something went wrong while retrieving transaction details.",
+                "pending": "Something went wrong while retrieving pending transaction details."
             },
             "uncle": {
                 "detail": "Something went wrong while retrieving uncle details.",

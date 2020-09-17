@@ -1,9 +1,6 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-2">
         <app-table-title :title="$tc('tx.pending', 2)" :has-pagination="showPagination" page-type="pending" page-link="/pending-txs">
-            <!-- <template v-slot:update v-if="!isHome && !isBlock">
-                <app-new-update :text="$t('message.update.txs')" :update-count="newMinedTransfers" :hide-count="true" @reload="setPage(0, true)" />
-            </template> -->
             <template v-slot:pagination v-if="showPagination && !initialLoad">
                 <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" /></template
         ></app-table-title>
@@ -32,22 +29,18 @@
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { pendingTx, txMined } from './pendingTxs.graphql'
 import { PendingTx } from '@app/modules/txs/components/props'
-// import { pendingTx_pendingTransaction as PendingTxType } from './apolloTypes/pendingTx'
-// import { TransferType } from '@app/apollo/global/globalTypes'
-// import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
+import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForTx'
 
 @Component({
     components: {
         AppTableTitle,
         AppPaginate,
         AppPaginateHasMore,
-        AppNewUpdate,
         TableTxs
     },
     apollo: {
@@ -55,7 +48,7 @@ import { PendingTx } from '@app/modules/txs/components/props'
             NewPendingTx: {
                 query: pendingTx,
                 result({ data }) {
-                    if (this.initalLoad) {
+                    if (this.initialLoad) {
                         this.initialLoad = false
                     }
                     if (data.pendingTransaction) {
@@ -87,9 +80,6 @@ export default class PendingTxs extends Vue {
     pendingTxs: PendingTx[] = []
     initialLoad = true
     index = 0
-    totalPages = 0
-    isEnd = 0
-    newMinedTransfers = 0
     hasError = false
 
     /*
@@ -97,43 +87,25 @@ export default class PendingTxs extends Vue {
       Computed
     ===================================================================================
     */
-
-    // get transactions(): (TypeTransfers | null)[] | [] {
-    //     if (this.isBlock && this.getBlockTransfers && this.getBlockTransfers.transfers !== null) {
-    //         return this.getBlockTransfers.transfers
-    //     }
-    //     if (!this.isBlock && this.getAllEthTransfers && this.getAllEthTransfers.transfers !== null) {
-    //         return this.getAllEthTransfers.transfers
-    //     }
-    //     return []
-    // }
+    get totalPages(): number {
+        if (this.pendingTxs.length > 0) {
+            return Math.ceil(new BN(this.pendingTxs.length).div(this.maxItems).toNumber())
+        }
+        return 0
+    }
 
     get message(): string {
         if (this.loading) {
             return ''
         }
-        // if (this.isBlock && this.transactions.length === 0) {
-        //     return `${this.$t('message.tx.no-in-block')}`
-        // }
+        if (!this.initialLoad && this.pendingTxs.length === 0) {
+            return `${this.$t('message.tx.no-pen')}`
+        }
         return ''
     }
 
-    // get isHome(): boolean {
-    //     return this.pageType === 'home'
-    // }
-
-    // get isBlock(): boolean {
-    //     return this.pageType === 'blockDetails'
-    // }
-    // get skipBlockTxs(): boolean {
-    //     return !(this.isBlock && this.isMined)
-    // }
-
-    // get getTitle(): string {
-    //     return this.isBlock ? `${this.$t('block.txs')}` : `${this.$tc('tx.last', 1)}`
-    // }
     get showPagination(): boolean {
-        return this.hasMore
+        return this.totalPages > 1
     }
 
     get loading(): boolean {
@@ -143,10 +115,7 @@ export default class PendingTxs extends Vue {
         return this.pendingTxs.length === 0
     }
     get hasMore(): boolean {
-        if (this.pendingTxs.length > this.maxItems) {
-            return true
-        }
-        return false
+        return this.index + 1 < this.totalPages
     }
 
     /*
@@ -157,8 +126,9 @@ export default class PendingTxs extends Vue {
 
     markMined(hash: string): void {
         const index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
-        this.pendingTxs[index].isMined = true
-        console.error('this', this.pendingTxs[index])
+        if (this.pendingTxs[index]) {
+            this.pendingTxs[index].isMined = true
+        }
         setTimeout(() => {
             if (index >= 0) {
                 this.pendingTxs.splice(index, 1)
@@ -176,12 +146,10 @@ export default class PendingTxs extends Vue {
             })
             const a = observer.subscribe({
                 next: data => {
-                    console.error('data', data)
                     this.markMined(_hash)
                     a.unsubscribe()
                 },
                 error: error => {
-                    console.error('error', error)
                     this.emitErrorState(true)
                 }
             })
@@ -190,63 +158,15 @@ export default class PendingTxs extends Vue {
         }
     }
 
-    // setPage(page: number, reset: boolean = false): void {
-    //     if (reset) {
-    //         this.isEnd = 0
-    //         if (!this.isHome && !this.isBlock) {
-    //             this.newMinedTransfers = 0
-    //         }
-    //         this.$apollo.queries.getAllEthTransfers.refetch()
-    //     } else {
-    //         if (!this.isBlock && page > this.isEnd && this.hasMore) {
-    //             this.$apollo.queries.getAllEthTransfers.fetchMore({
-    //                 variables: {
-    //                     _limit: this.maxItems,
-    //                     _nextKey: this.getAllEthTransfers.nextKey
-    //                 },
-    //                 updateQuery: (previousResult, { fetchMoreResult }) => {
-    //                     this.isEnd = page
-    //                     const newT = fetchMoreResult.getAllEthTransfers.transfers
-    //                     const prevT = previousResult.getAllEthTransfers.transfers
-    //                     return {
-    //                         ...previousResult,
-    //                         getAllEthTransfers: {
-    //                             __typename: previousResult.getAllEthTransfers.__typename,
-    //                             nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
-    //                             transfers: [...prevT, ...newT]
-    //                         }
-    //                     }
-    //                 }
-    //             })
-    //         }
-    //     }
+    setPage(page: number): void {
+        if (page < this.index || this.hasMore) {
+            this.index = page
+        }
+    }
 
-    //     this.index = page
-    // }
     emitErrorState(val: boolean): void {
         this.hasError = val
-        // this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)
+        this.$emit('errorDetails', this.hasError, ErrorMessagePendingTx.details)
     }
-    /*
-    ===================================================================================
-      Watch:
-    ===================================================================================
-    */
-    // @Watch('blockRef')
-    // onBlockRefChanged(newVal: string, oldVal: string) {
-    //     if (newVal !== oldVal) {
-    //         this.initialLoad = true
-    //         this.hasError = false
-    //     }
-    // }
 }
 </script>
-<style scoped lang="css">
-.tx-filter-select-container {
-    border: solid 1px #efefef;
-    padding-top: 1px;
-}
-.tx-status {
-    min-width: 60px;
-}
-</style>

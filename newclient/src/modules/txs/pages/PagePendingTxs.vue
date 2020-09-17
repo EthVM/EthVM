@@ -4,7 +4,7 @@
         <app-message :messages="errorMessages" />
         <v-layout row justify-center mb-4>
             <v-flex xs12>
-                <pending-txs :max-items="maxItems" />
+                <pending-txs :max-items="maxItems" @errorDetails="setError" />
             </v-flex>
         </v-layout>
     </v-container>
@@ -16,7 +16,7 @@ import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import PendingTxs from '@app/modules/txs/handlers/PendingTxs/PendingTxs.vue'
 import { Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
-import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
+import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForTx'
 
 const MAX_ITEMS = 50
 
@@ -27,13 +27,13 @@ const MAX_ITEMS = 50
         PendingTxs
     }
 })
-export default class PageTxs extends Vue {
+export default class PagePendingTxs extends Vue {
     /*
     ===================================================================================
       Initial Data
     ===================================================================================
     */
-    errorMessages: ErrorMessageBlock[] = []
+    errorMessages: ErrorMessagePendingTx[] = []
 
     /*
     ===================================================================================
@@ -68,7 +68,7 @@ export default class PageTxs extends Vue {
     ===================================================================================
     */
 
-    setError(hasError: boolean, message: ErrorMessageBlock): void {
+    setError(hasError: boolean, message: ErrorMessagePendingTx): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {
                 this.errorMessages.push(message)
