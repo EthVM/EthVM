@@ -9,4 +9,15 @@ export interface Tx {
     fee: FormattedNumber
     value: FormattedNumber
     status: boolean
+    isMined: boolean
+}
+
+export interface PendingTx {
+    transactionHash: string;
+    from: string;
+    to: string | null;
+    txFee: string;
+    value: string;
+    timestamp: number;
+    isMined: boolean;
 }

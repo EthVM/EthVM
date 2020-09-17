@@ -36,8 +36,9 @@ import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { pendingTx } from './pendingTxs.graphql'
-import { pendingTx as PendingTxType } from './apolloTypes/pendingTx'
+import { pendingTx, txMined } from './pendingTxs.graphql'
+import { PendingTx } from '@app/modules/txs/components/props'
+// import { pendingTx_pendingTransaction as PendingTxType } from './apolloTypes/pendingTx'
 // import { TransferType } from '@app/apollo/global/globalTypes'
 // import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 
@@ -54,13 +55,16 @@ import { pendingTx as PendingTxType } from './apolloTypes/pendingTx'
             NewPendingTx: {
                 query: pendingTx,
                 result({ data }) {
+                    if (this.initalLoad) {
+                        this.initialLoad = false
+                    }
                     if (data.pendingTransaction) {
+                        data.pendingTransaction.isMined = false
+                        this.createSubscription(data.pendingTransaction.transactionHash)
                         this.pendingTxs.push(data.pendingTransaction)
                     }
-                    console.error('data', this.pendingTxs)
                 },
                 error(error) {
-                    console.error('error', error)
                     this.emitErrorState(true)
                 }
             }
@@ -80,7 +84,7 @@ export default class PendingTxs extends Vue {
      Initial Data
     ===================================================================================
     */
-    pendingTxs = []
+    pendingTxs: PendingTx[] = []
     initialLoad = true
     index = 0
     totalPages = 0
@@ -136,7 +140,7 @@ export default class PendingTxs extends Vue {
         if (this.hasError) {
             return true
         }
-        return false
+        return this.pendingTxs.length === 0
     }
     get hasMore(): boolean {
         if (this.pendingTxs.length > this.maxItems) {
@@ -150,6 +154,41 @@ export default class PendingTxs extends Vue {
       Methods:
     ===================================================================================
     */
+
+    markMined(hash: string): void {
+        const index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
+        this.pendingTxs[index].isMined = true
+        console.error('this', this.pendingTxs[index])
+        setTimeout(() => {
+            if (index >= 0) {
+                this.pendingTxs.splice(index, 1)
+            }
+        }, 10000)
+    }
+
+    createSubscription(_hash: string): void {
+        if (_hash) {
+            const observer = this.$apollo.subscribe({
+                query: txMined,
+                variables: {
+                    hash: _hash
+                }
+            })
+            const a = observer.subscribe({
+                next: data => {
+                    console.error('data', data)
+                    this.markMined(_hash)
+                    a.unsubscribe()
+                },
+                error: error => {
+                    console.error('error', error)
+                    this.emitErrorState(true)
+                }
+            })
+        } else {
+            console.log('not defined', _hash)
+        }
+    }
 
     // setPage(page: number, reset: boolean = false): void {
     //     if (reset) {
@@ -184,10 +223,10 @@ export default class PendingTxs extends Vue {
 
     //     this.index = page
     // }
-    // emitErrorState(val: boolean): void {
-    //     this.hasError = val
-    //     this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)
-    // }
+    emitErrorState(val: boolean): void {
+        this.hasError = val
+        // this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)
+    }
     /*
     ===================================================================================
       Watch:

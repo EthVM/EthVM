@@ -8,3 +8,7 @@ subscription pendingTx($owner: String) {
         timestamp
     }
 }
+
+subscription txMined($hash: String!) {
+    transactionEvent(hash: $hash)
+}

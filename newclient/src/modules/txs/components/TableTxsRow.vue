@@ -110,7 +110,7 @@
           =====================================================================================
           -->
                 <v-flex sm3 lg2>
-                    <p>
+                    <p :class="isPending ? 'pl-4' : ''">
                         {{ transaction.value.value }}
                         {{ $t(`common.${transaction.value.unit}`) }}
                         <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
@@ -127,7 +127,7 @@
           =====================================================================================
           -->
                 <v-flex hidden-sm-and-down md2>
-                    <app-time-ago :timestamp="transaction.timestamp" />
+                    <app-time-ago :timestamp="transaction.timestamp" :class="isPending ? 'pl-2' : ''" />
                 </v-flex>
                 <!--
           =====================================================================================
@@ -140,7 +140,7 @@
           =====================================================================================
           -->
                 <v-flex hidden-md-and-down lg2>
-                    <p class="black--text text-truncate mb-0">
+                    <p :class="('black--text', 'text-truncate', 'mb-0', isPending ? 'pl-3' : '')">
                         {{ transaction.fee.value }}
                     </p>
                 </v-flex>
@@ -158,6 +158,13 @@
                     <v-icon v-if="transaction.status" small class="txSuccess--text tx-status text-xs-center">fa fa-check-circle</v-icon>
                     <v-icon v-else small class="txFail--text tx-status text-xs-center">fa fa-times-circle</v-icon>
                 </div>
+
+                <!--
+          =====================================================================================
+            MINED INDICATOR
+          =====================================================================================
+          -->
+                <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
             </v-layout>
             <v-divider class="mb-2 mt-2" />
         </v-flex>
@@ -212,6 +219,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get transaction(): Tx {
         const tx = this.isPending ? this.tx : this.transferObj
         return {
+            isMined: this.isPending ? tx['isMined'] : false,
             hash: tx['transactionHash'],
             block: this.formatNumber(tx['block']),
             from: tx['from'],
@@ -252,5 +260,14 @@ p {
 
 .tx-status {
     min-width: 60px;
+}
+
+.blinking {
+    animation: blinker 2s linear infinite;
+}
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }
 </style>
