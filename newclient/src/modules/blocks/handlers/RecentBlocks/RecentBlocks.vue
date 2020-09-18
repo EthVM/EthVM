@@ -14,7 +14,7 @@
                     @newPage="setPage"
                 /> </template
         ></app-table-title>
-        <table-blocks :max-items="maxItems" :index="0" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="isHome" />
+        <table-blocks :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="isHome" />
         <v-layout
             v-if="showPagination && !initialLoad"
             :justify-end="$vuetify.breakpoint.mdAndUp"

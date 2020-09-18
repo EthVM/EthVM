@@ -37,7 +37,7 @@
         <v-container v-if="!hasMessage" :style="getStyle" flat class="scroll-y pt-2 pr-2 pl-2 pb-0">
             <v-layout column class="mb-1">
                 <v-flex v-if="!isLoading">
-                    <div v-for="(block, index) in displayData" :key="index">
+                    <div v-for="(block, index) in blockData" :key="index">
                         <table-blocks-row :block="block" :page-type="pageType" />
                     </div>
                 </v-flex>
@@ -92,15 +92,6 @@ export default class TableBlocks extends Vue {
 
     get getStyle(): string {
         return this.isScrollView ? SCROLLVIEW : ''
-    }
-
-    get displayData(): any[] {
-        if (this.blockData) {
-            const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.blockData.length ? this.blockData.length : start + this.maxItems
-            return this.blockData.slice(start, end)
-        }
-        return []
     }
 }
 </script>
