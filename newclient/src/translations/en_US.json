@@ -141,7 +141,7 @@
     "price": {
         "name": "Price | Prices",
         "erc20": "ERC20 Prices",
-        "erc721": "ERC721 Prices"
+        "erc721": "NFT Prices"
     },
 
     "common": {
@@ -204,11 +204,11 @@
             "tokens": {
                 "detail": "Something went wrong while retrieving token details.",
                 "not-found": "This token contract does not exist.",
-                "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
-                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
-                "token-owner": "Something went wrong retrieving Token owners.",
-                "token-details": "Something went wrong retrieving Token details.",
-                "token-market": "Something went wrong retrieving Token Market data."
+                "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
+                "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers.",
+                "token-owner": "Something went wrong retrieving token owners.",
+                "token-details": "Something went wrong retrieving token details.",
+                "token-market": "Something went wrong retrieving token market data."
             },
             "search": {
                 "you-entered": "You entered",
@@ -273,7 +273,7 @@
             "uncle": "New Uncle | New Uncles",
             "pending": "New Pending Tx | New Pending Txs",
             "erc20-transfer": "New ERC20 Transfer | New ERC20 Transfers",
-            "erc721-transfer": "New ERC721 Transfer | New ERC721 Transfers",
+            "erc721-transfer": "New NFT Transfer | New NFT Transfers",
             "tokens": "Token's Balance Changed, Refresh",
             "txs": "New Txs Found, Refresh"
         },
@@ -670,7 +670,7 @@
         "empty": "No transfers",
         "TOKEN_TRANSFER": "transfer",
         "erc20": "ERC20 Transfers",
-        "erc721": "ERC721 Transfers"
+        "erc721": "NFT Transfers"
     },
     "state": {
         "bal-before": "Balance Before",
