@@ -182,7 +182,7 @@
             "address": {
                 "balance": "Something went wrong while retrieving Address's ETH balance.",
                 "pending": "Something went wrong while retrieving Address's pending transactions.",
-                "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
+                "block-rewards": "Something went wrong while retrieving Address's block rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
                 "erc721": "Something went wrong while retrieving NFTs balances.",
                 "transfers-eth": "Something went wrong retrieving Address transactions.",
@@ -217,8 +217,8 @@
                 "let-us-know": "let us know"
             },
             "txs": "Something went wrong while retrieving transactions.",
-            "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
-            "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
+            "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "This address does not have any transaction history",

@@ -288,7 +288,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     }
 
     get getTitle(): string {
-        return this.isERC20 ? `${this.$t('token.erc20')}` : `${this.$t('token.erc721')}`
+        return this.isERC20 ? `${this.$t('token.erc20')}` : `${this.$t('token.nft')}`
     }
 
     get hasTokens(): boolean {
