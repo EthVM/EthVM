@@ -286,7 +286,9 @@
         "token": {
             "no-tokens": "There are no supported tokens",
             "no-tokens-for-address": "Address does not hold any supported tokens",
-            "no-holders": "There are no holders of this token"
+            "no-holders": "There are no holders of this token",
+            "no-tokens-addr": "This address does not hold any ERC20 tokens",
+            "no-nft-addr": "This address does not hold any NFTs (ERC721 tokens)"
         },
         "coming-soon": "Coming soon"
     },
