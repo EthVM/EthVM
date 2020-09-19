@@ -35,7 +35,7 @@
             =====================================================================================
             -->
             <v-flex hidden-sm-and-down pa-0>
-                <v-tabs v-model="activeTab" class="pr-2 pl-2 ml-3 mr-3 pt-1" color="white" show-arrows @change="$emit('change-Tab', $event)">
+                <v-tabs v-model="activeTab" class="pr-2 pl-2 ml-3 mr-3 pt-1" color="white" show-arrows @change="$emit('change-tab', $event)">
                     <v-tab
                         v-for="item in tabs"
                         :key="item.id"
@@ -56,10 +56,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { Tab } from '@app/core/components/props'
 import { TranslateResult } from 'vue-i18n'
-
+import BN from ''
 @Component
 export default class AppTabs extends Vue {
     /*
@@ -86,13 +86,15 @@ export default class AppTabs extends Vue {
   ===================================================================================
   */
 
-    setTab(id: number) {
+    setTab(id: number, tabChange = false) {
         this.activeTabId = id
         this.tabs.forEach(tab => {
             if (this.activeTabId === tab.id) {
                 tab.isActive = true
-                this.activeTab = `tab-${this.activeTabId}`
-                this.$emit('changeTab', `tab-${tab.id}`) // Notify parent of tab change
+                if (!tabChange) {
+                    this.activeTab = `tab-${this.activeTabId}`
+                    this.$emit('changeTab', `tab-${tab.id}`) // Notify parent of tab change
+                }
             } else {
                 tab.isActive = false
             }
@@ -114,6 +116,13 @@ export default class AppTabs extends Vue {
     }
     get mobileIcon(): string {
         return this.showMobile ? 'fas fa-angle-up' : 'fas fa-angle-down'
+    }
+
+    @Watch('activeTab')
+    onActiveTabChanged(newVal: string, oldVal: string) {
+        if (newVal !== oldVal) {
+            this.setTab(parseInt(newVal.substr(4, 1)), true)
+        }
     }
 }
 </script>
