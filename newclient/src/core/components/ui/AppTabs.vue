@@ -6,7 +6,7 @@
               Mobile
             =====================================================================================
             -->
-            <v-flex hidden-md-and-up>
+            <v-flex hidden-md-and-up pt-0 pb-0>
                 <v-menu v-model="showMobile" offset-y>
                     <template v-slot:activator="{ on }">
                         <v-toolbar color="menuDark" flat v-on="on">
