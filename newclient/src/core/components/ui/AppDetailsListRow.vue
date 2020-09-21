@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-layout align-center justify-start row class="ma-2">
+        <v-layout align-center justify-start row class="pr-2 pl-2 pt-1 pb-1">
             <!--
       =====================================================================================
         DETAIL TITLE
