@@ -141,6 +141,8 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
         if (!newVal && oldVal) {
             this.hasLast = true
             this.lastPage = this.currentPage
+        } else {
+            this.hasLast = false
         }
     }
 }

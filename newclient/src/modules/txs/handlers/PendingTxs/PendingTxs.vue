@@ -2,8 +2,9 @@
     <v-card color="white" flat class="pt-3 pb-2">
         <app-table-title :title="$tc('tx.pending', 2)" :has-pagination="showPagination" page-type="pending" page-link="/pending-txs">
             <template v-slot:pagination v-if="showPagination && !initialLoad">
-                <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" /></template
-        ></app-table-title>
+                <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
+            </template>
+        </app-table-title>
         <table-txs
             :max-items="maxItems"
             :index="index"
@@ -20,14 +21,14 @@
             row
             class="pb-1 pr-3 pl-2"
         >
-            <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+            <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
         </v-layout>
     </v-card>
 </template>
 
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
-import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
+import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
@@ -38,7 +39,7 @@ import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForT
 @Component({
     components: {
         AppTableTitle,
-        AppPaginate,
+        AppPaginateHasMore,
         TableTxs
     },
     apollo: {
@@ -123,13 +124,17 @@ export default class PendingTxs extends Vue {
     */
 
     markMined(hash: string): void {
-        const index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
+        let index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
         if (this.pendingTxs[index]) {
             this.pendingTxs[index].isMined = true
         }
         setTimeout(() => {
+            index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
             if (index >= 0) {
                 this.pendingTxs.splice(index, 1)
+                if (this.totalPages < this.index + 1) {
+                    this.index = this.totalPages - 1
+                }
             }
         }, 10000)
     }
