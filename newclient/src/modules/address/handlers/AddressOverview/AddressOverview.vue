@@ -58,8 +58,9 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
                 }
             },
             error(error) {
-                const newError = JSON.stringify(error.message)
-                if (newError.includes('Contract not found')) {
+                const newError = JSON.stringify(error.message))
+                if (newError.includes('No contract found')) {
+                    this.hasError = false
                     this.setContract(false)
                 } else {
                     this.hasError = true
