@@ -132,7 +132,7 @@
     "price": {
         "name": "Цена | Цены",
         "erc20": "Цены ERC20",
-        "erc721": "Цены ERC721"
+        "erc721": "NFT Prices"
     },
     "common": {
         "hash": "Хэш",
@@ -170,7 +170,7 @@
             "address": {
                 "balance": "Что-то пошло не так при получении ETH баланса Адреса.",
                 "pending": "Что-то пошло не так при получении ожидающих транзакций Адреса.",
-                "block-rewards": "Что-то пошло не так при получении Вознаграждений Адреса.",
+                "block-rewards": "Something went wrong while retrieving Address's block rewards.",
                 "erc20": "Что-то пошло не так при получении балансов ERC20.",
                 "erc721": "Что-то пошло не так при получении балансов NFT.",
                 "transfers-eth": "Что-то пошло не так при получении ожидающих транзакций Адреса.",
@@ -192,11 +192,11 @@
             "tokens": {
                 "detail": "Что-то пошло не так при получении деталей токена.",
                 "not-found": "Этот контракт токена не существует.",
-                "transfers-erc721": "Что-то пошло не так при получении переводов Токенов NFT.",
-                "transfers-erc20": "Что-то пошло не так при получении переводов Токенов ERC20.",
-                "token-owner": "Что-то пошло не так при получении владельцев Токена.",
-                "token-details": "Что-то пошло не так при получении деталей Токена.",
-                "token-market": "Что-то пошло не так при получении данных Рынка Токенов."
+                "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
+                "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers.",
+                "token-owner": "Something went wrong retrieving token owners.",
+                "token-details": "Something went wrong retrieving token details.",
+                "token-market": "Something went wrong retrieving token market data."
             },
             "search": {
                 "you-entered": "Вы ввели",
@@ -205,8 +205,8 @@
                 "let-us-know": "дайте нам знать"
             },
             "txs": "Что-то пошло не так при получении транзакций.",
-            "transfers-erc721": "Что-то пошло не так при получении переводов токенов NFT Адреса.",
-            "transfers-erc20": "Что-то пошло не так при получении переводов токенов ERC20 Адреса."
+            "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
+            "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "Этот адрес не имеет истории транзакций",
@@ -261,7 +261,7 @@
             "uncle": "Новый Uncle Блок | Новых Uncle Блоков",
             "pending": "Новая Ожидающая Tx | Новых Ожидающих Txs",
             "erc20-transfer": "Новый ERC20 Перевод | Новых ERC20 Переводов",
-            "erc721-transfer": "Новый ERC721 Перевод | Новых ERC721 Переводов",
+            "erc721-transfer": "New NFT Transfer | New NFT Transfers",
             "tokens": "Баланс Tокенов Изменен, Обновить",
             "txs": "Найдены Новые Txs, Обновить"
         },
@@ -274,7 +274,9 @@
         "token": {
             "no-tokens": "Нет поддерживаемых токенов",
             "no-tokens-for-address": "Адрес не имеет поддерживаемых токенов",
-            "no-holders": "Нет владельцев этого токена"
+            "no-holders": "Нет владельцев этого токена",
+            "no-tokens-addr": "This address does not hold any ERC20 tokens",
+            "no-nft-addr": "This address does not hold any NFTs (ERC721 tokens)"
         },
         "coming-soon": "В разработке"
     },
@@ -648,7 +650,7 @@
         "empty": "Нет переводов",
         "TOKEN_TRANSFER": "Перевод",
         "erc20": "Переводы ERC20",
-        "erc721": "Переводы ERC721"
+        "erc721": "NFT Transfers"
     },
     "state": {
         "bal-before": "Баланс До",
