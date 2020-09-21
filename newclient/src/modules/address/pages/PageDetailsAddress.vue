@@ -18,6 +18,8 @@
                         :is-contract="isContract"
                         :total-erc20-owned="totalERC20"
                         :update-balance="addrBalanceChanged"
+                        :set-contract-creator="setContractCreator"
+                        :set-contract="setContract"
                         :loading-tokens="loadingERC20Balance"
                         @resetBalanceUpdate="resetBalance"
                         @errorBalance="setError"

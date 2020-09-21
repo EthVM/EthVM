@@ -75,6 +75,11 @@ module.exports = {
             .end()
     },
     configureWebpack: process.env.NODE_ENV === 'production' ? merge(webpackCommon, webpackProduction) : webpackCommon,
-    productionSourceMap: false
-    // devServer
+    productionSourceMap: false,
+    devServer: {
+        https: true,
+        host: 'localhost',
+        hotOnly: true,
+        port: 3000
+    }
 }
