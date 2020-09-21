@@ -7,5 +7,6 @@ export enum ErrorMessage {
     transfersETH = 'message.error.address.transfers-eth',
     transfersERC20 = 'message.error.transfers-erc20',
     transfersERC721 = 'message.error.transfers-erc721',
-    updateEvent = 'message.error.address.update-event'
+    updateEvent = 'message.error.address.update-event',
+    contractNotFound = 'message.error.contract.not-found'
 }

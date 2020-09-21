@@ -17,7 +17,7 @@ const ETHER_ID = 'ethereum'
                 return this.isRopsten
             },
             result({ data }) {
-                if (data && data.getLatestPrices.length > 0) {
+                if (data && data.getLatestPrices && data.getLatestPrices.length > 0) {
                     data.getLatestPrices.forEach((token, index) => {
                         if (token.id === ETHER_ID) {
                             this.etherPrice = token.current_price

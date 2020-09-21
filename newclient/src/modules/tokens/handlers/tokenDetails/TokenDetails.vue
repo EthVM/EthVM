@@ -10,7 +10,13 @@
     =====================================================================================
     -->
         <div v-if="!isHolder">
-            <token-details-list :address-ref="addressRef" :token-details="tokenDetails" :is-loading="loading || hasError" @errorDetails="emitErrorState" />
+            <token-details-list
+                :holder-details="null"
+                :address-ref="addressRef"
+                :token-details="tokenDetails"
+                :is-loading="loading || hasError"
+                @errorDetails="emitErrorState"
+            />
             <app-tabs v-if="!loading" :tabs="tabsTokenDetails">
                 <!--
         =====================================================================================
@@ -18,7 +24,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-0">
-                    <transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
+                    <token-transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
                 </v-tab-item>
                 <!--
         =====================================================================================
@@ -26,7 +32,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-1">
-                    <token-table-holders :address-ref="addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
+                    <token-holders :address-ref="addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
                 </v-tab-item>
             </app-tabs>
         </div>
@@ -42,7 +48,7 @@
             <token-details-list
                 :address-ref="addressRef"
                 :holder-details="tokenDetails"
-                :token-details="tokenDetails ? tokenDetails.tokenInfo : {}"
+                :token-details="tokenDetails ? tokenDetails['tokenInfo'] : {}"
                 :is-loading="loading || hasError"
                 @errorDetails="emitErrorState"
             />
@@ -57,8 +63,8 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Crumb, Tab } from '@app/core/components/props'
 import BigNumber from 'bignumber.js'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
-import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
-import Transfers from '@app/modules/tokens/handlers/transfers/Transfers.vue'
+import TokenHolders from '@app/modules/tokens/handlers/tokenHolders/TokenHolders.vue'
+import TokenTransfers from '@app/modules/tokens/handlers/tokenTransfers/TokenTransfers.vue'
 import { getTokenInfoByContract, getERC20TokenBalance } from '@app/modules/tokens/handlers/tokenDetails/tokenDetails.graphql'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from './apolloTypes/ERC20TokenOwnerDetails'
 import { TokenDetails as TokenInfo } from './apolloTypes/TokenDetails'
@@ -72,8 +78,8 @@ const MAX_ITEMS = 10
         AppBreadCrumbs,
         TokenDetailsList,
         AppTabs,
-        TokenTableHolders,
-        Transfers
+        TokenHolders,
+        TokenTransfers
     },
     apollo: {
         tokenDetails: {

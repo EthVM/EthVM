@@ -2,7 +2,7 @@
     <v-card color="white" flat class="pt-3 pb-2">
         <app-table-title :title="$tc('tx.pending', 2)" :has-pagination="showPagination" page-type="pending" page-link="/pending-txs">
             <template v-slot:pagination v-if="showPagination && !initialLoad">
-                <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
+                <app-paginate :total="totalPages" :current-page="index" :has-input="false" :has-first="true" :has-last="true" @newPage="setPage" />
             </template>
         </app-table-title>
         <table-txs
@@ -21,14 +21,14 @@
             row
             class="pb-1 pr-3 pl-2"
         >
-            <app-paginate-has-more :has-more="hasMore" :current-page="index" :loading="loading" @newPage="setPage" />
+            <app-paginate :total="totalPages" :current-page="index" :has-input="false" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
     </v-card>
 </template>
 
 <script lang="ts">
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
-import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
+import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import BN from 'bignumber.js'
@@ -39,7 +39,7 @@ import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForT
 @Component({
     components: {
         AppTableTitle,
-        AppPaginateHasMore,
+        AppPaginate,
         TableTxs
     },
     apollo: {

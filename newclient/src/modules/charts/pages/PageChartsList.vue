@@ -103,7 +103,7 @@ export default class PageChartsList extends Vue {
             {
                 id: 0,
                 title: this.$i18n.tc('tx.name', 2),
-                isActive: false
+                isActive: true
             },
             {
                 id: 1,

@@ -18,7 +18,7 @@
         "state-root": "State Root",
         "rcpt-root": "Receipts Root"
     },
-
+  
     "uncle": {
         "name": "Uncle | Uncles",
         "number": "Uncle #",
@@ -29,7 +29,7 @@
         "reward": "Uncle Reward",
         "included": "Included in Block #"
     },
-
+  
     "tx": {
         "name": "Transaction | Transactions",
         "name-short": "Tx | Txs",
@@ -46,6 +46,7 @@
         "total": "Total Txs",
         "success": "Successful Tx | Successful Txs",
         "failed": "Failed Tx | Failed Txs",
+        "replaced-tx": "Replaced Tx | Replaced Txs",
         "for-tx": "For Tx",
         "cost": "Tx Cost",
         "root": "Transactions Root",
@@ -55,6 +56,7 @@
         "input": "Input Data",
         "func": "Function",
         "method": "Method ID",
+        "replaced": "Replaced by",
         "type": {
             "self": "Self Sent",
             "in": "Incoming from",
@@ -64,7 +66,7 @@
             "success": "Successful Transaction"
         }
     },
-
+  
     "token": {
         "top-200": "Top 200 Tokens",
         "erc20": "ERC20 Tokens",
@@ -94,21 +96,23 @@
         "per": "per",
         "filtered": "Filtered by Holder",
         "sort-by": "Sort by",
-        "total-tokens": "Total Tokens"
+        "total-tokens": "Total Tokens",
+        "image": "Image"
     },
-
+  
     "address": {
         "name": "Address | Addresses"
     },
-
+  
     "contract": {
         "name": "Contract | Contracts",
         "creator": "Contract Creator",
         "hash": "Contract #",
         "created": "Created at",
-        "total": "Total"
+        "total": "Total",
+        "creation": "Contract Creation"
     },
-
+  
     "gas": {
         "name": "Gas",
         "limit": "Gas Limit",
@@ -117,7 +121,7 @@
         "price": "Gas Price",
         "ave-price": "Avg Gas Price"
     },
-
+  
     "miner": {
         "name": "Miner",
         "reward": {
@@ -129,18 +133,18 @@
         "total-rewards": "Total Rewards",
         "history": "Mining History"
     },
-
+  
     "diff": {
         "name": "Difficulty",
         "total": "Total Difficulty"
     },
-
+  
     "price": {
         "name": "Price | Prices",
         "erc20": "ERC20 Prices",
         "erc721": "ERC721 Prices"
     },
-
+  
     "common": {
         "hash": "Hash",
         "height": "Height",
@@ -155,6 +159,7 @@
         "success": "Successful",
         "fail": "Failed",
         "pending": "Pending",
+        "replaced": "Replaced",
         "amount": "Amount",
         "quantity": "Quantity",
         "id": "ID",
@@ -163,13 +168,13 @@
         "balance": "Balance",
         "close": "Close"
     },
-
+  
     "usd": {
         "name": "USD",
         "total": "Total USD Value",
         "value": "USD Value"
     },
-
+  
     "message": {
         "disconnected": "Disconnected from the server. Attempting to connect...",
         "no-data": "Oops something went wrong, no data from server :(",
@@ -183,6 +188,9 @@
                 "erc721": "Something went wrong while retrieving NFTs balances.",
                 "transfers-eth": "Something went wrong retrieving Address transactions.",
                 "update-event": "Something went wrong during Address update."
+            },
+            "contract": {
+              "not-found": "No contract found!"
             },
             "block": {
                 "detail": "Something went wrong while retrieving block details.",
@@ -203,9 +211,9 @@
                 "not-found": "This token contract does not exist.",
                 "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
                 "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
-                "token-owner": "Something went wrong retrieving Token owners",
-                "token-details": "Something went wrong retrieving Token details",
-                "token-market": "Something went wrong retrieving Token Market data"
+                "token-owner": "Something went wrong retrieving Token owners.",
+                "token-details": "Something went wrong retrieving Token details.",
+                "token-market": "Something went wrong retrieving Token Market data."
             },
             "search": {
                 "you-entered": "You entered",
@@ -252,7 +260,7 @@
         },
         "not-found": "Oops! Page Not Found :(",
         "welcome": {
-            "title": "Welcome to EthVM Beta!",
+            "title": "Welcome to EthVM!",
             "text1": "We are showing Ethereum Mainnet data, so have a look around and let us know about any bugs or feature requests at ",
             "text2": ", or go to ",
             "text3": "for updates and to contribute. ",
@@ -344,7 +352,7 @@
             "description": "Total number of pending transactions",
             "label": "Txs Count"
         },
-
+  
         "gas-price-avg": {
             "title": "Average Gas Price ",
             "description": "Average Gas Price (GWEI)",
@@ -389,13 +397,13 @@
         "details": "View Details",
         "back": "Back"
     },
-
+  
     "search": {
         "name": "Search",
         "default": "Search Block / Address / Tx",
         "address-tx": "Tx Hash/Address"
     },
-
+  
     "filter": {
         "name": "Filter",
         "view": "View",
@@ -406,7 +414,7 @@
         "low": "Low to High",
         "page": "Page"
     },
-
+  
     "footer": {
         "discover": "Discover",
         "donate": "Donate",
@@ -418,9 +426,9 @@
         "copy-btc-addr": "Copy BTC address",
         "pricing": "Pricing taken from"
     },
-
+  
     "home": "Home",
-
+  
     "about": {
         "name": "About Us",
         "title": "What is EthVM?",
@@ -439,14 +447,14 @@
         },
         "reddit": {
             "title": "Reddit",
-            "text": "Visit our reddit thread."
+            "text": "Visit our Reddit thread."
         },
         "disclaimer": {
             "name": "Disclaimer",
             "text": "SSPL License, Copyright © 2019 MyEtherWallet Inc.  For Terms & conditions visit our "
         }
     },
-
+  
     "kb": {
         "name": "Knowledge Base",
         "title": "Blockchain Terms",
@@ -480,8 +488,8 @@
                 "def": "Abbreviation for Decentralized Autonomous Organization – an organization that is run without direct human oversight, governed by a set of unalterable rules enforced through the blockchain."
             },
             "dapp": {
-                "term": "dApp",
-                "def": "Abbreviation for decentralized application. dApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
+                "term": "DApp",
+                "def": "Abbreviation for decentralized application. DApps are applications that are open-source, not controlled by any centralized entity, enabling direct interaction between users without a trusted third party."
             },
             "decentralization": {
                 "term": "Decentralization",
@@ -585,7 +593,7 @@
             }
         }
     },
-
+  
     "pp": {
         "name": "Privacy Policy",
         "intro": {
@@ -680,4 +688,5 @@
         "block-rewards": "Block Rewards",
         "uncle-rewards": "Uncle Rewards"
     }
-}
+  }
+  

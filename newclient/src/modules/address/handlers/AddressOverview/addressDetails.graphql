@@ -3,3 +3,12 @@ query getEthBalance($hash: String!) {
         balance
     }
 }
+
+query getContractMeta($hash: String!) {
+    getContractMeta(contract: $hash) {
+      block,
+      codeHash,
+      creator,
+      transactionHash
+    }
+}

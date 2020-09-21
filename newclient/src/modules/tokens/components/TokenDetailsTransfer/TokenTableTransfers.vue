@@ -27,6 +27,9 @@
                         <h5 v-if="!isERC721">{{ $t('common.quantity') }}</h5>
                         <h5 v-else>{{ $t('common.id') }}</h5>
                     </v-flex>
+                    <v-flex v-if="isERC721" sm2>
+                        <h5>{{ $t('token.image') }}</h5>
+                    </v-flex>
                 </v-layout>
             </v-card>
             <!-- End Table Header -->
@@ -69,7 +72,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppTimeAgo from '@app/core/components/ui/AppTimeAgo.vue'
 import AppPaginateHasMore from '@app/core/components/ui/AppPaginateHasMore.vue'
-import TransfersTableRow from './TransfersTableRow.vue'
+import TransfersTableRow from './TokenTableTransfersRow.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppTableRowLoading from '@app/core/components/ui/AppTableRowLoading.vue'
 
@@ -85,7 +88,7 @@ const TYPES = ['ERC20', 'ERC721']
         AppTableRowLoading
     }
 })
-export default class TransfersTable extends Vue {
+export default class TokenTableTransfers extends Vue {
     /*
         ===================================================================================
           Props

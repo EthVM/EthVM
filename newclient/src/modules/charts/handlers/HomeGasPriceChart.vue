@@ -65,7 +65,7 @@ const MAX_ITEMS = 10
                     }
                 }
             },
-            update: data => data.getTimeseriesData.items,
+            update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
                 this.gasMinDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
             }
@@ -101,7 +101,7 @@ const MAX_ITEMS = 10
                     }
                 }
             },
-            update: data => data.getTimeseriesData.items,
+            update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
                 this.gasMaxDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
             }
@@ -137,7 +137,7 @@ const MAX_ITEMS = 10
                     }
                 }
             },
-            update: data => data.getTimeseriesData.items,
+            update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
                 this.gasAvgDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
             }

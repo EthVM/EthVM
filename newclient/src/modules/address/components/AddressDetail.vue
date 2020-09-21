@@ -19,6 +19,7 @@
                             <v-layout hidden-sm-and-down align-center justify-start row fill-height pt-2>
                                 <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
                                 <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+                                <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
                             </v-layout>
                             <address-qr :address="address.hash" :large="true" />
                         </v-layout>
@@ -33,6 +34,7 @@
                         <v-layout align-center justify-start row fill-height pt-2>
                             <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
                             <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
+                            <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -267,11 +269,11 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
   */
 
     get title(): string {
-        return this.address.isContract ? this.$i18n.tc('contract.name', 1) : this.$i18n.tc('address.name', 1)
+        return this.$i18n.tc('address.name', 1)
     }
 
     get hasChips(): boolean {
-        return !this.address.isContract && (this.address.isMiner || this.address.isContractCreator)
+        return this.address.isContract || this.address.isMiner || this.address.isContractCreator
     }
 
     get layoutPadding(): string {
@@ -333,6 +335,10 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
 
 .creator-chip {
     background-color: #b3d4fc;
+}
+
+.contract-chip {
+    background-color: #fed18e;
 }
 
 p {
