@@ -14,7 +14,7 @@
                     @newPage="setPage"
                 /> </template
         ></app-table-title>
-        <table-blocks :max-items="maxItems" :index="0" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="isHome" />
+        <table-blocks :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :block-data="blocks" :is-scroll-view="isHome" />
         <v-layout
             v-if="showPagination && !initialLoad"
             :justify-end="$vuetify.breakpoint.mdAndUp"
@@ -90,7 +90,7 @@ interface BlockMap {
                     if (this.initialLoad) {
                         this.startBlock = data.getBlocksArrayByNumber[0].number
                         this.index = 0
-                        this.totalPages = Math.ceil(new BN(this.startBlock).div(this.maxItems).toNumber())
+                        this.totalPages = Math.ceil(new BN(this.startBlock + 1).div(this.maxItems).toNumber())
                         this.initialLoad = false
                     }
                     if (this.pageType === 'home') {
@@ -190,7 +190,7 @@ export default class RecentBlocks extends Vue {
             this.$apollo.queries.getBlocksArrayByNumber.refetch()
         } else {
             const from = this.startBlock - this.maxItems * this.index
-            if (from > 0 && !this.indexedBlocks[this.index]) {
+            if (from >= 0 && !this.indexedBlocks[this.index]) {
                 this.$apollo.queries.getBlocksArrayByNumber.fetchMore({
                     variables: {
                         fromBlock: from,
