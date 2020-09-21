@@ -1,6 +1,11 @@
 ### Feature
 
-- Detect if address is contract [#957](https://github.com/EthVM/EthVM/pull/957)
+- Detect if address is contract [#857](https://github.com/EthVM/EthVM/pull/857)
+
+
+### Bug
+
+- Catch correct error [#860](https://github.com/EthVM/EthVM/pull/860)
 
 ### Release v1.0.1
 
