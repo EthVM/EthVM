@@ -90,7 +90,7 @@ interface BlockMap {
                     if (this.initialLoad) {
                         this.startBlock = data.getBlocksArrayByNumber[0].number
                         this.index = 0
-                        this.totalPages = Math.ceil(new BN(this.startBlock).div(this.maxItems).toNumber())
+                        this.totalPages = Math.ceil(new BN(this.startBlock + 1).div(this.maxItems).toNumber())
                         this.initialLoad = false
                     }
                     if (this.pageType === 'home') {
