@@ -9,7 +9,7 @@
       DETAILS LIST
     =====================================================================================
     -->
-        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" @errorDetails="setError" @isMined="setIsMined" />
+        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" @errorDetails="setError" @isMined="setIsMined" @setBlockNumber="setBlockNumber" />
 
         <!--
     =====================================================================================
@@ -18,9 +18,9 @@
     -->
         <!-- TODO: Implement get block transfers by hash -->
         <block-txs
-            v-if="isValid && !isHash"
+            v-if="isValid && hasNumber"
             :max-items="maxItems"
-            :block-ref="blockRef"
+            :block-ref="blockNumber"
             :is-hash="isHash"
             :is-mined="isMined"
             page-type="blockDetails"
@@ -71,6 +71,7 @@ export default class PageDetailsBlock extends Vue {
 
     errorMessages: ErrorMessageBlock[] = []
     isMined = false
+    blockNumber: string = ''
 
     /*
     ===================================================================================
@@ -81,6 +82,11 @@ export default class PageDetailsBlock extends Vue {
     created() {
         window.scrollTo(0, 0)
     }
+    mounted() {
+        if (!this.isHash) {
+            this.blockNumber = this.blockRef
+        }
+    }
 
     /*
     ===================================================================================
@@ -90,6 +96,9 @@ export default class PageDetailsBlock extends Vue {
 
     setIsMined(value: boolean): void {
         this.isMined = true
+    }
+    setBlockNumber(value: string): void {
+        this.blockNumber = value
     }
 
     setError(hasError: boolean, message: ErrorMessageBlock): void {
@@ -123,6 +132,9 @@ export default class PageDetailsBlock extends Vue {
 
     get isHash(): boolean {
         return eth.isValidHash(this.blockRef)
+    }
+    get hasNumber(): boolean {
+        return this.blockNumber !== ''
     }
 
     /**
