@@ -52,23 +52,17 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
             result(data) {
                 if (data.data && data.data.getContractMeta) {
                     this.hasError = false
-                    this.setContractCreator(data.data.getContractMeta.creator === this.address)
                     this.setContract(true)
-                    this.emitErrorState()
                 } else {
-                    this.setContractCreator(false)
                     this.setContract(false)
-                    this.emitErrorState(ErrorMessage.contractNotFound)
                 }
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
                 if (newError.includes('Contract not found')) {
-                    this.setContractCreator(false)
                     this.setContract(false)
                 } else {
                     this.hasError = true
-                    this.emitErrorState(ErrorMessage.contractNotFound)
                 }
             }
         }
@@ -88,7 +82,6 @@ export default class AddressOverview extends Mixins(CoinData) {
     @Prop(Number) totalErc20Owned!: number
     @Prop(Boolean) loadingTokens!: boolean
     @Prop(Boolean) updateBalance!: boolean
-    @Prop(Function) setContractCreator!: void
     @Prop(Function) setContract!: void
     /*
     ===================================================================================
@@ -123,7 +116,7 @@ export default class AddressOverview extends Mixins(CoinData) {
     ===================================================================================
     */
     emitErrorState(msg): void {
-        this.$emit('errorBalance', this.hasError, msg ? msg : ErrorMessage.balance)
+        this.$emit('errorBalance', ErrorMessage.balance)
     }
 
     /*
