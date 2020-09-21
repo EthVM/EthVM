@@ -48,14 +48,14 @@ export default class SearchDetails extends Vue {
         this.hasError = true
         this.isLoading = false
     }
-    isValidHash(param): boolean {
-        return eth.isValidHash(this.removeSpaces(param))
+    isValid(param): boolean {
+        return eth.isValidHash(this.removeSpaces(param)) || eth.isValidAddress(this.removeSpaces(param))
     }
     getHashType(param): void {
         let routeName = ''
         this.isLoading = true
         this.hasError = false
-        if (!this.isValidHash(param)) {
+        if (!this.isValid(param)) {
             this.setError(param)
             return
         }
