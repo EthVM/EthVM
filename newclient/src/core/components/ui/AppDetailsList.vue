@@ -44,7 +44,9 @@
     -->
 
         <div v-for="(item, index) in basicDetails" :key="calculateKey(index)" :class="[getColor(calculateKey(index)) ? '' : 'tableGrey']">
-            <app-details-list-row :detail="item" :is-loading="isLoading" />
+            <v-flex xs12>
+                <app-details-list-row :detail="item" :is-loading="isLoading" />
+            </v-flex>
         </div>
 
         <!--
