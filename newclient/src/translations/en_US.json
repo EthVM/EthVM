@@ -141,7 +141,7 @@
     "price": {
         "name": "Price | Prices",
         "erc20": "ERC20 Prices",
-        "erc721": "ERC721 Prices"
+        "erc721": "NFT Prices"
     },
 
     "common": {
@@ -182,7 +182,7 @@
             "address": {
                 "balance": "Something went wrong while retrieving Address's ETH balance.",
                 "pending": "Something went wrong while retrieving Address's pending transactions.",
-                "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
+                "block-rewards": "Something went wrong while retrieving Address's block rewards.",
                 "erc20": "Something went wrong while retrieving ERC20 balances.",
                 "erc721": "Something went wrong while retrieving NFTs balances.",
                 "transfers-eth": "Something went wrong retrieving Address transactions.",
@@ -204,11 +204,11 @@
             "tokens": {
                 "detail": "Something went wrong while retrieving token details.",
                 "not-found": "This token contract does not exist.",
-                "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
-                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
-                "token-owner": "Something went wrong retrieving Token owners.",
-                "token-details": "Something went wrong retrieving Token details.",
-                "token-market": "Something went wrong retrieving Token Market data."
+                "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
+                "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers.",
+                "token-owner": "Something went wrong retrieving token owners.",
+                "token-details": "Something went wrong retrieving token details.",
+                "token-market": "Something went wrong retrieving token market data."
             },
             "search": {
                 "you-entered": "You entered",
@@ -217,8 +217,8 @@
                 "let-us-know": "let us know"
             },
             "txs": "Something went wrong while retrieving transactions.",
-            "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
-            "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
+            "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers."
         },
         "tx": {
             "no-all": "This address does not have any transaction history",
@@ -273,7 +273,7 @@
             "uncle": "New Uncle | New Uncles",
             "pending": "New Pending Tx | New Pending Txs",
             "erc20-transfer": "New ERC20 Transfer | New ERC20 Transfers",
-            "erc721-transfer": "New ERC721 Transfer | New ERC721 Transfers",
+            "erc721-transfer": "New NFT Transfer | New NFT Transfers",
             "tokens": "Token's Balance Changed, Refresh",
             "txs": "New Txs Found, Refresh"
         },
@@ -286,7 +286,9 @@
         "token": {
             "no-tokens": "There are no supported tokens",
             "no-tokens-for-address": "Address does not hold any supported tokens",
-            "no-holders": "There are no holders of this token"
+            "no-holders": "There are no holders of this token",
+            "no-tokens-addr": "This address does not hold any ERC20 tokens",
+            "no-nft-addr": "This address does not hold any NFTs (ERC721 tokens)"
         },
         "coming-soon": "Coming soon"
     },
@@ -668,7 +670,7 @@
         "empty": "No transfers",
         "TOKEN_TRANSFER": "transfer",
         "erc20": "ERC20 Transfers",
-        "erc721": "ERC721 Transfers"
+        "erc721": "NFT Transfers"
     },
     "state": {
         "bal-before": "Balance Before",
