@@ -9,7 +9,7 @@ import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { getEthBalance } from './addressDetails.graphql'
+import { getEthBalance, getContractMeta } from './addressDetails.graphql'
 import { getEthBalance_getEthBalance as BalanceType } from './apolloTypes/getEthBalance'
 import { Address } from '@app/modules/address/components/props'
 import AddressDetail from '@app/modules/address/components/AddressDetail.vue'
@@ -43,6 +43,34 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
                 this.emitErrorState()
                 /*Sentry */
             }
+        },
+        getContractMeta: {
+            query: getContractMeta,
+            variables() {
+                return { hash: this.address }
+            },
+            result(data) {
+                if (data.data && data.data.getContractMeta) {
+                    this.hasError = false
+                    this.setContractCreator(data.data.getContractMeta.creator === this.address)
+                    this.setContract(true)
+                    this.emitErrorState()
+                } else {
+                    this.setContractCreator(false)
+                    this.setContract(false)
+                    this.emitErrorState(ErrorMessage.contractNotFound)
+                }
+            },
+            error(error) {
+                const newError = JSON.stringify(error.message)
+                if (newError.includes('Contract not found')) {
+                    this.setContractCreator(false)
+                    this.setContract(false)
+                } else {
+                    this.hasError = true
+                    this.emitErrorState(ErrorMessage.contractNotFound)
+                }
+            }
         }
     }
 })
@@ -60,6 +88,8 @@ export default class AddressOverview extends Mixins(CoinData) {
     @Prop(Number) totalErc20Owned!: number
     @Prop(Boolean) loadingTokens!: boolean
     @Prop(Boolean) updateBalance!: boolean
+    @Prop(Function) setContractCreator!: void
+    @Prop(Function) setContract!: void
     /*
     ===================================================================================
       Initial Data
@@ -79,22 +109,21 @@ export default class AddressOverview extends Mixins(CoinData) {
             balance: this.getEthBalance ? this.getEthBalance.balance : '0',
             isMiner: this.isMiner,
             isContractCreator: this.isContractcreator,
-            isContract: this.isContract,
-            totalERC20: this.totalErc20Owned
+            totalERC20: this.totalErc20Owned,
+            isContract: this.isContract
         }
     }
 
     get loading(): boolean {
         return this.hasError ? true : this.$apollo.queries.getEthBalance.loading
     }
-
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
-    emitErrorState(): void {
-        this.$emit('errorBalance', this.hasError, ErrorMessage.balance)
+    emitErrorState(msg): void {
+        this.$emit('errorBalance', this.hasError, msg ? msg : ErrorMessage.balance)
     }
 
     /*
