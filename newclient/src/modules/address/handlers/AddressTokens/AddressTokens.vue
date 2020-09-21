@@ -280,15 +280,15 @@ export default class AddressTokens extends Mixins(CoinData) {
     get message(): string {
         if (!this.loading && this.hasTokens && this.getTokens.length === 0) {
             if (this.isNFT) {
-                return `${this.$t('message.transfer.no-nft')}`
+                return `${this.$t('message.token.no-nft-addr')}`
             }
-            return `${this.$t('message.transfer.no-all')}`
+            return `${this.$t('message.token.no-tokens-addr')}`
         }
         return ''
     }
 
     get getTitle(): string {
-        return this.isERC20 ? `${this.$t('token.erc20')}` : `${this.$t('token.erc721')}`
+        return this.isERC20 ? `${this.$t('token.erc20')}` : `${this.$t('token.nft')}`
     }
 
     get hasTokens(): boolean {
