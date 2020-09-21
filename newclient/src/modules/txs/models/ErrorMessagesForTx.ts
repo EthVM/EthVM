@@ -3,6 +3,10 @@ export enum ErrorMessageTx {
     notFound = 'message.tx.not-exist'
 }
 
+export enum ErrorMessagePendingTx {
+    details = 'message.error.tx.pending'
+}
+
 export enum TxStatus {
     success = 'common.success',
     failed = 'common.fail',

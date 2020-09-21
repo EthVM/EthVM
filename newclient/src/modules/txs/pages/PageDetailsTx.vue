@@ -92,7 +92,7 @@ export default class PageDetailsTxs extends Vue {
     get crumbs(): Crumb[] {
         return [
             {
-                text: this.$t('tx.mined'),
+                text: this.$t('tx.mined-tx'),
                 link: '/txs'
             },
             {

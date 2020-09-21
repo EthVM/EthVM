@@ -12,7 +12,7 @@
                 <v-card color="info" flat class="white--text" height="40px">
                     <slot name="header">
                         <v-layout align-center justify-start row fill-height pl-3 pr-2>
-                            <v-flex sm2 lg1>
+                            <v-flex v-if="!pending" sm2 lg1>
                                 <h5>{{ $t('block.number') }}</h5>
                             </v-flex>
                             <v-flex sm7 md5>
@@ -25,7 +25,7 @@
                                 <h5 class="pl-2">{{ $t('common.age') }}</h5>
                             </v-flex>
                             <v-flex hidden-md-and-down lg2>
-                                <h5>{{ $tc('tx.fee', 1) }}</h5>
+                                <h5>{{ pending ? $t('tx.estimated-fee') : $tc('tx.fee', 1) }}</h5>
                             </v-flex>
                             <div v-if="!pending">
                                 <h5 class="tx-status text-xs-center">{{ $t('tx.status') }}</h5>
@@ -46,7 +46,7 @@
                     <v-flex v-if="!isLoading" xs12>
                         <slot name="rows">
                             <v-card v-for="(tx, index) in displayData" :key="index" class="transparent" flat>
-                                <table-txs-row :tx="tx" :is-pending="false" />
+                                <table-txs-row :tx="tx" :is-pending="pending" />
                             </v-card>
                         </slot>
                     </v-flex>

@@ -1,0 +1,14 @@
+subscription pendingTx($owner: String) {
+    pendingTransaction(owner: $owner) {
+        transactionHash
+        from
+        to
+        txFee
+        value
+        timestamp
+    }
+}
+
+subscription txMined($hash: String!) {
+    transactionEvent(hash: $hash)
+}
