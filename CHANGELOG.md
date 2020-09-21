@@ -10,3 +10,4 @@
 - Fix for item padding within details list [#853] (https://github.com/EthVM/EthVM/pull/853)
 - Fix animation for sum menu item change on address page [#854] (https://github.com/EthVM/EthVM/pull/854)
 - Fix strings [#852] (https://github.com/EthVM/EthVM/pull/852)
+- Fixes of incorrect rendering of the menu items when user slides between tab items and on switch between mobile/desktop layouts [#855] (https://github.com/EthVM/EthVM/pull/855)
