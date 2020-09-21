@@ -50,7 +50,7 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-transfers
                                     v-show="toggleLastTx === 0"
                                     :address="addressRef"
@@ -59,10 +59,10 @@
                                     @resetUpdateCount="setNewEvent"
                                     @errorTransfers="setError"
                                 ></address-transfers>
-                            </v-slide-x-reverse-transition>
-                            <v-slide-x-reverse-transition>
+                            </transition>
+                            <transition name="fade">
                                 <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" @errorPending="setError" />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
                 </v-tab-item>
@@ -86,7 +86,7 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-transfers
                                     v-show="toggleERC20 === 1"
                                     :address="addressRef"
@@ -98,8 +98,8 @@
                                     @resetTransfersRefetch="resetTransfersRefetch(true)"
                                     @errorTransfers="setError"
                                 />
-                            </v-slide-x-reverse-transition>
-                            <v-slide-x-reverse-transition>
+                            </transition>
+                            <transition name="fade">
                                 <address-tokens
                                     v-show="toggleERC20 === 0"
                                     :address="addressRef"
@@ -113,7 +113,7 @@
                                     @resetBalanceRefetch="resetBalanceRefetch(true)"
                                     @errorTokenBalance="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
                 </v-tab-item>
@@ -137,7 +137,7 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-transfers
                                     v-show="toggleERC721 === 1"
                                     :address="addressRef"
@@ -149,8 +149,8 @@
                                     @resetTransfersRefetch="resetTransfersRefetch(false)"
                                     @errorTransfers="setError"
                                 />
-                            </v-slide-x-reverse-transition>
-                            <v-slide-x-reverse-transition>
+                            </transition>
+                            <transition name="fade">
                                 <address-tokens
                                     v-show="toggleERC721 === 0"
                                     :address="addressRef"
@@ -162,7 +162,7 @@
                                     @resetBalanceRefetch="resetBalanceRefetch(false)"
                                     @errorTokenBalance="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
 
@@ -216,7 +216,7 @@
                               BLOCK REWARDS TABLE
                             =====================================================================================
                             -->
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-rewards
                                     v-show="toggleMiner === 0"
                                     :address="addressRef"
@@ -227,13 +227,13 @@
                                     @resetUpdateCount="setNewEvent"
                                     @errorRewards="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                             <!--
                             =====================================================================================
                               UNCLE REWARDS TABLE
                             =====================================================================================
                             -->
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-rewards
                                     v-show="toggleMiner === 1"
                                     :address="addressRef"
@@ -244,13 +244,13 @@
                                     @resetUpdateCount="setNewEvent"
                                     @errorRewards="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                             <!--
                             =====================================================================================
                               GENESIS REWARDS TABLE
                             =====================================================================================
                             -->
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-rewards
                                     v-show="toggleMiner === 2"
                                     :address="addressRef"
@@ -259,7 +259,7 @@
                                     @genesisRewards="setGenesisRewards"
                                     @errorRewards="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
                 </v-tab-item>
@@ -503,5 +503,13 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
 }
 .divider {
     height: 24px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.4s ease;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
 }
 </style>
