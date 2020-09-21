@@ -6,12 +6,13 @@
       =====================================================================================
       -->
         <v-flex xs12 hidden-md-and-up>
-            <div :class="txStatusClass">
+            <div :class="isPending ? 'table-row-mobile' : txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs6 pa-1>
-                        <router-link :to="`/block/number${transferObj.block}`" class="black--text font-weight-medium pb-1"
+                        <router-link v-if="!isPending" :to="`/block/number${transferObj.block}`" class="black--text font-weight-medium pb-1"
                             >{{ $t('block.number') }} {{ transaction.block }}</router-link
                         >
+                        <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>
                     </v-flex>
                     <v-flex xs6 pr-44>
                         <v-layout row justify-end>
@@ -63,7 +64,7 @@
             LG: 1/12 (1)
           =====================================================================================
           -->
-                <v-flex sm2 lg1>
+                <v-flex v-if="!isPending" sm2 lg1>
                     <router-link :to="`/block/number/${transferObj.block}`" class="black--text text-truncate font-italic psmall">{{
                         transaction.block
                     }}</router-link>
@@ -110,7 +111,7 @@
           =====================================================================================
           -->
                 <v-flex sm3 lg2>
-                    <p>
+                    <p :class="isPending ? 'pl-4' : ''">
                         {{ transaction.value.value }}
                         {{ $t(`common.${transaction.value.unit}`) }}
                         <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ${$t('common.eth')}`" />
@@ -127,7 +128,7 @@
           =====================================================================================
           -->
                 <v-flex hidden-sm-and-down md2>
-                    <app-time-ago :timestamp="transaction.timestamp" />
+                    <app-time-ago :timestamp="transaction.timestamp" :class="isPending ? 'pl-2' : ''" />
                 </v-flex>
                 <!--
           =====================================================================================
@@ -140,7 +141,7 @@
           =====================================================================================
           -->
                 <v-flex hidden-md-and-down lg2>
-                    <p class="black--text text-truncate mb-0">
+                    <p :class="('black--text', 'text-truncate', 'mb-0', isPending ? 'pl-3' : '')">
                         {{ transaction.fee.value }}
                     </p>
                 </v-flex>
@@ -158,6 +159,13 @@
                     <v-icon v-if="transaction.status" small class="txSuccess--text tx-status text-xs-center">fa fa-check-circle</v-icon>
                     <v-icon v-else small class="txFail--text tx-status text-xs-center">fa fa-times-circle</v-icon>
                 </div>
+
+                <!--
+          =====================================================================================
+            MINED INDICATOR
+          =====================================================================================
+          -->
+                <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>
             </v-layout>
             <v-divider class="mb-2 mt-2" />
         </v-flex>
@@ -174,6 +182,8 @@ import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { Tx } from './props'
 import { TxSummary_transfers as TransferType } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
 import { TxSummary_transfers_transfer as TransferObj } from '@app/modules/txs/handlers/BlockTxs/apolloTypes/TxSummary'
+import { pendingTx_pendingTransaction as PendingTx } from '@app/modules/txs/handlers/PendingTxs/apolloTypes/pendingTx'
+
 import BN from 'bignumber.js'
 
 @Component({
@@ -208,15 +218,17 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get transaction(): Tx {
+        const tx = this.isPending ? this.tx : this.transferObj
         return {
-            hash: this.transferObj.transactionHash,
-            block: this.formatNumber(this.transferObj.block),
-            from: this.transferObj.from,
-            to: this.transferObj.to,
-            timestamp: new Date(this.transferObj.timestamp * 1e3),
-            fee: this.formatNonVariableEthValue(new BN(this.transferObj.txFee)),
+            isMined: this.isPending ? tx['isMined'] : false,
+            hash: tx['transactionHash'],
+            block: this.formatNumber(tx['block']),
+            from: tx['from'],
+            to: tx['to'],
+            timestamp: new Date(tx['timestamp'] * 1e3),
+            fee: this.formatNonVariableEthValue(new BN(tx['txFee'])),
             value: this.formatNonVariableEthValue(new BN(this.tx ? this.tx.value : '')),
-            status: this.transferObj.status != null ? this.transferObj.status : false
+            status: tx['status'] != null ? tx['status'] : false
         }
     }
 
@@ -249,5 +261,14 @@ p {
 
 .tx-status {
     min-width: 60px;
+}
+
+.blinking {
+    animation: blinker 2s linear infinite;
+}
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }
 </style>

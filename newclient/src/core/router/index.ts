@@ -4,7 +4,7 @@ import Router from 'vue-router'
 const PageHome = () => import(/* webpackChunkName: "page-home" */ '@app/modules/home/pages/PageHome.vue')
 const PageBlocks = () => import(/* webpackChunkName: "page-blocks" */ '@app/modules/blocks/pages/PageBlocks.vue')
 const PageTxs = () => import(/* webpackChunkName: "page-txs" */ '@app/modules/txs/pages/PageTxs.vue')
-// const PagePendingTxs = () => import(/* webpackChunkName: "page-pending-txs" */ '@app/modules/pending-txs/pages/PagePendingTxs.vue')
+const PagePendingTxs = () => import(/* webpackChunkName: "page-pending-txs" */ '@app/modules/txs/pages/PagePendingTxs.vue')
 const PageAbout = () => import(/* webpackChunkName: "page-about" */ '@app/modules/other/pages/PageAbout.vue')
 // const PageUncles = () => import(/* webpackChunkName: "page-uncles" */ '@app/modules/uncles/pages/PageUncles.vue')
 const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" */ '@app/modules/blocks/pages/PageDetailsBlock.vue')
@@ -57,11 +57,11 @@ export default new Router({
             name: 'transaction',
             props: true
         },
-        // {
-        //   path: '/pending-txs',
-        //   component: PagePendingTxs,
-        //   name: 'pending'
-        // },
+        {
+            path: '/pending-txs',
+            component: PagePendingTxs,
+            name: 'pending'
+        },
         // {
         //   path: '/uncles',
         //   component: PageUncles,
