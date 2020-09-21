@@ -7,3 +7,4 @@
 - Fix Search All by address by adding isValidAddress check [#847] (https://github.com/EthVM/EthVM/pull/847)
 - Fix block transaction if route param of the block details is hash
 - Fix block parent route changed to hash
+- Fix for item padding within details list
