@@ -48,7 +48,7 @@
         "graphql-tag": "^2.10.3",
         "import": "^0.0.6",
         "moment": "^2.27.0",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.1",
         "number-formatter": "^1.2.0",
         "rxjs": "^6.5.5",
         "store": "^2.0.12",

@@ -32,7 +32,7 @@
 
             <v-flex v-if="!isErc20" md2 />
             <v-flex md3>
-                <h5>{{ text }}</h5>
+                <h5 class="pl-1">{{ text }}</h5>
             </v-flex>
             <v-flex v-if="isErc20" md3>
                 <h5>{{ $t('usd.value') }}</h5>
@@ -64,7 +64,7 @@ export default class TableAddressTokensHeader extends Vue {
    */
 
     get text(): string {
-        return this.isErc20 ? `${this.$t('common.amount')}` : `${this.$t('token.total-tokens')}`
+        return this.isErc20 ? `${this.$t('common.amount')}` : `${this.$t('common.id')}`
     }
 }
 </script>

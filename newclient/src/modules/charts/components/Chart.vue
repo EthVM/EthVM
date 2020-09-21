@@ -108,13 +108,14 @@ ChartJs.defaults.global.layout = Object.assign(ChartJs.defaults.global.layout, {
         bottom: 10
     }
 })
-
-/* Data point style */
-ChartJs.defaults.global.elements.point = Object.assign(ChartJs.defaults.global.elements.point, {
-    hoverRadius: 6,
-    borderWidth: 1,
-    radius: 1
-})
+if (ChartJs.defaults.global.elements) {
+    /* Data point style */
+    ChartJs.defaults.global.elements.point = Object.assign(ChartJs.defaults.global.elements.point, {
+        hoverRadius: 6,
+        borderWidth: 1,
+        radius: 1
+    })
+}
 
 /* Show doughnut chart animation */
 ChartJs.defaults.doughnut.animation = Object.assign(ChartJs.defaults.doughnut.animation, {

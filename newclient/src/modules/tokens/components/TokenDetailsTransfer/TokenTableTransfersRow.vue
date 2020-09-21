@@ -8,7 +8,7 @@
         <v-flex hidden-sm-and-down>
             <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
                 <!-- Column 1: Tx Info -->
-                <v-flex :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'pr-3' : 'pr-5']" sm6 md7>
+                <v-flex :class="[$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs' ? 'pr-3' : 'pr-5']" :md6="isERC721" :md7="!isERC721">
                     <v-layout row align-center justift-start pa-2>
                         <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
                         <app-transform-hash :hash="transfer.transfer.transactionHash" :link="`/tx/${transfer.transfer.transactionHash}`" />
@@ -31,13 +31,13 @@
                 <!-- End Column 1 -->
 
                 <!-- Column 2: Age -->
-                <v-flex sm2>
+                <v-flex md2>
                     <app-time-ago :timestamp="date" />
                 </v-flex>
                 <!-- End Column 2 -->
 
-                <!-- Column 3: Quantity -->
-                <v-flex sm2>
+                <!-- Column 3: Quantity/ID -->
+                <v-flex md2>
                     <p>
                         <span v-if="isERC721" class="text-truncate">{{ getTokenID }}</span>
                         <span v-else>{{ transferValue.value }} {{ units }} </span>
@@ -45,6 +45,10 @@
                     </p>
                 </v-flex>
                 <!-- End Column 3 -->
+
+                <v-flex v-if="isERC721" md2>
+                    <v-img :src="image" align-center justify-end max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+                </v-flex>
             </v-layout>
             <v-divider class="mb-2 mt-2" />
         </v-flex>
@@ -81,7 +85,7 @@
                     </v-flex>
                     <v-flex xs12>
                         <p class="pb-0">
-                            <span class="info--text">{{ isERC721 ? $t('common.id') : $t('common.quantity') }}:</span>
+                            <span class="info--text">{{ isERC721 ? $t('common.id') : $t('common.quantity') }}: </span>
                             <span v-if="isERC721" class="text-truncate">{{ getTokenID }}</span>
                             <span v-else>{{ transferValue.value }} {{ units }}</span>
                             <app-tooltip v-if="transferValueTooltip && !isERC721" :text="transferValueTooltip" />
@@ -102,9 +106,10 @@ import BigNumber from 'bignumber.js'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
-import { getERC721TokenTransfers_getERC721TokenTransfers_transfers as ERC721TokenTransfer } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC721TokenTransfers'
-import { getERC20TokenTransfers_getERC20TokenTransfers_transfers as ERC20TokenTransfer } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20TokenTransfers'
+import { getERC721TokenTransfers_getERC721TokenTransfers_transfers as ERC721TokenTransfer } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC721TokenTransfers'
+import { getERC20TokenTransfers_getERC20TokenTransfers_transfers as ERC20TokenTransfer } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC20TokenTransfers'
 import BN from 'bignumber.js'
+import configs from '@app/configs'
 
 const TYPES = ['ERC20', 'ERC721']
 
@@ -115,7 +120,7 @@ const TYPES = ['ERC20', 'ERC721']
         AppTooltip
     }
 })
-export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
+export default class TokenTableTransfersRow extends Mixins(NumberFormatMixin) {
     /*
    ===================================================================================
      Props
@@ -125,11 +130,25 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
     @Prop(Number) decimals?: number
     @Prop(String) symbol?: string
     @Prop(String) transferType!: string
+
+    /*
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+    imageExists = true
     /*
     ===================================================================================
       Computed
     ===================================================================================
     */
+
+    get image(): string {
+        if (this.transfer && this.transfer['contract'] && this.imageExists) {
+            return `${configs.OPENSEA}/dev/getImage?contract=${this.transfer['contract']}&tokenId=${this.getTokenID}`
+        }
+        return require('@/assets/icon-token.png')
+    }
 
     get transferValue(): FormattedNumber {
         let n = new BigNumber(this.transfer['value']) || new BigNumber(0)
@@ -167,6 +186,15 @@ export default class TransfersTableRow extends Mixins(NumberFormatMixin) {
 
     get getTokenID() {
         return new BN(this.transfer['token']).toString()
+    }
+
+    /*
+    ===================================================================================
+     Methods
+    ===================================================================================
+    */
+    onImageLoadFail(index): void {
+        this.imageExists = false
     }
 }
 </script>

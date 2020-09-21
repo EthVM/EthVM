@@ -57,6 +57,9 @@ import newBlockFeed from '../../NewBlockSubscription/newBlockFeed.graphql'
             update: data => data.getBlockByHash || data.getBlockByNumber,
             result({ data }) {
                 if (this.block) {
+                    if (this.isHash) {
+                        this.emitBlockNumber()
+                    }
                     this.$emit('isMined', true)
                     this.emitErrorState(false)
                 }
@@ -160,7 +163,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                 {
                     title: this.$i18n.t('block.p-hash'),
                     detail: this.block.parentHash!,
-                    link: `/block/number/${this.block.summary.number - 1}`,
+                    link: `/block/hash/${this.block.parentHash}`,
                     copy: true,
                     mono: true
                 },
@@ -270,7 +273,8 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     }
     get lastBlock(): number | undefined {
         if (!this.$apollo.queries.getLatestBlockInfo.loading) {
-            return this.newBlockNumber ? this.newBlockNumber : this.getLatestBlockInfo.number
+            const latestBlockNum = this.getLatestBlockInfo ? this.getLatestBlockInfo.number : undefined
+            return this.newBlockNumber ? this.newBlockNumber : latestBlockNum
         }
         return undefined
     }
@@ -315,6 +319,9 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorDetails', this.hasError, ErrorMessageBlock.details)
+    }
+    emitBlockNumber(): void {
+        this.$emit('setBlockNumber', this.block.summary.number.toString())
     }
 }
 </script>

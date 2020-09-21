@@ -12,7 +12,7 @@
                     <v-flex xs12 sm9 md7>
                         <v-card-text class="font-weight-thin font-italic text-xs-center"
                             >{{ $t('message.ropsten-no-token.text')
-                            }}<a href="https://ethvm.com/tokens">{{ $t('message.ropsten-no-token.link') }} </a></v-card-text
+                            }}<a href="https://www.ethvm.com/tokens">{{ $t('message.ropsten-no-token.link') }} </a></v-card-text
                         >
                     </v-flex>
                     <v-spacer />

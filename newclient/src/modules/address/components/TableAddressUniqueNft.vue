@@ -5,28 +5,34 @@
       TABLE HEADER FOR UNIQUE TOKENS
     =====================================================================================
     -->
-        <v-layout align-center justify-start row wrap fill-height pa-2>
-            <v-btn flat color="primary" class="text-capitalize" @click="$emit('hideNFT')">
-                <v-icon left small>fas fa-arrow-left</v-icon>{{ $t('btn.back') }}</v-btn
-            >
-            <v-card-title class="title font-weight-bold pl-1">{{ contractName }} </v-card-title>
+        <v-layout align-center justify-space-around row wrap fill-height pr-2 pl-2>
+            <v-flex shrink>
+                <v-btn flat color="primary" class="text-capitalize ma-0" @click="$emit('hideNFT')">
+                    <v-icon left small>fas fa-arrow-left</v-icon>{{ $t('btn.back') }}</v-btn
+                >
+            </v-flex>
+            <v-flex xs7 sm6 md5>
+                <v-card-title class="title font-weight-bold pa-0">{{ contractName }} </v-card-title>
+            </v-flex>
             <v-spacer />
-            <app-paginate
-                v-if="showPagination"
-                :total="totalPages"
-                :current-page="index"
-                :has-input="true"
-                :has-first="true"
-                :has-last="true"
-                @newPage="setPage"
-            />
+            <v-flex shrink>
+                <app-paginate
+                    v-if="showPagination"
+                    :total="totalPages"
+                    :current-page="index"
+                    :has-input="true"
+                    :has-first="true"
+                    :has-last="true"
+                    @newPage="setPage"
+                />
+            </v-flex>
         </v-layout>
-        <v-layout v-if="!loading" align-center justify-start row wrap fill-height>
+        <v-layout v-if="!loading" align-center justify-start row wrap fill-height pr-2 pl-2>
             <v-flex v-for="(token, i) in uniqueTokens" :key="i" xs12 sm6 md4>
                 <unique-nft-row :token="token" :loading="false" :contract="contract" />
             </v-flex>
         </v-layout>
-        <v-layout v-else align-center justify-start row wrap fill-height>
+        <v-layout v-else align-center justify-start row wrap fill-height pr-2 pl-2>
             <v-flex v-for="i in 4" :key="i" xs12 sm6 md4>
                 <unique-nft-row :loading="true" :contract="contract" />
             </v-flex>

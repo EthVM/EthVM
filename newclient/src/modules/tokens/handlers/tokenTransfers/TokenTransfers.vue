@@ -1,7 +1,7 @@
 <template>
-    <transfers-table
+    <token-table-transfers
         :transfers="transferData"
-        :loading="loading || hasError"
+        :loading="loading"
         :show-pagination="showPagination"
         :decimals="decimals"
         :symbol="symbol"
@@ -18,23 +18,18 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import BigNumber from 'bignumber.js'
-import TransfersTable from '@app/modules/tokens/components/Transfers/TransfersTable.vue'
-import { getERC20TokenTransfers, getERC721TokenTransfers } from '@app/modules/tokens/handlers/transfers/transfers.graphql'
-import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC20Transfers'
-import { getERC721TokenTransfers_getERC721TokenTransfers as ERC721TransfersType } from '@app/modules/tokens/handlers/transfers/apolloTypes/getERC721TokenTransfers'
+import TokenTableTransfers from '@app/modules/tokens/components/TokenDetailsTransfer/TokenTableTransfers.vue'
+import { getERC20TokenTransfers, getERC721TokenTransfers } from '@app/modules/tokens/handlers/tokenTransfers/tokenTransfers.graphql'
+import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC20Transfers'
+import { getERC721TokenTransfers_getERC721TokenTransfers as ERC721TransfersType } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC721TokenTransfers'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 const TYPES = ['ERC20', 'ERC721']
 
 const MAX_ITEMS = 10
 
-interface Transfer {
-    transfer: object
-    value?: string
-}
-
 @Component({
     components: {
-        TransfersTable
+        TokenTableTransfers
     },
     apollo: {
         getERC20Transfers: {
@@ -49,7 +44,6 @@ interface Transfer {
                 if (data && data.getERC20TokenTransfers) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMoreERC20Transfers
                         this.initialLoad = false
                     }
                 }
@@ -70,7 +64,6 @@ interface Transfer {
                 if (data && data.getERC721TokenTransfer) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
-                        this.showPagination = this.hasMoreERC721Transfers
                         this.initialLoad = false
                     }
                 }
@@ -81,7 +74,7 @@ interface Transfer {
         }
     }
 })
-export default class Transfers extends Vue {
+export default class TokenTransfers extends Vue {
     /*
         ===================================================================================
           Props
@@ -102,12 +95,11 @@ export default class Transfers extends Vue {
     getERC20Transfers!: ERC20TransfersType
     page?: number
     index = 0
-    showPagination = false
     /*isEnd -  Last Index loaded */
     isEnd = 0
     initialLoad = true
     hasError = false
-    transferType = ''
+    transferType = TYPES[0]
     /*
         ===================================================================================
           Methods
@@ -185,22 +177,22 @@ export default class Transfers extends Vue {
           Computed Values
         ===================================================================================
         */
+    get showPagination(): boolean {
+        return this.hasMoreERC721Transfers || this.hasMoreERC20Transfers
+    }
+
     get hasERC721Transfers() {
         return this.getERC721Transfers && this.getERC721Transfers.transfers && this.getERC721Transfers.transfers.length > 0
     }
 
+    get hasERC20Transfers() {
+        return this.getERC20Transfers && this.getERC20Transfers.transfers
+    }
+
     get transferData(): any[] {
-        if (this.getERC20Transfers && this.getERC20Transfers.transfers) {
-            const data: Array<Transfer> = []
-            this.getERC20Transfers.transfers.forEach(transfer => {
-                transfer ? data.push(transfer) : null
-            })
-            if (this.hasERC721Transfers) {
-                this.getERC721Transfers.transfers.forEach(transfer => {
-                    transfer ? data.push(transfer) : null
-                })
-                this.transferType = TYPES[1]
-            }
+        if (this.hasERC20Transfers && this.getERC721Transfers) {
+            const data = this.hasERC721Transfers ? this.getERC721Transfers.transfers : this.getERC20Transfers.transfers
+            this.transferType = this.hasERC721Transfers ? TYPES[1] : TYPES[0]
             const start = this.index * this.maxItems
             const end = start + this.maxItems > data.length ? data.length : start + this.maxItems
             return data.slice(start, end)

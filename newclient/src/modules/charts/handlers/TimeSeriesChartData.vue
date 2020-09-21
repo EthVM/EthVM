@@ -165,7 +165,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
                     }
                 }
             },
-            update: data => data.getTimeseriesData.items,
+            update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
                 this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.value_type)]
             }

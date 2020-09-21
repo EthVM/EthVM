@@ -112,7 +112,10 @@ interface NFTMetaMap {
             },
             deep: true,
             update(data) {
-                return this.isERC20 ? data.getOwnersERC20Tokens.owners : data.getOwnersERC721Balances
+                if (this.isERC20) {
+                    return data.getOwnersERC20Tokens ? data.getOwnersERC20Tokens.owners : null
+                }
+                return data.getOwnersERC721Balances
             },
             result({ data }) {
                 if (this.hasTokens) {
@@ -277,15 +280,15 @@ export default class AddressTokens extends Mixins(CoinData) {
     get message(): string {
         if (!this.loading && this.hasTokens && this.getTokens.length === 0) {
             if (this.isNFT) {
-                return `${this.$t('message.transfer.no-nft')}`
+                return `${this.$t('message.token.no-nft-addr')}`
             }
-            return `${this.$t('message.transfer.no-all')}`
+            return `${this.$t('message.token.no-tokens-addr')}`
         }
         return ''
     }
 
     get getTitle(): string {
-        return this.isERC20 ? `${this.$t('token.erc20')}` : `${this.$t('token.erc721')}`
+        return this.isERC20 ? `${this.$t('token.erc20')}` : `${this.$t('token.nft')}`
     }
 
     get hasTokens(): boolean {
@@ -397,7 +400,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     }
 
     createNFTMetaMap(): void {
-        const contracts = this.getNFTcontractsMeta.tokenContracts
+        const contracts = this.getNFTcontractsMeta ? this.getNFTcontractsMeta.tokenContracts : null
         if (contracts && contracts.length > 0) {
             contracts.forEach(contract => {
                 if (contract && contract.primary_asset_contracts) {
