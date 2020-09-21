@@ -18,6 +18,8 @@
                         :is-contract="isContract"
                         :total-erc20-owned="totalERC20"
                         :update-balance="addrBalanceChanged"
+                        :set-contract-creator="setContractCreator"
+                        :set-contract="setContract"
                         :loading-tokens="loadingERC20Balance"
                         @resetBalanceUpdate="resetBalance"
                         @errorBalance="setError"
@@ -38,19 +40,19 @@
                 <v-tab-item slot="tabs-item" value="tab-0">
                     <keep-alive>
                         <div>
-                            <v-layout row wrap align-center justify-start pt-2>
+                            <v-layout :class="subMenuClass" row wrap align-center justify-start>
                                 <v-btn :class="[toggleLastTx === 0 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleLastTx = 0">
                                     {{ $tc('btn.last', 2) }}
                                 </v-btn>
                                 <v-divider vertical />
-                                <v-btn :class="[toggleLastTx === 1 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleLastTx = 1">
+                                <v-btn :class="[toggleLastTx === 1 ? 'active-button' : 'button', 'pl-1 text-capitalize']" flat small @click="toggleLastTx = 1">
                                     {{ $tc('common.pending', 2) }}
                                 </v-btn>
-                                <v-flex xs12 pa-1>
+                                <v-flex xs12 pr-0 pl-0 pt-1 pb-1>
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-transfers
                                     v-show="toggleLastTx === 0"
                                     :address="addressRef"
@@ -59,10 +61,10 @@
                                     @resetUpdateCount="setNewEvent"
                                     @errorTransfers="setError"
                                 ></address-transfers>
-                            </v-slide-x-reverse-transition>
-                            <v-slide-x-reverse-transition>
+                            </transition>
+                            <transition name="fade">
                                 <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" @errorPending="setError" />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
                 </v-tab-item>
@@ -74,7 +76,7 @@
                 <v-tab-item slot="tabs-item" value="tab-1">
                     <keep-alive>
                         <div>
-                            <v-layout row wrap align-center justify-start pt-2>
+                            <v-layout :class="subMenuClass" row wrap align-center justify-start pt-2>
                                 <v-btn :class="[toggleERC20 === 0 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleERC20 = 0">
                                     {{ $tc('token.name', 2) }}
                                 </v-btn>
@@ -82,11 +84,11 @@
                                 <v-btn :class="[toggleERC20 === 1 ? 'active-button' : 'button', 'text-capitalize']" flat small @click="toggleERC20 = 1">
                                     {{ $tc('transfer.name', 2) }}
                                 </v-btn>
-                                <v-flex xs12 pa-1>
+                                <v-flex xs12 pr-0 pl-0 pt-1 pb-1>
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-transfers
                                     v-show="toggleERC20 === 1"
                                     :address="addressRef"
@@ -98,8 +100,8 @@
                                     @resetTransfersRefetch="resetTransfersRefetch(true)"
                                     @errorTransfers="setError"
                                 />
-                            </v-slide-x-reverse-transition>
-                            <v-slide-x-reverse-transition>
+                            </transition>
+                            <transition name="fade">
                                 <address-tokens
                                     v-show="toggleERC20 === 0"
                                     :address="addressRef"
@@ -113,7 +115,7 @@
                                     @resetBalanceRefetch="resetBalanceRefetch(true)"
                                     @errorTokenBalance="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
                 </v-tab-item>
@@ -125,7 +127,7 @@
                 <v-tab-item slot="tabs-item" value="tab-2">
                     <keep-alive>
                         <div>
-                            <v-layout row wrap align-center justify-start pt-2>
+                            <v-layout :class="subMenuClass" row wrap align-center justify-start pt-2>
                                 <v-btn :class="[toggleERC721 === 0 ? 'active-button' : 'button', 'pl-3 text-capitalize']" flat small @click="toggleERC721 = 0">
                                     {{ $tc('token.name', 2) }}
                                 </v-btn>
@@ -133,11 +135,11 @@
                                 <v-btn :class="[toggleERC721 === 1 ? 'active-button' : 'button', 'text-capitalize']" flat small @click="toggleERC721 = 1">
                                     {{ $tc('transfer.name', 2) }}
                                 </v-btn>
-                                <v-flex xs12 pa-1>
+                                <v-flex xs12 pr-0 pl-0 pt-1 pb-1>
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-transfers
                                     v-show="toggleERC721 === 1"
                                     :address="addressRef"
@@ -149,8 +151,8 @@
                                     @resetTransfersRefetch="resetTransfersRefetch(false)"
                                     @errorTransfers="setError"
                                 />
-                            </v-slide-x-reverse-transition>
-                            <v-slide-x-reverse-transition>
+                            </transition>
+                            <transition name="fade">
                                 <address-tokens
                                     v-show="toggleERC721 === 0"
                                     :address="addressRef"
@@ -162,7 +164,7 @@
                                     @resetBalanceRefetch="resetBalanceRefetch(false)"
                                     @errorTokenBalance="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
 
@@ -177,7 +179,7 @@
                 <v-tab-item slot="tabs-item" value="tab-3">
                     <keep-alive>
                         <div>
-                            <v-layout row wrap align-center justify-start pt-2>
+                            <v-layout :class="subMenuClass" row wrap align-center justify-start pt-2>
                                 <v-btn
                                     v-if="hasBlockRewards"
                                     :class="[toggleMiner === 0 ? 'active-button' : 'button', 'ml-3 text-capitalize']"
@@ -207,7 +209,7 @@
                                 >
                                     {{ $t('miner.reward.genesis') }}
                                 </v-btn>
-                                <v-flex xs12 pa-1>
+                                <v-flex xs12 pr-0 pl-0 pt-1 pb-1>
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
@@ -216,7 +218,7 @@
                               BLOCK REWARDS TABLE
                             =====================================================================================
                             -->
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-rewards
                                     v-show="toggleMiner === 0"
                                     :address="addressRef"
@@ -227,13 +229,13 @@
                                     @resetUpdateCount="setNewEvent"
                                     @errorRewards="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                             <!--
                             =====================================================================================
                               UNCLE REWARDS TABLE
                             =====================================================================================
                             -->
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-rewards
                                     v-show="toggleMiner === 1"
                                     :address="addressRef"
@@ -244,13 +246,13 @@
                                     @resetUpdateCount="setNewEvent"
                                     @errorRewards="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                             <!--
                             =====================================================================================
                               GENESIS REWARDS TABLE
                             =====================================================================================
                             -->
-                            <v-slide-x-reverse-transition>
+                            <transition name="fade">
                                 <address-rewards
                                     v-show="toggleMiner === 2"
                                     :address="addressRef"
@@ -259,7 +261,7 @@
                                     @genesisRewards="setGenesisRewards"
                                     @errorRewards="setError"
                                 />
-                            </v-slide-x-reverse-transition>
+                            </transition>
                         </div>
                     </keep-alive>
                 </v-tab-item>
@@ -416,6 +418,9 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     get showMiningRewards(): boolean {
         return this.isMiner || this.hasGenesisRewards
     }
+    get subMenuClass(): string {
+        return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm' ? 'pt-3' : 'pt-2'
+    }
 
     /*
     ===================================================================================
@@ -503,5 +508,13 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
 }
 .divider {
     height: 24px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.4s ease;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
 }
 </style>

@@ -122,7 +122,8 @@ Vue.use(Vuetify, {
         primaryLight: '#465a9c',
         errorLight: '#fe7665',
         warningLight: '#fed18e',
-        successLight: '#97c9dc'
+        successLight: '#97c9dc',
+        menuDark: '#2a3643'
 
         // used -->
         // background: String(colors.grey.darken3)

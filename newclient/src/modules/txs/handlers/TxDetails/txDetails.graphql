@@ -1,22 +1,26 @@
 fragment TxDetails on Tx {
-  blockNumber
-  from
-  gas
-  gasPrice
-  gasUsed
-  timestamp
-  hash
-  input
-  status
-  nonce
-  to
-  transactionIndex
-  value
-  replacedBy
+    blockNumber
+    from
+    gas
+    gasPrice
+    gasUsed
+    timestamp
+    hash
+    input
+    status
+    nonce
+    to
+    transactionIndex
+    value
+    replacedBy
 }
 
 query getTransactionByHash($hash: String!) {
-  getTransactionByHash(hash: $hash) {
-    ...TxDetails
-  }
+    getTransactionByHash(hash: $hash) {
+        ...TxDetails
+    }
+}
+
+subscription transactionEvent($hash: String!) {
+    transactionEvent(hash: $hash)
 }

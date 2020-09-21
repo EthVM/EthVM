@@ -124,7 +124,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
         let holder = ''
         if (this.tokenDetails && !this.isLoading) {
             name = this.tokenDetails.name === null ? name : this.tokenDetails.name
-            symbol = this.tokenDetails.symbol === null ? symbol : `(${this.tokenDetails.symbol.toUpperCase()}) `
+            symbol = this.tokenDetails.symbol === null || !this.tokenDetails.symbol ? symbol : `(${this.tokenDetails.symbol.toUpperCase()}) `
         }
         if (this.holderDetails && this.holderDetails.owner) {
             holder = `- ${this.$t('token.filtered')}`
@@ -173,7 +173,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
      */
     get holderDetailsList(): Detail[] {
         const details = [this.holderDetail, this.holderBalanceDetail]
-        if (!this.isRopsten) {
+        if (!this.isRopsten && this.holderUsdDetail.detail) {
             details.push(this.holderUsdDetail)
         }
         // details.push(this.holderTransfersDetail)
@@ -311,7 +311,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     get holderBalanceDetail(): Detail {
         const detail: Detail = { title: this.$t('common.balance') }
         if (!this.isLoading && this.tokenDetails && this.holderDetails) {
-            const symbol = this.tokenDetails.symbol === null ? '' : ` ${this.tokenDetails.symbol.toUpperCase()}`
+            const symbol = this.tokenDetails.symbol === null || !this.tokenDetails.symbol ? '' : ` ${this.tokenDetails.symbol.toUpperCase()}`
             detail.detail = `${this.balance.value}${symbol}`
             detail.tooltip = this.balance.tooltipText ? this.balance.tooltipText : undefined
         }

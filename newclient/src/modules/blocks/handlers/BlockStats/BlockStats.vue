@@ -49,6 +49,7 @@ import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBl
             result({ data }) {
                 if (data) {
                     if (this.initialLoad) {
+                        this.initialLoadedBlock = this.getLatestBlockInfo ? this.getLatestBlockInfo.number : null
                         this.initialLoad = false
                     }
                     this.initialLoadedBlock = this.getLatestBlockInfo.number

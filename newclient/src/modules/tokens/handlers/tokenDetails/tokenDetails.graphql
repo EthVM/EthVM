@@ -14,13 +14,6 @@ fragment ERC20TokenOwnerDetails on ERC20TokenBalance  {
   balance
 }
 
-fragment ERC20TokenOwners on ERC20TokenOwners {
-  owners {
-    ...ERC20TokenOwnerDetails
-  }
-  nextKey
-}
-
 query getTokenInfoByContract($contract: String!) {
   getTokenInfoByContract(contract: $contract) {
     ...TokenDetails
@@ -30,11 +23,5 @@ query getTokenInfoByContract($contract: String!) {
 query getERC20TokenBalance($contract: String!, $owner: String!) {
   getERC20TokenBalance(contract: $contract, owner: $owner) {
     ...ERC20TokenOwnerDetails
-  }
-}
-
-query getERC20TokenOwners($contract: String!, $_limit: Int, $_nextKey: String) {
-  getERC20TokenOwners(contract: $contract, limit: $_limit, nextKey: $_nextKey) { 
-    ...ERC20TokenOwners
   }
 }
