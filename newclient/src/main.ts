@@ -45,11 +45,14 @@ const wsLink = new WebSocketLink(subscriptionClient)
 
 //For Development use Only:
 const onErrorLink = onError(({ graphQLErrors }) => {
+    const addrNotContract = 'No contract found'
     // Log every GraphQL errors in develop
     if (graphQLErrors && process.env.NODE_ENV !== 'production') {
         graphQLErrors.map(({ message, locations, path }) => {
             const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            console.log(newError)
+            if (!message.includes(addrNotContract)) {
+                console.log(newError)
+            }
         })
     }
     if (graphQLErrors && process.env.NODE_ENV === 'production') {
@@ -58,7 +61,8 @@ const onErrorLink = onError(({ graphQLErrors }) => {
             const blockNotMined = 'Block not found'
             const txDoNotExists = 'Cannot return null for non-nullable field Query.getTransactionByHash'
             const uncleNotFound = 'Uncle not found'
-            if (!message.includes(blockNotMined || txDoNotExists || uncleNotFound)) {
+
+            if (!message.includes(blockNotMined || txDoNotExists || uncleNotFound || addrNotContract)) {
                 Sentry.captureException(newError)
             }
         })
