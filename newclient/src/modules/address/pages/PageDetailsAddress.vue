@@ -52,7 +52,7 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-transfers
                                     v-show="toggleLastTx === 0"
                                     :address="addressRef"
@@ -62,7 +62,7 @@
                                     @errorTransfers="setError"
                                 ></address-transfers>
                             </transition>
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-pending-tx v-show="toggleLastTx === 1" :address="addressRef" :max-items="max" @errorPending="setError" />
                             </transition>
                         </div>
@@ -88,7 +88,7 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-transfers
                                     v-show="toggleERC20 === 1"
                                     :address="addressRef"
@@ -101,7 +101,7 @@
                                     @errorTransfers="setError"
                                 />
                             </transition>
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-tokens
                                     v-show="toggleERC20 === 0"
                                     :address="addressRef"
@@ -139,7 +139,7 @@
                                     <v-divider class="lineGrey mt-1 mb-1" />
                                 </v-flex>
                             </v-layout>
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-transfers
                                     v-show="toggleERC721 === 1"
                                     :address="addressRef"
@@ -152,7 +152,7 @@
                                     @errorTransfers="setError"
                                 />
                             </transition>
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-tokens
                                     v-show="toggleERC721 === 0"
                                     :address="addressRef"
@@ -218,7 +218,7 @@
                               BLOCK REWARDS TABLE
                             =====================================================================================
                             -->
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-rewards
                                     v-show="toggleMiner === 0"
                                     :address="addressRef"
@@ -235,7 +235,7 @@
                               UNCLE REWARDS TABLE
                             =====================================================================================
                             -->
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-rewards
                                     v-show="toggleMiner === 1"
                                     :address="addressRef"
@@ -252,7 +252,7 @@
                               GENESIS REWARDS TABLE
                             =====================================================================================
                             -->
-                            <transition name="fade">
+                            <transition name="tab-fade">
                                 <address-rewards
                                     v-show="toggleMiner === 2"
                                     :address="addressRef"
@@ -510,11 +510,19 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     height: 24px;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.4s ease;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.tab-fade-enter /* .tab-fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+}
+
+.tab-fade-enter-active {
+    transition: all 0.5s ease-in;
+}
+.tab-fade-enter-to {
+    opacity: 1;
+}
+.tab-fade-leave,
+.tab-fade-leave-active,
+.tab-fade-leave-to {
+    display: none;
 }
 </style>

@@ -18,7 +18,7 @@
         </app-table-title>
         <v-layout v-if="isETH" :column="$vuetify.breakpoint.xs" :align-center="true" d-flex justify-space-between wrap pa-3>
             <app-filter
-                v-if="!initialLoad && getTransfers.transfers.length > 0"
+                v-if="((!initialLoad && getTransfers.transfers.length > 0) || filter)"
                 :options="options"
                 :show-desktop="true"
                 :is-sort="false"

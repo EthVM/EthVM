@@ -129,7 +129,7 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
 
     get image(): string {
         if (this.holder && this.imageExists) {
-            return `${configs.OPENSEA}/dev/getImage?contract=${this.holder.tokenInfo.contract}&tokenId=${this.getTokenID}`
+            return `${configs.OPENSEA}/getImage?contract=${this.holder.tokenInfo.contract}&tokenId=${this.getTokenID}`
         }
         return require('@/assets/icon-token.png')
     }

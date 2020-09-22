@@ -38,7 +38,7 @@ query getOwnersERC721Tokens($hash: String!, $tokenContract: String, $_nextKey: S
 }
 
 query getNFTcontractsMeta($address: String!) {
-    getNFTcontractsMeta(address: $address) @rest(type: "AddressNFTcontracts", path: "/dev/nft?{args}") {
+    getNFTcontractsMeta(address: $address) @rest(type: "AddressNFTcontracts", path: "/nft?{args}") {
         tokenContracts @type(name: "NFTContract") {
             contractIdAddress
             owned_asset_count

@@ -18,7 +18,7 @@
         "state-root": "State Root",
         "rcpt-root": "Receipts Root"
     },
-  
+
     "uncle": {
         "name": "Uncle | Uncles",
         "number": "Uncle #",
@@ -29,7 +29,7 @@
         "reward": "Uncle Reward",
         "included": "Included in Block #"
     },
-  
+
     "tx": {
         "name": "Transaction | Transactions",
         "name-short": "Tx | Txs",
@@ -66,7 +66,7 @@
             "success": "Successful Transaction"
         }
     },
-  
+
     "token": {
         "top-200": "Top 200 Tokens",
         "erc20": "ERC20 Tokens",
@@ -99,11 +99,11 @@
         "total-tokens": "Total Tokens",
         "image": "Image"
     },
-  
+
     "address": {
         "name": "Address | Addresses"
     },
-  
+
     "contract": {
         "name": "Contract | Contracts",
         "creator": "Contract Creator",
@@ -112,7 +112,7 @@
         "total": "Total",
         "creation": "Contract Creation"
     },
-  
+
     "gas": {
         "name": "Gas",
         "limit": "Gas Limit",
@@ -121,7 +121,7 @@
         "price": "Gas Price",
         "ave-price": "Avg Gas Price"
     },
-  
+
     "miner": {
         "name": "Miner",
         "reward": {
@@ -133,18 +133,18 @@
         "total-rewards": "Total Rewards",
         "history": "Mining History"
     },
-  
+
     "diff": {
         "name": "Difficulty",
         "total": "Total Difficulty"
     },
-  
+
     "price": {
         "name": "Price | Prices",
         "erc20": "ERC20 Prices",
-        "erc721": "ERC721 Prices"
+        "erc721": "NFT Prices"
     },
-  
+
     "common": {
         "hash": "Hash",
         "height": "Height",
@@ -168,13 +168,13 @@
         "balance": "Balance",
         "close": "Close"
     },
-  
+
     "usd": {
         "name": "USD",
         "total": "Total USD Value",
         "value": "USD Value"
     },
-  
+
     "message": {
         "disconnected": "Disconnected from the server. Attempting to connect...",
         "no-data": "Oops something went wrong, no data from server :(",
@@ -190,7 +190,7 @@
                 "update-event": "Something went wrong during Address update."
             },
             "contract": {
-              "not-found": "No contract found!"
+                "not-found": "No contract found!"
             },
             "block": {
                 "detail": "Something went wrong while retrieving block details.",
@@ -209,11 +209,11 @@
             "tokens": {
                 "detail": "Something went wrong while retrieving token details.",
                 "not-found": "This token contract does not exist.",
-                "transfers-erc721": "Something went wrong retrieving Token NFTs transfers.",
-                "transfers-erc20": "Something went wrong retrieving Token ERC20 tokens transfers.",
-                "token-owner": "Something went wrong retrieving Token owners.",
-                "token-details": "Something went wrong retrieving Token details.",
-                "token-market": "Something went wrong retrieving Token Market data."
+                "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
+                "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers.",
+                "token-owner": "Something went wrong retrieving token owners.",
+                "token-details": "Something went wrong retrieving token details.",
+                "token-market": "Something went wrong retrieving token market data."
             },
             "search": {
                 "you-entered": "You entered",
@@ -278,7 +278,7 @@
             "uncle": "New Uncle | New Uncles",
             "pending": "New Pending Tx | New Pending Txs",
             "erc20-transfer": "New ERC20 Transfer | New ERC20 Transfers",
-            "erc721-transfer": "New ERC721 Transfer | New ERC721 Transfers",
+            "erc721-transfer": "New NFT Transfer | New NFT Transfers",
             "tokens": "Token's Balance Changed, Refresh",
             "txs": "New Txs Found, Refresh"
         },
@@ -291,7 +291,9 @@
         "token": {
             "no-tokens": "There are no supported tokens",
             "no-tokens-for-address": "Address does not hold any supported tokens",
-            "no-holders": "There are no holders of this token"
+            "no-holders": "There are no holders of this token",
+            "no-tokens-addr": "This address does not hold any ERC20 tokens",
+            "no-nft-addr": "This address does not hold any NFTs (ERC721 tokens)"
         },
         "coming-soon": "Coming soon"
     },
@@ -352,7 +354,7 @@
             "description": "Total number of pending transactions",
             "label": "Txs Count"
         },
-  
+
         "gas-price-avg": {
             "title": "Average Gas Price ",
             "description": "Average Gas Price (GWEI)",
@@ -397,13 +399,13 @@
         "details": "View Details",
         "back": "Back"
     },
-  
+
     "search": {
         "name": "Search",
         "default": "Search Block / Address / Tx",
         "address-tx": "Tx Hash/Address"
     },
-  
+
     "filter": {
         "name": "Filter",
         "view": "View",
@@ -414,7 +416,7 @@
         "low": "Low to High",
         "page": "Page"
     },
-  
+
     "footer": {
         "discover": "Discover",
         "donate": "Donate",
@@ -426,9 +428,9 @@
         "copy-btc-addr": "Copy BTC address",
         "pricing": "Pricing taken from"
     },
-  
+
     "home": "Home",
-  
+
     "about": {
         "name": "About Us",
         "title": "What is EthVM?",
@@ -454,7 +456,7 @@
             "text": "SSPL License, Copyright © 2019 MyEtherWallet Inc.  For Terms & conditions visit our "
         }
     },
-  
+
     "kb": {
         "name": "Knowledge Base",
         "title": "Blockchain Terms",
@@ -593,7 +595,7 @@
             }
         }
     },
-  
+
     "pp": {
         "name": "Privacy Policy",
         "intro": {
@@ -673,7 +675,7 @@
         "empty": "No transfers",
         "TOKEN_TRANSFER": "transfer",
         "erc20": "ERC20 Transfers",
-        "erc721": "ERC721 Transfers"
+        "erc721": "NFT Transfers"
     },
     "state": {
         "bal-before": "Balance Before",
@@ -688,5 +690,4 @@
         "block-rewards": "Block Rewards",
         "uncle-rewards": "Uncle Rewards"
     }
-  }
-  
+}

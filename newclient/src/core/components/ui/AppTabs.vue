@@ -9,13 +9,15 @@
             <v-flex hidden-md-and-up pt-0 pb-0>
                 <v-menu v-model="showMobile" offset-y>
                     <template v-slot:activator="{ on }">
-                        <v-toolbar color="menuDark" flat v-on="on">
-                            <v-layout row justify-space-between pa-2>
+                        <v-toolbar color="menuDark" class="toolbar-menu" flat v-on="on">
+                            <v-layout row align-center justify-space-between pa-2>
                                 <v-flex grow>
                                     <p class="white--text">{{ mobileText }}</p>
                                 </v-flex>
                                 <v-flex shrink>
-                                    <v-icon class="white--text small-global-icon-font asset-icon">{{ mobileIcon }} </v-icon>
+                                    <v-btn icon small class="ma-0">
+                                        <v-icon class="white--text small-global-icon-font asset-icon">{{ mobileIcon }} </v-icon>
+                                    </v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-toolbar>
@@ -133,5 +135,12 @@ export default class AppTabs extends Vue {
 
 .tabs-items {
     border-top: 1px solid #efefef;
+}
+.toolbar-menu {
+    cursor: pointer;
+}
+.toolbar-menu:hover {
+    background-color: #34475c !important;
+    border-color: #34475c !important;
 }
 </style>
