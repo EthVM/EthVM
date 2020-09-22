@@ -4,12 +4,11 @@
 
 - Detect if address is contract [#857](https://github.com/EthVM/EthVM/pull/857)
 
-
 ### Bug
 
+- fix error catch [#862](https://github.com/EthVM/EthVM/pull/862)
 - Catch correct error [#860](https://github.com/EthVM/EthVM/pull/860)
-- Detect if address is contract [#957](https://github.com/EthVM/EthVM/pull/957)
-- Add pending tx table [#833] (https://github.com/EthVM/EthVM/pull/833)
+- Add pending tx table [#833](https://github.com/EthVM/EthVM/pull/833)
 
 ### Bug
 - Fix BLOCKS pagination is not taking block 0 into account [#850](https://github.com/EthVM/EthVM/pull/850)

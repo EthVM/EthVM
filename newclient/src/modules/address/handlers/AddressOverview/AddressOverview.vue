@@ -117,7 +117,7 @@ export default class AddressOverview extends Mixins(CoinData) {
     ===================================================================================
     */
     emitErrorState(msg): void {
-        this.$emit('errorBalance', ErrorMessage.balance)
+        this.$emit('errorBalance', this.hasError, ErrorMessage.balance)
     }
 
     /*
