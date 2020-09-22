@@ -33,8 +33,8 @@
         "name-short": "Tx | Txs",
         "pending": "Ожидающая Транзакция | Ожидающие Транзакции",
         "pending-short": "Ожидающая Тх | Ожидающие Txs",
-        "mined-tx": "Mined Transactions",
-        "mined": "Mined",
+        "mined-tx": "Подтвержденные Tранзакции",
+        "mined": "Подтвержденa",
         "detail": "Детали Транзакции",
         "last": "Последние Tранзакции | Последние Txs",
         "hash": "№ Тх | № Транзакции",
@@ -133,7 +133,7 @@
     "price": {
         "name": "Цена | Цены",
         "erc20": "Цены ERC20",
-        "erc721": "NFT Prices"
+        "erc721": "NFT Цены"
     },
     "common": {
         "hash": "Хэш",
@@ -171,14 +171,14 @@
             "address": {
                 "balance": "Что-то пошло не так при получении ETH баланса Адреса.",
                 "pending": "Что-то пошло не так при получении ожидающих транзакций Адреса.",
-                "block-rewards": "Something went wrong while retrieving Address's block Rewards.",
+                "block-rewards": "Что-то пошло не так при получении блок-вознаграждений адреса.",
                 "erc20": "Что-то пошло не так при получении балансов ERC20.",
                 "erc721": "Что-то пошло не так при получении балансов NFT.",
                 "transfers-eth": "Что-то пошло не так при получении ожидающих транзакций Адреса.",
                 "update-event": "Что-то пошло не так во время обновления данных Адреса."
             },
             "contract": {
-                "not-found": "No contract found!"
+                "not-found": "Контракт не найден!"
             },
             "block": {
                 "detail": "Что-то пошло не так при получении деталей блока.",
@@ -188,7 +188,7 @@
             },
             "tx": {
                 "detail": "Что-то пошло не так при получении деталей транзакции.",
-                "pending": "Something went wrong while retrieving pending transaction details."
+                "pending": "Что-то пошло не так при получении деталей ожидающих транзакций."
             },
             "uncle": {
                 "detail": "Что-то пошло не так при получении деталей Uncle-блока.",
@@ -197,11 +197,11 @@
             "tokens": {
                 "detail": "Что-то пошло не так при получении деталей токена.",
                 "not-found": "Этот контракт токена не существует.",
-                "transfers-erc721": "Something went wrong retrieving NFTs transfers.",
-                "transfers-erc20": "Something went wrong retrieving ERC20 tokens transfers.",
-                "token-owner": "Something went wrong retrieving token owners.",
-                "token-details": "Something went wrong retrieving token details.",
-                "token-market": "Something went wrong retrieving token market data."
+                "transfers-erc721": "Что-то пошло не так при получении переводов токенов NFT.",
+                "transfers-erc20": "Что-то пошло не так при получении переводов токенов ERC20.",
+                "token-owner": "Что-то пошло не так при получении владельцев токена.",
+                "token-details": "Что-то пошло не так при получении деталей токена.",
+                "token-market": "Что-то пошло не так при получении данных рынка токенов."
             },
             "search": {
                 "you-entered": "Вы ввели",
@@ -210,8 +210,8 @@
                 "let-us-know": "дайте нам знать"
             },
             "txs": "Что-то пошло не так при получении транзакций.",
-            "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
-            "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."
+            "transfers-erc721": "Что-то пошло не так при получении переводов токенов NFT.",
+            "transfers-erc20": "Что-то пошло не так при получении переводов токенов ERC20."
         },
         "tx": {
             "no-all": "Этот адрес не имеет истории транзакций",
@@ -266,7 +266,7 @@
             "uncle": "Новый Uncle Блок | Новых Uncle Блоков",
             "pending": "Новая Ожидающая Tx | Новых Ожидающих Txs",
             "erc20-transfer": "Новый ERC20 Перевод | Новых ERC20 Переводов",
-            "erc721-transfer": "New NFT Transfer | New NFT Transfers",
+            "erc721-transfer": "Новый NFT Перевод | Новых NFT Переводов",
             "tokens": "Баланс Tокенов Изменен, Обновить",
             "txs": "Найдены Новые Txs, Обновить"
         },
@@ -280,8 +280,8 @@
             "no-tokens": "Нет поддерживаемых токенов",
             "no-tokens-for-address": "Адрес не имеет поддерживаемых токенов",
             "no-holders": "Нет владельцев этого токена",
-            "no-tokens-addr": "This address does not hold any ERC20 tokens",
-            "no-nft-addr": "This address does not hold any NFTs (ERC721 tokens)"
+            "no-tokens-addr": "Этот адрес не держит ERC20 токены",
+            "no-nft-addr": "Этот адрес не держит NFTs (токены ERC721)"
         },
         "coming-soon": "В разработке"
     },
@@ -655,7 +655,7 @@
         "empty": "Нет переводов",
         "TOKEN_TRANSFER": "Перевод",
         "erc20": "Переводы ERC20",
-        "erc721": "NFT Transfers"
+        "erc721": "Переводы NFT"
     },
     "state": {
         "bal-before": "Баланс До",
