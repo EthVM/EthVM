@@ -15,6 +15,7 @@
                         :loading="loading"
                         :is-subscribed="subscribed"
                     />
+                    <v-divider class="lineGrey" />
                 </template>
             </app-details-list>
         </v-flex>

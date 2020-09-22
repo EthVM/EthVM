@@ -61,7 +61,9 @@
     -->
         <v-slide-y-transition v-if="!isLoading && showMore" group>
             <div v-for="(item, index) in moreDetails" :key="calculateKey(index)" :class="[getColor(index) ? '' : 'tableGrey']">
-                <app-details-list-row :detail="item" :is-loading="isLoading" />
+                <v-flex xs12>
+                    <app-details-list-row :detail="item" :is-loading="isLoading" />
+                </v-flex>
             </div>
         </v-slide-y-transition>
         <div v-if="hasMore && !isLoading">
