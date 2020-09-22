@@ -9,9 +9,6 @@
 - Catch correct error [#860](https://github.com/EthVM/EthVM/pull/860)
 - Detect if address is contract [#957](https://github.com/EthVM/EthVM/pull/957)
 - Add pending tx table [#833] (https://github.com/EthVM/EthVM/pull/833)
-
-### Bug
-
 - Fix BLOCKS pagination is not taking block 0 into account [#850](https://github.com/EthVM/EthVM/pull/850)
 - Only hide filter on initialLoad [#848](https://github.com/EthVM/EthVM/pull/848)
 - Fix Search All by address by adding isValidAddress check [#847](https://github.com/EthVM/EthVM/pull/847)
@@ -30,3 +27,4 @@
 - Added error state to emitError on Balance
 - Additional animation fix
 - Updated NFT image api route
+- Added coursor to mobile tab menu, hover color change
