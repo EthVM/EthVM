@@ -11,6 +11,7 @@ import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { getEthBalance, getContractMeta } from './addressDetails.graphql'
 import { getEthBalance_getEthBalance as BalanceType } from './apolloTypes/getEthBalance'
+import { getContractMeta_getContractMeta as ContractMeta } from './apolloTypes/getContractMeta'
 import { Address } from '@app/modules/address/components/props'
 import AddressDetail from '@app/modules/address/components/AddressDetail.vue'
 import BN from 'bignumber.js'
@@ -33,22 +34,23 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
                 if (data.data && data.data.getEthBalance) {
                     this.hasError = false
                     this.emitErrorState()
-                } else {
-                    this.hasError = true
-                    this.emitErrorState()
                 }
             },
             error(error) {
                 this.hasError = true
                 this.emitErrorState()
-                /*Sentry */
             }
         },
         getContractMeta: {
             query: getContractMeta,
+            fetchPolicy: 'cache-first',
+            skip() {
+                return this.skipContract
+            },
             variables() {
                 return { hash: this.address }
             },
+            update: data => data.getContractMeta,
             result(data) {
                 if (data.data && data.data.getContractMeta) {
                     this.hasError = false
@@ -56,10 +58,11 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
                 } else {
                     this.setContract(false)
                 }
+                this.skipContract = true
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
-                if (newError.includes('Contract not found')) {
+                if (newError.includes('No contract found')) {
                     this.setContract(false)
                 } else {
                     this.hasError = true
@@ -90,6 +93,8 @@ export default class AddressOverview extends Mixins(CoinData) {
     */
     getEthBalance!: BalanceType
     hasError = false
+    getContractMeta!: ContractMeta
+    skipContract = false
 
     /*
     ===================================================================================
