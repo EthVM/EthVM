@@ -145,7 +145,7 @@ export default class TokenTableTransfersRow extends Mixins(NumberFormatMixin) {
 
     get image(): string {
         if (this.transfer && this.transfer['contract'] && this.imageExists) {
-            return `${configs.OPENSEA}/dev/getImage?contract=${this.transfer['contract']}&tokenId=${this.getTokenID}`
+            return `${configs.OPENSEA}/getImage?contract=${this.transfer['contract']}&tokenId=${this.getTokenID}`
         }
         return require('@/assets/icon-token.png')
     }

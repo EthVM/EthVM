@@ -268,7 +268,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             return this.tokenTransfer.image || require('@/assets/icon-token.png')
         }
         if (this.imageExhists && this.transfer) {
-            return `${configs.OPENSEA}/dev/getImage?contract=${this.transfer.contract}&tokenId=${this.getTokenID().toString()}`
+            return `${configs.OPENSEA}/getImage?contract=${this.transfer.contract}&tokenId=${this.getTokenID().toString()}`
         }
         return require('@/assets/icon-token.png')
     }

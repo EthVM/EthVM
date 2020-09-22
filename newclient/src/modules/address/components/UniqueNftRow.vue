@@ -49,7 +49,7 @@ export default class UniqueNftRow extends Vue {
     */
     get image(): string {
         if (!this.loading && this.token && this.imageExists) {
-            const tknImage = `${configs.OPENSEA}/dev/getImage?contract=${this.contract}&tokenId=${this.getTokenID(this.token).toString()}`
+            const tknImage = `${configs.OPENSEA}/getImage?contract=${this.contract}&tokenId=${this.getTokenID(this.token).toString()}`
             return tknImage ? tknImage : require('@/assets/icon-token.png')
         }
         return this.contractDefaultImage === '' ? require('@/assets/icon-token.png') : this.contractDefaultImage
