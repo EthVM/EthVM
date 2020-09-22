@@ -28,3 +28,4 @@
 - Additional animation fix
 - Updated NFT image api route
 - Added coursor to mobile tab menu, hover color change
+- Added divider to app details list for tokens and block
