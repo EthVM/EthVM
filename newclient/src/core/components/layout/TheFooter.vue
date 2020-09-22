@@ -119,7 +119,7 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-layout align-end justify-end fill-height pr-3>
-                            <p class="info--text text-xs-right caption">V1.0.0</p>
+                            <p class="info--text text-xs-right caption">v1.0.1</p>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
