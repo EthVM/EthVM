@@ -1,4 +1,4 @@
-name: add to mewbuilds
+name: add to ethvmBuild
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - '*'
 
 jobs:
-  mewbuilds:
+  ethvmBuild:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +29,7 @@ jobs:
         run: cd ./newclient && yarn install && yarn lint
 
       - name: build
-        run: cd ./newclient && yarn install && yarn apollo:codegen && yarn build
+        run: cd ./newclient && yarn install && yarn apollo:codegen && yarn build:hash
 
       - name: post build
         if: github.base_ref == ''
@@ -49,7 +49,7 @@ jobs:
           cd dist && zip -r ../ethVM-$GITHUB_SHA.zip * && cd ..
           VIRUS_TOTAL_URL=`curl -s -F "file=@ethVM-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-            -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${GITHUB_SHA}/index.html<br/> \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://builds.ethvm.dev/builds/${GITHUB_SHA}/index.html<br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"

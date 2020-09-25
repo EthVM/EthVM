@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import configs from '@app/configs'
 const PageHome = () => import(/* webpackChunkName: "page-home" */ '@app/modules/home/pages/PageHome.vue')
 const PageBlocks = () => import(/* webpackChunkName: "page-blocks" */ '@app/modules/blocks/pages/PageBlocks.vue')
 const PageTxs = () => import(/* webpackChunkName: "page-txs" */ '@app/modules/txs/pages/PageTxs.vue')
@@ -23,6 +23,7 @@ const PageSearchNotFound = () => import(/* webpackChunkName: "page-search-not-fo
 Vue.use(Router)
 
 export default new Router({
+    mode: configs.ROUTER_MODE,
     routes: [
         {
             path: '/',
@@ -132,6 +133,5 @@ export default new Router({
             path: '*',
             redirect: '/404'
         }
-    ],
-    mode: 'history'
+    ]
 })

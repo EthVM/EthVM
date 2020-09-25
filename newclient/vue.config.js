@@ -3,9 +3,17 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const vars = require('./ENV_VARS.js')
 
 const webpackCommon = {
-    plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
+    plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new webpack.EnvironmentPlugin(vars)],
+    // module: {
+    //     loaders: [
+    //         {
+    //             loader: 'json'
+    //         }
+    //     ]
+    // },
     resolve: {
         extensions: ['.ts', '.vue', '.json'],
         alias: {
@@ -20,8 +28,6 @@ const webpackCommon = {
 const webpackDevelopment = {}
 
 const webpackProduction = {
-    //  plugins: [new BundleAnalyzerPlugin()],
-    plugins: [],
     optimization: {
         namedModules: true,
         moduleIds: 'size',

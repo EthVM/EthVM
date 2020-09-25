@@ -40,7 +40,6 @@ export default class App extends Vue {
   */
 
     syncing?: boolean = false
-
     /*
   ===================================================================================
     Computed values

@@ -166,5 +166,6 @@ const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
 
 Sentry.init({
     dsn: sentryToken,
-    integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })]
+    integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
+    release: configs.VERSION
 })
