@@ -22,14 +22,17 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-
+      - name: move to ./newclient
+        run: cd ./newclient
+
       - name: yarn install
-        run: cd ./newclient; yarn install
+        run: yarn install
 
       - name: yarn lint
-        run: cd ./newclient; yarn install; yarn lint
+        run: yarn install && yarn lint
 
       - name: build
-        run: cd ./newclient; yarn install; yarn apollo:codegen; yarn build;
+        run: yarn install && yarn apollo:codegen && yarn build
 
       - name: post build
         if: github.base_ref == ''
