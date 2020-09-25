@@ -26,10 +26,10 @@ jobs:
         run: cd ./newclient; yarn install
 
       - name: yarn lint
-        run: yarn lint
+        run: cd ./newclient; yarn install; yarn lint
 
       - name: build
-        run: yarn install; yarn apollo:codegen; yarn build;
+        run: cd ./newclient; yarn install; yarn apollo:codegen; yarn build;
 
       - name: post build
         if: github.base_ref == ''
