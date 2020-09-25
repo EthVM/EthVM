@@ -1,5 +1,4 @@
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { getFavAddresses } from './schema.graphql'
 import { favAddressCache } from './rootQuery.graphql'
 import { TypeName, DataArray } from './models'
 import store from 'store'
@@ -12,6 +11,12 @@ enum Actions {
 }
 export const resolvers = {
     Query: {
+        /**
+         * Checks whether or not an address is already in the favorite store, by address hash
+         * @param address: string, new address hash
+         * @param cache: InMemoryCache, apollo cache object
+         * @return - returns cachedAdrsType data type or null if !data.favAddresses
+         */
         checkAddress: (root, { address }, { cache }) => {
             const adr = hasAddress(address, cache)
             return adr ? true : false
@@ -19,7 +24,7 @@ export const resolvers = {
     },
     Mutation: {
         /**
-         * Adds a new address to the cache if address does not exhists. Function checks if the address already exhists and returns it.
+         * Adds a new address to the cache if address does not exhists. Checks if the address already exhists and returns it.
          * @param address: string, new address hash
          * @param name: string, new address name if any
          * @param cache: InMemoryCache, apollo cache object
@@ -72,18 +77,23 @@ function hasAddress(address: string, cache: InMemoryCache): AddrType | null {
 
 /**
  * Function updates apollo cache, as we as,local storage in the application,
- * accordign to the specified action
- * @param address: string, address hash string to search for
+ * according to the specified action: add, edit (name only), deletes - specifed item.
+ * To edit an address name, use item param to specify new object name.
+ * @param action: Actions; add, edit (name only), delete
  * @param cache: InMemoryCache, apollo cache object
- * @return - returns AddrType or  null if not found
+ * @param item: AddrType;
+ *    - add: will add new item to the cache
+ *    - edit: will search for an object with item.address and edit the object with item.name
+ *    - delete: will search for an object with item.address and delete this object
+ * @return - returns AddrType - item
  */
 
 function changeFavAddressArray(action: Actions, cache: InMemoryCache, item: AddrType): AddrType {
-    let storeAdrs = store.get(DataArray.addr) || []
+    const storeAdrs = store.get(DataArray.addr) || []
     let data = getCachedAddrs(cache)
 
     if (data === null) {
-        /* Update Store and Create new AddressArray */
+        /* Update Apollo Cache */
         data = {
             favAddresses: action === Actions.delete ? [] : [item]
         }
@@ -100,6 +110,5 @@ function changeFavAddressArray(action: Actions, cache: InMemoryCache, item: Addr
     /* Update Store and Apollo Cache */
     store.set(DataArray.addr, storeAdrs)
     cache.writeQuery({ query: favAddressCache, data })
-
     return item
 }
