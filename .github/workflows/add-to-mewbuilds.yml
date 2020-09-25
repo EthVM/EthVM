@@ -26,7 +26,7 @@ jobs:
         run: cd ./newclient; yarn install
 
       - name: build
-        run: cd ./newclient; yarn build:hash
+        run: cd ./newclient; yarn build
 
       - name: post build
         if: github.base_ref == ''
