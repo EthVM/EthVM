@@ -22,14 +22,11 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-
-      - name: move inside
-        run: |
-              cd ./newclient
       - name: yarn install
-        run: yarn install
+        run: cd ./newclient; yarn install
 
       - name: build
-        run: yarn run build:hash
+        run: cd ./newclient; yarn build:hash
 
       - name: post build
         if: github.base_ref == ''
@@ -40,6 +37,7 @@ jobs:
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_API_KEY}}
         run: |
+          cd ./newclient
           pip install --user awscli
           aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/$GITHUB_SHA
           aws s3 cp s3://mewbuilds/build/$GITHUB_SHA/service-worker.js s3://mewbuilds/build/$GITHUB_SHA/service-worker.js \
