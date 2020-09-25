@@ -1,0 +1,8 @@
+query checkAddress($address: String!) {
+    checkAddress(address: $address) @client
+}
+mutation addFavAddress($address: String!, $name: String) {
+    addFavAddress(address: $address, name: $name) @client {
+        name
+    }
+}

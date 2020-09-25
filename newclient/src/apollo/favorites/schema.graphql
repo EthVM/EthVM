@@ -1,0 +1,12 @@
+type FavAddress {
+    address: String!
+    name: String!
+}
+extend type Query {
+    checkAddress(address: String!): Boolean!
+    favAddresses: [FavAddress!]!
+}
+
+extend type Mutation {
+    addFavAddress(address: String!, name: String): FavAddress
+}

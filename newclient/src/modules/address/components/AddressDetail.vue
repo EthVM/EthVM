@@ -2,10 +2,15 @@
     <v-card color="white" flat>
         <!--
         =====================================================================================
-         ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
+        ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
         =====================================================================================
         -->
         <v-layout :class="layoutPadding" grid-list-md align-start justify-start row fill-height>
+            <!--
+            =====================================================================================
+              BLOCKIE
+            =====================================================================================
+            -->
             <v-flex shrink>
                 <v-layout align-start justify-center row fill-height pa-2>
                     <blockies :address="address.address" />
@@ -16,12 +21,25 @@
                     <v-flex xs12>
                         <v-layout row wrap align-center justify-space-between>
                             <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2">{{ title }}</v-card-title>
+                            <!--
+                            =====================================================================================
+                              CHIPS
+                            =====================================================================================
+                            -->
                             <v-layout hidden-sm-and-down align-center justify-start row fill-height pt-2>
                                 <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
                                 <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
                                 <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
                             </v-layout>
-                            <address-qr :address="address.hash" :large="true" />
+                            <!--
+                            =====================================================================================
+                              FAVORITE/ QR
+                            =====================================================================================
+                            -->
+                            <v-layout row align-center justify-end>
+                                <fav-handler-like :address="address.hash" />
+                                <address-qr :address="address.hash" :large="true" />
+                            </v-layout>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -235,6 +253,7 @@
 <script lang="ts">
 import AddressQr from '@app/modules/address/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import FavHandlerLike from '@app/modules/favorites/handlers/FavHandlerLike.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
@@ -247,7 +266,8 @@ import { Address } from './props'
     components: {
         AddressQr,
         AppCopyToClip,
-        Blockies
+        Blockies,
+        FavHandlerLike
     }
 })
 export default class AddressDetail extends Mixins(NumberFormatMixin) {
