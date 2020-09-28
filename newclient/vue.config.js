@@ -3,7 +3,11 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
-const vars = require('./ENV_VARS.js')
+const version = require('./package.json').version
+const vars = {
+    VERSION: JSON.stringify(version),
+    ROUTER_MODE: JSON.stringify(process.env.ROUTER_MODE || 'history')
+}
 
 const webpackCommon = {
     plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new webpack.EnvironmentPlugin(vars)],
