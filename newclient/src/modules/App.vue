@@ -40,6 +40,10 @@ export default class App extends Vue {
   */
 
     syncing?: boolean = false
+
+    mounted() {
+        console.log(process.env.ROUTER_MODE, process.env.VERSION)
+    }
     /*
   ===================================================================================
     Computed values

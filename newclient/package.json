@@ -15,7 +15,7 @@
       "build:development-ropsten": "vue-cli-service --mode development-ropsten build",
       "build:staging": "vue-cli-service --mode staging build",
       "build:staging-ropsten": "vue-cli-service --mode staging-ropsten build",
-      "build:hash": "ROUTER_MODE=history vue-cli-service --mode staging-ropsten build",
+      "build:hash": "ROUTER_MODE=hash vue-cli-service --mode staging-ropsten build",
       "clean": "rm -rf dist/",
       "lint": "vue-cli-service lint --no-fix",
       "lint:fix": "vue-cli-service lint",

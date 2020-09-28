@@ -5,8 +5,8 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const version = require('./package.json').version
 const vars = {
-    VERSION: JSON.stringify(version),
-    ROUTER_MODE: JSON.stringify(process.env.ROUTER_MODE || 'history')
+    VERSION: version,
+    ROUTER_MODE: process.env.ROUTER_MODE || 'history'
 }
 
 const webpackCommon = {
