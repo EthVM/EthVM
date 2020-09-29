@@ -12,9 +12,7 @@ const vars = {
 const sourceMapsConfig = {
     filename: 'sourcemaps/[file].map'
 }
-if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false') {
-    sourceMapsConfig.exclude = /vendors.*.*/
-}
+sourceMapsConfig.exclude = /vendors.*.*/
 
 const webpackCommon = {
     devtools: false,
