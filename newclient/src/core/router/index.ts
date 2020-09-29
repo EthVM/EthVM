@@ -23,7 +23,7 @@ const PageSearchNotFound = () => import(/* webpackChunkName: "page-search-not-fo
 Vue.use(Router)
 
 export default new Router({
-    mode: configs.ROUTER_MODE,
+    mode: configs.ROUTER_MODE as 'hash' | 'history' | 'abstract' | undefined,
     routes: [
         {
             path: '/',
