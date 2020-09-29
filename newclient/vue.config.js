@@ -9,7 +9,15 @@ const vars = {
     ROUTER_MODE: process.env.ROUTER_MODE || 'history'
 }
 
+const sourceMapsConfig = {
+    filename: 'sourcemaps/[file].map'
+}
+if (JSON.parse(env_vars.FULL_SOURCEMAPS) === 'false') {
+    sourceMapsConfig.exclude = /vendors.*.*/
+}
+
 const webpackCommon = {
+    devtools: false,
     plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new webpack.EnvironmentPlugin(vars)],
     // module: {
     //     loaders: [
@@ -32,6 +40,7 @@ const webpackCommon = {
 const webpackDevelopment = {}
 
 const webpackProduction = {
+    plugins: [new webpack.SourceMapDevToolPlugin(sourceMapsConfig)],
     optimization: {
         namedModules: true,
         moduleIds: 'size',
@@ -86,7 +95,6 @@ module.exports = {
             .end()
     },
     configureWebpack: process.env.NODE_ENV === 'production' ? merge(webpackCommon, webpackProduction) : webpackCommon,
-    productionSourceMap: false,
     devServer: {
         https: true,
         host: 'localhost',
