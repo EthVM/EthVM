@@ -8,5 +8,5 @@ extend type Query {
 }
 
 extend type Mutation {
-    addFavAddress(address: String!, name: String): FavAddress
+    addFavAddress(address: String!, name: String): FavAddress!
 }

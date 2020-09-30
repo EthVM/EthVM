@@ -167,10 +167,11 @@ new Vue({
     Sentry
   ===================================================================================
 */
+if (process.env.NODE_ENV === 'production') {
+    const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
 
-const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
-
-Sentry.init({
-    dsn: sentryToken,
-    integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })]
-})
+    Sentry.init({
+        dsn: sentryToken,
+        integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })]
+    })
+}

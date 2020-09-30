@@ -1,11 +1,16 @@
 <template>
-    <v-btn icon fab class="ma-1" @click="addToFav()"> <v-icon :class="iconClass" large></v-icon> </v-btn>
+    <fav-btn-add-to-fav :is-added="checkAddress" :add-address="addToFav" :tooltip-text="tooltipText"></fav-btn-add-to-fav>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { checkAddress, addFavAddress } from './addtoFav.graphql'
+import FavBtnAddToFav from '@app/modules/favorites/components/FavBtnAddToFav.vue'
+
 @Component({
+    components: {
+        FavBtnAddToFav
+    },
     apollo: {
         checkAddress: {
             query: checkAddress,
@@ -35,7 +40,7 @@ export default class FavHandlerLike extends Vue {
       Data
     ===================================================================================
     */
-    checkAddress?: boolean
+    checkAddress!: boolean
     /*
     ===================================================================================
       Methods
@@ -51,8 +56,13 @@ export default class FavHandlerLike extends Vue {
         })
         this.$apollo.queries.checkAddress.refresh()
     }
-    get iconClass(): string {
-        return this.checkAddress ? 'far fa-heart red--text' : 'far fa-heart grey--text'
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+    get tooltipText(): string {
+        return this.checkAddress ? this.$t('fav.tooltip.remove').toString() : this.$t('fav.tooltip.add').toString()
     }
 }
 </script>
