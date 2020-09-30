@@ -5,7 +5,7 @@
         ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
         =====================================================================================
         -->
-        <v-layout :class="layoutPadding" grid-list-md align-start justify-start row fill-height>
+        <v-layout :class="layoutPadding" grid-list-sm align-start justify-start row fill-height>
             <!--
             =====================================================================================
               BLOCKIE
@@ -20,16 +20,14 @@
                 <v-layout wrap column fill-height pa-1>
                     <v-flex xs12>
                         <v-layout row wrap align-center justify-space-between>
-                            <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2">{{ title }}</v-card-title>
+                            <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 pt-2">{{ title }}</v-card-title>
                             <!--
                             =====================================================================================
                               CHIPS
                             =====================================================================================
                             -->
-                            <v-layout hidden-sm-and-down align-center justify-start row fill-height pt-2>
-                                <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-                                <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
-                                <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
+                            <v-layout v-if="hasChips" hidden-xs-only align-center justify-start row fill-height ml-1>
+                                <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="mr-2" />
                             </v-layout>
                             <!--
                             =====================================================================================
@@ -48,18 +46,13 @@
                             <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ address.hash }}</p>
                         </v-layout>
                     </v-flex>
-                    <v-flex v-if="hasChips" xs12 hidden-md-and-up>
+                    <v-flex v-if="hasChips" xs12 hidden-sm-and-up>
                         <v-layout align-center justify-start row fill-height pt-2>
-                            <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-                            <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
-                            <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
+                            <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="mr-2" />
                         </v-layout>
                     </v-flex>
                 </v-layout>
             </v-flex>
-            <!-- <v-flex hidden-xs-only fill-height mr-3>
-        <v-layout justify-end> <address-qr :address="address.hash" :large="true" /> </v-layout>
-      </v-flex> -->
         </v-layout>
 
         <!--
@@ -253,6 +246,7 @@
 <script lang="ts">
 import AddressQr from '@app/modules/address/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
 import FavHandlerLike from '@app/modules/favorites/handlers/FavHandlerLike.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
@@ -261,10 +255,12 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import BN from 'bignumber.js'
 import { eth } from '@app/core/helper'
 import { Address } from './props'
+import { EnumAdrChips } from '@app/core/components/props'
 
 @Component({
     components: {
         AddressQr,
+        AppAdrChip,
         AppCopyToClip,
         Blockies,
         FavHandlerLike
@@ -293,7 +289,7 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     }
 
     get hasChips(): boolean {
-        return this.address.isContract || this.address.isMiner || this.address.isContractCreator
+        return this.addrChips.length > 0
     }
 
     get layoutPadding(): string {
@@ -333,32 +329,26 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     get loadingUSD(): boolean {
         return this.etherPrice === undefined
     }
+
+    get addrChips(): EnumAdrChips[] {
+        const chips: EnumAdrChips[] = []
+        if (this.address.isMiner) {
+            chips.push(EnumAdrChips.miner)
+        }
+        if (this.address.isContractCreator) {
+            chips.push(EnumAdrChips.creator)
+        }
+        if (this.address.isContract) {
+            chips.push(EnumAdrChips.contract)
+        }
+        return chips
+    }
 }
 </script>
 
 <style scoped lang="css">
 .break-hash {
     word-break: break-all;
-}
-
-.chip {
-    height: 28px;
-    border-radius: 14px;
-    font-size: 85%;
-    color: white;
-    padding: 5px 10px;
-}
-
-.miner-chip {
-    background-color: #40ce9c;
-}
-
-.creator-chip {
-    background-color: #b3d4fc;
-}
-
-.contract-chip {
-    background-color: #fed18e;
 }
 
 p {
