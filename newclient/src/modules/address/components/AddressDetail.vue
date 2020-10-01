@@ -35,7 +35,7 @@
                             =====================================================================================
                             -->
                             <v-layout row align-center justify-end>
-                                <fav-handler-like :address="address.hash" />
+                                <fav-handler-like :address="address.hash" :addr-chips="addrChips" />
                                 <address-qr :address="address.hash" :large="true" />
                             </v-layout>
                         </v-layout>
@@ -235,7 +235,6 @@
                             />
                         </v-card-title>
                     </v-card>
-
                     <div class="empty-xs"></div>
                 </div>
             </v-flex>
