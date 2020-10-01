@@ -5,7 +5,7 @@
   "author": "EthVM Team",
   "private": true,
   "scripts": {
-      "start:dev": "vue-cli-service serve",
+      "start:dev": "NODE_ENV=development vue-cli-service serve",
       "build": "vue-cli-service --mode production build",
       "build:production": "NODE_ENV=production yarn build",
       "build:production-ropsten": "vue-cli-service --mode production-ropsten build",
