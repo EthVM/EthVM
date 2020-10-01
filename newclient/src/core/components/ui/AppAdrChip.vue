@@ -55,11 +55,10 @@ export default class AppAdrChip extends Vue {
 
 <style scoped lang="css">
 .chip {
-    height: 28px;
     border-radius: 14px;
     font-size: 85%;
     color: white;
-    padding: 5px 10px;
+    padding: 2px 10px;
 }
 
 .miner-chip {
