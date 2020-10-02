@@ -342,15 +342,22 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
       Methods
     ===================================================================================
     */
-
-    getValue(value): BN {
+    /**
+     * Gets value based on whether decimals exists
+     * @param value {Number}
+     * @returns {BN}
+     */
+    getValue(value: string): BN {
         let n = new BN(value)
         if (this.transfer.tokenInfo.decimals) {
             n = n.div(new BN(10).pow(this.transfer.tokenInfo.decimals))
         }
         return n
     }
-
+    /**
+     * Gets balance before
+     * @returns {BN} or {String}
+     */
     getBalBefore(): BN | string {
         if (!this.transfer.stateDiff) {
             return '0'
@@ -360,7 +367,10 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             ? this.getValue(this.transfer.stateDiff.from.before)
             : this.getValue(this.transfer.stateDiff.to.before)
     }
-
+    /**
+     * Gets balance after
+     * @returns {BN} or {String}
+     */
     getBalAfter(): BN | string {
         if (!this.transfer.stateDiff) {
             return '0'
@@ -369,13 +379,21 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             ? this.getValue(this.transfer.stateDiff.from.after)
             : this.getValue(this.transfer.stateDiff.to.after)
     }
-
-    getStateVal(val): object {
+    /**
+     * Gets value from state
+     * @param value {BN}
+     * @returns {Object}
+     */
+    getStateVal(val: BN): object {
         return {
             value: this.formatFloatingPointValue(val).value,
             unit: this.transfer.tokenInfo.symbol
         }
     }
+    /**
+     * Gets token ID
+     * @returns {String}
+     */
     getTokenID(): string {
         return new BN(this.transfer.token).toString()
     }

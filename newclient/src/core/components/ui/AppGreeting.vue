@@ -78,12 +78,18 @@ export default class AppGreeting extends Vue {
     Methods
   ===================================================================================
   */
-
+    /**
+     * Removes dialog and sets
+     * notFirsTimeVisit in localStorage as true
+     */
     removeDialog(): void {
         this.dialog = false
         storePack.set('notFirstTimeVisit', true)
     }
-
+    /**
+     * Creates confetti animation
+     * with canvas
+     */
     createAnimation(): void {
         const myCanvas: any = document.getElementById('animate')
         const colors = ['#6270fc', '#92cce1', '#fed9a1', '#fe8778', '#00b173', '#fe1377', '#eea66b']

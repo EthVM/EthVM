@@ -86,8 +86,14 @@ export default class AppTabs extends Vue {
     Methods
   ===================================================================================
   */
-
-    setTab(id: number, tabChange = false) {
+    /**
+     * Sets active tab id to param
+     * and update active tab and
+     * emit tab id to parent
+     *
+     * @param id {Number} tabChange {Boolean} default false
+     */
+    setTab(id: number, tabChange = false): void {
         this.activeTabId = id
         this.tabs.forEach(tab => {
             if (this.activeTabId === tab.id) {

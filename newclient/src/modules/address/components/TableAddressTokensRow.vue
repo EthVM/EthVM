@@ -344,6 +344,10 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
       Methods
     ===================================================================================
     */
+    /**
+     * Gets token balance value
+     * @returns {BN}
+     */
     getValue(): BN {
         if (this.isErc20) {
             let n = new BN(this.token.balance)
@@ -354,7 +358,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
         }
         return new BN(this.token.balance)
     }
-
+    /**
+     * Emit showNft to parent
+     */
     showNft(): void {
         this.$emit('showNft', this.token.tokenInfo.contract, this.token.tokenInfo.name)
     }

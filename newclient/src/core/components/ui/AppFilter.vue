@@ -128,7 +128,11 @@ export default class AppFilter extends Vue {
     Methods
   ===================================================================================
   */
-    setSelected(option: object) {
+    /**
+     * Sets selected option and removes dialog
+     * @param option {Object}
+     */
+    setSelected(option: object): void {
         this.selected = option
         this.dialog = false
     }
@@ -139,7 +143,7 @@ export default class AppFilter extends Vue {
   ===================================================================================
   */
     @Watch('selected')
-    onSelectChange(newVal: object, oldVal: object) {
+    onSelectChange(newVal: object, oldVal: object): void {
         if (newVal && newVal !== oldVal) {
             this.$emit('onSelectChange', newVal['value'])
         }

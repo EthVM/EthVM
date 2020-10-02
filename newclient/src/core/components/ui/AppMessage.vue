@@ -87,23 +87,38 @@ export default class AppMessage extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets isLarge as false and calls
+     * debouncedSmall
+     */
     debouncedSetSmall(): void {
         this.isLarge = false
         this.debouncedSmall()
     }
-
+    /**
+     * Sets isSmall as false and calls
+     * debouncedLarge
+     */
     debouncedSetLarge(): void {
         this.isSmall = false
         this.debouncedLarge()
     }
+    /**
+     * Sets isSmall as true
+     */
     setIsSmall(): void {
         this.isSmall = true
     }
+    /**
+     * Sets isLarge as true
+     */
     setIsLarge(): void {
         this.isLarge = true
     }
-
+    /**
+     * Sets isLarge as false
+     * Sets isSmall as false
+     */
     hideAll(): void {
         this.isLarge = false
         this.isSmall = false
