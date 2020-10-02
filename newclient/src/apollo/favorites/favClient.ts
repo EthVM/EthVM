@@ -16,7 +16,7 @@ const addressMap: favAddressType[] = addresses.map(item => {
     return {
         __typename: TypeName.addr,
         address: item.address,
-        name: item.address
+        name: item.name
     }
 })
 console.log('addresses', addresses)

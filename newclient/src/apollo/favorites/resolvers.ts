@@ -18,8 +18,7 @@ export const resolvers = {
          * @return - returns cachedAdrsType data type or null if !data.favAddresses
          */
         checkAddress: (root, { address }, { cache }) => {
-            const adr = hasAddress(address, cache)
-            return adr ? true : false
+            return hasAddress(address, cache)
         }
     },
     Mutation: {

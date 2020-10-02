@@ -13,14 +13,14 @@
             -->
             <v-flex shrink>
                 <v-layout align-start justify-center row fill-height pa-2>
-                    <blockies :address="address.address" />
+                    <blockies :address="address.hash" />
                 </v-layout>
             </v-flex>
             <v-flex d-block>
                 <v-layout wrap column fill-height pa-1>
                     <v-flex xs12>
                         <v-layout row wrap align-center justify-space-between>
-                            <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2 pt-2">{{ title }}</v-card-title>
+                            <v-card-title class="title font-weight-bold pl-1 pr-3 pt-2">{{ title }}</v-card-title>
                             <!--
                             =====================================================================================
                               CHIPS
@@ -35,7 +35,7 @@
                             =====================================================================================
                             -->
                             <v-layout row align-center justify-end>
-                                <fav-handler-like :address="address.hash" :addr-chips="addrChips" />
+                                <fav-handler-like :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
                                 <address-qr :address="address.hash" :large="true" />
                             </v-layout>
                         </v-layout>
@@ -267,10 +267,10 @@ import { EnumAdrChips } from '@app/core/components/props'
 })
 export default class AddressDetail extends Mixins(NumberFormatMixin) {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
     @Prop(Object) address!: Address
     @Prop(Boolean) loading!: boolean
@@ -278,14 +278,17 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     @Prop(Number) etherPrice!: number
 
     /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Data
+    ===================================================================================
+    */
+    title = this.$i18n.tc('address.name', 1).toString()
 
-    get title(): string {
-        return this.$i18n.tc('address.name', 1)
-    }
+    /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
 
     get hasChips(): boolean {
         return this.addrChips.length > 0
@@ -341,6 +344,14 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
             chips.push(EnumAdrChips.contract)
         }
         return chips
+    }
+    /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
+    updateTitle(name: string): void {
+        this.title = `${name}`
     }
 }
 </script>

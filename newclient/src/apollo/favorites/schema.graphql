@@ -3,7 +3,7 @@ type FavAddress {
     name: String!
 }
 extend type Query {
-    checkAddress(address: String!): Boolean!
+    checkAddress(address: String!): FavAddress
     favAddresses: [FavAddress!]!
 }
 

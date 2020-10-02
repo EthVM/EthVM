@@ -44,7 +44,7 @@
 
         <v-layout fill-height align-center justify-center pt-2 pb-2 pl-4 pr-4>
             <v-flex xs12>
-                <v-text-field v-model="name" :rules="nameRulles" outline clearable counter maxlength="30" label="Enter Name" class="name-input-container">
+                <v-text-field v-model="name" :rules="nameRulles" outline clearable counter maxlength="20" label="Enter Name" class="name-input-container">
                 </v-text-field>
             </v-flex>
         </v-layout>

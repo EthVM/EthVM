@@ -1,6 +1,6 @@
 <template>
     <div>
-        <fav-btn-add-to-fav :is-added="checkAddress" :add-address="openFavDialog" :tooltip-text="tooltipText"></fav-btn-add-to-fav>
+        <fav-btn-add-to-fav :is-added="isAdded" :add-address="openFavDialog" :tooltip-text="tooltipText"></fav-btn-add-to-fav>
         <v-dialog v-model="open" max-width="500">
             <fav-dialog :address="address" :add="add" :chips="addrChips" :dialog-method="addToFav" @closeFavDialog="closeFavDialog()" />
         </v-dialog>
@@ -27,6 +27,13 @@ import { EnumAdrChips } from '@app/core/components/props'
             variables() {
                 return {
                     address: this.address
+                }
+            },
+            result({ data }) {
+                if (data && data.checkAddress && data.checkAddress.name) {
+                    if (data.checkAddress.name !== '') {
+                        this.$emit('addressHasName', data.checkAddress.name)
+                    }
                 }
             }
         }
@@ -72,7 +79,11 @@ export default class FavHandlerLike extends Vue {
     ===================================================================================
     */
     get tooltipText(): string {
-        return this.checkAddress ? this.$t('fav.tooltip.remove').toString() : this.$t('fav.tooltip.add').toString()
+        return this.isAdded ? this.$t('fav.tooltip.remove').toString() : this.$t('fav.tooltip.add').toString()
+    }
+
+    get isAdded(): boolean {
+        return this.checkAddress !== undefined && this.checkAddress !== null
     }
 
     /*
