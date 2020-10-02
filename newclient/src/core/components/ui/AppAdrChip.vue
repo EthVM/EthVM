@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import Blockies from '@app/modules/address/components/Blockies.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 @Component
 export default class AppAdrChip extends Vue {
