@@ -2,58 +2,128 @@
     <v-card color="white" flat>
         <!--
         =====================================================================================
-        ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
+          DESKTOP: ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
         =====================================================================================
         -->
-        <v-layout :class="layoutPadding" grid-list-sm align-start justify-start row fill-height>
+        <v-layout :class="layoutPadding" grid-list-sm align-center justify-start row fill-height hidden-sm-and-down>
             <!--
             =====================================================================================
               BLOCKIE
             =====================================================================================
             -->
             <v-flex shrink>
-                <v-layout align-start justify-center row fill-height pa-2>
+                <v-layout align-start justify-center row fill-height pr-2 pl-2 pt-2>
                     <blockies :address="address.hash" />
                 </v-layout>
             </v-flex>
+            <!--
+            =====================================================================================
+              ADDRESS NAME / CHIPS
+            =====================================================================================
+            -->
             <v-flex d-block>
-                <v-layout wrap column fill-height pa-1>
+                <v-layout wrap pa-1>
                     <v-flex xs12>
-                        <v-layout row wrap align-center justify-space-between>
-                            <v-card-title class="title font-weight-bold pl-1 pr-3 pt-2">{{ title }}</v-card-title>
+                        <v-layout row align-center justify-start pr-2 pl-2 pb-2 pt-3>
+                            <!--
+                            =====================================================================================
+                              TITLE
+                            =====================================================================================
+                            -->
+                            <v-card-title class="title font-weight-bold pl-0 pr-3 pb-0 pt-0">{{ title }}</v-card-title>
                             <!--
                             =====================================================================================
                               CHIPS
                             =====================================================================================
                             -->
-                            <v-layout v-if="hasChips" hidden-xs-only align-center justify-start row fill-height ml-1>
-                                <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="mr-2" />
-                            </v-layout>
-                            <!--
-                            =====================================================================================
-                              FAVORITE/ QR
-                            =====================================================================================
-                            -->
-                            <v-layout row align-center justify-end>
-                                <fav-handler-like :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
-                                <address-qr :address="address.hash" :large="true" />
-                            </v-layout>
+                            <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="mr-2" />
                         </v-layout>
+                    </v-flex>
+                    <!--
+                    =====================================================================================
+                      COPY/ADDRESS HASH
+                    =====================================================================================
+                    -->
+                    <v-flex xs12>
+                        <v-layout row align-center justify-start pr-2>
+                            <p class="break-hash font-mono pl-1">{{ address.hash }}</p>
+                            <app-copy-to-clip :value-to-copy="address.hash" />
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
+            <!--
+            =====================================================================================
+              FAVORITE/ QR
+            =====================================================================================
+            -->
+            <v-flex shrink>
+                <v-layout row align-center justify-end pa-2>
+                    <fav-handler-like :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
+                    <address-qr :address="address.hash" :large="true" />
+                </v-layout>
+            </v-flex>
+        </v-layout>
+        <!--
+        =====================================================================================
+          END DESKTOP
+        =====================================================================================
+        -->
+        <!--
+        =====================================================================================
+          MOBILE: ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
+        =====================================================================================
+        -->
+        <v-layout grid-list-sm align-center justify-start row fill-height hidden-sm-and-up pr-2 pl->
+            <!--
+            =====================================================================================
+              BLOCKIE
+            =====================================================================================
+            -->
+            <v-flex>
+                <v-layout align-start justify-center row fill-height pa-2>
+                    <blockies :address="address.hash" width="40px" height="40px" />
+                </v-layout>
+            </v-flex>
+            <!--
+            =====================================================================================
+              ADDRESS NAME / HASH
+            =====================================================================================
+            -->
+            <v-flex d-block>
+                <v-layout row wrap align-center justify-start>
+                    <v-flex xs12>
+                        <v-card-title class="body-2 font-weight-bold pl-0 pr-3 pb-0 pt-0">{{ title }}</v-card-title>
                     </v-flex>
                     <v-flex xs12>
-                        <v-layout row align-center justify-start>
+                        <v-layout row align-center justify-start pl-1 pr-3>
                             <app-copy-to-clip :value-to-copy="address.hash" />
-                            <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ address.hash }}</p>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex v-if="hasChips" xs12 hidden-sm-and-up>
-                        <v-layout align-center justify-start row fill-height pt-2>
-                            <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="mr-2" />
+                            <p class="break-hash font-mono pl-1">{{ address.hash }}</p>
                         </v-layout>
                     </v-flex>
                 </v-layout>
             </v-flex>
         </v-layout>
+
+        <v-layout grid-list-xs align-center justify-start row fill-height hidden-sm-and-up>
+            <!--
+            =====================================================================================
+              CHIPS / LIKE / QR
+            =====================================================================================
+            -->
+            <v-layout row wrap align-center justify-start pl-3 ma-0>
+                <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="ma-1" />
+            </v-layout>
+            <v-layout row align-center justify-end pr-2 ma-0>
+                <fav-handler-like :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
+                <address-qr :address="address.hash" :large="true" />
+            </v-layout>
+        </v-layout>
+        <!--
+        =====================================================================================
+          END MOBILE
+        =====================================================================================
+        -->
 
         <!--
         =====================================================================================
@@ -383,7 +453,7 @@ p {
     position: absolute;
     bottom: 0;
     right: 0;
-    height: 100%;
+    height: 45%;
     width: 12vw;
     content: '';
     background: linear-gradient(to left, rgba(255, 255, 255, 1) 5%, hsla(0, 0%, 100%, 0) 80%);
