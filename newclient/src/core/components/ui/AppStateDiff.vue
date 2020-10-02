@@ -100,7 +100,12 @@ export default class AppStateDiff extends Vue {
     Methods
   ===================================================================================
   */
-    showMinus(name) {
+    /**
+     * Returns + or - symbol based on name
+     * @param name {String}
+     * @returns {String}
+     */
+    showMinus(name: string): string | undefined {
         if (minusTypes.indexOf(name) > -1) {
             return '-'
         }

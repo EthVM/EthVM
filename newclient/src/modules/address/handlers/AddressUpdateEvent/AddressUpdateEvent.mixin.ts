@@ -71,6 +71,10 @@ export class AddressUpdateEvent extends Vue {
     setEventVariables(_owner: string) {
         this.owner = _owner.toLowerCase()
     }
+    /**
+     * Sets events or resets
+     * @params newEvent {AddressEventType} or {String}, reset {Boolean}
+     */
     setNewEvent(newEvent: AddressEventType | string, reset: boolean = false): void {
         if (reset) {
             this.addrBalanceChanged = false
@@ -103,13 +107,23 @@ export class AddressUpdateEvent extends Vue {
                 return
         }
     }
-
+    /**
+     * Resets balance
+     */
     resetBalance(): void {
         this.addrBalanceChanged = false
     }
+    /**
+     * Resets refetching for ERC20 or ERC721
+     * @param isERC20 {Boolean}
+     */
     resetBalanceRefetch(isERC20: boolean): void {
         isERC20 ? (this.refetchERC20Balance = false) : (this.refetchERC721Balance = false)
     }
+    /**
+     * Resets transfers refetch for ERC20 or ERC721
+     * @param isERC20 {Boolean}
+     */
     resetTransfersRefetch(isERC20: boolean): void {
         isERC20 ? (this.refetchERC20Transfers = false) : (this.refetchERC721Transfers = false)
     }

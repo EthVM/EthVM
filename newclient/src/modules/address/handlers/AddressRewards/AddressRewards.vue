@@ -187,7 +187,10 @@ export default class AddressRewards extends Vue {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Sets page number and fetch more data or reset state
+     * @param page {Number} reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
@@ -228,7 +231,9 @@ export default class AddressRewards extends Vue {
 
         this.index = page
     }
-
+    /**
+     * Emit Rewards to parent
+     */
     emitRewards(): void {
         if (this.isBlock) {
             this.$emit('blockRewards', true)
@@ -238,6 +243,9 @@ export default class AddressRewards extends Vue {
             this.$emit('genesisRewards', true)
         }
     }
+    /**
+     * Emit error to Sentry
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorRewards', this.hasError, ErrorMessage.rewards)

@@ -53,7 +53,9 @@ export default class AppLanguage extends Vue {
     Methods
   ===================================================================================
   */
-
+    /**
+     * Changes the locale
+     */
     async changeLocale(): Promise<void> {
         if (this.$i18n.locale === this.language) {
             return
@@ -80,13 +82,19 @@ export default class AppLanguage extends Vue {
         this.loaded.push(this.language)
         this.setLang()
     }
-
+    /**
+     * Sets language in i18n and in localStorage
+     */
     setLang(): void {
         this.$i18n.locale = this.language
         storePack.set('language', this.language)
         window.scrollTo(0, 0)
     }
-
+    /**
+     * Checks lang is in the included lists of languages
+     * @param lang {String}
+     * @returns {Boolean}
+     */
     isLang(lang: string): boolean {
         return this.items.find(l => l._id === lang) !== undefined
     }

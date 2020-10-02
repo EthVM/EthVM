@@ -121,7 +121,10 @@ export default class AddressOverview extends Mixins(CoinData) {
       Methods
     ===================================================================================
     */
-    emitErrorState(msg): void {
+    /**
+     * Emits error to Sentry
+     */
+    emitErrorState(): void {
         this.$emit('errorBalance', this.hasError, ErrorMessage.balance)
     }
 
