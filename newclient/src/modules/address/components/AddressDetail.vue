@@ -5,7 +5,7 @@
           DESKTOP: ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
         =====================================================================================
         -->
-        <v-layout :class="layoutPadding" grid-list-sm align-center justify-start row fill-height hidden-sm-and-down>
+        <v-layout :class="layoutPadding" grid-list-sm align-center justify-start row fill-height hidden-xs-only>
             <!--
             =====================================================================================
               BLOCKIE
@@ -45,8 +45,8 @@
                     =====================================================================================
                     -->
                     <v-flex xs12>
-                        <v-layout row align-center justify-start pr-2>
-                            <p class="break-hash font-mono pl-1">{{ address.hash }}</p>
+                        <v-layout row wrap align-center justify-start>
+                            <p class="break-hash font-mono pl-2 pr-2">{{ address.hash }}</p>
                             <app-copy-to-clip :value-to-copy="address.hash" />
                         </v-layout>
                     </v-flex>
@@ -74,7 +74,7 @@
           MOBILE: ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
         =====================================================================================
         -->
-        <v-layout grid-list-sm align-center justify-start row fill-height hidden-sm-and-up pr-2 pl->
+        <v-layout grid-list-sm align-center justify-start row fill-height hidden-sm-and-up pr-2 pl-2>
             <!--
             =====================================================================================
               BLOCKIE
