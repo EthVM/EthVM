@@ -174,5 +174,6 @@ Sentry.init({
     integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
     beforeSend(event) {
         return process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' ? event : null
-    }
+    },
+    release: configs.VERSION
 })
