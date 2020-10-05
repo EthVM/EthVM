@@ -1,7 +1,15 @@
+
+### Release v1.0.2
+
 ### Bug
 
 - Fix chart font bug [#869](https://github.com/EthVM/EthVM/pull/869)
 
+### Devop
+
+- fixed spelling mistakes in readme 
+
+-----------------------------------------------------------------------------------------------------------------------
 ### Release v1.0.1
 
 ### Feature
