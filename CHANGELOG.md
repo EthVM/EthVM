@@ -2,9 +2,8 @@
 
 
 ### Devop
+- Add sentry environment [#871](https://github.com/EthVM/EthVM/pull/871)
 - fixed spelling mistakes in readme 
-
-
 
 
 ### Release v1.0.1
