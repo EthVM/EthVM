@@ -15,7 +15,7 @@
                         <v-flex :xs10="isERC721" :sm11="isERC721">
                             <v-flex xs12>
                                 <v-layout row align-center justify-start pa-2>
-                                    <p class="info--text pr-2">{{ $t('token.holder') }}:</p>
+                                    <p class="info--text pr-2">{{ $tc('token.holder', 1) }}:</p>
                                     <app-transform-hash :hash="holder.owner | toChecksum" :link="holderLink" />
                                 </v-layout>
                             </v-flex>
