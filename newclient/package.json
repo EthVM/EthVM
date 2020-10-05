@@ -12,7 +12,7 @@
       "build:hash": "ROUTER_MODE=hash yarn build",
       "clean": "rm -rf dist/",
       "lint": "vue-cli-service lint --no-fix",
-      "lint:fix": "vue-cli-service lint",
+      "lint:fix": "vue-cli-service lint --fix",
       "apollo": "apollo",
       "apollo:schema": "apollo service:download ./src/apollo/schemas/api.json",
       "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript  --globalTypesFile=./src/apollo/global/globalTypes.ts  apolloTypes"

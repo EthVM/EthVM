@@ -21,6 +21,7 @@ import i18n from '@app/translations'
 import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
 import Vue from 'vue'
+import toChecksum from '@app/core/filters/toChecksum'
 
 /*
   ===================================================================================
@@ -141,6 +142,14 @@ Vue.use(Vuetify, {
         clear: 'fas fa-times'
     }
 })
+
+/*
+  ===================================================================================
+    Vue: Filters
+  ===================================================================================
+*/
+
+Vue.filter('toChecksum', toChecksum)
 
 /*
   ===================================================================================

@@ -25,7 +25,7 @@
                                 <v-list-tile v-for="(uncle, index) in uncles" :key="index">
                                     <v-layout row justify-start align-center fill-height>
                                         <v-card-title class="info--text p-0">{{ $t('common.hash') }}:</v-card-title>
-                                        <app-transform-hash :hash="uncle" :link="`/uncle/${uncle}`" />
+                                        <app-transform-hash :hash="uncle | toChecksum" :link="`/uncle/${uncle}`" />
                                     </v-layout>
                                 </v-list-tile>
                             </v-list>

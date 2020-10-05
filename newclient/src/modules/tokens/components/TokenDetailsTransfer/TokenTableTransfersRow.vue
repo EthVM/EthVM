@@ -15,17 +15,17 @@
                     </v-layout>
                     <v-layout row align-center justify-space-around fill-height pa-2>
                         <p class="info--text mr-1">{{ $t('tx.from') }}:</p>
-                        <app-transform-hash :hash="transfer.transfer.from" :link="`/address/${transfer.transfer.from}`" :italic="true" />
+                        <app-transform-hash :hash="transfer.transfer.from | toChecksum" :link="`/address/${transfer.transfer.from}`" :italic="true" />
                         <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                         <p v-if="transfer.transfer.contract" class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
                         <p v-else class="info--text mr-1">{{ $t('tx.to') }}:</p>
                         <app-transform-hash
                             v-if="transfer.transfer.contract"
-                            :hash="transfer.transfer.address"
+                            :hash="transfer.transfer.address | toChecksum"
                             :link="`/address/${transfer.transfer.address}`"
                             :italic="true"
                         />
-                        <app-transform-hash v-else :hash="transfer.transfer.to" :link="`/address/${transfer.transfer.to}`" :italic="true" />
+                        <app-transform-hash v-else :hash="transfer.transfer.to | toChecksum" :link="`/address/${transfer.transfer.to}`" :italic="true" />
                     </v-layout>
                 </v-flex>
                 <!-- End Column 1 -->
@@ -72,15 +72,15 @@
                     <v-flex xs12>
                         <v-layout row pa-2>
                             <p class="info--text pr-1">{{ $tc('address.name', 2) }}:</p>
-                            <app-transform-hash :hash="transfer.transfer.from" :italic="true" :link="`/address/${transfer.transfer.from}`" />
+                            <app-transform-hash :hash="transfer.transfer.from | toChecksum" :italic="true" :link="`/address/${transfer.transfer.from}`" />
                             <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                             <app-transform-hash
                                 v-if="transfer.transfer.contract"
-                                :hash="transfer.transfer.address"
+                                :hash="transfer.transfer.address | toChecksum"
                                 :italic="true"
                                 :link="`/address/${transfer.transfer.address}`"
                             />
-                            <app-transform-hash v-else :hash="transfer.transfer.to" :italic="true" :link="`/address/${transfer.transfer.to}`" />
+                            <app-transform-hash v-else :hash="transfer.transfer.to | toChecksum" :italic="true" :link="`/address/${transfer.transfer.to}`" />
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>

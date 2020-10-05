@@ -21,13 +21,13 @@
                                 <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
                                 <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
                             </v-layout>
-                            <address-qr :address="address.hash" :large="true" />
+                            <address-qr :address="address.hash | toChecksum" :large="true" />
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
                         <v-layout row align-center justify-start>
-                            <app-copy-to-clip :value-to-copy="address.hash" />
-                            <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ address.hash }}</p>
+                            <app-copy-to-clip :value-to-copy="address.hash | toChecksum" />
+                            <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ address.hash | toChecksum }}</p>
                         </v-layout>
                     </v-flex>
                     <v-flex v-if="hasChips" xs12 hidden-md-and-up>
