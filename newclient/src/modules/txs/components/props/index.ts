@@ -13,11 +13,11 @@ export interface Tx {
 }
 
 export interface PendingTx {
-    transactionHash: string;
-    from: string;
-    to: string | null;
-    txFee: string;
-    value: string;
-    timestamp: number;
-    isMined: boolean;
+    transactionHash: string
+    from: string
+    to: string | null
+    txFee: string
+    value: string
+    timestamp: number
+    isMined: boolean
 }

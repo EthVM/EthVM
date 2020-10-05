@@ -1,18 +1,18 @@
 {
   "name": "ethvm",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "EthVM: Open source Ethereum networks explorer",
   "author": "EthVM Team",
   "private": true,
   "scripts": {
-      "start:dev": "vue-cli-service serve",
+      "start:dev": "NODE_ENV=development vue-cli-service serve",
       "build": "vue-cli-service --mode production build",
-      "build:production": "yarn build",
+      "build:production": "NODE_ENV=production yarn build",
       "build:staging": "vue-cli-service --mode staging build",
       "build:hash": "ROUTER_MODE=hash yarn build",
       "clean": "rm -rf dist/",
       "lint": "vue-cli-service lint --no-fix",
-      "lint:fix": "vue-cli-service lint",
+      "lint:fix": "vue-cli-service lint --fix",
       "apollo": "apollo",
       "apollo:schema": "apollo service:download ./src/apollo/schemas/api.json",
       "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript  --globalTypesFile=./src/apollo/global/globalTypes.ts  apolloTypes"
