@@ -1,3 +1,12 @@
+### Release v1.0.2
+
+
+### Devop
+- fixed spelling mistakes in readme 
+
+
+
+
 ### Release v1.0.1
 
 ### Feature
