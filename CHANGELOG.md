@@ -1,6 +1,9 @@
-### Devop
+### Release v1.0.2
 
+### Devop
 - Convert all address instance to checksum [#870](https://github.com/EthVM/EthVM/pull/870)
+- Fixed spelling mistakes in readme 
+
 
 
 ### Release v1.0.1
