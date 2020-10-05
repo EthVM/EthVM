@@ -16,7 +16,7 @@
                             <v-flex xs12>
                                 <v-layout row align-center justify-start pa-2>
                                     <p class="info--text pr-2">{{ $t('token.holder') }}:</p>
-                                    <app-transform-hash :hash="holder.owner" :link="holderLink" />
+                                    <app-transform-hash :hash="holder.owner | toChecksum" :link="holderLink" />
                                 </v-layout>
                             </v-flex>
                             <v-flex xs12>
@@ -50,7 +50,7 @@
                 <v-layout align-center justify-start row fill-height pa-3>
                     <!-- Column 1: Holders Address -->
                     <v-flex sm6 pr-4>
-                        <app-transform-hash :hash="holder.owner" :link="holderLink" />
+                        <app-transform-hash :hash="holder.owner | toChecksum" :link="holderLink" />
                     </v-flex>
                     <!-- End Column 1 -->
 
