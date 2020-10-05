@@ -79,7 +79,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 /* Font */
 ChartJs.defaults.global = Object.assign(ChartJs.defaults.global, {
-    defaultFontFamily: "'Open Sans', 'sans-serif'",
+    defaultFontFamily: "'Roboto', 'Roboto Mono', 'sans-serif'",
     defaultFontStyle: '200'
 })
 
