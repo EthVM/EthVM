@@ -23,6 +23,12 @@ import { Vue as VueIntegration } from '@sentry/integrations'
 import Vue from 'vue'
 import toChecksum from '@app/core/filters/toChecksum'
 
+router.onError(error => {
+  if (/loading chunk \d* failed./i.test(error.message)) {
+    window.location.reload()
+  }
+})
+
 /*
   ===================================================================================
     Vue: Plugins Configuration
