@@ -384,12 +384,14 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
      * @param value {BN}
      * @returns {Object}
      */
-    getStateVal(val: BN): object {
+    getStateVal(val: BN | string): object {
+        const _val = new BN(val)
         return {
-            value: this.formatFloatingPointValue(val).value,
+            value: this.formatFloatingPointValue(_val).value,
             unit: this.transfer.tokenInfo.symbol
         }
     }
+    
     /**
      * Gets token ID
      * @returns {String}
