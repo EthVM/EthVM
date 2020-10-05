@@ -2,7 +2,7 @@
 ### Release v1.0.2
 
 ### Bug
-
+- Fix state diff types [#873](https://github.com/EthVM/EthVM/pull/873)
 - Fix chart font bug [#869](https://github.com/EthVM/EthVM/pull/869)
 
 ### Devop
