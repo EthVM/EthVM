@@ -5,9 +5,9 @@
   "author": "EthVM Team",
   "private": true,
   "scripts": {
-      "start:dev": "vue-cli-service serve",
+      "start:dev": "NODE_ENV=development vue-cli-service serve",
       "build": "vue-cli-service --mode production build",
-      "build:production": "yarn build",
+      "build:production": "NODE_ENV=production yarn build",
       "build:staging": "vue-cli-service --mode staging build",
       "build:hash": "ROUTER_MODE=hash yarn build",
       "clean": "rm -rf dist/",
