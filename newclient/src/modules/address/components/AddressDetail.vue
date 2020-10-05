@@ -74,7 +74,7 @@
           MOBILE: ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
         =====================================================================================
         -->
-        <v-layout grid-list-sm align-center justify-start row fill-height hidden-sm-and-up pr-2 pl-2>
+        <v-layout grid-list-sm align-center justify-start row fill-height hidden-sm-and-up pr-2 pl-2 pt-2>
             <!--
             =====================================================================================
               BLOCKIE
