@@ -119,7 +119,7 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-layout align-end justify-end fill-height pr-3>
-                            <p class="info--text text-xs-right caption">v{{version}}</p>
+                            <p class="info--text text-xs-right caption">v{{ version }}</p>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -141,7 +141,7 @@
 <script lang="ts">
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppLanguage from '@app/core/components/ui/AppLanguage.vue'
-import configs from '@app/configs';
+import configs from '@app/configs'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
@@ -168,7 +168,7 @@ export default class TheFooter extends Vue {
   */
     get flexClass(): string {
         return this.$vuetify.breakpoint.name === 'sm' || this.$vuetify.breakpoint.name === 'xs' ? 'pa-1' : 'pa-3'
-    },
+    }
 }
 </script>
 
