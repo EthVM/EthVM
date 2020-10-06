@@ -7,9 +7,10 @@
 
 ### Devop
 
+- Add version to footer [#872](https://github.com/EthVM/EthVM/pull/872)
 - Add sentry environment [#871](https://github.com/EthVM/EthVM/pull/871)
 - Convert all address instance to checksum [#870](https://github.com/EthVM/EthVM/pull/870)
-- Fixed spelling mistakes in readme 
+- Fixed spelling mistakes in readme [#866](https://github.com/EthVM/EthVM/pull/866)
 
 
 =======================================================================================================================
