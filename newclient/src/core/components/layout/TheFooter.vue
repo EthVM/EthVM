@@ -47,10 +47,11 @@
                     </v-layout>
                     <v-layout row justify-start align-center>
                         <v-btn
+                            :to="{ name: 'address', params: { addressRef: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D' } }"
                             outline
                             color="secondary"
                             class="text-lowercase font-weight-regular donation-btn"
-                            href="https://www.ethvm.com/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+                            active-class=""
                         >
                             <v-icon class="secondary--text fab fa-ethereum pr-2 asset-icon" /> <span class="text-uppercase pr-1">{{ $t('common.eth') }}</span> -
                             {{ $t('footer.ens') }}
