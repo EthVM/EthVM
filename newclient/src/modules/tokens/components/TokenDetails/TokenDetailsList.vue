@@ -302,7 +302,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     // }
 
     get holderDetail(): Detail {
-        const detail: Detail = { title: this.$t('token.holder') }
+        const detail: Detail = { title: this.$tc('token.holder', 1) }
         if (!this.isLoading && this.holderDetails && this.holderDetails.owner) {
             detail.detail = this.holderDetails.owner
             detail.link = `/address/${this.holderDetails.owner}`
