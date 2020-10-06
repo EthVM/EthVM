@@ -70,7 +70,7 @@ const webpackProduction = {
 // }
 
 module.exports = {
-    publicPath: process.env.ROUTER_MODE === 'history' ? '/' : './',
+    publicPath: './',
     chainWebpack: config => {
         config.plugin('html').tap(args => {
             args[0].hash = true

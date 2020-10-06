@@ -379,7 +379,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             ? this.getValue(this.transfer.stateDiff.from.after)
             : this.getValue(this.transfer.stateDiff.to.after)
     }
-
     /**
      * Gets value from state
      * @param value {BN}
