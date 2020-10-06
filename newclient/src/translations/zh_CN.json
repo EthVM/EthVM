@@ -76,7 +76,7 @@
         "number": "Total ERC20 Tokens ",
         "tokenName": "Token Name",
         "supply": "Total Supply",
-        "holder": "Holder",
+        "holder": "Holder | Holders",
         "holder-total": "Total Holders",
         "symbol": "Symbol",
         "decimal": "Decimals",
