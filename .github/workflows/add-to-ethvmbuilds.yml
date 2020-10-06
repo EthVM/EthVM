@@ -4,6 +4,8 @@ on:
   push:
     branches-ignore:
       - 'gh-pages'
+      - 'develop'
+      - 'master'
     tags-ignore:
       - '*'
 
