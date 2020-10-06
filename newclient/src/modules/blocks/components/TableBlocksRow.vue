@@ -32,7 +32,7 @@
                             <p class="info--text psmall pr-1">{{ $t('miner.name') }}:</p>
                         </v-flex>
                         <v-flex xs10 pa-1>
-                            <app-transform-hash :hash="_block.miner" :italic="true" :link="`/address/${_block.miner}`" />
+                            <app-transform-hash :hash="_block.miner | toChecksum" :italic="true" :link="`/address/${_block.miner}`" />
                         </v-flex>
                         <v-flex xs2 pa-1>
                             <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
@@ -64,7 +64,7 @@
                     <v-flex sm5>
                         <v-layout row pb-2>
                             <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
-                            <app-transform-hash :hash="_block.miner" :italic="true" :link="`/address/${_block.miner}`" />
+                            <app-transform-hash :hash="_block.miner | toChecksum" :italic="true" :link="`/address/${_block.miner}`" />
                         </v-layout>
                         <v-layout row>
                             <p class="info--text psmall pr-2">{{ $t('common.age') }}:</p>

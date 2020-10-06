@@ -46,8 +46,9 @@
                     -->
                     <v-flex xs12>
                         <v-layout row wrap align-center justify-start>
-                            <p class="break-hash font-mono pl-2 pr-2">{{ address.hash }}</p>
-                            <app-copy-to-clip :value-to-copy="address.hash" />
+                            <p class="break-hash font-mono pl-2 pr-2">{{ address.hash | toChecksum }}}</p>
+                            <app-copy-to-clip :value-to-copy="address.hash | toChecksum" />
+
                         </v-layout>
                     </v-flex>
                 </v-layout>

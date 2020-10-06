@@ -71,7 +71,7 @@ import { Component, Prop, Watch, Vue, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
 import { getAddressEthTransfers, getAddressERC20Transfers, getAddressERC721Transfers } from './transfers.graphql'
 import { getAddressEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAddressEthTransfers'
-import { getAddressERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAddressErc20Transfers'
+import { getAddressERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAddressERC20Transfers'
 import { getAddressERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAddressERC721Transfers'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
@@ -277,7 +277,11 @@ export default class AddressTransers extends Mixins(CoinData) {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Fetches image for the contract
+     * @param contract {String}
+     * @returns {TokenMarketData} or {undefined}
+     */
     getImg(contract: string): TokenMarketData | undefined {
         if (!this.initialLoad && this.tokenImg && this.tokenImg.has(contract) && this.isERC20) {
             const token = this.tokenImg.get(contract)
@@ -285,12 +289,17 @@ export default class AddressTransers extends Mixins(CoinData) {
         }
         return undefined
     }
-
-    onFilterChange(filter) {
+    /**
+     * Filter on change call back
+     */
+    onFilterChange(filter: any) {
         this.setPage(0, true)
         this.filter = filter
     }
-
+    /**
+     * Sets page or reset
+     * @params page {Number} reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
@@ -332,6 +341,10 @@ export default class AddressTransers extends Mixins(CoinData) {
 
         this.index = page
     }
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         const errorType = this.isETH ? ErrorMessage.transfersETH : this.isERC20 ? ErrorMessage.transfersERC20 : ErrorMessage.transfersERC721

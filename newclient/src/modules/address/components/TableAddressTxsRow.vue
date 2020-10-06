@@ -69,7 +69,7 @@
                     =====================================================================================
                     -->
                     <v-flex xs7 sm9 pa-1>
-                        <app-transform-hash :hash="typeAddr" :link="`/address/${typeAddr}`" />
+                        <app-transform-hash :hash="typeAddr | toChecksum" :link="`/address/${typeAddr}`" />
                     </v-flex>
                 </v-layout>
             </div>
@@ -105,7 +105,7 @@
                                     </v-card>
                                 </v-flex>
                                 <v-flex sm7 lg8 pl-0>
-                                    <app-transform-hash :hash="typeAddr" :link="`/address/${typeAddr}`" :italic="true" />
+                                    <app-transform-hash :hash="typeAddr | toChecksum" :link="`/address/${typeAddr}`" :italic="true" />
                                 </v-flex>
                             </v-layout>
                         </v-flex>

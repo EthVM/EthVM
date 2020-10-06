@@ -41,7 +41,10 @@ export default class AppNewUpdate extends Vue {
       Methods:
     ===================================================================================
   */
-    onReload() {
+    /**
+     * Emits reload to parent
+     */
+    onReload(): void {
         this.$emit('reload')
     }
 }

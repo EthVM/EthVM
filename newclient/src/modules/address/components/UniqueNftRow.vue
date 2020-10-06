@@ -63,11 +63,18 @@ export default class UniqueNftRow extends Vue {
      Methods
     ===================================================================================
     */
+    /**
+     * Get token ID
+     * @param token {ERC721TokenTyp}
+     * @returns {String}
+     */
     getTokenID(token: ERC721TokenType): string {
         return new BN(token.token).toString()
     }
-
-    nftImageLoadFail(index): void {
+    /**
+     * Image loading failed catcher
+     */
+    nftImageLoadFail(): void {
         this.imageExists = false
     }
 }

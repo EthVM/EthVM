@@ -30,18 +30,33 @@ export default class AppFootnotes extends Vue {
     Methods
   ===================================================================================
   */
-
+    /**
+     * Gets color
+     * @param note Footnote
+     * @returns {String}
+     */
     getColor(note: Footnote): string {
         return note.color
     }
-
+    /**
+     * Sets text class based on whether display is mobile
+     * @returns {String}
+     */
     get classText(): string {
         return this.isMobile ? 'footnote-mobile-text pl-1' : 'pl-1 caption'
     }
+
+    /**
+     * Sets icon class based on whether display is mobile
+     * @returns {String}
+     */
     get classIcon(): string {
         return this.isMobile ? 'footnote-mobile-icon' : 'footnote-desktop-icon'
     }
-
+    /**
+     * Checks whether current display is mobile based on Vuetify's breakpoint
+     * @return {Boolean}
+     */
     get isMobile(): boolean {
         return this.$vuetify.breakpoint.name === 'sm' || this.$vuetify.breakpoint.name === 'xs'
     }

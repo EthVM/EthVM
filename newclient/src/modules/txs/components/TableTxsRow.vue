@@ -9,7 +9,7 @@
             <div :class="isPending ? 'table-row-mobile' : txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs6 pa-1>
-                        <router-link v-if="!isPending" :to="`/block/number${transferObj.block}`" class="black--text font-weight-medium pb-1"
+                        <router-link v-if="!isPending" :to="`/block/number/${transferObj.block}`" class="black--text font-weight-medium pb-1"
                             >{{ $t('block.number') }} {{ transaction.block }}</router-link
                         >
                         <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>
@@ -28,10 +28,10 @@
                     <v-flex xs12 pa-1>
                         <v-layout row pa-2>
                             <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
-                            <app-transform-hash :hash="transaction.from" :italic="true" :link="`/address/${transaction.from}`" />
+                            <app-transform-hash :hash="transaction.from | toChecksum" :italic="true" :link="`/address/${transaction.from}`" />
                             <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                             <!-- <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :italic="true" :link="`/address/${tx.creates}`" /> -->
-                            <app-transform-hash :hash="transaction.to" :italic="true" :link="`/address/${transaction.to}`" />
+                            <app-transform-hash :hash="transaction.to | toChecksum" :italic="true" :link="`/address/${transaction.to}`" />
                         </v-layout>
                     </v-flex>
                     <v-flex shrink pa-1>
@@ -90,12 +90,12 @@
                         <v-flex sm12>
                             <v-layout row align-center justify-space-around fill-height pa-2>
                                 <p class="info--text mr-1">{{ $t('tx.from') }}:</p>
-                                <app-transform-hash :hash="transaction.from" :link="`/address/${transaction.from}`" :italic="true" />
+                                <app-transform-hash :hash="transaction.from | toChecksum" :link="`/address/${transaction.from}`" :italic="true" />
                                 <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                                 <!-- <p v-if="tx.isContractCreation" class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p> -->
                                 <p class="info--text mr-1">{{ $t('tx.to') }}:</p>
                                 <!-- <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" /> -->
-                                <app-transform-hash :hash="transaction.to" :link="`/address/${transaction.to}`" :italic="true" />
+                                <app-transform-hash :hash="transaction.to | toChecksum" :link="`/address/${transaction.to}`" :italic="true" />
                             </v-layout>
                         </v-flex>
                     </v-layout>

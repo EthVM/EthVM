@@ -315,7 +315,10 @@ export default class AddressTokens extends Mixins(CoinData) {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Sets page or reset
+     * @params page {Number} reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.$emit('resetUpdateCount', this.eventType, true)
@@ -323,7 +326,10 @@ export default class AddressTokens extends Mixins(CoinData) {
             this.index = page
         }
     }
-
+    /**
+     * Fetches more values
+     * @param nextKey {String}
+     */
     fetchMore(nextKey: string): void {
         this.$apollo.queries.getTokens.fetchMore({
             variables: {
@@ -343,7 +349,11 @@ export default class AddressTokens extends Mixins(CoinData) {
             }
         })
     }
-
+    /**
+     * Gets USD prices for a token
+     * @param contract {String}
+     * @returns {TokenMarketData} or {undefined}
+     */
     getUSDInfo(contract: string): TokenMarketData | undefined {
         if (!this.loading && this.tokenPrices && this.tokenPrices.has(contract)) {
             return this.tokenPrices.get(contract)
@@ -351,8 +361,11 @@ export default class AddressTokens extends Mixins(CoinData) {
         return undefined
     }
     /* NFT TOKENS*/
-
-    showNftTokens(contract: string, name: string | null) {
+    /**
+     * Displays NFT tokens
+     * @param contract {String} name {String}
+     */
+    showNftTokens(contract: string, name: string | null): void {
         this.requestContractName = name ? name : contract
         if (contract) {
             if (this.uniqueNFTMap && this.uniqueNFTMap[contract]) {
@@ -369,6 +382,9 @@ export default class AddressTokens extends Mixins(CoinData) {
             }
         }
     }
+    /**
+     * Fetches more NFT tokens for the address
+     */
     fetchMoreUniqueNFT(): void {
         this.$apollo.queries.getTokens.fetchMore({
             variables: {
@@ -388,17 +404,25 @@ export default class AddressTokens extends Mixins(CoinData) {
             }
         })
     }
+    /**
+     * Hides NFT tokens
+     */
     hideNFTTokens(): void {
         this.showUniqueNFT = false
         this.loadingUniqueNFT = true
     }
-
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         const errorType = this.isERC20 ? ErrorMessage.tokensERC20 : ErrorMessage.tokens721
         this.$emit('errorTokenBalance', this.hasError, errorType)
     }
-
+    /**
+     * Creates a meta Map for the NFTS
+     */
     createNFTMetaMap(): void {
         const contracts = this.getNFTcontractsMeta ? this.getNFTcontractsMeta.tokenContracts : null
         if (contracts && contracts.length > 0) {
@@ -412,8 +436,11 @@ export default class AddressTokens extends Mixins(CoinData) {
         }
         this.loadingMeta = false
     }
-
-    getContractMeta(contract): NFTMetaType | undefined {
+    /**
+     * Fetches NFT Contract meta
+     * @param contract {String}
+     */
+    getContractMeta(contract: string): NFTMetaType | undefined {
         if (this.isNFT) {
             return this.nftMeta[contract]
         }

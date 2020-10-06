@@ -60,13 +60,21 @@ export class CoinData extends Vue {
       Methods
     ===================================================================================
     */
+    /**
+     * Fetch EthereumTokens
+     * @returns {Array} TokenMarketData or {Boolean}
+     */
     getEthereumTokens(): TokenMarketData[] | false {
         if (!this.isLoadingTokensMarketData && this.getLatestPrices.length > 0) {
             return this.getLatestPrices.filter(item => item.id !== ETHER_ID)
         }
         return false
     }
-
+    /**
+     * Generate ethereum token map
+     * @param contract String[]
+     * @returns {Map} TokenMarketData or {Boolean}
+     */
     getEthereumTokensMap(contracts: string[]): Map<string, TokenMarketData> | false {
         if (!this.isLoadingTokensMarketData) {
             const requestMarketInfo = new Map<string, TokenMarketData>()
@@ -82,7 +90,11 @@ export class CoinData extends Vue {
         }
         return false
     }
-
+    /**
+     * Generate ethereum tokens by contract
+     * @param contract String[]
+     * @returns {Map} TokenMarketData or {Boolean}
+     */
     getEthereumTokenByContract(contract: string): TokenMarketData | false {
         if (!this.isLoadingTokensMarketData) {
             const token = this.tokensMarketInfo.get(contract)
@@ -92,7 +104,11 @@ export class CoinData extends Vue {
         }
         return false
     }
-
+    /**
+     * Check if token has data
+     * @param token TokenMarketData
+     * @returns {Boolean}
+     */
     hasData(token: TokenMarketData): boolean {
         if (token.contract === null || token.current_price === null || token.market_cap === null || token.total_supply === null) {
             return false

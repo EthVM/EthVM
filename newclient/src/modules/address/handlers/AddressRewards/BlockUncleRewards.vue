@@ -44,7 +44,9 @@ export default class BlockUncleRewards extends Mixins(NumberFormatMixin) {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Fetches Block Uncle rewards
+     */
     getBlockUncleRewards(): void {
         this.$apollo
             .query({

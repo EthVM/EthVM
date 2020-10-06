@@ -190,7 +190,7 @@ export default class TokenDetails extends Vue {
                 link: `/token/${this.addressRef}`
             },
             {
-                text: this.$t('token.holder'),
+                text: this.$tc('token.holder', 1),
                 hash: this.holderAddress,
                 link: `/address/${this.holderAddress}`
             }
@@ -250,27 +250,13 @@ export default class TokenDetails extends Vue {
         const tabs = [
             {
                 id: 0,
-                title: 'Transfers',
+                title: this.$tc('transfer.name', 2),
                 isActive: true
             },
             {
                 id: 1,
-                title: 'Holders',
+                title: this.$tc('token.holder', 2),
                 isActive: false
-            }
-        ]
-        return tabs
-    }
-
-    /**
-     * Props object to describe tabs for AppTabs component for Token Holder view
-     */
-    get tabsTokenHolderDetails(): Tab[] {
-        const tabs = [
-            {
-                id: 0,
-                title: 'Transfers',
-                isActive: true
             }
         ]
         return tabs

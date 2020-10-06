@@ -39,11 +39,19 @@ export default class AppBreadCrumbs extends Vue {
     Methods
   ===================================================================================
   */
-
+    /**
+     * Gets text
+     * @param item Crumb
+     * @returns {String}
+     */
     getText(item: Crumb): string {
         return item.hash ? `${item.text}: ${this.getHash(item.hash)}` : `${item.text}`
     }
-
+    /**
+     * Gets hash and returns concatenated version
+     * @param hash {String}
+     * @returns {String}
+     */
     getHash(hash: string): string {
         const n = hash.length
         return `${hash.slice(0, 4)}...${hash.slice(n - 4, n)}`

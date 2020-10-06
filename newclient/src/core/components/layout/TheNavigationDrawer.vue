@@ -252,7 +252,10 @@ export default class TheNavigationDrawer extends Vue {
     Methods
   ===================================================================================
   */
-
+    /**
+     * Sets drawer based on vuetify breakpoints
+     *
+     */
     setDrawer(): void {
         if (this.$vuetify.breakpoint.name === 'lg' || this.$vuetify.breakpoint.name === 'xl') {
             this.drawer = true
@@ -263,14 +266,28 @@ export default class TheNavigationDrawer extends Vue {
         }
     }
 
+    /**
+     * Fetches the current route path
+     * @returns {String} route name
+     */
+
     getCurrentPath(): string {
         return this.$route.name ? this.$route.name : ''
     }
-
+    /**
+     * Checks whether passed name matches current path
+     * @param name {String}
+     * @returns {Boolean}
+     */
     isCurrentLinkPath(name: string): boolean {
         return this.getCurrentPath() == name
     }
 
+    /**
+     * Checks if any links is the current path
+     * @param links any
+     * @returns {Boolean}
+     */
     checkLinkPath(links: any[] = []): boolean {
         for (const link of links) {
             if (this.isCurrentLinkPath(link.name)) {

@@ -52,7 +52,7 @@
                                             </div>
                                             <app-transform-hash
                                                 v-if="!name && !symbolString"
-                                                :hash="token.tokenInfo.contract"
+                                                :hash="token.tokenInfo.contract | toChecksum"
                                                 :link="`/address/${token.tokenInfo.contract}`"
                                             />
                                         </v-layout>
@@ -66,7 +66,7 @@
                                             </div>
                                             <app-transform-hash
                                                 v-if="!name && !symbolString"
-                                                :hash="token.tokenInfo.contract"
+                                                :hash="token.tokenInfo.contract | toChecksum"
                                                 :link="`/address/${token.tokenInfo.contract}`"
                                             />
                                         </v-layout>
@@ -149,7 +149,7 @@
                                 <p v-else class="info--text contract-string mr-1">{{ $tc('contract.name', 1) }}:</p>
                                 <app-transform-hash
                                     v-if="!name && !symbolString"
-                                    :hash="token.tokenInfo.contract"
+                                    :hash="token.tokenInfo.contract | toChecksum"
                                     :link="`/address/${token.tokenInfo.contract}`"
                                 />
                             </v-layout>
@@ -344,6 +344,10 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
       Methods
     ===================================================================================
     */
+    /**
+     * Gets token balance value
+     * @returns {BN}
+     */
     getValue(): BN {
         if (this.isErc20) {
             let n = new BN(this.token.balance)
@@ -354,7 +358,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
         }
         return new BN(this.token.balance)
     }
-
+    /**
+     * Emit showNft to parent
+     */
     showNft(): void {
         this.$emit('showNft', this.token.tokenInfo.contract, this.token.tokenInfo.name)
     }

@@ -56,8 +56,10 @@ export default class Blockies extends Vue {
     Methods
   ===================================================================================
   */
-
-    setBlockie() {
+    /**
+     * Creates and sets a blockie
+     */
+    setBlockie(): void {
         const data = createIcon({
             seed: this.address.toLowerCase(),
             size: 8,

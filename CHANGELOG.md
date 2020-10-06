@@ -1,3 +1,20 @@
+### Release v1.0.2
+
+### Bug
+
+- Fix state diff types [#873](https://github.com/EthVM/EthVM/pull/873)
+- Fix chart font bug [#869](https://github.com/EthVM/EthVM/pull/869)
+
+### Devop
+
+- Add version to footer [#872](https://github.com/EthVM/EthVM/pull/872)
+- Add sentry environment [#871](https://github.com/EthVM/EthVM/pull/871)
+- Convert all address instance to checksum [#870](https://github.com/EthVM/EthVM/pull/870)
+- Fixed spelling mistakes in readme [#866](https://github.com/EthVM/EthVM/pull/866)
+- Removedd hardocded strings from UI token details page [#875](https://github.com/EthVM/EthVM/pull/875)
+
+=======================================================================================================================
+
 ### Release v1.0.1
 
 ### Feature
