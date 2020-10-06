@@ -21,7 +21,9 @@ export default class AppCopyToClip extends Vue {
     Methods
   ===================================================================================
   */
-
+    /**
+     * Copies string to clipboard
+     */
     copy(): void {
         const status = clipboardCopy(this.valueToCopy)
     }

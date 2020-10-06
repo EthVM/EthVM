@@ -9,7 +9,7 @@
             <div :class="isPending ? 'table-row-mobile' : txStatusClass">
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-3 pl-3">
                     <v-flex xs6 pa-1>
-                        <router-link v-if="!isPending" :to="`/block/number${transferObj.block}`" class="black--text font-weight-medium pb-1"
+                        <router-link v-if="!isPending" :to="`/block/number/${transferObj.block}`" class="black--text font-weight-medium pb-1"
                             >{{ $t('block.number') }} {{ transaction.block }}</router-link
                         >
                         <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>

@@ -209,7 +209,10 @@ export default class AddressPendingTx extends Vue {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Sets page number
+     * @param page {Number}
+     */
     setPage(page: number): void {
         if (page < this.index || this.hasMore) {
             this.index = page

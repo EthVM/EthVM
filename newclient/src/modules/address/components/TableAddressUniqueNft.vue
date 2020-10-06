@@ -99,6 +99,10 @@ export default class TableAddressUniqueNft extends Vue {
      Methods
     ===================================================================================
     */
+    /**
+     * Sets page number
+     * @param page {Number}
+     */
     setPage(page: number): void {
         this.index = page
     }

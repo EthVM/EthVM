@@ -158,13 +158,20 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
       Methods
     ===================================================================================
     */
+    /**
+     * Gets the previous balance
+     * @returns {FormattedNumber}
+     */
     getBalBefore(): FormattedNumber {
         if (!this.reward.stateDiff.to) {
             return { value: '0' }
         }
         return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.to.before))
     }
-
+    /**
+     * Gets the after balance
+     * @returns {FormattedNumber}
+     */
     getBalAfter(): FormattedNumber {
         if (!this.reward.stateDiff.to) {
             return { value: '0' }
