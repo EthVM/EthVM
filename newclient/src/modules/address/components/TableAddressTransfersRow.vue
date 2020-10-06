@@ -391,7 +391,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
             unit: this.transfer.tokenInfo.symbol
         }
     }
-    
+
     /**
      * Gets token ID
      * @returns {String}
