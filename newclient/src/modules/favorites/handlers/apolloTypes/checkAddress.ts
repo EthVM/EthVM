@@ -7,8 +7,13 @@
 // GraphQL query operation: checkAddress
 // ====================================================
 
+export interface checkAddress_checkAddress {
+  __typename: "FavAddress";
+  name: string;
+}
+
 export interface checkAddress {
-  checkAddress: boolean;
+  checkAddress: checkAddress_checkAddress | null;
 }
 
 export interface checkAddressVariables {

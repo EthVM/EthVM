@@ -4,19 +4,18 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: addFavAddress
+// GraphQL mutation operation: deleteFavAddress
 // ====================================================
 
-export interface addFavAddress_addFavAddress {
+export interface deleteFavAddress_deleteFavAddress {
   __typename: "FavAddress";
   name: string;
 }
 
-export interface addFavAddress {
-  addFavAddress: addFavAddress_addFavAddress;
+export interface deleteFavAddress {
+  deleteFavAddress: deleteFavAddress_deleteFavAddress | null;
 }
 
-export interface addFavAddressVariables {
+export interface deleteFavAddressVariables {
   address: string;
-  name?: string | null;
 }

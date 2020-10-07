@@ -46,9 +46,8 @@
                     -->
                     <v-flex xs12>
                         <v-layout row wrap align-center justify-start>
-                            <p class="break-hash font-mono pl-2 pr-2">{{ address.hash | toChecksum }}}</p>
+                            <p class="break-hash font-mono pl-2 pr-2">{{ address.hash | toChecksum }}</p>
                             <app-copy-to-clip :value-to-copy="address.hash | toChecksum" />
-
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -422,7 +421,7 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     updateTitle(name: string): void {
-        this.title = `${name}`
+        this.title = name === '' ? this.$i18n.tc('address.name', 1).toString() : `${name}`
     }
 }
 </script>

@@ -40,6 +40,38 @@ export const resolvers = {
                 return changeFavAddressArray(Actions.add, cache, newAdr)
             }
             return adr
+        },
+        /**
+         * Deletes address from the cache if address exhists, otherwise returns null.
+         * @param address: string, address hash
+         * @param cache: InMemoryCache, apollo cache object
+         * @return - returns cachedAdrsType data type or null if address does not exhist
+         */
+        deleteFavAddress: (root, { address }, { cache }) => {
+            const adr = hasAddress(address, cache)
+            if (adr === null) {
+                return null
+            }
+            return changeFavAddressArray(Actions.delete, cache, adr)
+        },
+        /**
+         * Edit address in the cache if address exhists, otherwise add item.
+         * @param address: string, address hash
+         * @param name: string, new address name if any
+         * @param cache: InMemoryCache, apollo cache object
+         * @return - returns cachedAdrsType data type
+         */
+        editFavAddress: (root, { address, name }, { cache }) => {
+            const adr = hasAddress(address, cache)
+            const newAdr: AddrType = {
+                __typename: TypeName.addr,
+                address: address,
+                name: name || ''
+            }
+            if (adr === null) {
+                return changeFavAddressArray(Actions.add, cache, newAdr)
+            }
+            return changeFavAddressArray(Actions.edit, cache, adr)
         }
     }
 }
@@ -86,7 +118,6 @@ function hasAddress(address: string, cache: InMemoryCache): AddrType | null {
  *    - delete: will search for an object with item.address and delete this object
  * @return - returns AddrType - item
  */
-
 function changeFavAddressArray(action: Actions, cache: InMemoryCache, item: AddrType): AddrType {
     const storeAdrs = store.get(DataArray.addr) || []
     let data = getCachedAddrs(cache)
@@ -94,16 +125,33 @@ function changeFavAddressArray(action: Actions, cache: InMemoryCache, item: Addr
     if (data === null) {
         /* Update Apollo Cache */
         data = {
-            favAddresses: action === Actions.delete ? [] : [item]
+            favAddresses: []
         }
         cache.writeData({
             data: data
         })
     }
-    /* Add New Item*/
+    /* Add New Item */
     if (action === Actions.add) {
         storeAdrs.push({ address: item.address, name: item.name })
         data.favAddresses.push(item)
+    }
+    /* Delete anItem */
+    if (action === Actions.delete) {
+        const indexStore = data.favAddresses.indexOf(item)
+        if (indexStore > -1) {
+            storeAdrs.splice(indexStore, 1)
+            data.favAddresses.splice(indexStore, 1)
+        }
+    }
+
+    /* Edit anItem */
+    if (action === Actions.delete) {
+        const indexStore = storeAdrs.indexOf(i => i.address === item.address)
+        if (indexStore > -1) {
+            storeAdrs.splice(indexStore, 1, item)
+            data.favAddresses.splice(indexStore, 1, item)
+        }
     }
 
     /* Update Store and Apollo Cache */

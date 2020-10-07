@@ -2,14 +2,23 @@
     <div>
         <fav-btn-add-to-fav :is-added="isAdded" :add-address="openFavDialog" :tooltip-text="tooltipText"></fav-btn-add-to-fav>
         <v-dialog v-model="open" max-width="500">
-            <fav-dialog :address="address" :add="add" :chips="addrChips" :dialog-method="addToFav" @closeFavDialog="closeFavDialog()" />
+            <fav-dialog v-if="!isAdded" :address="address" :add="true" :chips="addrChips" :dialog-method="addToFav" @closeFavDialog="closeFavDialog()" />
+            <fav-dialog
+                v-else
+                :address="address"
+                :addr-name="name"
+                :add="false"
+                :chips="addrChips"
+                :dialog-method="removeFromFav"
+                @closeFavDialog="closeFavDialog()"
+            />
         </v-dialog>
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { checkAddress, addFavAddress } from './addtoFav.graphql'
+import { checkAddress, addFavAddress, deleteFavAddress } from './addtoFav.graphql'
 import FavBtnAddToFav from '@app/modules/favorites/components/FavBtnAddToFav.vue'
 import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
@@ -30,10 +39,15 @@ import { EnumAdrChips } from '@app/core/components/props'
                 }
             },
             result({ data }) {
+                console.log(data)
                 if (data && data.checkAddress && data.checkAddress.name) {
                     if (data.checkAddress.name !== '') {
-                        this.$emit('addressHasName', data.checkAddress.name)
+                        this.name = data.checkAddress.name
+                        this.$emit('addressHasName', this.name)
                     }
+                } else {
+                    this.name = ''
+                    this.$emit('addressHasName', this.name)
                 }
             }
         }
@@ -55,7 +69,7 @@ export default class FavHandlerLike extends Vue {
     */
     checkAddress!: boolean
     open = false
-    add = true
+    name = ''
     /*
     ===================================================================================
       Methods
@@ -68,6 +82,17 @@ export default class FavHandlerLike extends Vue {
             variables: {
                 address: this.address,
                 name: name
+            }
+        })
+        this.$apollo.queries.checkAddress.refresh()
+        this.closeFavDialog()
+    }
+    removeFromFav(): void {
+        this.$apollo.mutate({
+            mutation: deleteFavAddress,
+            client: 'FavClient',
+            variables: {
+                address: this.address
             }
         })
         this.$apollo.queries.checkAddress.refresh()
