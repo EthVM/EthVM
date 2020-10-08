@@ -14,8 +14,9 @@
 - Convert all address instance to checksum [#870](https://github.com/EthVM/EthVM/pull/870)
 - Fixed spelling mistakes in readme [#866](https://github.com/EthVM/EthVM/pull/866)
 - Removedd hardocded strings from UI token details page [#875](https://github.com/EthVM/EthVM/pull/875)
+- replaced router-link-tag with a-tag [#880](https://github.com/EthVM/EthVM/pull/880)
 
-=======================================================================================================================
+===================================================================================
 
 ### Release v1.0.1
 
