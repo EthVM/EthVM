@@ -7,6 +7,7 @@
 
 ### Devop
 
+- Fix public path [#878](https://github.com/EthVM/EthVM/pull/878)
 - Update ethvm builds action [#877](https://github.com/EthVM/EthVM/pull/877)
 - Add version to footer [#872](https://github.com/EthVM/EthVM/pull/872)
 - Add sentry environment [#871](https://github.com/EthVM/EthVM/pull/871)
