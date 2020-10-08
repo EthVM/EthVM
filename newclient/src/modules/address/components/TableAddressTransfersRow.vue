@@ -18,7 +18,7 @@
                     <v-flex xs2 sm1>
                         <v-layout row align-center justify-center>
                             <div class="token-image-mobile">
-                                <v-img :src="image" contain />
+                                <v-img :src="image" contain @error="imgLoadFail" />
                             </div>
                         </v-layout>
                     </v-flex>
@@ -92,7 +92,7 @@
                 <v-flex md3>
                     <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-2>
                         <div class="token-image">
-                            <v-img :src="image" contain />
+                            <v-img :src="image" contain @error="imgLoadFail" />
                         </div>
                         <router-link v-if="tokenTransfer.name !== '' || tokenTransfer.symbol" :to="`/token/${transfer.contract}`" class="black--text">
                             <p v-if="tokenTransfer.name">{{ tokenTransfer.name }}</p>
@@ -397,6 +397,13 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
      */
     getTokenID(): string {
         return new BN(this.transfer.token).toString()
+    }
+
+    /**
+     * Image loading failed catcher
+     */
+    imgLoadFail(): void {
+        this.imageExists = false
     }
 }
 </script>

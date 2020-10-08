@@ -249,15 +249,23 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
 
     /*
     ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+
+    imageExists = true
+
+    /*
+    ===================================================================================
       Computed Values
     ===================================================================================
     */
 
     get image(): string {
-        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image) {
+        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image && this.imageExists) {
             return this.tokenPriceInfo.image
         }
-        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url) {
+        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url && this.imageExists) {
             return this.nftMeta.image_url
         }
         return require('@/assets/icon-token.png')
@@ -363,6 +371,12 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
      */
     showNft(): void {
         this.$emit('showNft', this.token.tokenInfo.contract, this.token.tokenInfo.name)
+    }
+    /**
+     * Image loading failed catcher
+     */
+    imgLoadFail(): void {
+        this.imageExists = false
     }
 }
 </script>
