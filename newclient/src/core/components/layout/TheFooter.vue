@@ -80,7 +80,7 @@
                         <v-flex xs12>
                             <v-layout justify-start align-center fill-height pa-2>
                                 <p class="info--text text-xs-left caption pl-2">
-                                    {{ $t('footer.pricing') }} <router-link to="https://www.coingecko.com/">Coingecko.</router-link>
+                                    {{ $t('footer.pricing') }} <a href="https://www.coingecko.com/">Coingecko.</a>
                                 </p>
                             </v-layout>
                         </v-flex>

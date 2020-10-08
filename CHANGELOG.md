@@ -1,3 +1,7 @@
+### Devop
+
+- Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
+
 ### Release v1.0.2
 
 ### Bug
@@ -7,15 +11,16 @@
 
 ### Devop
 
-- Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
+- Fix public path [#878](https://github.com/EthVM/EthVM/pull/878)
 - Update ethvm builds action [#877](https://github.com/EthVM/EthVM/pull/877)
 - Add version to footer [#872](https://github.com/EthVM/EthVM/pull/872)
 - Add sentry environment [#871](https://github.com/EthVM/EthVM/pull/871)
 - Convert all address instance to checksum [#870](https://github.com/EthVM/EthVM/pull/870)
 - Fixed spelling mistakes in readme [#866](https://github.com/EthVM/EthVM/pull/866)
 - Removedd hardocded strings from UI token details page [#875](https://github.com/EthVM/EthVM/pull/875)
+- replaced router-link-tag with a-tag [#880](https://github.com/EthVM/EthVM/pull/880)
 
-=======================================================================================================================
+===================================================================================
 
 ### Release v1.0.1
 
@@ -27,7 +32,7 @@
 
 - Catch correct error [#860](https://github.com/EthVM/EthVM/pull/860)
 - Detect if address is contract [#957](https://github.com/EthVM/EthVM/pull/957)
-- Add pending tx table [#833] (https://github.com/EthVM/EthVM/pull/833)
+- Add pending tx table [#833](https://github.com/EthVM/EthVM/pull/833)
 - Fix BLOCKS pagination is not taking block 0 into account [#850](https://github.com/EthVM/EthVM/pull/850)
 - Only hide filter on initialLoad [#848](https://github.com/EthVM/EthVM/pull/848)
 - Fix Search All by address by adding isValidAddress check [#847](https://github.com/EthVM/EthVM/pull/847)
@@ -37,7 +42,7 @@
 - Fix animation for sum menu item change on address page [#854](https://github.com/EthVM/EthVM/pull/854)
 - Fix strings [#852](https://github.com/EthVM/EthVM/pull/852)
 - Fixes of incorrect rendering of the menu items when user slides between tab items and on switch between mobile/desktop layouts [#855](https://github.com/EthVM/EthVM/pull/855)
-- Block Number set to update only when the block number is higher [#835] (https://github.com/EthVM/EthVM/pull/835)
+- Block Number set to update only when the block number is higher [#835](https://github.com/EthVM/EthVM/pull/835)
 
 ### Devop
 
