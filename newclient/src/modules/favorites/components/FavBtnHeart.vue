@@ -1,7 +1,7 @@
 <template>
     <v-tooltip top color="white" content-class="tooltip-border">
         <template #activator="{on}">
-            <v-btn icon fab class="ma-1" @click.stop="addAddress()" v-on="on"> <v-icon :class="iconClass" large /></v-btn>
+            <v-btn icon fab class="ma-0" @click.stop="addAddress()" v-on="on"> <v-img :src="iconImage" height="48px" min-width="30px" contain /></v-btn>
         </template>
         <span class="black--text">{{ tooltipText }}</span>
     </v-tooltip>
@@ -11,7 +11,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
-export default class FavBtnAddToFav extends Vue {
+export default class FavBtnHeart extends Vue {
     /*
     ===================================================================================
       Props
@@ -26,8 +26,8 @@ export default class FavBtnAddToFav extends Vue {
       Computed
     ===================================================================================
     */
-    get iconClass(): string {
-        return this.isAdded ? 'fas fa-heart red--text' : 'far fa-heart black--text'
+    get iconImage(): string {
+        return this.isAdded ? require('@/assets/icon-heart.png') : require('@/assets/icon-heart-outline.png')
     }
 }
 </script>

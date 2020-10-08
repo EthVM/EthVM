@@ -1,6 +1,16 @@
 <template>
     <div>
-        <fav-btn-add-to-fav :is-added="isAdded" :add-address="openFavDialog" :tooltip-text="tooltipText"></fav-btn-add-to-fav>
+        <!--
+        =====================================================================================
+          Button
+        =====================================================================================
+        -->
+        <fav-btn-heart :is-added="isAdded" :add-address="openFavDialog" :tooltip-text="tooltipText" />
+        <!--
+        =====================================================================================
+          Dialog
+        =====================================================================================
+        -->
         <v-dialog v-model="open" max-width="500">
             <fav-dialog v-if="!isAdded" :address="address" :add="true" :chips="addrChips" :dialog-method="addToFav" @closeFavDialog="closeFavDialog()" />
             <fav-dialog
@@ -17,15 +27,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { checkAddress, addFavAddress, deleteFavAddress } from './addtoFav.graphql'
-import FavBtnAddToFav from '@app/modules/favorites/components/FavBtnAddToFav.vue'
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { checkAddress } from './checkAdr.graphql'
+import FavBtnHeart from '@app/modules/favorites/components/FavBtnHeart.vue'
 import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
+import { FavActions as FavActionsMixin } from '@app/modules/favorites/mixins/FavActions.mixin'
 
 @Component({
     components: {
-        FavBtnAddToFav,
+        FavBtnHeart,
         FavDialog
     },
     apollo: {
@@ -39,7 +50,6 @@ import { EnumAdrChips } from '@app/core/components/props'
                 }
             },
             result({ data }) {
-                console.log(data)
                 if (data && data.checkAddress && data.checkAddress.name) {
                     if (data.checkAddress.name !== '') {
                         this.name = data.checkAddress.name
@@ -53,7 +63,7 @@ import { EnumAdrChips } from '@app/core/components/props'
         }
     }
 })
-export default class FavHandlerLike extends Vue {
+export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     /*
     ===================================================================================
       Props
@@ -61,7 +71,6 @@ export default class FavHandlerLike extends Vue {
     */
     @Prop(String) address!: string
     @Prop(Array) addrChips!: EnumAdrChips[]
-
     /*
     ===================================================================================
       Data
@@ -76,26 +85,19 @@ export default class FavHandlerLike extends Vue {
     ===================================================================================
     */
     addToFav(name: string): void {
-        this.$apollo.mutate({
-            mutation: addFavAddress,
-            client: 'FavClient',
-            variables: {
-                address: this.address,
-                name: name
+        this.mixinAddToFav(name, this.address).then(res => {
+            if (res) {
+                this.$apollo.queries.checkAddress.refresh()
             }
         })
-        this.$apollo.queries.checkAddress.refresh()
         this.closeFavDialog()
     }
     removeFromFav(): void {
-        this.$apollo.mutate({
-            mutation: deleteFavAddress,
-            client: 'FavClient',
-            variables: {
-                address: this.address
+        this.mixinRemoveFromFav(this.address).then(res => {
+            if (res) {
+                this.$apollo.queries.checkAddress.refresh()
             }
         })
-        this.$apollo.queries.checkAddress.refresh()
         this.closeFavDialog()
     }
     /*

@@ -59,7 +59,7 @@
             -->
             <v-flex shrink>
                 <v-layout row align-center justify-end pa-2>
-                    <fav-handler-like :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
+                    <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
                     <address-qr :address="address.hash" :large="true" />
                 </v-layout>
             </v-flex>
@@ -115,7 +115,7 @@
                 <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="ma-1" />
             </v-layout>
             <v-layout row align-center justify-end pr-2 ma-0>
-                <fav-handler-like :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
+                <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
                 <address-qr :address="address.hash" :large="true" />
             </v-layout>
         </v-layout>
@@ -316,7 +316,7 @@
 import AddressQr from '@app/modules/address/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
-import FavHandlerLike from '@app/modules/favorites/handlers/FavHandlerLike.vue'
+import FavHandlerHeartActions from '@app/modules/favorites/handlers/FavHandlerHeartActions.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
@@ -332,7 +332,7 @@ import { EnumAdrChips } from '@app/core/components/props'
         AppAdrChip,
         AppCopyToClip,
         Blockies,
-        FavHandlerLike
+        FavHandlerHeartActions
     }
 })
 export default class AddressDetail extends Mixins(NumberFormatMixin) {

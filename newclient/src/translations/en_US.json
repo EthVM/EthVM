@@ -180,7 +180,8 @@
     "fav": {
         "tooltip": {
             "add": "Add to favorite addresses list",
-            "remove": "Remove from favorite addresses list"
+            "remove": "Remove from favorite addresses list",
+            "edit": "Edit favorite address name"
         },
         "dialog": {
             "title-add": "Add Address Name",

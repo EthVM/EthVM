@@ -1,8 +1,3 @@
-query checkAddress($address: String!) {
-    checkAddress(address: $address) @client {
-        name
-    }
-}
 mutation addFavAddress($address: String!, $name: String) {
     addFavAddress(address: $address, name: $name) @client {
         name
