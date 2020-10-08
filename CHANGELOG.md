@@ -1,3 +1,7 @@
+### Devop
+
+- Clean up packages, install depcheck, config husky with commitlint [#882](https://github.com/EthVM/EthVM/pull/882)
+
 ### Release v1.0.2
 
 ### Bug
