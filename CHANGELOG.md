@@ -1,3 +1,7 @@
+### Bug
+
+- Deep watch on chart data sets []()
+
 ### Release v1.0.2
 
 ### Bug
