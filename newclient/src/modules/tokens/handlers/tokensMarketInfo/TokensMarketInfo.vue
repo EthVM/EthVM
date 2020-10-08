@@ -8,7 +8,7 @@
             page-link=""
             class="pl-2"
         >
-            <template v-slot:pagination>
+            <template #pagination>
                 <app-paginate
                     v-if="showPagination"
                     :total="totalPages"

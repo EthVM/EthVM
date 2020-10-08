@@ -3,10 +3,10 @@
         <div v-if="!showUniqueNFT">
             <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
                 <!-- Notice new update-->
-                <template v-slot:update v-if="!loading">
+                <template v-if="!loading" #update>
                     <app-new-update :text="updateText" :update-count="newTokens" :hide-count="true" @reload="setPage(0, true)" />
                 </template>
-                <template v-slot:pagination v-if="showPagination && !loading">
+                <template v-if="showPagination && !loading" #pagination>
                     <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
                 </template>
             </app-table-title>

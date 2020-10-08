@@ -2,10 +2,10 @@
     <v-card color="white" flat class="pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="">
             <!-- Notice new update-->
-            <template v-slot:update v-if="!initialLoad">
+            <template v-if="!initialLoad" #update>
                 <app-new-update :text="updateText" :update-count="newTransfers" @reload="setPage(0, true)" />
             </template>
-            <template v-slot:pagination v-if="!isETH && showPagination && !initialLoad">
+            <template v-if="!isETH && showPagination && !initialLoad" #pagination>
                 <app-paginate-has-more
                     v-if="showPagination && !initialLoad"
                     :class="$vuetify.breakpoint.smAndDown ? 'pt-3' : ''"
