@@ -21,7 +21,7 @@
                             <v-flex xs2 pa-1>
                                 <v-layout row align-center justify-center pa-2>
                                     <div class="token-image-mobile">
-                                        <v-img :src="image" contain />
+                                        <v-img :src="image" contain @error="imgLoadFail" />
                                     </div>
                                 </v-layout>
                             </v-flex>
@@ -140,7 +140,7 @@
                         <v-flex md4>
                             <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-1>
                                 <div class="token-image">
-                                    <v-img :src="image" contain />
+                                    <v-img :src="image" contain @error="imgLoadFail" />
                                 </div>
                                 <div v-if="name || symbolString" class="black--text subtitle-2 font-weight-medium">
                                     <p v-if="name">{{ name }}</p>
