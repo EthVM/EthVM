@@ -21,6 +21,13 @@ import i18n from '@app/translations'
 import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
 import Vue from 'vue'
+import toChecksum from '@app/core/filters/toChecksum'
+
+router.onError(error => {
+    if (/loading chunk \d* failed./i.test(error.message)) {
+        window.location.reload()
+    }
+})
 
 /*
   ===================================================================================
@@ -144,6 +151,14 @@ Vue.use(Vuetify, {
 
 /*
   ===================================================================================
+    Vue: Filters
+  ===================================================================================
+*/
+
+Vue.filter('toChecksum', toChecksum)
+
+/*
+  ===================================================================================
     Vue: Application Kickstart
   ===================================================================================
 */
@@ -169,6 +184,11 @@ new Vue({
 const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
 
 Sentry.init({
+    environment: process.env.NODE_ENV,
     dsn: sentryToken,
-    integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })]
+    integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
+    beforeSend(event) {
+        return process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' ? event : null
+    },
+    release: configs.VERSION
 })

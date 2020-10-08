@@ -47,10 +47,11 @@
                     </v-layout>
                     <v-layout row justify-start align-center>
                         <v-btn
+                            :to="{ name: 'address', params: { addressRef: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D' } }"
                             outline
                             color="secondary"
                             class="text-lowercase font-weight-regular donation-btn"
-                            href="https://www.ethvm.com/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+                            active-class=""
                         >
                             <v-icon class="secondary--text fab fa-ethereum pr-2 asset-icon" /> <span class="text-uppercase pr-1">{{ $t('common.eth') }}</span> -
                             {{ $t('footer.ens') }}
@@ -90,7 +91,7 @@
                         <v-flex xs12>
                             <v-layout justify-start align-center fill-height pa-2>
                                 <p class="info--text text-xs-left caption pl-2">
-                                    {{ $t('footer.pricing') }} <router-link to="https://www.coingecko.com/">Coingecko.</router-link>
+                                    {{ $t('footer.pricing') }} <a href="https://www.coingecko.com/">Coingecko.</a>
                                 </p>
                             </v-layout>
                         </v-flex>
@@ -119,7 +120,7 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-layout align-end justify-end fill-height pr-3>
-                            <p class="info--text text-xs-right caption">v1.0.1</p>
+                            <p class="info--text text-xs-right caption">v{{ version }}</p>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -141,6 +142,7 @@
 <script lang="ts">
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppLanguage from '@app/core/components/ui/AppLanguage.vue'
+import configs from '@app/configs'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
@@ -158,6 +160,7 @@ export default class TheFooter extends Vue {
 
     btcAddr: string = '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9'
     ethAddr: string = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+    version: string = configs.VERSION || ''
 
     /*
   ===================================================================================

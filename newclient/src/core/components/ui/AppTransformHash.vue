@@ -36,7 +36,6 @@ export default class AppTransformHash extends Vue {
     Computed
   ===================================================================================
   */
-
     get last(): string {
         const n = this.hash.length
         return this.hash.slice(n - 4, n)

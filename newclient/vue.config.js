@@ -2,9 +2,27 @@ const path = require('path')
 const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const version = require('./package.json').version
+const vars = {
+    VERSION: version,
+    ROUTER_MODE: process.env.ROUTER_MODE || 'history'
+}
+
+const sourceMapsConfig = {
+    filename: 'sourcemaps/[file].map'
+}
+sourceMapsConfig.exclude = /vendors.*.*/
 
 const webpackCommon = {
-    plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
+    devtool: false,
+    plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new webpack.EnvironmentPlugin(vars)],
+    // module: {
+    //     loaders: [
+    //         {
+    //             loader: 'json'
+    //         }
+    //     ]
+    // },
     resolve: {
         extensions: ['.ts', '.vue', '.json'],
         alias: {
@@ -19,7 +37,7 @@ const webpackCommon = {
 const webpackDevelopment = {}
 
 const webpackProduction = {
-    plugins: [],
+    plugins: [new webpack.SourceMapDevToolPlugin(sourceMapsConfig)],
     optimization: {
         namedModules: true,
         moduleIds: 'size',
@@ -37,6 +55,7 @@ const webpackProduction = {
 }
 
 module.exports = {
+    publicPath: process.env.ROUTER_MODE === 'hash' ? './' : '/',
     chainWebpack: config => {
         config.plugin('html').tap(args => {
             args[0].hash = true
@@ -59,7 +78,6 @@ module.exports = {
             .end()
     },
     configureWebpack: process.env.NODE_ENV === 'production' ? merge(webpackCommon, webpackProduction) : webpackCommon,
-    productionSourceMap: false,
     devServer: {
         https: true,
         host: 'localhost',

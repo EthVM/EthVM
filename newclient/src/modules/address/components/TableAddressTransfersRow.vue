@@ -35,7 +35,7 @@
                                 </router-link>
                                 <v-layout v-else row align-center justift-start pa-1>
                                     <p class="info--text contract-string caption mr-1">{{ $tc('contract.name', 1) }}:</p>
-                                    <app-transform-hash :hash="transfer.contract" :link="`/address/${transfer.contract}`" />
+                                    <app-transform-hash :hash="transfer.contract | toChecksum" :link="`/address/${transfer.contract}`" />
                                 </v-layout>
                             </v-flex>
                             <v-flex xs12>
@@ -66,7 +66,7 @@
                                 </v-card>
                             </v-flex>
                             <v-flex xs7 sm9 pl-1>
-                                <app-transform-hash :hash="typeAddr" :link="`/address/${typeAddr}`" :italic="true" />
+                                <app-transform-hash :hash="typeAddr | toChecksum" :link="`/address/${typeAddr}`" :italic="true" />
                             </v-flex>
                         </v-layout>
                     </v-flex>
@@ -98,7 +98,7 @@
                             <p v-if="tokenTransfer.name">{{ tokenTransfer.name }}</p>
                             <p v-else class="text-uppercase caption">{{ tokenTransfer.symbol }}</p>
                         </router-link>
-                        <app-transform-hash v-else :hash="transfer.contract" :link="`/address/${transfer.contract}`" />
+                        <app-transform-hash v-else :hash="transfer.contract | toChecksum" :link="`/address/${transfer.contract}`" />
                     </v-layout>
                 </v-flex>
                 <!--
@@ -126,7 +126,7 @@
                                     </v-card>
                                 </v-flex>
                                 <v-flex sm7 lg8 pl-0>
-                                    <app-transform-hash :hash="typeAddr" :link="`/address/${typeAddr}`" :italic="true" />
+                                    <app-transform-hash :hash="typeAddr | toChecksum" :link="`/address/${typeAddr}`" :italic="true" />
                                 </v-flex>
                             </v-layout>
                         </v-flex>
@@ -219,7 +219,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    imageExhists = true
+    imageExists = true
 
     /*
     ===================================================================================
@@ -267,7 +267,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         if (this.isErc20) {
             return this.tokenTransfer.image || require('@/assets/icon-token.png')
         }
-        if (this.imageExhists && this.transfer) {
+        if (this.imageExists && this.transfer) {
             return `${configs.OPENSEA}/getImage?contract=${this.transfer.contract}&tokenId=${this.getTokenID().toString()}`
         }
         return require('@/assets/icon-token.png')
@@ -384,9 +384,10 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
      * @param value {BN}
      * @returns {Object}
      */
-    getStateVal(val: BN): object {
+    getStateVal(val: BN | string): object {
+        const _val = new BN(val)
         return {
-            value: this.formatFloatingPointValue(val).value,
+            value: this.formatFloatingPointValue(_val).value,
             unit: this.transfer.tokenInfo.symbol
         }
     }

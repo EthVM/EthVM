@@ -52,7 +52,7 @@
                                             </div>
                                             <app-transform-hash
                                                 v-if="!name && !symbolString"
-                                                :hash="token.tokenInfo.contract"
+                                                :hash="token.tokenInfo.contract | toChecksum"
                                                 :link="`/address/${token.tokenInfo.contract}`"
                                             />
                                         </v-layout>
@@ -66,7 +66,7 @@
                                             </div>
                                             <app-transform-hash
                                                 v-if="!name && !symbolString"
-                                                :hash="token.tokenInfo.contract"
+                                                :hash="token.tokenInfo.contract | toChecksum"
                                                 :link="`/address/${token.tokenInfo.contract}`"
                                             />
                                         </v-layout>
@@ -149,7 +149,7 @@
                                 <p v-else class="info--text contract-string mr-1">{{ $tc('contract.name', 1) }}:</p>
                                 <app-transform-hash
                                     v-if="!name && !symbolString"
-                                    :hash="token.tokenInfo.contract"
+                                    :hash="token.tokenInfo.contract | toChecksum"
                                     :link="`/address/${token.tokenInfo.contract}`"
                                 />
                             </v-layout>
