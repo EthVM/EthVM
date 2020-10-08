@@ -1,29 +1,10 @@
 const path = require('path')
 const webpack = require('webpack')
-const merge = require('webpack-merge')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const { merge } = require('webpack-merge')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
-const version = require('./package.json').version
-const vars = {
-    VERSION: version,
-    ROUTER_MODE: process.env.ROUTER_MODE || 'history'
-}
-
-const sourceMapsConfig = {
-    filename: 'sourcemaps/[file].map'
-}
-sourceMapsConfig.exclude = /vendors.*.*/
 
 const webpackCommon = {
-    devtool: false,
-    plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new webpack.EnvironmentPlugin(vars)],
-    // module: {
-    //     loaders: [
-    //         {
-    //             loader: 'json'
-    //         }
-    //     ]
-    // },
+    plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
     resolve: {
         extensions: ['.ts', '.vue', '.json'],
         alias: {
@@ -38,7 +19,7 @@ const webpackCommon = {
 const webpackDevelopment = {}
 
 const webpackProduction = {
-    plugins: [new webpack.SourceMapDevToolPlugin(sourceMapsConfig)],
+    plugins: [],
     optimization: {
         namedModules: true,
         moduleIds: 'size',
@@ -53,24 +34,9 @@ const webpackProduction = {
             }
         }
     }
-    // stats: {
-    //   warningsFilter: /mini-css-extract-plugin[^]*Conflicting order between:/
-    // }
 }
 
-// const publicUrl = process.env.VUE_APP_PUBLIC_URL
-
-// const devServer = {
-//     disableHostCheck: true,
-//     noInfo: true
-// }
-
-// if (publicUrl) {
-//     devServer.public = publicUrl // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
-// }
-
 module.exports = {
-    publicPath: process.env.ROUTER_MODE === 'hash' ? './' : '/',
     chainWebpack: config => {
         config.plugin('html').tap(args => {
             args[0].hash = true
@@ -93,6 +59,7 @@ module.exports = {
             .end()
     },
     configureWebpack: process.env.NODE_ENV === 'production' ? merge(webpackCommon, webpackProduction) : webpackCommon,
+    productionSourceMap: false,
     devServer: {
         https: true,
         host: 'localhost',
