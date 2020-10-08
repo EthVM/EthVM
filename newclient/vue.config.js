@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const merge = require('webpack-merge')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const { merge } = require('webpack-merge')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 const webpackCommon = {
@@ -20,7 +19,6 @@ const webpackCommon = {
 const webpackDevelopment = {}
 
 const webpackProduction = {
-    //  plugins: [new BundleAnalyzerPlugin()],
     plugins: [],
     optimization: {
         namedModules: true,
@@ -36,21 +34,7 @@ const webpackProduction = {
             }
         }
     }
-    // stats: {
-    //   warningsFilter: /mini-css-extract-plugin[^]*Conflicting order between:/
-    // }
 }
-
-// const publicUrl = process.env.VUE_APP_PUBLIC_URL
-
-// const devServer = {
-//     disableHostCheck: true,
-//     noInfo: true
-// }
-
-// if (publicUrl) {
-//     devServer.public = publicUrl // Workaround for sockjs-node defaulting to localhost see https://github.com/vuejs/vue-cli/issues/1472
-// }
 
 module.exports = {
     chainWebpack: config => {

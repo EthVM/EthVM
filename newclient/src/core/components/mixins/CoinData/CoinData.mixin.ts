@@ -60,7 +60,7 @@ export class CoinData extends Vue {
       Methods
     ===================================================================================
     */
-   /**
+    /**
      * Fetch EthereumTokens
      * @returns {Array} TokenMarketData or {Boolean}
      */
