@@ -24,13 +24,13 @@
             <v-flex d-block>
                 <v-layout wrap pa-1>
                     <v-flex xs12>
-                        <v-layout row align-center justify-start pr-2 pl-2 pb-2 pt-3>
+                        <v-layout row wrap align-center justify-start pr-2 pl-2 pb-2 pt-3>
                             <!--
                             =====================================================================================
                               TITLE
                             =====================================================================================
                             -->
-                            <v-card-title class="title font-weight-bold pl-0 pr-3 pb-0 pt-0">{{ title }}</v-card-title>
+                            <v-card-title class="title font-weight-bold pl-0 pr-3 pb-0 pt-0 break-hash">{{ title }}</v-card-title>
                             <!--
                             =====================================================================================
                               CHIPS
@@ -48,6 +48,7 @@
                         <v-layout row wrap align-center justify-start>
                             <p class="break-hash font-mono pl-2 pr-2">{{ address.hash | toChecksum }}</p>
                             <app-copy-to-clip :value-to-copy="address.hash | toChecksum" />
+                            <fav-handler-edit :address="address.hash" :addr-chips="addrChips" class="pr-2 pl-1" @nameChange="updateTitle" />
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -87,16 +88,19 @@
             </v-flex>
             <!--
             =====================================================================================
-              ADDRESS NAME / HASH
+              ADDRESS NAME / HASH / COPY / EDIT
             =====================================================================================
             -->
             <v-flex d-block>
                 <v-layout row wrap align-center justify-start>
                     <v-flex xs12>
-                        <v-card-title class="body-2 font-weight-bold pl-0 pr-3 pb-0 pt-0">{{ title }}</v-card-title>
+                        <v-layout row align-center justify-start pr-3>
+                            <fav-handler-edit :address="address.hash" :addr-chips="addrChips" class="pr-1" @nameChange="updateTitle" />
+                            <v-card-title class="body-2 font-weight-bold pa-0 break-hash">{{ title }}</v-card-title>
+                        </v-layout>
                     </v-flex>
                     <v-flex xs12>
-                        <v-layout row align-center justify-start pl-1 pr-3>
+                        <v-layout row align-center justify-start pr-3>
                             <app-copy-to-clip :value-to-copy="address.hash" />
                             <p class="break-hash font-mono pl-1">{{ address.hash }}</p>
                         </v-layout>
@@ -317,6 +321,7 @@ import AddressQr from '@app/modules/address/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
 import FavHandlerHeartActions from '@app/modules/favorites/handlers/FavHandlerHeartActions.vue'
+import FavHandlerEdit from '@app/modules/favorites/handlers/FavHandlerEdit.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
@@ -332,7 +337,8 @@ import { EnumAdrChips } from '@app/core/components/props'
         AppAdrChip,
         AppCopyToClip,
         Blockies,
-        FavHandlerHeartActions
+        FavHandlerHeartActions,
+        FavHandlerEdit
     }
 })
 export default class AddressDetail extends Mixins(NumberFormatMixin) {

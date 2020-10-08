@@ -98,6 +98,7 @@ export default class FavAddDialog extends Vue {
     @Prop(Array) chips!: EnumAdrChips[]
     @Prop(Function) dialogMethod!: void
     @Prop(String) addrName?: string
+    @Prop({ type: Boolean, default: false }) isEditMode!: boolean
 
     /*
     ===================================================================================
@@ -127,14 +128,20 @@ export default class FavAddDialog extends Vue {
     }
 
     get title(): string {
+        if (this.isEditMode) {
+            return this.$t('fav.dialog.title-edit').toString()
+        }
         return this.add ? this.$t('fav.dialog.title-add').toString() : this.$t('fav.dialog.title-delete').toString()
     }
 
     get rightBtnText(): string {
+        if (this.isEditMode) {
+            return this.$t('fav.btn.change').toString()
+        }
         return this.add ? this.$t('fav.btn.add').toString() : this.$t('fav.btn.delete').toString()
     }
     get leftBtnText(): string {
-        return this.add ? this.$t('common.skip').toString() : this.$t('common.cancel').toString()
+        return this.add && !this.isEditMode ? this.$t('common.skip').toString() : this.$t('common.cancel').toString()
     }
     get rightBtnCollor(): string {
         return this.add ? 'secondary' : 'error'

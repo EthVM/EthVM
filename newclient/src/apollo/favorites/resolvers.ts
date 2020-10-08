@@ -71,7 +71,7 @@ export const resolvers = {
             if (adr === null) {
                 return changeFavAddressArray(Actions.add, cache, newAdr)
             }
-            return changeFavAddressArray(Actions.edit, cache, adr)
+            return changeFavAddressArray(Actions.edit, cache, newAdr)
         }
     }
 }
@@ -136,20 +136,20 @@ function changeFavAddressArray(action: Actions, cache: InMemoryCache, item: Addr
         storeAdrs.push({ address: item.address, name: item.name })
         data.favAddresses.push(item)
     }
-    /* Delete anItem */
+    /* Delete an Item */
     if (action === Actions.delete) {
-        const indexStore = data.favAddresses.indexOf(item)
+        const indexStore = data.favAddresses.findIndex(i => i.address.toLowerCase() === item.address.toLowerCase())
         if (indexStore > -1) {
             storeAdrs.splice(indexStore, 1)
             data.favAddresses.splice(indexStore, 1)
         }
     }
 
-    /* Edit anItem */
-    if (action === Actions.delete) {
-        const indexStore = storeAdrs.indexOf(i => i.address === item.address)
+    /* Edit an Item */
+    if (action === Actions.edit) {
+        const indexStore = data.favAddresses.findIndex(i => i.address.toLowerCase() === item.address.toLowerCase())
         if (indexStore > -1) {
-            storeAdrs.splice(indexStore, 1, item)
+            storeAdrs.splice(indexStore, 1, { address: item.address, name: item.name })
             data.favAddresses.splice(indexStore, 1, item)
         }
     }
