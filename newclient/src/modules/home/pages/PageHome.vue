@@ -96,7 +96,11 @@ export default class PageHome extends Mixins(NewBlockSubscription) {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets error messages if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageBlock}
+     */
     setError(hasError: boolean, message: ErrorMessageBlock): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {

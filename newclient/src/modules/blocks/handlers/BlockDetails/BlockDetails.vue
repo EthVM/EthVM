@@ -299,6 +299,9 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
      Methods
     ===================================================================================
     */
+    /**
+     * Method to start subscription
+     */
     startSubscription(): void {
         this.subscribed = true
         const observer = this.$apollo.subscribe({
@@ -317,10 +320,17 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
         })
     }
 
+    /**
+     * Emits error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorDetails', this.hasError, ErrorMessageBlock.details)
     }
+    /**
+     * Emits setBlockNumber to parent
+     */
     emitBlockNumber(): void {
         this.$emit('setBlockNumber', this.block.summary.number.toString())
     }

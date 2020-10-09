@@ -91,7 +91,11 @@ export default class PageTokens extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets error if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageToken}
+     */
     setError(hasError: boolean, message: ErrorMessageToken): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {

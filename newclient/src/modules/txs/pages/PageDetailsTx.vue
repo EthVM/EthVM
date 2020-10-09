@@ -101,6 +101,11 @@ export default class PageDetailsTxs extends Vue {
             }
         ]
     }
+    /**
+     * Sets error if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageToken}
+     */
     setError(hasError: boolean, message: ErrorMessageTx): void {
         if (hasError) {
             if (message === ErrorMessageTx.notFound) {

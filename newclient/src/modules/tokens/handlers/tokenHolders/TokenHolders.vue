@@ -111,11 +111,19 @@ export default class TokenHolders extends Vue {
       Methods
     ===================================================================================
     */
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorDetails', this.hasError, ErrorMessageToken.tokenOwner)
     }
-
+    /**
+     * Gets ERC20 holders via apollo
+     * @param page {Number}
+     * @returns {Any}
+     */
     getERC20Holders(page: number) {
         const queryName = 'getERC20TokenOwners'
 
@@ -139,7 +147,11 @@ export default class TokenHolders extends Vue {
             }
         })
     }
-
+    /**
+     * Gets ERC721 holders via apollo
+     * @param page {Number}
+     * @returns {Any}
+     */
     getERC721Holders(page: number) {
         const queryName = 'getERC721TokenOwners'
 
@@ -163,7 +175,11 @@ export default class TokenHolders extends Vue {
             }
         })
     }
-
+    /**
+     * Sets page number and reset value and emit
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0

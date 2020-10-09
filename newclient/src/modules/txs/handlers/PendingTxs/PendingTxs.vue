@@ -122,7 +122,10 @@ export default class PendingTxs extends Vue {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Marks pending tx as mined
+     * @param _hash {String}
+     */
     markMined(hash: string): void {
         let index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
         if (this.pendingTxs[index]) {
@@ -138,7 +141,10 @@ export default class PendingTxs extends Vue {
             }
         }, 10000)
     }
-
+    /**
+     * Create apollo subscription
+     * @param _hash {String}
+     */
     createSubscription(_hash: string): void {
         if (_hash) {
             const observer = this.$apollo.subscribe({
@@ -160,13 +166,19 @@ export default class PendingTxs extends Vue {
             console.log('not defined', _hash)
         }
     }
-
+    /**
+     * Sets page number
+     * @param page {Number}
+     */
     setPage(page: number): void {
         if (page < this.index || this.hasMore) {
             this.index = page
         }
     }
-
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorDetails', this.hasError, ErrorMessagePendingTx.details)
