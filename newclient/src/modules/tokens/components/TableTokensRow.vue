@@ -216,12 +216,12 @@ export default class TokenTableRow extends Mixins(NumberFormatMixin) {
         return this.formatUsdValue(new BN(price))
     }
     get percentageChange(): FormattedNumber {
-        const change = this.token.price_change_24h || 0
+        const change = this.token.price_change_percentage_24h || 0
         return this.formatPercentageValue(new BN(change))
     }
 
     get priceChangeSymbol(): string {
-        const change = this.token.price_change_24h || 0
+        const change = this.token.price_change_percentage_24h || 0
         if (change > 0) {
             return '+'
         }
@@ -231,7 +231,7 @@ export default class TokenTableRow extends Mixins(NumberFormatMixin) {
         return ''
     }
     get priceChangeClass(): string {
-        const change = this.token.price_change_24h || 0
+        const change = this.token.price_change_percentage_24h || 0
 
         if (change > 0) {
             return 'txSuccess--text pl-3'

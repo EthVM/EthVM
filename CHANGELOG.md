@@ -1,3 +1,6 @@
+### Bug
+- Change 24 price change to 24 price change percentage []
+
 ### Release v1.0.2
 
 ### Bug

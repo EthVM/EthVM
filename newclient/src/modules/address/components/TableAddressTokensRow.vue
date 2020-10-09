@@ -292,9 +292,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get change(): number {
-        if (!this.tokenPriceInfo || !this.tokenPriceInfo.price_change_24h || this.tokenPriceInfo.price_change_24h === 0) {
+        if (!this.tokenPriceInfo || !this.tokenPriceInfo.price_change_percentage_24h || this.tokenPriceInfo.price_change_percentage_24h === 0) {
             return 0
-        } else if (this.tokenPriceInfo.price_change_24h > 0) {
+        } else if (this.tokenPriceInfo.price_change_percentage_24h > 0) {
             return 1
         }
         return -1
@@ -310,7 +310,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get priceChangeFormatted(): FormattedNumber | null {
-        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_24h ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_24h)) : null
+        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_percentage_24h ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_percentage_24h)) : null
     }
 
     get name(): string | undefined {
