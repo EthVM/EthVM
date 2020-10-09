@@ -1,5 +1,5 @@
 ### Bug
-- Change 24 price change to 24 price change percentage []
+- Change 24 price change to 24 price change percentage [#887](https://github.com/EthVM/EthVM/pull/887)
 
 ### Release v1.0.2
 
