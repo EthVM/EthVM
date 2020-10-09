@@ -195,7 +195,8 @@
             "add": "Add",
             "delete": "Delete",
             "change": "Change Name"
-        }
+        },
+        "title": "Favorite Addresses"
     },
 
     "message": {
