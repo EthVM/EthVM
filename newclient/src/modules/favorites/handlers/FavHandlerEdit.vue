@@ -12,7 +12,16 @@
         =====================================================================================
         -->
         <v-dialog v-model="open" max-width="500">
-            <fav-dialog :address="address" :add="true" :is-edit-mode="true" :chips="addrChips" :dialog-method="editName" @closeEditDialog="closeEditDialog()" />
+            <fav-dialog
+                v-if="open"
+                :address="address"
+                :add="true"
+                :is-edit-mode="true"
+                :addr-name="name"
+                :chips="addrChips"
+                :dialog-method="editName"
+                @closeFavDialog="closeEditDialog()"
+            />
         </v-dialog>
     </div>
 </template>

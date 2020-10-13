@@ -32,7 +32,6 @@
                         <app-adr-chip :chip="chip" />
                     </v-flex>
                 </v-layout>
-                <p v-if="!add && addrName && addrName !== ''" class="font-weight-bold">{{ addrName }}</p>
                 <p class="pt-2">{{ address }}</p>
             </v-flex>
         </v-layout>
@@ -41,10 +40,13 @@
           INPUT - NAME
         =====================================================================================
         -->
+        <p v-if="isEditMode && addrName && addrName !== ''" class="info--text pl-4 pr-3 pt-2 pb-2 center--text">
+            {{ $t('fav.dialog.current-name') }}: <span class="black--text"> {{ addrName }}</span>
+        </p>
 
-        <v-layout v-if="add" fill-height align-center justify-center pt-2 pb-2 pl-4 pr-4>
+        <v-layout v-if="add" fill-height align-center justify-center row wrap pt-2 pb-2 pl-4 pr-4>
             <v-flex xs12>
-                <v-text-field v-model="name" :rules="nameRulles" outline clearable counter maxlength="20" label="Enter Name" class="name-input-container">
+                <v-text-field v-model="name" :rules="nameRulles" :label="inputLabel" outline clearable counter maxlength="20" class="name-input-container">
                 </v-text-field>
             </v-flex>
         </v-layout>
@@ -68,7 +70,7 @@
         =====================================================================================
         -->
         <v-layout fill-height align-center justify-end pb-4 pl-4 pr-4>
-            <v-btn flat color="black" class="text-capitalize mr-3" @click="dialogMethod('')"> {{ leftBtnText }} </v-btn>
+            <v-btn flat color="black" class="text-capitalize mr-3" @click="isEditMode ? closeDialog() : dialogMethod('')"> {{ leftBtnText }} </v-btn>
             <v-btn :disabled="disableAdd" :color="rightBtnCollor" depressed class="text-capitalize ma-0" @click="dialogMethod(name)"> {{ rightBtnText }}</v-btn>
         </v-layout>
     </v-card>
@@ -106,7 +108,10 @@ export default class FavAddDialog extends Vue {
     ===================================================================================
     */
     name: string = ''
-    nameRulles = [name => (!!name && name !== '') || 'This field is required', name => (!!name && name.length <= 30) || 'Name must be less than 30 characters']
+    nameRulles = [
+        name => (!!name && name !== '') || this.$t('fav.dialog.input-required'),
+        name => (!!name && name.length <= 30) || this.$t('fav.dialog.input-length')
+    ]
 
     /*
     ===================================================================================
@@ -145,6 +150,10 @@ export default class FavAddDialog extends Vue {
     }
     get rightBtnCollor(): string {
         return this.add ? 'secondary' : 'error'
+    }
+
+    get inputLabel(): string {
+        return this.isEditMode ? this.$t('fav.dialog.label-edit').toString() : this.$t('fav.dialog.label-add').toString()
     }
 
     /*
