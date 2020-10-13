@@ -1,3 +1,6 @@
+### Bug
+- Fix mobile loading state padding for address header page [#891](https://github.com/EthVM/EthVM/pull/891)
+
 ### Release v1.0.2
 
 ### Bug
