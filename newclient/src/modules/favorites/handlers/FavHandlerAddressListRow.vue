@@ -11,7 +11,6 @@ import { EnumAdrChips } from '@app/core/components/props'
 import { getEthBalance, getContractMeta } from '@app/modules/address/handlers/AddressOverview/addressDetails.graphql'
 import { getEthBalance_getEthBalance as BalanceType } from '@app/modules/address/handlers/AddressOverview/apolloTypes/getEthBalance'
 import { getContractMeta_getContractMeta as ContractMeta } from '@app/modules/address/handlers/AddressOverview/apolloTypes/getContractMeta'
-
 import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsBlock'
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsUncle'
 import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from '@app/modules/address/handlers/AddressRewards/rewards.graphql'
