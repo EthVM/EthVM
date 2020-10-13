@@ -4,20 +4,19 @@
       TABLE HEADER
     =====================================================================================
     -->
-    <v-layout align-center justify-start row fill-height>
+    <v-layout align-center justify-start row fill-height pr-4 pl-4>
         <v-flex md5>
-            <h5 class="pl-3">{{ $tc('tx.hash', 1) }}</h5>
+            <h5 class="pl-4 ml-2">{{ $tc('address.name', 1) }}</h5>
         </v-flex>
-        <v-flex md3 lg2>
-            <h5>{{ $t('common.amount') }}</h5>
+        <v-flex md3>
+            <h5>Name</h5>
         </v-flex>
-        <v-flex sm2 hidden-md-and-down>
-            <h5 class="hidden-md-and-down">{{ feeString }}</h5>
+        <v-flex md2>
+            <h5>{{ $t('common.eth-balance') }}</h5>
         </v-flex>
-        <v-flex md3 lg2>
-            <h5>{{ $t('common.age') }}</h5>
+        <v-flex md2>
+            <h5>{{ $t('usd.value') }}</h5>
         </v-flex>
-        <v-spacer />
     </v-layout>
 </template>
 
