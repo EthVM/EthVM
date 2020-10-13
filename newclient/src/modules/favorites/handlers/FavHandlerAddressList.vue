@@ -10,14 +10,14 @@
         <v-layout align-center justify-start row pl-4 pr-3 pb-2>
             <p v-if="!isLoading">Total: {{ totalAddr }}</p>
             <v-spacer />
-            <app-paginate :total="2" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+            <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
         <table-txs :max-items="maxItems" :index="index" :is-loading="isLoading || hasError" :txs-data="adrList" :is-scroll-view="false">
             <template #header>
                 <fav-addr-table-header />
             </template>
             <template #rows>
-                <v-card v-for="(adr, index) in adrList" :key="index" class="transparent" flat>
+                <v-card v-for="adr in adrList" :key="adr.hash" class="transparent" flat>
                     <fav-addr-table-row-handler :ether-price="ethPrice" :hash="adr.address" :name="adr.name" />
                 </v-card>
             </template>
@@ -56,10 +56,7 @@ import BN from 'bignumber.js'
             query: favAddressCache,
             client: 'FavClient',
             fetchPolicy: 'cache-and-network',
-            update: data => data.favAddresses,
-            result({ data }) {
-                this.totalPages = Math.ceil(new BN(this.favAddresses.length).div(this.maxItems).toNumber())
-            }
+            update: data => data.favAddresses
         }
     }
 })
@@ -69,7 +66,6 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     favAddresses!: favAddressesType[]
     hasError = false
     maxItems = 10
-    totalPages = 0
     /*
   ===================================================================================
     Computed
@@ -93,10 +89,15 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
         if (!this.isLoading || this.hasFavAdr) {
             const start = this.index * this.maxItems
             const end = start + this.maxItems > this.favAddresses.length ? this.favAddresses.length : start + this.maxItems
-            console.log(this.favAddresses)
             return this.favAddresses.slice(start, end)
         }
         return []
+    }
+    get totalPages(): number {
+        if (this.favAddresses && this.favAddresses.length) {
+            return Math.ceil(new BN(this.favAddresses.length).div(this.maxItems).toNumber())
+        }
+        return 0
     }
 
     /*
@@ -114,7 +115,6 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.index = 0
-            this.totalPages = 0
         } else {
             this.index = page
         }

@@ -13,7 +13,7 @@
             -->
             <v-flex hidden-sm-and-down>
                 <v-card flat white>
-                    <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pa-2">
+                    <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pr-2 pl-2 row-desktop">
                         <!--
                         =====================================================================================
                           ADDRESS BLOCKIE/HASH/CHIPS/COPY
@@ -80,7 +80,7 @@
                           MD: 24/12 (12)
                         =====================================================================================
                         -->
-                        <v-flex md12>
+                        <v-flex md12 pt-0>
                             <v-layout grid-list-xs row wrap align-center justify-start fill-height ml-5>
                                 <app-adr-chip v-for="(chip, index) in chips" :chip="chip" :key="index" class="mr-2" />
                             </v-layout>
@@ -148,24 +148,7 @@ export default class FavAddrTableRow extends Mixins(NumberFormatMixin) {
 </script>
 
 <style scoped lang="css">
-.token-mobile {
-    border: 1px solid #b4bfd2;
-    padding: 10px 0px 10px 0px;
-}
-
-.v-btn--floating.v-btn--small {
-    height: 30px;
-    width: 30px;
-    margin-right: 0px;
-    margin-left: 0px;
-}
-
-.token-btn-icon {
-    height: auto;
-    width: auto;
-}
-
-.cap-text {
-    font-size: 9px;
+.row-desktop {
+    min-height: 60px;
 }
 </style>
