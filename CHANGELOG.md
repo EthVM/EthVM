@@ -1,3 +1,6 @@
+### Devop
+- Change token sort arrow ui [#890](https://github.com/EthVM/EthVM/pull/890)
+
 ### Release v1.0.2
 
 ### Bug
