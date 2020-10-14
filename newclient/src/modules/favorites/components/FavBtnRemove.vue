@@ -5,7 +5,7 @@
                 <v-icon class="fas fa-trash-alt pr-2 icon-small" />Remove</v-btn
             >
         </template>
-        <span class="black--text">{{ $t('fav.tooltip.add') }}</span>
+        <span class="black--text">{{ $t('fav.tooltip.remove') }}</span>
     </v-tooltip>
 </template>
 

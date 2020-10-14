@@ -1,14 +1,42 @@
 <template>
     <v-card color="white" flat class="pb-2">
-        <v-layout align-center justify-center row pl-3 pr-3 mt-1>
+        <!--
+        =====================================================================================
+          Desktop (sm-and-up): TITLE / ADD button / REMOVE button
+          Mobile (xs-only): TITLE
+        =====================================================================================
+        -->
+        <v-layout align-center justify-start row wrap pl-3 pr-3 mt-1>
             <app-table-title :title="title" :has-pagination="false" :page-type="pageType" page-link="" class="pl-2" />
-            <fav-btn-add :add-address="addItem" />
-            <v-spacer />
-            <fav-btn-remove :remove-address="removeItem" />
+            <v-flex v-if="!isLoading" shrink hidden-xs-only>
+                <p class="text-xs-center mr-3">{{ $t('contract.total') }}: {{ totalAddr }}</p>
+            </v-flex>
+            <v-flex shrink pl-2 hidden-xs-only>
+                <fav-btn-add :add-address="addItem" />
+            </v-flex>
+            <v-spacer hidden-xs-only />
+            <v-flex shrink pl-2 hidden-xs-only>
+                <fav-btn-remove :remove-address="removeItem" />
+            </v-flex>
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
+        <!--
+        =====================================================================================
+          Mobile (xs-only): ADD button / TOTAL / REMOVE button
+        =====================================================================================
+        -->
+        <v-layout hidden-sm-and-up justify-space-between align-center pl-2 pr-2>
+            <v-flex shrink>
+                <fav-btn-add :add-address="addItem" />
+            </v-flex>
+            <v-flex grow>
+                <p v-if="!isLoading" class="text-xs-center">{{ $t('contract.total') }}: {{ totalAddr }}</p>
+            </v-flex>
+            <v-flex shrink>
+                <fav-btn-remove :remove-address="removeItem" />
+            </v-flex>
+        </v-layout>
         <v-layout align-center justify-start row pl-4 pr-3 pb-2>
-            <p v-if="!isLoading">Total: {{ totalAddr }}</p>
             <v-spacer />
             <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
