@@ -201,7 +201,8 @@
             "delete": "Delete",
             "change": "Change Name"
         },
-        "title": "Favorite Addresses"
+        "title": "Favorite Addresses",
+        "name": "Name"
     },
 
     "message": {
