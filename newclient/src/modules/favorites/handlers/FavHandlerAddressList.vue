@@ -36,7 +36,8 @@
                 <fav-btn-remove :remove-address="removeItem" />
             </v-flex>
         </v-layout>
-        <v-layout align-center justify-start row pl-4 pr-3 pb-2>
+        <v-layout :column="$vuetify.breakpoint.xs || $vuetify.breakpoint.sm" align-center justify-start row pl-4 pr-3 pb-2>
+            <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
             <v-spacer />
             <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
         </v-layout>
@@ -63,6 +64,7 @@ import FavAddrTableHeader from '@app/modules/favorites/components/FavAddrTableHe
 import FavAddrTableRowHandler from '@app/modules/favorites/handlers/FavHandlerAddressListRow.vue'
 import FavBtnAdd from '@app/modules/favorites/components/FavBtnAdd.vue'
 import FavBtnRemove from '@app/modules/favorites/components/FavBtnRemove.vue'
+import FavSearch from '@app/modules/favorites/components/FavSearch.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { favAddressCache } from '@app/apollo/favorites/rootQuery.graphql'
@@ -77,6 +79,7 @@ import BN from 'bignumber.js'
         FavBtnRemove,
         FavAddrTableHeader,
         FavAddrTableRowHandler,
+        FavSearch,
         TableTxs
     },
     apollo: {
@@ -92,8 +95,11 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     pageType = 'fav_addresses'
     index = 0
     favAddresses!: favAddressesType[]
+    items!: favAddressesType[]
     hasError = false
     maxItems = 10
+    searchVal = ''
+
     /*
   ===================================================================================
     Computed
@@ -104,11 +110,11 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
         return this.$t('fav.title').toString()
     }
     get totalAddr(): number | null {
-        return this.favAddresses ? this.favAddresses.length : null
+        return this.favorites ? this.favorites.length : null
     }
 
     get isLoading(): boolean {
-        return this.favAddresses === undefined
+        return this.favorites === undefined
     }
     get hasFavAdr(): boolean {
         return this.totalPages > 0
@@ -116,16 +122,23 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     get adrList(): favAddressesType[] {
         if (!this.isLoading || this.hasFavAdr) {
             const start = this.index * this.maxItems
-            const end = start + this.maxItems > this.favAddresses.length ? this.favAddresses.length : start + this.maxItems
-            return this.favAddresses.slice(start, end)
+            const end = start + this.maxItems > this.favorites.length ? this.favorites.length : start + this.maxItems
+            return this.favorites.slice(start, end)
         }
         return []
     }
     get totalPages(): number {
-        if (this.favAddresses && this.favAddresses.length) {
-            return Math.ceil(new BN(this.favAddresses.length).div(this.maxItems).toNumber())
+        if (this.favorites && this.favorites.length) {
+            return Math.ceil(new BN(this.favorites.length).div(this.maxItems).toNumber())
         }
         return 0
+    }
+
+    get favorites(): favAddressesType[] {
+        this.items = this.searchVal
+            ? this.favAddresses.filter(item => item.name.toLowerCase().includes(this.searchVal) || item.address.toLowerCase().includes(this.searchVal))
+            : []
+        return this.items && this.searchVal ? this.items : this.favAddresses
     }
 
     /*
@@ -134,6 +147,9 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
   ===================================================================================
   */
 
+    onSearch(val): void {
+        this.searchVal = val ? val.toLowerCase() : null
+    }
     addItem(): void {
         console.log('adding item')
     }
