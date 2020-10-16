@@ -66,6 +66,7 @@ import FavBtnAdd from '@app/modules/favorites/components/FavBtnAdd.vue'
 import FavBtnRemove from '@app/modules/favorites/components/FavBtnRemove.vue'
 import FavSearch from '@app/modules/favorites/components/FavSearch.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import { FavActions as FavActionsMixin } from '@app/modules/favorites/mixins/FavActions.mixin'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { favAddressCache } from '@app/apollo/favorites/rootQuery.graphql'
 import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorites/apolloTypes/favAddressCache'
@@ -91,7 +92,12 @@ import BN from 'bignumber.js'
         }
     }
 })
-export default class FavHandlerAddressListRow extends Mixins(CoinData) {
+export default class FavHandlerAddressListRow extends Mixins(CoinData, FavActionsMixin) {
+    /*
+    ===================================================================================
+      Data:
+    ===================================================================================
+    */
     pageType = 'fav_addresses'
     index = 0
     favAddresses!: favAddressesType[]
@@ -150,8 +156,12 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     onSearch(val): void {
         this.searchVal = val ? val.toLowerCase() : null
     }
-    addItem(): void {
-        console.log('adding item')
+    addItem(item): void {
+        this.mixinAddToFav(item.name, item.address).then(res => {
+            if (res) {
+                this.$apollo.queries.favAddresses.refresh()
+            }
+        })
     }
     removeItem(): void {
         console.log('remove item')

@@ -10,7 +10,7 @@
             <v-btn flat icon color="secondary" @click="closeDialog()"> <v-icon class="fas fa-times" /> </v-btn>
         </v-layout>
         <v-divider class="lineGrey mb-1" />
-        <v-layout grid-list-xs align-center justify-start row fill-height pt-2 pb-2 pl-3>
+        <v-layout v-if="!isNew" grid-list-xs align-center justify-start row fill-height pt-2 pb-2 pl-3>
             <!--
             =====================================================================================
               BLOCKIE
@@ -36,6 +36,30 @@
             </v-flex>
         </v-layout>
         <!--
+            =====================================================================================
+             NEW ADDRESS INPUT
+            =====================================================================================
+            -->
+        <v-layout v-if="isNew" fill-height align-center justify-center row wrap pt-4 pb-2 pl-4 pr-4>
+            <v-flex xs12>
+                <v-text-field
+                    v-model="newAddress"
+                    :label="$t('fav.dialog.enter-address')"
+                    :rules="addressRules"
+                    outline
+                    clearable
+                    counter
+                    maxlength="42"
+                    class="name-input-container address-input"
+                >
+                    <template v-slot:prepend-inner>
+                        <div v-if="!isValidAddress" class="blockie-placeholder" />
+                        <blockies v-if="isValidAddress" :address="newAddress" width="36px" height="36px" />
+                    </template>
+                </v-text-field>
+            </v-flex>
+        </v-layout>
+        <!--
         =====================================================================================
           INPUT - NAME
         =====================================================================================
@@ -46,7 +70,10 @@
 
         <v-layout v-if="add" fill-height align-center justify-center row wrap pt-2 pb-2 pl-4 pr-4>
             <v-flex xs12>
-                <v-text-field v-model="name" :rules="nameRulles" :label="inputLabel" outline clearable counter maxlength="20" class="name-input-container">
+                <v-text-field v-model="name" :rules="nameRules" :label="inputLabel" outline clearable counter maxlength="20" class="name-input-container">
+                    <template v-slot:append>
+                        <span class="caption greyPlaceholder--text optional-text">{{ $t('fav.dialog.optional') }}</span>
+                    </template>
                 </v-text-field>
             </v-flex>
         </v-layout>
@@ -66,12 +93,26 @@
         </v-layout>
         <!--
         =====================================================================================
-         SKIP/ADD BUTONS
+         CANCEL/ADD BUTONS
         =====================================================================================
         -->
         <v-layout fill-height align-center justify-end pb-4 pl-4 pr-4>
-            <v-btn flat color="black" class="text-capitalize mr-3" @click="isEditMode ? closeDialog() : dialogMethod('')"> {{ leftBtnText }} </v-btn>
-            <v-btn :disabled="disableAdd" :color="rightBtnCollor" depressed class="text-capitalize ma-0" @click="dialogMethod(name)"> {{ rightBtnText }}</v-btn>
+            <v-btn v-if="isEditMode" flat color="black" class="text-capitalize mr-3" @click="closeDialog()">
+                {{ $t('common.cancel') }}
+            </v-btn>
+            <v-btn
+                :disabled="disableAdd"
+                :color="rightBtnCollor"
+                depressed
+                class="text-capitalize ma-0"
+                @click="
+                    dialogMethod(value)
+                    closeDialog()
+                    clear()
+                "
+            >
+                {{ rightBtnText }}</v-btn
+            >
         </v-layout>
     </v-card>
 </template>
@@ -82,6 +123,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { EnumAdrChips } from '@app/core/components/props'
+import { eth } from '@app/core/helper'
+
+type Rules = (data: string) => void
 
 @Component({
     components: {
@@ -95,9 +139,10 @@ export default class FavAddDialog extends Vue {
       Props:
     ===================================================================================
     */
-    @Prop({ type: String }) address!: string
+    @Prop({ type: String }) address?: string
     @Prop({ type: Boolean }) add!: boolean
-    @Prop(Array) chips!: EnumAdrChips[]
+    @Prop({ type: Boolean }) isNew?: boolean
+    @Prop(Array) chips?: EnumAdrChips[]
     @Prop(Function) dialogMethod!: void
     @Prop(String) addrName?: string
     @Prop({ type: Boolean, default: false }) isEditMode!: boolean
@@ -108,18 +153,32 @@ export default class FavAddDialog extends Vue {
     ===================================================================================
     */
     name: string = ''
-    nameRulles = [
-        name => (!!name && name !== '') || this.$t('fav.dialog.input-required'),
-        name => (!!name && name.length <= 30) || this.$t('fav.dialog.input-length')
-    ]
+    newAddress: string = ''
 
     /*
     ===================================================================================
       Computed:
     ===================================================================================
     */
+    get value(): object | string {
+        if (this.isNew) {
+            return { name: this.name, address: this.newAddress }
+        }
+        return this.name
+    }
+    get nameRules(): Rules[] {
+        const rules = [name => (!!name && name.length <= 20) || this.$t('fav.dialog.input-length')]
+        return rules
+    }
+    get addressRules(): Rules[] {
+        const rules = [
+            newAddress => (!!newAddress && newAddress !== '') || this.$t('fav.dialog.input-required'),
+            newAddress => eth.isValidAddress(newAddress) || this.$t('fav.dialog.invalid-address')
+        ]
+        return rules
+    }
     get hasChips(): boolean {
-        if (!this.add && this.addrName && this.addrName !== '') {
+        if ((!this.add && this.addrName && this.addrName !== '') || !this.chips) {
             return false
         }
         return this.chips.length > 0
@@ -129,10 +188,13 @@ export default class FavAddDialog extends Vue {
         if (!this.add) {
             return false
         }
-        return !this.name || this.name === ''
+        return !this.isValidAddress
     }
 
     get title(): string {
+        if (this.isNew) {
+            return this.$t('fav.dialog.add-new').toString()
+        }
         if (this.isEditMode) {
             return this.$t('fav.dialog.title-edit').toString()
         }
@@ -145,15 +207,16 @@ export default class FavAddDialog extends Vue {
         }
         return this.add ? this.$t('fav.btn.add').toString() : this.$t('fav.btn.delete').toString()
     }
-    get leftBtnText(): string {
-        return this.add && !this.isEditMode ? this.$t('common.skip').toString() : this.$t('common.cancel').toString()
-    }
     get rightBtnCollor(): string {
         return this.add ? 'secondary' : 'error'
     }
 
     get inputLabel(): string {
         return this.isEditMode ? this.$t('fav.dialog.label-edit').toString() : this.$t('fav.dialog.label-add').toString()
+    }
+
+    get isValidAddress(): boolean {
+        return eth.isValidAddress(this.isNew ? this.newAddress : this.address)
     }
 
     /*
@@ -163,6 +226,10 @@ export default class FavAddDialog extends Vue {
     */
     closeDialog(): void {
         this.$emit('closeFavDialog')
+    }
+    clear(): void {
+        this.name = ''
+        this.newAddress = ''
     }
 }
 </script>
@@ -185,6 +252,23 @@ export default class FavAddDialog extends Vue {
             border: 1px solid #3d55a5;
             border-radius: 0px;
         }
+    }
+    .optional-text {
+        margin-top: 6px;
+    }
+    .address-input {
+        .v-input__prepend-inner {
+            margin-top: 11px;
+            margin-right: 5px;
+        }
+    }
+    .blockie-placeholder {
+        background-color: #d8d8d8;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-radius: 50%;
+        height: 36px;
+        width: 36px;
     }
 }
 </style>

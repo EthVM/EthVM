@@ -61,7 +61,7 @@ export default class Blockies extends Vue {
      */
     setBlockie(): void {
         const data = createIcon({
-            seed: this.address.toLowerCase(),
+            seed: this.address ? this.address.toLowerCase() : '',
             size: 8,
             scale: 4
         }).toDataURL()

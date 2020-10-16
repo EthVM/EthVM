@@ -1,18 +1,28 @@
 <template>
-    <v-tooltip top color="white" content-class="tooltip-border">
-        <template #activator="{on}">
-            <v-btn small depressed color="secondary" class="text-capitalize ma-0 pa-0 btn-width" @click.stop="editAddress()" v-on="on">
-                <v-icon class="fas fa-plus pr-2 icon-small" />Add</v-btn
-            >
-        </template>
-        <span class="black--text">{{ $t('fav.tooltip.add') }}</span>
-    </v-tooltip>
+    <div>
+        <v-tooltip top color="white" content-class="tooltip-border">
+            <template #activator="{on}">
+                <v-btn small depressed color="secondary" class="text-capitalize ma-0 pa-0 btn-width" @click.stop="openDialog()" v-on="on">
+                    <v-icon class="fas fa-plus pr-2 icon-small" />{{ $t('fav.btn.add') }}</v-btn
+                >
+            </template>
+            <span class="black--text">{{ $t('fav.tooltip.add') }}</span>
+        </v-tooltip>
+        <v-dialog v-model="open" max-width="500">
+            <fav-dialog :is-new="true" :is-edit-mode="false" :add="true" :dialog-method="addAddress" @closeFavDialog="closeFavDialog()" />
+        </v-dialog>
+    </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 
-@Component
+@Component({
+    components: {
+        FavDialog
+    }
+})
 export default class FavBtnAdd extends Vue {
     /*
     ===================================================================================
@@ -20,6 +30,25 @@ export default class FavBtnAdd extends Vue {
     ===================================================================================
     */
     @Prop(Function) addAddress!: void
+
+    /*
+    ===================================================================================
+      Data
+    ===================================================================================
+    */
+    open = false
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    openDialog(): void {
+        this.open = true
+    }
+    closeFavDialog(): void {
+        this.open = false
+    }
 }
 </script>
 <style scoped lang="css">
