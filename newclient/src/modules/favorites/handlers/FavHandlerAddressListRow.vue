@@ -1,5 +1,5 @@
 <template>
-    <fav-addr-table-row :ether-price="etherPrice" :hash="hash" :name="name" :eth-balance="balance" :chips="addrChips" />
+    <fav-addr-table-row :ether-price="etherPrice" :hash="hash" :name="name" :eth-balance="balance" :chips="addrChips" @errorFavorites="emitErrorState" />
 </template>
 
 <script lang="ts">
@@ -28,15 +28,13 @@ import { Hash } from 'crypto'
             },
             update: data => data.getEthBalance,
             result(data) {
-                // if (data.data && data.data.getEthBalance) {
-                //     this.hasError = false
-                //     this.emitErrorState()
-                // }
+                if (data.data && data.data.getEthBalance) {
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                this.emitErrorState(true, ErrorMessagesFav.ethBalance)
             }
-            // error(error) {
-            //     this.hasError = true
-            //     this.emitErrorState()
-            // }
         },
         getContractMeta: {
             query: getContractMeta,
@@ -47,16 +45,17 @@ import { Hash } from 'crypto'
             update: data => data.getContractMeta,
             result(data) {
                 if (data.data && data.data.getContractMeta) {
-                    this.hasError = false
+                    this.emitErrorState(false)
                     this.isContract = true
                 }
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
                 if (newError.includes('No contract found')) {
-                    this.hasError = false
+                    this.emitErrorState(false)
                     this.isContract = false
                 } else {
+                    this.emitErrorState(true, ErrorMessagesFav.contract)
                     this.hasError = true
                 }
             }
@@ -77,17 +76,19 @@ import { Hash } from 'crypto'
             result({ data }) {
                 if (this.getRewards && this.getRewards.transfers && this.getRewards.transfers.length > 0) {
                     this.isMiner = true
+                    this.emitErrorState(false)
                 } else {
                     if (this.skipUncleRewards) {
                         this.skipUncleRewards = false
                         this.$apollo.queries.getRewards.refetch()
                     } else {
+                        this.emitErrorState(false)
                         this.isMiner = false
                     }
                 }
             },
             error(error) {
-                // this.emitErrorState(true)
+                this.emitErrorState(true, ErrorMessagesFav.rewards)
             }
         }
     }
@@ -152,6 +153,16 @@ export default class FavHandlerAddressListRow extends Vue {
             this.isContractCreator = false
             this.skipUncleRewards = true
         }
+    }
+
+    /*
+  ===================================================================================
+    Methods
+  ===================================================================================
+  */
+    emitErrorState(val: boolean, message: string): void {
+        this.hasError = val
+        this.$emit('errorFavorites', this.hasError, message)
     }
 }
 </script>

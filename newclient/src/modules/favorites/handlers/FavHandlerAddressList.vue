@@ -47,7 +47,7 @@
             </template>
             <template #rows>
                 <v-card v-for="adr in adrList" :key="adr.hash" class="transparent" flat>
-                    <fav-addr-table-row-handler :ether-price="ethPrice" :hash="adr.address" :name="adr.name" />
+                    <fav-addr-table-row-handler :ether-price="ethPrice" :hash="adr.address" :name="adr.name" @errorFavorites="emitErrorState" />
                 </v-card>
             </template>
         </table-txs>
@@ -88,7 +88,15 @@ import BN from 'bignumber.js'
             query: favAddressCache,
             client: 'FavClient',
             fetchPolicy: 'cache-and-network',
-            update: data => data.favAddresses
+            update: data => data.favAddresses,
+            result({ data }) {
+                if (data && data.favAddresses) {
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                this.emitErrorState(true, ErrorMessagesFav.addressCheck)
+            }
         }
     }
 })
@@ -152,6 +160,10 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     Methods
   ===================================================================================
   */
+    emitErrorState(val: boolean, message: string): void {
+        this.hasError = val
+        this.$emit('errorFavorites', this.hasError, message)
+    }
 
     onSearch(val): void {
         this.searchVal = val ? val.toLowerCase() : null

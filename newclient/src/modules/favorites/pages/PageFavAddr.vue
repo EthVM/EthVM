@@ -1,7 +1,7 @@
 <template>
     <v-container grid-list-lg>
         <app-bread-crumbs :new-items="crumbs" />
-        <fav-handler-address-list />
+        <fav-handler-address-list @errorFavorites="setError" />
         <app-error v-if="error" :has-error="hasError" :message="error" />
         <app-message :messages="errorMessages" />
     </v-container>
@@ -71,12 +71,8 @@ export default class PageFavAddr extends Vue {
     setError(hasError: boolean, message: ErrorMessagesFav): void {
         this.hasError = hasError
         if (hasError) {
-            if (message === ErrorMessagesFav.invalid) {
-                this.error = this.$i18n.t(message).toString()
-            } else {
-                if (!this.errorMessages.includes(message)) {
-                    this.errorMessages.push(message)
-                }
+            if (!this.errorMessages.includes(message)) {
+                this.errorMessages.push(message)
             }
         } else {
             if (this.errorMessages.length > 0) {

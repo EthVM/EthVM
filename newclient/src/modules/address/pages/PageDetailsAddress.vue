@@ -22,7 +22,7 @@
                         :set-contract="setContract"
                         :loading-tokens="loadingERC20Balance"
                         @resetBalanceUpdate="resetBalance"
-                        @errorBalance="setError"
+                        @errorAddrOverview="setError"
                     />
                 </v-flex>
             </v-layout>

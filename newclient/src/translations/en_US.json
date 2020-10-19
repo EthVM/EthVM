@@ -254,6 +254,12 @@
                 "is-bug": "If you think this is a bug, please {let-us-know}.",
                 "let-us-know": "let us know"
             },
+            "favorites": {
+                "address-check": "Something went wrong while checking the address.",
+                "eth-balance": "Something went wrong while retrieving the Eth balance.",
+                "contract": "Something went wrong while retrieving the contract.",
+                "rewards": "Something went wrong while retrieving rewards."
+            },
             "txs": "Something went wrong while retrieving transactions.",
             "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
             "transfers-erc20": "Something went wrong retrieving Address ERC20 tokens transfers."

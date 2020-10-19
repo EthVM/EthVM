@@ -26,7 +26,7 @@
                             <v-flex xs12>
                                 <v-layout row align-center justify-start>
                                     <v-card-title class="body-1 font-weight-bold pa-0 break-string">{{ name }}</v-card-title>
-                                    <fav-handler-edit :address="hash" :addr-chips="chips" class="pr-1" />
+                                    <fav-handler-edit :address="hash" :addr-chips="chips" class="pr-1" @errorFavorites="emitErrorState" />
                                     <!--
                                     =====================================================================================
                                       CHIPS on SM ONLY
@@ -144,7 +144,7 @@
                                 <p v-if="usdBalance">{{ usdBalance.value }}</p>
                                 <v-flex v-else class="table-row-loading"></v-flex>
 
-                                <fav-handler-edit :address="hash" :addr-chips="chips" />
+                                <fav-handler-edit :address="hash" :addr-chips="chips" @errorFavorites="emitErrorState" />
                             </v-layout>
                         </v-flex>
                         <!--
@@ -218,6 +218,15 @@ export default class FavAddrTableRow extends Mixins(NumberFormatMixin) {
             return this.formatNonVariableEthValue(new BN(this.ethBalance))
         }
         return undefined
+    }
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    emitErrorState(val: boolean, message: string): void {
+        this.$emit('errorFavorites', val, message)
     }
 }
 </script>

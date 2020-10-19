@@ -48,7 +48,13 @@
                         <v-layout row wrap align-center justify-start>
                             <p class="break-hash font-mono pl-2 pr-2">{{ address.hash | toChecksum }}</p>
                             <app-copy-to-clip :value-to-copy="address.hash | toChecksum" />
-                            <fav-handler-edit :address="address.hash" :addr-chips="addrChips" class="pr-2 pl-1" @nameChange="updateTitle" />
+                            <fav-handler-edit
+                                :address="address.hash"
+                                :addr-chips="addrChips"
+                                class="pr-2 pl-1"
+                                @nameChange="updateTitle"
+                                @errorFavorites="emitErrorState"
+                            />
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -60,7 +66,7 @@
             -->
             <v-flex shrink>
                 <v-layout row align-center justify-end pa-2>
-                    <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
+                    <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" @errorFavorites="emitErrorState" />
                     <address-qr :address="address.hash" :large="true" />
                 </v-layout>
             </v-flex>
@@ -95,7 +101,13 @@
                 <v-layout row wrap align-center justify-start>
                     <v-flex xs12>
                         <v-layout row align-center justify-start pr-3>
-                            <fav-handler-edit :address="address.hash" :addr-chips="addrChips" class="pr-1" @nameChange="updateTitle" />
+                            <fav-handler-edit
+                                :address="address.hash"
+                                :addr-chips="addrChips"
+                                class="pr-1"
+                                @nameChange="updateTitle"
+                                @errorFavorites="emitErrorState"
+                            />
                             <v-card-title class="body-2 font-weight-bold pa-0 break-hash">{{ title }}</v-card-title>
                         </v-layout>
                     </v-flex>
@@ -119,7 +131,7 @@
                 <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="ma-1" />
             </v-layout>
             <v-layout row align-center justify-end pr-2 ma-0>
-                <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" />
+                <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" @errorFavorites="emitErrorState" />
                 <address-qr :address="address.hash" :large="true" />
             </v-layout>
         </v-layout>
@@ -423,11 +435,14 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     }
     /*
     ===================================================================================
-      Computed Values
+        Methods
     ===================================================================================
     */
     updateTitle(name: string): void {
         this.title = name === '' ? this.$i18n.tc('address.name', 1).toString() : `${name}`
+    }
+    emitErrorState(val: boolean, message: string): void {
+        this.$emit('errorFavorites', val, message)
     }
 }
 </script>

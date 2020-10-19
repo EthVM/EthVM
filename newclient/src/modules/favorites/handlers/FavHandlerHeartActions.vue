@@ -33,6 +33,7 @@ import FavBtnHeart from '@app/modules/favorites/components/FavBtnHeart.vue'
 import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorites/mixins/FavActions.mixin'
+import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
 
 @Component({
     components: {
@@ -54,11 +55,16 @@ import { FavActions as FavActionsMixin } from '@app/modules/favorites/mixins/Fav
                     if (data.checkAddress.name !== '') {
                         this.name = data.checkAddress.name
                         this.$emit('addressHasName', this.name)
+                        this.emitErrorState(false)
                     }
                 } else {
                     this.name = ''
                     this.$emit('addressHasName', this.name)
+                    this.emitErrorState(false)
                 }
+            },
+            error(error) {
+                this.emitErrorState(true, ErrorMessagesFav.addressCheck)
             }
         }
     }
@@ -123,6 +129,9 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     }
     openFavDialog(): void {
         this.open = true
+    }
+    emitErrorState(val: boolean, message: string): void {
+        this.$emit('errorFavorites', val, message)
     }
 }
 </script>

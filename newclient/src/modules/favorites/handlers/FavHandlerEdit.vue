@@ -33,6 +33,7 @@ import { editFavAddress } from './editAdr.graphql'
 import FavBtnEdit from '@app/modules/favorites/components/FavBtnEdit.vue'
 import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
+import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
 
 @Component({
     components: {
@@ -54,11 +55,16 @@ import { EnumAdrChips } from '@app/core/components/props'
                     if (data.checkAddress.name !== '') {
                         this.name = data.checkAddress.name
                         this.$emit('addressHasName', this.name)
+                        this.emitErrorState(false)
                     }
                 } else {
                     this.name = ''
                     this.$emit('addressHasName', this.name)
+                    this.emitErrorState(false)
                 }
+            },
+            error(error) {
+                this.emitErrorState(true, ErrorMessagesFav.addressCheck)
             }
         }
     }
@@ -123,6 +129,9 @@ export default class FavHandlerEdit extends Vue {
     }
     openEditDialog(): void {
         this.open = true
+    }
+    emitErrorState(val: boolean, message: string): void {
+        this.$emit('errorFavorites', val, message)
     }
 }
 </script>
