@@ -2,7 +2,8 @@
     <v-card color="white" flat class="pb-2">
         <!--
         =====================================================================================
-          Desktop (sm-and-up): TITLE / ADD button / REMOVE button
+          Desktop (md-and-up): TITLE / ADD button / CANCEL button / REMOVE button
+          Mobile (SM): TITLE / ADD button / CHECK ALL button / CANCEL button/ REMOVE button
           Mobile (xs-only): TITLE
         =====================================================================================
         -->
@@ -12,7 +13,7 @@
                 <fav-btn-add :add-address="addItem" />
             </v-flex>
             <v-spacer hidden-xs-only />
-            <v-flex v-if="deleteMode" shrink hidden-xs-only>
+            <v-flex v-if="deleteMode" shrink hidden-xs-only hidden-md-and-up>
                 <v-layout row align-center justify-start>
                     <app-check-box :values-array="deleteArray" :is-select-all="true" :all-selected="allSelected" @selectAll="removeAll" />
                     <p class="caption black--text">{{ $t('fav.select-all') }}</p>
@@ -26,7 +27,11 @@
             </v-flex>
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
-
+        <!--
+        =====================================================================================
+        Pagination
+        =====================================================================================
+        -->
         <v-layout align-center justify-start row pl-4 pr-3 pb-2>
             <v-spacer />
             <app-paginate
@@ -39,7 +44,6 @@
                 @newPage="setPage"
             />
         </v-layout>
-
         <!--
         =====================================================================================
           Mobile (xs-only): ADD button / REMOVE button
