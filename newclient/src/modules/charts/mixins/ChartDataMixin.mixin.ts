@@ -97,7 +97,7 @@ export class ChartDataMixin extends Vue {
     /**
      * Maps items into formatted object with x and y values
      * @param items: TimeseriesItemsTypes
-     * @param itemvalueTypes: TimeseriesValue
+     * @param valueTypes: TimeseriesValue
      * @returns DataPoint
      */
     mapItemsToDataSet(items: TimeseriesItemsTypes[], valueType: TimeseriesValue): DataPoint[] {
