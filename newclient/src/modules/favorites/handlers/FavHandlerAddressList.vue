@@ -78,7 +78,7 @@
         =====================================================================================
         -->
         <v-layout align-center justify-center hidden-sm-and-up row wrap pr-2 pl-2 pb-2>
-            <v-flex xs12 pb-1>
+            <v-flex xs12>
                 <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
             </v-flex>
 
@@ -236,6 +236,9 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
     get message(): string {
         if (!this.isLoading) {
+            if (this.searchVal && (!this.totalAddr || this.totalAddr < 1)) {
+                return this.$t('fav.message.no-search-results').toString()
+            }
             if (!this.totalAddr || this.totalAddr < 1) {
                 return this.$t('fav.message.no-addr').toString()
             }

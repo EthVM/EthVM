@@ -1,6 +1,6 @@
 <template>
     <v-layout class="fav-search">
-        <v-flex xs12 sm12 md9 pr-0 d-flex align-center justify-center>
+        <v-flex xs12 sm12 md9 py-3 px-2 d-flex align-center justify-center>
             <v-text-field
                 :loading="isLoading"
                 :placeholder="$t('search.favorites')"
@@ -11,15 +11,11 @@
                 flat
                 outline
                 clearable
-                height="34px"
                 return-masked-value
                 @keyup.enter="onSearch"
                 @input="onSearch"
                 @click:clear="searchVal = ''"
             ></v-text-field>
-            <v-btn right flat small depressed color="secondary" class="search-button text-capitalize ma-0 pr-0 pl-0" @click="onSearch">{{
-                $t('search.name')
-            }}</v-btn>
         </v-flex>
     </v-layout>
 </template>
@@ -62,7 +58,6 @@ export default class FavSearch extends Vue {
         height: 40px;
         .v-input__slot {
             border: 1px solid #b4bfd2 !important;
-            border-right: none !important;
             min-height: 40px !important;
             padding-left: 4px !important;
             padding-right: 4px !important;
@@ -74,12 +69,6 @@ export default class FavSearch extends Vue {
                 font-size: 16px;
             }
         }
-    }
-    .search-button {
-        border: 1px solid #b4bfd2 !important;
-        border-left: none !important;
-        height: 40px;
-        max-width: 60px !important;
     }
 }
 </style>
