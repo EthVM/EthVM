@@ -15,7 +15,7 @@
             <v-spacer hidden-xs-only />
             <v-flex v-if="deleteMode" shrink hidden-xs-only hidden-md-and-up>
                 <v-layout row align-center justify-start>
-                    <app-check-box :values-array="deleteArray" :is-select-all="true" :all-selected="allSelected" @selectAll="removeAll" />
+                    <app-check-box :values-array="deleteArray" :is-select-all="true" :all-selected="isAllSelected" @selectAll="removeAll" />
                     <p class="caption black--text">{{ $t('fav.select-all') }}</p>
                 </v-layout>
             </v-flex>

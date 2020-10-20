@@ -6,8 +6,8 @@
               Mobile (XS-SM)
             =====================================================================================
             -->
-            <v-flex hidden-md-and-up>
-                <v-layout grid-list-sm align-center justify-start row wrap fill-height mt-2 mb-2 mr-1 ml-1 pa-2 class="table-row-mobile">
+            <v-flex hidden-md-and-up mr-2 ml-2>
+                <v-layout grid-list-sm align-center justify-start row wrap fill-height mb-2 mt-2 pa-2 class="table-row-mobile">
                     <!--
                     =====================================================================================
                       BLOCKIE
@@ -47,13 +47,24 @@
                             </v-flex>
                         </v-layout>
                     </v-flex>
-                    <v-flex shrink> </v-flex>
+                    <v-spacer />
+                    <!--
+                    =====================================================================================
+                      CHECKBOX
+                    =====================================================================================
+                    -->
+                    <v-flex align-self-start shrink pl-0>
+                        <v-layout align-start justify-end>
+                            <app-check-box v-if="deleteMode" :values-array="deleteArray" :value="hash" @newCheckBoxArray="checkBoxMethod" />
+                        </v-layout>
+                    </v-flex>
+
                     <!--
                     =====================================================================================
                       Balance
                     =====================================================================================
                     -->
-                    <v-flex xs12 pb-0>
+                    <v-flex xs12 sm5 pb-0>
                         <p class="info--text">
                             {{ $t('common.eth-balance') }}:
                             <span v-if="balance" class="black--text"> {{ balance.value }} {{ $t(`common.${balance.unit}`) }}</span>
@@ -61,7 +72,7 @@
                             <span v-else class="table-row-loading" />
                         </p>
                     </v-flex>
-                    <v-flex xs12>
+                    <v-flex shrink pb-0>
                         <p class="info--text">
                             {{ $t('usd.value') }}: <span v-if="balance" class="black--text"> {{ usdBalance.value }}</span>
                             <span v-else class="table-row-loading" />
