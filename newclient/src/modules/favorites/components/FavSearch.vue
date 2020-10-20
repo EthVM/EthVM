@@ -17,7 +17,9 @@
                 @input="onSearch"
                 @click:clear="searchVal = ''"
             ></v-text-field>
-            <v-btn right flat depressed color="secondary" class="search-button text-capitalize ml-0" @click="onSearch">{{ $t('search.name') }}</v-btn>
+            <v-btn right flat small depressed color="secondary" class="search-button text-capitalize ma-0 pr-0 pl-0" @click="onSearch">{{
+                $t('search.name')
+            }}</v-btn>
         </v-flex>
     </v-layout>
 </template>
@@ -57,11 +59,14 @@ export default class FavSearch extends Vue {
 .fav-search {
     .v-input {
         font-size: 14px;
-        height: 34px;
+        height: 40px;
         .v-input__slot {
-            border: 1px solid #efefef !important;
+            border: 1px solid #b4bfd2 !important;
             border-right: none !important;
-            min-height: 34px !important;
+            min-height: 40px !important;
+            padding-left: 4px !important;
+            padding-right: 4px !important;
+            font-size: 90%;
             input {
                 margin-top: 0;
             }
@@ -71,10 +76,10 @@ export default class FavSearch extends Vue {
         }
     }
     .search-button {
-        border: 1px solid #efefef !important;
+        border: 1px solid #b4bfd2 !important;
         border-left: none !important;
-        height: 34px;
-        width: 20px;
+        height: 40px;
+        max-width: 60px !important;
     }
 }
 </style>

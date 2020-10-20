@@ -450,7 +450,7 @@
         "name": "Search",
         "default": "Search Block / Address / Tx",
         "address-tx": "Tx Hash/Address",
-        "favorites": "Search address or name here"
+        "favorites": "Search Address / Name"
     },
 
     "filter": {
