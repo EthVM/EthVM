@@ -1,5 +1,14 @@
 <template>
-    <fav-addr-table-row :ether-price="etherPrice" :hash="hash" :name="name" :eth-balance="balance" :chips="addrChips" />
+    <fav-addr-table-row
+        :ether-price="etherPrice"
+        :hash="hash"
+        :name="name"
+        :eth-balance="balance"
+        :chips="addrChips"
+        :delete-mode="deleteMode"
+        :delete-array="deleteArray"
+        :check-box-method="checkBoxMethod"
+    />
 </template>
 
 <script lang="ts">
@@ -101,6 +110,9 @@ export default class FavHandlerAddressListRow extends Vue {
     @Prop(Number) etherPrice!: number
     @Prop(String) name!: string
     @Prop(String) hash!: string
+    @Prop(Boolean) deleteMode!: boolean
+    @Prop(Array) deleteArray!: string[]
+    @Prop(Function) checkBoxMethod!: string[]
 
     /*
     ===================================================================================

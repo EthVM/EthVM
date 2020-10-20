@@ -42,11 +42,18 @@
         </v-layout>
         <table-txs :max-items="maxItems" :index="index" :is-loading="isLoading || hasError" :txs-data="adrList" :is-scroll-view="false">
             <template #header>
-                <fav-addr-table-header />
+                <fav-addr-table-header :delete-mode="deleteMode" :all-selected="isAllSelected" :delete-array="deleteArray" @selectAllInHeader="removeAll" />
             </template>
             <template #rows>
                 <v-card v-for="adr in adrList" :key="adr.hash" class="transparent" flat>
-                    <fav-addr-table-row-handler :ether-price="ethPrice" :hash="adr.address" :name="adr.name" />
+                    <fav-addr-table-row-handler
+                        :ether-price="ethPrice"
+                        :hash="adr.address"
+                        :name="adr.name"
+                        :delete-mode="deleteMode"
+                        :delete-array="deleteArray"
+                        :check-box-method="updateDeleteArray"
+                    />
                 </v-card>
             </template>
         </table-txs>
@@ -94,6 +101,10 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     favAddresses!: favAddressesType[]
     hasError = false
     maxItems = 10
+    deleteMode = false
+    deleteArray: string[] = []
+    isAllSelected = false
+
     /*
   ===================================================================================
     Computed
@@ -138,13 +149,30 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
         console.log('adding item')
     }
     removeItem(): void {
-        console.log('remove item')
+        this.deleteMode = !this.deleteMode
     }
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.index = 0
         } else {
             this.index = page
+        }
+    }
+    updateDeleteArray(newArray: string[]): void {
+        this.deleteArray = newArray
+        if (this.deleteArray.length === this.totalAddr) {
+            this.isAllSelected = true
+        }
+        if (this.deleteArray.length !== this.totalAddr) {
+            this.isAllSelected = false
+        }
+    }
+    removeAll(): void {
+        this.isAllSelected = !this.isAllSelected
+        if (this.isAllSelected) {
+            this.deleteArray = this.favAddresses.map(i => i.address)
+        } else {
+            this.deleteArray = []
         }
     }
 }

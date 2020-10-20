@@ -1,8 +1,8 @@
 <template>
     <v-tooltip top color="white" content-class="tooltip-border">
         <template #activator="{on}">
-            <v-btn outline flat small color="error" class="text-capitalize ma-0" @click.stop="editAddress()" v-on="on">
-                <v-icon class="fas fa-trash-alt pr-2 icon-small" />Remove</v-btn
+            <v-btn outline flat small color="error" class="text-capitalize ma-0" @click.stop="removeAddress()" v-on="on">
+                <v-icon class="fas fa-trash-alt pr-2 icon-small" />{{ $t('fav.btn.remove') }}</v-btn
             >
         </template>
         <span class="black--text">{{ $t('fav.tooltip.remove') }}</span>

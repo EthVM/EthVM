@@ -199,9 +199,12 @@
         "btn": {
             "add": "Add",
             "delete": "Delete",
-            "change": "Change Name"
+            "change": "Change Name",
+            "remove": "Remove"
         },
-        "title": "Favorite Addresses"
+        "title": "Favorite Addresses",
+        "name" : "Name",
+        "select-all": "Select All"
     },
 
     "message": {
