@@ -2,52 +2,125 @@
     <v-card color="white" flat class="pb-2">
         <!--
         =====================================================================================
-          Desktop (sm-and-up): TITLE / ADD button / REMOVE button
+          Desktop (md-and-up): TITLE / ADD button / CANCEL button / REMOVE button
+          Mobile (SM): TITLE / ADD button / CHECK ALL button / CANCEL button/ REMOVE button
           Mobile (xs-only): TITLE
         =====================================================================================
         -->
         <v-layout align-center justify-start row wrap pl-3 pr-3 mt-1>
-            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" page-link="" class="pl-2" />
-            <v-flex v-if="!isLoading" shrink hidden-xs-only>
-                <p class="text-xs-center mr-3">{{ $t('contract.total') }}: {{ totalAddr }}</p>
-            </v-flex>
-            <v-flex shrink pl-2 hidden-xs-only>
+            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" :title-caption="titleCaption" page-link="" class="pl-2" />
+            <v-flex v-if="!deleteMode" shrink pl-2 hidden-xs-only>
                 <fav-btn-add :add-address="addItem" />
             </v-flex>
             <v-spacer hidden-xs-only />
+            <v-flex v-if="deleteMode" shrink hidden-xs-only hidden-md-and-up>
+                <v-layout row align-center justify-start>
+                    <app-check-box :values-array="deleteArray" :is-select-all="true" :all-selected="isAllSelected" @selectAll="removeAll" />
+                    <p class="caption black--text">{{ $t('fav.select-all') }}</p>
+                </v-layout>
+            </v-flex>
+            <v-flex v-if="deleteMode" hidden-xs-only shrink>
+                <v-btn flat small color="error" class="text-capitalize ma-0" @click="closeDeleteMode()"> {{ $t('common.cancel') }}</v-btn>
+            </v-flex>
             <v-flex shrink pl-2 hidden-xs-only>
-                <fav-btn-remove :remove-address="removeItem" />
+                <fav-btn-remove :remove-address="removeItem" :delete-mode="deleteMode" :delete-array="deleteArray" />
             </v-flex>
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
         <!--
         =====================================================================================
-          Mobile (xs-only): ADD button / TOTAL / REMOVE button
+        SM AND UP: Search / Pagination
         =====================================================================================
         -->
-        <v-layout hidden-sm-and-up justify-space-between align-center pl-2 pr-2>
-            <v-flex shrink>
+        <v-layout align-center justify-start row hidden-xs-only pr-2 pl-2 pb-2>
+            <v-flex xs12 sm6 md7 pt-0 pb-0 pr-0>
+                <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
+            </v-flex>
+            <v-spacer hidden-sm-and-down />
+            <v-flex shrink pt-0 pb-0 pl-1>
+                <app-paginate
+                    v-if="totalPages > 1"
+                    :total="totalPages"
+                    :current-page="index"
+                    :has-input="true"
+                    :has-first="true"
+                    :has-last="true"
+                    @newPage="setPage"
+                />
+            </v-flex>
+        </v-layout>
+
+        <!--
+        =====================================================================================
+          Mobile (xs-only): ADD button / REMOVE button
+        =====================================================================================
+        -->
+        <v-layout hidden-sm-and-up align-center justify-space-between pl-2 pr-2 pb-2>
+            <v-flex v-if="!deleteMode" shrink pt-0 pb-0>
                 <fav-btn-add :add-address="addItem" />
             </v-flex>
-            <v-flex grow>
-                <p v-if="!isLoading" class="text-xs-center">{{ $t('contract.total') }}: {{ totalAddr }}</p>
+            <v-flex v-if="deleteMode" shrink pb-0>
+                <v-layout row align-center justify-start>
+                    <app-check-box :values-array="deleteArray" :is-select-all="true" :all-selected="isAllSelected" @selectAll="removeAll" />
+                    <p class="caption black--text">{{ $t('fav.select-all') }}</p>
+                </v-layout>
             </v-flex>
-            <v-flex shrink>
-                <fav-btn-remove :remove-address="removeItem" />
+            <v-flex v-if="deleteMode" shrink pb-0>
+                <v-btn v-if="deleteMode" flat small color="error" class="text-capitalize ma-0" @click="closeDeleteMode()"> {{ $t('common.cancel') }}</v-btn>
+            </v-flex>
+            <v-flex shrink pb-0 pt-1>
+                <fav-btn-remove :remove-address="removeItem" :delete-mode="deleteMode" :delete-array="deleteArray" />
             </v-flex>
         </v-layout>
-        <v-layout :column="$vuetify.breakpoint.xs || $vuetify.breakpoint.sm" align-center justify-start row pl-4 pr-3 pb-2>
-            <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
-            <v-spacer />
-            <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+        <!--
+        =====================================================================================
+          Mobile (xs-only): Search / Pagination
+        =====================================================================================
+        -->
+        <v-layout align-center justify-center hidden-sm-and-up row wrap pr-2 pl-2 pb-2>
+            <v-flex xs12 pb-1>
+                <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
+            </v-flex>
+
+            <v-flex shrink pt-0 pb-0>
+                <app-paginate
+                    v-if="totalPages > 1"
+                    :total="totalPages"
+                    :current-page="index"
+                    :has-input="true"
+                    :has-first="true"
+                    :has-last="true"
+                    @newPage="setPage"
+                />
+            </v-flex>
         </v-layout>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="isLoading || hasError" :txs-data="adrList" :is-scroll-view="false">
+        <!--
+        =====================================================================================
+          Fav Address Table
+        =====================================================================================
+        -->
+        <table-txs
+            :max-items="maxItems"
+            :index="index"
+            :is-loading="isLoading || hasError"
+            :txs-data="adrList"
+            :is-scroll-view="false"
+            :table-message="message"
+        >
             <template #header>
-                <fav-addr-table-header />
+                <fav-addr-table-header :delete-mode="deleteMode" :all-selected="isAllSelected" :delete-array="deleteArray" @selectAllInHeader="removeAll" />
             </template>
             <template #rows>
                 <v-card v-for="adr in adrList" :key="adr.hash" class="transparent" flat>
-                    <fav-addr-table-row-handler :ether-price="ethPrice" :hash="adr.address" :name="adr.name" @errorFavorites="emitErrorState" />
+                    <fav-addr-table-row-handler
+                        :ether-price="ethPrice"
+                        :hash="adr.address"
+                        :name="adr.name"
+                        :delete-mode="deleteMode"
+                        :delete-array="deleteArray"
+                        :check-box-method="updateDeleteArray"
+                        @errorFavorites="emitErrorState"
+                    />
                 </v-card>
             </template>
         </table-txs>
@@ -70,10 +143,12 @@ import { FavActions as FavActionsMixin } from '@app/modules/favorites/mixins/Fav
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { favAddressCache } from '@app/apollo/favorites/rootQuery.graphql'
 import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorites/apolloTypes/favAddressCache'
+import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import BN from 'bignumber.js'
 
 @Component({
     components: {
+        AppCheckBox,
         AppTableTitle,
         AppPaginate,
         FavBtnAdd,
@@ -112,7 +187,12 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     items!: favAddressesType[]
     hasError = false
     maxItems = 10
+    /* Search */
     searchVal = ''
+    /* Delete Mode */
+    deleteMode = false
+    deleteArray: string[] = []
+    isAllSelected = false
 
     /*
   ===================================================================================
@@ -128,7 +208,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
 
     get isLoading(): boolean {
-        return this.favorites === undefined
+        return this.$apollo.queries.favAddresses.loading
     }
     get hasFavAdr(): boolean {
         return this.totalPages > 0
@@ -154,6 +234,18 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
             : []
         return this.items && this.searchVal ? this.items : this.favAddresses
     }
+    get message(): string {
+        if (!this.isLoading) {
+            if (!this.totalAddr || this.totalAddr < 1) {
+                return this.$t('fav.message.no-addr').toString()
+            }
+        }
+        return ''
+    }
+
+    get titleCaption(): string {
+        return `${this.$t('contract.total')}: ${this.totalAddr}`
+    }
 
     /*
   ===================================================================================
@@ -176,7 +268,11 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         })
     }
     removeItem(): void {
-        console.log('remove item')
+        this.deleteMode = !this.deleteMode
+    }
+    closeDeleteMode(): void {
+        this.deleteMode = false
+        this.deleteArray = []
     }
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
@@ -185,5 +281,28 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
             this.index = page
         }
     }
+    updateDeleteArray(newArray: string[]): void {
+        this.deleteArray = newArray
+        if (this.deleteArray.length === this.totalAddr) {
+            this.isAllSelected = true
+        }
+        if (this.deleteArray.length !== this.totalAddr) {
+            this.isAllSelected = false
+        }
+    }
+    removeAll(): void {
+        this.isAllSelected = !this.isAllSelected
+        if (this.isAllSelected) {
+            this.deleteArray = this.favAddresses.map(i => i.address)
+        } else {
+            this.deleteArray = []
+        }
+    }
 }
 </script>
+
+<style scoped lang="css">
+.v-btn {
+    min-width: 40px !important;
+}
+</style>

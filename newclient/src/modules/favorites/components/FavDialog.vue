@@ -67,7 +67,6 @@
         <p v-if="isEditMode && addrName && addrName !== ''" class="info--text pl-4 pr-3 pt-2 pb-2 center--text">
             {{ $t('fav.dialog.current-name') }}: <span class="black--text"> {{ addrName }}</span>
         </p>
-
         <v-layout v-if="add" fill-height align-center justify-center row wrap pt-2 pb-2 pl-4 pr-4>
             <v-flex xs12>
                 <v-text-field v-model="name" :rules="nameRules" :label="inputLabel" outline clearable counter maxlength="20" class="name-input-container">

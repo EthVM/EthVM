@@ -181,7 +181,8 @@
         "tooltip": {
             "add": "Add to favorite addresses list",
             "remove": "Remove from favorite addresses list",
-            "edit": "Edit favorite address name"
+            "edit": "Edit favorite address name",
+            "remove-select": "Select addresses from the list"
         },
         "dialog": {
             "title-add": "Add Address Name",
@@ -203,9 +204,15 @@
         "btn": {
             "add": "Add",
             "delete": "Delete",
-            "change": "Change Name"
+            "change": "Change Name",
+            "remove": "Remove"
         },
-        "title": "Favorite Addresses"
+        "message": {
+          "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page."
+        },
+        "title": "Favorite Addresses",
+        "name" : "Name",
+        "select-all": "Select All"
     },
 
     "message": {

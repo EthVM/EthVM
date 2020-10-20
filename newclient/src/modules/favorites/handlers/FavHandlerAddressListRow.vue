@@ -1,5 +1,15 @@
 <template>
-    <fav-addr-table-row :ether-price="etherPrice" :hash="hash" :name="name" :eth-balance="balance" :chips="addrChips" @errorFavorites="emitErrorState" />
+    <fav-addr-table-row
+        :ether-price="etherPrice"
+        :hash="hash"
+        :name="name"
+        :eth-balance="balance"
+        :chips="addrChips"
+        :delete-mode="deleteMode"
+        :delete-array="deleteArray"
+        :check-box-method="checkBoxMethod"
+        @errorFavorites="emitErrorState"
+    />
 </template>
 
 <script lang="ts">
@@ -14,7 +24,6 @@ import { getContractMeta_getContractMeta as ContractMeta } from '@app/modules/ad
 import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsBlock'
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsUncle'
 import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from '@app/modules/address/handlers/AddressRewards/rewards.graphql'
-import { Hash } from 'crypto'
 
 @Component({
     components: {
@@ -102,6 +111,9 @@ export default class FavHandlerAddressListRow extends Vue {
     @Prop(Number) etherPrice!: number
     @Prop(String) name!: string
     @Prop(String) hash!: string
+    @Prop(Boolean) deleteMode!: boolean
+    @Prop(Array) deleteArray!: string[]
+    @Prop(Function) checkBoxMethod!: string[]
 
     /*
     ===================================================================================
