@@ -38,9 +38,24 @@
         </v-layout>
         <v-layout align-center justify-start row pl-4 pr-3 pb-2>
             <v-spacer />
-            <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
+            <app-paginate
+                v-if="totalPages > 1"
+                :total="totalPages"
+                :current-page="index"
+                :has-input="true"
+                :has-first="true"
+                :has-last="true"
+                @newPage="setPage"
+            />
         </v-layout>
-        <table-txs :max-items="maxItems" :index="index" :is-loading="isLoading || hasError" :txs-data="adrList" :is-scroll-view="false">
+        <table-txs
+            :max-items="maxItems"
+            :index="index"
+            :is-loading="isLoading || hasError"
+            :txs-data="adrList"
+            :is-scroll-view="false"
+            :table-message="message"
+        >
             <template #header>
                 <fav-addr-table-header :delete-mode="deleteMode" :all-selected="isAllSelected" :delete-array="deleteArray" @selectAllInHeader="removeAll" />
             </template>
@@ -119,7 +134,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     }
 
     get isLoading(): boolean {
-        return this.favAddresses === undefined
+        return this.$apollo.queries.favAddresses.loading
     }
     get hasFavAdr(): boolean {
         return this.totalPages > 0
@@ -137,6 +152,15 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
             return Math.ceil(new BN(this.favAddresses.length).div(this.maxItems).toNumber())
         }
         return 0
+    }
+
+    get message(): string {
+        if (!this.isLoading) {
+            if (!this.totalAddr || this.totalAddr < 1) {
+                return this.$t('fav.message.no-addr').toString()
+            }
+        }
+        return ''
     }
 
     /*

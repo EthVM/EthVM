@@ -202,6 +202,9 @@
             "change": "Change Name",
             "remove": "Remove"
         },
+        "message": {
+          "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page."
+        },
         "title": "Favorite Addresses",
         "name" : "Name",
         "select-all": "Select All"
