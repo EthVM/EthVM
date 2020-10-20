@@ -7,35 +7,26 @@
         =====================================================================================
         -->
         <v-layout align-center justify-start row wrap pl-3 pr-3 mt-1>
-            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" page-link="" class="pl-2" />
-            <v-flex v-if="!isLoading" shrink hidden-xs-only>
-                <p class="text-xs-center mr-3">{{ $t('contract.total') }}: {{ totalAddr }}</p>
-            </v-flex>
-            <v-flex shrink pl-2 hidden-xs-only>
+            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" :title-caption="titleCaption" page-link="" class="pl-2" />
+            <v-flex v-if="!deleteMode" shrink pl-2 hidden-xs-only>
                 <fav-btn-add :add-address="addItem" />
             </v-flex>
             <v-spacer hidden-xs-only />
+            <v-flex v-if="deleteMode" shrink hidden-xs-only>
+                <v-layout row align-center justify-start>
+                    <app-check-box :values-array="deleteArray" :is-select-all="true" :all-selected="allSelected" @selectAll="removeAll" />
+                    <p class="caption black--text">{{ $t('fav.select-all') }}</p>
+                </v-layout>
+            </v-flex>
+            <v-flex v-if="deleteMode" hidden-xs-only shrink>
+                <v-btn flat small color="error" class="text-capitalize ma-0" @click="closeDeleteMode()"> {{ $t('common.cancel') }}</v-btn>
+            </v-flex>
             <v-flex shrink pl-2 hidden-xs-only>
-                <fav-btn-remove :remove-address="removeItem" />
+                <fav-btn-remove :remove-address="removeItem" :delete-mode="deleteMode" :delete-array="deleteArray" />
             </v-flex>
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
-        <!--
-        =====================================================================================
-          Mobile (xs-only): ADD button / TOTAL / REMOVE button
-        =====================================================================================
-        -->
-        <v-layout hidden-sm-and-up justify-space-between align-center pl-2 pr-2>
-            <v-flex shrink>
-                <fav-btn-add :add-address="addItem" />
-            </v-flex>
-            <v-flex grow>
-                <p v-if="!isLoading" class="text-xs-center">{{ $t('contract.total') }}: {{ totalAddr }}</p>
-            </v-flex>
-            <v-flex shrink>
-                <fav-btn-remove :remove-address="removeItem" />
-            </v-flex>
-        </v-layout>
+
         <v-layout align-center justify-start row pl-4 pr-3 pb-2>
             <v-spacer />
             <app-paginate
@@ -48,6 +39,34 @@
                 @newPage="setPage"
             />
         </v-layout>
+
+        <!--
+        =====================================================================================
+          Mobile (xs-only): ADD button / REMOVE button
+        =====================================================================================
+        -->
+        <v-layout hidden-sm-and-up align-center justify-space-between pl-2 pr-2 mb-2>
+            <v-flex v-if="!deleteMode" shrink>
+                <fav-btn-add :add-address="addItem" />
+            </v-flex>
+            <v-flex v-if="deleteMode" shrink>
+                <v-layout row align-center justify-start>
+                    <app-check-box :values-array="deleteArray" :is-select-all="true" :all-selected="allSelected" @selectAll="removeAll" />
+                    <p class="caption black--text">{{ $t('fav.select-all') }}</p>
+                </v-layout>
+            </v-flex>
+            <v-flex v-if="deleteMode" shrink>
+                <v-btn v-if="deleteMode" flat small color="error" class="text-capitalize ma-0" @click="closeDeleteMode()"> {{ $t('common.cancel') }}</v-btn>
+            </v-flex>
+            <v-flex shrink>
+                <fav-btn-remove :remove-address="removeItem" :delete-mode="deleteMode" :delete-array="deleteArray" />
+            </v-flex>
+        </v-layout>
+        <!--
+        =====================================================================================
+          Fav Address Table
+        =====================================================================================
+        -->
         <table-txs
             :max-items="maxItems"
             :index="index"
@@ -89,10 +108,12 @@ import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { favAddressCache } from '@app/apollo/favorites/rootQuery.graphql'
 import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorites/apolloTypes/favAddressCache'
+import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import BN from 'bignumber.js'
 
 @Component({
     components: {
+        AppCheckBox,
         AppTableTitle,
         AppPaginate,
         FavBtnAdd,
@@ -163,6 +184,10 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
         return ''
     }
 
+    get titleCaption(): string {
+        return `${this.$t('contract.total')}: ${this.totalAddr}`
+    }
+
     /*
   ===================================================================================
     Methods
@@ -174,6 +199,10 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     }
     removeItem(): void {
         this.deleteMode = !this.deleteMode
+    }
+    closeDeleteMode(): void {
+        this.deleteMode = false
+        this.deleteArray = []
     }
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
@@ -201,3 +230,9 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData) {
     }
 }
 </script>
+
+<style scoped lang="css">
+.v-btn {
+    min-width: 40px !important;
+}
+</style>
