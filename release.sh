@@ -6,11 +6,11 @@ CHANGELOG=`awk -v version="$RELEASE" '/### Release / {printit = $3 == version}; 
 mkdir release
 cd newclient/dist; zip -r ../../release/EthVM-Web-$RELEASE.zip *; cd ../../
 
-if [ -n "$4" ]; then
-    for f in release/*; do
-        gpg --output $f.sig --detach-sig $f
-    done
-fi
+# if [ -n "$4" ]; then
+#     for f in release/*; do
+#         gpg --output $f.sig --detach-sig $f
+#     done
+# fi
 
 sha256sum ./release/EthVM-Web-$RELEASE.zip > ./release/EthVM-Web-$RELEASE-CHECKSUM-SHA256
 
