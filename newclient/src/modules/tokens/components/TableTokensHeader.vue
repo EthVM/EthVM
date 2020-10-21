@@ -15,7 +15,7 @@
         =====================================================================================
         -->
         <v-flex sm4>
-            <v-layout :class="[!isActive(0) && !isActive(0) ? 'inactive-sort' : '']" align-center justify-start row pl-4>
+            <v-layout :class="[!isActive(0) && !isActive(1) ? 'inactive-sort' : '']" align-center justify-start row pl-4>
                 <h5 class="pl-5 pr-2">{{ $tc('token.name', 1) }}</h5>
                 <v-flex>
                     <v-layout align-start justify-right>
