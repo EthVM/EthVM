@@ -89,6 +89,6 @@ jobs:
 
       - name: create release
         env:
-          GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
           bash ./release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
