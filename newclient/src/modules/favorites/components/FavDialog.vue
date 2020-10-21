@@ -280,12 +280,11 @@ export default class FavAddDialog extends Vue {
      * @return: boolean
      */
     get isValidAddress(): boolean {
-        return eth.isValidAddress(this.dialogMode === FavDialogModes.searchAdd ? this.newAddress : this.address)
+        return eth.isValidAddress(this.dialogMode === FavDialogModes.searchAdd ? this.newAddress : true)
     }
 
     get containerPadding(): string {
         if (this.$vuetify.breakpoint.name === 'xs') {
-            console.log('xs')
             return 'pl-2 pr-2'
         }
         return 'pl-3 pr-3'

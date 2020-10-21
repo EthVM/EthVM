@@ -19,7 +19,6 @@ const addressMap: favAddressType[] = addresses.map(item => {
         name: item.name
     }
 })
-console.log('addresses', addresses)
 
 favCache.writeData({
     data: {
