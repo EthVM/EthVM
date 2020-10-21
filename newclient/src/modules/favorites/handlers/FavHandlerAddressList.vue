@@ -37,12 +37,12 @@
         SM AND UP: Search / Pagination
         =====================================================================================
         -->
-        <v-layout align-center justify-start row hidden-xs-only pr-2 pl-2 pb-2>
-            <v-flex xs12 sm6 md7 pt-0 pb-0 pr-0>
+        <v-layout align-center justify-start row hidden-xs-only px-2 my-2>
+            <v-flex xs12 sm6 md7 pr-0>
                 <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
             </v-flex>
             <v-spacer hidden-sm-and-down />
-            <v-flex shrink pt-0 pb-0 pl-1>
+            <v-flex shrink py-0 pl-1>
                 <app-paginate
                     v-if="totalPages > 1"
                     :total="totalPages"
@@ -87,11 +87,10 @@
           Mobile (xs-only): Search / Pagination
         =====================================================================================
         -->
-        <v-layout align-center justify-center hidden-sm-and-up row wrap pr-2 pl-2 pb-2>
-            <v-flex xs12>
+        <v-layout grid-list-xs align-center justify-center hidden-sm-and-up row wrap pr-2 pl-2 mb-3>
+            <v-flex xs12 pb-0 pt-0>
                 <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
             </v-flex>
-
             <v-flex shrink pt-0 pb-0>
                 <app-paginate
                     v-if="totalPages > 1"

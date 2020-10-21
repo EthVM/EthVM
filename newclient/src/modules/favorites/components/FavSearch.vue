@@ -1,6 +1,6 @@
 <template>
     <v-layout class="fav-search">
-        <v-flex xs12 sm12 md9 py-3 px-2 d-flex align-center justify-center>
+        <v-flex xs12 sm12 md9 px-2 d-flex align-center justify-center>
             <v-text-field
                 :loading="isLoading"
                 :placeholder="$t('search.favorites')"
