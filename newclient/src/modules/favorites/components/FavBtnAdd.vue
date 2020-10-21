@@ -9,7 +9,7 @@
             <span class="black--text">{{ $t('fav.tooltip.add') }}</span>
         </v-tooltip>
         <v-dialog v-model="open" max-width="500">
-            <fav-dialog :is-new="true" :is-edit-mode="false" :add="true" :dialog-method="addAddress" @closeFavDialog="closeFavDialog()" />
+            <fav-dialog v-if="open" :dialog-method="addAddress" :dialog-mode="searchMode" @closeFavDialog="closeFavDialog()" />
         </v-dialog>
     </div>
 </template>
@@ -17,6 +17,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
+import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/FavDialog'
 
 @Component({
     components: {
@@ -37,6 +38,7 @@ export default class FavBtnAdd extends Vue {
     ===================================================================================
     */
     open = false
+    searchMode = FavDialogModes.searchAdd
 
     /*
     ===================================================================================

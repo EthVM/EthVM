@@ -194,11 +194,12 @@
             "label-add":"Enter Name",
             "label-edit": "Enter New Name",
             "input-required": "This field is required",
-            "input-length": "Name must be less than 30 characters",
+            "input-length": "Name must be less than 20 characters",
             "current-name": "Current Name",
             "enter-address": "Enter Address",
             "add-new": "Add new favorites address",
             "optional": "Optional",
+            "required": "Required",
             "invalid-address": "This is an invalid address"
         },
         "btn": {

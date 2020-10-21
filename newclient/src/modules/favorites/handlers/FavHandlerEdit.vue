@@ -14,12 +14,10 @@
         <v-dialog v-model="open" max-width="500">
             <fav-dialog
                 v-if="open"
-                :address="address"
-                :add="true"
-                :is-edit-mode="true"
-                :addr-name="name"
                 :chips="addrChips"
                 :dialog-method="editName"
+                :dialog-mode="editMode"
+                :addrs="dialogAddrs"
                 @closeFavDialog="closeEditDialog()"
             />
         </v-dialog>
@@ -34,7 +32,7 @@ import FavBtnEdit from '@app/modules/favorites/components/FavBtnEdit.vue'
 import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
-
+import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/FavDialog'
 @Component({
     components: {
         FavBtnEdit,
@@ -86,6 +84,7 @@ export default class FavHandlerEdit extends Vue {
     checkAddress!: boolean
     name = ''
     open = false
+    editMode = FavDialogModes.edit
 
     /*
     ===================================================================================
@@ -106,6 +105,7 @@ export default class FavHandlerEdit extends Vue {
                 if (data) {
                     this.$emit('nameChange', name)
                     this.closeEditDialog()
+                    this.$apollo.queries.checkAddress.refresh()
                 }
             })
     }
@@ -117,6 +117,9 @@ export default class FavHandlerEdit extends Vue {
     */
     get isAdded(): boolean {
         return this.checkAddress !== undefined && this.checkAddress !== null
+    }
+    get dialogAddrs(): DialogAddress[] {
+        return [new DialogAddress(this.address, this.name, this.addrChips)]
     }
 
     /*

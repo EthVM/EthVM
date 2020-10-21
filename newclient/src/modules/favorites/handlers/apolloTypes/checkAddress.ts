@@ -10,6 +10,7 @@
 export interface checkAddress_checkAddress {
   __typename: "FavAddress";
   name: string;
+  address: string;
 }
 
 export interface checkAddress {

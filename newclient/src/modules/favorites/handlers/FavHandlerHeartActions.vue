@@ -12,14 +12,11 @@
         =====================================================================================
         -->
         <v-dialog v-model="open" max-width="500">
-            <fav-dialog v-if="!isAdded" :address="address" :add="true" :chips="addrChips" :dialog-method="addToFav" @closeFavDialog="closeFavDialog()" />
             <fav-dialog
-                v-else
-                :address="address"
-                :addr-name="name"
-                :add="false"
                 :chips="addrChips"
-                :dialog-method="removeFromFav"
+                :dialog-method="(mode === FavDialogModes.add ? addToFav : removeFromFav)"
+                :dialog-mode="mode"
+                :addrs="dialogAddrs"
                 @closeFavDialog="closeFavDialog()"
             />
         </v-dialog>
@@ -34,6 +31,7 @@ import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorites/mixins/FavActions.mixin'
 import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
+import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/FavDialog'
 
 @Component({
     components: {
@@ -44,7 +42,7 @@ import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav
         checkAddress: {
             query: checkAddress,
             client: 'FavClient',
-            fetchPolicy: 'cache-and-network',
+            fetchPolicy: 'network-only',
             variables() {
                 return {
                     address: this.address
@@ -85,6 +83,7 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     checkAddress!: boolean
     open = false
     name = ''
+    FavDialogModes = FavDialogModes
     /*
     ===================================================================================
       Methods
@@ -117,6 +116,13 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
 
     get isAdded(): boolean {
         return this.checkAddress !== undefined && this.checkAddress !== null
+    }
+
+    get mode(): FavDialogModes {
+        return this.isAdded ? FavDialogModes.remove : FavDialogModes.add
+    }
+    get dialogAddrs(): DialogAddress[] {
+        return [new DialogAddress(this.address, this.name, this.addrChips)]
     }
 
     /*
