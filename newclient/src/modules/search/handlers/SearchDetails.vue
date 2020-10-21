@@ -17,6 +17,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { getTokensBeginsWith, getHashType } from '@app/modules/search/handlers/searchDetails.graphql'
 import Search from '@app/modules/search/components/Search.vue'
 import { eth } from '@app/core/helper'
+const values = ['transaction', 'token-detail', 'address', 'uncle', 'blockHash']
 interface SearchRef extends Vue {
     resetValues(): void
 }
@@ -69,15 +70,15 @@ export default class SearchDetails extends Vue {
             .then(response => {
                 const hashType = response.data.getHashType
                 if (hashType.includes('ADDRESS')) {
-                    routeName = 'address'
+                    routeName = values[2]
                 } else if (hashType.includes('TX')) {
-                    routeName = 'transaction'
+                    routeName = values[0]
                 } else if (hashType.includes('TOKEN')) {
-                    routeName = 'token-detail'
+                    routeName = values[1]
                 } else if (hashType.includes('UNCLE')) {
-                    routeName = 'uncle'
+                    routeName = values[3]
                 } else if (hashType.includes('BLOCK')) {
-                    routeName = 'blockHash'
+                    routeName = values[4]
                 } else {
                     this.setError(param)
                 }
@@ -107,16 +108,16 @@ export default class SearchDetails extends Vue {
     getSelectVal(selectVal, searchVal) {
         const isNum = /^\d+$/.test(searchVal)
         if (selectVal === 'block' && !isNum) {
-            return 'blockHash'
+            return values[4]
         }
         return selectVal
     }
     getParam(selectVal, searchVal): {} {
-        if (selectVal === 'transaction') {
+        if (selectVal === values[0]) {
             return { txRef: this.removeSpaces(searchVal) }
-        } else if (selectVal === 'token-detail' || selectVal === 'address') {
+        } else if (selectVal === values[1] || selectVal === values[2]) {
             return { addressRef: this.removeSpaces(searchVal) }
-        } else if (selectVal === 'uncle') {
+        } else if (selectVal === values[3]) {
             return { uncleRef: this.removeSpaces(searchVal) }
         }
         return { blockRef: this.removeSpaces(searchVal) }
