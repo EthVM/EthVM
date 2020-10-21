@@ -17,7 +17,7 @@
         <v-flex sm4>
             <v-layout :class="[!isActive(0) && !isActive(1) ? 'inactive-sort' : '']" align-center justify-start row pl-4>
                 <h5 class="pl-5 pr-2">{{ $tc('token.name', 1) }}</h5>
-                <v-flex>
+                <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(1)" :class="[!isActive(0) && !isActive(1) ? 'inactive-btn' : '']" flat icon @click="selectFilter(0)">
                             <v-icon :class="[isActive(0) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
@@ -32,7 +32,7 @@
         <v-flex sm2>
             <v-layout :class="[!isActive(2) && !isActive(3) ? 'inactive-sort' : '']" align-center justify-start row pl-1>
                 <h5 class="pr-2">{{ $tc('price.name', 1) }}</h5>
-                <v-flex>
+                <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(3)" :class="[!isActive(2) && !isActive(3) ? 'inactive-btn' : '']" flat icon @click="selectFilter(2)">
                             <v-icon :class="[isActive(2) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
@@ -50,7 +50,7 @@
         <v-flex sm2>
             <v-layout :class="[!isActive(4) && !isActive(5) ? 'inactive-sort' : '']" align-center justify-start row pl-2>
                 <h5 class="pr-1">{{ $t('token.volume') }}</h5>
-                <v-flex>
+                <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(5)" :class="[!isActive(4) && !isActive(5) ? 'inactive-btn' : '']" flat icon @click="selectFilter(4)">
                             <v-icon :class="[isActive(4) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
@@ -65,7 +65,7 @@
         <v-flex sm2>
             <v-layout :class="[!isActive(6) && !isActive(7) ? 'inactive-sort' : '']" align-center justify-start row pl-2>
                 <h5 class="pr-1">{{ $t('token.market') }}</h5>
-                <v-flex>
+                <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(7)" :class="[!isActive(6) && !isActive(7) ? 'inactive-btn' : '']" flat icon @click="selectFilter(6)">
                             <v-icon :class="[isActive(6) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
