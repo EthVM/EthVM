@@ -5,18 +5,26 @@
           TITLE / CLOSE BTN
         =====================================================================================
         -->
-        <v-layout grid-list-xs align-center justify-space-between row fill-height pt-2 pb-2 pl-3 pr-3>
+        <v-layout :class="containerPadding" grid-list-xs align-center justify-space-between row fill-height pt-2 pb-1>
             <v-card-title class="title font-weight-bold"> {{ title }}</v-card-title>
             <v-btn flat icon color="secondary" @click="closeDialog()"> <v-icon class="fas fa-times" /> </v-btn>
         </v-layout>
         <v-divider class="lineGrey mb-1" />
         <!--
         =====================================================================================
+         Are You Sure?: Mode === remove
+        =====================================================================================
+        -->
+        <p v-if="dialogMode === FavDialogModes.remove" :class="[containerPadding, ' pt-2 pb-3 body-2']">
+            {{ $tc('fav.dialog.delete-are-you-sure', pluralStrings) }}
+        </p>
+        <!--
+        =====================================================================================
           ADDRESSES NAME/CHIPS/HASH: Mode !=== searchAdd
         =====================================================================================
         -->
-        <div v-if="dialogMode !== FavDialogModes.searchAdd">
-            <v-layout v-for="(adr, index) in addrs" :key="index" grid-list-xs align-center justify-start row fill-height pt-2 pb-2 pl-3>
+        <div v-if="dialogMode !== FavDialogModes.searchAdd" :class="addressContainerClass">
+            <v-layout v-for="(adr, index) in addrs" :key="index" grid-list-xs align-center justify-start row wrap fill-height>
                 <!--
                 =====================================================================================
                   BLOCKIE
@@ -24,7 +32,7 @@
                 -->
                 <v-flex shrink>
                     <v-layout align-center justify-center row fill-height pa-2>
-                        <blockies :address="adr.getAddress()" />
+                        <blockies :address="adr.getAddress()" width="36px" height="36px" />
                     </v-layout>
                 </v-flex>
                 <!--
@@ -32,8 +40,8 @@
                   NAME/CHIPS/HASH
                 =====================================================================================
                 -->
-                <v-flex grow pl-2>
-                    <v-layout v-if="adr.getName() !== undefined || adr.getChips() !== undefined" align-center justify-start row>
+                <v-flex xs8 pl-2>
+                    <v-layout v-if="adr.getName() !== undefined || adr.getChips() !== undefined" align-center justify-start row wrap>
                         <v-flex v-if="adr.getName() !== undefined && adr.getName() !== ''" shrink pr-2>
                             <p class="body-2">{{ adr.getName() }}</p>
                         </v-flex>
@@ -43,7 +51,10 @@
                             </v-flex>
                         </v-layout>
                     </v-layout>
-                    <p class="pt-2">{{ adr.getAddress() }}</p>
+                    <app-transform-hash :hash="adr.getAddress() | toChecksum" />
+                </v-flex>
+                <v-flex v-if="addrs.length > 1 && index + 1 < addrs.length" xs12>
+                    <v-divider class="lineGrey ma-1" />
                 </v-flex>
             </v-layout>
         </div>
@@ -52,7 +63,7 @@
           ADDRESS INPUT: Mode searcAdd
         =====================================================================================
         -->
-        <v-layout v-if="dialogMode === FavDialogModes.searchAdd" fill-height align-center justify-center row wrap pt-4 pl-4 pr-4>
+        <v-layout v-if="dialogMode === FavDialogModes.searchAdd" :class="containerPadding" fill-height align-center justify-center row wrap pt-4>
             <v-flex xs12>
                 <v-text-field
                     v-model="newAddress"
@@ -69,7 +80,6 @@
                     </template>
                     <template v-slot:append>
                         <span v-if="newAddress === ''" class="caption greyPlaceholder--text optional-text">{{ $t('fav.dialog.required') }}</span>
-
                         <v-btn v-else flat icon small color="secondary" class="ma-0" @click="clearAddr()">
                             <v-icon class="fas fa-times" />
                         </v-btn>
@@ -82,34 +92,28 @@
           INPUT - NAME: Mode edit, add, searchAdd
         =====================================================================================
         -->
-        <div v-if="dialogMode !== FavDialogModes.remove">
-            <p v-if="dialogMode === FavDialogModes.edit" class="info--text pl-4 pr-3 pt-2 pb-2 center--text">
-                {{ $t('fav.dialog.current-name') }}: <span class="black--text"> {{ addrs[0].getName() }}</span>
-            </p>
-            <v-layout fill-height align-center justify-center row wrap pt-2 pb-2 pl-4 pr-4>
-                <v-flex xs12>
-                    <v-text-field v-model="name" :rules="nameRules" :label="inputLabel" outline counter maxlength="20" class="name-input-container">
-                        <template v-slot:append>
-                            <span v-if="name === ''" class="caption greyPlaceholder--text optional-text">{{ $t('fav.dialog.optional') }}</span>
-                            <v-btn v-else flat icon small color="secondary" class="ma-0" @click="clearName()"> <v-icon class="fas fa-times" /> </v-btn>
-                        </template>
-                    </v-text-field>
-                </v-flex>
-            </v-layout>
-        </div>
+        <v-layout v-if="dialogMode !== FavDialogModes.remove" :class="containerPadding" fill-height align-center justify-center row wrap pt-2 pb-2>
+            <v-flex xs12>
+                <v-text-field v-model="name" :rules="nameRules" :label="inputLabel" outline counter maxlength="20" class="name-input-container">
+                    <template v-slot:append>
+                        <span v-if="name === ''" class="caption greyPlaceholder--text optional-text">{{ $t('fav.dialog.optional') }}</span>
+                        <v-btn v-else flat icon small color="secondary" class="ma-0" @click="clearName()"> <v-icon class="fas fa-times" /> </v-btn>
+                    </template>
+                </v-text-field>
+            </v-flex>
+        </v-layout>
         <!--
         =====================================================================================
           DELETE TEXT: Mode Delete
         =====================================================================================
         -->
         <div v-if="dialogMode === FavDialogModes.remove">
-            <p class="pl-4 pr-4 pt-2 pb-2 body-2">{{ $t('fav.dialog.delete-are-you-sure') }}</p>
-            <v-layout row align-start justify-start pb-2 pl-4 pr-4>
+            <v-layout :class="[containerPadding, 'pb-2 pt-2']" row align-start justify-start>
                 <v-flex shrink pt-2 pb-2>
                     <p class="info--text">{{ $t('fav.dialog.delete-tip') }}</p>
                 </v-flex>
                 <v-flex pa-2>
-                    <p class="info--text">{{ $t('fav.dialog.delete-tip-text') }}</p>
+                    <p class="info--text">{{ $tc('fav.dialog.delete-tip-text', pluralStrings) }}</p>
                 </v-flex>
             </v-layout>
         </div>
@@ -118,7 +122,7 @@
          CANCEL/ADD BUTONS
         =====================================================================================
         -->
-        <v-layout fill-height align-center justify-end pb-4 pl-4 pr-4>
+        <v-layout :class="containerPadding" fill-height align-center justify-end pb-4>
             <v-btn flat color="black" class="text-capitalize mr-3" @click="closeDialog()">
                 {{ $t('common.cancel') }}
             </v-btn>
@@ -133,6 +137,7 @@
 import VueQr from 'vue-qr'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
@@ -143,6 +148,7 @@ type Rules = (data: string) => void
 @Component({
     components: {
         AppAdrChip,
+        AppTransformHash,
         Blockies
     }
 })
@@ -277,6 +283,21 @@ export default class FavAddDialog extends Vue {
         return eth.isValidAddress(this.dialogMode === FavDialogModes.searchAdd ? this.newAddress : this.address)
     }
 
+    get containerPadding(): string {
+        if (this.$vuetify.breakpoint.name === 'xs') {
+            console.log('xs')
+            return 'pl-2 pr-2'
+        }
+        return 'pl-3 pr-3'
+    }
+    get pluralStrings(): 1 | 2 {
+        return this.addrs && this.addrs.length > 1 ? 2 : 1
+    }
+    get addressContainerClass(): string {
+        const margin = this.$vuetify.breakpoint.name === 'xs' ? 'ml-2 mr-2' : 'ml-3 mr-3'
+        return this.addrs && this.addrs.length > 1 ? `address-table ${margin}` : `${margin}`
+    }
+
     /*
     ===================================================================================
       Methods
@@ -338,5 +359,9 @@ export default class FavAddDialog extends Vue {
         height: 36px;
         width: 36px;
     }
+}
+
+.address-table {
+    border: 1px solid #b4bfd2;
 }
 </style>
