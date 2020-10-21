@@ -209,7 +209,8 @@
             "remove": "Remove"
         },
         "message": {
-          "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page."
+          "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page.",
+          "no-search-results": "There are no search results."
         },
         "title": "Favorite Addresses",
         "name" : "Name",
