@@ -294,7 +294,7 @@ export default class FavAddDialog extends Vue {
     }
     get addressContainerClass(): string {
         const margin = this.$vuetify.breakpoint.name === 'xs' ? 'ml-2 mr-2' : 'ml-3 mr-3'
-        return this.addrs && this.addrs.length > 1 ? `address-table ${margin}` : `${margin}`
+        return this.addrs && this.addrs.length > 1 ? `address-table ${margin} scroll-y` : `${margin}`
     }
 
     /*
@@ -362,5 +362,6 @@ export default class FavAddDialog extends Vue {
 
 .address-table {
     border: 1px solid #b4bfd2;
+    max-height: 200px;
 }
 </style>
