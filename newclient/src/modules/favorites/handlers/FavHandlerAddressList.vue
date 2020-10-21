@@ -23,7 +23,12 @@
                 <v-btn flat small color="error" class="text-capitalize ma-0" @click="closeDeleteMode()"> {{ $t('common.cancel') }}</v-btn>
             </v-flex>
             <v-flex shrink pl-2 hidden-xs-only>
-                <fav-btn-remove :remove-address="removeItem" :delete-mode="deleteMode" :delete-array="deleteArray" />
+                <fav-btn-remove
+                    :start-delete-mode="changeDeleteMode"
+                    :delete-mode="deleteMode"
+                    :delete-array="dialogDeleteArray"
+                    :delete-method="deleteAddrs"
+                />
             </v-flex>
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
@@ -69,7 +74,12 @@
                 <v-btn v-if="deleteMode" flat small color="error" class="text-capitalize ma-0" @click="closeDeleteMode()"> {{ $t('common.cancel') }}</v-btn>
             </v-flex>
             <v-flex shrink pb-0 pt-1>
-                <fav-btn-remove :remove-address="removeItem" :delete-mode="deleteMode" :delete-array="deleteArray" />
+                <fav-btn-remove
+                    :start-delete-mode="changeDeleteMode"
+                    :delete-mode="deleteMode"
+                    :delete-array="dialogDeleteArray"
+                    :delete-method="deleteAddrs"
+                />
             </v-flex>
         </v-layout>
         <!--
@@ -120,6 +130,7 @@
                         :delete-array="deleteArray"
                         :check-box-method="updateDeleteArray"
                         @errorFavorites="emitErrorState"
+                        @addressChips="updateChips"
                     />
                 </v-card>
             </template>
@@ -144,6 +155,9 @@ import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { favAddressCache } from '@app/apollo/favorites/rootQuery.graphql'
 import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorites/apolloTypes/favAddressCache'
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
+import { DialogAddress } from '@app/modules/favorites/models/FavDialog'
+import { EnumAdrChips } from '@app/core/components/props'
+
 import BN from 'bignumber.js'
 
 @Component({
@@ -193,6 +207,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     deleteMode = false
     deleteArray: string[] = []
     isAllSelected = false
+    addressChipsMap = new Map<string, EnumAdrChips[]>()
 
     /*
   ===================================================================================
@@ -247,6 +262,22 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         return `${this.$t('contract.total')}: ${this.totalAddr}`
     }
 
+    get dialogDeleteArray(): DialogAddress[] {
+        const addrDelete = this.deleteArray.map(_hash => {
+            const addr = new DialogAddress(_hash)
+            const hasName = this.favAddresses.find(i => i.address === _hash)
+            if (hasName) {
+                addr.setName(hasName.name)
+            }
+            const hasChips = this.addressChipsMap.get(_hash)
+            if (hasChips) {
+                addr.setChips(hasChips)
+            }
+            return addr
+        })
+        return addrDelete
+    }
+
     /*
   ===================================================================================
     Methods
@@ -267,7 +298,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
             }
         })
     }
-    removeItem(): void {
+    changeDeleteMode(): void {
         this.deleteMode = !this.deleteMode
     }
     closeDeleteMode(): void {
@@ -297,6 +328,20 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         } else {
             this.deleteArray = []
         }
+    }
+    deleteAddrs(): void {
+        this.deleteArray.forEach(_hash => {
+            this.mixinRemoveFromFav(_hash).then(res => {
+                if (res) {
+                    this.$apollo.queries.checkAddress.refresh()
+                }
+            })
+        })
+        this.deleteMode = false
+        this.deleteArray = []
+    }
+    updateChips(chips: EnumAdrChips[], hash: string): void {
+        this.addressChipsMap.set(hash, chips)
     }
 }
 </script>

@@ -26,4 +26,10 @@ export class DialogAddress {
     getChips(): EnumAdrChips[] | undefined {
         return this.chips
     }
+    setName(_name: string): void {
+        this.name = _name
+    }
+    setChips(_chips: EnumAdrChips[]): void {
+        this.chips = _chips
+    }
 }

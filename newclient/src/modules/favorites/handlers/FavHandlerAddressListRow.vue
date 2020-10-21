@@ -166,6 +166,12 @@ export default class FavHandlerAddressListRow extends Vue {
             this.skipUncleRewards = true
         }
     }
+    @Watch('addrChips')
+    onAddrChipsChange(newVal: EnumAdrChips[], oldVal: EnumAdrChips[]): void {
+        if (newVal.length !== oldVal.length) {
+            this.$emit('addressChips', this.addrChips, this.hash)
+        }
+    }
 
     /*
   ===================================================================================
