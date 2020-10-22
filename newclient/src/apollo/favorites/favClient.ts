@@ -31,7 +31,6 @@ getLocalStorageCache(favCache)
 window.addEventListener('storage', event => {
     if (event.key === DataArray.addr) {
         getLocalStorageCache(favCache)
-        console.log('inclient', favCache)
     }
 })
 
