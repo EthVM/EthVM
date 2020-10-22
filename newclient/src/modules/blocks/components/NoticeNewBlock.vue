@@ -73,6 +73,9 @@ export default class NoticeNewBlock extends Mixins(NewBlockSubscription) {
       Methods:
     ===================================================================================
   */
+    /**
+     * Reloads everything and emit's reload to parent
+     */
     onReload() {
         this.$emit('reload')
         this.display = false
