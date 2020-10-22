@@ -51,9 +51,6 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
-                        if (newItems.length > MAX_ITEMS) {
-                            newItems.slice(1)
-                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -87,9 +84,6 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
-                        if (newItems.length > MAX_ITEMS) {
-                            newItems.slice(1)
-                        }
 
                         return {
                             getTimeseriesData: {
@@ -242,6 +236,30 @@ export default class HomeTxChart extends Mixins(ChartDataMixin) {
                 icon: 'fa fa-circle'
             }
         ]
+    }
+
+    /*
+    ===================================================================================
+      Watchers
+    ===================================================================================
+    */
+    @Watch('txTotalDataSet', { deep: true })
+    ongasMinDataSetChanged(newVal) {
+        if (newVal.length > MAX_ITEMS) {
+            newVal.shift()
+            this.txTotalDataSet = newVal
+        } else {
+            this.txTotalDataSet = newVal
+        }
+    }
+    @Watch('txPenDataSet', { deep: true })
+    ongasMaxDataSetChanged(newVal) {
+        if (newVal.length > MAX_ITEMS) {
+            newVal.shift()
+            this.txPenDataSet = newVal
+        } else {
+            this.txPenDataSet = newVal
+        }
     }
 }
 </script>

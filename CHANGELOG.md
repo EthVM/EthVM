@@ -1,6 +1,14 @@
+### Release v1.0.2
+
 ### Devop
 
 - Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
+
+### Bug
+
+- Deep watch on chart data sets [#885](https://github.com/EthVM/EthVM/pull/885)
+
+===================================================================================
 
 ### Release v1.0.2
 

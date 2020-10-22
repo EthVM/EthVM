@@ -76,7 +76,7 @@
         "number": "Всего  ERC20 Токенов  ",
         "tokenName": "Имя Токена",
         "supply": "Общее Предложение",
-        "holder": "Holder | Holders",
+        "holder": "Владелец | Владельцы",
         "holder-total": "Всего Владельцев",
         "symbol": "Символ",
         "decimal": "Десятичные Знаки",
