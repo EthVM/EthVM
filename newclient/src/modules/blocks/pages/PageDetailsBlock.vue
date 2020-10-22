@@ -93,14 +93,24 @@ export default class PageDetailsBlock extends Vue {
       Methods
     ===================================================================================
     */
-
-    setIsMined(value: boolean): void {
+    /**
+     * Sets isMined to true
+     */
+    setIsMined(): void {
         this.isMined = true
     }
+    /**
+     * Set block Number
+     * @param value {String}
+     */
     setBlockNumber(value: string): void {
         this.blockNumber = value
     }
-
+    /**
+     * Sets error messages if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageBlock}
+     */
     setError(hasError: boolean, message: ErrorMessageBlock): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {

@@ -110,11 +110,18 @@ export default class TableTokensHeader extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Select filter and emit to parent
+     * @param _value {Number}
+     */
     selectFilter(_value: number): void {
         this.$emit('sortBy', FILTER_VALUES[_value])
     }
-
+    /**
+     * Check if filter is active
+     * @param _value {Number}
+     * @returns {Boolean}
+     */
     isActive(_value: number): boolean {
         return this.selectedFilter === _value
     }

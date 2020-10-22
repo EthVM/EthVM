@@ -209,6 +209,10 @@ export default class AddressTokens extends Mixins(CoinData) {
       Methods:
     ===================================================================================
     */
+    /**
+     * Sort tokens via given param
+     * @param sort {String}
+     */
     sortTokens(sort: string): void {
         this.isSortedBy = sort
         this.index = 0
@@ -228,6 +232,11 @@ export default class AddressTokens extends Mixins(CoinData) {
             }
         }
     }
+    /**
+     * Sets page number and reset value and emit
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.index = 0
@@ -237,6 +246,10 @@ export default class AddressTokens extends Mixins(CoinData) {
             this.index = page
         }
     }
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorTransfers', val, ErrorMessageToken.tokenMarket)
