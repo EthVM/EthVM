@@ -156,6 +156,7 @@ import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/fa
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import { DialogAddress } from '@app/modules/favorites/models/FavDialog'
 import { EnumAdrChips } from '@app/core/components/props'
+import { DataArray } from '@app/apollo/favorites/models'
 
 import BN from 'bignumber.js'
 
@@ -175,7 +176,7 @@ import BN from 'bignumber.js'
         favAddresses: {
             query: favAddressCache,
             client: 'FavClient',
-            fetchPolicy: 'cache-and-network',
+            fetchPolicy: 'network-only',
             update: data => data.favAddresses,
             result({ data }) {
                 if (data && data.favAddresses) {
@@ -294,11 +295,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         this.searchVal = val ? val.toLowerCase() : null
     }
     addItem(item): void {
-        this.mixinAddToFav(item.name, item.address).then(res => {
-            if (res) {
-                this.$apollo.queries.favAddresses.refresh()
-            }
-        })
+        this.mixinAddToFav(item.name, item.address)
     }
     changeDeleteMode(): void {
         this.deleteMode = !this.deleteMode
@@ -333,11 +330,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
     deleteAddrs(): void {
         this.deleteArray.forEach(_hash => {
-            this.mixinRemoveFromFav(_hash).then(res => {
-                if (res) {
-                    this.$apollo.queries.checkAddress.refresh()
-                }
-            })
+            this.mixinRemoveFromFav(_hash)
         })
         this.deleteMode = false
         this.deleteArray = []

@@ -10,23 +10,31 @@ const FavTypeDef = `${FavAddress} ${Query} ${Mutation}`
 
 const favCache = new InMemoryCache()
 
-const addresses = store.get(DataArray.addr) || []
+const getLocalStorageCache = (_cache: InMemoryCache): void => {
+    const addresses = store.get(DataArray.addr) || []
+    const addressMap: favAddressType[] = addresses.map(item => {
+        return {
+            __typename: TypeName.addr,
+            address: item.address,
+            name: item.name
+        }
+    })
+    _cache.writeData({
+        data: {
+            favAddresses: addressMap
+        }
+    })
+}
+getLocalStorageCache(favCache)
 
-const addressMap: favAddressType[] = addresses.map(item => {
-    return {
-        __typename: TypeName.addr,
-        address: item.address,
-        name: item.name
+/* Listen to updates on different browser Tabs */
+window.addEventListener('storage', event => {
+    if (event.key === DataArray.addr) {
+        getLocalStorageCache(favCache)
+        console.log('inclient', favCache)
     }
 })
 
-favCache.writeData({
-    data: {
-        favAddresses: addressMap
-    }
-})
-
-//  client
 export const FavClient = new ApolloClient({
     cache: favCache,
     typeDefs: FavTypeDef,

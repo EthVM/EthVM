@@ -33,6 +33,8 @@ import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
 import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/FavDialog'
+import { DataArray } from '@app/apollo/favorites/models'
+
 @Component({
     components: {
         FavBtnEdit,
@@ -42,7 +44,7 @@ import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/Fav
         checkAddress: {
             query: checkAddress,
             client: 'FavClient',
-            fetchPolicy: 'cache-and-network',
+            fetchPolicy: 'network-only',
             variables() {
                 return {
                     address: this.address
@@ -105,7 +107,6 @@ export default class FavHandlerEdit extends Vue {
                 if (data) {
                     this.$emit('nameChange', name)
                     this.closeEditDialog()
-                    this.$apollo.queries.checkAddress.refresh()
                 }
             })
     }
@@ -120,6 +121,19 @@ export default class FavHandlerEdit extends Vue {
     }
     get dialogAddrs(): DialogAddress[] {
         return [new DialogAddress(this.address, this.name, this.addrChips)]
+    }
+
+    /*
+    ===================================================================================
+      Lifecycle:
+    ===================================================================================
+    */
+    mounted() {
+        window.addEventListener('storage', event => {
+            if (event.key === DataArray.addr) {
+                this.$apollo.queries.checkAddress.refresh()
+            }
+        })
     }
 
     /*
