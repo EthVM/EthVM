@@ -105,12 +105,20 @@ export default class TokenTransfers extends Vue {
           Methods
         ===================================================================================
         */
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     * @param isErc20 {Boolean}
+     */
     emitErrorState(val: boolean, isErc20 = false): void {
         this.hasError = val
         const message = isErc20 ? ErrorMessageToken.erc20Transfers : ErrorMessageToken.erc721Transfers
         this.$emit('errorDetails', val, message)
     }
-
+    /**
+     * Gets ERC20 through apollo
+     * @param page {Number}
+     */
     getERC20Transfer(page: number) {
         const queryName = 'getERC20TokenTransfers'
 
@@ -134,7 +142,10 @@ export default class TokenTransfers extends Vue {
             }
         })
     }
-
+    /**
+     * Gets ERC721 through apollo
+     * @param page {Number}
+     */
     getERC721Transfer(page: number) {
         const queryName = 'getERC721TokenTransfers'
 
@@ -158,7 +169,11 @@ export default class TokenTransfers extends Vue {
             }
         })
     }
-
+    /**
+     * Sets page number and reset value and emit
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0

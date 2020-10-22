@@ -106,7 +106,11 @@ export default class PageDetailsUncle extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets error if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageToken}
+     */
     setError(hasError: boolean, message: ErrorMessageUncle): void {
         if (hasError) {
             if (message === ErrorMessageUncle.notFound) {

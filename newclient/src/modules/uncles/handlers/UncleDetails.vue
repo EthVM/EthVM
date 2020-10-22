@@ -192,7 +192,11 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
     Methods:
   ===================================================================================
   */
-
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     * @param hashNotFound {Boolean}
+     */
     emitErrorState(val: boolean, hashNotFound = false): void {
         this.hasError = val
         const mess = hashNotFound ? ErrorMessageUncle.notFound : ErrorMessageUncle.details

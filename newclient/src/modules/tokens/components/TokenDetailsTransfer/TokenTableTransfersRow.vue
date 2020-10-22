@@ -193,7 +193,10 @@ export default class TokenTableTransfersRow extends Mixins(NumberFormatMixin) {
      Methods
     ===================================================================================
     */
-    onImageLoadFail(index): void {
+    /**
+     * Sets image exists to false
+     */
+    onImageLoadFail(): void {
         this.imageExists = false
     }
 }
