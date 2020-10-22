@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Mixins, Watch } from 'vue-property-decorator'
 import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
 import { Crumb } from '@app/core/components/props'
 import FavAddrTableRow from '@app/modules/favorites/components/FavAddrTableRow.vue'
@@ -24,6 +24,7 @@ import { getContractMeta_getContractMeta as ContractMeta } from '@app/modules/ad
 import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsBlock'
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsUncle'
 import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from '@app/modules/address/handlers/AddressRewards/rewards.graphql'
+import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
 
 @Component({
     components: {
@@ -102,7 +103,7 @@ import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from 
         }
     }
 })
-export default class FavHandlerAddressListRow extends Vue {
+export default class FavHandlerAddressListRow extends Mixins(AddressUpdateEvent) {
     /*
     ===================================================================================
       Props
@@ -156,6 +157,14 @@ export default class FavHandlerAddressListRow extends Vue {
         }
         return chips
     }
+    /*
+    ===================================================================================
+      LifeCycle:
+    ===================================================================================
+    */
+    mounted() {
+        this.setEventVariables(this.hash)
+    }
 
     @Watch('hash')
     onHashChange(newVal: string, oldVal: string): void {
@@ -164,12 +173,20 @@ export default class FavHandlerAddressListRow extends Vue {
             this.isContract = false
             this.isContractCreator = false
             this.skipUncleRewards = true
+            this.setEventVariables(newVal)
         }
     }
     @Watch('addrChips')
     onAddrChipsChange(newVal: EnumAdrChips[], oldVal: EnumAdrChips[]): void {
         if (newVal.length !== oldVal.length) {
             this.$emit('addressChips', this.addrChips, this.hash)
+        }
+    }
+    @Watch('addrBalanceChanged')
+    onAddrBalanceChanged(): void {
+        if (this.onAddrBalanceChanged && !this.$apollo.queries.getEthBalance.loading) {
+            this.$apollo.queries.getEthBalance.refetch()
+            this.resetBalance()
         }
     }
 
