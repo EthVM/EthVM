@@ -1,3 +1,6 @@
+### Bug
+- Sentry fix #1950193750 and set contract correctly in CoinData [#895](https://github.com/EthVM/EthVM/pull/895)
+
 ### Release v1.0.2
 
 ### Bug
