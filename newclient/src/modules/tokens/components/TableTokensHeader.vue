@@ -20,10 +20,10 @@
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(1)" :class="[!isActive(0) && !isActive(1) ? 'inactive-btn' : '']" flat icon @click="selectFilter(0)">
-                            <v-icon :class="[isActive(0) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                            <v-icon :class="[isActive(0) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
                         </v-btn>
                         <v-btn v-if="!loading && isActive(1)" flat icon @click="selectFilter(1)">
-                            <v-icon :class="[isActive(1) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                            <v-icon :class="[isActive(1) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -35,10 +35,10 @@
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(3)" :class="[!isActive(2) && !isActive(3) ? 'inactive-btn' : '']" flat icon @click="selectFilter(2)">
-                            <v-icon :class="[isActive(2) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                            <v-icon :class="[isActive(2) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
                         </v-btn>
                         <v-btn v-if="!loading && isActive(3)" flat icon @click="selectFilter(3)">
-                            <v-icon :class="[isActive(3) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                            <v-icon :class="[isActive(3) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -53,10 +53,10 @@
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(5)" :class="[!isActive(4) && !isActive(5) ? 'inactive-btn' : '']" flat icon @click="selectFilter(4)">
-                            <v-icon :class="[isActive(4) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                            <v-icon :class="[isActive(4) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
                         </v-btn>
                         <v-btn v-if="!loading && isActive(5)" flat icon @click="selectFilter(5)">
-                            <v-icon :class="[isActive(5) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                            <v-icon :class="[isActive(5) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -68,10 +68,10 @@
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(7)" :class="[!isActive(6) && !isActive(7) ? 'inactive-btn' : '']" flat icon @click="selectFilter(6)">
-                            <v-icon :class="[isActive(6) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                            <v-icon :class="[isActive(6) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
                         </v-btn>
                         <v-btn v-if="!loading && isActive(7)" flat icon @click="selectFilter(7)">
-                            <v-icon :class="[isActive(7) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                            <v-icon :class="[isActive(7) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -143,6 +143,9 @@ export default class TableTokensHeader extends Vue {
     height: 12px;
     width: 12px;
     margin: 0;
+    .v-icon {
+        font-size: 18px !important;
+    }
 }
 .inactive-sort {
     .inactive-btn {
