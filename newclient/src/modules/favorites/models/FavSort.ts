@@ -8,7 +8,7 @@ const KEY_NAME = 'name'
 const KEY_BALANCE = 'balance'
 const KEY_BALANCE_USD = 'balanceUSD'
 
-interface FavoritesSort {
+export interface FavoritesSort {
     name?: string
     address: string
     balance?: number
@@ -23,11 +23,11 @@ export class FavSort {
     }
     addFavoriteBalance(value: string, hash: string) {
         const favorite = this.favorites.find(addr => addr.address === hash)
-        favorite ? (favorite.balance = parseInt(new EthValue(value).toEthBN().toFixed())) : ''
+        favorite ? (favorite.balance = parseFloat(new EthValue(value).toEthBN().toFixed())) : ''
     }
     addFavoriteBalanceUSD(value: string, hash: string) {
         const favorite = this.favorites.find(addr => addr.address === hash)
-        favorite ? (favorite.balanceUSD = parseInt(value)) : ''
+        favorite ? (favorite.balanceUSD = parseFloat(value)) : ''
     }
     sortByDescend(key: string) {
         if (this.favorites) {
@@ -52,5 +52,6 @@ export class FavSort {
             /* Sort By Balance USD: */
             this.favorites = sort.includes('high') ? this.sortByDescend(KEY_BALANCE_USD) : this.sortByAscend(KEY_BALANCE_USD)
         }
+        return this.favorites
     }
 }

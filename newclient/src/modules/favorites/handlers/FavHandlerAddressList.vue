@@ -10,7 +10,7 @@
         <v-layout align-center justify-start row wrap pl-3 pr-3 mt-1>
             <app-table-title :title="title" :has-pagination="false" :page-type="pageType" :title-caption="titleCaption" page-link="" class="pl-2" />
             <v-flex v-if="!deleteMode" shrink pl-2 hidden-xs-only>
-                <fav-btn-add :add-address="addItem" />
+                <fav-btn-add ref="favAdd" :add-address="addItem" :has-address="hasAddress" />
             </v-flex>
             <v-spacer hidden-xs-only />
             <v-flex v-if="deleteMode" shrink hidden-xs-only hidden-md-and-up>
@@ -167,7 +167,7 @@ import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/fa
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import { DialogAddress } from '@app/modules/favorites/models/FavDialog'
 import { EnumAdrChips } from '@app/core/components/props'
-import { FavSort } from '@app/modules/favorites/models/FavSort'
+import { FavoritesSort, FavSort } from '@app/modules/favorites/models/FavSort'
 import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import { DataArray } from '@app/apollo/favorites/models'
 
@@ -347,8 +347,12 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     Methods
   ===================================================================================
   */
-    sortAddresses(sort: string): void {
-        this.favSort.sortFavorites(sort)
+    hasAddress(address: string): boolean {
+        const foundItems = this.favAddresses.find(i => i.address === address)
+        return foundItems ? true : false
+    }
+    sortAddresses(sort: string): FavoritesSort[] {
+        return this.favSort.sortFavorites(sort)
     }
     emitErrorState(val: boolean, message: string): void {
         this.hasError = val

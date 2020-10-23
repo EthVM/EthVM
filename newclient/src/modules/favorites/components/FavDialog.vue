@@ -162,6 +162,7 @@ export default class FavAddDialog extends Vue {
     @Prop(Array) addrs?: DialogAddress[]
     @Prop(Array) chips?: EnumAdrChips[]
     @Prop(Function) dialogMethod!: void
+    @Prop(Function) hasAddress!: (addr) => boolean
 
     /*
     ===================================================================================
@@ -208,7 +209,8 @@ export default class FavAddDialog extends Vue {
     get addressRules(): Rules[] {
         const rules = [
             newAddress => (!!newAddress && newAddress !== '') || this.$t('fav.dialog.input-required'),
-            newAddress => eth.isValidAddress(newAddress) || this.$t('fav.dialog.invalid-address')
+            newAddress => this.isValidAddress || this.$t('fav.dialog.invalid-address'),
+            newAddress => !this.hasAddress(newAddress) || this.$t('fav.message.already-exists')
         ]
         return rules
     }
@@ -221,7 +223,7 @@ export default class FavAddDialog extends Vue {
         if (this.dialogMode !== FavDialogModes.searchAdd) {
             return false
         }
-        return !this.isValidAddress
+        return !this.isValidAddress || !!this.hasAddress(this.newAddress)
     }
 
     /**

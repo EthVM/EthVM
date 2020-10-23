@@ -9,7 +9,7 @@
             <span class="black--text">{{ $t('fav.tooltip.add') }}</span>
         </v-tooltip>
         <v-dialog v-model="open" max-width="500">
-            <fav-dialog v-if="open" :dialog-method="addAddress" :dialog-mode="searchMode" @closeFavDialog="closeFavDialog()" />
+            <fav-dialog v-if="open" :has-address="hasAddress" :dialog-method="addAddress" :dialog-mode="searchMode" @closeFavDialog="closeFavDialog()" />
         </v-dialog>
     </div>
 </template>
@@ -31,6 +31,7 @@ export default class FavBtnAdd extends Vue {
     ===================================================================================
     */
     @Prop(Function) addAddress!: void
+    @Prop(Function) hasAddress!: void
 
     /*
     ===================================================================================
