@@ -169,6 +169,8 @@ import { DialogAddress } from '@app/modules/favorites/models/FavDialog'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavSort } from '@app/modules/favorites/models/FavSort'
 import AppFilter from '@app/core/components/ui/AppFilter.vue'
+import { DataArray } from '@app/apollo/favorites/models'
+
 import BN from 'bignumber.js'
 
 const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low', 'balance_high', 'balance_low', 'value_high', 'value_low']
@@ -190,7 +192,7 @@ const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low', '
         favAddresses: {
             query: favAddressCache,
             client: 'FavClient',
-            fetchPolicy: 'cache-and-network',
+            fetchPolicy: 'network-only',
             update: data => data.favAddresses,
             result({ data }) {
                 if (data && data.favAddresses) {
@@ -359,11 +361,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         this.searchVal = val ? val.toLowerCase() : null
     }
     addItem(item): void {
-        this.mixinAddToFav(item.name, item.address).then(res => {
-            if (res) {
-                this.$apollo.queries.favAddresses.refresh()
-            }
-        })
+        this.mixinAddToFav(item.name, item.address)
     }
     changeDeleteMode(): void {
         this.deleteMode = !this.deleteMode
@@ -398,11 +396,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
     deleteAddrs(): void {
         this.deleteArray.forEach(_hash => {
-            this.mixinRemoveFromFav(_hash).then(res => {
-                if (res) {
-                    this.$apollo.queries.checkAddress.refresh()
-                }
-            })
+            this.mixinRemoveFromFav(_hash)
         })
         this.deleteMode = false
         this.deleteArray = []

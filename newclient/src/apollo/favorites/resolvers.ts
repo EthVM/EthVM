@@ -87,7 +87,7 @@ export const resolvers = {
  * @param cache: InMemoryCache, apollo cache object
  * @return - returns cachedAdrsType data type or null if !data.favAddresses
  */
-function getCachedAddrs(cache: InMemoryCache): cachedAdrsType | null {
+const getCachedAddrs = (cache: InMemoryCache): cachedAdrsType | null => {
     return cache.readQuery({ query: favAddressCache })
 }
 
@@ -97,7 +97,7 @@ function getCachedAddrs(cache: InMemoryCache): cachedAdrsType | null {
  * @param cache: InMemoryCache, apollo cache object
  * @return - returns AddrType or  null if not found
  */
-function hasAddress(address: string, cache: InMemoryCache): AddrType | null {
+const hasAddress = (address: string, cache: InMemoryCache): AddrType | null => {
     const data = getCachedAddrs(cache)
     if (data && data.favAddresses && data.favAddresses.length > 0) {
         const items = data.favAddresses.filter(item => item.address.toLowerCase() === address.toLowerCase())
@@ -118,7 +118,7 @@ function hasAddress(address: string, cache: InMemoryCache): AddrType | null {
  *    - delete: will search for an object with item.address and delete this object
  * @return - returns AddrType - item
  */
-function changeFavAddressArray(action: Actions, cache: InMemoryCache, item: AddrType): AddrType {
+const changeFavAddressArray = (action: Actions, cache: InMemoryCache, item: AddrType): AddrType => {
     const storeAdrs = store.get(DataArray.addr) || []
     let data = getCachedAddrs(cache)
 
@@ -155,7 +155,7 @@ function changeFavAddressArray(action: Actions, cache: InMemoryCache, item: Addr
     }
 
     /* Update Store and Apollo Cache */
-    store.set(DataArray.addr, storeAdrs)
     cache.writeQuery({ query: favAddressCache, data })
+    store.set(DataArray.addr, storeAdrs)
     return item
 }

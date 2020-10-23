@@ -25,13 +25,15 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { checkAddress } from './checkAdr.graphql'
+import { checkAddress as checkAddressQuery } from './checkAdr.graphql'
 import FavBtnHeart from '@app/modules/favorites/components/FavBtnHeart.vue'
 import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorites/mixins/FavActions.mixin'
 import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
 import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/FavDialog'
+import { DataArray } from '@app/apollo/favorites/models'
+import { CheckAddressRefetch } from '@app/modules/favorites/models/FavApolloRefetch'
 
 @Component({
     components: {
@@ -40,7 +42,7 @@ import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/Fav
     },
     apollo: {
         checkAddress: {
-            query: checkAddress,
+            query: checkAddressQuery,
             client: 'FavClient',
             fetchPolicy: 'network-only',
             variables() {
@@ -90,19 +92,11 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     ===================================================================================
     */
     addToFav(name: string): void {
-        this.mixinAddToFav(name, this.address).then(res => {
-            if (res) {
-                this.$apollo.queries.checkAddress.refresh()
-            }
-        })
+        this.mixinAddToFav(name, this.address, this.refetchCheckAddress)
         this.closeFavDialog()
     }
     removeFromFav(): void {
-        this.mixinRemoveFromFav(this.address).then(res => {
-            if (res) {
-                this.$apollo.queries.checkAddress.refresh()
-            }
-        })
+        this.mixinRemoveFromFav(this.address, this.refetchCheckAddress)
         this.closeFavDialog()
     }
     /*
@@ -123,6 +117,30 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     }
     get dialogAddrs(): DialogAddress[] {
         return [new DialogAddress(this.address, this.name, this.addrChips)]
+    }
+
+    get refetchCheckAddress(): CheckAddressRefetch[] {
+        return [
+            {
+                query: checkAddressQuery,
+                variables: {
+                    address: this.address
+                }
+            }
+        ]
+    }
+
+    /*
+    ===================================================================================
+      Lifecycle:
+    ===================================================================================
+    */
+    mounted() {
+        window.addEventListener('storage', event => {
+            if (event.key === DataArray.addr) {
+                this.$apollo.queries.checkAddress.refresh()
+            }
+        })
     }
 
     /*
