@@ -276,7 +276,10 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets time frame for chart
+     * @param value {Number}
+     */
     setTimeFrame(value: number): void {
         this.scale = DEFAULT_DATA[value].scale
         this.maxItems = DEFAULT_DATA[value].max_items

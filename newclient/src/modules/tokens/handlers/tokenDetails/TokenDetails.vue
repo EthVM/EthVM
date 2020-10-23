@@ -267,7 +267,11 @@ export default class TokenDetails extends Vue {
     Methods:
   ===================================================================================
   */
-
+    /**
+     * Sets error messages if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageBlock}
+     */
     emitErrorState(val: boolean, message: ErrorMessageToken): void {
         this.hasError = val
         this.$emit('errorDetails', this.hasError, message)

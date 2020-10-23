@@ -52,6 +52,10 @@ export default class ChartLink extends Vue {
       Methods
     ===================================================================================
     */
+    /**
+     * Reroutes page
+     * @param newRoute {String}
+     */
     reroute(newRoute: string): void {
         this.$router.push({ path: `chart/${newRoute}` })
     }
