@@ -65,7 +65,8 @@
         "vuex": "^3.4.0",
         "vuex-class": "^0.3.2",
         "web3": "^1.2.6",
-        "webfontloader": "^1.6.28"
+        "webfontloader": "^1.6.28",
+        "webpack-merge": "^5.2.0"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.10.1",

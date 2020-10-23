@@ -67,7 +67,11 @@ export default class PageTxs extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets error if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageToken}
+     */
     setError(hasError: boolean, message: ErrorMessageBlock): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {

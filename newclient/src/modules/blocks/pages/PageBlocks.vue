@@ -62,7 +62,11 @@ export default class PageBlocks extends Mixins(NewBlockSubscription) {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets error messages if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageBlock}
+     */
     setError(hasError: boolean, message: ErrorMessageBlock): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {
@@ -78,6 +82,10 @@ export default class PageBlocks extends Mixins(NewBlockSubscription) {
         }
     }
     @Watch('hasNewBlockUpdateError')
+    /**
+     * Watches hasNewBlockUpdateError
+     * @param newVal {Boolean}
+     */
     onHasNewBlockUpdateErrorChanged(newVal: boolean): void {
         this.setError(newVal, ErrorMessageBlock.subscription)
     }

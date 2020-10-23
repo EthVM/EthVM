@@ -145,11 +145,17 @@ export default class TableBlocksRow extends Mixins(NumberFormatMixin) {
    Methods
   ===================================================================================
   */
-
+    /**
+     * Called when translation is success
+     * @returns {Number}
+     */
     sucessTransalate(): number {
         return this._block && this._block.txSuccess > 1 ? 2 : 1
     }
-
+    /**
+     * Called when translation is fails
+     * @returns {Number}
+     */
     failedTranslate(): number {
         return this.block && this._block.txFail > 1 ? 2 : 1
     }

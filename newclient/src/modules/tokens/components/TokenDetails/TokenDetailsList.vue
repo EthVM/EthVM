@@ -94,6 +94,10 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
       Methods:
     ===================================================================================
     */
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorDetails', val, ErrorMessageToken.details)
