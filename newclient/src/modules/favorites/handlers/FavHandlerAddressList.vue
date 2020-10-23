@@ -214,7 +214,6 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     pageType = 'fav_addresses'
     index = 0
     favAddresses!: favAddressesType[]
-    items!: favAddressesType[]
     hasError = false
     maxItems = 10
     /* Search */
@@ -281,7 +280,6 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     get totalAddr(): number | null {
         return this.favorites ? this.favorites.length : null
     }
-
     get isLoading(): boolean {
         return this.$apollo.queries.favAddresses.loading
     }
@@ -290,7 +288,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
     get adrList(): favAddressesType[] {
         if (!this.isLoading || this.hasFavAdr) {
-            const start = this.index * this.maxItems
+            const start = this.searchVal ? 0 : this.index * this.maxItems
             const end = start + this.maxItems > this.favorites.length ? this.favorites.length : start + this.maxItems
             return this.favorites.slice(start, end)
         }
@@ -304,10 +302,10 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
 
     get favorites(): favAddressesType[] {
-        this.items = this.searchVal
+        const searchResults = this.searchVal
             ? this.favAddresses.filter(item => item.name.toLowerCase().includes(this.searchVal) || item.address.toLowerCase().includes(this.searchVal))
             : []
-        return this.items && this.searchVal ? this.items : this.favAddresses
+        return searchResults && this.searchVal ? searchResults : this.favAddresses
     }
     get message(): string {
         if (!this.isLoading) {
