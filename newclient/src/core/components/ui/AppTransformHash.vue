@@ -1,17 +1,12 @@
 <template>
     <div class="transform-hash-container">
-        <router-link v-if="link" :to="url">
-            <div :class="hashClass">
-                <div class="hash-section">{{ first }}</div>
-                <div class="concat hash-section">{{ middle }}</div>
-                <div class="hash-section">{{ last }}</div>
-            </div>
+        <router-link v-if="link" :to="url" :class="[hashClass, 'font-mono hash-container force-select url']" tag="li">
+            <span class="concat">{{ start }}</span> <span>{{ end }}</span>
         </router-link>
-        <div v-else :class="hashClass">
-            <div class="hash-section">{{ first }}</div>
-            <div class="concat hash-section">{{ middle }}</div>
-            <div class="hash-section">{{ last }}</div>
-        </div>
+        <span v-else :class="[hashClass, 'force-select font-mono hash-container']">
+            <span class="concat">{{ start }}</span>
+            <span>{{ end }}</span>
+        </span>
     </div>
 </template>
 
@@ -36,23 +31,19 @@ export default class AppTransformHash extends Vue {
     Computed
   ===================================================================================
   */
-    get last(): string {
+    get start(): string {
+        const n = this.hash.length
+        return this.hash.slice(0, n - 4)
+    }
+    get end(): string {
         const n = this.hash.length
         return this.hash.slice(n - 4, n)
     }
-    get first(): string {
-        return this.hash.slice(0, 4)
-    }
-    get middle(): string {
-        const n = this.hash.length
-        return this.hash.slice(4, n - 4)
-    }
-
     get hashClass(): string {
         if (!this.isBlue) {
-            return this.italic ? 'hash-container font-italic black--text font-mono' : ' hash-container black--text font-mono'
+            return this.italic ? 'font-italic black--text ' : 'black--text'
         }
-        return this.italic ? 'hash-container font-italic secondary--text font-mono' : ' hash-container secondary--text font-mono'
+        return this.italic ? ' font-italic secondary--text ' : 'secondary--text'
     }
 
     get url(): string {
@@ -65,6 +56,7 @@ export default class AppTransformHash extends Vue {
 .concat {
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 20px;
 }
 .transform-hash-container {
     overflow: hidden;
@@ -75,7 +67,17 @@ export default class AppTransformHash extends Vue {
     display: flex;
     flex-shrink: 2;
 }
+.force-select {
+    -webkit-user-select: all; /* Chrome 49+ */
+    -moz-user-select: all; /* Firefox 43+ */
+    -ms-user-select: all; /* No support yet */
+    user-select: all;
+}
 .hash-section {
     display: inline;
+}
+
+.url:hover {
+    text-decoration: underline;
 }
 </style>
