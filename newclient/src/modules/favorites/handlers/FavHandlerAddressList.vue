@@ -89,6 +89,9 @@
         -->
         <v-layout grid-list-xs align-center justify-center hidden-sm-and-up row wrap pr-2 pl-2 mb-3>
             <v-flex xs12 pb-0 pt-0>
+                <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortAddresses" />
+            </v-flex>
+            <v-flex xs12 pb-0 pt-0>
                 <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
             </v-flex>
             <v-flex shrink pt-0 pb-0>
@@ -117,7 +120,14 @@
             :table-message="message"
         >
             <template #header>
-                <fav-addr-table-header :delete-mode="deleteMode" :all-selected="isAllSelected" :delete-array="deleteArray" @selectAllInHeader="removeAll" />
+                <fav-addr-table-header
+                    :loading="isLoading"
+                    :delete-mode="deleteMode"
+                    :all-selected="isAllSelected"
+                    :delete-array="deleteArray"
+                    @sortBy="sortAddresses"
+                    @selectAllInHeader="removeAll"
+                />
             </template>
             <template #rows>
                 <v-card v-for="adr in adrList" :key="adr.hash" class="transparent" flat>
@@ -128,6 +138,7 @@
                         :delete-mode="deleteMode"
                         :delete-array="deleteArray"
                         :check-box-method="updateDeleteArray"
+                        :fav-sort="favSort"
                         @errorFavorites="emitErrorState"
                         @addressChips="updateChips"
                     />
@@ -156,8 +167,11 @@ import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/fa
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import { DialogAddress } from '@app/modules/favorites/models/FavDialog'
 import { EnumAdrChips } from '@app/core/components/props'
-
+import { FavSort } from '@app/modules/favorites/models/FavSort'
+import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import BN from 'bignumber.js'
+
+const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low', 'balance_high', 'balance_low', 'value_high', 'value_low']
 
 @Component({
     components: {
@@ -169,7 +183,8 @@ import BN from 'bignumber.js'
         FavAddrTableHeader,
         FavAddrTableRowHandler,
         FavSearch,
-        TableTxs
+        TableTxs,
+        AppFilter
     },
     apollo: {
         favAddresses: {
@@ -213,6 +228,50 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     Computed
   ===================================================================================
   */
+    get options() {
+        return [
+            {
+                value: FILTER_VALUES[0],
+                text: this.$i18n.tc('fav.sort.address'),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[1],
+                text: this.$i18n.tc('fav.sort.address'),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[2],
+                text: this.$i18n.tc('fav.sort.name'),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[3],
+                text: this.$i18n.tc('fav.sort.name'),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[4],
+                text: this.$i18n.tc('fav.sort.balance'),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[5],
+                text: this.$i18n.tc('fav.sort.balance'),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[6],
+                text: this.$i18n.t('fav.sort.balance-usd'),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[7],
+                text: this.$i18n.t('fav.sort.balance-usd'),
+                filter: this.$i18n.t('filter.low')
+            }
+        ]
+    }
 
     get title(): string {
         return this.$t('fav.title').toString()
@@ -279,12 +338,18 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         })
         return addrDelete
     }
+    get favSort(): FavSort {
+        return new FavSort(this.favorites)
+    }
 
     /*
   ===================================================================================
     Methods
   ===================================================================================
   */
+    sortAddresses(sort: string): void {
+        this.favSort.sortFavorites(sort)
+    }
     emitErrorState(val: boolean, message: string): void {
         this.hasError = val
         this.$emit('errorFavorites', this.hasError, message)

@@ -214,7 +214,13 @@
         },
         "title": "Favorite Addresses",
         "name" : "Name",
-        "select-all": "Select All"
+        "select-all": "Select All",
+        "sort": {
+            "address": "Address",
+            "name": "Name",
+            "balance": "Balance",
+            "balance-usd": "USD Value"
+        }
     },
 
     "message": {

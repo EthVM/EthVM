@@ -96,6 +96,7 @@ export default class AppFilter extends Vue {
     @Prop(Array) options!: any[]
     @Prop(Boolean) showDesktop?: boolean
     @Prop(Boolean) isSort?: boolean
+    @Prop(Object) isSelected?: object
 
     /*
   ===================================================================================
@@ -103,9 +104,19 @@ export default class AppFilter extends Vue {
   ===================================================================================
   */
 
-    selected = this.isSort ? this.options[6] : this.options[0]
+    selected = {}
     // category = this.options[0].category
     dialog = false
+
+    /*
+  ===================================================================================
+    Lifecycle
+  ===================================================================================
+  */
+
+    mounted() {
+        this.selected = this.isSelected ? this.isSelected : this.options[0]
+    }
 
     /*
   ===================================================================================
