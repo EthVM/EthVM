@@ -10,6 +10,7 @@
 ### Bug
 
 - Deep watch on chart data sets [#885](https://github.com/EthVM/EthVM/pull/885)
+- Change 24 price change to 24 price change percentage [#887](https://github.com/EthVM/EthVM/pull/887)
 
 ===================================================================================
 
