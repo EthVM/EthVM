@@ -1,3 +1,4 @@
+
 ### Release v1.0.3
 
 ### Devop
@@ -8,6 +9,10 @@
 
 - Deep watch on chart data sets [#885](https://github.com/EthVM/EthVM/pull/885)
 - Fixed transform hash component for easy string copy [#899](https://github.com/EthVM/EthVM/pull/899/commits/e63c11860e9b0a22d7cfecad80719c8787e2c42c)
+- Change 24 price change to 24 price change percentage [#887](https://github.com/EthVM/EthVM/pull/887)
+- Sentry fix #1950193750 and set contract correctly in CoinData [#895](https://github.com/EthVM/EthVM/pull/895)
+- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881) 
+
 
 ===================================================================================
 
