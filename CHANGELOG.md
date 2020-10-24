@@ -1,3 +1,6 @@
+### Bug 
+- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881) 
+
 ### Release v1.0.3
 
 ### Devop

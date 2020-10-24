@@ -5,7 +5,7 @@
                 <template v-slot:title>
                     <v-layout grid-list-xs row align-center justify-start fill-height pl-4 pr-2 pt-1 mt-1 mb-1>
                         <div class="token-image">
-                            <v-img :src="image" contain />
+                            <v-img :src="image" contain @error="imgLoadFail" />
                         </div>
                         <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
                     </v-layout>
@@ -70,6 +70,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     // tokenData: TokenMarketData | null = null
     isRopsten = ConfigHelper.isRopsten
     hasError = false
+    imageExists = true
     /*
   ===================================================================================
         LifeCycle:
@@ -100,6 +101,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorDetails', val, ErrorMessageToken.details)
+    }
+
+    /**
+     * Image loading failed catcher
+     */
+    imgLoadFail(): void {
+        this.imageExists = false
     }
 
     /*
@@ -140,7 +148,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     }
 
     get image(): string {
-        return !(this.tokenData && this.tokenData.image) ? require('@/assets/icon-token.png') : this.tokenData.image
+        return !(this.tokenData && this.tokenData.image && this.imageExists) ? require('@/assets/icon-token.png') : this.tokenData.image
     }
 
     /**

@@ -21,7 +21,7 @@
                             <v-flex xs2 pa-1>
                                 <v-layout row align-center justify-center pa-2>
                                     <div class="token-image-mobile">
-                                        <v-img :src="image" contain />
+                                        <v-img :src="image" contain @error="imgLoadFail" />
                                     </div>
                                 </v-layout>
                             </v-flex>
@@ -140,7 +140,7 @@
                         <v-flex md4>
                             <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-1>
                                 <div class="token-image">
-                                    <v-img :src="image" contain />
+                                    <v-img :src="image" contain @error="imgLoadFail" />
                                 </div>
                                 <div v-if="name || symbolString" class="black--text subtitle-2 font-weight-medium">
                                     <p v-if="name">{{ name }}</p>
@@ -249,15 +249,23 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
 
     /*
     ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+
+    imageExists = true
+
+    /*
+    ===================================================================================
       Computed Values
     ===================================================================================
     */
 
     get image(): string {
-        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image) {
+        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image && this.imageExists) {
             return this.tokenPriceInfo.image
         }
-        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url) {
+        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url && this.imageExists) {
             return this.nftMeta.image_url
         }
         return require('@/assets/icon-token.png')
@@ -363,6 +371,12 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
      */
     showNft(): void {
         this.$emit('showNft', this.token.tokenInfo.contract, this.token.tokenInfo.name)
+    }
+    /**
+     * Image loading failed catcher
+     */
+    imgLoadFail(): void {
+        this.imageExists = false
     }
 }
 </script>

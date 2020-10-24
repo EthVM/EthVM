@@ -19,8 +19,7 @@
                         -->
                         <v-flex xs2 pl-1 pr-1 d-flex justify-center>
                             <div class="token-image-mobile">
-                                <v-img v-if="!token.image || token.image.includes('missing')" :src="require('@/assets/icon-token.png')" contain />
-                                <v-img v-else :src="token.image" contain />
+                                <v-img :src="image" contain @error="onImageLoadFail" />
                             </div>
                         </v-flex>
                         <!--
@@ -99,15 +98,7 @@
                         -->
                         <v-flex md4>
                             <v-layout grid-list-xs row align-center justify-start fill-height>
-                                <v-img
-                                    v-if="!token.image || token.image.includes('missing')"
-                                    :src="require('@/assets/icon-token.png')"
-                                    height="25px"
-                                    max-width="25px"
-                                    contain
-                                    class="ml-3 mr-2"
-                                />
-                                <v-img v-else :src="token.image" height="25px" max-width="25px" contain class="ml-3 mr-2" />
+                                <v-img :src="image" height="25px" max-width="25px" contain class="ml-3 mr-2" @error="onImageLoadFail" />
                                 <router-link :to="tokenLink" class="info--text caption">
                                     <span v-if="token.symbol" class="black--text text-uppercase font-weight-medium"> {{ token.symbol }} - </span>
                                     {{ token.name }}
@@ -202,10 +193,23 @@ export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     @Prop(Object) token!: TokenMarketData
 
     /*
+    ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+    imageExists = true
+
+    /*
   ===================================================================================
     Computed
   ===================================================================================
   */
+    get image(): string {
+        if (this.token.image && this.imageExists) {
+            return this.token.image
+        }
+        return '@/assets/icon-token.png'
+    }
 
     get tokenLink(): string {
         return `/token/${this.token.contract}`
@@ -250,6 +254,15 @@ export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     get tokenMarket(): FormattedNumber {
         const marketCap = this.token.market_cap || 0
         return this.formatIntegerValue(new BN(marketCap))
+    }
+
+    /*
+    ===================================================================================
+     Methods
+    ===================================================================================
+    */
+    onImageLoadFail(index): void {
+        this.imageExists = false
     }
 }
 </script>

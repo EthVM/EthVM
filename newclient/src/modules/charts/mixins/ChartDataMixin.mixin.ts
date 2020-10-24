@@ -133,14 +133,16 @@ export class ChartDataMixin extends Vue {
      */
     toEth(val: string): string {
         return fromWei(val, 'ether')
-    }/**
+    }
+    /**
      * Converts received value toG wei
      * @param val: {String}
      * @returns string
      */
     toGwei(val: string): string {
         return fromWei(val, 'gwei')
-    }/**
+    }
+    /**
      * Converts received value toU SDT
      * @param val: {String}
      * @returns string

@@ -68,7 +68,7 @@ export class AddressUpdateEvent extends Vue {
       Methods
     ===================================================================================
     */
-   /**
+    /**
      * Sets owner
      * @param owner String
      */
