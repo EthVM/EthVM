@@ -79,7 +79,7 @@ export class CoinData extends Vue {
         if (!this.isLoadingTokensMarketData) {
             const requestMarketInfo = new Map<string, TokenMarketData>()
             contracts.forEach(contract => {
-                const token = this.tokensMarketInfo.get(contract)
+                const token = this.tokensMarketInfo.get(contract.toLowerCase())
                 if (token && token.contract) {
                     requestMarketInfo.set(token.contract.toLowerCase(), token)
                 }
@@ -97,7 +97,7 @@ export class CoinData extends Vue {
      */
     getEthereumTokenByContract(contract: string): TokenMarketData | false {
         if (!this.isLoadingTokensMarketData) {
-            const token = this.tokensMarketInfo.get(contract)
+            const token = this.tokensMarketInfo.get(contract.toLowerCase())
             if (token) {
                 return token
             }
