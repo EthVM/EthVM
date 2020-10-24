@@ -188,7 +188,10 @@ export default class TokenTableHoldersRow extends Mixins(NumberFormatMixin) {
      Methods
     ===================================================================================
     */
-    onImageLoadFail(index): void {
+    /**
+     * Sets image exists to false
+     */
+    onImageLoadFail(): void {
         this.imageExists = false
     }
 }

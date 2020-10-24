@@ -116,6 +116,10 @@ export default class BlockStats extends Mixins(NumberFormatMixin) {
       Methods
     ===================================================================================
     */
+    /**
+     * Emits error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorBlockStats', this.hasError, ErrorMessageBlock.stats)

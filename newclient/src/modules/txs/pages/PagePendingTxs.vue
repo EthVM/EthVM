@@ -67,7 +67,11 @@ export default class PagePendingTxs extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets error if any
+     * @param hasError {Boolean}
+     * @param message {ErrorMessageToken}
+     */
     setError(hasError: boolean, message: ErrorMessagePendingTx): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {

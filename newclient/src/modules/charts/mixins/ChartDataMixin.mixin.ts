@@ -36,6 +36,12 @@ export class ChartDataMixin extends Vue {
                 .unix()
         }
     }
+    /**
+     * Creates getTimeseriesData query and subsequent subscription, to get timeseries data for the chart
+     * @param _key: TimeseriesKey | string, defines which data to get. ie: Gas Price Ave. Use Strings only to get address balances as those requre additional params passed to the key.
+     * @param _scale: TimeseriesScale, defines which timeseries to get. ie: hours
+     * @return - returns timeseriesEthAvgVariables data type
+     */
 
     getSubscriptionVars(_key: TimeseriesKey, _scale: TimeseriesScale): timeseriesEthAvgVariables {
         return {
@@ -43,6 +49,12 @@ export class ChartDataMixin extends Vue {
             scale: _scale
         }
     }
+    /**
+     * Creates getTimeseriesData query and subsequent subscription, to get timeseries data for the chart
+     * @param _key: TimeseriesItemsTypes
+     * @param _scale: TimeseriesScale, defines which timeseries to get. ie: hours
+     * @return - returns TimeseriesItemsTypes data type
+     */
 
     addSubscriptionItem(newItem: TimeseriesItemsTypes, _items: TimeseriesItemsTypes[]): TimeseriesItemsTypes[] {
         let isNew = true
@@ -82,7 +94,12 @@ export class ChartDataMixin extends Vue {
                 return 300
         }
     }
-
+    /**
+     * Maps items into formatted object with x and y values
+     * @param items: TimeseriesItemsTypes
+     * @param valueTypes: TimeseriesValue
+     * @returns DataPoint
+     */
     mapItemsToDataSet(items: TimeseriesItemsTypes[], valueType: TimeseriesValue): DataPoint[] {
         return items.map(item => {
             return {
@@ -91,7 +108,12 @@ export class ChartDataMixin extends Vue {
             }
         })
     }
-
+    /**
+     * Formats time to its corresponding values
+     * @param valueType: TimeseriesValue
+     * @param value: string
+     * @return: string
+     */
     getFormat(valueType: TimeseriesValue, value: string): string {
         switch (valueType) {
             case TimeseriesValue.GWEI:
@@ -104,13 +126,27 @@ export class ChartDataMixin extends Vue {
                 return this.toEth(value)
         }
     }
-
+    /**
+     * Converts received value to Eth
+     * @param val: {String}
+     * @returns string
+     */
     toEth(val: string): string {
         return fromWei(val, 'ether')
     }
+    /**
+     * Converts received value toG wei
+     * @param val: {String}
+     * @returns string
+     */
     toGwei(val: string): string {
         return fromWei(val, 'gwei')
     }
+    /**
+     * Converts received value toU SDT
+     * @param val: {String}
+     * @returns string
+     */
     toUSDT(val: string): string {
         let _val = toBN(val)
         _val = _val.div(toBN(10).pow(toBN(6)))

@@ -1,5 +1,19 @@
+
+### Release v1.0.3
+
+### Devop
+
+- Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
+
 ### Bug
+
+- Deep watch on chart data sets [#885](https://github.com/EthVM/EthVM/pull/885)
+- Change 24 price change to 24 price change percentage [#887](https://github.com/EthVM/EthVM/pull/887)
 - Sentry fix #1950193750 and set contract correctly in CoinData [#895](https://github.com/EthVM/EthVM/pull/895)
+- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881) 
+
+
+===================================================================================
 
 ### Release v1.0.2
 

@@ -44,14 +44,26 @@ export default class SearchDetails extends Vue {
     Methods
   ===================================================================================
   */
+    /**
+     * Sets error and cancels loading
+     * @param param {Any}
+     */
     setError(param): void {
         this.routeToNotFound(param)
         this.hasError = true
         this.isLoading = false
     }
+    /**
+     * Checks whether param is valid
+     * @param param {Any}
+     */
     isValid(param): boolean {
         return eth.isValidHash(this.removeSpaces(param)) || eth.isValidAddress(this.removeSpaces(param))
     }
+    /**
+     * Gets the hashtype of param
+     * @param param {Any}
+     */
     getHashType(param): void {
         let routeName = ''
         this.isLoading = true
@@ -90,14 +102,27 @@ export default class SearchDetails extends Vue {
                 throw error
             })
     }
+    /**
+     * Sends user to not found route
+     * @param searchVal {Any}
+     */
     routeToNotFound(searchVal): void {
         const route = { name: 'search-not-found', params: { searchTerm: searchVal } }
         this.$router.push(route).catch(() => {})
     }
+    /**
+     * Sends user to the right page
+     * @param selectVal {Any}
+     * @param searchVal {Any}
+     */
     routeTo(selectVal, searchVal): void {
         const route = { name: this.getSelectVal(selectVal, searchVal), params: this.getParam(selectVal, searchVal) }
         this.$router.push(route).catch(() => {})
     }
+    /**
+     * Route user to tokens ppage
+     * @param param {Any}
+     */
     routeToToken(param): void {
         const route = { name: 'token-detail', params: { addressRef: this.removeSpaces(param) } }
         this.$router
@@ -105,6 +130,11 @@ export default class SearchDetails extends Vue {
             .then(() => this.$refs.search.resetValues())
             .catch(() => {})
     }
+    /**
+     * Get selected value
+     * @param selectVal {Any}
+     * @param searchVal {Any}
+     */
     getSelectVal(selectVal, searchVal) {
         const isNum = /^\d+$/.test(searchVal)
         if (selectVal === 'block' && !isNum) {
@@ -112,6 +142,11 @@ export default class SearchDetails extends Vue {
         }
         return selectVal
     }
+    /**
+     * Get params
+     * @param selectVal {Any}
+     * @param searchVal {Any}
+     */
     getParam(selectVal, searchVal): {} {
         if (selectVal === values[0]) {
             return { txRef: this.removeSpaces(searchVal) }
@@ -122,6 +157,10 @@ export default class SearchDetails extends Vue {
         }
         return { blockRef: this.removeSpaces(searchVal) }
     }
+    /**
+     * Get tokens
+     * @param param {Any}
+     */
     getToken(param): void {
         if (!this.onlyLetters(param)) {
             return
@@ -150,23 +189,39 @@ export default class SearchDetails extends Vue {
                 throw error
             })
     }
+    /**
+     * Get search values based on if param is token or hashType
+     * @param param {Any}
+     */
     getAllSearch(param): void {
         if (param && param.contract) {
             this.routeToToken(param.contract)
         }
         this.onlyLetters(param) ? this.getToken(param) : this.getHashType(param)
     }
+    /**
+     * Get selected value and route user to token page
+     * @param param {Any}
+     */
     onSelect(param): void {
         if (param && param.contract) {
             this.routeToToken(param.contract)
         }
     }
+    /**
+     * Removes spaces from val
+     * @param val {Any}
+     */
     removeSpaces(val): string {
         if (val) {
             return val.replace(/ /g, '')
         }
         return ''
     }
+    /**
+     * Check if param onl contains string
+     * @param param {Any}
+     */
     onlyLetters(param): boolean {
         const value = this.removeSpaces(param)
         return /^[a-zA-Z]+$/.test(value) ? true : false
