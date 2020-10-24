@@ -7,6 +7,7 @@
 ### Bug
 
 - Deep watch on chart data sets [#885](https://github.com/EthVM/EthVM/pull/885)
+- Fixed transform hash component for easy string copy [#899](https://github.com/EthVM/EthVM/pull/899/commits/e63c11860e9b0a22d7cfecad80719c8787e2c42c)
 
 ===================================================================================
 
