@@ -1,12 +1,7 @@
 <template>
-    <div class="transform-hash-container">
-        <router-link v-if="link" :to="url" :class="[hashClass, 'font-mono hash-container force-select url']" tag="li">
-            <span class="concat">{{ start }}</span> <span>{{ end }}</span>
-        </router-link>
-        <span v-else :class="[hashClass, 'force-select font-mono hash-container']">
-            <span class="concat">{{ start }}</span>
-            <span>{{ end }}</span>
-        </span>
+    <div :class="hashClass" @click="routeTo()">
+        <span class="firstPart">{{ start }}</span
+        ><span class="lastPart">{{ end }}</span>
     </div>
 </template>
 
@@ -16,21 +11,20 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component
 export default class AppTransformHash extends Vue {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
-
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
     @Prop(String) hash!: string
     @Prop({ type: Boolean, default: false }) italic!: boolean
-    @Prop(String) link!: string
+    @Prop(String) link?: string
     @Prop({ type: Boolean, default: true }) isBlue!: boolean
 
     /*
-  ===================================================================================
-    Computed
-  ===================================================================================
-  */
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
     get start(): string {
         const n = this.hash.length
         return this.hash.slice(0, n - 4)
@@ -40,43 +34,59 @@ export default class AppTransformHash extends Vue {
         return this.hash.slice(n - 4, n)
     }
     get hashClass(): string {
+        const base = this.link ? 'url hash-container font-mono' : 'hash-container font-mono'
         if (!this.isBlue) {
-            return this.italic ? 'font-italic black--text ' : 'black--text'
+            return this.italic ? `${base} font-italic black--text` : `${base} black--text`
         }
-        return this.italic ? ' font-italic secondary--text ' : 'secondary--text'
+        return this.italic ? `${base}font-italic secondary--text` : `${base} secondary--text`
     }
 
-    get url(): string {
-        return this.link
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    routeTo(): void {
+        if (this.link) {
+            this.$router.push(this.link).catch(() => {})
+        }
     }
 }
 </script>
 
-<style scoped lang="css">
-.concat {
+<style scoped lang="scss">
+// Variables to control the truncation behaviour
+$startFixedChars: 4; // Number of chars before ellipsis - have priority over end chars
+$endFixedChars: 5; // Number of chars after ellipsis  - lower priority than start chars
+$fontFaceScaleFactor: 0.46; // Magic number dependent on font face - set by trial and error
+
+// Dervied from the 3 variables above
+$startWidth: 1em * $fontFaceScaleFactor * ($startFixedChars + 3);
+$endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
+
+.firstPart,
+.lastPart {
+    display: inline-block;
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 20px;
 }
-.transform-hash-container {
-    overflow: hidden;
-    padding: 0px 1px;
+.firstPart {
+    max-width: calc(100% - #{$endWidth});
+    min-width: $startWidth;
+    text-overflow: ellipsis;
+}
+.lastPart {
+    max-width: calc(100% - #{$startWidth});
+    direction: rtl;
 }
 .hash-container {
-    min-width: 80px;
-    display: flex;
-    flex-shrink: 2;
-}
-.force-select {
-    -webkit-user-select: all; /* Chrome 49+ */
-    -moz-user-select: all; /* Firefox 43+ */
-    -ms-user-select: all; /* No support yet */
-    user-select: all;
-}
-.hash-section {
-    display: inline;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
+.url {
+    cursor: pointer;
+}
 .url:hover {
     text-decoration: underline;
 }
