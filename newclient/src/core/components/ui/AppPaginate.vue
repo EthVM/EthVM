@@ -186,7 +186,7 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
 }
 
 .page-input {
-    width: 80px;
+    width: 60px;
 }
 
 p {

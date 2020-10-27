@@ -53,3 +53,9 @@ export interface State {
     title?: string
     blockNumber?: number
 }
+
+export enum EnumAdrChips {
+    miner = 'miner',
+    creator = 'creator',
+    contract = 'contract'
+}

@@ -8,7 +8,7 @@
             page-link=""
             class="pl-2"
         >
-            <template v-slot:pagination>
+            <template #pagination>
                 <app-paginate
                     v-if="showPagination"
                     :total="totalPages"
@@ -24,7 +24,7 @@
         <v-layout v-if="!initialLoad" row wrap align-center justify-space-between pl-3 pr-3>
             <v-flex xs12 sm12 hidden-md-and-up>
                 <v-layout :align-end="$vuetify.breakpoint.mdAndUp" :align-center="$vuetify.breakpoint.smAndDown" d-flex column>
-                    <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
+                    <app-filter :options="options" :show-desktop="false" :is-selected="options[6]" :is-sort="true" @onSelectChange="sortTokens" />
                     <app-paginate
                         v-if="showPagination"
                         :total="totalPages"

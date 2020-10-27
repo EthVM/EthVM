@@ -1,5 +1,9 @@
 ### Release v1.0.3
 
+### Feature
+
+- Favorite Address List. Add/Remove/Edit Name of the address, live balance update within a list. [#867](https://github.com/EthVM/EthVM/pull/867)
+
 ### Devop
 
 - Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)

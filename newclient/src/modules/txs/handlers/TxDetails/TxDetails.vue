@@ -7,7 +7,7 @@
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
             <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :max-items="7">
-                <template v-slot:title v-if="!isLoading">
+                <template v-if="!isLoading" #title>
                     <tx-details-title :status="titleStatus" />
                 </template>
             </app-details-list>

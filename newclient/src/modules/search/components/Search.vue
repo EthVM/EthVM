@@ -4,21 +4,21 @@
             <v-card flat class="search-input-container">
                 <v-layout fill-height align-center justify-end>
                     <v-select
+                        v-model="selectVal"
                         :flat="true"
                         :solo="true"
                         :items="selectItems"
-                        v-model="selectVal"
                         class="search-select"
                         height="48"
                         append-icon="fa fa-chevron-down secondary--text"
                     />
                     <v-combobox
+                        v-model="searchVal"
                         :loading="isLoading"
                         :items="items"
                         :search-input.sync="searchAutocomplete"
                         :prepend-inner-icon="getIcon"
                         :placeholder="$t('search.default')"
-                        v-model="searchVal"
                         item-value="contract"
                         item-text="keyword"
                         hide-no-data

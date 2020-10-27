@@ -7,7 +7,7 @@
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
             <app-details-list :details="blockDetails" :is-loading="loading" :max-items="9" :is-block="true" class="mb-4">
-                <template v-slot:title>
+                <template #title>
                     <block-details-title
                         :next-block="nextBlock"
                         :prev-block="previousBlock"

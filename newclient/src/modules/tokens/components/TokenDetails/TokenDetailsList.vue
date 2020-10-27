@@ -2,7 +2,7 @@
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
             <app-details-list :title="title" :details="details" :is-loading="isLoading || hasError" :max-items="10" class="mb-4">
-                <template v-slot:title>
+                <template #title>
                     <v-layout grid-list-xs row align-center justify-start fill-height pl-4 pr-2 pt-1 mt-1 mb-1>
                         <div class="token-image">
                             <v-img :src="image" contain @error="imgLoadFail" />

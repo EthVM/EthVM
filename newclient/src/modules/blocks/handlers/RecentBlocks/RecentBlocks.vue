@@ -1,10 +1,10 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-3">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/blocks">
-            <template v-slot:update v-if="!isHome">
+            <template v-if="!isHome" #update>
                 <notice-new-block @reload="setPage(0, true)" />
             </template>
-            <template v-slot:pagination v-if="showPagination && !initialLoad">
+            <template v-if="showPagination && !initialLoad" #pagination>
                 <app-paginate
                     :total="totalPages"
                     :current-page="currentPage"
