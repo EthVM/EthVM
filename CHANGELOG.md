@@ -1,9 +1,10 @@
-
 ### Release v1.0.3
 
 ### Devop
 
 - Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
+- Change token sort arrow ui [#890](https://github.com/EthVM/EthVM/pull/890)
+
 
 ### Bug
 
@@ -15,6 +16,7 @@
 - Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881) 
 
 ===================================================================================
+
 
 ### Release v1.0.2
 
