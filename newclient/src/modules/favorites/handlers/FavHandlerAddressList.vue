@@ -62,7 +62,7 @@
         -->
         <v-layout hidden-sm-and-up align-center justify-space-between pl-2 pr-2 pb-2>
             <v-flex v-if="!deleteMode" shrink pt-0 pb-0>
-                <fav-btn-add :add-address="addItem" />
+                <fav-btn-add ref="favAdd" :add-address="addItem" :has-address="hasAddress" />
             </v-flex>
             <v-flex v-if="deleteMode" shrink pb-0>
                 <v-layout row align-center justify-start>
