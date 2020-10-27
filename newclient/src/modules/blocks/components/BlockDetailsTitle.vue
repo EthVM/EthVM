@@ -108,7 +108,9 @@ export default class BlockDetailsTitle extends Vue {
   Methods
   ===================================================================================
   */
-
+    /**
+     * Emit's reload to parent
+     */
     reload() {
         this.$emit('reload')
     }

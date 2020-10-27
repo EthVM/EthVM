@@ -17,8 +17,8 @@ export interface getLatestPrices_getLatestPrices {
   current_price: number | null;
   market_cap: number | null;
   total_volume: number | null;
-  price_change_24h: number | null;
   total_supply: string | null;
+  price_change_percentage_24h: number | null;
 }
 
 export interface getLatestPrices {

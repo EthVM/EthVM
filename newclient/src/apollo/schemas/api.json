@@ -1661,7 +1661,7 @@
             "deprecationReason": null
           },
           {
-            "name": "price_change_24h",
+            "name": "price_change_percentage_24h",
             "description": null,
             "args": [],
             "type": {

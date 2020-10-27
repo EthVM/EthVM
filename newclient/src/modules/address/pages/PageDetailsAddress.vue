@@ -427,30 +427,63 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Methods
     ===================================================================================
     */
+    /**
+     * Sets Block Rewards
+     * @param value {Boolean}
+     */
     setBlockRewards(value: boolean): void {
         this.hasBlockRewards = value
     }
+    /**
+     * Sets Uncle Rewards
+     * @param value {Boolean}
+     */
     setUncleRewards(value: boolean): void {
         this.hasUncleRewards = value
     }
+    /**
+     * Sets Genesis Rewards
+     * @param value {Boolean}
+     */
     setGenesisRewards(value: boolean): void {
         this.hasGenesisRewards = value
     }
+    /**
+     * Sets Contract Creator
+     * @param value {Boolean}
+     */
     setContractCreator(value: boolean): void {
         this.isContractCreator = value
     }
+    /**
+     * Sets Contract
+     * @param value {Boolean}
+     */
     setContract(value: boolean): void {
         this.isContract = value
     }
+    /**
+     * Sets Total Tokens
+     * @param value {Number}
+     */
     setTotalTokens(value: number): void {
         this.totalERC20 = value
     }
 
+    /**
+     * Set LoadingERC20 state
+     * @param _value {Boolean}
+     */
     setLoadingERC20(_value: boolean): void {
         this.loadingERC20Balance = _value
     }
 
     /* Errors Events :*/
+    /**
+     * Set Errors
+     * @param hasError {Boolean}
+     * @param message {ErrorMessage}
+     */
     setError(hasError: boolean, message: ErrorMessage): void {
         if (hasError) {
             if (!this.errorMessages.includes(message)) {

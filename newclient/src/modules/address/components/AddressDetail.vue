@@ -263,13 +263,13 @@
                         </v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
+                                class="ma-0"
                                 color="primaryLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
                                 indeterminate
                                 height="25"
-                                class="ma-2"
                             />
                         </v-card-title>
                     </v-card>
@@ -291,13 +291,13 @@
                         </v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
+                                class="ma-0"
                                 color="errorLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
                                 indeterminate
                                 height="25"
-                                class="ma-2"
                             />
                         </v-card-title>
                     </v-card>
@@ -311,13 +311,13 @@
                         <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
+                                class="ma-0"
                                 color="warningLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
                                 indeterminate
                                 height="25"
-                                class="ma-2"
                             />
                         </v-card-title>
                     </v-card>

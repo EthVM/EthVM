@@ -70,7 +70,7 @@ interface PendingMap {
                 return data.getPendingTransactions
             },
             result({ data }) {
-                if (data.getPendingTransactions) {
+                if (data && data.getPendingTransactions) {
                     this.emitErrorState(false)
                     if (this.initialLoad) {
                         try {

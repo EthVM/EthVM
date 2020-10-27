@@ -46,24 +46,14 @@
                         <v-card-title class="title font-weight-bold pb-4">{{ $t('footer.donate') }}</v-card-title>
                     </v-layout>
                     <v-layout row justify-start align-center>
-                        <v-btn
-                            outline
-                            color="secondary"
-                            class="text-lowercase font-weight-regular donation-btn"
-                            href="https://www.ethvm.com/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
-                        >
+                        <v-btn :to="ethPath" outline color="secondary" class="text-lowercase font-weight-regular donation-btn" active-class="">
                             <v-icon class="secondary--text fab fa-ethereum pr-2 asset-icon" /> <span class="text-uppercase pr-1">{{ $t('common.eth') }}</span> -
                             {{ $t('footer.ens') }}
                         </v-btn>
                         <app-copy-to-clip :value-to-copy="ethAddr"></app-copy-to-clip>
                     </v-layout>
                     <v-layout row justify-start align-center>
-                        <v-btn
-                            outline
-                            color="secondary"
-                            class="text-lowercase font-weight-regular donation-btn"
-                            href="https://www.blockchain.com/btc/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                        >
+                        <v-btn :href="bitcoinUrl" outline color="secondary" class="text-lowercase font-weight-regular donation-btn">
                             <v-icon class="secondary--text fab fa-btc pr-2 asset-icon" />
                             <span class="text-uppercase pr-1">{{ $t('footer.btc') }}</span> - Bitcoin
                         </v-btn>
@@ -90,7 +80,7 @@
                         <v-flex xs12>
                             <v-layout justify-start align-center fill-height pa-2>
                                 <p class="info--text text-xs-left caption pl-2">
-                                    {{ $t('footer.pricing') }} <router-link to="https://www.coingecko.com/">Coingecko.</router-link>
+                                    {{ $t('footer.pricing') }} <a href="https://www.coingecko.com/">Coingecko.</a>
                                 </p>
                             </v-layout>
                         </v-flex>
@@ -168,6 +158,12 @@ export default class TheFooter extends Vue {
   */
     get flexClass(): string {
         return this.$vuetify.breakpoint.name === 'sm' || this.$vuetify.breakpoint.name === 'xs' ? 'pa-1' : 'pa-3'
+    }
+    get bitcoinUrl(): string {
+        return `https://www.blockchain.com/btc/address/${this.btcAddr}`
+    }
+    get ethPath(): object {
+        return { name: 'address', params: { addressRef: this.ethAddr } }
     }
 }
 </script>
