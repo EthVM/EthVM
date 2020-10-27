@@ -35,10 +35,7 @@ export default class AppTransformHash extends Vue {
     }
     get hashClass(): string {
         const base = this.link ? 'url hash-container font-mono' : 'hash-container font-mono'
-        if (!this.isBlue) {
-            return this.italic ? `${base} font-italic black--text` : `${base} black--text`
-        }
-        return this.italic ? `${base}font-italic secondary--text` : `${base} secondary--text`
+        return this.isBlue ? `${base} secondary--text` : `${base} black--text`
     }
 
     /*
@@ -58,7 +55,7 @@ export default class AppTransformHash extends Vue {
 // Variables to control the truncation behaviour
 $startFixedChars: 4; // Number of chars before ellipsis - have priority over end chars
 $endFixedChars: 5; // Number of chars after ellipsis  - lower priority than start chars
-$fontFaceScaleFactor: 0.46; // Magic number dependent on font face - set by trial and error
+$fontFaceScaleFactor: 0.47; // Magic number dependent on font face - set by trial and error
 
 // Dervied from the 3 variables above
 $startWidth: 1em * $fontFaceScaleFactor * ($startFixedChars + 3);
