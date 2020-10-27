@@ -68,7 +68,11 @@ export class AddressUpdateEvent extends Vue {
       Methods
     ===================================================================================
     */
-    setEventVariables(_owner: string) {
+    /**
+     * Sets owner
+     * @param owner String
+     */
+    setEventVariables(_owner: string): void {
         this.owner = _owner.toLowerCase()
     }
     /**

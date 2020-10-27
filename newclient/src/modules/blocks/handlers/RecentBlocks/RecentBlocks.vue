@@ -181,7 +181,11 @@ export default class RecentBlocks extends Vue {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Sets current page, checks if it should reset
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         this.index = page
         if (reset) {
@@ -203,6 +207,10 @@ export default class RecentBlocks extends Vue {
             }
         }
     }
+    /**
+     * Emits error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorBlocksList', this.hasError, ErrorMessageBlock.list)

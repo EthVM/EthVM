@@ -110,7 +110,10 @@ export default class TableTokensHeader extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Select filter and emit to parent
+     * @param _value {Number}
+     */
     selectFilter(_value: number): void {
         if (this.isActive(_value)) {
             if (_value % 2 == 0) {
@@ -121,7 +124,11 @@ export default class TableTokensHeader extends Vue {
         }
         this.$emit('sortBy', FILTER_VALUES[_value])
     }
-
+    /**
+     * Check if filter is active
+     * @param _value {Number}
+     * @returns {Boolean}
+     */
     isActive(_value: number): boolean {
         return this.selectedFilter === _value
     }

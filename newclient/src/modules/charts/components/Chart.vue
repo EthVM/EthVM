@@ -214,7 +214,11 @@ export default class Chart extends Vue {
    Methods
   ===================================================================================
   */
-
+    /**
+     * Sets time frame and
+     * emits data up to the parent
+     * @param value {Number}
+     */
     setTimeFrame(value: number) {
         this.toggleData = value
         this.$emit('timeFrame', this.toggleData)

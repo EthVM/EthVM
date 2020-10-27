@@ -76,7 +76,7 @@ jobs:
 
       - name: deploy to sentry
         env:
-          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_TOKEN}}
+          SENTRY_AUTH_TOKEN: ${{secrets.VUE_APP_SENTRY_SECURITY_TOKEN}}
           SENTRY_ORG: myetherwallet-inc
         run: |
           curl -sL https://sentry.io/get-cli/ | bash
@@ -86,3 +86,9 @@ jobs:
           sentry-cli releases -p ethvm-web files $RELEASE upload-sourcemaps ./newclient/dist/sourcemaps --url-prefix 'https://www.ethvm.com/sourcemaps' --rewrite --validate
           sentry-cli releases set-commits $RELEASE --auto
           sentry-cli releases finalize $RELEASE
+
+      - name: create release
+        env:
+          GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
+        run: |
+          bash ./release.sh ${{ steps.get_release_tag.outputs.VERSION }} $GITHUB_TOKEN $GITHUB_REPOSITORY true
