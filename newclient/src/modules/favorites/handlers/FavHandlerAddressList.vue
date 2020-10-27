@@ -138,7 +138,6 @@
                         :delete-mode="deleteMode"
                         :delete-array="deleteArray"
                         :check-box-method="updateDeleteArray"
-                        :fav-sort="favSort"
                         @errorFavorites="emitErrorState"
                         @addressChips="updateChips"
                     />
@@ -167,13 +166,13 @@ import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/fa
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import { DialogAddress } from '@app/modules/favorites/models/FavDialog'
 import { EnumAdrChips } from '@app/core/components/props'
-import { FavoritesSort, FavSort } from '@app/modules/favorites/models/FavSort'
+import { FavSort } from '@app/modules/favorites/models/FavSort'
 import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import { DataArray } from '@app/apollo/favorites/models'
 
 import BN from 'bignumber.js'
 
-const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low', 'balance_high', 'balance_low', 'value_high', 'value_low']
+const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
 
 @Component({
     components: {
@@ -223,6 +222,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     deleteArray: string[] = []
     isAllSelected = false
     addressChipsMap = new Map<string, EnumAdrChips[]>()
+    sort = ''
 
     /*
   ===================================================================================
@@ -250,26 +250,6 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
                 value: FILTER_VALUES[3],
                 text: this.$i18n.tc('fav.sort.name'),
                 filter: this.$i18n.t('filter.low')
-            },
-            {
-                value: FILTER_VALUES[4],
-                text: this.$i18n.tc('fav.sort.balance'),
-                filter: this.$i18n.t('filter.high')
-            },
-            {
-                value: FILTER_VALUES[5],
-                text: this.$i18n.tc('fav.sort.balance'),
-                filter: this.$i18n.t('filter.low')
-            },
-            {
-                value: FILTER_VALUES[6],
-                text: this.$i18n.t('fav.sort.balance-usd'),
-                filter: this.$i18n.t('filter.high')
-            },
-            {
-                value: FILTER_VALUES[7],
-                text: this.$i18n.t('fav.sort.balance-usd'),
-                filter: this.$i18n.t('filter.low')
             }
         ]
     }
@@ -288,6 +268,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
     get adrList(): favAddressesType[] {
         if (!this.isLoading || this.hasFavAdr) {
+            this.sort !== '' ? this.favSort.sortFavorites(this.favorites, this.sort) : ''
             const start = this.searchVal ? 0 : this.index * this.maxItems
             const end = start + this.maxItems > this.favorites.length ? this.favorites.length : start + this.maxItems
             return this.favorites.slice(start, end)
@@ -300,7 +281,6 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         }
         return 0
     }
-
     get favorites(): favAddressesType[] {
         const searchResults = this.searchVal
             ? this.favAddresses.filter(item => item.name.toLowerCase().includes(this.searchVal) || item.address.toLowerCase().includes(this.searchVal))
@@ -351,8 +331,8 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         const foundItems = this.favAddresses.find(i => i.address === address)
         return foundItems ? true : false
     }
-    sortAddresses(sort: string): FavoritesSort[] {
-        return this.favSort.sortFavorites(sort)
+    sortAddresses(sort: string): void {
+        this.sort = sort
     }
     emitErrorState(val: boolean, message: string): void {
         this.hasError = val

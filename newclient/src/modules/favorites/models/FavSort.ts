@@ -1,57 +1,46 @@
 import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorites/apolloTypes/favAddressCache'
-import { EthValue } from '@app/core/models'
+// import { EthValue } from '@app/core/models'
 
-const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low', 'balance_high', 'balance_low', 'value_high', 'value_low']
-const MAX_ITEMS = 10
+const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
 const KEY_ADDRESS = 'address'
 const KEY_NAME = 'name'
-const KEY_BALANCE = 'balance'
-const KEY_BALANCE_USD = 'balanceUSD'
 
-export interface FavoritesSort {
-    name?: string
-    address: string
-    balance?: number
-    balanceUSD?: number
-}
+// export interface FavoritesSort {
+//     name?: string
+//     address: string
+//     balance?: number
+//     balanceUSD?: number
+// }
 
 export class FavSort {
-    favorites!: FavoritesSort[]
+    favorites!: favAddressesType[]
 
-    constructor(_favorites: FavoritesSort[]) {
+    constructor(_favorites: favAddressesType[]) {
         this.favorites = _favorites
     }
-    addFavoriteBalance(value: string, hash: string) {
-        const favorite = this.favorites.find(addr => addr.address === hash)
-        favorite ? (favorite.balance = parseFloat(new EthValue(value).toEthBN().toFixed())) : ''
-    }
-    addFavoriteBalanceUSD(value: string, hash: string) {
-        const favorite = this.favorites.find(addr => addr.address === hash)
-        favorite ? (favorite.balanceUSD = parseFloat(value)) : ''
-    }
-    sortByDescend(key: string) {
-        if (this.favorites) {
-            return this.favorites.sort((x, y) => (y[key] < x[key] ? -1 : y[key] > x[key] ? 1 : 0))
+    // addFavoriteBalance(value: string, hash: string) {
+    //     const favorite = this.favorites.find(addr => addr.address === hash)
+    //     favorite ? (favorite.balance = parseFloat(new EthValue(value).toEthBN().toFixed())) : ''
+    // }
+    // addFavoriteBalanceUSD(value: string, hash: string) {
+    //     const favorite = this.favorites.find(addr => addr.address === hash)
+    //     favorite ? (favorite.balanceUSD = parseFloat(value)) : ''
+    // }
+    sortByDescend(data: favAddressesType[], key: string) {
+        if (data) {
+            return data.sort((x, y) => (y[key] < x[key] ? -1 : y[key] > x[key] ? 1 : 0))
         }
         return []
     }
-    sortByAscend(key: string) {
-        return this.sortByDescend(key).reverse()
+    sortByAscend(data: favAddressesType[], key: string) {
+        return this.sortByDescend(data, key).reverse()
     }
-    sortFavorites(sort: string) {
+    sortFavorites(data: favAddressesType[], sort: string) {
         if (sort === FILTER_VALUES[0] || sort === FILTER_VALUES[1]) {
             /* Sort By Address: */
-            this.favorites = sort.includes('high') ? this.sortByDescend(KEY_ADDRESS) : this.sortByAscend(KEY_ADDRESS)
-        } else if (sort === FILTER_VALUES[2] || sort === FILTER_VALUES[3]) {
-            /* Sort By Name: */
-            this.favorites = sort.includes('high') ? this.sortByDescend(KEY_NAME) : this.sortByAscend(KEY_NAME)
-        } else if (sort === FILTER_VALUES[4] || sort === FILTER_VALUES[5]) {
-            /* Sort By Balance: */
-            this.favorites = sort.includes('high') ? this.sortByDescend(KEY_BALANCE) : this.sortByAscend(KEY_BALANCE)
-        } else {
-            /* Sort By Balance USD: */
-            this.favorites = sort.includes('high') ? this.sortByDescend(KEY_BALANCE_USD) : this.sortByAscend(KEY_BALANCE_USD)
+            return sort.includes('high') ? this.sortByDescend(data, KEY_ADDRESS) : this.sortByAscend(data, KEY_ADDRESS)
         }
-        return this.favorites
+        /* Sort By Name: */
+        return sort.includes('high') ? this.sortByDescend(data, KEY_NAME) : this.sortByAscend(data, KEY_NAME)
     }
 }

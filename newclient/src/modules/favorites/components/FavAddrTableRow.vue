@@ -1,12 +1,12 @@
 <template>
     <v-container pa-0>
-        <v-layout>
+        <v-layout ma-0>
             <!--
             =====================================================================================
               Mobile (XS-SM)
             =====================================================================================
             -->
-            <v-flex hidden-md-and-up mr-2 ml-2>
+            <v-flex hidden-md-and-up mr-2 ml-2 px-0>
                 <v-layout grid-list-sm align-center justify-start row wrap fill-height mb-2 pa-2 class="table-row-mobile">
                     <!--
                     =====================================================================================
@@ -214,7 +214,6 @@ import Blockies from '@app/modules/address/components/Blockies.vue'
 import FavHandlerEdit from '@app/modules/favorites/handlers/FavHandlerEdit.vue'
 import BN from 'bignumber.js'
 import { eth } from '@app/core/helper'
-import { FavSort } from '@app/modules/favorites/models/FavSort'
 
 @Component({
     components: {
@@ -241,7 +240,6 @@ export default class FavAddrTableRow extends Mixins(NumberFormatMixin) {
     @Prop(Boolean) deleteMode!: boolean
     @Prop(Array) deleteArray!: string[]
     @Prop(Function) checkBoxMethod!: string[]
-    @Prop(Object) favSort!: FavSort
 
     /*
     ===================================================================================
@@ -253,7 +251,6 @@ export default class FavAddrTableRow extends Mixins(NumberFormatMixin) {
         if (this.ethBalance) {
             const balanceEth = eth.toEthFromWei(this.ethBalance)
             const balanceUsd = new BN(balanceEth).multipliedBy(new BN(this.etherPrice))
-            this.favSort.addFavoriteBalanceUSD(balanceUsd.toFixed(), this.hash)
             return this.formatUsdValue(balanceUsd)
         }
         return undefined
@@ -261,7 +258,6 @@ export default class FavAddrTableRow extends Mixins(NumberFormatMixin) {
 
     get balance(): FormattedNumber | undefined {
         if (this.ethBalance) {
-            this.favSort.addFavoriteBalance(this.ethBalance, this.hash)
             return this.formatNonVariableEthValue(new BN(this.ethBalance))
         }
         return undefined
@@ -278,7 +274,7 @@ export default class FavAddrTableRow extends Mixins(NumberFormatMixin) {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 .row-desktop {
     min-height: 60px;
 }
@@ -290,5 +286,10 @@ export default class FavAddrTableRow extends Mixins(NumberFormatMixin) {
 }
 .delete-space {
     width: 44px;
+}
+.v-card {
+    .layout {
+        max-width: 100%;
+    }
 }
 </style>

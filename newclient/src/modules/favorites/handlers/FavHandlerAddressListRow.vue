@@ -8,7 +8,6 @@
         :delete-mode="deleteMode"
         :delete-array="deleteArray"
         :check-box-method="checkBoxMethod"
-        :fav-sort="favSort"
         @errorFavorites="emitErrorState"
     />
 </template>
@@ -25,7 +24,6 @@ import { getContractMeta_getContractMeta as ContractMeta } from '@app/modules/ad
 import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsBlock'
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsUncle'
 import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from '@app/modules/address/handlers/AddressRewards/rewards.graphql'
-import { FavSort } from '@app/modules/favorites/models/FavSort'
 import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
 
 @Component({
@@ -117,7 +115,6 @@ export default class FavHandlerAddressListRow extends Mixins(AddressUpdateEvent)
     @Prop(Boolean) deleteMode!: boolean
     @Prop(Array) deleteArray!: string[]
     @Prop(Function) checkBoxMethod!: string[]
-    @Prop(Object) favSort!: FavSort
 
     /*
     ===================================================================================

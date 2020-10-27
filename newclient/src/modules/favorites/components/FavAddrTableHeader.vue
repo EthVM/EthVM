@@ -42,8 +42,8 @@
             </v-layout>
         </v-flex>
         <v-flex md2 pl-3>
-            <v-layout :class="[!isActive(4) && !isActive(5) ? 'inactive-sort' : '']" align-center justify-start row>
-                <h5>{{ $t('common.eth-balance') }}</h5>
+            <h5>{{ $t('common.eth-balance') }}</h5>
+            <!-- <v-layout :class="[!isActive(4) && !isActive(5) ? 'inactive-sort' : '']" align-center justify-start row>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(5)" :class="[!isActive(4) && !isActive(5) ? 'inactive-btn' : '']" flat icon @click="selectFilter(5)">
@@ -54,11 +54,11 @@
                         </v-btn>
                     </v-layout>
                 </v-flex>
-            </v-layout>
+            </v-layout> -->
         </v-flex>
         <v-flex md2 pl-3>
-            <v-layout :class="[!isActive(6) && !isActive(7) ? 'inactive-sort' : '']" align-center justify-start row>
-                <h5>{{ $t('usd.value') }}</h5>
+            <h5>{{ $t('usd.value') }}</h5>
+            <!-- <v-layout :class="[!isActive(6) && !isActive(7) ? 'inactive-sort' : '']" align-center justify-start row>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(7)" :class="[!isActive(6) && !isActive(7) ? 'inactive-btn' : '']" flat icon @click="selectFilter(7)">
@@ -69,7 +69,7 @@
                         </v-btn>
                     </v-layout>
                 </v-flex>
-            </v-layout>
+            </v-layout> -->
         </v-flex>
         <v-spacer v-if="deleteMode" />
     </v-layout>
@@ -79,7 +79,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 
-const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low', 'balance_high', 'balance_low', 'value_high', 'value_low']
+const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
 
 @Component({
     components: {
