@@ -34,7 +34,7 @@
                                     -->
                                     <v-flex hidden-xs-only shrink>
                                         <v-layout v-if="chips && chips.length > 0" row align-start justify-center hidden-xs-only>
-                                            <app-adr-chip v-for="(chip, index) in chips" :chip="chip" :key="index" class="mr-1" />
+                                            <app-adr-chip v-for="(chip, index) in chips" :key="index" :chip="chip" class="mr-1" />
                                         </v-layout>
                                     </v-flex>
                                 </v-layout>
@@ -86,7 +86,7 @@
                         =====================================================================================
                         -->
                         <v-layout row wrap align-center justify-start pr-2>
-                            <app-adr-chip v-for="(chip, index) in chips" :chip="chip" :key="index" class="mr-1" />
+                            <app-adr-chip v-for="(chip, index) in chips" :key="index" :chip="chip" class="mr-1" />
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -188,7 +188,7 @@
                         <v-flex v-if="deleteMode" md1 />
                         <v-flex md11 pt-0>
                             <v-layout grid-list-xs row wrap align-center justify-start fill-height ml-5>
-                                <app-adr-chip v-for="(chip, index) in chips" :chip="chip" :key="index" class="mr-2" />
+                                <app-adr-chip v-for="(chip, index) in chips" :key="index" :chip="chip" class="mr-2" />
                             </v-layout>
                         </v-flex>
                         <v-spacer v-if="!deleteMode" />

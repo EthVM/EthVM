@@ -74,11 +74,11 @@
                     maxlength="42"
                     class="name-input-container address-input"
                 >
-                    <template v-slot:prepend-inner>
+                    <template #prepend-inner>
                         <div v-if="!isValidAddress" class="blockie-placeholder" />
                         <blockies v-if="isValidAddress" :address="newAddress" width="30px" height="30px" />
                     </template>
-                    <template v-slot:append>
+                    <template #append>
                         <span v-if="newAddress === ''" class="caption greyPlaceholder--text optional-text">{{ $t('fav.dialog.required') }}</span>
                         <v-btn v-else flat icon small color="secondary" class="ma-0" @click="clearAddr()">
                             <v-icon class="fas fa-times" />
@@ -95,7 +95,7 @@
         <v-layout v-if="dialogMode !== FavDialogModes.remove" :class="containerPadding" fill-height align-center justify-center row wrap pt-2 pb-2>
             <v-flex xs12>
                 <v-text-field v-model="name" :rules="nameRules" :label="inputLabel" outline counter maxlength="20" class="name-input-container">
-                    <template v-slot:append>
+                    <template #append>
                         <span v-if="name === ''" class="caption greyPlaceholder--text optional-text">{{ $t('fav.dialog.optional') }}</span>
                         <v-btn v-else flat icon small color="secondary" class="ma-0" @click="clearName()"> <v-icon class="fas fa-times" /> </v-btn>
                     </template>

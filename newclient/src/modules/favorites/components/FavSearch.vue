@@ -2,9 +2,9 @@
     <v-layout class="fav-search">
         <v-flex xs12 sm12 md9 px-2 d-flex align-center justify-center>
             <v-text-field
+                v-model="searchVal"
                 :loading="isLoading"
                 :placeholder="$t('search.favorites')"
-                v-model="searchVal"
                 prepend-inner-icon="fa fa-search info--text"
                 color="lineGrey"
                 solo

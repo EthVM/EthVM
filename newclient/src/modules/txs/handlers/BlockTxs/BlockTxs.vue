@@ -1,10 +1,10 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/txs">
-            <template v-slot:update v-if="!isHome && !isBlock">
+            <template v-if="!isHome && !isBlock" #update>
                 <app-new-update :text="$t('message.update.txs')" :update-count="newMinedTransfers" :hide-count="true" @reload="setPage(0, true)" />
             </template>
-            <template v-slot:pagination v-if="showPagination && !initialLoad">
+            <template v-if="showPagination && !initialLoad" #pagination>
                 <app-paginate
                     v-if="isBlock"
                     :total="totalPages"

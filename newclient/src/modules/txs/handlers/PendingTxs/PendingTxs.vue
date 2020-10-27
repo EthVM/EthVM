@@ -1,7 +1,7 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-2">
         <app-table-title :title="$tc('tx.pending', 2)" :has-pagination="showPagination" page-type="pending" page-link="/pending-txs">
-            <template v-slot:pagination v-if="showPagination && !initialLoad">
+            <template v-if="showPagination && !initialLoad" #pagination>
                 <app-paginate :total="totalPages" :current-page="index" :has-input="false" :has-first="true" :has-last="true" @newPage="setPage" />
             </template>
         </app-table-title>

@@ -12,7 +12,7 @@
                 <v-layout row wrap align-center justify-start>
                     <v-card-title class="title font-weight-bold pa-1">{{ title }}</v-card-title>
                     <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
-                        <template v-slot:activator="{ on }">
+                        <template #activator="{ on }">
                             <v-btn slot="activator" round outline color="primary" class="text-capitalize" small v-on="on">
                                 {{ $tc('uncle.name', unclesPlural) }}
                                 <v-icon right>fa fa-angle-right</v-icon>

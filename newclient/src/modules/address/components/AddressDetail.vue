@@ -36,7 +36,7 @@
                               CHIPS
                             =====================================================================================
                             -->
-                            <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="mr-2" />
+                            <app-adr-chip v-for="(chip, index) in addrChips" :key="index" :chip="chip" class="mr-2" />
                         </v-layout>
                     </v-flex>
                     <!--
@@ -128,7 +128,7 @@
             =====================================================================================
             -->
             <v-layout row wrap align-center justify-start pl-3 ma-0>
-                <app-adr-chip v-for="(chip, index) in addrChips" :chip="chip" :key="index" class="ma-1" />
+                <app-adr-chip v-for="(chip, index) in addrChips" :key="index" :chip="chip" class="ma-1" />
             </v-layout>
             <v-layout row align-center justify-end pr-2 ma-0>
                 <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" @errorFavorites="emitErrorState" />
