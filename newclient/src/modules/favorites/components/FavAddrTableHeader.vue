@@ -128,8 +128,8 @@ export default class TableAddressTxsHeader extends Vue {
     white-space: nowrap;
 }
 .v-btn.v-btn--flat.v-btn--icon {
-    height: 12px;
-    width: 12px;
+    height: 16px;
+    width: 16px;
     margin: 0;
     .v-icon {
         font-size: 18px !important;
