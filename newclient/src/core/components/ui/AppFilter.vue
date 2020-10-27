@@ -104,7 +104,7 @@ export default class AppFilter extends Vue {
   ===================================================================================
   */
 
-    selected = {}
+    selected = this.options[0]
     // category = this.options[0].category
     dialog = false
 
@@ -114,7 +114,7 @@ export default class AppFilter extends Vue {
   ===================================================================================
   */
 
-    mounted() {
+    created() {
         this.selected = this.isSelected ? this.isSelected : this.options[0]
     }
 
