@@ -317,7 +317,9 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      Methods
     ===================================================================================
     */
-
+    /**
+     * Start apollo subscription
+     */
     startSubscription(): void {
         const _hash = this.transaction.hash
         const observer = this.$apollo.subscribe({
@@ -336,7 +338,12 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             }
         })
     }
-    emitErrorState(val: boolean, hashNotFound = false): void {
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     * @param hashNotFound {Boolean}
+     */
+    emitErrorState(val: boolean, hashNotFound: boolean = false): void {
         this.hasError = val
         const mess = hashNotFound ? ErrorMessageTx.notFound : ErrorMessageTx.details
         this.$emit('errorDetails', this.hasError, mess)

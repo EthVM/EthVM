@@ -99,3 +99,11 @@ p {
 .small-global-icon-font {
     font-size: 14px;
 }
+
+/* Global Tooltip */
+.tooltip-border {
+    border: 1px solid #b4bfd2 !important;
+    padding: 5px 10px !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+}

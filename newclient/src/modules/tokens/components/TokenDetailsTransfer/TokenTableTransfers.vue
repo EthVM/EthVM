@@ -110,7 +110,11 @@ export default class TokenTableTransfers extends Vue {
         Methods
     ===================================================================================
     */
-
+    /**
+     * Sets page number and reset value and emit
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         this.$emit('setPage', page, reset)
     }

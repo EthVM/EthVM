@@ -87,10 +87,17 @@ export default class Search extends Vue {
     Methods
   ===================================================================================
   */
+    /**
+     * Emits received value to parent
+     * @param param {Any}
+     */
     onSelect(param): void {
         this.$emit('onSelect', param)
     }
-
+    /**
+     * Emits received value to parent
+     * @param param {Any}
+     */
     onSearch(param): void {
         if (this.selectVal === selectTypes[0]) {
             clearTimeout(this.searchTimeout)
@@ -103,7 +110,9 @@ export default class Search extends Vue {
             }, 500)
         }
     }
-
+    /**
+     * Resets search and selected values
+     */
     resetValues() {
         this.searchVal = ''
         this.selectVal = selectTypes[0]

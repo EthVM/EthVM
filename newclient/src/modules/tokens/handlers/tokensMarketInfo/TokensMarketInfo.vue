@@ -24,7 +24,7 @@
         <v-layout v-if="!initialLoad" row wrap align-center justify-space-between pl-3 pr-3>
             <v-flex xs12 sm12 hidden-md-and-up>
                 <v-layout :align-end="$vuetify.breakpoint.mdAndUp" :align-center="$vuetify.breakpoint.smAndDown" d-flex column>
-                    <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
+                    <app-filter :options="options" :show-desktop="false" :is-selected="options[6]" :is-sort="true" @onSelectChange="sortTokens" />
                     <app-paginate
                         v-if="showPagination"
                         :total="totalPages"
@@ -209,6 +209,10 @@ export default class AddressTokens extends Mixins(CoinData) {
       Methods:
     ===================================================================================
     */
+    /**
+     * Sort tokens via given param
+     * @param sort {String}
+     */
     sortTokens(sort: string): void {
         this.isSortedBy = sort
         this.index = 0
@@ -228,6 +232,11 @@ export default class AddressTokens extends Mixins(CoinData) {
             }
         }
     }
+    /**
+     * Sets page number and reset value and emit
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.index = 0
@@ -237,6 +246,10 @@ export default class AddressTokens extends Mixins(CoinData) {
             this.index = page
         }
     }
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorTransfers', val, ErrorMessageToken.tokenMarket)

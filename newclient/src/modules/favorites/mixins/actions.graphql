@@ -1,0 +1,11 @@
+mutation addFavAddress($address: String!, $name: String) {
+    addFavAddress(address: $address, name: $name) @client {
+        name
+    }
+}
+
+mutation deleteFavAddress($address: String!) {
+    deleteFavAddress(address: $address) @client {
+        name
+    }
+}

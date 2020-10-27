@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" max-width="400">
         <v-btn slot="activator" flat color="black" fab class="black--text ma-0"
-            ><v-img :src="require('@/assets/icon-qr.png')" height="30px" max-width="30x" contain />
+            ><v-img :src="require('@/assets/icon-qr.png')" height="30px" max-width="30px" contain />
         </v-btn>
         <v-card>
             <v-layout column align-center justify-center pa-2>

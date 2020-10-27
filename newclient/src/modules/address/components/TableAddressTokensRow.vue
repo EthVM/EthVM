@@ -21,7 +21,7 @@
                             <v-flex xs2 pa-1>
                                 <v-layout row align-center justify-center pa-2>
                                     <div class="token-image-mobile">
-                                        <v-img :src="image" contain />
+                                        <v-img :src="image" contain @error="imgLoadFail" />
                                     </div>
                                 </v-layout>
                             </v-flex>
@@ -140,7 +140,7 @@
                         <v-flex md4>
                             <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-1>
                                 <div class="token-image">
-                                    <v-img :src="image" contain />
+                                    <v-img :src="image" contain @error="imgLoadFail" />
                                 </div>
                                 <div v-if="name || symbolString" class="black--text subtitle-2 font-weight-medium">
                                     <p v-if="name">{{ name }}</p>
@@ -249,15 +249,23 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
 
     /*
     ===================================================================================
+      Initial Data
+    ===================================================================================
+    */
+
+    imageExists = true
+
+    /*
+    ===================================================================================
       Computed Values
     ===================================================================================
     */
 
     get image(): string {
-        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image) {
+        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image && this.imageExists) {
             return this.tokenPriceInfo.image
         }
-        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url) {
+        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url && this.imageExists) {
             return this.nftMeta.image_url
         }
         return require('@/assets/icon-token.png')
@@ -292,9 +300,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get change(): number {
-        if (!this.tokenPriceInfo || !this.tokenPriceInfo.price_change_24h || this.tokenPriceInfo.price_change_24h === 0) {
+        if (!this.tokenPriceInfo || !this.tokenPriceInfo.price_change_percentage_24h || this.tokenPriceInfo.price_change_percentage_24h === 0) {
             return 0
-        } else if (this.tokenPriceInfo.price_change_24h > 0) {
+        } else if (this.tokenPriceInfo.price_change_percentage_24h > 0) {
             return 1
         }
         return -1
@@ -310,7 +318,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get priceChangeFormatted(): FormattedNumber | null {
-        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_24h ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_24h)) : null
+        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_percentage_24h
+            ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_percentage_24h))
+            : null
     }
 
     get name(): string | undefined {
@@ -363,6 +373,12 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
      */
     showNft(): void {
         this.$emit('showNft', this.token.tokenInfo.contract, this.token.tokenInfo.name)
+    }
+    /**
+     * Image loading failed catcher
+     */
+    imgLoadFail(): void {
+        this.imageExists = false
     }
 }
 </script>

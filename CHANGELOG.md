@@ -1,6 +1,25 @@
+### Release v1.0.3
+
+### Feature
+
+- Favorite Address List. Add/Remove/Edit Name of the address, live balance update within a list. [#867](https://github.com/EthVM/EthVM/pull/867)
+
 ### Devop
 
+- Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
+- Change token sort arrow ui [#890](https://github.com/EthVM/EthVM/pull/890)
 - Clean up packages, install depcheck, config husky with commitlint [#882](https://github.com/EthVM/EthVM/pull/882)
+
+### Bug
+
+- Deep watch on chart data sets [#885](https://github.com/EthVM/EthVM/pull/885)
+- Fixed transform hash component for easy string copy [#899](https://github.com/EthVM/EthVM/pull/899/commits/e63c11860e9b0a22d7cfecad80719c8787e2c42c)
+- Fix mobile loading state padding for address header page [#891](https://github.com/EthVM/EthVM/pull/891)
+- Change 24 price change to 24 price change percentage [#887](https://github.com/EthVM/EthVM/pull/887)
+- Sentry fix #1950193750 and set contract correctly in CoinData [#895](https://github.com/EthVM/EthVM/pull/895)
+- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881) 
+
+===================================================================================
 
 ### Release v1.0.2
 

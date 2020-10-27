@@ -61,9 +61,9 @@ export default class Blockies extends Vue {
      */
     setBlockie(): void {
         const data = createIcon({
-            seed: this.address.toLowerCase(),
+            seed: this.address ? this.address.toLowerCase() : '',
             size: 8,
-            scale: 8
+            scale: 4
         }).toDataURL()
         const identicon = this.$refs.identicon as any
         const style = identicon.style as any
@@ -74,11 +74,12 @@ export default class Blockies extends Vue {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 .blockie {
-    border-radius: 50px;
-    min-width: 50px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
     height: 100%;
-    margin: 8px 5px;
+    width: 100%;
 }
 </style>

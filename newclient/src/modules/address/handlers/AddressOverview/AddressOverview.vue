@@ -1,6 +1,6 @@
 <template>
     <div>
-        <address-detail :address="addressDetails" :loading="loading" :loading-tokens="loadingTokens" :ether-price="ethPrice" />
+        <address-detail :address="addressDetails" :loading="loading" :loading-tokens="loadingTokens" :ether-price="ethPrice" @errorFavorites="emitErrorState" />
     </div>
 </template>
 
@@ -32,13 +32,11 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
             update: data => data.getEthBalance,
             result(data) {
                 if (data.data && data.data.getEthBalance) {
-                    this.hasError = false
-                    this.emitErrorState()
+                    this.emitErrorState(false)
                 }
             },
             error(error) {
-                this.hasError = true
-                this.emitErrorState()
+                this.emitErrorState(true, ErrorMessage.balance)
             }
         },
         getContractMeta: {
@@ -53,7 +51,7 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
             update: data => data.getContractMeta,
             result(data) {
                 if (data.data && data.data.getContractMeta) {
-                    this.hasError = false
+                    this.emitErrorState(false)
                     this.setContract(true)
                 } else {
                     this.setContract(false)
@@ -63,10 +61,10 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
             error(error) {
                 const newError = JSON.stringify(error.message)
                 if (newError.includes('No contract found')) {
-                    this.hasError = false
+                    this.emitErrorState(false)
                     this.setContract(false)
                 } else {
-                    this.hasError = true
+                    this.emitErrorState(true, ErrorMessage.contractNotFound)
                 }
             }
         }
@@ -124,8 +122,9 @@ export default class AddressOverview extends Mixins(CoinData) {
     /**
      * Emits error to Sentry
      */
-    emitErrorState(): void {
-        this.$emit('errorBalance', this.hasError, ErrorMessage.balance)
+    emitErrorState(val: boolean, message: string): void {
+        this.hasError = val
+        this.$emit('errorAddrOverview', this.hasError, message)
     }
 
     /*

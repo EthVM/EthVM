@@ -234,7 +234,11 @@ export default class BlockTxs extends Vue {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Sets page number and reset value and emit
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
@@ -268,6 +272,10 @@ export default class BlockTxs extends Vue {
 
         this.index = page
     }
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)
