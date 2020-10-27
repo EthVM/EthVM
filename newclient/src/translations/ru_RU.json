@@ -177,38 +177,38 @@
             "title-delete": "Удалить Избранный Адрес",
             "title-edit": "Редактировать Имя Адреса",
             "delete-are-you-sure": "Вы уверены, что хотите удалить этот адрес? | Вы уверены, что хотите удалить эти адреса?",
-            "delete-tip": "Tip:",
-            "delete-tip-text": "You can always add it again on the address details or favorite addresses page. | You can always add them again on the address details or favorite addresses page.",
-            "label-add": "Enter Name",
-            "label-edit": "Enter New Name",
-            "input-required": "This field is required",
-            "input-length": "Name must be less than 20 characters",
-            "current-name": "Current Name",
-            "enter-address": "Enter Address",
-            "add-new": "Add New Favorite Address",
-            "optional": "Optional",
-            "required": "Required",
-            "invalid-address": "This is an invalid address"
+            "delete-tip": "Совет:",
+            "delete-tip-text": "Вы всегда можете снова добавить его на странице деталей адреса или странице избранных адресов. | Вы всегда можете снова добавить их на странице деталей адреса или странице избранных адресов.",
+            "label-add": "Введите Имя",
+            "label-edit": "Введите Новое Имя",
+            "input-required": "Поле обязательно для заполнения",
+            "input-length": "Имя должно быть меньше 20 символов",
+            "current-name": "Текущее Имя",
+            "enter-address": "Введите Адрес",
+            "add-new": "Добавить Новый Избранный Адрес",
+            "optional": "Необязательно",
+            "required": "Обязательно",
+            "invalid-address": "Этот адрес не действителен"
         },
         "btn": {
-            "add": "Add",
-            "delete": "Delete",
-            "change": "Change Name",
-            "remove": "Remove"
+            "add": "Добавить",
+            "delete": "Удалить",
+            "change": "Поменять Имя",
+            "remove": "Удалить"
         },
         "message": {
-            "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page.",
-            "no-search-results": "There are no search results.",
-            "already-exists": "This address already exists"
+            "no-addr": "У вас нет избранных адресов. Вы можете добавить адрес, нажав на кнопку 'Добавить' или вы можете добавить его непосредственно на странице адреса.",
+            "no-search-results": "Нет результатов поиска.",
+            "already-exists": "Такой адрес уже существует"
         },
-        "title": "Favorite Addresses",
-        "name": "Name",
-        "select-all": "Select All",
+        "title": "Избранные Адреса",
+        "name": "Имя",
+        "select-all": "Выбрать Все",
         "sort": {
-            "address": "Address",
-            "name": "Name",
-            "balance": "Balance",
-            "balance-usd": "USD Value"
+            "address": "Адрес",
+            "name": "Имя",
+            "balance": "Баланс",
+            "balance-usd": "Стоимость в USD"
         }
     },
     "message": {
@@ -258,10 +258,10 @@
                 "let-us-know": "дайте нам знать"
             },
             "favorites": {
-                "address-check": "Something went wrong while checking the address.",
-                "eth-balance": "Something went wrong while retrieving the Eth balance.",
-                "contract": "Something went wrong while retrieving the contract.",
-                "rewards": "Something went wrong while retrieving rewards."
+                "address-check": "Что-то пошло не так во время проверки адреса.",
+                "eth-balance": "Что-то пошло не так при получении Eth баланса.",
+                "contract": "Что-то пошло не так при получении деталей контракта.",
+                "rewards": "Что-то пошло не так при получении вознаграждений."
             },
             "txs": "Что-то пошло не так при получении транзакций.",
             "transfers-erc721": "Что-то пошло не так при получении переводов токенов NFT.",
