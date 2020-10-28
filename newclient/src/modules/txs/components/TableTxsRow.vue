@@ -31,7 +31,13 @@
                             <app-transform-hash :hash="transaction.from | toChecksum" :italic="true" :link="`/address/${transaction.from}`" />
                             <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                             <!-- <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :italic="true" :link="`/address/${tx.creates}`" /> -->
-                            <app-transform-hash :hash="transaction.to | toChecksum" :italic="true" :link="`/address/${transaction.to}`" />
+                            <app-transform-hash
+                                v-if="transaction.to && transaction.to !== ''"
+                                :hash="transaction.to | toChecksum"
+                                :italic="true"
+                                :link="`/address/${transaction.to}`"
+                            />
+                            <p v-else class="info--text">{{ $t('contract.creation') }}</p>
                         </v-layout>
                     </v-flex>
                     <v-flex shrink pa-1>
@@ -93,9 +99,15 @@
                                 <app-transform-hash :hash="transaction.from | toChecksum" :link="`/address/${transaction.from}`" :italic="true" />
                                 <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
                                 <!-- <p v-if="tx.isContractCreation" class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p> -->
-                                <p class="info--text mr-1">{{ $t('tx.to') }}:</p>
+                                <p v-if="transaction.to && transaction.to !== ''" class="info--text mr-1">{{ $t('tx.to') }}:</p>
+                                <p v-else class="info--text">{{ $t('contract.creation') }}</p>
                                 <!-- <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" /> -->
-                                <app-transform-hash :hash="transaction.to | toChecksum" :link="`/address/${transaction.to}`" :italic="true" />
+                                <app-transform-hash
+                                    v-if="transaction.to && transaction.to !== ''"
+                                    :hash="transaction.to | toChecksum"
+                                    :link="`/address/${transaction.to}`"
+                                    :italic="true"
+                                />
                             </v-layout>
                         </v-flex>
                     </v-layout>

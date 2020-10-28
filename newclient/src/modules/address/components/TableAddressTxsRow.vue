@@ -69,7 +69,7 @@
                     =====================================================================================
                     -->
                     <v-flex xs7 sm9 pa-1>
-                        <app-transform-hash :hash="typeAddr | toChecksum" :link="`/address/${typeAddr}`" />
+                        <app-transform-hash v-if="!isContractCreation" :hash="typeAddr | toChecksum" :link="`/address/${typeAddr}`" />
                     </v-flex>
                 </v-layout>
             </div>
@@ -105,7 +105,12 @@
                                     </v-card>
                                 </v-flex>
                                 <v-flex sm7 lg8 pl-0>
-                                    <app-transform-hash :hash="typeAddr | toChecksum" :link="`/address/${typeAddr}`" :italic="true" />
+                                    <app-transform-hash
+                                        v-if="!isContractCreation"
+                                        :hash="typeAddr | toChecksum"
+                                        :link="`/address/${typeAddr}`"
+                                        :italic="true"
+                                    />
                                 </v-flex>
                             </v-layout>
                         </v-flex>
@@ -196,7 +201,7 @@ import { FormattedNumber, NumberFormatHelper } from '@app/core/helper/number-for
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import BN from 'bignumber.js'
 
-const TYPES = ['in', 'out', 'self']
+const TYPES = ['in', 'out', 'self', 'contractCreation']
 @Component({
     components: {
         AppTooltip,
@@ -242,7 +247,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
 
     get getValueTitle(): string {
-        if (this.type === TYPES[1]) {
+        if (this.type === TYPES[1] || this.type === TYPES[3]) {
             if (this.transfer.getStatus() === false) {
                 return `${this.$t('state.actual-sent')}`
             }
@@ -269,6 +274,9 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     get type(): string {
         const from = this.transfer.getFrom().toLowerCase()
         const to = this.transfer.getTo().toLowerCase()
+        if (to === '') {
+            return TYPES[3]
+        }
         const addr = this.address.toLowerCase()
         if (addr === from && addr === to) {
             return TYPES[2]
@@ -283,6 +291,8 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
                 return `${this.$t('tx.type.in')}`
             case TYPES[1]:
                 return `${this.$t('tx.type.out')}`
+            case TYPES[3]:
+                return `${this.$t('contract.creation')}`
             default:
                 return `${this.$t('tx.type.self')}`
         }
@@ -293,6 +303,8 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
                 return 'primary'
             case TYPES[1]:
                 return 'error'
+            case TYPES[3]:
+                return 'warning'
             default:
                 return 'info'
         }
@@ -342,6 +354,10 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
     get isMined(): boolean {
         return !this.transfer.getIsPending()
+    }
+
+    get isContractCreation(): boolean {
+        return this.type === TYPES[3]
     }
 }
 </script>
