@@ -1,3 +1,8 @@
+### Devop
+
+- Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
+
+
 ### Release v1.0.3
 
 ### Feature
