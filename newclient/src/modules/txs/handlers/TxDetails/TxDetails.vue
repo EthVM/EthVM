@@ -7,7 +7,7 @@
     <v-layout row wrap justify-start class="mb-4">
         <v-flex xs12>
             <app-details-list :title="title" :details="txDetails" :is-loading="isLoading" :max-items="7">
-                <template v-slot:title v-if="!isLoading">
+                <template v-if="!isLoading" #title>
                     <tx-details-title :status="titleStatus" />
                 </template>
             </app-details-list>
@@ -317,7 +317,9 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
      Methods
     ===================================================================================
     */
-
+    /**
+     * Start apollo subscription
+     */
     startSubscription(): void {
         const _hash = this.transaction.hash
         const observer = this.$apollo.subscribe({
@@ -336,7 +338,12 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             }
         })
     }
-    emitErrorState(val: boolean, hashNotFound = false): void {
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     * @param hashNotFound {Boolean}
+     */
+    emitErrorState(val: boolean, hashNotFound: boolean = false): void {
         this.hasError = val
         const mess = hashNotFound ? ErrorMessageTx.notFound : ErrorMessageTx.details
         this.$emit('errorDetails', this.hasError, mess)

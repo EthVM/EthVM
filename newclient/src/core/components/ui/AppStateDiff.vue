@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :hide-overlay="true" v-model="showDialog" justify-end width="300" origin="right" class="app-state-diff">
+    <v-dialog v-model="showDialog" :hide-overlay="true" justify-end width="300" origin="right" class="app-state-diff">
         <v-btn slot="activator" :small="true" class="more-btn" color="white" fab depressed>
             <p class="info--text subheading pb-2">...</p>
         </v-btn>

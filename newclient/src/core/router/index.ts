@@ -18,8 +18,8 @@ const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modu
 const PageKnowledgeBase = () => import(/* webpackChunkName: "page-kb" */ '@app/modules/other/pages/PageKnowledgeBase.vue')
 const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp" */ '@app/modules/other/pages/PagePrivacyPolicy.vue')
 const PageNotFound = () => import(/* webpackChunkName: "page-not-found" */ '@app/modules/other/pages/PageNotFound.vue')
+const PageFavAddr = () => import(/* webpackChunkName: "page-fav-addrs" */ '@app/modules/favorites/pages/PageFavAddr.vue')
 const PageSearchNotFound = () => import(/* webpackChunkName: "page-search-not-found" */ '@app/modules/search/pages/PageNotFound.vue')
-
 Vue.use(Router)
 
 export default new Router({
@@ -128,6 +128,11 @@ export default new Router({
             component: PageSearchNotFound,
             name: 'search-not-found',
             props: true
+        },
+        {
+            path: '/fav_addresses',
+            component: PageFavAddr,
+            name: 'fav_addresses'
         },
         {
             path: '*',

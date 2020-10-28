@@ -1,17 +1,7 @@
 <template>
-    <div class="transform-hash-container">
-        <router-link v-if="link" :to="url">
-            <div :class="hashClass">
-                <div class="hash-section">{{ first }}</div>
-                <div class="concat hash-section">{{ middle }}</div>
-                <div class="hash-section">{{ last }}</div>
-            </div>
-        </router-link>
-        <div v-else :class="hashClass">
-            <div class="hash-section">{{ first }}</div>
-            <div class="concat hash-section">{{ middle }}</div>
-            <div class="hash-section">{{ last }}</div>
-        </div>
+    <div :class="hashClass" @click="routeTo()">
+        <span class="firstPart">{{ start }}</span
+        ><span class="lastPart">{{ end }}</span>
     </div>
 </template>
 
@@ -21,61 +11,80 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component
 export default class AppTransformHash extends Vue {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
-
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
     @Prop(String) hash!: string
     @Prop({ type: Boolean, default: false }) italic!: boolean
-    @Prop(String) link!: string
+    @Prop(String) link?: string
     @Prop({ type: Boolean, default: true }) isBlue!: boolean
 
     /*
-  ===================================================================================
-    Computed
-  ===================================================================================
-  */
-    get last(): string {
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+    get start(): string {
+        const n = this.hash.length
+        return this.hash.slice(0, n - 4)
+    }
+    get end(): string {
         const n = this.hash.length
         return this.hash.slice(n - 4, n)
     }
-    get first(): string {
-        return this.hash.slice(0, 4)
-    }
-    get middle(): string {
-        const n = this.hash.length
-        return this.hash.slice(4, n - 4)
-    }
-
     get hashClass(): string {
-        if (!this.isBlue) {
-            return this.italic ? 'hash-container font-italic black--text font-mono' : ' hash-container black--text font-mono'
-        }
-        return this.italic ? 'hash-container font-italic secondary--text font-mono' : ' hash-container secondary--text font-mono'
+        const base = this.link ? 'url hash-container font-mono' : 'hash-container font-mono'
+        return this.isBlue ? `${base} secondary--text` : `${base} black--text`
     }
 
-    get url(): string {
-        return this.link
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    routeTo(): void {
+        if (this.link) {
+            this.$router.push(this.link).catch(() => {})
+        }
     }
 }
 </script>
 
-<style scoped lang="css">
-.concat {
+<style scoped lang="scss">
+// Variables to control the truncation behaviour
+$startFixedChars: 4; // Number of chars before ellipsis - have priority over end chars
+$endFixedChars: 5; // Number of chars after ellipsis  - lower priority than start chars
+$fontFaceScaleFactor: 0.47; // Magic number dependent on font face - set by trial and error
+
+// Dervied from the 3 variables above
+$startWidth: 1em * $fontFaceScaleFactor * ($startFixedChars + 3);
+$endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
+
+.firstPart,
+.lastPart {
+    display: inline-block;
+    white-space: nowrap;
     overflow: hidden;
+}
+.firstPart {
+    max-width: calc(100% - #{$endWidth});
+    min-width: $startWidth;
     text-overflow: ellipsis;
 }
-.transform-hash-container {
-    overflow: hidden;
-    padding: 0px 1px;
+.lastPart {
+    max-width: calc(100% - #{$startWidth});
+    direction: rtl;
 }
 .hash-container {
-    min-width: 80px;
-    display: flex;
-    flex-shrink: 2;
+    white-space: nowrap;
+    overflow: hidden;
 }
-.hash-section {
-    display: inline;
+
+.url {
+    cursor: pointer;
+}
+.url:hover {
+    text-decoration: underline;
 }
 </style>

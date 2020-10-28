@@ -1,0 +1,6 @@
+query favAddressCache {
+    favAddresses @client {
+        address
+        name
+    }
+}

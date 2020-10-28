@@ -52,9 +52,6 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
-                        if (newItems.length > MAX_ITEMS) {
-                            newItems.slice(1)
-                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -88,9 +85,6 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
-                        if (newItems.length > MAX_ITEMS) {
-                            newItems.slice(1)
-                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -124,9 +118,6 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
-                        if (newItems.length > MAX_ITEMS) {
-                            newItems.slice(1)
-                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -302,6 +293,38 @@ export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
                 icon: 'fa fa-circle'
             }
         ]
+    }
+    /*
+    ===================================================================================
+      Watchers
+    ===================================================================================
+    */
+    @Watch('gasMinDataSet', { deep: true })
+    ongasMinDataSetChanged(newVal) {
+        if (newVal.length > MAX_ITEMS) {
+            newVal.shift()
+            this.gasMinDataSet = newVal
+        } else {
+            this.gasMinDataSet = newVal
+        }
+    }
+    @Watch('gasMaxDataSet', { deep: true })
+    ongasMaxDataSetChanged(newVal) {
+        if (newVal.length > MAX_ITEMS) {
+            newVal.shift()
+            this.gasMaxDataSet = newVal
+        } else {
+            this.gasMaxDataSet = newVal
+        }
+    }
+    @Watch('gasAvgDataSet', { deep: true })
+    ongasAvgDataSetChanged(newVal) {
+        if (newVal.length > MAX_ITEMS) {
+            newVal.shift()
+            this.gasAvgDataSet = newVal
+        } else {
+            this.gasAvgDataSet = newVal
+        }
     }
 }
 </script>

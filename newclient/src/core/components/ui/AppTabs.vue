@@ -8,7 +8,7 @@
             -->
             <v-flex hidden-md-and-up pt-0 pb-0>
                 <v-menu v-model="showMobile" offset-y>
-                    <template v-slot:activator="{ on }">
+                    <template #activator="{ on }">
                         <v-toolbar color="menuDark" class="toolbar-menu" flat v-on="on">
                             <v-layout row align-center justify-space-between pa-2>
                                 <v-flex grow>

@@ -37,7 +37,7 @@
                             </v-layout>
                         </v-list-tile>
                         <v-list-group v-else :class="[checkLinkPath(item.links) ? 'accent white--text' : 'nav--text']" @click="mini = false">
-                            <template v-slot:activator>
+                            <template #activator>
                                 <v-icon class="ml-4 pl-1 pr-3" small>{{ item.header.icon }}</v-icon>
                                 <v-list-tile>
                                     <v-list-tile-content>
@@ -46,7 +46,7 @@
                                 </v-list-tile>
                             </template>
                             <div v-if="!mini">
-                                <v-list-tile v-for="(link, j) in item.links" :to="link.routerLink" :key="j">
+                                <v-list-tile v-for="(link, j) in item.links" :key="j" :to="link.routerLink">
                                     <v-list-tile-content>
                                         <v-list-tile-title :class="[isCurrentLinkPath(link.name) ? 'white--text ml-5 pl-2' : 'nav--text ml-5 pl-2']">{{
                                             link.text
@@ -109,7 +109,7 @@
                 </v-flex>
             </v-layout>
 
-            <template v-slot:extension v-if="showSearch">
+            <template v-if="showSearch" #extension>
                 <v-layout row justify-center align-center>
                     <v-flex xs11> <search-details /> </v-flex>
                     <v-flex xs1>
@@ -242,6 +242,13 @@ export default class TheNavigationDrawer extends Vue {
                     icon: 'fas fa-chart-pie',
                     text: this.$i18n.t('charts.name'),
                     routerLink: '/charts'
+                }
+            },
+            {
+                header: {
+                    icon: 'fas fa-heart',
+                    text: this.$t('fav.title'),
+                    routerLink: '/fav_addresses'
                 }
             }
         ]

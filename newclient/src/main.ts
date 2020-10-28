@@ -9,6 +9,7 @@ import VueApollo from 'vue-apollo'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { onError } from 'apollo-link-error'
 import { OpenSeaClient } from './apollo/opensea/osClient'
+import { FavClient } from './apollo/favorites/favClient'
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -96,7 +97,8 @@ const apolloClient = new ApolloClient({
 const apolloProvider = new VueApollo({
     clients: {
         apolloClient,
-        OpenSeaClient
+        OpenSeaClient,
+        FavClient
     },
     defaultClient: apolloClient
 })
@@ -134,7 +136,8 @@ Vue.use(Vuetify, {
         errorLight: '#fe7665',
         warningLight: '#fed18e',
         successLight: '#97c9dc',
-        menuDark: '#2a3643'
+        menuDark: '#2a3643',
+        greyPlaceholder: '#afafaf'
 
         // used -->
         // background: String(colors.grey.darken3)
@@ -180,7 +183,6 @@ new Vue({
     Sentry
   ===================================================================================
 */
-
 const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
 
 Sentry.init({

@@ -1,10 +1,10 @@
 <template>
     <v-card color="white" flat class="pt-3 pb-2">
         <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/txs">
-            <template v-slot:update v-if="!isHome && !isBlock">
+            <template v-if="!isHome && !isBlock" #update>
                 <app-new-update :text="$t('message.update.txs')" :update-count="newMinedTransfers" :hide-count="true" @reload="setPage(0, true)" />
             </template>
-            <template v-slot:pagination v-if="showPagination && !initialLoad">
+            <template v-if="showPagination && !initialLoad" #pagination>
                 <app-paginate
                     v-if="isBlock"
                     :total="totalPages"
@@ -234,7 +234,11 @@ export default class BlockTxs extends Vue {
       Methods:
     ===================================================================================
     */
-
+    /**
+     * Sets page number and reset value and emit
+     * @param page {Number}
+     * @param reset {Boolean}
+     */
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.isEnd = 0
@@ -268,6 +272,10 @@ export default class BlockTxs extends Vue {
 
         this.index = page
     }
+    /**
+     * Emit error to Sentry
+     * @param val {Boolean}
+     */
     emitErrorState(val: boolean): void {
         this.hasError = val
         this.$emit('errorTxs', this.hasError, ErrorMessageBlock.blockTxs)

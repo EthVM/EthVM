@@ -1,0 +1,5 @@
+mutation editFavAddress($address: String!, $name: String!) {
+    editFavAddress(address: $address, name: $name) @client {
+        name
+    }
+}

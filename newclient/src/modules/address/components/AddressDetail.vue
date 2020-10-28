@@ -2,47 +2,144 @@
     <v-card color="white" flat>
         <!--
         =====================================================================================
-         ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
+          DESKTOP: ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
         =====================================================================================
         -->
-        <v-layout :class="layoutPadding" grid-list-md align-start justify-start row fill-height>
+        <v-layout :class="layoutPadding" grid-list-sm align-center justify-start row fill-height hidden-xs-only>
+            <!--
+            =====================================================================================
+              BLOCKIE
+            =====================================================================================
+            -->
             <v-flex shrink>
-                <v-layout align-start justify-center row fill-height pa-2>
-                    <blockies :address="address.address" />
+                <v-layout align-start justify-center row fill-height pr-2 pl-2 pt-2>
+                    <blockies :address="address.hash" />
                 </v-layout>
             </v-flex>
+            <!--
+            =====================================================================================
+              ADDRESS NAME / CHIPS
+            =====================================================================================
+            -->
             <v-flex d-block>
-                <v-layout wrap column fill-height pa-1>
+                <v-layout wrap pa-1>
                     <v-flex xs12>
-                        <v-layout row wrap align-center justify-space-between>
-                            <v-card-title class="title font-weight-bold pl-1 pr-3 pb-2">{{ title }}</v-card-title>
-                            <v-layout hidden-sm-and-down align-center justify-start row fill-height pt-2>
-                                <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-                                <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
-                                <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
-                            </v-layout>
-                            <address-qr :address="address.hash | toChecksum" :large="true" />
+                        <v-layout row wrap align-center justify-start pr-2 pl-2 pb-2 pt-3>
+                            <!--
+                            =====================================================================================
+                              TITLE
+                            =====================================================================================
+                            -->
+                            <v-card-title class="title font-weight-bold pl-0 pr-3 pb-0 pt-0 break-hash">{{ title }}</v-card-title>
+                            <!--
+                            =====================================================================================
+                              CHIPS
+                            =====================================================================================
+                            -->
+                            <app-adr-chip v-for="(chip, index) in addrChips" :key="index" :chip="chip" class="mr-2" />
                         </v-layout>
                     </v-flex>
+                    <!--
+                    =====================================================================================
+                      COPY/ADDRESS HASH
+                    =====================================================================================
+                    -->
                     <v-flex xs12>
-                        <v-layout row align-center justify-start>
+                        <v-layout row wrap align-center justify-start>
+                            <p class="break-hash font-mono pl-2 pr-2">{{ address.hash | toChecksum }}</p>
                             <app-copy-to-clip :value-to-copy="address.hash | toChecksum" />
-                            <p class="break-hash font-mono pt-0 pr-4 pl-1">{{ address.hash | toChecksum }}</p>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex v-if="hasChips" xs12 hidden-md-and-up>
-                        <v-layout align-center justify-start row fill-height pt-2>
-                            <div v-if="!address.isContract && address.isMiner" class="chip miner-chip mr-2 ml-1">{{ $t('miner.name') }}</div>
-                            <div v-if="!address.isContract && address.isContractCreator" class="chip creator-chip">{{ $t('contract.creator') }}</div>
-                            <div v-if="address.isContract" class="chip contract-chip">{{ $tc('contract.name', 1) }}</div>
+                            <fav-handler-edit
+                                :address="address.hash"
+                                :addr-chips="addrChips"
+                                class="pr-2 pl-1"
+                                @nameChange="updateTitle"
+                                @errorFavorites="emitErrorState"
+                            />
                         </v-layout>
                     </v-flex>
                 </v-layout>
             </v-flex>
-            <!-- <v-flex hidden-xs-only fill-height mr-3>
-        <v-layout justify-end> <address-qr :address="address.hash" :large="true" /> </v-layout>
-      </v-flex> -->
+            <!--
+            =====================================================================================
+              FAVORITE/ QR
+            =====================================================================================
+            -->
+            <v-flex shrink>
+                <v-layout row align-center justify-end pa-2>
+                    <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" @errorFavorites="emitErrorState" />
+                    <address-qr :address="address.hash" :large="true" />
+                </v-layout>
+            </v-flex>
         </v-layout>
+        <!--
+        =====================================================================================
+          END DESKTOP
+        =====================================================================================
+        -->
+        <!--
+        =====================================================================================
+          MOBILE: ADDRESS HASH, QR CODE, COPY BUTTON, IDENTICON, CHIPS
+        =====================================================================================
+        -->
+        <v-layout grid-list-sm align-center justify-start row fill-height hidden-sm-and-up pr-2 pl-2 pt-2>
+            <!--
+            =====================================================================================
+              BLOCKIE
+            =====================================================================================
+            -->
+            <v-flex>
+                <v-layout align-start justify-center row fill-height pa-2>
+                    <blockies :address="address.hash" width="40px" height="40px" />
+                </v-layout>
+            </v-flex>
+            <!--
+            =====================================================================================
+              ADDRESS NAME / HASH / COPY / EDIT
+            =====================================================================================
+            -->
+            <v-flex d-block>
+                <v-layout row wrap align-center justify-start>
+                    <v-flex xs12>
+                        <v-layout row align-center justify-start pr-3>
+                            <fav-handler-edit
+                                :address="address.hash"
+                                :addr-chips="addrChips"
+                                class="pr-1"
+                                @nameChange="updateTitle"
+                                @errorFavorites="emitErrorState"
+                            />
+                            <v-card-title class="body-2 font-weight-bold pa-0 break-hash">{{ title }}</v-card-title>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-layout row align-center justify-start pr-3>
+                            <app-copy-to-clip :value-to-copy="address.hash" />
+                            <p class="break-hash font-mono pl-1">{{ address.hash }}</p>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
+        </v-layout>
+
+        <v-layout grid-list-xs align-center justify-start row fill-height hidden-sm-and-up>
+            <!--
+            =====================================================================================
+              CHIPS / LIKE / QR
+            =====================================================================================
+            -->
+            <v-layout row wrap align-center justify-start pl-3 ma-0>
+                <app-adr-chip v-for="(chip, index) in addrChips" :key="index" :chip="chip" class="ma-1" />
+            </v-layout>
+            <v-layout row align-center justify-end pr-2 ma-0>
+                <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" @errorFavorites="emitErrorState" />
+                <address-qr :address="address.hash" :large="true" />
+            </v-layout>
+        </v-layout>
+        <!--
+        =====================================================================================
+          END MOBILE
+        =====================================================================================
+        -->
 
         <!--
         =====================================================================================
@@ -166,13 +263,13 @@
                         </v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
+                                class="ma-0"
                                 color="primaryLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
                                 indeterminate
                                 height="25"
-                                class="ma-2"
                             />
                         </v-card-title>
                     </v-card>
@@ -194,13 +291,13 @@
                         </v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
+                                class="ma-0"
                                 color="errorLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
                                 indeterminate
                                 height="25"
-                                class="ma-2"
                             />
                         </v-card-title>
                     </v-card>
@@ -214,17 +311,16 @@
                         <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                         <v-card-title v-else>
                             <v-progress-linear
+                                class="ma-0"
                                 color="warningLight"
                                 background-color="white"
                                 background-opacity="0.3"
                                 value="40"
                                 indeterminate
                                 height="25"
-                                class="ma-2"
                             />
                         </v-card-title>
                     </v-card>
-
                     <div class="empty-xs"></div>
                 </div>
             </v-flex>
@@ -235,6 +331,9 @@
 <script lang="ts">
 import AddressQr from '@app/modules/address/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
+import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
+import FavHandlerHeartActions from '@app/modules/favorites/handlers/FavHandlerHeartActions.vue'
+import FavHandlerEdit from '@app/modules/favorites/handlers/FavHandlerEdit.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
@@ -242,20 +341,24 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import BN from 'bignumber.js'
 import { eth } from '@app/core/helper'
 import { Address } from './props'
+import { EnumAdrChips } from '@app/core/components/props'
 
 @Component({
     components: {
         AddressQr,
+        AppAdrChip,
         AppCopyToClip,
-        Blockies
+        Blockies,
+        FavHandlerHeartActions,
+        FavHandlerEdit
     }
 })
 export default class AddressDetail extends Mixins(NumberFormatMixin) {
     /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
 
     @Prop(Object) address!: Address
     @Prop(Boolean) loading!: boolean
@@ -263,17 +366,30 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     @Prop(Number) etherPrice!: number
 
     /*
-  ===================================================================================
-    Computed Values
-  ===================================================================================
-  */
+    ===================================================================================
+      Data
+    ===================================================================================
+    */
+    title = ''
 
-    get title(): string {
-        return this.$i18n.tc('address.name', 1)
+    /*
+    ===================================================================================
+        Lifecycle
+    ===================================================================================
+    */
+
+    mounted() {
+        this.title = this.$i18n.tc('address.name', 1).toString()
     }
 
+    /*
+    ===================================================================================
+      Computed Values
+    ===================================================================================
+    */
+
     get hasChips(): boolean {
-        return this.address.isContract || this.address.isMiner || this.address.isContractCreator
+        return this.addrChips.length > 0
     }
 
     get layoutPadding(): string {
@@ -313,32 +429,37 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
     get loadingUSD(): boolean {
         return this.etherPrice === undefined
     }
+
+    get addrChips(): EnumAdrChips[] {
+        const chips: EnumAdrChips[] = []
+        if (this.address.isMiner) {
+            chips.push(EnumAdrChips.miner)
+        }
+        if (this.address.isContractCreator) {
+            chips.push(EnumAdrChips.creator)
+        }
+        if (this.address.isContract) {
+            chips.push(EnumAdrChips.contract)
+        }
+        return chips
+    }
+    /*
+    ===================================================================================
+        Methods
+    ===================================================================================
+    */
+    updateTitle(name: string): void {
+        this.title = name === '' ? this.$i18n.tc('address.name', 1).toString() : `${name}`
+    }
+    emitErrorState(val: boolean, message: string): void {
+        this.$emit('errorFavorites', val, message)
+    }
 }
 </script>
 
 <style scoped lang="css">
 .break-hash {
     word-break: break-all;
-}
-
-.chip {
-    height: 28px;
-    border-radius: 14px;
-    font-size: 85%;
-    color: white;
-    padding: 5px 10px;
-}
-
-.miner-chip {
-    background-color: #40ce9c;
-}
-
-.creator-chip {
-    background-color: #b3d4fc;
-}
-
-.contract-chip {
-    background-color: #fed18e;
 }
 
 p {
@@ -363,7 +484,7 @@ p {
     position: absolute;
     bottom: 0;
     right: 0;
-    height: 100%;
+    height: 45%;
     width: 12vw;
     content: '';
     background: linear-gradient(to left, rgba(255, 255, 255, 1) 5%, hsla(0, 0%, 100%, 0) 80%);
