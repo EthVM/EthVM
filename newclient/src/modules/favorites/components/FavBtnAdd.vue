@@ -2,7 +2,7 @@
     <div>
         <v-tooltip top color="white" content-class="tooltip-border">
             <template #activator="{on}">
-                <v-btn small depressed color="secondary" class="text-capitalize ma-0 pa-0 btn-width" @click.stop="openDialog()" v-on="on">
+                <v-btn small depressed color="secondary" class="text-capitalize ma-0 py-0 px-1 btn-width" @click.stop="openDialog()" v-on="on">
                     <v-icon class="fas fa-plus pr-2 icon-small" />{{ $t('fav.btn.add') }}</v-btn
                 >
             </template>
