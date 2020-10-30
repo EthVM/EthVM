@@ -6,6 +6,8 @@
 - Removed individual subscriptions for each pending transactions on address and pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
 - Added identicon to address QR dialog [#906](https://github.com/EthVM/EthVM/pull/906)
 - Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
+- Clean up packages, install depcheck, config husky with commitlint [#882](https://github.com/EthVM/EthVM/pull/882)
+
 
 ### Bug
 
@@ -25,6 +27,7 @@
 
 - Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
 - Change token sort arrow ui [#890](https://github.com/EthVM/EthVM/pull/890)
+
 
 ### Bug
 

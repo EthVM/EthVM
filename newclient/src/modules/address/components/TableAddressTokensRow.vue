@@ -318,7 +318,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get priceChangeFormatted(): FormattedNumber | null {
-        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_percentage_24h ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_percentage_24h)) : null
+        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_percentage_24h
+            ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_percentage_24h))
+            : null
     }
 
     get name(): string | undefined {
