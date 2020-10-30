@@ -30,11 +30,13 @@
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
-import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { pendingTx, txMined } from './pendingTxs.graphql'
+import { pendingTx } from './pendingTxs.graphql'
 import { PendingTx } from '@app/modules/txs/components/props'
 import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForTx'
+import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
+import { getBlockTransfers } from '@app/modules/txs/handlers/BlockTxs/queryTransfers.graphql'
 
 @Component({
     components: {
@@ -43,6 +45,30 @@ import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForT
         TableTxs
     },
     apollo: {
+        getBlockTransfers: {
+            query: getBlockTransfers,
+            fetchPolicy: 'network-only',
+            skip() {
+                return this.newBlockNumber === undefined && this.pendingTxs.length < 1
+            },
+            variables() {
+                return { _number: this.newBlockNumber }
+            },
+            result({ data }) {
+                if (data && data.getBlockTransfers) {
+                    if (data.getBlockTransfers.transfers.length > 0 && this.pendingTxs.length > 0) {
+                        data.getBlockTransfers.transfers.forEach(i => {
+                            if (i.transfer.transactionHash) {
+                                this.markMined(i.transfer.transactionHash)
+                            }
+                        })
+                    }
+                }
+            },
+            error(error) {
+                this.emitErrorState(true)
+            }
+        },
         $subscribe: {
             NewPendingTx: {
                 query: pendingTx,
@@ -52,7 +78,6 @@ import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForT
                     }
                     if (data.pendingTransaction) {
                         data.pendingTransaction.isMined = false
-                        this.createSubscription(data.pendingTransaction.transactionHash)
                         this.pendingTxs.push(data.pendingTransaction)
                     }
                 },
@@ -63,7 +88,7 @@ import { ErrorMessagePendingTx } from '@app/modules/txs/models/ErrorMessagesForT
         }
     }
 })
-export default class PendingTxs extends Vue {
+export default class PendingTxs extends Mixins(NewBlockSubscription) {
     /*
     ===================================================================================
       Props
@@ -128,42 +153,17 @@ export default class PendingTxs extends Vue {
      */
     markMined(hash: string): void {
         let index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
-        if (this.pendingTxs[index]) {
+        if (index >= 0 && this.pendingTxs[index]) {
             this.pendingTxs[index].isMined = true
-        }
-        setTimeout(() => {
-            index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
-            if (index >= 0) {
-                this.pendingTxs.splice(index, 1)
-                if (this.totalPages < this.index + 1) {
-                    this.index = this.totalPages - 1
+            setTimeout(() => {
+                index = this.pendingTxs.findIndex(tx => tx.transactionHash === hash)
+                if (index >= 0) {
+                    this.pendingTxs.splice(index, 1)
+                    if (this.totalPages < this.index + 1) {
+                        this.index = this.totalPages - 1
+                    }
                 }
-            }
-        }, 10000)
-    }
-    /**
-     * Create apollo subscription
-     * @param _hash {String}
-     */
-    createSubscription(_hash: string): void {
-        if (_hash) {
-            const observer = this.$apollo.subscribe({
-                query: txMined,
-                variables: {
-                    hash: _hash
-                }
-            })
-            const a = observer.subscribe({
-                next: data => {
-                    this.markMined(_hash)
-                    a.unsubscribe()
-                },
-                error: error => {
-                    this.emitErrorState(true)
-                }
-            })
-        } else {
-            console.log('not defined', _hash)
+            }, 10000)
         }
     }
     /**

@@ -1,7 +1,17 @@
+
+### Release v1.0.3-hotfix.1
+
 ### Devop
 
+- Removed individual subscriptions for each pending transactions on address and pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
 - Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
 
+
+### Bug
+
+- Fixed mined blinker on pending txs table on pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
+
+===================================================================================
 
 ### Release v1.0.3
 
@@ -14,7 +24,6 @@
 - Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
 - Change token sort arrow ui [#890](https://github.com/EthVM/EthVM/pull/890)
 
-
 ### Bug
 
 - Deep watch on chart data sets [#885](https://github.com/EthVM/EthVM/pull/885)
@@ -22,10 +31,9 @@
 - Fix mobile loading state padding for address header page [#891](https://github.com/EthVM/EthVM/pull/891)
 - Change 24 price change to 24 price change percentage [#887](https://github.com/EthVM/EthVM/pull/887)
 - Sentry fix #1950193750 and set contract correctly in CoinData [#895](https://github.com/EthVM/EthVM/pull/895)
-- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881) 
+- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881)
 
 ===================================================================================
-
 
 ### Release v1.0.2
 
