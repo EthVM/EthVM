@@ -46,7 +46,7 @@
                             <p class="body-2">{{ adr.getName() }}</p>
                         </v-flex>
                         <v-layout v-if="adr.getChips() !== undefined" align-center justify-start row>
-                            <v-flex v-for="(chip, index) in adr.getChips()" :key="index" shrink>
+                            <v-flex v-for="(chip, idx) in adr.getChips()" :key="idx" shrink>
                                 <app-adr-chip :chip="chip" />
                             </v-flex>
                         </v-layout>

@@ -1,3 +1,22 @@
+
+### Release v1.0.3-hotfix.1
+
+### Devop
+
+- Removed individual subscriptions for each pending transactions on address and pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
+- Added identicon to address QR dialog [#906](https://github.com/EthVM/EthVM/pull/906)
+- Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
+- Clean up packages, install depcheck, config husky with commitlint [#882](https://github.com/EthVM/EthVM/pull/882)
+
+
+### Bug
+
+- Fixed mined blinker on pending txs table on pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
+- Fixed Unclickable QR on mobile [#906](https://github.com/EthVM/EthVM/pull/906)
+
+
+===================================================================================
+
 ### Release v1.0.3
 
 ### Feature
@@ -17,10 +36,9 @@
 - Fix mobile loading state padding for address header page [#891](https://github.com/EthVM/EthVM/pull/891)
 - Change 24 price change to 24 price change percentage [#887](https://github.com/EthVM/EthVM/pull/887)
 - Sentry fix #1950193750 and set contract correctly in CoinData [#895](https://github.com/EthVM/EthVM/pull/895)
-- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881) 
+- Catch v-img errors on load [#881](https://github.com/EthVM/EthVM/pull/881)
 
 ===================================================================================
-
 
 ### Release v1.0.2
 
