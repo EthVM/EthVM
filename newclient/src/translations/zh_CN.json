@@ -156,12 +156,60 @@
         "percentage": "Percentage",
         "eth-balance": "ETH Balance",
         "balance": "Balance",
-        "close": "Close"
+        "close": "Close",
+        "skip": "Skip",
+        "cancel": "Cancel"
     },
     "usd": {
         "name": "USD",
         "total": "Total USD Value",
         "value": "USD Value"
+    },
+    "fav": {
+        "tooltip": {
+            "add": "Add to favorite addresses list",
+            "remove": "Remove from favorite addresses list",
+            "edit": "Edit favorite address name",
+            "remove-select": "Select addresses from the list"
+        },
+        "dialog": {
+            "title-add": "Add Address Name",
+            "title-delete": "Delete Favorite Address",
+            "title-edit": "Edit Address Name",
+            "delete-are-you-sure": "Are you sure you want to delete this address? | Are you sure you want to delete these addresses?",
+            "delete-tip": "Tip:",
+            "delete-tip-text": "You can always add it again on the address details or favorite addresses page. | You can always add them again on the address details or favorite addresses page.",
+            "label-add": "Enter Name",
+            "label-edit": "Enter New Name",
+            "input-required": "This field is required",
+            "input-length": "Name must be less than 20 characters",
+            "current-name": "Current Name",
+            "enter-address": "Enter Address",
+            "add-new": "Add New Favorite Address",
+            "optional": "Optional",
+            "required": "Required",
+            "invalid-address": "This is an invalid address"
+        },
+        "btn": {
+            "add": "Add",
+            "delete": "Delete",
+            "change": "Change Name",
+            "remove": "Remove"
+        },
+        "message": {
+            "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page.",
+            "no-search-results": "There are no search results.",
+            "already-exists": "This address already exists"
+        },
+        "title": "Favorite Addresses",
+        "name": "Name",
+        "select-all": "Select All",
+        "sort": {
+            "address": "Address",
+            "name": "Name",
+            "balance": "Balance",
+            "balance-usd": "USD Value"
+        }
     },
     "message": {
         "disconnected": "Disconnected from the server. Attempting to connect...",
@@ -208,6 +256,12 @@
                 "invalid": "Sorry! This is an invalid search string.",
                 "is-bug": "If you think this is a bug, please {let-us-know}.",
                 "let-us-know": "let us know"
+            },
+            "favorites": {
+                "address-check": "Something went wrong while checking the address.",
+                "eth-balance": "Something went wrong while retrieving the Eth balance.",
+                "contract": "Something went wrong while retrieving the contract.",
+                "rewards": "Something went wrong while retrieving rewards."
             },
             "txs": "Something went wrong while retrieving transactions.",
             "transfers-erc721": "Something went wrong retrieving Address NFTs transfers.",
@@ -389,7 +443,8 @@
     "search": {
         "name": "Search",
         "default": "Search Block / Address / Tx",
-        "address-tx": "Tx Hash/Address"
+        "address-tx": "Tx Hash/Address",
+        "favorites": "Search Address / Name"
     },
     "filter": {
         "name": "Filter",

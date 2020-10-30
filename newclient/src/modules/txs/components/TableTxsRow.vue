@@ -201,7 +201,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     */
 
     @Prop(Object) tx!: TransferType
-    @Prop({ type: Boolean, default: false }) isPending
+    @Prop({ type: Boolean, default: false }) isPending!: boolean
 
     /*
     ===================================================================================
