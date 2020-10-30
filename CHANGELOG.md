@@ -1,10 +1,17 @@
+
+### Release v1.0.3-hotfix.1
+
 ### Devop
 
+- Removed individual subscriptions for each pending transactions on address and pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
 - Added identicon to address QR dialog [#906](https://github.com/EthVM/EthVM/pull/906)
+
 
 ### Bug
 
+- Fixed mined blinker on pending txs table on pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
 - Fixed Unclickable QR on mobile [#906](https://github.com/EthVM/EthVM/pull/906)
+
 
 ===================================================================================
 
