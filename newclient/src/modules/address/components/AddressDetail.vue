@@ -67,7 +67,7 @@
             <v-flex shrink>
                 <v-layout row align-center justify-end pa-2>
                     <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" @errorFavorites="emitErrorState" />
-                    <address-qr :address="address.hash" :large="true" />
+                    <address-qr :address="address.hash" />
                 </v-layout>
             </v-flex>
         </v-layout>
@@ -132,7 +132,7 @@
             </v-layout>
             <v-layout row align-center justify-end pr-2 ma-0>
                 <fav-handler-heart-actions :address="address.hash" :addr-chips="addrChips" @addressHasName="updateTitle" @errorFavorites="emitErrorState" />
-                <address-qr :address="address.hash" :large="true" />
+                <address-qr :address="address.hash" />
             </v-layout>
         </v-layout>
         <!--
