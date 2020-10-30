@@ -1,3 +1,6 @@
+### Release v1.0.3-hotfix.2
+
+- Fix variables []()
 
 ### Release v1.0.3-hotfix.1
 
