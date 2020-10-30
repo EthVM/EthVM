@@ -244,84 +244,86 @@
             =====================================================================================
             -->
             <v-flex hidden-md-and-up pt-0>
-                <div class="xs-overflow">
-                    <!--
+                <div class="blocks-container">
+                    <div class="xs-overflow">
+                        <!--
                     =====================================================================================
                       ETHER BALANCE
                     =====================================================================================
                     -->
-                    <v-card class="primary xs-div white--text">
-                        <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
-                        <v-card-title v-if="!loading" class="title font-weight-regular text-truncate pr-1"
-                            >{{ balance.value }} {{ $t(`common.${balance.unit}`) }}
-                            <v-tooltip v-if="balance.tooltipText" bottom>
-                                <template #activator="data">
-                                    <v-icon small class="white--text text-xs-center pl-1" v-on="data.on">fa fa-question-circle</v-icon>
-                                </template>
-                                <span>{{ balance.tooltipText }} {{ $t('common.eth') }}</span>
-                            </v-tooltip>
-                        </v-card-title>
-                        <v-card-title v-else>
-                            <v-progress-linear
-                                class="ma-0"
-                                color="primaryLight"
-                                background-color="white"
-                                background-opacity="0.3"
-                                value="40"
-                                indeterminate
-                                height="25"
-                            />
-                        </v-card-title>
-                    </v-card>
-                    <!--
+                        <v-card class="primary xs-div white--text">
+                            <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
+                            <v-card-title v-if="!loading" class="title font-weight-regular text-truncate pr-1"
+                                >{{ balance.value }} {{ $t(`common.${balance.unit}`) }}
+                                <v-tooltip v-if="balance.tooltipText" bottom>
+                                    <template #activator="data">
+                                        <v-icon small class="white--text text-xs-center pl-1" v-on="data.on">fa fa-question-circle</v-icon>
+                                    </template>
+                                    <span>{{ balance.tooltipText }} {{ $t('common.eth') }}</span>
+                                </v-tooltip>
+                            </v-card-title>
+                            <v-card-title v-else>
+                                <v-progress-linear
+                                    class="ma-0"
+                                    color="primaryLight"
+                                    background-color="white"
+                                    background-opacity="0.3"
+                                    value="40"
+                                    indeterminate
+                                    height="25"
+                                />
+                            </v-card-title>
+                        </v-card>
+                        <!--
                     =====================================================================================
                       USD BALANCE
                     =====================================================================================
                     -->
-                    <v-card class="error white--text xs-div" flat>
-                        <v-card-text class="pb-0">{{ $t('usd.value') }} {{ usdBalanceString }}</v-card-text>
-                        <v-card-title v-if="!loadingUSD" class="title font-weight-regular text-truncate">
-                            {{ balanceUsd.value }}
-                            <v-tooltip v-if="balanceUsd.tooltipText" bottom>
-                                <template #activator="data">
-                                    <v-icon small class="white--text text-xs-center pl-1" v-on="data.on">fa fa-question-circle</v-icon>
-                                </template>
-                                <span>{{ balanceUsd.tooltipText }}</span>
-                            </v-tooltip>
-                        </v-card-title>
-                        <v-card-title v-else>
-                            <v-progress-linear
-                                class="ma-0"
-                                color="errorLight"
-                                background-color="white"
-                                background-opacity="0.3"
-                                value="40"
-                                indeterminate
-                                height="25"
-                            />
-                        </v-card-title>
-                    </v-card>
-                    <!--
+                        <v-card class="error white--text xs-div" flat>
+                            <v-card-text class="pb-0">{{ $t('usd.value') }} {{ usdBalanceString }}</v-card-text>
+                            <v-card-title v-if="!loadingUSD" class="title font-weight-regular text-truncate">
+                                {{ balanceUsd.value }}
+                                <v-tooltip v-if="balanceUsd.tooltipText" bottom>
+                                    <template #activator="data">
+                                        <v-icon small class="white--text text-xs-center pl-1" v-on="data.on">fa fa-question-circle</v-icon>
+                                    </template>
+                                    <span>{{ balanceUsd.tooltipText }}</span>
+                                </v-tooltip>
+                            </v-card-title>
+                            <v-card-title v-else>
+                                <v-progress-linear
+                                    class="ma-0"
+                                    color="errorLight"
+                                    background-color="white"
+                                    background-opacity="0.3"
+                                    value="40"
+                                    indeterminate
+                                    height="25"
+                                />
+                            </v-card-title>
+                        </v-card>
+                        <!--
                     =====================================================================================
                       TOTAL TOKENS OWNED
                     =====================================================================================
                     -->
-                    <v-card class="warning white--text xs-div" flat>
-                        <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
-                        <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
-                        <v-card-title v-else>
-                            <v-progress-linear
-                                class="ma-0"
-                                color="warningLight"
-                                background-color="white"
-                                background-opacity="0.3"
-                                value="40"
-                                indeterminate
-                                height="25"
-                            />
-                        </v-card-title>
-                    </v-card>
-                    <div class="empty-xs"></div>
+                        <v-card class="warning white--text xs-div" flat>
+                            <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
+                            <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
+                            <v-card-title v-else>
+                                <v-progress-linear
+                                    class="ma-0"
+                                    color="warningLight"
+                                    background-color="white"
+                                    background-opacity="0.3"
+                                    value="40"
+                                    indeterminate
+                                    height="25"
+                                />
+                            </v-card-title>
+                        </v-card>
+                        <div class="empty-xs"></div>
+                    </div>
                 </div>
             </v-flex>
         </v-layout>
@@ -465,6 +467,9 @@ export default class AddressDetail extends Mixins(NumberFormatMixin) {
 p {
     margin-bottom: 0px;
 }
+.blocks-container {
+    position: relative;
+}
 
 .xs-overflow {
     display: flex;
@@ -484,8 +489,8 @@ p {
     position: absolute;
     bottom: 0;
     right: 0;
-    height: 45%;
-    width: 12vw;
+    height: 100%;
+    width: 18vw;
     content: '';
     background: linear-gradient(to left, rgba(255, 255, 255, 1) 5%, hsla(0, 0%, 100%, 0) 80%);
 }
