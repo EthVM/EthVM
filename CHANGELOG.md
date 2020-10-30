@@ -5,7 +5,7 @@
 
 - Removed individual subscriptions for each pending transactions on address and pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
 - Added identicon to address QR dialog [#906](https://github.com/EthVM/EthVM/pull/906)
-
+- Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
 
 ### Bug
 
