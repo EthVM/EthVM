@@ -183,7 +183,7 @@ new Vue({
     Sentry
   ===================================================================================
 */
-const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_TOKEN
+const sentryToken = process.env.VUE_APP_SENTRY_SECURITY_DSN
 
 Sentry.init({
     environment: process.env.NODE_ENV,

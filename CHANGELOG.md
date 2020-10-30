@@ -1,8 +1,11 @@
+
 ### Release v1.0.3-hotfix.1
 
 ### Devop
 
 - Removed individual subscriptions for each pending transactions on address and pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
+- Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
+
 
 ### Bug
 
