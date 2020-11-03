@@ -1,3 +1,6 @@
+### Devop
+
+- Enforce branch names [#911](https://github.com/EthVM/EthVM/pull/911)
 
 ### Release v1.0.3-hotfix.1
 
