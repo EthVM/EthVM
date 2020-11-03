@@ -18,4 +18,5 @@ export interface Tx {
     fee: FormattedNumber
     value: FormattedNumber
     status: boolean
+    contractAddress: string
 }

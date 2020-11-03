@@ -13,6 +13,7 @@ fragment TxDetails on Tx {
     transactionIndex
     value
     replacedBy
+    contractAddress
 }
 
 query getTransactionByHash($hash: String!) {

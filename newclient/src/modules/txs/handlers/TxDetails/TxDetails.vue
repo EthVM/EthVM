@@ -134,6 +134,8 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                 }
             ]
         } else {
+            const isContractCreation = typeof this.transaction.contractAddress !== 'string'
+            console.log(isContractCreation, this.transaction.contractAddress)
             // const receipt = transaction.receipt!
             details = [
                 {
@@ -150,10 +152,10 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     mono: true
                 },
                 {
-                    title: this.$i18n.t('tx.to').toString(),
-                    detail: this.transaction.to ? this.transaction.to : this.$t('contract.creation').toString(),
+                    title: isContractCreation ? this.$i18n.t('tx.to').toString() : this.$t('contract.creation').toString(),
+                    detail: isContractCreation ? this.transaction.to : this.transaction.contractAddress,
                     copy: this.transaction.to !== null,
-                    link: this.transaction.to !== null ? `/address/${this.transaction.to!}` : undefined,
+                    link: this.transaction.to !== null ? `/address/${this.transaction.to!}` : `/address/${this.transaction.contractAddress}`,
                     mono: this.transaction.to !== null
                 },
                 {
