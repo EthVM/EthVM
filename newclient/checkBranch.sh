@@ -7,10 +7,14 @@ valid_branch_regex="^(feature|feat|bug|chore|devop|release|hotfix)\/[a-z0-9._-]+
 
 message="Commit rejected! Please make sure your branch name starts with any of the following: $acceptable_branch_names."
 
-if [[ ! $local_branch =~ $valid_branch_regex ]]
+echo $local_branch
+if [[ $local_branch != "master" && $local_branch != "develop" ]]
 then
-    echo "$message"
-    exit 1
+  if [[ ! $local_branch =~ $valid_branch_regex ]]
+    then
+      echo "$message"
+      exit 1
+  fi
 fi
 
 exit 0
