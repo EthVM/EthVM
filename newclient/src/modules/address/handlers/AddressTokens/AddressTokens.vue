@@ -24,8 +24,8 @@
                             :token="token"
                             :is-erc20="isERC20"
                             :holder="address"
-                            :token-sort="addressSort"
-                            :token-price-info="addressSort.getUSDInfo(token.tokenInfo.contract)"
+                            :token-sort="tokenSort"
+                            :token-price-info="tokenSort.getUSDInfo(token.tokenInfo.contract)"
                             :nft-meta="getContractMeta(token.tokenInfo.contract)"
                             @showNft="showNftTokens"
                         />
@@ -81,7 +81,7 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
-import { TRANSFER_FILTER_VALUES, TOKEN_FILTER_VALUES, AddressSort, TokenSort } from '@app/modules/address/models/AddressSort'
+import { TOKEN_FILTER_VALUES, TokenSort } from '@app/modules/address/models/AddressSort'
 
 /*
   DEV NOTES:
@@ -361,8 +361,8 @@ export default class AddressTokens extends Mixins(CoinData) {
     get updateText(): string {
         return `${this.$t('message.update.tokens')}`
     }
-    get addressSort(): AddressSort {
-        return new AddressSort(this.getTokens, this.isERC20, this.tokenPrices)
+    get tokenSort(): TokenSort {
+        return new TokenSort(this.getTokens, this.isERC20, this.tokenPrices)
     }
 
     /*
@@ -371,7 +371,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     ===================================================================================
     */
     sortTokens(sort: string): void {
-        this.addressSort.sortTokens(this.getTokens, sort)
+        this.tokenSort.sortTokens(this.getTokens, sort)
     }
     /**
      * Sets page or reset

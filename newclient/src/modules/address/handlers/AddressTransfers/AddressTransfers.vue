@@ -78,7 +78,7 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
-import { TRANSFER_FILTER_VALUES, TOKEN_FILTER_VALUES, AddressSort } from '@app/modules/address/models/AddressSort'
+import { TRANSFER_FILTER_VALUES, TransferSort } from '@app/modules/address/models/AddressSort'
 
 @Component({
     components: {
@@ -112,6 +112,7 @@ import { TRANSFER_FILTER_VALUES, TOKEN_FILTER_VALUES, AddressSort } from '@app/m
             update: data => data.getEthTransfersV2 || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
+                    console.error('data', data)
                     try {
                         if (data.getEthTransfersV2 && data.getEthTransfersV2.transfers) {
                             this.ethTransfers = data.getEthTransfersV2.transfers.map(item => {
@@ -273,8 +274,8 @@ export default class AddressTransers extends Mixins(CoinData) {
         return false
     }
 
-    get addressSort(): AddressSort {
-        return new AddressSort(this.getTransfers, this.isERC20, this.tokenPrices)
+    get tokenSort(): TransferSort {
+        return new TransferSort(this.getTransfers)
     }
 
     /*
@@ -283,7 +284,7 @@ export default class AddressTransers extends Mixins(CoinData) {
     ===================================================================================
     */
     sortTokens(sort: string): void {
-        this.addressSort.sortTokens(this.getTransfers, sort)
+        this.tokenSort.sortTokens(this.getTransfers, sort)
     }
     /**
      * Fetches image for the contract
