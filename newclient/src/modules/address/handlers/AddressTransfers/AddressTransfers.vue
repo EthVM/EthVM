@@ -36,7 +36,7 @@
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
             <template #header>
                 <table-address-txs-header v-if="isETH" :address="address" />
-                <table-address-tokens-header v-else :is-erc20="isERC20" :is-transfers="true" />
+                <table-address-tokens-header v-else :is-erc20="isERC20" :is-transfers="true" @sortBy="sortTransfers" />
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
@@ -78,6 +78,7 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
+import { TRANSFER_FILTER_VALUES, TOKEN_FILTER_VALUES, AddressSort } from '@app/modules/address/models/AddressSort'
 
 @Component({
     components: {
@@ -272,11 +273,18 @@ export default class AddressTransers extends Mixins(CoinData) {
         return false
     }
 
+    get addressSort(): AddressSort {
+        return new AddressSort(this.getTransfers, this.isERC20, this.tokenPrices)
+    }
+
     /*
     ===================================================================================
       Methods:
     ===================================================================================
     */
+    sortTokens(sort: string): void {
+        this.addressSort.sortTokens(this.getTransfers, sort)
+    }
     /**
      * Fetches image for the contract
      * @param contract {String}

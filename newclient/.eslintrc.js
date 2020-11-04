@@ -16,6 +16,7 @@ module.exports = {
         'no-var': 'error',
         'vue/no-unused-vars': 'error',
         'vue/require-default-prop': 'off',
+        'vue/custom-event-name-casing': 'off',
         'graphql/template-strings': [
             'error',
             {

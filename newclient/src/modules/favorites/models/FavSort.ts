@@ -1,7 +1,6 @@
 import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorites/apolloTypes/favAddressCache'
 // import { EthValue } from '@app/core/models'
 
-const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
 const KEY_ADDRESS = 'address'
 const KEY_NAME = 'name'
 
@@ -12,6 +11,7 @@ const KEY_NAME = 'name'
 //     balanceUSD?: number
 // }
 
+export const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
 export class FavSort {
     favorites!: favAddressesType[]
 

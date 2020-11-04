@@ -78,8 +78,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
-
-const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
+import { FILTER_VALUES } from '@app/modules/favorites/models/FavSort'
 
 @Component({
     components: {
