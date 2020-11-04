@@ -112,12 +112,12 @@ import { TRANSFER_FILTER_VALUES, TransferSort } from '@app/modules/address/model
             update: data => data.getEthTransfersV2 || data.getERC20Transfers || data.getERC721Transfers,
             result({ data }) {
                 if (this.hasTransfers) {
-                    console.error('data', data)
                     try {
                         if (data.getEthTransfersV2 && data.getEthTransfersV2.transfers) {
                             this.ethTransfers = data.getEthTransfersV2.transfers.map(item => {
                                 return new EthTransfer(item)
                             })
+                            // this.sortTransfers(TRANSFER_FILTER_VALUES[1])
                         }
                         if (this.initialLoad) {
                             this.showPagination = this.getTransfers.nextKey != null
@@ -275,7 +275,7 @@ export default class AddressTransers extends Mixins(CoinData) {
     }
 
     get tokenSort(): TransferSort {
-        return new TransferSort(this.getTransfers)
+        return new TransferSort(this.getTransfers, this.isERC20)
     }
 
     /*
@@ -283,8 +283,8 @@ export default class AddressTransers extends Mixins(CoinData) {
       Methods:
     ===================================================================================
     */
-    sortTokens(sort: string): void {
-        this.tokenSort.sortTokens(this.getTransfers, sort)
+    sortTransfers(sort: string): void {
+        this.tokenSort.sortTransfers(this.getTransfers, sort)
     }
     /**
      * Fetches image for the contract

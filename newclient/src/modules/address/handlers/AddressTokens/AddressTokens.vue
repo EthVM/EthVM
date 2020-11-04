@@ -128,8 +128,8 @@ interface NFTMetaMap {
             result({ data }) {
                 if (this.hasTokens) {
                     this.emitErrorState(false)
+                    this.sortTokens(TOKEN_FILTER_VALUES[1])
                     if (this.isERC20) {
-                        this.sortTokens(TOKEN_FILTER_VALUES[1])
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
                             this.fetchMore(this.hasNext)

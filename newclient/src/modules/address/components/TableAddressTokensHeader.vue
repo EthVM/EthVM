@@ -23,11 +23,11 @@
                                 :class="[!isTransferSortActive(0) && !isTransferSortActive(1) ? 'inactive-btn' : '']"
                                 flat
                                 icon
-                                @click="selectTransferSort(0)"
+                                @click="selectTransferFilter(0)"
                             >
                                 <v-icon :class="[isTransferSortActive(0) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
                             </v-btn>
-                            <v-btn v-if="!loading && isTransferSortActive(1)" flat icon @click="selectTransferSort(1)">
+                            <v-btn v-if="!loading && isTransferSortActive(1)" flat icon @click="selectTransferFilter(1)">
                                 <v-icon :class="[isTransferSortActive(1) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
                             </v-btn>
                         </v-layout>
@@ -37,7 +37,35 @@
             <v-spacer />
             <v-flex md3>
                 <v-layout
-                    :class="[!isTransferSortActive(0) && !isTransferSortActive(1) ? 'inactive-sort' : '']"
+                    :class="[!isTransferSortActive(2) && !isTransferSortActive(3) ? 'inactive-sort' : '']"
+                    grid-list-xs
+                    row
+                    align-center
+                    justify-start
+                    fill-height
+                >
+                    <h5>{{ $t('common.amount') }}</h5>
+                    <v-flex d-flex align-center>
+                        <v-layout align-start justify-right>
+                            <v-btn
+                                v-if="!loading && !isTransferSortActive(2)"
+                                :class="[!isTransferSortActive(3) && !isTransferSortActive(2) ? 'inactive-btn' : '']"
+                                flat
+                                icon
+                                @click="selectTransferFilter(3)"
+                            >
+                                <v-icon :class="[isTransferSortActive(3) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
+                            </v-btn>
+                            <v-btn v-if="!loading && isTransferSortActive(2)" flat icon @click="selectTransferFilter(2)">
+                                <v-icon :class="[isTransferSortActive(2) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
+                            </v-btn>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
+            <v-flex md2>
+                <v-layout
+                    :class="[!isTransferSortActive(4) && !isTransferSortActive(5) ? 'inactive-sort' : '']"
                     grid-list-xs
                     row
                     align-center
@@ -48,23 +76,20 @@
                     <v-flex d-flex align-center>
                         <v-layout align-start justify-right>
                             <v-btn
-                                v-if="!loading && !isTransferSortActive(2)"
-                                :class="[!isTransferSortActive(1) && !isTransferSortActive(2) ? 'inactive-btn' : '']"
+                                v-if="!loading && !isTransferSortActive(4)"
+                                :class="[!isTransferSortActive(5) && !isTransferSortActive(4) ? 'inactive-btn' : '']"
                                 flat
                                 icon
-                                @click="selectTransferSort(1)"
+                                @click="selectTransferFilter(5)"
                             >
-                                <v-icon :class="[isTransferSortActive(1) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
+                                <v-icon :class="[isTransferSortActive(5) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
                             </v-btn>
-                            <v-btn v-if="!loading && isTransferSortActive(2)" flat icon @click="selectTransferSort(2)">
-                                <v-icon :class="[isTransferSortActive(2) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
+                            <v-btn v-if="!loading && isTransferSortActive(4)" flat icon @click="selectTransferFilter(4)">
+                                <v-icon :class="[isTransferSortActive(4) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
                             </v-btn>
                         </v-layout>
                     </v-flex>
                 </v-layout>
-            </v-flex>
-            <v-flex md2>
-                <h5>{{ $t('common.age') }}</h5>
             </v-flex>
         </v-layout>
         <!--
