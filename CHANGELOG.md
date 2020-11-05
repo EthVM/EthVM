@@ -1,3 +1,5 @@
+### Bug 
+- Hide state diff for failed tx [#913](https://github.com/EthVM/EthVM/pull/913)
 
 ### Release v1.0.3-hotfix.1
 
