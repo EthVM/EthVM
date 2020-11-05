@@ -11,8 +11,8 @@ const KEY_NAME = 'name'
 //     balanceUSD?: number
 // }
 
-export const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
-export class FavSort {
+const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
+class FavSort {
     favorites!: favAddressesType[]
 
     constructor(_favorites: favAddressesType[]) {
@@ -44,3 +44,5 @@ export class FavSort {
         return sort.includes('high') ? this.sortByDescend(data, KEY_NAME) : this.sortByAscend(data, KEY_NAME)
     }
 }
+
+export { FILTER_VALUES, FavSort }

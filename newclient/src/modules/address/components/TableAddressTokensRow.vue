@@ -226,7 +226,7 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC721Balances'
 import { getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts as NFTMetaType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getNFTcontractsMeta'
-import { TokenSort } from '@app/modules/address/models/AddressSort'
+import { TokenSort } from '@app/modules/address/models/TokenSort'
 import BN from 'bignumber.js'
 
 @Component({
