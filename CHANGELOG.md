@@ -1,3 +1,5 @@
+### Feature
+- Sort Address Tokens [#909](https://github.com/EthVM/EthVM/pull/909)
 
 ### Release v1.0.3-hotfix.1
 

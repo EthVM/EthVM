@@ -8,29 +8,28 @@ import { getAddressEthTransfers_getEthTransfersV2 as EthTransfersType } from '@a
 import BN from 'bignumber.js'
 
 const KEY_AMOUNT_ID = 'amountID'
-const KEY_AMOUNT = 'amount'
 const KEY_AMOUNT_USD = 'amountUSD'
 const KEY_NAME = 'name'
 const KEY_PERCENTAGE_CHANGE = 'percentageChange'
-const KEY_AGE = 'age'
 
-export const TOKEN_FILTER_VALUES = ['name_high', 'name_low', 'amount_high', 'amount_low', 'amount_usd_high', 'amount_usd_low', 'change_high', 'change_low']
-export const TRANSFER_FILTER_VALUES = ['name_high', 'name_low', 'amount_high', 'amount_low', 'amount_usd_high', 'amount_usd_low', 'change_high', 'change_low']
+const TOKEN_FILTER_VALUES = ['name_high', 'name_low', 'amount_id_high', 'amount_id_low', 'amount_usd_high', 'amount_usd_low', 'change_high', 'change_low']
 
-export class TokenSort {
+class TokenSort {
     isERC20: Boolean
     tokenPrices: Map<string, TokenMarketData> | false
 
     constructor(_tokens: ERC20TokensType[] | ERC721BalanceType[], _isERC20: boolean, _tokenPrices: Map<string, TokenMarketData> | false) {
         this.isERC20 = _isERC20
         this.tokenPrices = _tokenPrices
-        _tokens.forEach(token => {
-            const _tokenPriceInfo = this.getUSDInfo(token.tokenInfo.contract)
-            token.name = token.tokenInfo.name.toLowerCase()
-            token.amountID = this.getBalance(token)
-            token.amountUSD = this.getUSDValue(token, _tokenPriceInfo)
-            token.percentageChange = this.getPercentChange(_tokenPriceInfo)
-        })
+        if (_tokens) {
+            _tokens.forEach(token => {
+                const _tokenPriceInfo = this.getUSDInfo(token.tokenInfo.contract)
+                token.name = token.tokenInfo.name.toLowerCase()
+                token.amountID = this.getBalance(token)
+                token.amountUSD = this.getUSDValue(token, _tokenPriceInfo)
+                token.percentageChange = this.getPercentChange(_tokenPriceInfo)
+            })
+        }
     }
     /**
      * Gets USD prices for a token
@@ -97,53 +96,4 @@ export class TokenSort {
     }
 }
 
-
-export class TransferSort {
-    isERC20: Boolean
-
-    constructor(_transfers: EthTransfersType | ERC20TransfersType | ERC721TransfersType,  _isERC20: boolean) {
-        this.isERC20 = _isERC20
-        _transfers.transfers.forEach(transfer => {
-            transfer.name = transfer.tokenInfo.name.toLowerCase()
-            transfer.amount = this.getBalance(transfer)
-            transfer.age = transfer.transfer.timestamp
-        })
-    }
-    getBalance(_transfer): number {
-        if (this.isERC20) {
-            return this.getValue(_transfer).toNumber()
-        }
-        return new BN(_transfer.value).toNumber()
-    }
-    /**
-     * Gets transfer balance value
-     * @returns {BN}
-     */
-    getValue(_transfer): BN {
-        let n = new BN(_transfer.value)
-        if (_transfer.tokenInfo.decimals) {
-            n = n.div(new BN(10).pow(_transfer.tokenInfo.decimals))
-        }
-        return n
-    }
-    sortByDescend(data: EthTransfersType | ERC20TransfersType | ERC721TransfersType, key: string) {
-        if (data) {
-            return data.transfers.sort((x, y) => (y[key] < x[key] ? -1 : y[key] > x[key] ? 1 : 0))
-        }
-        return []
-    }
-    sortByAscend(data: EthTransfersType | ERC20TransfersType | ERC721TransfersType, key: string) {
-        return this.sortByDescend(data, key).reverse()
-    }
-    sortTransfers(data: EthTransfersType | ERC20TransfersType | ERC721TransfersType, sort: string) {
-        if (sort === TOKEN_FILTER_VALUES[0] || sort === TOKEN_FILTER_VALUES[1]) {
-            /* Sort By Name: */
-            return sort.includes('high') ? this.sortByDescend(data, KEY_NAME) : this.sortByAscend(data, KEY_NAME)
-        } else if (sort === TOKEN_FILTER_VALUES[2] || sort === TOKEN_FILTER_VALUES[3]) {
-            /* Sort By Amount: */
-            return sort.includes('high') ? this.sortByDescend(data, KEY_AMOUNT) : this.sortByAscend(data, KEY_AMOUNT)
-        } 
-        /* Sort By age: */
-        return sort.includes('high') ? this.sortByAscend(data, KEY_AGE) : this.sortByDescend(data, KEY_AGE)
-    }
-}
+export { TOKEN_FILTER_VALUES, TokenSort };

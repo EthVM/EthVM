@@ -7,7 +7,7 @@
                     <app-new-update :text="updateText" :update-count="newTokens" :hide-count="true" @reload="setPage(0, true)" />
                 </template>
                 <template #filter>
-                    <app-filter :is-selected="tokenOptions[0]" :options="tokenOptions" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
+                    <app-filter :is-selected="tokenOptions[1]" :options="tokenOptions" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
                 </template>
                 <template v-if="showPagination && !loading" #pagination>
                     <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
@@ -15,7 +15,13 @@
             </app-table-title>
             <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="tokens" :is-scroll-view="false">
                 <template #header>
-                    <table-address-tokens-header :is-erc20="isERC20" :is-transfers="false" :loading="loading" @sortBy="sortTokens" />
+                    <table-address-tokens-header
+                        :is-erc20="isERC20"
+                        :is-transfers="false"
+                        :loading="loading"
+                        :has-tokens="hasTokens && getTokens.length > 0"
+                        @sortBy="sortTokens"
+                    />
                 </template>
                 <template #rows>
                     <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
@@ -81,7 +87,7 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
-import { TOKEN_FILTER_VALUES, TokenSort } from '@app/modules/address/models/AddressSort'
+import { TOKEN_FILTER_VALUES, TokenSort } from '@app/modules/address/models/TokenSort'
 
 /*
   DEV NOTES:
@@ -257,7 +263,7 @@ export default class AddressTokens extends Mixins(CoinData) {
     ===================================================================================
     */
     get tokenOptions() {
-        return [
+        const options = [
             {
                 value: TOKEN_FILTER_VALUES[0],
                 text: this.$i18n.tc('token.name', 1),
@@ -270,35 +276,41 @@ export default class AddressTokens extends Mixins(CoinData) {
             },
             {
                 value: TOKEN_FILTER_VALUES[2],
-                text: this.$i18n.t('common.amount'),
+                text: this.isERC20 ? this.$i18n.t('common.amount') : this.$i18n.t('common.id'),
                 filter: this.$i18n.t('filter.low')
             },
             {
                 value: TOKEN_FILTER_VALUES[3],
-                text: this.$i18n.t('common.amount'),
-                filter: this.$i18n.t('filter.high')
-            },
-            {
-                value: TOKEN_FILTER_VALUES[4],
-                text: this.$i18n.t('usd.value'),
-                filter: this.$i18n.t('filter.low')
-            },
-            {
-                value: TOKEN_FILTER_VALUES[5],
-                text: this.$i18n.t('usd.value'),
-                filter: this.$i18n.t('filter.high')
-            },
-            {
-                value: TOKEN_FILTER_VALUES[6],
-                text: this.$i18n.t('token.change'),
-                filter: this.$i18n.t('filter.low')
-            },
-            {
-                value: TOKEN_FILTER_VALUES[7],
-                text: this.$i18n.t('token.change'),
+                text: this.isERC20 ? this.$i18n.t('common.amount') : this.$i18n.t('common.id'),
                 filter: this.$i18n.t('filter.high')
             }
         ]
+
+        if (this.isERC20) {
+            options.push(
+                {
+                    value: TOKEN_FILTER_VALUES[4],
+                    text: this.$i18n.t('usd.value'),
+                    filter: this.$i18n.t('filter.low')
+                },
+                {
+                    value: TOKEN_FILTER_VALUES[5],
+                    text: this.$i18n.t('usd.value'),
+                    filter: this.$i18n.t('filter.high')
+                },
+                {
+                    value: TOKEN_FILTER_VALUES[6],
+                    text: this.$i18n.t('token.change'),
+                    filter: this.$i18n.t('filter.low')
+                },
+                {
+                    value: TOKEN_FILTER_VALUES[7],
+                    text: this.$i18n.t('token.change'),
+                    filter: this.$i18n.t('filter.high')
+                }
+            )
+        }
+        return options
     }
 
     get loading(): boolean {
