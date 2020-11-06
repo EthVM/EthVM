@@ -43,10 +43,10 @@
                                 icon
                                 @click="selectTokenFilter(0)"
                             >
-                                <v-icon :class="[isTokenSortActive(0) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(0) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
                             </v-btn>
                             <v-btn v-if="!loading && isTokenSortActive(1)" flat icon @click="selectTokenFilter(1)">
-                                <v-icon :class="[isTokenSortActive(1) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(1) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
                             </v-btn>
                         </v-layout>
                     </v-flex>
@@ -73,10 +73,10 @@
                                 icon
                                 @click="selectTokenFilter(2)"
                             >
-                                <v-icon :class="[isTokenSortActive(2) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(2) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
                             </v-btn>
                             <v-btn v-if="!loading && isTokenSortActive(3)" flat icon @click="selectTokenFilter(3)">
-                                <v-icon :class="[isTokenSortActive(3) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(3) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
                             </v-btn>
                         </v-layout>
                     </v-flex>
@@ -101,10 +101,10 @@
                                 icon
                                 @click="selectTokenFilter(4)"
                             >
-                                <v-icon :class="[isTokenSortActive(4) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(4) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
                             </v-btn>
                             <v-btn v-if="isTokenSortActive(5)" flat icon @click="selectTokenFilter(5)">
-                                <v-icon :class="[isTokenSortActive(5) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(5) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
                             </v-btn>
                         </v-layout>
                     </v-flex>
@@ -129,10 +129,10 @@
                                 icon
                                 @click="selectTokenFilter(6)"
                             >
-                                <v-icon :class="[isTokenSortActive(6) ? 'white--text' : '']">fas fa-long-arrow-alt-up</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(6) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
                             </v-btn>
                             <v-btn v-if="!loading && isTokenSortActive(7)" flat icon @click="selectTokenFilter(7)">
-                                <v-icon :class="[isTokenSortActive(7) ? 'white--text' : '']">fas fa-long-arrow-alt-down</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(7) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
                             </v-btn>
                         </v-layout>
                     </v-flex>

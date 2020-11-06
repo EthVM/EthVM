@@ -1,9 +1,6 @@
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokensType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721BalanceType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC721Balances'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
-import { getAddressERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getAddressERC20Transfers'
-import { getAddressERC721Transfers_getERC721Transfers as ERC721TransfersType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getAddressERC721Transfers'
-import { getAddressEthTransfers_getEthTransfersV2 as EthTransfersType } from '@app/modules/address/handlers/AddressTransfers/apolloTypes/getAddressEthTransfers'
 
 import BN from 'bignumber.js'
 
