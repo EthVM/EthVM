@@ -1,3 +1,6 @@
+### Devop
+
+- create workflow for master and staging [#915](https://github.com/EthVM/EthVM/pull/915)
 
 ### Release v1.0.3-hotfix.1
 
