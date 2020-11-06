@@ -1,5 +1,17 @@
+### Release v1.0.4
+
 ### Feature
 - Sort Address Tokens [#909](https://github.com/EthVM/EthVM/pull/909)
+
+
+===================================================================================
+
+### Release v1.0.3-hotfix.2
+
+- Fix variables [#908](https://github.com/EthVM/EthVM/pull/908)
+
+
+===================================================================================
 
 ### Release v1.0.3-hotfix.1
 
