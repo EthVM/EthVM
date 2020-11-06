@@ -19,3 +19,11 @@ export interface Tx {
     value: FormattedNumber
     status: boolean
 }
+
+export interface Contract {
+    timestamp: number
+    block: number
+    codeHash: string
+    creator: string
+    transactionHash: string
+}

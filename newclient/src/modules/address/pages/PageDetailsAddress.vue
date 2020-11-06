@@ -20,6 +20,7 @@
                         :update-balance="addrBalanceChanged"
                         :set-contract-creator="setContractCreator"
                         :set-contract="setContract"
+                        :set-contract-timestamp="setContractTimestamp"
                         :loading-tokens="loadingERC20Balance"
                         @resetBalanceUpdate="resetBalance"
                         @errorAddrOverview="setError"
@@ -272,7 +273,7 @@
                 -->
                 <v-tab-item v-if="isContract" slot="tabs-item" :value="showMiningRewards ? 'tab-4' : 'tab-3'">
                     <keep-alive>
-                        <v-layout row wrap justify-start class="mb-4">
+                        <v-layout row wrap justify-start class="mb-4 contract-layout">
                             <v-flex xs12>
                                 <app-details-list :title="$t('contract.details')" :details="details" />
                             </v-flex>
@@ -299,10 +300,9 @@ import AddressOverview from '@app/modules/address/handlers/AddressOverview/Addre
 import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
 import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
 import AddressRewards from '@app/modules/address/handlers/AddressRewards/AddressRewards.vue'
-import { Address } from '@app/modules/address/components/props'
+import { Address, Contract } from '@app/modules/address/components/props'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
-import { getContractMeta_getContractMeta as ContractMeta } from '@app/modules/address/handlers/AddressOverview/apolloTypes/getContractMeta'
 
 const MAX_ITEMS = 10
 
@@ -347,7 +347,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     hasUncleRewards = false
     hasBlockRewards = false
     errorMessages: ErrorMessage[] = []
-    contract: ContractMeta
+    contract!: Contract
 
     /* ERC20 and ERC721 Refetc options */
     totalERC20 = 0
@@ -359,32 +359,35 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     ===================================================================================
     */
     get details(): Detail[] {
-        const details = [
-            {
-                title: this.$i18n.t('contract.date-created'),
-                detail: ''
-            },
-            {
-                title: this.$i18n.t('contract.tx-hash'),
-                detail: this.contract.transactionHash,
-                link: `/tx/${this.contract.transactionHash}`,
-                copy: true,
-                mono: true
-            },
-            {
-                title: this.$i18n.t('contract.creator'),
-                detail: this.contract.creator,
-                link: `/address/${this.contract.creator}`,
-                copy: true,
-                mono: true
-            },
-            {
-                title: this.$i18n.t('contract.code-hash'),
-                detail: this.contract.codeHash,
-                copy: true,
-                mono: true
-            }
-        ]
+        let details: Detail[] = []
+        if (this.contract) {
+            details = [
+                {
+                    title: this.$i18n.t('contract.date-created'),
+                    detail: this.timestamp
+                },
+                {
+                    title: this.$i18n.t('contract.tx-hash'),
+                    detail: this.contract.transactionHash,
+                    link: `/tx/${this.contract.transactionHash}`,
+                    copy: true,
+                    mono: true
+                },
+                {
+                    title: this.$i18n.t('contract.creator'),
+                    detail: this.contract.creator,
+                    link: `/address/${this.contract.creator}`,
+                    copy: true,
+                    mono: true
+                },
+                {
+                    title: this.$i18n.t('contract.code-hash'),
+                    detail: this.contract.codeHash,
+                    copy: true,
+                    mono: true
+                }
+            ]
+        }
         return details
     }
 
@@ -460,12 +463,18 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     get subMenuClass(): string {
         return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm' ? 'pt-3' : 'pt-2'
     }
+    get timestamp() {
+        return new Date(this.contract.timestamp * 1e3).toString()
+    }
 
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
+    getTimestamp() {
+        return new Date(this.contract.timestamp * 1e3).toString()
+    }
     /**
      * Sets Block Rewards
      * @param value {Boolean}
@@ -498,9 +507,16 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
      * Sets Contract
      * @param value {Boolean}
      */
-    setContract(value: boolean, data: ContractMeta): void {
+    setContract(value: boolean, data: Contract): void {
         this.isContract = value
         this.contract = data
+    }
+    /**
+     * Sets Contract Timestamp
+     * @param timestamp {Number}
+     */
+    setContractTimestamp(timestamp: number): void {
+        this.$set(this.contract, 'timestamp', timestamp)
     }
     /**
      * Sets Total Tokens
@@ -566,7 +582,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
 .active-button {
     color: #3d55a5;
     margin: 0px 10px;
@@ -597,5 +613,12 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
 .tab-fade-leave-active,
 .tab-fade-leave-to {
     display: none;
+}
+.contract-layout {
+    padding: 20px;
+    .flex {
+        border: 1px solid #efefef;
+        border-radius: 4px;
+    }
 }
 </style>

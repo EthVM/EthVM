@@ -243,7 +243,8 @@
                 "update-event": "Something went wrong during Address update."
             },
             "contract": {
-                "not-found": "No contract found!"
+                "not-found": "No contract found!",
+                "timestamp-not-found": "No contract timestamp found!"
             },
             "block": {
                 "detail": "Something went wrong while retrieving block details.",

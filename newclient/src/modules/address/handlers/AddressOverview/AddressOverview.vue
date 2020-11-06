@@ -9,7 +9,7 @@ import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { exchangeRate } from '@app/modules/addresses/addresses.graphql'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-import { getEthBalance, getContractMeta } from './addressDetails.graphql'
+import { getEthBalance, getContractMeta, getContractTimestamp } from './addressDetails.graphql'
 import { getEthBalance_getEthBalance as BalanceType } from './apolloTypes/getEthBalance'
 import { getContractMeta_getContractMeta as ContractMeta } from './apolloTypes/getContractMeta'
 import { Address } from '@app/modules/address/components/props'
@@ -53,6 +53,7 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
                 if (data.data && data.data.getContractMeta) {
                     this.emitErrorState(false)
                     this.setContract(true, data.data.getContractMeta)
+                    this.getTimestamp(data.data.getContractMeta)
                 } else {
                     this.setContract(false)
                 }
@@ -85,6 +86,7 @@ export default class AddressOverview extends Mixins(CoinData) {
     @Prop(Boolean) loadingTokens!: boolean
     @Prop(Boolean) updateBalance!: boolean
     @Prop(Function) setContract!: void
+    @Prop(Function) setContractTimestamp!: (data: number) => void
     /*
     ===================================================================================
       Initial Data
@@ -119,6 +121,24 @@ export default class AddressOverview extends Mixins(CoinData) {
       Methods
     ===================================================================================
     */
+    getTimestamp(contract: ContractMeta) {
+        this.$apollo
+            .query({
+                query: getContractTimestamp,
+                variables: {
+                    hash: contract.transactionHash
+                }
+            })
+            .then(response => {
+                if (response.data) {
+                    this.setContractTimestamp(response.data.getTransactionByHash.timestamp)
+                }
+            })
+            .catch(error => {
+                this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
+            })
+    }
+
     /**
      * Emits error to Sentry
      */
