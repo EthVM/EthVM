@@ -52,7 +52,7 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
             result(data) {
                 if (data.data && data.data.getContractMeta) {
                     this.emitErrorState(false)
-                    this.setContract(true)
+                    this.setContract(true, data.data.getContractMeta)
                 } else {
                     this.setContract(false)
                 }
@@ -79,7 +79,7 @@ export default class AddressOverview extends Mixins(CoinData) {
 
     @Prop(String) address!: string
     @Prop(Boolean) isMiner!: boolean
-    @Prop(Boolean) isContractcreator!: boolean
+    @Prop(Boolean) isContractCreator!: boolean
     @Prop(Boolean) isContract!: boolean
     @Prop(Number) totalErc20Owned!: number
     @Prop(Boolean) loadingTokens!: boolean
@@ -105,7 +105,7 @@ export default class AddressOverview extends Mixins(CoinData) {
             hash: this.address,
             balance: this.getEthBalance ? this.getEthBalance.balance : '0',
             isMiner: this.isMiner,
-            isContractCreator: this.isContractcreator,
+            isContractCreator: this.isContractCreator,
             totalERC20: this.totalErc20Owned,
             isContract: this.isContract
         }

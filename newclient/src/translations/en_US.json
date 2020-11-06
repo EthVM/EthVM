@@ -110,7 +110,11 @@
         "hash": "Contract #",
         "created": "Created at",
         "total": "Total",
-        "creation": "Contract Creation"
+        "creation": "Contract Creation",
+        "details": "Contract Details",
+        "date-created": "Date Created",
+        "code-hash": "Code Hash",
+        "tx-hash": "Tx Hash"
     },
 
     "gas": {

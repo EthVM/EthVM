@@ -14,7 +14,7 @@
                     <address-overview
                         :address="addressRef"
                         :is-miner="isMiner"
-                        :is-contractcreator="isContractCreator"
+                        :is-contract-creator="isContractCreator"
                         :is-contract="isContract"
                         :total-erc20-owned="totalERC20"
                         :update-balance="addrBalanceChanged"
@@ -176,7 +176,7 @@
                   MINING HISTORY INFO TAB
                 =====================================================================================
                 -->
-                <v-tab-item slot="tabs-item" value="tab-3">
+                <v-tab-item v-if="showMiningRewards" slot="tabs-item" value="tab-3">
                     <keep-alive>
                         <div>
                             <v-layout :class="subMenuClass" row wrap align-center justify-start pt-2>
@@ -270,8 +270,14 @@
                   CONTRACT CREATOR INFO TAB
                 =====================================================================================
                 -->
-                <v-tab-item v-if="isContractCreator" slot="tabs-item" value="tab-4">
-                    <!-- <table-address-contracts v-if="activeTab === 'tab-4'" :address="addressRef" /> -->
+                <v-tab-item v-if="isContract" slot="tabs-item" :value="showMiningRewards ? 'tab-4' : 'tab-3'">
+                    <keep-alive>
+                        <v-layout row wrap justify-start class="mb-4">
+                            <v-flex xs12>
+                                <app-details-list :title="$t('contract.details')" :details="details" />
+                            </v-flex>
+                        </v-layout>
+                    </keep-alive>
                 </v-tab-item>
             </app-tabs>
         </div>
@@ -285,7 +291,7 @@ import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
 import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
 import { Component, Prop, Mixins, Watch } from 'vue-property-decorator'
-import { Crumb, Tab } from '@app/core/components/props'
+import { Detail, Crumb, Tab } from '@app/core/components/props'
 import AppInfoLoad from '@app/core/components/ui/AppInfoLoad.vue'
 import { eth } from '@app/core/helper'
 import AddressPendingTx from '@app/modules/address/handlers/AddressPendingTx/AddressPendingTx.vue'
@@ -295,6 +301,8 @@ import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTo
 import AddressRewards from '@app/modules/address/handlers/AddressRewards/AddressRewards.vue'
 import { Address } from '@app/modules/address/components/props'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
+import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import { getContractMeta_getContractMeta as ContractMeta } from '@app/modules/address/handlers/AddressOverview/apolloTypes/getContractMeta'
 
 const MAX_ITEMS = 10
 
@@ -309,7 +317,8 @@ const MAX_ITEMS = 10
         AddressTransfers,
         AddressTokens,
         AddressRewards,
-        AddressPendingTx
+        AddressPendingTx,
+        AppDetailsList
     }
 })
 export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
@@ -338,6 +347,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     hasUncleRewards = false
     hasBlockRewards = false
     errorMessages: ErrorMessage[] = []
+    contract: ContractMeta
 
     /* ERC20 and ERC721 Refetc options */
     totalERC20 = 0
@@ -348,6 +358,35 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Computed Values
     ===================================================================================
     */
+    get details(): Detail[] {
+        const details = [
+            {
+                title: this.$i18n.t('contract.date-created'),
+                detail: ''
+            },
+            {
+                title: this.$i18n.t('contract.tx-hash'),
+                detail: this.contract.transactionHash,
+                link: `/tx/${this.contract.transactionHash}`,
+                copy: true,
+                mono: true
+            },
+            {
+                title: this.$i18n.t('contract.creator'),
+                detail: this.contract.creator,
+                link: `/address/${this.contract.creator}`,
+                copy: true,
+                mono: true
+            },
+            {
+                title: this.$i18n.t('contract.code-hash'),
+                detail: this.contract.codeHash,
+                copy: true,
+                mono: true
+            }
+        ]
+        return details
+    }
 
     get isValid(): boolean {
         return eth.isValidAddress(this.addressRef)
@@ -399,10 +438,10 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
                 tabs.push(newTab)
             }
 
-            if (this.isContractCreator) {
+            if (this.isContract) {
                 const newTab = {
-                    id: 4,
-                    title: this.$i18n.tc('contract.name', 2).toString(),
+                    id: this.showMiningRewards ? 4 : 3,
+                    title: this.$i18n.tc('contract.name', 1).toString(),
                     isActive: false
                 }
                 tabs.push(newTab)
@@ -459,8 +498,9 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
      * Sets Contract
      * @param value {Boolean}
      */
-    setContract(value: boolean): void {
+    setContract(value: boolean, data: ContractMeta): void {
         this.isContract = value
+        this.contract = data
     }
     /**
      * Sets Total Tokens
