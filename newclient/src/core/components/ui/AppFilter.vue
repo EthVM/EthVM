@@ -10,8 +10,8 @@
                     <v-flex d-flex justify-end align-center>
                         <p class="body-2 mb-0 font-weight-regular text-xs-right">
                             {{ selected.text }}
-                            <i v-if="selected.filter && selected.value.includes('low')" class="fas fa-sort-amount-up" />
-                            <i v-if="selected.filter && selected.value.includes('high')" class="fas fa-sort-amount-down" />
+                            <i v-if="selected.filter && selected.value.includes('high')" class="fas fa-sort-amount-up" />
+                            <i v-if="selected.filter && selected.value.includes('low')" class="fas fa-sort-amount-down" />
                         </p>
                     </v-flex>
                     <v-flex xs1 pr-4>

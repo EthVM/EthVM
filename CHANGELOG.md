@@ -1,6 +1,7 @@
 ### Release v1.0.4
 
 ### Feature
+- Sort Address Tokens [#909](https://github.com/EthVM/EthVM/pull/909)
 - Add in Address Contract Details [#914](https://github.com/EthVM/EthVM/pull/914)
 
 ===================================================================================

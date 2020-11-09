@@ -87,7 +87,7 @@ class TokensSorted implements TokensSortedInterface {
     desend: TokenMarketData[]
     /* Constructor: */
     constructor(data: TokenMarketData[], sortKey: string) {
-        this.desend = this.sortByKeyDesend([...data], sortKey)
+        this.desend = sortKey === KEY_SYMBOL ? this.sortByKeyDesendSymbol([...data], sortKey) : this.sortByKeyDesend([...data], sortKey)
         if (this.desend.length > MAX_TOKENS) {
             this.desend = this.desend.slice(0, MAX_TOKENS)
         }
@@ -97,10 +97,13 @@ class TokensSorted implements TokensSortedInterface {
     sortByKeyDesend(data: TokenMarketData[], key: string) {
         return data.sort((x, y) => (y[key] < x[key] ? -1 : y[key] > x[key] ? 1 : 0))
     }
+    sortByKeyDesendSymbol(data: TokenMarketData[], key: string) {
+        return data.sort((x, y) => (y[key].toLowerCase() < x[key].toLowerCase() ? -1 : y[key].toLowerCase() > x[key].toLowerCase() ? 1 : 0))
+    }
     getAscend(): TokenMarketData[] {
         return this.ascend
     }
-    getDesend(): TokenMarketData[] {
+    getDescend(): TokenMarketData[] {
         return this.desend
     }
 }
@@ -219,16 +222,16 @@ export default class AddressTokens extends Mixins(CoinData) {
         if (!this.hasError) {
             if (sort === FILTER_VALUES[0] || sort === FILTER_VALUES[1]) {
                 /* Sort By Symbol: */
-                this.tokensData = sort.includes('high') ? this.tokensBySymbol.getAscend() : this.tokensBySymbol.getDesend()
+                this.tokensData = sort.includes('high') ? this.tokensBySymbol.getDescend() : this.tokensBySymbol.getAscend()
             } else if (sort === FILTER_VALUES[2] || sort === FILTER_VALUES[3]) {
                 /* Sort By Price: */
-                this.tokensData = sort.includes('high') ? this.tokensByPrice.getDesend() : this.tokensByPrice.getAscend()
+                this.tokensData = sort.includes('high') ? this.tokensByPrice.getDescend() : this.tokensByPrice.getAscend()
             } else if (sort === FILTER_VALUES[4] || sort === FILTER_VALUES[5]) {
                 /* Sort By Volume: */
-                this.tokensData = sort.includes('high') ? this.tokensByVolume.getDesend() : this.tokensByVolume.getAscend()
+                this.tokensData = sort.includes('high') ? this.tokensByVolume.getDescend() : this.tokensByVolume.getAscend()
             } else {
                 /* Sort By Market Cap: */
-                this.tokensData = sort.includes('high') ? this.tokensByMarket.getDesend() : this.tokensByMarket.getAscend()
+                this.tokensData = sort.includes('high') ? this.tokensByMarket.getDescend() : this.tokensByMarket.getAscend()
             }
         }
     }
