@@ -40,7 +40,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
-                    <table-address-txs-row v-if="isETH" :transfer="tx" :is-pending="false" :address="address" />
+                    <table-address-txs-row v-if="isETH" :transfer="tx" :is-pending="false" :address="address" :get-state-diff="getStateDIff" />
                     <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" :token-image="getImg(tx.contract)" />
                 </v-card>
             </template>
