@@ -166,13 +166,11 @@ import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/fa
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import { DialogAddress } from '@app/modules/favorites/models/FavDialog'
 import { EnumAdrChips } from '@app/core/components/props'
-import { FavSort } from '@app/modules/favorites/models/FavSort'
+import { FILTER_VALUES, FavSort } from '@app/modules/favorites/models/FavSort'
 import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import { DataArray } from '@app/apollo/favorites/models'
 
 import BN from 'bignumber.js'
-
-const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
 
 @Component({
     components: {
