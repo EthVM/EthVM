@@ -16,13 +16,6 @@ sourceMapsConfig.exclude = /vendors.*.*/
 const webpackCommon = {
     devtool: false,
     plugins: [new VuetifyLoaderPlugin(), new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), new webpack.EnvironmentPlugin(vars)],
-    // module: {
-    //     loaders: [
-    //         {
-    //             loader: 'json'
-    //         }
-    //     ]
-    // },
     resolve: {
         extensions: ['.ts', '.vue', '.json'],
         alias: {

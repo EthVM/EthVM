@@ -33,7 +33,7 @@
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
                             <app-state-diff v-if="!isPending" :state="state" class="ml-2 mr-1" />
-                            <p v-if="isMined && isPending" class="caption primary--text blinking ml-2">{{ $t('tx.mined') }}</p>
+                            <p v-if="isMinedIndicator && isPending" class="caption primary--text blinking ml-2">{{ $t('tx.mined') }}</p>
                         </v-layout>
                     </v-flex>
                     <!--
@@ -182,7 +182,7 @@
                     </v-layout>
                 </v-flex>
                 <v-flex v-else shrink>
-                    <p v-if="isMined" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>
+                    <p v-if="isMinedIndicator" class="caption primary--text blinking">{{ $t('tx.mined') }}</p>
                 </v-flex>
             </v-layout>
             <v-divider class="mb-2 mt-2" />
@@ -219,6 +219,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     @Prop(Object) transfer!: EthTransfer
     @Prop(String) address!: string
     @Prop({ type: Boolean, default: false }) isPending!: boolean
+    @Prop(Boolean) isMinedIndicator?: boolean
     /*
     ===================================================================================
       Initial Data

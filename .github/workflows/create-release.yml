@@ -40,6 +40,7 @@ jobs:
         run: cd ./newclient && yarn install && yarn apollo:codegen && yarn build
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
+          VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
           VUE_APP_ETH_NETWORK: ${{ secrets.VUE_APP_ETH_NETWORK }}
           VUE_APP_PUBLIC_URL: ${{ secrets.VUE_APP_PUBLIC_URL }}
           VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}

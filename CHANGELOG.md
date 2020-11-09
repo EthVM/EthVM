@@ -1,6 +1,38 @@
+### Release v1.0.4
+
+### Feature
+- Sort Address Tokens [#909](https://github.com/EthVM/EthVM/pull/909)
+- Add in Address Contract Details [#914](https://github.com/EthVM/EthVM/pull/914)
+
 ### Devop
 
 - Remove "To" on contract creation on Eth Transfers on Address Transfers and Transactions Table [#903](https://github.com/EthVM/EthVM/pull/903)
+
+===================================================================================
+
+### Release v1.0.3-hotfix.2
+
+- Fix variables [#908](https://github.com/EthVM/EthVM/pull/908)
+
+===================================================================================
+
+### Release v1.0.3-hotfix.1
+
+### Devop
+
+- Removed individual subscriptions for each pending transactions on address and pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
+- Added identicon to address QR dialog [#906](https://github.com/EthVM/EthVM/pull/906)
+- Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
+- Clean up packages, install depcheck, config husky with commitlint [#882](https://github.com/EthVM/EthVM/pull/882)
+
+
+### Bug
+
+- Fixed mined blinker on pending txs table on pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
+- Fixed Unclickable QR on mobile [#906](https://github.com/EthVM/EthVM/pull/906)
+
+
+===================================================================================
 
 ### Release v1.0.3
 

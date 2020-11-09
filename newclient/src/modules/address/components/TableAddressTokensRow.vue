@@ -226,6 +226,7 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC721Balances'
 import { getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts as NFTMetaType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getNFTcontractsMeta'
+import { TokenSort } from '@app/modules/address/models/TokenSort'
 import BN from 'bignumber.js'
 
 @Component({
@@ -246,6 +247,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     @Prop(Boolean) isErc20!: boolean
     @Prop(Object) tokenPriceInfo!: TokenMarketData | undefined
     @Prop(Object) nftMeta!: NFTMetaType | undefined
+    @Prop(Object) tokenSort!: TokenSort
 
     /*
     ===================================================================================
@@ -273,7 +275,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
 
     get balance(): FormattedNumber | string {
         if (this.isErc20) {
-            return this.formatFloatingPointValue(this.getValue())
+            return this.formatFloatingPointValue(this.tokenSort.getValue(this.token))
         }
         return this.formatNumber(new BN(this.token.balance).toNumber())
     }
@@ -294,7 +296,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
 
     get usdValueFormatted(): FormattedNumber {
         if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.current_price) {
-            return this.formatUsdValue(new BN(this.tokenPriceInfo.current_price).multipliedBy(this.getValue()))
+            return this.formatUsdValue(new BN(this.tokenPriceInfo.current_price).multipliedBy(this.tokenSort.getValue(this.token)))
         }
         return this.formatUsdValue(new BN(0))
     }
@@ -318,7 +320,9 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get priceChangeFormatted(): FormattedNumber | null {
-        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_percentage_24h ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_percentage_24h)) : null
+        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_percentage_24h
+            ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_percentage_24h))
+            : null
     }
 
     get name(): string | undefined {
@@ -352,20 +356,6 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
       Methods
     ===================================================================================
     */
-    /**
-     * Gets token balance value
-     * @returns {BN}
-     */
-    getValue(): BN {
-        if (this.isErc20) {
-            let n = new BN(this.token.balance)
-            if ('decimals' in this.token.tokenInfo && this.token.tokenInfo.decimals) {
-                n = n.div(new BN(10).pow(this.token.tokenInfo.decimals))
-            }
-            return n
-        }
-        return new BN(this.token.balance)
-    }
     /**
      * Emit showNft to parent
      */

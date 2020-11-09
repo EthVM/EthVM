@@ -16,8 +16,8 @@
                 <table-address-txs-header :address="address" :is-pending="true" />
             </template>
             <template #rows>
-                <v-card v-for="(tx, index) in pendingTx" :key="index" class="transparent" flat>
-                    <table-address-txs-row v-if="tx" :is-pending="true" :transfer="tx" :address="address" />
+                <v-card v-for="tx in pendingTx" :key="tx.getHash()" class="transparent" flat>
+                    <table-address-txs-row v-if="tx" :is-pending="true" :transfer="tx" :address="address" :is-mined-indicator="minedIndicator[tx.getHash()]" />
                 </v-card>
             </template>
         </table-txs>
@@ -32,9 +32,9 @@ import TableAddressTxsHeader from '@app/modules/address/components/TableAddressT
 import TableAddressTxsRow from '@app/modules/address/components/TableAddressTxsRow.vue'
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
-import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getPendingTransactions, pendingTransaction, pendingMined } from './pendingTxs.graphql'
+import { getPendingTransactions, pendingTransaction } from './pendingTxs.graphql'
 import { getPendingTransactions_getPendingTransactions as PendingTxType } from './apolloTypes/getPendingTransactions'
 import { pendingTransaction_pendingTransaction as PendingTransferType } from './apolloTypes/pendingTransaction'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
@@ -42,9 +42,14 @@ import { throwError } from 'rxjs'
 import { networkInterfaces } from 'os'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 import { onError } from 'apollo-link-error'
+import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
+import { getBlockTransfers } from '@app/modules/txs/handlers/BlockTxs/queryTransfers.graphql'
 
 interface PendingMap {
     [key: string]: EthTransfer
+}
+interface MinedMap {
+    [key: string]: boolean
 }
 
 @Component({
@@ -76,8 +81,7 @@ interface PendingMap {
                         try {
                             this.pendingSorted = [...this.getPendingTx.sort((x, y) => (y.timestamp < x.timestamp ? -1 : y.timestamp > x.timestamp ? 1 : 0))]
                             this.getPendingTx.forEach(i => {
-                                this.pendingMap[i.hash] = new EthTransfer(i)
-                                this.createSubscription(i.hash)
+                                this.pendingMap[i.hash.toLowerCase()] = new EthTransfer(i)
                             })
                             this.initialLoad = false
                         } catch (error) {
@@ -87,6 +91,28 @@ interface PendingMap {
                     }
                 } else {
                     this.emitErrorState(true)
+                }
+            },
+            error(error) {
+                this.emitErrorState(true)
+            }
+        },
+        getBlockTransfers: {
+            query: getBlockTransfers,
+            fetchPolicy: 'network-only',
+            skip() {
+                return this.newBlockNumber === undefined || this.pendingSorted.length < 1
+            },
+            variables() {
+                return { _number: this.newBlockNumber }
+            },
+            result({ data }) {
+                if (data && data.getBlockTransfers && data.getBlockTransfers.transfers && data.getBlockTransfers.transfers.length > 0) {
+                    data.getBlockTransfers.transfers.forEach(i => {
+                        if (i.transfer.transactionHash && this.pendingMap[i.transfer.transactionHash]) {
+                            this.markMined(i.transfer.transactionHash.toLowerCase())
+                        }
+                    })
                 }
             },
             error(error) {
@@ -108,9 +134,8 @@ interface PendingMap {
                     if (data && data.pendingTransaction) {
                         try {
                             const newTx = data.pendingTransaction
-                            this.pendingMap[newTx.transactionHash] = new EthTransfer(newTx)
+                            this.pendingMap[newTx.transactionHash.toLowerCase()] = new EthTransfer(newTx)
                             this.insertItem(newTx)
-                            this.createSubscription(newTx.transactionHash)
                         } catch (error) {
                             this.emitErrorState(true)
                             throw error
@@ -126,7 +151,7 @@ interface PendingMap {
         }
     }
 })
-export default class AddressPendingTx extends Vue {
+export default class AddressPendingTx extends Mixins(NewBlockSubscription) {
     /*
     ===================================================================================
       Props
@@ -147,6 +172,8 @@ export default class AddressPendingTx extends Vue {
     pendingMap: PendingMap = {}
     initialLoad = true
     hasError = false
+    minedIndicator: MinedMap = {}
+
     /*
     ===================================================================================
       Computed
@@ -160,7 +187,7 @@ export default class AddressPendingTx extends Vue {
                 return this.pendingSorted
                     .slice(start, end)
                     .map(i => {
-                        const hash = i.__typename === 'Tx' ? i.hash : i.transactionHash
+                        const hash = i.__typename === 'Tx' ? i.hash.toLowerCase() : i.transactionHash.toLowerCase()
                         return this.pendingMap[hash]
                     })
                     .filter(i => {
@@ -183,7 +210,7 @@ export default class AddressPendingTx extends Vue {
     }
 
     get message(): string {
-        if (!this.loading && this.getPendingTx && this.getPendingTx.length === 0) {
+        if (!this.loading && this.pendingTx.length === 0) {
             return `${this.$t('message.tx.no-pending')}`
         }
         return ''
@@ -259,28 +286,6 @@ export default class AddressPendingTx extends Vue {
             this.pendingSorted.splice(end, 0, item)
         }
     }
-
-    createSubscription(_hash: string): void {
-        if (_hash) {
-            const observer = this.$apollo.subscribe({
-                query: pendingMined,
-                variables: {
-                    hash: _hash
-                }
-            })
-            const a = observer.subscribe({
-                next: data => {
-                    this.markMined(_hash)
-                    a.unsubscribe()
-                },
-                error: error => {
-                    this.emitErrorState(true)
-                }
-            })
-        } else {
-            console.log('not defined', _hash)
-        }
-    }
     /*
     Desc:
       - Marks a transfer as mined
@@ -292,7 +297,7 @@ export default class AddressPendingTx extends Vue {
      */
 
     markMined(hash: string): void {
-        this.pendingMap[hash].setPending(false)
+        this.$set(this.minedIndicator, hash, true)
         setTimeout(() => {
             const index = this.pendingSorted
                 .map(item => {

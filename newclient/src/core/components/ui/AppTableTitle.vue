@@ -21,6 +21,11 @@
             <v-flex v-if="hasPagination" shrink hidden-sm-and-down>
                 <slot name="pagination" />
             </v-flex>
+            <v-flex xs12 hidden-md-and-up>
+                <v-layout align-center justify-center pa-2>
+                    <slot name="filter" />
+                </v-layout>
+            </v-flex>
             <v-flex v-if="hasPagination" xs12 hidden-md-and-up>
                 <v-layout align-center justify-center pa-2>
                     <slot name="pagination" />
