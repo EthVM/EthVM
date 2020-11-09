@@ -18,4 +18,13 @@ export interface Tx {
     fee: FormattedNumber
     value: FormattedNumber
     status: boolean
+    contractAddress: string
+}
+
+export interface Contract {
+    timestamp: number
+    block: number
+    codeHash: string
+    creator: string
+    transactionHash: string
 }

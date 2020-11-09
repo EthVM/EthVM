@@ -31,7 +31,7 @@ export interface Tab {
 
 export interface Detail {
     title: TranslateResult
-    detail?: string | number
+    detail?: string | number | null
     link?: string
     copy?: boolean
     txInput?: string[]

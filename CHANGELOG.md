@@ -2,9 +2,23 @@
 
 - create workflow for master and staging [#916](https://github.com/EthVM/EthVM/pull/916)
 
+### Release v1.0.4
+
+### Feature
+- Sort Address Tokens [#909](https://github.com/EthVM/EthVM/pull/909)
+- Add in Address Contract Details [#914](https://github.com/EthVM/EthVM/pull/914)
+
+### Devop
+
+- Contract creation [#912](https://github.com/EthVM/EthVM/pull/912)
+
+===================================================================================
+
 ### Release v1.0.3-hotfix.2
 
 - Fix variables [#908](https://github.com/EthVM/EthVM/pull/908)
+
+===================================================================================
 
 ### Release v1.0.3-hotfix.1
 
