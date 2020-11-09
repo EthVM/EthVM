@@ -105,7 +105,11 @@
         "hash": "Контракт #",
         "created": "Время создания",
         "total": "Всего",
-        "creation": "Создание Контракта"
+        "creation": "Создание Контракта",
+        "details": "Contract Details",
+        "date-created": "Date Created",
+        "code-hash": "Code Hash",
+        "tx-hash": "Tx Hash"
     },
     "gas": {
         "name": "Газ",
@@ -226,7 +230,8 @@
                 "update-event": "Что-то пошло не так во время обновления данных Адреса."
             },
             "contract": {
-                "not-found": "Контракт не найден!"
+                "not-found": "Контракт не найден!",
+                "timestamp-not-found": "No contract timestamp found!"
             },
             "block": {
                 "detail": "Что-то пошло не так при получении деталей блока.",
