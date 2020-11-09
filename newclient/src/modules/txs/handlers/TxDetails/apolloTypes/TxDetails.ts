@@ -23,4 +23,5 @@ export interface TxDetails {
   transactionIndex: number | null;
   value: string;
   replacedBy: string | null;
+  contractAddress: string | null;
 }

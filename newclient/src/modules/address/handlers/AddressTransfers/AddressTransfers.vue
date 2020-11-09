@@ -36,7 +36,7 @@
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
             <template #header>
                 <table-address-txs-header v-if="isETH" :address="address" />
-                <table-address-tokens-header v-else :is-erc20="isERC20" :is-transfers="true" />
+                <table-address-tokens-header v-else :is-erc20="isERC20" :is-transfers="true"/>
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>

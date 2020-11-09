@@ -16,11 +16,11 @@
                 <h5 class="pl-4 ml-4">{{ $tc('address.name', 1) }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right pl-1>
-                        <v-btn v-if="!loading && !isActive(1)" :class="[!isActive(0) && !isActive(1) ? 'inactive-btn' : '']" flat icon @click="selectFilter(1)">
-                            <v-icon :class="[isActive(0) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                        <v-btn v-if="!loading && !isActive(1)" :class="[!isActive(0) && !isActive(1) ? 'inactive-btn' : '']" flat icon @click="selectFilter(0)">
+                            <v-icon :class="[isActive(0) ? 'white--text' : '']" small>fas fa-sort-amount-down</v-icon>
                         </v-btn>
-                        <v-btn v-if="!loading && isActive(1)" flat icon @click="selectFilter(0)">
-                            <v-icon :class="[isActive(1) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                        <v-btn v-if="!loading && isActive(1)" flat icon @click="selectFilter(1)">
+                            <v-icon :class="[isActive(1) ? 'white--text' : '']" small>fas fa-sort-amount-up</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -31,11 +31,11 @@
                 <h5>{{ $t('fav.name') }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
-                        <v-btn v-if="!loading && !isActive(3)" :class="[!isActive(2) && !isActive(3) ? 'inactive-btn' : '']" flat icon @click="selectFilter(3)">
-                            <v-icon :class="[isActive(2) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                        <v-btn v-if="!loading && !isActive(3)" :class="[!isActive(2) && !isActive(3) ? 'inactive-btn' : '']" flat icon @click="selectFilter(2)">
+                            <v-icon :class="['ml-2', isActive(2) ? 'white--text' : '']" small>fas fa-sort-amount-down</v-icon>
                         </v-btn>
-                        <v-btn v-if="!loading && isActive(3)" flat icon @click="selectFilter(2)">
-                            <v-icon :class="[isActive(3) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                        <v-btn v-if="!loading && isActive(3)" flat icon @click="selectFilter(3)">
+                            <v-icon :class="['ml-2', isActive(3) ? 'white--text' : '']" small>fas fa-sort-amount-up</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -47,10 +47,10 @@
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(5)" :class="[!isActive(4) && !isActive(5) ? 'inactive-btn' : '']" flat icon @click="selectFilter(5)">
-                            <v-icon :class="[isActive(4) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                            <v-icon :class="[isActive(4) ? 'white--text' : '']" small>fas fa-sort-amount-up</v-icon>
                         </v-btn>
                         <v-btn v-if="!loading && isActive(5)" flat icon @click="selectFilter(4)">
-                            <v-icon :class="[isActive(5) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                            <v-icon :class="[isActive(5) ? 'white--text' : '']" small>fas fa-sort-amount-down</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -62,10 +62,10 @@
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(7)" :class="[!isActive(6) && !isActive(7) ? 'inactive-btn' : '']" flat icon @click="selectFilter(7)">
-                            <v-icon :class="[isActive(6) ? 'white--text' : '']" small>fas fa-long-arrow-alt-up</v-icon>
+                            <v-icon :class="[isActive(6) ? 'white--text' : '']" small>fas fa-sort-amount-up</v-icon>
                         </v-btn>
                         <v-btn v-if="!loading && isActive(7)" flat icon @click="selectFilter(6)">
-                            <v-icon :class="[isActive(7) ? 'white--text' : '']" small>fas fa-long-arrow-alt-down</v-icon>
+                            <v-icon :class="[isActive(7) ? 'white--text' : '']" small>fas fa-sort-amount-down</v-icon>
                         </v-btn>
                     </v-layout>
                 </v-flex>
@@ -78,8 +78,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
-
-const FILTER_VALUES = ['address_high', 'address_low', 'name_high', 'name_low']
+import { FILTER_VALUES } from '@app/modules/favorites/models/FavSort'
 
 @Component({
     components: {
@@ -111,12 +110,26 @@ export default class TableAddressTxsHeader extends Vue {
     selectAll(): void {
         this.$emit('selectAllInHeader')
     }
-
+    /**
+     * Select filter and emit to parent
+     * @param _value {Number}
+     */
     selectFilter(_value: number): void {
+        if (this.isActive(_value)) {
+            if (_value % 2 == 0) {
+                _value = _value + 1
+            } else {
+                _value = _value - 1
+            }
+        }
         this.sort = _value
-        this.$emit('sortBy', FILTER_VALUES[_value])
+        this.$emit('sortBy', FILTER_VALUES[this.sort])
     }
-
+    /**
+     * Check if filter is active
+     * @param _value {Number}
+     * @returns {Boolean}
+     */
     isActive(_value: number): boolean {
         return this.sort === _value
     }
