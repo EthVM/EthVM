@@ -40,7 +40,7 @@
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
-                    <table-address-txs-row v-if="isETH" :transfer="tx" :is-pending="false" :address="address" :get-state-diff="getStateDIff" />
+                    <table-address-txs-row v-if="isETH" :transfer="tx" :is-pending="false" :address="address" :get-state-diff="getStateDiff" />
                     <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" :token-image="getImg(tx.contract)" />
                 </v-card>
             </template>
@@ -69,10 +69,11 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getAddressEthTransfers, getAddressERC20Transfers, getAddressERC721Transfers } from './transfers.graphql'
+import { getAddressEthTransfers, getAddressERC20Transfers, getAddressERC721Transfers, getTransactionStateDiff } from './transfers.graphql'
 import { getAddressEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAddressEthTransfers'
 import { getAddressERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAddressERC20Transfers'
 import { getAddressERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAddressERC721Transfers'
+import { getTransactionStateDiff as StateDiff } from './apolloTypes/getTransactionStateDiff'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
@@ -349,6 +350,26 @@ export default class AddressTransers extends Mixins(CoinData) {
         this.hasError = val
         const errorType = this.isETH ? ErrorMessage.transfersETH : this.isERC20 ? ErrorMessage.transfersERC20 : ErrorMessage.transfersERC721
         this.$emit('errorTransfers', this.hasError, errorType)
+    }
+
+    /**
+     * Get state diff if transaction has failed
+     * @param _hash {String}
+     */
+    getStateDiff(_hash: string): void {
+        this.$apollo
+            .query({
+                query: getTransactionStateDiff,
+                variables: {
+                    hash: _hash
+                }
+            })
+            .then(response => {
+                console.error('response', response)
+            })
+            .catch(error => {
+                console.error('error', error)
+            })
     }
     /*
     ===================================================================================
