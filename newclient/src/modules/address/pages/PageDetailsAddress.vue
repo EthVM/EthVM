@@ -275,7 +275,7 @@
                     <keep-alive>
                         <v-layout row wrap justify-start class="mb-4 contract-layout">
                             <v-flex xs12>
-                                <app-details-list :title="$t('contract.details')" :details="details" />
+                                <app-details-list :is-loading="loadingContractDetails" :title="$t('contract.details')" :details="details" />
                             </v-flex>
                         </v-layout>
                     </keep-alive>
@@ -335,6 +335,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Initial Data
     ===================================================================================
     */
+    loadingContractDetails = true
     isContractCreator = false
     isContract = false
     error = ''
@@ -360,7 +361,22 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     */
     get details(): Detail[] {
         let details: Detail[] = []
-        if (this.contract) {
+        if (this.loadingContractDetails) {
+            details = [
+                {
+                    title: this.$i18n.t('contract.date-created')
+                },
+                {
+                    title: this.$i18n.t('contract.tx-hash')
+                },
+                {
+                    title: this.$i18n.t('contract.creator')
+                },
+                {
+                    title: this.$i18n.t('contract.code-hash')
+                }
+            ]
+        } else {
             details = [
                 {
                     title: this.$i18n.t('contract.date-created'),
@@ -517,6 +533,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
      */
     setContractTimestamp(timestamp: number): void {
         this.$set(this.contract, 'timestamp', timestamp)
+        this.loadingContractDetails = false
     }
     /**
      * Sets Total Tokens

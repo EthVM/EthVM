@@ -10,5 +10,4 @@ export enum ErrorMessage {
     updateEvent = 'message.error.address.update-event',
     contractNotFound = 'message.error.contract.not-found',
     contractTimestampNotFound = 'message.error.contract.timestamp-not-found'
-
 }
