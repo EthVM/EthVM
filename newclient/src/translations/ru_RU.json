@@ -106,10 +106,10 @@
         "created": "Время создания",
         "total": "Всего",
         "creation": "Создание Контракта",
-        "details": "Contract Details",
-        "date-created": "Date Created",
-        "code-hash": "Code Hash",
-        "tx-hash": "Tx Hash"
+        "details": "Детали Контракта",
+        "date-created": "Дата Создания",
+        "code-hash": "Хэш Кода",
+        "tx-hash": "Хэш Тх"
     },
     "gas": {
         "name": "Газ",
@@ -231,7 +231,7 @@
             },
             "contract": {
                 "not-found": "Контракт не найден!",
-                "timestamp-not-found": "No contract timestamp found!"
+                "timestamp-not-found": "Не найдена дата создания контракта!"
             },
             "block": {
                 "detail": "Что-то пошло не так при получении деталей блока.",
