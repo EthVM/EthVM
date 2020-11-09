@@ -6,6 +6,7 @@
 
 ### Devop
 
+- Remove "To" on contract creation on Eth Transfers on Address Transfers and Transactions Table [#903](https://github.com/EthVM/EthVM/pull/903)
 - Contract creation [#912](https://github.com/EthVM/EthVM/pull/912)
 
 ===================================================================================
@@ -44,7 +45,6 @@
 
 - Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
 - Change token sort arrow ui [#890](https://github.com/EthVM/EthVM/pull/890)
-
 
 ### Bug
 
