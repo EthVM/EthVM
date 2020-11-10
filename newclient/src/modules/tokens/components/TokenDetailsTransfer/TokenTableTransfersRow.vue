@@ -38,8 +38,8 @@
 
                 <!-- Column 3: Quantity/ID -->
                 <v-flex md2>
-                    <p>
-                        <span v-if="isERC721" class="text-truncate">{{ getTokenID }}</span>
+                    <p class="text-truncate">
+                        <span v-if="isERC721">{{ getTokenID }}</span>
                         <span v-else>{{ transferValue.value }} {{ units }} </span>
                         <app-tooltip v-if="transferValueTooltip && !isERC721" :text="transferValueTooltip" />
                     </p>
@@ -84,7 +84,7 @@
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
-                        <p class="pb-0">
+                        <p class="pb-0 text-truncate">
                             <span class="info--text">{{ isERC721 ? $t('common.id') : $t('common.quantity') }}: </span>
                             <span v-if="isERC721" class="text-truncate">{{ getTokenID }}</span>
                             <span v-else>{{ transferValue.value }} {{ units }}</span>
