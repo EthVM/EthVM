@@ -45,7 +45,7 @@
                                         <span v-if="isErc20 && tokenTransfer.symbol" class="info--text caption pr-1">{{ tokenTransfer.symbol }}</span>
                                         <app-tooltip v-if="isErc20 && amount.tooltipText" :text="`${amount.tooltipText} ${tokenTransfer.symbol}`" />
                                     </p>
-                                    <p v-else class="black--text caption">
+                                    <p v-else class="black--text caption text-truncate">
                                         {{ amount }}
                                     </p>
                                 </v-layout>
@@ -149,7 +149,7 @@
                                 <span v-if="isErc20 && tokenTransfer.symbol" class="info--text caption pr-1">{{ tokenTransfer.symbol }}</span>
                                 <app-tooltip v-if="isErc20 && amount.tooltipText" :text="`${amount.tooltipText} ${tokenTransfer.symbol}`" />
                             </p>
-                            <p v-else>
+                            <p v-else class="text-truncate">
                                 {{ amount }}
                             </p>
                         </v-flex>
