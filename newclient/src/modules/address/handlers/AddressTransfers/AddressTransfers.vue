@@ -363,7 +363,7 @@ export default class AddressTransers extends Mixins(CoinData) {
 
     /**
      * Get state diff if transaction has failed
-     * @param _hash {String} 
+     * @param _hash {String}
      * @param type {String}
      */
     getStateDiff(_hash: string, type: string): void {
