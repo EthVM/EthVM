@@ -58,6 +58,7 @@
                                     v-show="toggleLastTx === 0"
                                     :address="addressRef"
                                     :max-items="max"
+                                    :is-contract="isContract"
                                     :new-transfers="newETHTransfers"
                                     @resetUpdateCount="setNewEvent"
                                     @errorTransfers="setError"

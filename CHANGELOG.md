@@ -1,3 +1,6 @@
+### Bug 
+- Query failed tx state diff if null [#913](https://github.com/EthVM/EthVM/pull/913)
+
 ### Release v1.0.4
 
 ### Feature

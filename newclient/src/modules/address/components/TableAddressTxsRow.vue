@@ -32,7 +32,7 @@
                     <v-flex xs6>
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
-                            <app-state-diff v-if="!isPending" :state="state" class="ml-2 mr-1" />
+                            <app-state-diff v-if="!isPending && !loadingStateDiff && transfer.stateDiff" :state="state" class="ml-2 mr-1" />
                             <p v-if="isMinedIndicator && isPending" class="caption primary--text blinking ml-2">{{ $t('tx.mined') }}</p>
                         </v-layout>
                     </v-flex>
@@ -178,7 +178,7 @@
                     <v-layout row align-center justify-end>
                         <v-icon v-if="transfer.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-                        <app-state-diff :state="state" class="ml-3 mr-1" />
+                        <app-state-diff v-if="!loadingStateDiff && transfer.stateDiff" :state="state" class="ml-3 mr-1" />
                     </v-layout>
                 </v-flex>
                 <v-flex v-else shrink>
@@ -220,11 +220,18 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     @Prop(String) address!: string
     @Prop({ type: Boolean, default: false }) isPending!: boolean
     @Prop(Boolean) isMinedIndicator?: boolean
+    @Prop(Function) getStateDiff!: (_hash: string, _type: string) => void
+    @Prop(Boolean) loadingStateDiff?: boolean
     /*
     ===================================================================================
-      Initial Data
+      Lifecycle
     ===================================================================================
     */
+    created() {
+        if (this.transfer.getStatus() === false && !this.transfer.stateDiff) {
+            this.getStateDiff(this.transfer.getHash(), this.type)
+        }
+    }
 
     /*
     ===================================================================================
@@ -232,19 +239,22 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     get state(): object {
-        const stateData = [{ name: `${this.$t('state.bal-before')}`, value: this.transfer.getBalBefore(this.type) }]
-        if (this.type !== TYPES[0]) {
-            stateData.push({ name: `${this.$tc('tx.fee', 1)}`, value: this.transfer.getFee() })
+        if (!this.loadingStateDiff) {
+            const stateData = [{ name: `${this.$t('state.bal-before')}`, value: this.transfer.getBalBefore(this.type) }]
+            if (this.type !== TYPES[0]) {
+                stateData.push({ name: `${this.$tc('tx.fee', 1)}`, value: this.transfer.getFee() })
+            }
+            stateData.push({
+                name: this.getValueTitle,
+                value: this.transfer.getStatus() === false ? NumberFormatHelper.formatNonVariableEthValue(new BN(0)) : this.transfer.getValue()
+            })
+            return {
+                status: this.transfer.getStatus(),
+                balAfter: this.transfer.getBalAfter(this.type),
+                data: stateData
+            }
         }
-        stateData.push({
-            name: this.getValueTitle,
-            value: this.transfer.getStatus() === false ? NumberFormatHelper.formatNonVariableEthValue(new BN(0)) : this.transfer.getValue()
-        })
-        return {
-            status: this.transfer.getStatus(),
-            balAfter: this.transfer.getBalAfter(this.type),
-            data: stateData
-        }
+        return {}
     }
 
     get getValueTitle(): string {
@@ -336,9 +346,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     }
     get transferValueClass(): string {
         let textColor = 'black--text'
-        // if (this.isPending) {
-        //     console.log(this.transfer)
-        // }
         if (this.transfer.getStatus() === null) {
             textColor = 'info--text'
         }

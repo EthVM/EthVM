@@ -36,11 +36,18 @@
         <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="transfers" :is-scroll-view="false">
             <template #header>
                 <table-address-txs-header v-if="isETH" :address="address" />
-                <table-address-tokens-header v-else :is-erc20="isERC20" :is-transfers="true"/>
+                <table-address-tokens-header v-else :is-erc20="isERC20" :is-transfers="true" />
             </template>
             <template #rows>
                 <v-card v-for="(tx, index) in transfers" :key="index" class="transparent" flat>
-                    <table-address-txs-row v-if="isETH" :transfer="tx" :is-pending="false" :address="address" />
+                    <table-address-txs-row
+                        v-if="isETH"
+                        :transfer="tx"
+                        :is-pending="false"
+                        :address="address"
+                        :get-state-diff="getStateDiff"
+                        :loading-state-diff="loadingStateDiff"
+                    />
                     <table-address-transfers-row v-else :transfer="tx" :is-erc20="isERC20" :address="address" :token-image="getImg(tx.contract)" />
                 </v-card>
             </template>
@@ -69,7 +76,7 @@ import TableAddressTokensHeader from '@app/modules/address/components/TableAddre
 import TableAddressTransfersRow from '@app/modules/address/components/TableAddressTransfersRow.vue'
 import { Component, Prop, Watch, Vue, Mixins } from 'vue-property-decorator'
 import BN from 'bignumber.js'
-import { getAddressEthTransfers, getAddressERC20Transfers, getAddressERC721Transfers } from './transfers.graphql'
+import { getAddressEthTransfers, getAddressERC20Transfers, getAddressERC721Transfers, getTransactionStateDiff } from './transfers.graphql'
 import { getAddressEthTransfers_getEthTransfersV2 as EthTransfersType } from './apolloTypes/getAddressEthTransfers'
 import { getAddressERC20Transfers_getERC20Transfers as ERC20TransfersType } from './apolloTypes/getAddressERC20Transfers'
 import { getAddressERC721Transfers_getERC721Transfers as ERC721TransfersType } from './apolloTypes/getAddressERC721Transfers'
@@ -78,6 +85,7 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
+const TYPES = ['in', 'out', 'self']
 
 @Component({
     components: {
@@ -150,6 +158,7 @@ export default class AddressTransers extends Mixins(CoinData) {
     @Prop({ type: String, default: 'eth' }) transfersType!: string
     @Prop(Number) newTransfers!: number
     @Prop(Boolean) refetchTransfers?: boolean
+    @Prop(Boolean) isContract?: boolean
 
     /*
     ===================================================================================
@@ -169,6 +178,7 @@ export default class AddressTransers extends Mixins(CoinData) {
     getTransfers!: EthTransfersType | ERC20TransfersType | ERC721TransfersType
     ethTransfers!: EthTransfer[]
     hasError = false
+    loadingStateDiff = false
 
     /*
     ===================================================================================
@@ -349,6 +359,50 @@ export default class AddressTransers extends Mixins(CoinData) {
         this.hasError = val
         const errorType = this.isETH ? ErrorMessage.transfersETH : this.isERC20 ? ErrorMessage.transfersERC20 : ErrorMessage.transfersERC721
         this.$emit('errorTransfers', this.hasError, errorType)
+    }
+
+    /**
+     * Get state diff if transaction has failed
+     * @param _hash {String}
+     * @param _type {String}
+     */
+    getStateDiff(_hash: string, _type: string): void {
+        this.loadingStateDiff = true
+        this.$apollo
+            .query({
+                query: getTransactionStateDiff,
+                variables: {
+                    hash: _hash
+                }
+            })
+            .then(response => {
+                if (response && response.data) {
+                    const transferIdx = this.transfers.findIndex(t => {
+                        return t.transfer.transfer.transactionHash === _hash
+                    })
+                    const stateDiffIdx = response.data.getTransactionStateDiff.findIndex(state => {
+                        return state.owner === this.address
+                    })
+                    if (transferIdx > -1 && stateDiffIdx > -1) {
+                        this.transfers[transferIdx].stateDiff = Object.assign({}, this.transfers[transferIdx].stateDiff, {
+                            from: {
+                                before: _type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
+                                after: _type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
+                            },
+                            after: {
+                                before: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
+                                after: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
+                            }
+                        })
+                    } else if (stateDiffIdx > -1 && !this.isContract) {
+                        throw new Error('No state diff found for regular address')
+                    }
+                }
+                this.loadingStateDiff = false
+            })
+            .catch(error => {
+                throw error
+            })
     }
     /*
     ===================================================================================

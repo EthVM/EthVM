@@ -93,4 +93,4 @@ class TokenSort {
     }
 }
 
-export { TOKEN_FILTER_VALUES, TokenSort };
+export { TOKEN_FILTER_VALUES, TokenSort }
