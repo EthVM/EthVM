@@ -110,7 +110,11 @@
         "hash": "Contract #",
         "created": "Created at",
         "total": "Total",
-        "creation": "Contract Creation"
+        "creation": "Contract Creation",
+        "details": "Contract Details",
+        "date-created": "Date Created",
+        "code-hash": "Code Hash",
+        "tx-hash": "Tx Hash"
     },
 
     "gas": {
@@ -239,7 +243,8 @@
                 "update-event": "Something went wrong during Address update."
             },
             "contract": {
-                "not-found": "No contract found!"
+                "not-found": "No contract found!",
+                "timestamp-not-found": "No contract timestamp found!"
             },
             "block": {
                 "detail": "Something went wrong while retrieving block details.",

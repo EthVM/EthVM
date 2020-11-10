@@ -12,3 +12,9 @@ query getContractMeta($hash: String!) {
       transactionHash
     }
 }
+
+query getContractTimestamp($hash: String!) {
+    getTransactionByHash(hash: $hash) {
+        timestamp
+    }
+}
