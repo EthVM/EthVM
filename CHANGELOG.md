@@ -1,11 +1,14 @@
-### Bug 
-- Query failed tx state diff if null [#913](https://github.com/EthVM/EthVM/pull/913)
-
 ### Release v1.0.4
 
 ### Feature
+
 - Sort Address Tokens [#909](https://github.com/EthVM/EthVM/pull/909)
 - Add in Address Contract Details [#914](https://github.com/EthVM/EthVM/pull/914)
+
+### Bug
+
+- Query failed tx state diff if null [#913](https://github.com/EthVM/EthVM/pull/913)
+- NFT ids not truncating on address and token details page [#918](https://github.com/EthVM/EthVM/pull/918)
 
 ### Devop
 
@@ -31,12 +34,10 @@
 - Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
 - Clean up packages, install depcheck, config husky with commitlint [#882](https://github.com/EthVM/EthVM/pull/882)
 
-
 ### Bug
 
 - Fixed mined blinker on pending txs table on pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
 - Fixed Unclickable QR on mobile [#906](https://github.com/EthVM/EthVM/pull/906)
-
 
 ===================================================================================
 
