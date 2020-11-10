@@ -215,7 +215,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     @Prop(String) address!: string
     @Prop({ type: Boolean, default: false }) isPending!: boolean
     @Prop(Boolean) isMinedIndicator?: boolean
-    @Prop(Function) getStateDiff!: (_hash: string) => void
+    @Prop(Function) getStateDiff!: (_hash: string, _type: string) => void
     @Prop(Boolean) loadingStateDiff?: boolean
     /*
     ===================================================================================

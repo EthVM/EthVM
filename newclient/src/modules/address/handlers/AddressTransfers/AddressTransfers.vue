@@ -364,9 +364,9 @@ export default class AddressTransers extends Mixins(CoinData) {
     /**
      * Get state diff if transaction has failed
      * @param _hash {String}
-     * @param type {String}
+     * @param _type {String}
      */
-    getStateDiff(_hash: string, type: string): void {
+    getStateDiff(_hash: string, _type: string): void {
         this.loadingStateDiff = true
         this.$apollo
             .query({
@@ -386,12 +386,12 @@ export default class AddressTransers extends Mixins(CoinData) {
                     if (transferIdx > -1 && stateDiffIdx > -1) {
                         this.transfers[transferIdx].stateDiff = Object.assign({}, this.transfers[transferIdx].stateDiff, {
                             from: {
-                                before: type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
-                                after: type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
+                                before: _type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
+                                after: _type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
                             },
                             after: {
-                                before: type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
-                                after: type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
+                                before: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
+                                after: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
                             }
                         })
                     } else if (stateDiffIdx > -1 && !this.isContract) {
