@@ -6,13 +6,22 @@
                 <template v-if="!loading" #update>
                     <app-new-update :text="updateText" :update-count="newTokens" :hide-count="true" @reload="setPage(0, true)" />
                 </template>
+                <template #filter>
+                    <app-filter :is-selected="tokenOptions[1]" :options="tokenOptions" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
+                </template>
                 <template v-if="showPagination && !loading" #pagination>
                     <app-paginate :total="totalPages" :current-page="index" :has-input="true" :has-first="true" :has-last="true" @newPage="setPage" />
                 </template>
             </app-table-title>
             <table-txs :max-items="maxItems" :index="index" :is-loading="loading" :table-message="message" :txs-data="tokens" :is-scroll-view="false">
                 <template #header>
-                    <table-address-tokens-header :is-erc20="isERC20" :is-transfers="false" />
+                    <table-address-tokens-header
+                        :is-erc20="isERC20"
+                        :is-transfers="false"
+                        :loading="loading"
+                        :has-tokens="hasTokens && getTokens.length > 0"
+                        @sortBy="sortTokens"
+                    />
                 </template>
                 <template #rows>
                     <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
@@ -21,7 +30,8 @@
                             :token="token"
                             :is-erc20="isERC20"
                             :holder="address"
-                            :token-price-info="getUSDInfo(token.tokenInfo.contract)"
+                            :token-sort="tokenSort"
+                            :token-price-info="tokenSort.getUSDInfo(token.tokenInfo.contract)"
                             :nft-meta="getContractMeta(token.tokenInfo.contract)"
                             @showNft="showNftTokens"
                         />
@@ -55,6 +65,7 @@ import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
+import AppFilter from '@app/core/components/ui/AppFilter.vue'
 import TableAddressTokensRow from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableAddressTokensRowLoading from '@app/modules/address/components/TableAddressTokensRow.vue'
 import TableAddressTokensHeader from '@app/modules/address/components/TableAddressTokensHeader.vue'
@@ -76,6 +87,8 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
+import { TOKEN_FILTER_VALUES, TokenSort } from '@app/modules/address/models/TokenSort'
+
 /*
   DEV NOTES:
   - add on Error
@@ -97,7 +110,8 @@ interface NFTMetaMap {
         TableAddressTokensHeader,
         TableAddressTokensRow,
         TableAddressTokensRowLoading,
-        TableAddressUniqueNft
+        TableAddressUniqueNft,
+        AppFilter
     },
     apollo: {
         getTokens: {
@@ -120,6 +134,9 @@ interface NFTMetaMap {
             result({ data }) {
                 if (this.hasTokens) {
                     this.emitErrorState(false)
+                    if (this.initialLoad) {
+                        this.sortTokens(TOKEN_FILTER_VALUES[1])
+                    }
                     if (this.isERC20) {
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
@@ -147,7 +164,6 @@ interface NFTMetaMap {
                 this.emitErrorState(true)
             }
         },
-
         getOwnersERC721Tokens: {
             query: getOwnersERC721Tokens,
             variables() {
@@ -248,6 +264,56 @@ export default class AddressTokens extends Mixins(CoinData) {
       Computed
     ===================================================================================
     */
+    get tokenOptions() {
+        const options = [
+            {
+                value: TOKEN_FILTER_VALUES[0],
+                text: this.$i18n.tc('token.name', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: TOKEN_FILTER_VALUES[1],
+                text: this.$i18n.tc('token.name', 1),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: TOKEN_FILTER_VALUES[2],
+                text: this.isERC20 ? this.$i18n.t('common.amount') : this.$i18n.t('common.id'),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: TOKEN_FILTER_VALUES[3],
+                text: this.isERC20 ? this.$i18n.t('common.amount') : this.$i18n.t('common.id'),
+                filter: this.$i18n.t('filter.high')
+            }
+        ]
+
+        if (this.isERC20) {
+            options.push(
+                {
+                    value: TOKEN_FILTER_VALUES[4],
+                    text: this.$i18n.t('usd.value'),
+                    filter: this.$i18n.t('filter.low')
+                },
+                {
+                    value: TOKEN_FILTER_VALUES[5],
+                    text: this.$i18n.t('usd.value'),
+                    filter: this.$i18n.t('filter.high')
+                },
+                {
+                    value: TOKEN_FILTER_VALUES[6],
+                    text: this.$i18n.t('token.change'),
+                    filter: this.$i18n.t('filter.low')
+                },
+                {
+                    value: TOKEN_FILTER_VALUES[7],
+                    text: this.$i18n.t('token.change'),
+                    filter: this.$i18n.t('filter.high')
+                }
+            )
+        }
+        return options
+    }
 
     get loading(): boolean {
         if (this.isNFT) {
@@ -309,12 +375,18 @@ export default class AddressTokens extends Mixins(CoinData) {
     get updateText(): string {
         return `${this.$t('message.update.tokens')}`
     }
+    get tokenSort(): TokenSort {
+        return new TokenSort(this.getTokens, this.isERC20, this.tokenPrices)
+    }
 
     /*
     ===================================================================================
       Methods:
     ===================================================================================
     */
+    sortTokens(sort: string): void {
+        this.tokenSort.sortTokens(this.getTokens, sort)
+    }
     /**
      * Sets page or reset
      * @params page {Number} reset {Boolean}
@@ -348,17 +420,6 @@ export default class AddressTokens extends Mixins(CoinData) {
                 }
             }
         })
-    }
-    /**
-     * Gets USD prices for a token
-     * @param contract {String}
-     * @returns {TokenMarketData} or {undefined}
-     */
-    getUSDInfo(contract: string): TokenMarketData | undefined {
-        if (!this.loading && this.tokenPrices && this.tokenPrices.has(contract)) {
-            return this.tokenPrices.get(contract)
-        }
-        return undefined
     }
     /* NFT TOKENS*/
     /**
@@ -452,7 +513,6 @@ export default class AddressTokens extends Mixins(CoinData) {
       Watch
     ===================================================================================
     */
-
     @Watch('refetchTokens')
     onRefetchTokensChanged(newVal: boolean, oldVal: boolean): void {
         if (newVal && newVal !== oldVal) {

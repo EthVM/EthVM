@@ -77,3 +77,12 @@ query getAddressERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String)
         nextKey
     }
 }
+
+
+query getTransactionStateDiff($hash: String!){
+    getTransactionStateDiff(hash: $hash) {
+        owner
+        from
+        to
+    }
+}

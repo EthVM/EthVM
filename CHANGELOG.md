@@ -1,6 +1,29 @@
+### Release v1.0.4
+
+### Feature
+
+- Sort Address Tokens [#909](https://github.com/EthVM/EthVM/pull/909)
+- Add in Address Contract Details [#914](https://github.com/EthVM/EthVM/pull/914)
+
+### Bug
+
+- Query failed tx state diff if null [#913](https://github.com/EthVM/EthVM/pull/913)
+- NFT ids not truncating on address and token details page [#918](https://github.com/EthVM/EthVM/pull/918)
+
+### Devop
+
+- Remove "To" on contract creation on Eth Transfers on Address Transfers and Transactions Table [#903](https://github.com/EthVM/EthVM/pull/903)
+- Contract creation [#912](https://github.com/EthVM/EthVM/pull/912)
+- Enforce branch names [#911](https://github.com/EthVM/EthVM/pull/911)
+- Create workflow for master and staging [#916](https://github.com/EthVM/EthVM/pull/916)
+
+===================================================================================
+
 ### Release v1.0.3-hotfix.2
 
 - Fix variables [#908](https://github.com/EthVM/EthVM/pull/908)
+
+===================================================================================
 
 ### Release v1.0.3-hotfix.1
 
@@ -11,12 +34,10 @@
 - Set correct DSN for Sentry [#904](https://github.com/EthVM/EthVM/pull/904)
 - Clean up packages, install depcheck, config husky with commitlint [#882](https://github.com/EthVM/EthVM/pull/882)
 
-
 ### Bug
 
 - Fixed mined blinker on pending txs table on pending txs page. [#905](https://github.com/EthVM/EthVM/pull/905)
 - Fixed Unclickable QR on mobile [#906](https://github.com/EthVM/EthVM/pull/906)
-
 
 ===================================================================================
 
@@ -30,7 +51,6 @@
 
 - Use address provided in footer [#879](https://github.com/EthVM/EthVM/pull/879)
 - Change token sort arrow ui [#890](https://github.com/EthVM/EthVM/pull/890)
-
 
 ### Bug
 
