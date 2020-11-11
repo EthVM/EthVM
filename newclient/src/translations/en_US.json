@@ -97,7 +97,9 @@
         "filtered": "Filtered by Holder",
         "sort-by": "Sort by",
         "total-tokens": "Total Tokens",
-        "image": "Image"
+        "image": "Image",
+        "favorites": "Favorites",
+        "view-all": "View All"
     },
 
     "address": {

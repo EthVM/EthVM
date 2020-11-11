@@ -135,6 +135,11 @@ export default new Router({
             name: 'fav_addresses'
         },
         {
+            path: '/fav_tokens',
+            component: PageFavAddr,
+            name: 'fav_tokens'
+        },
+        {
             path: '*',
             redirect: '/404'
         }
