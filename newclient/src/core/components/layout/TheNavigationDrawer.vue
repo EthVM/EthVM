@@ -243,9 +243,9 @@ export default class TheNavigationDrawer extends Vue {
                         name: 'tokens'
                     },
                     {
-                        text: this.$i18n.tc('token.favorites', 2),
+                        text: this.$i18n.tc('token.favorite', 2),
                         routerLink: '/fav_tokens',
-                        name: 'favorites'
+                        name: 'fav_tokens'
                     }
                 ]
             },

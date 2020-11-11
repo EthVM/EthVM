@@ -11,10 +11,10 @@
           TOKEN NAME/IMAGE
 
           Responsive Tally:
-          MD: 4/12 (4)
+          MD: 3/12 (4)
         =====================================================================================
         -->
-        <v-flex sm4>
+        <v-flex sm3>
             <v-layout :class="[!isActive(0) && !isActive(1) ? 'inactive-sort' : '']" align-center justify-start row pl-4>
                 <h5 class="pl-5 pr-2">{{ $tc('token.name', 1) }}</h5>
                 <v-flex d-flex align-center>
@@ -77,6 +77,21 @@
                 </v-flex>
             </v-layout>
         </v-flex>
+        <v-flex sm1>
+            <v-layout :class="[!isActive(8) && !isActive(9) ? 'inactive-sort' : '']" align-center justify-start row pl-2>
+                <h5 class="pr-1">{{ $tc('token.favorite', 1) }}</h5>
+                <v-flex d-flex align-center>
+                    <v-layout align-start justify-right>
+                        <v-btn v-if="!loading && !isActive(9)" :class="[!isActive(8) && !isActive(9) ? 'inactive-btn' : '']" flat icon @click="selectFilter(8)">
+                            <v-icon :class="[isActive(8) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
+                        </v-btn>
+                        <v-btn v-if="!loading && isActive(9)" flat icon @click="selectFilter(9)">
+                            <v-icon :class="[isActive(9) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
+                        </v-btn>
+                    </v-layout>
+                </v-flex>
+            </v-layout>
+        </v-flex>
     </v-layout>
 </template>
 
@@ -87,7 +102,18 @@ import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
-const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
+const FILTER_VALUES = [
+    'name_high',
+    'name_low',
+    'price_high',
+    'price_low',
+    'volume_high',
+    'volume_low',
+    'market_cap_high',
+    'market_cap_low',
+    'favorite',
+    'non_favorite'
+]
 
 @Component({
     components: {

@@ -14,9 +14,9 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins, Watch } from 'vue-property-decorator'
-import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
+import { ErrorMessagesFav } from '@app/modules/favorite-address/models/ErrorMessagesFav'
 import { Crumb } from '@app/core/components/props'
-import FavAddrTableRow from '@app/modules/favorites/components/FavAddrTableRow.vue'
+import FavAddrTableRow from '@app/modules/favorite-address/components/FavAddrTableRow.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { getEthBalance, getContractMeta } from '@app/modules/address/handlers/AddressOverview/addressDetails.graphql'
 import { getEthBalance_getEthBalance as BalanceType } from '@app/modules/address/handlers/AddressOverview/apolloTypes/getEthBalance'

@@ -93,10 +93,10 @@
                           TOKEN NAME/IMAGE
 
                           Responsive Tally:
-                          MD: 4/12 (4)
+                          MD: 3/12 (3)
                         =====================================================================================
                         -->
-                        <v-flex md4>
+                        <v-flex md3>
                             <v-layout grid-list-xs row align-center justify-start fill-height>
                                 <v-img :src="image" height="25px" max-width="25px" contain class="ml-3 mr-2" @error="onImageLoadFail" />
                                 <router-link :to="tokenLink" class="info--text caption">
@@ -110,7 +110,7 @@
                           TOKEN PRICE
 
                           Responsive Tally:
-                          MD: 6/12 (2)
+                          MD: 5/12 (2)
                         =====================================================================================
                         -->
                         <v-flex md2>
@@ -124,7 +124,7 @@
                           TOKEN PRICE PERCENTAGE CHANGE
 
                           Responsive Tally:
-                          MD: 8/12 (2)
+                          MD: 7/12 (2)
                         =====================================================================================
                         -->
                         <v-flex md2>
@@ -140,7 +140,7 @@
                           TOKEN VOLUME
 
                           Responsive Tally:
-                          MD: 10/12 (2)
+                          MD: 9/12 (2)
                         =====================================================================================
                         -->
                         <v-flex md2>
@@ -154,7 +154,7 @@
                           TOKEN MARKET CAP
 
                           Responsive Tally:
-                          MD: 12/12 (2)
+                          MD: 11/12 (2)
                         =====================================================================================
                         -->
                         <v-flex xs2>
@@ -163,6 +163,15 @@
                                 <app-tooltip v-if="tokenMarket.tooltipText" :text="tokenMarket.tooltipText" />
                             </p>
                         </v-flex>
+                        <!--
+                        =====================================================================================
+                          TOKEN FAVORITE
+
+                          Responsive Tally:
+                          MD: 12/12 (1)
+                        =====================================================================================
+                        -->
+                        <v-flex xs1> </v-flex>
                     </v-layout>
                     <v-divider class="mb-2 mt-2" />
                 </v-card>

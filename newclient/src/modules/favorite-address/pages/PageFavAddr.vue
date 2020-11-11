@@ -9,8 +9,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { ErrorMessagesFav } from '@app/modules/favorites/models/ErrorMessagesFav'
-import FavHandlerAddressList from '@app/modules/favorites/handlers/FavHandlerAddressList.vue'
+import { ErrorMessagesFav } from '@app/modules/favorite-address/models/ErrorMessagesFav'
+import FavHandlerAddressList from '@app/modules/favorite-address/handlers/FavHandlerAddressList.vue'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'

@@ -21,8 +21,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import FavDialog from '@app/modules/favorites/components/FavDialog.vue'
-import { FavDialogModes, DialogAddress } from '@app/modules/favorites/models/FavDialog'
+import FavDialog from '@app/modules/favorite-address/components/FavDialog.vue'
+import { FavDialogModes, DialogAddress } from '@app/modules/favorite-address/models/FavDialog'
 
 @Component({
     components: {

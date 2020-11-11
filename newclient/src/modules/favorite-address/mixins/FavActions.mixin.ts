@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { addFavAddress, deleteFavAddress } from './actions.graphql'
-import { CheckAddressRefetch } from '@app/modules/favorites/models/FavApolloRefetch'
+import { CheckAddressRefetch } from '@app/modules/favorite-address/models/FavApolloRefetch'
 
 @Component
 export class FavActions extends Vue {
