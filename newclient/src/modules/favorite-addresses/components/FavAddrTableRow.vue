@@ -211,7 +211,7 @@ import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
-import FavHandlerEdit from '@app/modules/favorite-address/handlers/FavHandlerEdit.vue'
+import FavHandlerEdit from '@app/modules/favorite-addresses/handlers/FavHandlerEdit.vue'
 import BN from 'bignumber.js'
 import { eth } from '@app/core/helper'
 

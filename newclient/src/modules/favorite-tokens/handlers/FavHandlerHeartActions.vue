@@ -1,0 +1,128 @@
+<template>
+    <div>
+        <!--
+        =====================================================================================
+          Button
+        =====================================================================================
+        -->
+        <fav-btn-heart :is-added="isAdded" :tooltip-text="tooltipText" />
+    </div>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { checkAddress as checkAddressQuery } from './checkAdr.graphql'
+import FavBtnHeart from '@app/modules/favorite-tokens/components/FavBtnHeart.vue'
+import { EnumAdrChips } from '@app/core/components/props'
+import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
+import { ErrorMessagesFav } from '@app/modules/favorite-tokens/models/ErrorMessagesFav'
+import { DataArray } from '@app/apollo/favorites/models'
+import { CheckAddressRefetch } from '@app/modules/favorite-tokens/models/FavApolloRefetch'
+
+@Component({
+    components: {
+        FavBtnHeart
+    },
+    apollo: {
+        checkAddress: {
+            query: checkAddressQuery,
+            client: 'FavClient',
+            fetchPolicy: 'network-only',
+            variables() {
+                return {
+                    address: this.address
+                }
+            },
+            result({ data }) {
+                if (data && data.checkAddress && data.checkAddress.name) {
+                    if (data.checkAddress.name !== '') {
+                        this.name = data.checkAddress.name
+                        this.$emit('addressHasName', this.name)
+                        this.emitErrorState(false)
+                    }
+                } else {
+                    this.name = ''
+                    this.$emit('addressHasName', this.name)
+                    this.emitErrorState(false)
+                }
+            },
+            error(error) {
+                this.emitErrorState(true, ErrorMessagesFav.addressCheck)
+            }
+        }
+    }
+})
+export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
+    /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
+    @Prop(String) address!: string
+    @Prop(Array) addrChips!: EnumAdrChips[]
+    /*
+    ===================================================================================
+      Data
+    ===================================================================================
+    */
+    checkAddress!: boolean
+    open = false
+    name = ''
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    addToFav(name: string): void {
+        this.mixinAddToFav(name, this.address, this.refetchCheckAddress)
+    }
+    removeFromFav(): void {
+        this.mixinRemoveFromFav(this.address, this.refetchCheckAddress)
+    }
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+    get tooltipText(): string {
+        return this.isAdded ? this.$t('fav.tooltip.remove').toString() : this.$t('fav.tooltip.add').toString()
+    }
+
+    get isAdded(): boolean {
+        return this.checkAddress !== undefined && this.checkAddress !== null
+    }
+
+    get refetchCheckAddress(): CheckAddressRefetch[] {
+        return [
+            {
+                query: checkAddressQuery,
+                variables: {
+                    address: this.address
+                }
+            }
+        ]
+    }
+
+    /*
+    ===================================================================================
+      Lifecycle:
+    ===================================================================================
+    */
+    mounted() {
+        window.addEventListener('storage', event => {
+            if (event.key === DataArray.addr) {
+                this.$apollo.queries.checkAddress.refresh()
+            }
+        })
+    }
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    emitErrorState(val: boolean, message: string): void {
+        this.$emit('errorFavorites', val, message)
+    }
+}
+</script>

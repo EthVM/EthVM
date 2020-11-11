@@ -78,7 +78,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import AppCheckBox from '@app/core/components/ui/AppCheckBox.vue'
-import { FILTER_VALUES } from '@app/modules/favorite-address/models/FavSort'
+import { FILTER_VALUES } from '@app/modules/favorite-addresses/models/FavSort'
 
 @Component({
     components: {

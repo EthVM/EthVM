@@ -141,7 +141,7 @@ import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { eth } from '@app/core/helper'
-import { FavDialogModes, DialogAddress } from '@app/modules/favorite-address/models/FavDialog'
+import { FavDialogModes, DialogAddress } from '@app/modules/favorite-addresses/models/FavDialog'
 
 type Rules = (data: string) => void
 

@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <div v-if="isAdded">
         <!--
         =====================================================================================
-          Button
+          Edit
         =====================================================================================
         -->
-        <fav-btn-heart :is-added="isAdded" :add-address="openFavDialog" :tooltip-text="tooltipText" />
+        <fav-btn-edit :edit-address="openEditDialog" />
         <!--
         =====================================================================================
           Dialog
@@ -13,36 +13,36 @@
         -->
         <v-dialog v-model="open" max-width="500">
             <fav-dialog
+                v-if="open"
                 :chips="addrChips"
-                :dialog-method="(mode === FavDialogModes.add ? addToFav : removeFromFav)"
-                :dialog-mode="mode"
+                :dialog-method="editName"
+                :dialog-mode="editMode"
                 :addrs="dialogAddrs"
-                @closeFavDialog="closeFavDialog()"
+                @closeFavDialog="closeEditDialog()"
             />
         </v-dialog>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { checkAddress as checkAddressQuery } from './checkAdr.graphql'
-import FavBtnHeart from '@app/modules/favorite-address/components/FavBtnHeart.vue'
-import FavDialog from '@app/modules/favorite-address/components/FavDialog.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { checkAddress } from './checkAdr.graphql'
+import { editFavAddress } from './editAdr.graphql'
+import FavBtnEdit from '@app/modules/favorite-addresses/components/FavBtnEdit.vue'
+import FavDialog from '@app/modules/favorite-addresses/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
-import { FavActions as FavActionsMixin } from '@app/modules/favorite-address/mixins/FavActions.mixin'
-import { ErrorMessagesFav } from '@app/modules/favorite-address/models/ErrorMessagesFav'
-import { FavDialogModes, DialogAddress } from '@app/modules/favorite-address/models/FavDialog'
+import { ErrorMessagesFav } from '@app/modules/favorite-addresses/models/ErrorMessagesFav'
+import { FavDialogModes, DialogAddress } from '@app/modules/favorite-addresses/models/FavDialog'
 import { DataArray } from '@app/apollo/favorites/models'
-import { CheckAddressRefetch } from '@app/modules/favorite-address/models/FavApolloRefetch'
 
 @Component({
     components: {
-        FavBtnHeart,
+        FavBtnEdit,
         FavDialog
     },
     apollo: {
         checkAddress: {
-            query: checkAddressQuery,
+            query: checkAddress,
             client: 'FavClient',
             fetchPolicy: 'network-only',
             variables() {
@@ -69,7 +69,7 @@ import { CheckAddressRefetch } from '@app/modules/favorite-address/models/FavApo
         }
     }
 })
-export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
+export default class FavHandlerEdit extends Vue {
     /*
     ===================================================================================
       Props
@@ -77,57 +77,50 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     */
     @Prop(String) address!: string
     @Prop(Array) addrChips!: EnumAdrChips[]
+
     /*
     ===================================================================================
       Data
     ===================================================================================
     */
     checkAddress!: boolean
-    open = false
     name = ''
-    FavDialogModes = FavDialogModes
+    open = false
+    editMode = FavDialogModes.edit
+
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
-    addToFav(name: string): void {
-        this.mixinAddToFav(name, this.address, this.refetchCheckAddress)
-        this.closeFavDialog()
+    editName(name: string): void {
+        this.$apollo
+            .mutate({
+                mutation: editFavAddress,
+                client: 'FavClient',
+                variables: {
+                    address: this.address,
+                    name: name
+                }
+            })
+            .then(data => {
+                if (data) {
+                    this.$emit('nameChange', name)
+                    this.closeEditDialog()
+                }
+            })
     }
-    removeFromFav(): void {
-        this.mixinRemoveFromFav(this.address, this.refetchCheckAddress)
-        this.closeFavDialog()
-    }
+
     /*
     ===================================================================================
       Computed
     ===================================================================================
     */
-    get tooltipText(): string {
-        return this.isAdded ? this.$t('fav.tooltip.remove').toString() : this.$t('fav.tooltip.add').toString()
-    }
-
     get isAdded(): boolean {
         return this.checkAddress !== undefined && this.checkAddress !== null
     }
-
-    get mode(): FavDialogModes {
-        return this.isAdded ? FavDialogModes.remove : FavDialogModes.add
-    }
     get dialogAddrs(): DialogAddress[] {
         return [new DialogAddress(this.address, this.name, this.addrChips)]
-    }
-
-    get refetchCheckAddress(): CheckAddressRefetch[] {
-        return [
-            {
-                query: checkAddressQuery,
-                variables: {
-                    address: this.address
-                }
-            }
-        ]
     }
 
     /*
@@ -148,10 +141,10 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
       Methods
     ===================================================================================
     */
-    closeFavDialog(): void {
+    closeEditDialog(): void {
         this.open = false
     }
-    openFavDialog(): void {
+    openEditDialog(): void {
         this.open = true
     }
     emitErrorState(val: boolean, message: string): void {
