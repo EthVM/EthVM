@@ -135,7 +135,7 @@ export default new Router({
             name: 'fav_addresses'
         },
         {
-            path: '/fav_tokens',
+            path: '/tokens/favorites',
             component: PageFavAddr,
             name: 'fav_tokens'
         },
