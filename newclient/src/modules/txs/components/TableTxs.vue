@@ -15,10 +15,10 @@
                             <v-flex v-if="!pending" md2>
                                 <h5>{{ $t('block.number') }}</h5>
                             </v-flex>
-                            <v-flex :class="isPending ? 'md6 lg5 ' : 'md5 lg4'">
+                            <v-flex :class="pending ? 'md6 lg5 ' : 'md5 lg4'">
                                 <h5>{{ $tc('tx.hash', 1) }}</h5>
                             </v-flex>
-                            <v-flex :class="isPending ? 'md3' : 'md2'">
+                            <v-flex :class="pending ? 'md3' : 'md2'">
                                 <h5>{{ $t('common.amount') }}</h5>
                             </v-flex>
                             <v-flex md2>
