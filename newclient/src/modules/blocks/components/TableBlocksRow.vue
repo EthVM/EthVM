@@ -2,19 +2,24 @@
     <v-container pa-0>
         <v-layout d-block>
             <!--
-      =====================================================================================
-        Mobile (XS-SM)
-      =====================================================================================
-      -->
+            =====================================================================================
+              Mobile (XS-SM)
+            =====================================================================================
+            -->
             <v-flex xs12 hidden-md-and-up>
                 <div class="table-row-mobile">
-                    <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
-                        <v-flex xs6 pa-1>
+                    <!--
+                    =====================================================================================
+                      ROW: Block Number and Total Txs
+                    =====================================================================================
+                    -->
+                    <v-layout grid-list-xs row align-center justify-start fill-height class="pt-3 px-4">
+                        <v-flex pa-1>
                             <router-link :to="`/block/number/${block.number}`" class="black--text font-weight-medium pb-1"
                                 >{{ $t('block.number') }} {{ _block.number }}</router-link
                             >
                         </v-flex>
-                        <v-flex xs6 pr-44>
+                        <v-flex pa-1>
                             <v-layout row justify-end>
                                 <p class="black--text align-center pl-2">
                                     {{ _block.totalTx }} {{ $tc('tx.name-short', 2) }}
@@ -22,19 +27,36 @@
                                 </p>
                             </v-layout>
                         </v-flex>
-                        <v-flex xs2 pa-1>
+                    </v-layout>
+                    <!--
+                    =====================================================================================
+                     ROW: Age
+                    =====================================================================================
+                    -->
+                    <v-layout grid-list-xs row align-center justify-start fill-height class="px-4">
+                        <v-flex shrink pa-1>
                             <p class="info--text psmall">{{ $t('common.age') }}:</p>
                         </v-flex>
-                        <v-flex xs10 pa-1>
+                        <v-flex grow pa-1>
                             <app-time-ago :timestamp="_block.timestamp" />
                         </v-flex>
-                        <v-flex xs2 pa-1>
-                            <p class="info--text psmall pr-1">{{ $t('miner.name') }}:</p>
-                        </v-flex>
-                        <v-flex xs10 pa-1>
-                            <app-transform-hash :hash="_block.miner | toChecksum" :italic="true" :link="`/address/${_block.miner}`" />
-                        </v-flex>
-                        <v-flex xs2 pa-1>
+                    </v-layout>
+                    <!--
+                    =====================================================================================
+                     ROW: Miner
+                    =====================================================================================
+                    -->
+                    <v-layout grid-list-xs row align-center justify-start fill-height class="px-4">
+                        <p class="info--text psmall pl-1 pr-2">{{ $t('miner.name') }}:</p>
+                        <app-transform-hash :hash="_block.miner | toChecksum" :italic="true" :link="`/address/${_block.miner}`" />
+                    </v-layout>
+                    <!--
+                    =====================================================================================
+                     ROW: Reward
+                    =====================================================================================
+                    -->
+                    <v-layout grid-list-xs row align-center justify-start fill-height class="px-4 pb-3">
+                        <v-flex shrink pa-1>
                             <p class="info--text psmall">{{ $t('miner.reward-short') }}:</p>
                         </v-flex>
                         <v-flex xs10 pa-1>
@@ -47,22 +69,33 @@
                 </div>
             </v-flex>
             <!--
-      =====================================================================================
-        Tablet/ Desktop (SM - XL)
-      =====================================================================================
-      -->
+            =====================================================================================
+              Tablet/ Desktop (SM - XL)
+            =====================================================================================
+            -->
             <v-flex hidden-sm-and-down sm12>
-                <!--
-        =====================================================================================
-          Block Info
-        =====================================================================================
-        -->
                 <v-layout grid-list-xs row wrap align-center justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-                    <v-flex sm2>
-                        <router-link :to="`/block/number/${block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
+                    <!--
+                    =====================================================================================
+                      BLOCK NUMBER
+
+                      Responsive Tally:
+                      MD: 2/12 (2)
+                    =====================================================================================
+                    -->
+                    <v-flex md2>
+                        <router-link :to="`/block/number/${block.number}`" class="black--text">{{ _block.number }}</router-link>
                     </v-flex>
-                    <v-flex sm5>
-                        <v-layout row pb-2>
+                    <!--
+                    =====================================================================================
+                      MINER / AGE
+
+                      Responsive Tally:
+                      MD: 7/12 (5)
+                    =====================================================================================
+                    -->
+                    <v-flex md5>
+                        <v-layout row align-center justify-start pb-2>
                             <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
                             <app-transform-hash :hash="_block.miner | toChecksum" :italic="true" :link="`/address/${_block.miner}`" />
                         </v-layout>
@@ -71,15 +104,39 @@
                             <app-time-ago :timestamp="_block.timestamp" />
                         </v-layout>
                     </v-flex>
-                    <v-spacer hidden-xl-only />
+                    <!--
+                    =====================================================================================
+                      SPACE
+
+                      Responsive Tally:
+                      MD: 8/12 (1)
+                    =====================================================================================
+                    -->
+                    <v-spacer />
+                    <!--
+                    =====================================================================================
+                      TOTAL TXS
+
+                      Responsive Tally:
+                      MD: 10/12 (2)
+                    =====================================================================================
+                    -->
                     <v-flex sm2>
                         <p class="pr-1">
                             {{ _block.totalTx }}
                             <app-tooltip v-if="_block.txFail > 0" :text="txTooltipText" />
                         </p>
                     </v-flex>
+                    <!--
+                    =====================================================================================
+                      REWARD
+
+                      Responsive Tally:
+                      MD: 12/12 (2)
+                    =====================================================================================
+                    -->
                     <v-flex sm2>
-                        <p class="black--text align-center mb-0">
+                        <p class="black--text align-center">
                             {{ _block.rewards.value }}
                             <app-tooltip v-if="_block.rewards.tooltipText" :text="`${_block.rewards.tooltipText} ${$t('common.eth')}`" />
                         </p>

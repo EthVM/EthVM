@@ -97,11 +97,11 @@
                 =====================================================================================
                 -->
                 <v-flex :class="isPending ? 'md6 lg5 pr-5' : 'md5 lg4 pr-5'">
-                    <v-layout row align-center justify start pr-4 pl-2 pb-2>
+                    <v-layout row align-center justify-start pr-4 pl-2 pb-2>
                         <p class="info--text tx-string pr-1">{{ $tc('tx.hash', 1) }}:</p>
                         <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
                     </v-layout>
-                    <v-layout row align-center justify-space-aroundstart pr-4 pl-2>
+                    <v-layout row align-center justify-start pr-4 pl-2>
                         <p class="info--text mr-1">{{ $t('tx.from') }}:</p>
                         <app-transform-hash :hash="transaction.from | toChecksum" :link="`/address/${transaction.from}`" :italic="true" />
                         <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
