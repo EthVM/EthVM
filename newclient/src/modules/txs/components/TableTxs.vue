@@ -12,24 +12,24 @@
                 <v-card color="info" flat class="white--text" height="40px">
                     <slot name="header">
                         <v-layout align-center justify-start row fill-height pl-3 pr-2>
-                            <v-flex v-if="!pending" sm2 lg1>
+                            <v-flex v-if="!pending" md2>
                                 <h5>{{ $t('block.number') }}</h5>
                             </v-flex>
-                            <v-flex sm7 md5>
+                            <v-flex :class="isPending ? 'md6 lg5 ' : 'md5 lg4'">
                                 <h5>{{ $tc('tx.hash', 1) }}</h5>
                             </v-flex>
-                            <v-flex sm3 lg2>
-                                <h5 class="pl-3">{{ $t('common.amount') }}</h5>
+                            <v-flex :class="isPending ? 'md3' : 'md2'">
+                                <h5>{{ $t('common.amount') }}</h5>
                             </v-flex>
-                            <v-flex hidden-sm-and-down md2>
-                                <h5 class="pl-2">{{ $t('common.age') }}</h5>
+                            <v-flex md2>
+                                <h5>{{ $t('common.age') }}</h5>
                             </v-flex>
-                            <v-flex hidden-md-and-down lg2>
+                            <v-flex hidden-md-and-down lg1>
                                 <h5>{{ pending ? $t('tx.estimated-fee') : $tc('tx.fee', 1) }}</h5>
                             </v-flex>
-                            <div v-if="!pending">
-                                <h5 class="tx-status text-xs-center">{{ $t('tx.status') }}</h5>
-                            </div>
+                            <v-flex md1>
+                                <h5 v-if="!pending" class="tx-status text-xs-center">{{ $t('tx.status') }}</h5>
+                            </v-flex>
                         </v-layout>
                     </slot>
                 </v-card>
