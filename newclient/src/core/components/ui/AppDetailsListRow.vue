@@ -46,8 +46,10 @@
                         </div>
                     </div>
                     <div v-else>
-                        <app-transform-hash v-if="detail.link" :hash="detail.detail | toChecksum" :link="detail.link" />
-                        <app-transform-hash v-else :hash="detail.detail | toChecksum" :is-blue="false" />
+                        <v-layout row align-center justift-start px-2>
+                            <app-transform-hash v-if="detail.link" :hash="detail.detail | toChecksum" :link="detail.link" />
+                            <app-transform-hash v-else :hash="detail.detail | toChecksum" :is-blue="false" />
+                        </v-layout>
                     </div>
                 </div>
             </v-flex>
