@@ -9,7 +9,7 @@ import VueApollo from 'vue-apollo'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { onError } from 'apollo-link-error'
 import { OpenSeaClient } from './apollo/opensea/osClient'
-import { FavClient } from './apollo/favorites/favClient'
+import { FavClient } from './apollo/favorite-addresses/favClient'
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'

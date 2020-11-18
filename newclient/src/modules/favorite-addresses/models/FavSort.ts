@@ -1,4 +1,4 @@
-import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorites/apolloTypes/favAddressCache'
+import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorite-addresses/apolloTypes/favAddressCache'
 // import { EthValue } from '@app/core/models'
 
 const KEY_ADDRESS = 'address'

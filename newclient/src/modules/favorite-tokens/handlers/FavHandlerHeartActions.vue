@@ -16,7 +16,7 @@ import FavBtnHeart from '@app/modules/favorite-tokens/components/FavBtnHeart.vue
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
 import { ErrorMessagesFav } from '@app/modules/favorite-tokens/models/ErrorMessagesFav'
-import { DataArray } from '@app/apollo/favorites/models'
+import { DataArray } from '@app/apollo/favorite-addresses/models'
 import { CheckAddressRefetch } from '@app/modules/favorite-tokens/models/FavApolloRefetch'
 
 @Component({

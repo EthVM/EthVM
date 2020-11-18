@@ -33,7 +33,7 @@ import FavDialog from '@app/modules/favorite-addresses/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { ErrorMessagesFav } from '@app/modules/favorite-addresses/models/ErrorMessagesFav'
 import { FavDialogModes, DialogAddress } from '@app/modules/favorite-addresses/models/FavDialog'
-import { DataArray } from '@app/apollo/favorites/models'
+import { DataArray } from '@app/apollo/favorite-addresses/models'
 
 @Component({
     components: {

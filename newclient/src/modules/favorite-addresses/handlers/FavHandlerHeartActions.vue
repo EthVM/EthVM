@@ -32,7 +32,7 @@ import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-addresses/mixins/FavActions.mixin'
 import { ErrorMessagesFav } from '@app/modules/favorite-addresses/models/ErrorMessagesFav'
 import { FavDialogModes, DialogAddress } from '@app/modules/favorite-addresses/models/FavDialog'
-import { DataArray } from '@app/apollo/favorites/models'
+import { DataArray } from '@app/apollo/favorite-addresses/models'
 import { CheckAddressRefetch } from '@app/modules/favorite-addresses/models/FavApolloRefetch'
 
 @Component({
