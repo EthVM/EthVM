@@ -6,7 +6,6 @@ import { favTokenCache as cachedTokenType, favTokenCache_favTokens as TokenType 
 
 enum Actions {
     add = 'addItem',
-    edit = 'editItem',
     delete = 'deleteItem'
 }
 export const resolvers = {
@@ -52,7 +51,7 @@ export const resolvers = {
             if (adr === null) {
                 return null
             }
-            return changeFavAddressArray(Actions.delete, cache, adr)
+            return changeFavToken(Actions.delete, cache, adr)
         }
     }
 }
@@ -68,7 +67,7 @@ export const resolvers = {
  * @param cache: InMemoryCache, apollo cache object
  * @return - returns cachedTokenType data type or null if !data.favTokens
  */
-const getCachedAddrs = (cache: InMemoryCache): cachedTokenType | null => {
+const getCacheToken = (cache: InMemoryCache): cachedTokenType | null => {
     return cache.readQuery({ query: favTokenCache })
 }
 
@@ -79,7 +78,7 @@ const getCachedAddrs = (cache: InMemoryCache): cachedTokenType | null => {
  * @return - returns TokenType or  null if not found
  */
 const hasAddress = (address: string, cache: InMemoryCache): TokenType | null => {
-    const data = getCachedAddrs(cache)
+    const data = getCacheToken(cache)
     if (data && data.favTokens && data.favTokens.length > 0) {
         const items = data.favTokens.filter(item => item.address.toLowerCase() === address.toLowerCase())
         return items.length > 0 ? items[0] : null
@@ -91,7 +90,7 @@ const hasAddress = (address: string, cache: InMemoryCache): TokenType | null => 
  * Function updates apollo cache, as we as,local storage in the application,
  * according to the specified action: add, edit (name only), deletes - specifed item.
  * To edit an address name, use item param to specify new object name.
- * @param action: Actions; add, edit (name only), delete
+ * @param action: Actions; add, delete
  * @param cache: InMemoryCache, apollo cache object
  * @param item: TokenType;
  *    - add: will add new item to the cache
@@ -99,9 +98,9 @@ const hasAddress = (address: string, cache: InMemoryCache): TokenType | null => 
  *    - delete: will search for an object with item.address and delete this object
  * @return - returns TokenType - item
  */
-const changeFavAddressArray = (action: Actions, cache: InMemoryCache, item: TokenType): TokenType => {
+const changeFavToken = (action: Actions, cache: InMemoryCache, item: TokenType): TokenType => {
     const storeAdrs = store.get(DataArray.token) || []
-    let data = getCachedAddrs(cache)
+    let data = getCacheToken(cache)
 
     if (data === null) {
         /* Update Apollo Cache */
