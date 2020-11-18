@@ -171,7 +171,9 @@
                           MD: 12/12 (1)
                         =====================================================================================
                         -->
-                        <v-flex xs1> </v-flex>
+                        <v-flex xs1>
+                            <fav-btn-heart />
+                        </v-flex>
                     </v-layout>
                     <v-divider class="mb-2 mt-2" />
                 </v-card>
@@ -186,11 +188,11 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
-
+import FavBtnHeart from '@app/modules/favorite-tokens/components/FavBtnHeart.vue'
 import BN from 'bignumber.js'
 
 @Component({
-    components: { AppTooltip }
+    components: { AppTooltip, FavBtnHeart }
 })
 export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     /*

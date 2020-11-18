@@ -1,10 +1,5 @@
 <template>
-    <v-tooltip top color="white" content-class="tooltip-border">
-        <template #activator="{on}">
-            <v-btn icon fab class="ma-0" @click.stop="addAddress()" v-on="on"> <v-img :src="iconImage" height="48px" min-width="30px" contain /></v-btn>
-        </template>
-        <span class="black--text">{{ tooltipText }}</span>
-    </v-tooltip>
+    <v-btn icon fab class="ma-0" @click.stop="likeToken()" v-on="on"> <v-img :src="iconImage" height="48px" min-width="30px" contain /></v-btn>
 </template>
 
 <script lang="ts">
@@ -18,7 +13,7 @@ export default class FavBtnHeart extends Vue {
     ===================================================================================
     */
     @Prop(Boolean) isAdded!: boolean
-    @Prop(Function) addAddress!: void
+    @Prop(Function) likeToken!: void
     @Prop(String) tooltipText!: string
 
     /*
