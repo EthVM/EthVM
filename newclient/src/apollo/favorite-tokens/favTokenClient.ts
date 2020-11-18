@@ -34,7 +34,7 @@ window.addEventListener('storage', event => {
     }
 })
 
-export const FavTokenClient = new ApolloClient({
+export const FavTokClient = new ApolloClient({
     cache: favCache,
     typeDefs: FavTypeDef,
     resolvers: resolvers
