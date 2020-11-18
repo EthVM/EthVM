@@ -1,7 +1,7 @@
 export enum TypeName {
-    addr = 'FavAddress'
+    token = 'FavToken'
 }
 
 export enum DataArray {
-    addr = 'favAdrsData'
+    token = 'favToksData'
 }

@@ -34,7 +34,7 @@ window.addEventListener('storage', event => {
     }
 })
 
-export const FavClient = new ApolloClient({
+export const FavAddrClient = new ApolloClient({
     cache: favCache,
     typeDefs: FavTypeDef,
     resolvers: resolvers

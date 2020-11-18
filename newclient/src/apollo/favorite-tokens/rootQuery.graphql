@@ -1,6 +1,6 @@
-query favAddressCache {
-    favAddresses @client {
+query favTokenCache {
+    favTokens @client {
         address
-        name
+        symbol
     }
 }

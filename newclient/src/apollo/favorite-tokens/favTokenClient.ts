@@ -4,24 +4,24 @@ import ApolloClient from 'apollo-client'
 import { resolvers } from './resolvers'
 import store from 'store'
 import { TypeName, DataArray } from './models'
-import { favAddressCache_favAddresses as favAddressType } from './apolloTypes/favAddressCache'
+import { favTokenCache_favTokens as favTokenType } from './apolloTypes/favTokenCache'
 
 const FavTypeDef = `${FavAddress} ${Query} ${Mutation}`
 
 const favCache = new InMemoryCache()
 
 const getLocalStorageCache = (_cache: InMemoryCache): void => {
-    const addresses = store.get(DataArray.addr) || []
-    const addressMap: favAddressType[] = addresses.map(item => {
+    const tokens = store.get(DataArray.token) || []
+    const tokensMap: favTokenType[] = tokens.map(item => {
         return {
-            __typename: TypeName.addr,
+            __typename: TypeName.token,
             address: item.address,
-            name: item.name
+            symbol: item.symbol
         }
     })
     _cache.writeData({
         data: {
-            favAddresses: addressMap
+            favTokens: tokensMap
         }
     })
 }
@@ -29,12 +29,12 @@ getLocalStorageCache(favCache)
 
 /* Listen to updates on different browser Tabs */
 window.addEventListener('storage', event => {
-    if (event.key === DataArray.addr) {
+    if (event.key === DataArray.token) {
         getLocalStorageCache(favCache)
     }
 })
 
-export const FavClient = new ApolloClient({
+export const FavTokenClient = new ApolloClient({
     cache: favCache,
     typeDefs: FavTypeDef,
     resolvers: resolvers

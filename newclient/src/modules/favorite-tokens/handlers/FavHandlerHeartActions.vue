@@ -11,21 +11,21 @@
 
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
-import { checkAddress as checkAddressQuery } from './checkAdr.graphql'
+import { checkToken as checkTokenQuery } from './checkToken.graphql'
 import FavBtnHeart from '@app/modules/favorite-tokens/components/FavBtnHeart.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
 import { ErrorMessagesFav } from '@app/modules/favorite-tokens/models/ErrorMessagesFav'
 import { DataArray } from '@app/apollo/favorite-addresses/models'
-import { CheckAddressRefetch } from '@app/modules/favorite-tokens/models/FavApolloRefetch'
+import { CheckTokenRefetch } from '@app/modules/favorite-tokens/models/FavApolloRefetch'
 
 @Component({
     components: {
         FavBtnHeart
     },
     apollo: {
-        checkAddress: {
-            query: checkAddressQuery,
+        checkToken: {
+            query: checkTokenQuery,
             client: 'FavClient',
             fetchPolicy: 'network-only',
             variables() {
@@ -34,9 +34,9 @@ import { CheckAddressRefetch } from '@app/modules/favorite-tokens/models/FavApol
                 }
             },
             result({ data }) {
-                if (data && data.checkAddress && data.checkAddress.name) {
-                    if (data.checkAddress.name !== '') {
-                        this.name = data.checkAddress.name
+                if (data && data.checkToken && data.checkToken.name) {
+                    if (data.checkToken.name !== '') {
+                        this.name = data.checkToken.name
                         this.$emit('addressHasName', this.name)
                         this.emitErrorState(false)
                     }
@@ -65,7 +65,7 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
       Data
     ===================================================================================
     */
-    checkAddress!: boolean
+    checkToken!: boolean
     open = false
     name = ''
     /*
@@ -73,11 +73,11 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
       Methods
     ===================================================================================
     */
-    addToFav(name: string): void {
-        this.mixinAddToFav(name, this.address, this.refetchCheckAddress)
+    addToFav(symbol: string): void {
+        this.mixinAddToFav(symbol, this.address, this.refetchCheckToken)
     }
     removeFromFav(): void {
-        this.mixinRemoveFromFav(this.address, this.refetchCheckAddress)
+        this.mixinRemoveFromFav(this.address, this.refetchCheckToken)
     }
     /*
     ===================================================================================
@@ -89,13 +89,13 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     }
 
     get isAdded(): boolean {
-        return this.checkAddress !== undefined && this.checkAddress !== null
+        return this.checkToken !== undefined && this.checkToken !== null
     }
 
-    get refetchCheckAddress(): CheckAddressRefetch[] {
+    get refetchCheckToken(): CheckTokenRefetch[] {
         return [
             {
-                query: checkAddressQuery,
+                query: checkTokenQuery,
                 variables: {
                     address: this.address
                 }
@@ -111,7 +111,7 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     mounted() {
         window.addEventListener('storage', event => {
             if (event.key === DataArray.addr) {
-                this.$apollo.queries.checkAddress.refresh()
+                this.$apollo.queries.checkToken.refresh()
             }
         })
     }

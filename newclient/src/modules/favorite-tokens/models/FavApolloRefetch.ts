@@ -1,7 +1,7 @@
 import { DocumentNode } from 'graphql'
-import { checkAddressVariables } from '@app/modules/favorite-tokens/handlers/apolloTypes/checkAddress'
+import { checkTokenVariables } from '@app/modules/favorite-tokens/handlers/apolloTypes/checkToken'
 
-export interface CheckAddressRefetch {
+export interface CheckTokenRefetch {
     query: DocumentNode
-    variables: checkAddressVariables
+    variables: checkTokenVariables
 }

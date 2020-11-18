@@ -4,19 +4,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: checkAddress
+// GraphQL query operation: checkToken
 // ====================================================
 
-export interface checkAddress_checkAddress {
-  __typename: "FavAddress";
-  name: string;
+export interface checkToken_checkToken {
+  __typename: "FavToken";
+  symbol: string;
   address: string;
 }
 
-export interface checkAddress {
-  checkAddress: checkAddress_checkAddress | null;
+export interface checkToken {
+  checkToken: checkToken_checkToken | null;
 }
 
-export interface checkAddressVariables {
+export interface checkTokenVariables {
   address: string;
 }

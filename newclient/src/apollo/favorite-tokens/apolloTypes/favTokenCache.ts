@@ -4,15 +4,15 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: favAddressCache
+// GraphQL query operation: favTokenCache
 // ====================================================
 
-export interface favAddressCache_favAddresses {
-  __typename: "FavAddress";
+export interface favTokenCache_favTokens {
+  __typename: "FavToken";
   address: string;
-  name: string;
+  symbol: string;
 }
 
-export interface favAddressCache {
-  favAddresses: favAddressCache_favAddresses[];
+export interface favTokenCache {
+  favTokens: favTokenCache_favTokens[];
 }

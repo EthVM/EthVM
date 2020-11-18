@@ -1,14 +1,13 @@
-type FavAddress {
+type FavToken {
     address: String!
     name: String!
 }
 extend type Query {
-    checkAddress(address: String!): FavAddress
-    favAddresses: [FavAddress!]!
+    checkToken(hash: String!): FavToken
+    favTokens: [FavToken!]!
 }
 
 extend type Mutation {
-    addFavAddress(address: String!, name: String): FavAddress!
-    deleteFavAddress(address: String!, name: String): FavAddress
-    editFavAddress(address: String!, name: String!): FavAddress!
+    addFavToken(hash: String!, name: String): FavToken!
+    deleteFavToken(hash: String!, name: String): FavToken
 }

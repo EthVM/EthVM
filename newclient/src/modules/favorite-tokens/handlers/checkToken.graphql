@@ -1,0 +1,6 @@
+query checkToken($address: String!) {
+    checkToken(address: $address) @client {
+        symbol
+        address
+    }
+}

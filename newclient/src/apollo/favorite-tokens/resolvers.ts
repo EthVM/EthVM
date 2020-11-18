@@ -1,8 +1,8 @@
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { favAddressCache } from './rootQuery.graphql'
+import { favTokenCache } from './rootQuery.graphql'
 import { TypeName, DataArray } from './models'
 import store from 'store'
-import { favAddressCache as cachedAdrsType, favAddressCache_favAddresses as AddrType } from './apolloTypes/favAddressCache'
+import { favTokenCache as cachedTokenType, favTokenCache_favTokens as TokenType } from './apolloTypes/favTokenCache'
 
 enum Actions {
     add = 'addItem',
@@ -15,7 +15,7 @@ export const resolvers = {
          * Checks whether or not an address is already in the favorite store, by address hash
          * @param address: string, new address hash
          * @param cache: InMemoryCache, apollo cache object
-         * @return - returns cachedAdrsType data type or null if !data.favAddresses
+         * @return - returns cachedTokenType data type or null if !data.favTokens
          */
         checkAddress: (root, { address }, { cache }) => {
             return hasAddress(address, cache)
@@ -27,15 +27,15 @@ export const resolvers = {
          * @param address: string, new address hash
          * @param name: string, new address name if any
          * @param cache: InMemoryCache, apollo cache object
-         * @return - returns cachedAdrsType data type or null if !data.favAddresses
+         * @return - returns cachedTokenType data type or null if !data.favTokens
          */
-        addFavAddress: (root, { address, name }, { cache }) => {
+        addFavAddress: (root, { address, symbol }, { cache }) => {
             const adr = hasAddress(address, cache)
             if (adr === null) {
-                const newAdr: AddrType = {
-                    __typename: TypeName.addr,
+                const newAdr: TokenType = {
+                    __typename: TypeName.token,
                     address: address,
-                    name: name || ''
+                    symbol: symbol || ''
                 }
                 return changeFavAddressArray(Actions.add, cache, newAdr)
             }
@@ -45,7 +45,7 @@ export const resolvers = {
          * Deletes address from the cache if address exhists, otherwise returns null.
          * @param address: string, address hash
          * @param cache: InMemoryCache, apollo cache object
-         * @return - returns cachedAdrsType data type or null if address does not exhist
+         * @return - returns cachedTokenType data type or null if address does not exhist
          */
         deleteFavAddress: (root, { address }, { cache }) => {
             const adr = hasAddress(address, cache)
@@ -53,25 +53,6 @@ export const resolvers = {
                 return null
             }
             return changeFavAddressArray(Actions.delete, cache, adr)
-        },
-        /**
-         * Edit address in the cache if address exhists, otherwise add item.
-         * @param address: string, address hash
-         * @param name: string, new address name if any
-         * @param cache: InMemoryCache, apollo cache object
-         * @return - returns cachedAdrsType data type
-         */
-        editFavAddress: (root, { address, name }, { cache }) => {
-            const adr = hasAddress(address, cache)
-            const newAdr: AddrType = {
-                __typename: TypeName.addr,
-                address: address,
-                name: name || ''
-            }
-            if (adr === null) {
-                return changeFavAddressArray(Actions.add, cache, newAdr)
-            }
-            return changeFavAddressArray(Actions.edit, cache, newAdr)
         }
     }
 }
@@ -83,24 +64,24 @@ export const resolvers = {
 */
 
 /**
- * Returns and Array of stored Address or null if !data.favAddresses
+ * Returns and Array of stored Address or null if !data.favTokens
  * @param cache: InMemoryCache, apollo cache object
- * @return - returns cachedAdrsType data type or null if !data.favAddresses
+ * @return - returns cachedTokenType data type or null if !data.favTokens
  */
-const getCachedAddrs = (cache: InMemoryCache): cachedAdrsType | null => {
-    return cache.readQuery({ query: favAddressCache })
+const getCachedAddrs = (cache: InMemoryCache): cachedTokenType | null => {
+    return cache.readQuery({ query: favTokenCache })
 }
 
 /**
- * Returns AddrType object with specified address hash  if it exhists in cache, otherwise null
+ * Returns TokenType object with specified address hash  if it exhists in cache, otherwise null
  * @param address: string, address hash string to search for
  * @param cache: InMemoryCache, apollo cache object
- * @return - returns AddrType or  null if not found
+ * @return - returns TokenType or  null if not found
  */
-const hasAddress = (address: string, cache: InMemoryCache): AddrType | null => {
+const hasAddress = (address: string, cache: InMemoryCache): TokenType | null => {
     const data = getCachedAddrs(cache)
-    if (data && data.favAddresses && data.favAddresses.length > 0) {
-        const items = data.favAddresses.filter(item => item.address.toLowerCase() === address.toLowerCase())
+    if (data && data.favTokens && data.favTokens.length > 0) {
+        const items = data.favTokens.filter(item => item.address.toLowerCase() === address.toLowerCase())
         return items.length > 0 ? items[0] : null
     }
     return null
@@ -112,20 +93,20 @@ const hasAddress = (address: string, cache: InMemoryCache): AddrType | null => {
  * To edit an address name, use item param to specify new object name.
  * @param action: Actions; add, edit (name only), delete
  * @param cache: InMemoryCache, apollo cache object
- * @param item: AddrType;
+ * @param item: TokenType;
  *    - add: will add new item to the cache
  *    - edit: will search for an object with item.address and edit the object with item.name
  *    - delete: will search for an object with item.address and delete this object
- * @return - returns AddrType - item
+ * @return - returns TokenType - item
  */
-const changeFavAddressArray = (action: Actions, cache: InMemoryCache, item: AddrType): AddrType => {
-    const storeAdrs = store.get(DataArray.addr) || []
+const changeFavAddressArray = (action: Actions, cache: InMemoryCache, item: TokenType): TokenType => {
+    const storeAdrs = store.get(DataArray.token) || []
     let data = getCachedAddrs(cache)
 
     if (data === null) {
         /* Update Apollo Cache */
         data = {
-            favAddresses: []
+            favTokens: []
         }
         cache.writeData({
             data: data
@@ -133,29 +114,20 @@ const changeFavAddressArray = (action: Actions, cache: InMemoryCache, item: Addr
     }
     /* Add New Item */
     if (action === Actions.add) {
-        storeAdrs.push({ address: item.address, name: item.name })
-        data.favAddresses.push(item)
+        storeAdrs.push({ address: item.address, symbol: item.symbol })
+        data.favTokens.push(item)
     }
     /* Delete an Item */
     if (action === Actions.delete) {
-        const indexStore = data.favAddresses.findIndex(i => i.address.toLowerCase() === item.address.toLowerCase())
+        const indexStore = data.favTokens.findIndex(i => i.address.toLowerCase() === item.address.toLowerCase())
         if (indexStore > -1) {
             storeAdrs.splice(indexStore, 1)
-            data.favAddresses.splice(indexStore, 1)
-        }
-    }
-
-    /* Edit an Item */
-    if (action === Actions.edit) {
-        const indexStore = data.favAddresses.findIndex(i => i.address.toLowerCase() === item.address.toLowerCase())
-        if (indexStore > -1) {
-            storeAdrs.splice(indexStore, 1, { address: item.address, name: item.name })
-            data.favAddresses.splice(indexStore, 1, item)
+            data.favTokens.splice(indexStore, 1)
         }
     }
 
     /* Update Store and Apollo Cache */
-    cache.writeQuery({ query: favAddressCache, data })
-    store.set(DataArray.addr, storeAdrs)
+    cache.writeQuery({ query: favTokenCache, data })
+    store.set(DataArray.token, storeAdrs)
     return item
 }
