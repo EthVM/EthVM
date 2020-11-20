@@ -41,8 +41,10 @@ const ETHER_ID = 'ethereum'
                 address: ''
             },
             result({ data, loading }) {
-              if(loading) {return false}
-              return data ? true : false
+                if (loading) {
+                    return false
+                }
+                return data ? true : false
             },
             error(err) {
                 console.log(err)
