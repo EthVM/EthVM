@@ -1,5 +1,5 @@
 <template>
-    <v-btn icon fab class="ma-0" @click.native="buttonPress"> <v-img :src="iconImage" height="48px" min-width="30px" contain /></v-btn>
+    <v-btn icon fab small class="ma-0" @click="buttonPress()"> <v-img :src="iconImage" height="48px" min-width="30px" contain /></v-btn>
 </template>
 
 <script lang="ts">
@@ -30,7 +30,7 @@ export default class FavBtnHeart extends Mixins(FavActions) {
       Methods
     ===================================================================================
     */
-    buttonPress() {
+    buttonPress(): void {
         console.log(this)
         this.isAdded ? this.mixinAddToFav(this.symbol, this.address) : this.mixinRemoveFromFav(this.address)
     }

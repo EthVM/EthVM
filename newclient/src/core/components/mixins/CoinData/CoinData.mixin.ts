@@ -19,15 +19,26 @@ const ETHER_ID = 'ethereum'
             },
             result({ data }) {
                 if (data && data.getLatestPrices && data.getLatestPrices.length > 0) {
+                    const tempMap = new Map()
                     data.getLatestPrices.forEach((token, index) => {
-                        token['isAdded'] = this.checkIfAdded(token.contract)
+                        // token['isAdded'] = this.checkIfAdded(token.contract)
+                        // this.checkIfAdded(token.contract).then(res => {
+                        //     console.log(res);
+                        // })
                         if (token.id === ETHER_ID) {
                             this.etherPrice = token.current_price
                         } else if (this.hasData(token)) {
-                            this.tokensMarketInfo.set(token.contract.toLowerCase(), token)
+                            tempMap.set(token.contract.toLowerCase(), token)
                         } else {
                             this.getLatestPrices.splice(index, 1)
                         }
+                    })
+                    tempMap.forEach((value, key) => {
+                        this.checkIfAdded(key).then(res => {
+                            // console.log(res)
+                            value['isAdded'] = res.data ? true : false
+                            this.tokensMarketInfo.set(key, value)
+                        })
                     })
                     this.isLoadingTokensMarketData = false
                 }
@@ -41,10 +52,9 @@ const ETHER_ID = 'ethereum'
                 address: ''
             },
             result({ data, loading }) {
-                if (loading) {
-                    return false
+                if (!loading) {
+                    return data ? true : false
                 }
-                return data ? true : false
             },
             error(err) {
                 console.log(err)
@@ -79,7 +89,7 @@ export class CoinData extends Vue {
     ===================================================================================
     */
     checkIfAdded(address = '0x43689531907482bee7e650d18411e284a7337a66') {
-        this.$apollo.queries.checkToken.refetch({
+        return this.$apollo.queries.checkToken.refetch({
             address: address
         })
     }

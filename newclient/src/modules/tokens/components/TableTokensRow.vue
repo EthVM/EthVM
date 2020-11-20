@@ -171,7 +171,7 @@
                           MD: 12/12 (1)
                         =====================================================================================
                         -->
-                        <v-flex xs1>
+                        <v-flex xs1 text-xs-right>
                             <fav-btn-heart :address="token.contract" :symbol="token.symbol" :is-added="token.isAdded" />
                         </v-flex>
                     </v-layout>
