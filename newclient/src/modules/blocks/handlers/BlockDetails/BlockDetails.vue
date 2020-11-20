@@ -37,6 +37,7 @@ import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/n
 import BN from 'bignumber.js'
 import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
 import newBlockFeed from '../../NewBlockSubscription/newBlockFeed.graphql'
+import { excpBlockNotMined } from '@app/apollo/exceptions/errorExceptions'
 
 @Component({
     components: {
@@ -67,7 +68,7 @@ import newBlockFeed from '../../NewBlockSubscription/newBlockFeed.graphql'
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
-                if (newError.includes('Block not found') && !this.isHash && !this.subscribed) {
+                if (newError.toLowerCase().includes(excpBlockNotMined) && !this.isHash && !this.subscribed) {
                     this.startSubscription()
                 } else {
                     this.emitErrorState(true)
