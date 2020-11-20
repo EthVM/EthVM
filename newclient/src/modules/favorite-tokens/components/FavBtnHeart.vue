@@ -1,20 +1,20 @@
 <template>
-    <v-btn icon fab class="ma-0" @click.stop="likeToken()" v-on="on"> <v-img :src="iconImage" height="48px" min-width="30px" contain /></v-btn>
+    <v-btn icon fab class="ma-0" @click.native="buttonPress"> <v-img :src="iconImage" height="48px" min-width="30px" contain /></v-btn>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-
-@Component
-export default class FavBtnHeart extends Vue {
+import { Vue, Mixins, Prop } from 'vue-property-decorator'
+import { FavActions } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
+// @Component
+export default class FavBtnHeart extends Mixins(FavActions) {
     /*
     ===================================================================================
       Props
     ===================================================================================
     */
     @Prop(Boolean) isAdded!: boolean
-    @Prop(Function) likeToken!: void
-    @Prop(String) tooltipText!: string
+    @Prop(String) address!: string
+    @Prop(String) symbol!: string
 
     /*
     ===================================================================================
@@ -23,6 +23,16 @@ export default class FavBtnHeart extends Vue {
     */
     get iconImage(): string {
         return this.isAdded ? require('@/assets/icon-heart.png') : require('@/assets/icon-heart-outline.png')
+    }
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    buttonPress() {
+        console.log(this)
+        this.isAdded ? this.mixinAddToFav(this.symbol, this.address) : this.mixinRemoveFromFav(this.address)
     }
 }
 </script>

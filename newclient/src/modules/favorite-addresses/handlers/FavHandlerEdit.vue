@@ -43,7 +43,7 @@ import { DataArray } from '@app/apollo/favorite-addresses/models'
     apollo: {
         checkAddress: {
             query: checkAddress,
-            client: 'FavClient',
+            client: 'FavAddrClient',
             fetchPolicy: 'network-only',
             variables() {
                 return {
@@ -97,7 +97,7 @@ export default class FavHandlerEdit extends Vue {
         this.$apollo
             .mutate({
                 mutation: editFavAddress,
-                client: 'FavClient',
+                client: 'FavAddrClient',
                 variables: {
                     address: this.address,
                     name: name

@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { addFavAddress, deleteFavAddress } from './actions.graphql'
-import { CheckAddressRefetch } from '@app/modules/favorite-tokens/models/FavApolloRefetch'
+import { CheckTokenRefetch } from '@app/modules/favorite-tokens/models/FavApolloRefetch'
 
 @Component
 export class FavActions extends Vue {
@@ -13,17 +13,17 @@ export class FavActions extends Vue {
     /**
      * Adds Address to the favorite list
      * @param address: string, new address hash
-     * @param name: string, new address name
+     * @param symbol: string, new address symbol
      * @return Promise boolean: true if action was sucessfull, otherwise false
      */
-    async mixinAddToFav(name: string, address: string, _refetch?: CheckAddressRefetch[]): Promise<boolean> {
+    async mixinAddToFav(symbol: string, address: string, _refetch?: CheckTokenRefetch[]): Promise<boolean> {
         const res = await this.$apollo
             .mutate({
                 mutation: addFavAddress,
-                client: 'FavClient',
+                client: 'FavTokClient',
                 variables: {
                     address: address,
-                    name: name
+                    symbol: symbol
                 },
                 refetchQueries: _refetch
             })
@@ -34,14 +34,13 @@ export class FavActions extends Vue {
     /**
      * Removes Address from the favorite list
      * @param address: string, new address hash
-     * @param name: string, new address name
      * @return Promise boolean: true if action was sucessfull, otherwise false
      */
-    async mixinRemoveFromFav(address: string, _refetch?: CheckAddressRefetch[]): Promise<boolean> {
+    async mixinRemoveFromFav(address: string, _refetch?: CheckTokenRefetch[]): Promise<boolean> {
         const res = await this.$apollo
             .mutate({
                 mutation: deleteFavAddress,
-                client: 'FavClient',
+                client: 'FavTokClient',
                 variables: {
                     address: address
                 },

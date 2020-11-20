@@ -1,5 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { getLatestPrices } from './getLatestPrices.graphql'
+import { checkToken } from '@app/modules/favorite-tokens/handlers/checkToken.graphql'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from './apolloTypes/getLatestPrices'
 
 const ETHER_ID = 'ethereum'
@@ -19,6 +20,7 @@ const ETHER_ID = 'ethereum'
             result({ data }) {
                 if (data && data.getLatestPrices && data.getLatestPrices.length > 0) {
                     data.getLatestPrices.forEach((token, index) => {
+                        token['isAdded'] = this.checkIfAdded(token.contract)
                         if (token.id === ETHER_ID) {
                             this.etherPrice = token.current_price
                         } else if (this.hasData(token)) {
@@ -29,6 +31,21 @@ const ETHER_ID = 'ethereum'
                     })
                     this.isLoadingTokensMarketData = false
                 }
+            }
+        },
+        checkToken: {
+            query: checkToken,
+            client: 'FavTokClient',
+            fetchPolicy: 'network-only',
+            variables: {
+                address: ''
+            },
+            result({ data, loading }) {
+              if(loading) {return false}
+              return data ? true : false
+            },
+            error(err) {
+                console.log(err)
             }
         }
     }
@@ -54,12 +71,16 @@ export class CoinData extends Vue {
     get ethPrice(): number | undefined {
         return this.isLoadingTokensMarketData || this.etherPrice === 0 ? undefined : this.etherPrice
     }
-
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
+    checkIfAdded(address = '0x43689531907482bee7e650d18411e284a7337a66') {
+        this.$apollo.queries.checkToken.refetch({
+            address: address
+        })
+    }
     /**
      * Fetch EthereumTokens
      * @returns {Array} TokenMarketData or {Boolean}

@@ -26,7 +26,7 @@ import { CheckTokenRefetch } from '@app/modules/favorite-tokens/models/FavApollo
     apollo: {
         checkToken: {
             query: checkTokenQuery,
-            client: 'FavClient',
+            client: 'FavTokClient',
             fetchPolicy: 'network-only',
             variables() {
                 return {
@@ -35,14 +35,10 @@ import { CheckTokenRefetch } from '@app/modules/favorite-tokens/models/FavApollo
             },
             result({ data }) {
                 if (data && data.checkToken && data.checkToken.name) {
-                    if (data.checkToken.name !== '') {
-                        this.name = data.checkToken.name
-                        this.$emit('addressHasName', this.name)
+                    if (data.checkToken.symbol !== '') {
                         this.emitErrorState(false)
                     }
                 } else {
-                    this.name = ''
-                    this.$emit('addressHasName', this.name)
                     this.emitErrorState(false)
                 }
             },
@@ -67,7 +63,7 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     */
     checkToken!: boolean
     open = false
-    name = ''
+    symbol = ''
     /*
     ===================================================================================
       Methods

@@ -134,7 +134,7 @@ import BN from 'bignumber.js'
     apollo: {
         favAddresses: {
             query: favAddressCache,
-            client: 'FavClient',
+            client: 'FavTokClient',
             fetchPolicy: 'network-only',
             update: data => data.favAddresses,
             result({ data }) {

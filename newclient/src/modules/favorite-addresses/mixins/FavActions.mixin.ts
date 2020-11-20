@@ -20,7 +20,7 @@ export class FavActions extends Vue {
         const res = await this.$apollo
             .mutate({
                 mutation: addFavAddress,
-                client: 'FavClient',
+                client: 'FavAddrClient',
                 variables: {
                     address: address,
                     name: name
@@ -41,7 +41,7 @@ export class FavActions extends Vue {
         const res = await this.$apollo
             .mutate({
                 mutation: deleteFavAddress,
-                client: 'FavClient',
+                client: 'FavAddrClient',
                 variables: {
                     address: address
                 },

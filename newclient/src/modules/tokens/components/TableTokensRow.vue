@@ -172,7 +172,7 @@
                         =====================================================================================
                         -->
                         <v-flex xs1>
-                            <fav-btn-heart />
+                            <fav-btn-heart :address="token.contract" :symbol="token.symbol" :is-added="token.isAdded" />
                         </v-flex>
                     </v-layout>
                     <v-divider class="mb-2 mt-2" />

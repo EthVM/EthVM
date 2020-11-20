@@ -43,7 +43,7 @@ import { CheckAddressRefetch } from '@app/modules/favorite-addresses/models/FavA
     apollo: {
         checkAddress: {
             query: checkAddressQuery,
-            client: 'FavClient',
+            client: 'FavAddrClient',
             fetchPolicy: 'network-only',
             variables() {
                 return {

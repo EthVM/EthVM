@@ -36,7 +36,7 @@ export const resolvers = {
                     address: address,
                     symbol: symbol || ''
                 }
-                return changeFavAddressArray(Actions.add, cache, newAdr)
+                return changeFavToken(Actions.add, cache, newAdr)
             }
             return adr
         },
