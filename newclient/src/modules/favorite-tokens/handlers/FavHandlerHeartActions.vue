@@ -5,7 +5,7 @@
           Button
         =====================================================================================
         -->
-        <fav-btn-heart :is-added="isAdded" :tooltip-text="tooltipText" />
+        <fav-btn-heart :is-added="isAdded" :click-btn="clickBtn" :tooltip-text="tooltipText" />
     </div>
 </template>
 
@@ -34,7 +34,7 @@ import { CheckTokenRefetch } from '@app/modules/favorite-tokens/models/FavApollo
                 }
             },
             result({ data }) {
-                if (data && data.checkToken && data.checkToken.name) {
+                if (data && data.checkToken && data.checkToken.symbol) {
                     if (data.checkToken.symbol !== '') {
                         this.emitErrorState(false)
                     }
@@ -55,6 +55,7 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     ===================================================================================
     */
     @Prop(String) address!: string
+    @Prop(String) symbol!: string
     @Prop(Array) addrChips!: EnumAdrChips[]
     /*
     ===================================================================================
@@ -63,17 +64,13 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     */
     checkToken!: boolean
     open = false
-    symbol = ''
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
-    addToFav(symbol: string): void {
-        this.mixinAddToFav(symbol, this.address, this.refetchCheckToken)
-    }
-    removeFromFav(): void {
-        this.mixinRemoveFromFav(this.address, this.refetchCheckToken)
+    clickBtn(): void {
+        !this.isAdded ? this.mixinAddToFav(this.symbol, this.address, this.refetchCheckToken) : this.mixinRemoveFromFav(this.address, this.refetchCheckToken)
     }
     /*
     ===================================================================================

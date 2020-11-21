@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { addFavAddress, deleteFavAddress } from './actions.graphql'
+import { addFaveToken, deleteFaveToken } from './actions.graphql'
 import { CheckTokenRefetch } from '@app/modules/favorite-tokens/models/FavApolloRefetch'
 
 @Component
@@ -19,7 +19,7 @@ export class FavActions extends Vue {
     async mixinAddToFav(symbol: string, address: string, _refetch?: CheckTokenRefetch[]): Promise<boolean> {
         const res = await this.$apollo
             .mutate({
-                mutation: addFavAddress,
+                mutation: addFaveToken,
                 client: 'FavTokClient',
                 variables: {
                     address: address,
@@ -39,7 +39,7 @@ export class FavActions extends Vue {
     async mixinRemoveFromFav(address: string, _refetch?: CheckTokenRefetch[]): Promise<boolean> {
         const res = await this.$apollo
             .mutate({
-                mutation: deleteFavAddress,
+                mutation: deleteFaveToken,
                 client: 'FavTokClient',
                 variables: {
                     address: address

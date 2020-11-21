@@ -135,8 +135,6 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
             ]
         } else {
             const isContractCreation = typeof this.transaction.contractAddress !== 'string'
-            console.log(isContractCreation, this.transaction.contractAddress)
-            // const receipt = transaction.receipt!
             details = [
                 {
                     title: this.$i18n.t('common.hash'),

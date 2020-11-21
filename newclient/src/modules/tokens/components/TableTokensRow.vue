@@ -172,7 +172,7 @@
                         =====================================================================================
                         -->
                         <v-flex xs1 text-xs-right>
-                            <fav-btn-heart :address="token.contract" :symbol="token.symbol" :is-added="token.isAdded" />
+                            <fav-handler-heart-actions :symbol="token.symbol" :address="token.contract" />
                         </v-flex>
                     </v-layout>
                     <v-divider class="mb-2 mt-2" />
@@ -188,11 +188,11 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
-import FavBtnHeart from '@app/modules/favorite-tokens/components/FavBtnHeart.vue'
+import FavHandlerHeartActions from '@app/modules/favorite-tokens/handlers/FavHandlerHeartActions.vue'
 import BN from 'bignumber.js'
 
 @Component({
-    components: { AppTooltip, FavBtnHeart }
+    components: { AppTooltip, FavHandlerHeartActions }
 })
 export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     /*
