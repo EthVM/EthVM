@@ -8,7 +8,7 @@
         =====================================================================================
         -->
         <v-layout align-center justify-start row wrap pl-3 pr-3 mt-1>
-            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" :title-caption="titleCaption" page-link="" class="pl-2" />
+            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" page-link="" class="pl-2" />
             <v-spacer hidden-xs-only />
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
@@ -17,21 +17,13 @@
         SM AND UP: Search / Pagination
         =====================================================================================
         -->
-        <v-layout align-center justify-start row hidden-xs-only px-2 my-2>
-            <v-flex xs12 sm6 md7 pr-0>
-                <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
+        <v-layout align-center justify-space-between row hidden-xs-only px-2 my-2>
+            <v-flex shrink py-0 pl-4>
+                {{ totalText }}
             </v-flex>
             <v-spacer hidden-sm-and-down />
-            <v-flex shrink py-0 pl-1>
-                <app-paginate
-                    v-if="totalPages > 1"
-                    :total="totalPages"
-                    :current-page="index"
-                    :has-input="true"
-                    :has-first="true"
-                    :has-last="true"
-                    @newPage="setPage"
-                />
+            <v-flex xs12 sm6 md7 align-self-end text-xs-right pr-0>
+                <fav-search :items="favTokens" :loading="isLoading" @search="onSearch" />
             </v-flex>
         </v-layout>
 
@@ -45,7 +37,7 @@
                 <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortAddresses" />
             </v-flex>
             <v-flex xs12 pb-0 pt-0>
-                <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
+                <fav-search :items="favTokens" :loading="isLoading" @search="onSearch" />
             </v-flex>
             <v-flex shrink pt-0 pb-0>
                 <app-paginate
@@ -64,7 +56,7 @@
           Fav Address Table
         =====================================================================================
         -->
-        <table-txs
+        <!-- <table-txs
             :max-items="maxItems"
             :index="index"
             :is-loading="isLoading || hasError"
@@ -96,7 +88,7 @@
                     />
                 </v-card>
             </template>
-        </table-txs>
+        </table-txs> -->
     </v-card>
 </template>
 
@@ -112,12 +104,11 @@ import FavSearch from '@app/modules/favorite-tokens/components/FavSearch.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
-import { favAddressCache } from '@app/apollo/favorite-addresses/rootQuery.graphql'
-import { favAddressCache_favAddresses as favAddressesType } from '@app/apollo/favorite-addresses/apolloTypes/favAddressCache'
+import { favTokenCache } from '@app/apollo/favorite-tokens/rootQuery.graphql'
+import { favTokenCache_favTokens as favTokensType } from '@app/apollo/favorite-tokens/apolloTypes/favTokenCache'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FILTER_VALUES, FavSort } from '@app/modules/favorite-tokens/models/FavSort'
 import AppFilter from '@app/core/components/ui/AppFilter.vue'
-import { DataArray } from '@app/apollo/favorite-addresses/models'
 
 import BN from 'bignumber.js'
 
@@ -132,13 +123,13 @@ import BN from 'bignumber.js'
         AppFilter
     },
     apollo: {
-        favAddresses: {
-            query: favAddressCache,
+        favTokens: {
+            query: favTokenCache,
             client: 'FavTokClient',
             fetchPolicy: 'network-only',
-            update: data => data.favAddresses,
+            update: data => data.favTokens,
             result({ data }) {
-                if (data && data.favAddresses) {
+                if (data && data.favTokens) {
                     this.emitErrorState(false)
                 }
             },
@@ -156,7 +147,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     */
     pageType = 'fav_addresses'
     index = 0
-    favAddresses!: favAddressesType[]
+    favTokens!: favTokensType[]
     hasError = false
     maxItems = 10
     /* Search */
@@ -199,19 +190,23 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
 
     get title(): string {
-        const isPlural = this.totalAddr && this.totalAddr > 1 ? 2 : 1
-        return `${this.$tc('token.name', 1)} ${this.$tc('token.favorite', isPlural)}`
+        return `${this.$tc('token.favorite', 2)}`
     }
     get totalAddr(): number | null {
         return this.favorites ? this.favorites.length : null
     }
+
+    get totalText(): string {
+        return `${this.$t('contract.total')}: ${this.totalAddr}`
+    }
+
     get isLoading(): boolean {
-        return this.$apollo.queries.favAddresses.loading
+        return this.$apollo.queries.favTokens.loading
     }
     get hasFavAdr(): boolean {
         return this.totalPages > 0
     }
-    get adrList(): favAddressesType[] {
+    get adrList(): favTokensType[] {
         if (!this.isLoading || this.hasFavAdr) {
             this.sort !== '' ? this.favSort.sortFavorites(this.favorites, this.sort) : ''
             const start = this.searchVal ? 0 : this.index * this.maxItems
@@ -226,11 +221,11 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         }
         return 0
     }
-    get favorites(): favAddressesType[] {
+    get favorites(): favTokensType[] {
         const searchResults = this.searchVal
-            ? this.favAddresses.filter(item => item.name.toLowerCase().includes(this.searchVal) || item.address.toLowerCase().includes(this.searchVal))
+            ? this.favTokens.filter(item => item.symbol.toLowerCase().includes(this.searchVal) || item.address.toLowerCase().includes(this.searchVal))
             : []
-        return searchResults && this.searchVal ? searchResults : this.favAddresses
+        return searchResults && this.searchVal ? searchResults : this.favTokens
     }
     get message(): string {
         if (!this.isLoading) {
@@ -244,10 +239,6 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         return ''
     }
 
-    get titleCaption(): string {
-        return `${this.$t('contract.total')}: ${this.totalAddr}`
-    }
-
     get favSort(): FavSort {
         return new FavSort(this.favorites)
     }
@@ -258,7 +249,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
   ===================================================================================
   */
     hasAddress(address: string): boolean {
-        const foundItems = this.favAddresses.find(i => i.address === address)
+        const foundItems = this.favTokens.find(i => i.address === address)
         return foundItems ? true : false
     }
     sortAddresses(sort: string): void {
@@ -273,7 +264,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         this.searchVal = val ? val.toLowerCase() : null
     }
     addItem(item): void {
-        this.mixinAddToFav(item.name, item.address)
+        this.mixinAddToFav(item.symbol, item.address)
     }
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
@@ -294,7 +285,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     removeAll(): void {
         this.isAllSelected = !this.isAllSelected
         if (this.isAllSelected) {
-            this.deleteArray = this.favAddresses.map(i => i.address)
+            this.deleteArray = this.favTokens.map(i => i.address)
         } else {
             this.deleteArray = []
         }
