@@ -1,11 +1,11 @@
-mutation addFaveToken($address: String!, $symbol: String) {
-    addFaveToken(address: $address, symbol: $symbol) @client {
+mutation addFavToken($address: String!, $symbol: String) {
+    addFavToken(address: $address, symbol: $symbol) @client {
         symbol
     }
 }
 
-mutation deleteFaveToken($address: String!) {
-    deleteFaveToken(address: $address) @client {
+mutation deleteFavToken($address: String!) {
+    deleteFavToken(address: $address) @client {
         symbol
     }
 }

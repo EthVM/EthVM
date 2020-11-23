@@ -1,4 +1,4 @@
-import { FavAddress, Query, Mutation } from './schema.graphql'
+import { FavToken, Query, Mutation } from './schema.graphql'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import ApolloClient from 'apollo-client'
 import { resolvers } from './resolvers'
@@ -6,7 +6,7 @@ import store from 'store'
 import { TypeName, DataArray } from './models'
 import { favTokenCache_favTokens as favTokenType } from './apolloTypes/favTokenCache'
 
-const FavTypeDef = `${FavAddress} ${Query} ${Mutation}`
+const FavTypeDef = `${FavToken} ${Query} ${Mutation}`
 
 const favCache = new InMemoryCache()
 
@@ -26,7 +26,6 @@ const getLocalStorageCache = (_cache: InMemoryCache): void => {
     })
 }
 getLocalStorageCache(favCache)
-
 /* Listen to updates on different browser Tabs */
 window.addEventListener('storage', event => {
     if (event.key === DataArray.token) {

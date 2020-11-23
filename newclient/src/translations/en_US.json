@@ -99,6 +99,8 @@
         "total-tokens": "Total Tokens",
         "image": "Image",
         "favorite": "Favorite | Favorites",
+        "remove": "Remove from favorite tokens list",
+        "add": "Add to favorite tokens list",
         "view-all": "View All"
     },
 
