@@ -8,6 +8,9 @@
                             <v-img :src="image" contain @error="imgLoadFail" />
                         </div>
                         <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
+                        <v-flex offset-xs5 offset-sm5 offset-md8 offset-lg7 text-xs-right>
+                            <fav-handler-heart-actions :symbol="tokenDetails.symbol" :address="tokenDetails.contract" />
+                        </v-flex>
                     </v-layout>
                     <v-divider class="lineGrey" />
                 </template>
@@ -30,10 +33,11 @@ import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
 import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
-
+import FavHandlerHeartActions from '@app/modules/favorite-tokens/handlers/FavHandlerHeartActions.vue'
 @Component({
     components: {
-        AppDetailsList
+        AppDetailsList,
+        FavHandlerHeartActions
     }
 })
 export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData) {
