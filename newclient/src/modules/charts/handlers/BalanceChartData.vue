@@ -73,7 +73,7 @@ const DEFAULT_DATA = {
         timeOptions: {
             unit: 'minute',
             displayFormats: {
-                minute: 'h:mm a'
+                minute: 'ddd, h:mm a'
             },
             stepSize: 1
         }
@@ -127,7 +127,8 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     start = 10
     timeOptions = DEFAULT_DATA[0].timeOptions
     creationTimestamp = 1602667372
-    endTimestamp = 1606003200
+    endTimestamp = 1606219200
+
     nextKey = null
 
     key = 'ACCOUNT_BALANCE_PREFIX_AVG-0xETH-0x00000000219ab540356cbb839cbe05303d7705fa'
@@ -142,7 +143,7 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
         return 'Eth2 Deposit Address Balance'
     }
     get description(): string {
-        return 'Eth2 Deposit Address Balance change'
+        return 'Eth2 Deposit Address Balance breakdown from first deposit on Nov 3, 2020 to the deadline Nov 24, 2020'
     }
 
     // get value_type(): TimeseriesValue {

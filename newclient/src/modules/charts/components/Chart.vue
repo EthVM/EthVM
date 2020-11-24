@@ -13,7 +13,8 @@
             -->
             <v-flex grow pa-1>
                 <v-card-title class="title font-weight-bold ml-1 pb-0">{{ chartTitle }}</v-card-title>
-                <v-card-text class="info--text caption ml-1 pt-2 pb-1">{{ description }}</v-card-text>
+                <v-card-text v-if="!showBalanceOptions" class="info--text caption ml-1 pt-2 pb-1">{{ description }}</v-card-text>
+                <v-card-text v-else class="info--text caption ml-1 pt-2 pb-1">{{ chartDescription }}</v-card-text>
             </v-flex>
             <!--
             =====================================================================================
