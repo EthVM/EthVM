@@ -9,7 +9,7 @@
                         </div>
                         <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
                         <v-flex offset-xs5 offset-sm5 offset-md8 offset-lg7 text-xs-right>
-                            <fav-handler-heart-actions :symbol="tokenDetails.symbol" :address="tokenDetails.contract" />
+                            <fav-handler-heart-actions :symbol="symbol" :address="address" />
                         </v-flex>
                     </v-layout>
                     <v-divider class="lineGrey" />
@@ -119,7 +119,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     Computed Values
   ===================================================================================
   */
+    get symbol(): string | null {
+        return this.tokenDetails ? this.tokenDetails.symbol : ''
+    }
 
+    get address(): string | null {
+        return this.tokenDetails ? this.tokenDetails.contract : ''
+    }
     get tokenData(): TokenMarketData | false {
         if (this.addressRef) {
             try {

@@ -56,39 +56,23 @@
           Fav Address Table
         =====================================================================================
         -->
-        <!-- <table-txs
+        <table-txs
             :max-items="maxItems"
             :index="index"
             :is-loading="isLoading || hasError"
-            :txs-data="adrList"
+            :txs-data="tokenList"
             :is-scroll-view="false"
             :table-message="message"
         >
             <template #header>
-                <fav-tokens-table-header
-                    :loading="isLoading"
-                    :delete-mode="deleteMode"
-                    :all-selected="isAllSelected"
-                    :delete-array="deleteArray"
-                    @sortBy="sortAddresses"
-                    @selectAllInHeader="removeAll"
-                />
+                <fav-tokens-table-header :loading="isLoading" @sortBy="sortAddresses" />
             </template>
             <template #rows>
-                <v-card v-for="adr in adrList" :key="adr.hash" class="transparent" flat>
-                    <fav-tokens-table-row-handler
-                        :ether-price="ethPrice"
-                        :hash="adr.address"
-                        :name="adr.name"
-                        :delete-mode="deleteMode"
-                        :delete-array="deleteArray"
-                        :check-box-method="updateDeleteArray"
-                        @errorFavorites="emitErrorState"
-                        @addressChips="updateChips"
-                    />
+                <v-card v-for="(token, index) in tokenList" :key="index" class="transparent" flat>
+                    <fav-tokens-table-row :token="token" />
                 </v-card>
             </template>
-        </table-txs> -->
+        </table-txs>
     </v-card>
 </template>
 
@@ -99,7 +83,7 @@ import { Crumb } from '@app/core/components/props'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import FavTokensTableHeader from '@app/modules/favorite-tokens/components/FavTokensTableHeader.vue'
-import FavTokenTableRowHandler from '@app/modules/favorite-tokens/handlers/FavHandlerTokenListRow.vue'
+import FavTokensTableRow from '@app/modules/favorite-tokens/components/FavTokensTableRow.vue'
 import FavSearch from '@app/modules/favorite-tokens/components/FavSearch.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
@@ -108,6 +92,7 @@ import { favTokenCache } from '@app/apollo/favorite-tokens/rootQuery.graphql'
 import { favTokenCache_favTokens as favTokensType } from '@app/apollo/favorite-tokens/apolloTypes/favTokenCache'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FILTER_VALUES, FavSort } from '@app/modules/favorite-tokens/models/FavSort'
+import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices.ts'
 import AppFilter from '@app/core/components/ui/AppFilter.vue'
 
 import BN from 'bignumber.js'
@@ -117,7 +102,7 @@ import BN from 'bignumber.js'
         AppTableTitle,
         AppPaginate,
         FavTokensTableHeader,
-        FavTokenTableRowHandler,
+        FavTokensTableRow,
         FavSearch,
         TableTxs,
         AppFilter
@@ -168,22 +153,42 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
         return [
             {
                 value: FILTER_VALUES[0],
-                text: this.$i18n.tc('fav.sort.address'),
+                text: this.$i18n.tc('token.name', 1),
                 filter: this.$i18n.t('filter.high')
             },
             {
                 value: FILTER_VALUES[1],
-                text: this.$i18n.tc('fav.sort.address'),
+                text: this.$i18n.tc('token.name', 1),
                 filter: this.$i18n.t('filter.low')
             },
             {
                 value: FILTER_VALUES[2],
-                text: this.$i18n.tc('fav.sort.name'),
+                text: this.$i18n.tc('price.name', 1),
                 filter: this.$i18n.t('filter.high')
             },
             {
                 value: FILTER_VALUES[3],
-                text: this.$i18n.tc('fav.sort.name'),
+                text: this.$i18n.tc('price.name', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[4],
+                text: this.$i18n.tc('token.volume', 1),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[5],
+                text: this.$i18n.tc('token.volume', 1),
+                filter: this.$i18n.t('filter.low')
+            },
+            {
+                value: FILTER_VALUES[6],
+                text: this.$i18n.t('token.market'),
+                filter: this.$i18n.t('filter.high')
+            },
+            {
+                value: FILTER_VALUES[7],
+                text: this.$i18n.t('token.market'),
                 filter: this.$i18n.t('filter.low')
             }
         ]
@@ -192,12 +197,12 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     get title(): string {
         return `${this.$tc('token.favorite', 2)}`
     }
-    get totalAddr(): number | null {
+    get totalFavorites(): number | null {
         return this.favorites ? this.favorites.length : null
     }
 
     get totalText(): string {
-        return `${this.$t('contract.total')}: ${this.totalAddr}`
+        return `${this.$t('contract.total')}: ${this.totalFavorites}`
     }
 
     get isLoading(): boolean {
@@ -206,12 +211,45 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     get hasFavAdr(): boolean {
         return this.totalPages > 0
     }
-    get adrList(): favTokensType[] {
+    get coinMarketFavorites(): Array<{}> {
         if (!this.isLoading || this.hasFavAdr) {
-            this.sort !== '' ? this.favSort.sortFavorites(this.favorites, this.sort) : ''
+            const coinMarketParams = this.favorites.map(item => {
+                return item.address
+            })
+            const coinMarketInfo = this.getEthereumTokensMap(coinMarketParams)
+            const favorites: Array<{}> = []
+            this.favorites.forEach(token => {
+                const getTokenFromCoinMarketList = coinMarketInfo ? coinMarketInfo.get(token.address) : new Map<string, TokenMarketData>()
+                if (getTokenFromCoinMarketList) {
+                    favorites.push(Object.assign({}, getTokenFromCoinMarketList))
+                } else {
+                    favorites.push({
+                        contract: token.address,
+                        current_price: 0,
+                        id: token.symbol,
+                        image: '',
+                        market_cap: 0,
+                        name: token.symbol.charAt(0).toUpperCase() + token.symbol.slice(1),
+                        price_change_percentage_24h: 0,
+                        symbol: token.symbol,
+                        total_supply: '0',
+                        total_volume: 0,
+                        __typename: 'TokenMarketInfo'
+                    })
+                }
+            })
+
+            return favorites
+        }
+        return []
+    }
+
+    get tokenList(): Array<{}> {
+        if (!this.isLoading || this.hasFavAdr) {
+            this.sort !== '' ? this.favSort.sortFavorites(this.coinMarketFavorites, this.sort) : ''
             const start = this.searchVal ? 0 : this.index * this.maxItems
-            const end = start + this.maxItems > this.favorites.length ? this.favorites.length : start + this.maxItems
-            return this.favorites.slice(start, end)
+            const end = start + this.maxItems > this.coinMarketFavorites.length ? this.coinMarketFavorites.length : start + this.maxItems
+            return this.coinMarketFavorites
         }
         return []
     }
@@ -229,10 +267,10 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
     get message(): string {
         if (!this.isLoading) {
-            if (this.searchVal && (!this.totalAddr || this.totalAddr < 1)) {
+            if (this.searchVal && (!this.totalFavorites || this.totalFavorites < 1)) {
                 return this.$t('fav.message.no-search-results').toString()
             }
-            if (!this.totalAddr || this.totalAddr < 1) {
+            if (!this.totalFavorites || this.totalFavorites < 1) {
                 return this.$t('fav.message.no-addr').toString()
             }
         }
@@ -275,10 +313,10 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     }
     updateDeleteArray(newArray: string[]): void {
         this.deleteArray = newArray
-        if (this.deleteArray.length === this.totalAddr) {
+        if (this.deleteArray.length === this.totalFavorites) {
             this.isAllSelected = true
         }
-        if (this.deleteArray.length !== this.totalAddr) {
+        if (this.deleteArray.length !== this.totalFavorites) {
             this.isAllSelected = false
         }
     }
