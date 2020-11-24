@@ -65,7 +65,7 @@
             :table-message="message"
         >
             <template #header>
-                <fav-tokens-table-header :loading="isLoading" @sortBy="sortAddresses" />
+                <fav-tokens-table-header :loading="isLoading" :sort="sort" @sortBy="sortAddresses" />
             </template>
             <template #rows>
                 <v-card v-for="(token, index) in tokenList" :key="index" class="transparent" flat>
