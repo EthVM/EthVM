@@ -230,25 +230,25 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
      * Fetches more values
      * @param nextKey {String}
      */
-    fetchMore(nextKey: string): void {
-        this.$apollo.queries.getChartData.fetchMore({
-            variables: {
-                hash: this.address,
-                _nextKey: nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                const newT = fetchMoreResult.getOwnersERC20Tokens.owners
-                const prevT = previousResult.getOwnersERC20Tokens.owners
-                return {
-                    getOwnersERC20Tokens: {
-                        __typename: previousResult.getOwnersERC20Tokens.__typename,
-                        owners: [...prevT, ...newT],
-                        nextKey: fetchMoreResult.getOwnersERC20Tokens.nextKey
-                    }
-                }
-            }
-        })
-    }
+    // fetchMore(nextKey: string): void {
+    //     this.$apollo.queries.getChartData.fetchMore({
+    //         variables: {
+    //             hash: this.address,
+    //             _nextKey: nextKey
+    //         },
+    //         updateQuery: (previousResult, { fetchMoreResult }) => {
+    //             const newT = fetchMoreResult.getOwnersERC20Tokens.owners
+    //             const prevT = previousResult.getOwnersERC20Tokens.owners
+    //             return {
+    //                 getOwnersERC20Tokens: {
+    //                     __typename: previousResult.getOwnersERC20Tokens.__typename,
+    //                     owners: [...prevT, ...newT],
+    //                     nextKey: fetchMoreResult.getOwnersERC20Tokens.nextKey
+    //                 }
+    //             }
+    //         }
+    //     })
+    // }
 }
 </script>
 <style scoped lang="css">
