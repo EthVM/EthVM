@@ -22,7 +22,7 @@
                 {{ totalText }}
             </v-flex>
             <v-spacer hidden-sm-and-down />
-            <v-flex xs12 sm6 md7 align-self-end text-xs-right pr-0>
+            <v-flex xs12 sm6 md7 align-self-end text-xs-right pr-2>
                 <fav-search :items="favTokens" :loading="isLoading" @search="onSearch" />
             </v-flex>
         </v-layout>
@@ -34,7 +34,7 @@
         -->
         <v-layout grid-list-xs align-center justify-center hidden-sm-and-up row wrap pr-2 pl-2 mb-3>
             <v-flex xs12 pb-0 pt-0>
-                <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortAddresses" />
+                <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
             </v-flex>
             <v-flex xs12 pb-0 pt-0>
                 <fav-search :items="favTokens" :loading="isLoading" @search="onSearch" />
@@ -65,7 +65,7 @@
             :table-message="message"
         >
             <template #header>
-                <fav-tokens-table-header :loading="isLoading" :sort="sort" @sortBy="sortAddresses" />
+                <fav-tokens-table-header :loading="isLoading" :sort="sort" @sortBy="sortTokens" />
             </template>
             <template #rows>
                 <v-card v-for="(token, index) in tokenList" :key="index" class="transparent" flat>
@@ -124,13 +124,13 @@ import BN from 'bignumber.js'
         }
     }
 })
-export default class FavHandlerAddressListRow extends Mixins(CoinData, FavActionsMixin) {
+export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActionsMixin) {
     /*
     ===================================================================================
       Data:
     ===================================================================================
     */
-    pageType = 'fav_addresses'
+    pageType = 'fav_tokens'
     index = 0
     favTokens!: favTokensType[]
     hasError = false
@@ -286,11 +286,8 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     Methods
   ===================================================================================
   */
-    hasAddress(address: string): boolean {
-        const foundItems = this.favTokens.find(i => i.address === address)
-        return foundItems ? true : false
-    }
-    sortAddresses(sort: string): void {
+
+    sortTokens(sort: string): void {
         this.sort = sort
     }
     emitErrorState(val: boolean, message: string): void {
@@ -301,42 +298,12 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
     onSearch(val): void {
         this.searchVal = val ? val.toLowerCase() : null
     }
-    addItem(item): void {
-        this.mixinAddToFav(item.symbol, item.address)
-    }
     setPage(page: number, reset: boolean = false): void {
         if (reset) {
             this.index = 0
         } else {
             this.index = page
         }
-    }
-    updateDeleteArray(newArray: string[]): void {
-        this.deleteArray = newArray
-        if (this.deleteArray.length === this.totalFavorites) {
-            this.isAllSelected = true
-        }
-        if (this.deleteArray.length !== this.totalFavorites) {
-            this.isAllSelected = false
-        }
-    }
-    removeAll(): void {
-        this.isAllSelected = !this.isAllSelected
-        if (this.isAllSelected) {
-            this.deleteArray = this.favTokens.map(i => i.address)
-        } else {
-            this.deleteArray = []
-        }
-    }
-    deleteAddrs(): void {
-        this.deleteArray.forEach(_hash => {
-            this.mixinRemoveFromFav(_hash)
-        })
-        this.deleteMode = false
-        this.deleteArray = []
-    }
-    updateChips(chips: EnumAdrChips[], hash: string): void {
-        this.addressChipsMap.set(hash, chips)
     }
 }
 </script>
