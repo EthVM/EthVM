@@ -20,6 +20,7 @@ const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp" */ '@app/m
 const PageNotFound = () => import(/* webpackChunkName: "page-not-found" */ '@app/modules/other/pages/PageNotFound.vue')
 const PageFavAddr = () => import(/* webpackChunkName: "page-fav-addrs" */ '@app/modules/favorites/pages/PageFavAddr.vue')
 const PageSearchNotFound = () => import(/* webpackChunkName: "page-search-not-found" */ '@app/modules/search/pages/PageNotFound.vue')
+const PageChartBalance = () => import(/* webpackChunkName: "page-details-chart" */ '@app/modules/charts/pages/PageChartBalance.vue')
 Vue.use(Router)
 
 export default new Router({
@@ -137,6 +138,11 @@ export default new Router({
         {
             path: '*',
             redirect: '/404'
+        },
+        {
+            path: '/eth2-balance',
+            component: PageChartBalance,
+            name: 'eth2-balance'
         }
     ]
 })
