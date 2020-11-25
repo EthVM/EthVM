@@ -101,7 +101,8 @@
         "favorite": "Favorite | Favorites",
         "remove": "Remove from favorite tokens list",
         "add": "Add to favorite tokens list",
-        "view-all": "View All"
+        "view-all": "View All",
+        "favorite-title": "Favorite Tokens"
     },
 
     "address": {

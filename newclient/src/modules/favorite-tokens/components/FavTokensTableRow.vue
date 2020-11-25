@@ -93,7 +93,7 @@
                           TOKEN NAME/IMAGE
 
                           Responsive Tally:
-                          MD: 3/12 (3)
+                          MD: 3/12 (4)
                         =====================================================================================
                         -->
                         <v-flex md3>
@@ -171,7 +171,7 @@
                           MD: 12/12 (1)
                         =====================================================================================
                         -->
-                        <v-flex xs1 text-xs-right>
+                        <v-flex xs1>
                             <fav-handler-heart-actions :symbol="token.symbol" :address="token.contract" />
                         </v-flex>
                     </v-layout>
