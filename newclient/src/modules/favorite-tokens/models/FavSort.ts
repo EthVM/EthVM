@@ -1,17 +1,8 @@
-// import { favTokenCache_favTokens as favTokenType } from '@app/apollo/favorite-tokens/apolloTypes/favTokenCache'
-// import { EthValue } from '@app/core/models'
-
 const KEY_VOLUME = 'total_volume'
 const KEY_MARKET_CAP = 'market_cap'
 const KEY_PRICE = 'current_price'
 const KEY_NAME = 'name'
 const KNOWN_NUM = ['total_volume', 'market_cap', 'current_price']
-// export interface FavoritesSort {
-//     name?: string
-//     address: string
-//     balance?: number
-//     balanceUSD?: number
-// }
 
 const FILTER_VALUES = ['name_high', 'name_low', 'price_high', 'price_low', 'volume_high', 'volume_low', 'market_cap_high', 'market_cap_low']
 class FavSort {

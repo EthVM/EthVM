@@ -71,8 +71,8 @@ const MAX_ITEMS = 10
             update: data => data.getERC721TokenOwners,
             result({ data }) {
                 if (this.hasItems) {
-                    this.$emit('isNft', true)
                     if (data.getERC721TokenOwners) {
+                        this.$emit('isNft', true)
                         this.emitErrorState(false)
                     }
                     if (this.initialLoad) {
