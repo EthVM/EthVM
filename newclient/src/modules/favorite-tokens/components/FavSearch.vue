@@ -1,6 +1,6 @@
 <template>
-    <v-layout class="fav-search">
-        <v-flex xs12 sm12 md9 px-2 d-flex align-center justify-center>
+    <v-layout class="fav-search" align-center justify-end>
+        <v-flex xs12 sm12 md9 px-2 d-flex align-self-end>
             <v-text-field
                 v-model="searchVal"
                 :loading="isLoading"
