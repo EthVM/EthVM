@@ -73,9 +73,14 @@
                         =====================================================================================
                         -->
                         <v-flex xs2>
-                            <v-btn :to="tokenLink" outline small fab color="bttnToken">
-                                <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
-                            </v-btn>
+                            <v-layout row align-center justify-space-around>
+                                <div class="pb-1">
+                                    <fav-handler-heart-actions :symbol="token.symbol" :address="token.contract" />
+                                </div>
+                                <v-btn :to="tokenLink" outline small fab color="bttnToken">
+                                    <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
+                                </v-btn>
+                            </v-layout>
                         </v-flex>
                     </v-layout>
                 </div>
