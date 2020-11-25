@@ -8,7 +8,7 @@
                             <v-img :src="image" contain @error="imgLoadFail" />
                         </div>
                         <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
-                        <v-flex offset-xs5 offset-sm5 offset-md8 offset-lg7 text-xs-right>
+                        <v-flex v-if="!isNft" offset-xs5 offset-sm5 offset-md8 offset-lg7 text-xs-right>
                             <fav-handler-heart-actions :symbol="symbol" :address="address" />
                         </v-flex>
                     </v-layout>
@@ -50,6 +50,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     @Prop(String) addressRef!: string // Token contract address
     @Prop(Object) tokenDetails!: TokenInfo
     @Prop(Boolean) isLoading!: boolean
+    @Prop(Boolean) isNft!: boolean
     @Prop(Object) holderDetails!: TokenOwnerInfo
     /*
   ===================================================================================
