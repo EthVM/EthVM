@@ -5,8 +5,8 @@
                 v-model="searchVal"
                 :loading="isLoading"
                 :placeholder="$t('search.favorites')"
-                prepend-inner-icon="fa fa-search info--text"
-                color="lineGrey"
+                prepend-inner-icon="fa fa-search  grey--text text--lighten-1"
+                color="primary"
                 solo
                 flat
                 outline
