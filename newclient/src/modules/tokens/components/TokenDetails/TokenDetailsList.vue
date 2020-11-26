@@ -3,12 +3,16 @@
         <v-flex xs12>
             <app-details-list :title="title" :details="details" :is-loading="isLoading || hasError" :max-items="10" class="mb-4">
                 <template #title>
-                    <v-layout grid-list-xs row align-center justify-start fill-height pl-4 pr-2 pt-1 mt-1 mb-1>
-                        <div class="token-image">
-                            <v-img :src="image" contain @error="imgLoadFail" />
-                        </div>
-                        <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
-                        <v-flex offset-xs5 offset-sm5 offset-md8 offset-lg7 text-xs-right>
+                    <v-layout grid-list-xs row align-center justify-space-between fill-height pl-4 pr-2 pt-1 mt-1 mb-1>
+                        <v-flex>
+                            <v-layout grid-list-xs row align-center justify-start>
+                                <div class="token-image">
+                                    <v-img :src="image" contain @error="imgLoadFail" />
+                                </div>
+                                <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
+                            </v-layout>
+                        </v-flex>
+                        <v-flex v-if="!isNft" text-xs-right>
                             <fav-handler-heart-actions :symbol="symbol" :address="address" />
                         </v-flex>
                     </v-layout>
@@ -50,6 +54,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     @Prop(String) addressRef!: string // Token contract address
     @Prop(Object) tokenDetails!: TokenInfo
     @Prop(Boolean) isLoading!: boolean
+    @Prop(Boolean) isNft!: boolean
     @Prop(Object) holderDetails!: TokenOwnerInfo
     /*
   ===================================================================================

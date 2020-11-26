@@ -195,7 +195,7 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
     }
 
     get title(): string {
-        return `${this.$tc('token.favorite', 2)}`
+        return `${this.$t('token.favorite-title')}`
     }
     get totalFavorites(): number | null {
         return this.favorites ? this.favorites.length : null
