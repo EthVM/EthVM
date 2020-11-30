@@ -5,7 +5,8 @@
           Button
         =====================================================================================
         -->
-        <fav-btn-heart :is-added="isAdded" :add-address="openFavDialog" :tooltip-text="tooltipText" />
+        <app-btn-heart :is-added="isAdded" :btn-click="openFavDialog" :tooltip-text="tooltipText" :is-small="isSmall" />
+
         <!--
         =====================================================================================
           Dialog
@@ -26,7 +27,7 @@
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { checkAddress as checkAddressQuery } from './checkAdr.graphql'
-import FavBtnHeart from '@app/modules/favorite-addresses/components/FavBtnHeart.vue'
+import AppBtnHeart from '@app/core/components/ui/AppBtnHeart.vue'
 import FavDialog from '@app/modules/favorite-addresses/components/FavDialog.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-addresses/mixins/FavActions.mixin'
@@ -37,7 +38,7 @@ import { CheckAddressRefetch } from '@app/modules/favorite-addresses/models/FavA
 
 @Component({
     components: {
-        FavBtnHeart,
+        AppBtnHeart,
         FavDialog
     },
     apollo: {
@@ -77,6 +78,8 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     */
     @Prop(String) address!: string
     @Prop(Array) addrChips!: EnumAdrChips[]
+    @Prop({ type: Boolean, default: false }) isSmall!: boolean
+
     /*
     ===================================================================================
       Data

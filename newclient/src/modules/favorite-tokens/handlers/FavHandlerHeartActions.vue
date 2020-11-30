@@ -5,14 +5,14 @@
           Button
         =====================================================================================
         -->
-        <fav-btn-heart :is-added="isAdded" :click-btn="clickBtn" :tooltip-text="tooltipText" :is-small="isSmall" />
+        <app-btn-heart :is-added="isAdded" :btn-click="clickBtn" :tooltip-text="tooltipText" :is-small="isSmall" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { checkToken as checkTokenQuery } from './checkToken.graphql'
-import FavBtnHeart from '@app/modules/favorite-tokens/components/FavBtnHeart.vue'
+import AppBtnHeart from '@app/core/components/ui/AppBtnHeart.vue'
 import { EnumAdrChips } from '@app/core/components/props'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
 import { ErrorMessagesFav } from '@app/modules/favorite-tokens/models/ErrorMessagesFav'
@@ -21,7 +21,7 @@ import { CheckTokenRefetch } from '@app/modules/favorite-tokens/models/FavApollo
 
 @Component({
     components: {
-        FavBtnHeart
+        AppBtnHeart
     },
     apollo: {
         checkToken: {
