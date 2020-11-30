@@ -65,11 +65,11 @@
             :table-message="message"
         >
             <template #header>
-                <fav-tokens-table-header :loading="isLoading" :sort="sort" @sortBy="sortTokens" />
+                <table-tokens-header :loading="isLoading" :sort="sort" @sortBy="sortTokens" />
             </template>
             <template #rows>
                 <v-card v-for="(token, index) in tokenList" :key="index" class="transparent" flat>
-                    <fav-tokens-table-row :token="token" />
+                    <table-tokens-row :token="token" />
                 </v-card>
             </template>
         </table-txs>
@@ -82,8 +82,9 @@ import { ErrorMessagesFav } from '@app/modules/favorite-tokens/models/ErrorMessa
 import { Crumb } from '@app/core/components/props'
 import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
-import FavTokensTableHeader from '@app/modules/favorite-tokens/components/FavTokensTableHeader.vue'
-import FavTokensTableRow from '@app/modules/favorite-tokens/components/FavTokensTableRow.vue'
+import TableTokensHeader from '@app/modules/tokens/components/TableTokensHeader.vue'
+import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
+
 import FavSearch from '@app/modules/favorite-tokens/components/FavSearch.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
@@ -101,10 +102,10 @@ import BN from 'bignumber.js'
     components: {
         AppTableTitle,
         AppPaginate,
-        FavTokensTableHeader,
-        FavTokensTableRow,
         FavSearch,
         TableTxs,
+        TableTokensHeader,
+        TableTokensRow,
         AppFilter
     },
     apollo: {

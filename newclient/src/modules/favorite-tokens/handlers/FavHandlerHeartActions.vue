@@ -5,7 +5,7 @@
           Button
         =====================================================================================
         -->
-        <fav-btn-heart :is-added="isAdded" :click-btn="clickBtn" :tooltip-text="tooltipText" />
+        <fav-btn-heart :is-added="isAdded" :click-btn="clickBtn" :tooltip-text="tooltipText" :is-small="isSmall" />
     </div>
 </template>
 
@@ -57,6 +57,8 @@ export default class FavHandlerHeartActions extends Mixins(FavActionsMixin) {
     @Prop(String) address!: string
     @Prop(String) symbol!: string
     @Prop(Array) addrChips!: EnumAdrChips[]
+    @Prop({ type: Boolean, default: false }) isSmall!: boolean
+
     /*
     ===================================================================================
       Data

@@ -1,15 +1,14 @@
 <template>
-    <v-container pa-1>
-        <v-layout>
-            <!--
+    <v-layout>
+        <!--
             =====================================================================================
               Mobile (XS-SM)
             =====================================================================================
             -->
-            <v-flex xs12 hidden-md-and-up>
-                <div class="token-mobile">
-                    <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-3 pr-3 pt-2 pb-2">
-                        <!--
+        <v-flex xs12 hidden-md-and-up>
+            <div class="token-mobile">
+                <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pl-3 pr-3 pt-2 pb-2">
+                    <!--
                         =====================================================================================
                           TOKEN IMAGE
 
@@ -17,12 +16,12 @@
                           XS: 4/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex xs2 pl-1 pr-1 d-flex justify-center>
-                            <div class="token-image-mobile">
-                                <v-img :src="image" contain @error="onImageLoadFail" />
-                            </div>
-                        </v-flex>
-                        <!--
+                    <v-flex xs2 pl-1 pr-1 d-flex justify-center>
+                        <div class="token-image-mobile">
+                            <v-img :src="image" contain @error="onImageLoadFail" />
+                        </div>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN NAME/PRICE/PRICE CHANGE/MARKET CAP
 
@@ -30,41 +29,41 @@
                           XS: 10/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex xs8 pr-0 pt-2>
-                            <v-layout row wrap align-center justify-start pl-2 pb-1>
-                                <p class="black--text text-uppercase font-weight-medium mb-0 pr-1">{{ token.symbol }} -</p>
-                                <p class="info--text caption mb-0 pr-1">{{ token.name }}</p>
-                            </v-layout>
-                            <v-layout row wrap align-end justify-start pa-2>
-                                <p class="black--text text-truncate">
-                                    {{ tokenPrice.value }}
-                                    <app-tooltip v-if="tokenPrice.tooltipText" :text="tokenPrice.tooltipText" />
-                                    <span :class="priceChangeClass">{{ percentageChange.value }}% </span>
-                                </p>
-                                <v-img v-if="priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="16px" max-width="16px" contain></v-img>
-                                <v-img v-if="priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="16px" max-width="16px" contain></v-img>
-                                <app-tooltip v-if="percentageChange.tooltip" :text="percentageChange.tooltip" />
-                            </v-layout>
-                            <v-layout row align-center justify-start pt-1>
-                                <v-flex shrink pt-0 pb-0>
-                                    <p class="info--text cap-text">{{ $t('token.market') }}</p>
+                    <v-flex xs8 pr-0 pt-2>
+                        <v-layout row wrap align-center justify-start pl-2 pb-1>
+                            <p class="black--text text-uppercase font-weight-medium mb-0 pr-1">{{ token.symbol }} -</p>
+                            <p class="info--text caption mb-0 pr-1">{{ token.name }}</p>
+                        </v-layout>
+                        <v-layout row wrap align-end justify-start pa-2>
+                            <p class="black--text text-truncate">
+                                {{ tokenPrice.value }}
+                                <app-tooltip v-if="tokenPrice.tooltipText" :text="tokenPrice.tooltipText" />
+                                <span :class="priceChangeClass">{{ percentageChange.value }}% </span>
+                            </p>
+                            <v-img v-if="priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="16px" max-width="16px" contain></v-img>
+                            <v-img v-if="priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="16px" max-width="16px" contain></v-img>
+                            <app-tooltip v-if="percentageChange.tooltip" :text="percentageChange.tooltip" />
+                        </v-layout>
+                        <v-layout row align-center justify-start pt-1>
+                            <v-flex shrink pt-0 pb-0>
+                                <p class="info--text cap-text">{{ $t('token.market') }}</p>
 
-                                    <p class="black--text pr-1">
-                                        {{ tokenMarket.value }}
-                                        <app-tooltip v-if="tokenMarket.tooltipText" :text="tokenMarket.tooltipText" />
-                                    </p>
-                                </v-flex>
-                                <v-divider vertical />
-                                <v-flex shrink pt-0 pb-0>
-                                    <p class="info--text cap-text pl-1">{{ $t('token.volume') }}</p>
-                                    <p class="black--text pl-1">
-                                        {{ tokenVolume.value }}
-                                        <app-tooltip v-if="tokenVolume.tooltipText" :text="tokenVolume.tooltipText" />
-                                    </p>
-                                </v-flex>
-                            </v-layout>
-                        </v-flex>
-                        <!--
+                                <p class="black--text pr-1">
+                                    {{ tokenMarket.value }}
+                                    <app-tooltip v-if="tokenMarket.tooltipText" :text="tokenMarket.tooltipText" />
+                                </p>
+                            </v-flex>
+                            <v-divider vertical />
+                            <v-flex shrink pt-0 pb-0>
+                                <p class="info--text cap-text pl-1">{{ $t('token.volume') }}</p>
+                                <p class="black--text pl-1">
+                                    {{ tokenVolume.value }}
+                                    <app-tooltip v-if="tokenVolume.tooltipText" :text="tokenVolume.tooltipText" />
+                                </p>
+                            </v-flex>
+                        </v-layout>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN LINK BUTTON
 
@@ -72,119 +71,110 @@
                           XS: 12/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex xs2>
-                            <v-layout row align-center justify-space-around>
-                                <div class="pb-1">
-                                    <fav-handler-heart-actions :symbol="token.symbol" :address="token.contract" />
-                                </div>
-                                <v-btn :to="tokenLink" outline small fab color="bttnToken">
-                                    <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
-                                </v-btn>
-                            </v-layout>
-                        </v-flex>
-                    </v-layout>
-                </div>
-            </v-flex>
-            <!--
+                    <v-flex xs2>
+                        <v-layout row align-center justify-space-around>
+                            <div class="pb-1">
+                                <fav-handler-heart-actions :symbol="token.symbol" :address="token.contract" />
+                            </div>
+                            <v-btn :to="tokenLink" outline small fab color="bttnToken">
+                                <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
+                            </v-btn>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </div>
+        </v-flex>
+        <!--
             =====================================================================================
               Desktop (MD and UP)
             =====================================================================================
             -->
-            <v-flex hidden-sm-and-down>
-                <v-card flat white>
-                    <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-2">
-                        <!--
+        <v-flex hidden-sm-and-down>
+            <v-card flat white>
+                <v-layout grid-list-xs row wrap align-center justify-start fill-height class="pt-2">
+                    <!--
                         =====================================================================================
                           TOKEN NAME/IMAGE
 
                           Responsive Tally:
-                          MD: 3/12 (4)
+                          MD: 4/12 (4)
                         =====================================================================================
                         -->
-                        <v-flex md3>
-                            <v-layout grid-list-xs row align-center justify-start fill-height>
-                                <v-img :src="image" height="25px" max-width="25px" contain class="ml-3 mr-2" @error="onImageLoadFail" />
-                                <router-link :to="tokenLink" class="info--text caption">
-                                    <span v-if="token.symbol" class="black--text text-uppercase font-weight-medium"> {{ token.symbol }} - </span>
-                                    {{ token.name }}
-                                </router-link>
-                            </v-layout>
-                        </v-flex>
-                        <!--
+                    <v-flex md4>
+                        <v-layout grid-list-xs row align-center justify-start fill-height>
+                            <v-img :src="image" height="25px" max-width="25px" contain class="ml-3 mr-4" @error="onImageLoadFail" />
+                            <router-link :to="tokenLink" class="info--text caption">
+                                <span v-if="token.symbol" class="black--text text-uppercase font-weight-medium"> {{ token.symbol }} - </span>
+                                {{ token.name }}
+                            </router-link>
+                        </v-layout>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN PRICE
 
                           Responsive Tally:
-                          MD: 5/12 (2)
+                          MD: 6/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex md2>
-                            <p class="black--text text-truncate mb-0">
-                                {{ tokenPrice.value }}
-                                <app-tooltip v-if="tokenPrice.tooltipText" :text="tokenPrice.tooltipText" />
-                            </p>
-                        </v-flex>
-                        <!--
+                    <v-flex md2>
+                        <p class="black--text text-truncate mb-0">
+                            {{ tokenPrice.value }}
+                            <app-tooltip v-if="tokenPrice.tooltipText" :text="tokenPrice.tooltipText" />
+                        </p>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN PRICE PERCENTAGE CHANGE
 
                           Responsive Tally:
-                          MD: 7/12 (2)
+                          MD: 8/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex md2>
-                            <v-layout grid-list-xs row align-center justify-start>
-                                <p :class="priceChangeClass">{{ percentageChange.value }}%</p>
-                                <v-img v-if="priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                                <v-img v-if="priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
-                                <app-tooltip v-if="percentageChange.tooltip" :text="priceChange.tooltip" />
-                            </v-layout>
-                        </v-flex>
-                        <!--
+                    <v-flex md2>
+                        <v-layout grid-list-xs row align-center justify-start>
+                            <p :class="priceChangeClass">{{ percentageChange.value }}%</p>
+                            <v-img v-if="priceChangeSymbol === '+'" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                            <v-img v-if="priceChangeSymbol === '-'" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                            <app-tooltip v-if="percentageChange.tooltip" :text="priceChange.tooltip" />
+                        </v-layout>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN VOLUME
 
                           Responsive Tally:
-                          MD: 9/12 (2)
+                          MD: 10/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex md2>
-                            <p class="black--text text-truncate mb-0">
-                                {{ tokenVolume.value }}
-                                <app-tooltip v-if="tokenVolume.tooltipText" :text="tokenVolume.tooltipText" />
-                            </p>
-                        </v-flex>
-                        <!--
+                    <v-flex md2>
+                        <p class="black--text text-truncate mb-0">
+                            {{ tokenVolume.value }}
+                            <app-tooltip v-if="tokenVolume.tooltipText" :text="tokenVolume.tooltipText" />
+                        </p>
+                    </v-flex>
+                    <!--
                         =====================================================================================
-                          TOKEN MARKET CAP
+                          TOKEN MARKET CAP AND HEART BUTTON
 
                           Responsive Tally:
-                          MD: 11/12 (2)
+                          MD: 12/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex xs2>
+                    <v-flex xs2>
+                        <v-layout grid-list-xs row align-center justify-space-between fill-height pr-2>
                             <p class="black--text text-truncate mb-0">
                                 {{ tokenMarket.value }}
                                 <app-tooltip v-if="tokenMarket.tooltipText" :text="tokenMarket.tooltipText" />
                             </p>
-                        </v-flex>
-                        <!--
-                        =====================================================================================
-                          TOKEN FAVORITE
-
-                          Responsive Tally:
-                          MD: 12/12 (1)
-                        =====================================================================================
-                        -->
-                        <v-flex xs1>
-                            <fav-handler-heart-actions :symbol="token.symbol" :address="token.contract" />
-                        </v-flex>
-                    </v-layout>
-                    <v-divider class="mb-2 mt-2" />
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
+                            <fav-handler-heart-actions :symbol="token.symbol" :address="token.contract" :is-small="true" />
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+                <v-divider class="mb-2 mt-2" />
+            </v-card>
+        </v-flex>
+    </v-layout>
 </template>
 
 <script lang="ts">
