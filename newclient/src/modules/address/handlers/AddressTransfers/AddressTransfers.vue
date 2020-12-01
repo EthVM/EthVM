@@ -381,7 +381,7 @@ export default class AddressTransers extends Mixins(CoinData) {
                         return t.transfer.transfer.transactionHash === _hash
                     })
                     const stateDiffIdx = response.data.getTransactionStateDiff.findIndex(state => {
-                        return state.owner === this.address
+                        return state.owner.toLowerCase() === this.address.toLowerCase()
                     })
                     if (transferIdx > -1 && stateDiffIdx > -1) {
                         this.transfers[transferIdx].stateDiff = Object.assign({}, this.transfers[transferIdx].stateDiff, {
@@ -397,7 +397,6 @@ export default class AddressTransers extends Mixins(CoinData) {
                     } else if (stateDiffIdx < 0 && !this.isContract) {
                         throw new Error('No state diff found for regular address')
                     }
-                    return this.transfers[transferIdx].stateDiff
                 }
                 this.loadingStateDiff = false
             })

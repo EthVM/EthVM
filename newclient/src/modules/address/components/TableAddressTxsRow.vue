@@ -32,7 +32,7 @@
                     <v-flex xs6>
                         <v-layout row align-center justify-end>
                             <app-time-ago :timestamp="transfer.getTimestamp()" class="info--text caption" />
-                            <app-state-diff v-if="!isPending && !hideStateDiff" :state="state" class="ml-2 mr-1" />
+                            <app-state-diff v-if="!isPending && state" :state="state" class="ml-2 mr-1" />
                             <p v-if="isMinedIndicator && isPending" class="caption primary--text blinking ml-2">{{ $t('tx.mined') }}</p>
                         </v-layout>
                     </v-flex>
@@ -178,7 +178,7 @@
                     <v-layout row align-center justify-end>
                         <v-icon v-if="transfer.getStatus()" small class="txSuccess--text">fa fa-check-circle</v-icon>
                         <v-icon v-else small class="txFail--text">fa fa-times-circle</v-icon>
-                        <app-state-diff v-if="!hideStateDiff" :state="state" class="ml-3 mr-1" />
+                        <app-state-diff v-if="state" :state="state" class="ml-3 mr-1" />
                     </v-layout>
                 </v-flex>
                 <v-flex v-else shrink>
@@ -237,12 +237,6 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
       Computed
     ===================================================================================
     */
-    get hideStateDiff() {
-        if (!this.loadingStateDiff) {
-            return !this.transfer.stateDiff
-        }
-        return false
-    }
     get state(): object {
         if (!this.loadingStateDiff) {
             const stateData = [{ name: `${this.$t('state.bal-before')}`, value: this.transfer.getBalBefore(this.type) }]
