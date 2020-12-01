@@ -2,44 +2,29 @@
     <v-card color="white" flat class="pb-2">
         <!--
         =====================================================================================
-          Desktop (md-and-up): TITLE / ADD button / CANCEL button / REMOVE button
-          Mobile (SM): TITLE / ADD button / CHECK ALL button / CANCEL button/ REMOVE button
-          Mobile (xs-only): TITLE
+          Title / Total
         =====================================================================================
         -->
         <v-layout align-center justify-start row wrap pl-3 pr-3 mt-1>
-            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" page-link="" class="pl-2" />
+            <app-table-title :title="title" :has-pagination="false" :page-type="pageType" :title-caption="totalText" page-link="" class="pl-2" />
             <v-spacer hidden-xs-only />
         </v-layout>
         <v-divider class="lineGrey mt-1 mb-1" />
         <!--
         =====================================================================================
-        SM AND UP: Search / Pagination
+          Search / Pagination / Filter
         =====================================================================================
         -->
-        <v-layout align-center justify-space-between row hidden-xs-only px-2 my-2>
-            <v-flex shrink py-0 pl-4>
-                {{ totalText }}
-            </v-flex>
-            <v-spacer hidden-sm-and-down />
-            <v-flex xs12 sm6 md7 align-self-end text-xs-right pr-2>
+        <v-layout align-center justify-center row wrap px-2 my-2 class="search-paginate-filter-layout">
+            <v-flex xs12 md7 py-0 mb-1>
                 <fav-search :items="favTokens" :loading="isLoading" @search="onSearch" />
             </v-flex>
-        </v-layout>
-
-        <!--
-        =====================================================================================
-          Mobile (xs-only): Search / Pagination
-        =====================================================================================
-        -->
-        <v-layout grid-list-xs align-center justify-center hidden-sm-and-up row wrap pr-2 pl-2 mb-3>
-            <v-flex xs12 pb-0 pt-0>
+            <v-spacer hidden-sm-and-up />
+            <v-flex xs12 sm5 py-0 hidden-md-and-up>
                 <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
             </v-flex>
-            <v-flex xs12 pb-0 pt-0>
-                <fav-search :items="favTokens" :loading="isLoading" @search="onSearch" />
-            </v-flex>
-            <v-flex shrink pt-0 pb-0>
+            <v-spacer hidden-md-and-up />
+            <v-flex shrink py-0>
                 <app-paginate
                     v-if="totalPages > 1"
                     :total="totalPages"
@@ -202,11 +187,11 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
     get isLoading(): boolean {
         return this.isLoadingTokensMarketData
     }
-    get hasFavAdr(): boolean {
+    get hasFavTokens(): boolean {
         return this.totalPages > 0
     }
     get coinMarketFavorites(): TokenMarketData[] {
-        if (!this.isLoading && this.hasFavAdr) {
+        if (!this.isLoading && this.hasFavTokens) {
             const coinMarketParams = this.favorites.map(item => {
                 return item.address
             })
@@ -238,11 +223,11 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
         return []
     }
     get tokenList(): TokenMarketData[] {
-        if (!this.isLoading || this.hasFavAdr) {
+        if (!this.isLoading || this.hasFavTokens) {
             this.sort !== '' ? this.favSort.sortFavorites(this.coinMarketFavorites, this.sort) : ''
             const start = this.searchVal ? 0 : this.index * this.maxItems
             const end = start + this.maxItems > this.coinMarketFavorites.length ? this.coinMarketFavorites.length : start + this.maxItems
-            return this.coinMarketFavorites
+            return this.coinMarketFavorites.slice(start, end)
         }
         return []
     }
@@ -304,5 +289,8 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
 <style scoped lang="css">
 .v-btn {
     min-width: 40px !important;
+}
+.search-paginate-filter-layout {
+    min-height: 52px;
 }
 </style>

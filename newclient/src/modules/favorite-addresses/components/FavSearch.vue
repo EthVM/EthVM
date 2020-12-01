@@ -55,10 +55,10 @@ export default class FavSearch extends Vue {
 .fav-search {
     .v-input {
         font-size: 14px;
-        height: 40px;
+        height: 42px;
         .v-input__slot {
             border: 1px solid #b4bfd2 !important;
-            min-height: 40px !important;
+            min-height: 42px !important;
             padding-left: 4px !important;
             padding-right: 4px !important;
             font-size: 90%;
