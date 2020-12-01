@@ -37,11 +37,14 @@
         SM AND UP: Search / Pagination
         =====================================================================================
         -->
-        <v-layout align-center justify-start row hidden-xs-only px-2 my-2>
-            <v-flex xs12 sm6 md7 pr-0>
+        <v-layout align-center justify-center row wrap hidden-xs-only px-2 my-2>
+            <v-flex sm12 md7>
                 <fav-search :items="favAddresses" :loading="isLoading" @search="onSearch" />
             </v-flex>
-            <v-spacer hidden-sm-and-down />
+            <v-flex sm5 py-0 hidden-md-and-up>
+                <app-filter :options="options" :show-desktop="false" :is-sort="true" @onSelectChange="sortAddresses" />
+            </v-flex>
+            <v-spacer />
             <v-flex shrink py-0 pl-1>
                 <app-paginate
                     v-if="totalPages > 1"
