@@ -84,9 +84,11 @@
                                 </p>
                             </v-layout>
                         </v-flex>
-                        <v-flex xs12>
-                            <v-layout justify-start align-start pa-2>
-                                <v-img :src="require('@/assets/powered-by-MEW.png')" class="ml-2" height="20px" max-width="130px" contain></v-img>
+                        <v-flex xs12 pa-0>
+                            <v-layout justify-start align-center>
+                                <v-btn flat left class="ma-0 pa-0" @click="openMewLink()">
+                                    <v-img :src="require('@/assets/powered-by-MEW.png')" height="20px" min-width="130px" contain></v-img>
+                                </v-btn>
                             </v-layout>
                         </v-flex>
                     </v-layout>
@@ -164,6 +166,10 @@ export default class TheFooter extends Vue {
     }
     get ethPath(): object {
         return { name: 'address', params: { addressRef: this.ethAddr } }
+    }
+
+    openMewLink(): void {
+        window.open('https://www.myetherwallet.com/', '_blank')
     }
 }
 </script>
