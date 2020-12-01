@@ -57,7 +57,11 @@ export default class PageFavAddr extends Vue {
     get crumbs(): Crumb[] {
         return [
             {
-                text: `${this.$tc('token.name', 2)} / ${this.$tc('token.favorite', 2)}`
+                text: this.$tc('token.name', 2),
+                link: '/tokens'
+            },
+            {
+                text: `${this.$tc('token.favorite', 2)}`
             }
         ]
     }
