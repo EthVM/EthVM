@@ -389,14 +389,15 @@ export default class AddressTransers extends Mixins(CoinData) {
                                 before: _type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
                                 after: _type === TYPES[1] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
                             },
-                            after: {
+                            to: {
                                 before: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].from : '',
                                 after: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
                             }
                         })
-                    } else if (stateDiffIdx > -1 && !this.isContract) {
+                    } else if (stateDiffIdx < 0 && !this.isContract) {
                         throw new Error('No state diff found for regular address')
                     }
+                    return this.transfers[transferIdx].stateDiff
                 }
                 this.loadingStateDiff = false
             })
