@@ -84,14 +84,12 @@ import AppTableTitle from '@app/core/components/ui/AppTableTitle.vue'
 import AppPaginate from '@app/core/components/ui/AppPaginate.vue'
 import TableTokensHeader from '@app/modules/tokens/components/TableTokensHeader.vue'
 import TableTokensRow from '@app/modules/tokens/components/TableTokensRow.vue'
-
 import FavSearch from '@app/modules/favorite-tokens/components/FavSearch.vue'
 import TableTxs from '@app/modules/txs/components/TableTxs.vue'
 import { FavActions as FavActionsMixin } from '@app/modules/favorite-tokens/mixins/FavActions.mixin'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { favTokenCache } from '@app/apollo/favorite-tokens/rootQuery.graphql'
 import { favTokenCache_favTokens as favTokensType } from '@app/apollo/favorite-tokens/apolloTypes/favTokenCache'
-import { EnumAdrChips } from '@app/core/components/props'
 import { FILTER_VALUES, FavSort } from '@app/modules/favorite-tokens/models/FavSort'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices.ts'
 import AppFilter from '@app/core/components/ui/AppFilter.vue'
@@ -138,11 +136,6 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
     maxItems = 10
     /* Search */
     searchVal = ''
-    /* Delete Mode */
-    deleteMode = false
-    deleteArray: string[] = []
-    isAllSelected = false
-    addressChipsMap = new Map<string, EnumAdrChips[]>()
     sort = ''
 
     /*
@@ -207,24 +200,24 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
     }
 
     get isLoading(): boolean {
-        return this.$apollo.queries.favTokens.loading
+        return this.isLoadingTokensMarketData
     }
     get hasFavAdr(): boolean {
         return this.totalPages > 0
     }
-    get coinMarketFavorites(): Array<{}> {
-        if (!this.isLoading || this.hasFavAdr) {
+    get coinMarketFavorites(): TokenMarketData[] {
+        if (!this.isLoading && this.hasFavAdr) {
             const coinMarketParams = this.favorites.map(item => {
                 return item.address
             })
             const coinMarketInfo = this.getEthereumTokensMap(coinMarketParams)
-            const favorites: Array<{}> = []
+            const _favorites: TokenMarketData[] = []
             this.favorites.forEach(token => {
-                const getTokenFromCoinMarketList = coinMarketInfo ? coinMarketInfo.get(token.address) : new Map<string, TokenMarketData>()
+                const getTokenFromCoinMarketList = coinMarketInfo ? coinMarketInfo.get(token.address) : undefined
                 if (getTokenFromCoinMarketList) {
-                    favorites.push(Object.assign({}, getTokenFromCoinMarketList))
+                    _favorites.push(Object.assign({}, getTokenFromCoinMarketList))
                 } else {
-                    favorites.push({
+                    _favorites.push({
                         contract: token.address,
                         current_price: 0,
                         id: token.symbol,
@@ -240,12 +233,11 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
                 }
             })
 
-            return favorites
+            return _favorites
         }
         return []
     }
-
-    get tokenList(): Array<{}> {
+    get tokenList(): TokenMarketData[] {
         if (!this.isLoading || this.hasFavAdr) {
             this.sort !== '' ? this.favSort.sortFavorites(this.coinMarketFavorites, this.sort) : ''
             const start = this.searchVal ? 0 : this.index * this.maxItems
