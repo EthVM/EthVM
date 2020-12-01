@@ -1,8 +1,8 @@
 <template>
     <v-tooltip top color="white" content-class="tooltip-border">
         <template #activator="{on}">
-            <v-btn icon fab class="ma-0" @click.stop="btnClick()" v-on="on">
-                <v-img :src="iconImage" :height="btnHeight" :min-width="btnWidth" contain
+            <v-btn :small="isSmall" icon fab class="ma-0" @click.stop="btnClick()" v-on="on">
+                <v-img :src="iconImage" :max-height="btnHeight" :max-width="btnWidth" contain
             /></v-btn>
         </template>
         <span class="black--text">{{ tooltipText }}</span>
@@ -36,7 +36,7 @@ export default class AppBtnHeart extends Vue {
         return this.isSmall ? '30px' : '48px'
     }
     get btnWidth(): string {
-        return this.isSmall ? '20px' : '30px'
+        return this.isSmall ? '30px' : '30px'
     }
 }
 </script>
