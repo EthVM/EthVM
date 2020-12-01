@@ -36,7 +36,7 @@ export default class AppBtnHeart extends Vue {
         return this.isSmall ? '30px' : '48px'
     }
     get btnWidth(): string {
-        return this.isSmall ? '30px' : '30px'
+        return this.isSmall ? '30px' : '48px'
     }
 }
 </script>
