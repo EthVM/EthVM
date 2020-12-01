@@ -3,16 +3,16 @@
         <v-flex xs12>
             <app-details-list :title="title" :details="details" :is-loading="isLoading || hasError" :max-items="10" class="mb-4">
                 <template #title>
-                    <v-layout grid-list-xs row align-center justify-space-between fill-height pl-4 pr-2 pt-1 mt-1 mb-1>
+                    <v-layout grid-list-xs row align-center justify-space-between fill-height pl-4 pr-2>
                         <v-flex>
-                            <v-layout grid-list-xs row align-center justify-start>
-                                <div class="token-image">
+                            <v-layout grid-list-xs row align-center justify-start class="token-header">
+                                <div class="token-header-image">
                                     <v-img :src="image" contain @error="imgLoadFail" />
                                 </div>
-                                <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
+                                <v-card-title class="title font-weight-bold pl-3">{{ title }}</v-card-title>
                             </v-layout>
                         </v-flex>
-                        <v-flex v-if="!isNft" text-xs-right>
+                        <v-flex v-if="!isNft" text-xs-right py-0>
                             <fav-handler-heart-actions :symbol="symbol" :address="address" />
                         </v-flex>
                     </v-layout>
@@ -395,3 +395,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     }
 }
 </script>
+<style lang="scss" scoped>
+.token-header {
+    min-height: 56px;
+    .token-header-image {
+        width: 30px;
+    }
+}
+</style>

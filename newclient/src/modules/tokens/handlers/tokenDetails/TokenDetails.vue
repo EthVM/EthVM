@@ -141,7 +141,7 @@ export default class TokenDetails extends Vue {
     tokenDetails!: TokenInfo | TokenOwnerInfo
     address = ''
     hasError = false
-    isNft = false
+    isNft = true
 
     /*
   ===================================================================================
