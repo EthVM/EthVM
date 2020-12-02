@@ -1,3 +1,15 @@
+### Release v1.0.5
+
+### Bug
+
+- Fix disappearance of the header on some breakpoints [#929](https://github.com/EthVM/EthVM/pull/929)
+
+### Devop
+
+- Mobile ui adjustments of the search button on the app header [#929](https://github.com/EthVM/EthVM/pull/929)
+
+===================================================================================
+
 ### Release v1.0.4
 
 ### Feature
