@@ -1,3 +1,11 @@
+### Release v1.0.5
+
+### Devop
+
+- Adjust blocks height to 100% on Address page [#930](https://github.com/EthVM/EthVM/pull/930)
+
+===================================================================================
+
 ### Release v1.0.4
 
 ### Feature
