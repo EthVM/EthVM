@@ -1,3 +1,11 @@
+### Release v1.0.5
+
+### Devop
+
+- Added link to myetherwallet.com to 'powered by mew' image [#928](https://github.com/EthVM/EthVM/pull/928)
+
+===================================================================================
+
 ### Release v1.0.4
 
 ### Feature
