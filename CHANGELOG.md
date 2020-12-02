@@ -1,3 +1,11 @@
+### Release v1.0.5
+
+### Feature
+
+- Favorite ERC20 tokens List. Add/Remove tokens. [#921](https://github.com/EthVM/EthVM/pull/921)
+
+==================================================================================
+
 ### Release v1.0.4
 
 ### Feature
