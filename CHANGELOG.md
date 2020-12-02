@@ -1,3 +1,12 @@
+### Release v1.0.5
+
+### Devop
+
+- Refactor known apollo exception [#922](https://github.com/EthVM/EthVM/pull/922)
+- Fix sending known apollo exception to Sentry [#922](https://github.com/EthVM/EthVM/pull/922)
+
+===================================================================================
+
 ### Release v1.0.4
 
 ### Feature
