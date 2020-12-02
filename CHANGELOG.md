@@ -1,3 +1,11 @@
+### Release v1.0.5
+
+### Devop
+
+- Fixed incorrect ui layout on fav address page and fav address row mobile [#927](https://github.com/EthVM/EthVM/pull/927)
+
+===================================================================================
+
 ### Release v1.0.4
 
 ### Feature
