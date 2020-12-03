@@ -10,6 +10,7 @@
 - Removed console log and unused comments[#923](https://github.com/EthVM/EthVM/pull/923)
 - Refactor known apollo exception [#922](https://github.com/EthVM/EthVM/pull/922)
 - Fix sending known apollo exception to Sentry [#922](https://github.com/EthVM/EthVM/pull/922)
+- Adjust blocks height to 100% on Address page [#930](https://github.com/EthVM/EthVM/pull/930)
 
 ===================================================================================
 
