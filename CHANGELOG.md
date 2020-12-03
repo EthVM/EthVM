@@ -1,5 +1,9 @@
 ### Release v1.0.5
 
+### Feature
+
+- Favorite ERC20 tokens List. Add/Remove tokens. [#921](https://github.com/EthVM/EthVM/pull/921)
+
 ### Bug
 
 - Fix disappearance of the header on some breakpoints [#929](https://github.com/EthVM/EthVM/pull/929)
@@ -13,7 +17,6 @@
 - Adjust blocks height to 100% on Address page [#930](https://github.com/EthVM/EthVM/pull/930)
 - Added link to myetherwallet.com to 'powered by mew' image [#928](https://github.com/EthVM/EthVM/pull/928)
 
-===================================================================================
 
 ### Release v1.0.4
 
