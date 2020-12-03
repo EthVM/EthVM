@@ -70,7 +70,7 @@
                                         <app-transform-hash
                                             v-if="!name && !symbolString"
                                             :hash="token.tokenInfo.contract | toChecksum"
-                                            :link="`/address/${token.tokenInfo.contract}`"
+                                            :link="`/token/${token.tokenInfo.contract}`"
                                         />
                                     </v-layout>
                                 </v-flex>
