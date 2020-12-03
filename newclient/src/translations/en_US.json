@@ -102,7 +102,8 @@
         "remove": "Remove from favorite tokens list",
         "add": "Add to favorite tokens list",
         "view-all": "View All",
-        "favorite-title": "Favorite Tokens"
+        "favorite-title": "Favorite Tokens",
+        "no-favorites": "You do not have any favorite tokens. You can add a token, by navigating to 'View All' and clicking the 'heart' icon or you can directly add it on the token page."
     },
 
     "address": {

@@ -158,7 +158,7 @@
                             <div class="token-image">
                                 <v-img :src="image" contain @error="imgLoadFail" />
                             </div>
-                            <component v-if="name || symbolString" :is="isErc20 ? 'router-link' : 'span'" :to="tokenLink">
+                            <component :is="isErc20 ? 'router-link' : 'span'" v-if="name || symbolString" :to="tokenLink">
                                 <div class="black--text subtitle-2 font-weight-medium">
                                     <p v-if="name">{{ name }}</p>
                                     <p v-else class="text-uppercase">{{ symbolString }}</p>
