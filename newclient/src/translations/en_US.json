@@ -220,7 +220,8 @@
         "message": {
             "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page.",
             "no-search-results": "There are no search results.",
-            "already-exists": "This address already exists"
+            "already-exists": "This address already exists",
+            "no-tokens": "You do not have any favorite tokens. You can add a token on the tokens page with market information, on a token details page, or on an addres page."
         },
         "title": "Favorite Addresses",
         "name": "Name",

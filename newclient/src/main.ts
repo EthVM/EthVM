@@ -24,6 +24,7 @@ import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
 import Vue from 'vue'
 import toChecksum from '@app/core/filters/toChecksum'
+import { isAPIExceptionProduction, isAPIExceptionDev } from './apollo/exceptions/errorExceptions'
 
 router.onError(error => {
     if (/loading chunk \d* failed./i.test(error.message)) {
@@ -52,27 +53,20 @@ const subscriptionClient = new SubscriptionClient(configs.APOLLO_WS, { lazy: tru
 
 const wsLink = new WebSocketLink(subscriptionClient)
 
-//For Development use Only:
 const onErrorLink = onError(({ graphQLErrors }) => {
-    const addrNotContract = 'No contract found'
-    // Log every GraphQL errors in develop
-    if (graphQLErrors && process.env.NODE_ENV !== 'production') {
+    if (graphQLErrors) {
         graphQLErrors.map(({ message, locations, path }) => {
             const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            if (!message.includes(addrNotContract)) {
-                console.log(newError)
-            }
-        })
-    }
-    if (graphQLErrors && process.env.NODE_ENV === 'production') {
-        graphQLErrors.map(({ message, locations, path }) => {
-            const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            const blockNotMined = 'Block not found'
-            const txDoNotExists = 'Cannot return null for non-nullable field Query.getTransactionByHash'
-            const uncleNotFound = 'Uncle not found'
-
-            if (!message.includes(blockNotMined || txDoNotExists || uncleNotFound || addrNotContract)) {
-                Sentry.captureException(newError)
+            //For production and staging emit to Sentry:
+            if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+                if (!isAPIExceptionProduction(message)) {
+                    Sentry.captureException(newError)
+                }
+            } else {
+                //For Development use only console errors:
+                if (!isAPIExceptionDev(message)) {
+                    console.log(newError)
+                }
             }
         })
     }

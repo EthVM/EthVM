@@ -30,12 +30,16 @@
                         =====================================================================================
                         -->
                     <v-flex xs8 sm9>
-                        <router-link :to="tokenLink">
+                        <router-link v-if="token.symbol || token.name" :to="tokenLink">
                             <v-layout row wrap align-center justify-start pl-2>
                                 <p class="black--text text-uppercase font-weight-medium mb-0 pr-1">{{ token.symbol }} -</p>
                                 <p class="info--text caption mb-0 pr-1">{{ token.name }}</p>
                             </v-layout>
                         </router-link>
+                        <v-layout v-else row pa-2>
+                            <p class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
+                            <app-transform-hash :hash="token.contract | toChecksum" :link="tokenLink" />
+                        </v-layout>
                     </v-flex>
                     <v-flex xs2>
                         <v-layout row align-center justify-end>
@@ -160,12 +164,18 @@
                         =====================================================================================
                         -->
                     <v-flex md4>
-                        <v-layout grid-list-xs row align-center justify-start fill-height>
-                            <v-img :src="image" height="25px" max-width="25px" contain class="ml-3 mr-4" @error="onImageLoadFail" />
-                            <router-link :to="tokenLink" class="info--text caption">
+                        <v-layout grid-list-xs row align-center justify-start fill-height px-3>
+                            <div class="token-image-block mr-4">
+                                <v-img :src="image" height="25px" max-width="25px" contain @error="onImageLoadFail" />
+                            </div>
+                            <router-link v-if="token.symbol || token.name" :to="tokenLink" class="info--text caption">
                                 <span v-if="token.symbol" class="black--text text-uppercase font-weight-medium"> {{ token.symbol }} - </span>
                                 {{ token.name }}
                             </router-link>
+                            <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
+                            <div class="transform-contract">
+                                <app-transform-hash v-if="!token.symbol && !token.name" :hash="token.contract | toChecksum" :link="tokenLink" class="pt-1" />
+                            </div>
                         </v-layout>
                     </v-flex>
                     <!--
@@ -239,6 +249,7 @@
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
@@ -246,7 +257,7 @@ import FavHandlerHeartActions from '@app/modules/favorite-tokens/handlers/FavHan
 import BN from 'bignumber.js'
 
 @Component({
-    components: { AppTooltip, FavHandlerHeartActions }
+    components: { AppTooltip, FavHandlerHeartActions, AppTransformHash }
 })
 export default class TokenTableRow extends Mixins(NumberFormatMixin) {
     /*
@@ -355,5 +366,11 @@ export default class TokenTableRow extends Mixins(NumberFormatMixin) {
 }
 .mobile-divider {
     height: 50px;
+}
+.transform-contract {
+    width: 50%;
+}
+.token-image-block {
+    min-width: 25px;
 }
 </style>

@@ -249,7 +249,7 @@ export default class FavHandlerTokensListRow extends Mixins(CoinData, FavActions
                 return this.$t('fav.message.no-search-results').toString()
             }
             if (!this.totalFavorites || this.totalFavorites < 1) {
-                return this.$t('fav.message.no-addr').toString()
+                return this.$t('fav.message.no-tokens').toString()
             }
         }
         return ''
