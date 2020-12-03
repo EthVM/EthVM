@@ -3,11 +3,18 @@
         <v-flex xs12>
             <app-details-list :title="title" :details="details" :is-loading="isLoading || hasError" :max-items="10" class="mb-4">
                 <template #title>
-                    <v-layout grid-list-xs row align-center justify-start fill-height pl-4 pr-2 pt-1 mt-1 mb-1>
-                        <div class="token-image">
-                            <v-img :src="image" contain @error="imgLoadFail" />
-                        </div>
-                        <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
+                    <v-layout grid-list-xs row align-center justify-space-between fill-height pl-4 pr-2>
+                        <v-flex>
+                            <v-layout grid-list-xs row align-center justify-start class="token-header">
+                                <div class="token-header-image">
+                                    <v-img :src="image" contain @error="imgLoadFail" />
+                                </div>
+                                <v-card-title class="title font-weight-bold pl-3">{{ title }}</v-card-title>
+                            </v-layout>
+                        </v-flex>
+                        <v-flex v-if="!isNft" text-xs-right py-0>
+                            <fav-handler-heart-actions :symbol="symbol" :address="address" />
+                        </v-flex>
                     </v-layout>
                     <v-divider class="lineGrey" />
                 </template>
@@ -30,10 +37,11 @@ import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { ERC20TokenOwnerDetails as TokenOwnerInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/ERC20TokenOwnerDetails.ts'
 import { TokenDetails as TokenInfo } from '@app/modules/tokens/handlers/tokenDetails/apolloTypes/TokenDetails'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
-
+import FavHandlerHeartActions from '@app/modules/favorite-tokens/handlers/FavHandlerHeartActions.vue'
 @Component({
     components: {
-        AppDetailsList
+        AppDetailsList,
+        FavHandlerHeartActions
     }
 })
 export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData) {
@@ -46,6 +54,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     @Prop(String) addressRef!: string // Token contract address
     @Prop(Object) tokenDetails!: TokenInfo
     @Prop(Boolean) isLoading!: boolean
+    @Prop(Boolean) isNft!: boolean
     @Prop(Object) holderDetails!: TokenOwnerInfo
     /*
   ===================================================================================
@@ -115,7 +124,13 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     Computed Values
   ===================================================================================
   */
+    get symbol(): string | null {
+        return this.tokenDetails ? this.tokenDetails.symbol : ''
+    }
 
+    get address(): string | null {
+        return this.tokenDetails ? this.tokenDetails.contract : ''
+    }
     get tokenData(): TokenMarketData | false {
         if (this.addressRef) {
             try {
@@ -380,3 +395,11 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
     }
 }
 </script>
+<style lang="scss" scoped>
+.token-header {
+    min-height: 56px;
+    .token-header-image {
+        width: 30px;
+    }
+}
+</style>

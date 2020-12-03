@@ -54,7 +54,6 @@ export class CoinData extends Vue {
     get ethPrice(): number | undefined {
         return this.isLoadingTokensMarketData || this.etherPrice === 0 ? undefined : this.etherPrice
     }
-
     /*
     ===================================================================================
       Methods

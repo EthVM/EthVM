@@ -1,0 +1,13 @@
+type FavToken {
+    address: String!
+    symbol: String!
+}
+extend type Query {
+    checkToken(hash: String!): FavToken
+    favTokens: [FavToken!]!
+}
+
+extend type Mutation {
+    addFavToken(hash: String!, symbol: String): FavToken!
+    deleteFavToken(hash: String!, symbol: String): FavToken
+}

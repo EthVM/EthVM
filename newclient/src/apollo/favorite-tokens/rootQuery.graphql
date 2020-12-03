@@ -1,0 +1,6 @@
+query favTokenCache {
+    favTokens @client {
+        address
+        symbol
+    }
+}

@@ -15,7 +15,7 @@
         =====================================================================================
         -->
         <v-flex sm4>
-            <v-layout :class="[!isActive(0) && !isActive(1) ? 'inactive-sort' : '']" align-center justify-start row pl-4>
+            <v-layout :class="[!isActive(0) && !isActive(1) ? 'inactive-sort' : '']" align-center justify-start row pl-3>
                 <h5 class="pl-5 pr-2">{{ $tc('token.name', 1) }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
@@ -29,9 +29,17 @@
                 </v-flex>
             </v-layout>
         </v-flex>
+        <!--
+        =====================================================================================
+          Price
+
+          Responsive Tally:
+          MD: 6/12 (2)
+        =====================================================================================
+        -->
         <v-flex sm2>
-            <v-layout :class="[!isActive(2) && !isActive(3) ? 'inactive-sort' : '']" align-center justify-start row pl-1>
-                <h5 class="pr-2">{{ $tc('price.name', 1) }}</h5>
+            <v-layout :class="[!isActive(2) && !isActive(3) ? 'inactive-sort' : '']" align-center justify-start row>
+                <h5 class="px-2">{{ $tc('price.name', 1) }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(3)" :class="[!isActive(2) && !isActive(3) ? 'inactive-btn' : '']" flat icon @click="selectFilter(2)">
@@ -44,12 +52,28 @@
                 </v-flex>
             </v-layout>
         </v-flex>
-        <v-flex sm2 pl-0>
+        <!--
+        =====================================================================================
+          %Change
+
+          Responsive Tally:
+          MD: 8/12 (2)
+        =====================================================================================
+        -->
+        <v-flex sm2>
             <h5>{{ $t('token.change') }}</h5>
         </v-flex>
+        <!--
+        =====================================================================================
+          Volume
+
+          Responsive Tally:
+          MD: 10/12 (2)
+        =====================================================================================
+        -->
         <v-flex sm2>
-            <v-layout :class="[!isActive(4) && !isActive(5) ? 'inactive-sort' : '']" align-center justify-start row pl-2>
-                <h5 class="pr-1">{{ $t('token.volume') }}</h5>
+            <v-layout :class="[!isActive(4) && !isActive(5) ? 'inactive-sort' : '']" align-center justify-start row>
+                <h5 class="px-2">{{ $t('token.volume') }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(5)" :class="[!isActive(4) && !isActive(5) ? 'inactive-btn' : '']" flat icon @click="selectFilter(4)">
@@ -62,9 +86,17 @@
                 </v-flex>
             </v-layout>
         </v-flex>
+        <!--
+        =====================================================================================
+          Market Cap
+
+          Responsive Tally:
+          MD: 12/12 (2)
+        =====================================================================================
+        -->
         <v-flex sm2>
-            <v-layout :class="[!isActive(6) && !isActive(7) ? 'inactive-sort' : '']" align-center justify-start row pl-2>
-                <h5 class="pr-1">{{ $t('token.market') }}</h5>
+            <v-layout :class="[!isActive(6) && !isActive(7) ? 'inactive-sort' : '']" align-center justify-start row>
+                <h5 class="pr-2">{{ $t('token.market') }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(7)" :class="[!isActive(6) && !isActive(7) ? 'inactive-btn' : '']" flat icon @click="selectFilter(6)">

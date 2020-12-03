@@ -1,16 +1,15 @@
 <template>
     <v-container pa-0 ma-0>
-        <component :is="isErc20 ? 'router-link' : 'span'" :to="tokenLink">
-            <v-layout d-block>
-                <!--
+        <v-layout d-block>
+            <!--
                 =====================================================================================
                   Mobile (XS - SM)
                 =====================================================================================
                 -->
-                <v-flex xs12 hidden-md-and-up>
-                    <div class="table-row-mobile">
-                        <v-layout grid-list-xs row align-center justify-center class="pt-3 pb-3 pr-2 pl-2">
-                            <!--
+            <v-flex xs12 hidden-md-and-up>
+                <div class="table-row-mobile">
+                    <v-layout grid-list-xs row wrap align-center justify-center class="pt-3 pb-3 pr-2 pl-2">
+                        <!--
                             =====================================================================================
                               TOKEN IMAGE
 
@@ -18,14 +17,14 @@
                               XS: 2/12 (2)
                             =====================================================================================
                             -->
-                            <v-flex xs2 pa-1>
-                                <v-layout row align-center justify-center pa-2>
-                                    <div class="token-image-mobile">
-                                        <v-img :src="image" contain @error="imgLoadFail" />
-                                    </div>
-                                </v-layout>
-                            </v-flex>
-                            <!--
+                        <v-flex xs2 pa-1>
+                            <v-layout row align-center justify-center pa-2>
+                                <div class="token-image-mobile">
+                                    <v-img :src="image" contain @error="imgLoadFail" />
+                                </div>
+                            </v-layout>
+                        </v-flex>
+                        <!--
                             =====================================================================================
                               REMAINING TOKEN INFO
 
@@ -33,9 +32,9 @@
                               XS: 12/12 (10)
                             =====================================================================================
                             -->
-                            <v-flex xs10>
-                                <v-layout row wrap align-center justify-start>
-                                    <!--
+                        <v-flex xs10>
+                            <v-layout row wrap align-center justify-start>
+                                <!--
                                     =====================================================================================
                                       TOKEN NAME
 
@@ -43,35 +42,39 @@
                                       XS: 9/12 (9)
                                     =====================================================================================
                                     -->
-                                    <v-flex v-if="isErc20" xs8 pa-1>
-                                        <v-layout row align-center justify-start pa-2>
-                                            <div class="black--text subtitle-2 font-weight-medium">
-                                                <p v-if="name">{{ name }}</p>
-                                                <p v-else-if="!name && symbolString" class="text-uppercase">{{ symbolString }}</p>
-                                                <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
-                                            </div>
-                                            <app-transform-hash
-                                                v-if="!name && !symbolString"
-                                                :hash="token.tokenInfo.contract | toChecksum"
-                                                :link="`/address/${token.tokenInfo.contract}`"
-                                            />
-                                        </v-layout>
-                                    </v-flex>
-                                    <v-flex v-else xs12 pa-1>
-                                        <v-layout row align-center justify-start pa-2>
-                                            <div class="black--text subtitle-2 font-weight-medium">
-                                                <p v-if="name">{{ name }}</p>
-                                                <p v-else-if="!name && symbolString" class="text-uppercase">{{ symbolString }}</p>
-                                                <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
-                                            </div>
-                                            <app-transform-hash
-                                                v-if="!name && !symbolString"
-                                                :hash="token.tokenInfo.contract | toChecksum"
-                                                :link="`/address/${token.tokenInfo.contract}`"
-                                            />
-                                        </v-layout>
-                                    </v-flex>
-                                    <!--
+                                <v-flex v-if="isErc20" xs7 sm8 pa-1>
+                                    <v-layout row align-start justify-start pa-2>
+                                        <router-link v-if="name" :to="tokenLink" class="black--text subtitle-2 font-weight-medium">{{ name }}</router-link>
+                                        <router-link
+                                            v-else-if="!name && symbolString"
+                                            :to="tokenLink"
+                                            class="text-uppercase black--text subtitle-2 font-weight-medium"
+                                            >{{ symbolString }}</router-link
+                                        >
+                                        <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
+
+                                        <app-transform-hash
+                                            v-if="!name && !symbolString"
+                                            :hash="token.tokenInfo.contract | toChecksum"
+                                            :link="`/address/${token.tokenInfo.contract}`"
+                                        />
+                                    </v-layout>
+                                </v-flex>
+                                <v-flex v-else xs12 pa-1>
+                                    <v-layout row align-center justify-start pa-2>
+                                        <div class="black--text subtitle-2 font-weight-medium">
+                                            <p v-if="name">{{ name }}</p>
+                                            <p v-else-if="!name && symbolString" class="text-uppercase">{{ symbolString }}</p>
+                                            <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
+                                        </div>
+                                        <app-transform-hash
+                                            v-if="!name && !symbolString"
+                                            :hash="token.tokenInfo.contract | toChecksum"
+                                            :link="`/token/${token.tokenInfo.contract}`"
+                                        />
+                                    </v-layout>
+                                </v-flex>
+                                <!--
                                     =====================================================================================
                                       TOKEN PRICE CHANGE
 
@@ -79,15 +82,28 @@
                                       XS: 12/12 (3)
                                     =====================================================================================
                                     -->
-                                    <v-flex v-if="isErc20" xs4 pb-1 pt-1 pr-2>
-                                        <v-layout v-if="priceChangeFormatted" grid-list-xs row justify-end>
-                                            <p :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
-                                            <v-img v-if="change > 0" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                                            <v-img v-if="change < 0" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
-                                        </v-layout>
-                                    </v-flex>
-                                    <v-spacer v-else />
-                                    <!--
+                                <v-flex v-if="isErc20" xs5 sm4 pb-1 pt-1 pl-1>
+                                    <v-layout row justify-end align-center>
+                                        <p v-if="priceChangeFormatted" :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
+                                        <v-img
+                                            v-if="priceChangeFormatted && change > 0"
+                                            :src="require('@/assets/up.png')"
+                                            height="18px"
+                                            max-width="18px"
+                                            contain
+                                        ></v-img>
+                                        <v-img
+                                            v-if="priceChangeFormatted && change < 0"
+                                            :src="require('@/assets/down.png')"
+                                            height="18px"
+                                            max-width="18px"
+                                            contain
+                                        ></v-img>
+                                        <fav-handler-heart-actions :symbol="favTokenSymbol" :address="token.tokenInfo.contract" :is-small="true" />
+                                    </v-layout>
+                                </v-flex>
+                                <v-spacer v-else />
+                                <!--
                                     =====================================================================================
                                       TOKEN BALANCE/USD VALUE
 
@@ -95,41 +111,41 @@
                                       XS: 12/12 (12)
                                     =====================================================================================
                                     -->
-                                    <v-flex xs12 pa-1>
-                                        <p class="info--text mb-2">
-                                            {{ $t('common.amount') }}:
-                                            <span v-if="isErc20" class="black--text"> {{ balance.value }}</span>
-                                            <span v-else class="black--text"> {{ balance }}</span>
-                                            <span v-if="isErc20 && symbolString" class="info--text caption pl-1 pr-1">{{ symbolString }}</span>
-                                            <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" pl-1 />
-                                        </p>
-                                        <p v-if="isErc20" class="info--text mb-2">
-                                            {{ $t('usd.value') }}:
-                                            <span class="black--text">
-                                                {{ usdValueFormatted.value }}
-                                                <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
-                                            </span>
-                                            <span class="caption pl-2"> @ {{ currPrice.value }} {{ $t('token.per') }} {{ symbolString }} </span>
-                                        </p>
-                                    </v-flex>
-                                </v-layout>
-                            </v-flex>
-                            <v-flex v-if="!isErc20" shrink>
-                                <v-btn outline small fab color="bttnToken" @click="showNft()">
-                                    <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
-                                </v-btn>
-                            </v-flex>
-                        </v-layout>
-                    </div>
-                </v-flex>
-                <!--
+                                <v-flex xs12 pa-1>
+                                    <p class="info--text mb-2">
+                                        {{ $t('common.amount') }}:
+                                        <span v-if="isErc20" class="black--text"> {{ balance.value }}</span>
+                                        <span v-else class="black--text"> {{ balance }}</span>
+                                        <span v-if="isErc20 && symbolString" class="info--text caption pl-1 pr-1">{{ symbolString }}</span>
+                                        <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" pl-1 />
+                                    </p>
+                                    <p v-if="isErc20" class="info--text mb-2">
+                                        {{ $t('usd.value') }}:
+                                        <span class="black--text">
+                                            {{ usdValueFormatted.value }}
+                                            <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
+                                        </span>
+                                        <span class="caption pl-2"> @ {{ currPrice.value }} {{ usdCaption }} </span>
+                                    </p>
+                                </v-flex>
+                            </v-layout>
+                        </v-flex>
+                        <v-flex v-if="!isErc20" shrink>
+                            <v-btn outline small fab color="bttnToken" @click="showNft()">
+                                <v-icon class="bttnToken--text token-btn-icon fas fa-chevron-right" small />
+                            </v-btn>
+                        </v-flex>
+                    </v-layout>
+                </div>
+            </v-flex>
+            <!--
                 =====================================================================================
                   Desktop (MD and UP)
                 =====================================================================================
                 -->
-                <v-flex hidden-sm-and-down>
-                    <v-layout grid-list-xs row wrap align-center justify-start fill-height pt-2 pb-2>
-                        <!--
+            <v-flex hidden-sm-and-down>
+                <v-layout grid-list-xs row wrap align-center justify-start fill-height pt-2 pb-2>
+                    <!--
                         =====================================================================================
                           TOKEN NAME/IMAGE
 
@@ -137,24 +153,26 @@
                           MD: 4/12 (4)
                         =====================================================================================
                         -->
-                        <v-flex md4>
-                            <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-1>
-                                <div class="token-image">
-                                    <v-img :src="image" contain @error="imgLoadFail" />
-                                </div>
-                                <div v-if="name || symbolString" class="black--text subtitle-2 font-weight-medium">
+                    <v-flex md4>
+                        <v-layout grid-list-xs row align-center justify-start fill-height pl-2 pr-3>
+                            <div class="token-image">
+                                <v-img :src="image" contain @error="imgLoadFail" />
+                            </div>
+                            <component :is="isErc20 ? 'router-link' : 'span'" v-if="name || symbolString" :to="tokenLink">
+                                <div class="black--text subtitle-2 font-weight-medium">
                                     <p v-if="name">{{ name }}</p>
                                     <p v-else class="text-uppercase">{{ symbolString }}</p>
                                 </div>
-                                <p v-else class="info--text contract-string mr-1">{{ $tc('contract.name', 1) }}:</p>
-                                <app-transform-hash
-                                    v-if="!name && !symbolString"
-                                    :hash="token.tokenInfo.contract | toChecksum"
-                                    :link="`/address/${token.tokenInfo.contract}`"
-                                />
-                            </v-layout>
-                        </v-flex>
-                        <!--
+                            </component>
+                            <p v-else class="info--text contract-string mr-1">{{ $tc('contract.name', 1) }}:</p>
+                            <app-transform-hash
+                                v-if="!name && !symbolString"
+                                :hash="token.tokenInfo.contract | toChecksum"
+                                :link="`/token/${token.tokenInfo.contract}`"
+                            />
+                        </v-layout>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN Balance / Token ID
 
@@ -162,16 +180,16 @@
                           MD: 7/12 (3)
                         =====================================================================================
                         -->
-                        <v-flex v-if="!isErc20" md2 />
-                        <v-flex md3>
-                            <p v-if="isErc20" class="black--text">
-                                {{ balance.value }}
-                                <span v-if="isErc20 && symbolString" class="info--text caption pr-1">{{ symbolString }}</span>
-                                <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
-                            </p>
-                            <p v-else class="black--text">{{ balance }}</p>
-                        </v-flex>
-                        <!--
+                    <v-flex v-if="!isErc20" md2 />
+                    <v-flex md3>
+                        <p v-if="isErc20" class="black--text">
+                            {{ balance.value }}
+                            <span v-if="isErc20 && symbolString" class="info--text caption pr-1">{{ symbolString }}</span>
+                            <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
+                        </p>
+                        <p v-else class="black--text">{{ balance }}</p>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN USD VALUE
 
@@ -179,16 +197,16 @@
                           MD: 10/12 (3)
                         =====================================================================================
                         -->
-                        <v-flex v-if="isErc20" md3>
-                            <v-layout column align-start fill-height pl-2>
-                                <p class="black--text">
-                                    {{ usdValueFormatted.value }}
-                                    <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
-                                </p>
-                                <p class="info--text caption pt-1">(@ {{ currPrice.value }} {{ $t('token.per') }} {{ symbolString }})</p>
-                            </v-layout>
-                        </v-flex>
-                        <!--
+                    <v-flex v-if="isErc20" md3>
+                        <v-layout column align-start fill-height pl-2>
+                            <p class="black--text">
+                                {{ usdValueFormatted.value }}
+                                <app-tooltip v-if="usdValueFormatted.tooltipText" :text="usdValueFormatted.tooltipText" />
+                            </p>
+                            <p class="info--text caption pt-1">(@ {{ currPrice.value }} {{ usdCaption }})</p>
+                        </v-layout>
+                    </v-flex>
+                    <!--
                         =====================================================================================
                           TOKEN  Price Change
 
@@ -196,22 +214,23 @@
                           MD: 12/12 (2)
                         =====================================================================================
                         -->
-                        <v-flex v-if="isErc20" md2>
-                            <v-layout v-if="priceChangeFormatted" grid-list-xs row align-center justify-start pl-2 pr-2>
-                                <p :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
-                                <v-img v-if="change > 0" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
-                                <v-img v-if="change < 0" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
-                            </v-layout>
-                        </v-flex>
-                        <v-spacer v-else />
-                        <v-flex v-if="!isErc20" shrink>
-                            <v-btn outline color="secondary" class="text-capitalize" @click="showNft()">{{ $t('btn.view-all') }}</v-btn>
-                        </v-flex>
-                    </v-layout>
-                    <v-divider />
-                </v-flex>
-            </v-layout>
-        </component>
+                    <v-flex v-if="isErc20" md2>
+                        <v-layout grid-list-xs row align-center justify-start pl-2 pr-2>
+                            <p v-if="priceChangeFormatted" :class="priceChangeClass">{{ priceChangeFormatted.value }}%</p>
+                            <v-img v-if="priceChangeFormatted && change > 0" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
+                            <v-img v-if="priceChangeFormatted && change < 0" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
+                            <v-spacer />
+                            <fav-handler-heart-actions :symbol="favTokenSymbol" :address="token.tokenInfo.contract" :is-small="true" />
+                        </v-layout>
+                    </v-flex>
+                    <v-spacer v-else />
+                    <v-flex v-if="!isErc20" shrink>
+                        <v-btn outline color="secondary" class="text-capitalize" @click="showNft()">{{ $t('btn.view-all') }}</v-btn>
+                    </v-flex>
+                </v-layout>
+                <v-divider />
+            </v-flex>
+        </v-layout>
     </v-container>
 </template>
 
@@ -221,6 +240,7 @@ import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mix
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
+import FavHandlerHeartActions from '@app/modules/favorite-tokens/handlers/FavHandlerHeartActions.vue'
 import { ObjectCache } from 'apollo-cache-inmemory'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
@@ -232,7 +252,8 @@ import BN from 'bignumber.js'
 @Component({
     components: {
         AppTooltip,
-        AppTransformHash
+        AppTransformHash,
+        FavHandlerHeartActions
     }
 })
 export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
@@ -349,6 +370,14 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
             return undefined
         }
         return this.token.tokenInfo.symbol
+    }
+
+    get favTokenSymbol(): string {
+        return this.symbolString && this.isErc20 ? this.symbolString : ''
+    }
+
+    get usdCaption(): string {
+        return this.symbolString ? `${this.$t('token.per')} ${this.symbolString}` : `${this.$t('token.per')} ${this.$tc('token.name', 1)}`
     }
 
     /*

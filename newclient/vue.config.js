@@ -74,6 +74,7 @@ module.exports = {
     devServer: {
         https: true,
         host: 'localhost',
-        hotOnly: true
+        hotOnly: true,
+        port: 3000
     }
 }

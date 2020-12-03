@@ -9,7 +9,8 @@ import VueApollo from 'vue-apollo'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { onError } from 'apollo-link-error'
 import { OpenSeaClient } from './apollo/opensea/osClient'
-import { FavClient } from './apollo/favorites/favClient'
+import { FavAddrClient } from './apollo/favorite-addresses/favAddrClient'
+import { FavTokClient } from './apollo/favorite-tokens/favTokenClient'
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -92,7 +93,8 @@ const apolloProvider = new VueApollo({
     clients: {
         apolloClient,
         OpenSeaClient,
-        FavClient
+        FavAddrClient,
+        FavTokClient
     },
     defaultClient: apolloClient
 })
@@ -123,7 +125,7 @@ Vue.use(Vuetify, {
         uncleGrey: '#eff1f6',
         sync: '#ffe7d6',
         bttnGrey: '#dee5f0',
-        bttnToken: '#b4bfd2',
+        bttnToken: '#303030',
         bttnReport: '#1EEEA6',
         linkBlue: '#3965e8',
         primaryLight: '#465a9c',

@@ -97,7 +97,12 @@
         "filtered": "Filtered by Holder",
         "sort-by": "Sort by",
         "total-tokens": "Total Tokens",
-        "image": "Image"
+        "image": "Image",
+        "favorite": "Favorite | Favorites",
+        "remove": "Remove from favorite tokens list",
+        "add": "Add to favorite tokens list",
+        "view-all": "View All",
+        "favorite-title": "Favorite Tokens"
     },
 
     "address": {
@@ -195,7 +200,7 @@
             "delete-are-you-sure": "Are you sure you want to delete this address? | Are you sure you want to delete these addresses?",
             "delete-tip": "Tip:",
             "delete-tip-text": "You can always add it again on the address details or favorite addresses page. | You can always add them again on the address details or favorite addresses page.",
-            "label-add":"Enter Name",
+            "label-add": "Enter Name",
             "label-edit": "Enter New Name",
             "input-required": "This field is required",
             "input-length": "Name must be less than 20 characters",
@@ -213,12 +218,13 @@
             "remove": "Remove"
         },
         "message": {
-          "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page.",
-          "no-search-results": "There are no search results.",
-          "already-exists": "This address already exists"
+            "no-addr": "You do not have any favorite addresses. You can add an address, by clicking on 'Add' button or you can directly add it on the address page.",
+            "no-search-results": "There are no search results.",
+            "already-exists": "This address already exists",
+            "no-tokens": "You do not have any favorite tokens. You can add a token on the tokens page with market information, on a token details page, or on an addres page."
         },
         "title": "Favorite Addresses",
-        "name" : "Name",
+        "name": "Name",
         "select-all": "Select All",
         "sort": {
             "address": "Address",
