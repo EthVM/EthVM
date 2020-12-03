@@ -455,7 +455,8 @@
         "name": "Search",
         "default": "Search Block / Address / Tx",
         "address-tx": "Tx Hash/Address",
-        "favorites": "Search Address / Name"
+        "favorites": "Search Address / Name",
+        "favorites-token": "Search Token Name / Address"
     },
     "filter": {
         "name": "Filter",
