@@ -4,7 +4,7 @@
             <v-text-field
                 v-model="searchVal"
                 :loading="isLoading"
-                :placeholder="$t('search.favorites')"
+                :placeholder="$t('search.favorites-token')"
                 prepend-inner-icon="fa fa-search grey--text text--lighten-1"
                 color="primary"
                 solo

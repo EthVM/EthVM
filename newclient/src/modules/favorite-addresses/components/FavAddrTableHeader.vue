@@ -12,7 +12,7 @@
             </v-layout>
         </v-flex>
         <v-flex md4>
-            <v-layout :class="[!isActive(0) && !isActive(1) ? 'inactive-sort' : '']" align-center justify-start row>
+            <v-layout :class="[!isActive(0) && !isActive(1) ? 'inactive-sort' : '', 'pl-1']" align-center justify-start row>
                 <h5 class="pl-4 ml-4">{{ $tc('address.name', 1) }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right pl-1>
@@ -27,8 +27,8 @@
             </v-layout>
         </v-flex>
         <v-flex md3 pl-3>
-            <v-layout :class="[!isActive(2) && !isActive(3) ? 'inactive-sort' : '']" align-center justify-start row>
-                <h5>{{ $t('fav.name') }}</h5>
+            <v-layout :class="[!isActive(2) && !isActive(3) ? 'inactive-sort' : '', 'pl-4']" align-center justify-start row>
+                <h5 class="pl-3">{{ $t('fav.name') }}</h5>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
                         <v-btn v-if="!loading && !isActive(3)" :class="[!isActive(2) && !isActive(3) ? 'inactive-btn' : '']" flat icon @click="selectFilter(2)">
@@ -56,8 +56,8 @@
                 </v-flex>
             </v-layout> -->
         </v-flex>
-        <v-flex md2 pl-3>
-            <h5>{{ $t('usd.value') }}</h5>
+        <v-flex md2 pl-0>
+            <h5 class="pl-5">{{ $t('usd.value') }}</h5>
             <!-- <v-layout :class="[!isActive(6) && !isActive(7) ? 'inactive-sort' : '']" align-center justify-start row>
                 <v-flex d-flex align-center>
                     <v-layout align-start justify-right>
