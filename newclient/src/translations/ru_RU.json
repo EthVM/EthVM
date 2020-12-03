@@ -94,7 +94,12 @@
         "filtered": "Отфильтровано по Владельцу",
         "sort-by": "Сортировка",
         "total-tokens": "Всего Токенов",
-        "image": "Изображение"
+        "image": "Изображение",
+        "favorite": "Favorite | Favorites",
+        "remove": "Remove from favorite tokens list",
+        "add": "Add to favorite tokens list",
+        "view-all": "View All",
+        "favorite-title": "Favorite Tokens"
     },
     "address": {
         "name": "Адрес | Адреса"
@@ -203,7 +208,8 @@
         "message": {
             "no-addr": "У вас нет избранных адресов. Вы можете добавить адрес, нажав на кнопку 'Добавить' или вы можете добавить его непосредственно на странице адреса.",
             "no-search-results": "Нет результатов поиска.",
-            "already-exists": "Такой адрес уже существует"
+            "already-exists": "Такой адрес уже существует",
+            "no-tokens": "You do not have any favorite tokens. You can add a token on the tokens page with market information, on a token details page, or on an addres page."
         },
         "title": "Избранные Адреса",
         "name": "Имя",
