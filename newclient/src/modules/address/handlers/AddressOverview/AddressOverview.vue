@@ -18,6 +18,7 @@ import BN from 'bignumber.js'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { watch } from 'fs'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
+import { excpAddrNotContract } from '@app/apollo/exceptions/errorExceptions'
 
 @Component({
     components: {
@@ -61,7 +62,8 @@ import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddres
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
-                if (newError.includes('No contract found')) {
+
+                if (newError.toLowerCase().includes(excpAddrNotContract)) {
                     this.emitErrorState(false)
                     this.setContract(false)
                 } else {
