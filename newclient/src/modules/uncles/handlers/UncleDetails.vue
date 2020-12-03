@@ -19,6 +19,7 @@ import { getUncleByHash } from './uncleDetails.graphql'
 import { UncleDetails as UncleDetailsType } from './apolloTypes/UncleDetails'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { ErrorMessageUncle } from '@app/modules/uncles/models/ErrorMessagesForUncle'
+import { excpUncleNotFound } from '@app/apollo/exceptions/errorExceptions'
 
 @Component({
     components: {
@@ -38,7 +39,7 @@ import { ErrorMessageUncle } from '@app/modules/uncles/models/ErrorMessagesForUn
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
-                if (newError.includes('Uncle not found')) {
+                if (newError.toLowerCase().includes(excpUncleNotFound)) {
                     this.emitErrorState(true, true)
                 } else {
                     this.emitErrorState(true)
