@@ -25,6 +25,7 @@ import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from '@app/mo
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsUncle'
 import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from '@app/modules/address/handlers/AddressRewards/rewards.graphql'
 import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateEvent/AddressUpdateEvent.mixin'
+import { excpAddrNotContract } from '@app/apollo/exceptions/errorExceptions'
 
 @Component({
     components: {
@@ -61,7 +62,7 @@ import { AddressUpdateEvent } from '@app/modules/address/handlers/AddressUpdateE
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
-                if (newError.includes('No contract found')) {
+                if (newError.toLowerCase().includes(excpAddrNotContract)) {
                     this.emitErrorState(false)
                     this.isContract = false
                 } else {

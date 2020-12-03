@@ -27,6 +27,7 @@ import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { ErrorMessageTx, TxStatus } from '@app/modules/txs/models/ErrorMessagesForTx'
 import { FormattedNumberUnit } from '@app/core/helper/number-format-helper'
+import { excpTxDoNotExists } from '@app/apollo/exceptions/errorExceptions'
 
 @Component({
     components: {
@@ -51,7 +52,7 @@ import { FormattedNumberUnit } from '@app/core/helper/number-format-helper'
             },
             error(error) {
                 const newError = JSON.stringify(error.message)
-                if (newError.includes('Cannot return null for non-nullable field Query.getTransactionByHash')) {
+                if (newError.toLowerCase().includes(excpTxDoNotExists)) {
                     this.emitErrorState(true, true)
                 } else {
                     this.emitErrorState(true)

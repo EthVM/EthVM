@@ -75,30 +75,33 @@
         </v-navigation-drawer>
         <!--
         =====================================================================================
-          TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Mobile
+          TOOLBAR (TOGGLE MENU & SEARCH INPUT)
         =====================================================================================
         -->
-
         <v-toolbar
-            v-if="$vuetify.breakpoint.name === 'sm' || $vuetify.breakpoint.name === 'xs'"
-            :scroll-threshold="75"
-            :extended="showSearch"
-            color="primary"
+            :color="headerColor"
+            :fixed="!showMobile"
+            :scroll-off-screen="showMobile"
+            :scroll-threshold="200"
+            :extended="showSearchMobile"
             app
-            scroll-off-screen
             clipped
             flat
-            class="pb-2 pt-2 pr-2"
         >
-            <v-layout align-center row fill-height>
+            <!--
+            =====================================================================================
+              TOOLBAR  Mobile
+            =====================================================================================
+            -->
+            <v-layout v-if="showMobile" align-center row fill-height>
                 <v-flex shrink>
                     <v-layout align-end justify-start row fill-height>
                         <v-img :src="require('@/assets/logo-white.png')" height="30px" width="70px" contain></v-img>
                     </v-layout>
                 </v-flex>
                 <v-spacer />
-                <v-flex v-if="!showSearch" xs2>
-                    <v-btn icon @click="showSearch = true">
+                <v-flex v-if="!showSearchMobile" shrink>
+                    <v-btn icon @click="showSearchMobile = true">
                         <v-icon class="fa fa-search white--text" />
                     </v-btn>
                 </v-flex>
@@ -108,25 +111,12 @@
                     </v-btn>
                 </v-flex>
             </v-layout>
-
-            <template v-if="showSearch" #extension>
-                <v-layout row justify-center align-center>
-                    <v-flex xs11> <search-details /> </v-flex>
-                    <v-flex xs1>
-                        <v-btn icon @click="showSearch = false">
-                            <v-icon class="fas fa-times white--text" />
-                        </v-btn>
-                    </v-flex>
-                </v-layout>
-            </template>
-        </v-toolbar>
-        <!--
-        =====================================================================================
-          TOOLBAR (TOGGLE MENU & SEARCH INPUT) - Desktop
-        =====================================================================================
-        -->
-        <v-toolbar v-else color="white" app fixed clipped flat height="77px">
-            <v-layout align-center row fill-height>
+            <!--
+            =====================================================================================
+              TOOLBAR  Desktop
+            =====================================================================================
+            -->
+            <v-layout v-else align-center row fill-height>
                 <v-flex xs1>
                     <v-layout row>
                         <v-btn icon @click.stop="setDrawer">
@@ -137,6 +127,16 @@
                 <v-spacer />
                 <v-flex xs9 sm7 md6> <search-details /> </v-flex>
             </v-layout>
+            <template v-if="showSearchMobile" #extension>
+                <v-layout row justify-center align-center>
+                    <v-flex xs11> <search-details /> </v-flex>
+                    <v-flex xs1>
+                        <v-btn icon @click="showSearchMobile = false">
+                            <v-icon class="fas fa-times white--text" />
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+            </template>
         </v-toolbar>
     </div>
 </template>
@@ -144,7 +144,7 @@
 <script lang="ts">
 import SearchDetails from '@app/modules/search/handlers/SearchDetails.vue'
 import { NavMenuEntry } from '@app/core/components/props'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component({
     components: {
@@ -163,7 +163,7 @@ export default class TheNavigationDrawer extends Vue {
     active = 0
     sublink = null
     mini: boolean = false
-    showSearch: boolean = false
+    showSearchMobile: boolean = false
 
     /*
   ===================================================================================
@@ -172,7 +172,7 @@ export default class TheNavigationDrawer extends Vue {
   */
 
     created() {
-        if (this.$vuetify.breakpoint.name === 'lg' || this.$vuetify.breakpoint.name === 'xl') {
+        if (!this.showMobile) {
             this.drawer = true
         }
     }
@@ -182,6 +182,14 @@ export default class TheNavigationDrawer extends Vue {
     Computed
   ===================================================================================
   */
+
+    get showMobile(): boolean {
+        return this.$vuetify.breakpoint.name === 'sm' || this.$vuetify.breakpoint.name === 'xs'
+    }
+
+    get headerColor(): string {
+        return this.showMobile ? 'primary' : 'white'
+    }
 
     get items(): NavMenuEntry[] {
         return [
@@ -276,7 +284,7 @@ export default class TheNavigationDrawer extends Vue {
      *
      */
     setDrawer(): void {
-        if (this.$vuetify.breakpoint.name === 'lg' || this.$vuetify.breakpoint.name === 'xl') {
+        if (!this.showMobile) {
             this.drawer = true
             this.mini = !this.mini
         } else {
@@ -314,6 +322,12 @@ export default class TheNavigationDrawer extends Vue {
             }
         }
         return false
+    }
+    @Watch('showMobile')
+    onShowMobileChange(newVal: boolean): void {
+        if (newVal === false) {
+            this.showSearchMobile = false
+        }
     }
 }
 </script>
