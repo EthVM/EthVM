@@ -15,7 +15,7 @@
 - Refactor known apollo exception [#922](https://github.com/EthVM/EthVM/pull/922)
 - Fix sending known apollo exception to Sentry [#922](https://github.com/EthVM/EthVM/pull/922)
 - Adjust blocks height to 100% on Address page [#930](https://github.com/EthVM/EthVM/pull/930)
-
+- Fixed incorrect ui layout on fav address page and fav address row mobile [#927](https://github.com/EthVM/EthVM/pull/927)
 
 ### Release v1.0.4
 
