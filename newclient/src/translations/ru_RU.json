@@ -98,7 +98,7 @@
         "favorite": "Избранный | Избранные",
         "remove": "Удалить из списка избранных токенов",
         "add": "Добавить в список избранных токенов",
-        "view-all": "View All",
+        "view-all": "Смотреть Все",
         "favorite-title": "Избранные Токены"
     },
     "address": {
@@ -456,7 +456,7 @@
         "default": "Поиск: Блок / Адрес / Тх",
         "address-tx": "Хэш Тx/Адреса",
         "favorites": "Поиск Aдреса / Имeни",
-        "favorites-token": "Search Token Name / Address"
+        "favorites-token": "Поиск Имени / Адреса Токена"
     },
     "filter": {
         "name": "Фильтр",
