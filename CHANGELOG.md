@@ -1,3 +1,6 @@
+### Bug 
+- Switch tabs for Address Details [#935](https://github.com/EthVM/EthVM/pull/935)
+
 ### Release v1.0.5
 
 ### Feature
