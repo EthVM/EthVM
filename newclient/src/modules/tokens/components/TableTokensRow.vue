@@ -174,7 +174,7 @@
                             </router-link>
                             <p v-else class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
                             <div v-if="!token.symbol && !token.name" class="transform-contract">
-                                <app-transform-hash  :hash="token.contract | toChecksum" :link="tokenLink" class="pt-1" />
+                                <app-transform-hash :hash="token.contract | toChecksum" :link="tokenLink" class="pt-1" />
                             </div>
                         </v-layout>
                     </v-flex>
