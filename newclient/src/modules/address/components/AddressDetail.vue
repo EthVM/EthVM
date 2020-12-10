@@ -160,7 +160,7 @@
                     =====================================================================================
                     -->
                     <v-flex xs12 md4>
-                        <v-card class="primary white--text pl-2 pr-2" flat>
+                        <v-card class="primary white--text pl-2 pr-2 desktop-block" flat>
                             <v-card-text class="pb-0">{{ $t('common.eth-balance') }}</v-card-text>
                             <v-card-title v-if="!loading" class="title font-weight-regular text-truncate pr-1"
                                 >{{ balance.value }} {{ $t(`common.${balance.unit}`) }}
@@ -190,7 +190,7 @@
                     =====================================================================================
                     -->
                     <v-flex xs12 md4>
-                        <v-card class="error white--text pl-2 pr-2" flat>
+                        <v-card class="error white--text pl-2 pr-2 desktop-block" flat>
                             <v-card-text class="pb-0">{{ $t('usd.value') }} {{ usdBalanceString }}</v-card-text>
                             <v-card-title v-if="!loadingUSD" class="title font-weight-regular text-truncate">
                                 {{ balanceUsd.value }}
@@ -220,7 +220,7 @@
                     =====================================================================================
                     -->
                     <v-flex xs12 md4>
-                        <v-card class="warning white--text pl-2 pr-2" flat>
+                        <v-card class="warning white--text pl-2 pr-2 desktop-block" flat>
                             <v-card-text class="pb-0">{{ $t('token.number') }}</v-card-text>
                             <v-card-title v-if="!loadingTokens" class="title font-weight-regular text-truncate">{{ address.totalERC20 }}</v-card-title>
                             <v-card-title v-else>
@@ -334,8 +334,8 @@
 import AddressQr from '@app/modules/address/components/AddressQr.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
-import FavHandlerHeartActions from '@app/modules/favorites/handlers/FavHandlerHeartActions.vue'
-import FavHandlerEdit from '@app/modules/favorites/handlers/FavHandlerEdit.vue'
+import FavHandlerHeartActions from '@app/modules/favorite-addresses/handlers/FavHandlerHeartActions.vue'
+import FavHandlerEdit from '@app/modules/favorite-addresses/handlers/FavHandlerEdit.vue'
 import Blockies from '@app/modules/address/components/Blockies.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
@@ -493,5 +493,8 @@ p {
     width: 18vw;
     content: '';
     background: linear-gradient(to left, rgba(255, 255, 255, 1) 5%, hsla(0, 0%, 100%, 0) 80%);
+}
+.desktop-block {
+    height: 100%;
 }
 </style>

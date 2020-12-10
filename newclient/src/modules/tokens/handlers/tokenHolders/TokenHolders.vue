@@ -72,6 +72,9 @@ const MAX_ITEMS = 10
             result({ data }) {
                 if (this.hasItems) {
                     if (data.getERC721TokenOwners) {
+                        if (!data.getERC721TokenOwners.owners || data.getERC721TokenOwners.owners.length < 1) {
+                            this.$emit('isNft', false)
+                        }
                         this.emitErrorState(false)
                     }
                     if (this.initialLoad) {
@@ -79,6 +82,7 @@ const MAX_ITEMS = 10
                     }
                 } else {
                     this.initialLoad = true
+                    this.$emit('isNft', false)
                 }
             },
             error(error) {

@@ -1,3 +1,27 @@
+### Release v1.0.5
+
+### Feature
+
+- Favorite ERC20 tokens List. Add/Remove tokens. [#921](https://github.com/EthVM/EthVM/pull/921)
+
+### Bug
+
+- Fix disappearance of the header on some breakpoints [#929](https://github.com/EthVM/EthVM/pull/929)
+- Fix no statediff for reg address [#926](https://github.com/EthVM/EthVM/pull/926)
+
+### Devop
+
+- Mobile ui adjustments of the search button on the app header [#929](https://github.com/EthVM/EthVM/pull/929)
+- Removed console log and unused comments[#923](https://github.com/EthVM/EthVM/pull/923)
+- Refactor known apollo exception [#922](https://github.com/EthVM/EthVM/pull/922)
+- Fix sending known apollo exception to Sentry [#922](https://github.com/EthVM/EthVM/pull/922)
+- Adjust blocks height to 100% on Address page [#930](https://github.com/EthVM/EthVM/pull/930)
+- Added link to myetherwallet.com to 'powered by mew' image [#928](https://github.com/EthVM/EthVM/pull/928)
+- Fixed incorrect ui layout on fav address page and fav address row mobile [#927](https://github.com/EthVM/EthVM/pull/927)
+
+
+===================================================================================
+
 ### Release v1.0.4
 
 ### Feature

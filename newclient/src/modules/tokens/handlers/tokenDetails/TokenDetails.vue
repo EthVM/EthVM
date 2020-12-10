@@ -14,6 +14,7 @@
                 :holder-details="null"
                 :address-ref="addressRef"
                 :token-details="tokenDetails"
+                :is-nft="isNft"
                 :is-loading="loading || hasError"
                 @errorDetails="emitErrorState"
             />
@@ -32,7 +33,7 @@
         =====================================================================================
         -->
                 <v-tab-item slot="tabs-item" value="tab-1">
-                    <token-holders :address-ref="addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
+                    <token-holders :address-ref="addressRef" :decimals="decimals" @errorDetails="emitErrorState" @isNft="getTokenType" />
                 </v-tab-item>
             </app-tabs>
         </div>
@@ -140,6 +141,7 @@ export default class TokenDetails extends Vue {
     tokenDetails!: TokenInfo | TokenOwnerInfo
     address = ''
     hasError = false
+    isNft = true
 
     /*
   ===================================================================================
@@ -275,6 +277,10 @@ export default class TokenDetails extends Vue {
     emitErrorState(val: boolean, message: ErrorMessageToken): void {
         this.hasError = val
         this.$emit('errorDetails', this.hasError, message)
+    }
+
+    getTokenType(val: boolean) {
+        this.isNft = val
     }
 }
 </script>

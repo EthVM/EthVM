@@ -283,34 +283,6 @@ export default class AddressTokens extends Mixins(CoinData) {
             }
         }
     }
-    /*
-    ===================================================================================
-      LifeCycle:
-    ===================================================================================
-    */
-    // mounted() {
-    //     if (this.tokensData === null) {
-    //         const tokenMarketData
-    //         this.$CD
-    //             .getEthereumTokens()
-    //             .then(data => {
-    //                 if (data && data.length > 0) {
-    //                     this.tokensByVolume = new TokensSorted(data, 'volume')
-    //                     this.tokensByMarket = new TokensSorted(data, 'marketCap')
-    //                     this.tokensBySymbol = new TokensSorted(data, 'symbol')
-    //                     this.tokensByPrice = new TokensSorted(data, 'price')
-    //                     this.sortTokens(this.isSortedBy)
-    //                     this.initialLoad = false
-    //                     this.totalTokens = data.length
-    //                     this.totalPages = Math.ceil(new BN(this.totalTokens).div(this.maxItems).toNumber())
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 console.log(error)
-    //                 this.error = `${this.$t('message.no-data')}`
-    //             })
-    //     }
-    // }
 }
 </script>
 <style scoped lang="css">
