@@ -1,3 +1,6 @@
+### Bug
+- Add loader for isContract [#939](https://github.com/EthVM/EthVM/pull/939)
+
 ### Release v1.0.5-hotfix.1
 
 ### Bug 
