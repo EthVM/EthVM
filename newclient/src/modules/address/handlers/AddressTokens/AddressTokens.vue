@@ -88,6 +88,7 @@ import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 import { TOKEN_FILTER_VALUES, TokenSort } from '@app/modules/address/models/TokenSort'
+import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
 
 /*
   DEV NOTES:
@@ -402,24 +403,33 @@ export default class AddressTokens extends Mixins(CoinData) {
      * Fetches more values
      * @param nextKey {String}
      */
-    fetchMore(nextKey: string): void {
-        this.$apollo.queries.getTokens.fetchMore({
-            variables: {
-                hash: this.address,
-                _nextKey: nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                const newT = fetchMoreResult.getOwnersERC20Tokens.owners
-                const prevT = previousResult.getOwnersERC20Tokens.owners
-                return {
-                    getOwnersERC20Tokens: {
-                        __typename: previousResult.getOwnersERC20Tokens.__typename,
-                        owners: [...prevT, ...newT],
-                        nextKey: fetchMoreResult.getOwnersERC20Tokens.nextKey
+    async fetchMore(nextKey: string): Promise<boolean> {
+        try {
+            await this.$apollo.queries.getTokens.fetchMore({
+                variables: {
+                    hash: this.address,
+                    _nextKey: nextKey
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    const newT = fetchMoreResult.getOwnersERC20Tokens.owners
+                    const prevT = previousResult.getOwnersERC20Tokens.owners
+                    return {
+                        getOwnersERC20Tokens: {
+                            __typename: previousResult.getOwnersERC20Tokens.__typename,
+                            owners: [...prevT, ...newT],
+                            nextKey: fetchMoreResult.getOwnersERC20Tokens.nextKey
+                        }
                     }
                 }
+            })
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
             }
-        })
+            return false
+        }
     }
     /* NFT TOKENS*/
     /**
@@ -446,24 +456,33 @@ export default class AddressTokens extends Mixins(CoinData) {
     /**
      * Fetches more NFT tokens for the address
      */
-    fetchMoreUniqueNFT(): void {
-        this.$apollo.queries.getTokens.fetchMore({
-            variables: {
-                hash: this.address,
-                _nextKey: this.getOwnersERC721Tokens.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                const newT = fetchMoreResult.getOwnersERC721Tokens
-                const prevT = previousResult.getOwnersERC721Tokens
-                return {
-                    getOwnersERC721Tokens: {
-                        __typename: previousResult.getOwnersERC721Tokens.__typename,
-                        tokens: [...prevT, ...newT],
-                        nextKey: fetchMoreResult.getOwnersERC721Tokens.nextKey
+    async fetchMoreUniqueNFT(): Promise<boolean> {
+        try {
+            await this.$apollo.queries.getTokens.fetchMore({
+                variables: {
+                    hash: this.address,
+                    _nextKey: this.getOwnersERC721Tokens.nextKey
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    const newT = fetchMoreResult.getOwnersERC721Tokens
+                    const prevT = previousResult.getOwnersERC721Tokens
+                    return {
+                        getOwnersERC721Tokens: {
+                            __typename: previousResult.getOwnersERC721Tokens.__typename,
+                            tokens: [...prevT, ...newT],
+                            nextKey: fetchMoreResult.getOwnersERC721Tokens.nextKey
+                        }
                     }
                 }
+            })
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
             }
-        })
+            return false
+        }
     }
     /**
      * Hides NFT tokens

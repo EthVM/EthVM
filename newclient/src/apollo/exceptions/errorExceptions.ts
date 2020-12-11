@@ -27,13 +27,25 @@ const excpTxDoNotExists = 'cannot return null for non-nullable field query.gettr
 const excpAddrNotContract = 'no contract found'
 
 /**
+ *  @event - This error is thrown, when an fetchMore is still pending, but user navigated to a different Page.
+ *           Happens on all pages with FetchMore
+ **/
+const excpInvariantViolation = 'invariant violation'
+
+/**
  *  @function = checks whether or no an error is an exepction in production mode
  *  @param {string} - errorMessage
  *  @returns {boolean}
  **/
 const isAPIExceptionProduction = (errorMessage: string): boolean => {
     const newE = errorMessage.toLocaleLowerCase()
-    return newE.includes(excpBlockNotMined) || newE.includes(excpTxDoNotExists) || newE.includes(excpUncleNotFound) || newE.includes(excpAddrNotContract)
+    return (
+        newE.includes(excpBlockNotMined) ||
+        newE.includes(excpTxDoNotExists) ||
+        newE.includes(excpUncleNotFound) ||
+        newE.includes(excpAddrNotContract) ||
+        newE.includes(excpInvariantViolation)
+    )
 }
 
 /**
@@ -45,4 +57,4 @@ const isAPIExceptionDev = (errorMessage: string): boolean => {
     return errorMessage.toLocaleLowerCase().includes(excpAddrNotContract)
 }
 
-export { isAPIExceptionProduction, isAPIExceptionDev, excpBlockNotMined, excpTxDoNotExists, excpUncleNotFound, excpAddrNotContract }
+export { isAPIExceptionProduction, isAPIExceptionDev, excpBlockNotMined, excpTxDoNotExists, excpUncleNotFound, excpAddrNotContract, excpInvariantViolation }

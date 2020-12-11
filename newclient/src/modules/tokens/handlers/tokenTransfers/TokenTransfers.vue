@@ -23,6 +23,8 @@ import { getERC20TokenTransfers, getERC721TokenTransfers } from '@app/modules/to
 import { getERC20Transfers_getERC20Transfers as ERC20TransfersType } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC20Transfers'
 import { getERC721TokenTransfers_getERC721TokenTransfers as ERC721TransfersType } from '@app/modules/tokens/handlers/tokenTransfers/apolloTypes/getERC721TokenTransfers'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
+import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
+
 const TYPES = ['ERC20', 'ERC721']
 
 const MAX_ITEMS = 10
@@ -119,55 +121,73 @@ export default class TokenTransfers extends Vue {
      * Gets ERC20 through apollo
      * @param page {Number}
      */
-    getERC20Transfer(page: number) {
-        const queryName = 'getERC20TokenTransfers'
+    async getERC20Transfer(page: number): Promise<boolean> {
+        try {
+            const queryName = 'getERC20TokenTransfers'
 
-        this.$apollo.queries.getERC20Transfers.fetchMore({
-            variables: {
-                hash: this.address,
-                _limit: 10,
-                _nextKey: this.getERC20Transfers.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                this.isEnd = page
-                const newT = fetchMoreResult[queryName].transfers
-                const prevT = previousResult[queryName].transfers
-                return {
-                    [queryName]: {
-                        nextKey: fetchMoreResult[queryName].nextKey,
-                        transfers: [...prevT, ...newT],
-                        __typename: fetchMoreResult[queryName].__typename
+            await this.$apollo.queries.getERC20Transfers.fetchMore({
+                variables: {
+                    hash: this.address,
+                    _limit: 10,
+                    _nextKey: this.getERC20Transfers.nextKey
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    this.isEnd = page
+                    const newT = fetchMoreResult[queryName].transfers
+                    const prevT = previousResult[queryName].transfers
+                    return {
+                        [queryName]: {
+                            nextKey: fetchMoreResult[queryName].nextKey,
+                            transfers: [...prevT, ...newT],
+                            __typename: fetchMoreResult[queryName].__typename
+                        }
                     }
                 }
+            })
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
             }
-        })
+            return false
+        }
     }
     /**
      * Gets ERC721 through apollo
      * @param page {Number}
      */
-    getERC721Transfer(page: number) {
-        const queryName = 'getERC721TokenTransfers'
+    async getERC721Transfer(page: number): Promise<boolean> {
+        try {
+            const queryName = 'getERC721TokenTransfers'
 
-        this.$apollo.queries.getERC721Transfers.fetchMore({
-            variables: {
-                hash: this.address,
-                _limit: 10,
-                _nextKey: this.getERC721Transfers.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                this.isEnd = page
-                const newT = fetchMoreResult[queryName].transfers
-                const prevT = previousResult[queryName].transfers
-                return {
-                    [queryName]: {
-                        nextKey: fetchMoreResult[queryName].nextKey,
-                        transfers: [...prevT, ...newT],
-                        __typename: fetchMoreResult[queryName].__typename
+            await this.$apollo.queries.getERC721Transfers.fetchMore({
+                variables: {
+                    hash: this.address,
+                    _limit: 10,
+                    _nextKey: this.getERC721Transfers.nextKey
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    this.isEnd = page
+                    const newT = fetchMoreResult[queryName].transfers
+                    const prevT = previousResult[queryName].transfers
+                    return {
+                        [queryName]: {
+                            nextKey: fetchMoreResult[queryName].nextKey,
+                            transfers: [...prevT, ...newT],
+                            __typename: fetchMoreResult[queryName].__typename
+                        }
                     }
                 }
+            })
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
             }
-        })
+            return false
+        }
     }
     /**
      * Sets page number and reset value and emit
