@@ -175,10 +175,24 @@
                 </v-tab-item>
                 <!--
                 =====================================================================================
+                  CONTRACT CREATOR INFO TAB
+                =====================================================================================
+                -->
+                <v-tab-item v-if="isContract" slot="tabs-item" value="tab-3">
+                    <keep-alive>
+                        <v-layout row wrap justify-start class="mb-4 contract-layout">
+                            <v-flex xs12>
+                                <app-details-list :is-loading="loadingContractDetails" :title="$t('contract.details')" :details="details" />
+                            </v-flex>
+                        </v-layout>
+                    </keep-alive>
+                </v-tab-item>
+                <!--
+                =====================================================================================
                   MINING HISTORY INFO TAB
                 =====================================================================================
                 -->
-                <v-tab-item v-if="showMiningRewards" slot="tabs-item" value="tab-3">
+                <v-tab-item slot="tabs-item" :value="isContract ? 'tab-4' : 'tab-3'">
                     <keep-alive>
                         <div>
                             <v-layout :class="subMenuClass" row wrap align-center justify-start pt-2>
@@ -265,20 +279,6 @@
                                 />
                             </transition>
                         </div>
-                    </keep-alive>
-                </v-tab-item>
-                <!--
-                =====================================================================================
-                  CONTRACT CREATOR INFO TAB
-                =====================================================================================
-                -->
-                <v-tab-item v-if="isContract" slot="tabs-item" :value="showMiningRewards ? 'tab-4' : 'tab-3'">
-                    <keep-alive>
-                        <v-layout row wrap justify-start class="mb-4 contract-layout">
-                            <v-flex xs12>
-                                <app-details-list :is-loading="loadingContractDetails" :title="$t('contract.details')" :details="details" />
-                            </v-flex>
-                        </v-layout>
                     </keep-alive>
                 </v-tab-item>
             </app-tabs>
