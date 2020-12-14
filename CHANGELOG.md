@@ -1,11 +1,16 @@
+### Devop
+
+- Change Unique chart route names [#942](https://github.com/EthVM/EthVM/pull/942)
+
+===================================================================================
+
 ### Release v1.0.5-hotfix.1
 
-### Bug 
+### Bug
 
 - Switch tabs for Address Details [#935](https://github.com/EthVM/EthVM/pull/935)
 
 ===================================================================================
-
 
 ### Release v1.0.5
 
@@ -27,7 +32,6 @@
 - Adjust blocks height to 100% on Address page [#930](https://github.com/EthVM/EthVM/pull/930)
 - Added link to myetherwallet.com to 'powered by mew' image [#928](https://github.com/EthVM/EthVM/pull/928)
 - Fixed incorrect ui layout on fav address page and fav address row mobile [#927](https://github.com/EthVM/EthVM/pull/927)
-
 
 ===================================================================================
 
