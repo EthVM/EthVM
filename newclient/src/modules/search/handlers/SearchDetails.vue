@@ -57,7 +57,7 @@ export default class SearchDetails extends Vue {
      * Checks whether param is valid
      * @param param {Any}
      */
-    isValid(param): boolean {
+    isValidHash(param): boolean {
         return eth.isValidHash(this.removeSpaces(param)) || eth.isValidAddress(this.removeSpaces(param))
     }
     /**
@@ -68,8 +68,11 @@ export default class SearchDetails extends Vue {
         let routeName = ''
         this.isLoading = true
         this.hasError = false
-        if (!this.isValid(param)) {
+        if (!this.isValidHash(param)) {
             this.setError(param)
+            return
+        }
+        if (param.indexOf(' ') >= 0) {
             return
         }
         this.$apollo
@@ -162,7 +165,7 @@ export default class SearchDetails extends Vue {
      * @param param {Any}
      */
     getToken(param): void {
-        if (!this.onlyLetters(param)) {
+        if (param.indexOf(' ') >= 0) {
             return
         }
         this.isLoading = true
@@ -197,7 +200,7 @@ export default class SearchDetails extends Vue {
         if (param && param.contract) {
             this.routeToToken(param.contract)
         }
-        this.onlyLetters(param) ? this.getToken(param) : this.getHashType(param)
+        this.isValidHash(param) ? this.getHashType(param) : this.getToken(param)
     }
     /**
      * Get selected value and route user to token page
@@ -217,14 +220,6 @@ export default class SearchDetails extends Vue {
             return val.replace(/ /g, '')
         }
         return ''
-    }
-    /**
-     * Check if param onl contains string
-     * @param param {Any}
-     */
-    onlyLetters(param): boolean {
-        const value = this.removeSpaces(param)
-        return /^[a-zA-Z]+$/.test(value) ? true : false
     }
     /*
   ===================================================================================
