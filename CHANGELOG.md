@@ -1,3 +1,5 @@
+### Bug
+- Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
 ### Release v1.0.5-hotfix.1
 
 ### Bug 
