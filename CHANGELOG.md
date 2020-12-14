@@ -1,5 +1,13 @@
+### Release v1.0.6
 ### Bug
 - Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
+
+### Devop
+
+- Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
+
+===================================================================================
+
 ### Release v1.0.5-hotfix.1
 
 ### Bug 
