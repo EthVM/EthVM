@@ -23,6 +23,11 @@
         =====================================================================================
         -->
         <v-layout v-else align-center justify-start row fill-height>
+            <!--
+            =====================================================================================
+              Name
+            =====================================================================================
+            -->
             <v-flex md4>
                 <v-layout
                     :class="[!isTokenSortActive(0) && !isTokenSortActive(1) ? 'inactive-sort' : '']"
@@ -37,23 +42,27 @@
                     <v-flex v-if="hasTokens" d-flex align-center>
                         <v-layout align-start justify-right>
                             <v-btn
-                                v-if="!loading && !isTokenSortActive(1)"
+                                v-if="!loading && !isTokenSortActive(0)"
                                 :class="[!isTokenSortActive(0) && !isTokenSortActive(1) ? 'inactive-btn' : '']"
                                 flat
                                 icon
-                                @click="selectTokenFilter(0)"
+                                @click="selectTokenFilter(1)"
                             >
-                                <v-icon :class="['ml-2', isTokenSortActive(0) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(1) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
                             </v-btn>
-                            <v-btn v-if="!loading && isTokenSortActive(1)" flat icon @click="selectTokenFilter(1)">
-                                <v-icon :class="['ml-2', isTokenSortActive(1) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
+                            <v-btn v-if="!loading && isTokenSortActive(0)" flat icon @click="selectTokenFilter(1)">
+                                <v-icon :class="['ml-2', isTokenSortActive(0) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
                             </v-btn>
                         </v-layout>
                     </v-flex>
                 </v-layout>
             </v-flex>
-
             <v-flex v-if="!isErc20" md2 />
+            <!--
+            =====================================================================================
+              Amount
+            =====================================================================================
+            -->
             <v-flex md3>
                 <v-layout
                     :class="[!isTokenSortActive(2) && !isTokenSortActive(3) ? 'inactive-sort' : '']"
@@ -82,6 +91,11 @@
                     </v-flex>
                 </v-layout>
             </v-flex>
+            <!--
+            =====================================================================================
+              USD VALUE
+            =====================================================================================
+            -->
             <v-flex v-if="isErc20" md3>
                 <v-layout
                     :class="[!isTokenSortActive(4) && !isTokenSortActive(5) ? 'inactive-sort' : '']"
@@ -110,6 +124,11 @@
                     </v-flex>
                 </v-layout>
             </v-flex>
+            <!--
+            =====================================================================================
+              % CHANGE
+            =====================================================================================
+            -->
             <v-flex v-if="isErc20" md2>
                 <v-layout
                     :class="[!isTokenSortActive(6) && !isTokenSortActive(7) ? 'inactive-sort' : '']"
@@ -129,10 +148,10 @@
                                 icon
                                 @click="selectTokenFilter(6)"
                             >
-                                <v-icon :class="['ml-2', isTokenSortActive(6) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(6) ? 'white--text' : '']"> fas fa-sort-amount-down</v-icon>
                             </v-btn>
                             <v-btn v-if="!loading && isTokenSortActive(7)" flat icon @click="selectTokenFilter(7)">
-                                <v-icon :class="['ml-2', isTokenSortActive(7) ? 'white--text' : '']">fas fa-sort-amount-down</v-icon>
+                                <v-icon :class="['ml-2', isTokenSortActive(7) ? 'white--text' : '']">fas fa-sort-amount-up</v-icon>
                             </v-btn>
                         </v-layout>
                     </v-flex>
