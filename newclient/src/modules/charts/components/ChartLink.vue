@@ -15,8 +15,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { TimeseriesKey } from '@app/modules/charts/models'
-
 @Component
 export default class ChartLink extends Vue {
     /*
@@ -25,7 +23,7 @@ export default class ChartLink extends Vue {
     ===================================================================================
     */
 
-    @Prop({ type: String, required: true }) chartId!: TimeseriesKey
+    @Prop({ type: String, required: true }) chartId!: string
 
     /*
     ===================================================================================
@@ -33,18 +31,13 @@ export default class ChartLink extends Vue {
     ===================================================================================
     */
     get title(): string {
-        const title = `charts.${this.translationsID}.title`
+        const title = `charts.${this.chartId}.title`
         return `${this.$t(title)}`
     }
 
     get text(): string {
-        const desc = `charts.${this.translationsID}.description`
+        const desc = `charts.${this.chartId}.description`
         return `${this.$t(desc)}`
-    }
-
-    get translationsID(): string {
-        const _id = `${this.chartId}`
-        return _id.replace(/_/g, '-').toLowerCase()
     }
 
     /*

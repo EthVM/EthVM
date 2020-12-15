@@ -1,16 +1,15 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
-        <time-series-chart-data :chart-key="chartId" />
+        <time-series-chart-data :chart-ref="chartRef" />
     </v-container>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import TimeSeriesChartData from '@app/modules/charts/handlers/TimeSeriesChartData.vue'
 import { Crumb } from '@app/core/components/props'
-import { TimeseriesKey } from '@app/modules/charts/models'
 
 @Component({
     components: {
@@ -20,12 +19,20 @@ import { TimeseriesKey } from '@app/modules/charts/models'
 })
 export default class PageUniqueChart extends Vue {
     /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
+
+    @Prop({ type: String, required: true }) chartRef!: string
+
+    /*
   ===================================================================================
     Computed Values
   ===================================================================================
   */
     get crumbs(): Crumb[] {
-        const translationsId = `charts.${this.chartId.replace(/_/g, '-').toLowerCase()}.title`
+        const translationsId = `charts.${this.chartRef}.title`
         return [
             {
                 text: this.$t('charts.name'),
@@ -35,10 +42,6 @@ export default class PageUniqueChart extends Vue {
                 text: this.$t(translationsId)
             }
         ]
-    }
-
-    get chartId(): TimeseriesKey {
-        return TimeseriesKey[this.$route.params.chartRef]
     }
 }
 </script>
