@@ -1,19 +1,23 @@
 ### Release v1.0.6
 
+### Bug
+
+- Fix Cannot read property 'insertBefore' of null in Address ERC20 Tokens [#945](https://github.com/EthVM/EthVM/pull/945)
+
 ### Devop
 
 - Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
+- Refactor Tokens Sorting in Address, loading logic [#945](https://github.com/EthVM/EthVM/pull/945)
 
 ===================================================================================
 
 ### Release v1.0.5-hotfix.1
 
-### Bug 
+### Bug
 
 - Switch tabs for Address Details [#935](https://github.com/EthVM/EthVM/pull/935)
 
 ===================================================================================
-
 
 ### Release v1.0.5
 
@@ -35,7 +39,6 @@
 - Adjust blocks height to 100% on Address page [#930](https://github.com/EthVM/EthVM/pull/930)
 - Added link to myetherwallet.com to 'powered by mew' image [#928](https://github.com/EthVM/EthVM/pull/928)
 - Fixed incorrect ui layout on fav address page and fav address row mobile [#927](https://github.com/EthVM/EthVM/pull/927)
-
 
 ===================================================================================
 
