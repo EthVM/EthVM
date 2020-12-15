@@ -5,7 +5,7 @@
 /**
  *  @event -  This error is received, when there is an invalid hash. Happens when a user is trying to search for a valid hash or address.
  **/
-const excpInvalidHash = 'Invalid Hash'
+const excpInvalidHash = 'invalid hash'
 
 /**
  *  @event -  This error is recieved, when block has not been mined yet. Happens on Block Details Page,
