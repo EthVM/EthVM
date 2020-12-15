@@ -241,7 +241,7 @@ export default class AddressTokens extends Mixins(CoinData) {
 
     /* Unique NFT List for contract */
     getOwnersERC721Tokens!: ERC721ContractTokensType
-    uniqueNFTMap: NFTMap | false = false
+    uniqueNFTMap: NFTMap = {}
     loadingUniqueNFT = true
     showUniqueNFT = false
     uniqueNFT: ERC721TokenType[] = []
@@ -327,9 +327,8 @@ export default class AddressTokens extends Mixins(CoinData) {
     /**
      * Gets an object with all sorted arrays
      *
-     * @returns { false } if values have been loaded
-     * @returns { Map<string, TokenMarketData> }  if values have been loaded within a mixin
-     * @returns { null } otherwise
+     * @returns false OR Map<string, TokenMarketData>  if values have been loaded
+     * @returns  null  otherwise
      */
     get tokenPrices(): Map<string, TokenMarketData> | false | null {
         if (!this.loading && this.isERC20) {
@@ -380,8 +379,9 @@ export default class AddressTokens extends Mixins(CoinData) {
     /**
      * Gets an object with all sorted arrays
      * @param {String} contract
-     * @returns {TokenSort} if all has been loaded
-     * @returns {false} if still loading
+     * @returns
+     * - TokenSort if all has been loaded
+     * - false if still loading
      */
 
     get tokenSort(): TokenSort | false {
