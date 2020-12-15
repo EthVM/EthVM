@@ -6,7 +6,6 @@
         :select-items="selectItems"
         :has-error="hasError"
         @onSelect="onSelect"
-        @getToken="getToken"
         @getAllSearch="getAllSearch"
         @routeTo="routeTo"
     />
@@ -68,13 +67,6 @@ export default class SearchDetails extends Vue {
         let routeName = ''
         this.isLoading = true
         this.hasError = false
-        if (!this.isValidHash(param)) {
-            this.setError(param)
-            return
-        }
-        if (param.indexOf(' ') >= 0) {
-            return
-        }
         this.$apollo
             .query({
                 query: getHashType,
@@ -165,9 +157,6 @@ export default class SearchDetails extends Vue {
      * @param param {Any}
      */
     getToken(param): void {
-        if (param.indexOf(' ') >= 0) {
-            return
-        }
         this.isLoading = true
         this.hasError = false
         this.$apollo
@@ -197,6 +186,9 @@ export default class SearchDetails extends Vue {
      * @param param {Any}
      */
     getAllSearch(param): void {
+        if (this.removeSpaces(param).length === 0) {
+            return
+        }
         if (param && param.contract) {
             this.routeToToken(param.contract)
         }
