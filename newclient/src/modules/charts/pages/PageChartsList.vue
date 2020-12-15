@@ -10,16 +10,16 @@
             <v-tab-item slot="tabs-item" value="tab-0">
                 <v-layout :class="contentClass" row wrap justify-start>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.TX_COUNT_AVG" />
+                        <chart-link :chart-id="ChartType.average_txs.link" />
                     </v-flex>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.TX_COUNT_TOTAL" />
+                        <chart-link :chart-id="ChartType.total_txs.link" />
                     </v-flex>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.TX_COUNT_MIN" />
+                        <chart-link :chart-id="ChartType.min_txs.link" />
                     </v-flex>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.TX_COUNT_MAX" />
+                        <chart-link :chart-id="ChartType.max_txs.link" />
                     </v-flex>
                 </v-layout>
             </v-tab-item>
@@ -31,14 +31,13 @@
             <v-tab-item slot="tabs-item" value="tab-1">
                 <v-layout :class="contentClass" row wrap justify-start>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.PENDING_TX_COUNT_AVG" />
+                        <chart-link :chart-id="ChartType.average_new_pending_txs.link" />
                     </v-flex>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.PENDING_TX_COUNT_TOTAL" />
+                        <chart-link :chart-id="ChartType.total_new_pending_txs.link" />
                     </v-flex>
                 </v-layout>
             </v-tab-item>
-
             <!--
             =====================================================================================
             GAS PRICE TAB
@@ -47,13 +46,13 @@
             <v-tab-item slot="tabs-item" value="tab-2">
                 <v-layout :class="contentClass" row wrap justify-start>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.GAS_PRICE_AVG" />
+                        <chart-link :chart-id="ChartType.average_gas_price.link" />
                     </v-flex>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.GAS_PRICE_MIN" />
+                        <chart-link :chart-id="ChartType.min_gas_price.link" />
                     </v-flex>
                     <v-flex xs12 md6>
-                        <chart-link :chart-id="ChartType.GAS_PRICE_MAX" />
+                        <chart-link :chart-id="ChartType.max_gas_price.link" />
                     </v-flex>
                 </v-layout>
             </v-tab-item>
@@ -67,7 +66,7 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import ChartLink from '@app/modules/charts/components/ChartLink.vue'
 import { Tab, Crumb } from '@app/core/components/props'
 import { Vue, Component } from 'vue-property-decorator'
-import { TimeseriesKey } from '@app/modules/charts/models'
+import { ChartRouteKey } from '@app/modules/charts/models'
 
 @Component({
     components: {
@@ -82,7 +81,7 @@ export default class PageChartsList extends Vue {
     Initial Data
   ===================================================================================
   */
-    ChartType = TimeseriesKey
+    ChartType = ChartRouteKey
 
     /*
   ===================================================================================

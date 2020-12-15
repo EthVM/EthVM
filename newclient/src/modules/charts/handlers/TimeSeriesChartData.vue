@@ -24,7 +24,8 @@ import {
     TimeseriesValue,
     TimeseriesValueKey,
     TimeOptions,
-    ComponentDataInterface
+    ComponentDataInterface,
+    ChartRouteKey
 } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
 import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
@@ -173,7 +174,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
     }
 })
 export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
-    @Prop({ type: String, required: true }) chartKey!: TimeseriesKey
+    @Prop({ type: String, required: true }) chartRef!: string
     /*
     ===================================================================================
      Initial Data
@@ -193,16 +194,15 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     ===================================================================================
     */
 
-    get chartID(): string {
-        const _id = `${this.chartKey}`
-        return _id.replace(/_/g, '-').toLowerCase()
+    get chartKey(): TimeseriesKey {
+        return ChartRouteKey[this.chartRef].key
     }
 
     get title(): string {
-        return `${this.$t(`charts.${this.chartID}.title`)}`
+        return `${this.$t(`charts.${this.chartRef}.title`)}`
     }
     get description(): string {
-        return `${this.$t(`charts.${this.chartID}.description`)}`
+        return `${this.$t(`charts.${this.chartRef}.description`)}`
     }
     get value_type(): TimeseriesValue {
         return TimeseriesValueKey[this.chartKey]
@@ -216,7 +216,7 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
         if (this.chartDataSet) {
             _datasets.push({
                 data: this.chartDataSet,
-                label: `${this.$t(`charts.${this.chartID}.label`)}`,
+                label: `${this.$t(`charts.${this.chartRef}.label`)}`,
                 backgroundColor: 'rgba(118, 221, 251, 0.2)',
                 borderColor: '#2c82be',
                 borderWidth: 2
@@ -257,7 +257,7 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: `${this.$t(`charts.${this.chartID}.label`)}`
+                            labelString: `${this.$t(`charts.${this.chartRef}.label`)}`
                         },
                         ticks: {
                             source: 'auto',
