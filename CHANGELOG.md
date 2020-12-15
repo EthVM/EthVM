@@ -1,5 +1,8 @@
+### Release v1.0.6
+
 ### Devop
 
+- Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
 - Change Unique chart route names [#942](https://github.com/EthVM/EthVM/pull/942)
 
 ===================================================================================
