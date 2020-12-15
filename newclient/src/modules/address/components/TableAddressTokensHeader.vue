@@ -214,7 +214,7 @@ export default class TableAddressTokensHeader extends Vue {
     ===================================================================================
    */
     get text(): string {
-        return this.isErc20 ? `${this.$t('common.amount')}` : `${this.$t('common.id')}`
+        return this.isErc20 ? `${this.$t('common.amount')}` : `${this.$t('token.total-tokens')}`
     }
 }
 </script>
