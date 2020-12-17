@@ -6,6 +6,7 @@
             :datacollection="chartData"
             :chart-options="chartOptions"
             :is-pending="isPending"
+            :is-loading-data="loading"
             @timeFrame="setTimeFrame"
         />
     </div>
@@ -169,6 +170,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
                 this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.value_type)]
+                this.loadingData = false
             }
         }
     }
@@ -187,6 +189,8 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     maxItems = DEFAULT_DATA[0].max_items
     start = DEFAULT_DATA[0].start
     timeOptions = DEFAULT_DATA[0].timeOptions
+    loadingData = true
+    currentUnit = DEFAULT_DATA[0].timeOptions.unit
 
     /*
     ===================================================================================
@@ -270,6 +274,9 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
             }
         }
     }
+    get loading(): boolean {
+        return this.loadingData
+    }
 
     /*
     ===================================================================================
@@ -281,11 +288,14 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
      * @param value {Number}
      */
     setTimeFrame(value: number): void {
+        if (this.currentUnit !== DEFAULT_DATA[value].timeOptions.unit) {
+            this.loadingData = true
+            this.currentUnit = DEFAULT_DATA[value].timeOptions.unit
+        }
         this.scale = DEFAULT_DATA[value].scale
         this.maxItems = DEFAULT_DATA[value].max_items
         this.start = DEFAULT_DATA[value].start
         this.timeOptions = DEFAULT_DATA[value].timeOptions
-        this.$apollo.queries.getChartData.refetch()
     }
 }
 </script>

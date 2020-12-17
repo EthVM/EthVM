@@ -52,7 +52,15 @@
           Chart Body
         =====================================================================================
         -->
-        <line-chart :chart-data="datacollection" :chart-options="chartOptions"></line-chart>
+        <div class="chart-card">
+            <line-chart v-if="!isLoadingData" :chart-data="datacollection" :chart-options="chartOptions" pa-2></line-chart>
+            <v-layout v-else column fill-height align-center pa-2>
+                <div class="chart-icon-container">
+                    <v-icon class="primary--text fas fa-circle-notch fa-spin chart-icon" />
+                </div>
+            </v-layout>
+        </div>
+
         <!--
         =====================================================================================
          Footnotes
@@ -163,6 +171,7 @@ export default class Chart extends Vue {
     @Prop({ type: Object }) chartOptions!: ChartOptions
     @Prop({ type: Boolean, default: true }) showTimeOptions!: boolean
     @Prop({ type: Boolean, default: false }) isPending!: boolean
+    @Prop({ type: Boolean, default: true }) isLoadingData!: boolean
 
     /*
     ===================================================================================
@@ -193,15 +202,7 @@ export default class Chart extends Vue {
     Computed
   ===================================================================================
   */
-    get chartClass(): string {
-        const brkPoint = this.$vuetify.breakpoint.name
-        switch (brkPoint) {
-            case 'xs':
-                return 'xs-chart'
-            default:
-                return ''
-        }
-    }
+
     get description(): string {
         if (!this.showTimeOptions) {
             return this.chartDescription
@@ -242,8 +243,14 @@ export default class Chart extends Vue {
     padding: 2px;
 }
 
-.xs-chart {
-    min-height: 280px;
+.chart-card {
+    min-height: 400px;
+}
+
+.chart-icon-container {
+    height: 2em;
+    width: 2em;
+    margin-top: 150px;
 }
 
 .chart-caption {

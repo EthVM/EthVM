@@ -7,6 +7,7 @@
             :chart-options="chartOptions"
             :footnotes="footnotes"
             :show-time-options="false"
+            :is-loading-data="loading"
         />
     </div>
 </template>
@@ -236,6 +237,9 @@ export default class HomeTxChart extends Mixins(ChartDataMixin) {
                 icon: 'fa fa-circle'
             }
         ]
+    }
+    get loading(): boolean {
+        return this.$apollo.queries.dataTxTotal.loading
     }
 
     /*
