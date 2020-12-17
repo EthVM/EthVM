@@ -1,6 +1,10 @@
 ### Release v1.0.6
+
 ### Bug
+
 - Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
+- Fixed x and y are too far apart with stepSize of 1 minute [#924](https://github.com/EthVM/EthVM/pull/947)
+- Fixed 'Cannot set property 'font' of null' (https://github.com/EthVM/EthVM/pull/947)
 
 ### Devop
 
