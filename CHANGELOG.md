@@ -1,4 +1,5 @@
 ### Release v1.0.6
+
 ### Bug
 - Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
 - Add Invalid Hash error to exceptions [#933](https://github.com/EthVM/EthVM/pull/933)
@@ -7,6 +8,7 @@
 
 - Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
 - Change Unique chart route names [#942](https://github.com/EthVM/EthVM/pull/942)
+- remove console [#941](https://github.com/EthVM/EthVM/pull/941)
 
 ===================================================================================
 
