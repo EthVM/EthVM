@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <app-transform-hash v-if="isValidAddress" :hash="detail.detail | toChecksum" :link="detail.link" :is-blue="showLink" />
+                        <app-transform-hash v-if="detail.toChecksum" :hash="detail.detail | toChecksum" :link="detail.link" :is-blue="showLink" />
                         <app-transform-hash v-else :hash="detail.detail" :link="detail.link" :is-blue="showLink" />
                     </div>
                 </div>
@@ -133,10 +133,6 @@ export default class AppDetailsListRow extends Mixins(NumberFormatMixin) {
 
     get isMono(): boolean {
         return !!this.detail.mono
-    }
-
-    get isValidAddress(): boolean {
-        return eth.isValidAddress(this.detail.detail)
     }
 
     get showLink(): boolean {
