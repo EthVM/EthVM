@@ -1,3 +1,6 @@
+### Bug
+- Do checksum on valid addresses only [#949](https://github.com/EthVM/EthVM/pull/949)
+
 ### Release v1.0.6
 
 ### Bug
