@@ -5,6 +5,7 @@
 - Fix Cannot read property 'insertBefore' of null in Address ERC20 Tokens [#945](https://github.com/EthVM/EthVM/pull/945)
 - Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
 - Add Invalid Hash error to exceptions [#933](https://github.com/EthVM/EthVM/pull/933)
+- Add loader for isContract [#939](https://github.com/EthVM/EthVM/pull/939)
 
 ### Devop
 
