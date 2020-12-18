@@ -46,8 +46,8 @@
                         </div>
                     </div>
                     <div v-else>
-                        <app-transform-hash v-if="detail.link" :hash="detail.detail | toChecksum" :link="detail.link" />
-                        <app-transform-hash v-else :hash="detail.detail | toChecksum" :is-blue="false" />
+                        <app-transform-hash v-if="isValidAddress" :hash="detail.detail | toChecksum" :link="detail.link" :is-blue="showLink" />
+                        <app-transform-hash v-else :hash="detail.detail" :link="detail.link" :is-blue="showLink" />
                     </div>
                 </div>
             </v-flex>
@@ -79,6 +79,7 @@ import AppTooltip from '@app/core/components/ui/AppTooltip.vue'
 import BN from 'bignumber.js'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { eth } from '@app/core/helper'
 
 @Component({
     components: {
@@ -132,6 +133,14 @@ export default class AppDetailsListRow extends Mixins(NumberFormatMixin) {
 
     get isMono(): boolean {
         return !!this.detail.mono
+    }
+
+    get isValidAddress(): boolean {
+        return eth.isValidAddress(this.detail.detail)
+    }
+
+    get showLink(): boolean {
+        return !!this.detail.link
     }
 }
 </script>
