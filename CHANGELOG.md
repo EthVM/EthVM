@@ -1,13 +1,14 @@
 ### Release v1.0.6
 
 ### Bug
-
+- Prevent searching an empty string & remove only Letters [#944](https://github.com/EthVM/EthVM/pull/944)
 - Fix Cannot read property 'insertBefore' of null in Address ERC20 Tokens [#945](https://github.com/EthVM/EthVM/pull/945)
 
 ### Devop
 
 - Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
 - Refactor Tokens Sorting in Address, loading logic [#945](https://github.com/EthVM/EthVM/pull/945)
+- Change Unique chart route names [#942](https://github.com/EthVM/EthVM/pull/942)
 
 ===================================================================================
 
