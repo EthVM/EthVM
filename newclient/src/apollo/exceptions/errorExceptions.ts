@@ -3,6 +3,11 @@
 /*------------------------------------------------------------------*/
 
 /**
+ *  @event -  This error is received, when there is an invalid hash. Happens when a user is trying to search for a valid hash or address.
+ **/
+const excpInvalidHash = 'invalid hash'
+
+/**
  *  @event -  This error is recieved, when block has not been mined yet. Happens on Block Details Page,
  *            when a user is looking for a valid block hash or a valid block Number
  **/
@@ -33,7 +38,7 @@ const excpAddrNotContract = 'no contract found'
  **/
 const isAPIExceptionProduction = (errorMessage: string): boolean => {
     const newE = errorMessage.toLocaleLowerCase()
-    return newE.includes(excpBlockNotMined) || newE.includes(excpTxDoNotExists) || newE.includes(excpUncleNotFound) || newE.includes(excpAddrNotContract)
+    return newE.includes(excpBlockNotMined) || newE.includes(excpTxDoNotExists) || newE.includes(excpUncleNotFound) || newE.includes(excpAddrNotContract) || newE.includes(excpInvalidHash)
 }
 
 /**

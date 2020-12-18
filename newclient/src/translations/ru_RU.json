@@ -377,50 +377,50 @@
                 "avg": "Сред."
             }
         },
-        "tx-count-avg": {
-            "title": "Среднее Количество Транзакций",
-            "description": "Среднее количество транзакций",
-            "label": "Количество Txs"
+        "average_txs": {
+            "title": "Average Transactions Count",
+            "description": "Average number of transactions",
+            "label": "Txs Count"
         },
-        "tx-count-total": {
-            "title": "Общее количество транзакций",
-            "description": "Общее количество транзакций",
-            "label": "Количество Txs"
+        "total_txs": {
+            "title": "Total Transactions Count",
+            "description": "Total number of transactions",
+            "label": "Txs Count"
         },
-        "tx-count-min": {
-            "title": "Минимальное количество транзакций",
-            "description": "Минимальное количество транзакций",
-            "label": "Мин. Txs "
+        "min_txs": {
+            "title": "Minimum Transactions Count",
+            "description": "Minimum number of transactions",
+            "label": "Min Txs "
         },
-        "tx-count-max": {
-            "title": "Максимальное количество транзакций",
-            "description": "Максимальное количество транзакций",
-            "label": "Макс. Txs "
+        "max_txs": {
+            "title": "Maximum Transactions Count",
+            "description": "Maximum number of transactions",
+            "label": "Max Txs "
         },
-        "pending-tx-count-avg": {
-            "title": "Среднее Количество Ожидающих Транзакций ",
-            "description": "Среднее количество ожидающих транзакций",
-            "label": "Количество Txs"
+        "average_new_pending_txs": {
+            "title": "Average Pending Transactions ",
+            "description": "Average number of pending transactions",
+            "label": "Txs Count"
         },
-        "pending-tx-count-total": {
-            "title": "Всего Ожидающих Транзакций ",
-            "description": "Общее количество ожидающих транзакций",
-            "label": "Количество Txs"
+        "total_new_pending_txs": {
+            "title": "Total Pending Transactions ",
+            "description": "Total number of pending transactions",
+            "label": "Txs Count"
         },
-        "gas-price-avg": {
-            "title": "Сред. Цена Газа ",
-            "description": "Средняя Цена Газа (GWEI)",
-            "label": "Цена Газа (Gwei)"
+        "average_gas_price": {
+            "title": "Average Gas Price ",
+            "description": "Average Gas Price (GWEI)",
+            "label": "Gas Price (GWEI)"
         },
-        "gas-price-min": {
-            "title": "Минимальная Цена Газа ",
-            "description": "Минимальная Цена Газа (GWEI)",
-            "label": "Цена Газа (Gwei)"
+        "min_gas_price": {
+            "title": "Minimum Gas Price ",
+            "description": "Minimum Gas Price (GWEI)",
+            "label": "Gas Price (GWEI)"
         },
-        "gas-price-max": {
-            "title": "Минимальная Цена Газа ",
-            "description": "Минимальная Цена Газа (GWEI)",
-            "label": "Цена Газа (GWEI)"
+        "max_gas_price": {
+            "title": "Maximum Gas Price ",
+            "description": "Maximum Gas Price (GWEI)",
+            "label": "Gas Price (GWEI)"
         },
         "states": {
             "all": "Все",

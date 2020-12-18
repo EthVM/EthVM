@@ -3,12 +3,15 @@
 ### Bug
 - Prevent searching an empty string & remove only Letters [#944](https://github.com/EthVM/EthVM/pull/944)
 - Fix Cannot read property 'insertBefore' of null in Address ERC20 Tokens [#945](https://github.com/EthVM/EthVM/pull/945)
+- Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
+- Add Invalid Hash error to exceptions [#933](https://github.com/EthVM/EthVM/pull/933)
 
 ### Devop
 
 - Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
 - Refactor Tokens Sorting in Address, loading logic [#945](https://github.com/EthVM/EthVM/pull/945)
 - Change Unique chart route names [#942](https://github.com/EthVM/EthVM/pull/942)
+- remove console [#941](https://github.com/EthVM/EthVM/pull/941)
 
 ===================================================================================
 
