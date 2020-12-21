@@ -6,6 +6,7 @@
 - Fixed x and y are too far apart with stepSize of 1 minute [#947](https://github.com/EthVM/EthVM/pull/947)
 - Fixed 'Cannot set property 'font' of null' [#947](https://github.com/EthVM/EthVM/pull/947)
 - Cannot read property 'skip' of undefined [#947](https://github.com/EthVM/EthVM/pull/947)
+- Corrected data points within unique charts for duration [#947](https://github.com/EthVM/EthVM/pull/947)
 
 ### Devop
 

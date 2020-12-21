@@ -64,7 +64,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
         start: 24,
         max_items: 24,
         timeOptions: {
-            unit: 'minute',
+            unit: 'hour',
             displayFormats: {
                 minute: 'h:mm a'
             },
@@ -77,7 +77,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
         start: 168,
         max_items: 168,
         timeOptions: {
-            unit: 'day',
+            unit: 'hour',
             displayFormats: {
                 day: 'ddd, h:mm a'
             },
