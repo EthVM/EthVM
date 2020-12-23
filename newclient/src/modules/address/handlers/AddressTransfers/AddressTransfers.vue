@@ -159,6 +159,7 @@ export default class AddressTransers extends Mixins(CoinData) {
     @Prop(Number) newTransfers!: number
     @Prop(Boolean) refetchTransfers?: boolean
     @Prop(Boolean) isContract?: boolean
+    @Prop(Boolean) loadingContract?: boolean
 
     /*
     ===================================================================================
@@ -394,7 +395,7 @@ export default class AddressTransers extends Mixins(CoinData) {
                                 after: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
                             }
                         })
-                    } else if (stateDiffIdx < 0 && !this.isContract) {
+                    } else if (stateDiffIdx < 0 && !this.isContract && !this.loadingContract) {
                         throw new Error('No state diff found for regular address')
                     }
                 }

@@ -178,7 +178,8 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
                     detail: this.block.summary.miner!,
                     link: `/address/${this.block.summary.miner}`,
                     copy: true,
-                    mono: true
+                    mono: true,
+                    toChecksum: true
                 },
                 {
                     title: this.$i18n.t('miner.total-rewards'),

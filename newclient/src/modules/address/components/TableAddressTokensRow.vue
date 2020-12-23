@@ -55,8 +55,8 @@
 
                                         <app-transform-hash
                                             v-if="!name && !symbolString"
-                                            :hash="token.tokenInfo.contract | toChecksum"
-                                            :link="`/address/${token.tokenInfo.contract}`"
+                                            :hash="token.contract | toChecksum"
+                                            :link="`/address/${token.contract}`"
                                         />
                                     </v-layout>
                                 </v-flex>
@@ -69,8 +69,8 @@
                                         </div>
                                         <app-transform-hash
                                             v-if="!name && !symbolString"
-                                            :hash="token.tokenInfo.contract | toChecksum"
-                                            :link="`/token/${token.tokenInfo.contract}`"
+                                            :hash="token.contract | toChecksum"
+                                            :link="`/token/${token.contract}`"
                                         />
                                     </v-layout>
                                 </v-flex>
@@ -99,7 +99,7 @@
                                             max-width="18px"
                                             contain
                                         ></v-img>
-                                        <fav-handler-heart-actions :symbol="favTokenSymbol" :address="token.tokenInfo.contract" :is-small="true" />
+                                        <fav-handler-heart-actions :symbol="favTokenSymbol" :address="token.contract" :is-small="true" />
                                     </v-layout>
                                 </v-flex>
                                 <v-spacer v-else />
@@ -165,11 +165,7 @@
                                 </div>
                             </component>
                             <p v-else class="info--text contract-string mr-1">{{ $tc('contract.name', 1) }}:</p>
-                            <app-transform-hash
-                                v-if="!name && !symbolString"
-                                :hash="token.tokenInfo.contract | toChecksum"
-                                :link="`/token/${token.tokenInfo.contract}`"
-                            />
+                            <app-transform-hash v-if="!name && !symbolString" :hash="token.contract | toChecksum" :link="`/token/${token.contract}`" />
                         </v-layout>
                     </v-flex>
                     <!--
@@ -220,7 +216,7 @@
                             <v-img v-if="priceChangeFormatted && change > 0" :src="require('@/assets/up.png')" height="18px" max-width="18px" contain></v-img>
                             <v-img v-if="priceChangeFormatted && change < 0" :src="require('@/assets/down.png')" height="18px" max-width="18px" contain></v-img>
                             <v-spacer />
-                            <fav-handler-heart-actions :symbol="favTokenSymbol" :address="token.tokenInfo.contract" :is-small="true" />
+                            <fav-handler-heart-actions :symbol="favTokenSymbol" :address="token.contract" :is-small="true" />
                         </v-layout>
                     </v-flex>
                     <v-spacer v-else />
@@ -246,7 +242,7 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { getOwnersERC20Tokens_getOwnersERC20Tokens_owners as ERC20TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC20Tokens'
 import { getOwnersERC721Balances_getOwnersERC721Balances as ERC721TokenType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getOwnersERC721Balances'
 import { getNFTcontractsMeta_getNFTcontractsMeta_tokenContracts_primary_asset_contracts as NFTMetaType } from '@app/modules/address/handlers/AddressTokens/apolloTypes/getNFTcontractsMeta'
-import { TokenSort } from '@app/modules/address/models/TokenSort'
+import { Token } from '@app/modules/address/models/TokenSort'
 import BN from 'bignumber.js'
 
 @Component({
@@ -263,12 +259,8 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
 
-    @Prop(Object) token!: ERC20TokenType | ERC721TokenType
+    @Prop(Object) token!: Token
     @Prop(String) holder!: string
-    @Prop(Boolean) isErc20!: boolean
-    @Prop(Object) tokenPriceInfo!: TokenMarketData | undefined
-    @Prop(Object) nftMeta!: NFTMetaType | undefined
-    @Prop(Object) tokenSort!: TokenSort
 
     /*
     ===================================================================================
@@ -283,49 +275,40 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
       Computed Values
     ===================================================================================
     */
+    get isErc20(): boolean {
+        return this.token.isERC20
+    }
 
     get image(): string {
-        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.image && this.imageExists) {
-            return this.tokenPriceInfo.image
-        }
-        if (!this.isErc20 && this.nftMeta && this.nftMeta.image_url && this.imageExists) {
-            return this.nftMeta.image_url
+        if (this.token.image && this.imageExists) {
+            return this.token.image
         }
         return require('@/assets/icon-token.png')
     }
 
     get balance(): FormattedNumber | string {
         if (this.isErc20) {
-            return this.formatFloatingPointValue(this.tokenSort.getValue(this.token))
+            return this.formatFloatingPointValue(this.token.balance)
         }
         return this.formatNumber(new BN(this.token.balance).toNumber())
     }
 
-    // get symbolString(): string {
-    //     return this.token.tokenInfo.symbol ? this.token.tokenInfo.symbol : `${this.$tc('token.name', 2)}`
-    // }
-
     get tokenLink(): string {
-        return `/token/${this.token.tokenInfo.contract}?holder=${this.holder}`
+        return `/token/${this.token.contract}?holder=${this.holder}`
     }
 
     get currPrice(): FormattedNumber {
-        return this.tokenPriceInfo && this.tokenPriceInfo.current_price
-            ? this.formatUsdValue(new BN(this.tokenPriceInfo.current_price))
-            : this.formatUsdValue(new BN(0))
+        return this.token.current_price ? this.formatUsdValue(new BN(this.token.current_price)) : this.formatUsdValue(new BN(0))
     }
 
     get usdValueFormatted(): FormattedNumber {
-        if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.current_price) {
-            return this.formatUsdValue(new BN(this.tokenPriceInfo.current_price).multipliedBy(this.tokenSort.getValue(this.token)))
-        }
-        return this.formatUsdValue(new BN(0))
+        return this.formatUsdValue(this.token.usdValue)
     }
 
     get change(): number {
-        if (!this.tokenPriceInfo || !this.tokenPriceInfo.price_change_percentage_24h || this.tokenPriceInfo.price_change_percentage_24h === 0) {
+        if (!this.token.price_change_percentage_24h || this.token.price_change_percentage_24h === 0) {
             return 0
-        } else if (this.tokenPriceInfo.price_change_percentage_24h > 0) {
+        } else if (this.token.price_change_percentage_24h > 0) {
             return 1
         }
         return -1
@@ -341,35 +324,15 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
     }
 
     get priceChangeFormatted(): FormattedNumber | null {
-        return this.tokenPriceInfo && this.tokenPriceInfo.price_change_percentage_24h
-            ? this.formatPercentageValue(new BN(this.tokenPriceInfo.price_change_percentage_24h))
-            : null
+        return this.token.price_change_percentage_24h ? this.formatPercentageValue(new BN(this.token.price_change_percentage_24h)) : null
     }
 
     get name(): string | undefined {
-        if (this.token.tokenInfo.name === null || this.token.tokenInfo.name === 'UNKNOWN') {
-            if (!this.isErc20 && this.nftMeta && this.nftMeta.name) {
-                return this.nftMeta.name
-            }
-            if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.name) {
-                return this.tokenPriceInfo.name
-            }
-            return undefined
-        }
-        return this.token.tokenInfo.name
+        return this.token.name ? this.token.name : undefined
     }
 
     get symbolString(): string | undefined {
-        if (this.token.tokenInfo.symbol === null || this.token.tokenInfo.symbol === 'UNKN') {
-            if (!this.isErc20 && this.nftMeta && this.nftMeta.symbol) {
-                return this.nftMeta.symbol
-            }
-            if (this.isErc20 && this.tokenPriceInfo && this.tokenPriceInfo.symbol) {
-                return this.tokenPriceInfo.symbol
-            }
-            return undefined
-        }
-        return this.token.tokenInfo.symbol
+        return this.token.symbol ? this.token.symbol : undefined
     }
 
     get favTokenSymbol(): string {
@@ -389,7 +352,7 @@ export default class TableAddressTokensRow extends Mixins(NumberFormatMixin) {
      * Emit showNft to parent
      */
     showNft(): void {
-        this.$emit('showNft', this.token.tokenInfo.contract, this.token.tokenInfo.name)
+        this.$emit('showNft', this.token.contract, this.token.name)
     }
     /**
      * Image loading failed catcher

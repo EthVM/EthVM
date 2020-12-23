@@ -25,7 +25,6 @@ class FavSort {
         return this.sortByDescend(data, key).reverse()
     }
     sortFavorites(data: Array<{}>, sort: string) {
-        console.log(sort)
         if (sort === FILTER_VALUES[0] || sort === FILTER_VALUES[1]) {
             /* Sort By Price: */
             return sort.includes('high') ? this.sortByDescend(data, KEY_NAME) : this.sortByAscend(data, KEY_NAME)

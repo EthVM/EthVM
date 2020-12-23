@@ -153,7 +153,8 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
                     detail: this.uncle.block.summary.miner,
                     link: `/address/${this.uncle.block.summary.miner}`,
                     copy: true,
-                    mono: true
+                    mono: true,
+                    toChecksum: true
                 },
                 {
                     title: this.$i18n.t('common.timestmp'),

@@ -59,6 +59,7 @@
                                     :address="addressRef"
                                     :max-items="max"
                                     :is-contract="isContract"
+                                    :loading-contract="loadingContract"
                                     :new-transfers="newETHTransfers"
                                     @resetUpdateCount="setNewEvent"
                                     @errorTransfers="setError"
@@ -182,7 +183,7 @@
                     <keep-alive>
                         <v-layout row wrap justify-start class="mb-4 contract-layout">
                             <v-flex xs12>
-                                <app-details-list :is-loading="loadingContractDetails" :title="$t('contract.details')" :details="details" />
+                                <app-details-list :is-loading="loadingContractTimestamp" :title="$t('contract.details')" :details="details" />
                             </v-flex>
                         </v-layout>
                     </keep-alive>
@@ -336,7 +337,8 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Initial Data
     ===================================================================================
     */
-    loadingContractDetails = true
+    loadingContractTimestamp = true
+    loadingContract = true
     isContractCreator = false
     isContract = false
     error = ''
@@ -362,7 +364,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     */
     get details(): Detail[] {
         let details: Detail[] = []
-        if (this.loadingContractDetails) {
+        if (this.loadingContractTimestamp) {
             details = [
                 {
                     title: this.$i18n.t('contract.date-created')
@@ -395,7 +397,8 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
                     detail: this.contract.creator,
                     link: `/address/${this.contract.creator}`,
                     copy: true,
-                    mono: true
+                    mono: true,
+                    toChecksum: true
                 },
                 {
                     title: this.$i18n.t('contract.code-hash'),
@@ -527,6 +530,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     setContract(value: boolean, data: Contract): void {
         this.isContract = value
         this.contract = data
+        this.loadingContract = false
     }
     /**
      * Sets Contract Timestamp
@@ -534,7 +538,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
      */
     setContractTimestamp(timestamp: number): void {
         this.$set(this.contract, 'timestamp', timestamp)
-        this.loadingContractDetails = false
+        this.loadingContractTimestamp = false
     }
     /**
      * Sets Total Tokens
