@@ -14,6 +14,7 @@
 - Cannot read property 'skip' of undefined [#947](https://github.com/EthVM/EthVM/pull/947)
 - Corrected data points within unique charts for duration [#947](https://github.com/EthVM/EthVM/pull/947)
 - Fixed 'From timestamp is larger than to timestamp' in uniqe charts [#947](https://github.com/EthVM/EthVM/pull/947)
+- Fix invariant violation in fetchMore. [#936](https://github.com/EthVM/EthVM/pull/936)
 
 ### Devop
 

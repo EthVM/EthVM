@@ -37,6 +37,7 @@ import BN from 'bignumber.js'
 import { getBlocksArrayByNumber, newBlockTable } from './recentBlocks.graphql'
 import { getBlocksArrayByNumber_getBlocksArrayByNumber as TypeBlocks } from './apolloTypes/getBlocksArrayByNumber'
 import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
+import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
 
 interface BlockMap {
     [key: number]: TypeBlocks
@@ -186,25 +187,34 @@ export default class RecentBlocks extends Vue {
      * @param page {Number}
      * @param reset {Boolean}
      */
-    setPage(page: number, reset: boolean = false): void {
-        this.index = page
-        if (reset) {
-            this.indexedBlocks = {}
-            this.initialLoad = true
-            this.$apollo.queries.getBlocksArrayByNumber.refetch()
-        } else {
-            const from = this.startBlock - this.maxItems * this.index
-            if (from >= 0 && !this.indexedBlocks[this.index]) {
-                this.$apollo.queries.getBlocksArrayByNumber.fetchMore({
-                    variables: {
-                        fromBlock: from,
-                        limit: this.maxItems
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        return fetchMoreResult
-                    }
-                })
+    async setPage(page: number, reset: boolean = false): Promise<boolean> {
+        try {
+            this.index = page
+            if (reset) {
+                this.indexedBlocks = {}
+                this.initialLoad = true
+                await this.$apollo.queries.getBlocksArrayByNumber.refetch()
+            } else {
+                const from = this.startBlock - this.maxItems * this.index
+                if (from >= 0 && !this.indexedBlocks[this.index]) {
+                    await this.$apollo.queries.getBlocksArrayByNumber.fetchMore({
+                        variables: {
+                            fromBlock: from,
+                            limit: this.maxItems
+                        },
+                        updateQuery: (previousResult, { fetchMoreResult }) => {
+                            return fetchMoreResult
+                        }
+                    })
+                }
             }
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
+            }
+            return false
         }
     }
     /**
