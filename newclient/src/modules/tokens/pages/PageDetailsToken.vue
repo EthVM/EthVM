@@ -1,7 +1,7 @@
 <template>
-    <v-container grid-list-lg>
-        <token-details :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" @errorDetails="setError" />
-        <app-error v-if="error" :has-error="hasError" :message="error" />
+    <v-container grid-list-lg class="mb-0">
+        <token-details v-if="!hasError" :address-ref="addressRef" :is-holder="isHolder" :holder-address="holderAddress" @errorDetails="setError" />
+        <app-error v-else :has-error="hasError" :message="error" />
         <app-message :messages="errorMessages" />
     </v-container>
 </template>
@@ -12,6 +12,7 @@ import TokenDetails from '@app/modules/tokens/handlers/tokenDetails/TokenDetails
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
+import { eth } from '@app/core/helper'
 
 @Component({
     components: {
@@ -38,20 +39,27 @@ export default class PageDetailsToken extends Vue {
     isHolder = false // Whether or not "holder" is included in query params to display view accordingly
     holderAddress?: string = '' // Address of current token holder, if applicable
     error = ''
-    hasError = false
     errorMessages: ErrorMessageToken[] = []
+    hasErrorHandler = false
     /*
   ===================================================================================
     Lifecycle
   ===================================================================================
   */
 
+    created() {
+        if (!this.isValid) {
+            this.error = this.$i18n.t('message.invalid.token').toString()
+        }
+
+        window.scrollTo(0, 0)
+    }
+
     /**
      * Set isHolder and holderAddress if found in route
      */
     async mounted() {
         const query = this.$route.query
-
         if (query.holder) {
             this.isHolder = true
             this.holderAddress = query.holder as string
@@ -60,7 +68,20 @@ export default class PageDetailsToken extends Vue {
 
     /*
   ===================================================================================
-    Lifecycle
+    Computed
+  ===================================================================================
+  */
+    get isValid(): boolean {
+        return eth.isValidAddress(this.addressRef)
+    }
+
+    get hasError(): boolean {
+        return this.error !== ''
+    }
+
+    /*
+  ===================================================================================
+   Watch
   ===================================================================================
   */
 
@@ -92,7 +113,7 @@ export default class PageDetailsToken extends Vue {
      * @param message {ErrorMessageToken}
      */
     setError(hasError: boolean, message: ErrorMessageToken): void {
-        this.hasError = hasError
+        this.hasErrorHandler = hasError
         if (hasError) {
             if (message === ErrorMessageToken.invalid) {
                 this.error = this.$i18n.t(message).toString()
