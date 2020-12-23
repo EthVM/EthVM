@@ -38,6 +38,7 @@ export interface Detail {
     mono?: boolean
     priceChange?: number | null
     tooltip?: string
+    toChecksum?: boolean
 }
 
 export interface Crumb {

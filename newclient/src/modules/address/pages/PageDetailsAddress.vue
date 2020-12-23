@@ -397,7 +397,8 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
                     detail: this.contract.creator,
                     link: `/address/${this.contract.creator}`,
                     copy: true,
-                    mono: true
+                    mono: true,
+                    toChecksum: true
                 },
                 {
                     title: this.$i18n.t('contract.code-hash'),

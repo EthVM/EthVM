@@ -1,6 +1,3 @@
-### Bug
-- Fix Cannot read property 'to' of null, sentry 2096719583 [#948](https://github.com/EthVM/EthVM/pull/948)
-
 ### Release v1.0.6
 
 ### Bug
@@ -9,6 +6,8 @@
 - Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
 - Add Invalid Hash error to exceptions [#933](https://github.com/EthVM/EthVM/pull/933)
 - Add loader for isContract [#939](https://github.com/EthVM/EthVM/pull/939)
+- Fix Cannot read property 'to' of null, sentry 2096719583 [#948](https://github.com/EthVM/EthVM/pull/948)
+- Do checksum on valid addresses only [#949](https://github.com/EthVM/EthVM/pull/949)
 
 ### Devop
 
