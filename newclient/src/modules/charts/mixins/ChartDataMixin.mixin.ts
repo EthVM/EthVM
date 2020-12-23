@@ -2,7 +2,9 @@ import { Component, Vue } from 'vue-property-decorator'
 import { TimeseriesKey, TimeseriesValue, DataPoint } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
 import { timeseriesEthAvgVariables } from '@app/modules/charts/handlers/apolloTypes/timeseriesEthAvg'
+import { getTimestamp } from './getServerTimestamp.graphql'
 import moment from 'moment'
+import BN from 'bignumber.js'
 
 import {
     getTimeseriesDataVariables,
@@ -10,8 +12,57 @@ import {
 } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { fromWei, toBN } from 'web3-utils'
 
-@Component
+@Component({
+    apollo: {
+        getTimestamp: {
+            query: getTimestamp,
+            update: data => data.getTimestamp,
+
+            result({ data }) {
+                if (data) {
+                    /**
+                     * Set server time offset if difference is greater then 999 milliseconds
+                     */
+                    const now = new BN(moment().valueOf())
+                    const server = new BN(data.getTimestamp)
+                    const offset = server.minus(now)
+                    if (offset.abs().isGreaterThan(999)) {
+                        this.serverTimeOffset = offset.toFixed()
+                    }
+                }
+            },
+            error() {
+                this.serverTmpsError = true
+            }
+        }
+    }
+})
 export class ChartDataMixin extends Vue {
+    /*
+    ===================================================================================
+      Data
+    ===================================================================================
+    */
+
+    serverTimeOffset = 0
+    getTimestamp!: string
+    serverTmpsError = false
+
+    /*
+    ===================================================================================
+      Computed
+    ===================================================================================
+    */
+
+    /**
+     * Var to identify whether or not server offest was loaded
+     * Used in skipping TimeSereies Quereis in charts
+     * @returns bolean
+     */
+    get loadingOffset(): boolean {
+        return this.$apollo.queries.getTimestamp.loading || this.serverTmpsError
+    }
+
     /*
     ===================================================================================
       Methods
@@ -28,14 +79,14 @@ export class ChartDataMixin extends Vue {
 
     getQueryVars(_key: TimeseriesKey, _scale: TimeseriesScale, _start?: number): getTimeseriesDataVariables {
         const START = _start ? _start : this.getStart(_scale)
+        const time = moment().add(this.serverTimeOffset)
         return {
             key: _key,
             scale: _scale,
-            fromT: moment()
-                .add(START * -1, _scale)
-                .unix()
+            fromT: time.subtract(START, _scale).unix()
         }
     }
+
     /**
      * Creates getTimeseriesData query and subsequent subscription, to get timeseries data for the chart
      * @param _key: TimeseriesKey | string, defines which data to get. ie: Gas Price Ave. Use Strings only to get address balances as those requre additional params passed to the key.
@@ -49,6 +100,7 @@ export class ChartDataMixin extends Vue {
             scale: _scale
         }
     }
+
     /**
      * Creates getTimeseriesData query and subsequent subscription, to get timeseries data for the chart
      * @param _key: TimeseriesItemsTypes
@@ -56,7 +108,7 @@ export class ChartDataMixin extends Vue {
      * @return - returns TimeseriesItemsTypes data type
      */
 
-    addSubscriptionItem(newItem: TimeseriesItemsTypes, _items: TimeseriesItemsTypes[]): TimeseriesItemsTypes[] {
+    addSubscriptionItem(newItem: TimeseriesItemsTypes, _items: TimeseriesItemsTypes[], max: number | null = null): TimeseriesItemsTypes[] {
         let isNew = true
         _items.forEach((item, index) => {
             if (!isNew) {
@@ -94,20 +146,27 @@ export class ChartDataMixin extends Vue {
                 return 300
         }
     }
+
     /**
      * Maps items into formatted object with x and y values
+     * Filters null values if any
      * @param items: TimeseriesItemsTypes
      * @param valueTypes: TimeseriesValue
      * @returns DataPoint
      */
-    mapItemsToDataSet(items: TimeseriesItemsTypes[], valueType: TimeseriesValue): DataPoint[] {
-        return items.map(item => {
-            return {
-                x: moment.unix(item.timestamp),
-                y: this.getFormat(valueType, item.value)
+    mapItemsToDataSet(items: (TimeseriesItemsTypes | null)[], valueType: TimeseriesValue): DataPoint[] {
+        const filtered: DataPoint[] = []
+        items.forEach(item => {
+            if (item) {
+                filtered.push({
+                    x: moment.unix(item.timestamp),
+                    y: this.getFormat(valueType, item.value)
+                })
             }
         })
+        return filtered
     }
+
     /**
      * Formats time to its corresponding values
      * @param valueType: TimeseriesValue
@@ -127,23 +186,25 @@ export class ChartDataMixin extends Vue {
         }
     }
     /**
-     * Converts received value to Eth
+     * Converts received value to ETH
      * @param val: {String}
      * @returns string
      */
     toEth(val: string): string {
         return fromWei(val, 'ether')
     }
+
     /**
-     * Converts received value toG wei
+     * Converts received value to GWEI
      * @param val: {String}
      * @returns string
      */
     toGwei(val: string): string {
         return fromWei(val, 'gwei')
     }
+
     /**
-     * Converts received value toU SDT
+     * Converts received value to USDT
      * @param val: {String}
      * @returns string
      */

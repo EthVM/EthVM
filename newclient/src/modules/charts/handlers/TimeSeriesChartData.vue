@@ -6,6 +6,7 @@
             :datacollection="chartData"
             :chart-options="chartOptions"
             :is-pending="isPending"
+            :is-loading-data="loading"
             @timeFrame="setTimeFrame"
         />
     </div>
@@ -28,7 +29,7 @@ import {
     ChartRouteKey
 } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
-import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
+import { getTimeseriesData_getTimeseriesData_items as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
 import { Footnote } from '@app/core/components/props'
 
@@ -63,7 +64,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
         start: 24,
         max_items: 24,
         timeOptions: {
-            unit: 'minute',
+            unit: 'hour',
             displayFormats: {
                 minute: 'h:mm a'
             },
@@ -76,7 +77,7 @@ const DEFAULT_DATA: ComponentDataInterface = {
         start: 168,
         max_items: 168,
         timeOptions: {
-            unit: 'day',
+            unit: 'hour',
             displayFormats: {
                 day: 'ddd, h:mm a'
             },
@@ -140,6 +141,9 @@ const DEFAULT_DATA: ComponentDataInterface = {
             variables() {
                 return this.getQueryVars(this.chartKey, this.scale, this.start)
             },
+            skip() {
+                return this.loadingOffset
+            },
             subscribeToMore: {
                 document: timeseriesEthAvg,
                 variables() {
@@ -153,8 +157,8 @@ const DEFAULT_DATA: ComponentDataInterface = {
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
-                        if (newItems.length > this.maxItems) {
-                            newItems.slice(1)
+                        while (newItems.length > this.maxItems) {
+                            newItems.shift()
                         }
                         return {
                             getTimeseriesData: {
@@ -168,7 +172,13 @@ const DEFAULT_DATA: ComponentDataInterface = {
             },
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
-                this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.value_type)]
+                if (data && data.getTimeseriesData && data.getTimeseriesData.items && data.getTimeseriesData.items.length > 0) {
+                    this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.value_type)]
+                    this.loadingData = false
+                }
+            },
+            error(error) {
+                this.hasError = true
             }
         }
     }
@@ -187,6 +197,9 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     maxItems = DEFAULT_DATA[0].max_items
     start = DEFAULT_DATA[0].start
     timeOptions = DEFAULT_DATA[0].timeOptions
+    loadingData = true
+    currentUnit = DEFAULT_DATA[0].timeOptions.unit
+    hasError = false
 
     /*
     ===================================================================================
@@ -270,6 +283,9 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
             }
         }
     }
+    get loading(): boolean {
+        return this.loadingOffset || this.loadingData || this.hasError
+    }
 
     /*
     ===================================================================================
@@ -281,11 +297,14 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
      * @param value {Number}
      */
     setTimeFrame(value: number): void {
+        if (this.currentUnit !== DEFAULT_DATA[value].timeOptions.unit) {
+            this.loadingData = true
+            this.currentUnit = DEFAULT_DATA[value].timeOptions.unit
+        }
         this.scale = DEFAULT_DATA[value].scale
         this.maxItems = DEFAULT_DATA[value].max_items
         this.start = DEFAULT_DATA[value].start
         this.timeOptions = DEFAULT_DATA[value].timeOptions
-        this.$apollo.queries.getChartData.refetch()
     }
 }
 </script>
