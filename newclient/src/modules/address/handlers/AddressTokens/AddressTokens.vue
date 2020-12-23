@@ -26,13 +26,10 @@
                 <template #rows>
                     <v-card v-for="(token, index) in tokens" :key="index" class="transparent" flat>
                         <table-address-tokens-row
-                            v-if="!loading"
+                            v-if="!loading && tokenSort"
                             :token="token"
-                            :is-erc20="isERC20"
                             :holder="address"
                             :token-sort="tokenSort"
-                            :token-price-info="tokenSort.getUSDInfo(token.tokenInfo.contract)"
-                            :nft-meta="getContractMeta(token.tokenInfo.contract)"
                             @showNft="showNftTokens"
                         />
                         <table-address-tokens-row-loading v-else />
@@ -87,8 +84,8 @@ import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/co
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
-import { TOKEN_FILTER_VALUES, TokenSort } from '@app/modules/address/models/TokenSort'
 import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
+import { TOKEN_FILTER_VALUES, TokenSort, Token, NFTMetaMap } from '@app/modules/address/models/TokenSort'
 
 /*
   DEV NOTES:
@@ -97,9 +94,6 @@ import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
 */
 interface NFTMap {
     [key: string]: ERC721TokenType[]
-}
-interface NFTMetaMap {
-    [key: string]: NFTMetaType
 }
 
 @Component({
@@ -135,9 +129,6 @@ interface NFTMetaMap {
             result({ data }) {
                 if (this.hasTokens) {
                     this.emitErrorState(false)
-                    if (this.initialLoad) {
-                        this.sortTokens(TOKEN_FILTER_VALUES[1])
-                    }
                     if (this.isERC20) {
                         this.hasNext = data.getOwnersERC20Tokens.nextKey || null
                         if (this.hasNext != null) {
@@ -190,7 +181,7 @@ interface NFTMetaMap {
                     }
                 } else {
                     this.emitErrorState(true)
-                    throw new Error('etOwnersERC721Tokens.tokens returns null')
+                    throw new Error('getOwnersERC721Tokens.tokens returns null')
                 }
             },
             error(error) {
@@ -260,6 +251,9 @@ export default class AddressTokens extends Mixins(CoinData) {
     skipGetUniqueTokens = true
     hasError = false
 
+    /*Sorting */
+    sort = TOKEN_FILTER_VALUES[0]
+
     /*
     ===================================================================================
       Computed
@@ -323,15 +317,21 @@ export default class AddressTokens extends Mixins(CoinData) {
         return this.initialLoad
     }
 
-    get tokens(): ERC20TokensType[] | ERC721BalanceType[] {
+    get tokens(): Token[] {
         const start = this.index * this.maxItems
-        if (!this.loading && this.hasTokens) {
+        if (!this.loading && this.hasTokens && this.tokenSort) {
             const end = start + this.maxItems > this.getTokens.length ? this.getTokens.length : start + this.maxItems
-            return this.getTokens.slice(start, end)
+            return this.tokenSort.getSortedTokens(this.sort).slice(start, end)
         }
         return []
     }
-    get tokenPrices(): Map<string, TokenMarketData> | false {
+    /**
+     * Gets an object with all sorted arrays
+     *
+     * @returns false OR Map<string, TokenMarketData>  if values have been loaded
+     * @returns  null  otherwise
+     */
+    get tokenPrices(): Map<string, TokenMarketData> | false | null {
         if (!this.loading && this.isERC20) {
             const contracts: string[] = []
             this.getTokens.forEach(token => {
@@ -341,7 +341,7 @@ export default class AddressTokens extends Mixins(CoinData) {
                 return this.getEthereumTokensMap(contracts)
             }
         }
-        return false
+        return null
     }
 
     get message(): string {
@@ -376,8 +376,23 @@ export default class AddressTokens extends Mixins(CoinData) {
     get updateText(): string {
         return `${this.$t('message.update.tokens')}`
     }
-    get tokenSort(): TokenSort {
-        return new TokenSort(this.getTokens, this.isERC20, this.tokenPrices)
+
+    /**
+     * Gets an object with all sorted arrays
+     * @param {String} contract
+     * @returns
+     * - TokenSort if all has been loaded
+     * - false if still loading
+     */
+
+    get tokenSort(): TokenSort | false {
+        if (!this.loading && this.getTokens && this.isERC20 && this.tokenPrices !== null) {
+            return new TokenSort(this.getTokens, this.tokenPrices, false, this.isERC20)
+        }
+        if (!this.loading && this.getTokens && !this.isERC20) {
+            return new TokenSort(this.getTokens, false, this.nftMeta, this.isERC20)
+        }
+        return false
     }
 
     /*
@@ -385,8 +400,9 @@ export default class AddressTokens extends Mixins(CoinData) {
       Methods:
     ===================================================================================
     */
+
     sortTokens(sort: string): void {
-        this.tokenSort.sortTokens(this.getTokens, sort)
+        this.sort = sort
     }
     /**
      * Sets page or reset

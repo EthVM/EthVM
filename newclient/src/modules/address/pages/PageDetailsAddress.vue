@@ -59,6 +59,7 @@
                                     :address="addressRef"
                                     :max-items="max"
                                     :is-contract="isContract"
+                                    :loading-contract="loadingContract"
                                     :new-transfers="newETHTransfers"
                                     @resetUpdateCount="setNewEvent"
                                     @errorTransfers="setError"
@@ -175,10 +176,24 @@
                 </v-tab-item>
                 <!--
                 =====================================================================================
+                  CONTRACT CREATOR INFO TAB
+                =====================================================================================
+                -->
+                <v-tab-item v-if="isContract" slot="tabs-item" value="tab-3">
+                    <keep-alive>
+                        <v-layout row wrap justify-start class="mb-4 contract-layout">
+                            <v-flex xs12>
+                                <app-details-list :is-loading="loadingContractTimestamp" :title="$t('contract.details')" :details="details" />
+                            </v-flex>
+                        </v-layout>
+                    </keep-alive>
+                </v-tab-item>
+                <!--
+                =====================================================================================
                   MINING HISTORY INFO TAB
                 =====================================================================================
                 -->
-                <v-tab-item v-if="showMiningRewards" slot="tabs-item" value="tab-3">
+                <v-tab-item slot="tabs-item" :value="isContract ? 'tab-4' : 'tab-3'">
                     <keep-alive>
                         <div>
                             <v-layout :class="subMenuClass" row wrap align-center justify-start pt-2>
@@ -267,20 +282,6 @@
                         </div>
                     </keep-alive>
                 </v-tab-item>
-                <!--
-                =====================================================================================
-                  CONTRACT CREATOR INFO TAB
-                =====================================================================================
-                -->
-                <v-tab-item v-if="isContract" slot="tabs-item" :value="showMiningRewards ? 'tab-4' : 'tab-3'">
-                    <keep-alive>
-                        <v-layout row wrap justify-start class="mb-4 contract-layout">
-                            <v-flex xs12>
-                                <app-details-list :is-loading="loadingContractDetails" :title="$t('contract.details')" :details="details" />
-                            </v-flex>
-                        </v-layout>
-                    </keep-alive>
-                </v-tab-item>
             </app-tabs>
         </div>
     </v-container>
@@ -336,7 +337,8 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Initial Data
     ===================================================================================
     */
-    loadingContractDetails = true
+    loadingContractTimestamp = true
+    loadingContract = true
     isContractCreator = false
     isContract = false
     error = ''
@@ -362,7 +364,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     */
     get details(): Detail[] {
         let details: Detail[] = []
-        if (this.loadingContractDetails) {
+        if (this.loadingContractTimestamp) {
             details = [
                 {
                     title: this.$i18n.t('contract.date-created')
@@ -395,7 +397,8 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
                     detail: this.contract.creator,
                     link: `/address/${this.contract.creator}`,
                     copy: true,
-                    mono: true
+                    mono: true,
+                    toChecksum: true
                 },
                 {
                     title: this.$i18n.t('contract.code-hash'),
@@ -527,6 +530,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     setContract(value: boolean, data: Contract): void {
         this.isContract = value
         this.contract = data
+        this.loadingContract = false
     }
     /**
      * Sets Contract Timestamp
@@ -534,7 +538,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
      */
     setContractTimestamp(timestamp: number): void {
         this.$set(this.contract, 'timestamp', timestamp)
-        this.loadingContractDetails = false
+        this.loadingContractTimestamp = false
     }
     /**
      * Sets Total Tokens

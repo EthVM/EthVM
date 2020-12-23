@@ -7,6 +7,7 @@
             :chart-options="chartOptions"
             :footnotes="footnotes"
             :show-time-options="false"
+            :is-loading-data="loading"
         />
     </div>
 </template>
@@ -17,7 +18,10 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartDataMixin } from '@app/modules/charts/mixins/ChartDataMixin.mixin'
 import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValue } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
-import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
+import {
+    getTimeseriesData_getTimeseriesData as GetTimeseriesDataType,
+    getTimeseriesData_getTimeseriesData_items as TimeseriesDataItem
+} from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
 import { Footnote } from '@app/core/components/props'
 
@@ -38,6 +42,9 @@ const MAX_ITEMS = 10
             variables() {
                 return this.getQueryVars(KEY_TX_TOTAL, SCALE, START)
             },
+            skip() {
+                return this.loadingOffset
+            },
             subscribeToMore: {
                 document: timeseriesEthAvg,
                 variables() {
@@ -50,7 +57,10 @@ const MAX_ITEMS = 10
                         if (!newItem) {
                             return previousResult
                         }
-                        const newItems = this.addSubscriptionItem(newItem, prevItems)
+                        const newItems = this.addSubscriptionItem(newItem, prevItems, MAX_ITEMS)
+                        while (newItems.length > MAX_ITEMS) {
+                            newItems.shift()
+                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -63,13 +73,21 @@ const MAX_ITEMS = 10
             },
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
-                this.txTotalDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                if (data && data.getTimeseriesData && data.getTimeseriesData.items && data.getTimeseriesData.items.length > 0) {
+                    this.txTotalDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                }
+            },
+            error(error) {
+                this.hasErrorTxTotal = true
             }
         },
         dataTxPen: {
             query: getTimeseriesData,
             variables() {
                 return this.getQueryVars(KEY_TX_PEN, SCALE, START)
+            },
+            skip() {
+                return this.loadingOffset
             },
             subscribeToMore: {
                 document: timeseriesEthAvg,
@@ -83,8 +101,10 @@ const MAX_ITEMS = 10
                         if (!newItem) {
                             return previousResult
                         }
-                        const newItems = this.addSubscriptionItem(newItem, prevItems)
-
+                        const newItems = this.addSubscriptionItem(newItem, prevItems, MAX_ITEMS)
+                        while (newItems.length > MAX_ITEMS) {
+                            newItems.shift()
+                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -97,7 +117,12 @@ const MAX_ITEMS = 10
             },
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
-                this.txPenDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                if (data && data.getTimeseriesData && data.getTimeseriesData.items && data.getTimeseriesData.items.length > 0) {
+                    this.txPenDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                }
+            },
+            error(error) {
+                this.hasErrorTxPen = true
             }
         }
     }
@@ -109,10 +134,12 @@ export default class HomeTxChart extends Mixins(ChartDataMixin) {
     ===================================================================================
     */
 
-    dataTxTotal!: GetTimeseriesDataType
-    dataTxPen!: GetTimeseriesDataType
+    dataTxTotal!: (TimeseriesDataItem | null)[]
+    dataTxPen!: (TimeseriesDataItem | null)[]
     txTotalDataSet: DataPoint[] = []
     txPenDataSet: DataPoint[] = []
+    hasErrorTxTotal = false
+    hasErrorTxPen = false
 
     /*
     ===================================================================================
@@ -127,11 +154,44 @@ export default class HomeTxChart extends Mixins(ChartDataMixin) {
         return `${this.$t('charts.tx-summary.description')}`
     }
 
+    /**
+     * Array of Total Txs points aligned with the pending timestamp
+     * 0 values are set when data point was not found in the dataTotalTxs, due to data
+     * not being avaialble in the DB.
+     * Futher results are mapped to the teh DataPoint Type
+     * @return
+     * - DataPoint[] if dataTotalTxs and dataTxPen queries returned results
+     * - null otherwise
+     */
+    get totalTxs(): DataPoint[] | null {
+        if (this.txTotalDataSet.length > 0 && this.txPenDataSet.length > 0) {
+            const _items = this.dataTxPen.map((txPen, index) => {
+                if (txPen) {
+                    const point = this.dataTxTotal.find(element => {
+                        if (element) {
+                            return element.timestamp === txPen.timestamp
+                        }
+                        return undefined
+                    })
+                    return {
+                        __typename: txPen.__typename,
+                        timestamp: txPen.timestamp,
+                        value: point ? point.value : '0'
+                    }
+                }
+                return null
+            })
+
+            return this.mapItemsToDataSet(_items, VALUE_TYPE)
+        }
+        return null
+    }
+
     get chartData(): ChartData | null {
         const _datasets: Dataset[] = []
-        if (this.txTotalDataSet) {
+        if (this.totalTxs) {
             _datasets.push({
-                data: this.txTotalDataSet,
+                data: this.totalTxs,
                 label: `${this.$t('charts.tx-summary.label.total')}`,
                 borderColor: '#00b173',
                 backgroundColor: '#00b173',
@@ -157,6 +217,7 @@ export default class HomeTxChart extends Mixins(ChartDataMixin) {
         }
         return null
     }
+
     get chartOptions(): ChartOptions {
         return {
             responsive: true,
@@ -238,28 +299,10 @@ export default class HomeTxChart extends Mixins(ChartDataMixin) {
         ]
     }
 
-    /*
-    ===================================================================================
-      Watchers
-    ===================================================================================
-    */
-    @Watch('txTotalDataSet', { deep: true })
-    ongasMinDataSetChanged(newVal) {
-        if (newVal.length > MAX_ITEMS) {
-            newVal.shift()
-            this.txTotalDataSet = newVal
-        } else {
-            this.txTotalDataSet = newVal
-        }
-    }
-    @Watch('txPenDataSet', { deep: true })
-    ongasMaxDataSetChanged(newVal) {
-        if (newVal.length > MAX_ITEMS) {
-            newVal.shift()
-            this.txPenDataSet = newVal
-        } else {
-            this.txPenDataSet = newVal
-        }
+    get loading(): boolean {
+        const loadingQueries = this.$apollo.queries.dataTxTotal.loading || this.$apollo.queries.dataTxPen.loading
+        const hasError = this.hasErrorTxTotal && this.hasErrorTxPen
+        return this.loadingOffset || loadingQueries || hasError
     }
 }
 </script>

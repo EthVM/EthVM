@@ -148,14 +148,16 @@ export default class TxDetails extends Mixins(NumberFormatMixin) {
                     detail: this.transaction.from,
                     copy: true,
                     link: `/address/${this.transaction.from}`,
-                    mono: true
+                    mono: true,
+                    toChecksum: true
                 },
                 {
                     title: isContractCreation ? this.$i18n.t('tx.to').toString() : this.$t('contract.creation').toString(),
                     detail: isContractCreation ? this.transaction.to : this.transaction.contractAddress,
                     copy: this.transaction.to !== null,
                     link: this.transaction.to !== null ? `/address/${this.transaction.to!}` : `/address/${this.transaction.contractAddress}`,
-                    mono: this.transaction.to !== null
+                    mono: this.transaction.to !== null,
+                    toChecksum: true
                 },
                 {
                     title: this.$i18n.t('common.amount'),

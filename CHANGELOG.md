@@ -1,6 +1,37 @@
+### Release v1.0.6
+
 ### Bug
 
+- Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
+- Fix Cannot read property 'insertBefore' of null in Address ERC20 Tokens [#945](https://github.com/EthVM/EthVM/pull/945)
+- Prevent searching an empty string & remove onlyLetters [#944](https://github.com/EthVM/EthVM/pull/944)
+- Add Invalid Hash error to exceptions [#933](https://github.com/EthVM/EthVM/pull/933)
+- Add loader for isContract [#939](https://github.com/EthVM/EthVM/pull/939)
+- Fix Cannot read property 'to' of null, sentry 2096719583 [#948](https://github.com/EthVM/EthVM/pull/948)
+- Do checksum on valid addresses only [#949](https://github.com/EthVM/EthVM/pull/949)
+- Fixed x and y are too far apart with stepSize of 1 minute [#947](https://github.com/EthVM/EthVM/pull/947)
+- Fixed 'Cannot set property 'font' of null' [#947](https://github.com/EthVM/EthVM/pull/947)
+- Cannot read property 'skip' of undefined [#947](https://github.com/EthVM/EthVM/pull/947)
+- Corrected data points within unique charts for duration [#947](https://github.com/EthVM/EthVM/pull/947)
+- Fixed 'From timestamp is larger than to timestamp' in uniqe charts [#947](https://github.com/EthVM/EthVM/pull/947)
 - Fix invariant violation in fetchMore. [#936](https://github.com/EthVM/EthVM/pull/936)
+
+### Devop
+
+- Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
+- Refactor Tokens Sorting in Address, loading logic [#945](https://github.com/EthVM/EthVM/pull/945)
+- Change Unique chart route names [#942](https://github.com/EthVM/EthVM/pull/942)
+- Implemented handler for undefined results in getTimeseriesData [#947](https://github.com/EthVM/EthVM/pull/947)
+- Refactor logic for home transactions chart to correct display updated data points in lines [#947](https://github.com/EthVM/EthVM/pull/947)
+- remove console [#941](https://github.com/EthVM/EthVM/pull/941)
+
+===================================================================================
+
+### Release v1.0.5-hotfix.1
+
+### Bug
+
+- Switch tabs for Address Details [#935](https://github.com/EthVM/EthVM/pull/935)
 
 ===================================================================================
 
