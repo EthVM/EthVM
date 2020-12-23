@@ -1,3 +1,6 @@
+### Bug
+- Fix Cannot read property 'to' of null, sentry 2096719583 [#948](https://github.com/EthVM/EthVM/pull/948)
+
 ### Release v1.0.6
 
 ### Bug

@@ -163,7 +163,7 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
      * @returns {FormattedNumber}
      */
     getBalBefore(): FormattedNumber {
-        if (!this.reward.stateDiff.to) {
+        if (!this.reward.stateDiff || !this.reward.stateDiff.to) {
             return { value: '0' }
         }
         return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.to.before))
@@ -173,7 +173,7 @@ export default class TableAddressRewardsRow extends Mixins(NumberFormatMixin) {
      * @returns {FormattedNumber}
      */
     getBalAfter(): FormattedNumber {
-        if (!this.reward.stateDiff.to) {
+        if (!this.reward.stateDiff || !this.reward.stateDiff.to) {
             return { value: '0' }
         }
         return NumberFormatHelper.formatNonVariableEthValue(new BN(this.reward.stateDiff.to.after))
