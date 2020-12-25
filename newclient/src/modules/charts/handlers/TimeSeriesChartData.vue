@@ -29,7 +29,7 @@ import {
     ChartRouteKey
 } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
-import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
+import { getTimeseriesData_getTimeseriesData_items as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
 import { Footnote } from '@app/core/components/props'
 
@@ -141,6 +141,9 @@ const DEFAULT_DATA: ComponentDataInterface = {
             variables() {
                 return this.getQueryVars(this.chartKey, this.scale, this.start)
             },
+            skip() {
+                return this.loadingOffset
+            },
             subscribeToMore: {
                 document: timeseriesEthAvg,
                 variables() {
@@ -154,8 +157,8 @@ const DEFAULT_DATA: ComponentDataInterface = {
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
-                        if (newItems.length > this.maxItems) {
-                            newItems.slice(1)
+                        while (newItems.length > this.maxItems) {
+                            newItems.shift()
                         }
                         return {
                             getTimeseriesData: {
@@ -169,8 +172,13 @@ const DEFAULT_DATA: ComponentDataInterface = {
             },
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
-                this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.value_type)]
-                this.loadingData = false
+                if (data && data.getTimeseriesData && data.getTimeseriesData.items && data.getTimeseriesData.items.length > 0) {
+                    this.chartDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, this.value_type)]
+                    this.loadingData = false
+                }
+            },
+            error(error) {
+                this.hasError = true
             }
         }
     }
@@ -191,6 +199,7 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
     timeOptions = DEFAULT_DATA[0].timeOptions
     loadingData = true
     currentUnit = DEFAULT_DATA[0].timeOptions.unit
+    hasError = false
 
     /*
     ===================================================================================
@@ -275,7 +284,7 @@ export default class TimeSeriesChartData extends Mixins(ChartDataMixin) {
         }
     }
     get loading(): boolean {
-        return this.loadingData
+        return this.loadingOffset || this.loadingData || this.hasError
     }
 
     /*
