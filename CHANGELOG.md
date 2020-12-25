@@ -7,11 +7,14 @@
 - Fixed 'Cannot set property 'font' of null' [#947](https://github.com/EthVM/EthVM/pull/947)
 - Cannot read property 'skip' of undefined [#947](https://github.com/EthVM/EthVM/pull/947)
 - Corrected data points within unique charts for duration [#947](https://github.com/EthVM/EthVM/pull/947)
+- Fixed 'From timestampe is larger than to timestamp' in uniqe charts [#947](https://github.com/EthVM/EthVM/pull/947)
 
 ### Devop
 
 - Bump ini from 1.3.5 to 1.3.8 [#943](https://github.com/EthVM/EthVM/pull/943)
 - Change Unique chart route names [#942](https://github.com/EthVM/EthVM/pull/942)
+- Implemented handler for undefined results in getTimeseriesData [#947](https://github.com/EthVM/EthVM/pull/947)
+- Refactor logic for home transactions chart to correct display updated data points in lines [#947](https://github.com/EthVM/EthVM/pull/947)
 
 ===================================================================================
 
