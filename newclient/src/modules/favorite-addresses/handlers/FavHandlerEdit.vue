@@ -108,6 +108,7 @@ export default class FavHandlerEdit extends Vue {
                     this.$emit('nameChange', name)
                     this.closeEditDialog()
                 }
+                this.$apollo.queries.checkAddress.refetch()
             })
     }
 
