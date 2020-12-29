@@ -15,6 +15,7 @@
 - Corrected data points within unique charts for duration [#947](https://github.com/EthVM/EthVM/pull/947)
 - Fixed 'From timestamp is larger than to timestamp' in uniqe charts [#947](https://github.com/EthVM/EthVM/pull/947)
 - Fix invariant violation in fetchMore. [#936](https://github.com/EthVM/EthVM/pull/936)
+- Fix old name is shown in edit/remove fav address dialog , after change [#950](https://github.com/EthVM/EthVM/pull/950)
 
 ### Devop
 
