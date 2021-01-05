@@ -184,7 +184,7 @@ export default class TheNavigationDrawer extends Vue {
   */
 
     get showMobile(): boolean {
-        return this.$vuetify.breakpoint.name === 'sm' || this.$vuetify.breakpoint.name === 'xs'
+        return this.$vuetify.breakpoint.name === 'md' || this.$vuetify.breakpoint.name === 'sm' || this.$vuetify.breakpoint.name === 'xs'
     }
 
     get headerColor(): string {
