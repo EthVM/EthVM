@@ -25,6 +25,7 @@
 - Implemented handler for undefined results in getTimeseriesData [#947](https://github.com/EthVM/EthVM/pull/947)
 - Refactor logic for home transactions chart to correct display updated data points in lines [#947](https://github.com/EthVM/EthVM/pull/947)
 - remove console [#941](https://github.com/EthVM/EthVM/pull/941)
+- adjust nav drawer breakpoint [#951](https://github.com/EthVM/EthVM/pull/951)
 
 ===================================================================================
 
