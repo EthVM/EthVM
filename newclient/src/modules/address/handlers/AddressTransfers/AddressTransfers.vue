@@ -85,6 +85,8 @@ import { EthTransfer } from '@app/modules/address/models/EthTransfer'
 import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
+import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
+
 const TYPES = ['in', 'out', 'self']
 
 @Component({
@@ -159,6 +161,7 @@ export default class AddressTransers extends Mixins(CoinData) {
     @Prop(Number) newTransfers!: number
     @Prop(Boolean) refetchTransfers?: boolean
     @Prop(Boolean) isContract?: boolean
+    @Prop(Boolean) loadingContract?: boolean
 
     /*
     ===================================================================================
@@ -310,46 +313,54 @@ export default class AddressTransers extends Mixins(CoinData) {
      * Sets page or reset
      * @params page {Number} reset {Boolean}
      */
-    setPage(page: number, reset: boolean = false): void {
-        if (reset) {
-            this.isEnd = 0
-            this.initialLoad = true
-            this.showPagination = false
-            if (this.isETH) {
-                this.$apollo.queries.getTransfers.refetch()
-            }
-            this.$emit('resetUpdateCount', this.eventType, true)
-        } else {
-            if (page > this.isEnd && this.hasMore) {
-                let queryName!: string
+    async setPage(page: number, reset: boolean = false): Promise<boolean> {
+        try {
+            if (reset) {
+                this.isEnd = 0
+                this.initialLoad = true
+                this.showPagination = false
                 if (this.isETH) {
-                    queryName = 'getEthTransfersV2'
-                } else {
-                    queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
+                    this.$apollo.queries.getTransfers.refetch()
                 }
-                this.$apollo.queries.getTransfers.fetchMore({
-                    variables: {
-                        hash: this.address,
-                        _limit: this.maxItems,
-                        _nextKey: this.getTransfers.nextKey
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        this.isEnd = page
-                        const newT = fetchMoreResult[queryName].transfers
-                        const prevT = previousResult[queryName].transfers
-                        return {
-                            [queryName]: {
-                                nextKey: fetchMoreResult[queryName].nextKey,
-                                transfers: [...prevT, ...newT],
-                                __typename: fetchMoreResult[queryName].__typename
+                this.$emit('resetUpdateCount', this.eventType, true)
+            } else {
+                if (page > this.isEnd && this.hasMore) {
+                    let queryName!: string
+                    if (this.isETH) {
+                        queryName = 'getEthTransfersV2'
+                    } else {
+                        queryName = this.isERC20 ? 'getERC20Transfers' : 'getERC721Transfers'
+                    }
+                    await this.$apollo.queries.getTransfers.fetchMore({
+                        variables: {
+                            hash: this.address,
+                            _limit: this.maxItems,
+                            _nextKey: this.getTransfers.nextKey
+                        },
+                        updateQuery: (previousResult, { fetchMoreResult }) => {
+                            this.isEnd = page
+                            const newT = fetchMoreResult[queryName].transfers
+                            const prevT = previousResult[queryName].transfers
+                            return {
+                                [queryName]: {
+                                    nextKey: fetchMoreResult[queryName].nextKey,
+                                    transfers: [...prevT, ...newT],
+                                    __typename: fetchMoreResult[queryName].__typename
+                                }
                             }
                         }
-                    }
-                })
+                    })
+                }
             }
+            this.index = page
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
+            }
+            return false
         }
-
-        this.index = page
     }
     /**
      * Emit error to Sentry
@@ -394,7 +405,7 @@ export default class AddressTransers extends Mixins(CoinData) {
                                 after: _type === TYPES[0] ? response.data.getTransactionStateDiff[stateDiffIdx].to : ''
                             }
                         })
-                    } else if (stateDiffIdx < 0 && !this.isContract) {
+                    } else if (stateDiffIdx < 0 && !this.isContract && !this.loadingContract) {
                         throw new Error('No state diff found for regular address')
                     }
                 }

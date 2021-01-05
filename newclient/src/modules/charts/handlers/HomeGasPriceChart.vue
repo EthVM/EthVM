@@ -7,6 +7,7 @@
             :chart-options="chartOptions"
             :footnotes="footnotes"
             :show-time-options="false"
+            :is-loading-data="loading"
         />
     </div>
 </template>
@@ -17,7 +18,10 @@ import Chart from '@app/modules/charts/components/Chart.vue'
 import { ChartDataMixin } from '@app/modules/charts/mixins/ChartDataMixin.mixin'
 import { TimeseriesKey, DataPoint, ChartData, Dataset, ChartOptions, TimeseriesValue } from '@app/modules/charts/models'
 import { TimeseriesScale } from '@app/apollo/global/globalTypes'
-import { getTimeseriesData_getTimeseriesData as GetTimeseriesDataType } from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
+import {
+    getTimeseriesData_getTimeseriesData as GetTimeseriesDataType,
+    getTimeseriesData_getTimeseriesData_items as TimeseriesDataItem
+} from '@app/modules/charts/handlers/apolloTypes/getTimeseriesData'
 import { getTimeseriesData, timeseriesEthAvg } from '@app/modules/charts/handlers/timeseriesData.graphql'
 import { Footnote } from '@app/core/components/props'
 
@@ -39,6 +43,9 @@ const MAX_ITEMS = 10
             variables() {
                 return this.getQueryVars(KEY_GAS_MIN, SCALE, START)
             },
+            skip() {
+                return this.loadingOffset
+            },
             subscribeToMore: {
                 document: timeseriesEthAvg,
                 variables() {
@@ -52,6 +59,9 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
+                        while (newItems.length > MAX_ITEMS) {
+                            newItems.shift()
+                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -64,13 +74,21 @@ const MAX_ITEMS = 10
             },
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
-                this.gasMinDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                if (data && data.getTimeseriesData && data.getTimeseriesData.items && data.getTimeseriesData.items.length > 0) {
+                    this.gasMinDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                }
+            },
+            error(error) {
+                this.hasErrorGasMin = true
             }
         },
         dataGasMax: {
             query: getTimeseriesData,
             variables() {
                 return this.getQueryVars(KEY_GAS_MAX, SCALE, START)
+            },
+            skip() {
+                return this.loadingOffset
             },
             subscribeToMore: {
                 document: timeseriesEthAvg,
@@ -85,6 +103,9 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
+                        while (newItems.length > MAX_ITEMS) {
+                            newItems.shift()
+                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -97,13 +118,21 @@ const MAX_ITEMS = 10
             },
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
-                this.gasMaxDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                if (data && data.getTimeseriesData && data.getTimeseriesData.items && data.getTimeseriesData.items.length > 0) {
+                    this.gasMaxDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                }
+            },
+            error(error) {
+                this.hasErrorGasMax = true
             }
         },
         dataGasAvg: {
             query: getTimeseriesData,
             variables() {
                 return this.getQueryVars(KEY_GAS_AVG, SCALE, START)
+            },
+            skip() {
+                return this.loadingOffset
             },
             subscribeToMore: {
                 document: timeseriesEthAvg,
@@ -118,6 +147,9 @@ const MAX_ITEMS = 10
                             return previousResult
                         }
                         const newItems = this.addSubscriptionItem(newItem, prevItems)
+                        while (newItems.length > MAX_ITEMS) {
+                            newItems.shift()
+                        }
                         return {
                             getTimeseriesData: {
                                 __typename: previousResult.getTimeseriesData.__typename,
@@ -130,7 +162,12 @@ const MAX_ITEMS = 10
             },
             update: data => (data.getTimeseriesData ? data.getTimeseriesData.items : null),
             result({ data }) {
-                this.gasAvgDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                if (data && data.getTimeseriesData && data.getTimeseriesData.items && data.getTimeseriesData.items.length > 0) {
+                    this.gasAvgDataSet = [...this.mapItemsToDataSet(data.getTimeseriesData.items, VALUE_TYPE)]
+                }
+            },
+            error(error) {
+                this.hasErrorGasAvg = true
             }
         }
     }
@@ -150,12 +187,16 @@ export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
     ===================================================================================
     */
 
-    dataGasMin!: GetTimeseriesDataType
-    dataGasMax!: GetTimeseriesDataType
-    dataGasAvg!: GetTimeseriesDataType
+    dataGasMin!: TimeseriesDataItem
+    dataGasMax!: TimeseriesDataItem
+    dataGasAvg!: TimeseriesDataItem
     gasMinDataSet: DataPoint[] = []
     gasMaxDataSet: DataPoint[] = []
     gasAvgDataSet: DataPoint[] = []
+
+    hasErrorGasMin = false
+    hasErrorGasMax = false
+    hasErrorGasAvg = false
 
     /*
     ===================================================================================
@@ -294,37 +335,10 @@ export default class HomeGasPriceChart extends Mixins(ChartDataMixin) {
             }
         ]
     }
-    /*
-    ===================================================================================
-      Watchers
-    ===================================================================================
-    */
-    @Watch('gasMinDataSet', { deep: true })
-    ongasMinDataSetChanged(newVal) {
-        if (newVal.length > MAX_ITEMS) {
-            newVal.shift()
-            this.gasMinDataSet = newVal
-        } else {
-            this.gasMinDataSet = newVal
-        }
-    }
-    @Watch('gasMaxDataSet', { deep: true })
-    ongasMaxDataSetChanged(newVal) {
-        if (newVal.length > MAX_ITEMS) {
-            newVal.shift()
-            this.gasMaxDataSet = newVal
-        } else {
-            this.gasMaxDataSet = newVal
-        }
-    }
-    @Watch('gasAvgDataSet', { deep: true })
-    ongasAvgDataSetChanged(newVal) {
-        if (newVal.length > MAX_ITEMS) {
-            newVal.shift()
-            this.gasAvgDataSet = newVal
-        } else {
-            this.gasAvgDataSet = newVal
-        }
+    get loading(): boolean {
+        const loadingQueries = this.$apollo.queries.dataGasMin.loading || this.$apollo.queries.dataGasMax.loading || this.$apollo.queries.dataGasAvg.loading
+        const hasError = this.hasErrorGasMin && this.hasErrorGasMax && this.hasErrorGasAvg
+        return this.loadingOffset || loadingQueries || hasError
     }
 }
 </script>

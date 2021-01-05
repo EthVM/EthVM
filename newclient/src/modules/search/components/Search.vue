@@ -78,7 +78,7 @@ export default class Search extends Vue {
     @Watch('searchAutocomplete')
     search(newVal: string, oldVal: string): void {
         if (newVal && (this.selectVal === selectTypes[0] || this.selectVal === selectTypes[1])) {
-            this.$emit('getToken', newVal)
+            this.$emit('getAllSearch', newVal)
         }
     }
 

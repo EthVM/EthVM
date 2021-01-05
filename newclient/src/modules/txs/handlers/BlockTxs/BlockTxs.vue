@@ -55,6 +55,7 @@ import { newTransfersCompleteFeed as TypeTransfersSubscribtion } from './apolloT
 import { getAllTxs_getAllEthTransfers as AllTxType } from './apolloTypes/getAllTxs'
 import { TransferType } from '@app/apollo/global/globalTypes'
 import { ErrorMessageBlock } from '@app/modules/blocks/models/ErrorMessagesForBlock'
+import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
 
 @Component({
     components: {
@@ -239,38 +240,47 @@ export default class BlockTxs extends Vue {
      * @param page {Number}
      * @param reset {Boolean}
      */
-    setPage(page: number, reset: boolean = false): void {
-        if (reset) {
-            this.isEnd = 0
-            if (!this.isHome && !this.isBlock) {
-                this.newMinedTransfers = 0
-            }
-            this.$apollo.queries.getAllEthTransfers.refetch()
-        } else {
-            if (!this.isBlock && page > this.isEnd && this.hasMore) {
-                this.$apollo.queries.getAllEthTransfers.fetchMore({
-                    variables: {
-                        _limit: this.maxItems,
-                        _nextKey: this.getAllEthTransfers.nextKey
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        this.isEnd = page
-                        const newT = fetchMoreResult.getAllEthTransfers.transfers
-                        const prevT = previousResult.getAllEthTransfers.transfers
-                        return {
-                            ...previousResult,
-                            getAllEthTransfers: {
-                                __typename: previousResult.getAllEthTransfers.__typename,
-                                nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
-                                transfers: [...prevT, ...newT]
+    async setPage(page: number, reset: boolean = false): Promise<boolean> {
+        try {
+            if (reset) {
+                this.isEnd = 0
+                if (!this.isHome && !this.isBlock) {
+                    this.newMinedTransfers = 0
+                }
+                this.$apollo.queries.getAllEthTransfers.refetch()
+            } else {
+                if (!this.isBlock && page > this.isEnd && this.hasMore) {
+                    this.$apollo.queries.getAllEthTransfers.fetchMore({
+                        variables: {
+                            _limit: this.maxItems,
+                            _nextKey: this.getAllEthTransfers.nextKey
+                        },
+                        updateQuery: (previousResult, { fetchMoreResult }) => {
+                            this.isEnd = page
+                            const newT = fetchMoreResult.getAllEthTransfers.transfers
+                            const prevT = previousResult.getAllEthTransfers.transfers
+                            return {
+                                ...previousResult,
+                                getAllEthTransfers: {
+                                    __typename: previousResult.getAllEthTransfers.__typename,
+                                    nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
+                                    transfers: [...prevT, ...newT]
+                                }
                             }
                         }
-                    }
-                })
+                    })
+                }
             }
-        }
 
-        this.index = page
+            this.index = page
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
+            }
+            return false
+        }
     }
     /**
      * Emit error to Sentry

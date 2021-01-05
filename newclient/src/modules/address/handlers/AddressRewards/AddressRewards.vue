@@ -46,6 +46,8 @@ import { RewardSummary_transfers as RewardType } from './apolloTypes/RewardSumma
 import AppNewUpdate from '@app/core/components/ui/AppNewUpdate.vue'
 import { AddressEventType } from '@app/apollo/global/globalTypes'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
+import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
+
 /*
   DEV NOTES:
   - add on Error
@@ -191,45 +193,53 @@ export default class AddressRewards extends Vue {
      * Sets page number and fetch more data or reset state
      * @param page {Number} reset {Boolean}
      */
-    setPage(page: number, reset: boolean = false): void {
-        if (reset) {
-            this.isEnd = 0
-            this.initialLoad = true
-            this.showPagination = false
-            this.$apollo.queries.getRewards.refetch()
-            this.$emit('resetUpdateCount', this.eventType, true)
-        } else {
-            if (page > this.isEnd && this.hasMore) {
-                let queryName!: string
-                if (this.isBlock) {
-                    queryName = 'getBlockRewards'
-                } else {
-                    queryName = this.isUncle ? 'getUncleRewards' : 'getGenesisRewards'
-                }
+    async setPage(page: number, reset: boolean = false): Promise<boolean> {
+        try {
+            if (reset) {
+                this.isEnd = 0
+                this.initialLoad = true
+                this.showPagination = false
+                this.$apollo.queries.getRewards.refetch()
+                this.$emit('resetUpdateCount', this.eventType, true)
+            } else {
+                if (page > this.isEnd && this.hasMore) {
+                    let queryName!: string
+                    if (this.isBlock) {
+                        queryName = 'getBlockRewards'
+                    } else {
+                        queryName = this.isUncle ? 'getUncleRewards' : 'getGenesisRewards'
+                    }
 
-                this.$apollo.queries.getRewards.fetchMore({
-                    variables: {
-                        hash: this.address,
-                        _limit: this.maxItems,
-                        _nextKey: this.getRewards.nextKey
-                    },
-                    updateQuery: (previousResult, { fetchMoreResult }) => {
-                        this.isEnd = page
-                        const newT = fetchMoreResult[queryName].transfers
-                        const prevT = previousResult[queryName].transfers
-                        return {
-                            [queryName]: {
-                                nextKey: fetchMoreResult[queryName].nextKey,
-                                transfers: [...prevT, ...newT],
-                                __typename: fetchMoreResult[queryName].__typename
+                    await this.$apollo.queries.getRewards.fetchMore({
+                        variables: {
+                            hash: this.address,
+                            _limit: this.maxItems,
+                            _nextKey: this.getRewards.nextKey
+                        },
+                        updateQuery: (previousResult, { fetchMoreResult }) => {
+                            this.isEnd = page
+                            const newT = fetchMoreResult[queryName].transfers
+                            const prevT = previousResult[queryName].transfers
+                            return {
+                                [queryName]: {
+                                    nextKey: fetchMoreResult[queryName].nextKey,
+                                    transfers: [...prevT, ...newT],
+                                    __typename: fetchMoreResult[queryName].__typename
+                                }
                             }
                         }
-                    }
-                })
+                    })
+                }
             }
+            this.index = page
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
+            }
+            return false
         }
-
-        this.index = page
     }
     /**
      * Emit Rewards to parent

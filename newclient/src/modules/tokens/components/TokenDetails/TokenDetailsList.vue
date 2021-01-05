@@ -216,6 +216,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
             detail.detail = new Hex(this.tokenDetails.contract).toString()
             detail.link = `/address/${new Hex(this.tokenDetails.contract).toString()}`
             detail.copy = true
+            detail.toChecksum = true
         }
         return detail
     }
@@ -226,6 +227,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
             detail.detail = this.holderDetails.owner
             detail.link = `/address/${this.holderDetails.owner}`
             detail.copy = true
+            detail.toChecksum = true
         }
         return detail
     }
@@ -334,6 +336,7 @@ export default class TokenDetailsList extends Mixins(NumberFormatMixin, CoinData
             detail.detail = this.holderDetails.owner
             detail.link = `/address/${this.holderDetails.owner}`
             detail.copy = true
+            detail.toChecksum = true
         }
         return detail
     }

@@ -390,48 +390,49 @@
                 "avg": "Avg"
             }
         },
-        "tx-count-avg": {
+
+        "average_txs": {
             "title": "Average Transactions Count",
             "description": "Average number of transactions",
             "label": "Txs Count"
         },
-        "tx-count-total": {
+        "total_txs": {
             "title": "Total Transactions Count",
             "description": "Total number of transactions",
             "label": "Txs Count"
         },
-        "tx-count-min": {
+        "min_txs": {
             "title": "Minimum Transactions Count",
             "description": "Minimum number of transactions",
             "label": "Min Txs "
         },
-        "tx-count-max": {
+        "max_txs": {
             "title": "Maximum Transactions Count",
             "description": "Maximum number of transactions",
             "label": "Max Txs "
         },
-        "pending-tx-count-avg": {
+        "average_new_pending_txs": {
             "title": "Average Pending Transactions ",
             "description": "Average number of pending transactions",
             "label": "Txs Count"
         },
-        "pending-tx-count-total": {
+        "total_new_pending_txs": {
             "title": "Total Pending Transactions ",
             "description": "Total number of pending transactions",
             "label": "Txs Count"
         },
 
-        "gas-price-avg": {
+        "average_gas_price": {
             "title": "Average Gas Price ",
             "description": "Average Gas Price (GWEI)",
             "label": "Gas Price (GWEI)"
         },
-        "gas-price-min": {
+        "min_gas_price": {
             "title": "Minimum Gas Price ",
             "description": "Minimum Gas Price (GWEI)",
             "label": "Gas Price (GWEI)"
         },
-        "gas-price-max": {
+        "max_gas_price": {
             "title": "Maximum Gas Price ",
             "description": "Maximum Gas Price (GWEI)",
             "label": "Gas Price (GWEI)"

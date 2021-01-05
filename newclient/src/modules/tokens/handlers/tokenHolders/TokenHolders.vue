@@ -23,6 +23,8 @@ import { ERC20TokenOwners } from '@app/modules/tokens/handlers/tokenHolders/apol
 import { ERC721TokenOwners } from '@app/modules/tokens/handlers/tokenHolders/apolloTypes/ERC721TokenOwners'
 import { ErrorMessageToken } from '@app/modules/tokens/models/ErrorMessagesForTokens'
 import TokenTableHolders from '@app/modules/tokens/components/TokenDetailsHolder/TokenTableHolders.vue'
+import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
+
 const TYPES = ['ERC20', 'ERC721']
 
 const MAX_ITEMS = 10
@@ -128,56 +130,72 @@ export default class TokenHolders extends Vue {
      * @param page {Number}
      * @returns {Any}
      */
-    getERC20Holders(page: number) {
-        const queryName = 'getERC20TokenOwners'
-
-        this.$apollo.queries.erc20TokenHolders.fetchMore({
-            variables: {
-                contract: this.addressRef,
-                _limit: this.maxItems,
-                _nextKey: this.erc20TokenHolders.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                this.isEnd = page
-                const newT = fetchMoreResult[queryName].owners
-                const prevT = previousResult[queryName].owners
-                return {
-                    [queryName]: {
-                        nextKey: fetchMoreResult[queryName].nextKey,
-                        owners: [...prevT, ...newT],
-                        __typename: fetchMoreResult[queryName].__typename
+    async getERC20Holders(page: number): Promise<boolean> {
+        try {
+            const queryName = 'getERC20TokenOwners'
+            await this.$apollo.queries.erc20TokenHolders.fetchMore({
+                variables: {
+                    contract: this.addressRef,
+                    _limit: this.maxItems,
+                    _nextKey: this.erc20TokenHolders.nextKey
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    this.isEnd = page
+                    const newT = fetchMoreResult[queryName].owners
+                    const prevT = previousResult[queryName].owners
+                    return {
+                        [queryName]: {
+                            nextKey: fetchMoreResult[queryName].nextKey,
+                            owners: [...prevT, ...newT],
+                            __typename: fetchMoreResult[queryName].__typename
+                        }
                     }
                 }
+            })
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
             }
-        })
+            return false
+        }
     }
     /**
      * Gets ERC721 holders via apollo
      * @param page {Number}
      * @returns {Any}
      */
-    getERC721Holders(page: number) {
-        const queryName = 'getERC721TokenOwners'
-
-        this.$apollo.queries.erc721TokenHolders.fetchMore({
-            variables: {
-                contract: this.addressRef,
-                _limit: this.maxItems,
-                _nextKey: this.erc721TokenHolders.nextKey
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-                this.isEnd = page
-                const newT = fetchMoreResult[queryName].owners
-                const prevT = previousResult[queryName].owners
-                return {
-                    [queryName]: {
-                        nextKey: fetchMoreResult[queryName].nextKey,
-                        owners: [...prevT, ...newT],
-                        __typename: fetchMoreResult[queryName].__typename
+    async getERC721Holders(page: number): Promise<boolean> {
+        try {
+            const queryName = 'getERC721TokenOwners'
+            await this.$apollo.queries.erc721TokenHolders.fetchMore({
+                variables: {
+                    contract: this.addressRef,
+                    _limit: this.maxItems,
+                    _nextKey: this.erc721TokenHolders.nextKey
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    this.isEnd = page
+                    const newT = fetchMoreResult[queryName].owners
+                    const prevT = previousResult[queryName].owners
+                    return {
+                        [queryName]: {
+                            nextKey: fetchMoreResult[queryName].nextKey,
+                            owners: [...prevT, ...newT],
+                            __typename: fetchMoreResult[queryName].__typename
+                        }
                     }
                 }
+            })
+            return true
+        } catch (e) {
+            const newE = JSON.stringify(e)
+            if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+                throw new Error(newE)
             }
-        })
+            return false
+        }
     }
     /**
      * Sets page number and reset value and emit

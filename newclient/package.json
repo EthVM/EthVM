@@ -1,6 +1,6 @@
 {
     "name": "ethvm",
-    "version": "1.0.5-hotfix.1",
+    "version": "1.0.6",
     "description": "EthVM: Open source Ethereum networks explorer",
     "author": "EthVM Team",
     "private": true,
