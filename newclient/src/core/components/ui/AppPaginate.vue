@@ -77,19 +77,14 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
     Props
   ===================================================================================
   */
-
     @Prop(Number) total!: number
     @Prop(Number) currentPage!: number
-    // @Prop({ type: Boolean, default: true }) hasFirst!: boolean
-    // @Prop({ type: Boolean, default: true }) hasLast!: boolean
-    // @Prop({ type: Boolean, default: true }) hasInput!: boolean
 
     /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
-
     validClass = 'center-input body-1 secondary--text'
     invalidClass = 'center-input body-1 error--text'
     isError = false
@@ -146,7 +141,7 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
     }
 
     /**
-     * Determine if an given @number is within the valid page range.
+     * Determine if a given @number is within the valid page range.
      *
      * @page {Number} - Page number to be validated
      * @return {Boolean}
@@ -179,13 +174,19 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
   */
 
     /**
+     * Returns Text for the total pages near the input
+     *
+     * @returns {string}
+     */
+    get showText(): string {
+        return `${this.$t('message.page')} ${this.formatIntegerValue(new BigNumber(this.total), true).value}`
+    }
+
+    /**
      * Transform the "zero-based" value of this.page into
      * a human-readable string that starts from 1 as opposed to 0
+     * @returns {string}
      */
-
-    get showText(): string {
-        return `${this.$t('message.page')} ${this.totalFormatted}`
-    }
     get pageDisplay(): string {
         return new BigNumber(this.currentPage + 1).toFixed()
     }
@@ -199,10 +200,11 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
         return !this.isError
     }
 
-    get totalFormatted(): string {
-        return this.formatIntegerValue(new BigNumber(this.total), true).value
-    }
-
+    /**
+     * Display tooltip if totalPages >= 1k
+     *
+     * @return {string | undefined} - string IF totalPages >= 1k, undefined otherwise
+     */
     get hasTotalTooltip(): string | undefined {
         return this.total >= 1e3 ? this.formatNumber(this.total) : undefined
     }
@@ -210,6 +212,8 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
     /**
      * Property this.total is a human-readable number/length as opposed to a zero-based number.
      * The last possible page is zero-based, so this translates the human-readable number into zero-based
+     *
+     * @returns {number}
      */
     get lastPage(): number {
         return this.total - 1
@@ -223,6 +227,12 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
         return mask
     }
 
+    /**
+     * Returns Class name of the input width
+     * Determines width of the input accordign to the total page size
+     *
+     * @returns {string}
+     */
     get inputWidthClass(): string {
         if (this.total.toString().length < 3) {
             return 'x-sm'

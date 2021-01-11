@@ -68,8 +68,6 @@ export default class AppPaginate extends Mixins(NumberFormatMixin) {
   ===================================================================================
   */
 
-    validClass = 'center-input body-1 secondary--text'
-    invalidClass = 'center-input body-1 error--text'
     hasLast = false
     lastPageLoad = 0
 
