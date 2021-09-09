@@ -9,7 +9,7 @@ const ETHER_ID = 'ethereum'
         getLatestPrices: {
             query: getLatestPrices,
             fetchPolicy: 'cache-and-network',
-            pollInterval: 30000,
+            pollInterval: 300000,
             update: data => {
                 return data.getLatestPrices
             },
