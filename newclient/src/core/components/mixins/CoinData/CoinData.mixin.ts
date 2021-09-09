@@ -18,13 +18,12 @@ const ETHER_ID = 'ethereum'
             },
             result({ data }) {
                 if (data && data.getLatestPrices && data.getLatestPrices.length > 0) {
-                    data.getLatestPrices.forEach((token, index) => {
+                    data.getLatestPrices.forEach(token => {
                         if (token.id === ETHER_ID) {
                             this.etherPrice = token.current_price
                         } else if (this.hasData(token)) {
                             this.tokensMarketInfo.set(token.contract.toLowerCase(), token)
-                        } else {
-                            this.getLatestPrices.splice(index, 1)
+                            this.filteredLatestPrices.push(token)
                         }
                     })
                     this.isLoadingTokensMarketData = false
@@ -40,7 +39,11 @@ export class CoinData extends Vue {
     ===================================================================================
     */
     isRopsten: boolean = false
+    /**@param getLatestPrices - Contains all market data */
+
     getLatestPrices!: TokenMarketData[]
+    /** @param filteredLatestPrices - Contains only ERC20 tokens market data */
+    filteredLatestPrices: TokenMarketData[] = []
     tokensMarketInfo = new Map<string, TokenMarketData>()
     isLoadingTokensMarketData = true
     etherPrice: number = 0
@@ -64,8 +67,8 @@ export class CoinData extends Vue {
      * @returns {Array} TokenMarketData or {Boolean}
      */
     getEthereumTokens(): TokenMarketData[] | false {
-        if (!this.isLoadingTokensMarketData && this.getLatestPrices.length > 0) {
-            return this.getLatestPrices.filter(item => item.id !== ETHER_ID)
+        if (!this.isLoadingTokensMarketData && this.filteredLatestPrices.length > 0) {
+            return this.filteredLatestPrices.filter(item => item.id !== ETHER_ID)
         }
         return false
     }
