@@ -39,9 +39,10 @@ export class CoinData extends Vue {
     ===================================================================================
     */
     isRopsten: boolean = false
-    /* getLatestPrices - Contains all market data */
+    /**@param getLatestPrices - Contains all market data */
+
     getLatestPrices!: TokenMarketData[]
-    /* filteredLatestPrices - Contains only ERC20 market data */
+    /** @param filteredLatestPrices - Contains only ERC20 tokens market data */
     filteredLatestPrices: TokenMarketData[] = []
     tokensMarketInfo = new Map<string, TokenMarketData>()
     isLoadingTokensMarketData = true

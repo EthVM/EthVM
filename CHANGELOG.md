@@ -1,3 +1,6 @@
+### Release v1.0.7
+- fix remove non eth tokens from the tokens list  [#966](https://github.com/EthVM/EthVM/pull/966)
+
 ### Release v1.0.6
 
 ### Bug
