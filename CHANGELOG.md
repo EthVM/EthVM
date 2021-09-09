@@ -1,12 +1,13 @@
+### Release v1.0.7
+
 ### Bug
 
 - Fix pgainate has more bug for the last page [#953](https://github.com/EthVM/EthVM/pull/953)
+- fix remove non eth tokens from the tokens list  [#966](https://github.com/EthVM/EthVM/pull/966)
 
 ### Devop
 
 - Refactor Pagination components and update UI [#953](https://github.com/EthVM/EthVM/pull/953)
-
-===================================================================================
 
 ### Release v1.0.6
 
