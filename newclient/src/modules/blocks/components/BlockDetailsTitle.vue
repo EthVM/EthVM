@@ -9,28 +9,42 @@
             </v-flex>
             <!-- Title -->
             <v-flex xs8 sm10 pl-0 pr-0>
-                <v-layout row wrap align-center justify-start>
-                    <v-card-title class="title font-weight-bold pa-1">{{ title }}</v-card-title>
-                    <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
-                        <template #activator="{ on }">
-                            <v-btn slot="activator" round outline color="primary" class="text-capitalize" small v-on="on">
-                                {{ $tc('uncle.name', unclesPlural) }}
-                                <v-icon right>fa fa-angle-right</v-icon>
-                            </v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-title class="title font-weight-bold">{{ $tc('uncle.name', unclesPlural) }}:</v-card-title>
-                            <v-divider class="lineGrey" />
-                            <v-list>
-                                <v-list-tile v-for="(uncle, index) in uncles" :key="index">
-                                    <v-layout row justify-start align-center fill-height>
-                                        <v-card-title class="info--text p-0">{{ $t('common.hash') }}:</v-card-title>
-                                        <app-transform-hash :hash="uncle | toChecksum" :link="`/uncle/${uncle}`" />
-                                    </v-layout>
-                                </v-list-tile>
-                            </v-list>
-                        </v-card>
-                    </v-dialog>
+                <v-layout row wrap align-start justify-start>
+                    <v-flex xs12>
+                        <v-layout row wrap align-center justify-start>
+                            <v-card-title class="title font-weight-bold py-1 pl-1">Block #13679083 </v-card-title>
+                            <v-dialog v-model="dialog" max-width="700">
+                                <template #activator="{ on }">
+                                    <v-btn slot="activator" round outline color="primary" class="text-capitalize mx-0" small v-on="on">
+                                        {{ $tc('uncle.name', unclesPlural) }}
+                                        <v-icon right small>fa fa-angle-right</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title class="title font-weight-bold">{{ $tc('uncle.name', unclesPlural) }}:</v-card-title>
+                                    <v-divider class="lineGrey" />
+                                    <v-list>
+                                        <v-list-tile v-for="(uncle, index) in uncles" :key="index">
+                                            <v-layout row justify-start align-center fill-height>
+                                                <v-card-title class="info--text p-0">{{ $t('common.hash') }}:</v-card-title>
+                                                <app-transform-hash :hash="uncle | toChecksum" :link="`/uncle/${uncle}`" />
+                                            </v-layout>
+                                        </v-list-tile>
+                                    </v-list>
+                                </v-card>
+                            </v-dialog>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex shrink class="border-conatiner hidden-xs-only">
+                        <v-img :src="require('./image.png')" contain min-height="150px" min-width="150px"></v-img>
+                    </v-flex>
+                    <v-flex xs12 sm7 md6 class="hidden-xs-only">
+                        <v-card-text class="py-1">
+                            Completed on 7/30/2015, this iconic piece of history included 0 transactions. Note the use of 0 in gas. With a size of 546 bytes,
+                            this immutable piece will look fantastic next to a computer server.
+                        </v-card-text>
+                        <v-btn depressed color="secondary" class="text-none mx-3"> Mint this block as NFT </v-btn>
+                    </v-flex>
                 </v-layout>
             </v-flex>
             <!-- Next Block -->
@@ -38,6 +52,22 @@
                 <v-layout align-center justify-end>
                     <v-btn :to="nextBlock" flat color="secondary" class="black--text" icon> <v-icon>fas fa-angle-right</v-icon> </v-btn>
                 </v-layout>
+            </v-flex>
+            <v-flex xs12 align-center justify-start hidden-sm-and-up px-3>
+                <div>
+                    <div class="border-conatiner float-img">
+                        <v-img :src="require('./image.png')" contain height="110px" width="110px"></v-img>
+                    </div>
+                    <d-flex shrink>
+                        <p>
+                            Completed on 7/30/2015, this iconic piece of history included 0 transactions. Note the use of 0 in gas. With a size of 546 bytes,
+                            this immutable piece will look fantastic next to a computer server.
+                        </p>
+                    </d-flex>
+                </div>
+                <v-btn depressed color="secondary" class="text-capitalize mx-0">
+                    Mint this block as NFT
+                </v-btn>
             </v-flex>
         </v-layout>
         <div v-else>
@@ -116,3 +146,19 @@ export default class BlockDetailsTitle extends Vue {
     }
 }
 </script>
+<style lang="scss">
+.border-conatiner {
+    border: 1px solid #b4bfd2;
+    border-radius: 5px;
+}
+.nft-image-container {
+    height: 160px;
+    width: 160px;
+    padding: 5px;
+}
+.float-img {
+    float: left;
+    margin-right: 10px;
+    padding: 4px;
+}
+</style>
