@@ -1,6 +1,7 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-eth-blocks class="mb-3" />
         <app-message :messages="errorMessages" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
@@ -14,6 +15,8 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppEthBlocks from '@app/core/components/ui/AppEthBlocks.vue'
+
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import { eth } from '@app/core/helper'
@@ -26,6 +29,7 @@ import { ErrorMessageTx } from '@app/modules/txs/models/ErrorMessagesForTx'
     components: {
         AppBreadCrumbs,
         AppError,
+        AppEthBlocks,
         AppMessage,
         TxDetails
     }

@@ -1,6 +1,7 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-eth-blocks class="mb-4" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
         =====================================================================================
@@ -289,6 +290,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppEthBlocks from '@app/core/components/ui/AppEthBlocks.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import AppTabs from '@app/core/components/ui/AppTabs.vue'
@@ -320,7 +322,8 @@ const MAX_ITEMS = 10
         AddressTokens,
         AddressRewards,
         AddressPendingTx,
-        AppDetailsList
+        AppDetailsList,
+        AppEthBlocks
     }
 })
 export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
