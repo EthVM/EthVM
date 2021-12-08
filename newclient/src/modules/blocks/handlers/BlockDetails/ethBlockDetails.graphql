@@ -1,0 +1,6 @@
+query getEthBlock($blockNumber: Int!, $chainId: Int!) {
+  getEthBlock(input: {blockNumber : $blockNumber, chainId: $chainId}) @rest (type: "EthBlock", path: "/meta", method: "POST", bodyKey: "input") {
+    img
+    description
+  }
+}

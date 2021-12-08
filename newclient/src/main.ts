@@ -11,6 +11,7 @@ import { onError } from 'apollo-link-error'
 import { OpenSeaClient } from './apollo/opensea/osClient'
 import { FavAddrClient } from './apollo/favorite-addresses/favAddrClient'
 import { FavTokClient } from './apollo/favorite-tokens/favTokenClient'
+import { EthBlocksClient } from './apollo/eth-blocks/ethBlocksClient'
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -94,7 +95,8 @@ const apolloProvider = new VueApollo({
         apolloClient,
         OpenSeaClient,
         FavAddrClient,
-        FavTokClient
+        FavTokClient,
+        EthBlocksClient
     },
     defaultClient: apolloClient
 })

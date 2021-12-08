@@ -9,6 +9,10 @@
             <app-details-list :details="blockDetails" :is-loading="loading" :max-items="9" :is-block="true" class="mb-4">
                 <template #title>
                     <block-details-title
+                        :curr-block="currBlockNumber"
+                        :has-eth-block="isEthBlock"
+                        :eth-block-img="ethBlockImg"
+                        :eth-block-desc="ethBlockDesc"
                         :next-block="nextBlock"
                         :prev-block="previousBlock"
                         :uncles="uncleHashes"
@@ -30,8 +34,10 @@ import { eth } from '@app/core/helper'
 import { Mixins, Component, Prop } from 'vue-property-decorator'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 import { getBlockByNumber, getBlockByHash, getLastBlockNumber } from './blockDetails.graphql'
+import { getEthBlock } from './ethBlockDetails.graphql'
 import { BlockDetails as BlockDetailsType } from './apolloTypes/BlockDetails'
 import { getLastBlockNumber_getLatestBlockInfo as lastBlockType } from './apolloTypes/getLastBlockNumber'
+import { getEthBlock_getEthBlock as ethBlockType } from './apolloTypes/getEthBlock'
 import { FormattedNumber } from '@app/core/helper/number-format-helper'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
 import BN from 'bignumber.js'
@@ -78,6 +84,17 @@ import { excpBlockNotMined } from '@app/apollo/exceptions/errorExceptions'
         getLatestBlockInfo: {
             query: getLastBlockNumber,
             fetchPolicy: 'cache-and-network'
+        },
+        ethBlock: {
+            query: getEthBlock,
+            client: 'EthBlocksClient',
+            variables() {
+                return { blockNumber: this.currBlockNumber, chainId: 1 }
+            },
+            skip() {
+                return !this.isEthBlock
+            },
+            update: data => data.getEthBlock
         }
     }
 })
@@ -103,6 +120,7 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     getLatestBlockInfo!: lastBlockType
     skipDetailsFetch = false
     subscribed = false
+    ethBlock!: ethBlockType
 
     /*
     ===================================================================================
@@ -295,6 +313,25 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
             return `/block/number/${prev}`
         }
         return ''
+    }
+    get currBlockNumber(): number | null {
+        return this.block && this.block.summary ? this.block.summary.number : null
+    }
+    get isEthBlock(): boolean {
+        if (this.lastBlock && this.currBlockNumber) {
+            const recentEthBlock = new BN(this.lastBlock).minus(50)
+            return new BN(this.currBlockNumber).lte(recentEthBlock)
+        }
+        return false
+    }
+    get loadingEthBlock(): boolean {
+        return this.$apollo.queries.ethBlock.loading
+    }
+    get ethBlockImg(): string {
+        return this.loadingEthBlock || !this.ethBlock ? '' : this.ethBlock.img
+    }
+    get ethBlockDesc(): string {
+        return this.loadingEthBlock || !this.ethBlock ? '' : this.ethBlock.description
     }
     /*
     ===================================================================================
