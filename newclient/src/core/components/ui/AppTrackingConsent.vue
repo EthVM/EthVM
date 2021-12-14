@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" width="360" persistent scrollable>
         <v-card v-if="dialog">
             <v-card-title class="title font-weight-regular consent-title">
-                Help us make EthVM better by allowing us to measure a few things?
+                Help us make EthVM better by allowing us to measure a few things? {{ userConsent }}
             </v-card-title>
             <v-divider class="lineGrey" />
             <v-card-text class="consent-content pa-0">
@@ -44,11 +44,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch, Mixins } from 'vue-property-decorator'
+import { MatomoMixin } from '../mixins/Matomo/matomo-mixin'
 import storePack from 'store'
 
 @Component
-export default class AppTrackingConsent extends Vue {
+export default class AppTrackingConsent extends Mixins(MatomoMixin) {
     /*
   ===================================================================================
     Props
@@ -125,9 +126,8 @@ export default class AppTrackingConsent extends Vue {
      * true -> sets polling to show consent dialog
      */
     mounted() {
-        this.isFirstTime = !storePack.get('notFirstTimeVisit')
-        if (this.isFirstTime) {
-            this.pollStore()
+        if (this.userNotFirstTime && !this.userDisplayedTrackingPopup) {
+            this.openDialog()
         }
     }
     /**
@@ -141,7 +141,7 @@ export default class AppTrackingConsent extends Vue {
     }
     /*
     ===================================================================================
-      Computed
+      Methods
     ===================================================================================
     */
 
@@ -154,22 +154,23 @@ export default class AppTrackingConsent extends Vue {
         this.dialog = false
         storePack.set('displayedTrackingPopup', true)
     }
-    /**
-     * Method to check greet dialog state every sec
-     * Sets isFirstTime accordingly
-     */
-    pollStore(): void {
-        this.pollIsFirstTime = setInterval(() => {
-            this.isFirstTime = !storePack.get('notFirstTimeVisit')
-        }, 1000)
-    }
+    // /**
+    //  * Method to check greet dialog state every sec
+    //  * Sets isFirstTime accordingly
+    //  */
+    // pollStore(): void {
+    //     this.pollIsFirstTime = setInterval(() => {
+    //         this.userNotFirstTime = !storePack.get('notFirstTimeVisit')
+    //     }, 1000)
+    // }
     /**
      * Method open consent dialog after 4 sec
      */
     openDialog(): void {
-        setTimeout(() => {
-            this.dialog = true
-        }, 4000)
+        // setTimeout(() => {
+        //     this.dialog = true
+        // }, 4000)
+        this.dialog = true
     }
     /*
   ===================================================================================
@@ -180,13 +181,14 @@ export default class AppTrackingConsent extends Vue {
      * Watches changes in greet dialog.
      * If changed from true to false -> clears interval and opens consent dialog
      */
-    @Watch('isFirstTime')
-    onIsFirstTimeChange(newVal: boolean, oldVal: boolean): void {
-        const gaveConsent = storePack.get('consentToTrack')
-        if (oldVal && !newVal && !gaveConsent) {
-            if (this.pollIsFirstTime) {
-                clearInterval(this.pollIsFirstTime)
-            }
+    @Watch('userNotFirstTime')
+    onUserNotFirstTimeChange(newVal: boolean, oldVal: boolean): void {
+        // console.log('In Watch', newVal, oldVal)
+
+        if (newVal && !this.userDisplayedTrackingPopup) {
+            // if (this.pollIsFirstTime) {
+            //     clearInterval(this.pollIsFirstTime)
+            // }
             this.openDialog()
         }
     }

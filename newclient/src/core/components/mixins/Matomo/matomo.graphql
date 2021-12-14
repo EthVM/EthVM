@@ -1,0 +1,28 @@
+query getConsentToTrack {
+    getConsentToTrack @client
+}
+
+query  getNotFirstTime {
+    getNotFirstTime @client
+
+}
+
+query  getDisplayedTrackingPopup {
+   getDisplayedTrackingPopup @client
+
+}
+
+
+mutation  setConsentToTrack($_consent: Boolean!,) {
+     setConsentToTrack(consent: $_consent) @client
+}
+
+mutation  setNotFirstTime($_notFirstTimeVisit: Boolean!,) {
+     setNotFirstTime(notFirstTimeVisit: $_notFirstTimeVisit) @client
+}
+
+mutation   setDisplayedTrackingPopup($_showed: Boolean!,) {
+     setNotFirstTime(showed: $_showed) @client
+}
+
+

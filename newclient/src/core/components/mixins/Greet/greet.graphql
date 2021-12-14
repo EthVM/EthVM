@@ -1,0 +1,10 @@
+query  getNotFirstTime {
+    getNotFirstTime @client
+
+}
+
+mutation  setNotFirstTime($_notFirstTimeVisit: Boolean!,) {
+     setNotFirstTime(notFirstTimeVisit: $_notFirstTimeVisit) @client
+}
+
+

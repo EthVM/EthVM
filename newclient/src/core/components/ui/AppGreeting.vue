@@ -32,20 +32,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import storePack from 'store'
+import { Mixins, Component, Watch } from 'vue-property-decorator'
 import confetti from 'canvas-confetti'
-
+import { GreetMixin } from '../mixins/Greet/greeting-mixin'
 @Component
-export default class AppGreeting extends Vue {
-    /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
-
-    @Prop(Boolean) greet!: boolean
-
+export default class AppGreeting extends Mixins(GreetMixin) {
     /*
   ===================================================================================
     Initial Data
@@ -58,11 +49,26 @@ export default class AppGreeting extends Vue {
 
     /*
   ===================================================================================
-    Lifecycle
+    Computed
   ===================================================================================
   */
 
-    mounted() {
+    get greet(): boolean {
+        return !this.userNotFirstTimeLoading && !this.userNotFirstTime
+    }
+
+    /*
+  ===================================================================================
+   Watch
+  ====================================()===============================================
+  */
+
+    /**
+     * Watches changes in greet .
+     * If changed to true -> open greet dialog
+     */
+    @Watch('greet')
+    onGreetChange(): void {
         if (this.greet && this.animate) {
             setTimeout(() => {
                 this.createAnimation()
@@ -72,7 +78,16 @@ export default class AppGreeting extends Vue {
             }, 5000)
         }
     }
-
+    /**
+     * Watches changes in  dialog.
+     * If changed  to false -> set not first time visit
+     */
+    @Watch('dialog')
+    onDialogChange(): void {
+        if (!this.dialog) {
+            this.setNotFirstTimeTrue()
+        }
+    }
     /*
   ===================================================================================
     Methods
@@ -84,7 +99,6 @@ export default class AppGreeting extends Vue {
      */
     removeDialog(): void {
         this.dialog = false
-        storePack.set('notFirstTimeVisit', true)
     }
     /**
      * Creates confetti animation

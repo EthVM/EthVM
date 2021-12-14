@@ -1,0 +1,19 @@
+type LocalStore {
+    consentToTrack: Boolean!
+    notFirstTimeVisit: Boolean!
+    displayedTrackingPopup: Boolean!
+}
+
+
+extend type Query {
+    getConsentToTrack: Boolean!
+    getNotFirstTime: Boolean!
+    getDisplayedTrackingPopup: Boolean!
+    localAppStore: LocalStore!
+}
+
+extend type Mutation {
+    setConsentToTrack(consent: Boolean!): Boolean !
+    setNotFirstTime (notFirstTimeVisit: Boolean!): Boolean!
+    setDisplayedTrackingPopup (showed: Boolean!): Boolean!
+}

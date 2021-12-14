@@ -3,7 +3,7 @@
         <the-navigation-drawer />
         <v-content>
             <v-layout column fill-height>
-                <app-greeting v-if="appGreet" :greet="appGreet" />
+                <app-greeting />
                 <app-tracking-consent />
                 <v-flex>
                     <router-view :key="$route.path" />
@@ -49,9 +49,9 @@ export default class App extends Vue {
     Computed values
   ===================================================================================
   */
-    get appGreet() {
-        return !storePack.get('notFirstTimeVisit')
-    }
+    // get appGreet() {
+    //     return !storePack.get('notFirstTimeVisit')
+    // }
     get connected(): boolean {
         return true
     }

@@ -5,6 +5,7 @@ const configs = {
     ETH_BLOCKS: process.env.VUE_APP_ETHBLOCKS || '',
     NODE_ENV: process.env.NODE_ENV,
     VERSION: process.env.VERSION,
-    ROUTER_MODE: process.env.ROUTER_MODE || 'history'
+    ROUTER_MODE: process.env.ROUTER_MODE || 'history',
+    VUE_APP_MATOMO: process.env.VUE_APP_MATOMO === 'true'
 }
 export default configs
