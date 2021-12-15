@@ -9,6 +9,9 @@ const LOCAL_CLIENT = 'LocalStoreClient'
             client: 'LocalStoreClient',
             fetchPolicy: 'network-only',
             update: data => data.getConsentToTrack,
+            result() {
+                this.loadingUserConsent = false
+            },
             error() {
                 // this.hasNewBlockUpdateError = true
             }
@@ -34,8 +37,9 @@ export class MatomoMixin extends Vue {
     ===================================================================================
     */
     userConsent!: any
+    loadingUserConsent = true
     userDisplayedTrackingPopup!: any
-    loadingDisplayedTrackingPopup!: true
+    loadingDisplayedTrackingPopup = true
 
     /*
     ===================================================================================
