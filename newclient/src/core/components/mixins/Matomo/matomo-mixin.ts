@@ -1,5 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { getConsentToTrack, getNotFirstTime, getDisplayedTrackingPopup } from './matomo.graphql'
+import { getConsentToTrack, getDisplayedTrackingPopup, setConsentToTrack, setDisplayedTrackingPopup } from './matomo.graphql'
+const LOCAL_CLIENT = 'LocalStoreClient'
+
 @Component({
     apollo: {
         userConsent: {
@@ -11,20 +13,14 @@ import { getConsentToTrack, getNotFirstTime, getDisplayedTrackingPopup } from '.
                 // this.hasNewBlockUpdateError = true
             }
         },
-        userNotFirstTime: {
-            query: getNotFirstTime,
-            client: 'LocalStoreClient',
-            fetchPolicy: 'network-only',
-            update: data => data.getNotFirstTime,
-            error() {
-                // this.hasNewBlockUpdateError = true
-            }
-        },
         userDisplayedTrackingPopup: {
             query: getDisplayedTrackingPopup,
             client: 'LocalStoreClient',
             fetchPolicy: 'network-only',
-            update: data => data.getNotFirstTime,
+            update: data => data.getDisplayedTrackingPopup,
+            result() {
+                this.loadingDisplayedTrackingPopup = false
+            },
             error() {
                 // this.hasNewBlockUpdateError = true
             }
@@ -38,17 +34,44 @@ export class MatomoMixin extends Vue {
     ===================================================================================
     */
     userConsent!: any
-    userNotFirstTime!: any
-    userDisplayedTrackingPopup
+    userDisplayedTrackingPopup!: any
+    loadingDisplayedTrackingPopup!: true
+
     /*
     ===================================================================================
-      Computed
+      Methods
     ===================================================================================
     */
-    // get newBlockNumber(): number | undefined {
-    //     return this.newBlock ? this.newBlock.number : undefined
-    // }
-    // get newTxs(): number | undefined {
-    //     return this.newBlock ? this.newBlock.txCount : undefined
-    // }
+
+    setConsentToTrack(consent: boolean): void {
+        this.$apollo
+            .mutate({
+                mutation: setConsentToTrack,
+                client: LOCAL_CLIENT,
+                variables: {
+                    _consent: consent
+                }
+            })
+            .then(data => {
+                if (data) {
+                    this.$apollo.queries.userConsent.refetch()
+                }
+            })
+    }
+
+    setDisplayedTrackingPopupTrue(): void {
+        this.$apollo
+            .mutate({
+                mutation: setDisplayedTrackingPopup,
+                client: LOCAL_CLIENT,
+                variables: {
+                    _showed: true
+                }
+            })
+            .then(data => {
+                if (data) {
+                    this.$apollo.queries.userDisplayedTrackingPopup.refetch()
+                }
+            })
+    }
 }

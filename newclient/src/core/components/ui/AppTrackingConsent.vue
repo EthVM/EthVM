@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" width="360" persistent scrollable>
         <v-card v-if="dialog">
             <v-card-title class="title font-weight-regular consent-title">
-                Help us make EthVM better by allowing us to measure a few things? {{ userConsent }}
+                Help us make EthVM better by allowing us to measure a few things?
             </v-card-title>
             <v-divider class="lineGrey" />
             <v-card-text class="consent-content pa-0">
@@ -33,7 +33,7 @@
                         </v-btn>
                     </v-flex>
                     <v-flex xs12>
-                        <v-btn flat color="error" block class="text-capitalize" @click="allowTracking(true)">
+                        <v-btn flat color="error" block class="text-capitalize" @click="allowTracking(false)">
                             Don't allow
                         </v-btn>
                     </v-flex>
@@ -44,26 +44,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch, Mixins } from 'vue-property-decorator'
+import { Component, Watch, Mixins } from 'vue-property-decorator'
 import { MatomoMixin } from '../mixins/Matomo/matomo-mixin'
-import storePack from 'store'
+import { GreetMixin } from '../mixins/Greet/greeting-mixin'
 
 @Component
-export default class AppTrackingConsent extends Mixins(MatomoMixin) {
-    /*
-  ===================================================================================
-    Props
-  ===================================================================================
-  */
-
+export default class AppTrackingConsent extends Mixins(MatomoMixin, GreetMixin) {
     /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
     dialog = false
-    pollIsFirstTime?: NodeJS.Timeout
-    isFirstTime = true
     constentText = [
         {
             title: 'What we collect',
@@ -114,31 +106,6 @@ export default class AppTrackingConsent extends Mixins(MatomoMixin) {
             ]
         }
     ]
-
-    /*
-  ===================================================================================
-    Lifecycle
-  ===================================================================================
-  */
-
-    /**
-     * Checks if greeting is active, sets isFirstTime.
-     * true -> sets polling to show consent dialog
-     */
-    mounted() {
-        if (this.userNotFirstTime && !this.userDisplayedTrackingPopup) {
-            this.openDialog()
-        }
-    }
-    /**
-     * Checks if interval is active.
-     * true -> clears interval
-     */
-    beforeDestroy() {
-        if (this.pollIsFirstTime) {
-            clearInterval(this.pollIsFirstTime)
-        }
-    }
     /*
     ===================================================================================
       Methods
@@ -150,27 +117,17 @@ export default class AppTrackingConsent extends Mixins(MatomoMixin) {
      * @param {boolean} allow user consent to track
      */
     allowTracking(allow: boolean): void {
-        storePack.set('consentToTrack', allow)
+        this.setConsentToTrack(allow)
         this.dialog = false
-        storePack.set('displayedTrackingPopup', true)
+        this.setDisplayedTrackingPopupTrue()
     }
-    // /**
-    //  * Method to check greet dialog state every sec
-    //  * Sets isFirstTime accordingly
-    //  */
-    // pollStore(): void {
-    //     this.pollIsFirstTime = setInterval(() => {
-    //         this.userNotFirstTime = !storePack.get('notFirstTimeVisit')
-    //     }, 1000)
-    // }
     /**
      * Method open consent dialog after 4 sec
      */
     openDialog(): void {
-        // setTimeout(() => {
-        //     this.dialog = true
-        // }, 4000)
-        this.dialog = true
+        setTimeout(() => {
+            this.dialog = true
+        }, 4000)
     }
     /*
   ===================================================================================
@@ -178,17 +135,12 @@ export default class AppTrackingConsent extends Mixins(MatomoMixin) {
   ===================================================================================
   */
     /**
-     * Watches changes in greet dialog.
-     * If changed from true to false -> clears interval and opens consent dialog
+     * Watches changes in userNotFirstTime.
+     * If changed from false or undefined(on loading) to true -> opens consent dialog
      */
     @Watch('userNotFirstTime')
-    onUserNotFirstTimeChange(newVal: boolean, oldVal: boolean): void {
-        // console.log('In Watch', newVal, oldVal)
-
-        if (newVal && !this.userDisplayedTrackingPopup) {
-            // if (this.pollIsFirstTime) {
-            //     clearInterval(this.pollIsFirstTime)
-            // }
+    onUserNotFirstTimeChange(): void {
+        if (this.userNotFirstTime && !this.userDisplayedTrackingPopup) {
             this.openDialog()
         }
     }

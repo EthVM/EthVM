@@ -41,8 +41,8 @@ export class GreetMixin extends Vue {
     ===================================================================================
     */
 
-    async setNotFirstTimeTrue(): Promise<boolean> {
-        const res = await this.$apollo
+    setNotFirstTimeTrue(): void {
+        this.$apollo
             .mutate({
                 mutation: setNotFirstTime,
                 client: LOCAL_CLIENT,
@@ -51,7 +51,10 @@ export class GreetMixin extends Vue {
                 },
                 refetchQueries: getNotFirstTime
             })
-            .then(data => (data !== null ? true : false))
-        return res
+            .then(data => {
+                if (data) {
+                    this.$apollo.queries.userNotFirstTime.refetch()
+                }
+            })
     }
 }
