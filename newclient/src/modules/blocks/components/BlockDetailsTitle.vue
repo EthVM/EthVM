@@ -50,6 +50,7 @@
                             class="text-none mx-3"
                             :href="`https://www.myetherwallet.com/wallet/dapps/eth-blocks/block/${currBlock}`"
                             target="_blank"
+                            @click="trackMint"
                         >
                             Mint this block as NFT
                         </v-btn>
@@ -88,6 +89,7 @@
                     class="text-capitalize mx-0"
                     :href="`https://www.myetherwallet.com/wallet/dapps/eth-blocks/block/${currBlock}`"
                     target="_blank"
+                    @click="trackMint"
                 >
                     Mint this block as NFT
                 </v-btn>
@@ -112,7 +114,8 @@
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
-
+import { MatomoMixin } from '@app/core/components/mixins/Matomo/matomo-mixin'
+import { Category, Action } from '@app/core/components/mixins/Matomo/matomoEnums'
 import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
 
 @Component({
@@ -120,7 +123,7 @@ import AppTransformHash from '@app/core/components/ui/AppTransformHash.vue'
         AppTransformHash
     }
 })
-export default class BlockDetailsTitle extends Mixins(NumberFormatMixin) {
+export default class BlockDetailsTitle extends Mixins(NumberFormatMixin, MatomoMixin) {
     /*
   ===================================================================================
     Props
@@ -176,6 +179,9 @@ export default class BlockDetailsTitle extends Mixins(NumberFormatMixin) {
      */
     reload() {
         this.$emit('reload')
+    }
+    trackMint() {
+        this.setMatomoEvent(Category.BLOCK_PAGE, Action.CLICK_MINT)
     }
 }
 </script>

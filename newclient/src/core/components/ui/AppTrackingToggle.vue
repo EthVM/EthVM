@@ -16,6 +16,35 @@ import { MatomoMixin } from '../mixins/Matomo/matomo-mixin'
 export default class AppTrackingToggle extends Mixins(MatomoMixin) {
     /*
     ===================================================================================
+      Computed
+    ===================================================================================
+    */
+
+    /**
+     * Property returns tracking state 'on' or 'off'
+     */
+    get toggleString(): string {
+        return this.userConsent ? 'on' : 'off'
+    }
+
+    /*
+    ===================================================================================
+      Watch
+    ===================================================================================
+    */
+
+    /**
+     * Sets matomo cookie for the consent to track on the initial page load, based on value in local storage
+     */
+    @Watch('userConsent')
+    onUserConsentChange(newVal, oldVal) {
+        if (oldVal === undefined) {
+            this.setConsentToTrack(newVal)
+        }
+    }
+
+    /*
+    ===================================================================================
       Methods
     ===================================================================================
     */
@@ -27,10 +56,6 @@ export default class AppTrackingToggle extends Mixins(MatomoMixin) {
     toggleTracking(): void {
         const allow = !this.userConsent
         this.setConsentToTrack(allow)
-    }
-
-    get toggleString(): string {
-        return this.userConsent ? 'on' : 'off'
     }
 }
 </script>

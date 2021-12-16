@@ -13,6 +13,7 @@ import { FavAddrClient } from './apollo/favorite-addresses/favAddrClient'
 import { FavTokClient } from './apollo/favorite-tokens/favTokenClient'
 import { EthBlocksClient } from './apollo/eth-blocks/ethBlocksClient'
 import { LocalStoreClient } from './apollo/local-store-global/localStoreClient'
+
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -111,12 +112,13 @@ Vue.use(VueApollo)
     Matomo
   ===================================================================================
 */
-
 Vue.use(VueMatomo, MatomoConfigs)
 
-// -------------------------------------------------------
-//    Vuetify
-// -------------------------------------------------------
+/*
+  ===================================================================================
+    Vuetify
+  ===================================================================================
+*/
 
 Vue.use(Vuetify, {
     theme: {

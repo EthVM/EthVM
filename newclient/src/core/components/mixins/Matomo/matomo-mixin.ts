@@ -1,5 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { getConsentToTrack, getDisplayedTrackingPopup, setConsentToTrack, setDisplayedTrackingPopup } from './matomo.graphql'
+import { Category, Action } from './matomoEnums'
 const LOCAL_CLIENT = 'LocalStoreClient'
 
 @Component({
@@ -46,7 +47,11 @@ export class MatomoMixin extends Vue {
       Methods
     ===================================================================================
     */
-
+    /**
+     * Sets consent based on user input, changes local store and sets Matomo coockies
+     * Defaults to FALSE
+     * @param {boolean} consent - user unput
+     */
     setConsentToTrack(consent: boolean): void {
         this.$apollo
             .mutate({
@@ -61,8 +66,18 @@ export class MatomoMixin extends Vue {
                     this.$apollo.queries.userConsent.refetch()
                 }
             })
-    }
 
+        this.matomoExists().then(() => {
+            if (consent) {
+                this.$matomo.setConsentGiven()
+            } else {
+                this.$matomo.forgetConsentGiven()
+            }
+        })
+    }
+    /**
+     * Sets displayed tracking popup to true after it has been shown
+     */
     setDisplayedTrackingPopupTrue(): void {
         this.$apollo
             .mutate({
@@ -77,5 +92,39 @@ export class MatomoMixin extends Vue {
                     this.$apollo.queries.userDisplayedTrackingPopup.refetch()
                 }
             })
+    }
+
+    /**
+     * Sends matomo event if consent it true
+     * @param {Category} category - component description
+     * @param {Action} action - action desciption
+     */
+    setMatomoEvent(category: Category, action: Action): void {
+        if (this.userConsent && !this.loadingUserConsent) {
+            this.matomoExists().then(() => {
+                this.$matomo.trackEvent(category, action)
+            })
+        }
+    }
+
+    /**
+     * Method checks if Matomo plugin is initialized,
+     * @returns true
+     */
+    matomoExists(): Promise<boolean> {
+        return new Promise(resolve => {
+            const checkInterval = 50
+            const timeout = 5000
+            const waitStart = Date.now()
+            const interval = setInterval(() => {
+                if (this.$matomo) {
+                    clearInterval(interval)
+                    return resolve(true)
+                }
+                if (Date.now() >= waitStart + timeout) {
+                    clearInterval(interval)
+                }
+            }, checkInterval)
+        })
     }
 }

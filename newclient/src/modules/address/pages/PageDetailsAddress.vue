@@ -1,7 +1,7 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
-        <app-eth-blocks class="mb-4" />
+        <app-eth-blocks class="mb-4" :category="matomoEthBlockCategory" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
         =====================================================================================
@@ -307,6 +307,7 @@ import AddressRewards from '@app/modules/address/handlers/AddressRewards/Address
 import { Address, Contract } from '@app/modules/address/components/props'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
+import { Category } from '@app/core/components/mixins/Matomo/matomoEnums'
 
 const MAX_ITEMS = 10
 
@@ -355,6 +356,7 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     hasBlockRewards = false
     errorMessages: ErrorMessage[] = []
     contract!: Contract
+    matomoEthBlockCategory = Category.ADR_PAGE
 
     /* ERC20 and ERC721 Refetc options */
     totalERC20 = 0

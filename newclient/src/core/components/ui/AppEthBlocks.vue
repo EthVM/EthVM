@@ -12,7 +12,15 @@
             </v-flex>
             <v-spacer hidden-sm-only />
 
-            <v-btn depressed outline color="white" class="text-none mx-0">
+            <v-btn
+                depressed
+                outline
+                color="white"
+                class="text-none mx-0"
+                @click="mint"
+                :href="`https://www.myetherwallet.com/wallet/dapps/eth-blocks`"
+                target="_blank"
+            >
                 Mint ETH Blocks at MEW
             </v-btn>
         </v-layout>
@@ -20,8 +28,25 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-
+import { Mixins, Component, Prop } from 'vue-property-decorator'
+import { MatomoMixin } from '@app/core/components/mixins/Matomo/matomo-mixin'
+import { Category, Action } from '@app/core/components/mixins/Matomo/matomoEnums'
 @Component
-export default class AppEthBlocks extends Vue {}
+export default class AppEthBlocks extends Mixins(MatomoMixin) {
+    /*
+    ===================================================================================
+      Props
+    ===================================================================================
+    */
+    @Prop(String) category!: Category
+
+    /*
+    ===================================================================================
+      Methods
+    ===================================================================================
+    */
+    mint(): void {
+        this.setMatomoEvent(this.category, Action.CLICK_MINT)
+    }
+}
 </script>
