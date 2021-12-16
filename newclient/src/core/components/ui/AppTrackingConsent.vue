@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" width="360" persistent scrollable>
         <v-card v-if="dialog">
             <v-card-title class="title font-weight-regular consent-title">
-                Help us make EthVM better by allowing us to measure a few things?
+                {{ $t('tracking-consent.dialog.title') }}
             </v-card-title>
             <v-divider class="lineGrey" />
             <v-card-text class="consent-content pa-0">
@@ -21,7 +21,7 @@
                     <v-divider class="lineGrey" />
                 </div>
                 <v-btn flat color="secondary" block class="text-capitalize">
-                    View our full tracking policy <span><v-icon size="12px" class="fas fa-external-link-alt ml-2" /></span>
+                    {{ $t('tracking-consent.dialog.privacy-link') }} <span><v-icon size="12px" class="fas fa-external-link-alt ml-2" /></span>
                 </v-btn>
                 <v-divider class="lineGrey" />
             </v-card-text>
@@ -29,12 +29,12 @@
                 <v-layout row wrap class="px-3">
                     <v-flex xs12 my-2>
                         <v-btn block depressed color="secondary" class="text-capitalize" @click="allowTracking(true)">
-                            Allow
+                            {{ $t('tracking-consent.dialog.allow') }}
                         </v-btn>
                     </v-flex>
                     <v-flex xs12>
                         <v-btn flat color="error" block class="text-capitalize" @click="allowTracking(false)">
-                            Don't allow
+                            {{ $t('tracking-consent.dialog.dont-allow') }}
                         </v-btn>
                     </v-flex>
                 </v-layout>
@@ -58,50 +58,50 @@ export default class AppTrackingConsent extends Mixins(MatomoMixin, GreetMixin) 
     dialog = false
     constentText = [
         {
-            title: 'What we collect',
+            title: this.$t('tracking-consent.dialog-panel-1.title'),
             icon: 'far fa-chart-bar',
             content: [
                 {
-                    text: 'We will only measure how users are using the product:'
+                    text: this.$t('tracking-consent.dialog-panel-1.text')
                 },
                 {
-                    text: 'What features they use',
+                    text: this.$t('tracking-consent.dialog-panel-1.bul-1'),
                     isBPoint: true
                 },
                 {
-                    text: 'How long it takes to complete a process',
+                    text: this.$t('tracking-consent.dialog-panel-1.bul-2'),
                     isBPoint: true
                 },
                 {
-                    text: 'Where users drop off when completing an action',
+                    text: this.$t('tracking-consent.dialog-panel-1.bul-3'),
                     isBPoint: true
                 }
             ]
         },
         {
-            title: 'Annonimity',
+            title: this.$t('tracking-consent.dialog-panel-2.title'),
             icon: 'fas fa-user-secret',
             content: [
                 {
-                    text: 'We will never collect user’s full IP address or exact location so you can remain anonymous'
+                    text: this.$t('tracking-consent.dialog-panel-2.text')
                 }
             ]
         },
         {
-            title: 'Privacy',
+            title: this.$t('tracking-consent.dialog-panel-3.title'),
             icon: 'fas fa-lock',
             content: [
                 {
-                    text: 'We cannot access any personal data: No seed words, no private keys, no public adress nor passwords'
+                    text: this.$t('tracking-consent.dialog-panel-3.text')
                 }
             ]
         },
         {
-            title: 'Opt out at any time',
+            title: this.$t('tracking-consent.dialog-panel-4.title'),
             icon: 'fas fa-toggle-on',
             content: [
                 {
-                    text: 'Data sharing can be turned on and off from the Dashboard’s sidebar menu and the site’s footers'
+                    text: this.$t('tracking-consent.dialog-panel-4.text')
                 }
             ]
         }

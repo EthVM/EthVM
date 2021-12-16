@@ -4,9 +4,9 @@
             <v-img :src="require('@/assets/eth-blocks.png')" min-width="90px" max-width="120" contain></v-img>
             <v-flex xs12 sm6 md7 lg6>
                 <div>
-                    <div class="subheading font-weight-bold mb-1 white--text text-xs-center text-sm-left">Introducing ETH Blocks NFTs by MEW!</div>
+                    <div class="subheading font-weight-bold mb-1 white--text text-xs-center text-sm-left">{{ $t('eth-block.ad.title') }}</div>
                     <div class="white--text caption text-xs-center text-sm-left">
-                        Mint generative art NFTs of your favorite blocks
+                        {{ $t('eth-block.ad.text') }}
                     </div>
                 </div>
             </v-flex>
@@ -17,11 +17,11 @@
                 outline
                 color="white"
                 class="text-none mx-0"
-                @click="mint"
                 :href="`https://www.myetherwallet.com/wallet/dapps/eth-blocks`"
                 target="_blank"
+                @click="mint"
             >
-                Mint ETH Blocks at MEW
+                {{ $t('eth-block.ad.btn-text') }}
             </v-btn>
         </v-layout>
     </v-card>

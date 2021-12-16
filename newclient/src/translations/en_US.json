@@ -760,5 +760,44 @@
         "including-uncle": "Including Uncle Reward?",
         "block-rewards": "Block Rewards",
         "uncle-rewards": "Uncle Rewards"
+    },
+    "eth-block": {
+        "ad": {
+            "title": "Introducing ETH Blocks NFTs by MEW!",
+            "text": "Mint generative art NFTs of your favorite blocks",
+            "btn-text": "Mint ETH Blocks at MEW"
+        }
+    },
+    "tracking-consent": {
+        "tracking": {
+            "text": "Tracking",
+            "on": "on",
+            "off": "off"
+        },
+        "dialog": {
+            "title": "Help us make EthVM better by allowing us to measure a few things?",
+            "privacy-link": "View our full tracking policy",
+            "allow": "Allow",
+            "dont-allow": "Don't Allow"
+        },
+        "dialog-panel-1": {
+            "title": "What we collect",
+            "text": "We will only measure how users are using the product:",
+            "bul-1": "What features they use",
+            "bul-2": "How long it takes to complete a process",
+            "bul-3": "Where users drop off when completing an action"
+        },
+        "dialog-panel-2": {
+            "title": "Annonimity",
+            "text": "We will never collect user’s full IP address or exact location so you can remain anonymous"
+        },
+        "dialog-panel-3": {
+            "title": "Privacy",
+            "text": "We cannot access any personal data: No seed words, no private keys, no public adress nor passwords"
+        },
+        "dialog-panel-4": {
+            "title": "Opt out at any time",
+            "text": "Data sharing can be turned on and off in the site’s footer"
+        }
     }
 }

@@ -1,11 +1,5 @@
 <template>
-    <v-switch
-        v-if="!loadingUserConsent"
-        :input-value="userConsent"
-        color="secondary"
-        :label="`Tracking: ${toggleString}`"
-        @change="toggleTracking()"
-    ></v-switch>
+    <v-switch v-if="!loadingUserConsent" :input-value="userConsent" color="secondary" :label="toggleString" @change="toggleTracking()"></v-switch>
 </template>
 
 <script lang="ts">
@@ -24,7 +18,8 @@ export default class AppTrackingToggle extends Mixins(MatomoMixin) {
      * Property returns tracking state 'on' or 'off'
      */
     get toggleString(): string {
-        return this.userConsent ? 'on' : 'off'
+        const label = this.$t('tracking-consent.tracking.text')
+        return this.userConsent ? `${label} ${this.$t('tracking-consent.tracking.on')}` : `${label} ${this.$t('tracking-consent.tracking.off')}`
     }
 
     /*
