@@ -10,9 +10,6 @@ const LOCAL_CLIENT = 'LocalStoreClient'
             update: data => data.getNotFirstTime,
             result() {
                 this.initialFirstTimeLoading = false
-            },
-            error() {
-                // this.hasNewBlockUpdateError = true
             }
         }
     }

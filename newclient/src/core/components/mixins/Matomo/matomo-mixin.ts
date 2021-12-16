@@ -12,9 +12,6 @@ const LOCAL_CLIENT = 'LocalStoreClient'
             update: data => data.getConsentToTrack,
             result() {
                 this.loadingUserConsent = false
-            },
-            error() {
-                // this.hasNewBlockUpdateError = true
             }
         },
         userDisplayedTrackingPopup: {
@@ -24,9 +21,6 @@ const LOCAL_CLIENT = 'LocalStoreClient'
             update: data => data.getDisplayedTrackingPopup,
             result() {
                 this.loadingDisplayedTrackingPopup = false
-            },
-            error() {
-                // this.hasNewBlockUpdateError = true
             }
         }
     }
