@@ -21,7 +21,7 @@ const transformMeta = (data: any) => {
     return null
 }
 const osRestLink = new RestLink({
-    uri: configs.ETH_BLOCKS,
+    uri: 'https://ethblocksapi.mewapi.io',
     responseTransformer: async (response, typeName) => {
         const data = await response.json()
         if (typeName === TypeNames.EthBlock) {
