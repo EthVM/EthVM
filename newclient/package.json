@@ -110,6 +110,7 @@
         "not ie <= 8"
     ],
     "resolutions": {
-        "graphql": "14.6.0"
+        "graphql": "14.6.0",
+        "@apollo/federation": "0.20.7"
     }
 }
