@@ -1,7 +1,6 @@
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { getLocalAppStore } from './rootQuery.graphql'
 import store from 'store'
-// import { favAddressCache as cachedAdrsType, favAddressCache_favAddresses as AddrType } from './apolloTypes/favAddressCache'
 
 export const resolvers = {
     Query: {
