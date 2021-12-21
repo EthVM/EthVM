@@ -49,9 +49,7 @@ export default class App extends Vue {
     Computed values
   ===================================================================================
   */
-    // get appGreet() {
-    //     return !storePack.get('notFirstTimeVisit')
-    // }
+
     get connected(): boolean {
         return true
     }
