@@ -26,7 +26,7 @@
                     <a href="/about">
                         <v-card-text class="pt-0 pb-3 black--text">{{ $t('about.name') }}</v-card-text>
                     </a>
-                    <a href="/privacy_policy">
+                    <a href="https://www.myetherwallet.com/privacy-policy" target="_blank">
                         <v-card-text class="pt-0 pb-3 black--text">{{ $t('pp.name') }}</v-card-text>
                     </a>
                     <a href="/knowledge_base">

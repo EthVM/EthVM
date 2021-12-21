@@ -20,7 +20,7 @@
                     </v-layout>
                     <v-divider class="lineGrey" />
                 </div>
-                <v-btn flat color="secondary" block class="text-capitalize">
+                <v-btn flat color="secondary" block class="text-capitalize" href="https://www.myetherwallet.com/privacy-policy" target="_blank">
                     {{ $t('tracking-consent.dialog.privacy-link') }} <span><v-icon size="12px" class="fas fa-external-link-alt ml-2" /></span>
                 </v-btn>
                 <v-divider class="lineGrey" />
