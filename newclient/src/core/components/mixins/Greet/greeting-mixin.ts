@@ -1,13 +1,14 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { getNotFirstTime, setNotFirstTime } from './greet.graphql'
+import { userNotFirstTime, setNotFirstTime } from './greet.graphql'
 const LOCAL_CLIENT = 'LocalStoreClient'
 @Component({
     apollo: {
         userNotFirstTime: {
-            query: getNotFirstTime,
+            query: userNotFirstTime,
+            fetchPolicy: 'cache-first',
             client: LOCAL_CLIENT,
-            fetchPolicy: 'network-only',
-            update: data => data.getNotFirstTime,
+            deep: true,
+            update: data => data.localAppStore.notFirstTimeVisit,
             result() {
                 this.initialFirstTimeLoading = false
             }
@@ -46,7 +47,7 @@ export class GreetMixin extends Vue {
                 variables: {
                     _notFirstTimeVisit: true
                 },
-                refetchQueries: getNotFirstTime
+                refetchQueries: userNotFirstTime
             })
             .then(data => {
                 if (data) {

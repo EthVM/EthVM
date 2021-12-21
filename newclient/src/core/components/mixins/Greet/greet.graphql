@@ -1,9 +1,10 @@
-query  getNotFirstTime {
-    getNotFirstTime @client
-
+query userNotFirstTime {
+    localAppStore @client {
+        notFirstTimeVisit
+    }
 }
 
-mutation  setNotFirstTime($_notFirstTimeVisit: Boolean!,) {
+mutation  setNotFirstTime($_notFirstTimeVisit: Boolean!) {
      setNotFirstTime(notFirstTimeVisit: $_notFirstTimeVisit) @client
 }
 

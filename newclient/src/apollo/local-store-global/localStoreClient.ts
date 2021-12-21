@@ -1,10 +1,15 @@
-import { LocalStore, Query, Mutation } from './schema.graphql'
+import { LocalStore, Mutation } from './schema.graphql'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import ApolloClient from 'apollo-client'
 import { resolvers } from './resolvers'
 import store from 'store'
 
-const LocalStorageTypeDef = `${LocalStore} ${Query} ${Mutation}`
+enum tabEvent {
+    conset = 'consentToTrack',
+    displayed = 'displayedTrackingPopup',
+    first = 'notFirstTimeVisit'
+}
+const LocalStorageTypeDef = `${LocalStore} ${Mutation}`
 const localStorageCache = new InMemoryCache()
 
 const getLocalStorageCache = (_cache: InMemoryCache): void => {
@@ -26,10 +31,10 @@ getLocalStorageCache(localStorageCache)
 
 /* Listen to updates on different browser Tabs */
 window.addEventListener('storage', event => {
-    console.log(event.key)
-    // if (event.key === DataArray.addr) {
-    //     getLocalStorageCache(localStorageCache)
-    // }
+    LocalStoreClient.reFetchObservableQueries()
+    if (event.key === tabEvent.conset || event.key === tabEvent.displayed || event.key === tabEvent.first) {
+        getLocalStorageCache(localStorageCache)
+    }
 })
 
 export const LocalStoreClient = new ApolloClient({

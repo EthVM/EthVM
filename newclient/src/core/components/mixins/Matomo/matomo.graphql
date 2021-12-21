@@ -1,9 +1,13 @@
 query getConsentToTrack {
-    getConsentToTrack @client
+    localAppStore @client {
+        consentToTrack
+    }
 }
 
 query  getDisplayedTrackingPopup {
-   getDisplayedTrackingPopup @client
+      localAppStore @client {
+        displayedTrackingPopup
+    }
 }
 
 mutation  setConsentToTrack($_consent: Boolean!,) {

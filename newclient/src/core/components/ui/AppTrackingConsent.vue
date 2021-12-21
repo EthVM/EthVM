@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" width="360" persistent scrollable>
+    <v-dialog v-if="!userDisplayedTrackingPopup" v-model="dialog" width="360" persistent scrollable>
         <v-card v-if="dialog">
             <v-card-title class="title font-weight-regular consent-title">
                 {{ $t('tracking-consent.dialog.title') }}

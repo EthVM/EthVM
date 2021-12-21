@@ -8,8 +8,8 @@ const LOCAL_CLIENT = 'LocalStoreClient'
         userConsent: {
             query: getConsentToTrack,
             client: 'LocalStoreClient',
-            fetchPolicy: 'network-only',
-            update: data => data.getConsentToTrack,
+            fetchPolicy: 'cache-first',
+            update: data => data.localAppStore.consentToTrack,
             result() {
                 this.loadingUserConsent = false
             }
@@ -17,8 +17,9 @@ const LOCAL_CLIENT = 'LocalStoreClient'
         userDisplayedTrackingPopup: {
             query: getDisplayedTrackingPopup,
             client: 'LocalStoreClient',
-            fetchPolicy: 'network-only',
-            update: data => data.getDisplayedTrackingPopup,
+            fetchPolicy: 'cache-first',
+            deep: true,
+            update: data => data.localAppStore.displayedTrackingPopup,
             result() {
                 this.loadingDisplayedTrackingPopup = false
             }

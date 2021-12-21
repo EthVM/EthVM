@@ -6,9 +6,6 @@ type LocalStore {
 
 
 extend type Query {
-    getConsentToTrack: Boolean!
-    getNotFirstTime: Boolean!
-    getDisplayedTrackingPopup: Boolean!
     localAppStore: LocalStore!
 }
 

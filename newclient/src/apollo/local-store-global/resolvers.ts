@@ -3,25 +3,6 @@ import { getLocalAppStore } from './rootQuery.graphql'
 import store from 'store'
 
 export const resolvers = {
-    Query: {
-        /**
-         * Checks whether or not an address is already in the favorite store, by address hash
-         * @param cache: InMemoryCache, apollo cache object
-         * @return - returns cachedAdrsType data type or null if !data.favAddresses
-         */
-        getConsentToTrack: (root, args, { cache }) => {
-            const data = getCachedLocalStore(cache)
-            return data && data.localAppStore && data.localAppStore.consentToTrack
-        },
-        getNotFirstTime: (root, args, { cache }) => {
-            const data = getCachedLocalStore(cache)
-            return data && data.localAppStore && data.localAppStore.notFirstTimeVisit
-        },
-        getDisplayedTrackingPopup: (root, args, { cache }) => {
-            const data = getCachedLocalStore(cache)
-            return data && data.localAppStore && data.localAppStore.displayedTrackingPopup
-        }
-    },
     Mutation: {
         /**
          * Adds a new address to the cache if address does not exhists. Checks if the address already exhists and returns it.

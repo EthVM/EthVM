@@ -7,6 +7,11 @@
 // GraphQL query operation: getConsentToTrack
 // ====================================================
 
+export interface getConsentToTrack_localAppStore {
+  __typename: "LocalStore";
+  consentToTrack: boolean;
+}
+
 export interface getConsentToTrack {
-  getConsentToTrack: boolean;
+  localAppStore: getConsentToTrack_localAppStore;
 }

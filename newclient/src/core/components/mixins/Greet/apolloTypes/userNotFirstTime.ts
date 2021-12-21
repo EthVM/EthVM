@@ -4,14 +4,14 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: getDisplayedTrackingPopup
+// GraphQL query operation: userNotFirstTime
 // ====================================================
 
-export interface getDisplayedTrackingPopup_localAppStore {
+export interface userNotFirstTime_localAppStore {
   __typename: "LocalStore";
-  displayedTrackingPopup: boolean;
+  notFirstTimeVisit: boolean;
 }
 
-export interface getDisplayedTrackingPopup {
-  localAppStore: getDisplayedTrackingPopup_localAppStore;
+export interface userNotFirstTime {
+  localAppStore: userNotFirstTime_localAppStore;
 }
