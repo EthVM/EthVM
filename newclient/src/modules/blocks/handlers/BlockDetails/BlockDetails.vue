@@ -318,9 +318,17 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
         return this.block && this.block.summary ? this.block.summary.number : null
     }
     get isEthBlock(): boolean {
-        if (this.lastBlock && this.currBlockNumber) {
+        if (this.lastBlock && (this.currBlockNumber || this.currBlockNumber === 0)) {
+            const curr = new BN(this.currBlockNumber)
+            console.log(this.currBlockNumber)
+            if (curr.isEqualTo(0)) {
+                return true
+            }
+            if (curr.isLessThanOrEqualTo(10)) {
+                return false
+            }
             const recentEthBlock = new BN(this.lastBlock).minus(50)
-            return new BN(this.currBlockNumber).lte(recentEthBlock)
+            return curr.lte(recentEthBlock)
         }
         return false
     }
