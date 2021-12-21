@@ -527,6 +527,7 @@
             "text": "SSPL License, Copyright © 2019 MyEtherWallet Inc.  For Terms & conditions visit our "
         }
     },
+    "privacy-policy": "Privacy Policy",
 
     "kb": {
         "name": "Knowledge Base",
@@ -666,7 +667,9 @@
             }
         }
     },
-
+    "pp": {
+        "name": "Privacy Policy"
+    },
     "transfer": {
         "name": "Transfer | Transfers",
         "internal": "Internal Transfers",
