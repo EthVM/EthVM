@@ -24,8 +24,8 @@ export class FavActions extends Vue {
                 variables: {
                     address: address,
                     name: name
-                },
-                refetchQueries: _refetch
+                }
+                // refetchQueries: _refetch
             })
             .then(data => (data !== null ? true : false))
         return res

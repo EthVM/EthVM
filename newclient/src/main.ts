@@ -11,6 +11,9 @@ import { onError } from 'apollo-link-error'
 import { OpenSeaClient } from './apollo/opensea/osClient'
 import { FavAddrClient } from './apollo/favorite-addresses/favAddrClient'
 import { FavTokClient } from './apollo/favorite-tokens/favTokenClient'
+import { EthBlocksClient } from './apollo/eth-blocks/ethBlocksClient'
+import { LocalStoreClient } from './apollo/local-store-global/localStoreClient'
+
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -25,6 +28,8 @@ import { Vue as VueIntegration } from '@sentry/integrations'
 import Vue from 'vue'
 import toChecksum from '@app/core/filters/toChecksum'
 import { isAPIExceptionProduction, isAPIExceptionDev } from './apollo/exceptions/errorExceptions'
+import VueMatomo from 'vue-matomo'
+import { MatomoConfigs } from '@app/core/configs/matomo-configs'
 
 router.onError(error => {
     if (/loading chunk \d* failed./i.test(error.message)) {
@@ -94,16 +99,26 @@ const apolloProvider = new VueApollo({
         apolloClient,
         OpenSeaClient,
         FavAddrClient,
-        FavTokClient
+        FavTokClient,
+        EthBlocksClient,
+        LocalStoreClient
     },
     defaultClient: apolloClient
 })
 
 Vue.use(VueApollo)
+/*
+  ===================================================================================
+    Matomo
+  ===================================================================================
+*/
+Vue.use(VueMatomo, MatomoConfigs)
 
-// -------------------------------------------------------
-//    Vuetify
-// -------------------------------------------------------
+/*
+  ===================================================================================
+    Vuetify
+  ===================================================================================
+*/
 
 Vue.use(Vuetify, {
     theme: {
