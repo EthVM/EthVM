@@ -125,17 +125,12 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
             details = [
                 {
                     title: this.$i18n.t('uncle.height'),
-                    detail: this.formatNumber(this.uncle.parentBlockNumber)
+                    detail: this.formatNumber(this.uncle.block.summary.number)
                 },
                 {
                     title: this.$i18n.t('uncle.position'),
                     detail: this.uncle.unclePosition
                 },
-                // {
-                //     title: this.$i18n.t('uncle.included'),
-                //     detail: this.uncle.nephewNumberFormatted,
-                //     link: `/block/number/${this.uncle.nephewNumberBN.toString()}`
-                // },
                 {
                     title: this.$i18n.t('common.hash'),
                     detail: this.uncle.block.hash,
@@ -144,9 +139,8 @@ export default class UncleDetails extends Mixins(NumberFormatMixin) {
                 },
                 {
                     title: this.$i18n.t('uncle.included'),
-                    detail: this.uncle.parentHash,
-                    link: `/block/number/${this.uncle.parentBlockNumber}`,
-                    mono: true
+                    detail: this.uncle.parentBlockNumber,
+                    link: `/block/number/${this.uncle.parentBlockNumber}`
                 },
                 {
                     title: this.$i18n.tc('miner.name', 1),
