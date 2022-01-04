@@ -50,19 +50,19 @@
                 </v-flex>
                 <v-flex :sm6="isRopsten" sm3 class="pt-0 pb-0">
                     <div
-                        :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'sm' }"
+                        :class="{ 'table-row-loading-desktop': $vuetify.breakpoint.name !== 'xs' && $vuetify.breakpoint.name !== 'sm' }"
                         class="table-row-loading"
                     ></div>
                 </v-flex>
                 <v-flex v-if="!isRopsten" sm3 class="pt-0 pb-0">
                     <div
-                        :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'sm' }"
+                        :class="{ 'table-row-loading-desktop': $vuetify.breakpoint.name !== 'xs' && $vuetify.breakpoint.name !== 'sm' }"
                         class="table-row-loading"
                     ></div>
                 </v-flex>
                 <v-flex v-if="!isRopsten" sm2 class="pt-0 pb-0">
                     <div
-                        :class="{ 'table-row-loading-desktop': this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'sm' }"
+                        :class="{ 'table-row-loading-desktop': $vuetify.breakpoint.name !== 'xs' && $vuetify.breakpoint.name !== 'sm' }"
                         class="table-row-loading"
                     ></div>
                 </v-flex>

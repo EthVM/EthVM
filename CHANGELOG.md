@@ -1,3 +1,9 @@
+### Release v1.0.8
+
+### Feature
+- Matomo support [#971](https://github.com/EthVM/EthVM/pull/971)
+- Eth Blocks mentions [#971](https://github.com/EthVM/EthVM/pull/971)
+
 ### Release v1.0.7
 
 ### Bug

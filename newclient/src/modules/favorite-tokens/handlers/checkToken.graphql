@@ -1,5 +1,5 @@
 query checkToken($address: String!) {
-    checkToken(address: $address) @client {
+    checkToken(hash: $address) @client {
         symbol
         address
     }

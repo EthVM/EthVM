@@ -1,6 +1,7 @@
 <template>
     <v-container grid-list-lg class="mb-0">
         <app-bread-crumbs :new-items="crumbs" />
+        <app-eth-blocks class="mb-3" :category="matomoCategory" />
         <app-message :messages="errorMessages" />
         <app-error v-if="hasError" :has-error="hasError" :message="error" />
         <!--
@@ -14,6 +15,7 @@
 
 <script lang="ts">
 import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
+import AppEthBlocks from '@app/core/components/ui/AppEthBlocks.vue'
 import AppError from '@app/core/components/ui/AppError.vue'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import { eth } from '@app/core/helper'
@@ -21,11 +23,13 @@ import { Crumb } from '@app/core/components/props'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import TxDetails from '@app/modules/txs/handlers/TxDetails/TxDetails.vue'
 import { ErrorMessageTx } from '@app/modules/txs/models/ErrorMessagesForTx'
+import { Category } from '@app/core/components/mixins/Matomo/matomoEnums'
 
 @Component({
     components: {
         AppBreadCrumbs,
         AppError,
+        AppEthBlocks,
         AppMessage,
         TxDetails
     }
@@ -46,6 +50,7 @@ export default class PageDetailsTxs extends Vue {
   */
     errorMessages: ErrorMessageTx[] = []
     error = ''
+    matomoCategory = Category.TXS_PAGE
 
     /*
   ===================================================================================
