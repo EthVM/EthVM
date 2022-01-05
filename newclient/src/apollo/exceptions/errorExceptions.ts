@@ -43,7 +43,7 @@ const excpInvariantViolation = 'invariant violation'
  *  @returns {boolean}
  **/
 const isAPIExceptionProduction = (errorMessage: string): boolean => {
-    const newE = errorMessage.toLocaleLowerCase()
+    const newE = errorMessage.toLowerCase()
     return (
         newE.includes(excpBlockNotMined) ||
         newE.includes(excpTxDoNotExists) ||
@@ -60,7 +60,7 @@ const isAPIExceptionProduction = (errorMessage: string): boolean => {
  *  @returns {boolean}
  **/
 const isAPIExceptionDev = (errorMessage: string): boolean => {
-    return errorMessage.toLocaleLowerCase().includes(excpAddrNotContract)
+    return errorMessage.toLowerCase().includes(excpAddrNotContract)
 }
 
 export { isAPIExceptionProduction, isAPIExceptionDev, excpBlockNotMined, excpTxDoNotExists, excpUncleNotFound, excpAddrNotContract, excpInvariantViolation }
