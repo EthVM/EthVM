@@ -49,7 +49,8 @@ const isAPIExceptionProduction = (errorMessage: string): boolean => {
         newE.includes(excpTxDoNotExists) ||
         newE.includes(excpUncleNotFound) ||
         newE.includes(excpAddrNotContract) ||
-        newE.includes(excpInvariantViolation)
+        newE.includes(excpInvariantViolation) ||
+        newE.includes(excpInvalidHash)
     )
 }
 
