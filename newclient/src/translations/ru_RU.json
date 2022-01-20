@@ -673,6 +673,7 @@
         "block-rewards": "Вознаграждение за Блок",
         "uncle-rewards": "Вознаграждение за Uncle-Блок"
     },
+    "copied": "Copied",
     "eth-block": {
         "ad": {
             "title": "Introducing ETH Blocks NFTs by MEW!",
