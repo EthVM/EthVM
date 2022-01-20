@@ -1,16 +1,6 @@
 /* Apolo:  */
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import ApolloClient from 'apollo-client'
-import { split } from 'apollo-link'
-import { HttpLink } from 'apollo-link-http'
-import { WebSocketLink } from 'apollo-link-ws'
-import { getMainDefinition } from 'apollo-utilities'
 import VueApollo from 'vue-apollo'
-import { SubscriptionClient } from 'subscriptions-transport-ws'
-import { onError } from 'apollo-link-error'
-import { OpenSeaClient } from './apollo/opensea/osClient'
-import { FavAddrClient } from './apollo/favorite-addresses/favAddrClient'
-import { FavTokClient } from './apollo/favorite-tokens/favTokenClient'
+import { apolloProvider } from './apollo/apolloProvider'
 /* Other */
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -38,66 +28,6 @@ router.onError(error => {
   ===================================================================================
 */
 Vue.config.productionTip = false
-
-/*
-  ===================================================================================
-    APIs: Apollo (GraphQL)
-  ===================================================================================
-*/
-
-const httpLink = new HttpLink({
-    uri: configs.APOLLO_HTTP
-})
-
-const subscriptionClient = new SubscriptionClient(configs.APOLLO_WS, { lazy: true, reconnect: true }, null, [])
-
-const wsLink = new WebSocketLink(subscriptionClient)
-
-const onErrorLink = onError(({ graphQLErrors }) => {
-    if (graphQLErrors) {
-        graphQLErrors.map(({ message, locations, path }) => {
-            const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            //For production and staging emit to Sentry:
-            if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-                if (!isAPIExceptionProduction(message)) {
-                    Sentry.captureException(newError)
-                }
-            } else {
-                //For Development use only console errors:
-                if (!isAPIExceptionDev(message)) {
-                    console.log(newError)
-                }
-            }
-        })
-    }
-})
-const link = split(
-    // split based on operation type
-    ({ query }) => {
-        const definition = getMainDefinition(query)
-        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
-    },
-    wsLink,
-    onErrorLink.concat(httpLink)
-)
-
-const cache = new InMemoryCache()
-const apolloClient = new ApolloClient({
-    link,
-    cache,
-    connectToDevTools: configs.NODE_ENV === 'development'
-    // resolvers
-})
-
-const apolloProvider = new VueApollo({
-    clients: {
-        apolloClient,
-        OpenSeaClient,
-        FavAddrClient,
-        FavTokClient
-    },
-    defaultClient: apolloClient
-})
 
 Vue.use(VueApollo)
 
