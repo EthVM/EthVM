@@ -1,6 +1,6 @@
 {
     "name": "ethvm",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "EthVM: Open source Ethereum networks explorer",
     "author": "EthVM Team",
     "private": true,
@@ -60,6 +60,7 @@
         "vue-chartjs-typescript": "^3.3.3",
         "vue-class-component": "^7.2.3",
         "vue-i18n": "^8.17.6",
+        "vue-matomo": "^4.1.0",
         "vue-property-decorator": "^8.4.2",
         "vue-qr": "^1.5.3",
         "vue-router": "^3.1.6",
@@ -109,6 +110,7 @@
         "not ie <= 8"
     ],
     "resolutions": {
-        "graphql": "14.6.0"
+        "graphql": "14.6.0",
+        "@apollo/federation": "0.20.7"
     }
 }

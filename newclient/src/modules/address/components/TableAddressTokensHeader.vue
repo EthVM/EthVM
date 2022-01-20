@@ -7,7 +7,7 @@
         -->
         <v-layout v-if="isTransfers" align-center justify-start row fill-height>
             <v-flex md3>
-                <h5 class="pl-3">{{ this.$tc('token.name', 1) }}</h5>
+                <h5 class="pl-3">{{ $tc('token.name', 1) }}</h5>
             </v-flex>
             <v-spacer />
             <v-flex md3>

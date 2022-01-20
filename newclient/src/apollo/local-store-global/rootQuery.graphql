@@ -1,0 +1,7 @@
+query getLocalAppStore {
+    localAppStore @client {
+        consentToTrack
+        notFirstTimeVisit
+        displayedTrackingPopup
+    }
+}
