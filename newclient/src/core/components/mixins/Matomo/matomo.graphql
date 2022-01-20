@@ -1,0 +1,21 @@
+query getConsentToTrack {
+    localAppStore @client {
+        consentToTrack
+    }
+}
+
+query  getDisplayedTrackingPopup {
+      localAppStore @client {
+        displayedTrackingPopup
+    }
+}
+
+mutation  setConsentToTrack($_consent: Boolean!,) {
+     setConsentToTrack(consent: $_consent) @client
+}
+
+mutation   setDisplayedTrackingPopup($_showed: Boolean!,) {
+     setDisplayedTrackingPopup(showed: $_showed) @client
+}
+
+
