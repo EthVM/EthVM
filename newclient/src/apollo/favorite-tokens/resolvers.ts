@@ -16,8 +16,8 @@ export const resolvers = {
          * @param cache: InMemoryCache, apollo cache object
          * @return - returns cachedTokenType data type or null if !data.favTokens
          */
-        checkToken: (root, { address }, { cache }) => {
-            return hasToken(address, cache)
+        checkToken: (root, { hash }, { cache }) => {
+            return hasToken(hash, cache)
         }
     },
     Mutation: {
@@ -28,12 +28,12 @@ export const resolvers = {
          * @param cache: InMemoryCache, apollo cache object
          * @return - returns cachedTokenType data type or null if !data.favTokens
          */
-        addFavToken: (root, { address, symbol }, { cache }) => {
-            const adr = hasToken(address, cache)
+        addFavToken: (root, { hash, symbol }, { cache }) => {
+            const adr = hasToken(hash, cache)
             if (adr === null) {
                 const newAdr: TokenType = {
                     __typename: TypeName.token,
-                    address: address,
+                    address: hash,
                     symbol: symbol || ''
                 }
                 return changeFavToken(Actions.add, cache, newAdr)
@@ -46,8 +46,8 @@ export const resolvers = {
          * @param cache: InMemoryCache, apollo cache object
          * @return - returns cachedTokenType data type or null if address does not exhist
          */
-        deleteFavToken: (root, { address }, { cache }) => {
-            const adr = hasToken(address, cache)
+        deleteFavToken: (root, { hash }, { cache }) => {
+            const adr = hasToken(hash, cache)
             if (adr === null) {
                 return null
             }
