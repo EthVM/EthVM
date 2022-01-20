@@ -1,3 +1,13 @@
+### Release v1.0.9
+
+### Bug
+- Can not view the Uncle hash for early uncles [#974](https://github.com/EthVM/EthVM/pull/974)
+
+### Devop
+- Add snackbar on copy [#976](https://github.com/EthVM/EthVM/pull/976/files)
+
+===================================================================================
+
 ### Release v1.0.8
 
 ### Feature
