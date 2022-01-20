@@ -14,7 +14,8 @@ import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
 import Vue from 'vue'
 import toChecksum from '@app/core/filters/toChecksum'
-import { isAPIExceptionProduction, isAPIExceptionDev } from './apollo/exceptions/errorExceptions'
+import VueMatomo from 'vue-matomo'
+import { MatomoConfigs } from '@app/core/configs/matomo-configs'
 
 router.onError(error => {
     if (/loading chunk \d* failed./i.test(error.message)) {
@@ -30,10 +31,18 @@ router.onError(error => {
 Vue.config.productionTip = false
 
 Vue.use(VueApollo)
+/*
+  ===================================================================================
+    Matomo
+  ===================================================================================
+*/
+Vue.use(VueMatomo, MatomoConfigs)
 
-// -------------------------------------------------------
-//    Vuetify
-// -------------------------------------------------------
+/*
+  ===================================================================================
+    Vuetify
+  ===================================================================================
+*/
 
 Vue.use(Vuetify, {
     theme: {

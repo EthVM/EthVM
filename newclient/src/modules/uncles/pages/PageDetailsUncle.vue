@@ -92,8 +92,8 @@ export default class PageDetailsUncle extends Vue {
     get crumbs(): Crumb[] {
         return [
             {
-                text: this.$tc('uncle.name', 2),
-                link: '/uncles'
+                text: this.$tc('block.name', 2),
+                link: '/blocks'
             },
             {
                 text: this.$tc('uncle.name', 1),

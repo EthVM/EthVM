@@ -44,7 +44,7 @@ import { DataArray } from '@app/apollo/favorite-addresses/models'
         checkAddress: {
             query: checkAddress,
             client: 'FavAddrClient',
-            fetchPolicy: 'network-only',
+            fetchPolicy: 'cache-first',
             variables() {
                 return {
                     address: this.address

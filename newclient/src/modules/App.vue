@@ -3,7 +3,8 @@
         <the-navigation-drawer />
         <v-content>
             <v-layout column fill-height>
-                <app-greeting v-if="appGreet" :greet="appGreet" />
+                <app-greeting />
+                <app-tracking-consent />
                 <v-flex>
                     <router-view :key="$route.path" />
                 </v-flex>
@@ -17,6 +18,7 @@
 <script lang="ts">
 import AppGreeting from '@app/core/components/ui/AppGreeting.vue'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
+import AppTrackingConsent from '@app/core/components/ui/AppTrackingConsent.vue'
 import TheNavigationDrawer from '@app/core/components/layout/TheNavigationDrawer.vue'
 import TheFooter from '@app/core/components/layout/TheFooter.vue'
 import storePack from 'store'
@@ -28,6 +30,7 @@ const MAX_ITEMS = 10
     components: {
         AppGreeting,
         AppMessage,
+        AppTrackingConsent,
         TheNavigationDrawer,
         TheFooter
     }
@@ -40,14 +43,13 @@ export default class App extends Vue {
   */
 
     syncing?: boolean = false
+
     /*
   ===================================================================================
     Computed values
   ===================================================================================
   */
-    get appGreet() {
-        return !storePack.get('notFirstTimeVisit')
-    }
+
     get connected(): boolean {
         return true
     }

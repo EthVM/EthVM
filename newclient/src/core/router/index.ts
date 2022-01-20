@@ -6,7 +6,6 @@ const PageBlocks = () => import(/* webpackChunkName: "page-blocks" */ '@app/modu
 const PageTxs = () => import(/* webpackChunkName: "page-txs" */ '@app/modules/txs/pages/PageTxs.vue')
 const PagePendingTxs = () => import(/* webpackChunkName: "page-pending-txs" */ '@app/modules/txs/pages/PagePendingTxs.vue')
 const PageAbout = () => import(/* webpackChunkName: "page-about" */ '@app/modules/other/pages/PageAbout.vue')
-// const PageUncles = () => import(/* webpackChunkName: "page-uncles" */ '@app/modules/uncles/pages/PageUncles.vue')
 const PageDetailsBlock = () => import(/* webpackChunkName: "page-details-block" */ '@app/modules/blocks/pages/PageDetailsBlock.vue')
 const PageDetailsTxs = () => import(/* webpackChunkName: "page-details-txs" */ '@app/modules/txs/pages/PageDetailsTx.vue')
 const PageDetailsAddress = () => import(/* webpackChunkName: "page-details-addr" */ '@app/modules/address/pages/PageDetailsAddress.vue')
@@ -16,7 +15,6 @@ const PageDetailsUncle = () => import(/* webpackChunkName: "page-details-uncle" 
 const PageDetailsToken = () => import(/* webpackChunkName: "page-details-token" */ '@app/modules/tokens/pages/PageDetailsToken.vue')
 const PageTokens = () => import(/* webpackChunkName: "page-tokens" */ '@app/modules/tokens/pages/PageTokes.vue')
 const PageKnowledgeBase = () => import(/* webpackChunkName: "page-kb" */ '@app/modules/other/pages/PageKnowledgeBase.vue')
-const PagePrivacyPolicy = () => import(/* webpackChunkName: "page-pp" */ '@app/modules/other/pages/PagePrivacyPolicy.vue')
 const PageNotFound = () => import(/* webpackChunkName: "page-not-found" */ '@app/modules/other/pages/PageNotFound.vue')
 const PageFavAddr = () => import(/* webpackChunkName: "page-fav-addrs" */ '@app/modules/favorite-addresses/pages/PageFavAddr.vue')
 const PageFavTokens = () => import(/* webpackChunkName: "page-fav-addrs" */ '@app/modules/favorite-tokens/pages/PageFavTokens.vue')
@@ -64,11 +62,6 @@ export default new Router({
             component: PagePendingTxs,
             name: 'pending'
         },
-        // {
-        //   path: '/uncles',
-        //   component: PageUncles,
-        //   name: 'uncles'
-        // },
         {
             path: '/uncle/:uncleRef',
             component: PageDetailsUncle,
@@ -108,11 +101,6 @@ export default new Router({
             path: '/about',
             component: PageAbout,
             name: 'about'
-        },
-        {
-            path: '/privacy_policy',
-            component: PagePrivacyPolicy,
-            name: 'privacy'
         },
         {
             path: '/knowledge_base',

@@ -1,0 +1,14 @@
+input Payload {
+   blockNumber: Int!
+   chainId: Int!
+}
+type EthBlock {
+    img: String!
+    description: String!
+}
+
+extend type Query {
+    getEthBlock(input: Payload): EthBlock!
+}
+
+
