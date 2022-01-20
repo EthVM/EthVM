@@ -1,10 +1,13 @@
 ### Release v1.0.9
 
 ### Bug
+- Fix adding and removing favorite tokens [#973] (https://github.com/EthVM/EthVM/pull/973)
 - Can not view the Uncle hash for early uncles [#974](https://github.com/EthVM/EthVM/pull/974)
 
 ### Devop
+- Add invalid hash to exceptions properly [#975](https://github.com/EthVM/EthVM/pull/975)
 - Add snackbar on copy [#976](https://github.com/EthVM/EthVM/pull/976/files)
+- Add retry on network fetch fail [#979](https://github.com/EthVM/EthVM/pull/979)
 
 ===================================================================================
 
