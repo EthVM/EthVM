@@ -7,7 +7,7 @@ const LOCAL_CLIENT = 'LocalStoreClient'
     apollo: {
         userConsent: {
             query: getConsentToTrack,
-            client: 'LocalStoreClient',
+            client: LOCAL_CLIENT,
             fetchPolicy: 'cache-first',
             update: data => data.localAppStore.consentToTrack,
             result() {
@@ -16,7 +16,7 @@ const LOCAL_CLIENT = 'LocalStoreClient'
         },
         userDisplayedTrackingPopup: {
             query: getDisplayedTrackingPopup,
-            client: 'LocalStoreClient',
+            client: LOCAL_CLIENT,
             fetchPolicy: 'cache-first',
             deep: true,
             update: data => data.localAppStore.displayedTrackingPopup,

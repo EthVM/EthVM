@@ -11,6 +11,7 @@ import { onError } from 'apollo-link-error'
 import { OpenSeaClient } from './opensea/osClient'
 import { FavAddrClient } from './favorite-addresses/favAddrClient'
 import { FavTokClient } from './favorite-tokens/favTokenClient'
+import { LocalStoreClient } from './local-store-global/localStoreClient'
 import configs from '../configs'
 import * as Sentry from '@sentry/browser'
 import { isAPIExceptionProduction, isAPIExceptionDev } from './exceptions/errorExceptions'
@@ -82,7 +83,8 @@ export const apolloProvider = new VueApollo({
         apolloClient,
         OpenSeaClient,
         FavAddrClient,
-        FavTokClient
+        FavTokClient,
+        LocalStoreClient
     },
     defaultClient: apolloClient
 })
