@@ -1,3 +1,9 @@
+### Release v1.0.9-hotfix.1
+
+### Bug
+
+- Put back eth blocks provider [commit](https://github.com/EthVM/EthVM/commit/2078300976d1c50b30d13b534a16bc282e569529)
+
 ### Release v1.0.9
 
 ### Bug
