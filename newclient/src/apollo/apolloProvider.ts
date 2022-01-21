@@ -12,6 +12,7 @@ import { OpenSeaClient } from './opensea/osClient'
 import { FavAddrClient } from './favorite-addresses/favAddrClient'
 import { FavTokClient } from './favorite-tokens/favTokenClient'
 import { LocalStoreClient } from './local-store-global/localStoreClient'
+import { EthBlocksClient } from './eth-blocks/ethBlocksClient'
 import configs from '../configs'
 import * as Sentry from '@sentry/browser'
 import { isAPIExceptionProduction, isAPIExceptionDev } from './exceptions/errorExceptions'
@@ -84,7 +85,8 @@ export const apolloProvider = new VueApollo({
         OpenSeaClient,
         FavAddrClient,
         FavTokClient,
-        LocalStoreClient
+        LocalStoreClient,
+        EthBlocksClient
     },
     defaultClient: apolloClient
 })
