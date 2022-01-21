@@ -22,7 +22,8 @@
 ### Bug
 
 - Fix pgainate has more bug for the last page [#953](https://github.com/EthVM/EthVM/pull/953)
-- fix remove non eth tokens from the tokens list  [#966](https://github.com/EthVM/EthVM/pull/966)
+- Fix remove non eth tokens from the tokens list  [#966](https://github.com/EthVM/EthVM/pull/966)
+- Fix address already exhists message [#981](https://github.com/EthVM/EthVM/pull/981)
 
 ### Devop
 
