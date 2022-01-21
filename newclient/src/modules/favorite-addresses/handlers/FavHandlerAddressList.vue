@@ -313,7 +313,7 @@ export default class FavHandlerAddressListRow extends Mixins(CoinData, FavAction
   ===================================================================================
   */
     hasAddress(address: string): boolean {
-        const foundItems = this.favAddresses.find(i => i.address === address)
+        const foundItems = this.favAddresses.find(i => i.address.toLowerCase() === address.toLowerCase())
         return foundItems ? true : false
     }
     sortAddresses(sort: string): void {
