@@ -34,7 +34,9 @@ const wsLink = new WebSocketLink(subscriptionClient)
 const onErrorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
         graphQLErrors.map(({ message, locations, path }) => {
-            const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            const loc = JSON.stringify(locations)
+            const op = JSON.stringify(operation)
+            const newError = `[GraphQL error]: Message: ${message}, Location: ${loc}, Path: ${path}, Operation: ${op}`
             //For production and staging emit to Sentry:
             if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
                 if (!isAPIExceptionProduction(message)) {
