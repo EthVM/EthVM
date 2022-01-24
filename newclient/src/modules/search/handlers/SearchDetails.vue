@@ -186,13 +186,17 @@ export default class SearchDetails extends Vue {
      * @param param {Any}
      */
     getAllSearch(param): void {
-        if (this.removeSpaces(param).length === 0) {
-            return
+        if (Buffer.byteLength(param, 'utf8') > 1024) {
+            this.setError(param)
+        } else {
+            if (this.removeSpaces(param).length === 0) {
+                return
+            }
+            if (param && param.contract) {
+                this.routeToToken(param.contract)
+            }
+            this.isValidHash(param) ? this.getHashType(param) : this.getToken(param)
         }
-        if (param && param.contract) {
-            this.routeToToken(param.contract)
-        }
-        this.isValidHash(param) ? this.getHashType(param) : this.getToken(param)
     }
     /**
      * Get selected value and route user to token page
