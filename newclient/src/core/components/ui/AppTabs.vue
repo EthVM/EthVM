@@ -94,7 +94,7 @@ export default class AppTabs extends Vue {
      * @param id {Number} tabChange {Boolean} default false
      */
     setTab(id: number, tabChange = false): void {
-        this.activeTabId = id
+        this.activeTabId = id >= this.tabs.length ? 0 : id
         this.tabs.forEach(tab => {
             if (this.activeTabId === tab.id) {
                 tab.isActive = true
