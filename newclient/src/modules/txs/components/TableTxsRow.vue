@@ -26,7 +26,7 @@
                         <app-transform-hash :hash="transaction.hash" :link="`/tx/${transaction.hash}`" />
                     </v-flex>
                     <v-flex xs12 pa-1>
-                        <v-layout row pa-2>
+                        <v-layout row align-center pa-2>
                             <p class="info--text psmall pr-1">{{ $tc('address.name', 2) }}:</p>
                             <app-transform-hash :hash="transaction.from | toChecksum" :italic="true" :link="`/address/${transaction.from}`" />
                             <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
