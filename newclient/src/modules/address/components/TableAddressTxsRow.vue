@@ -228,7 +228,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
     ===================================================================================
     */
     created() {
-        if (this.transfer.getStatus() === false && !this.transfer.stateDiff) {
+        if (this.transfer.getStatus() === false && !this.transfer.stateDiff && this.transfer.getFee().value !== '0') {
             this.getStateDiff(this.transfer.getHash(), this.type)
         }
     }
