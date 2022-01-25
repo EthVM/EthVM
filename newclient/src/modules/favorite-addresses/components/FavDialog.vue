@@ -51,7 +51,7 @@
                             </v-flex>
                         </v-layout>
                     </v-layout>
-                    <app-transform-hash :hash="adr.getAddress() | toChecksum" />
+                    <app-transform-hash :hash="adr.getAddress() | toChecksum" class="pt-1" />
                 </v-flex>
                 <v-flex v-if="addrs.length > 1 && index + 1 < addrs.length" xs12>
                     <v-divider class="lineGrey ma-1" />

@@ -1,7 +1,13 @@
 <template>
-    <div :class="hashClass" @click="routeTo()">
-        <span class="firstPart">{{ start }}</span
-        ><span class="lastPart">{{ end }}</span>
+    <div class="hash-container font-mono">
+        <div v-if="!hasLink" :class="isBlue ? `secondary--text` : `black--text`">
+            <div class="firstPart">{{ start }}</div>
+            <div class="lastPart">{{ end }}</div>
+        </div>
+        <router-link v-else :to="link" :class="isBlue ? `secondary--text` : `black--text`">
+            <div class="firstPart">{{ start }}</div>
+            <div class="lastPart">{{ end }}</div>
+        </router-link>
     </div>
 </template>
 
@@ -33,9 +39,8 @@ export default class AppTransformHash extends Vue {
         const n = this.hash.length
         return this.hash.slice(n - 4, n)
     }
-    get hashClass(): string {
-        const base = this.link ? 'url hash-container font-mono' : 'hash-container font-mono'
-        return this.isBlue ? `${base} secondary--text` : `${base} black--text`
+    get hasLink(): boolean {
+        return !!this.link && this.link !== ''
     }
 
     /*
@@ -79,12 +84,6 @@ $endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
 .hash-container {
     white-space: nowrap;
     overflow: hidden;
-}
-
-.url {
-    cursor: pointer;
-}
-.url:hover {
-    text-decoration: underline;
+    line-height: 1rem;
 }
 </style>

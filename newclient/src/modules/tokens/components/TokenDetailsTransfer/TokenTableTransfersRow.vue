@@ -64,13 +64,13 @@
                         <app-time-ago :timestamp="date" />
                     </v-flex>
                     <v-flex xs12>
-                        <v-layout row pa-2>
+                        <v-layout row align-center pa-2>
                             <p class="info--text tx-hash">{{ $tc('tx.hash', 1) }}:</p>
                             <app-transform-hash :hash="transfer.transfer.transactionHash" :link="`/tx/${transfer.transfer.transactionHash}`" />
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
-                        <v-layout row pa-2>
+                        <v-layout row align-center pa-2>
                             <p class="info--text pr-1">{{ $tc('address.name', 2) }}:</p>
                             <app-transform-hash :hash="transfer.transfer.from | toChecksum" :italic="true" :link="`/address/${transfer.transfer.from}`" />
                             <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small></v-icon>
