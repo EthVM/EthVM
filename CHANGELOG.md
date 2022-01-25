@@ -1,8 +1,27 @@
+
+### Release v1.0.10
+
+### Devop
+
+- add router link and adjust styling to app transform hash [#985](https://github.com/EthVM/EthVM/pull/985)
+- added check for hexString strict on isAddress [#983](https://github.com/EthVM/EthVM/pull/983)
+- added additional logs for gql errors [#986](https://github.com/EthVM/EthVM/pull/986)
+- 
+
+### Bug
+- fix not showing balance state diff for address with 0 tx fee [#986](https://github.com/EthVM/EthVM/pull/986)
+- fix error no title found on tab when user swipes content on mobile [#986](https://github.com/EthVM/EthVM/pull/986)
+- fix error on search exceed byte limit [#986](https://github.com/EthVM/EthVM/pull/986)
+
+===================================================================================
+
 ### Release v1.0.9-hotfix.1
 
 ### Bug
 
 - Put back eth blocks provider [commit](https://github.com/EthVM/EthVM/commit/2078300976d1c50b30d13b534a16bc282e569529)
+
+===================================================================================
 
 ### Release v1.0.9
 
