@@ -6,7 +6,7 @@
                 <template v-if="!loading" #update>
                     <app-new-update :text="updateText" :update-count="newTokens" :hide-count="true" @reload="setPage(0, true)" />
                 </template>
-                <template #filter>
+                <template v-if="hasTokens && tokens.length > 1" #filter>
                     <app-filter :is-selected="tokenOptions[1]" :options="tokenOptions" :show-desktop="false" :is-sort="true" @onSelectChange="sortTokens" />
                 </template>
                 <template v-if="showPagination && !loading" #pagination>
