@@ -119,7 +119,15 @@
         "details": "Contract Details",
         "date-created": "Date Created",
         "code-hash": "Code Hash",
-        "tx-hash": "Tx Hash"
+        "tx-hash": "Tx Hash",
+        "language": "Language",
+        "compiler": "Compiler",
+        "constructor-bytes": "Constructor Bytes",
+        "evm-version": "EVM Version",
+        "optimization": "Optimization",
+        "optimization-true": "Enabled, {runs} runs",
+        "optimization-false": "Disabled",
+        "source-code": "Source Code"
     },
 
     "gas": {
@@ -177,7 +185,8 @@
         "balance": "Balance",
         "close": "Close",
         "skip": "Skip",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "name": "Name"
     },
 
     "usd": {

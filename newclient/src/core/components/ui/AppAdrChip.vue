@@ -1,5 +1,11 @@
 <template>
-    <div :class="[chipColor, 'chip']">{{ chipText }}</div>
+    <div :class="[chipColor, 'chip']">
+        {{ chipText }} <span v-if="hasCheck"> <v-icon size="10px" class="white--text check-mark">fa fa-check-circle</v-icon> </span>
+    </div>
+
+    <!-- <v-icon large color="grey">
+                mail
+            </v-icon> -->
 </template>
 
 <script lang="ts">
@@ -14,6 +20,7 @@ export default class AppAdrChip extends Vue {
   */
 
     @Prop({ type: String }) chip!: EnumAdrChips
+    @Prop({ type: Boolean, default: false }) hasCheck!: boolean
 
     /*
   ===================================================================================
@@ -56,8 +63,9 @@ export default class AppAdrChip extends Vue {
 .chip {
     border-radius: 14px;
     font-size: 85%;
+    font-weight: bold;
     color: white;
-    padding: 2px 10px;
+    padding: 2px 20px;
 }
 
 .miner-chip {
@@ -70,5 +78,8 @@ export default class AppAdrChip extends Vue {
 
 .contract-chip {
     background-color: #fed18e;
+}
+.check-mark {
+    padding-bottom: 2px;
 }
 </style>

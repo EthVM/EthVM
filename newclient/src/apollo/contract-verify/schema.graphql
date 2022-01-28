@@ -1,0 +1,30 @@
+input PayloadContract {
+  address: String!
+  chainId: Int!
+}
+type ContractConfigs {
+  compiler:String!
+  constructorBytes: String!
+  evmVersion: String!
+  name: String!
+  optimization: Boolean!
+  runs:Int
+}
+
+type ContractInput {
+  language: String!
+  sources: [SourceContent!]
+}
+
+type SourceContent {
+  name: String!
+  content: String!
+}
+
+extend type Query {
+    getContractInput(input: PayloadContract): ContractInput
+    getContractConfigs(input: PayloadContract): ContractConfigs
+}
+
+
+
