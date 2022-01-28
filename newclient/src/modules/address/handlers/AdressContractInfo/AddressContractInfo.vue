@@ -8,7 +8,7 @@
                     </template>
                     <v-layout row wrap justify-start>
                         <v-flex xs12>
-                            <app-details-list :is-loading="isLoadingDetails" :hasTitle="false" :details="detailsOverview" class=""> </app-details-list>
+                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsOverview" class=""> </app-details-list>
                         </v-flex>
                     </v-layout>
                 </v-expansion-panel-content>
@@ -23,7 +23,7 @@
                     </template>
                     <v-layout row wrap justify-start>
                         <v-flex xs12>
-                            <app-details-list :is-loading="isLoadingDetails" :hasTitle="false" :details="detailsSource" />
+                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsSource" />
                         </v-flex>
                     </v-layout>
                 </v-expansion-panel-content>
