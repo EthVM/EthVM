@@ -502,14 +502,13 @@ export class NumberFormatHelper {
      */
     public static timeSince(date: Date): string {
         //get milliseconds from date value
-        const milliseconds = date.getTime()        
-        
+        const milliseconds = date.getTime()
+
         //get second from milliseconds
         let seconds = Math.floor((+new Date() - milliseconds) / 1000)
-        
+
         //get year age
         let interval = Math.floor(seconds / 31536000)
-
 
         if (interval >= 1) {
             return interval + ' year' + (interval > 1 ? 's' : '')
