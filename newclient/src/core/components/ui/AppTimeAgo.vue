@@ -1,16 +1,18 @@
 <template>
     <p class="black--text mb-0 caption">
-        <timeago :datetime="timestamp" :locale="locale" :auto-update="60" />
+        <!-- <timeago :datetime="timestamp" :locale="locale" :auto-update="60" /> -->
+        {{ timeSince(timestamp) }}
         <!-- <vue-time-ticker v-else :value="timestamp.toString()" format="SECONDS" />
         {{ text }} -->
     </p>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import VueTimeago from 'vue-timeago'
 import VueTimeTicker from 'vue-time-ticker'
 import { TranslateResult } from 'vue-i18n'
+import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 Vue.use(VueTimeago, {
     name: 'timeago',
@@ -26,7 +28,7 @@ Vue.use(VueTimeago, {
         VueTimeTicker
     }
 })
-export default class AppTimeAgo extends Vue {
+export default class AppTimeAgo extends Mixins(Vue, NumberFormatMixin) {
     /*
     ===================================================================================
       Props
@@ -59,32 +61,5 @@ export default class AppTimeAgo extends Vue {
                 return 'en'
         }
     }
-    // get moreThenAMin(): boolean {
-    //     return new Date().getTime() - this.timestamp.getTime() >= 60 * 1e3
-    // }
-    // get text(): TranslateResult {
-    //     return !this.moreThenAMin ? this.$t('message.sec-ago') : ''
-    // }
-    /*
-    ===================================================================================
-      Lifecycle
-    ===================================================================================
-    */
-    // mounted() {
-    //     this.currentTime = Date.now()
-    //     if (!this.moreThenAMin) {
-    //         this.count = setInterval(() => {
-    //             this.currentTime = Date.now()
-    //             if (this.moreThenAMin && this.count) {
-    //                 clearInterval(this.count)
-    //             }
-    //         }, 1000)
-    //     }
-    // }
-    // beforeDestroy() {
-    //     if (this.count) {
-    //         clearInterval(this.count)
-    //     }
-    // }
 }
 </script>
