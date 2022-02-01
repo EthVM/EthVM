@@ -733,5 +733,19 @@
             "title": "Opt out at any time",
             "text": "Data sharing can be turned on and off in the site’s footer"
         }
+    },
+    "timeformat":{
+        "second":"second",
+        "minute":"minute",
+        "hour":"hour",
+        "day":"day",
+        "month":"month",
+        "year":"year",
+        "seconds":"seconds",
+        "minutes":"minutes",
+        "hours":"hours",
+        "days":"days",
+        "months":"months",
+        "years":"years"
     }
 }

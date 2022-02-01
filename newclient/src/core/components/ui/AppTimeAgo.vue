@@ -8,7 +8,6 @@
 import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
 import VueTimeago from 'vue-timeago'
 import VueTimeTicker from 'vue-time-ticker'
-import { TranslateResult } from 'vue-i18n'
 import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
 
 Vue.use(VueTimeago, {
@@ -25,7 +24,7 @@ Vue.use(VueTimeago, {
         VueTimeTicker
     }
 })
-export default class AppTimeAgo extends Mixins(Vue, NumberFormatMixin) {
+export default class AppTimeAgo extends Mixins(NumberFormatMixin) {
     /*
     ===================================================================================
       Props

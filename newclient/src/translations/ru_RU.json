@@ -736,5 +736,19 @@
         "including-uncle": "Включая вознаграждение за Uncle-Блок?",
         "block-rewards": "Вознаграждение за Блок",
         "uncle-rewards": "Вознаграждение за Uncle-Блок"
+    },
+    "timeformat":{
+        "second":"второй",
+        "minute":"минута",
+        "hour":"час",
+        "day":"день",
+        "month":"месяц",
+        "year":"год",
+        "seconds":"секунды",
+        "minutes":"минуты",
+        "hours":"часы",
+        "days":"дни",
+        "months":"месяцы",
+        "years":"годы"
     }
 }

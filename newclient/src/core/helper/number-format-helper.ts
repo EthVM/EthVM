@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
+import i18n from '@app/translations'
 
 export enum FormattedNumberUnit {
     ETH = 'eth',
@@ -506,41 +507,40 @@ export class NumberFormatHelper {
 
         //get second from milliseconds
         let seconds = Math.floor((+new Date() - milliseconds) / 1000)
-
+        
         //get year age
         let interval = Math.floor(seconds / 31536000)
 
         if (interval >= 1) {
-            return interval + ' year' + (interval > 1 ? 's' : '')
+            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.years')  : i18n.t('timeformat.year') )
         }
 
         //get month age
         interval = Math.floor(seconds / 2592000)
         if (interval >= 1) {
-            return interval + ' month' + (interval > 1 ? 's' : '')
+            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.months') : i18n.t('timeformat.month'))
         }
 
         //get day age
         interval = Math.floor(seconds / 86400)
         if (interval >= 1) {
-            return interval + ' day' + (interval > 1 ? 's' : '')
+            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.days') : i18n.t('timeformat.day') )
         }
 
         //get hour age
         interval = Math.floor(seconds / 3600)
         if (interval >= 1) {
-            return interval + ' hour' + (interval > 1 ? 's' : '')
+            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.hours') : i18n.t('timeformat.hour'))
         }
 
         //get minute age
         interval = Math.floor(seconds / 60)
         if (interval >= 1) {
-            return interval + ' minute' + (interval > 1 ? 's' : '')
+            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.minutes') : i18n.t('timeformat.minute') )
         }
-
         //get second age
         seconds = seconds < 1 ? 1 : seconds
 
-        return Math.floor(seconds) + ' second' + (seconds !== 1 ? 's' : '')
+        return Math.floor(seconds) + ' ' + (seconds !== 1 ? i18n.t('timeformat.seconds') : i18n.t('timeformat.second') )
     }
 }
