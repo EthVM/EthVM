@@ -57,8 +57,4 @@ export class NumberFormatMixin extends Vue {
     formatUsdValue(value: BigNumber): FormattedNumber {
         return NumberFormatHelper.formatUsdValue(value)
     }
-
-    timeSince(value: Date): string {
-        return NumberFormatHelper.timeSince(value)
-    }
 }

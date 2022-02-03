@@ -1,60 +1,40 @@
 <template>
     <p class="black--text mb-0 caption">
-        {{ timeSince(timestamp) }}
+        {{ timeSince }}
     </p>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Mixins } from 'vue-property-decorator'
-import VueTimeago from 'vue-timeago'
-import VueTimeTicker from 'vue-time-ticker'
-import { NumberFormatMixin } from '@app/core/components/mixins/number-format.mixin'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import moment, { unitOfTime } from 'moment'
 
-Vue.use(VueTimeago, {
-    name: 'timeago',
-    locale: 'en-US',
-    locales: {
-        'en-US': require('date-fns/locale/en'),
-        ru: require('date-fns/locale/ru')
-    }
-})
-
-@Component({
-    components: {
-        VueTimeTicker
-    }
-})
-export default class AppTimeAgo extends Mixins(NumberFormatMixin) {
+@Component
+export default class AppTimeAgo extends Vue {
     /*
     ===================================================================================
       Props
     ===================================================================================
     */
-
     @Prop(Date) timestamp!: Date
 
-    /*
-    ===================================================================================
-     Initial Data
-    ===================================================================================
-    */
+    items: unitOfTime.Diff[] = ['years', 'months', 'days', 'hours', 'minutes', 'seconds']
+    timeformat: string[] = ['timeformat.year', 'timeformat.month', 'timeformat.day', 'timeformat.hour', 'timeformat.minute', 'timeformat.second']
 
-    // currentTime = Date.now()
-    // count?: NodeJS.Timeout
-    /*
-    ===================================================================================
-      Computed
-    ===================================================================================
-    */
-    get locale(): string {
-        const currLang = this.$i18n.locale
-        switch (currLang) {
-            case 'en_US':
-                return 'en'
-            case 'ru_RU':
-                return 'ru'
-            default:
-                return 'en'
+    /**
+     * Converts a date to an age string
+     * @returns : Value as formatted string,
+     */
+    get timeSince(): string {
+        try {
+            for (let n = 0; n < this.items.length; n++) {
+                const diff = moment().diff(this.timestamp, this.items[n])
+                if (diff > 0) {
+                    return this.$tc(this.timeformat[n], diff)
+                }
+            }
+            return ''
+        } catch (e) {
+            return ''
         }
     }
 }

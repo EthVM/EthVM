@@ -735,17 +735,11 @@
         }
     },
     "timeformat":{
-        "second":"second",
-        "minute":"minute",
-        "hour":"hour",
-        "day":"day",
-        "month":"month",
-        "year":"year",
-        "seconds":"seconds",
-        "minutes":"minutes",
-        "hours":"hours",
-        "days":"days",
-        "months":"months",
-        "years":"years"
+        "second": "{n} sec",
+        "minute":"{n} min",
+        "hour":"{n} h",
+        "day":"{n} d",
+        "month":"{n} m",
+        "year":"{n} year"
     }
 }

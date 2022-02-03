@@ -738,17 +738,11 @@
         "uncle-rewards": "Вознаграждение за Uncle-Блок"
     },
     "timeformat":{
-        "second":"второй",
-        "minute":"минута",
-        "hour":"час",
-        "day":"день",
-        "month":"месяц",
-        "year":"год",
-        "seconds":"секунды",
-        "minutes":"минуты",
-        "hours":"часы",
-        "days":"дни",
-        "months":"месяцы",
-        "years":"годы"
+        "second": "{n} cek",
+        "minute":"{n} min",
+        "hour":"{n} h",
+        "day":"{n} d",
+        "month":"{n} m",
+        "year":"{n} year"
     }
 }

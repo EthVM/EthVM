@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@app/core/models'
-import i18n from '@app/translations'
 
 export enum FormattedNumberUnit {
     ETH = 'eth',
@@ -494,53 +493,5 @@ export class NumberFormatHelper {
 
     public static getRoundNumber(value: BigNumber, round: number, dp: number): FormattedNumber {
         return { value: value.toFormat(Math.min(round, dp)), tooltipText: dp > round ? value.toFormat() : undefined }
-    }
-
-    /**
-     * Converts a date to an age string
-     * @param date : Date value
-     * @returns : Value as formatted string,
-     */
-    public static timeSince(date: Date): string {
-        //get milliseconds from date value
-        const milliseconds = date.getTime()
-
-        //get second from milliseconds
-        let seconds = Math.floor((+new Date() - milliseconds) / 1000)
-
-        //get year age
-        let interval = Math.floor(seconds / 31536000)
-
-        if (interval >= 1) {
-            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.years') : i18n.t('timeformat.year'))
-        }
-
-        //get month age
-        interval = Math.floor(seconds / 2592000)
-        if (interval >= 1) {
-            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.months') : i18n.t('timeformat.month'))
-        }
-
-        //get day age
-        interval = Math.floor(seconds / 86400)
-        if (interval >= 1) {
-            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.days') : i18n.t('timeformat.day'))
-        }
-
-        //get hour age
-        interval = Math.floor(seconds / 3600)
-        if (interval >= 1) {
-            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.hours') : i18n.t('timeformat.hour'))
-        }
-
-        //get minute age
-        interval = Math.floor(seconds / 60)
-        if (interval >= 1) {
-            return interval + ' ' + (interval > 1 ? i18n.t('timeformat.minutes') : i18n.t('timeformat.minute'))
-        }
-        //get second age
-        seconds = seconds < 1 ? 1 : seconds
-
-        return Math.floor(seconds) + ' ' + (seconds !== 1 ? i18n.t('timeformat.seconds') : i18n.t('timeformat.second'))
     }
 }
