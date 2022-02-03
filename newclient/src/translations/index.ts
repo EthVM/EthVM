@@ -4,7 +4,7 @@ import VueI18n from 'vue-i18n'
 import en_US from '@app/translations/en_US.json'
 
 const messages = {
-    en_US    
+    en_US
 }
 const dateTimeFormats = {
     'en-US': {
