@@ -7,7 +7,6 @@
                         <p class="title font-weight-bold">
                             Contract Overview
                         </p>
-                        <!-- <app-adr-chip v-if="isVerified" :chip="verifiedChip" /> -->
                     </template>
                     <v-layout row wrap justify-start>
                         <v-flex xs12>
@@ -43,7 +42,7 @@
                         <p class="title font-weight-bold">Files</p>
                     </template>
                     <div v-for="(i, index) in input.sources" :key="i.name" class="mb-4 file-container">
-                        <div :class="{ 'file-header': (panelCode = 0) }">
+                        <div :class="{ 'file-header': panelCode === 0 }">
                             <v-layout row wrap align-center justify-space-between class="px-3">
                                 <v-flex>
                                     <p class="info--text break-string">
@@ -56,11 +55,11 @@
                                         :icon="!fileViews[index] ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
                                         :tooltip-text="!fileViews[index] ? 'Expand File View' : 'Shrink file view'"
                                         color="white"
-                                        @click="expandView(index)"
+                                        @click="expandView(expand.FILE, index)"
                                     />
                                 </v-flex>
                                 <v-flex shrink pa-1>
-                                    <app-btn-icon @ icon="far fa-copy" tooltip-text="Copy file content" color="white" @click="expandView(index)" />
+                                    <app-btn-icon @ icon="far fa-copy" tooltip-text="Copy file content" color="white" @click="expandView(expand.FILE, index)" />
                                 </v-flex>
                             </v-layout>
                         </div>
@@ -68,6 +67,39 @@
                             :code="i.content"
                             language="solidity"
                             :class="[{ 'expand-source': !fileViews[index] }, 'contract-source-code line-numbers']"
+                        >
+                        </prism-component>
+                    </div>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </div>
+        <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
+            <v-expansion-panel v-model="panelAbi" class="elevation-0">
+                <v-expansion-panel-content>
+                    <template #header>
+                        <p class="title font-weight-bold">Contract Abi</p>
+                    </template>
+                    <div class="mb-4 file-container">
+                        <div :class="{ 'file-header': panelAbi === 0 }">
+                            <v-layout row wrap align-center justify-space-between class="px-3">
+                                <v-spacer />
+                                <v-flex pa-1 shrink>
+                                    <app-btn-icon
+                                        :icon="!expandAbi ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
+                                        :tooltip-text="!expandAbi ? 'Expand File View' : 'Shrink file view'"
+                                        color="white"
+                                        @click="expandView(expand.ABI, 0)"
+                                    />
+                                </v-flex>
+                                <v-flex shrink pa-1>
+                                    <app-btn-icon @ icon="far fa-copy" tooltip-text="Copy file content" color="white" @click="expandView(expand.ABI, 0)" />
+                                </v-flex>
+                            </v-layout>
+                        </div>
+                        <prism-component
+                            :code="meta.abiStringify"
+                            language="json"
+                            :class="[{ 'expand-source': !expandAbi }, 'contract-source-code line-numbers']"
                         >
                         </prism-component>
                     </div>
@@ -82,7 +114,7 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
 import AppBtnIcon from '@app/core/components/ui/AppBtnIcon.vue'
-import { getContractMeta1, getContractTimestamp1, getContractInput, getContractConfigs } from './addressContractInfo.graphql'
+import { getContractMeta1, getContractTimestamp1, getContractInput, getContractConfigs, getContractMeta2 } from './addressContractInfo.graphql'
 import { getContractMeta1_getContractMeta as ContractMeta } from './apolloTypes/getContractMeta1'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 import { excpAddrNotContract } from '@app/apollo/exceptions/errorExceptions'
@@ -92,9 +124,15 @@ import PrismComponent from 'vue-prism-component'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.min.css'
 import 'prismjs/components/prism-solidity.min.js'
+import 'prismjs/components/prism-json.min.js'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 
+const EXPAND_TYPES = {
+    FILE: 'FILE',
+    ABI: 'ABI',
+    META: 'META'
+}
 @Component({
     components: {
         AppDetailsList,
@@ -120,6 +158,7 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
                     this.getTimestamp(data.data.getContractMeta)
                     this.getInput()
                     this.getConfigs()
+                    this.getMeta()
                 } else {
                     this.setContract(false)
                 }
@@ -158,16 +197,20 @@ export default class AddressContractInfo extends Vue {
     isLoadingConfigs = true
     isLoadingInput = true
     isLoadingTimestamp = true
+    isLoadingMeta = true
     timestampRaw: number | null = null
     input!: any
     configs!: any
+    meta!: any
     isVerified = false
     panelOverview = 0
     panelSource = 0
     panelCode = 0
+    panelAbi = 0
     fileViews: boolean[] = []
+    expandAbi = false
     verifiedChip = EnumAdrChips.verified
-
+    expand = EXPAND_TYPES
     /*
     ===================================================================================
       Computed Values
@@ -288,11 +331,12 @@ export default class AddressContractInfo extends Vue {
     }
 
     get isLoadingDetails(): boolean {
-        return this.isLoadingConfigs || this.isLoadingInput
+        return this.isLoadingConfigs || this.isLoadingInput || this.isLoadingMeta
     }
     get loading(): boolean {
         return this.hasError ? true : this.$apollo.queries.getEthBalance.loading
     }
+
     /*
     ===================================================================================
       Watch
@@ -301,7 +345,6 @@ export default class AddressContractInfo extends Vue {
     @Watch('isLoadingDetails')
     onIsLoadingDetailsChanged(newVal: boolean): void {
         if (!newVal && this.isVerified) {
-            console.log(Prism)
             setTimeout(() => Prism.highlightAll(), 0)
         }
     }
@@ -341,11 +384,9 @@ export default class AddressContractInfo extends Vue {
                 fetchPolicy: 'cache-first'
             })
             .then(response => {
-                // console.log(response.data.getContractInput)
                 if (response.data && response.data.getContractInput) {
                     this.input = response.data.getContractInput
                     this.fileViews = this.input.sources.map(i => false)
-
                     this.isVerified = true
                 }
                 this.isLoadingInput = false
@@ -381,6 +422,28 @@ export default class AddressContractInfo extends Vue {
                 // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
             })
     }
+    getMeta(): void {
+        this.$apollo
+            .query({
+                query: getContractMeta2,
+                variables: {
+                    address: this.address,
+                    chainId: 1
+                },
+                client: 'ContractsClient',
+                fetchPolicy: 'cache-first'
+            })
+            .then(response => {
+                if (response.data && response.data.getContractMetaVerified) {
+                    this.meta = response.data.getContractMetaVerified
+                }
+                this.isLoadingMeta = false
+            })
+            .catch(error => {
+                console.log('Error in meta: ', error)
+                // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
+            })
+    }
 
     /**
      * Emits error to Sentry
@@ -390,8 +453,12 @@ export default class AddressContractInfo extends Vue {
         this.$emit('errorAddrOverview', this.hasError, message)
     }
 
-    expandView(index: number): void {
-        this.$set(this.fileViews, index, !this.fileViews[index])
+    expandView(panel: string, index: number): void {
+        if (panel === this.expand.FILE) {
+            this.$set(this.fileViews, index, !this.fileViews[index])
+        } else if (panel === this.expand.ABI) {
+            this.expandAbi = !this.expandAbi
+        }
     }
 }
 </script>

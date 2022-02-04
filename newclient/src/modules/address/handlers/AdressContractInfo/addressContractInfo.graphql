@@ -34,3 +34,19 @@ query getContractConfigs($address: Int!, $chainId: Int!) {
     runs
   }
 }
+query getContractMeta2($address: Int!, $chainId: Int!) {
+  getContractMetaVerified(input:{address: $address, chainId: $chainId}) @rest (type: "ContractMetaVerified", path: "/{args.input.chainId}/{args.input.address}/metadata.json", method: "GET", bodyKey: "input") {
+    opcodeHash
+    metalessHash
+    runtimeHash
+    encodedMetadata @type(name: "encodedMetadataType"){
+      ipfs
+      bzzr0
+      bzzr1
+      solc
+    }
+    deployedByteCode
+    byteCode
+    abiStringify
+  }
+}

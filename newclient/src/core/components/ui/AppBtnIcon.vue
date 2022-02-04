@@ -1,7 +1,7 @@
 <template>
     <v-tooltip top color="white" content-class="tooltip-border">
         <template #activator="{on}">
-            <v-btn :small="isSmall" icon fab class="ma-0" @click.stop="btnClick()" v-on="on" :color="color">
+            <v-btn :small="isSmall" icon fab class="ma-0" :color="color" @click.stop="btnClick()" v-on="on">
                 <v-icon :small="isSmall" class="secondary--text"> {{ icon }}</v-icon>
             </v-btn>
         </template>

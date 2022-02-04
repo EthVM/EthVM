@@ -1,16 +1,29 @@
-import { PayloadContract, ContractConfigs, ContractInput, SourceContent, Query } from './schema.graphql'
+import {
+    PayloadContract,
+    ContractConfigs,
+    ContractInput,
+    SourceContent,
+    ContractMetaVerified,
+    AbiItem,
+    AbiInput,
+    AbiOutput,
+    StateMutabilityType,
+    AbiType,
+    encodedMetadataType,
+    Query
+} from './schema.graphql'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import ApolloClient from 'apollo-client'
 import { RestLink } from 'apollo-link-rest'
-import configs from '../../configs'
 
 enum TypeNames {
     INPUT = 'ContractInput',
     CONFIGS = 'ContractConfigs',
-    SOURCE = 'SourceContent'
+    SOURCE = 'SourceContent',
+    META = 'ContractMetaVerified'
 }
 
-const ContractsTypeDef = `${PayloadContract} ${ContractConfigs} ${Query} ${ContractInput} ${SourceContent}`
+const ContractsTypeDef = `${PayloadContract} ${ContractConfigs} ${Query} ${ContractInput} ${SourceContent} ${ContractMetaVerified} ${AbiItem} ${AbiInput} ${AbiOutput} ${StateMutabilityType} ${AbiType} ${encodedMetadataType}`
 
 const transformContractInput = (data: any) => {
     if (data) {
@@ -44,6 +57,20 @@ const transformContractConfigs = (data: any) => {
     }
     return undefined
 }
+const transformContractMeta = (data: any) => {
+    if (data) {
+        return {
+            opcodeHash: data.opcodeHash,
+            metalessHash: data.metalessHash,
+            runtimeHash: data.runtimeHash,
+            encodedMetadata: data.encodedMetadata,
+            abi: data.abi,
+            deployedByteCode: data.deployedBytecode.object,
+            byteCode: data.bytecode.object,
+            abiStringify: JSON.stringify(data.abi, null, 2)
+        }
+    }
+}
 
 const contractsRestLink = new RestLink({
     uri: 'https://raw.githubusercontent.com/EthVM/evm-source-verification/main/contracts/',
@@ -51,6 +78,9 @@ const contractsRestLink = new RestLink({
         const data = await response.json()
         if (typeName === TypeNames.INPUT) {
             return transformContractInput(data)
+        }
+        if (typeName === TypeNames.META) {
+            return transformContractMeta(data)
         }
         return transformContractConfigs(data)
     }
