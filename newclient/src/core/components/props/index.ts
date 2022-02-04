@@ -58,5 +58,6 @@ export interface State {
 export enum EnumAdrChips {
     miner = 'miner',
     creator = 'creator',
-    contract = 'contract'
+    contract = 'contract',
+    verified = 'verified'
 }

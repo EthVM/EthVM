@@ -38,7 +38,7 @@ export default class AppAdrChip extends Vue {
                 return this.$tc('contract.name', 1).toString()
             }
             default: {
-                return ''
+                return 'Verified'
             }
         }
     }
@@ -52,7 +52,7 @@ export default class AppAdrChip extends Vue {
                 return 'contract-chip'
             }
             default: {
-                return ''
+                return 'miner-chip'
             }
         }
     }

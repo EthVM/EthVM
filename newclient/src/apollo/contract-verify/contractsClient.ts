@@ -31,17 +31,8 @@ const transformContractInput = (data: any) => {
 }
 
 const transformContractConfigs = (data: any) => {
-    console.log(data)
     if (data) {
         const configs = data
-        console.log('RETUN CONFIGS', {
-            compiler: configs.compiler,
-            constructorBytes: configs.constructorBytes,
-            evmVersion: configs.evmVersion,
-            name: configs.name,
-            optimization: configs.optimization,
-            runs: configs.runs
-        })
         return {
             compiler: configs.compiler,
             constructorBytes: configs.constructorBytes,
