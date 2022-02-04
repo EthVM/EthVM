@@ -736,19 +736,5 @@
         "including-uncle": "Including Uncle Reward?",
         "block-rewards": "Block Rewards",
         "uncle-rewards": "Uncle Rewards"
-    },
-    "timeformat":{
-        "second":"second",
-        "minute":"minute",
-        "hour":"hour",
-        "day":"day",
-        "month":"month",
-        "year":"year",
-        "seconds":"seconds",
-        "minutes":"minutes",
-        "hours":"hours",
-        "days":"days",
-        "months":"months",
-        "years":"years"
     }
 }
