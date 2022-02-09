@@ -30,7 +30,7 @@
             <v-expansion-panel v-model="panelSource" class="elevation-0">
                 <v-expansion-panel-content>
                     <template #header>
-                        <v-layout row wrap align-center justify-start pr-2 pl-2 pb-2 pt-3>
+                        <v-layout row wrap align-center justify-start pr-2 pl-2 pb-1 pt-2 mb-0>
                             <p class="title font-weight-bold">{{ $t('contract.source-code') }}</p>
                             <v-icon small class="txSuccess--text fas fa-check pl-2" />
                         </v-layout>
@@ -39,50 +39,53 @@
                         <v-flex xs12>
                             <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsSource" />
                         </v-flex>
+                        <v-flex xs12>
+                            <v-divider class="lineGrey" />
+                        </v-flex>
+                        <v-flex xs12>
+                            <p class="subheading font-weight-medium px-3">
+                                Source Code Files
+                            </p>
+                        </v-flex>
+                        <v-flex xs12>
+                            <div v-for="(i, index) in input.sources" :key="i.name" class="mb-4 file-container">
+                                <div :class="'file-header file-header-color'">
+                                    <v-layout row wrap align-center justify-space-between class="px-3">
+                                        <v-flex>
+                                            <p class="info--text break-string font-weight-medium">
+                                                File {{ index + 1 }} out of {{ input.sources.length }}:
+                                                <span class="white--text font-weight-normal">{{ i.name }} </span>
+                                            </p>
+                                        </v-flex>
+                                        <v-spacer />
+                                        <v-flex pa-1 shrink>
+                                            <app-btn-icon
+                                                :icon="!fileViews[index] ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
+                                                :tooltip-text="!fileViews[index] ? 'Expand File View' : 'Shrink file view'"
+                                                color="white"
+                                                @click="expandView(expand.FILE, index)"
+                                            />
+                                        </v-flex>
+                                        <v-flex shrink pa-1>
+                                            <app-copy-to-clip
+                                                :value-to-copy="i.content"
+                                                tooltip-text="Copy file content"
+                                                color="white"
+                                                :is-custom="true"
+                                                :custom-message="`Copied ${i.name} file contents`"
+                                            />
+                                        </v-flex>
+                                    </v-layout>
+                                </div>
+                                <prism-component
+                                    :code="i.content"
+                                    language="solidity"
+                                    :class="[{ 'expand-source': !fileViews[index] }, 'contract-source-code line-numbers']"
+                                >
+                                </prism-component>
+                            </div>
+                        </v-flex>
                     </v-layout>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </div>
-        <!--
-        =====================================================================================
-          Files
-        =====================================================================================
-        -->
-        <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
-            <v-expansion-panel v-model="panelCode" class="elevation-0">
-                <v-expansion-panel-content>
-                    <template #header>
-                        <p class="title font-weight-bold">Files</p>
-                    </template>
-                    <div v-for="(i, index) in input.sources" :key="i.name" class="mb-4 file-container">
-                        <div :class="{ 'file-header': panelCode === 0 }">
-                            <v-layout row wrap align-center justify-space-between class="px-3">
-                                <v-flex>
-                                    <p class="info--text break-string">
-                                        File {{ index + 1 }} out of {{ input.sources.length }}: <span class="primary--text">{{ i.name }} </span>
-                                    </p>
-                                </v-flex>
-                                <v-spacer />
-                                <v-flex pa-1 shrink>
-                                    <app-btn-icon
-                                        :icon="!fileViews[index] ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
-                                        :tooltip-text="!fileViews[index] ? 'Expand File View' : 'Shrink file view'"
-                                        color="white"
-                                        @click="expandView(expand.FILE, index)"
-                                    />
-                                </v-flex>
-                                <v-flex shrink pa-1>
-                                    <app-btn-icon @ icon="far fa-copy" tooltip-text="Copy file content" color="white" @click="expandView(expand.FILE, index)" />
-                                </v-flex>
-                            </v-layout>
-                        </div>
-                        <prism-component
-                            :code="i.content"
-                            language="solidity"
-                            :class="[{ 'expand-source': !fileViews[index] }, 'contract-source-code line-numbers']"
-                        >
-                        </prism-component>
-                    </div>
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </div>
@@ -97,8 +100,9 @@
                     <template #header>
                         <p class="title font-weight-bold">Contract ABI</p>
                     </template>
-                    <div class="mb-4 file-container">
-                        <div :class="{ 'file-header': panelAbi === 0 }">
+
+                    <div class="mb-4 mt-2 file-container">
+                        <div :class="[expandAbi, 'file-header-color']">
                             <v-layout row wrap align-center justify-space-between class="px-3">
                                 <v-spacer />
                                 <v-flex pa-1 shrink>
@@ -110,7 +114,13 @@
                                     />
                                 </v-flex>
                                 <v-flex shrink pa-1>
-                                    <app-btn-icon @ icon="far fa-copy" tooltip-text="Copy file content" color="white" @click="expandView(expand.ABI, 0)" />
+                                    <app-copy-to-clip
+                                        :value-to-copy="meta.abiStringify"
+                                        tooltip-text="Copy file content"
+                                        color="white"
+                                        :is-custom="true"
+                                        custom-message="Copied ABI"
+                                    />
                                 </v-flex>
                             </v-layout>
                         </div>
@@ -174,6 +184,7 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
 import AppBtnIcon from '@app/core/components/ui/AppBtnIcon.vue'
+import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
 import { getContractMeta1, getContractTimestamp1, getContractInput, getContractConfigs, getContractMeta2 } from './addressContractInfo.graphql'
 import { getContractMeta1_getContractMeta as ContractMeta } from './apolloTypes/getContractMeta1'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
@@ -198,7 +209,8 @@ const EXPAND_TYPES = {
         AppDetailsList,
         PrismComponent,
         AppBtnIcon,
-        AppAdrChip
+        AppAdrChip,
+        AppCopyToClip
     },
     apollo: {
         getContractMeta: {
@@ -265,7 +277,6 @@ export default class AddressContractInfo extends Vue {
     isVerified = false
     panelOverview = 0
     panelSource = 0
-    panelCode = 0
     panelAbi = 0
     panelMeta = 0
     panelOther = 0
@@ -273,6 +284,7 @@ export default class AddressContractInfo extends Vue {
     expandAbi = false
     verifiedChip = EnumAdrChips.verified
     expand = EXPAND_TYPES
+    abiSticky = 'file-header'
     /*
     ===================================================================================
       Computed Values
@@ -343,9 +355,6 @@ export default class AddressContractInfo extends Vue {
                 {
                     title: this.$i18n.t('contract.compiler')
                 },
-                // {
-                //     title: this.$i18n.t('contract.constructor-bytes')
-                // },
                 {
                     title: this.$i18n.t('contract.evm-version')
                 },
@@ -478,6 +487,15 @@ export default class AddressContractInfo extends Vue {
             setTimeout(() => Prism.highlightAll(), 0)
         }
     }
+    @Watch('panelAbi')
+    onPanelAbiChange(newVal: 0 | null): void {
+        if (newVal === 0) {
+            this.abiSticky = 'file-header-expanding'
+            setTimeout(() => (this.abiSticky = 'file-header'), 1000)
+        } else {
+            this.abiSticky = ''
+        }
+    }
     /*
     ===================================================================================
       Methods
@@ -599,9 +617,6 @@ export default class AddressContractInfo extends Vue {
     border-radius: 4px;
     padding: 1px 0px;
 }
-.content-border {
-    // border-top: 1px solid #efefef;
-}
 
 .v-expansion-panel:before {
     box-shadow: none !important;
@@ -617,19 +632,29 @@ export default class AddressContractInfo extends Vue {
 }
 
 .expand-source {
-    max-height: 360px;
+    max-height: 300px;
 }
 .file-header {
+    position: sticky;
+    right: 0;
+    top: 56px;
+    z-index: 1;
+    left: 0;
+    width: 100%;
+    @media (min-width: 960px) {
+        top: 64px;
+    }
+}
+.file-header-expanding {
     position: sticky;
     right: 0;
     top: 0px;
     z-index: 1;
     left: 0;
     width: 100%;
-    background-color: white;
-    @media (min-width: 960px) {
-        top: 64px;
-    }
+}
+.file-header-color {
+    background-color: #2a3643;
 }
 
 .file-container {

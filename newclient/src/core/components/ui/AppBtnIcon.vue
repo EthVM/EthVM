@@ -1,8 +1,8 @@
 <template>
     <v-tooltip top color="white" content-class="tooltip-border">
         <template #activator="{on}">
-            <v-btn :small="isSmall" icon fab class="ma-0" :color="color" @click.stop="btnClick()" v-on="on">
-                <v-icon :small="isSmall" class="secondary--text"> {{ icon }}</v-icon>
+            <v-btn :small="isSmall" icon fab class="ma-0" @click.stop="btnClick()" v-on="on">
+                <v-icon :small="isSmall" :class="iconColor"> {{ icon }}</v-icon>
             </v-btn>
         </template>
         <span class="black--text">{{ tooltipText }}</span>
@@ -34,6 +34,9 @@ export default class AppBtnIcon extends Vue {
     }
     btnClick(): void {
         this.$emit('click')
+    }
+    get iconColor(): string {
+        return this.color === '' ? 'primary--text' : `${this.color}--text`
     }
 }
 </script>
