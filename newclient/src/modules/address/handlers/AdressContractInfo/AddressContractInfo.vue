@@ -126,15 +126,36 @@
         </div>
         <!--
         =====================================================================================
-          ByteCode
+          Meta
         =====================================================================================
         -->
         <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
-            <v-expansion-panel v-model="panelByteCode" class="elevation-0">
+            <v-expansion-panel v-model="panelMeta" class="elevation-0">
                 <v-expansion-panel-content>
                     <template #header>
                         <p class="title font-weight-bold">
-                            Byte code
+                            Meta
+                        </p>
+                    </template>
+                    <v-layout row wrap justify-start>
+                        <v-flex xs12>
+                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsMeta" class=""> </app-details-list>
+                        </v-flex>
+                    </v-layout>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </div>
+        <!--
+        =====================================================================================
+          Other
+        =====================================================================================
+        -->
+        <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
+            <v-expansion-panel v-model="panelOther" class="elevation-0">
+                <v-expansion-panel-content>
+                    <template #header>
+                        <p class="title font-weight-bold">
+                            Other
                         </p>
                     </template>
                     <v-layout row wrap justify-start>
@@ -246,7 +267,8 @@ export default class AddressContractInfo extends Vue {
     panelSource = 0
     panelCode = 0
     panelAbi = 0
-    panelByteCode = 0
+    panelMeta = 0
+    panelOther = 0
     fileViews: boolean[] = []
     expandAbi = false
     verifiedChip = EnumAdrChips.verified
@@ -371,25 +393,66 @@ export default class AddressContractInfo extends Vue {
         if (this.isLoadingInput || this.isLoadingConfigs) {
             details = [
                 {
-                    title: 'Byte code'
+                    title: 'opcodeHash'
                 },
                 {
-                    title: 'Deployed byte code'
+                    title: 'metalessHash'
+                },
+                {
+                    title: 'runtimeHash'
+                },
+                {
+                    title: 'Deployed Bytecode'
                 }
             ]
         } else if (this.isVerified) {
             details = [
                 {
-                    title: 'Byte code',
+                    title: 'opcodeHash',
+                    detail: this.meta.opcodeHash
+                },
+                {
+                    title: 'metalessHash',
+                    detail: this.meta.metalessHash
+                },
+                {
+                    title: 'runtimeHash',
+                    detail: this.meta.runtimeHash
+                },
+                {
+                    title: 'Bytecode',
                     detail: this.meta.byteCode,
                     txInput: this.meta.byteCode
                 },
                 {
-                    title: 'Deployed byte code',
+                    title: 'Deployed Bytecode',
                     detail: this.meta.deployedByteCode,
                     txInput: this.meta.deployedByteCode
                 }
             ]
+        }
+        return details
+    }
+    get detailsMeta(): Detail[] {
+        let details: Detail[] = []
+        if (this.isLoadingDetails) {
+            details = [
+                {
+                    title: 'Loading'
+                }
+            ]
+        } else if (this.isVerified && this.meta.encodedMetadata.length > 0) {
+            this.meta.encodedMetadata.forEach(i => {
+                const keys = Object.keys(i)
+                keys.forEach(key => {
+                    if (i[key] && key !== 'solc' && key !== '__typename') {
+                        details.push({
+                            title: key,
+                            detail: i[key]
+                        })
+                    }
+                })
+            })
         }
         return details
     }
