@@ -1,5 +1,10 @@
 <template>
     <div class="pa-2">
+        <!--
+        =====================================================================================
+          Overview
+        =====================================================================================
+        -->
         <div class="contract-layout mb-3">
             <v-expansion-panel v-model="panelOverview" class="elevation-0">
                 <v-expansion-panel-content>
@@ -16,7 +21,11 @@
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </div>
-
+        <!--
+        =====================================================================================
+          Source Contract
+        =====================================================================================
+        -->
         <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
             <v-expansion-panel v-model="panelSource" class="elevation-0">
                 <v-expansion-panel-content>
@@ -34,7 +43,11 @@
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </div>
-
+        <!--
+        =====================================================================================
+          Files
+        =====================================================================================
+        -->
         <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
             <v-expansion-panel v-model="panelCode" class="elevation-0">
                 <v-expansion-panel-content>
@@ -73,11 +86,16 @@
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </div>
+        <!--
+        =====================================================================================
+          ABI
+        =====================================================================================
+        -->
         <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
             <v-expansion-panel v-model="panelAbi" class="elevation-0">
                 <v-expansion-panel-content>
                     <template #header>
-                        <p class="title font-weight-bold">Contract Abi</p>
+                        <p class="title font-weight-bold">Contract ABI</p>
                     </template>
                     <div class="mb-4 file-container">
                         <div :class="{ 'file-header': panelAbi === 0 }">
@@ -103,6 +121,27 @@
                         >
                         </prism-component>
                     </div>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </div>
+        <!--
+        =====================================================================================
+          ByteCode
+        =====================================================================================
+        -->
+        <div v-if="!isLoadingDetails && isVerified" class="contract-layout mb-3">
+            <v-expansion-panel v-model="panelByteCode" class="elevation-0">
+                <v-expansion-panel-content>
+                    <template #header>
+                        <p class="title font-weight-bold">
+                            Byte code
+                        </p>
+                    </template>
+                    <v-layout row wrap justify-start>
+                        <v-flex xs12>
+                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsByteCode" class=""> </app-details-list>
+                        </v-flex>
+                    </v-layout>
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </div>
@@ -207,6 +246,7 @@ export default class AddressContractInfo extends Vue {
     panelSource = 0
     panelCode = 0
     panelAbi = 0
+    panelByteCode = 0
     fileViews: boolean[] = []
     expandAbi = false
     verifiedChip = EnumAdrChips.verified
@@ -322,6 +362,33 @@ export default class AddressContractInfo extends Vue {
                 //     title: this.$i18n.t('contract.code-hash'),
                 //     detail: this.configs.codeHash
                 // }
+            ]
+        }
+        return details
+    }
+    get detailsByteCode(): Detail[] {
+        let details: Detail[] = []
+        if (this.isLoadingInput || this.isLoadingConfigs) {
+            details = [
+                {
+                    title: 'Byte code'
+                },
+                {
+                    title: 'Deployed byte code'
+                }
+            ]
+        } else if (this.isVerified) {
+            details = [
+                {
+                    title: 'Byte code',
+                    detail: this.meta.byteCode,
+                    txInput: this.meta.byteCode
+                },
+                {
+                    title: 'Deployed byte code',
+                    detail: this.meta.deployedByteCode,
+                    txInput: this.meta.deployedByteCode
+                }
             ]
         }
         return details
