@@ -1,5 +1,5 @@
 <template>
-    <div class="pa-2">
+    <div v-if="isContract" class="pa-2">
         <!--
         =====================================================================================
           Overview
@@ -60,7 +60,7 @@
                                 -->
                                 <v-menu v-if="input.sources.length > 1" v-model="viewOutline" offset-y>
                                     <template #activator="{ on }">
-                                        <v-btn outline color="secondary" class="text-capitalize font-weight-regular pa-1" v-on="on" small>
+                                        <v-btn outline color="secondary" class="text-capitalize font-weight-regular pa-1" small v-on="on">
                                             <v-layout row align-center justify-space-between>
                                                 <v-flex grow>
                                                     <p>Outline</p>
@@ -264,8 +264,9 @@ const EXPAND_TYPES = {
             update: data => data.getContractMeta,
             result(data) {
                 if (data.data && data.data.getContractMeta) {
+                    this.isContract = true
                     this.emitErrorState(false)
-                    // this.setContract(true, data.data.getContractMeta)
+                    this.setContract(true)
                     this.getTimestamp(data.data.getContractMeta)
                     this.getInput()
                     this.getConfigs()
@@ -302,6 +303,7 @@ export default class AddressContractInfo extends Vue {
       Initial Data
     ===================================================================================
     */
+    isContract = false
     hasError = false
     getContractMeta!: ContractMeta
     skipContract = false
@@ -580,6 +582,7 @@ export default class AddressContractInfo extends Vue {
                 this.isLoadingInput = false
             })
             .catch(error => {
+                this.isLoadingInput = false
                 console.log('Error in input: ', error)
                 // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
             })
@@ -606,6 +609,7 @@ export default class AddressContractInfo extends Vue {
                 this.isLoadingConfigs = false
             })
             .catch(error => {
+                this.isLoadingConfigs = false
                 console.log('Error in configs: ', error)
                 // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
             })
@@ -628,6 +632,7 @@ export default class AddressContractInfo extends Vue {
                 this.isLoadingMeta = false
             })
             .catch(error => {
+                this.isLoadingMeta = false
                 console.log('Error in meta: ', error)
                 // this.emitErrorState(true, ErrorMessage.contractTimestampNotFound)
             })

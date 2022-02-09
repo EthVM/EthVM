@@ -20,8 +20,6 @@
                         :total-erc20-owned="totalERC20"
                         :update-balance="addrBalanceChanged"
                         :set-contract-creator="setContractCreator"
-                        :set-contract="setContract"
-                        :set-contract-timestamp="setContractTimestamp"
                         :loading-tokens="loadingERC20Balance"
                         @resetBalanceUpdate="resetBalance"
                         @errorAddrOverview="setError"
@@ -180,9 +178,9 @@
                   CONTRACT CREATOR INFO TAB
                 =====================================================================================
                 -->
-                <v-tab-item v-if="isContract" slot="tabs-item" value="tab-3">
+                <v-tab-item slot="tabs-item" value="tab-3">
                     <keep-alive>
-                        <address-contract-info :address="addressRef" />
+                        <address-contract-info :address="addressRef" :set-contract="setContract" />
                     </keep-alive>
                 </v-tab-item>
                 <!--
@@ -337,7 +335,6 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Initial Data
     ===================================================================================
     */
-    loadingContractTimestamp = true
     loadingContract = true
     isContractCreator = false
     isContract = false
@@ -442,9 +439,6 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Methods
     ===================================================================================
     */
-    getTimestamp() {
-        return new Date(this.contract.timestamp * 1e3).toString()
-    }
     /**
      * Sets Block Rewards
      * @param value {Boolean}
@@ -477,18 +471,9 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
      * Sets Contract
      * @param value {Boolean}
      */
-    setContract(value: boolean, data: Contract): void {
+    setContract(value: boolean): void {
         this.isContract = value
-        this.contract = data
         this.loadingContract = false
-    }
-    /**
-     * Sets Contract Timestamp
-     * @param timestamp {Number}
-     */
-    setContractTimestamp(timestamp: number): void {
-        this.$set(this.contract, 'timestamp', timestamp)
-        this.loadingContractTimestamp = false
     }
     /**
      * Sets Total Tokens
