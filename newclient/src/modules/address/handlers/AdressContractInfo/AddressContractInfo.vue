@@ -42,13 +42,52 @@
                         <v-flex xs12>
                             <v-divider class="lineGrey" />
                         </v-flex>
+                        <!--
+                        =====================================================================================
+                          Source Files Header
+                        =====================================================================================
+                        -->
                         <v-flex xs12>
-                            <p class="subheading font-weight-medium px-3">
-                                Source Code Files
-                            </p>
+                            <v-layout row wrap align-center justify-start px-3 mb-1>
+                                <p class="subheading font-weight-medium px-2">
+                                    Source Code Files
+                                </p>
+                                <v-spacer />
+                                <!--
+                                =====================================================================================
+                                  Outline
+                                =====================================================================================
+                                -->
+                                <v-menu v-if="input.sources.length > 1" v-model="viewOutline" offset-y>
+                                    <template #activator="{ on }">
+                                        <v-btn outline color="secondary" class="text-capitalize font-weight-regular pa-1" v-on="on" small>
+                                            <v-layout row align-center justify-space-between>
+                                                <v-flex grow>
+                                                    <p>Outline</p>
+                                                </v-flex>
+                                                <v-flex>
+                                                    <v-icon :class="[viewOutline ? 'fas fa-angle-up' : 'fas fa-angle-down', ' small-global-icon-font ']" />
+                                                </v-flex>
+                                            </v-layout>
+                                        </v-btn>
+                                    </template>
+                                    <v-list>
+                                        <v-list-tile v-for="(i, index) in input.sources" :key="index" @click="scrollToFile(i.name)">
+                                            <v-list-tile-content>
+                                                <p :class="['body-1 pl-2']">{{ i.name }}</p>
+                                            </v-list-tile-content>
+                                        </v-list-tile>
+                                    </v-list>
+                                </v-menu>
+                            </v-layout>
                         </v-flex>
+                        <!--
+                        =====================================================================================
+                          Source Files
+                        =====================================================================================
+                        -->
                         <v-flex xs12>
-                            <div v-for="(i, index) in input.sources" :key="i.name" class="mb-4 file-container">
+                            <div v-for="(i, index) in input.sources" :id="i.name" :key="i.name" class="mb-4 file-container">
                                 <div :class="'file-header file-header-color'">
                                     <v-layout row wrap align-center justify-space-between class="px-3">
                                         <v-flex>
@@ -285,6 +324,7 @@ export default class AddressContractInfo extends Vue {
     verifiedChip = EnumAdrChips.verified
     expand = EXPAND_TYPES
     abiSticky = 'file-header'
+    viewOutline = false
     /*
     ===================================================================================
       Computed Values
@@ -607,6 +647,11 @@ export default class AddressContractInfo extends Vue {
         } else if (panel === this.expand.ABI) {
             this.expandAbi = !this.expandAbi
         }
+    }
+    scrollToFile(_id: string): void {
+        const el = document.getElementById(_id)
+        const options = { duration: 1000, offset: -60 }
+        this.$vuetify.goTo(el, { ...options })
     }
 }
 </script>
