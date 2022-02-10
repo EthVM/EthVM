@@ -10,12 +10,12 @@
                 <v-expansion-panel-content>
                     <template #header>
                         <p class="title font-weight-bold">
-                            Contract Overview
+                            {{ $t('contract.overview') }}
                         </p>
                     </template>
                     <v-layout row wrap justify-start>
                         <v-flex xs12>
-                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsOverview" class=""> </app-details-list>
+                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsOverview"> </app-details-list>
                         </v-flex>
                     </v-layout>
                 </v-expansion-panel-content>
@@ -50,7 +50,7 @@
                         <v-flex xs12>
                             <v-layout row wrap align-center justify-start px-3 mb-1>
                                 <p class="subheading font-weight-medium px-2">
-                                    Source Code Files
+                                    {{ $t('contract.source-code-files') }}
                                 </p>
                                 <v-spacer />
                                 <!--
@@ -63,7 +63,7 @@
                                         <v-btn outline color="secondary" class="text-capitalize font-weight-regular pa-1" small v-on="on">
                                             <v-layout row align-center justify-space-between>
                                                 <v-flex grow>
-                                                    <p>Outline</p>
+                                                    <p>{{ $t('contract.outline') }}</p>
                                                 </v-flex>
                                                 <v-flex>
                                                     <v-icon :class="[viewOutline ? 'fas fa-angle-up' : 'fas fa-angle-down', ' small-global-icon-font ']" />
@@ -92,7 +92,7 @@
                                     <v-layout row wrap align-center justify-start class="px-3">
                                         <v-flex>
                                             <p class="info--text break-string font-weight-medium">
-                                                File {{ index + 1 }} out of {{ input.sources.length }}:
+                                                {{ $t('contract.file-out-of', { n: index + 1, total: input.sources.length }) }}
                                                 <span class="white--text font-weight-normal">{{ i.name }} </span>
                                             </p>
                                         </v-flex>
@@ -102,7 +102,7 @@
                                                 <v-flex pa-1 shrink>
                                                     <app-btn-icon
                                                         :icon="!fileViews[index] ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
-                                                        :tooltip-text="!fileViews[index] ? 'Expand File View' : 'Shrink file view'"
+                                                        :tooltip-text="!fileViews[index] ? $t('contract.view-expand') : $t('contract.view-shrink')"
                                                         color="white"
                                                         @click="expandView(expand.FILE, index)"
                                                     />
@@ -110,10 +110,10 @@
                                                 <v-flex shrink pa-1>
                                                     <app-copy-to-clip
                                                         :value-to-copy="i.content"
-                                                        tooltip-text="Copy file content"
+                                                        :tooltip-text="$t('contract.copy-file')"
                                                         color="white"
                                                         :is-custom="true"
-                                                        :custom-message="`Copied ${i.name} file contents`"
+                                                        :custom-message="$t('contract.copied-file', { name: i.name })"
                                                     />
                                                 </v-flex>
                                             </v-layout>
@@ -141,7 +141,7 @@
             <v-expansion-panel v-model="panelAbi" class="elevation-0">
                 <v-expansion-panel-content>
                     <template #header>
-                        <p class="title font-weight-bold">Contract ABI</p>
+                        <p class="title font-weight-bold">{{ $t('contract.abi') }}</p>
                     </template>
 
                     <div class="mb-4 mt-2 file-container">
@@ -151,7 +151,7 @@
                                 <v-flex pa-1 shrink>
                                     <app-btn-icon
                                         :icon="!expandAbi ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
-                                        :tooltip-text="!expandAbi ? 'Expand File View' : 'Shrink file view'"
+                                        :tooltip-text="!expandAbi ? $t('contract.view-expand') : $t('contract.view-shrink')"
                                         color="white"
                                         @click="expandView(expand.ABI, 0)"
                                     />
@@ -159,10 +159,10 @@
                                 <v-flex shrink pa-1>
                                     <app-copy-to-clip
                                         :value-to-copy="meta.abiStringify"
-                                        tooltip-text="Copy file content"
+                                        :tooltip-text="$t('contract.copy-file')"
                                         color="white"
                                         :is-custom="true"
-                                        custom-message="Copied ABI"
+                                        :custom-message="$t('contract.copied-abi')"
                                     />
                                 </v-flex>
                             </v-layout>
@@ -187,12 +187,12 @@
                 <v-expansion-panel-content>
                     <template #header>
                         <p class="title font-weight-bold">
-                            Meta
+                            {{ $t('contract.meta') }}
                         </p>
                     </template>
                     <v-layout row wrap justify-start>
                         <v-flex xs12>
-                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsMeta" class=""> </app-details-list>
+                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsMeta"> </app-details-list>
                         </v-flex>
                     </v-layout>
                 </v-expansion-panel-content>
@@ -208,12 +208,12 @@
                 <v-expansion-panel-content>
                     <template #header>
                         <p class="title font-weight-bold">
-                            Other
+                            {{ $t('contract.other') }}
                         </p>
                     </template>
                     <v-layout row wrap justify-start>
                         <v-flex xs12>
-                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsByteCode" class=""> </app-details-list>
+                            <app-details-list :is-loading="isLoadingDetails" :has-title="false" :details="detailsByteCode"> </app-details-list>
                         </v-flex>
                     </v-layout>
                 </v-expansion-panel-content>
@@ -442,10 +442,6 @@ export default class AddressContractInfo extends Vue {
                     title: this.$i18n.t('contract.evm-version'),
                     detail: this.configs.evmVersion
                 }
-                // {
-                //     title: this.$i18n.t('contract.code-hash'),
-                //     detail: this.configs.codeHash
-                // }
             ]
         }
         return details
@@ -500,7 +496,7 @@ export default class AddressContractInfo extends Vue {
         if (this.isLoadingDetails) {
             details = [
                 {
-                    title: 'Loading'
+                    title: this.$t('message.load')
                 }
             ]
         } else if (this.meta) {
