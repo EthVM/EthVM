@@ -2,10 +2,6 @@
     <div :class="[chipColor, 'chip']">
         {{ chipText }} <span v-if="hasCheck"> <v-icon size="10px" class="white--text check-mark">fa fa-check-circle</v-icon> </span>
     </div>
-
-    <!-- <v-icon large color="grey">
-                mail
-            </v-icon> -->
 </template>
 
 <script lang="ts">
