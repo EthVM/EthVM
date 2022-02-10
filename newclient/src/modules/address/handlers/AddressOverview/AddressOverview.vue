@@ -49,7 +49,6 @@ export default class AddressOverview extends Mixins(CoinData) {
     @Prop(Number) totalErc20Owned!: number
     @Prop(Boolean) loadingTokens!: boolean
     @Prop(Boolean) updateBalance!: boolean
-    @Prop(Function) setContract!: void
 
     /*
     ===================================================================================
