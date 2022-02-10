@@ -40,7 +40,7 @@ const transformContractInput = (data: any) => {
             sources: _sources
         }
     }
-    return undefined
+    return null
 }
 
 const transformContractConfigs = (data: any) => {
@@ -55,7 +55,7 @@ const transformContractConfigs = (data: any) => {
             runs: configs.runs
         }
     }
-    return undefined
+    return null
 }
 const transformContractMeta = (data: any) => {
     if (data) {
@@ -70,19 +70,24 @@ const transformContractMeta = (data: any) => {
             abiStringify: JSON.stringify(data.abi, null, 2)
         }
     }
+    return null
 }
 
 const contractsRestLink = new RestLink({
     uri: 'https://raw.githubusercontent.com/EthVM/evm-source-verification/main/contracts/',
     responseTransformer: async (response, typeName) => {
-        const data = await response.json()
-        if (typeName === TypeNames.INPUT) {
-            return transformContractInput(data)
+        try {
+            const data = await response.json()
+            if (typeName === TypeNames.INPUT) {
+                return transformContractInput(data)
+            }
+            if (typeName === TypeNames.META) {
+                return transformContractMeta(data)
+            }
+            return transformContractConfigs(data)
+        } catch (err) {
+            return null
         }
-        if (typeName === TypeNames.META) {
-            return transformContractMeta(data)
-        }
-        return transformContractConfigs(data)
     }
 })
 

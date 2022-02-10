@@ -13,7 +13,7 @@ type ContractConfigs {
 
 type ContractInput {
   language: String!
-  sources: [SourceContent!]
+  sources: [SourceContent!]!
 }
 
 type SourceContent {
@@ -24,7 +24,7 @@ type ContractMetaVerified {
   opcodeHash: String!
   metalessHash: String!
   runtimeHash: String!
-  encodedMetadata: [encodedMetadataType!]
+  encodedMetadata: [encodedMetadataType!]!
   abi: [AbiItem!]
   deployedByteCode: String!
   byteCode: String!
@@ -40,7 +40,7 @@ type AbiItem {
     outputs: [AbiOutput!]
     stateMutability: StateMutabilityType
     type: AbiType
-    gas: Number
+    gas: Int
 
 }
 

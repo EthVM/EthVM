@@ -89,7 +89,7 @@
                         <v-flex xs12>
                             <div v-for="(i, index) in input.sources" :id="i.name" :key="i.name" class="mb-4 file-container">
                                 <div :class="'file-header file-header-color'">
-                                    <v-layout row wrap align-center justify-space-between class="px-3">
+                                    <v-layout row wrap align-center justify-start class="px-3">
                                         <v-flex>
                                             <p class="info--text break-string font-weight-medium">
                                                 File {{ index + 1 }} out of {{ input.sources.length }}:
@@ -97,22 +97,26 @@
                                             </p>
                                         </v-flex>
                                         <v-spacer />
-                                        <v-flex pa-1 shrink>
-                                            <app-btn-icon
-                                                :icon="!fileViews[index] ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
-                                                :tooltip-text="!fileViews[index] ? 'Expand File View' : 'Shrink file view'"
-                                                color="white"
-                                                @click="expandView(expand.FILE, index)"
-                                            />
-                                        </v-flex>
-                                        <v-flex shrink pa-1>
-                                            <app-copy-to-clip
-                                                :value-to-copy="i.content"
-                                                tooltip-text="Copy file content"
-                                                color="white"
-                                                :is-custom="true"
-                                                :custom-message="`Copied ${i.name} file contents`"
-                                            />
+                                        <v-flex>
+                                            <v-layout row align-center justify-end class="px-3">
+                                                <v-flex pa-1 shrink>
+                                                    <app-btn-icon
+                                                        :icon="!fileViews[index] ? 'fas fa-angle-double-down' : 'fas fa-angle-double-up'"
+                                                        :tooltip-text="!fileViews[index] ? 'Expand File View' : 'Shrink file view'"
+                                                        color="white"
+                                                        @click="expandView(expand.FILE, index)"
+                                                    />
+                                                </v-flex>
+                                                <v-flex shrink pa-1>
+                                                    <app-copy-to-clip
+                                                        :value-to-copy="i.content"
+                                                        tooltip-text="Copy file content"
+                                                        color="white"
+                                                        :is-custom="true"
+                                                        :custom-message="`Copied ${i.name} file contents`"
+                                                    />
+                                                </v-flex>
+                                            </v-layout>
                                         </v-flex>
                                     </v-layout>
                                 </div>
@@ -141,7 +145,7 @@
                     </template>
 
                     <div class="mb-4 mt-2 file-container">
-                        <div :class="[expandAbi, 'file-header-color']">
+                        <div :class="[abiSticky, 'file-header-color']">
                             <v-layout row wrap align-center justify-space-between class="px-3">
                                 <v-spacer />
                                 <v-flex pa-1 shrink>
@@ -224,8 +228,11 @@ import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import AppAdrChip from '@app/core/components/ui/AppAdrChip.vue'
 import AppBtnIcon from '@app/core/components/ui/AppBtnIcon.vue'
 import AppCopyToClip from '@app/core/components/ui/AppCopyToClip.vue'
-import { getContractMeta1, getContractTimestamp1, getContractInput, getContractConfigs, getContractMeta2 } from './addressContractInfo.graphql'
-import { getContractMeta1_getContractMeta as ContractMeta } from './apolloTypes/getContractMeta1'
+import { getContractInfo, getContractTimestamp, getContractInput, getContractConfigs, getContractMetaVerified } from './addressContractInfo.graphql'
+import { getContractMetaVerified_getContractMetaVerified as ContractMeta } from './apolloTypes/getContractMetaVerified'
+import { getContractConfigs_getContractConfigs as ContractConfigs } from './apolloTypes/getContractConfigs'
+import { getContractInput_getContractInput as ContractInput } from './apolloTypes/getContractInput'
+import { getContractInfo_getContractMeta as ContractInfo } from './apolloTypes/getContractInfo'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
 import { excpAddrNotContract } from '@app/apollo/exceptions/errorExceptions'
 import { Detail } from '@app/core/components/props'
@@ -252,8 +259,8 @@ const EXPAND_TYPES = {
         AppCopyToClip
     },
     apollo: {
-        getContractMeta: {
-            query: getContractMeta1,
+        getContractInfo: {
+            query: getContractInfo,
             fetchPolicy: 'cache-first',
             skip() {
                 return this.skipContract
@@ -305,17 +312,16 @@ export default class AddressContractInfo extends Vue {
     */
     isContract = false
     hasError = false
-    getContractMeta!: ContractMeta
+    getContractInfo!: ContractInfo
     skipContract = false
     isLoadingConfigs = true
     isLoadingInput = true
     isLoadingTimestamp = true
     isLoadingMeta = true
     timestampRaw: number | null = null
-    input!: any
-    configs!: any
-    meta!: any
-    isVerified = false
+    input: ContractInput | null = null
+    configs: ContractConfigs | null = null
+    meta: ContractMeta | null = null
     panelOverview = 0
     panelSource = 0
     panelAbi = 0
@@ -327,11 +333,15 @@ export default class AddressContractInfo extends Vue {
     expand = EXPAND_TYPES
     abiSticky = 'file-header'
     viewOutline = false
+
     /*
     ===================================================================================
       Computed Values
     ===================================================================================
     */
+    get isVerified(): boolean {
+        return !(this.meta === null || this.input === null || this.configs == null)
+    }
     get detailsOverview(): Detail[] {
         let details: Detail[] = []
         if (this.isLoadingDetails || this.isLoadingConfigs) {
@@ -357,27 +367,27 @@ export default class AddressContractInfo extends Vue {
                 },
                 {
                     title: this.$i18n.t('contract.tx-hash'),
-                    detail: this.getContractMeta.transactionHash,
-                    link: `/tx/${this.getContractMeta.transactionHash}`,
+                    detail: this.getContractInfo.transactionHash,
+                    link: `/tx/${this.getContractInfo.transactionHash}`,
                     copy: true,
                     mono: true
                 },
                 {
                     title: this.$i18n.t('contract.creator'),
-                    detail: this.getContractMeta.creator,
-                    link: `/address/${this.getContractMeta.creator}`,
+                    detail: this.getContractInfo.creator,
+                    link: `/address/${this.getContractInfo.creator}`,
                     copy: true,
                     mono: true,
                     toChecksum: true
                 },
                 {
                     title: this.$i18n.t('contract.code-hash'),
-                    detail: this.getContractMeta.codeHash,
+                    detail: this.getContractInfo.codeHash,
                     copy: true,
                     mono: true
                 }
             ]
-            if (this.isVerified && this.configs.name) {
+            if (this.isVerified && this.configs && this.configs.name) {
                 details.unshift({
                     title: this.$i18n.t('common.name'),
                     detail: this.configs.name
@@ -407,7 +417,7 @@ export default class AddressContractInfo extends Vue {
                     title: this.$i18n.t('contract.optimization')
                 }
             ]
-        } else {
+        } else if (this.configs && this.input) {
             details = [
                 {
                     title: this.$i18n.t('contract.language'),
@@ -419,9 +429,10 @@ export default class AddressContractInfo extends Vue {
                 },
                 {
                     title: this.$i18n.t('contract.optimization'),
-                    detail: this.configs.optimization
-                        ? this.$i18n.t('contract.optimization-true', { runs: this.configs.runs })
-                        : this.$i18n.t('contract.optimization-false')
+                    detail:
+                        this.configs.optimization && this.configs.runs !== null
+                            ? `${this.$i18n.t('contract.optimization-true', { runs: this.configs.runs || 0 })}`
+                            : `${this.$i18n.t('contract.optimization-false')}`
                 },
                 {
                     title: this.$i18n.t('contract.constructor-bytes'),
@@ -456,7 +467,7 @@ export default class AddressContractInfo extends Vue {
                     title: 'Deployed Bytecode'
                 }
             ]
-        } else if (this.isVerified) {
+        } else if (this.isVerified && this.meta) {
             details = [
                 {
                     title: 'opcodeHash',
@@ -492,7 +503,7 @@ export default class AddressContractInfo extends Vue {
                     title: 'Loading'
                 }
             ]
-        } else if (this.isVerified && this.meta.encodedMetadata.length > 0) {
+        } else if (this.meta) {
             this.meta.encodedMetadata.forEach(i => {
                 const keys = Object.keys(i)
                 keys.forEach(key => {
@@ -512,7 +523,7 @@ export default class AddressContractInfo extends Vue {
     }
 
     get isLoadingDetails(): boolean {
-        return this.isLoadingConfigs || this.isLoadingInput || this.isLoadingMeta
+        return this.isLoadingConfigs || this.isLoadingInput || this.isLoadingMeta || this.isLoadingTimestamp
     }
     get loading(): boolean {
         return this.hasError ? true : this.$apollo.queries.getEthBalance.loading
@@ -543,10 +554,10 @@ export default class AddressContractInfo extends Vue {
       Methods
     ===================================================================================
     */
-    getTimestamp(contract: ContractMeta) {
+    getTimestamp(contract: ContractInfo) {
         this.$apollo
             .query({
-                query: getContractTimestamp1,
+                query: getContractTimestamp,
                 variables: {
                     hash: contract.transactionHash
                 }
@@ -576,8 +587,9 @@ export default class AddressContractInfo extends Vue {
             .then(response => {
                 if (response.data && response.data.getContractInput) {
                     this.input = response.data.getContractInput
-                    this.fileViews = this.input.sources.map(i => false)
-                    this.isVerified = true
+                    if (this.input) {
+                        this.fileViews = this.input.sources.map(i => false)
+                    }
                 }
                 this.isLoadingInput = false
             })
@@ -602,9 +614,6 @@ export default class AddressContractInfo extends Vue {
             .then(response => {
                 if (response.data && response.data.getContractConfigs) {
                     this.configs = response.data.getContractConfigs
-                    // this.timestampRaw = response.data.getTransactionByHash.timestamp
-                    // this.isLoadingTimestamp = false
-                    this.isVerified = true
                 }
                 this.isLoadingConfigs = false
             })
@@ -617,7 +626,7 @@ export default class AddressContractInfo extends Vue {
     getMeta(): void {
         this.$apollo
             .query({
-                query: getContractMeta2,
+                query: getContractMetaVerified,
                 variables: {
                     address: this.address,
                     chainId: 1
@@ -655,8 +664,10 @@ export default class AddressContractInfo extends Vue {
     }
     scrollToFile(_id: string): void {
         const el = document.getElementById(_id)
-        const options = { duration: 1000, offset: -60 }
-        this.$vuetify.goTo(el, { ...options })
+        if (el) {
+            const options = { duration: 1000, offset: -60 }
+            this.$vuetify.goTo(el, { ...options })
+        }
     }
 }
 </script>

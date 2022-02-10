@@ -4,26 +4,23 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: getContractMeta1
+// GraphQL query operation: getEthBalance
 // ====================================================
 
-export interface getContractMeta1_getContractMeta {
-  __typename: "ContractMeta";
-  block: number;
-  codeHash: string;
-  creator: string;
-  transactionHash: string;
+export interface getEthBalance_getEthBalance {
+  __typename: "EthOwner";
+  balance: string;
 }
 
-export interface getContractMeta1 {
+export interface getEthBalance {
   /**
    * ------------------------------------------------
-   * Contracts:
+   * ETH:
    * ------------------------------------------------
    */
-  getContractMeta: getContractMeta1_getContractMeta;
+  getEthBalance: getEthBalance_getEthBalance;
 }
 
-export interface getContractMeta1Variables {
+export interface getEthBalanceVariables {
   hash: string;
 }

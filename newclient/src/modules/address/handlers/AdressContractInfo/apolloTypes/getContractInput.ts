@@ -16,7 +16,7 @@ export interface getContractInput_getContractInput_sources {
 export interface getContractInput_getContractInput {
   __typename: "ContractInput";
   language: string;
-  sources: getContractInput_getContractInput_sources[] | null;
+  sources: getContractInput_getContractInput_sources[];
 }
 
 export interface getContractInput {
