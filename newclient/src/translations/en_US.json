@@ -131,7 +131,7 @@
         "source-code-files": " Source Code Files",
         "outline": "Outline",
         "file-out-of": " File {n} out of {total}:",
-        "view-expand": "Expand File View",
+        "view-expand": "Expand file view",
         "view-shrink": "Shrink file view",
         "copy-file": "Copy file content",
         "copied-file": "Copied {name} file contents",

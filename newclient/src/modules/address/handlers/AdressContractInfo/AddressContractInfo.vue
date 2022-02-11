@@ -434,15 +434,18 @@ export default class AddressContractInfo extends Vue {
                             ? `${this.$i18n.t('contract.optimization-true', { runs: this.configs.runs || 0 })}`
                             : `${this.$i18n.t('contract.optimization-false')}`
                 },
-                {
-                    title: this.$i18n.t('contract.constructor-bytes'),
-                    detail: this.configs.constructorBytes
-                },
+
                 {
                     title: this.$i18n.t('contract.evm-version'),
                     detail: this.configs.evmVersion
                 }
             ]
+            if (this.configs.constructorBytes && this.configs.constructorBytes !== '') {
+                details.push({
+                    title: this.$i18n.t('contract.constructor-bytes'),
+                    detail: this.configs.constructorBytes
+                })
+            }
         }
         return details
     }
