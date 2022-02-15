@@ -13,6 +13,7 @@ import { FavAddrClient } from './favorite-addresses/favAddrClient'
 import { FavTokClient } from './favorite-tokens/favTokenClient'
 import { LocalStoreClient } from './local-store-global/localStoreClient'
 import { EthBlocksClient } from './eth-blocks/ethBlocksClient'
+import { ContractsClient } from './contract-verify/contractsClient'
 import configs from '../configs'
 import * as Sentry from '@sentry/browser'
 import { isAPIExceptionProduction, isAPIExceptionDev } from './exceptions/errorExceptions'
@@ -34,7 +35,9 @@ const wsLink = new WebSocketLink(subscriptionClient)
 const onErrorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
         graphQLErrors.map(({ message, locations, path }) => {
-            const newError = `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            const loc = JSON.stringify(locations, null, 2)
+            const op = JSON.stringify(operation, null, 2)
+            const newError = `[GraphQL error]: Message: ${message}, \nLocation: ${loc}, \nPath: ${path}, \nOperation: ${op}`
             //For production and staging emit to Sentry:
             if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
                 if (!isAPIExceptionProduction(message)) {
@@ -76,7 +79,6 @@ const apolloClient = new ApolloClient({
     link,
     cache,
     connectToDevTools: configs.NODE_ENV === 'development'
-    // resolvers
 })
 
 export const apolloProvider = new VueApollo({
@@ -86,7 +88,8 @@ export const apolloProvider = new VueApollo({
         FavAddrClient,
         FavTokClient,
         LocalStoreClient,
-        EthBlocksClient
+        EthBlocksClient,
+        ContractsClient
     },
     defaultClient: apolloClient
 })

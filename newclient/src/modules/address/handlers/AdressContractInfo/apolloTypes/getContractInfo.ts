@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: getContractMeta
+// GraphQL query operation: getContractInfo
 // ====================================================
 
-export interface getContractMeta_getContractMeta {
+export interface getContractInfo_getContractMeta {
   __typename: "ContractMeta";
   block: number;
   codeHash: string;
@@ -15,15 +15,15 @@ export interface getContractMeta_getContractMeta {
   transactionHash: string;
 }
 
-export interface getContractMeta {
+export interface getContractInfo {
   /**
    * ------------------------------------------------
    * Contracts:
    * ------------------------------------------------
    */
-  getContractMeta: getContractMeta_getContractMeta;
+  getContractMeta: getContractInfo_getContractMeta;
 }
 
-export interface getContractMetaVariables {
+export interface getContractInfoVariables {
   hash: string;
 }

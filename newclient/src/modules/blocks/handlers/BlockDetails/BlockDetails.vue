@@ -320,7 +320,6 @@ export default class BlockDetails extends Mixins(NumberFormatMixin, NewBlockSubs
     get isEthBlock(): boolean {
         if (this.lastBlock && (this.currBlockNumber || this.currBlockNumber === 0)) {
             const curr = new BN(this.currBlockNumber)
-            console.log(this.currBlockNumber)
             if (curr.isEqualTo(0)) {
                 return true
             }

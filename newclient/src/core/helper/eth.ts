@@ -7,7 +7,7 @@ const eth = {
         const n = Number(raw)
         return !isNaN(n) && Number.isInteger(n) && n >= 0 && isNum
     },
-    isValidAddress: (raw: any): boolean => web3.utils.isAddress(raw),
+    isValidAddress: (address: any): boolean => address && web3.utils.isHexStrict(address) && web3.utils.isAddress(address),
     toEthFromWei(wei) {
         return web3.utils.fromWei(wei, 'ether')
     }

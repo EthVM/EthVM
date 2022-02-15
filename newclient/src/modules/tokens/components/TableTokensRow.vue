@@ -36,7 +36,7 @@
                                 <p class="info--text caption mb-0 pr-1">{{ token.name }}</p>
                             </v-layout>
                         </router-link>
-                        <v-layout v-else row pa-2>
+                        <v-layout v-else row align-center pa-2>
                             <p class="info--text mr-1">{{ $tc('contract.name', 1) }}:</p>
                             <app-transform-hash :hash="token.contract | toChecksum" :link="tokenLink" />
                         </v-layout>

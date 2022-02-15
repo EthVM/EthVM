@@ -116,10 +116,29 @@
         "created": "Created at",
         "total": "Total",
         "creation": "Contract Creation",
-        "details": "Contract Details",
+        "overview": "Contract Overview",
         "date-created": "Date Created",
         "code-hash": "Code Hash",
-        "tx-hash": "Tx Hash"
+        "tx-hash": "Tx Hash",
+        "language": "Language",
+        "compiler": "Compiler",
+        "constructor-bytes": "Constructor Bytes",
+        "evm-version": "EVM Version",
+        "optimization": "Optimization",
+        "optimization-true": "Enabled, {runs} runs",
+        "optimization-false": "Disabled",
+        "source-code": "Source Code",
+        "source-code-files": " Source Code Files",
+        "outline": "Outline",
+        "file-out-of": " File {n} out of {total}:",
+        "view-expand": "Expand file view",
+        "view-shrink": "Shrink file view",
+        "copy-file": "Copy file content",
+        "copied-file": "Copied {name} file contents",
+        "copied-abi": "Copied ABI",
+        "abi": "Contract ABI",
+        "meta": "Meta",
+        "other": "Other"
     },
 
     "gas": {
@@ -177,7 +196,8 @@
         "balance": "Balance",
         "close": "Close",
         "skip": "Skip",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "name": "Name"
     },
 
     "usd": {

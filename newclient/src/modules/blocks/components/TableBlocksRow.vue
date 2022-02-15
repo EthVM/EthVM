@@ -62,7 +62,7 @@
                         <router-link :to="`/block/number/${block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
                     </v-flex>
                     <v-flex sm5>
-                        <v-layout row pb-2>
+                        <v-layout row align-center pb-2>
                             <p class="info--text pr-1">{{ $t('miner.name') }}:</p>
                             <app-transform-hash :hash="_block.miner | toChecksum" :italic="true" :link="`/address/${_block.miner}`" />
                         </v-layout>

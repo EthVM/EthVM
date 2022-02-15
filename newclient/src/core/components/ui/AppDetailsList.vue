@@ -11,7 +11,7 @@
 
     =====================================================================================
     -->
-        <div>
+        <div v-if="hasTitle">
             <slot name="title">
                 <div v-if="isLoading">
                     <v-layout pa-2 align-center justify-start>
@@ -94,6 +94,7 @@ export default class AppDetailsList extends Vue {
     @Prop(Array) details!: Detail[]
     @Prop(Boolean) isLoading!: boolean
     @Prop({ type: Number, default: 99 }) maxItems!: number
+    @Prop({ type: Boolean, default: true }) hasTitle!: boolean
 
     /*
     ===================================================================================

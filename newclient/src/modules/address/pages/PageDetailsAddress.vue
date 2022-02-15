@@ -20,8 +20,6 @@
                         :total-erc20-owned="totalERC20"
                         :update-balance="addrBalanceChanged"
                         :set-contract-creator="setContractCreator"
-                        :set-contract="setContract"
-                        :set-contract-timestamp="setContractTimestamp"
                         :loading-tokens="loadingERC20Balance"
                         @resetBalanceUpdate="resetBalance"
                         @errorAddrOverview="setError"
@@ -180,13 +178,9 @@
                   CONTRACT CREATOR INFO TAB
                 =====================================================================================
                 -->
-                <v-tab-item v-if="isContract" slot="tabs-item" value="tab-3">
+                <v-tab-item slot="tabs-item" value="tab-3">
                     <keep-alive>
-                        <v-layout row wrap justify-start class="mb-4 contract-layout">
-                            <v-flex xs12>
-                                <app-details-list :is-loading="loadingContractTimestamp" :title="$t('contract.details')" :details="details" />
-                            </v-flex>
-                        </v-layout>
+                        <address-contract-info :address="addressRef" :set-contract="setContract" />
                     </keep-alive>
                 </v-tab-item>
                 <!--
@@ -304,9 +298,9 @@ import AddressOverview from '@app/modules/address/handlers/AddressOverview/Addre
 import AddressTransfers from '@app/modules/address/handlers/AddressTransfers/AddressTransfers.vue'
 import AddressTokens from '@app/modules/address/handlers/AddressTokens/AddressTokens.vue'
 import AddressRewards from '@app/modules/address/handlers/AddressRewards/AddressRewards.vue'
+import AddressContractInfo from '@app/modules/address/handlers/AdressContractInfo/AddressContractInfo.vue'
 import { Address, Contract } from '@app/modules/address/components/props'
 import { ErrorMessage } from '@app/modules/address/models/ErrorMessagesForAddress'
-import AppDetailsList from '@app/core/components/ui/AppDetailsList.vue'
 import { Category } from '@app/core/components/mixins/Matomo/matomoEnums'
 
 const MAX_ITEMS = 10
@@ -323,8 +317,8 @@ const MAX_ITEMS = 10
         AddressTokens,
         AddressRewards,
         AddressPendingTx,
-        AppDetailsList,
-        AppEthBlocks
+        AppEthBlocks,
+        AddressContractInfo
     }
 })
 export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
@@ -341,7 +335,6 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Initial Data
     ===================================================================================
     */
-    loadingContractTimestamp = true
     loadingContract = true
     isContractCreator = false
     isContract = false
@@ -367,54 +360,6 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
       Computed Values
     ===================================================================================
     */
-    get details(): Detail[] {
-        let details: Detail[] = []
-        if (this.loadingContractTimestamp) {
-            details = [
-                {
-                    title: this.$i18n.t('contract.date-created')
-                },
-                {
-                    title: this.$i18n.t('contract.tx-hash')
-                },
-                {
-                    title: this.$i18n.t('contract.creator')
-                },
-                {
-                    title: this.$i18n.t('contract.code-hash')
-                }
-            ]
-        } else {
-            details = [
-                {
-                    title: this.$i18n.t('contract.date-created'),
-                    detail: this.timestamp
-                },
-                {
-                    title: this.$i18n.t('contract.tx-hash'),
-                    detail: this.contract.transactionHash,
-                    link: `/tx/${this.contract.transactionHash}`,
-                    copy: true,
-                    mono: true
-                },
-                {
-                    title: this.$i18n.t('contract.creator'),
-                    detail: this.contract.creator,
-                    link: `/address/${this.contract.creator}`,
-                    copy: true,
-                    mono: true,
-                    toChecksum: true
-                },
-                {
-                    title: this.$i18n.t('contract.code-hash'),
-                    detail: this.contract.codeHash,
-                    copy: true,
-                    mono: true
-                }
-            ]
-        }
-        return details
-    }
 
     get isValid(): boolean {
         return eth.isValidAddress(this.addressRef)
@@ -488,18 +433,12 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
     get subMenuClass(): string {
         return this.$vuetify.breakpoint.name === 'xs' || this.$vuetify.breakpoint.name === 'sm' ? 'pt-3' : 'pt-2'
     }
-    get timestamp() {
-        return new Date(this.contract.timestamp * 1e3).toString()
-    }
 
     /*
     ===================================================================================
       Methods
     ===================================================================================
     */
-    getTimestamp() {
-        return new Date(this.contract.timestamp * 1e3).toString()
-    }
     /**
      * Sets Block Rewards
      * @param value {Boolean}
@@ -532,18 +471,9 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
      * Sets Contract
      * @param value {Boolean}
      */
-    setContract(value: boolean, data: Contract): void {
+    setContract(value: boolean): void {
         this.isContract = value
-        this.contract = data
         this.loadingContract = false
-    }
-    /**
-     * Sets Contract Timestamp
-     * @param timestamp {Number}
-     */
-    setContractTimestamp(timestamp: number): void {
-        this.$set(this.contract, 'timestamp', timestamp)
-        this.loadingContractTimestamp = false
     }
     /**
      * Sets Total Tokens
@@ -640,12 +570,5 @@ export default class PageDetailsAddress extends Mixins(AddressUpdateEvent) {
 .tab-fade-leave-active,
 .tab-fade-leave-to {
     display: none;
-}
-.contract-layout {
-    padding: 20px;
-    .flex {
-        border: 1px solid #efefef;
-        border-radius: 4px;
-    }
 }
 </style>

@@ -78,16 +78,7 @@
           TOOLBAR (TOGGLE MENU & SEARCH INPUT)
         =====================================================================================
         -->
-        <v-toolbar
-            :color="headerColor"
-            :fixed="!showMobile"
-            :scroll-off-screen="showMobile"
-            :scroll-threshold="200"
-            :extended="showSearchMobile"
-            app
-            clipped
-            flat
-        >
+        <v-toolbar :color="headerColor" :fixed="!showMobile" :scroll-threshold="200" :extended="showSearchMobile" app clipped flat>
             <!--
             =====================================================================================
               TOOLBAR  Mobile
