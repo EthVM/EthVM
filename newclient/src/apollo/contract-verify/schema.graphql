@@ -1,0 +1,89 @@
+input PayloadContract {
+  address: String!
+  chainId: Int!
+}
+type ContractConfigs {
+  compiler:String!
+  constructorBytes: String!
+  evmVersion: String!
+  name: String!
+  optimization: Boolean!
+  runs:Int
+}
+
+type ContractInput {
+  language: String!
+  sources: [SourceContent!]!
+}
+
+type SourceContent {
+  name: String!
+  content: String!
+}
+type ContractMetaVerified {
+  opcodeHash: String!
+  metalessHash: String!
+  runtimeHash: String!
+  encodedMetadata: [encodedMetadataType!]!
+  abi: [AbiItem!]
+  deployedByteCode: String!
+  byteCode: String!
+  abiStringify: String
+
+}
+type AbiItem {
+    anonymous: Boolean
+    constant: Boolean
+    payable: Boolean
+    name: String
+    inputs: [AbiInput!]
+    outputs: [AbiOutput!]
+    stateMutability: StateMutabilityType
+    type: AbiType
+    gas: Int
+
+}
+
+type AbiInput {
+    name: String!
+    type: String!
+    indexed: Boolean
+	  components: [AbiInput]
+    internalType: String
+}
+
+type AbiOutput {
+    name: String!
+    type: String!
+	  components: [AbiOutput]
+    internalType: String
+ }
+enum StateMutabilityType {
+    pure
+    view
+    nonpayable
+    payable
+}
+
+enum AbiType {
+  function
+  constructor
+  event
+  fallback
+}
+type encodedMetadataType {
+  ipfs: String
+  bzzr0: String
+  bzzr1: String
+  solc: String
+}
+
+
+extend type Query {
+    getContractInput(input: PayloadContract): ContractInput
+    getContractConfigs(input: PayloadContract): ContractConfigs
+    getContractMetaVerified( input: PayloadContract): ContractMetaVerified
+}
+
+
+

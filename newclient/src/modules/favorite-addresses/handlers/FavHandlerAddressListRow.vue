@@ -18,9 +18,10 @@ import { ErrorMessagesFav } from '@app/modules/favorite-addresses/models/ErrorMe
 import { Crumb } from '@app/core/components/props'
 import FavAddrTableRow from '@app/modules/favorite-addresses/components/FavAddrTableRow.vue'
 import { EnumAdrChips } from '@app/core/components/props'
-import { getEthBalance, getContractMeta } from '@app/modules/address/handlers/AddressOverview/addressDetails.graphql'
+import { getEthBalance } from '@app/modules/address/handlers/AddressOverview/addressDetails.graphql'
+import { getContractInfo } from '@app/modules/address/handlers/AdressContractInfo/addressContractInfo.graphql'
 import { getEthBalance_getEthBalance as BalanceType } from '@app/modules/address/handlers/AddressOverview/apolloTypes/getEthBalance'
-import { getContractMeta_getContractMeta as ContractMeta } from '@app/modules/address/handlers/AddressOverview/apolloTypes/getContractMeta'
+import { getContractInfo_getContractMeta as ContractMeta } from '@app/modules/address/handlers/AdressContractInfo/apolloTypes/getContractInfo'
 import { getAddrRewardsBlock_getBlockRewards as RewardsBlockType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsBlock'
 import { getAddrRewardsUncle_getUncleRewards as RewardsUncleType } from '@app/modules/address/handlers/AddressRewards/apolloTypes/getAddrRewardsUncle'
 import { getAddrRewardsBlock, getAddrRewardsUncle, getAddrRewardsGenesis } from '@app/modules/address/handlers/AddressRewards/rewards.graphql'
@@ -47,8 +48,8 @@ import { excpAddrNotContract } from '@app/apollo/exceptions/errorExceptions'
                 this.emitErrorState(true, ErrorMessagesFav.ethBalance)
             }
         },
-        getContractMeta: {
-            query: getContractMeta,
+        getContractInfo: {
+            query: getContractInfo,
             fetchPolicy: 'cache-first',
             variables() {
                 return { hash: this.hash }
@@ -124,7 +125,7 @@ export default class FavHandlerAddressListRow extends Mixins(AddressUpdateEvent)
     */
 
     getEthBalance: BalanceType | undefined = undefined
-    getContractMeta!: ContractMeta
+    getContractInfo!: ContractMeta
     hasError = false
     //CHIPS:
     isMiner = false

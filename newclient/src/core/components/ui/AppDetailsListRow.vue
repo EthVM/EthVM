@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-layout align-center justify-start row class="pr-2 pl-2 pt-1 pb-1">
+        <v-layout align-top justify-start row class="pr-2 pl-2 pt-1 pb-1">
             <!--
       =====================================================================================
         DETAIL TITLE
@@ -55,15 +55,15 @@
                 <app-copy-to-clip v-if="detail.copy" :value-to-copy="detail.detail" />
             </v-flex>
             <v-flex v-if="detail.txInput" hidden-sm-and-down sm9 md10>
-                <div class="data-input pa-3">
-                    <p v-for="(item, index) in detail.txInput" :key="index" class="mb-2">{{ item }}</p>
+                <div class="data-input pa-3 break-string">
+                    <p class="mb-2">{{ detail.txInput }}</p>
                 </div>
             </v-flex>
         </v-layout>
-        <v-layout v-if="detail.txInput" align-start justify-start row class="mr-2 ml-2">
+        <v-layout v-if="detail.txInput" align-start justify-start row class="mr-0 ml-0">
             <v-flex xs12 hidden-md-and-up pt-0>
-                <div class="data-input pa-3">
-                    <p v-for="(item, index) in detail.txInput" :key="index" class="mb-2">{{ item }}</p>
+                <div class="data-input pa-2 break-string">
+                    <p class="mb-2">{{ detail.txInput }}</p>
                 </div>
             </v-flex>
         </v-layout>
@@ -143,8 +143,10 @@ export default class AppDetailsListRow extends Mixins(NumberFormatMixin) {
 
 <style scoped lang="css">
 .data-input {
-    border: 1.2px solid #dee5f0;
-    border-radius: 5px;
+    background-color: #2d2d2d;
+    color: #cc99cd;
+    max-height: 160px;
+    overflow: scroll;
 }
 .detail-container {
     display: flex;

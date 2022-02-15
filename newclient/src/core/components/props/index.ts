@@ -34,7 +34,7 @@ export interface Detail {
     detail?: string | number | null
     link?: string
     copy?: boolean
-    txInput?: string[]
+    txInput?: string[] | string
     mono?: boolean
     priceChange?: number | null
     tooltip?: string
@@ -58,5 +58,6 @@ export interface State {
 export enum EnumAdrChips {
     miner = 'miner',
     creator = 'creator',
-    contract = 'contract'
+    contract = 'contract',
+    verified = 'verified'
 }

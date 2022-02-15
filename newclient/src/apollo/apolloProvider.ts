@@ -13,6 +13,7 @@ import { FavAddrClient } from './favorite-addresses/favAddrClient'
 import { FavTokClient } from './favorite-tokens/favTokenClient'
 import { LocalStoreClient } from './local-store-global/localStoreClient'
 import { EthBlocksClient } from './eth-blocks/ethBlocksClient'
+import { ContractsClient } from './contract-verify/contractsClient'
 import configs from '../configs'
 import * as Sentry from '@sentry/browser'
 import { isAPIExceptionProduction, isAPIExceptionDev } from './exceptions/errorExceptions'
@@ -78,7 +79,6 @@ const apolloClient = new ApolloClient({
     link,
     cache,
     connectToDevTools: configs.NODE_ENV === 'development'
-    // resolvers
 })
 
 export const apolloProvider = new VueApollo({
@@ -88,7 +88,8 @@ export const apolloProvider = new VueApollo({
         FavAddrClient,
         FavTokClient,
         LocalStoreClient,
-        EthBlocksClient
+        EthBlocksClient,
+        ContractsClient
     },
     defaultClient: apolloClient
 })

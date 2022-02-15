@@ -1,0 +1,52 @@
+query getContractInfo($hash: String!) {
+    getContractMeta(contract: $hash) {
+      block,
+      codeHash,
+      creator,
+      transactionHash
+    }
+}
+
+query getContractTimestamp($hash: String!) {
+    getTransactionByHash(hash: $hash) {
+        timestamp
+    }
+}
+
+query getContractInput($address: Int!, $chainId: Int!) {
+  getContractInput(input:{address: $address, chainId: $chainId}) @rest (type: "ContractInput", path: "/{args.input.chainId}/{args.input.address}/input.json", method: "GET", bodyKey: "input") {
+        language
+        sources {
+          content
+          name
+        }
+  }
+}
+
+
+query getContractConfigs($address: Int!, $chainId: Int!) {
+  getContractConfigs(input:{address: $address, chainId: $chainId}) @rest (type: "ContractConfigs", path: "/{args.input.chainId}/{args.input.address}/configs.json", method: "GET", bodyKey: "input") {
+    compiler
+    constructorBytes
+    evmVersion
+    name
+    optimization
+    runs
+  }
+}
+query getContractMetaVerified($address: Int!, $chainId: Int!) {
+  getContractMetaVerified(input:{address: $address, chainId: $chainId}) @rest (type: "ContractMetaVerified", path: "/{args.input.chainId}/{args.input.address}/metadata.json", method: "GET", bodyKey: "input") {
+    opcodeHash
+    metalessHash
+    runtimeHash
+    encodedMetadata @type(name: "encodedMetadataType"){
+      ipfs
+      bzzr0
+      bzzr1
+      solc
+    }
+    deployedByteCode
+    byteCode
+    abiStringify
+  }
+}
