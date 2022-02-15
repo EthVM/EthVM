@@ -111,10 +111,29 @@
         "created": "Время создания",
         "total": "Всего",
         "creation": "Создание Контракта",
-        "details": "Детали Контракта",
+        "overview": "Contract Overview",
         "date-created": "Дата Создания",
         "code-hash": "Хэш Кода",
-        "tx-hash": "Хэш Тх"
+        "tx-hash": "Хэш Тх",
+        "language": "Language",
+        "compiler": "Compiler",
+        "constructor-bytes": "Constructor Bytes",
+        "evm-version": "EVM Version",
+        "optimization": "Optimization",
+        "optimization-true": "Enabled, {runs} runs",
+        "optimization-false": "Disabled",
+        "source-code": "Source Code",
+        "source-code-files": " Source Code Files",
+        "outline": "Outline",
+        "file-out-of": " File {n} out of {total}:",
+        "view-expand": "Expand file view",
+        "view-shrink": "Shrink file view",
+        "copy-file": "Copy file content",
+        "copied-file": "Copied {name} file contents",
+        "copied-abi": "Copied ABI",
+        "abi": "Contract ABI",
+        "meta": "Meta",
+        "other": "Other"
     },
     "gas": {
         "name": "Газ",
@@ -167,7 +186,8 @@
         "balance": "Баланс",
         "close": "Закрыть",
         "skip": "Пропустить",
-        "cancel": "Отменить"
+        "cancel": "Отменить",
+        "name": "Name"
     },
     "usd": {
         "name": "USD",
