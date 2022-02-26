@@ -52,7 +52,7 @@
         "husky": "^4.3.0",
         "moment": "^2.27.0",
         "number-formatter": "^1.2.0",
-        "prismjs": "^1.26.0",
+        "prismjs": "^1.27.0",
         "rxjs": "^6.5.5",
         "store": "^2.0.12",
         "subscriptions-transport-ws": "^0.9.16",
