@@ -50,7 +50,7 @@
         "graphql-anywhere": "^4.2.7",
         "graphql-tag": "^2.10.3",
         "husky": "^4.3.0",
-        "moment": "^2.27.0",
+        "moment": "^2.29.4",
         "number-formatter": "^1.2.0",
         "prismjs": "^1.26.0",
         "rxjs": "^6.5.5",
