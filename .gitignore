@@ -16,6 +16,7 @@ yarn-debug.log*
 yarn-error.log*
 /test/unit/coverage/
 package-lock.json
+pnpm-debug.log*
 
 # Editor directories and files
 .idea

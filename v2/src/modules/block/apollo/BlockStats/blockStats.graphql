@@ -1,0 +1,8 @@
+query getLatestBlockInfo {
+    getLatestBlockInfo {
+        number
+        avgBlockTime
+        hashRate
+        difficulty
+    }
+}

@@ -1,0 +1,75 @@
+fragment TransferSummary on Transfer {
+    transactionHash
+    timestamp
+    from
+    to
+    txFee
+}
+fragment TokenFragment on EthTokenInfo {
+    name
+    symbol
+    decimals
+}
+
+fragment BalanceFragment on BalanceDiff {
+    before
+    after
+}
+
+query getAddressEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
+    getEthTransfersV2(owner: $hash, filter: $filter, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            transfer {
+                ...TransferSummary
+                block
+                status
+            }
+            stateDiff {
+                to {
+                    ...BalanceFragment
+                }
+                from {
+                    ...BalanceFragment
+                }
+            }
+            value
+        }
+        nextKey
+    }
+}
+
+fragment TransferFragment on ERC20Transfer {
+    transfer {
+        ...TransferSummary
+    }
+    stateDiff {
+        to {
+            ...BalanceFragment
+        }
+        from {
+            ...BalanceFragment
+        }
+    }
+    value
+    contract
+    tokenInfo {
+        ...TokenFragment
+    }
+}
+
+query getAddressERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getERC20Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            ...TransferFragment
+        }
+        nextKey
+    }
+}
+
+query getTransactionStateDiff($hash: String!){
+    getTransactionStateDiff(hash: $hash) {
+        owner
+        from
+        to
+    }
+}

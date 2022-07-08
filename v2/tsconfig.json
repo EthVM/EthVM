@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+      "target": "esnext",
+      "module": "esnext",
+      "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
+      // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
+      // "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
+      "noEmit": false,                                     /* Disable emitting files from a compilation. */
+      "sourceMap": true,
+      "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
+      "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+      "strict": true,                                      /* Enable all strict type-checking options. */
+      "resolveJsonModule": true,
+      "moduleResolution": "node",
+      "jsx": "preserve",
+      "allowSyntheticDefaultImports": true,
+      "baseUrl": ".",
+      "types": ["webpack-env", "node"],
+      "paths": {
+          "@/*": ["src/*"],
+          "@core/*": ["src/core/*"],
+          "@module/*": ["src/modules/*"],
+          "@view/*": ["src/views/*"]
+      },
+      "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "src/**/*.graphql"]
+}

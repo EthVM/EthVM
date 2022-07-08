@@ -1,0 +1,17 @@
+fragment MarketData on TokenMarketInfo {
+    id
+    symbol
+    name
+    image
+    contract
+    current_price
+    market_cap
+    total_volume
+    total_supply
+    price_change_percentage_24h
+}
+query getLatestPrices {
+    getLatestPrices {
+        ...MarketData
+    }
+}
