@@ -40,7 +40,7 @@ jobs:
         run: cd ./v2 && pnpm codegen-generate
       # Build (temp dev mode)
       - name: build
-        run: cd ./v2 && pnpm build
+        run: cd ./v2 && pnpm build:hash
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
