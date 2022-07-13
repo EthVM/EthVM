@@ -59,7 +59,7 @@ jobs:
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
-          cd ./newclient
+          cd ./v2
           pip install --user awscli
           aws s3 sync --delete --acl public-read dist/ s3://ethvm-mainnet-web/builds/$GITHUB_SHA
           aws s3 cp s3://ethvm-mainnet-web/builds/$GITHUB_SHA/index.html s3://ethvm-mainnet-web/builds/$GITHUB_SHA/index.html \
