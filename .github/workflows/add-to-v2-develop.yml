@@ -12,8 +12,14 @@ jobs:
       #Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v3
+      # Use pnpm
+      - name: Use pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.10
       # Use node in .nvmrc and cache dependencies
-      - uses: actions/setup-node@v3
+      - name: Set up
+        uses: actions/setup-node@v3
         with:
           node-version-file: 'v2/.nvmrc'
           cache: pnpm
