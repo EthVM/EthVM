@@ -55,6 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
           cd ./v2
+          ls
           pip install --user awscli
           aws s3 sync --delete --acl public-read dist/ s3://ethvm-mainnet-web/v2-develop
           aws s3 cp s3://ethvm-mainnet-web/v2-develop/index.html s3://ethvm-mainnet-web/v2-develop/index.html \
