@@ -5,7 +5,7 @@
                 <v-img :src="require('@/assets/logo-compact.png')" height="30px" width="30px" contain class="mx-auto" />
             </v-col>
             <v-col cols="9" class="text-caption">
-                <p>Ethereum Explorer V2</p>
+                <p>Ethereum Explorer V2 TEST BUILD</p>
                 <p>powered by MEW</p>
             </v-col>
         </v-row>
