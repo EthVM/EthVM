@@ -8,7 +8,7 @@
         "ts-serve": "run-p type-check serve",
         "serve": "vue-cli-service serve",
         "type-check": "vue-tsc --noEmit --watch",
-        "build": "vue-cli-service build",
+        "build": "vue-cli-service build --mode development",
         "lint": "vue-cli-service lint",
         "codegen-generate": "graphql-codegen --config codegen.yml"
     },
