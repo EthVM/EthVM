@@ -14,25 +14,33 @@ jobs:
   ethvmBuild:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
+      #Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Use pnpm
+      - name: Use pnpm
+        uses: pnpm/action-setup@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{env.NODE_VERSION}}-
-      - name: yarn install
-        run: cd ./newclient && yarn install
-
-      - name: yarn lint
-        run: cd ./newclient && yarn install && yarn lint
-
+          version: 6.32.10
+      # Use node in .nvmrc and cache dependencies
+      - name: Set up
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: 'v2/.nvmrc'
+          cache: pnpm
+          cache-dependency-path: v2/pnpm-lock.yaml
+      #Install
+      - name: pnpm Install
+        run:  cd ./v2 && pnpm install
+      # Lint Code
+      - name: pnpm Lint
+        run: cd ./v2 && pnpm lint
+      #Generate code from most recent GraphQL schema
+      - name: pnpm generate schema
+        run: cd ./v2 && pnpm codegen-generate
+      # Build (temp dev mode)
       - name: build
-        run: cd ./newclient && yarn install && yarn apollo:codegen && yarn build:hash
+        run: cd ./v2 && pnpm build:hash
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
@@ -41,8 +49,8 @@ jobs:
           VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}
           VUE_APP_WS_CLIENT: ${{ secrets.VUE_APP_WS_CLIENT }}
           VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
-
-      - name: post build
+      # Deploy to S3
+      - name: Deploy to S3
         if: github.base_ref == ''
         env:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
@@ -51,7 +59,7 @@ jobs:
           VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
           GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
         run: |
-          cd ./newclient
+          cd ./v2
           pip install --user awscli
           aws s3 sync --delete --acl public-read dist/ s3://ethvm-mainnet-web/builds/$GITHUB_SHA
           aws s3 cp s3://ethvm-mainnet-web/builds/$GITHUB_SHA/index.html s3://ethvm-mainnet-web/builds/$GITHUB_SHA/index.html \

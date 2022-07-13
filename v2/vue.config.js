@@ -8,6 +8,7 @@ module.exports = defineConfig({
             // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
         }
     },
+    publicPath: process.env.VUE_APP_ROUTER_MODE === 'hash' ? './' : '/',
     configureWebpack: {
         module: {
             rules: [
