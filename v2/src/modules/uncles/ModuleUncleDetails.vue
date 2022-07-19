@@ -21,14 +21,16 @@ import { computed, reactive } from 'vue'
 import { formatNumber } from '@core/helper/number-format-helper'
 
 const props = defineProps({
-    uncleRef: String
+    uncleRef: {
+        type: String,
+        required: true
+    }
 })
 
 const emit = defineEmits(['errorDetails'])
 
 interface ModuleState {
     hasError: boolean
-    uncle: UncleDetailsType
 }
 
 const state: ModuleState = reactive({
@@ -59,7 +61,7 @@ onError(error => {
     }
 })
 
-const uncle = computed<UncleDetailsType>(() => {
+const uncle = computed<UncleDetailsType | undefined>(() => {
     return uncleData.value?.getUncleByHash
 })
 
@@ -67,7 +69,7 @@ const uncleDetails = computed<Detail[]>(() => {
     const details: Detail[] = [
         {
             title: 'Uncle Height',
-            detail: formatNumber(uncle.value?.block.summary.number)
+            detail: uncle.value && formatNumber(uncle.value?.block.summary.number)
         },
         {
             title: 'Uncle Position',
@@ -94,7 +96,7 @@ const uncleDetails = computed<Detail[]>(() => {
         },
         {
             title: 'Timestamp',
-            detail: new Date(uncle.value?.block.summary.timestamp * 1e3).toString()
+            detail: uncle.value && new Date(uncle.value?.block.summary.timestamp * 1e3).toString()
         },
         {
             title: 'SHA3',
@@ -103,11 +105,11 @@ const uncleDetails = computed<Detail[]>(() => {
         },
         {
             title: 'Gas Limit',
-            detail: formatNumber(uncle.value?.block.gasLimit)
+            detail: uncle.value && formatNumber(uncle.value?.block.gasLimit)
         },
         {
             title: 'Gas Used',
-            detail: formatNumber(uncle.value?.block.gasUsed)
+            detail: uncle.value && formatNumber(uncle.value?.block.gasUsed)
         }
     ]
     return details
