@@ -84,15 +84,21 @@
                     <v-col cols="2">{{ formatFloatingPointValue(token.usdValue).value }}</v-col>
                     <v-col cols="1">
                         <v-row v-if="priceChangeFormatted(token)" class="ma-0">
-                            <p :class="priceChangeClass(token)">{{ priceChangeFormatted(token).value }}%</p>
-                            <span>
-                                <v-icon
-                                    :color="change(token) < 0 ? 'red' : 'green'"
-                                    :class="change(token) < 0 ? 'mdi-arrow-bottom-right' : 'mdi-arrow-top-right'"
-                                    size="x-small"
-                                    >mdi-arrow-bottom-right</v-icon
-                                >
-                            </span>
+                            <p v-if="priceChangeFormatted(token)" :class="priceChangeClass(token)">{{ priceChangeFormatted(token).value }}%</p>
+                            <v-img
+                                v-if="priceChangeFormatted(token) && change(token) > 0"
+                                :src="require('@/assets/up.png')"
+                                height="18px"
+                                max-width="18px"
+                                contain
+                            ></v-img>
+                            <v-img
+                                v-if="priceChangeFormatted(token) && change(token) < 0"
+                                :src="require('@/assets/down.png')"
+                                height="18px"
+                                max-width="18px"
+                                contain
+                            ></v-img>
                         </v-row>
                     </v-col>
                     <v-col cols="2">
@@ -129,6 +135,48 @@
                                 </v-row>
                                 <v-divider />
                             </v-col>
+                            <v-col cols="12">
+                                <p v-if="count > 0">{{ count }} new points loaded</p>
+                                <Line v-if="chartData" :chart-options="chartOptions" :chart-data="chartData" :height="200" />
+                                <v-row justify="space-between" align="center" class="ma-0">
+                                    <v-btn-toggle v-model="selectedAggregateModel" borderless mandatory color="primary" active-class="primary white--text">
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedAggregate === PREFIX.AVG">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedAggregate === PREFIX.AVG" />
+                                            <span v-else> avg </span>
+                                        </v-btn>
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedAggregate === PREFIX.MAX">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedAggregate === PREFIX.MAX" />
+                                            <span v-else> max </span>
+                                        </v-btn>
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedAggregate === PREFIX.MIN">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedAggregate === PREFIX.MIN" />
+                                            <span v-else> min </span>
+                                        </v-btn>
+                                    </v-btn-toggle>
+                                    <v-btn-toggle v-model="selectedTimeSeriesModel" borderless mandatory color="primary" active-class="primary white--text">
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedTimeSeriesModel === 0">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedTimeSeriesModel === 0" />
+                                            <span v-else> Hour </span>
+                                        </v-btn>
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedTimeSeriesModel === 1">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedTimeSeriesModel === 1" />
+                                            <span v-else> Day </span>
+                                        </v-btn>
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedTimeSeriesModel === 2">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedTimeSeriesModel === 2" />
+                                            <span v-else> Week </span>
+                                        </v-btn>
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedTimeSeriesModel === 3">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedTimeSeriesModel === 3" />
+                                            <span v-else> Month </span>
+                                        </v-btn>
+                                        <v-btn size="small" :disabled="loadingChartPoints && selectedTimeSeriesModel === 4">
+                                            <v-progress-circular indeterminate v-if="loadingChartPoints && selectedTimeSeriesModel === 4" />
+                                            <span v-else> Year </span>
+                                        </v-btn>
+                                    </v-btn-toggle>
+                                </v-row>
+                            </v-col>
                         </v-row>
                     </v-col>
                     <v-divider />
@@ -139,7 +187,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/tokens.generated'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
@@ -147,9 +195,19 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, TokenSort, Token } from '@module/address/models/TokenSort'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
+import { Line } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, Filler } from 'chart.js'
+import { useTokenBalanceChange } from '@module/address/composable/chart/token-change.composable'
 
+ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, Filler)
 const { getEthereumTokensMap, loading: loadingEthTokens, getEthereumTokenByContract } = useCoinData()
+
 const MAX_ITEMS = 10
+const PREFIX = {
+    AVG: 'ACCOUNT_BALANCE_PREFIX_AVG',
+    MIN: 'ACCOUNT_BALANCE_PREFIX_MIN',
+    MAX: 'ACCOUNT_BALANCE_PREFIX_MAX'
+}
 
 const props = defineProps({
     addressHash: {
@@ -172,6 +230,117 @@ const state: ComponentState = reactive({
     sortKey: TOKEN_FILTER_VALUES[1],
     sortDirection: 'high',
     index: 0
+})
+
+let width, height, gradient
+const getGradient = (ctx: CanvasRenderingContext2D, chartArea) => {
+    const chartWidth = chartArea.right - chartArea.left
+    const chartHeight = chartArea.bottom - chartArea.top
+    if (!gradient || width !== chartWidth || height !== chartHeight) {
+        // Create the gradient because this is either the first render
+        // or the size of the chart has changed
+        width = chartWidth
+        height = chartHeight
+        gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top)
+        gradient.addColorStop(0, 'white')
+        gradient.addColorStop(0.9, 'rgba(5, 192, 165, 0.32)')
+    }
+
+    return gradient
+}
+
+const chartOptions = ref({
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            // type: 'time',
+            display: true,
+            distribution: 'series',
+            scaleLabel: {
+                display: true,
+                labelString: 'Date'
+            },
+            // time: {
+            //     unit: 'day'
+            // },
+            ticks: {
+                beginAtZero: false,
+                major: {
+                    fontStyle: 'bold',
+                    fontColor: '#FF0000'
+                }
+            },
+            grid: {
+                display: false
+            }
+        },
+        y: {
+            display: false,
+            scaleLabel: {
+                display: true,
+                labelString: 'Value'
+            },
+            ticks: {
+                beginAtZero: true
+            },
+            grid: {
+                display: false
+            }
+        }
+    }
+})
+
+const tokenContract = ref('')
+const selectedAggregateModel = ref(0)
+const selectedTimeSeriesModel = ref(4)
+
+const selectedAggregate = computed<string>(() => {
+    switch (selectedAggregateModel.value) {
+        case 0:
+            return PREFIX.AVG
+        case 1:
+            return PREFIX.MAX
+        default:
+            return PREFIX.MIN
+    }
+})
+const {
+    result: balanceChange,
+    chartPoints,
+    loading: loadingChartPoints,
+    onNewTimeSeriesData
+} = useTokenBalanceChange(selectedAggregate, tokenContract, props.addressHash, selectedTimeSeriesModel)
+
+const count = ref(0)
+onNewTimeSeriesData(data => {
+    console.log(data)
+    count.value += 1
+})
+
+const chartData = computed(() => {
+    // const { result: balanceChange, chartPoints } = useTokenBalanceChange('ACCOUNT_BALANCE_PREFIX_AVG', '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0', props.addressHash)
+    if (tokenContract.value) {
+        return {
+            datasets: [
+                {
+                    label: 'Balance Change',
+                    fill: true,
+                    backgroundColor: context => {
+                        const chart = context.chart
+                        const { ctx, chartArea } = chart
+                        if (!chartArea) {
+                            return
+                        }
+                        return getGradient(ctx, chartArea)
+                    },
+                    data: chartPoints.value,
+                    tension: 0.5
+                }
+            ]
+        }
+    }
+    return {}
 })
 
 const { result: erc20TokensResult, loading: loadingTokens } = useGetOwnersErc20TokensQuery({
@@ -263,12 +432,13 @@ const priceChangeClass = (token: Token): string => {
 }
 
 const showTokenDetails = (contract: string) => {
-    if (state.activeToken?.contract === contract) {
+    if (state.activeToken?.contract === contract && state.showMoreTokenDetails) {
         state.showMoreTokenDetails = false
         return
     }
     state.showMoreTokenDetails = true
     state.activeToken = getEthereumTokenByContract(contract)
+    tokenContract.value = contract
 }
 
 const setPage = (page: number, reset: boolean) => {

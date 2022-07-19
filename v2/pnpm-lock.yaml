@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@apollo/client': ^3.5.10
@@ -26,6 +26,7 @@ specifiers:
   assert: ^2.0.0
   bignumber.js: ^9.0.2
   buffer: ^6.0.3
+  chart.js: ^3.8.0
   clipboard-copy: ^4.0.1
   core-js: ^3.8.3
   eslint: ^7.32.0
@@ -48,6 +49,7 @@ specifiers:
   ts-loader: ^9.3.0
   typescript: ~4.5.5
   vue: ^3.2.13
+  vue-chartjs: ^4.1.1
   vue-cli-plugin-vuetify: ~2.4.8
   vue-router: ^4.0.3
   vue-tsc: ^0.37.9
@@ -57,49 +59,51 @@ specifiers:
   webfontloader: ^1.0.0
 
 dependencies:
-  '@apollo/client': 3.6.8_438f77a0c1e0ceb72dd18b14509d07f6
+  '@apollo/client': 3.6.8_iohxpigb4dhlolorrmkfbhih6y
   '@graphql-codegen/add': 3.1.1_graphql@16.5.0
   '@graphql-codegen/near-operation-file-preset': 2.2.14_graphql@16.5.0
-  '@graphql-codegen/typescript-vue-apollo': 3.2.14_a0633a4f3aa4457c1ed08eb355c13938
+  '@graphql-codegen/typescript-vue-apollo': 3.2.14_ubrtutz2urcxyhwqr2zvlqjzha
   '@mdi/font': 5.9.55
   '@types/webpack-env': 1.17.0
-  '@vue/apollo-composable': 4.0.0-alpha.17_f3d6d9b4e9b0d8c4835750a193c74dc2
+  '@vue/apollo-composable': 4.0.0-alpha.17_6plntnhjwdmmja2xkcqzhr2nyi
   assert: 2.0.0
   bignumber.js: 9.0.2
   buffer: 6.0.3
+  chart.js: 3.8.0
   clipboard-copy: 4.0.1
   core-js: 3.23.1
   graphql: 16.5.0
   graphql-tag: 2.12.6_graphql@16.5.0
   graphql-ws: 5.9.0_graphql@16.5.0
-  pinia: 2.0.14_typescript@4.5.5+vue@3.2.37
+  pinia: 2.0.14_khqcrm3nbfs7aq4aok36jjwtje
   roboto-fontface: 0.10.0
   ts-loader: 9.3.0_typescript@4.5.5
   vue: 3.2.37
+  vue-chartjs: 4.1.1_chart.js@3.8.0+vue@3.2.37
   vue-router: 4.0.16_vue@3.2.37
   vuetify: 3.0.0-beta.3_vue@3.2.37
   web3-utils: 1.7.3
   webfontloader: 1.6.28
 
 devDependencies:
-  '@graphql-codegen/cli': 2.6.2_bdb26b155a33a369333c0dd8b567806b
+  '@graphql-codegen/cli': 2.6.2_xwzgwfk2gorwsmz4bxmlkz4anm
   '@graphql-codegen/introspection': 2.1.1_graphql@16.5.0
   '@graphql-codegen/typescript': 2.4.8_graphql@16.5.0
   '@graphql-codegen/typescript-graphql-files-modules': 2.1.1_graphql@16.5.0
   '@graphql-codegen/typescript-operations': 2.3.5_graphql@16.5.0
   '@types/node': 17.0.42
   '@types/webfontloader': 1.6.34
-  '@typescript-eslint/eslint-plugin': 5.28.0_44122d9aef2005c534752e6374b3f571
-  '@typescript-eslint/parser': 5.28.0_eslint@7.32.0+typescript@4.5.5
-  '@vue/cli-plugin-babel': 5.0.4_9cdfe65639711716d1fdddf38cad02d7
-  '@vue/cli-plugin-eslint': 5.0.4_6084a5b0c7b00dd6f5be6d9e72604c89
+  '@typescript-eslint/eslint-plugin': 5.28.0_iqjc3gxpeac4kndvfzrxjm7voe
+  '@typescript-eslint/parser': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
+  '@vue/cli-plugin-babel': 5.0.4_ttp6mvrzoelrnup53xzyzlic24
+  '@vue/cli-plugin-eslint': 5.0.4_mccklmghwag5n5n6nwpheycmre
   '@vue/cli-plugin-router': 5.0.4_@vue+cli-service@5.0.4
-  '@vue/cli-plugin-typescript': 5.0.4_ac8c1a6103f2c45d2e45c76d5aa8cbff
+  '@vue/cli-plugin-typescript': 5.0.4_vsgbuyid6lcf2lsfy5wvvkgl74
   '@vue/cli-service': 5.0.4_sass-loader@10.2.1
-  '@vue/eslint-config-typescript': 9.1.0_72c89532f707b6c3dde08f4855de09e6
+  '@vue/eslint-config-typescript': 9.1.0_olejkmxxa63mhxpar5eflxqj4y
   eslint: 7.32.0
   eslint-config-prettier: 8.5.0_eslint@7.32.0
-  eslint-plugin-prettier: 4.0.0_dcc2661190d9c6ac0eaf6c22ee1ff197
+  eslint-plugin-prettier: 4.0.0_3tbgmemq3hdkydvpnqro4h7rs4
   eslint-plugin-vue: 8.7.1_eslint@7.32.0
   npm-run-all: 4.1.5
   prettier: 2.7.0
@@ -110,7 +114,7 @@ devDependencies:
   stream-http: 3.2.0
   subscriptions-transport-ws: 0.11.0_graphql@16.5.0
   typescript: 4.5.5
-  vue-cli-plugin-vuetify: 2.4.8_d5c1f66f383de0fdc66de0644adb7005
+  vue-cli-plugin-vuetify: 2.4.8_2xa7m3zyhxqp3rtn4bsevw3qau
   vue-tsc: 0.37.9_typescript@4.5.5
   vuetify-loader: 2.0.0-alpha.9_vuetify@3.0.0-beta.3
 
@@ -132,7 +136,7 @@ packages:
       '@jridgewell/gen-mapping': 0.1.1
       '@jridgewell/trace-mapping': 0.3.13
 
-  /@apollo/client/3.6.8_438f77a0c1e0ceb72dd18b14509d07f6:
+  /@apollo/client/3.6.8_iohxpigb4dhlolorrmkfbhih6y:
     resolution: {integrity: sha512-p/J6KRHZZPGX0bZtMLvRFAIcReYsRYGg+Jz9MkgabWPy0L8rwgyolq9fvKsNqkH888Tj9Yvwrxz9V84KfcORJA==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -1383,7 +1387,7 @@ packages:
       '@babel/helper-validator-identifier': 7.16.7
       to-fast-properties: 2.0.0
 
-  /@endemolshinegroup/cosmiconfig-typescript-loader/3.0.2_e1c3b685f8b7686dcc885a02fd14c5f0:
+  /@endemolshinegroup/cosmiconfig-typescript-loader/3.0.2_4hb3nbpyw5ug3teilibp2fgf6a:
     resolution: {integrity: sha512-QRVtqJuS1mcT56oHpVegkKBlgtWjXw/gHNWO3eL9oyB5Sc7HBoc2OLG/nYpVfT/Jejvo3NUrD0Udk7XgoyDKkA==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -1425,7 +1429,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@graphql-codegen/cli/2.6.2_bdb26b155a33a369333c0dd8b567806b:
+  /@graphql-codegen/cli/2.6.2_xwzgwfk2gorwsmz4bxmlkz4anm:
     resolution: {integrity: sha512-UO75msoVgvLEvfjCezM09cQQqp32+mR8Ma1ACsBpr7nroFvHbgcu2ulx1cMovg4sxDBCsvd9Eq/xOOMpARUxtw==}
     hasBin: true
     peerDependencies:
@@ -1440,8 +1444,8 @@ packages:
       '@graphql-tools/graphql-file-loader': 7.3.15_graphql@16.5.0
       '@graphql-tools/json-file-loader': 7.3.15_graphql@16.5.0
       '@graphql-tools/load': 7.5.14_graphql@16.5.0
-      '@graphql-tools/prisma-loader': 7.1.23_0c0fc33cdeeeb710d1f567b85139ec69
-      '@graphql-tools/url-loader': 7.9.24_0c0fc33cdeeeb710d1f567b85139ec69
+      '@graphql-tools/prisma-loader': 7.1.23_bqh4gpg6523rbupvm64fcopmne
+      '@graphql-tools/url-loader': 7.9.24_bqh4gpg6523rbupvm64fcopmne
       '@graphql-tools/utils': 8.6.13_graphql@16.5.0
       ansi-escapes: 4.3.2
       chalk: 4.1.2
@@ -1455,7 +1459,7 @@ packages:
       glob: 7.2.3
       globby: 11.1.0
       graphql: 16.5.0
-      graphql-config: 4.3.1_bdb26b155a33a369333c0dd8b567806b
+      graphql-config: 4.3.1_xwzgwfk2gorwsmz4bxmlkz4anm
       inquirer: 8.2.4
       is-glob: 4.0.3
       json-to-pretty-yaml: 1.2.2
@@ -1571,7 +1575,7 @@ packages:
       - supports-color
     dev: true
 
-  /@graphql-codegen/typescript-vue-apollo/3.2.14_a0633a4f3aa4457c1ed08eb355c13938:
+  /@graphql-codegen/typescript-vue-apollo/3.2.14_ubrtutz2urcxyhwqr2zvlqjzha:
     resolution: {integrity: sha512-5Skk0lYSzSfbmA5vMXJ+GVDX91UgJ7IJriHUaiBCxcQ7HLlwT3c8ZakmH2EjEhALW+ngT6OSsOrJ86W59B6k+g==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -1816,12 +1820,12 @@ packages:
       graphql: 16.5.0
       tslib: 2.4.0
 
-  /@graphql-tools/prisma-loader/7.1.23_0c0fc33cdeeeb710d1f567b85139ec69:
+  /@graphql-tools/prisma-loader/7.1.23_bqh4gpg6523rbupvm64fcopmne:
     resolution: {integrity: sha512-xMAZIS/p7uQFyvmBQaRNQOVTOWsFciXefy+iz+XSe7jYoSREUc8FNdF9YCtOBD8xBnjJnl9h4L1ymrV8qt58rw==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      '@graphql-tools/url-loader': 7.9.24_0c0fc33cdeeeb710d1f567b85139ec69
+      '@graphql-tools/url-loader': 7.9.24_bqh4gpg6523rbupvm64fcopmne
       '@graphql-tools/utils': 8.6.13_graphql@16.5.0
       '@types/js-yaml': 4.0.5
       '@types/json-stable-stringify': 1.0.34
@@ -1875,7 +1879,7 @@ packages:
       value-or-promise: 1.0.11
     dev: true
 
-  /@graphql-tools/url-loader/7.9.24_0c0fc33cdeeeb710d1f567b85139ec69:
+  /@graphql-tools/url-loader/7.9.24_bqh4gpg6523rbupvm64fcopmne:
     resolution: {integrity: sha512-DpIP9EVZSyhSJgX3P2/ka7lzmpDLqOQ4hDkt1oCBcRDzkeyMOKl5XQAg5/X6AaIonhss+/el0ELqTVOHt9zDxQ==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -2294,7 +2298,7 @@ packages:
       '@types/node': 17.0.42
     dev: true
 
-  /@typescript-eslint/eslint-plugin/5.28.0_44122d9aef2005c534752e6374b3f571:
+  /@typescript-eslint/eslint-plugin/5.28.0_iqjc3gxpeac4kndvfzrxjm7voe:
     resolution: {integrity: sha512-DXVU6Cg29H2M6EybqSg2A+x8DgO9TCUBRp4QEXQHJceLS7ogVDP0g3Lkg/SZCqcvkAP/RruuQqK0gdlkgmhSUA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2305,10 +2309,10 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.28.0_eslint@7.32.0+typescript@4.5.5
+      '@typescript-eslint/parser': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
       '@typescript-eslint/scope-manager': 5.28.0
-      '@typescript-eslint/type-utils': 5.28.0_eslint@7.32.0+typescript@4.5.5
-      '@typescript-eslint/utils': 5.28.0_eslint@7.32.0+typescript@4.5.5
+      '@typescript-eslint/type-utils': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
+      '@typescript-eslint/utils': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
       debug: 4.3.4
       eslint: 7.32.0
       functional-red-black-tree: 1.0.1
@@ -2321,7 +2325,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser/5.28.0_eslint@7.32.0+typescript@4.5.5:
+  /@typescript-eslint/parser/5.28.0_sgaiclxgc5mltnpgmg7py4v6ca:
     resolution: {integrity: sha512-ekqoNRNK1lAcKhZESN/PdpVsWbP9jtiNqzFWkp/yAUdZvJalw2heCYuqRmM5eUJSIYEkgq5sGOjq+ZqsLMjtRA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2349,7 +2353,7 @@ packages:
       '@typescript-eslint/visitor-keys': 5.28.0
     dev: true
 
-  /@typescript-eslint/type-utils/5.28.0_eslint@7.32.0+typescript@4.5.5:
+  /@typescript-eslint/type-utils/5.28.0_sgaiclxgc5mltnpgmg7py4v6ca:
     resolution: {integrity: sha512-SyKjKh4CXPglueyC6ceAFytjYWMoPHMswPQae236zqe1YbhvCVQyIawesYywGiu98L9DwrxsBN69vGIVxJ4mQQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2359,7 +2363,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/utils': 5.28.0_eslint@7.32.0+typescript@4.5.5
+      '@typescript-eslint/utils': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
       debug: 4.3.4
       eslint: 7.32.0
       tsutils: 3.21.0_typescript@4.5.5
@@ -2394,7 +2398,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/utils/5.28.0_eslint@7.32.0+typescript@4.5.5:
+  /@typescript-eslint/utils/5.28.0_sgaiclxgc5mltnpgmg7py4v6ca:
     resolution: {integrity: sha512-E60N5L0fjv7iPJV3UGc4EC+A3Lcj4jle9zzR0gW7vXhflO7/J29kwiTGITA2RlrmPokKiZbBy2DgaclCaEUs6g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2450,7 +2454,7 @@ packages:
       '@vue/reactivity': 3.2.37
     dev: true
 
-  /@vue/apollo-composable/4.0.0-alpha.17_f3d6d9b4e9b0d8c4835750a193c74dc2:
+  /@vue/apollo-composable/4.0.0-alpha.17_6plntnhjwdmmja2xkcqzhr2nyi:
     resolution: {integrity: sha512-Wsx73CSEbk4EqlpxV+5S4u0gZH4V4oCqy6Q0IS8JR7Wn8PjrM8mIKNL1JtRErUOzkQHgVHbBftzDMt0Fi39QFA==}
     peerDependencies:
       '@apollo/client': ^3.4.13
@@ -2461,7 +2465,7 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      '@apollo/client': 3.6.8_438f77a0c1e0ceb72dd18b14509d07f6
+      '@apollo/client': 3.6.8_iohxpigb4dhlolorrmkfbhih6y
       graphql: 16.5.0
       throttle-debounce: 3.0.1
       ts-essentials: 9.1.2_typescript@4.5.5
@@ -2622,7 +2626,7 @@ packages:
     resolution: {integrity: sha512-ZTLAAydILjvx0XHUGSNu/cQDpmvLTMYUutDf2vf6XGkSWYqncQ6RwkeMSQhvQNlgpa/ovwIgrlGxLoojFRwdVg==}
     dev: true
 
-  /@vue/cli-plugin-babel/5.0.4_9cdfe65639711716d1fdddf38cad02d7:
+  /@vue/cli-plugin-babel/5.0.4_ttp6mvrzoelrnup53xzyzlic24:
     resolution: {integrity: sha512-413ZwOWLtgw5vWJoMbrv36crW3qTas4Iru8sU7cRb0IqEZbS28R9X4PVtO8Pek2NYFbrs2XKRYOB7GblB6hVqg==}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0 || ^5.0.0-0
@@ -2631,7 +2635,7 @@ packages:
       '@vue/babel-preset-app': 5.0.4_vue@3.2.37
       '@vue/cli-service': 5.0.4_sass-loader@10.2.1
       '@vue/cli-shared-utils': 5.0.4
-      babel-loader: 8.2.5_993ce5acb94884ef30374affded05051
+      babel-loader: 8.2.5_te6ollfzjcco6mbxjl755ucqke
       thread-loader: 3.0.4_webpack@5.73.0
       webpack: 5.73.0
     transitivePeerDependencies:
@@ -2644,7 +2648,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@vue/cli-plugin-eslint/5.0.4_6084a5b0c7b00dd6f5be6d9e72604c89:
+  /@vue/cli-plugin-eslint/5.0.4_mccklmghwag5n5n6nwpheycmre:
     resolution: {integrity: sha512-NLBEKFTFJhYHMzQ3z+sb6xlkcNaN/RcbZ3hiCY72aJe4YOO8jEAp0XkPzlHd4xYkMW7jrmOwwLOPw+3BJ4b77Q==}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0 || ^5.0.0-0
@@ -2653,7 +2657,7 @@ packages:
       '@vue/cli-service': 5.0.4_sass-loader@10.2.1
       '@vue/cli-shared-utils': 5.0.4
       eslint: 7.32.0
-      eslint-webpack-plugin: 3.1.1_eslint@7.32.0+webpack@5.73.0
+      eslint-webpack-plugin: 3.1.1_oxnz3ipaot6yjz2b7jqxkugcdm
       globby: 11.1.0
       webpack: 5.73.0
       yorkie: 2.0.0
@@ -2676,7 +2680,7 @@ packages:
       - encoding
     dev: true
 
-  /@vue/cli-plugin-typescript/5.0.4_ac8c1a6103f2c45d2e45c76d5aa8cbff:
+  /@vue/cli-plugin-typescript/5.0.4_vsgbuyid6lcf2lsfy5wvvkgl74:
     resolution: {integrity: sha512-ITIt9hDc94gI4UCdsoAKYtFp2LAXF9fNYQqXminTnctd0UuTSXGvQcLmCnMYgKfKPVVcAWfG3vCMiB5bsd+Kyg==}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0 || ^5.0.0-0
@@ -2694,11 +2698,11 @@ packages:
       '@types/webpack-env': 1.17.0
       '@vue/cli-service': 5.0.4_sass-loader@10.2.1
       '@vue/cli-shared-utils': 5.0.4
-      babel-loader: 8.2.5_993ce5acb94884ef30374affded05051
-      fork-ts-checker-webpack-plugin: 6.5.2_c3dc4b05403fe45c13f106e891f52901
+      babel-loader: 8.2.5_te6ollfzjcco6mbxjl755ucqke
+      fork-ts-checker-webpack-plugin: 6.5.2_ypoewbkah7sfye7ra3ujd5jjae
       globby: 11.1.0
       thread-loader: 3.0.4_webpack@5.73.0
-      ts-loader: 9.3.0_typescript@4.5.5+webpack@5.73.0
+      ts-loader: 9.3.0_aqql6fqjnucmdfn6etiifn2koq
       typescript: 4.5.5
       vue: 3.2.37
       webpack: 5.73.0
@@ -2761,7 +2765,7 @@ packages:
       '@vue/cli-plugin-vuex': 5.0.4_@vue+cli-service@5.0.4
       '@vue/cli-shared-utils': 5.0.4
       '@vue/component-compiler-utils': 3.3.0
-      '@vue/vue-loader-v15': /vue-loader/15.9.8_css-loader@6.7.1+webpack@5.73.0
+      '@vue/vue-loader-v15': /vue-loader/15.9.8_jmkrogeftkdotxjvanivswc4hi
       '@vue/web-component-wrapper': 1.3.0
       acorn: 8.7.1
       acorn-walk: 8.2.0
@@ -2793,7 +2797,7 @@ packages:
       module-alias: 2.2.2
       portfinder: 1.0.28
       postcss: 8.4.14
-      postcss-loader: 6.2.1_postcss@8.4.14+webpack@5.73.0
+      postcss-loader: 6.2.1_mepnsno3xmng6eyses4tepu7bu
       progress-webpack-plugin: 1.0.16_webpack@5.73.0
       sass-loader: 10.2.1_sass@1.52.3
       ssri: 8.0.1
@@ -2895,7 +2899,7 @@ packages:
     resolution: {integrity: sha512-IiA0SvDrJEgXvVxjNkHPFfDx6SXw0b/TUkqMcDZWNg9fnCAHbTpoo59YfJ9QLFkwa3raau5vSlRVzMSLDnfdtQ==}
     dev: false
 
-  /@vue/eslint-config-typescript/9.1.0_72c89532f707b6c3dde08f4855de09e6:
+  /@vue/eslint-config-typescript/9.1.0_olejkmxxa63mhxpar5eflxqj4y:
     resolution: {integrity: sha512-j/852/ZYQ5wDvCD3HE2q4uqJwJAceer2FwoEch1nFo+zTOsPrbzbE3cuWIs3kvu5hdFsGTMYwRwjI6fqZKDMxQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2904,8 +2908,8 @@ packages:
       eslint: ^6.2.0 || ^7.0.0 || ^8.0.0
       eslint-plugin-vue: ^8.0.1
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.28.0_44122d9aef2005c534752e6374b3f571
-      '@typescript-eslint/parser': 5.28.0_eslint@7.32.0+typescript@4.5.5
+      '@typescript-eslint/eslint-plugin': 5.28.0_iqjc3gxpeac4kndvfzrxjm7voe
+      '@typescript-eslint/parser': 5.28.0_sgaiclxgc5mltnpgmg7py4v6ca
       eslint: 7.32.0
       eslint-plugin-vue: 8.7.1_eslint@7.32.0
       vue-eslint-parser: 8.3.0_eslint@7.32.0
@@ -3377,7 +3381,7 @@ packages:
     engines: {node: '>= 0.4'}
     dev: false
 
-  /babel-loader/8.2.5_993ce5acb94884ef30374affded05051:
+  /babel-loader/8.2.5_te6ollfzjcco6mbxjl755ucqke:
     resolution: {integrity: sha512-OSiFfH89LrEMiWd4pLNqGz4CwJDtbs2ZVc+iGu2HrkRfPxId9F2anQj38IxWpmRfsUY0aBZYi1EFcd3mhtRMLQ==}
     engines: {node: '>= 8.9'}
     peerDependencies:
@@ -3807,6 +3811,10 @@ packages:
   /chardet/0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
+
+  /chart.js/3.8.0:
+    resolution: {integrity: sha512-cr8xhrXjLIXVLOBZPkBZVF6NDeiVIrPLHcMhnON7UufudL+CNeRrD+wpYanswlm8NpudMdrt3CHoLMQMxJhHRg==}
+    dev: false
 
   /chokidar/3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
@@ -4734,7 +4742,7 @@ packages:
       eslint: 7.32.0
     dev: true
 
-  /eslint-plugin-prettier/4.0.0_dcc2661190d9c6ac0eaf6c22ee1ff197:
+  /eslint-plugin-prettier/4.0.0_3tbgmemq3hdkydvpnqro4h7rs4:
     resolution: {integrity: sha512-98MqmCJ7vJodoQK359bqQWaxOE0CS8paAz/GgjaZLyex4TTk3g9HugoO89EqWCrFiOqn9EVvcoo7gZzONCWVwQ==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
@@ -4816,7 +4824,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /eslint-webpack-plugin/3.1.1_eslint@7.32.0+webpack@5.73.0:
+  /eslint-webpack-plugin/3.1.1_oxnz3ipaot6yjz2b7jqxkugcdm:
     resolution: {integrity: sha512-xSucskTN9tOkfW7so4EaiFIkulWLXwCB/15H917lR6pTv0Zot6/fetFucmENRb7J5whVSFKIvwnrnsa78SG2yg==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
@@ -5279,7 +5287,7 @@ packages:
       is-callable: 1.2.4
     dev: false
 
-  /fork-ts-checker-webpack-plugin/6.5.2_c3dc4b05403fe45c13f106e891f52901:
+  /fork-ts-checker-webpack-plugin/6.5.2_ypoewbkah7sfye7ra3ujd5jjae:
     resolution: {integrity: sha512-m5cUmF30xkZ7h4tWUgTAcEaKmUW7tfyUyTqNNOz7OxWJ0v1VWKTcOvH8FWHUwSjlW/356Ijc9vi3XfcPstpQKA==}
     engines: {node: '>=10', yarn: '>=1.0.0'}
     peerDependencies:
@@ -5507,18 +5515,18 @@ packages:
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
 
-  /graphql-config/4.3.1_bdb26b155a33a369333c0dd8b567806b:
+  /graphql-config/4.3.1_xwzgwfk2gorwsmz4bxmlkz4anm:
     resolution: {integrity: sha512-czBWzJSGaLJfOHBLuUTZVRTjfgohPfvlaeN1B5nXBVptFARpiFuS7iI4FnRhCGwm6qt1h2j1g05nkg0OIGA6bg==}
     engines: {node: '>= 10.0.0'}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@endemolshinegroup/cosmiconfig-typescript-loader': 3.0.2_e1c3b685f8b7686dcc885a02fd14c5f0
+      '@endemolshinegroup/cosmiconfig-typescript-loader': 3.0.2_4hb3nbpyw5ug3teilibp2fgf6a
       '@graphql-tools/graphql-file-loader': 7.3.15_graphql@16.5.0
       '@graphql-tools/json-file-loader': 7.3.15_graphql@16.5.0
       '@graphql-tools/load': 7.5.14_graphql@16.5.0
       '@graphql-tools/merge': 8.2.14_graphql@16.5.0
-      '@graphql-tools/url-loader': 7.9.24_0c0fc33cdeeeb710d1f567b85139ec69
+      '@graphql-tools/url-loader': 7.9.24_bqh4gpg6523rbupvm64fcopmne
       '@graphql-tools/utils': 8.6.13_graphql@16.5.0
       cosmiconfig: 7.0.1
       cosmiconfig-toml-loader: 1.0.0
@@ -5788,7 +5796,7 @@ packages:
       - supports-color
     dev: true
 
-  /http-proxy-middleware/2.0.6_adbe487640bba2b97136947cd1213f1b:
+  /http-proxy-middleware/2.0.6_vw7eq5saxorls4jwsr6ncij7dm:
     resolution: {integrity: sha512-ya/UeJ6HVBYxrgYotAZo1KvPWlgB48kUJLDePFeneHsVujFaW5WNj2NgWCAE//B1Dl02BIfYlpNgBy8Kf8Rjmw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -7385,7 +7393,7 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /pinia/2.0.14_typescript@4.5.5+vue@3.2.37:
+  /pinia/2.0.14_khqcrm3nbfs7aq4aok36jjwtje:
     resolution: {integrity: sha512-0nPuZR4TetT/WcLN+feMSjWJku3SQU7dBbXC6uw+R6FLQJCsg+/0pzXyD82T1FmAYe0lsx+jnEDQ1BLgkRKlxA==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
@@ -7489,7 +7497,7 @@ packages:
       postcss: 8.4.14
     dev: true
 
-  /postcss-loader/6.2.1_postcss@8.4.14+webpack@5.73.0:
+  /postcss-loader/6.2.1_mepnsno3xmng6eyses4tepu7bu:
     resolution: {integrity: sha512-WbbYpmAaKcux/P66bZ40bpWsBucjx/TTgVVzRZ9yUO8yQfVBlameJ0ZGVaPfH64hNSBh63a+ICP5nqOpBA0w+Q==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
@@ -9021,21 +9029,7 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /ts-loader/9.3.0_typescript@4.5.5:
-    resolution: {integrity: sha512-2kLLAdAD+FCKijvGKi9sS0OzoqxLCF3CxHpok7rVgCZ5UldRzH0TkbwG9XECKjBzHsAewntC5oDaI/FwKzEUog==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      typescript: '*'
-      webpack: ^5.0.0
-    dependencies:
-      chalk: 4.1.2
-      enhanced-resolve: 5.9.3
-      micromatch: 4.0.5
-      semver: 7.3.7
-      typescript: 4.5.5
-    dev: false
-
-  /ts-loader/9.3.0_typescript@4.5.5+webpack@5.73.0:
+  /ts-loader/9.3.0_aqql6fqjnucmdfn6etiifn2koq:
     resolution: {integrity: sha512-2kLLAdAD+FCKijvGKi9sS0OzoqxLCF3CxHpok7rVgCZ5UldRzH0TkbwG9XECKjBzHsAewntC5oDaI/FwKzEUog==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -9049,6 +9043,20 @@ packages:
       typescript: 4.5.5
       webpack: 5.73.0
     dev: true
+
+  /ts-loader/9.3.0_typescript@4.5.5:
+    resolution: {integrity: sha512-2kLLAdAD+FCKijvGKi9sS0OzoqxLCF3CxHpok7rVgCZ5UldRzH0TkbwG9XECKjBzHsAewntC5oDaI/FwKzEUog==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      typescript: '*'
+      webpack: ^5.0.0
+    dependencies:
+      chalk: 4.1.2
+      enhanced-resolve: 5.9.3
+      micromatch: 4.0.5
+      semver: 7.3.7
+      typescript: 4.5.5
+    dev: false
 
   /ts-log/2.2.4:
     resolution: {integrity: sha512-DEQrfv6l7IvN2jlzc/VTdZJYsWUnQNCsueYjMkC/iXoEoi5fNan6MjeDqkvhfzbmHgdz9UxDUluX3V5HdjTydQ==}
@@ -9276,7 +9284,17 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /vue-cli-plugin-vuetify/2.4.8_d5c1f66f383de0fdc66de0644adb7005:
+  /vue-chartjs/4.1.1_chart.js@3.8.0+vue@3.2.37:
+    resolution: {integrity: sha512-rKIQ3jPrjhwxjKdNJppnYxRuBSrx4QeM3nNHsfIxEqjX6QS4Jq6e6vnZBxh2MDpURDC2uvuI2N0eIt1cWXbBVA==}
+    peerDependencies:
+      chart.js: ^3.7.0
+      vue: ^3.0.0-0 || ^2.6.0
+    dependencies:
+      chart.js: 3.8.0
+      vue: 3.2.37
+    dev: false
+
+  /vue-cli-plugin-vuetify/2.4.8_2xa7m3zyhxqp3rtn4bsevw3qau:
     resolution: {integrity: sha512-1e8tVbJNQPLpdJgx8tlsCrFVSKrohLe5axWwolOuMr9k++X1pg95jiqBxYZdhh7tIl9bNh4wzVPPGQzTIpoS+Q==}
     peerDependencies:
       sass-loader: '*'
@@ -9333,7 +9351,7 @@ packages:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
     dev: true
 
-  /vue-loader/15.9.8_css-loader@6.7.1+webpack@5.73.0:
+  /vue-loader/15.9.8_jmkrogeftkdotxjvanivswc4hi:
     resolution: {integrity: sha512-GwSkxPrihfLR69/dSV3+5CdMQ0D+jXg8Ma1S4nQXKJAznYFX14vHdc/NetQc34Dw+rBbIJyP7JOuVb9Fhprvog==}
     peerDependencies:
       cache-loader: '*'
@@ -9561,7 +9579,7 @@ packages:
       express: 4.18.1
       graceful-fs: 4.2.10
       html-entities: 2.3.3
-      http-proxy-middleware: 2.0.6_adbe487640bba2b97136947cd1213f1b
+      http-proxy-middleware: 2.0.6_vw7eq5saxorls4jwsr6ncij7dm
       ipaddr.js: 2.0.1
       open: 8.4.0
       p-retry: 4.6.2

@@ -112,11 +112,13 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, TokenSort, Token } from '@module/address/models/TokenSort'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
-const { getEthereumTokensMap, loading: loadingEthTokens, getEthereumTokenByContract } = useCoinData()
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from '@module/address/apollo/transfers.generated'
 import { eth, timeAgo } from '@core/helper'
+
 import BN from 'bignumber.js'
+
+const { getEthereumTokensMap, loading: loadingEthTokens, getEthereumTokenByContract } = useCoinData()
 
 const MAX_ITEMS = 10
 const TYPES = ['in', 'out', 'self']
