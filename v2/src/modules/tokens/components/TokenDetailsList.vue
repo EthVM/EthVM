@@ -31,20 +31,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { GetErc20TokenBalanceQuery as TokenOwnerInfo, GetTokenInfoByContractQuery as TokenInfo } from '@module/tokens/apollo/tokenDetails.generated'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
-
-interface TokenMarketData {
-    __typename?: 'TokenMarketInfo'
-    id: string
-    symbol: string
-    name: string
-    image: string
-    contract?: string | null
-    current_price?: number | null
-    market_cap?: number | null
-    total_volume?: number | null
-    total_supply?: string | null
-    price_change_percentage_24h?: number | null
-}
+import { MarketDataFragment as TokenMarketData } from '@/core/composables/CoinData/getLatestPrices.generated'
 
 interface PropType {
     addressRef: string

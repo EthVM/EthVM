@@ -9,13 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, watch, onMounted, toRefs } from 'vue'
+import { computed, onMounted } from 'vue'
 import AppError from '@core/components/AppError.vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
 import { eth } from '@core/helper'
-import { useAddressEventSubscription } from '@module/address/apollo/addressEvent.generated'
-import { AddressEventType } from '@/apollo/types'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 
 const props = defineProps({

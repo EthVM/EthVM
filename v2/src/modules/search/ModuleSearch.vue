@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import AppSearch from '@core/components/AppSearch.vue'
 import { SearchTokenOption } from '@core/components/props/index'
-import { eth } from '@core/helpers/eth'
+import { eth } from '@core/helper/eth'
 import { reactive, watch } from 'vue'
 import { useGetHashTypeQuery, useGetTokensBeginsWithQuery } from './apollo/searchDetails.generated'
 import { HashType } from '@/apollo/types'

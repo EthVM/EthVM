@@ -8,8 +8,8 @@
 //     }
 // }
 
-// export class ConfigHelper {
-//     public static get isRopsten(): boolean {
-//         return process.env.VUE_APP_ETH_NETWORK === 'ropsten'
-//     }
-// }
+export class ConfigHelper {
+    public static get isRopsten(): boolean {
+        return process.env.VUE_APP_ETH_NETWORK === 'ropsten'
+    }
+}

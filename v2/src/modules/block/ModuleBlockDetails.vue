@@ -43,8 +43,6 @@ import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.compos
 import { useStore } from '@/store'
 import { useQuery } from '@vue/apollo-composable'
 
-const store = useStore()
-
 const props = defineProps({
     blockRef: String,
     isHash: {
