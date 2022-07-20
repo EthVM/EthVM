@@ -17,6 +17,10 @@
                 :is-loading="loadingTokenDetails || state.hasError"
                 @errorDetails="emitErrorState"
             />
+            <app-tabs :tabs="tabsTokenDetails">
+                <v-window-item value="tab-0"> Token transfers </v-window-item>
+                <v-window-item value="tab-1"> Token Holders </v-window-item>
+            </app-tabs>
         </div>
         <!--
     =====================================================================================
@@ -40,10 +44,12 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue'
+import AppTabs from '@core/components/AppTabs'
 import TokenDetailsList from '@module/tokens/components/TokenDetailsList.vue'
 import { useGetErc20TokenBalanceQuery, useGetTokenInfoByContractQuery } from '@module/tokens/apollo/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
+import { Tab } from '@core/components/props'
 
 const props = defineProps({
     addressRef: {
@@ -123,6 +129,22 @@ COMPUTED PROPERTIES:
 
 const isValid = computed<boolean>(() => {
     return eth.isValidAddress(props.addressRef)
+})
+
+const tabsTokenDetails = computed<Tab[]>(() => {
+    const tabs = [
+        {
+            id: 0,
+            title: 'Transfers',
+            isActive: true
+        },
+        {
+            id: 1,
+            title: 'Holders',
+            isActive: false
+        }
+    ]
+    return tabs
 })
 
 /*
