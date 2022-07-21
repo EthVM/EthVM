@@ -34,5 +34,5 @@ export const timeAgo = (date: string | Date) => {
             return `${Math.floor(res)} ${interval.name}${remainder ? 's' : ''} ago`
         }
     }
-    return `${Math.floor(seconds)} seconds ago`
+    return seconds > 5 ? `${Math.floor(seconds)} seconds ago` : 'Just now'
 }

@@ -5,7 +5,7 @@ import { AddressEventType } from '@/apollo/types'
 export function useAddressUpdate(addressRef: string) {
     const newErc20Transfer = ref(0)
 
-    const { result: addressUpdate, onResult } = useAddressEventSubscription({
+    const { onResult } = useAddressEventSubscription({
         owner: addressRef
     })
 

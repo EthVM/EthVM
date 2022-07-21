@@ -4,6 +4,7 @@ import HomeView from '@view/HomeView.vue'
 import BlocksView from '@view/BlocksView.vue'
 import TxDetailsView from '@/views/TxDetailsView.vue'
 import BlockDetailsView from '@view/BlockDetailsView.vue'
+import UncleDetailsView from '@view/UncleDetailsView.vue'
 import TokenDetailsView from '@view/TokenDetailsView.vue'
 import TxsView from '@view/TxsView.vue'
 import AddressTokensView from '@view/AddressTokensView.vue'
@@ -32,6 +33,12 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.BLOCK_HASH.PATH,
         name: ROUTE_NAME.BLOCK_HASH.NAME,
         component: BlockDetailsView,
+        props: true
+    },
+    {
+        path: ROUTE_NAME.UNCLE_HASH.PATH,
+        name: ROUTE_NAME.UNCLE_HASH.NAME,
+        component: UncleDetailsView,
         props: true
     },
     {

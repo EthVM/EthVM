@@ -32,7 +32,7 @@ const ROUTE_NAME: Route = {
         NAME: 'blockHash'
     },
     UNCLE_HASH: {
-        PATH: `/unlce/hash/:${ROUTE_PROP.UNCLE}`,
+        PATH: `/uncle/:${ROUTE_PROP.UNCLE}`,
         NAME: 'uncleHash'
     },
     TXS: {
