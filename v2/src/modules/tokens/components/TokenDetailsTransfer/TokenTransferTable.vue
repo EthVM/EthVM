@@ -10,7 +10,7 @@
         <div v-if="!hasError">
             <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-sm-and-down" height="40px">
                 <v-row align="center" justify="start" class="fill-height pr-2">
-                    <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" md="7">
+                    <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" :md="isERC721 ? 6 : 7">
                         <h5>Tx #</h5>
                     </v-col>
                     <v-col sm="2">

@@ -164,7 +164,7 @@ const setPage = (page: number, reset = false): void => {
     } else {
         if (page > state.isEnd) {
             hasMoreERC20Transfers.value ? getERC20Transfer(page) : null
-            // hasMoreERC721Transfers.value ? this.getERC721Transfer(page) : null
+            hasMoreERC721Transfers.value ? getERC721Transfer(page) : null
         }
     }
     state.index = page
@@ -200,6 +200,50 @@ const getERC20Transfer = async (page: number): Promise<boolean> => {
                         nextKey: previousResult.getERC20TokenTransfers.nextKey,
                         transfers: [...prevT],
                         __typename: previousResult.getERC20TokenTransfers.__typename
+                    }
+                }
+            }
+        })
+        return true
+    } catch (e) {
+        const newE = JSON.stringify(e)
+        if (!newE.toLowerCase().includes(excpInvariantViolation)) {
+            throw new Error(newE)
+        }
+        return false
+    }
+}
+
+/**
+ * Gets ERC721 through apollo
+ * @param page {Number}
+ */
+const getERC721Transfer = async (page: number): Promise<boolean> => {
+    try {
+        await fetchMoreErc721TokenTransfer({
+            variables: {
+                hash: props.address,
+                _limit: 10,
+                _nextKey: erc721TokenTransfer.value?.nextKey
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                state.isEnd = page
+                const prevT = previousResult.getERC721TokenTransfers.transfers
+                if (fetchMoreResult) {
+                    const newT = fetchMoreResult.getERC721TokenTransfers.transfers
+                    return {
+                        getERC721TokenTransfers: {
+                            nextKey: fetchMoreResult.getERC721TokenTransfers.nextKey,
+                            transfers: [...prevT, ...newT],
+                            __typename: fetchMoreResult.getERC721TokenTransfers.__typename
+                        }
+                    }
+                }
+                return {
+                    getERC721TokenTransfers: {
+                        nextKey: previousResult.getERC721TokenTransfers.nextKey,
+                        transfers: [...prevT],
+                        __typename: previousResult.getERC721TokenTransfers.__typename
                     }
                 }
             }
