@@ -72,7 +72,8 @@
         "vue-cli-plugin-vuetify": "~2.4.8",
         "vue-tsc": "^0.37.9",
         "vuetify-loader": "^2.0.0-alpha.0",
-        "webpack": ">=5.0.0 <6.0.0"
+        "webpack": ">=5.0.0 <6.0.0",
+        "webpack-plugin-vuetify": "^2.0.0-alpha.11"
     },
     "peerDependencies": {
         "subscriptions-transport-ws": "^0.11.0"
