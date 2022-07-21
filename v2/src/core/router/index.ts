@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { ROUTE_NAME } from './routesNames'
 import HomeView from '@view/HomeView.vue'
 import BlocksView from '@view/BlocksView.vue'
@@ -8,6 +8,7 @@ import TokenDetailsView from '@view/TokenDetailsView.vue'
 import TxsView from '@view/TxsView.vue'
 import AddressTokensView from '@view/AddressTokensView.vue'
 import ViewTemp from '@view/ViewTemp.vue'
+import configs from '@/configs'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -89,7 +90,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: configs.ROUTER_MODE === 'hash' ? createWebHashHistory() : createWebHistory(),
     routes
 })
 

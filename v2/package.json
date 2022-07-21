@@ -10,7 +10,8 @@
         "type-check": "vue-tsc --noEmit --watch",
         "build": "vue-cli-service build --mode development",
         "lint": "vue-cli-service lint",
-        "codegen-generate": "graphql-codegen --config codegen.yml"
+        "codegen-generate": "graphql-codegen --config codegen.yml",
+        "build:hash": "VUE_APP_ROUTER_MODE=hash vue-cli-service build --mode development"
     },
     "dependencies": {
         "@apollo/client": "^3.5.10",
