@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list-lg class="mb-0">
+    <div>
         <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
         <app-message :messages="state.errorMessages" />
         <!--
@@ -8,7 +8,7 @@
         =====================================================================================
         -->
         <tx-details v-if="isValid && !hasError" :tx-ref="txRef" @errorDetails="setError" />
-    </v-container>
+    </div>
 </template>
 
 <script setup lang="ts">

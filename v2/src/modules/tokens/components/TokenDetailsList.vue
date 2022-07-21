@@ -25,7 +25,6 @@ import { Detail } from '@core/components/props'
 import AppDetailsList from '@core/components/AppDetailsList.vue'
 import { Hex } from '@core/models'
 import BN from 'bignumber.js'
-import { ConfigHelper } from '@core/helper/config-helper'
 import { formatFloatingPointValue, formatNumber, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { GetErc20TokenBalanceQuery as TokenOwnerInfo, GetTokenInfoByContractQuery as TokenInfo } from '@module/tokens/apollo/tokenDetails.generated'
@@ -62,7 +61,7 @@ interface ComponentState {
 }
 
 const state: ComponentState = {
-    isRopsten: ConfigHelper.isRopsten,
+    isRopsten: false,
     hasError: false,
     imageExists: true
 }

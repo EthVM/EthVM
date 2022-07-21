@@ -1,29 +1,29 @@
 <template>
-    <v-tooltip top color="white" content-class="tooltip-border">
-        <template #activator="{ on }">
-            <v-btn :small="isSmall" icon fab class="ma-0" @click.stop="btnClick()" v-on="on">
-                <v-icon :small="isSmall" :class="iconColor"> {{ icon }}</v-icon>
-            </v-btn>
-        </template>
-        <span class="black--text">{{ tooltipText }}</span>
-    </v-tooltip>
+    <v-btn icon :color="props.color" flat :size="props.size" @click.stop="btnClick()">
+        <v-icon>{{ props.icon }}</v-icon>
+        <v-tooltip v-if="tooltipText !== ''" activator="parent" location="top">
+            {{ tooltipText }}
+        </v-tooltip>
+    </v-btn>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 const props = defineProps({
-    tooltipText: String,
-    icon: {
+    tooltipText: {
         type: String,
         default: ''
+    },
+    icon: {
+        type: String,
+        default: 'mdi-lightbulb-question'
     },
     color: {
         type: String,
-        default: ''
+        default: 'transparent'
     },
-    isSmall: {
-        type: Boolean,
-        default: true
+    size: {
+        type: String,
+        default: 'x-small'
     }
 })
 
@@ -35,18 +35,7 @@ const emit = defineEmits(['click'])
 ===================================================================================
 */
 
-const iconColor = computed<string>(() => {
-    return props.color === '' ? 'primary--text' : `${props.color}--text`
-})
-
 const btnClick = (): void => {
     emit('click')
 }
 </script>
-
-<style lang="scss" scoped>
-.v-btn--floating.v-btn--small {
-    height: 30px;
-    width: 30px;
-}
-</style>

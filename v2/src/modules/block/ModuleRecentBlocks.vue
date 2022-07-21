@@ -1,29 +1,27 @@
 <template>
-    <v-container>
-        <v-card color="white" flat class="pt-3 pb-3">
-            <v-container>
-                <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/blocks">
-                    <template v-if="!isHome" #update>
-                        <notice-new-block @reload="setPage(0, true)" />
-                    </template>
-                    <template v-if="showPagination && !state.initialLoad" #pagination>
-                        <app-paginate :total="state.totalPages" :current-page="currentPage" @newPage="setPage" />
-                    </template>
-                </app-table-title>
-                <table-blocks
-                    :max-items="maxItems"
-                    :index="state.index"
-                    :is-loading="loading"
-                    :table-message="message"
-                    :block-data="blocks"
-                    :is-scroll-view="isHome"
-                />
-                <v-row v-if="showPagination && !state.initialLoad" justify="end" row class="pb-1 pr-3 pl-2">
+    <v-card flat class="pt-3 pb-3">
+        <v-container>
+            <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/blocks">
+                <template v-if="!isHome" #update>
+                    <notice-new-block @reload="setPage(0, true)" />
+                </template>
+                <template v-if="showPagination && !state.initialLoad" #pagination>
                     <app-paginate :total="state.totalPages" :current-page="currentPage" @newPage="setPage" />
-                </v-row>
-            </v-container>
-        </v-card>
-    </v-container>
+                </template>
+            </app-table-title>
+            <table-blocks
+                :max-items="maxItems"
+                :index="state.index"
+                :is-loading="loading"
+                :table-message="message"
+                :block-data="blocks"
+                :is-scroll-view="isHome"
+            />
+            <v-row v-if="showPagination && !state.initialLoad" justify="end" row class="pb-1 pr-3 pl-2">
+                <app-paginate :total="state.totalPages" :current-page="currentPage" @newPage="setPage" />
+            </v-row>
+        </v-container>
+    </v-card>
 </template>
 
 <script setup lang="ts">

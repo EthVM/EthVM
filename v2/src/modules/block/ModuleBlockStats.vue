@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container fluid class="pa-0">
         <v-row class="fill-height" align-content="center" justify="center">
             <v-col cols="12" sm="6" md="3">
                 <BlockStatsCard :is-loading="loading" title="Last Block #" :value="blockNumber" color-type="primary" back-type="last-block" />

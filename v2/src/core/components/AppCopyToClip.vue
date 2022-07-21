@@ -1,10 +1,7 @@
 <template>
     <div>
-        <app-btn-icon v-if="isCustom" icon="far fa-copy" :tooltip-text="tooltipText" :color="color" @click="copy" />
-        <v-btn v-else icon small class="ma-0" @click="copy" flat>
-            <v-icon color="primary">mdi-content-copy</v-icon>
-        </v-btn>
-        <v-snackbar v-model="state.showCopyMes" bottom right :color="state.mesColor" :absolute="isCustom" class="break-string" :timeout="20000">
+        <app-btn-icon icon="mdi-content-copy" :tooltip-text="tooltipText" @click="copy" />
+        <v-snackbar v-model="state.showCopyMes" bottom right :color="state.mesColor" class="break-string" :timeout="20000">
             <v-row class="flex-nowrap">
                 {{ state.message }}
                 <v-btn color="white" variant="plain" flat icon my-1 @click="state.showCopyMes = false">
@@ -21,7 +18,10 @@ import clipboardCopy from 'clipboard-copy'
 import AppBtnIcon from './AppBtnIcon.vue'
 
 const props = defineProps({
-    valueToCopy: String,
+    valueToCopy: {
+        type: String,
+        required: true
+    },
     color: {
         type: String,
         default: ''
@@ -30,11 +30,10 @@ const props = defineProps({
         type: String,
         default: ''
     },
-    isCustom: {
-        type: Boolean,
-        default: false
-    },
-    tooltipText: String
+    tooltipText: {
+        type: String,
+        default: ''
+    }
 })
 
 interface ComponentState {
@@ -59,7 +58,7 @@ const copy = async (): Promise<void> => {
         state.message = props.customMessage === '' ? `Copied: ${props.valueToCopy}` : `${props.customMessage}`
         state.mesColor = 'primary'
     } catch (err) {
-        state.message = err
+        state.message = 'Error in copy'
         state.mesColor = 'error'
     }
     state.showCopyMes = true

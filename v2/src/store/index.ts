@@ -4,13 +4,15 @@ import { GetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices
 interface StoreState {
     coinData: GetLatestPricesQuery | undefined
     loadingCoinData: boolean
+    appDrawer: boolean
 }
 
 export const useStore = defineStore('main', {
     state: (): StoreState => {
         return {
             coinData: <GetLatestPricesQuery>{},
-            loadingCoinData: false
+            loadingCoinData: false,
+            appDrawer: false
         }
     }
 })

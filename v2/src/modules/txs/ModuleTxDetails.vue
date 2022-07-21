@@ -4,7 +4,7 @@
       TX DETAILS LIST
     =====================================================================================
     -->
-    <v-row justify="start" class="mb-4">
+    <v-row justify="start">
         <v-col xs="12">
             <app-details-list has-title title="Transaction Details" :details="txDetails" :is-loading="isLoading" :max-items="7">
                 <template v-if="!isLoading" #title>

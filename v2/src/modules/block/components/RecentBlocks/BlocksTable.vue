@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white" flat class="pt-3 mt-0">
+    <v-card flat class="pt-3 mt-0">
         <!--
     =====================================================================================
       isLoading / ERROR
