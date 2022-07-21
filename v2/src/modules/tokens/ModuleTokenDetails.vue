@@ -18,7 +18,9 @@
                 @errorDetails="emitErrorState"
             />
             <app-tabs :tabs="tabsTokenDetails">
-                <v-window-item value="tab-0"> Token transfers </v-window-item>
+                <v-window-item value="tab-0">
+                    <token-transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
+                </v-window-item>
                 <v-window-item value="tab-1"> Token Holders </v-window-item>
             </app-tabs>
         </div>
@@ -46,7 +48,13 @@
 import { reactive, computed, onMounted } from 'vue'
 import AppTabs from '@core/components/AppTabs'
 import TokenDetailsList from '@module/tokens/components/TokenDetailsList.vue'
-import { useGetErc20TokenBalanceQuery, useGetTokenInfoByContractQuery } from '@module/tokens/apollo/tokenDetails.generated'
+import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
+import {
+    Erc20TokenOwnerDetailsFragment as TokenOwnerInfo,
+    TokenDetailsFragment as TokenInfo,
+    useGetErc20TokenBalanceQuery,
+    useGetTokenInfoByContractQuery
+} from '@module/tokens/apollo/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { Tab } from '@core/components/props'
@@ -111,7 +119,7 @@ onTokenDetailsError(error => {
     }
 })
 
-const tokenDetails = computed<any>(() => {
+const tokenDetails = computed<TokenInfo | TokenOwnerInfo>(() => {
     if (result && result.value) {
         if (props.isHolder) {
             return result.value.getERC20TokenBalance
@@ -129,6 +137,20 @@ COMPUTED PROPERTIES:
 
 const isValid = computed<boolean>(() => {
     return eth.isValidAddress(props.addressRef)
+})
+
+const symbol = computed<string | null>(() => {
+    if (tokenDetails.value) {
+        return tokenDetails.value['tokenInfo'] ? tokenDetails.value['tokenInfo'].symbol : tokenDetails.value['symbol']
+    }
+    return null
+})
+
+const decimals = computed<string | null>(() => {
+    if (tokenDetails.value) {
+        return tokenDetails.value['tokenInfo'] ? tokenDetails.value['tokenInfo'].decimals : tokenDetails.value['decimals']
+    }
+    return null
 })
 
 const tabsTokenDetails = computed<Tab[]>(() => {
