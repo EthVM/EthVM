@@ -54,7 +54,7 @@ import {
     TokenDetailsFragment as TokenInfo,
     useGetErc20TokenBalanceQuery,
     useGetTokenInfoByContractQuery
-} from '@module/tokens/apollo/tokenDetails.generated'
+} from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { Tab } from '@core/components/props'

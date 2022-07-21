@@ -28,7 +28,10 @@ import BN from 'bignumber.js'
 import { ConfigHelper } from '@core/helper/config-helper'
 import { formatFloatingPointValue, formatNumber, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { GetErc20TokenBalanceQuery as TokenOwnerInfo, GetTokenInfoByContractQuery as TokenInfo } from '@module/tokens/apollo/tokenDetails.generated'
+import {
+    GetErc20TokenBalanceQuery as TokenOwnerInfo,
+    GetTokenInfoByContractQuery as TokenInfo
+} from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { computed } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@/core/composables/CoinData/getLatestPrices.generated'
@@ -49,7 +52,7 @@ interface ComponentState {
 }
 
 const state: ComponentState = {
-    isRopsten: ConfigHelper.isRopsten,
+    isRopsten: false,
     hasError: false,
     imageExists: true
 }

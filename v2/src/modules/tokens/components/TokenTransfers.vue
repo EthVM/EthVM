@@ -25,7 +25,7 @@ import {
     TokenTransfersFragment as Erc20TokenTransfersType,
     useGetErc20TokenTransfersQuery,
     useGetErc721TokenTransfersQuery
-} from '@module/tokens/apollo/tokenTransfers.generated'
+} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
 
 const TYPES = ['ERC20', 'ERC721']
 

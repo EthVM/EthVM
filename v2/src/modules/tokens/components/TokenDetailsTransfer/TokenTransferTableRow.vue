@@ -61,7 +61,10 @@ import AppTimeAgo from '@core/components/AppTimeAgo.vue'
 import { EthValue } from '@core/models'
 import BigNumber from 'bignumber.js'
 import AppTooltip from '@core/components/AppTooltip.vue'
-import { TokenTransferFragment as Erc20TokenTransferType, Erc721TransferFragment as Erc721TransferType } from '@module/tokens/apollo/tokenTransfers.generated'
+import {
+    TokenTransferFragment as Erc20TokenTransferType,
+    Erc721TransferFragment as Erc721TransferType
+} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
 import BN from 'bignumber.js'
 import configs from '@/configs'
 import { reactive, computed } from 'vue'
