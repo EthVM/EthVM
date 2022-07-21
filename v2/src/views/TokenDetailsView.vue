@@ -24,7 +24,7 @@ const props = defineProps({
 
 interface ComponentState {
     errorMessages: ErrorMessageToken[]
-    holderAddress?: string
+    holderAddress?: string | undefined
     error: string
     isHolder: boolean
     hasErrorHandler: boolean
@@ -33,7 +33,7 @@ const route = useRoute()
 
 const state: ComponentState = reactive({
     errorMessages: [],
-    holderAddress: route.query,
+    holderAddress: (route.query?.holder as string) || '',
     error: '',
     hasErrorHandler: false,
     isHolder: false

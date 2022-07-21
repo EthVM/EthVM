@@ -103,16 +103,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, TokenSort, Token } from '@module/address/models/TokenSort'
-import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
-const { getEthereumTokensMap, loading: loadingEthTokens, getEthereumTokenByContract } = useCoinData()
+import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
+import { formatFloatingPointValue } from '@core/helper/number-format-helper'
+const { getEthereumTokensMap } = useCoinData()
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from '@module/address/apollo/transfers.generated'
 import { eth, timeAgo } from '@core/helper'
@@ -167,7 +167,7 @@ const hasMore = computed<boolean>(() => {
 
 const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getERC20Transfers.transfers || [])
 
-const transfers = computed<any[]>(() => {
+const transfers = computed<Array<Transfer>[]>(() => {
     if (transferHistory.value.length > 0) {
         const start = MAX_ITEMS * state.index
         const end = start + MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + MAX_ITEMS

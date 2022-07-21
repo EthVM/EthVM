@@ -1,4 +1,4 @@
-import { useGetLatestPricesQuery, MarketDataFragment as TokenMarketData } from './getLatestPrices.generated'
+import { MarketDataFragment as TokenMarketData } from './getLatestPrices.generated'
 import { computed } from 'vue'
 import { useStore } from '@/store'
 import { storeToRefs } from 'pinia'

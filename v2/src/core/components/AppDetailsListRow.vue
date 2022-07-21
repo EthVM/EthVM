@@ -39,12 +39,8 @@
                                 justify="start"
                             >
                                 (<span class="pl-1">{{ percentageChange.value }}%</span>
-                                <v-icon
-                                    :color="priceChangeSymbol === '-' ? 'red' : 'green'"
-                                    :class="priceChangeSymbol === '+' ? 'mdi-arrow-bottom-right' : 'mdi-arrow-top-right'"
-                                    size="x-small"
-                                >
-                                </v-icon
+                                <v-icon :color="priceChangeSymbol === '-' ? 'red' : 'green'" size="x-small">
+                                    {{ priceChangeSymbol === '-' ? 'mdi-arrow-bottom' : 'mdi-arrow-top' }} </v-icon
                                 >)
                             </v-row>
                         </div>

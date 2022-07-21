@@ -139,13 +139,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/tokens.generated'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, TokenSort, Token } from '@module/address/models/TokenSort'
-import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
+import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
 const { getEthereumTokensMap, loading: loadingEthTokens, getEthereumTokenByContract } = useCoinData()
@@ -271,7 +271,7 @@ const showTokenDetails = (contract: string) => {
     state.activeToken = getEthereumTokenByContract(contract)
 }
 
-const setPage = (page: number, reset: boolean) => {
+const setPage = (page: number) => {
     state.index = page
 }
 </script>
