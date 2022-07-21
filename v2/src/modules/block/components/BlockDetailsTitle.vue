@@ -15,6 +15,26 @@
                     <v-col xs="12">
                         <v-row row wrap align="center" justify="start">
                             <v-card-title class="title font-weight-bold py-1 pl-1">Block #{{ blockNumber }} </v-card-title>
+                            <v-dialog v-if="hasUncles" v-model="dialog" max-width="700">
+                                <template v-slot:activator="{ props }">
+                                    <v-btn v-bind="props" variant="outlined" round color="primary" class="text-capitalize mx-0" small>
+                                        Uncles
+                                        <v-icon>mdi-chevron-right</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title class="title font-weight-bold">Uncles:</v-card-title>
+                                    <v-divider class="lineGrey" />
+                                    <v-list>
+                                        <v-list-item v-for="(uncle, index) in uncles" :key="index">
+                                            <v-row justify="start" align="center" class="fill-height flex-nowrap">
+                                                <v-card-title class="info--text p-0">Hash:</v-card-title>
+                                                <app-transform-hash :hash="eth.toCheckSum(uncle)" :link="`/uncle/${uncle}`" />
+                                            </v-row>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-card>
+                            </v-dialog>
                         </v-row>
                     </v-col>
                 </v-row>
@@ -45,8 +65,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { formatNumber } from '@core/helper/number-format-helper'
+import { eth } from '@core/helper'
+import AppTransformHash from '@core/components/AppTransformHash'
 
 const props = defineProps({
     nextBlock: String,
@@ -59,8 +81,11 @@ const props = defineProps({
     isSubscribed: {
         type: Boolean,
         default: false
-    }
+    },
+    uncles: Array
 })
+
+const dialog = ref(false)
 
 const emit = defineEmits(['reload'])
 
@@ -71,6 +96,10 @@ Computed Values
 */
 const blockNumber = computed<string>(() => {
     return formatNumber(props.currBlock)
+})
+
+const hasUncles = computed<boolean>(() => {
+    return props.uncles && props.uncles.length > 0
 })
 
 /*
