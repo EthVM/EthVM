@@ -4,11 +4,8 @@
       UNCLE DETAILS LIST
     =====================================================================================
     -->
-    <v-row justify="start" class="mb-4">
-        <v-col xs="12">
-            <app-details-list title="Uncle Details" :details="uncleDetails" :is-loading="loading" />
-        </v-col>
-    </v-row>
+
+    <app-details-list title="Uncle Details" :details="uncleDetails" :is-loading="loading" />
 </template>
 
 <script setup lang="ts">

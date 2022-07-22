@@ -1,6 +1,8 @@
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import '@/styles/main.scss'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 import { createVuetify, ThemeDefinition } from 'vuetify'
 type ThemeDefinition = typeof ThemeDefinition
 
@@ -22,7 +24,6 @@ const COLORS = {
     greyDark: '#2E2E2E',
     black: '#121212'
 }
-console.log(ThemeDefinition)
 const mainnetLightTheme: ThemeDefinition = {
     dark: false,
     colors: {
@@ -64,6 +65,8 @@ const mainnetDarkTheme: ThemeDefinition = {
 }
 
 export default createVuetify({
+    components,
+    directives,
     theme: {
         defaultTheme: 'mainnetLightTheme',
         themes: {

@@ -96,8 +96,11 @@ $grid-breakpoints:
 
 $container-max-widths: 
 (
-    'md': 856px,
-    'lg': calc(100vw - 24px),
-    'xl': 1390px
-);
+  'xs': null,
+  'sm': null,
+  'md': 856px,
+  'lg': map-get($grid-breakpoints, 'lg') - 48px,
+  'xl': 1390px,
+  'xxl': 1390px
+)
  
