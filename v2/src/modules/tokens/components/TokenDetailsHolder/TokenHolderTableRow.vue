@@ -82,8 +82,8 @@ const state = reactive({
 ===================================================================================
 */
 const image = computed<string>(() => {
-    if (props.transfer && props.transfer['contract'] && state.imageExists) {
-        return `${configs.OPENSEA}/getImage?contract=${props.transfer['contract']}&tokenId=${getTokenID.value}`
+    if (props.holder && state.imageExists) {
+        return `${configs.OPENSEA}/getImage?contract=${props.holder.tokenInfo.contract}&tokenId=${getTokenID.value}`
     }
     return require('@/assets/icon-token.png')
 })
@@ -111,7 +111,7 @@ const balance = computed<FormattedNumber>(() => {
 })
 
 const isERC721 = computed<boolean>(() => {
-    return props.transferType === TYPES[1]
+    return props.holderType === TYPES[1]
 })
 
 const getTokenID = computed<string>(() => {
