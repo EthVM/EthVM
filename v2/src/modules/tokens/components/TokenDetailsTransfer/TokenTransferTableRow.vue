@@ -57,8 +57,6 @@
 
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
-import AppTimeAgo from '@core/components/AppTimeAgo.vue'
-import { EthValue } from '@core/models'
 import BigNumber from 'bignumber.js'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import {

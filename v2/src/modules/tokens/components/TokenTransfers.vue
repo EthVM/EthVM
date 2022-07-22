@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import BigNumber from 'bignumber.js'
 import TokenTransfersTable from '@module/tokens/components/TokenDetailsTransfer/TokenTransferTable.vue'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
@@ -95,6 +94,10 @@ const erc721TokenTransfer = computed(() => {
 })
 
 onErc20TokenTransferError(() => {
+    emitErrorState(true, true)
+})
+
+onErc721TokenTransferError(() => {
     emitErrorState(true, true)
 })
 

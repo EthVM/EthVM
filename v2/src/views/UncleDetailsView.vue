@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted, watch } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
 import UncleDetails from '@module/uncles/ModuleUncleDetails'

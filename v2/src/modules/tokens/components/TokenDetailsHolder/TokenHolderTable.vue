@@ -10,18 +10,18 @@
         <div v-if="!hasError">
             <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-sm-and-down" height="40px">
                 <v-row align="center" justify="start" class="fill-height pr-2">
-                    <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" :md="isERC721 ? 6 : 7">
-                        <h5>Tx #</h5>
+                    <v-col sm="6">
+                        <h5>Address</h5>
                     </v-col>
-                    <v-col sm="2">
-                        <h5>Age</h5>
+                    <v-col sm="3" md="4">
+                        <h5>
+                            {{ isERC721 ? 'ID' : 'Quantity' }}
+                        </h5>
                     </v-col>
-                    <v-col sm="2">
-                        <h5 v-if="!isERC721">Quantity</h5>
-                        <h5 v-else>ID</h5>
-                    </v-col>
-                    <v-col v-if="isERC721" sm="2">
-                        <h5>Image</h5>
+                    <v-col sm="3" md="2">
+                        <h5>
+                            {{ isERC721 ? 'Image' : 'Percentage' }}
+                        </h5>
                     </v-col>
                 </v-row>
             </v-card>
@@ -37,15 +37,11 @@
             </div>
             <div v-else>
                 <v-card v-if="!hasItems" flat>
-                    <v-card-text class="text-xs-center secondary--text">No transfers</v-card-text>
+                    <v-card-text class="text-xs-center secondary--text">There are no holders of this token</v-card-text>
                 </v-card>
-                <v-card v-for="(transfer, index) in transfers" v-else :key="index" color="white" class="transparent" flat>
-                    <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" :transfer-type="transferType" />
+                <v-card v-for="(holder, index) in holders" v-else :key="index" color="white" class="transparent" flat>
+                    <holders-table-row :holder="holder" :token-address="address" :decimals="decimals" :holder-type="holderType" />
                 </v-card>
-                <!-- End Rows -->
-                <v-row v-if="showPagination" justify="center" justify-md="end" row class="pb-1 pr-2 pl-2">
-                    <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading || hasError" @newPage="setPage" />
-                </v-row>
             </div>
         </div>
     </v-card>
@@ -54,24 +50,24 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
-import TransfersTableRow from './TokenTransferTableRow.vue'
+import HoldersTableRow from './TokenHolderTableRow.vue'
 import { useDisplay } from 'vuetify'
 
 const { xs, sm } = useDisplay()
 const TYPES = ['ERC20', 'ERC721']
 
 interface PropType {
-    transfers: any[]
+    holders: any[]
     hasItems: boolean
     hasMore: boolean
     showPagination: boolean
     loading: boolean
     decimals?: number
-    symbol?: string
     hasError: boolean
     maxItems: number
     index: number
-    transferType: string
+    address: string
+    holderType: string
 }
 const props = defineProps<PropType>()
 
@@ -89,7 +85,7 @@ const setPage = (page: number, reset = false): void => {
 }
 
 const isERC721 = computed<boolean>(() => {
-    return props.transferType === TYPES[1]
+    return props.holderType === TYPES[1]
 })
 </script>
 
