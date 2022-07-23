@@ -13,7 +13,7 @@
                 :holder-details="null"
                 :address-ref="addressRef"
                 :token-details="tokenDetails"
-                :is-nft="isNft"
+                :is-nft="state.isNft"
                 :is-loading="loadingTokenDetails || state.hasError"
                 @errorDetails="emitErrorState"
             />
@@ -21,7 +21,9 @@
                 <v-window-item value="tab-0">
                     <token-transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
                 </v-window-item>
-                <v-window-item value="tab-1"> Token Holders </v-window-item>
+                <v-window-item value="tab-1">
+                    <token-holders :address="addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
+                </v-window-item>
             </app-tabs>
         </div>
         <!--
@@ -49,6 +51,7 @@ import { reactive, computed, onMounted } from 'vue'
 import AppTabs from '@core/components/AppTabs'
 import TokenDetailsList from '@module/tokens/components/TokenDetailsList.vue'
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
+import TokenHolders from '@module/tokens/components/TokenHolders.vue'
 import {
     Erc20TokenOwnerDetailsFragment as TokenOwnerInfo,
     TokenDetailsFragment as TokenInfo,
