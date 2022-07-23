@@ -1,6 +1,6 @@
 <template>
     <v-card flat class="pt-3 pb-3">
-        <v-container>
+        <v-container fluid>
             <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/blocks">
                 <template v-if="!isHome" #update>
                     <notice-new-block @reload="setPage(0, true)" />

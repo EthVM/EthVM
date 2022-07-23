@@ -81,26 +81,4 @@ $shadow-key-umbra:
     0: (0px 0px 0px 0px $shadow-key-umbra-opacity),    
     1: (0px 8px 12px 0px $shadow-key-umbra-opacity)
 );
-
-/**
---- GRID CONTAINER
-*/
-$grid-breakpoints: 
-(
-  'xs': 0,
-  'sm': 600px,
-  'md': 905px,
-  'lg': 1240px,
-  'xl': 1439px
-);
-
-$container-max-widths: 
-(
-  'xs': null,
-  'sm': null,
-  'md': 856px,
-  'lg': map-get($grid-breakpoints, 'lg') - 48px,
-  'xl': 1390px,
-  'xxl': 1390px
-)
  

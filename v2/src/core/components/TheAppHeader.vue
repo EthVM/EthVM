@@ -1,6 +1,6 @@
 <template>
     <v-app-bar app color="primary" class="px-2 px-sm-6 px-xl-auto">
-        <v-container class="core-header">
+        <v-container class="core-container" :fluid="isFluidView">
             <v-row align="center">
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
                 <v-img :src="require('@/assets/logo-compact.png')" height="30" max-width="30" contain class="mr-2" />
@@ -34,8 +34,7 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
 import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
 import { useStore } from '@/store'
-import { storeToRefs } from 'pinia'
-// import AppSearch from './AppSearch.vue'
+import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
 import ModuleSearch from '@module/search/ModuleSearch.vue'
 import AppMenu from './AppMenu.vue'
 /* Vuetify BreakPoints */
@@ -45,22 +44,11 @@ const showDrawerBtn = computed<boolean>(() => {
 })
 
 const appStore = useStore()
+const { isFluidView } = useAppIsFluid()
 
 /*Define Emit Events */
 defineEmits(['openDrawer'])
 
 const { navItems } = useAppNavigation()
 </script>
-<style lang="scss">
-.core-header {
-    @media (min-width: 960px) {
-        width: 960px !important;
-    }
-    @media (min-width: 1240px) {
-        width: 100% !important;
-    }
-    @media (min-width: 1439px) {
-        width: 1390px !important;
-    }
-}
-</style>
+<style lang="scss"></style>

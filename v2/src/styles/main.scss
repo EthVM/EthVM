@@ -7,16 +7,17 @@
   $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-penumbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-ambient: settings.$shadow-key-ambient,
-  $shadow-key-umbra: settings.$shadow-key-umbra,
-  // BELOW NOT WORKING:
-  $grid-breakpoints: (
-    xs: 0px,
-    sm: 540px,
-    md: 768px,
-    lg: 1024px,
-    xl: 1440px,
-  ),
-  // $container-max-widths: settings.$container-max-widths
+  $shadow-key-umbra: settings.$shadow-key-umbra
 );
 
-
+.core-container {
+  @media (min-width: 905px) {
+      width: 856px;
+  }
+  @media (min-width: 1240px) {
+      width: 100% !important;
+  }
+  @media (min-width: 1439px) {
+      max-width: 1390px !important;
+  }
+}
