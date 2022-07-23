@@ -2,7 +2,7 @@
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
         <the-app-header />
-        <v-main class="mx-xs-2 mx-sm-6 mx-xl-auto">
+        <v-main class="mx-2 mx-sm-6 mx-xl-auto">
             <v-container class="px-0 pt-8 core-container" :fluid="isFluidView">
                 <v-btn @click="toggleTheme" class="mb-6">toggle theme</v-btn>
                 <router-view />
