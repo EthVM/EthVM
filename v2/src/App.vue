@@ -3,7 +3,7 @@
         <the-app-navigation-drawer-vue />
         <the-app-header />
         <v-main class="mx-xs-2 mx-sm-6 mx-xl-auto">
-            <v-container class="px-0 pt-8 core-container hello" :fluid="isFluidView">
+            <v-container class="px-0 pt-8 core-container" :fluid="isFluidView">
                 <v-btn @click="toggleTheme" class="mb-6">toggle theme</v-btn>
                 <router-view />
             </v-container>
@@ -37,9 +37,5 @@ const { isFluidView } = useAppIsFluid()
 <style lang="scss">
 .app-view {
     min-width: 320px;
-}
-
-.hello {
-    background-color: yellow;
 }
 </style>
