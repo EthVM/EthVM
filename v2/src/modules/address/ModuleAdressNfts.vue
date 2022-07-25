@@ -1,7 +1,5 @@
 <template>
-    <div>
-        NFT Collections
-    </div>
+    <div>NFT Collections</div>
 </template>
 
 <script setup lang="ts">
