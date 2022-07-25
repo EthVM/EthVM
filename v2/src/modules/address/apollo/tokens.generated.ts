@@ -63,6 +63,35 @@ export type GetOwnersErc721TokensQuery = {
     }
 }
 
+export type PrimaryAssetContractFragment = {
+    __typename?: 'PrimaryAssetContract'
+    address: string
+    name?: string | null
+    symbol?: string | null
+    total_supply?: number | null
+    description?: string | null
+    external_link?: string | null
+    image_url?: string | null
+}
+
+export type TokenContractFragment = {
+    __typename?: 'NFTContract'
+    contractIdAddress: string
+    owned_asset_count: number
+    name?: string | null
+    contractImage?: string | null
+    primary_asset_contracts?: Array<{
+        __typename?: 'PrimaryAssetContract'
+        address: string
+        name?: string | null
+        symbol?: string | null
+        total_supply?: number | null
+        description?: string | null
+        external_link?: string | null
+        image_url?: string | null
+    }> | null
+}
+
 export type GetNfTcontractsMetaQueryVariables = Types.Exact<{
     address: Types.Scalars['String']
 }>
@@ -107,6 +136,29 @@ export const TokenOwnersFragmentDoc = gql`
         balance
     }
     ${TokenFragmentFragmentDoc}
+`
+export const PrimaryAssetContractFragmentDoc = gql`
+    fragment PrimaryAssetContract on PrimaryAssetContract {
+        address
+        name
+        symbol
+        total_supply
+        description
+        external_link
+        image_url
+    }
+`
+export const TokenContractFragmentDoc = gql`
+    fragment TokenContract on NFTContract {
+        contractIdAddress
+        owned_asset_count
+        name
+        contractImage
+        primary_asset_contracts @type(name: "PrimaryAssetContract") {
+            ...PrimaryAssetContract
+        }
+    }
+    ${PrimaryAssetContractFragmentDoc}
 `
 export const GetOwnersErc20TokensDocument = gql`
     query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {
@@ -288,22 +340,11 @@ export const GetNfTcontractsMetaDocument = gql`
     query getNFTcontractsMeta($address: String!) {
         getNFTcontractsMeta(address: $address) @rest(type: "AddressNFTcontracts", path: "/nft?{args}") {
             tokenContracts @type(name: "NFTContract") {
-                contractIdAddress
-                owned_asset_count
-                name
-                contractImage
-                primary_asset_contracts @type(name: "PrimaryAssetContract") {
-                    address
-                    name
-                    symbol
-                    total_supply
-                    description
-                    external_link
-                    image_url
-                }
+                ...TokenContract
             }
         }
     }
+    ${TokenContractFragmentDoc}
 `
 
 /**
