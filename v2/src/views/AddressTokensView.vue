@@ -1,11 +1,17 @@
 <template>
-    <v-container grid-list-lg class="mb-0">
+    <div>
         <app-error v-if="!isValid" :has-error="!isValid" :message="state.error" />
         <template v-if="isValid">
-            <module-address-tokens class="mb-4" :address-hash="props.addressRef" />
-            <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" />
+            <v-row>
+                <v-col cols="12">
+                    <module-address-tokens class="mb-4" :address-hash="props.addressRef" />
+                </v-col>
+                <v-col cols="12">
+                    <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" />
+                </v-col>
+            </v-row>
         </template>
-    </v-container>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -17,7 +23,10 @@ import { eth } from '@core/helper'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 
 const props = defineProps({
-    addressRef: String
+    addressRef: {
+        type: String,
+        required: true
+    }
 })
 
 const state = {

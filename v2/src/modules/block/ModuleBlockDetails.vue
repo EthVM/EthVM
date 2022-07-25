@@ -4,23 +4,20 @@
       TX DETAILS LIST
     =====================================================================================
     -->
-    <v-container class="mb-4">
-        <div xs="12">
-            <app-details-list :details="blockDetails" :is-loading="isLoading" :max-items="9" is-block class="mb-4">
-                <template #title>
-                    <block-details-title
-                        :curr-block="currBlockNumber"
-                        :next-block="nextBlock"
-                        :prev-block="previousBlock"
-                        :uncles="uncleHashes"
-                        :loading="isLoading"
-                        :is-subscribed="subscriptionEnabled"
-                    />
-                    <v-divider class="lineGrey" />
-                </template>
-            </app-details-list>
-        </div>
-    </v-container>
+
+    <app-details-list :details="blockDetails" :is-loading="isLoading" :max-items="9" is-block>
+        <template #title>
+            <block-details-title
+                :curr-block="currBlockNumber"
+                :next-block="nextBlock"
+                :prev-block="previousBlock"
+                :uncles="uncleHashes"
+                :loading="isLoading"
+                :is-subscribed="subscriptionEnabled"
+            />
+            <v-divider class="lineGrey" />
+        </template>
+    </app-details-list>
 </template>
 
 <script setup lang="ts">

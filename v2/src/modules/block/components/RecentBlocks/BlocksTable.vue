@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white" flat class="pt-3 mt-0">
+    <v-card flat class="pt-3 mt-0">
         <!--
     =====================================================================================
       isLoading / ERROR
@@ -34,7 +34,7 @@
       TABLE BODY
     =====================================================================================
     -->
-        <v-container v-if="!hasMessage" :style="getStyle" flat class="scroll-y pt-2 pr-2 pl-2 pb-0">
+        <v-container fluid v-if="!hasMessage" :style="getStyle" flat class="scroll-y pt-2 pr-2 pl-2 pb-0">
             <v-row column class="mb-1">
                 <v-col>
                     <template v-if="!isLoading">

@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list-lg class="mb-0">
+    <div>
         <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
         <app-message :messages="state.errorMessages" />
         <!--
@@ -7,15 +7,19 @@
           UNCLE DETAILS LIST
         =====================================================================================
         -->
-        <uncle-details v-if="isValid && !hasError" :uncle-ref="uncleRef" @errorDetails="setError" />
-    </v-container>
+        <v-row justify="start" class="mb-4">
+            <v-col cols="12">
+                <uncle-details v-if="isValid && !hasError" :uncle-ref="uncleRef" @errorDetails="setError" />
+            </v-col>
+        </v-row>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue'
 import AppMessage from '@core/components/AppMessage.vue'
 import AppError from '@core/components/AppError.vue'
-import UncleDetails from '@module/uncles/ModuleUncleDetails'
+import UncleDetails from '@module/uncles/ModuleUncleDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageUncle } from '@module/uncles/models/ErrorMessagesForUncle'
 
@@ -43,7 +47,7 @@ const hasError = computed<boolean>(() => {
 
 onMounted(() => {
     if (!isValid.value) {
-        this.error = 'This is not a valid uncle hash'
+        state.error = 'This is not a valid uncle hash'
         return
     }
     window.scrollTo(0, 0)

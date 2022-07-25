@@ -1,9 +1,9 @@
 <template>
-    <v-container grid-list-lg class="mb-0">
+    <div>
         <token-details v-if="!hasError" :address-ref="addressRef" :is-holder="state.isHolder" :holder-address="state.holderAddress" @errorDetails="setError" />
         <app-error v-else :has-error="hasError" :message="state.error" />
         <app-message :messages="state.errorMessages" />
-    </v-container>
+    </div>
 </template>
 
 <script setup lang="ts">

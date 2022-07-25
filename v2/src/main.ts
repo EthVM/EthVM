@@ -16,5 +16,6 @@ const app = createApp({
     },
     render: () => h(App)
 })
+console.log(vuetify)
 
 app.use(router).use(vuetify).use(createPinia()).mount('#app')

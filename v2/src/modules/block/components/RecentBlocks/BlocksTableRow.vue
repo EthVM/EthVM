@@ -1,5 +1,5 @@
 <template>
-    <v-container class="pa-0 text-body-2">
+    <v-container fluid class="pa-0 text-body-2">
         <v-row d-block>
             <!--
       =====================================================================================

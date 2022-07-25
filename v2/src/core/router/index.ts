@@ -88,6 +88,11 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.FAV_TOKENS.PATH,
         name: ROUTE_NAME.FAV_TOKENS.NAME,
         component: ViewTemp
+    },
+    {
+        path: ROUTE_NAME.TOKENS.PATH,
+        name: ROUTE_NAME.TOKENS.NAME,
+        component: ViewTemp
     }
 ]
 

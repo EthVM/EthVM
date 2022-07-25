@@ -1,15 +1,12 @@
 <template>
-    <v-navigation-drawer color="primary" v-model="state.drawer">
-        <v-row dense justify="center" align="center">
-            <v-col cols="2">
+    <v-navigation-drawer v-model="appStore.appDrawer" color="primary" temporary>
+        <v-row dense justify="space-between" align="center" class="mt-2">
+            <v-col cols="3">
                 <v-img :src="require('@/assets/logo-compact.png')" height="30px" width="30px" contain class="mx-auto" />
             </v-col>
-            <v-col cols="9" class="text-caption">
-                <p>Ethereum Explorer V2 TEST BUILD</p>
-                <p>powered by MEW</p>
-            </v-col>
+            <v-col cols="2"> <app-btn-icon icon="mdi-close" @click="appStore.appDrawer = false" /> </v-col>
         </v-row>
-        <v-list bg-color="primary" class="my-3" lines="two">
+        <v-list bg-color="primary" lines="two">
             <template v-for="(item, index) in navItems" :key="index">
                 <v-list-item
                     v-if="!item.links"
@@ -30,104 +27,17 @@
             </template>
         </v-list>
     </v-navigation-drawer>
-    <the-app-header @open-drawer="openDrawer" />
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { ROUTE_NAME } from '../router/routesNames'
-/* COMPONENTS */
-import TheAppHeader from './TheAppHeader.vue'
+import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
+import { useStore } from '@/store'
+import AppBtnIcon from './AppBtnIcon.vue'
 /*
   ===================================================================================
     Initial Data
   ===================================================================================
   */
-const state = reactive({ drawer: true })
-
-const openDrawer = () => {
-    state.drawer = !state.drawer
-}
-
-/**
- * Nav Items
- */
-interface NavMenuEntry {
-    header: NavHeader
-    links?: NavLink[]
-}
-
-interface NavLink {
-    text: string
-    routerLink: string
-}
-
-interface NavHeader {
-    text: string
-    icon: string
-    routerLink?: string
-}
-
-const navItems = reactive<NavMenuEntry[]>([
-    {
-        header: {
-            icon: 'mdi-home',
-            text: 'Home',
-            routerLink: ROUTE_NAME.HOME.PATH
-        }
-    },
-    {
-        header: {
-            icon: 'mdi-cube-outline',
-            text: 'Blocks',
-            routerLink: ROUTE_NAME.BLOCKS.PATH
-        }
-    },
-    {
-        header: {
-            text: 'Transactions',
-            icon: 'mdi-swap-horizontal'
-        },
-        links: [
-            {
-                text: 'Mined Txs',
-                routerLink: ROUTE_NAME.TXS.PATH
-            },
-            {
-                text: 'Pending Txs',
-                routerLink: ROUTE_NAME.TXS_PENDING.PATH
-            }
-        ]
-    },
-    {
-        header: {
-            text: 'Tokens',
-            icon: 'mdi-ethereum'
-        },
-        links: [
-            {
-                text: 'Market data',
-                routerLink: ROUTE_NAME.TOKENS.PATH
-            },
-            {
-                text: 'Favorites',
-                routerLink: ROUTE_NAME.FAV_TOKENS.PATH
-            }
-        ]
-    },
-    {
-        header: {
-            icon: 'mdi-chart-bar',
-            text: 'Charts',
-            routerLink: ROUTE_NAME.CHARTS.PATH
-        }
-    },
-    {
-        header: {
-            icon: 'mdi-cards-heart',
-            text: 'Favorite addresses',
-            routerLink: ROUTE_NAME.FAV_ADDRESS.PATH
-        }
-    }
-])
+const appStore = useStore()
+const { navItems } = useAppNavigation()
 </script>

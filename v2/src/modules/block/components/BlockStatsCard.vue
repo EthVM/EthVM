@@ -1,6 +1,6 @@
 <template>
     <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text info-card" height="150px">
-        <v-container wrap fill-height row>
+        <v-container fluid wrap fill-height row>
             <v-row v-if="!isLoading" xs="12" class="my-0 text-white">
                 <p v-if="!isDate" class="text-h4 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ value }}</p>
                 <p v-else class="text-h4 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ timeFrom }}</p>

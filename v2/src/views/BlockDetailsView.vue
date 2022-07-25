@@ -1,30 +1,43 @@
 <template>
-    <v-container grid-list-lg class="mb-0">
+    <div>
         <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block hash" />
         <app-message :messages="state.errorMessages" />
-        <!--
+        <v-row>
+            <!--
         =====================================================================================
           Block DETAILS LIST
         =====================================================================================
         -->
-        <block-details v-if="isValid" :block-ref="blockRef" :is-hash="isHash" @errorDetails="setError" @isMined="setIsMined" @setBlockNumber="setBlockNumber" />
+            <v-col cols="12">
+                <block-details
+                    v-if="isValid"
+                    :block-ref="blockRef"
+                    :is-hash="isHash"
+                    @errorDetails="setError"
+                    @isMined="setIsMined"
+                    @setBlockNumber="setBlockNumber"
+                />
+            </v-col>
 
-        <!--
+            <!--
         =====================================================================================
           TX TABLE
         =====================================================================================
         -->
-        <!-- TODO: Implement get block transfers by hash -->
-        <block-txs
-            v-if="showBlockTxs"
-            :max-items="10"
-            :block-ref="state.blockNumber"
-            :is-hash="isHash"
-            :is-mined="state.isMined"
-            page-type="blockDetails"
-            @errorTxs="setError"
-        />
-    </v-container>
+            <!-- TODO: Implement get block transfers by hash -->
+            <v-col cols="12">
+                <block-txs
+                    v-if="showBlockTxs"
+                    :max-items="10"
+                    :block-ref="state.blockNumber"
+                    :is-hash="isHash"
+                    :is-mined="state.isMined"
+                    page-type="blockDetails"
+                    @errorTxs="setError"
+                />
+            </v-col>
+        </v-row>
+    </div>
 </template>
 
 <script setup lang="ts">
