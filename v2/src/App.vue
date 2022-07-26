@@ -4,7 +4,7 @@
         <the-app-header />
         <v-main class="mx-2 mx-sm-6 mx-xl-auto">
             <v-container class="px-0 pt-8 core-container" :fluid="isFluidView">
-                <v-btn @click="toggleTheme" class="mb-6">toggle theme</v-btn>
+                <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
                 <router-view />
             </v-container>
         </v-main>
@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+import AppBtn from './core/components/AppBtn.vue'
 import TheAppHeader from './core/components/TheAppHeader.vue'
 import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.vue'
 import { useStore } from '@/store'

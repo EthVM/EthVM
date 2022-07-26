@@ -1,6 +1,7 @@
 // Styles
-import '@mdi/font/css/materialdesignicons.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@/styles/main.scss'
+import { md, aliases } from 'vuetify/iconsets/md'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createVuetify, ThemeDefinition } from 'vuetify'
@@ -60,13 +61,21 @@ const mainnetDarkTheme: ThemeDefinition = {
         background: COLORS.greyDark,
         'on-background': COLORS.blueLight,
         'on-surface': COLORS.blueLight,
-        'on-primary': COLORS.blueLight
+        'on-primary': COLORS.blueLight,
+        'on-secondary': COLORS.blueLight
     }
 }
 
 export default createVuetify({
     components,
     directives,
+    icons: {
+        defaultSet: 'md',
+        aliases,
+        sets: {
+            md
+        }
+    },
     theme: {
         defaultTheme: 'mainnetLightTheme',
         themes: {
@@ -85,5 +94,3 @@ export default createVuetify({
         }
     }
 })
-
-// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
