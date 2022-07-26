@@ -16,7 +16,7 @@
                     small
                     @click="setPageOnClick('first')"
                 >
-                    <v-icon class="secondary--text fas fa-angle-double-left" small>mdi-chevron-double-left</v-icon>
+                    <v-icon class="secondary--text" small>keyboard_double_arrow_left</v-icon>
                 </v-btn>
                 <!--
                 =====================================================================================
@@ -32,7 +32,7 @@
                     small
                     @click="setPageOnClick('prev')"
                 >
-                    <v-icon class="secondary--text fas fa-angle-left" small>mdi-chevron-left</v-icon>
+                    <v-icon class="secondary--text" small>chevron_left</v-icon>
                 </v-btn>
                 <!--
                 =====================================================================================
@@ -77,7 +77,7 @@
                     class="bttnGrey info--text text-capitalize bttn"
                     small
                     @click="setPageOnClick('next')"
-                    ><v-icon class="secondary--text fas fa-angle-right" small>mdi-chevron-right</v-icon>
+                    ><v-icon class="secondary--text fas fa-angle-right" small>chevron_right</v-icon>
                 </v-btn>
                 <!--
                 =====================================================================================
@@ -92,7 +92,7 @@
                     class="bttnGrey info--text text-capitalize bttn caption"
                     small
                     @click="setPageOnClick('last')"
-                    ><v-icon class="secondary--text fas fa-angle-double-right" small>mdi-chevron-double-right</v-icon>
+                    ><v-icon class="secondary--text" small>keyboard_double_arrow_right</v-icon>
                 </v-btn>
             </v-row>
         </v-container>

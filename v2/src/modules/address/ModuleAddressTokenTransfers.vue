@@ -78,7 +78,7 @@
                     <v-col cols="1">
                         <v-row class="ma-0" align="center">
                             <v-icon :class="transferType(transfer) === 'in' ? 'text-green' : 'text-red'">
-                                {{ transferType(transfer) === 'in' ? 'mdi-arrow-left' : 'mdi-arrow-right' }}
+                                {{ transferType(transfer) === 'in' ? 'west' : 'east' }}
                             </v-icon>
                             {{ transferType(transfer) === 'in' ? 'From' : 'To' }}
                         </v-row>

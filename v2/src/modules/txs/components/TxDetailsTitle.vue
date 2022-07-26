@@ -29,13 +29,13 @@ const props = defineProps({
 const statusIcon = computed<string>(() => {
     switch (props.status) {
         case TitleStatus.success:
-            return 'mdi-check-circle'
+            return 'check_circle'
         case TitleStatus.failed:
-            return 'mdi-close-circle-outline'
+            return 'highlight_off'
         case TitleStatus.pending:
-            return 'mdi-sync'
+            return 'sync'
         default:
-            return 'mdi-sync'
+            return 'sync'
     }
 })
 

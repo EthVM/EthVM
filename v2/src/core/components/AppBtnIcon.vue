@@ -15,7 +15,7 @@ const props = defineProps({
     },
     icon: {
         type: String,
-        default: 'mdi-lightbulb-question'
+        default: 'question_mark'
     },
     color: {
         type: String,

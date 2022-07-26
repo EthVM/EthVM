@@ -70,10 +70,10 @@
         </v-expand-transition>
         <div v-if="hasMore && !isLoading">
             <v-btn v-if="!state.showMore" flat block color="primary" @click="setShowMore(true)">
-                <v-icon class="fa fa-angle-down white--text">mdi-chevron-down</v-icon>
+                <v-icon class="fa fa-angle-down white--text">expand_more</v-icon>
             </v-btn>
             <v-btn v-else flat block color="primary" @click="setShowMore(false)">
-                <v-icon class="fa fa-angle-up white--text">mdi-chevron-up</v-icon>
+                <v-icon class="fa fa-angle-up white--text">expand_less</v-icon>
             </v-btn>
         </div>
     </v-card>

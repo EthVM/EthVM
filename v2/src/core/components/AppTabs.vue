@@ -109,7 +109,7 @@ const mobileText = computed<string>(() => {
     return props.tabs[state.activeTabId].title.toString()
 })
 const mobileIcon = computed<string>(() => {
-    return state.showMobile ? 'mdi-chevron-up' : 'mdi-chevron-down'
+    return state.showMobile ? 'chevron_up' : 'chevron_down'
 })
 watch(
     () => state.activeTab,

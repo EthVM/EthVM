@@ -1,11 +1,11 @@
 <template>
     <div>
-        <app-btn-icon icon="mdi-content-copy" :tooltip-text="tooltipText" @click="copy" />
+        <app-btn-icon icon="content-copy" :tooltip-text="tooltipText" @click="copy" />
         <v-snackbar v-model="state.showCopyMes" bottom right :color="state.mesColor" class="break-string" :timeout="20000">
             <v-row class="flex-nowrap">
                 {{ state.message }}
                 <v-btn color="white" variant="plain" flat icon my-1 @click="state.showCopyMes = false">
-                    <v-icon small>mdi-close</v-icon>
+                    <v-icon small>close</v-icon>
                 </v-btn>
             </v-row>
         </v-snackbar>

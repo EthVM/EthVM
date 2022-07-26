@@ -1,7 +1,7 @@
 <template>
     <v-btn v-if="display" :class="['new-block-alert', 'text-capitalize', 'ma-0', sm || xs ? 'caption' : '']" flat @click="onReload">
         {{ buttonText }}
-        <v-icon class="ml-2 secondary--text fas fa-sync small-global-icon-font">mdi-sync</v-icon>
+        <v-icon class="ml-2 secondary--text fas fa-sync small-global-icon-font">sync</v-icon>
     </v-btn>
 </template>
 
