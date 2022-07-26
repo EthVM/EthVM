@@ -7,9 +7,9 @@ import { computed } from 'vue'
  * @returns boolean
  */
 export function useAppIsFluid() {
-    const { md, xl } = useDisplay()
+    const { md, xl, xxl } = useDisplay()
     const isFluidView = computed<boolean>(() => {
-        return !(md.value || xl.value)
+        return !(md.value || xl.value || xxl.value)
     })
     return {
         isFluidView
