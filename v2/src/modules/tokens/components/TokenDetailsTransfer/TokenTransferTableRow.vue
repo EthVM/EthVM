@@ -16,7 +16,7 @@
                     <v-row align="center" justify="space-around" class="fill-height pa-2 flex-nowrap">
                         <p class="info--text mr-1">From:</p>
                         <app-transform-hash :hash="eth.toCheckSum(transfer.transfer.from)" :link="`/address/${transfer.transfer.from}`" :italic="true" />
-                        <v-icon class="primary--text pl-2 pr-2" small>mdi-arrow-right</v-icon>
+                        <v-icon class="primary--text pl-2 pr-2" small>east</v-icon>
                         <p v-if="transfer.transfer.contract" class="info--text mr-1">Contract:</p>
                         <p v-else class="info--text mr-1">To:</p>
                         <app-transform-hash

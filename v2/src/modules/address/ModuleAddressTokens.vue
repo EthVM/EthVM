@@ -11,8 +11,8 @@
                     <v-row class="ma-0" align="center">
                         Token
                         <v-btn icon variant="text" size="x-small" class="ml-2" @click="sortTable('name')">
-                            <v-icon v-if="state.sortKey === `name_${state.sortDirection}` && state.sortDirection === 'high'">mdi-chevron-down</v-icon>
-                            <v-icon v-else>mdi-chevron-up</v-icon>
+                            <v-icon v-if="state.sortKey === `name_${state.sortDirection}` && state.sortDirection === 'high'">arrow_drop_down</v-icon>
+                            <v-icon v-else>arrow_drop_up</v-icon>
                         </v-btn>
                     </v-row>
                 </v-col>
@@ -20,8 +20,8 @@
                     <v-row class="ma-0" align="center">
                         Symbol
                         <v-btn icon variant="text" size="x-small" class="ml-2" @click="sortTable('symbol')">
-                            <v-icon v-if="state.sortKey === `symbol_${state.sortDirection}` && state.sortDirection === 'high'">mdi-chevron-down</v-icon>
-                            <v-icon v-else>mdi-chevron-up</v-icon>
+                            <v-icon v-if="state.sortKey === `symbol_${state.sortDirection}` && state.sortDirection === 'high'">arrow_drop_down</v-icon>
+                            <v-icon v-else>arrow_drop_up</v-icon>
                         </v-btn>
                     </v-row>
                 </v-col>
@@ -29,8 +29,8 @@
                     <v-row class="ma-0" align="center">
                         Balance
                         <v-btn icon variant="text" size="x-small" class="ml-2" @click="sortTable('balance')">
-                            <v-icon v-if="state.sortKey === `balance_${state.sortDirection}` && state.sortDirection === 'high'">mdi-chevron-down</v-icon>
-                            <v-icon v-else>mdi-chevron-up</v-icon>
+                            <v-icon v-if="state.sortKey === `balance_${state.sortDirection}` && state.sortDirection === 'high'">arrow_drop_down</v-icon>
+                            <v-icon v-else>arrow_drop_up</v-icon>
                         </v-btn>
                     </v-row>
                 </v-col>
@@ -38,8 +38,8 @@
                     <v-row class="ma-0" align="center">
                         USD Value
                         <v-btn icon variant="text" size="x-small" class="ml-2" @click="sortTable('amount_usd')">
-                            <v-icon v-if="state.sortKey === `amount_usd_${state.sortDirection}` && state.sortDirection === 'high'">mdi-chevron-down</v-icon>
-                            <v-icon v-else>mdi-chevron-up</v-icon>
+                            <v-icon v-if="state.sortKey === `amount_usd_${state.sortDirection}` && state.sortDirection === 'high'">arrow_drop_down</v-icon>
+                            <v-icon v-else>arrow_drop_up</v-icon>
                         </v-btn>
                     </v-row>
                 </v-col>
@@ -47,8 +47,8 @@
                     <v-row class="ma-0 flex-nowrap" align="center">
                         24HR
                         <v-btn icon variant="text" size="x-small" class="ml-2" @click="sortTable('change')">
-                            <v-icon v-if="state.sortKey === `change_${state.sortDirection}` && state.sortDirection === 'high'">mdi-chevron-down</v-icon>
-                            <v-icon v-else>mdi-chevron-up</v-icon>
+                            <v-icon v-if="state.sortKey === `change_${state.sortDirection}` && state.sortDirection === 'high'">arrow_drop_down</v-icon>
+                            <v-icon v-else>arrow_drop_up</v-icon>
                         </v-btn>
                     </v-row>
                 </v-col>
@@ -56,8 +56,8 @@
                     <v-row class="ma-0 flex-nowrap" align="center">
                         Price
                         <v-btn icon variant="text" size="x-small" class="ml-2" @click="sortTable('price')">
-                            <v-icon v-if="state.sortKey === `price_${state.sortDirection}` && state.sortDirection === 'high'">mdi-chevron-down</v-icon>
-                            <v-icon v-else>mdi-chevron-up</v-icon>
+                            <v-icon v-if="state.sortKey === `price_${state.sortDirection}` && state.sortDirection === 'high'">arrow_drop_down</v-icon>
+                            <v-icon v-else>arrow_drop_up</v-icon>
                         </v-btn>
                     </v-row>
                 </v-col>
@@ -86,12 +86,8 @@
                         <v-row v-if="priceChangeFormatted(token)" class="ma-0">
                             <p :class="priceChangeClass(token)">{{ priceChangeFormatted(token).value }}%</p>
                             <span>
-                                <v-icon
-                                    :color="change(token) < 0 ? 'red' : 'green'"
-                                    :class="change(token) < 0 ? 'mdi-arrow-bottom-right' : 'mdi-arrow-top-right'"
-                                    size="x-small"
-                                    >mdi-arrow-bottom-right</v-icon
-                                >
+                                <v-icon v-if="change(token) < 0" color="error" size="x-small">south_east</v-icon>
+                                <v-icon v-else color="success" size="x-small">north_east</v-icon>
                             </span>
                         </v-row>
                     </v-col>
@@ -102,8 +98,8 @@
                     </v-col>
                     <v-col cols="1">
                         <v-btn v-if="getEthereumTokenByContract(token.contract)" icon size="small" @click="showTokenDetails(token.contract)">
-                            <v-icon v-if="state.showMoreTokenDetails && state.activeToken.contract === token.contract">mdi-chevron-up</v-icon>
-                            <v-icon v-else>mdi-chevron-down</v-icon>
+                            <v-icon v-if="state.showMoreTokenDetails && state.activeToken.contract === token.contract">expand_less</v-icon>
+                            <v-icon v-else>expand_more</v-icon>
                         </v-btn>
                     </v-col>
                     <v-col v-if="state.showMoreTokenDetails && state.activeToken.contract === token.contract" cols="12">

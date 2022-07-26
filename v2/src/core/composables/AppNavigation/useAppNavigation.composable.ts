@@ -24,14 +24,14 @@ export function useAppNavigation() {
     const navItems = reactive<NavMenuEntry[]>([
         {
             header: {
-                icon: 'mdi-home',
+                icon: 'home',
                 text: 'Home',
                 routerLink: ROUTE_NAME.HOME.PATH
             }
         },
         {
             header: {
-                icon: 'mdi-cube-outline',
+                icon: 'view_in_ar',
                 text: 'Blockchain'
             },
             links: [
@@ -52,14 +52,14 @@ export function useAppNavigation() {
         {
             header: {
                 text: 'Top Tokens',
-                icon: 'mdi-ethereum',
+                icon: 'insights',
                 routerLink: ROUTE_NAME.TOKENS.PATH
             }
         },
         {
             header: {
                 text: 'Watchlist',
-                icon: 'mdi-cards-heart'
+                icon: 'favorite'
             },
             links: [
                 {
@@ -74,7 +74,7 @@ export function useAppNavigation() {
         },
         {
             header: {
-                icon: 'mdi-chart-bar',
+                icon: 'area_chart',
                 text: 'Charts',
                 routerLink: ROUTE_NAME.CHARTS.PATH
             }

@@ -11,7 +11,6 @@ specifiers:
   '@graphql-codegen/typescript-graphql-files-modules': 2.1.1
   '@graphql-codegen/typescript-operations': 2.3.5
   '@graphql-codegen/typescript-vue-apollo': ^3.2.9
-  '@mdi/font': 5.9.55
   '@types/node': ^17.0.29
   '@types/webfontloader': ^1.0.0
   '@types/webpack-env': ^1.17.0
@@ -37,6 +36,7 @@ specifiers:
   graphql: ^16.4.0
   graphql-tag: ^2.12.6
   graphql-ws: ^5.8.1
+  material-design-icons-iconfont: ^6.7.0
   npm-run-all: ^4.1.5
   pinia: ^2.0.14
   prettier: ^2.4.1
@@ -64,7 +64,6 @@ dependencies:
   '@graphql-codegen/add': 3.1.1_graphql@16.5.0
   '@graphql-codegen/near-operation-file-preset': 2.2.14_graphql@16.5.0
   '@graphql-codegen/typescript-vue-apollo': 3.2.14_a0633a4f3aa4457c1ed08eb355c13938
-  '@mdi/font': 5.9.55
   '@types/webpack-env': 1.17.0
   '@vue/apollo-composable': 4.0.0-alpha.17_f3d6d9b4e9b0d8c4835750a193c74dc2
   assert: 2.0.0
@@ -106,6 +105,7 @@ devDependencies:
   eslint-config-prettier: 8.5.0_eslint@7.32.0
   eslint-plugin-prettier: 4.0.0_dcc2661190d9c6ac0eaf6c22ee1ff197
   eslint-plugin-vue: 8.7.1_eslint@7.32.0
+  material-design-icons-iconfont: 6.7.0
   npm-run-all: 4.1.5
   prettier: 2.7.0
   process: 0.11.10
@@ -2039,10 +2039,6 @@ packages:
   /@leichtgewicht/ip-codec/2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
-
-  /@mdi/font/5.9.55:
-    resolution: {integrity: sha512-jswRF6q3eq8NWpWiqct6q+6Fg/I7nUhrxYJfiEM8JJpap0wVJLQdbKtyS65GdlK7S7Ytnx3TTi/bmw+tBhkGmg==}
-    dev: false
 
   /@n1ru4l/graphql-live-query/0.9.0_graphql@16.5.0:
     resolution: {integrity: sha512-BTpWy1e+FxN82RnLz4x1+JcEewVdfmUhV1C6/XYD5AjS7PQp9QFF7K8bCD6gzPTr2l+prvqOyVueQhFJxB1vfg==}
@@ -6733,6 +6729,10 @@ packages:
   /map-cache/0.2.2:
     resolution: {integrity: sha512-8y/eV9QQZCiyn1SprXSrCmqJN0yNRATe+PO8ztwqrvrbdRLA3eYJF0yaR0YayLWkMbsQSKWS9N2gPcGEc4UsZg==}
     engines: {node: '>=0.10.0'}
+
+  /material-design-icons-iconfont/6.7.0:
+    resolution: {integrity: sha512-lSj71DgVv20kO0kGbs42icDzbRot61gEDBLQACzkUuznRQBUYmbxzEkGU6dNBb5fRWHMaScYlAXX96HQ4/cJWA==}
+    dev: true
 
   /md5.js/1.3.5:
     resolution: {integrity: sha512-xitP+WxNPcTTOgnTJcrhM0xvdPepipPSf3I8EIpGKeFLjt3PlJLIDG3u8EX53ZIubkb+5U2+3rELYpEhHhzdkg==}

@@ -40,7 +40,7 @@
                             >
                                 (<span class="pl-1">{{ percentageChange.value }}%</span>
                                 <v-icon :color="priceChangeSymbol === '-' ? 'red' : 'green'" size="x-small">
-                                    {{ priceChangeSymbol === '-' ? 'mdi-arrow-bottom' : 'mdi-arrow-top' }} </v-icon
+                                    {{ priceChangeSymbol === '-' ? 'south_east' : 'north_east' }} </v-icon
                                 >)
                             </v-row>
                         </div>

@@ -32,7 +32,7 @@
                             <v-row align="center" class="pa-2">
                                 <p class="info--text psmall pr-1">Addresses:</p>
                                 <app-transform-hash :hash="eth.toCheckSum(transaction.from)" :italic="true" :link="`/address/${transaction.from}`" />
-                                <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small>mdi-arrow-right</v-icon>
+                                <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small>east</v-icon>
                                 <app-transform-hash
                                     v-if="transaction.to && transaction.to !== ''"
                                     :hash="eth.toCheckSum(transaction.to)"
@@ -82,7 +82,7 @@
                                 <v-row align="center" class="flex-nowrap mx-0">
                                     <p class="info--text mr-1">From:</p>
                                     <app-transform-hash :hash="eth.toCheckSum(transaction.from)" :link="`/address/${transaction.from}`" :italic="true" />
-                                    <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small>mdi-arrow-right</v-icon>
+                                    <v-icon class="fas fa-arrow-right primary--text pl-2 pr-2" small>east</v-icon>
                                     <p v-if="transaction.to && transaction.to !== ''" class="info--text mr-1">To:</p>
                                     <p v-else class="info--text">Contract Creation</p>
                                     <!-- <app-transform-hash v-if="tx.isContractCreation" :hash="tx.creates" :link="`/address/${tx.creates}`" :italic="true" /> -->
@@ -113,8 +113,8 @@
                         </p>
                     </v-col>
                     <v-col v-if="!isPending" lg="1">
-                        <v-icon v-if="transaction.status" small class="txSuccess--text tx-status text-xs-center text-green">mdi-check-circle</v-icon>
-                        <v-icon v-else small class="txFail--text tx-status text-xs-center text-red">mdi-close-circle-outline</v-icon>
+                        <v-icon v-if="transaction.status" small class="txSuccess--text tx-status text-xs-center text-green">check_circle</v-icon>
+                        <v-icon v-else small class="txFail--text tx-status text-xs-center text-red">highlight_off</v-icon>
                     </v-col>
                     <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
                 </v-row>

@@ -28,7 +28,7 @@
                         <v-list-item
                             v-for="item in searchOptions"
                             :key="item.contract"
-                            prepend-icon="mdi-alpha-t-circle"
+                            prepend-icon="image"
                             :title="item.text"
                             :subtitle="item.contract"
                             class="overflow-hidden"

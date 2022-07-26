@@ -15,7 +15,7 @@
                         <v-btn v-else variant="text">
                             <v-icon class="mr-1">{{ item.header.icon }}</v-icon>
                             {{ item.header.text }}
-                            <v-icon class="ml-2">mdi-chevron-down</v-icon>
+                            <v-icon class="ml-2">chevron_down</v-icon>
                             <app-menu min-width="180" activator="parent" :items="item.links">
                                 <template v-for="(link, j) in item.links" :key="j">
                                     <v-list-item :to="link.routerLink" :value="link.routerLink" :title="link.text"> </v-list-item>

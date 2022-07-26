@@ -5,7 +5,7 @@
             <v-col xs="2" sm="1">
                 <v-row v-if="prevBlock != ''" align="center" justify="start">
                     <v-btn :to="prevBlock" variant="text" color="secondary" class="black--text" icon @click="reload()">
-                        <v-icon>mdi-chevron-left</v-icon>
+                        <v-icon>chevron_left</v-icon>
                     </v-btn>
                 </v-row>
             </v-col>
@@ -19,7 +19,7 @@
                                 <template v-slot:activator="{ props }">
                                     <v-btn v-bind="props" variant="outlined" round color="primary" class="text-capitalize mx-0" small>
                                         Uncles
-                                        <v-icon>mdi-chevron-right</v-icon>
+                                        <v-icon>chevron_right</v-icon>
                                     </v-btn>
                                 </template>
                                 <v-card>
@@ -43,7 +43,7 @@
             <v-col v-if="nextBlock != ''" xs="2" sm="1">
                 <v-row align="center" justify="end">
                     <v-btn :to="nextBlock" variant="text" color="secondary" class="black--text" icon>
-                        <v-icon>mdi-chevron-right</v-icon>
+                        <v-icon>chevron_right</v-icon>
                     </v-btn>
                 </v-row>
             </v-col>

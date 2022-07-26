@@ -14,7 +14,7 @@ const props = defineProps({
     text: String,
     iconType: {
         type: String,
-        default: 'mdi-help-circle-outline'
+        default: 'help_outline'
     },
     iconColor: {
         type: String,
