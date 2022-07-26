@@ -44,8 +44,8 @@ $typography:
     'letter-spacing': 0.49px,
   ),
   'subtitle-1': (
-    'size': 14px,
-    'weight': $font-bold,
+    'size': 16px,
+    'weight': $font-normal,
     'line-height': 15px,
     'letter-spacing': 0.49px,
   ),
@@ -82,3 +82,10 @@ $shadow-key-umbra:
     1: (0px 8px 12px 0px $shadow-key-umbra-opacity)
 );
  
+/**
+--- Border radius
+*/
+$rounded:
+(
+    'xl': 12px,
+);
