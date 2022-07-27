@@ -35,6 +35,12 @@ export type GetOwnersErc20TokensQuery = {
     }
 }
 
+export type Erc721BalanceFragment = {
+    __typename?: 'ERC721TokenBalance'
+    balance: string
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; contract: string }
+}
+
 export type GetOwnersErc721BalancesQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
 }>
@@ -46,6 +52,12 @@ export type GetOwnersErc721BalancesQuery = {
         balance: string
         tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null; symbol?: string | null; contract: string }
     } | null>
+}
+
+export type OwnerErc721Fragment = {
+    __typename?: 'ERC721TokenContract'
+    nextKey?: string | null
+    tokens: Array<{ __typename?: 'ERC721TokenOwner'; token: string } | null>
 }
 
 export type GetOwnersErc721TokensQueryVariables = Types.Exact<{
@@ -137,6 +149,24 @@ export const TokenOwnersFragmentDoc = gql`
     }
     ${TokenFragmentFragmentDoc}
 `
+export const Erc721BalanceFragmentDoc = gql`
+    fragment Erc721Balance on ERC721TokenBalance {
+        balance
+        tokenInfo {
+            name
+            symbol
+            contract
+        }
+    }
+`
+export const OwnerErc721FragmentDoc = gql`
+    fragment OwnerErc721 on ERC721TokenContract {
+        tokens {
+            token
+        }
+        nextKey
+    }
+`
 export const PrimaryAssetContractFragmentDoc = gql`
     fragment PrimaryAssetContract on PrimaryAssetContract {
         address
@@ -219,14 +249,10 @@ export type GetOwnersErc20TokensQueryCompositionFunctionResult = VueApolloCompos
 export const GetOwnersErc721BalancesDocument = gql`
     query getOwnersERC721Balances($hash: String!) {
         getOwnersERC721Balances(owner: $hash) {
-            balance
-            tokenInfo {
-                name
-                symbol
-                contract
-            }
+            ...Erc721Balance
         }
     }
+    ${Erc721BalanceFragmentDoc}
 `
 
 /**
@@ -283,12 +309,10 @@ export type GetOwnersErc721BalancesQueryCompositionFunctionResult = VueApolloCom
 export const GetOwnersErc721TokensDocument = gql`
     query getOwnersERC721Tokens($hash: String!, $tokenContract: String, $_nextKey: String) {
         getOwnersERC721Tokens(owner: $hash, contract: $tokenContract, nextKey: $_nextKey) {
-            tokens {
-                token
-            }
-            nextKey
+            ...OwnerErc721
         }
     }
+    ${OwnerErc721FragmentDoc}
 `
 
 /**

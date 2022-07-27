@@ -1,10 +1,10 @@
 <template>
-    <v-container grid-list-lg class="mb-0">
+    <div class="mb-0">
         <app-error v-if="!isValid" :has-error="!isValid" :message="state.error" />
         <template v-if="isValid">
             <module-adress-nfts class="mb-4" :address-hash="props.addressRef" />
         </template>
-    </v-container>
+    </div>
 </template>
 
 <script setup lang="ts">

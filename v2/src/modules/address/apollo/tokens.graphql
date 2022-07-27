@@ -21,23 +21,30 @@ query getOwnersERC20Tokens($hash: String!, $_nextKey: String) {
     }
 }
 
-query getOwnersERC721Balances($hash: String!) {
-    getOwnersERC721Balances(owner: $hash) {
-        balance
-        tokenInfo {
-            name
-            symbol
-            contract
-        }
+fragment Erc721Balance on ERC721TokenBalance {
+    balance
+    tokenInfo {
+        name
+        symbol
+        contract
     }
 }
 
+query getOwnersERC721Balances($hash: String!) {
+    getOwnersERC721Balances(owner: $hash) {
+        ...Erc721Balance
+    }
+}
+
+fragment OwnerErc721 on ERC721TokenContract {
+    tokens {
+        token
+    }
+    nextKey
+}
 query getOwnersERC721Tokens($hash: String!, $tokenContract: String, $_nextKey: String) {
     getOwnersERC721Tokens(owner: $hash, contract: $tokenContract, nextKey: $_nextKey) {
-        tokens {
-            token
-        }
-        nextKey
+        ...OwnerErc721
     }
 }
 
