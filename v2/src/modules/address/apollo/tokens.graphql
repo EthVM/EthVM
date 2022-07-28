@@ -36,9 +36,13 @@ query getOwnersERC721Balances($hash: String!) {
     }
 }
 
+fragment Token on ERC721TokenOwner {
+    token
+}
+
 fragment OwnerErc721 on ERC721TokenContract {
     tokens {
-        token
+        ...Token
     }
     nextKey
 }

@@ -54,6 +54,8 @@ export type GetOwnersErc721BalancesQuery = {
     } | null>
 }
 
+export type TokenFragment = { __typename?: 'ERC721TokenOwner'; token: string }
+
 export type OwnerErc721Fragment = {
     __typename?: 'ERC721TokenContract'
     nextKey?: string | null
@@ -159,13 +161,19 @@ export const Erc721BalanceFragmentDoc = gql`
         }
     }
 `
+export const TokenFragmentDoc = gql`
+    fragment Token on ERC721TokenOwner {
+        token
+    }
+`
 export const OwnerErc721FragmentDoc = gql`
     fragment OwnerErc721 on ERC721TokenContract {
         tokens {
-            token
+            ...Token
         }
         nextKey
     }
+    ${TokenFragmentDoc}
 `
 export const PrimaryAssetContractFragmentDoc = gql`
     fragment PrimaryAssetContract on PrimaryAssetContract {

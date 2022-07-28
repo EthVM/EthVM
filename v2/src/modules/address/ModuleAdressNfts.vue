@@ -1,12 +1,8 @@
 <template>
     <div>
         <div v-for="token in erc721Tokens" :key="token.tokenInfo.contract">
-            <v-lazy @update:modelValue="tokenVisible($event, token.tokenInfo.contract)" min-height="300" :options="{ threshold: 0.5 }">
+            <v-lazy @update:modelValue="tokenVisible($event, token.tokenInfo.contract)" min-height="250" :options="{ threshold: 0.5 }">
                 <div>
-                    <p class="text-subtitle-1">
-                        {{ token.tokenInfo.name }}
-                    </p>
-                    <v-divider class="my-2" />
                     <template v-if="visibleTokens.has(token.tokenInfo.contract)">
                         <single-address-nfts :name="token.tokenInfo.name" :contract="token.tokenInfo.contract" :address-hash="props.addressHash" />
                     </template>
@@ -47,7 +43,7 @@ const nftContractsMeta = computed<Array<TokenContractFragment | null> | undefine
 
 const nftContractMetaMap = computed<Map<string, PrimaryAssetContractFragment> | null>(() => {
     if (nftContractsMeta.value) {
-        const map = new Map()
+        const map = new Map<string, PrimaryAssetContractFragment>()
         nftContractsMeta.value.forEach(contract => {
             if (contract && contract.primary_asset_contracts) {
                 contract.primary_asset_contracts.forEach(asset => {
@@ -63,7 +59,6 @@ const visibleTokens = ref(new Set())
 
 const tokenVisible = (isVisible: boolean, contract: string) => {
     if (isVisible && contract) {
-        console.log(contract, isVisible)
         visibleTokens.value.add(contract)
     }
 }
