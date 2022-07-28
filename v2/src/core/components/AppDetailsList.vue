@@ -11,7 +11,7 @@
 
     =====================================================================================
     -->
-        <div v-if="hasTitle">
+        <div v-if="props.hasTitle">
             <slot name="title">
                 <div v-if="isLoading">
                     <v-row align="center" justify="start" class="pa-2">
@@ -23,7 +23,7 @@
                 </div>
                 <div v-else class="pb-1 pt-1">
                     <div class="pa-1">
-                        <v-card-title class="title font-weight-bold pl-4">{{ title }}</v-card-title>
+                        <v-card-title class="title font-weight-bold pl-4">{{ props.title }}</v-card-title>
                     </div>
                     <v-divider class="lineGrey mt-1 mb-1" />
                 </div>
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </v-expand-transition>
-        <div v-if="hasMore && !isLoading">
+        <div v-if="hasMore && !props.isLoading">
             <v-btn v-if="!state.showMore" flat block color="primary" @click="setShowMore(true)">
                 <v-icon class="fa fa-angle-down white--text">expand_more</v-icon>
             </v-btn>

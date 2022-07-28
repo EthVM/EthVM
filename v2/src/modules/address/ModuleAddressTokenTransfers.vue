@@ -3,7 +3,7 @@
         <v-card-title class="justify-space-between">
             <div>
                 Token Transfer History
-                <app-new-update text="New ERC20 Transfers" :update-count="newErc20Transfer" @reload="setPage(0, true)" />
+                <app-new-update text="New ERC20 Transfers" :update-count="props.newErc20Transfer" @reload="setPage(0, true)" />
             </div>
             <app-paginate-has-more
                 :class="smAndDown ? 'pt-3' : ''"

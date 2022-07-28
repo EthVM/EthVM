@@ -1,10 +1,10 @@
 <template>
     <div>
-        <v-row v-if="!loading" align="center" justify="start" class="mt-1 mb-1 mx-0 py-3">
+        <v-row v-if="!props.loading" align="center" justify="start" class="mt-1 mb-1 mx-0 py-3">
             <!-- Previous Block -->
             <v-col xs="2" sm="1">
-                <v-row v-if="prevBlock != ''" align="center" justify="start">
-                    <v-btn :to="prevBlock" variant="text" color="secondary" class="black--text" icon @click="reload()">
+                <v-row v-if="props.prevBlock != ''" align="center" justify="start">
+                    <v-btn :to="props.prevBlock" variant="text" color="secondary" class="black--text" icon @click="reload()">
                         <v-icon>chevron_left</v-icon>
                     </v-btn>
                 </v-row>
@@ -26,7 +26,7 @@
                                     <v-card-title class="title font-weight-bold">Uncles:</v-card-title>
                                     <v-divider class="lineGrey" />
                                     <v-list>
-                                        <v-list-item v-for="(uncle, index) in uncles" :key="index">
+                                        <v-list-item v-for="(uncle, index) in props.uncles" :key="index">
                                             <v-row justify="start" align="center" class="fill-height flex-nowrap">
                                                 <v-card-title class="info--text p-0">Hash:</v-card-title>
                                                 <app-transform-hash :hash="eth.toCheckSum(uncle)" :link="`/uncle/${uncle}`" />
@@ -40,9 +40,9 @@
                 </v-row>
             </v-col>
             <!-- Next Block -->
-            <v-col v-if="nextBlock != ''" xs="2" sm="1">
+            <v-col v-if="props.nextBlock != ''" xs="2" sm="1">
                 <v-row align="center" justify="end">
-                    <v-btn :to="nextBlock" variant="text" color="secondary" class="black--text" icon>
+                    <v-btn :to="props.nextBlock" variant="text" color="secondary" class="black--text" icon>
                         <v-icon>chevron_right</v-icon>
                     </v-btn>
                 </v-row>
@@ -50,13 +50,13 @@
         </v-row>
         <div v-else>
             <v-row align="center" justify="space-between">
-                <v-col v-if="!isSubscribed" xs="5" sm="4">
+                <v-col v-if="!props.isSubscribed" xs="5" sm="4">
                     <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
                 </v-col>
-                <v-col v-if="isSubscribed" xs="8" sm="11">
+                <v-col v-if="props.isSubscribed" xs="8" sm="11">
                     <v-card-title class="title font-weight-bold pl-4">This block has not been mined yet</v-card-title>
                 </v-col>
-                <v-col v-if="isSubscribed" xs="2" sm="1">
+                <v-col v-if="props.isSubscribed" xs="2" sm="1">
                     <v-progress-circular :size="20" color="secondary" indeterminate></v-progress-circular>
                 </v-col>
             </v-row>

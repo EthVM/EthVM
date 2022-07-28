@@ -1,7 +1,7 @@
 <template>
     <v-card class="pt-3 pb-3">
         <v-container fluid>
-            <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="pageType" page-link="/txs">
+            <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="props.pageType" page-link="/txs">
                 <template v-if="!isHome && !isBlock" #update>
                     <app-new-update text="New Txs" :update-count="state.newMinedTransfers" :hide-count="true" @reload="setPage(0, true)" />
                 </template>
@@ -11,7 +11,7 @@
                 </template>
             </app-table-title>
             <txs-table
-                :max-items="maxItems"
+                :max-items="props.maxItems"
                 :index="state.index"
                 :is-loading="loading"
                 :table-message="message"

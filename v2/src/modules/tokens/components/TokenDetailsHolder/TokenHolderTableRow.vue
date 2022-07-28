@@ -9,7 +9,7 @@
             <v-row grid-list-xs row wrap align="center" justify="start" class="fill-height pl-3 pr-2 pt-2 pb-1 text-subtitle-2 font-weight-regular">
                 <!-- Column 1: Holders Address -->
                 <v-col sm="6" class="pr-4">
-                    <app-transform-hash :hash="eth.toCheckSum(holder.owner)" :link="holderLink" />
+                    <app-transform-hash :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
                 </v-col>
                 <!-- End Column 1 -->
 
