@@ -1,6 +1,6 @@
 <template>
     <v-container fluid class="pa-0 text-body-2">
-        <v-row d-block>
+        <v-row class="my-0">
             <!--
       =====================================================================================
         Mobile (XS-SM)

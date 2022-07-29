@@ -31,9 +31,14 @@ import AppTableTitle from '@core/components/AppTableTitle.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
-import { useGetAllTxsQuery, useNewTransfersCompleteFeedSubscription, useGetBlockTransfersQuery } from './apollo/transfersQuery.generated'
+import {
+    useGetAllTxsQuery,
+    useNewTransfersCompleteFeedSubscription,
+    useGetBlockTransfersQuery,
+    TxSummaryFragment,
+    EthTransfersFragment
+} from './apollo/transfersQuery.generated'
 import { computed, onMounted, reactive, watch } from 'vue'
-import { useResult } from '@vue/apollo-composable'
 import TxsTable from '@module/txs/components/TxsTable.vue'
 import BN from 'bignumber.js'
 
@@ -176,8 +181,13 @@ onBlockTransfersArrayLoaded(() => {
 
 const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
 
-const allEthTransfers = useResult(getAllEthTransfers, null, data => data.getAllEthTransfers)
-const allBlockTransfersResult = useResult(getAllBlockTransfersResult, null, data => data.getBlockTransfers)
+const allEthTransfers = computed<EthTransfersFragment>(() => {
+    return getAllEthTransfers.value?.getAllEthTransfers
+})
+
+const allBlockTransfersResult = computed<TxSummaryFragment>(() => {
+    return getAllBlockTransfersResult.value?.getBlockTransfers
+})
 
 onTxsArrayLoaded(() => {
     state.initialLoad = false
@@ -210,19 +220,29 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
         if (page >= state.isEnd && hasMore.value) {
             await fetchMore({
                 variables: {
-                    nextKey: getAllEthTransfers.nextKey,
+                    nextKey: allEthTransfers.value?.nextKey,
                     _limit: props.maxItems
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
                     state.isEnd = page
-                    const newT = fetchMoreResult.getAllEthTransfers.transfers
+                    const newT = fetchMoreResult?.getAllEthTransfers.transfers
                     const prevT = previousResult.getAllEthTransfers.transfers
+                    if (newT) {
+                        return {
+                            ...previousResult,
+                            getAllEthTransfers: {
+                                __typename: previousResult.getAllEthTransfers.__typename,
+                                nextKey: fetchMoreResult?.getAllEthTransfers.nextKey,
+                                transfers: [...prevT, ...newT]
+                            }
+                        }
+                    }
                     return {
                         ...previousResult,
                         getAllEthTransfers: {
                             __typename: previousResult.getAllEthTransfers.__typename,
-                            nextKey: fetchMoreResult.getAllEthTransfers.nextKey,
-                            transfers: [...prevT, ...newT]
+                            nextKey: previousResult.getAllEthTransfers.nextKey,
+                            transfers: [...prevT]
                         }
                     }
                 }

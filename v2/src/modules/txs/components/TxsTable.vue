@@ -44,7 +44,7 @@
     -->
         <div>
             <v-card v-if="!hasMessage" :style="getStyle" variant="flat" class="scroll-y pt-2 pr-2 pl-2 pb-0">
-                <v-row class="my-0">
+                <v-row class="ma-0">
                     <v-col v-if="!props.isLoading" xs="12">
                         <v-card v-for="(tx, index) in displayData" :key="index" variant="flat">
                             <txs-table-row :tx="tx" :is-pending="props.pending" />
