@@ -60,7 +60,10 @@ const state: ModuleState = reactive({
 
 const props = defineProps({
     maxItems: Number,
-    blockRef: String,
+    blockRef: {
+        type: String,
+        required: true
+    },
     pageType: {
         type: String,
         default: 'home'
@@ -181,11 +184,11 @@ onBlockTransfersArrayLoaded(() => {
 
 const { onResult: onNewTransferLoaded } = useNewTransfersCompleteFeedSubscription()
 
-const allEthTransfers = computed<EthTransfersFragment>(() => {
+const allEthTransfers = computed<EthTransfersFragment | undefined>(() => {
     return getAllEthTransfers.value?.getAllEthTransfers
 })
 
-const allBlockTransfersResult = computed<TxSummaryFragment>(() => {
+const allBlockTransfersResult = computed<TxSummaryFragment | undefined>(() => {
     return getAllBlockTransfersResult.value?.getBlockTransfers
 })
 

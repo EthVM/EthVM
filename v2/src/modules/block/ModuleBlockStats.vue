@@ -45,7 +45,7 @@ const blockNumber = computed<number | string>(() => {
     if (blockInfo.value) {
         return new BN(blockInfo.value?.getLatestBlockInfo.number).toFormat()
     }
-    return blockInfo.value?.getLatestBlockInfo.number
+    return 0
 })
 
 const latestBlockInfo = computed<BlockInfoFragment | undefined>(() => {
