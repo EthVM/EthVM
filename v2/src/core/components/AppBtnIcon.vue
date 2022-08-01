@@ -1,6 +1,6 @@
 <template>
-    <v-btn icon color="textPrimary" variant="text" size="x-small" @click.stop="btnClick()">
-        <v-icon v-bind="$attrs"></v-icon>
+    <v-btn icon color="textPrimary" variant="text" height="34px" width="34px" @click.stop="btnClick()">
+        <v-icon v-bind="$attrs" :class="buttonFontSize"></v-icon>
         <v-tooltip v-if="tooltipText !== ''" activator="parent" location="top">
             {{ props.tooltipText }}
         </v-tooltip>
@@ -8,6 +8,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useAttrs } from 'vue'
+
 /**
  * PLESE USE FALLTHROUGH vue attrs from button icon:
  * pass `icon` prop of material design, ei: icon="content_copy"
@@ -25,6 +28,15 @@ const emit = defineEmits(['click'])
 const btnClick = (): void => {
     emit('click')
 }
+const attrs = useAttrs()
+
+const buttonFontSize = computed<string>(() => {
+    return attrs.size ? '' : 'defualt_size_icon'
+})
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.defualt_size_icon {
+    font-size: 18px;
+}
+</style>

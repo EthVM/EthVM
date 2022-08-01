@@ -53,7 +53,7 @@ const button = computed<ButtonState>(() => {
           }
         : {
               color: componentProps.btnColor ? componentProps.btnColor : 'secondary',
-              size: 'large',
+              size: 'default',
               rounded: 'pill',
               minWidth: '172'
           }
