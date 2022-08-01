@@ -1,19 +1,19 @@
 <template>
     <v-container fluid class="pa-0 text-body-2">
-        <v-row d-block>
+        <v-row class="my-0">
             <!--
       =====================================================================================
         Mobile (XS-SM)
       =====================================================================================
       -->
             <v-col xs="12" v-if="!mdAndUp">
-                <div :class="isPending ? 'table-row-mobile' : txStatusClass">
+                <div :class="props.isPending ? 'table-row-mobile' : txStatusClass">
                     <v-row grid-list-xs row wrap align="center" justify="start" fill-height class="pt-3 pb-3 pr-4 pl-4">
                         <v-col cols="6" class="pa-1">
                             <router-link :to="`/block/number/${transferObj.block}`" class="black--text font-weight-medium pb-1">
                                 Block # {{ transaction.block }}
                             </router-link>
-                            <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
+                            <p v-if="props.isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
                         </v-col>
                         <v-col cols="6">
                             <v-row justify="end">
@@ -67,7 +67,7 @@
         =====================================================================================
         -->
                 <v-row grid-list-xs row wrap align="center" justify-start fill-height pl-3 pr-2 pt-2 pb-1>
-                    <v-col v-if="!isPending" sm="2" lg="1">
+                    <v-col v-if="!props.isPending" sm="2" lg="1">
                         <router-link :to="`/block/number/${transferObj.block}`" class="black--text pb-1">{{ transaction.block }}</router-link>
                     </v-col>
                     <v-col sm="7" md="5">
@@ -97,7 +97,7 @@
                         </v-row>
                     </v-col>
                     <v-col sm="3" lg="2" class="pr-3 pl-2">
-                        <p :class="isPending ? 'pl-4' : ''">
+                        <p :class="props.isPending ? 'pl-4' : ''">
                             {{ transaction.value.value }}
                             {{ transaction.value.unit }}
                             <app-tooltip v-if="transaction.value.tooltipText" :text="`${transaction.value.tooltipText} ETH`" />
@@ -105,18 +105,18 @@
                     </v-col>
                     <v-col v-if="!smAndDown" md="2">
                         {{ transaction.timestamp }}
-                        <!--                        <app-time-ago :timestamp="transaction.timestamp" :class="isPending ? 'pl-2' : ''" />-->
+                        <!--                        <app-time-ago :timestamp="transaction.timestamp" :class="props.isPending ? 'pl-2' : ''" />-->
                     </v-col>
                     <v-col v-if="!mdAndDown" lg="1">
-                        <p :class="['black--text', 'text-truncate', 'mb-0', isPending ? 'pl-3' : '']">
+                        <p :class="['black--text', 'text-truncate', 'mb-0', props.isPending ? 'pl-3' : '']">
                             {{ transaction.fee.value }}
                         </p>
                     </v-col>
-                    <v-col v-if="!isPending" lg="1">
+                    <v-col v-if="!props.isPending" lg="1">
                         <v-icon v-if="transaction.status" small class="txSuccess--text tx-status text-xs-center text-green">check_circle</v-icon>
                         <v-icon v-else small class="txFail--text tx-status text-xs-center text-red">highlight_off</v-icon>
                     </v-col>
-                    <p v-if="isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
+                    <p v-if="props.isPending && transaction.isMined" class="caption primary--text blinking">Mined</p>
                 </v-row>
             </v-col>
             <v-col sm="12">

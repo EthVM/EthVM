@@ -10,7 +10,7 @@
                 <div class="table-row-mobile">
                     <v-row grid-list-xs row wrap align="center" justify-start fill-height class="pt-3 pb-3 pr-4 pl-4">
                         <v-col cols="6" class="pa-1">
-                            <router-link :to="`/block/number/${block.number}`" class="black--text font-weight-medium pb-1">
+                            <router-link :to="`/block/number/${props.block.number}`" class="black--text font-weight-medium pb-1">
                                 Block # {{ _block.number }}
                             </router-link>
                         </v-col>
@@ -59,7 +59,7 @@
         -->
                 <v-row grid-list-xs row wrap align="center" justify="start" class="fill-height">
                     <v-col sm="2">
-                        <router-link :to="`/block/number/${block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
+                        <router-link :to="`/block/number/${props.block.number}`" class="black--text pb-1">{{ _block.number }}</router-link>
                     </v-col>
                     <v-col sm="5">
                         <v-row>

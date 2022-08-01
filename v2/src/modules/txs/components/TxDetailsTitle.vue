@@ -2,7 +2,7 @@
     <div class="pb-1 pt-1">
         <v-row align="center" justify="start" class="pa-1">
             <v-card-title align-center justify-start class="title font-weight-bold pl-4"> Transaction Details </v-card-title>
-            <app-tooltip :text="status" :icon-color="statusColor" :spin="statusSpin" :icon-type="statusIcon" />
+            <app-tooltip :text="props.status" :icon-color="statusColor" :spin="statusSpin" :icon-type="statusIcon" />
         </v-row>
         <v-divider class="lineGrey mt-1 mb-1" />
     </div>

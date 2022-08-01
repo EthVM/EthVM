@@ -7,15 +7,15 @@
       =====================================================================================
       -->
             <v-col xs="4" sm="3" md="2">
-                <div class="info--text font-weight-medium">{{ detail.title }}</div>
+                <div class="info--text font-weight-medium">{{ props.detail.title }}</div>
             </v-col>
             <!--
       =====================================================================================
         DETAIL INFO
       =====================================================================================
       -->
-            <v-col v-if="!detail.txInput" xs="7" sm="8" md="9" class="pr-0">
-                <div v-if="isLoading">
+            <v-col v-if="!props.detail.txInput" xs="7" sm="8" md="9" class="pr-0">
+                <div v-if="props.isLoading">
                     <v-row align-center justify-start mr-2>
                         <v-col xs="12" class="pa-0">
                             <v-progress-linear color="lineGrey" value="40" indeterminate height="16" class="ma-0" />
@@ -24,15 +24,15 @@
                 </div>
                 <div v-else>
                     <div v-if="!isMono">
-                        <router-link v-if="detail.link" :to="detail.link">
-                            <div class="text-truncate secondary--text">{{ detail.detail }}</div>
+                        <router-link v-if="props.detail.link" :to="props.detail.link">
+                            <div class="text-truncate secondary--text">{{ props.detail.detail }}</div>
                         </router-link>
                         <div v-else class="text-muted text-truncate detail-container">
-                            <span class="pr-1">{{ detail.detail }}</span>
-                            <app-tooltip v-if="detail.tooltip" :text="detail.tooltip" />
+                            <span class="pr-1">{{ props.detail.detail }}</span>
+                            <app-tooltip v-if="props.detail.tooltip" :text="props.detail.tooltip" />
                             <v-row
-                                v-if="detail.priceChange && percentageChange.value"
-                                :class="[detail.tooltip ? 'pl-3' : 'pl-2', priceChangeClass, 'price-container', 'font-weight-medium', 'my-0 ml-0']"
+                                v-if="props.detail.priceChange && percentageChange.value"
+                                :class="[props.detail.tooltip ? 'pl-3' : 'pl-2', priceChangeClass, 'price-container', 'font-weight-medium', 'my-0 ml-0']"
                                 row
                                 wrap
                                 align="center"
@@ -46,24 +46,29 @@
                         </div>
                     </div>
                     <div v-else>
-                        <app-transform-hash v-if="detail.toChecksum" :hash="eth.toCheckSum(detail.detail)" :link="detail.link" :is-blue="showLink" />
-                        <app-transform-hash v-else :hash="detail.detail" :link="detail.link" :is-blue="showLink" />
+                        <app-transform-hash
+                            v-if="props.detail.toChecksum"
+                            :hash="eth.toCheckSum(props.detail.detail)"
+                            :link="props.detail.link"
+                            :is-blue="showLink"
+                        />
+                        <app-transform-hash v-else :hash="props.detail.detail" :link="props.detail.link" :is-blue="showLink" />
                     </div>
                 </div>
             </v-col>
-            <v-col v-if="!detail.txInput" xs="1" class="pt-0 pb-0 pl-1">
-                <app-copy-to-clip v-if="detail.copy" :value-to-copy="detail.detail" />
+            <v-col v-if="!props.detail.txInput" xs="1" class="pt-0 pb-0 pl-1">
+                <app-copy-to-clip v-if="props.detail.copy" :value-to-copy="props.detail.detail" />
             </v-col>
-            <v-col v-if="detail.txInput && !smAndDown" sm="9" md="10">
+            <v-col v-if="props.detail.txInput && !smAndDown" sm="9" md="10">
                 <div class="data-input pa-3 break-string">
-                    <p class="mb-2">{{ detail.txInput }}</p>
+                    <p class="mb-2">{{ props.detail.txInput }}</p>
                 </div>
             </v-col>
         </v-row>
-        <v-row v-if="detail.txInput" align="start" justify="start" class="mr-0 ml-0">
+        <v-row v-if="props.detail.txInput" align="start" justify="start" class="mr-0 ml-0">
             <v-col v-if="!mdAndUp" xs="12" pt-0>
                 <div class="data-input pa-2 break-string">
-                    <p class="mb-2">{{ detail.txInput }}</p>
+                    <p class="mb-2">{{ props.detail.txInput }}</p>
                 </div>
             </v-col>
         </v-row>

@@ -1,16 +1,16 @@
 <template>
     <v-tooltip top color="white" content-class="tooltip-border">
         <template #activator="{ props }">
-            <v-icon :class="iconClass" :color="iconColor" dark small v-bind="props">{{ iconType }}</v-icon>
+            <v-icon :class="iconClass" :color="componentProps.iconColor" dark small v-bind="props">{{ componentProps.iconType }}</v-icon>
         </template>
-        <span class="black--text">{{ text }}</span>
+        <span class="black--text">{{ componentProps.text }}</span>
     </v-tooltip>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps({
+const componentProps = defineProps({
     text: String,
     iconType: {
         type: String,
@@ -27,8 +27,8 @@ const props = defineProps({
 })
 
 const iconClass = computed<string>(() => {
-    const _class = props.spin ? '--text fa-pulse' : '--text'
-    return `${props.iconColor}${_class} --text`
+    const _class = componentProps.spin ? '--text fa-pulse' : '--text'
+    return `${componentProps.iconColor}${_class} --text`
 })
 </script>
 

@@ -9,7 +9,7 @@
         -->
         <v-row justify="start" class="mb-4">
             <v-col cols="12">
-                <uncle-details v-if="isValid && !hasError" :uncle-ref="uncleRef" @errorDetails="setError" />
+                <uncle-details v-if="isValid && !hasError" :uncle-ref="props.uncleRef" @errorDetails="setError" />
             </v-col>
         </v-row>
     </div>

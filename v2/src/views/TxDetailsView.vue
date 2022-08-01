@@ -7,7 +7,7 @@
           TX DETAILS LIST
         =====================================================================================
         -->
-        <tx-details v-if="isValid && !hasError" :tx-ref="txRef" @errorDetails="setError" />
+        <tx-details v-if="isValid && !hasError" :tx-ref="props.txRef" @errorDetails="setError" />
     </div>
 </template>
 

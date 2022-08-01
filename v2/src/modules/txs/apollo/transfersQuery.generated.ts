@@ -63,6 +63,25 @@ export type GetBlockTransfersQuery = {
     }
 }
 
+export type EthTransfersFragment = {
+    __typename?: 'ETHTransfers'
+    nextKey?: string | null
+    transfers: Array<{
+        __typename?: 'EthTransfer'
+        value: string
+        transfer: {
+            __typename?: 'Transfer'
+            transactionHash: string
+            to: string
+            block: number
+            timestamp: number
+            from: string
+            txFee: string
+            status?: boolean | null
+        }
+    } | null>
+}
+
 export type GetAllTxsQueryVariables = Types.Exact<{
     _limit?: Types.InputMaybe<Types.Scalars['Int']>
     _nextKey?: Types.InputMaybe<Types.Scalars['String']>
@@ -119,6 +138,13 @@ export const TxSummaryFragmentDoc = gql`
     }
     ${SummaryFragmentDoc}
 `
+export const EthTransfersFragmentDoc = gql`
+    fragment EthTransfers on ETHTransfers {
+        ...TxSummary
+        nextKey
+    }
+    ${TxSummaryFragmentDoc}
+`
 export const GetBlockTransfersDocument = gql`
     query getBlockTransfers($_number: Int) {
         getBlockTransfers(number: $_number) {
@@ -171,11 +197,10 @@ export type GetBlockTransfersQueryCompositionFunctionResult = VueApolloComposabl
 export const GetAllTxsDocument = gql`
     query getAllTxs($_limit: Int, $_nextKey: String) {
         getAllEthTransfers(limit: $_limit, nextKey: $_nextKey) {
-            ...TxSummary
-            nextKey
+            ...EthTransfers
         }
     }
-    ${TxSummaryFragmentDoc}
+    ${EthTransfersFragmentDoc}
 `
 
 /**

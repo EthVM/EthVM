@@ -8,10 +8,10 @@
       Shows details pertinent to the token as a whole, with no holder-specific information
     =====================================================================================
     -->
-        <div v-if="!isHolder">
+        <div v-if="!props.isHolder">
             <token-details-list
                 :holder-details="null"
-                :address-ref="addressRef"
+                :address-ref="props.addressRef"
                 :token-details="tokenDetails"
                 :is-nft="state.isNft"
                 :is-loading="loadingTokenDetails || state.hasError"
@@ -19,10 +19,10 @@
             />
             <app-tabs :tabs="tabsTokenDetails">
                 <v-window-item value="tab-0">
-                    <token-transfers :address="addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
+                    <token-transfers :address="props.addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
                 </v-window-item>
                 <v-window-item value="tab-1">
-                    <token-holders :address="addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
+                    <token-holders :address="props.addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
                 </v-window-item>
             </app-tabs>
         </div>
@@ -34,9 +34,9 @@
       Shows holder details pertaining to particular token contract
     =====================================================================================
     -->
-        <div v-if="isHolder">
+        <div v-if="props.isHolder">
             <token-details-list
-                :address-ref="addressRef"
+                :address-ref="props.addressRef"
                 :holder-details="tokenDetails"
                 :token-details="tokenDetails ? tokenDetails['tokenInfo'] : {}"
                 :is-loading="loadingTokenDetails || state.hasError"
