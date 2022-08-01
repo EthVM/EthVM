@@ -17,7 +17,7 @@
                         <app-btn-icon icon="content_copy" color="warning" tooltip-text="Hello" />
                     </v-col>
                     <v-col cols="12">
-                        <app-expansion-panel title="Default Expansion Panel" class="pt-3">
+                        <app-expansion-panel title="Default Expansion Panel" has-more class="pt-3">
                             <template #visible-content>
                                 <p v-for="i in 3" :key="i">Hello {{ i }}</p></template
                             >
@@ -27,7 +27,7 @@
                         >
                     </v-col>
                     <v-col cols="12">
-                        <app-expansion-panel title="Expansion Panel with img slot" class="pt-3">
+                        <app-expansion-panel title="EP with img slot" class="pt-3">
                             <template #title-content>
                                 <v-img :src="require('@/assets/icon-token.png')" height="24" max-width="24" class="mr-2"></v-img>
                             </template>
@@ -38,6 +38,13 @@
                                 <p v-for="i in 3" :key="i + 3">Hello {{ i + 3 }}</p></template
                             ></app-expansion-panel
                         >
+                    </v-col>
+                    <v-col cols="12">
+                        <app-expansion-panel title="EP without expand content slot" class="pt-3">
+                            <template #visible-content>
+                                <p v-for="i in 3" :key="i">Hello {{ i }}</p></template
+                            >
+                        </app-expansion-panel>
                     </v-col>
                 </v-row>
             </v-card>

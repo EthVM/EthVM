@@ -5,7 +5,7 @@
         -->
         <slot name="title-content"></slot>
         <p class="text-h6 mr-4">{{ props.title }}</p>
-        <app-btn-icon :icon="icon" size="default" @click="expand = !expand"></app-btn-icon>
+        <app-btn-icon v-if="$slots['expand-content']" :icon="icon" size="default" @click="expand = !expand"></app-btn-icon>
     </v-row>
     <v-divider></v-divider>
     <v-card fluid width="auto" flat class="mx-6">
