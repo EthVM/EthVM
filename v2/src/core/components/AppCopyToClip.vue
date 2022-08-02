@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-btn-icon icon="content-copy" :tooltip-text="props.tooltipText" @click="copy" />
+        <app-btn-icon icon="content_copy" :tooltip-text="props.tooltipText" @click="copy" />
         <v-snackbar v-model="state.showCopyMes" bottom right :color="state.mesColor" class="break-string" :timeout="20000">
             <v-row class="flex-nowrap">
                 {{ state.message }}

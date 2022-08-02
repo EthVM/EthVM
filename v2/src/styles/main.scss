@@ -7,7 +7,8 @@
   $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-penumbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-ambient: settings.$shadow-key-ambient,
-  $shadow-key-umbra: settings.$shadow-key-umbra
+  $shadow-key-umbra: settings.$shadow-key-umbra,
+  $rounded: settings.$rounded
 );
 
 .core-container {
@@ -17,10 +18,11 @@
   @media (min-width: 1240px) {
       width: 100% !important;
   }
-  @media (min-width: 1439px) {
-      max-width: 1390px !important;
+    @media (min-width: 1280px) {
+      max-width: 100% !important;
   }
-}
-.v-icon {
-  font-size: 16px;
+  @media (min-width: 1439px) {
+     width: 1390px !important;
+  }
+  
 }

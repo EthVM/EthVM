@@ -39,6 +39,7 @@ const mainnetLightTheme: ThemeDefinition = {
         info: COLORS.greyText,
         surface: COLORS.offWhite,
         background: COLORS.greyMedium,
+        white: COLORS.white,
         'on-background': COLORS.navy,
         'on-surface': COLORS.navy,
         'on-primary': COLORS.white
@@ -59,6 +60,7 @@ const mainnetDarkTheme: ThemeDefinition = {
         info: COLORS.greyText,
         surface: COLORS.black,
         background: COLORS.greyDark,
+        white: COLORS.blueLight,
         'on-background': COLORS.blueLight,
         'on-surface': COLORS.blueLight,
         'on-primary': COLORS.blueLight,

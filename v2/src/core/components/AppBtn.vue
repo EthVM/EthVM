@@ -47,13 +47,13 @@ const button = computed<ButtonState>(() => {
     return componentProps.isSmall
         ? {
               color: componentProps.btnColor ? componentProps.btnColor : 'textPrimary',
-              size: 'small',
+              size: 'x-small',
               rounded: 'pill',
               minWidth: '84'
           }
         : {
               color: componentProps.btnColor ? componentProps.btnColor : 'secondary',
-              size: 'large',
+              size: 'default',
               rounded: 'pill',
               minWidth: '172'
           }
@@ -64,7 +64,6 @@ const btnClick = (): void => {
 }
 </script>
 <style lang="scss" scoped>
-@forward '~vuetify/lib/components/VBtn/VBtn.sass';
 .large-button {
     transition: 0.7s;
     &:hover {
@@ -75,6 +74,7 @@ const btnClick = (): void => {
     transition: 0.5s;
     &:hover {
         opacity: 100%;
+        border: 1px solid rgba(255, 255, 255, 0);
     }
 }
 .v-icon {

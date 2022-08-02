@@ -3,7 +3,7 @@
         <template #activator="{ props }">
             <slot name="activator" v-bind="{ props }" />
         </template>
-        <v-list bg-color="primary" class="my-2">
+        <v-list bg-color="surface" class="py-2 rounded-b-xl rounded-t-0">
             <slot v-if="$slots.default" />
         </v-list>
     </v-menu>
