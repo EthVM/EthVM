@@ -2,23 +2,23 @@
     <div>
         <v-row v-if="isHome" align="center" justify="space-between" class="pb-1 pr-2 pl-2 my-0">
             <v-col cols="6" class="pl-0">
-                <v-card-title class="title font-weight-bold pl-1">{{ title }}</v-card-title>
+                <v-card-title class="title font-weight-bold pl-1">{{ props.title }}</v-card-title>
             </v-col>
             <v-spacer />
             <v-col class="flex-grow-0">
-                <v-btn :to="pageLink" outline color="secondary" class="text-capitalize ma-0">View All</v-btn>
+                <v-btn :to="props.pageLink" outline color="secondary" class="text-capitalize ma-0">View All</v-btn>
             </v-col>
         </v-row>
         <v-row v-else align="center" row wrap fill-height pa-2>
             <v-col grow class="title-live">
                 <v-row align-center justify-start row wrap pa-1 class="my-0">
-                    <v-card-title class="title font-weight-bold pl-1">{{ title }} </v-card-title>
-                    <p v-if="hasCaption" class="info--text pl-1">{{ titleCaption }}</p>
+                    <v-card-title class="title font-weight-bold pl-1">{{ props.title }} </v-card-title>
+                    <p v-if="hasCaption" class="info--text pl-1">{{ props.titleCaption }}</p>
                     <slot name="update" />
                 </v-row>
             </v-col>
             <v-spacer />
-            <v-col v-if="hasPagination && !smAndDown" shrink hidden-sm-and-down>
+            <v-col v-if="props.hasPagination && !smAndDown" shrink hidden-sm-and-down>
                 <slot name="pagination" />
             </v-col>
             <v-col cols="12" v-if="!mdAndUp" hidden-md-and-up>
@@ -26,7 +26,7 @@
                     <slot name="filter" />
                 </v-row>
             </v-col>
-            <v-col v-if="hasPagination && !mdAndUp" cols="12" hidden-md-and-up>
+            <v-col v-if="props.hasPagination && !mdAndUp" cols="12" hidden-md-and-up>
                 <v-row align-center justify-center pa-2>
                     <slot name="pagination" />
                 </v-row>

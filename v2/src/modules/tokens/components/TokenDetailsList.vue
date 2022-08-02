@@ -1,7 +1,7 @@
 <template>
     <v-row row wrap justify="start" class="mb-4">
         <v-col xs="12">
-            <app-details-list :title="title" :details="details" :is-loading="isLoading || state.hasError" :max-items="10" class="mb-4">
+            <app-details-list :title="title" :details="details" :is-loading="props.isLoading || state.hasError" :max-items="10" class="mb-4">
                 <template #title>
                     <v-row grid-list-xs row align="center" justify="space-between" class="fill-height pl-4 pr-2 my-0">
                         <v-col>

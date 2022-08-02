@@ -1,16 +1,16 @@
 <template>
     <v-card :color="getColor" :class="getBackground" flat class="mt-1 pr-1 white--text info-card" height="150px">
         <v-container fluid wrap fill-height row>
-            <v-row v-if="!isLoading" xs="12" class="my-0 text-white">
-                <p v-if="!isDate" class="text-h4 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ value }}</p>
+            <v-row v-if="!props.isLoading" xs="12" class="my-0 text-white">
+                <p v-if="!props.isDate" class="text-h4 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ props.value }}</p>
                 <p v-else class="text-h4 text-truncate font-weight-medium pb-0 pl-1 mb-0">{{ timeFrom }}</p>
-                <p v-if="metrics" class="headline pl-1 mb-0">{{ metrics }}</p>
+                <p v-if="props.metrics" class="headline pl-1 mb-0">{{ props.metrics }}</p>
             </v-row>
             <v-row v-else xs="12" class="my-0">
                 <v-progress-linear :color="colorLoading" background-color="white" background-opacity="0.3" value="40" indeterminate height="21" class="ma-0" />
             </v-row>
             <v-row xs="12" class="my-0">
-                <v-card-text class="text-uppercase pt-0 pl-1 mt-4 text-white">{{ title }}</v-card-text>
+                <v-card-text class="text-uppercase pt-0 pl-1 mt-4 text-white">{{ props.title }}</v-card-text>
             </v-row>
         </v-container>
     </v-card>

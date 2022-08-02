@@ -23,10 +23,14 @@ query getBlockTransfers($_number: Int) {
     }
 }
 
+fragment EthTransfers on ETHTransfers {
+    ...TxSummary
+    nextKey
+}
+
 query getAllTxs($_limit: Int, $_nextKey: String) {
     getAllEthTransfers(limit: $_limit, nextKey: $_nextKey) {
-        ...TxSummary
-        nextKey
+        ...EthTransfers
     }
 }
 

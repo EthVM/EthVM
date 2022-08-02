@@ -10,7 +10,7 @@
                 <v-btn
                     variant="outlined"
                     color="primary"
-                    :disabled="currentPage === 0"
+                    :disabled="props.currentPage === 0"
                     flat
                     class="bttnGrey info--text text-capitalize bttn"
                     small
@@ -26,7 +26,7 @@
                 <v-btn
                     variant="outlined"
                     color="primary"
-                    :disabled="currentPage === 0"
+                    :disabled="props.currentPage === 0"
                     flat
                     class="bttnGrey info--text text-capitalize bttn"
                     small

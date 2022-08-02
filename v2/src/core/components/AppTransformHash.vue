@@ -1,10 +1,10 @@
 <template>
     <div class="hash-container font-mono">
-        <div v-if="!hasLink" :class="isBlue ? `secondary--text` : `black--text`">
+        <div v-if="!hasLink" :class="props.isBlue ? `secondary--text` : `black--text`">
             <div class="firstPart">{{ start }}</div>
             <div class="lastPart">{{ end }}</div>
         </div>
-        <router-link v-else :to="link" :class="isBlue ? `secondary--text` : `black--text`">
+        <router-link v-else :to="props.link" :class="props.isBlue ? `secondary--text` : `black--text`">
             <div class="firstPart">{{ start }}</div>
             <div class="lastPart">{{ end }}</div>
         </router-link>

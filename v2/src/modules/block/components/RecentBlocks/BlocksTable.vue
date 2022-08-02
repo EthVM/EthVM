@@ -37,13 +37,13 @@
         <v-container fluid v-if="!hasMessage" :style="getStyle" flat class="scroll-y pt-2 pr-2 pl-2 pb-0">
             <v-row column class="mb-1">
                 <v-col>
-                    <template v-if="!isLoading">
-                        <div v-for="(block, index) in blockData" :key="index">
-                            <table-blocks-row :block="block" :page-type="pageType" />
+                    <template v-if="!props.isLoading">
+                        <div v-for="(block, index) in props.blockData" :key="index">
+                            <table-blocks-row :block="block" :page-type="props.pageType" />
                         </div>
                     </template>
-                    <div v-if="isLoading">
-                        <div v-for="i in maxItems" :key="i">
+                    <div v-if="props.isLoading">
+                        <div v-for="i in props.maxItems" :key="i">
                             <app-table-row-loading />
                         </div>
                     </div>

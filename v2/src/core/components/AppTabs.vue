@@ -23,7 +23,7 @@
                         </v-toolbar>
                     </template>
                     <v-list>
-                        <v-list-item v-for="tab in tabs" :key="tab.id" @click="setTab(tab.id)">
+                        <v-list-item v-for="tab in props.tabs" :key="tab.id" @click="setTab(tab.id)">
                             <v-list-item-subtitle>
                                 <p :class="[tab.isActive ? 'primary--text' : '', 'body-1 pl-2']">{{ tab.title }}</p>
                             </v-list-item-subtitle>
@@ -38,7 +38,14 @@
             -->
             <v-col v-if="!smAndDown" class="pa-0">
                 <v-tabs v-model="state.activeTab" color="primary" @change="$emit('change-tab', $event)">
-                    <v-tab v-for="item in tabs" :key="item.id" :value="`tab-${item.id}`" class="text-capitalize pb-1" :ripple="false" slider-color="primary">
+                    <v-tab
+                        v-for="item in props.tabs"
+                        :key="item.id"
+                        :value="`tab-${item.id}`"
+                        class="text-capitalize pb-1"
+                        :ripple="false"
+                        slider-color="primary"
+                    >
                         {{ item.title }}
                     </v-tab>
                 </v-tabs>

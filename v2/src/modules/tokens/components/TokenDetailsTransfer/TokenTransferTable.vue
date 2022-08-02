@@ -1,13 +1,13 @@
 <template>
     <v-card color="white" flat class="pr-2 pl-2 pt-3">
         <!-- Pagination -->
-        <v-row v-if="showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">
-            <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading || hasError" @newPage="setPage" />
+        <v-row v-if="props.showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">
+            <app-paginate-has-more :current-page="props.index" :has-more="props.hasMore" :loading="props.loading || props.hasError" @newPage="setPage" />
         </v-row>
         <!-- End Pagination -->
 
         <!-- Table Header -->
-        <div v-if="!hasError">
+        <div v-if="!props.hasError">
             <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-sm-and-down" height="40px">
                 <v-row align="center" justify="start" class="fill-height pr-2">
                     <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" :md="isERC721 ? 6 : 7">
@@ -28,23 +28,28 @@
             <!-- End Table Header -->
 
             <!-- Start Rows -->
-            <div v-if="loading || hasError">
+            <div v-if="props.loading || props.hasError">
                 <v-col sm="12">
-                    <div v-for="i in maxItems" :key="i" :class="[sm || xs ? 'table-row-mobile mb-2' : '']">
+                    <div v-for="i in props.maxItems" :key="i" :class="[sm || xs ? 'table-row-mobile mb-2' : '']">
                         <v-progress-linear color="lineGrey" value="40" indeterminate height="15" class="ma-2" />
                     </div>
                 </v-col>
             </div>
             <div v-else>
-                <v-card v-if="!hasItems" flat>
+                <v-card v-if="!props.hasItems" flat>
                     <v-card-text class="text-xs-center secondary--text">No transfers</v-card-text>
                 </v-card>
-                <v-card v-for="(transfer, index) in transfers" v-else :key="index" color="white" class="transparent" flat>
-                    <transfers-table-row :transfer="transfer" :decimals="decimals" :symbol="symbol" :transfer-type="transferType" />
+                <v-card v-for="(transfer, index) in props.transfers" v-else :key="index" color="white" class="transparent" flat>
+                    <transfers-table-row :transfer="transfer" :decimals="props.decimals" :symbol="props.symbol" :transfer-type="props.transferType" />
                 </v-card>
                 <!-- End Rows -->
-                <v-row v-if="showPagination" justify="center" justify-md="end" row class="pb-1 pr-2 pl-2">
-                    <app-paginate-has-more :current-page="index" :has-more="hasMore" :loading="loading || hasError" @newPage="setPage" />
+                <v-row v-if="props.showPagination" justify="center" justify-md="end" row class="pb-1 pr-2 pl-2">
+                    <app-paginate-has-more
+                        :current-page="props.index"
+                        :has-more="props.hasMore"
+                        :loading="props.loading || props.hasError"
+                        @newPage="setPage"
+                    />
                 </v-row>
             </div>
         </div>

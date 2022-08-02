@@ -30,7 +30,7 @@
 import { ref, computed } from 'vue'
 //Apollo
 import { useResult } from '@vue/apollo-composable'
-import { useGetLatestBlockInfoQuery } from './apollo/BlockStats/blockStats.generated'
+import { BlockInfoFragment, useGetLatestBlockInfoQuery } from './apollo/BlockStats/blockStats.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
 
 import BN from 'bignumber.js'
@@ -41,8 +41,17 @@ import BlockStatsCard from './components/BlockStatsCard.vue'
 const { result: blockInfo, loading, refetch } = useGetLatestBlockInfoQuery()
 const { onNewBlockLoaded } = useBlockSubscription()
 
-const blockNumber = useResult(blockInfo, null, data => new BN(data.getLatestBlockInfo.number).toFormat())
-const latestBlockInfo = useResult(blockInfo, null, data => data.getLatestBlockInfo)
+const blockNumber = computed<number | string>(() => {
+    if (blockInfo.value) {
+        return new BN(blockInfo.value?.getLatestBlockInfo.number).toFormat()
+    }
+    return 0
+})
+
+const latestBlockInfo = computed<BlockInfoFragment | undefined>(() => {
+    return blockInfo.value?.getLatestBlockInfo
+})
+
 const timestamp = ref(new Date().toString())
 
 // Computed properties
@@ -61,7 +70,7 @@ const latestDifficulty = computed<string>(() => {
 })
 
 onNewBlockLoaded(res => {
-    const number = res.data.newBlockFeed.number
+    const number = res.data?.newBlockFeed.number
     if (number && number !== blockNumber.value) {
         timestamp.value = new Date().toString()
         refetch()

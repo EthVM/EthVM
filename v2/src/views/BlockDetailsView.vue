@@ -11,7 +11,7 @@
             <v-col cols="12">
                 <block-details
                     v-if="isValid"
-                    :block-ref="blockRef"
+                    :block-ref="props.blockRef"
                     :is-hash="isHash"
                     @errorDetails="setError"
                     @isMined="setIsMined"

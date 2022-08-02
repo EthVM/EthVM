@@ -11,21 +11,30 @@
                 <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" :md="isERC721 ? 6 : 7">
                     <v-row align="center" justify="start" class="pa-2 flex-nowrap">
                         <p class="info--text tx-hash">Tx #:</p>
-                        <app-transform-hash :hash="transfer.transfer.transactionHash" :link="`/tx/${transfer.transfer.transactionHash}`" />
+                        <app-transform-hash :hash="props.transfer.transfer.transactionHash" :link="`/tx/${props.transfer.transfer.transactionHash}`" />
                     </v-row>
                     <v-row align="center" justify="space-around" class="fill-height pa-2 flex-nowrap">
                         <p class="info--text mr-1">From:</p>
-                        <app-transform-hash :hash="eth.toCheckSum(transfer.transfer.from)" :link="`/address/${transfer.transfer.from}`" :italic="true" />
-                        <v-icon class="primary--text pl-2 pr-2" small>east</v-icon>
-                        <p v-if="transfer.transfer.contract" class="info--text mr-1">Contract:</p>
-                        <p v-else class="info--text mr-1">To:</p>
                         <app-transform-hash
-                            v-if="transfer.transfer.contract"
-                            :hash="eth.toCheckSum(transfer.transfer.address)"
-                            :link="`/address/${transfer.transfer.address}`"
+                            :hash="eth.toCheckSum(props.transfer.transfer.from)"
+                            :link="`/address/${props.transfer.transfer.from}`"
                             :italic="true"
                         />
-                        <app-transform-hash v-else :hash="eth.toCheckSum(transfer.transfer.to)" :link="`/address/${transfer.transfer.to}`" :italic="true" />
+                        <v-icon class="primary--text pl-2 pr-2" small>east</v-icon>
+                        <p v-if="props.transfer.transfer.contract" class="info--text mr-1">Contract:</p>
+                        <p v-else class="info--text mr-1">To:</p>
+                        <app-transform-hash
+                            v-if="props.transfer.transfer.contract"
+                            :hash="eth.toCheckSum(props.transfer.transfer.address)"
+                            :link="`/address/${props.transfer.transfer.address}`"
+                            :italic="true"
+                        />
+                        <app-transform-hash
+                            v-else
+                            :hash="eth.toCheckSum(props.transfer.transfer.to)"
+                            :link="`/address/${props.transfer.transfer.to}`"
+                            :italic="true"
+                        />
                     </v-row>
                 </v-col>
                 <!-- End Column 1 -->

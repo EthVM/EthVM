@@ -1,9 +1,9 @@
 <template>
-    <div v-if="hasError">
+    <div v-if="props.hasError">
         <v-card flat class="pa-5">
             <v-row class="error--text headline justify-center align-center">Error</v-row>
             <v-row class="justify-center subheading text-md-center">
-                {{ message }}
+                {{ props.message }}
             </v-row>
         </v-card>
     </div>
