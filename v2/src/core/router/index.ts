@@ -8,6 +8,7 @@ import UncleDetailsView from '@view/UncleDetailsView.vue'
 import TokenDetailsView from '@view/TokenDetailsView.vue'
 import TxsView from '@view/TxsView.vue'
 import AddressTokensView from '@view/AddressTokensView.vue'
+import TokensView from '@view/TokensView.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
 
@@ -92,7 +93,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.TOKENS.PATH,
         name: ROUTE_NAME.TOKENS.NAME,
-        component: ViewTemp
+        component: TokensView
     }
 ]
 

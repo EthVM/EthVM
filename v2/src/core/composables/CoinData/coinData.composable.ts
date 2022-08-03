@@ -14,17 +14,17 @@ export function useCoinData() {
         return true
     }
 
-    const filteredLatestPrice = computed<any>(() => {
+    const filteredLatestPrice = computed<Array<TokenMarketData | null>>(() => {
         if (coinData.value && coinData.value?.getLatestPrices.length > 0) {
-            const filteredRes = coinData.value?.getLatestPrices.filter(token => hasData(token) && token?.id !== 'ethereum')
+            const filteredRes = coinData.value.getLatestPrices.filter(token => hasData(token) && token?.id !== 'ethereum')
             return filteredRes || []
         }
         return []
     })
 
-    const ethereumTokens = computed<any>(() => {
+    const ethereumTokens = computed<Array<TokenMarketData | null>>(() => {
         if (coinData.value && coinData.value?.getLatestPrices.length > 0) {
-            const filteredRes = coinData.value?.getLatestPrices.filter(token => token?.id !== 'ethereum')
+            const filteredRes = filteredLatestPrice.value.filter(token => token?.id !== 'ethereum')
             return filteredRes || []
         }
         return []
