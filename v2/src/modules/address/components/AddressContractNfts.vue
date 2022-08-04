@@ -1,37 +1,42 @@
 <template>
     <div class="nft-container">
-        <div class="sticky-header">
-            <v-btn variant="text" class="text-subtitle-1" @click="showMoreTokens">
-                {{ props.name }}
-                <v-icon v-if="hasMore">expand_more</v-icon>
-            </v-btn>
-            <v-divider class="my-3" />
-        </div>
-        <template v-if="!loading && tokens.tokens.length > 0">
-            <v-row class="tokens-list">
-                <v-col cols="4" md="2" v-for="token in visibleTokens" :key="token.token">
-                    <div>
-                        <v-img :src="getImage(token.token)" max-height="150" />
-                        <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
-                    </div>
-                </v-col>
-                <template v-if="visibleTokens.length > 6">
-                    <v-lazy v-model="state.isEmptyCardVisible" class="w-100" :options="{ threshold: 1 }">
-                        <v-row>
-                            <v-col cols="4" md="2">
-                                <v-card height="150" md="2"></v-card>
-                            </v-col>
-                            <v-col cols="4" md="2">
-                                <v-card height="150" md="2"></v-card>
-                            </v-col>
-                            <v-col cols="4" md="2">
-                                <v-card height="150" md="2"></v-card>
-                            </v-col>
-                        </v-row>
-                    </v-lazy>
-                </template>
-            </v-row>
-        </template>
+        <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" :has-more="hasMore" class="pt-3">
+            <template #visible-content>
+                <v-row class="tokens-list">
+                    <v-col cols="4" md="2" v-for="token in visibleTokens.slice(0, 6)" :key="token.token">
+                        <div>
+                            <v-img :src="getImage(token.token)" max-height="150" />
+                            <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
+                        </div>
+                    </v-col>
+                </v-row>
+            </template>
+            <template #expand-content>
+                <v-row class="tokens-list">
+                    <v-col cols="4" md="2" v-for="token in visibleTokens.slice(6, state.end)" :key="token.token">
+                        <div>
+                            <v-img :src="getImage(token.token)" max-height="150" />
+                            <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
+                        </div>
+                    </v-col>
+                    <template v-if="visibleTokens.length > 6">
+                        <v-lazy v-model="state.isEmptyCardVisible" class="w-100" :options="{ threshold: 1 }">
+                            <v-row>
+                                <v-col cols="4" md="2">
+                                    <v-card height="150" md="2"></v-card>
+                                </v-col>
+                                <v-col cols="4" md="2">
+                                    <v-card height="150" md="2"></v-card>
+                                </v-col>
+                                <v-col cols="4" md="2">
+                                    <v-card height="150" md="2"></v-card>
+                                </v-col>
+                            </v-row>
+                        </v-lazy>
+                    </template>
+                </v-row>
+            </template>
+        </app-expansion-panel>
         <template v-else>
             <v-row>
                 <v-col cols="4" md="2">
@@ -50,6 +55,7 @@
 import { OwnerErc721Fragment, TokenFragment, useGetOwnersErc721TokensQuery } from '../apollo/tokens.generated'
 import { computed, reactive, watch } from 'vue'
 import BigNumber from 'bignumber.js'
+import AppExpansionPanel from '@core/components/AppExpansionPanel.vue'
 import configs from '@/configs'
 
 const props = defineProps({
