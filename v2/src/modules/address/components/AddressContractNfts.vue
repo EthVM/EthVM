@@ -8,13 +8,28 @@
             <v-divider class="my-3" />
         </div>
         <template v-if="!loading && tokens.tokens.length > 0">
-            <v-row class="tokens-list" v-scroll.self="handleScroll">
+            <v-row class="tokens-list">
                 <v-col cols="4" md="2" v-for="token in visibleTokens" :key="token.token">
                     <div>
                         <v-img :src="getImage(token.token)" max-height="150" />
                         <p class="text-caption">{{ props.name }} #{{ getTokenId(token.token) }}</p>
                     </div>
                 </v-col>
+                <template v-if="visibleTokens.length > 6">
+                    <v-lazy v-model="state.isEmptyCardVisible" class="w-100" :options="{ threshold: 1 }">
+                        <v-row>
+                            <v-col cols="4" md="2">
+                                <v-card height="150" md="2"></v-card>
+                            </v-col>
+                            <v-col cols="4" md="2">
+                                <v-card height="150" md="2"></v-card>
+                            </v-col>
+                            <v-col cols="4" md="2">
+                                <v-card height="150" md="2"></v-card>
+                            </v-col>
+                        </v-row>
+                    </v-lazy>
+                </template>
             </v-row>
         </template>
         <template v-else>
@@ -33,7 +48,7 @@
 
 <script setup lang="ts">
 import { OwnerErc721Fragment, TokenFragment, useGetOwnersErc721TokensQuery } from '../apollo/tokens.generated'
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import BigNumber from 'bignumber.js'
 import configs from '@/configs'
 
@@ -46,7 +61,8 @@ const props = defineProps({
 const state = reactive({
     showMore: false,
     end: 6,
-    offsetTop: 0
+    offsetTop: 0,
+    isEmptyCardVisible: false
 })
 
 const { result, loading } = useGetOwnersErc721TokensQuery(
@@ -91,20 +107,21 @@ const getImage = (token: string): string => {
     return require('@/assets/icon-token.png')
 }
 
-const handleScroll = (e: MouseEvent) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.target
-    state.offsetTop = scrollTop
-    const showMoreTokens = scrollHeight - clientHeight < scrollTop + 100
-    if (showMoreTokens) {
-        state.end += 24
+watch(
+    () => state.isEmptyCardVisible,
+    val => {
+        if (val) {
+            state.end += 24
+            state.isEmptyCardVisible = false
+        }
     }
-}
+)
 </script>
 
 <style lang="scss" scoped>
 .nft-container {
-    min-height: 250px;
-    max-height: 1000px;
+    //min-height: 250px;
+    //max-height: 1000px;
     margin-bottom: 50px;
 
     .sticky-header {
@@ -113,31 +130,31 @@ const handleScroll = (e: MouseEvent) => {
     }
 
     .tokens-list {
-        max-height: 700px;
-        overflow-y: auto;
+        //max-height: 700px;
+        //overflow-y: auto;
 
         /* width */
-        &::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        /* Track */
-        &::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 5px;
-        }
-
-        /* Handle */
-        &::-webkit-scrollbar-thumb {
-            background: rgba(#000, 0.2);
-            border-radius: 5px;
-            transition: background 0.2s ease-out;
-
-            /* Handle on hover */
-            &:hover {
-                background: rgba(#000, 0.3);
-            }
-        }
+        //&::-webkit-scrollbar {
+        //    width: 10px;
+        //}
+        //
+        ///* Track */
+        //&::-webkit-scrollbar-track {
+        //    background: #f1f1f1;
+        //    border-radius: 5px;
+        //}
+        //
+        ///* Handle */
+        //&::-webkit-scrollbar-thumb {
+        //    background: rgba(#000, 0.2);
+        //    border-radius: 5px;
+        //    transition: background 0.2s ease-out;
+        //
+        //    /* Handle on hover */
+        //    &:hover {
+        //        background: rgba(#000, 0.3);
+        //    }
+        //}
     }
 }
 </style>

@@ -4,7 +4,7 @@
             <v-lazy @update:modelValue="tokenVisible($event, token.tokenInfo.contract)" min-height="250" :options="{ threshold: 0.5 }">
                 <div>
                     <template v-if="visibleTokens.has(token.tokenInfo.contract)">
-                        <single-address-nfts :name="token.tokenInfo.name" :contract="token.tokenInfo.contract" :address-hash="props.addressHash" />
+                        <address-contract-nfts :name="token.tokenInfo.name" :contract="token.tokenInfo.contract" :address-hash="props.addressHash" />
                     </template>
                 </div>
             </v-lazy>
@@ -21,8 +21,7 @@ import {
     useGetNfTcontractsMetaQuery,
     useGetOwnersErc721BalancesQuery
 } from '@module/address/apollo/tokens.generated'
-import SingleAddressNfts from '@module/address/components/SingleAddressNft.vue'
-
+import AddressContractNfts from '@module/address/components/AddressContractNfts.vue'
 const props = defineProps({
     addressHash: { type: String, required: true }
 })
