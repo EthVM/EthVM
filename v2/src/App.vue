@@ -2,8 +2,8 @@
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
         <the-app-header />
-        <v-main class="mx-2 mx-sm-6 mx-xl-auto">
-            <v-container class="px-0 pt-8 core-container" :fluid="isFluidView">
+        <v-main :class="{ 'mx-2 mx-sm-6 mx-xl-auto': !isAddressView }">
+            <v-container :class="[isAddressView ? 'pa-0' : 'px-0 pt-8 core-container']" :fluid="isFluidView || isAddressView">
                 <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
                 <router-view />
             </v-container>
@@ -19,6 +19,10 @@ import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useTheme } from 'vuetify'
 import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { ROUTE_NAME } from '@core/router/routesNames'
+
 const store = useStore()
 
 store.loadingCoinData = true
@@ -34,6 +38,17 @@ const toggleTheme = () => {
 }
 
 const { isFluidView } = useAppIsFluid()
+
+const route = useRoute()
+/**
+ * Checks if Address View Only
+ * Remove all paddings/margins and sets container to fluid
+ * This is done to accomodate addree view ui
+ * Address view must control breakpoints
+ */
+const isAddressView = computed<boolean>(() => {
+    return route.name === ROUTE_NAME.ADDRESS.NAME
+})
 </script>
 <style lang="scss">
 .app-view {
