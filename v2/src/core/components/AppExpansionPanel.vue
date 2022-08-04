@@ -5,22 +5,22 @@
         -->
         <slot name="title-content"></slot>
         <p class="text-h6 mr-4">{{ props.title }}</p>
-        <app-btn-icon v-if="$slots['expand-content'] && props.hasMore" :icon="icon" size="default" @click="expandPanel"></app-btn-icon>
+        <app-btn-icon v-if="$slots['expand-content']" :icon="icon" size="default" @click="expandPanel"></app-btn-icon>
     </v-row>
     <v-divider></v-divider>
-    <div fluid width="auto" flat class="mx-6">
+    <v-card fluid width="auto" flat class="mx-6">
         <!--
             Use visible-content slot to show items that a visible when expansion panel is closed
         -->
         <slot name="visible-content"></slot>
-    </div>
+    </v-card>
     <v-expand-transition>
-        <div fluid v-if="expand" width="auto" flat class="mx-6">
+        <v-card fluid v-if="expand" width="auto" flat class="mx-6">
             <!--
                 Use expand-content slot to show items that a visible when expansion panel is opened
             -->
             <slot name="expand-content"></slot>
-        </div>
+        </v-card>
     </v-expand-transition>
 </template>
 
@@ -33,9 +33,6 @@ import AppBtnIcon from './AppBtnIcon.vue'
 const props = defineProps({
     title: {
         type: String
-    },
-    hasMore: {
-        type: Boolean
     }
 })
 

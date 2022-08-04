@@ -1,6 +1,6 @@
 <template>
     <div class="nft-container">
-        <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" :has-more="hasMore" class="pt-3" @expand="showMoreTokens">
+        <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" class="pt-3" @expand="showMoreTokens">
             <template #visible-content>
                 <v-row class="tokens-list">
                     <v-col cols="4" md="2" v-for="token in visibleTokens.slice(0, 6)" :key="token.token">
@@ -11,7 +11,7 @@
                     </v-col>
                 </v-row>
             </template>
-            <template #expand-content>
+            <template v-if="hasMore" #expand-content>
                 <v-row class="tokens-list">
                     <v-col cols="4" md="2" v-for="token in visibleTokens.slice(6, state.end)" :key="token.token">
                         <div>

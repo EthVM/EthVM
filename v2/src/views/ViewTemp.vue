@@ -17,7 +17,7 @@
                         <app-btn-icon icon="content_copy" color="warning" tooltip-text="Hello" />
                     </v-col>
                     <v-col cols="12">
-                        <app-expansion-panel title="Default Expansion Panel" has-more class="pt-3">
+                        <app-expansion-panel title="Default Expansion Panel" class="pt-3">
                             <template #visible-content>
                                 <p v-for="i in 3" :key="i">Hello {{ i }}</p></template
                             >
