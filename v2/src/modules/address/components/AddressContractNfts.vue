@@ -1,6 +1,6 @@
 <template>
     <div class="nft-container">
-        <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" :has-more="hasMore" class="pt-3">
+        <app-expansion-panel v-if="!loading && tokens.tokens.length > 0" :title="props.name" :has-more="hasMore" class="pt-3" @expand="showMoreTokens">
             <template #visible-content>
                 <v-row class="tokens-list">
                     <v-col cols="4" md="2" v-for="token in visibleTokens.slice(0, 6)" :key="token.token">
@@ -20,19 +20,25 @@
                         </div>
                     </v-col>
                     <template v-if="visibleTokens.length > 6">
-                        <v-lazy v-model="state.isEmptyCardVisible" class="w-100" :options="{ threshold: 1 }">
-                            <v-row>
-                                <v-col cols="4" md="2">
-                                    <v-card height="150" md="2"></v-card>
-                                </v-col>
-                                <v-col cols="4" md="2">
-                                    <v-card height="150" md="2"></v-card>
-                                </v-col>
-                                <v-col cols="4" md="2">
-                                    <v-card height="150" md="2"></v-card>
-                                </v-col>
-                            </v-row>
-                        </v-lazy>
+                        <v-row
+                            class="ma-0"
+                            v-intersect="{
+                                handler: onIntersect,
+                                options: {
+                                    threshold: 0.5
+                                }
+                            }"
+                        >
+                            <v-col cols="4" md="2">
+                                <v-img :src="getImage()" max-height="150" />
+                            </v-col>
+                            <v-col cols="4" md="2">
+                                <v-img :src="getImage()" max-height="150" />
+                            </v-col>
+                            <v-col cols="4" md="2">
+                                <v-img :src="getImage()" max-height="150" />
+                            </v-col>
+                        </v-row>
                     </template>
                 </v-row>
             </template>
@@ -66,9 +72,7 @@ const props = defineProps({
 
 const state = reactive({
     showMore: false,
-    end: 6,
-    offsetTop: 0,
-    isEmptyCardVisible: false
+    end: 6
 })
 
 const { result, loading } = useGetOwnersErc721TokensQuery(
@@ -112,16 +116,11 @@ const getImage = (token: string): string => {
     }
     return require('@/assets/icon-token.png')
 }
-
-watch(
-    () => state.isEmptyCardVisible,
-    val => {
-        if (val) {
-            state.end += 24
-            state.isEmptyCardVisible = false
-        }
+const onIntersect = (e: boolean): false => {
+    if (e) {
+        state.end += 24
     }
-)
+}
 </script>
 
 <style lang="scss" scoped>
