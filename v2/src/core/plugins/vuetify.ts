@@ -42,7 +42,8 @@ const mainnetLightTheme: ThemeDefinition = {
         white: COLORS.white,
         'on-background': COLORS.navy,
         'on-surface': COLORS.navy,
-        'on-primary': COLORS.white
+        'on-primary': COLORS.white,
+        'on-surface-tabs': COLORS.blue
     }
 }
 
@@ -64,7 +65,8 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-background': COLORS.blueLight,
         'on-surface': COLORS.blueLight,
         'on-primary': COLORS.blueLight,
-        'on-secondary': COLORS.blueLight
+        'on-secondary': COLORS.blueLight,
+        'on-surface-tabs': COLORS.blueLight
     }
 }
 

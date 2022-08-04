@@ -100,7 +100,7 @@ const { isFluidView } = useAppIsFluid()
 }
 .v-tab--selected {
     background-color: rgb(var(--v-theme-surface));
-    color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-on-surface-tabs));
 }
 .temp {
     background-color: rgb(var(--v-theme-primary));
