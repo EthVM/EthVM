@@ -47,7 +47,14 @@ const route = useRoute()
  * Address view must control breakpoints
  */
 const isAddressView = computed<boolean>(() => {
-    return route.name === ROUTE_NAME.ADDRESS.NAME
+    return (
+        route.name === ROUTE_NAME.ADDRESS.NAME ||
+        route.name === ROUTE_NAME.ADDRESS_BALANCE.NAME ||
+        route.name === ROUTE_NAME.ADDRESS_NFTS.NAME ||
+        route.name === ROUTE_NAME.ADDRESS_TOKENS.NAME ||
+        route.name === ROUTE_NAME.ADDRESS_CONTRACT.NAME ||
+        route.name === ROUTE_NAME.ADDRESS_MINER.NAME
+    )
 })
 </script>
 <style lang="scss">

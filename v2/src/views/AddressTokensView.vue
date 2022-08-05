@@ -1,6 +1,6 @@
 <template>
     <div>
-        <app-error v-if="!isValid" :has-error="!isValid" :message="state.error" />
+        <!-- <app-error v-if="!isValid" :has-error="!isValid" :message="state.error" /> -->
         <template v-if="isValid">
             <v-row>
                 <v-col cols="12">
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import AppError from '@core/components/AppError.vue'
+// import AppError from '@core/components/AppError.vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
 import { eth } from '@core/helper'

@@ -71,15 +71,50 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: ROUTE_NAME.ADDRESS.PATH,
-        name: ROUTE_NAME.ADDRESS.NAME,
+        props: true,
         component: ViewAddress,
-        props: true
-    },
-    {
-        path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
-        name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
-        component: AddressTokensView,
-        props: true
+        children: [
+            {
+                path: '',
+                name: ROUTE_NAME.ADDRESS.NAME,
+                component: ViewTemp,
+                props: true
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_BALANCE.PATH,
+                name: ROUTE_NAME.ADDRESS_BALANCE.NAME,
+                component: ViewTemp,
+                props: true
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
+                name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
+                component: AddressTokensView,
+                props: true
+                // props: route => ({ tab: route.query.t })
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_NFTS.PATH,
+                name: ROUTE_NAME.ADDRESS_NFTS.NAME,
+                component: ViewTemp,
+                props: true
+                // props: route => ({ tab: route.query.t })
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_CONTRACT.PATH,
+                name: ROUTE_NAME.ADDRESS_CONTRACT.NAME,
+                component: ViewTemp,
+                props: true
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_MINER.PATH,
+                name: ROUTE_NAME.ADDRESS_MINER.NAME,
+                component: ViewTemp,
+                props: true
+                // props: route => ({ tab: route.query.t })
+            }
+        ]
+        // beforeEnter: addressRouteGuard
     },
     {
         path: ROUTE_NAME.FAV_ADDRESS.PATH,

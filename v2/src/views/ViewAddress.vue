@@ -8,21 +8,15 @@
             </v-container>
         </v-card>
         <v-tabs v-model="state.tab" background-color="primary" centered hide-slider>
-            <v-tab href="#tab-1" class="py-3 text-h5 text-capitalize rounded-b-xl"> Overview </v-tab>
-            <v-tab href="#tab-2" class="py-3 text-h5 text-capitalize rounded-b-xl">ETH Balance </v-tab>
-            <v-tab href="#tab-3" class="py-3 text-h5 text-capitalize rounded-b-xl"> NFTs </v-tab>
-            <v-tab href="#tab-3" class="py-3 text-h5 text-capitalize rounded-b-xl"> Tokens </v-tab>
+            <v-tab :to="{ name: ROUTES.ADDRESS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> Overview </v-tab>
+            <v-tab :to="{ name: ROUTES.ADDRESS_BALANCE.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl">ETH Balance </v-tab>
+            <v-tab :to="{ name: ROUTES.ADDRESS_NFTS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> NFTs </v-tab>
+            <v-tab :to="{ name: ROUTES.ADDRESS_TOKENS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> Tokens </v-tab>
         </v-tabs>
         <v-window v-model="state.tab" class="mt-6">
             <v-window-item v-for="i in 4" :key="i" :value="i - 1" class="mx-2 mx-sm-6 mx-xl-auto">
                 <v-container class="core-container pa-0" fluid>
-                    <v-row class="">
-                        <v-col v-for="n in 3" :key="n" cols="12" md="6" lg="4">
-                            <v-card rounded="xl" elevation="1" height="256"
-                                ><p>{{ i }}</p></v-card
-                            >
-                        </v-col>
-                    </v-row>
+                    <router-view :address-ref="addressRef"></router-view>
                 </v-container>
             </v-window-item>
         </v-window>
@@ -36,7 +30,9 @@ import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import { ErrorMessage } from '@module/address/models/ErrorMessageAddress'
 import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
+import { ROUTE_NAME } from '@core/router/routesNames'
 
+const ROUTES = ROUTE_NAME
 const props = defineProps({
     addressRef: String
 })
@@ -75,26 +71,26 @@ if (!isValid.value) {
  * @param hasError {Boolean}
  * @param message {ErrorMessageToken}
  */
-const setError = (hasError: boolean, message: ErrorMessage): void => {
-    if (hasError) {
-        if (!state.errorMessages.includes(message)) {
-            state.errorMessages.push(message)
-        }
-    } else {
-        if (state.errorMessages.length > 0) {
-            const index = state.errorMessages.indexOf(message)
-            if (index > -1) {
-                state.errorMessages.splice(index, 1)
-            }
-        }
-    }
-}
+// const setError = (hasError: boolean, message: ErrorMessage): void => {
+//     if (hasError) {
+//         if (!state.errorMessages.includes(message)) {
+//             state.errorMessages.push(message)
+//         }
+//     } else {
+//         if (state.errorMessages.length > 0) {
+//             const index = state.errorMessages.indexOf(message)
+//             if (index > -1) {
+//                 state.errorMessages.splice(index, 1)
+//             }
+//         }
+//     }
+// }
 /**------------------------
  * Grid Handling
  -------------------------*/
 const { isFluidView } = useAppIsFluid()
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .v-tab {
     min-width: 180px;
 }

@@ -2,7 +2,7 @@
     <v-row>
         <v-col cols="12">
             <v-card class="py-6 mt-4" elevation="1" rounded="xl">
-                <v-card-title class="mb-6">Hello I am a temp view for: {{ routeName }}</v-card-title>
+                <v-card-title class="mb-6">Hello I am a temp view for: {{ routeName }}, {{ props.addressRef }}</v-card-title>
                 <v-row>
                     <v-col cols="12" class="px-10"> <app-btn></app-btn> </v-col>
                     <v-col cols="12" class="px-10">
@@ -60,6 +60,13 @@ import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import AppExpansionPanel from '@/core/components/AppExpansionPanel.vue'
 const routeName = computed(() => {
     return useRoute().name
+})
+
+const props = defineProps({
+    addressRef: {
+        type: String,
+        default: ''
+    }
 })
 </script>
 <style lang="scss" scoped></style>
