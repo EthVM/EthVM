@@ -1,7 +1,10 @@
 <template>
     <v-card>
         <v-card-title class="justify-space-between">
-            HRC20 token balance
+            <div>
+                HRC20 token balance
+                <app-new-update text="Token's Balance Changed, Refresh" :update-count="props.newErc20Transfer" hide-count @reload="setPage(0, true)" />
+            </div>
             <app-paginate v-if="!loadingTokens" :total="totalPages" :current-page="state.index" @newPage="setPage" />
         </v-card-title>
         <div>
@@ -137,6 +140,7 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
+import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/tokens.generated'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
@@ -151,8 +155,13 @@ const props = defineProps({
     addressHash: {
         type: String,
         required: true
-    }
+    },
+    newErc20Transfer: Number
 })
+
+const emit = defineEmits<{
+    (e: 'resetCount'): void
+}>()
 
 interface ComponentState {
     showMoreTokenDetails: boolean
@@ -170,9 +179,17 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { result: erc20TokensResult, loading: loadingTokens } = useGetOwnersErc20TokensQuery({
-    hash: props.addressHash
-})
+const {
+    result: erc20TokensResult,
+    loading: loadingTokens,
+    onResult: onTokensLoaded,
+    refetch: refetchTokens
+} = useGetOwnersErc20TokensQuery(
+    {
+        hash: props.addressHash
+    },
+    { notifyOnNetworkStatusChange: true }
+)
 
 const erc20Tokens = computed<Array<TokenOwnersFragment | null> | undefined>(() => {
     return erc20TokensResult.value?.getOwnersERC20Tokens.owners
@@ -267,7 +284,11 @@ const showTokenDetails = (contract: string) => {
     state.activeToken = getEthereumTokenByContract(contract)
 }
 
-const setPage = (page: number) => {
+const setPage = (page: number, reset = false): void => {
+    if (reset) {
+        refetchTokens()
+        emit('resetCount')
+    }
     state.index = page
 }
 </script>

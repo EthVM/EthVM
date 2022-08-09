@@ -130,7 +130,9 @@ const props = defineProps({
     newErc20Transfer: Number
 })
 
-const emit = defineEmits(['resetCount'])
+const emit = defineEmits<{
+    (e: 'resetCount'): void
+}>()
 
 interface ComponentState {
     showMoreTokenDetails: boolean
@@ -167,7 +169,7 @@ const hasMore = computed<boolean>(() => {
 
 const transferHistory = computed<Array<Transfer | null>>(() => result.value?.getERC20Transfers.transfers || [])
 
-const transfers = computed<Array<Transfer>[]>(() => {
+const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
         const start = MAX_ITEMS * state.index
         const end = start + MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + MAX_ITEMS

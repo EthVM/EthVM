@@ -21,8 +21,10 @@
 
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue'
+import AppError from '@core/components/AppError.vue'
 import ModuleAddressTokens from '@module/address/ModuleAddressTokens.vue'
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
+import { eth } from '@core/helper'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
