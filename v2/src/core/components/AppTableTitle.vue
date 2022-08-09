@@ -9,9 +9,9 @@
                 <v-btn :to="props.pageLink" outline color="secondary" class="text-capitalize ma-0">View All</v-btn>
             </v-col>
         </v-row>
-        <v-row v-else align="center" row wrap fill-height pa-2>
+        <v-row v-else align="center" class="mx-0" row wrap fill-height pa-2>
             <v-col grow class="title-live">
-                <v-row align-center justify-start row wrap pa-1 class="my-0">
+                <v-row align="center" justify="start" row wrap pa-1 class="my-0">
                     <v-card-title class="title font-weight-bold pl-1">{{ props.title }} </v-card-title>
                     <p v-if="hasCaption" class="info--text pl-1">{{ props.titleCaption }}</p>
                     <slot name="update" />

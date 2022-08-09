@@ -5,7 +5,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { createClient } from 'graphql-ws'
 import { onError } from '@apollo/client/link/error'
 import { getMainDefinition } from '@apollo/client/utilities'
-// import { OpenSeaClient } from './opensea/osClient'
+import { OpenSeaClient } from './opensea/OpenSeaClient'
 // import { FavAddrClient } from './favorite-addresses/favAddrClient'
 // import { FavTokClient } from './favorite-tokens/favTokenClient'
 // import { LocalStoreClient } from './local-store-global/localStoreClient'
@@ -88,8 +88,8 @@ const apolloClient = new ApolloClient({
 })
 
 export default {
-    default: apolloClient
-    // OpenSeaClient,
+    default: apolloClient,
+    openSeaClient: OpenSeaClient
     // FavAddrClient,
     // FavTokClient,
     // LocalStoreClient,

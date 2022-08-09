@@ -28,6 +28,12 @@ export enum AddressEventType {
     NewMinedUncle = 'NEW_MINED_UNCLE'
 }
 
+export type AddressNfTcontracts = {
+    __typename?: 'AddressNFTcontracts'
+    address: Scalars['String']
+    tokenContracts?: Maybe<Array<Maybe<NftContract>>>
+}
+
 export type AllTransfer = {
     __typename?: 'AllTransfer'
     contract?: Maybe<Scalars['String']>
@@ -250,6 +256,16 @@ export type MutationVerifyContractArgs = {
     contractData: Scalars['String']
 }
 
+export type NftContract = {
+    __typename?: 'NFTContract'
+    contractIdAddress: Scalars['String']
+    contractImage?: Maybe<Scalars['String']>
+    description?: Maybe<Scalars['String']>
+    name?: Maybe<Scalars['String']>
+    owned_asset_count: Scalars['Int']
+    primary_asset_contracts?: Maybe<Array<PrimaryAssetContract>>
+}
+
 export type PendingTransfer = {
     __typename?: 'PendingTransfer'
     from: Scalars['String']
@@ -258,6 +274,17 @@ export type PendingTransfer = {
     transactionHash: Scalars['String']
     txFee: Scalars['String']
     value: Scalars['String']
+}
+
+export type PrimaryAssetContract = {
+    __typename?: 'PrimaryAssetContract'
+    address: Scalars['String']
+    description?: Maybe<Scalars['String']>
+    external_link?: Maybe<Scalars['String']>
+    image_url?: Maybe<Scalars['String']>
+    name?: Maybe<Scalars['String']>
+    symbol?: Maybe<Scalars['String']>
+    total_supply?: Maybe<Scalars['Int']>
 }
 
 export type Query = {
@@ -314,6 +341,7 @@ export type Query = {
     getHashType: HashType
     getLatestBlockInfo: LatestBlockData
     getLatestPrices: Array<Maybe<TokenMarketInfo>>
+    getNFTcontractsMeta: AddressNfTcontracts
     /** Returns a list of all ERC20Tokens owned by an address */
     getOwnersERC20Tokens: Erc20TokenOwners
     /** Returns a list of ERC721 balances */
@@ -458,6 +486,10 @@ export type QueryGetGenesisRewardsArgs = {
 
 export type QueryGetHashTypeArgs = {
     hash: Scalars['String']
+}
+
+export type QueryGetNfTcontractsMetaArgs = {
+    address: Scalars['String']
 }
 
 export type QueryGetOwnersErc20TokensArgs = {

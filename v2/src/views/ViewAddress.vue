@@ -1,7 +1,8 @@
 <template>
-    <div class="adr-core-background pb-6">
-        <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
-        <app-message :messages="state.errorMessages" />
+    <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
+
+    <div v-if="isValid" class="adr-core-background pb-6">
+        <!-- <app-message :messages="state.error" /> -->
         <v-card class="px-2 px-sm-6 px-xl-auto" flat rounded="0" height="92px">
             <v-container class="pa-0 core-container">
                 <p class="text-info">{{ props.addressRef }}</p>
