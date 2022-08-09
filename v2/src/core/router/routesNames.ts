@@ -1,4 +1,3 @@
-import { Block } from './../../apollo/types'
 interface Route {
     [key: string]: {
         NAME: string
@@ -51,13 +50,25 @@ const ROUTE_NAME: Route = {
         PATH: `/address/:${ROUTE_PROP.ADDRESS}`,
         NAME: 'address'
     },
+    ADDRESS_BALANCE: {
+        PATH: 'adr-eth-balance-and-history',
+        NAME: 'address-balance'
+    },
     ADDRESS_TOKENS: {
-        PATH: '/address/:addressRef/tokens',
+        PATH: 'adr-tokens',
         NAME: 'address-tokens'
     },
     ADDRESS_NFTS: {
-        PATH: '/address/:addressRef/nfts',
+        PATH: 'adr-nfts',
         NAME: 'address-nfts'
+    },
+    ADDRESS_CONTRACT: {
+        PATH: 'adr-contract-info',
+        NAME: 'address-contract-info'
+    },
+    ADDRESS_MINER: {
+        PATH: 'adr-miner-info',
+        NAME: 'address-miner-info'
     },
     CHARTS: {
         PATH: '/charts',
@@ -96,4 +107,11 @@ const ROUTE_NAME: Route = {
         NAME: 'fav_tokens'
     }
 }
-export { ROUTE_NAME, ROUTE_PROP }
+
+const ADDRESS_ROUTE_QUERY = {
+    Q_NFTS: ['collection', 'transfers'],
+    Q_TOKENS: ['balance', 'transfers'],
+    Q_MINER: ['blocks', 'uncles']
+}
+
+export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY }

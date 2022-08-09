@@ -8,11 +8,12 @@ import UncleDetailsView from '@view/UncleDetailsView.vue'
 import TokenDetailsView from '@view/TokenDetailsView.vue'
 import TxsView from '@view/TxsView.vue'
 import AddressTokensView from '@view/AddressTokensView.vue'
+import ViewAddress from '@view/ViewAddress.vue'
 import TokensView from '@view/TokensView.vue'
 import AddressNftsView from '@view/AddressNftsView.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
-
+import { addressTokensRouteGuard } from './helpers'
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
@@ -72,21 +73,51 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: ROUTE_NAME.ADDRESS.PATH,
-        name: ROUTE_NAME.ADDRESS.NAME,
-        component: ViewTemp
+        props: true,
+        component: ViewAddress,
+        children: [
+            {
+                path: '',
+                name: ROUTE_NAME.ADDRESS.NAME,
+                component: ViewTemp,
+                props: true
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_BALANCE.PATH,
+                name: ROUTE_NAME.ADDRESS_BALANCE.NAME,
+                component: ViewTemp,
+                props: true
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
+                name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
+                component: AddressTokensView,
+                props: route => ({ tab: route.query.t }),
+                beforeEnter: addressTokensRouteGuard
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_NFTS.PATH,
+                name: ROUTE_NAME.ADDRESS_NFTS.NAME,
+                component: AddressNftsView,
+                props: true
+                // props: route => ({ tab: route.query.t })
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_CONTRACT.PATH,
+                name: ROUTE_NAME.ADDRESS_CONTRACT.NAME,
+                component: ViewTemp,
+                props: true
+            },
+            {
+                path: ROUTE_NAME.ADDRESS_MINER.PATH,
+                name: ROUTE_NAME.ADDRESS_MINER.NAME,
+                component: ViewTemp,
+                props: true
+                // props: route => ({ tab: route.query.t })
+            }
+        ]
     },
-    {
-        path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
-        name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
-        component: AddressTokensView,
-        props: true
-    },
-    {
-        path: ROUTE_NAME.ADDRESS_NFTS.PATH,
-        name: ROUTE_NAME.ADDRESS_NFTS.NAME,
-        component: AddressNftsView,
-        props: true
-    },
+
     {
         path: ROUTE_NAME.FAV_ADDRESS.PATH,
         name: ROUTE_NAME.FAV_ADDRESS.NAME,
