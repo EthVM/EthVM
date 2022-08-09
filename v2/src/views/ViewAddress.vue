@@ -8,15 +8,18 @@
             </v-container>
         </v-card>
         <v-tabs v-model="state.tab" background-color="primary" centered hide-slider>
-            <v-tab :to="{ name: ROUTES.ADDRESS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> Overview </v-tab>
-            <v-tab :to="{ name: ROUTES.ADDRESS_BALANCE.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl">ETH Balance </v-tab>
-            <v-tab :to="{ name: ROUTES.ADDRESS_NFTS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> NFTs </v-tab>
-            <v-tab :to="{ name: ROUTES.ADDRESS_TOKENS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> Tokens </v-tab>
+            <v-tab
+                v-for="i in tabs"
+                :to="i.secondaryTab ? { name: i.routeName, query: { t: i.secondaryTab } } : { name: i.routeName }"
+                :key="i.id"
+                class="py-3 text-h5 text-capitalize rounded-b-xl"
+                >{{ i.text }}</v-tab
+            >
         </v-tabs>
         <v-window v-model="state.tab" class="pt-6">
-            <v-window-item v-for="i in 4" :key="i" :value="i - 1" class="mx-2 mx-sm-6 mx-xl-auto">
+            <v-window-item v-for="i in tabs" :key="i.id" :value="i.id" class="mx-2 mx-sm-6 mx-xl-auto">
                 <v-container class="core-container pa-0" fluid>
-                    <router-view :address-ref="addressRef"></router-view>
+                    <router-view :address-ref="addressRef" @tabChange="setLastViewedTab"></router-view>
                 </v-container>
             </v-window-item>
         </v-window>
@@ -30,9 +33,44 @@ import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import { ErrorMessage } from '@module/address/models/ErrorMessageAddress'
 import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
-import { ROUTE_NAME } from '@core/router/routesNames'
+import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 
-const ROUTES = ROUTE_NAME
+const tabs = reactive([
+    {
+        id: 0,
+        text: 'Overview',
+        routeName: ROUTE_NAME.ADDRESS.NAME
+    },
+    {
+        id: 1,
+        text: 'ETH Balance',
+        routeName: ROUTE_NAME.ADDRESS_BALANCE.NAME
+    },
+    {
+        id: 2,
+        text: 'NFTS',
+        routeName: ROUTE_NAME.ADDRESS_NFTS.NAME,
+        secondaryTab: ADDRESS_ROUTE_QUERY.Q_NFTS[0]
+    },
+    {
+        id: 3,
+        text: 'Tokens',
+        routeName: ROUTE_NAME.ADDRESS_TOKENS.NAME,
+        secondaryTab: ADDRESS_ROUTE_QUERY.Q_TOKENS[0]
+    }
+])
+
+const setLastViewedTab = (tab: string) => {
+    if (tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[0] || tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[1]) {
+        tabs[3].secondaryTab = tab
+    } else {
+        tabs[2].secondaryTab = tab
+    }
+}
+/**
+ * Track last viewable tab within the tokens view
+ */
+
 const props = defineProps({
     addressRef: String
 })
@@ -40,13 +78,13 @@ const props = defineProps({
 interface ComponentState {
     errorMessages: ErrorMessage[]
     error: string
-    tab: string | null
+    tab: number
 }
 
 const state: ComponentState = reactive({
     errorMessages: [],
     error: '',
-    tab: 'tab-1'
+    tab: 0
 })
 
 /**------------------------

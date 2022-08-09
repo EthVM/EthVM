@@ -1,23 +1,12 @@
-// import { ADDRESS_ROUTE_PROPS } from './routesNames'
-// import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
-// import { nextTick } from 'process'
-// const addressProps = (route: typeof RouterView) => {
-//     if (Object.keys(route.query).length > 0) {
-//         const { type } = stripQuery(route.query)
-//         const walletType = type ? type : ''
-//         const overlay = route.params && route.params.overlay ? route.params.overlay : ''
-//         return {
-//             overlay: overlay,
-//             type: walletType
-//         }
-//     }
-// }
-// export const addressRouteGuard = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-//     if (to.params ) {
-//         // redirect the user to the login page
-//         return { name: 'Login' }
-//     }
-//     next()
-// }
-
-// export {addressProps, addressRouteGuard}
+import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { ADDRESS_ROUTE_QUERY } from './routesNames'
+export const addressTokensRouteGuard = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+    // check if TO query exhists and valid
+    if (!to.query.t) {
+        // redirect the user to first tab
+        to.query.t = ADDRESS_ROUTE_QUERY.Q_TOKENS[0]
+        next(to)
+    } else {
+        next()
+    }
+}

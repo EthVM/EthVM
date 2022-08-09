@@ -11,7 +11,7 @@ import AddressTokensView from '@view/AddressTokensView.vue'
 import ViewAddress from '@view/ViewAddress.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
-
+import { addressTokensRouteGuard } from './helpers'
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
@@ -90,8 +90,8 @@ const routes: Array<RouteRecordRaw> = [
                 path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
                 name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
                 component: AddressTokensView,
-                props: true
-                // props: route => ({ tab: route.query.t })
+                props: route => ({ tab: route.query.t }),
+                beforeEnter: addressTokensRouteGuard
             },
             {
                 path: ROUTE_NAME.ADDRESS_NFTS.PATH,
@@ -114,7 +114,6 @@ const routes: Array<RouteRecordRaw> = [
                 // props: route => ({ tab: route.query.t })
             }
         ]
-        // beforeEnter: addressRouteGuard
     },
     {
         path: ROUTE_NAME.FAV_ADDRESS.PATH,
