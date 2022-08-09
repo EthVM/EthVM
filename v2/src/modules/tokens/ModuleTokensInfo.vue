@@ -256,7 +256,6 @@ const totalPages = computed<number>(() => {
  * @param page {Number}
  */
 const setPage = (page: number): void => {
-    console.log('Clicked')
     state.index = page
 }
 
