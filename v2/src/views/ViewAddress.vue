@@ -1,5 +1,5 @@
 <template>
-    <div class="temp">
+    <div class="adr-core-background pb-6">
         <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
         <app-message :messages="state.errorMessages" />
         <v-card class="px-2 px-sm-6 px-xl-auto" flat rounded="0" height="92px">
@@ -13,7 +13,7 @@
             <v-tab :to="{ name: ROUTES.ADDRESS_NFTS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> NFTs </v-tab>
             <v-tab :to="{ name: ROUTES.ADDRESS_TOKENS.NAME }" class="py-3 text-h5 text-capitalize rounded-b-xl"> Tokens </v-tab>
         </v-tabs>
-        <v-window v-model="state.tab" class="mt-6">
+        <v-window v-model="state.tab" class="pt-6">
             <v-window-item v-for="i in 4" :key="i" :value="i - 1" class="mx-2 mx-sm-6 mx-xl-auto">
                 <v-container class="core-container pa-0" fluid>
                     <router-view :address-ref="addressRef"></router-view>
@@ -98,8 +98,7 @@ const { isFluidView } = useAppIsFluid()
     background-color: rgb(var(--v-theme-surface));
     color: rgb(var(--v-theme-on-surface-tabs));
 }
-.temp {
-    background-color: rgb(var(--v-theme-primary));
-    height: 316px;
+.adr-core-background {
+    background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 316px, rgb(var(--v-theme-background)) 316px, rgb(var(--v-theme-background)) 100%);
 }
 </style>
