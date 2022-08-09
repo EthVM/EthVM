@@ -8,6 +8,7 @@ import UncleDetailsView from '@view/UncleDetailsView.vue'
 import TokenDetailsView from '@view/TokenDetailsView.vue'
 import TxsView from '@view/TxsView.vue'
 import AddressTokensView from '@view/AddressTokensView.vue'
+import AddressNftsView from '@view/AddressNftsView.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
 
@@ -77,6 +78,12 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.ADDRESS_TOKENS.PATH,
         name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
         component: AddressTokensView,
+        props: true
+    },
+    {
+        path: ROUTE_NAME.ADDRESS_NFTS.PATH,
+        name: ROUTE_NAME.ADDRESS_NFTS.NAME,
+        component: AddressNftsView,
         props: true
     },
     {
