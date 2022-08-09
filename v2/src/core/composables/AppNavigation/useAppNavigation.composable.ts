@@ -31,6 +31,21 @@ export function useAppNavigation() {
         },
         {
             header: {
+                text: 'Top Tokens',
+                icon: 'insights',
+                routerLink: ROUTE_NAME.TOKENS.PATH
+            }
+        },
+
+        {
+            header: {
+                icon: 'area_chart',
+                text: 'Charts',
+                routerLink: ROUTE_NAME.CHARTS.PATH
+            }
+        },
+        {
+            header: {
                 icon: 'view_in_ar',
                 text: 'Blockchain'
             },
@@ -51,13 +66,6 @@ export function useAppNavigation() {
         },
         {
             header: {
-                text: 'Top Tokens',
-                icon: 'insights',
-                routerLink: ROUTE_NAME.TOKENS.PATH
-            }
-        },
-        {
-            header: {
                 text: 'Watchlist',
                 icon: 'favorite'
             },
@@ -71,13 +79,6 @@ export function useAppNavigation() {
                     routerLink: ROUTE_NAME.FAV_ADDRESS.PATH
                 }
             ]
-        },
-        {
-            header: {
-                icon: 'area_chart',
-                text: 'Charts',
-                routerLink: ROUTE_NAME.CHARTS.PATH
-            }
         }
     ])
     return {

@@ -4,7 +4,9 @@
             <v-col cols="3">
                 <v-img :src="require('@/assets/logo-compact.png')" height="30px" width="30px" contain class="mx-auto" />
             </v-col>
-            <v-col cols="2"> <app-btn-icon icon="close" @click="appStore.appDrawer = false" /> </v-col>
+            <v-col cols="2">
+                <app-btn-icon icon="close" @click="appStore.appDrawer = false" color="white" />
+            </v-col>
         </v-row>
         <v-list bg-color="primary" lines="two">
             <template v-for="(item, index) in navItems" :key="index">
