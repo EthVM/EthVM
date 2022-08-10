@@ -21,13 +21,16 @@ export const useStore = defineStore('main', {
         }
     },
     actions: {
-        computeTokenBalances(tokens: TokenOwnersFragment[]) {
+        computeTokenBalances(tokens: Array<TokenOwnersFragment | null>) {
             const sum = tokens.reduce((acc, el) => {
-                let balance = new BN(el.balance)
-                if (el.tokenInfo.decimals) {
-                    balance = balance.div(new BN(10).pow(el.tokenInfo.decimals))
+                if (el) {
+                    let balance = new BN(el.balance)
+                    if (el.tokenInfo.decimals) {
+                        balance = balance.div(new BN(10).pow(el.tokenInfo.decimals))
+                    }
+                    return balance.toNumber() + acc
                 }
-                return balance.toNumber() + acc
+                return 0
             }, 0)
             this.addressTokenBalance = formatFloatingPointValue(new BN(sum))
         }
