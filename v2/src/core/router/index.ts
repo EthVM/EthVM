@@ -9,6 +9,7 @@ import TokenDetailsView from '@view/TokenDetailsView.vue'
 import TxsView from '@view/TxsView.vue'
 import AddressTokensView from '@view/AddressTokensView.vue'
 import ViewAddress from '@view/ViewAddress.vue'
+import ViewAddressOverview from '@view/ViewAddressOverview.vue'
 import TokensView from '@view/TokensView.vue'
 import AddressNftsView from '@view/AddressNftsView.vue'
 import ViewTemp from '@view/ViewTemp.vue'
@@ -79,7 +80,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: '',
                 name: ROUTE_NAME.ADDRESS.NAME,
-                component: ViewTemp,
+                component: ViewAddressOverview,
                 props: true
             },
             {
