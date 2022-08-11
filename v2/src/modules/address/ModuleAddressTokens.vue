@@ -182,7 +182,6 @@ const state: ComponentState = reactive({
 const {
     result: erc20TokensResult,
     loading: loadingTokens,
-    onResult: onTokensLoaded,
     refetch: refetchTokens
 } = useGetOwnersErc20TokensQuery(
     {
