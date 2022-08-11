@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import { ROUTE_NAME } from '@core/router/routesNames'
+import { useRouter } from 'vue-router'
 
 export function useAppNavigation() {
     /**
@@ -26,14 +27,14 @@ export function useAppNavigation() {
             header: {
                 icon: 'home',
                 text: 'Home',
-                routerLink: ROUTE_NAME.HOME.PATH
+                routerLink: ROUTE_NAME.HOME.NAME
             }
         },
         {
             header: {
                 text: 'Top Tokens',
                 icon: 'insights',
-                routerLink: ROUTE_NAME.TOKENS.PATH
+                routerLink: ROUTE_NAME.TOKENS.NAME
             }
         },
 
@@ -41,7 +42,7 @@ export function useAppNavigation() {
             header: {
                 icon: 'area_chart',
                 text: 'Charts',
-                routerLink: ROUTE_NAME.CHARTS.PATH
+                routerLink: ROUTE_NAME.CHARTS.NAME
             }
         },
         {
@@ -52,15 +53,15 @@ export function useAppNavigation() {
             links: [
                 {
                     text: 'Blocks',
-                    routerLink: ROUTE_NAME.BLOCKS.PATH
+                    routerLink: ROUTE_NAME.BLOCKS.NAME
                 },
                 {
                     text: 'Transaction',
-                    routerLink: ROUTE_NAME.TXS.PATH
+                    routerLink: ROUTE_NAME.TXS.NAME
                 },
                 {
                     text: 'Pending Transactions',
-                    routerLink: ROUTE_NAME.TXS_PENDING.PATH
+                    routerLink: ROUTE_NAME.TXS_PENDING.NAME
                 }
             ]
         },
@@ -72,16 +73,23 @@ export function useAppNavigation() {
             links: [
                 {
                     text: 'My Addresses',
-                    routerLink: ROUTE_NAME.FAV_TOKENS.PATH
+                    routerLink: ROUTE_NAME.FAV_TOKENS.NAME
                 },
                 {
                     text: 'My Tokens',
-                    routerLink: ROUTE_NAME.FAV_ADDRESS.PATH
+                    routerLink: ROUTE_NAME.FAV_ADDRESS.NAME
                 }
             ]
         }
     ])
+    const router = useRouter()
+    const navigateTo = (name: string) => {
+        router.push({
+            name: name
+        })
+    }
     return {
-        navItems
+        navItems,
+        navigateTo
     }
 }

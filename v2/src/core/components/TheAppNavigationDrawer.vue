@@ -14,16 +14,16 @@
                     v-if="!item.links"
                     :prepend-icon="item.header.icon"
                     :title="item.header.text"
-                    :to="item.header.routerLink"
                     :value="item.header.routerLink"
                     class=""
+                    @click="navigateTo(item.header.routerLink || '')"
                 ></v-list-item>
                 <v-list-group v-else>
                     <template v-slot:activator="{ props }">
                         <v-list-item v-bind="props" :prepend-icon="item.header.icon" :title="item.header.text"></v-list-item>
                     </template>
                     <template v-for="(link, j) in item.links" :key="j">
-                        <v-list-item :to="link.routerLink" :value="link.routerLink" :title="link.text"> </v-list-item>
+                        <v-list-item @click="navigateTo(link.routerLink)" :value="link.routerLink" :title="link.text"> </v-list-item>
                     </template>
                 </v-list-group>
             </template>
@@ -41,5 +41,5 @@ import AppBtnIcon from './AppBtnIcon.vue'
   ===================================================================================
   */
 const appStore = useStore()
-const { navItems } = useAppNavigation()
+const { navItems, navigateTo } = useAppNavigation()
 </script>

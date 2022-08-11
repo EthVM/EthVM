@@ -2,7 +2,6 @@
     <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
 
     <div v-if="isValid" class="adr-core-background pb-6">
-        <!-- <app-message :messages="state.error" /> -->
         <v-card class="px-2 px-sm-6 px-xl-auto" flat rounded="0" height="92px">
             <v-container class="pa-0 core-container">
                 <p class="text-info">{{ props.addressRef }}</p>
@@ -11,30 +10,32 @@
         <v-tabs v-model="state.tab" background-color="primary" centered hide-slider>
             <v-tab
                 v-for="i in tabs"
-                :to="i.secondaryTab ? { name: i.routeName, query: { t: i.secondaryTab } } : { name: i.routeName }"
-                :key="i.id"
+                @click="navigateTo(i.routeName, i.secondaryTab)"
+                :value="i.routeName"
+                :key="i.routeName"
                 class="py-3 text-h5 text-capitalize rounded-b-xl"
                 >{{ i.text }}</v-tab
             >
         </v-tabs>
-        <v-window v-model="state.tab" class="pt-6">
-            <v-window-item v-for="i in tabs" :key="i.id" :value="i.id" class="mx-2 mx-sm-6 mx-xl-auto">
+        <div class="mx-2 mx-sm-6 mx-xl-auto mt-6">
+            <router-view v-slot="{ Component }" :address-ref="addressRef" @tabChange="setLastViewedTab">
                 <v-container class="core-container pa-0" fluid>
-                    <router-view :address-ref="addressRef" @tabChange="setLastViewedTab"></router-view>
+                    <Transition name="fade" mode="out-in">
+                        <component :is="Component" :key="route.name" />
+                    </Transition>
                 </v-container>
-            </v-window-item>
-        </v-window>
+            </router-view>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, ref } from 'vue'
-import AppMessage from '@/core/components/AppMessage.vue'
+import { reactive, computed, onMounted } from 'vue'
 import AppError from '@/core/components/AppError.vue'
 import { eth } from '@/core/helper'
 import { ErrorMessage } from '@module/address/models/ErrorMessageAddress'
-import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 
 const tabs = reactive([
     {
@@ -61,17 +62,6 @@ const tabs = reactive([
     }
 ])
 
-const setLastViewedTab = (tab: string) => {
-    if (tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[0] || tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[1]) {
-        tabs[3].secondaryTab = tab
-    } else {
-        tabs[2].secondaryTab = tab
-    }
-}
-/**
- * Track last viewable tab within the tokens view
- */
-
 const props = defineProps({
     addressRef: String
 })
@@ -79,14 +69,62 @@ const props = defineProps({
 interface ComponentState {
     errorMessages: ErrorMessage[]
     error: string
-    tab: number
+    tab: string
 }
 
 const state: ComponentState = reactive({
     errorMessages: [],
     error: '',
-    tab: 0
+    tab: ROUTE_NAME.ADDRESS.NAME
 })
+
+/**------------------------
+ * Tab Handling
+ -------------------------*/
+
+const router = useRouter()
+const route = useRoute()
+/**
+ * Check route and set appropriate tab and secondary tab
+ */
+onMounted(() => {
+    if (route.name && route.name.toString() !== state.tab) {
+        state.tab = route.name.toString()
+    }
+})
+/**
+ * Check if to.name not equal to the state.tab, in case when user goes back in history
+ */
+onBeforeRouteUpdate(to => {
+    if (to.name && state.tab !== to.name) {
+        state.tab = to.name.toString()
+    }
+})
+
+/**
+ * Reroutes appropriate tab
+ * @param {string} _name - route name, use imported ROUTE_NAME variables
+ * @param {string} _name - route query, use  imported ADDRESS_ROUTE_QUERY variables in the appropriate route names
+ */
+const navigateTo = async (_name: string, _query?: string) => {
+    await router.push({
+        name: _name,
+        query: { t: _query }
+    })
+}
+
+/**
+ * Track last viewable tab within the token/nfts/miner views
+ * @param {string} tab - route query, MUST BE FROM  imported ADDRESS_ROUTE_QUERY variables in the appropriate route names
+ */
+const setLastViewedTab = (tab: string) => {
+    // ERC20 Tokens:
+    if (tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[0] || tab === ADDRESS_ROUTE_QUERY.Q_TOKENS[1]) {
+        tabs[3].secondaryTab = tab
+    } else {
+        tabs[2].secondaryTab = tab
+    }
+}
 
 /**------------------------
  * Error Handling
@@ -104,30 +142,6 @@ if (!isValid.value) {
     state.error = 'This is not a valid address hash'
     window.scrollTo(0, 0)
 }
-
-/**
- * Sets error if any
- * @param hasError {Boolean}
- * @param message {ErrorMessageToken}
- */
-// const setError = (hasError: boolean, message: ErrorMessage): void => {
-//     if (hasError) {
-//         if (!state.errorMessages.includes(message)) {
-//             state.errorMessages.push(message)
-//         }
-//     } else {
-//         if (state.errorMessages.length > 0) {
-//             const index = state.errorMessages.indexOf(message)
-//             if (index > -1) {
-//                 state.errorMessages.splice(index, 1)
-//             }
-//         }
-//     }
-// }
-/**------------------------
- * Grid Handling
- -------------------------*/
-const { isFluidView } = useAppIsFluid()
 </script>
 <style lang="scss" scoped>
 .v-tab {
@@ -139,5 +153,15 @@ const { isFluidView } = useAppIsFluid()
 }
 .adr-core-background {
     background: linear-gradient(to bottom, rgb(var(--v-theme-primary)) 316px, rgb(var(--v-theme-background)) 316px, rgb(var(--v-theme-background)) 100%);
+}
+/* FADE TRANSITION */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

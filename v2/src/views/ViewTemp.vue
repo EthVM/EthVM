@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col cols="12">
-            <v-card class="py-6 mt-4" elevation="1" rounded="xl">
+            <v-card class="py-6" elevation="1" rounded="xl">
                 <v-card-title class="mb-6">Hello I am a temp view for: {{ routeName }}, {{ props.addressRef }}</v-card-title>
                 <v-row>
                     <v-col cols="12" class="px-10"> <app-btn></app-btn> </v-col>
