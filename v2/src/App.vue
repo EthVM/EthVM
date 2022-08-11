@@ -19,18 +19,24 @@ import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useTheme } from 'vuetify'
 import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
 
 const store = useStore()
 
-store.loadingCoinData = true
 const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
+store.loadingCoinData = loadingCoinData.value
+
 onResult(() => {
     store.coinData = coinData.value
+    store.loadingCoinData = false
+})
+
+watch(loadingCoinData, () => {
     store.loadingCoinData = loadingCoinData.value
 })
+
 const theme = useTheme()
 
 const toggleTheme = () => {
