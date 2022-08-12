@@ -19,8 +19,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
         name: ROUTE_NAME.HOME.NAME,
-        component: HomeView,
-        props: true
+        component: HomeView
     },
     {
         path: ROUTE_NAME.BLOCKS.PATH,

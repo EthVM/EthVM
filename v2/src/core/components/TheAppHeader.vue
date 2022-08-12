@@ -8,7 +8,13 @@
                 <module-search class="mb-n2 mt-8" />
                 <template v-if="!showDrawerBtn">
                     <template v-for="(item, index) in navItems" :key="index">
-                        <v-btn v-if="!item.links" :to="item.header.routerLink" variant="plain" rounded="0" class="no-opacity header-button text-subtitle-1">
+                        <v-btn
+                            v-if="!item.links"
+                            @click="navigateTo(item.header.routerLink || '')"
+                            variant="plain"
+                            rounded="0"
+                            class="no-opacity header-button text-subtitle-1"
+                        >
                             {{ item.header.text }}</v-btn
                         >
                         <v-btn v-else variant="plain" class="no-opacity text-subtitle-1" rounded="0">
@@ -16,7 +22,8 @@
                             <v-icon class="ml-2">expand_more</v-icon>
                             <app-menu min-width="180" activator="parent" :items="item.links">
                                 <template v-for="(link, j) in item.links" :key="j">
-                                    <v-list-item :to="link.routerLink" :value="link.routerLink" :title="link.text" class="primary--text"> </v-list-item>
+                                    <v-list-item @click="navigateTo(link.routerLink)" :value="link.routerLink" :title="link.text" class="primary--text">
+                                    </v-list-item>
                                 </template>
                             </app-menu>
                         </v-btn>
@@ -47,7 +54,7 @@ const { isFluidView } = useAppIsFluid()
 /*Define Emit Events */
 defineEmits(['openDrawer'])
 
-const { navItems } = useAppNavigation()
+const { navItems, navigateTo } = useAppNavigation()
 </script>
 <style lang="scss">
 .no-opacity {
