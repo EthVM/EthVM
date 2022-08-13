@@ -10,6 +10,7 @@ import TxsView from '@view/TxsView.vue'
 import AddressTokensView from '@view/AddressTokensView.vue'
 import ViewAddress from '@view/ViewAddress.vue'
 import ViewAddressOverview from '@view/ViewAddressOverview.vue'
+import ViewAddressEthBalance from '@view/ViewAddressEthBalance.vue'
 import TokensView from '@view/TokensView.vue'
 import AddressNftsView from '@view/AddressNftsView.vue'
 import ViewTemp from '@view/ViewTemp.vue'
@@ -85,7 +86,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: ROUTE_NAME.ADDRESS_BALANCE.PATH,
                 name: ROUTE_NAME.ADDRESS_BALANCE.NAME,
-                component: ViewTemp,
+                component: ViewAddressEthBalance,
                 props: true
             },
             {
