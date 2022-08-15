@@ -143,7 +143,7 @@ import AppPaginate from '@core/components/AppPaginate.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, TokenSort, Token } from '@module/address/models/TokenSort'
+import { TOKEN_FILTER_VALUES, Token } from '@module/address/models/TokenSort'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useAddressToken } from '@core/composables/AddressTokenBalance/addressTokenBalance.composable.ts'
@@ -178,7 +178,7 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(props.addressHash)
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort } = useAddressToken(props.addressHash)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value

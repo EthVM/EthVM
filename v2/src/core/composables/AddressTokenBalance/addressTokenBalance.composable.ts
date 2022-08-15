@@ -7,7 +7,7 @@ import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-f
 import BN from 'bignumber.js'
 
 export function useAddressToken(addressHash: string) {
-    const { getEthereumTokensMap, loading: loadingEthTokens, getEthereumTokenByContract } = useCoinData()
+    const { getEthereumTokensMap, loading: loadingEthTokens } = useCoinData()
     const {
         result: erc20TokensResult,
         loading: loadingTokens,
