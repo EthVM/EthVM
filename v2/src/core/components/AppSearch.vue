@@ -46,9 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
 import { PropType } from 'vue'
-import { defineProps, defineEmits, reactive, computed, ref, watch } from 'vue'
+import { defineProps, defineEmits, reactive, computed, ref } from 'vue'
 import { SearchTokenOption } from './props/index'
 const props = defineProps({
     selectItems: {

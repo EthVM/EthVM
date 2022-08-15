@@ -223,9 +223,11 @@ class TokenSort implements TokenSortInterface {
     symbol: Sorted | null = null
     currentPrice: Sorted | null = null
 
-    constructor(_tokens: ERC20TokensType[], _tokenPrices: Map<string, TokenMarketData> | false, isErc20: boolean) {
+    constructor(_tokens: Array<ERC20TokensType | null>, _tokenPrices: Map<string, TokenMarketData> | false, isErc20: boolean) {
         _tokens.forEach(token => {
-            this.tokens.push(new Token(token, _tokenPrices))
+            if (token) {
+                this.tokens.push(new Token(token, _tokenPrices))
+            }
         })
         this.name = new Sorted(this.tokens, KEY_NAME)
         this.balance = new Sorted(this.tokens, KEY_BALANCE)

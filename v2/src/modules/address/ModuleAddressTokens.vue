@@ -1,8 +1,11 @@
 <template>
     <v-card>
         <v-card-title class="justify-space-between">
-            HRC20 token balance
-            <app-paginate v-if="!loadingTokens" :total="totalPages" :current-page="state.index" @newPage="setPage" />
+            <div>
+                HRC20 token balance
+                <app-new-update text="Token's Balance Changed, Refresh" :update-count="props.newErc20Transfer" hide-count @reload="setPage(0, true)" />
+            </div>
+            <app-paginate v-if="!initialLoad" :total="totalPages" :current-page="state.index" @newPage="setPage" />
         </v-card-title>
         <div>
             <!--            Table Header-->
@@ -137,22 +140,27 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
-import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/tokens.generated'
+import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, TokenSort, Token } from '@module/address/models/TokenSort'
+import { TOKEN_FILTER_VALUES, Token } from '@module/address/models/TokenSort'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
-
-const { getEthereumTokensMap, loading: loadingEthTokens, getEthereumTokenByContract } = useCoinData()
+import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable.ts'
+const { getEthereumTokenByContract } = useCoinData()
 const MAX_ITEMS = 10
 
 const props = defineProps({
     addressHash: {
         type: String,
         required: true
-    }
+    },
+    newErc20Transfer: Number
 })
+
+const emit = defineEmits<{
+    (e: 'resetCount'): void
+}>()
 
 interface ComponentState {
     showMoreTokenDetails: boolean
@@ -170,52 +178,10 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { result: erc20TokensResult, loading: loadingTokens } = useGetOwnersErc20TokensQuery({
-    hash: props.addressHash
-})
-
-const erc20Tokens = computed<Array<TokenOwnersFragment | null> | undefined>(() => {
-    return erc20TokensResult.value?.getOwnersERC20Tokens.owners
-})
-
-/**
- * Gets an object with all sorted arrays
- *
- * @returns false OR Map<string, TokenMarketData>  if values have been loaded
- * @returns  null  otherwise
- */
-const tokenPrices = computed<Map<string, TokenMarketData> | false | null>(() => {
-    if (!loadingTokens.value && erc20Tokens.value && !loadingEthTokens.value) {
-        const contracts: string[] = []
-        erc20Tokens.value.forEach(token => {
-            if (token) {
-                contracts.push(token.tokenInfo.contract)
-            }
-        })
-        if (contracts.length > 0) {
-            return getEthereumTokensMap(contracts)
-        }
-    }
-    return null
-})
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, initialLoad } = useAddressToken(props.addressHash)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
-})
-
-/**
- * Gets an object with all sorted arrays
- * @param {String} contract
- * @returns
- * - TokenSort if all has been loaded
- * - false if still loading
- */
-
-const tokenSort = computed<TokenSort | false>(() => {
-    if (!loadingTokens.value && erc20Tokens.value && tokenPrices.value !== null) {
-        return new TokenSort(erc20Tokens.value, tokenPrices.value, true)
-    }
-    return false
 })
 
 const sortTable = (key: string): void => {
@@ -267,7 +233,11 @@ const showTokenDetails = (contract: string) => {
     state.activeToken = getEthereumTokenByContract(contract)
 }
 
-const setPage = (page: number) => {
+const setPage = (page: number, reset = false): void => {
+    if (reset) {
+        refetchTokens()
+        emit('resetCount')
+    }
     state.index = page
 }
 </script>

@@ -25,12 +25,14 @@ import { ROUTE_NAME } from '@core/router/routesNames'
 
 const store = useStore()
 
-store.loadingCoinData = true
-const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
+const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 30000 })
+store.loadingCoinData = loadingCoinData.value
+
 onResult(() => {
     store.coinData = coinData.value
-    store.loadingCoinData = loadingCoinData.value
+    store.loadingCoinData = false
 })
+
 const theme = useTheme()
 
 const toggleTheme = () => {

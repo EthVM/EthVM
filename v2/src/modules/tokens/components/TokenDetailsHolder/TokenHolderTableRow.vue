@@ -44,24 +44,15 @@
 
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
-import AppTimeAgo from '@core/components/AppTimeAgo.vue'
-import { EthValue } from '@core/models'
 import BigNumber from 'bignumber.js'
 import AppTooltip from '@core/components/AppTooltip.vue'
-import {
-    TokenTransferFragment as Erc20TokenTransferType,
-    Erc721TransferFragment as Erc721TransferType
-} from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
 import BN from 'bignumber.js'
 import configs from '@/configs'
 import { reactive, computed } from 'vue'
-import { formatFloatingPointValue, formatNumber, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
-import { useDisplay } from 'vuetify'
-import { eth, timeAgo } from '@core/helper'
+import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
+import { eth } from '@core/helper'
 import { Erc20TokenOwnerDetailsFragment } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 const TYPES = ['ERC20', 'ERC721']
-
-const { sm, xs, smAndDown } = useDisplay()
 
 interface PropType {
     holder: Erc20TokenOwnerDetailsFragment
@@ -116,14 +107,6 @@ const isERC721 = computed<boolean>(() => {
 
 const getTokenID = computed<string>(() => {
     return new BN(props.holder['token']).toString()
-})
-
-const totalSupply = computed<string>(() => {
-    if (props.holder && props.holder.tokenInfo && props.holder.tokenInfo.totalSupply) {
-        const supply = new BN(props.holder.tokenInfo.totalSupply).toNumber()
-        return formatNumber(supply)
-    }
-    return '0'
 })
 
 /*

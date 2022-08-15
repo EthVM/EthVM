@@ -37,7 +37,6 @@ import { excpBlockNotMined } from '@/apollo/errorExceptions'
 import { FormattedNumber, formatNumber, formatVariableUnitEthValue } from '@/core/helper/number-format-helper'
 import { useNewBlockFeedSubscription } from '@core/composables/NewBlock/newBlockFeed.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
-import { useStore } from '@/store'
 import { useQuery } from '@vue/apollo-composable'
 
 const props = defineProps({
