@@ -21,6 +21,9 @@ export type MarketDataFragment = {
     total_volume?: number | null
     total_supply?: string | null
     price_change_percentage_24h?: number | null
+    circulating_supply?: number | null
+    high_24h?: number | null
+    low_24h?: number | null
 }
 
 export type GetLatestPricesQueryVariables = Types.Exact<{ [key: string]: never }>
@@ -39,6 +42,9 @@ export type GetLatestPricesQuery = {
         total_volume?: number | null
         total_supply?: string | null
         price_change_percentage_24h?: number | null
+        circulating_supply?: number | null
+        high_24h?: number | null
+        low_24h?: number | null
     } | null>
 }
 
@@ -54,6 +60,9 @@ export const MarketDataFragmentDoc = gql`
         total_volume
         total_supply
         price_change_percentage_24h
+        circulating_supply
+        high_24h
+        low_24h
     }
 `
 export const GetLatestPricesDocument = gql`
