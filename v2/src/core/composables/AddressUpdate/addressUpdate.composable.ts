@@ -18,5 +18,5 @@ export function useAddressUpdate(addressRef: string) {
     const resetCount = () => {
         newErc20Transfer.value = 0
     }
-    return { newErc20Transfer, resetCount }
+    return { newErc20Transfer, resetCount, onAddressUpdate: onResult }
 }

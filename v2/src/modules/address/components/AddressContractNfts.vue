@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { OwnerErc721Fragment, TokenFragment, useGetOwnersErc721TokensQuery } from '../apollo/tokens.generated'
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppExpansionPanel from '@core/components/AppExpansionPanel.vue'
 import configs from '@/configs'

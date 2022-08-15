@@ -29,7 +29,6 @@
 //Vue
 import { ref, computed } from 'vue'
 //Apollo
-import { useResult } from '@vue/apollo-composable'
 import { BlockInfoFragment, useGetLatestBlockInfoQuery } from './apollo/BlockStats/blockStats.generated'
 import { useBlockSubscription } from '@core/composables/NewBlock/newBlock.composable'
 

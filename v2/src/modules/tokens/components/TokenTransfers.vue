@@ -105,10 +105,6 @@ const hasERC721Transfers = computed<boolean>(() => {
     return !!erc721TokenTransfer.value && erc721TokenTransfer.value.transfers.length > 0
 })
 
-const hasERC20Transfers = computed<boolean>(() => {
-    return !!erc20TokenTransfer.value && erc20TokenTransfer.value.transfers.length > 0
-})
-
 const transferData = computed<any[]>(() => {
     if (erc20TokenTransfer.value && erc721TokenTransfer.value) {
         const data = hasERC721Transfers.value ? erc721TokenTransfer.value.transfers : erc20TokenTransfer.value.transfers

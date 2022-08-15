@@ -138,7 +138,7 @@ const executeSearch = (searchParam: string, filterParam?: string): void => {
 */
 const {
     onResult: onHashTypeResult,
-    onError: onHashTypeError,
+    // onError: onHashTypeError,
     loading: loadingHashType
 } = useGetHashTypeQuery(
     () => ({
@@ -165,9 +165,9 @@ onHashTypeResult(({ data }) => {
         }
     }
 })
-onHashTypeError(error => {
-    const newError = JSON.stringify(error.message)
-})
+// onHashTypeError(error => {
+//     const newError = JSON.stringify(error.message)
+// })
 /**
  * Watching changes in the hashtype loading query
  * sets isLoading in search to give the proper ui responce
@@ -186,11 +186,7 @@ watch(
     Returns options to the child component
 ===================================================================================
 */
-const {
-    onResult: onTokenSearchResult,
-    onError: onTokenSearchError,
-    loading: loadingTokenSearch
-} = useGetTokensBeginsWithQuery(
+const { onResult: onTokenSearchResult } = useGetTokensBeginsWithQuery(
     () => ({
         keyword: search.param || ''
     }),

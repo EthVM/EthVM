@@ -8,7 +8,7 @@
                 </v-tabs>
                 <v-window v-model="state.tab" class="mt-6">
                     <v-window-item :value="routes[0]" :key="routes[0]">
-                        <module-address-tokens class="mb-4" :address-hash="props.addressRef" />
+                        <module-address-tokens class="mb-4" :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" />
                     </v-window-item>
                     <v-window-item :value="routes[1]" :key="routes[1]">
                         <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" />
