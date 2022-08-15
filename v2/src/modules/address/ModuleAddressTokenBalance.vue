@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAddressToken } from '@core/composables/AddressTokenBalance/addressTokenBalance.composable'
+import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 
 const props = defineProps({
