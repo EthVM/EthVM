@@ -178,7 +178,7 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort } = useAddressToken(props.addressHash)
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(props.addressHash)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
