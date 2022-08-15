@@ -1,5 +1,5 @@
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/tokens.generated'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
@@ -11,7 +11,8 @@ export function useAddressToken(addressHash: string) {
     const {
         result: erc20TokensResult,
         loading: loadingTokens,
-        refetch: refetchTokens
+        refetch: refetchTokens,
+        onResult: onErc20TokensLoaded
     } = useGetOwnersErc20TokensQuery(
         {
             hash: addressHash
@@ -21,6 +22,10 @@ export function useAddressToken(addressHash: string) {
 
     const erc20Tokens = computed<Array<TokenOwnersFragment | null> | undefined>(() => {
         return erc20TokensResult.value?.getOwnersERC20Tokens.owners
+    })
+
+    const initialLoad = computed<boolean>(() => {
+        return erc20TokensResult.value ? false : true
     })
 
     /**
@@ -71,5 +76,5 @@ export function useAddressToken(addressHash: string) {
         return 0
     })
 
-    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance }
+    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, initialLoad }
 }

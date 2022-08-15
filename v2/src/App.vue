@@ -25,7 +25,7 @@ import { ROUTE_NAME } from '@core/router/routesNames'
 
 const store = useStore()
 
-const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 300000 })
+const { result: coinData, loading: loadingCoinData, onResult } = useGetLatestPricesQuery({ pollInterval: 30000 })
 store.loadingCoinData = loadingCoinData.value
 
 onResult(() => {

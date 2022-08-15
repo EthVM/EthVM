@@ -5,7 +5,7 @@
                 HRC20 token balance
                 <app-new-update text="Token's Balance Changed, Refresh" :update-count="props.newErc20Transfer" hide-count @reload="setPage(0, true)" />
             </div>
-            <app-paginate v-if="!loadingTokens" :total="totalPages" :current-page="state.index" @newPage="setPage" />
+            <app-paginate v-if="!initialLoad" :total="totalPages" :current-page="state.index" @newPage="setPage" />
         </v-card-title>
         <div>
             <!--            Table Header-->
@@ -178,7 +178,7 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance } = useAddressToken(props.addressHash)
+const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, initialLoad } = useAddressToken(props.addressHash)
 
 const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
