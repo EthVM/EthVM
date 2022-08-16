@@ -53,7 +53,7 @@
                     class="bttnGrey info--text text-capitalize bttn"
                     small
                     @click="setPageOnClick('next')"
-                    ><v-icon class="secondary--text" small>arrow_drop_down</v-icon>
+                    ><v-icon class="secondary--text" small>chevron_right</v-icon>
                 </v-btn>
                 <!--
                 =====================================================================================

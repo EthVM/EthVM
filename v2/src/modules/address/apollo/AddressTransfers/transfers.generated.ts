@@ -6,13 +6,12 @@
 import * as Types from '../../../../apollo/types'
 
 import gql from 'graphql-tag'
+import { BalanceFragmentFragmentDoc } from '../AddressRewards/rewards.generated'
 import { TokenFragmentFragmentDoc } from '../AddressTokens/tokens.generated'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam
 export type TransferSummaryFragment = { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
-
-export type BalanceFragmentFragment = { __typename?: 'BalanceDiff'; before: string; after: string }
 
 export type GetAddressEthTransfersQueryVariables = Types.Exact<{
     hash?: Types.InputMaybe<Types.Scalars['String']>
@@ -103,12 +102,6 @@ export const TransferSummaryFragmentDoc = gql`
         from
         to
         txFee
-    }
-`
-export const BalanceFragmentFragmentDoc = gql`
-    fragment BalanceFragment on BalanceDiff {
-        before
-        after
     }
 `
 export const TransferFragmentFragmentDoc = gql`
