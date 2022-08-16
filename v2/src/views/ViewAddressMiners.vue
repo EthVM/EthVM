@@ -10,6 +10,9 @@
                     <v-window-item :value="routes[0]" :key="routes[0]">
                         <module-address-miner-block class="mb-4" reward-type="block" :address-hash="props.addressRef" :max-items="MAX_ITEMS" />
                     </v-window-item>
+                    <v-window-item :value="routes[1]" :key="routes[1]">
+                        <module-address-miner-block class="mb-4" reward-type="uncle" :address-hash="props.addressRef" :max-items="MAX_ITEMS" />
+                    </v-window-item>
                 </v-window>
             </v-card>
         </v-col>

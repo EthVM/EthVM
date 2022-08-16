@@ -104,7 +104,7 @@ const {
         hash: props.addressHash,
         _limit: 10
     }),
-    { notifyOnNetworkStatusChange: true, enabled: enableBlockRewardsQuery.value }
+    { notifyOnNetworkStatusChange: true, enabled: !enableBlockRewardsQuery.value }
 )
 
 const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
