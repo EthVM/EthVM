@@ -1,19 +1,30 @@
 <template>
     <v-card variant="flat">
-        <v-card-title>
+        <v-card-title class="d-flex justify-space-between align-center">
             <div>
                 {{ headerTitle }}
                 <!-- Notice new update-->
                 <app-new-update :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
             </div>
-            <app-paginate-has-more v-if="rewards.length > 0" :has-more="hasMore" :current-page="state.index" :loading="isLoadingRewards" @newPage="setPage" />
+            <app-paginate-has-more
+                v-if="rewards.length > 0 && !props.isOverview"
+                :has-more="hasMore"
+                :current-page="state.index"
+                :loading="isLoadingRewards"
+                @newPage="setPage"
+            />
+            <v-btn v-else :to="`/address/${props.addressHash}/adr-miner-info?t=blocks`" flat variant="outlined" rounded>
+                More
+                <v-icon>east</v-icon>
+            </v-btn>
         </v-card-title>
         <div>
             <!--            Table Header-->
             <v-row class="ma-0 bg-primary">
-                <v-col md="4"> Block # </v-col>
-                <v-col md="4"> Age </v-col>
-                <v-col md="4"> Reward </v-col>
+                <v-col md="3"> Block # </v-col>
+                <v-col md="3"> Reward </v-col>
+                <v-col md="3"> Balance Before </v-col>
+                <v-col md="3"> Balance After </v-col>
             </v-row>
             <v-divider />
             <template v-if="isLoadingRewards">
@@ -25,18 +36,20 @@
             <template v-else>
                 <template v-if="rewards.length > 0">
                     <v-row v-for="(reward, index) in rewards" :key="index" class="ma-0 text-subtitle-2 font-weight-regular" align="center">
-                        <v-col md="4">
+                        <v-col md="3">
                             <router-link :to="`/block/number/${reward.transfer.block}`" class="black--text"> {{ reward.transfer.block }}</router-link>
+                            <p>
+                                {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3) }}
+                            </p>
                         </v-col>
-                        <v-col md="4">
-                            {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3) }}
-                        </v-col>
-                        <v-col md="4">
+                        <v-col md="3">
                             <v-row>
-                                + {{ getMiningReward(reward).value }} {{ getMiningReward(reward).unit }}
+                                + {{ getMiningReward(reward).value }} ETH
                                 <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>
                             </v-row>
                         </v-col>
+                        <v-col md="3"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
+                        <v-col md="3"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
                 </template>
                 <template v-else>
@@ -85,6 +98,10 @@ const props = defineProps({
     newRewards: {
         type: Number,
         required: true
+    },
+    isOverview: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -268,5 +285,19 @@ const getMiningReward = (reward: RewardTransferFragment): FormattedNumber | null
         return formatNonVariableEthValue(_reward)
     }
     return null
+}
+
+const getRewardBalanceBefore = (reward: RewardTransferFragment): FormattedNumber => {
+    if (reward.stateDiff && reward.stateDiff.to) {
+        return formatNonVariableEthValue(new BN(reward.stateDiff.to.before))
+    }
+    return { value: '0' }
+}
+
+const getRewardBalanceAfter = (reward: RewardTransferFragment): FormattedNumber => {
+    if (reward.stateDiff && reward.stateDiff.to) {
+        return formatNonVariableEthValue(new BN(reward.stateDiff.to.after))
+    }
+    return { value: '0' }
 }
 </script>
