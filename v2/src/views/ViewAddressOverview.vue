@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col cols="12" md="6" lg="4">
-            <module-address-balance :address-ref="props.addressRef" />
+            <module-address-balance :address-ref="props.addressRef" is-overview />
         </v-col>
         <v-col cols="12" md="6" lg="4">
             <module-address-token-balance :address-ref="props.addressRef" />

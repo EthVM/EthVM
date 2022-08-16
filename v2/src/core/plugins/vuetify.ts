@@ -23,7 +23,8 @@ const COLORS = {
     greyText: '#90959C',
     greyMedium: '#C2C7CE',
     greyDark: '#2E2E2E',
-    black: '#121212'
+    black: '#121212',
+    greyLoading: '#dedbdd'
 }
 const mainnetLightTheme: ThemeDefinition = {
     dark: false,
@@ -37,6 +38,7 @@ const mainnetLightTheme: ThemeDefinition = {
         teal: COLORS.teal,
         textPrimary: COLORS.navy,
         info: COLORS.greyText,
+        loading: COLORS.greyLoading,
         surface: COLORS.offWhite,
         background: COLORS.greyMedium,
         white: COLORS.white,
@@ -44,6 +46,9 @@ const mainnetLightTheme: ThemeDefinition = {
         'on-surface': COLORS.navy,
         'on-primary': COLORS.white,
         'on-surface-tabs': COLORS.blue
+    },
+    variables: {
+        'skeleton-gradient': 0.3
     }
 }
 
@@ -59,6 +64,7 @@ const mainnetDarkTheme: ThemeDefinition = {
         teal: COLORS.teal,
         textPrimary: COLORS.blueLight,
         info: COLORS.greyText,
+        loading: COLORS.greyDark,
         surface: COLORS.black,
         background: COLORS.greyDark,
         white: COLORS.blueLight,
@@ -67,6 +73,9 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-primary': COLORS.blueLight,
         'on-secondary': COLORS.blueLight,
         'on-surface-tabs': COLORS.blueLight
+    },
+    variables: {
+        'skeleton-gradient': 0.03
     }
 }
 

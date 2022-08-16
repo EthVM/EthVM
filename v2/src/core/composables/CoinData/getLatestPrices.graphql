@@ -9,6 +9,9 @@ fragment MarketData on TokenMarketInfo {
     total_volume
     total_supply
     price_change_percentage_24h
+    circulating_supply
+    high_24h
+    low_24h
 }
 query getLatestPrices {
     getLatestPrices {

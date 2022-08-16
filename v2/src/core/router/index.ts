@@ -10,8 +10,9 @@ import TxsView from '@view/ViewTxs.vue'
 import AddressTokensView from '@view/ViewAddressTokens.vue'
 import ViewAddress from '@view/ViewAddress.vue'
 import ViewAddressOverview from '@view/ViewAddressOverview.vue'
-import TokensView from '@view/ViewTokens.vue'
-import AddressNftsView from '@view/ViewAddressNfts.vue'
+import ViewAddressEthBalance from '@view/ViewAddressEthBalance.vue'
+import ViewTokens from '@view/ViewTokens.vue'
+import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
 import { addressTokensRouteGuard } from './helpers'
@@ -85,7 +86,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: ROUTE_NAME.ADDRESS_BALANCE.PATH,
                 name: ROUTE_NAME.ADDRESS_BALANCE.NAME,
-                component: ViewTemp,
+                component: ViewAddressEthBalance,
                 props: true
             },
             {
@@ -98,7 +99,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: ROUTE_NAME.ADDRESS_NFTS.PATH,
                 name: ROUTE_NAME.ADDRESS_NFTS.NAME,
-                component: AddressNftsView,
+                component: ViewAddressNfts,
                 props: true
                 // props: route => ({ tab: route.query.t })
             },
@@ -131,7 +132,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.TOKENS.PATH,
         name: ROUTE_NAME.TOKENS.NAME,
-        component: TokensView
+        component: ViewTokens
     }
 ]
 

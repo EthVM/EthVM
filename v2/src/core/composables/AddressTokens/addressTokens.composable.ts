@@ -1,9 +1,9 @@
 import { TokenOwnersFragment, useGetOwnersErc20TokensQuery } from '@module/address/apollo/tokens.generated'
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TokenSort } from '@module/address/models/TokenSort'
-import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-format-helper'
+import { formatUsdValue } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 
 export function useAddressToken(addressHash: string) {
@@ -64,16 +64,16 @@ export function useAddressToken(addressHash: string) {
         return false
     })
 
-    const tokenBalance = computed<FormattedNumber | number>(() => {
+    const tokenBalance = computed<string>(() => {
         if (tokenSort.value) {
             const tokenAmounts = tokenSort.value.usdValue?.ascend.reduce((acc, el) => {
                 return new BN(el.usdValue).plus(acc).toNumber()
             }, 0)
             if (tokenAmounts) {
-                return formatFloatingPointValue(new BN(tokenAmounts))
+                return formatUsdValue(new BN(tokenAmounts)).value
             }
         }
-        return 0
+        return '$0.00'
     })
 
     return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, initialLoad }
