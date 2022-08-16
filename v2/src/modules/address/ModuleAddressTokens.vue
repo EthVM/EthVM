@@ -146,7 +146,7 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES, Token } from '@module/address/models/TokenSort'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
-import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable.ts'
+import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 const { getEthereumTokenByContract } = useCoinData()
 const MAX_ITEMS = 10
 
