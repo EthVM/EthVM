@@ -11,7 +11,7 @@ import AddressTokensView from '@view/ViewAddressTokens.vue'
 import ViewAddress from '@view/ViewAddress.vue'
 import ViewAddressOverview from '@view/ViewAddressOverview.vue'
 import ViewAddressEthBalance from '@view/ViewAddressEthBalance.vue'
-import TokensView from '@view/TokensView.vue'
+import ViewTokens from '@view/ViewTokens.vue'
 import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
@@ -132,7 +132,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.TOKENS.PATH,
         name: ROUTE_NAME.TOKENS.NAME,
-        component: TokensView
+        component: ViewTokens
     }
 ]
 
