@@ -18,7 +18,7 @@ export function useCoinData() {
      * Returns market info for ETH ONLY
      */
     const ethMarketInfo = computed<TokenMarketData | null>(() => {
-        if (coinData.value && coinData.value?.getLatestPrices.length > 0) {
+        if (loadingCoinData.value === false && coinData.value && coinData.value?.getLatestPrices.length > 0) {
             const filteredRes = coinData.value.getLatestPrices.filter(token => token?.id === ETH_ID)
             return filteredRes[0] || null
         }
