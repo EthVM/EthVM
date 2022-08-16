@@ -1,8 +1,12 @@
 <template>
     <v-card variant="flat">
         <v-card-title>
-            <div>Mined Blocks Rewards</div>
-            <app-paginate-has-more :has-more="hasMore" :current-page="state.index" :loading="isLoadingRewards" @newPage="setPage" />
+            <div>
+                {{ headerTitle }}
+                <!-- Notice new update-->
+                <app-new-update :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
+            </div>
+            <app-paginate-has-more v-if="rewards.length > 0" :has-more="hasMore" :current-page="state.index" :loading="isLoadingRewards" @newPage="setPage" />
         </v-card-title>
         <div>
             <!--            Table Header-->
@@ -19,20 +23,25 @@
                 </div>
             </template>
             <template v-else>
-                <v-row v-for="(reward, index) in rewards" :key="index" class="ma-0 text-subtitle-2 font-weight-regular" align="center">
-                    <v-col md="4">
-                        <router-link :to="`/block/number/${reward.transfer.block}`" class="black--text"> {{ reward.transfer.block }}</router-link>
-                    </v-col>
-                    <v-col md="4">
-                        {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3) }}
-                    </v-col>
-                    <v-col md="4">
-                        <v-row>
-                            + {{ getMiningReward(reward).value }} {{ getMiningReward(reward).unit }}
-                            <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>
-                        </v-row>
-                    </v-col>
-                </v-row>
+                <template v-if="rewards.length > 0">
+                    <v-row v-for="(reward, index) in rewards" :key="index" class="ma-0 text-subtitle-2 font-weight-regular" align="center">
+                        <v-col md="4">
+                            <router-link :to="`/block/number/${reward.transfer.block}`" class="black--text"> {{ reward.transfer.block }}</router-link>
+                        </v-col>
+                        <v-col md="4">
+                            {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3) }}
+                        </v-col>
+                        <v-col md="4">
+                            <v-row>
+                                + {{ getMiningReward(reward).value }} {{ getMiningReward(reward).unit }}
+                                <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>
+                            </v-row>
+                        </v-col>
+                    </v-row>
+                </template>
+                <template v-else>
+                    <p class="text-h4 text-center my-2">No mining history available for this address</p>
+                </template>
             </template>
         </div>
     </v-card>
@@ -48,10 +57,12 @@ import {
 import { computed, reactive, ref, onMounted, watch } from 'vue'
 import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
+import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { timeAgo } from '@core/helper'
 import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
+import { AddressEventType } from '@/apollo/types'
 
 const state = reactive({
     isEnd: 0,
@@ -70,6 +81,10 @@ const props = defineProps({
     maxItems: {
         type: Number,
         default: 10
+    },
+    newRewards: {
+        type: Number,
+        required: true
     }
 })
 
@@ -114,6 +129,21 @@ const addressRewards = computed<RewardSummaryFragment | undefined>(() => {
     return addressRewardsUncleQueryResult.value?.getUncleRewards
 })
 
+const newRewardsText = computed<string>(() => {
+    const isPlural = props.newRewards > 1
+    if (props.rewardType === 'block') {
+        return isPlural ? 'New blocks' : 'New block'
+    }
+    return isPlural ? 'New uncles' : 'New uncle'
+})
+
+const headerTitle = computed<string>(() => {
+    if (props.rewardType === 'block') {
+        return 'Mined Blocks Reward'
+    }
+    return 'Mined Uncles Rewards'
+})
+
 /*
  * Handle result pagination
  */
@@ -148,8 +178,15 @@ const showPagination = computed<boolean>(() => {
     return !initialLoad.value && !!addressRewards.value && addressRewards.value.nextKey !== null
 })
 
+const eventType = computed<AddressEventType>(() => {
+    if (props.rewardType === 'block') {
+        return AddressEventType.NewMinedBlock
+    }
+    return AddressEventType.NewMinedUncle
+})
+
 const emit = defineEmits<{
-    (e: 'resetUpdateCount', isReset: boolean): void
+    (e: 'resetUpdateCount', eventType: AddressEventType, isReset: boolean): void
 }>()
 
 /**
@@ -166,7 +203,7 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
             } else {
                 refetchAddressRewardsUncle()
             }
-            emit('resetUpdateCount', true)
+            emit('resetUpdateCount', eventType.value, true)
         } else {
             if (page > state.isEnd && hasMore.value && addressRewards.value) {
                 if (props.rewardType === 'block') {

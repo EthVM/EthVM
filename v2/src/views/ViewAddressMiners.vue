@@ -8,10 +8,24 @@
                 </v-tabs>
                 <v-window v-model="state.tab" class="mt-6">
                     <v-window-item :value="routes[0]" :key="routes[0]">
-                        <module-address-miner-block class="mb-4" reward-type="block" :address-hash="props.addressRef" :max-items="MAX_ITEMS" />
+                        <module-address-miner-block
+                            class="mb-4"
+                            reward-type="block"
+                            :address-hash="props.addressRef"
+                            :max-items="MAX_ITEMS"
+                            :new-rewards="newMinedBlocks"
+                            @resetUpdateCount="resetCount"
+                        />
                     </v-window-item>
                     <v-window-item :value="routes[1]" :key="routes[1]">
-                        <module-address-miner-block class="mb-4" reward-type="uncle" :address-hash="props.addressRef" :max-items="MAX_ITEMS" />
+                        <module-address-miner-block
+                            class="mb-4"
+                            reward-type="uncle"
+                            :address-hash="props.addressRef"
+                            :max-items="MAX_ITEMS"
+                            :new-rewards="newMinedUncles"
+                            @resetUpdateCount="resetCount"
+                        />
                     </v-window-item>
                 </v-window>
             </v-card>
@@ -24,6 +38,7 @@ import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { onMounted, reactive } from 'vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
+import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 
 const MAX_ITEMS = 10
 
@@ -38,6 +53,8 @@ const props = defineProps({
     }
 })
 const routes = ADDRESS_ROUTE_QUERY.Q_MINER
+
+const { newMinedBlocks, newMinedUncles, resetCount } = useAddressUpdate(props.addressRef)
 
 const state = reactive({
     error: '',
