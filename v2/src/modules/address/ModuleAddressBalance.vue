@@ -148,7 +148,7 @@
 
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import { useGetEthBalanceQuery } from './apollo/addressBalance.generated'
+import { useGetEthBalanceQuery } from './apollo/AddressBalance/addressBalance.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import BN from 'bignumber.js'
 import { formatVariableUnitEthValue, formatUsdValue, formatPercentageValue } from '@/core/helper/number-format-helper'

@@ -3,7 +3,7 @@
  * NOTE: THIS IS AN AUTO-GENERATED FILE. DO NOT MODIFY IT DIRECTLY.
  */
 
-import * as Types from '../../../apollo/types'
+import * as Types from '../../../../apollo/types'
 
 import gql from 'graphql-tag'
 import * as VueApolloComposable from '@vue/apollo-composable'

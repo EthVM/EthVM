@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { useAddressEventSubscription } from '@module/address/apollo/addressEvent.generated'
+import { useAddressEventSubscription } from '@module/address/apollo/AddressEvent/addressEvent.generated'
 import { AddressEventType } from '@/apollo/types'
 
 export function useAddressUpdate(addressRef: string) {
