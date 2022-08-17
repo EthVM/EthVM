@@ -1,12 +1,15 @@
 <template>
-    <v-card fluid class="py-4 px-8 pa-md-6 h-100" elevation="1" rounded="xl">
+    <v-card fluid class="py-4 px-8 pa-md-6" elevation="1" rounded="xl">
         <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
-        <v-row v-if="!isLoading && portfolioValueBN.gt(0)" class="mt-2" align="center">
-            <v-col cols="12" sm="4" md="5">
+        <v-row class="mt-2" align="center">
+            <v-col v-if="isLoading" cols="12">
+                <div class="skeleton-box rounded-xl" style="min-height: 140px"></div>
+            </v-col>
+            <v-col v-if="!isLoading && portfolioValueBN.gt(0)" cols="12" sm="4" md="5">
                 <chart-pie :chart-data="chartData" :loading="false"></chart-pie>
             </v-col>
-            <v-divider v-if="!xs" vertical></v-divider>
-            <v-col cols="12" sm="8" md="7">
+            <v-divider v-if="!xs && !isLoading && portfolioValueBN.gt(0)" vertical class="my-3"></v-divider>
+            <v-col v-if="!isLoading && portfolioValueBN.gt(0)" cols="12" sm="8" md="7">
                 <v-row dense v-for="i in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center">
                     <v-col class="d-flex align-center">
                         <app-token-icon :token-icon="i.icon"></app-token-icon>

@@ -9,7 +9,7 @@
             <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
                 <template #extra>
                     <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
-                        <v-progress-linear height="28px" rounded="xl" indeterminate color="#ECF2F7" bg-color="info" width="100px"></v-progress-linear>
+                        <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                     </v-col>
                     <p v-else class="text-h4 font-weight-medium">{{ balanceFiatFormatted }}</p>
                 </template>
@@ -32,7 +32,7 @@
             <address-balance-totals v-if="isSmallView" title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
                 <template #extra>
                     <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
-                        <v-progress-linear height="28px" rounded="xl" indeterminate color="#ECF2F7" bg-color="info" width="100px"></v-progress-linear>
+                        <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                     </v-col>
                     <p v-else class="text-h4 font-weight-medium">{{ balanceFiatFormatted }}</p>
                 </template>
@@ -54,15 +54,8 @@
                 -->
                 <v-col v-if="!isSmallView" cols="3" lg="2">
                     <p class="text-info text-h6">Balance</p>
-                    <v-progress-linear
-                        v-if="loadingBalanceData"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
+
                     <p v-else class="text-h3">{{ balanceFormatted }}</p>
                 </v-col>
                 <!--
@@ -72,15 +65,8 @@
                 -->
                 <v-col v-if="!isSmallView" cols="3">
                     <p class="text-info text-h6">USD Value</p>
-                    <v-progress-linear
-                        v-if="loadingMarketInfo || loadingBalanceData"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingMarketInfo || loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
+
                     <p v-else class="text-h3">{{ balanceFiatFormatted }}</p>
                 </v-col>
                 <!--
@@ -90,15 +76,7 @@
                 -->
                 <v-col cols="6" md="4">
                     <p :class="[isSmallView ? 'text-caption mb-1' : 'text-h6', 'text-info ']">Price</p>
-                    <v-progress-linear
-                        v-if="loadingMarketInfo"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
                     <p v-else :class="isSmallView ? 'text-body-1' : 'text-h3'">
                         {{ priceFiatFormatted }} <span v-if="!isSmallView" :class="['pl-5', percentageClass]"> {{ percentageFormatted }}%</span>
                     </p>
@@ -110,15 +88,7 @@
                 -->
                 <v-col v-if="isSmallView" cols="6" md="4">
                     <p class="text-caption mb-1 text-h6">24h Change</p>
-                    <v-progress-linear
-                        v-if="loadingMarketInfo"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
                     <p v-else :class="['text-body-1', percentageClass]">{{ percentageFormatted }}%</p>
                 </v-col>
                 <!--

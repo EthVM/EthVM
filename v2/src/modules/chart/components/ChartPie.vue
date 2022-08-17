@@ -14,7 +14,6 @@ ChartJS.defaults.plugins.legend = Object.assign(ChartJS.defaults.plugins.legend,
 
 interface PropType {
     chartData: ChartData<'doughnut'> | undefined
-    loading: boolean
 }
 const props = defineProps<PropType>()
 

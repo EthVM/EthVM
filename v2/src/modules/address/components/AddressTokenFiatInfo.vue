@@ -1,7 +1,8 @@
 <template>
     <v-col cols="6" md="4" lg="3" class="mt-4">
         <p :class="[xs || sm ? 'text-caption mb-1' : 'text-h6', 'text-info ']">{{ text }}</p>
-        <v-progress-linear v-if="props.loading" height="28px" rounded="xl" indeterminate color="#ECF2F7" bg-color="info" width="100px"></v-progress-linear>
+        <div v-if="props.loading" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
+
         <p v-else :class="xs || sm ? 'text-body-1' : 'text-h4'">{{ valueFiatFormatted }}</p>
     </v-col>
 </template>

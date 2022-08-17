@@ -1,6 +1,6 @@
 <template>
     <div class="token-icon-core" :style="loaderStyle">
-        <div v-if="!props.tokenIcon" class="skeleton-box"></div>
+        <div v-if="!props.tokenIcon" class="skeleton-box skeleton-box-icon"></div>
         <v-img v-else :src="image" contain @error="imgLoadFail" :max-height="size" :max-width="size" class="token-icon"></v-img>
     </div>
 </template>
@@ -40,33 +40,9 @@ const loaderStyle = computed<string>(() => {
 })
 </script>
 <style lang="scss" scoped>
-.skeleton-box {
-    position: relative;
-    background-color: rgb(var(--v-theme-loading));
-    display: inline-block;
-    overflow: hidden;
+.skeleton-box-icon {
     border-radius: 50%;
-    height: 100%;
-    width: 100%;
-    cursor: wait;
-
-    &::after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        transform: translateX(-100%);
-        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, var(--v-skeleton-gradient)), rgba(255, 255, 255, 0));
-        animation: loading 2s infinite;
-        content: '';
-    }
-
-    @keyframes loading {
-        100% {
-            transform: translateX(100%);
-        }
-    }
+    display: inline-block;
 }
 .token-icon-core {
     border-radius: 50%;
