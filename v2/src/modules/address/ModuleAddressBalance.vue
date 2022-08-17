@@ -11,7 +11,7 @@
                     <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
                         <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                     </v-col>
-                    <p v-else class="text-h4 font-weight-medium">{{ balanceFiatFormatted }}</p>
+                    <p v-else class="text-h5 font-weight-regular">{{ balanceFiatFormatted }}</p>
                 </template>
             </address-balance-totals>
             <div class="temp-chart pa-4 rounded-xl">
@@ -23,7 +23,7 @@
           VIEW: Eth Balance and History
         =========================
         -->
-        <div v-else fluid class="py-4 px-8 pa-md-6" elevation="1" rounded="xl">
+        <div v-else fluid class="py-4 px-8 pa-md-6">
             <!--
             ========================
                 XS & SM: Eth Balance & USD VALUE

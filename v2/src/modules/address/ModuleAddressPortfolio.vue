@@ -1,7 +1,7 @@
 <template>
-    <v-card fluid class="py-4 px-8 pa-md-6" elevation="1" rounded="xl">
+    <v-card fluid class="py-4 px-8 pa-md-6" elevation="1" rounded="xl" height="100%">
         <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
-        <v-row class="mt-2" align="center">
+        <v-row class="mt-2" align="start">
             <v-col v-if="isLoading" cols="12">
                 <div class="skeleton-box rounded-xl" style="min-height: 140px"></div>
             </v-col>
