@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="flat">
+    <v-card :variant="!isOverview ? 'flat' : 'elevated'" elevation="1" rounded="xl">
         <v-card-title class="d-flex justify-space-between align-center">
             <div>
                 {{ headerTitle }}
@@ -13,10 +13,7 @@
                 :loading="isLoadingRewards"
                 @newPage="setPage"
             />
-            <v-btn v-else :to="`/address/${props.addressHash}/adr-miner-info?t=blocks`" flat variant="outlined" rounded>
-                More
-                <v-icon>east</v-icon>
-            </v-btn>
+            <app-btn v-else text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
         </v-card-title>
         <div>
             <!--            Table Header-->
@@ -71,11 +68,13 @@ import { computed, reactive, ref, onMounted, watch } from 'vue'
 import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
+import AppBtn from '@core/components/AppBtn.vue'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { timeAgo } from '@core/helper'
 import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
+import { useRouter } from 'vue-router'
 
 const state = reactive({
     isEnd: 0,
@@ -299,5 +298,10 @@ const getRewardBalanceAfter = (reward: RewardTransferFragment): FormattedNumber 
         return formatNonVariableEthValue(new BN(reward.stateDiff.to.after))
     }
     return { value: '0' }
+}
+
+const router = useRouter()
+const goToAddressMiningPage = (): void => {
+    router.push(`/address/${props.addressHash}/adr-miner-info?t=blocks`)
 }
 </script>
