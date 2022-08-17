@@ -48,7 +48,9 @@ export function useAddressEthBalance(addressHash: string) {
     const balanceFormatted = computed<string>(() => {
         return formatVariableUnitEthValue(new BN(balanceWei.value)).value
     })
-
+    /**
+     * Returns FIAT balance in BN
+     */
     const balanceFiatBN = computed<BN>(() => {
         if (!loadingMarketInfo.value && !initialLoad.value) {
             const ethPrice = ethMarketInfo?.value?.current_price || 0

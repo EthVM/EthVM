@@ -79,7 +79,6 @@ const convertToQuadrillion = (value: BigNumber): FormattedNumber => {
 }
 
 export const getRoundNumber = (value: BigNumber, round: number, dp: number): FormattedNumber => {
-    // console.log( value.toFormat)
     return { value: value.toFormat(Math.min(round, dp)), tooltipText: dp > round ? value.toFormat() : undefined }
 }
 
