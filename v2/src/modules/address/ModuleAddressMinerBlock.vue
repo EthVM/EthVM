@@ -2,19 +2,21 @@
     <v-card :variant="!isOverview ? 'flat' : 'elevated'" :elevation="isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-md-6">
         <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
             <div>
-                <span class="text-h6">{{ headerTitle }}</span>
+                <span v-if="isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
                 <app-new-update :icon-only="isOverview" :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
             </div>
-            <app-paginate-has-more
-                v-if="rewards.length > 0 && !props.isOverview"
-                :has-more="hasMore"
-                :current-page="state.index"
-                :loading="isLoadingRewards"
-                @newPage="setPage"
-                class="d-none d-md-block"
-            />
-            <app-btn v-else text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
+            <template v-if="!initialLoad">
+                <app-paginate-has-more
+                    v-if="rewards.length > 0 && !props.isOverview"
+                    :has-more="hasMore"
+                    :current-page="state.index"
+                    :loading="isLoadingRewards"
+                    @newPage="setPage"
+                    class="d-none d-md-block"
+                />
+                <app-btn v-else text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
+            </template>
         </v-card-title>
         <div>
             <!--            Table Header-->
@@ -25,13 +27,7 @@
                 <v-col md="3" class="text-body-1 text-info py-0 pr-0"> Balance After </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4" />
-            <template v-if="isLoadingRewards">
-                <div v-for="item in 10" :key="item" class="my-2">
-                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
-                    <v-divider />
-                </div>
-            </template>
-            <template v-else>
+            <template v-if="!initialLoad">
                 <template v-if="rewards.length > 0">
                     <v-row v-for="(reward, index) in rewards" :key="index" class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular" align="center">
                         <v-col cols="7" md="3" class="py-0 pl-0">
@@ -55,10 +51,20 @@
                         <v-col md="3" class="d-none d-md-block py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
                         <v-col md="3" class="d-none d-md-block py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
+                    <app-intersect @intersect="loadMoreData">
+                        <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
+                        <v-divider />
+                    </app-intersect>
                 </template>
-                <template v-else>
+                <template v-if="rewards.length < 0 && !isLoadingRewards">
                     <p class="text-h4 text-center my-2">No mining history available for this address</p>
                 </template>
+            </template>
+            <template v-if="isLoadingRewards">
+                <div v-for="item in 10" :key="item" class="my-2">
+                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
+                    <v-divider />
+                </div>
             </template>
         </div>
     </v-card>
@@ -76,6 +82,7 @@ import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { timeAgo } from '@core/helper'
 import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
@@ -177,10 +184,11 @@ const headerTitle = computed<string>(() => {
  * Handle result pagination
  */
 const rewards = computed<Array<RewardTransferFragment | null>>(() => {
-    if (!loadingAddressRewardsBlock.value && addressRewards.value) {
+    if (!initialLoad.value && addressRewards.value) {
         const start = state.index * props.maxItems
         const end = start + props.maxItems > addressRewards.value?.transfers.length ? addressRewards.value?.transfers.length : start + props.maxItems
-        return addressRewards.value?.transfers.slice(start, end)
+        // return addressRewards.value?.transfers.slice(start, end)
+        return addressRewards.value?.transfers
     }
     return []
 })
@@ -288,6 +296,12 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
             throw new Error(newE)
         }
         return false
+    }
+}
+
+const loadMoreData = (e: boolean): void => {
+    if (addressRewards.value && e) {
+        setPage(state.index + 1)
     }
 }
 
