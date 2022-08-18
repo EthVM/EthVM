@@ -35,7 +35,7 @@
                 <template v-if="rewards.length > 0">
                     <v-row v-for="(reward, index) in rewards" :key="index" class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular" align="center">
                         <v-col cols="7" md="3" class="py-0 pl-0">
-                            <v-row class="d-flex flex-md-column ma-0">
+                            <v-row class="d-flex flex-md-column ma-0 text-caption text-md-subtitle-2">
                                 <v-col cols="6" md="12" class="pa-0">
                                     <router-link :to="`/block/number/${reward.transfer.block}`" class="text-link"> {{ reward.transfer.block }}</router-link>
                                 </v-col>

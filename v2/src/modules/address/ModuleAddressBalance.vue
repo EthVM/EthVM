@@ -39,7 +39,7 @@
             </address-balance-totals>
             <!--
             ========================
-                MD and UP: ICON & Eth title 
+                MD and UP: ICON & Eth title
             =========================
             -->
             <v-row v-else align="end" class="pt-11 mb-12">
@@ -49,7 +49,7 @@
             <v-row dense>
                 <!--
                 ========================
-                    MD and UP: ETH Balance 
+                    MD and UP: ETH Balance
                 =========================
                 -->
                 <v-col v-if="!isSmallView" cols="3" lg="2">
@@ -67,7 +67,7 @@
                 </v-col>
                 <!--
                 ========================
-                    MD and UP: FIAT Balance 
+                    MD and UP: FIAT Balance
                 =========================
                 -->
                 <v-col v-if="!isSmallView" cols="3">
@@ -85,7 +85,7 @@
                 </v-col>
                 <!--
                 ========================
-                    XS and UP: Price 
+                    XS and UP: Price
                 =========================
                 -->
                 <v-col cols="6" md="4">
