@@ -1,21 +1,13 @@
 <template>
-    <v-card :variant="!isOverview ? 'flat' : 'elevated'" :elevation="isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-md-6">
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-md-6">
         <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
             <div>
-                <span v-if="isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
+                <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
-                <app-new-update :icon-only="isOverview" :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
+                <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
             </div>
-            <template v-if="!initialLoad">
-                <app-paginate-has-more
-                    v-if="rewards.length > 0 && !props.isOverview"
-                    :has-more="hasMore"
-                    :current-page="state.index"
-                    :loading="isLoadingRewards"
-                    @newPage="setPage"
-                    class="d-none d-md-block"
-                />
-                <app-btn v-else text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
+            <template v-if="props.isOverview">
+                <app-btn text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
             </template>
         </v-card-title>
         <div>
@@ -51,12 +43,12 @@
                         <v-col md="3" class="d-none d-md-block py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
                         <v-col md="3" class="d-none d-md-block py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
-                    <app-intersect @intersect="loadMoreData">
+                    <app-intersect v-if="!props.isOverview" @intersect="loadMoreData">
                         <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
                         <v-divider />
                     </app-intersect>
                 </template>
-                <template v-if="rewards.length < 0 && !isLoadingRewards">
+                <template v-if="rewards.length < 1 && !isLoadingRewards">
                     <p class="text-h4 text-center my-2">No mining history available for this address</p>
                 </template>
             </template>
@@ -300,7 +292,7 @@ const setPage = async (page: number, reset = false): Promise<boolean> => {
 }
 
 const loadMoreData = (e: boolean): void => {
-    if (addressRewards.value && e) {
+    if (addressRewards.value && e && !props.isOverview) {
         setPage(state.index + 1)
     }
 }
