@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row :dense="xs">
         <v-col cols="12" md="6" lg="4">
             <module-address-portfolio :address-ref="props.addressRef" />
         </v-col>
@@ -16,7 +16,9 @@
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance.vue'
 import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
+import { useDisplay } from 'vuetify/lib/framework.mjs'
 const props = defineProps({
     addressRef: { type: String, required: true }
 })
+const { xs } = useDisplay()
 </script>
