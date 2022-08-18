@@ -57,6 +57,7 @@ $endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
+    vertical-align: middle;
 }
 .firstPart {
     max-width: calc(100% - #{$endWidth});
@@ -70,8 +71,5 @@ $endWidth: 1em * $fontFaceScaleFactor * $endFixedChars;
 .hash-container {
     white-space: nowrap;
     overflow: hidden;
-    width: 100%;
-    line-height: 1rem;
-    padding-top: 5px;
 }
 </style>
