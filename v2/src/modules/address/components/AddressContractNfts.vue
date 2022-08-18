@@ -20,25 +20,19 @@
                         </div>
                     </v-col>
                     <template v-if="visibleTokens.length > 6">
-                        <v-row
-                            class="ma-0"
-                            v-intersect="{
-                                handler: onIntersect,
-                                options: {
-                                    threshold: 0.5
-                                }
-                            }"
-                        >
-                            <v-col cols="4" md="2">
-                                <v-img :src="getImage()" max-height="150" />
-                            </v-col>
-                            <v-col cols="4" md="2">
-                                <v-img :src="getImage()" max-height="150" />
-                            </v-col>
-                            <v-col cols="4" md="2">
-                                <v-img :src="getImage()" max-height="150" />
-                            </v-col>
-                        </v-row>
+                        <app-intersect @intersect="onIntersect">
+                            <v-row class="ma-0">
+                                <v-col cols="4" md="2">
+                                    <v-img :src="getImage()" height="150" />
+                                </v-col>
+                                <v-col cols="4" md="2">
+                                    <v-img :src="getImage()" height="150" />
+                                </v-col>
+                                <v-col cols="4" md="2">
+                                    <v-img :src="getImage()" height="150" />
+                                </v-col>
+                            </v-row>
+                        </app-intersect>
                     </template>
                 </v-row>
             </template>
@@ -62,6 +56,7 @@ import { OwnerErc721Fragment, TokenFragment, useGetOwnersErc721TokensQuery } fro
 import { computed, reactive } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppExpansionPanel from '@core/components/AppExpansionPanel.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import configs from '@/configs'
 
 const props = defineProps({
