@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="!isOverview ? 'flat' : 'elevated'" :elevation="isOverview ? 1 : 0" rounded="xl" class="py-4 px-8 pa-md-6">
+    <v-card :variant="!isOverview ? 'flat' : 'elevated'" :elevation="isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-md-6">
         <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span class="text-h6">{{ headerTitle }}</span>
@@ -12,18 +12,19 @@
                 :current-page="state.index"
                 :loading="isLoadingRewards"
                 @newPage="setPage"
+                class="d-none d-md-block"
             />
             <app-btn v-else text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
         </v-card-title>
         <div>
             <!--            Table Header-->
-            <v-row class="ma-0">
+            <v-row class="ma-0 d-none d-md-flex">
                 <v-col md="3" class="text-body-1 text-info py-0 pl-0"> Block # </v-col>
                 <v-col md="3" class="text-body-1 text-info py-0"> Reward </v-col>
                 <v-col md="3" class="text-body-1 text-info py-0"> Balance Before </v-col>
                 <v-col md="3" class="text-body-1 text-info py-0 pr-0"> Balance After </v-col>
             </v-row>
-            <v-divider class="mt-4 mb-0" />
+            <v-divider class="my-0 mt-md-4" />
             <template v-if="isLoadingRewards">
                 <div v-for="item in 10" :key="item" class="my-2">
                     <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
@@ -33,20 +34,26 @@
             <template v-else>
                 <template v-if="rewards.length > 0">
                     <v-row v-for="(reward, index) in rewards" :key="index" class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular" align="center">
-                        <v-col md="3" class="py-0 pl-0">
-                            <router-link :to="`/block/number/${reward.transfer.block}`" class="text-link"> {{ reward.transfer.block }}</router-link>
-                            <p class="text-grey-darken-1">
-                                {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3) }}
-                            </p>
+                        <v-col cols="7" md="3" class="py-0 pl-0">
+                            <v-row class="d-flex flex-md-column ma-0">
+                                <v-col cols="6" md="12" class="pa-0">
+                                    <router-link :to="`/block/number/${reward.transfer.block}`" class="text-link"> {{ reward.transfer.block }}</router-link>
+                                </v-col>
+                                <v-col cols="6" md="12" class="pa-0">
+                                    <p class="text-grey-darken-1">
+                                        {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3, mdAndDown) }}
+                                    </p>
+                                </v-col>
+                            </v-row>
                         </v-col>
-                        <v-col md="3" class="py-0">
-                            <v-row>
+                        <v-col cols="5" md="3" class="py-0">
+                            <v-row justify="end" justify-md="start">
                                 + {{ getMiningReward(reward).value }} ETH
                                 <!--                                <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>-->
                             </v-row>
                         </v-col>
-                        <v-col md="3" class="py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
-                        <v-col md="3" class="py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
+                        <v-col md="3" class="d-none d-md-block py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
+                        <v-col md="3" class="d-none d-md-block py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
                 </template>
                 <template v-else>
@@ -75,6 +82,9 @@ import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-
 import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
+
+const { mdAndDown } = useDisplay()
 
 const state = reactive({
     isEnd: 0,

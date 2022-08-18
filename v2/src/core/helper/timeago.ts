@@ -1,4 +1,4 @@
-export const timeAgo = (date: string | Date) => {
+export const timeAgo = (date: string | Date, isShort: boolean) => {
     const prevDate = new Date(date)
 
     const seconds = Math.floor((new Date().getTime() - prevDate.getTime()) / 1000)
@@ -6,23 +6,23 @@ export const timeAgo = (date: string | Date) => {
     const intervals = [
         {
             interval: 31536000,
-            name: 'year'
+            name: isShort ? 'yr' : 'year'
         },
         {
             interval: 2592000,
-            name: 'month'
+            name: isShort ? 'mth' : 'month'
         },
         {
             interval: 86400,
-            name: 'day'
+            name: isShort ? 'day' : 'day'
         },
         {
             interval: 3600,
-            name: 'hour'
+            name: isShort ? 'hr' : 'hour'
         },
         {
             interval: 60,
-            name: 'minute'
+            name: isShort ? 'min' : 'minute'
         }
     ]
 
@@ -35,5 +35,5 @@ export const timeAgo = (date: string | Date) => {
             return `${Math.floor(res)} ${interval.name}${isPlural ? 's' : ''} ago`
         }
     }
-    return seconds > 5 ? `${Math.floor(seconds)} seconds ago` : 'Just now'
+    return seconds > 5 ? `${Math.floor(seconds)} ${isShort ? 'secs' : 'seconds'} ago` : 'Just now'
 }
