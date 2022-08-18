@@ -4,7 +4,7 @@
             <div class="firstPart">{{ start }}</div>
             <div class="lastPart">{{ end }}</div>
         </div>
-        <router-link v-else :to="props.link" :class="props.isBlue ? `secondary--text` : `black--text`">
+        <router-link v-else :to="props.link || ''" :class="props.isBlue ? `secondary--text` : `black--text`">
             <div class="firstPart">{{ start }}</div>
             <div class="lastPart">{{ end }}</div>
         </router-link>
@@ -15,7 +15,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-    hash: String,
+    hash: {
+        type: String,
+        required: true
+    },
     link: String,
     isBlue: {
         type: Boolean,
