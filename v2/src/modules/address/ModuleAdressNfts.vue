@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Erc721BalanceFragment, useGetOwnersErc721BalancesQuery } from '@module/address/apollo/tokens.generated'
+import { Erc721BalanceFragment, useGetOwnersErc721BalancesQuery } from '@module/address/apollo/AddressTokens/tokens.generated'
 import AddressContractNfts from '@module/address/components/AddressContractNfts.vue'
 const props = defineProps({
     addressHash: { type: String, required: true }

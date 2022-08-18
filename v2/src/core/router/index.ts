@@ -10,12 +10,13 @@ import TxsView from '@view/ViewTxs.vue'
 import AddressTokensView from '@view/ViewAddressTokens.vue'
 import ViewAddress from '@view/ViewAddress.vue'
 import ViewAddressOverview from '@view/ViewAddressOverview.vue'
+import ViewAddressMiners from '@view/ViewAddressMiners.vue'
 import ViewAddressEthBalance from '@view/ViewAddressEthBalance.vue'
 import ViewTokens from '@view/ViewTokens.vue'
 import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
-import { addressTokensRouteGuard } from './helpers'
+import { addressMinerRouteGuard, addressTokensRouteGuard } from './helpers'
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
@@ -112,9 +113,9 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: ROUTE_NAME.ADDRESS_MINER.PATH,
                 name: ROUTE_NAME.ADDRESS_MINER.NAME,
-                component: ViewTemp,
-                props: true
-                // props: route => ({ tab: route.query.t })
+                component: ViewAddressMiners,
+                props: route => ({ tab: route.query.t }),
+                beforeEnter: addressMinerRouteGuard
             }
         ]
     },

@@ -147,6 +147,7 @@ import { TOKEN_FILTER_VALUES, Token } from '@module/address/models/TokenSort'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
+import { AddressEventType } from '@/apollo/types'
 const { getEthereumTokenByContract } = useCoinData()
 const MAX_ITEMS = 10
 
@@ -159,7 +160,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-    (e: 'resetCount'): void
+    (e: 'resetCount', eventType: AddressEventType, isReset: boolean): void
 }>()
 
 interface ComponentState {
@@ -236,7 +237,7 @@ const showTokenDetails = (contract: string) => {
 const setPage = (page: number, reset = false): void => {
     if (reset) {
         refetchTokens()
-        emit('resetCount')
+        emit('resetCount', AddressEventType.NewErc20Transfer, true)
     }
     state.index = page
 }
