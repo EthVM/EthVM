@@ -1,19 +1,19 @@
 <template>
     <app-error v-if="hasError" :has-error="hasError" :message="state.error" />
 
-    <div v-if="isValid" :class="{ 'adr-core-background pb-6': !smAndDown }">
+    <div v-if="isValid && props.addressRef" :class="{ 'adr-core-background pb-6': !smAndDown }">
         <v-card class="px-xl-auto mx-2 mx-sm-6 mx-md-0" :flat="!smAndDown" :rounded="smAndDown ? 'xl' : '0'" :min-height="smAndDown ? '100%' : '92px'">
-            <v-container fluid class="core-container fill-height px-4 px-sm-6">
+            <v-container fluid class="core-container fill-height px-a pa-sm-6">
                 <v-row align="center" justify="center">
                     <v-col cols="12" md="8" lg="7" class="d-flex align-center">
-                        <AppAddressBlockie :address="props.addressRef || ''" :size="10" />
+                        <app-address-blockie :address="props.addressRef || ''" :size="10" />
                         <app-transform-hash :hash="props.addressRef" class="text-h4 px-2 px-sm-4"></app-transform-hash>
                         <v-spacer />
                         <app-copy-to-clip :value-to-copy="props.addressRef || ''" />
                         <app-btn-icon icon="favorite"></app-btn-icon>
                         <app-btn-icon icon="qr_code"></app-btn-icon>
                     </v-col>
-                    <v-divider :vertical="!smAndDown" class="my-3"></v-divider>
+                    <v-divider :vertical="!smAndDown" class="my-1 my-sm-3 mx-n1 mx-sm-n3 mx-md-none"></v-divider>
                     <v-col cols="12" md="4" lg="3" class="d-flex align-center"> </v-col>
                 </v-row>
             </v-container>
