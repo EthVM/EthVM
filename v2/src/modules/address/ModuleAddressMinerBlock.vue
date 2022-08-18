@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-md-6">
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
         <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
@@ -12,7 +12,7 @@
         </v-card-title>
         <div>
             <!--            Table Header-->
-            <v-row class="ma-0 d-none d-md-flex">
+            <v-row class="ma-0 d-none d-sm-flex">
                 <v-col md="3" class="text-body-1 text-info py-0 pl-0"> Block # </v-col>
                 <v-col md="3" class="text-body-1 text-info py-0"> Reward </v-col>
                 <v-col md="3" class="text-body-1 text-info py-0"> Balance Before </v-col>
@@ -22,26 +22,28 @@
             <template v-if="!initialLoad">
                 <template v-if="rewards.length > 0">
                     <v-row v-for="(reward, index) in rewards" :key="index" class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular" align="center">
-                        <v-col cols="7" md="3" class="py-0 pl-0">
-                            <v-row class="d-flex flex-md-column ma-0 text-caption text-md-subtitle-2">
-                                <v-col cols="6" md="12" class="pa-0">
-                                    <router-link :to="`/block/number/${reward.transfer.block}`" class="text-link"> {{ reward.transfer.block }}</router-link>
+                        <v-col cols="7" sm="3" class="py-0 pl-0">
+                            <v-row class="d-flex flex-sm-column ma-0 text-caption text-sm-subtitle-2">
+                                <v-col cols="6" sm="12" class="pa-0">
+                                    <router-link :to="`/block/number/${reward.transfer.block}`" class="text-secondary">
+                                        {{ reward.transfer.block }}
+                                    </router-link>
                                 </v-col>
-                                <v-col cols="6" md="12" class="pa-0">
-                                    <p class="text-grey-darken-1">
-                                        {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3, mdAndDown) }}
+                                <v-col cols="6" sm="12" class="pa-0">
+                                    <p class="text-info">
+                                        {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3, xs) }}
                                     </p>
                                 </v-col>
                             </v-row>
                         </v-col>
-                        <v-col cols="5" md="3" class="py-0">
-                            <v-row justify="end" justify-md="start">
+                        <v-col cols="5" sm="3" class="py-0">
+                            <v-row justify="end" justify-sm="start">
                                 + {{ getMiningReward(reward).value }} ETH
                                 <!--                                <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>-->
                             </v-row>
                         </v-col>
-                        <v-col md="3" class="d-none d-md-block py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
-                        <v-col md="3" class="d-none d-md-block py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
+                        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
+                        <v-col md="3" class="d-none d-sm-block py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
                     <app-intersect v-if="!props.isOverview" @intersect="loadMoreData">
                         <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
@@ -83,7 +85,7 @@ import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 
-const { mdAndDown } = useDisplay()
+const { xs } = useDisplay()
 
 const state = reactive({
     isEnd: 0,

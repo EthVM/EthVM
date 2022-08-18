@@ -5,7 +5,7 @@
           VIEW: Overview
         =========================
         -->
-        <v-card v-if="isOverview" fluid class="py-4 px-8 pa-md-6" elevation="1" rounded="xl">
+        <v-card v-if="isOverview" fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl">
             <address-balance-totals title="ETH Balance" :is-loading="state.loadingBalanceData" :balance="`${balanceFormatted} ETH`">
                 <template #extra>
                     <v-col v-if="loadingMarketInfo || state.loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
@@ -23,7 +23,7 @@
           VIEW: Eth Balance and History
         =========================
         -->
-        <div v-else fluid class="py-4 px-8 pa-md-6" elevation="1" rounded="xl">
+        <div v-else fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl">
             <!--
             ========================
                 XS & SM: Eth Balance & USD VALUE
