@@ -1,10 +1,10 @@
 <template>
-    <v-card :variant="!isOverview ? 'flat' : 'elevated'" elevation="1" rounded="xl">
-        <v-card-title class="d-flex justify-space-between align-center">
+    <v-card :variant="!isOverview ? 'flat' : 'elevated'" :elevation="isOverview ? 1 : 0" rounded="xl" class="py-4 px-8 pa-md-6">
+        <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
             <div>
-                {{ headerTitle }}
+                <span class="text-h6">{{ headerTitle }}</span>
                 <!-- Notice new update-->
-                <app-new-update :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
+                <app-new-update :icon-only="isOverview" :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
             </div>
             <app-paginate-has-more
                 v-if="rewards.length > 0 && !props.isOverview"
@@ -17,13 +17,13 @@
         </v-card-title>
         <div>
             <!--            Table Header-->
-            <v-row class="ma-0 bg-primary">
-                <v-col md="3"> Block # </v-col>
-                <v-col md="3"> Reward </v-col>
-                <v-col md="3"> Balance Before </v-col>
-                <v-col md="3"> Balance After </v-col>
+            <v-row class="ma-0">
+                <v-col md="3" class="text-body-1 text-info py-0 pl-0"> Block # </v-col>
+                <v-col md="3" class="text-body-1 text-info py-0"> Reward </v-col>
+                <v-col md="3" class="text-body-1 text-info py-0"> Balance Before </v-col>
+                <v-col md="3" class="text-body-1 text-info py-0 pr-0"> Balance After </v-col>
             </v-row>
-            <v-divider />
+            <v-divider class="mt-4 mb-0" />
             <template v-if="isLoadingRewards">
                 <div v-for="item in 10" :key="item" class="my-2">
                     <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
@@ -32,21 +32,21 @@
             </template>
             <template v-else>
                 <template v-if="rewards.length > 0">
-                    <v-row v-for="(reward, index) in rewards" :key="index" class="ma-0 text-subtitle-2 font-weight-regular" align="center">
-                        <v-col md="3">
-                            <router-link :to="`/block/number/${reward.transfer.block}`" class="black--text"> {{ reward.transfer.block }}</router-link>
-                            <p>
+                    <v-row v-for="(reward, index) in rewards" :key="index" class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular" align="center">
+                        <v-col md="3" class="py-0 pl-0">
+                            <router-link :to="`/block/number/${reward.transfer.block}`" class="text-link"> {{ reward.transfer.block }}</router-link>
+                            <p class="text-grey-darken-1">
                                 {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3) }}
                             </p>
                         </v-col>
-                        <v-col md="3">
+                        <v-col md="3" class="py-0">
                             <v-row>
                                 + {{ getMiningReward(reward).value }} ETH
-                                <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>
+                                <!--                                <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>-->
                             </v-row>
                         </v-col>
-                        <v-col md="3"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
-                        <v-col md="3"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
+                        <v-col md="3" class="py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
+                        <v-col md="3" class="py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
                 </template>
                 <template v-else>
@@ -154,6 +154,9 @@ const newRewardsText = computed<string>(() => {
 })
 
 const headerTitle = computed<string>(() => {
+    if (props.isOverview) {
+        return 'Blocks Mined'
+    }
     if (props.rewardType === 'block') {
         return 'Mined Blocks Reward'
     }
