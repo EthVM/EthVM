@@ -113,11 +113,11 @@ import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import { formatFloatingPointValue } from '@core/helper/number-format-helper'
 const { getEthereumTokensMap } = useCoinData()
-import { useDisplay } from 'vuetify/lib/framework.mjs'
-import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from '@module/address/apollo/AddressTransfers/transfers.generated'
+import { useDisplay } from 'vuetify'
+import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
 import { eth, timeAgo } from '@core/helper'
 import BN from 'bignumber.js'
-import {AddressEventType} from "@/apollo/types";
+import { AddressEventType } from '@/apollo/types'
 
 const MAX_ITEMS = 10
 const TYPES = ['in', 'out', 'self']

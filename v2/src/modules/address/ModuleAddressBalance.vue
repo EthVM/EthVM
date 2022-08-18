@@ -6,12 +6,12 @@
         =========================
         -->
         <v-card v-if="isOverview" fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl">
-            <address-balance-totals title="ETH Balance" :is-loading="state.loadingBalanceData" :balance="`${balanceFormatted} ETH`">
+            <address-balance-totals title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
                 <template #extra>
-                    <v-col v-if="loadingMarketInfo || state.loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
-                        <v-progress-linear height="28px" rounded="xl" indeterminate color="#ECF2F7" bg-color="info" width="100px"></v-progress-linear>
+                    <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
+                        <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                     </v-col>
-                    <p v-else class="text-h4 font-weight-medium">{{ balanceFiatFormatted }}</p>
+                    <p v-else class="text-h5 font-weight-regular">{{ balanceFiatFormatted }}</p>
                 </template>
             </address-balance-totals>
             <div class="temp-chart pa-4 rounded-xl">
@@ -23,16 +23,16 @@
           VIEW: Eth Balance and History
         =========================
         -->
-        <div v-else fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl">
+        <div v-else fluid class="pa-4 pa-sm-6">
             <!--
             ========================
                 XS & SM: Eth Balance & USD VALUE
             =========================
             -->
-            <address-balance-totals v-if="isSmallView" title="ETH Balance" :is-loading="state.loadingBalanceData" :balance="`${balanceFormatted} ETH`">
+            <address-balance-totals v-if="isSmallView" title="ETH Balance" :is-loading="loadingBalanceData" :balance="`${balanceFormatted} ETH`">
                 <template #extra>
-                    <v-col v-if="loadingMarketInfo || state.loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
-                        <v-progress-linear height="28px" rounded="xl" indeterminate color="#ECF2F7" bg-color="info" width="100px"></v-progress-linear>
+                    <v-col v-if="loadingMarketInfo || loadingBalanceData" cols="6" sm="4" md="6" class="pa-0">
+                        <div class="skeleton-box rounded-xl mt-1" style="height: 24px"></div>
                     </v-col>
                     <p v-else class="text-h4 font-weight-medium">{{ balanceFiatFormatted }}</p>
                 </template>
@@ -54,15 +54,8 @@
                 -->
                 <v-col v-if="!isSmallView" cols="3" lg="2">
                     <p class="text-info text-h6">Balance</p>
-                    <v-progress-linear
-                        v-if="state.loadingBalanceData"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
+
                     <p v-else class="text-h3">{{ balanceFormatted }}</p>
                 </v-col>
                 <!--
@@ -72,15 +65,8 @@
                 -->
                 <v-col v-if="!isSmallView" cols="3">
                     <p class="text-info text-h6">USD Value</p>
-                    <v-progress-linear
-                        v-if="loadingMarketInfo || state.loadingBalanceData"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingMarketInfo || loadingBalanceData" class="skeleton-box rounded-xl" style="height: 28px"></div>
+
                     <p v-else class="text-h3">{{ balanceFiatFormatted }}</p>
                 </v-col>
                 <!--
@@ -90,15 +76,7 @@
                 -->
                 <v-col cols="6" md="4">
                     <p :class="[isSmallView ? 'text-caption mb-1' : 'text-h6', 'text-info ']">Price</p>
-                    <v-progress-linear
-                        v-if="loadingMarketInfo"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
                     <p v-else :class="isSmallView ? 'text-body-1' : 'text-h3'">
                         {{ priceFiatFormatted }} <span v-if="!isSmallView" :class="['pl-5', percentageClass]"> {{ percentageFormatted }}%</span>
                     </p>
@@ -110,15 +88,7 @@
                 -->
                 <v-col v-if="isSmallView" cols="6" md="4">
                     <p class="text-caption mb-1 text-h6">24h Change</p>
-                    <v-progress-linear
-                        v-if="loadingMarketInfo"
-                        height="28px"
-                        rounded="xl"
-                        indeterminate
-                        color="#ECF2F7"
-                        bg-color="info"
-                        width="100px"
-                    ></v-progress-linear>
+                    <div v-if="loadingMarketInfo" class="skeleton-box rounded-xl" :style="xs || sm ? 'height: 20px' : 'height: 28px'"></div>
                     <p v-else :class="['text-body-1', percentageClass]">{{ percentageFormatted }}%</p>
                 </v-col>
                 <!--
@@ -147,12 +117,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
-import { useGetEthBalanceQuery } from './apollo/AddressBalance/addressBalance.generated'
+import { computed } from 'vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
+import { useAddressEthBalance } from '@core/composables/AddressEthBalance/addressEthBalance.composable'
 import BN from 'bignumber.js'
-import { formatVariableUnitEthValue, formatUsdValue, formatPercentageValue } from '@/core/helper/number-format-helper'
-import { eth } from '@/core/helper'
+import { formatUsdValue, formatPercentageValue } from '@/core/helper/number-format-helper'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
@@ -173,69 +142,12 @@ const props = defineProps({
  * Balance (ETH & FIAT) Handling
  -------------------------*/
 
-interface ComponentState {
-    loadingBalanceData: boolean
-}
-
-const state: ComponentState = reactive({
-    loadingBalanceData: true
-})
-const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
-
-const {
-    result: balanceData,
-    // onError,
-    onResult
-} = useGetEthBalanceQuery(
-    () => ({
-        hash: props.addressRef
-    }),
-    () => ({
-        fetchPolicy: 'cache-and-network'
-    })
-)
-/**
- * Once data is recieved sets loading to false
- */
-onResult(({ data }) => {
-    if (data && data.getEthBalance) {
-        state.loadingBalanceData = false
-        // emitErrorState(false)
-    }
-})
-/**
- * ETH balance in WEI
- */
-const balanceWei = computed<string>(() => {
-    const balance = balanceData.value?.getEthBalance.balance
-    return balance ? balance : '0'
-})
-
-/**
- * Returns formatted balance in ETH
- */
-const balanceFormatted = computed<string>(() => {
-    if (!state.loadingBalanceData) {
-        return formatVariableUnitEthValue(new BN(balanceWei.value)).value
-    }
-    return ''
-})
-/**
- * Returns formatted ETH balance in FIAT
- */
-const balanceFiatFormatted = computed<string>(() => {
-    if (!loadingMarketInfo.value && !state.loadingBalanceData) {
-        const ethPrice = ethMarketInfo?.value?.current_price || 0
-        const balanceInEth = eth.toEthFromWei(balanceWei.value)
-        const balanceInFiat = new BN(balanceInEth).multipliedBy(new BN(ethPrice))
-        return formatUsdValue(balanceInFiat).value
-    }
-    return '$0.00'
-})
+const { initialLoad: loadingBalanceData, balanceFiatFormatted, balanceFormatted } = useAddressEthBalance(props.addressRef)
 
 /**------------------------
  * Price and Change Handling
  -------------------------*/
+const { loading: loadingMarketInfo, ethMarketInfo } = useCoinData()
 
 /**
  * Returns formatted ETH price in FIAT

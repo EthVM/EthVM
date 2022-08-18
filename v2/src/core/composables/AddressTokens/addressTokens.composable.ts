@@ -64,17 +64,27 @@ export function useAddressToken(addressHash: string) {
         return false
     })
 
-    const tokenBalance = computed<string>(() => {
+    /**
+     * @returns {BN} - total token balance
+     */
+    const tokenTotalBalanceBN = computed<BN>(() => {
         if (tokenSort.value) {
             const tokenAmounts = tokenSort.value.usdValue?.ascend.reduce((acc, el) => {
                 return new BN(el.usdValue).plus(acc).toNumber()
             }, 0)
             if (tokenAmounts) {
-                return formatUsdValue(new BN(tokenAmounts)).value
+                return new BN(tokenAmounts)
             }
         }
-        return '$0.00'
+        return new BN(0)
     })
 
-    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, initialLoad }
+    /**
+     * @returns {string} - total token balance in formatted string
+     */
+    const tokenBalance = computed<string>(() => {
+        return formatUsdValue(tokenTotalBalanceBN.value).value
+    })
+
+    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, tokenTotalBalanceBN, initialLoad }
 }

@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js'
 import { EthValue } from '@core/models'
 
+BigNumber.config({ ROUNDING_MODE: 1 }) // equivalent to ROUND_DOWN
+
 export enum FormattedNumberUnit {
     ETH = 'eth',
     GWEI = 'gwei',
