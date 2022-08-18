@@ -1,5 +1,5 @@
 <template>
-    <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl">
+    <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
         <address-balance-totals
             title="Token Balance"
             :is-loading="initialLoad || loadingMarketInfo"
