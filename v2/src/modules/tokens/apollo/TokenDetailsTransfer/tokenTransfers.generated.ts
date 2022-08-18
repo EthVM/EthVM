@@ -6,7 +6,7 @@
 import * as Types from '../../../../apollo/types'
 
 import gql from 'graphql-tag'
-import { TransferSummaryFragmentDoc } from '../../../address/apollo/transfers.generated'
+import { TransferSummaryFragmentDoc } from '../../../address/apollo/AddressTransfers/transfers.generated'
 import * as VueApolloComposable from '@vue/apollo-composable'
 import * as VueCompositionApi from 'vue'
 export type ReactiveFunction<TParam> = () => TParam

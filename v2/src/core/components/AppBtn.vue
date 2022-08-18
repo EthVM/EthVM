@@ -80,4 +80,10 @@ const btnClick = (): void => {
 .v-icon {
     font-size: 16px;
 }
+.large-button,
+.small-button {
+    :deep(.v-btn__content) {
+        line-height: 1;
+    }
+}
 </style>

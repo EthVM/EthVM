@@ -9,6 +9,18 @@
         <v-col cols="12" md="6" lg="4">
             <module-address-token-balance :address-ref="props.addressRef" />
         </v-col>
+        <v-col cols="12" lg="6">
+            <!-- How the module can be used on the overview page -->
+            <module-address-miner-block
+                class="mb-4"
+                reward-type="block"
+                is-overview
+                :address-hash="props.addressRef"
+                :max-items="MAX_ITEMS"
+                :new-rewards="newMinedBlocks"
+                @resetUpdateCount="resetCount"
+            />
+        </v-col>
     </v-row>
 </template>
 
@@ -16,9 +28,15 @@
 import ModuleAddressBalance from '@module/address/ModuleAddressBalance.vue'
 import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance.vue'
 import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
+import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
+import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 const props = defineProps({
     addressRef: { type: String, required: true }
 })
 const { xs } = useDisplay()
+
+const MAX_ITEMS = 10
+
+const { newMinedBlocks, resetCount } = useAddressUpdate(props.addressRef)
 </script>

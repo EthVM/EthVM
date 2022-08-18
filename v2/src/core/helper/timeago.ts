@@ -1,4 +1,4 @@
-export const timeAgo = (date: string | Date) => {
+export const timeAgo = (date: string | Date, isShort: boolean) => {
     const prevDate = new Date(date)
 
     const seconds = Math.floor((new Date().getTime() - prevDate.getTime()) / 1000)
@@ -6,23 +6,23 @@ export const timeAgo = (date: string | Date) => {
     const intervals = [
         {
             interval: 31536000,
-            name: 'year'
+            name: isShort ? 'yr' : 'year'
         },
         {
             interval: 2592000,
-            name: 'month'
+            name: isShort ? 'mth' : 'month'
         },
         {
             interval: 86400,
-            name: 'day'
+            name: isShort ? 'day' : 'day'
         },
         {
             interval: 3600,
-            name: 'hour'
+            name: isShort ? 'hr' : 'hour'
         },
         {
             interval: 60,
-            name: 'minute'
+            name: isShort ? 'min' : 'minute'
         }
     ]
 
@@ -31,8 +31,9 @@ export const timeAgo = (date: string | Date) => {
         if (res > 1) {
             // Check if the remainder is closer to 1. i.e 1.75 year would return 2 years
             const remainder = (seconds % interval.interval) / interval.interval > 0.75
-            return `${Math.floor(res)} ${interval.name}${remainder ? 's' : ''} ago`
+            const isPlural = Math.floor(res) > 1
+            return `${Math.floor(res)} ${interval.name}${isPlural ? 's' : ''} ago`
         }
     }
-    return seconds > 5 ? `${Math.floor(seconds)} seconds ago` : 'Just now'
+    return seconds > 5 ? `${Math.floor(seconds)} ${isShort ? 'secs' : 'seconds'} ago` : 'Just now'
 }

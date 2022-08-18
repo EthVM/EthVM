@@ -1,4 +1,4 @@
-import { TokenOwnersFragment as ERC20TokensType } from '@module/address/apollo/tokens.generated'
+import { TokenOwnersFragment as ERC20TokensType } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import BN from 'bignumber.js'
 
