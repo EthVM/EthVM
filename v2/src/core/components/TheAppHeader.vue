@@ -1,7 +1,7 @@
 <template>
-    <v-app-bar app color="primary" class="px-2 px-sm-6 px-xl-auto">
-        <v-container class="core-container" :fluid="isFluidView">
-            <v-row align="center">
+    <v-app-bar app color="primary" class="pa-0">
+        <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0">
+            <v-row align="center mr-0 mx-lg-0">
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
                 <v-img :src="require('@/assets/logo-compact.png')" height="30" max-width="30" contain class="mr-2" />
                 <v-spacer />
@@ -39,7 +39,6 @@ import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { computed } from 'vue'
 import { useAppNavigation } from '../composables/AppNavigation/useAppNavigation.composable'
 import { useStore } from '@/store'
-import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
 import ModuleSearch from '@module/search/ModuleSearch.vue'
 import AppMenu from './AppMenu.vue'
 /* Vuetify BreakPoints */
@@ -49,7 +48,6 @@ const showDrawerBtn = computed<boolean>(() => {
 })
 
 const appStore = useStore()
-const { isFluidView } = useAppIsFluid()
 
 /*Define Emit Events */
 defineEmits(['openDrawer'])

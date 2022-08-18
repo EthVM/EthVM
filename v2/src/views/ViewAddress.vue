@@ -3,7 +3,7 @@
 
     <div v-if="isValid" class="adr-core-background pb-6">
         <v-card class="px-2 px-sm-6 px-xl-auto" flat rounded="0" height="92px">
-            <v-container class="pa-0 core-container">
+            <v-container class="pa-0">
                 <p class="text-info">{{ props.addressRef }}</p>
             </v-container>
         </v-card>
@@ -19,7 +19,7 @@
         </v-tabs>
         <div class="mx-2 mx-sm-6 mx-xl-auto mt-6">
             <router-view v-slot="{ Component }" :address-ref="addressRef" @tabChange="setLastViewedTab">
-                <v-container class="core-container pa-0" fluid>
+                <v-container class="pa-0">
                     <Transition name="fade" mode="out-in">
                         <component :is="Component" :key="route.name" />
                     </Transition>

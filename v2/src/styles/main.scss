@@ -1,30 +1,17 @@
 // src/sass/variables.scss
 @use './settings' as settings;
 
-@use 'vuetify/styles' as vuetify with (
+@use 'vuetify/styles' with (
   $font-size-root: 15px,
   $typography: settings.$typography,
   $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-penumbra-opacity: settings.$shadow-key-umbra-opacity,
   $shadow-key-ambient: settings.$shadow-key-ambient,
   $shadow-key-umbra: settings.$shadow-key-umbra,
-  $rounded: settings.$rounded
+  $rounded: settings.$rounded,
+  $grid-breakpoints: settings.$grid-breakpoints,
+  $container-max-widths: settings.$container-max-widths
 );
-
-.core-container {
-  @media (min-width: 905px) {
-      width: 856px;
-  }
-  @media (min-width: 1240px) {
-      width: 100% !important;
-  }
-    @media (min-width: 1280px) {
-      max-width: 100% !important;
-  }
-  @media (min-width: 1439px) {
-     width: 1390px !important;
-  }
-}
 
 a {
     text-decoration: none;
