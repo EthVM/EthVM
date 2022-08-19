@@ -7,8 +7,8 @@
           UNCLE DETAILS LIST
         =====================================================================================
         -->
-        <v-row justify="start" class="mb-4">
-            <v-col cols="12">
+        <v-row justify="start" :class="rowMargin">
+            <v-col cols="12" :class="columnPadding">
                 <uncle-details v-if="isValid && !hasError" :uncle-ref="props.uncleRef" @errorDetails="setError" />
             </v-col>
         </v-row>
@@ -22,6 +22,9 @@ import AppError from '@core/components/AppError.vue'
 import UncleDetails from '@module/uncles/ModuleUncleDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageUncle } from '@module/uncles/models/ErrorMessagesForUncle'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+
+const { columnPadding, rowMargin } = useAppViewGrid()
 
 interface ComponentState {
     errorMessages: ErrorMessageUncle[]

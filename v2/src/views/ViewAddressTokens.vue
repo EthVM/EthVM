@@ -1,6 +1,6 @@
 <template>
-    <v-row>
-        <v-col cols="12">
+    <v-row :class="rowMargin">
+        <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl">
                 <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
                     <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Balance</v-tab>
@@ -26,6 +26,9 @@ import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTrans
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+
+const { columnPadding, rowMargin } = useAppViewGrid()
 
 const props = defineProps({
     addressRef: {

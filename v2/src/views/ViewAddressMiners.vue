@@ -1,6 +1,6 @@
 <template>
-    <v-row>
-        <v-col cols="12">
+    <v-row :class="rowMargin">
+        <v-col cols="12" :class="columnPadding">
             <v-card elevation="1" rounded="xl" class="py-6">
                 <v-tabs v-model="state.tab" color="primary" end @update:model-value="setLastViewedTab()">
                     <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Blocks</v-tab>
@@ -39,6 +39,9 @@ import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { onMounted, reactive } from 'vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+
+const { columnPadding, rowMargin } = useAppViewGrid()
 
 const MAX_ITEMS = 10
 
