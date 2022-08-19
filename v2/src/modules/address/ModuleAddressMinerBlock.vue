@@ -47,7 +47,7 @@
                         <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
                     <app-intersect v-if="!props.isOverview" @intersect="loadMoreData">
-                        <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                         <v-divider />
                     </app-intersect>
                 </template>
@@ -57,7 +57,7 @@
             </template>
             <template v-if="isLoadingRewards">
                 <div v-for="item in 10" :key="item" class="my-2">
-                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
+                    <div class="skeleton-box rounded-xl my-4" style="height: 24px"></div>
                     <v-divider />
                 </div>
             </template>

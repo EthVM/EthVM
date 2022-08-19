@@ -4,7 +4,7 @@
 $font-bold: 700;
 $font-medium: 500;
 $font-normal: 400;
-$typography: 
+$typography:
 (
   'h1': (
     'size': 35px,
@@ -76,24 +76,25 @@ $shadow-key-umbra-opacity: rgba(24, 43, 75, 0.1);
 $shadow-key-penumbra-opacity: 0%;
 $shadow-key-ambient: 0%;
 
-$shadow-key-umbra: 
+$shadow-key-umbra:
 (
-    0: (0px 0px 0px 0px $shadow-key-umbra-opacity),    
+    0: (0px 0px 0px 0px $shadow-key-umbra-opacity),
     1: (0px 8px 12px 0px $shadow-key-umbra-opacity)
 );
- 
+
 /**
 --- Border radius
 */
 $rounded:
 (
     'xl': 12px,
+    'sm': 4px
 );
 
 /**
 --- Grid
 */
-$grid-breakpoints: 
+$grid-breakpoints:
 (
     'xs': 0,
     'sm': 600px,
@@ -102,7 +103,7 @@ $grid-breakpoints:
     'xl': 1439px,
 );
 
-$container-max-widths: 
+$container-max-widths:
   (
     'xs': null,
     'sm': null,

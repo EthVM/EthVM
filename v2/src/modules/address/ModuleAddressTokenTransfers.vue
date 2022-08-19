@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
         <v-card-title class="justify-space-between">
             <div>
                 Token Transfer History
@@ -15,28 +15,17 @@
         </v-card-title>
         <div>
             <!--            Table Header-->
-            <v-row class="ma-0 bg-primary">
-                <v-col cols="2">
-                    <v-row class="ma-0" align="center"> Token </v-row>
-                </v-col>
-                <v-col cols="1">
-                    <v-row class="ma-0" align="center"> Symbol </v-row>
-                </v-col>
-                <v-col cols="2">
-                    <v-row class="ma-0" align="center"> Amount </v-row>
-                </v-col>
-                <v-col cols="1">
-                    <v-row class="ma-0" align="center"> From/To </v-row>
-                </v-col>
-                <v-col cols="2">
-                    <v-row class="ma-0 flex-nowrap" align="center"> Address </v-row>
-                </v-col>
-                <v-col cols="2">
-                    <v-row class="ma-0 flex-nowrap" align="center"> Timestamp </v-row>
-                </v-col>
-                <v-col cols="2">Hash</v-col>
+            <v-row class="ma-0">
+                <v-col cols="2" class="text-body-1 text-info py-0 pl-0"> Token </v-col>
+                <v-col cols="1" class="text-body-1 text-info py-0"> Symbol </v-col>
+                <v-col cols="2" class="text-body-1 text-info py-0"> Amount </v-col>
+                <v-col cols="1" class="text-body-1 text-info py-0"> From/To </v-col>
+                <v-col cols="2" class="text-body-1 text-info py-0"> Address </v-col>
+                <v-col cols="2" class="text-body-1 text-info py-0"> Hash </v-col>
+                <v-col cols="1" class="text-body-1 text-info py-0"> Timestamp </v-col>
+                <v-col cols="1" class="text-body-1 text-info py-0 pr-0"> More </v-col>
             </v-row>
-            <v-divider />
+            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="loadingTransfers">
                 <div v-for="item in 10" :key="item" class="my-2">
                     <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
@@ -46,10 +35,10 @@
                 <v-row
                     v-for="(transfer, index) in transfers"
                     :key="`${transfer.transfer.transactionHash} - ${index}`"
-                    class="ma-0 text-subtitle-2 font-weight-regular"
+                    class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular"
                     align="center"
                 >
-                    <v-col cols="2">
+                    <v-col cols="2" class="py-0 pl-0">
                         <v-row class="ma-0" align="center">
                             <div class="token-image">
                                 <img :src="getImg(transfer.contract) || require('@/assets/icon-token.png')" alt="" height="24" width="24" class="mr-2" />
@@ -57,17 +46,17 @@
                             <router-link
                                 v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
                                 :to="`/token/${transfer.contract}`"
-                                class="black--text"
+                                class="text-textPrimary"
                             >
                                 <p v-if="transfer.tokenInfo.name">{{ transfer.tokenInfo.name }}</p>
                                 <p v-else class="text-uppercase caption">{{ transfer.tokenInfo.symbol }}</p>
                             </router-link>
                         </v-row>
                     </v-col>
-                    <v-col cols="1">
-                        <v-row class="ma-0" align="center">{{ transfer.tokenInfo.symbol }}</v-row>
+                    <v-col cols="1" class="text-info py-0">
+                        {{ transfer.tokenInfo.symbol }}
                     </v-col>
-                    <v-col cols="2">
+                    <v-col cols="2" class="py-0">
                         <v-row class="ma-0" align="center">
                             <p>
                                 {{ getAmount(transfer).value }}
@@ -75,27 +64,23 @@
                             </p>
                         </v-row>
                     </v-col>
-                    <v-col cols="1">
-                        <v-row class="ma-0" align="center">
-                            <v-icon :class="transferType(transfer) === 'in' ? 'text-green' : 'text-red'">
-                                {{ transferType(transfer) === 'in' ? 'west' : 'east' }}
-                            </v-icon>
-                            {{ transferType(transfer) === 'in' ? 'From' : 'To' }}
-                        </v-row>
+                    <v-col cols="1" class="py-0">
+                        <v-icon :class="transferType(transfer) === 'in' ? 'text-green' : 'text-red'">
+                            {{ transferType(transfer) === 'in' ? 'west' : 'east' }}
+                        </v-icon>
+                        {{ transferType(transfer) === 'in' ? 'From' : 'To' }}
+                        <app-chip bg="success" text="From" />
                     </v-col>
-                    <v-col cols="2">
-                        <v-row class="ma-0 flex-nowrap" align="center">
-                            <app-transform-hash :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
-                        </v-row>
+                    <v-col cols="2" class="text-link py-0">
+                        <app-transform-hash class="text-secondary" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
                     </v-col>
-                    <v-col cols="2">
-                        <v-row class="ma-0 flex-nowrap" align="center">
-                            {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
-                        </v-row>
-                    </v-col>
-                    <v-col cols="2">
+                    <v-col cols="2" class="text-secondary py-0">
                         <app-transform-hash :hash="eth.toCheckSum(transfer.transfer.transactionHash)" />
                     </v-col>
+                    <v-col cols="1" class="text-info py-0">
+                        {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
+                    </v-col>
+                    <v-col cols="1" class="py-0 pr-0"> More </v-col>
                 </v-row>
             </template>
         </div>
@@ -108,6 +93,7 @@ import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
+import AppChip from '@core/components/AppChip.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
@@ -128,7 +114,11 @@ const props = defineProps({
         type: String,
         required: true
     },
-    newErc20Transfer: Number
+    newErc20Transfer: Number,
+    isOverview: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const emit = defineEmits<{

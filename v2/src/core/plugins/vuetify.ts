@@ -46,6 +46,7 @@ const mainnetLightTheme: ThemeDefinition = {
         'on-background': COLORS.navy,
         'on-surface': COLORS.navy,
         'on-primary': COLORS.white,
+        'on-success': COLORS.surfaceLM,
         'on-surface-tabs': COLORS.blue,
         pillGrey: COLORS.greyLight
     },
@@ -74,6 +75,7 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-surface': COLORS.lightBlue,
         'on-primary': COLORS.lightBlue,
         'on-secondary': COLORS.lightBlue,
+        'on-success': COLORS.surfaceDM,
         'on-surface-tabs': COLORS.lightBlue,
         pillGrey: COLORS.greyBackdroundDM
     },
