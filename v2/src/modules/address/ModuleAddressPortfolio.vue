@@ -1,5 +1,5 @@
 <template>
-    <v-card fluid class="py-4 px-8 pa-md-6" elevation="1" rounded="xl" height="100%">
+    <v-card fluid class="pa-4 pa-sm-6" elevation="1" rounded="xl" height="100%">
         <address-balance-totals title="Portfolio Value" :is-loading="isLoading" :balance="portfolioValue"> </address-balance-totals>
         <v-row class="mt-2" align="start">
             <v-col v-if="isLoading" cols="12">
@@ -107,11 +107,11 @@ const topTokens = computed<Token[]>(() => {
                     usd: i.usdValue
                 }
             })
-            // Drop Zero Values:
-            topFive.filter(i => i.usd.gt(0))
             if (topFiveTokens) {
                 topFive.push(...topFiveTokens)
             }
+            // Drop Zero Values:
+            topFive = [...topFive.filter(i => i.usd.gt(0))]
             //Sort
             topFive.sort((x, y) => {
                 const a = y.percent

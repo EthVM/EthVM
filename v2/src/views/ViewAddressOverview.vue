@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row :dense="xs">
         <v-col cols="12" md="6" lg="4">
             <module-address-portfolio :address-ref="props.addressRef" />
         </v-col>
@@ -30,12 +30,13 @@ import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance
 import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
-
-const MAX_ITEMS = 10
-
+import { useDisplay } from 'vuetify/lib/framework.mjs'
 const props = defineProps({
     addressRef: { type: String, required: true }
 })
+const { xs } = useDisplay()
+
+const MAX_ITEMS = 10
 
 const { newMinedBlocks, resetCount } = useAddressUpdate(props.addressRef)
 </script>
