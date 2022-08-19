@@ -9,6 +9,11 @@
   $shadow-key-ambient: settings.$shadow-key-ambient,
   $shadow-key-umbra: settings.$shadow-key-umbra,
   $rounded: settings.$rounded,
+  $spacer: settings.$spacer,
+  $grid-gutter: settings.$grid-gutter,
+  $form-grid-gutter: settings.$form-grid-gutter, 
+  // $grid-gutters: settings.$grid-gutters,
+  $container-padding-x: settings.$container-padding-x,
   $grid-breakpoints: settings.$grid-breakpoints,
   $container-max-widths: settings.$container-max-widths
 );

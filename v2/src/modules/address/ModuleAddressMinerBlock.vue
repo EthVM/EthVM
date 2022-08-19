@@ -11,39 +11,40 @@
             </template>
         </v-card-title>
         <div>
-            <!--            Table Header-->
-            <v-row class="ma-0 d-none d-sm-flex">
-                <v-col md="3" class="text-body-1 text-info py-0 pl-0"> Block # </v-col>
-                <v-col md="3" class="text-body-1 text-info py-0"> Reward </v-col>
-                <v-col md="3" class="text-body-1 text-info py-0"> Balance Before </v-col>
-                <v-col md="3" class="text-body-1 text-info py-0 pr-0"> Balance After </v-col>
+            <!--Table Header-->
+            <v-row class="d-none d-sm-flex text-body-1 text-info">
+                <v-col md="3" class="py-0"> Block # </v-col>
+                <v-col md="3" class="py-0"> Reward </v-col>
+                <v-col md="3" class="py-0"> Balance Before </v-col>
+                <v-col md="3" class="py-0"> Balance After </v-col>
             </v-row>
-            <v-divider class="my-0 mt-md-4" />
+            <v-divider class="my-0 mt-sm-4" />
             <template v-if="!initialLoad">
                 <template v-if="rewards.length > 0">
-                    <v-row v-for="(reward, index) in rewards" :key="index" class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular" align="center">
-                        <v-col cols="7" sm="3" class="py-0 pl-0">
-                            <v-row class="d-flex flex-sm-column ma-0 text-caption text-sm-subtitle-2">
+                    <v-row :dense="xs" v-for="(reward, index) in rewards" :key="index" class="my-5 px-0 text-body-1 font-weight-regular" align="center">
+                        <!-- Blocks Mined-->
+                        <v-col cols="7" sm="3" class="py-0">
+                            <v-row class="ma-0 text-caption text-sm-body-1">
                                 <v-col cols="6" sm="12" class="pa-0">
                                     <router-link :to="`/block/number/${reward.transfer.block}`" class="text-secondary">
                                         {{ reward.transfer.block }}
                                     </router-link>
                                 </v-col>
-                                <v-col cols="6" sm="12" class="pa-0">
-                                    <p class="text-info">
+                                <v-col cols="6" sm="12" class="pa-0 pt-sm-1">
+                                    <p class="text-info font-regular">
                                         {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3, xs) }}
                                     </p>
                                 </v-col>
                             </v-row>
                         </v-col>
+                        <!-- Mined Rewards -->
                         <v-col cols="5" sm="3" class="py-0">
-                            <v-row justify="end" justify-sm="start">
-                                + {{ getMiningReward(reward).value }} ETH
-                                <!--                                <app-tooltip v-if="getMiningReward(reward).tooltipText" :text="`${getMiningReward(reward).tooltipText} ETH`"></app-tooltip>-->
-                            </v-row>
+                            <p class="text-right text-sm-left">+ {{ getMiningReward(reward).value }} ETH</p>
                         </v-col>
+                        <!-- Balance Before -->
                         <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
-                        <v-col md="3" class="d-none d-sm-block py-0 pr-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
+                        <!-- Balance After -->
+                        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
                     <app-intersect v-if="!props.isOverview" @intersect="loadMoreData">
                         <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />

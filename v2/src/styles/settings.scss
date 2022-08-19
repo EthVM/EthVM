@@ -112,4 +112,8 @@ $container-max-widths:
     'xxl': 1390px,
   )
 ;
+$spacer: 4px;
+$grid-gutter: 12px; //24
+$form-grid-gutter: $spacer*2;
+$container-padding-x: $spacer * 12;
 
