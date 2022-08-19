@@ -24,7 +24,7 @@
                     <v-row :dense="xs" v-for="(reward, index) in rewards" :key="index" class="my-5 px-0 text-body-1 font-weight-regular" align="center">
                         <!-- Blocks Mined-->
                         <v-col cols="7" sm="3" class="py-0">
-                            <v-row class="ma-0 text-caption text-sm-body-1">
+                            <v-row class="d-flex flex-sm-column ma-0 text-caption text-sm-body-1">
                                 <v-col cols="6" sm="12" class="pa-0">
                                     <router-link :to="`/block/number/${reward.transfer.block}`" class="text-secondary">
                                         {{ reward.transfer.block }}
@@ -46,7 +46,7 @@
                         <!-- Balance After -->
                         <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
-                    <app-intersect v-if="!props.isOverview" @intersect="loadMoreData">
+                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                         <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                         <v-divider />
                     </app-intersect>
@@ -54,12 +54,6 @@
                 <template v-if="rewards.length < 1 && !isLoadingRewards">
                     <p class="text-h4 text-center my-2">No mining history available for this address</p>
                 </template>
-            </template>
-            <template v-if="isLoadingRewards">
-                <div v-for="item in 10" :key="item" class="my-2">
-                    <div class="skeleton-box rounded-xl my-4" style="height: 24px"></div>
-                    <v-divider />
-                </div>
             </template>
         </div>
     </v-card>
@@ -182,7 +176,9 @@ const rewards = computed<Array<RewardTransferFragment | null>>(() => {
     if (!initialLoad.value && addressRewards.value) {
         const start = state.index * props.maxItems
         const end = start + props.maxItems > addressRewards.value?.transfers.length ? addressRewards.value?.transfers.length : start + props.maxItems
-        // return addressRewards.value?.transfers.slice(start, end)
+        if (props.isOverview) {
+            return addressRewards.value?.transfers.slice(0, 10)
+        }
         return addressRewards.value?.transfers
     }
     return []

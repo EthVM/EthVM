@@ -1,10 +1,17 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
-        <v-card-title class="justify-space-between">
-            <div>
-                Token Transfer History
-                <app-new-update text="New ERC20 Transfers" :update-count="props.newErc20Transfer" @reload="setPage(0, true)" />
-            </div>
+        <v-card-title class="justify-space-between px-0">
+            <v-row>
+                <v-col md="3">
+                    <address-balance-totals
+                        title="Token Balance"
+                        :is-loading="initialLoad || loadingMarketInfo"
+                        :balance="tokenBalanceValue"
+                        :subtext="`${tokenCount} total tokens`"
+                    />
+                    <app-new-update text="New ERC20 Transfers" :update-count="props.newErc20Transfer" @reload="setPage(0, true)" />
+                </v-col>
+            </v-row>
             <app-paginate-has-more
                 :class="smAndDown ? 'pt-3' : ''"
                 :has-more="hasMore"
@@ -28,7 +35,7 @@
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="loadingTransfers">
                 <div v-for="item in 10" :key="item" class="my-2">
-                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="ma-2" />
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                 </div>
             </template>
             <template v-else>
@@ -65,11 +72,7 @@
                         </v-row>
                     </v-col>
                     <v-col cols="1" class="py-0">
-                        <v-icon :class="transferType(transfer) === 'in' ? 'text-green' : 'text-red'">
-                            {{ transferType(transfer) === 'in' ? 'west' : 'east' }}
-                        </v-icon>
-                        {{ transferType(transfer) === 'in' ? 'From' : 'To' }}
-                        <app-chip bg="success" text="From" />
+                        <app-chip :bg="transferType(transfer) === 'in' ? 'success' : 'orange'" :text="transferType(transfer) === 'in' ? 'From' : 'To'" />
                     </v-col>
                     <v-col cols="2" class="text-link py-0">
                         <app-transform-hash class="text-secondary" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
@@ -80,7 +83,9 @@
                     <v-col cols="1" class="text-info py-0">
                         {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
                     </v-col>
-                    <v-col cols="1" class="py-0 pr-0"> More </v-col>
+                    <v-col cols="1" class="py-0 pr-0">
+                        <app-btn-icon icon="expand_more"></app-btn-icon>
+                    </v-col>
                 </v-row>
             </template>
         </div>
@@ -94,6 +99,8 @@ import AppTooltip from '@core/components/AppTooltip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppChip from '@core/components/AppChip.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
@@ -104,6 +111,7 @@ import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery 
 import { eth, timeAgo } from '@core/helper'
 import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
+import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 
 const MAX_ITEMS = 10
 const TYPES = ['in', 'out', 'self']
@@ -140,6 +148,9 @@ const state: ComponentState = reactive({
     sortDirection: 'high',
     index: 0
 })
+
+const { tokenBalanceValue, tokenCount, initialLoad } = useAddressToken(props.addressHash)
+const { loading: loadingMarketInfo } = useCoinData()
 
 const {
     result,

@@ -1,5 +1,5 @@
 <template>
-    <v-chip class="text-button py-1 px-3" :class="chipClass" :size="props.size">
+    <v-chip class="chip justify-center text-button py-1 px-3" :class="chipClass" :size="props.size">
         <slot>{{ props.text }}</slot>
     </v-chip>
 </template>
@@ -34,3 +34,9 @@ const chipClass = computed<string>(() => {
     return `bg-${props.bg} ${props.color} chip-${props.size} rounded-${props.rounded}`
 })
 </script>
+
+<style lang="scss" scoped>
+.chip {
+    min-width: 56px;
+}
+</style>

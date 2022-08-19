@@ -24,6 +24,14 @@ export function useAddressToken(addressHash: string) {
         return erc20TokensResult.value?.getOwnersERC20Tokens.owners
     })
 
+    const tokenCount = computed<number>(() => {
+        return erc20Tokens.value?.length || 0
+    })
+
+    const tokenBalanceValue = computed<string>(() => {
+        return tokenBalance.value || '0'
+    })
+
     const initialLoad = computed<boolean>(() => {
         return erc20TokensResult.value ? false : true
     })
@@ -86,5 +94,5 @@ export function useAddressToken(addressHash: string) {
         return formatUsdValue(tokenTotalBalanceBN.value).value
     })
 
-    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, tokenTotalBalanceBN, initialLoad }
+    return { erc20Tokens, tokenPrices, loadingTokens, refetchTokens, tokenSort, tokenBalance, tokenTotalBalanceBN, initialLoad, tokenCount, tokenBalanceValue }
 }

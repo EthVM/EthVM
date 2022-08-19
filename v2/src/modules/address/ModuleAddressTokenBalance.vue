@@ -25,16 +25,8 @@ const props = defineProps({
     }
 })
 
-const { initialLoad, tokenBalance, erc20Tokens } = useAddressToken(props.addressRef)
+const { initialLoad, tokenBalanceValue, tokenCount } = useAddressToken(props.addressRef)
 const { loading: loadingMarketInfo } = useCoinData()
-
-const tokenCount = computed<number>(() => {
-    return erc20Tokens.value?.length || 0
-})
-
-const tokenBalanceValue = computed<string>(() => {
-    return tokenBalance.value || '0'
-})
 </script>
 
 <style scoped></style>
