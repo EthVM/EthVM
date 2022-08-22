@@ -1,6 +1,6 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
-        <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
+        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
@@ -323,3 +323,9 @@ const goToAddressMiningPage = (): void => {
     router.push(`/address/${props.addressHash}/adr-miner-info?t=blocks`)
 }
 </script>
+
+<style lang="scss" scoped>
+.card-title {
+    min-height: 50px;
+}
+</style>
