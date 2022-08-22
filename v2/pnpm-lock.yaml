@@ -41,6 +41,7 @@ specifiers:
   graphql-ws: ^5.8.1
   material-design-icons-iconfont: ^6.7.0
   npm-run-all: ^4.1.5
+  null-loader: ^4.0.1
   pinia: ^2.0.14
   prettier: ^2.4.1
   process: ^0.11.10
@@ -115,6 +116,7 @@ devDependencies:
   eslint-plugin-vue: 8.7.1_eslint@7.32.0
   material-design-icons-iconfont: 6.7.0
   npm-run-all: 4.1.5
+  null-loader: 4.0.1_webpack@5.73.0
   prettier: 2.7.0
   process: 0.11.10
   sass: 1.52.3
