@@ -2,6 +2,7 @@
 @use './settings' as settings;
 
 @use 'vuetify/styles' with (
+  $color-pack: false,
   $font-size-root: 15px,
   $typography: settings.$typography,
   $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
