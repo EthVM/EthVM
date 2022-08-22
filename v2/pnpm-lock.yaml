@@ -54,7 +54,7 @@ specifiers:
   typescript: ~4.5.5
   vue: ^3.2.13
   vue-chartjs: ^4.1.1
-  vue-cli-plugin-vuetify: ~2.5.1
+  vue-cli-plugin-vuetify: ~2.5.4
   vue-router: ^4.1.3
   vue-tsc: ^0.37.9
   vuetify: ^3.0.0-beta.8
@@ -123,7 +123,7 @@ devDependencies:
   stream-http: 3.2.0
   subscriptions-transport-ws: 0.11.0_graphql@16.5.0
   typescript: 4.5.5
-  vue-cli-plugin-vuetify: 2.5.1_7ae712a2e2cfb4ad4f6c47e937f4b9e3
+  vue-cli-plugin-vuetify: 2.5.4_7ae712a2e2cfb4ad4f6c47e937f4b9e3
   vue-tsc: 0.37.9_typescript@4.5.5
   webpack: 5.73.0
   webpack-plugin-vuetify: 2.0.0-alpha.11_215f9756c100133b2f0c10c154d74f80
@@ -9368,8 +9368,8 @@ packages:
       vue: 3.2.37
     dev: false
 
-  /vue-cli-plugin-vuetify/2.5.1_7ae712a2e2cfb4ad4f6c47e937f4b9e3:
-    resolution: {integrity: sha512-OcZ8/bqf84yTbQN+PyRf+8Wvr8czg+u5J4JGVx+Lq5ytsBxTgIUIZ/oMO7j+bd9WCjiKid2l9gZbQYjZABw2+g==}
+  /vue-cli-plugin-vuetify/2.5.4_7ae712a2e2cfb4ad4f6c47e937f4b9e3:
+    resolution: {integrity: sha512-6o65u4yfXixxesWlBefSo2BbMbp5/vjin6+ymnJR0SGCiw20n+SdBbWhuvYTkPXMx3p8r4lqV0YVTrQ08z5p9g==}
     peerDependencies:
       sass-loader: '*'
       vuetify-loader: '*'
