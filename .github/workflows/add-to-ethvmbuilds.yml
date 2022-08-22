@@ -29,6 +29,9 @@ jobs:
           node-version-file: 'v2/.nvmrc'
           cache: pnpm
           cache-dependency-path: v2/pnpm-lock.yaml
+      # Console
+      - name: console stuff
+        run: node -v && pnpm -v
       #Install
       - name: pnpm Install
         run:  cd ./v2 && pnpm install
