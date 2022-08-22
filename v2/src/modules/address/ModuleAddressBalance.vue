@@ -23,6 +23,7 @@
           VIEW: Eth Balance and History
         =========================
         -->
+
         <div v-else fluid class="pa-4 pa-sm-6">
             <!--
             ========================

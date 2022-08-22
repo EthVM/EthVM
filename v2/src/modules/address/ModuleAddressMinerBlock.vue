@@ -18,7 +18,7 @@
                 <v-col md="3" class="py-0"> Balance Before </v-col>
                 <v-col md="3" class="py-0"> Balance After </v-col>
             </v-row>
-            <v-divider class="my-0 mt-sm-4" />
+            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <template v-if="!initialLoad">
                 <template v-if="rewards.length > 0">
                     <v-row :dense="xs" v-for="(reward, index) in rewards" :key="index" class="my-5 px-0 text-body-1 font-weight-regular" align="center">

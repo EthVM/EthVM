@@ -107,11 +107,11 @@ const topTokens = computed<Token[]>(() => {
                     usd: i.usdValue
                 }
             })
-            // Drop Zero Values:
-            topFive.filter(i => i.usd.gt(0))
             if (topFiveTokens) {
                 topFive.push(...topFiveTokens)
             }
+            // Drop Zero Values:
+            topFive = [...topFive.filter(i => i.usd.gt(0))]
             //Sort
             topFive.sort((x, y) => {
                 const a = y.percent

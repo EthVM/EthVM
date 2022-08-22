@@ -30,13 +30,20 @@ import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance
 import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
+<<<<<<< HEAD
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 
 const MAX_ITEMS = 10
 
+=======
+import { useDisplay } from 'vuetify/lib/framework.mjs'
+>>>>>>> v2/develop
 const props = defineProps({
     addressRef: { type: String, required: true }
 })
+const { xs } = useDisplay()
+
+const MAX_ITEMS = 10
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 
