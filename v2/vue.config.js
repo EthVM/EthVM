@@ -28,6 +28,20 @@ module.exports = defineConfig({
                             }
                         }
                     ]
+                },
+                {
+                    test: /\.scss$/,
+                    use: [
+                        'vue-style-loader',
+                        'css-loader',
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                // This is the path to your variables
+                                additionalData: "@import '@/styles/main.scss';"
+                            }
+                        }
+                    ]
                 }
             ]
         },
