@@ -5,7 +5,7 @@
                 <v-col md="3">
                     <address-balance-totals
                         title="Token Balance"
-                        :is-loading="initialLoad || loadingMarketInfo"
+                        :is-loading="loadingAddressTokens || loadingMarketInfo"
                         :balance="tokenBalanceValue"
                         :subtext="`${tokenCount} total tokens`"
                     />
@@ -30,70 +30,93 @@
                 <v-col cols="2" class="text-body-1 text-info py-0"> Address </v-col>
                 <v-col cols="2" class="text-body-1 text-info py-0"> Hash </v-col>
                 <v-col cols="1" class="text-body-1 text-info py-0"> Timestamp </v-col>
-                <v-col cols="1" class="text-body-1 text-info py-0 pr-0"> More </v-col>
+                <v-col cols="1" class="text-body-1 text-info py-0 pr-0 text-right"> More </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
-            <template v-if="loadingTransfers">
+            <template v-if="initialLoad">
                 <div v-for="item in 10" :key="item" class="my-2">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                 </div>
             </template>
             <template v-else>
-                <v-row
-                    v-for="(transfer, index) in transfers"
-                    :key="`${transfer.transfer.transactionHash} - ${index}`"
-                    class="my-5 mx-0 px-0 text-subtitle-2 font-weight-regular"
-                    align="center"
-                >
-                    <v-col cols="2" class="py-0 pl-0">
-                        <v-row class="ma-0" align="center">
-                            <div class="token-image">
-                                <img :src="getImg(transfer.contract) || require('@/assets/icon-token.png')" alt="" height="24" width="24" class="mr-2" />
+                <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
+                    <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
+                        <v-col cols="2" class="py-0">
+                            <v-row class="ma-0 flex-nowrap text-ellipses" align="center">
+                                <div class="token-image">
+                                    <img
+                                        :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
+                                        alt=""
+                                        height="24"
+                                        width="24"
+                                        class="mr-2 rounded-circle"
+                                    />
+                                </div>
+                                <router-link
+                                    v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
+                                    :to="`/token/${transfer.contract}`"
+                                    class="text-textPrimary"
+                                >
+                                    <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
+                                    <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
+                                </router-link>
+                            </v-row>
+                        </v-col>
+                        <v-col cols="1" class="text-info py-0 text-ellipses">
+                            {{ transfer.tokenInfo.symbol }}
+                        </v-col>
+                        <v-col cols="2" class="py-0">
+                            <v-row class="ma-0" align="center">
+                                <p>
+                                    {{ getAmount(transfer).value }}
+                                    <app-tooltip
+                                        v-if="getAmount(transfer).tooltipText"
+                                        :text="`${getAmount(transfer).tooltipText} ${transfer.tokenInfo.symbol}`"
+                                    />
+                                </p>
+                            </v-row>
+                        </v-col>
+                        <v-col cols="1" class="py-0">
+                            <app-chip :bg="transferType(transfer) === 'in' ? 'success' : 'orange'" :text="transferType(transfer) === 'in' ? 'From' : 'To'" />
+                        </v-col>
+                        <v-col cols="2" class="text-secondary py-0">
+                            <div class="d-flex align-center">
+                                <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
+                                <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
                             </div>
-                            <router-link
-                                v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
-                                :to="`/token/${transfer.contract}`"
-                                class="text-textPrimary"
-                            >
-                                <p v-if="transfer.tokenInfo.name">{{ transfer.tokenInfo.name }}</p>
-                                <p v-else class="text-uppercase caption">{{ transfer.tokenInfo.symbol }}</p>
-                            </router-link>
-                        </v-row>
-                    </v-col>
-                    <v-col cols="1" class="text-info py-0">
-                        {{ transfer.tokenInfo.symbol }}
-                    </v-col>
-                    <v-col cols="2" class="py-0">
-                        <v-row class="ma-0" align="center">
-                            <p>
-                                {{ getAmount(transfer).value }}
-                                <app-tooltip v-if="getAmount(transfer).tooltipText" :text="`${getAmount(transfer).tooltipText} ${transfer.tokenInfo.symbol}`" />
-                            </p>
-                        </v-row>
-                    </v-col>
-                    <v-col cols="1" class="py-0">
-                        <app-chip :bg="transferType(transfer) === 'in' ? 'success' : 'orange'" :text="transferType(transfer) === 'in' ? 'From' : 'To'" />
-                    </v-col>
-                    <v-col cols="2" class="text-link py-0">
-                        <app-transform-hash class="text-secondary" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
-                    </v-col>
-                    <v-col cols="2" class="text-secondary py-0">
-                        <app-transform-hash :hash="eth.toCheckSum(transfer.transfer.transactionHash)" />
-                    </v-col>
-                    <v-col cols="1" class="text-info py-0">
-                        {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
-                    </v-col>
-                    <v-col cols="1" class="py-0 pr-0">
-                        <app-btn-icon icon="expand_more"></app-btn-icon>
-                    </v-col>
-                </v-row>
+                        </v-col>
+                        <v-col cols="2" class="text-secondary py-0">
+                            <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transfer.transfer.transactionHash)" />
+                        </v-col>
+                        <v-col cols="1" class="text-info py-0">
+                            {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
+                        </v-col>
+                        <v-col cols="1" class="py-0 text-right">
+                            <app-btn-icon
+                                :icon="getDropdownIcon(transfer.transfer.transactionHash)"
+                                @click="toggleMoreDetails(transfer.transfer.transactionHash)"
+                            ></app-btn-icon>
+                        </v-col>
+                    </v-row>
+                    <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg"></div>
+                    <v-row v-if="visibleDetails.has(transfer.transfer.transactionHash)">
+                        <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
+                        <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceBefore(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
+                        <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
+                        <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceAfter(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
+                    </v-row>
+                </div>
+                <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                    <v-divider />
+                </app-intersect>
             </template>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import AppTransformHash from '@core/components/AppTransformHash.vue'
@@ -101,10 +124,12 @@ import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppChip from '@core/components/AppChip.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
+import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
-import { formatFloatingPointValue } from '@core/helper/number-format-helper'
+import { formatFloatingPointValue, formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 const { getEthereumTokensMap } = useCoinData()
 import { useDisplay } from 'vuetify'
 import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
@@ -149,7 +174,7 @@ const state: ComponentState = reactive({
     index: 0
 })
 
-const { tokenBalanceValue, tokenCount, initialLoad } = useAddressToken(props.addressHash)
+const { tokenBalanceValue, tokenCount, initialLoad: loadingAddressTokens } = useAddressToken(props.addressHash)
 const { loading: loadingMarketInfo } = useCoinData()
 
 const {
@@ -175,9 +200,19 @@ const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
         const start = MAX_ITEMS * state.index
         const end = start + MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + MAX_ITEMS
-        return transferHistory.value.slice(start, end)
+        if (props.isOverview) {
+            return transferHistory.value.slice(start, end)
+        }
+        return transferHistory.value
     }
     return []
+})
+
+/*
+ * Initial load will be true only when the data is being loaded initially
+ */
+const initialLoad = computed<boolean>(() => {
+    return !result.value
 })
 
 const tokenImg = computed<Map<string, TokenMarketData> | false>(() => {
@@ -240,8 +275,43 @@ const getValue = (transfer: Transfer): BN => {
     return n
 }
 
+const getTransferBalanceBefore = (transfer: Transfer): FormattedNumber => {
+    const type = transferTypeAddress(transfer)
+    if (!transfer.stateDiff) {
+        return { value: '0' }
+    }
+    if (type === TYPES[0] && transfer.stateDiff.to) {
+        return formatNonVariableEthValue(new BN(transfer.stateDiff.to.before))
+    }
+    return formatNonVariableEthValue(new BN(transfer.stateDiff.to.before))
+}
+
+const getTransferBalanceAfter = (transfer: Transfer): FormattedNumber => {
+    const type = transferTypeAddress(transfer)
+    if (!transfer.stateDiff) {
+        return { value: '0' }
+    }
+    if (type === TYPES[0] && transfer.stateDiff.to) {
+        return formatNonVariableEthValue(new BN(transfer.stateDiff.to.after))
+    }
+    return formatNonVariableEthValue(new BN(transfer.stateDiff.to.after))
+}
+
 const getAmount = (transfer: Transfer) => {
     return formatFloatingPointValue(getValue(transfer))
+}
+
+const visibleDetails = ref(new Set())
+const toggleMoreDetails = (transfer: string): void => {
+    if (visibleDetails.value.has(transfer)) {
+        visibleDetails.value.delete(transfer)
+    } else {
+        visibleDetails.value.add(transfer)
+    }
+}
+
+const getDropdownIcon = (transfer: string): string => {
+    return visibleDetails.value.has(transfer) ? 'expand_less' : 'expand_more'
 }
 
 const setPage = (page: number, reset = false) => {
@@ -270,4 +340,22 @@ const setPage = (page: number, reset = false) => {
     }
     state.index = page
 }
+
+const loadMoreData = (e: boolean): void => {
+    if (transfers.value.length && e && !props.isOverview) {
+        setPage(state.index + 1)
+    }
+}
 </script>
+
+<style scoped lang="scss">
+.row-bg {
+    background-color: #f3f5f9;
+    top: -20px;
+    bottom: 0;
+    left: -24px;
+    right: -24px;
+    position: absolute;
+    z-index: -1;
+}
+</style>
