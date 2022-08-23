@@ -1,6 +1,7 @@
 import { TokenOwnersFragment as ERC20TokensType } from '@module/address/apollo/AddressTokens/tokens.generated'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import BN from 'bignumber.js'
+import { formatUsdValue, formatFloatingPointValue, formatPercentageValue } from '@core/helper/number-format-helper'
 
 const KEY_NAME = 'name'
 const KEY_BALANCE = 'balance'
@@ -111,6 +112,26 @@ class Token implements TokenInterface {
             return new BN(_tokenPriceInfo.current_price).multipliedBy(this.getValue(_token))
         }
         return new BN(0)
+    }
+
+    public getBalanceFormatted(): string {
+        if (this.balance.gt(0)) {
+            return formatFloatingPointValue(this.balance).value
+        }
+        return ''
+    }
+
+    public getUSDValueFormatted(): string {
+        if (this.usdValue.gt(0)) {
+            return formatUsdValue(this.usdValue).value
+        }
+        return ''
+    }
+    public getPriceChangeFormatted(): string {
+        if (this.price_change_percentage_24h) {
+            return `${formatPercentageValue(this.price_change_percentage_24h).value}%`
+        }
+        return ''
     }
 }
 
