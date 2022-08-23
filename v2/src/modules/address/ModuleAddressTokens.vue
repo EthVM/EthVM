@@ -26,8 +26,8 @@
 
         <!--Table Header-->
         <v-row :dense="xs" class="d-flex text-body-1 text-info my-2 my-sm-5">
-            <v-col md="4" class="py-0 d-none d-sm-block"> Token</v-col>
-            <v-col cols="8">
+            <v-col sm="4" class="py-0 d-none d-sm-block"> Token</v-col>
+            <v-col cols="12" sm="8">
                 <v-row>
                     <v-col md="4" class="py-0 d-none d-sm-block"> Price</v-col>
                     <v-col md="4" class="py-0 d-none d-sm-block"> USD Value</v-col>
@@ -45,30 +45,32 @@
         </v-row>
         <!--Token Row -->
         <div v-else>
-            <v-row v-for="token in tokens" :key="token.contract" class="text-body-1 mb-5 flex-row" align="center">
+            <v-row :dense="xs" v-for="token in tokens" :key="token.contract" class="text-body-1 my-3 mt-sm-0 mb-sm-5 flex-row" align="center">
                 <!-- Icon -->
-                <v-col cols="1">
+                <v-col cols="auto">
                     <app-token-icon :token-icon="token.image || undefined" />
                 </v-col>
                 <!-- Name, Symbol -->
-                <v-col cols="3" class="pb-0">
+                <v-col cols="5" sm="3" class="pb-0">
                     <p class="mb-1 text-truncate">{{ token.name }}</p>
                     <p class="text-info text-uppercase text-truncate">{{ token.symbol }}</p>
                 </v-col>
-                <v-col cols="8">
+                <v-spacer />
+                <v-col cols="5" sm="8">
                     <v-row>
                         <!-- Price, Price Change -->
-                        <v-col cols="4" class="pb-0">
+                        <v-col cols="4" class="pb-0 d-none d-sm-block">
                             <p class="mb-1">{{ token.current_price }}</p>
                             <p :class="priceChangeClass(token)">{{ token.getPriceChangeFormatted() }}</p>
                         </v-col>
                         <!-- USD Value -->
-                        <v-col cols="4" class="pb-0">
-                            <p>{{ token.getUSDValueFormatted() }}</p>
+                        <v-col cols="12" sm="4" class="pb-0 d-none d-sm-block">
+                            <p class="text-right text-sm-left">{{ token.getUSDValueFormatted() }}</p>
                         </v-col>
                         <!-- Balance -->
-                        <v-col cols="4" class="pb-0">
-                            <p>{{ token.getBalanceFormatted() }}</p>
+                        <v-col ccols="12" sm="4" class="pb-0">
+                            <p class="text-right text-sm-left">{{ token.getBalanceFormatted() }}</p>
+                            <p class="d-sm-none text-right text-sm-left text-info mt-1">{{ token.getUSDValueFormatted() }}</p>
                         </v-col>
                     </v-row>
                 </v-col>

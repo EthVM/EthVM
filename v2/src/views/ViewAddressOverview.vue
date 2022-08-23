@@ -10,11 +10,9 @@
             <module-address-token-balance :address-ref="props.addressRef" />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
-            <!-- How the module can be used on the overview page -->
             <module-address-tokens is-overview :address-hash="props.addressRef" :max-items="MAX_ITEMS" />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
-            <!-- How the module can be used on the overview page -->
             <module-address-miner-block
                 class="mb-4"
                 reward-type="block"
