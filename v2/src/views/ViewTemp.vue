@@ -1,6 +1,6 @@
 <template>
-    <v-row>
-        <v-col cols="12">
+    <v-row :class="rowMargin">
+        <v-col cols="12" :class="columnPadding">
             <v-card class="py-6" elevation="1" rounded="xl">
                 <v-card-title class="mb-6">Hello I am a temp view for: {{ routeName }}, {{ props.addressRef }}</v-card-title>
                 <v-row>
@@ -58,6 +58,10 @@ import { computed } from 'vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import AppExpansionPanel from '@/core/components/AppExpansionPanel.vue'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+
+const { columnPadding, rowMargin } = useAppViewGrid()
+
 const routeName = computed(() => {
     return useRoute().name
 })

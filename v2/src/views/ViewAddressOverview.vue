@@ -1,15 +1,15 @@
 <template>
-    <v-row :dense="xs">
-        <v-col cols="12" md="6" lg="4">
+    <v-row :class="rowMargin">
+        <v-col cols="12" md="6" lg="4" :class="columnPadding">
             <module-address-portfolio :address-ref="props.addressRef" />
         </v-col>
-        <v-col cols="12" md="6" lg="4">
+        <v-col cols="12" md="6" lg="4" :class="columnPadding">
             <module-address-balance :address-ref="props.addressRef" is-overview />
         </v-col>
-        <v-col cols="12" md="6" lg="4">
+        <v-col cols="12" md="6" lg="4" :class="columnPadding">
             <module-address-token-balance :address-ref="props.addressRef" />
         </v-col>
-        <v-col cols="12" lg="6">
+        <v-col cols="12" lg="6" :class="columnPadding">
             <!-- How the module can be used on the overview page -->
             <module-address-miner-block
                 class="mb-4"
@@ -30,13 +30,15 @@ import ModuleAddressTokenBalance from '@module/address/ModuleAddressTokenBalance
 import ModuleAddressPortfolio from '@/modules/address/ModuleAddressPortfolio.vue'
 import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
-import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+
+const MAX_ITEMS = 10
+
 const props = defineProps({
     addressRef: { type: String, required: true }
 })
-const { xs } = useDisplay()
 
-const MAX_ITEMS = 10
+const { columnPadding, rowMargin } = useAppViewGrid()
 
 const { newMinedBlocks, resetCount } = useAddressUpdate(props.addressRef)
 </script>

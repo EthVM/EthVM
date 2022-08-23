@@ -2,8 +2,8 @@
     <v-app class="app-view">
         <the-app-navigation-drawer-vue />
         <the-app-header />
-        <v-main :class="{ 'mx-2 mx-sm-6 mx-xl-auto': !isAddressView }">
-            <v-container :class="[isAddressView ? 'pa-0' : 'px-0 pt-8 core-container']" :fluid="isFluidView || isAddressView">
+        <v-main :class="{ 'mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto': !isAddressView }">
+            <v-container :class="[isAddressView ? 'pa-0' : 'px-0 pt-4 pt-sm-6']" :fluid="isAddressView">
                 <app-btn @click="toggleTheme" text="toggle theme"></app-btn>
                 <router-view />
             </v-container>
@@ -18,7 +18,6 @@ import TheAppNavigationDrawerVue from './core/components/TheAppNavigationDrawer.
 import { useStore } from '@/store'
 import { useGetLatestPricesQuery } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useTheme } from 'vuetify'
-import { useAppIsFluid } from '@/core/composables/AppIsFluid/useAppIsFluid.composable'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { ROUTE_NAME } from '@core/router/routesNames'
@@ -38,8 +37,6 @@ const theme = useTheme()
 const toggleTheme = () => {
     theme.global.name.value = theme.global.current.value.dark ? 'mainnetLightTheme' : 'mainnetDarkTheme'
 }
-
-const { isFluidView } = useAppIsFluid()
 
 const route = useRoute()
 /**

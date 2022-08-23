@@ -2,13 +2,13 @@
     <div>
         <app-error v-if="!isValid" :has-error="!isValid" message="This is not a valid block hash" />
         <app-message :messages="state.errorMessages" />
-        <v-row>
+        <v-row :class="rowMargin">
             <!--
         =====================================================================================
           Block DETAILS LIST
         =====================================================================================
         -->
-            <v-col cols="12">
+            <v-col cols="12" :class="columnPadding">
                 <block-details
                     v-if="isValid"
                     :block-ref="props.blockRef"
@@ -25,7 +25,7 @@
         =====================================================================================
         -->
             <!-- TODO: Implement get block transfers by hash -->
-            <v-col cols="12">
+            <v-col cols="12" :class="columnPadding">
                 <block-txs
                     v-if="showBlockTxs"
                     :max-items="10"
@@ -48,6 +48,9 @@ import BlockTxs from '@module/txs/ModuleTxs.vue'
 import BlockDetails from '@module/block/ModuleBlockDetails.vue'
 import { eth } from '@core/helper'
 import { ErrorMessageBlock } from '@module/block/models/ErrorMessagesForBlock'
+import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
+
+const { columnPadding, rowMargin } = useAppViewGrid()
 
 interface ComponentState {
     errorMessages: ErrorMessageBlock[]

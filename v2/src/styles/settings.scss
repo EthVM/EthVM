@@ -89,3 +89,31 @@ $rounded:
 (
     'xl': 12px,
 );
+
+/**
+--- Grid
+*/
+$grid-breakpoints: 
+(
+    'xs': 0,
+    'sm': 600px,
+    'md': 905px,
+    'lg': 1240px,
+    'xl': 1439px,
+);
+
+$container-max-widths: 
+  (
+    'xs': null,
+    'sm': null,
+    'md': 856px,
+    'lg': 1390px,
+    'xl': 1390px,
+    'xxl': 1390px,
+  )
+;
+$spacer: 4px;
+$grid-gutter: 12px; //24
+$form-grid-gutter: $spacer*2;
+$container-padding-x: $spacer * 12;
+

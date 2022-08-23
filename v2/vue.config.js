@@ -6,8 +6,8 @@ module.exports = defineConfig({
     transpileDependencies: ['vuetify'],
     pluginOptions: {
         vuetify: {
-            // styles: 'expose'
-            // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
+            styles: 'expose',
+            stylesTimeout: 20000
         }
     },
     publicPath: process.env.VUE_APP_ROUTER_MODE === 'hash' ? './' : '/',

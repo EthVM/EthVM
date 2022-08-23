@@ -47,7 +47,7 @@
                 <app-token-icon :token-icon="ethTokenIcon" img-size="40px"></app-token-icon>
                 <p class="text-h3 pl-2">Ethereum <span class="text-info text-body-1 pl-3">ETH</span></p>
             </v-row>
-            <v-row dense>
+            <v-row :dense="xs">
                 <!--
                 ========================
                     MD and UP: ETH Balance
@@ -104,7 +104,7 @@
                     </div>
                 </v-col>
             </v-row>
-            <v-row dense>
+            <v-row :dense="xs">
                 <address-token-fiat-info
                     v-for="info in fiatInfo"
                     :key="info.text"

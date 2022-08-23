@@ -8,10 +8,10 @@
             <v-col v-if="!isLoading && portfolioValueBN.gt(0)" cols="12" sm="4" md="5">
                 <chart-pie :chart-data="chartData" :loading="false"></chart-pie>
             </v-col>
-            <v-divider v-if="!xs && !isLoading && portfolioValueBN.gt(0)" vertical class="my-3"></v-divider>
+            <v-divider v-if="!xs && !isLoading && portfolioValueBN.gt(0)" vertical class="my-2"></v-divider>
             <v-col v-if="!isLoading && portfolioValueBN.gt(0)" cols="12" sm="8" md="7">
-                <v-row dense v-for="i in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center">
-                    <v-col class="d-flex align-center">
+                <v-row v-for="i in topTokens.slice(0, 4)" :key="i.symbol" justify="space-between" align="center">
+                    <v-col class="d-flex align-center py-2">
                         <app-token-icon :token-icon="i.icon"></app-token-icon>
                         <p class="pl-3 text-button">{{ i.symbol }}</p>
                     </v-col>

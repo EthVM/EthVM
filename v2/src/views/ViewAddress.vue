@@ -62,7 +62,7 @@
         -->
         <div class="mx-2 mx-sm-6 mx-xl-auto mt-2 mt-sm-6">
             <router-view v-slot="{ Component }" :address-ref="addressRef" @tabChange="setLastViewedTab">
-                <v-container class="core-container pa-0" fluid>
+                <v-container class="pa-0">
                     <Transition name="fade" mode="out-in">
                         <component :is="Component" :key="route.name" />
                     </Transition>
