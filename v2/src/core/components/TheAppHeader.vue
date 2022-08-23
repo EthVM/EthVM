@@ -1,7 +1,7 @@
 <template>
     <v-app-bar app color="primary" class="pa-0">
         <v-container class="mx-2 mx-sm-6 mx-md-auto mx-lg-6 mx-xl-auto pa-0">
-            <v-row align="center mr-0 mx-lg-0">
+            <v-row align="center" class="mr-0 mx-lg-0">
                 <v-app-bar-nav-icon v-if="showDrawerBtn" @click="appStore.appDrawer = !appStore.appDrawer" />
                 <v-img :src="require('@/assets/logo-compact.png')" height="30" max-width="30" contain class="mr-2" />
                 <v-spacer />

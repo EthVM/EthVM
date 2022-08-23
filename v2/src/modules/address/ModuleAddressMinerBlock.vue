@@ -1,6 +1,6 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
-        <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
+        <v-card-title class="d-flex justify-space-between align-center pa-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
@@ -12,13 +12,13 @@
         </v-card-title>
         <div>
             <!--Table Header-->
-            <v-row class="d-none d-sm-flex text-body-1 text-info">
+            <v-row class="d-none d-sm-flex text-body-1 text-info my-2 my-sm-5">
                 <v-col md="3" class="py-0"> Block # </v-col>
                 <v-col md="3" class="py-0"> Reward </v-col>
                 <v-col md="3" class="py-0"> Balance Before </v-col>
                 <v-col md="3" class="py-0"> Balance After </v-col>
             </v-row>
-            <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
+            <v-divider class="my-0 mt-sm-5 mx-n4 mx-sm-n6" />
             <template v-if="!initialLoad">
                 <template v-if="rewards.length > 0">
                     <v-row :dense="xs" v-for="(reward, index) in rewards" :key="index" class="my-5 px-0 text-body-1 font-weight-regular" align="center">
@@ -85,6 +85,7 @@ import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 
 const { xs } = useDisplay()
 
@@ -104,7 +105,7 @@ const props = defineProps({
     },
     maxItems: {
         type: Number,
-        default: 10
+        default: 10000
     },
     newRewards: {
         type: Number,
@@ -323,7 +324,10 @@ const getRewardBalanceAfter = (reward: RewardTransferFragment): FormattedNumber 
 }
 
 const router = useRouter()
-const goToAddressMiningPage = (): void => {
-    router.push(`/address/${props.addressHash}/adr-miner-info?t=blocks`)
+const goToAddressMiningPage = async () => {
+    await router.push({
+        name: ROUTE_NAME.ADDRESS_MINER.NAME,
+        query: { t: ADDRESS_ROUTE_QUERY.Q_MINER[0] }
+    })
 }
 </script>

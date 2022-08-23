@@ -1,12 +1,13 @@
 <template>
     <div class="token-icon-core" :style="loaderStyle">
-        <div v-if="!props.tokenIcon" class="skeleton-box skeleton-box-icon"></div>
-        <v-img v-else :src="image" contain @error="imgLoadFail" :max-height="size" :max-width="size" class="token-icon"></v-img>
+        <div v-if="loadingCoinData" class="skeleton-box skeleton-box-icon" :style="loaderStyle"></div>
+        <v-img v-else :src="image" contain @error="imgLoadFail" :height="size" :width="size" class="token-icon"></v-img>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 
 interface PropType {
     tokenIcon?: string
@@ -16,6 +17,8 @@ interface PropType {
 const props = defineProps<PropType>()
 
 const imageExists = ref(true)
+
+const { loading: loadingCoinData } = useCoinData()
 
 /**
  * Image loading failed catcher
