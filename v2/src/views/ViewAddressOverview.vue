@@ -10,8 +10,10 @@
             <module-address-token-balance :address-ref="props.addressRef" />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
-            <!-- How the module can be used on the overview page -->
             <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" is-overview />
+        </v-col>
+        <v-col cols="12" md="6" :class="columnPadding">
+            <module-address-nft-transfers :address-hash="props.addressRef" :new-erc721-transfer="newErc721Transfer" @resetCount="resetCount" is-overview />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
             <!-- How the module can be used on the overview page -->
@@ -20,7 +22,6 @@
                 reward-type="block"
                 is-overview
                 :address-hash="props.addressRef"
-                :max-items="MAX_ITEMS"
                 :new-rewards="newMinedBlocks"
                 @resetUpdateCount="resetCount"
             />
@@ -36,7 +37,7 @@ import ModuleAddressMinerBlock from '@module/address/ModuleAddressMinerBlock.vue
 import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTransfers.vue'
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
-
+import ModuleAddressNftTransfers from '@module/address/ModuleAddressNftTransfers.vue'
 const MAX_ITEMS = 10
 
 const props = defineProps({
@@ -45,5 +46,5 @@ const props = defineProps({
 
 const { columnPadding, rowMargin } = useAppViewGrid()
 
-const { newMinedBlocks, resetCount, newErc20Transfer } = useAddressUpdate(props.addressRef)
+const { newMinedBlocks, resetCount, newErc20Transfer, newErc721Transfer } = useAddressUpdate(props.addressRef)
 </script>

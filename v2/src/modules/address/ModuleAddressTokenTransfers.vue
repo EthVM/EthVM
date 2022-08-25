@@ -26,15 +26,15 @@
         <div :class="!props.isOverview ? 'pt-13' : null">
             <!--            Table Header-->
 
-            <v-row v-if="!mdAndDown" class="ma-0">
-                <v-col :cols="props.isOverview ? 3 : 2" class="text-body-1 text-info py-0 pl-0"> Token </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="text-body-1 text-info py-0"> Symbol </v-col>
-                <v-col :cols="props.isOverview ? 3 : 2" class="text-body-1 text-info py-0"> Amount </v-col>
-                <v-col :cols="props.isOverview ? 2 : 1" class="text-body-1 text-info py-0"> From/To </v-col>
-                <v-col :cols="props.isOverview ? 4 : 2" class="text-body-1 text-info py-0"> Address </v-col>
-                <v-col v-if="!props.isOverview" cols="2" class="text-body-1 text-info py-0"> Hash </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="text-body-1 text-info py-0"> Timestamp </v-col>
-                <v-col v-if="!props.isOverview" cols="1" class="text-body-1 text-info py-0 pr-0 text-right"> More </v-col>
+            <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
+                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> Token </v-col>
+                <v-col v-if="!props.isOverview" cols="1" class="py-0"> Symbol </v-col>
+                <v-col :cols="props.isOverview ? 3 : 2" class="py-0"> Amount </v-col>
+                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> From/To </v-col>
+                <v-col :cols="props.isOverview ? 4 : 2" class="py-0"> Address </v-col>
+                <v-col v-if="!props.isOverview" cols="2" class="py-0"> Hash </v-col>
+                <v-col v-if="!props.isOverview" cols="1" class="py-0"> Timestamp </v-col>
+                <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right"> More </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="initialLoad">
@@ -238,7 +238,7 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 
-const MAX_ITEMS = 10
+const MAX_ITEMS = 6
 const MOBILE_MAX_ITEMS = 4
 const TYPES = ['in', 'out', 'self']
 

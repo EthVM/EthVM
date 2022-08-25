@@ -102,7 +102,7 @@ const props = defineProps({
     },
     maxItems: {
         type: Number,
-        default: 10
+        default: 6
     },
     newRewards: {
         type: Number,
