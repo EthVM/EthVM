@@ -7,7 +7,8 @@
                 <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
             </div>
             <template v-if="props.isOverview">
-                <app-btn text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
+                <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
+                <app-btn-icon v-else icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
             </template>
         </v-card-title>
         <div>
@@ -71,6 +72,7 @@ import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { timeAgo } from '@core/helper'
@@ -79,9 +81,11 @@ import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 
-const { xs } = useDisplay()
+const { xs, smAndDown, mdAndDown } = useDisplay()
 
+const MOBILE_MAX_ITEMS = 4
 const state = reactive({
     isEnd: 0,
     index: 0
@@ -176,8 +180,12 @@ const rewards = computed<Array<RewardTransferFragment | null>>(() => {
     if (!initialLoad.value && addressRewards.value) {
         const start = state.index * props.maxItems
         const end = start + props.maxItems > addressRewards.value?.transfers.length ? addressRewards.value?.transfers.length : start + props.maxItems
+        // If on mobile screen and on overview page
+        if (mdAndDown.value && props.isOverview) {
+            return addressRewards.value?.transfers.slice(start, MOBILE_MAX_ITEMS)
+        }
         if (props.isOverview) {
-            return addressRewards.value?.transfers.slice(0, 10)
+            return addressRewards.value?.transfers.slice(start, props.maxItems)
         }
         return addressRewards.value?.transfers
     }
@@ -319,8 +327,11 @@ const getRewardBalanceAfter = (reward: RewardTransferFragment): FormattedNumber 
 }
 
 const router = useRouter()
-const goToAddressMiningPage = (): void => {
-    router.push(`/address/${props.addressHash}/adr-miner-info?t=blocks`)
+const goToAddressMiningPage = async (): Promise<void> => {
+    await router.push({
+        name: ROUTE_NAME.ADDRESS_MINER.NAME,
+        query: { t: ADDRESS_ROUTE_QUERY.Q_MINER[0] }
+    })
 }
 </script>
 

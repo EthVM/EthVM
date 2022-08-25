@@ -3,7 +3,7 @@
         <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <v-row align="center" class="my-0 mx-0">
-                    <div v-if="!props.isOverview" class="mr-10">
+                    <div v-if="!props.isOverview && !mdAndDown" class="mr-10">
                         <address-balance-totals
                             title="Token Balance"
                             :is-loading="loadingAddressTokens || loadingMarketInfo"
@@ -11,7 +11,7 @@
                             :subtext="`${tokenCount} total tokens`"
                         />
                     </div>
-                    <span v-else class="text-h6 font-weight-bold">Token History</span>
+                    <span v-if="props.isOverview || mdAndDown" class="text-h6 font-weight-bold">Token History</span>
                     <app-new-update
                         :icon-only="props.isOverview"
                         text="New ERC20 Transfers"
@@ -20,11 +20,13 @@
                     />
                 </v-row>
             </div>
-            <app-btn v-if="props.isOverview" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
+            <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
+            <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
         <div :class="!props.isOverview ? 'pt-13' : null">
             <!--            Table Header-->
-            <v-row class="ma-0">
+
+            <v-row v-if="!mdAndDown" class="ma-0">
                 <v-col :cols="props.isOverview ? 3 : 2" class="text-body-1 text-info py-0 pl-0"> Token </v-col>
                 <v-col v-if="!props.isOverview" cols="1" class="text-body-1 text-info py-0"> Symbol </v-col>
                 <v-col :cols="props.isOverview ? 3 : 2" class="text-body-1 text-info py-0"> Amount </v-col>
@@ -42,23 +44,26 @@
             </template>
             <template v-else>
                 <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
-                    <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
+                    <!--
+                           ========================
+                             Desktop View
+                           =========================
+                    -->
+                    <v-row v-if="!mdAndDown" class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
                         <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
-                            <v-row class="ma-0 flex-nowrap text-ellipses" align="center">
-                                <div class="token-image">
-                                    <img
-                                        :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
-                                        alt=""
-                                        height="32"
-                                        width="32"
-                                        class="mr-2 rounded-circle"
-                                    />
-                                </div>
-                                <div>
+                            <v-row class="ma-0 flex-nowrap" align="center">
+                                <img
+                                    :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
+                                    alt=""
+                                    height="32"
+                                    width="32"
+                                    class="mr-2 rounded-circle"
+                                />
+                                <div style="display: grid">
                                     <router-link
                                         v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
                                         :to="`/token/${transfer.contract}`"
-                                        class="text-textPrimary"
+                                        class="text-textPrimary text-ellipses"
                                     >
                                         <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
                                         <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
@@ -104,7 +109,47 @@
                             ></app-btn-icon>
                         </v-col>
                     </v-row>
-                    <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg"></div>
+                    <!--
+                           ========================
+                             Mobile/Tablet View
+                           =========================
+                    -->
+                    <v-row v-else class="my-5 text-subtitle-2 font-weight-regular">
+                        <v-col cols="6" class="pb-2">
+                            <div class="d-flex align-center flex-nowrap">
+                                <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) ? 'bg-success' : 'bg-orange'">
+                                    <v-icon size="18">
+                                        {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
+                                    </v-icon>
+                                </div>
+                                <span>
+                                    {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
+                                </span>
+                            </div>
+                        </v-col>
+                        <v-col cols="6" class="pb-2">
+                            <div class="d-flex align-center">
+                                <img
+                                    :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
+                                    alt=""
+                                    height="24"
+                                    width="24"
+                                    class="mr-2 rounded-circle"
+                                />
+                                <span> {{ getAmount(transfer).value }} {{ transfer.tokenInfo.symbol }} </span>
+                            </div>
+                        </v-col>
+                        <v-col cols="6" class="py-0 text-info">
+                            {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }} {{ transferType(transfer) === 'in' ? 'from' : 'to' }}
+                        </v-col>
+                        <v-col cols="6" class="py-0 text-secondary">
+                            <div class="d-flex align-center">
+                                <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
+                                <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
+                            </div>
+                        </v-col>
+                    </v-row>
+                    <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg bg-tableGrey"></div>
                     <v-row v-if="visibleDetails.has(transfer.transfer.transactionHash)">
                         <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
                         <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceBefore(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
@@ -145,11 +190,13 @@ import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useRouter } from 'vue-router'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 
 const MAX_ITEMS = 10
+const MOBILE_MAX_ITEMS = 4
 const TYPES = ['in', 'out', 'self']
 
-const { smAndDown } = useDisplay()
+const { smAndDown, mdAndDown } = useDisplay()
 const props = defineProps({
     addressHash: {
         type: String,
@@ -208,6 +255,10 @@ const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
         const start = MAX_ITEMS * state.index
         const end = start + MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + MAX_ITEMS
+        // If on mobile screen and on overview page
+        if (mdAndDown.value && props.isOverview) {
+            return transferHistory.value.slice(start, MOBILE_MAX_ITEMS)
+        }
         if (props.isOverview) {
             return transferHistory.value.slice(start, end)
         }
@@ -356,8 +407,11 @@ const loadMoreData = (e: boolean): void => {
 }
 
 const router = useRouter()
-const goToTokenTransfersPage = (): void => {
-    router.push(`/address/${props.addressHash}/adr-tokens?t=transfers`)
+const goToTokenTransfersPage = async (): Promise<void> => {
+    await router.push({
+        name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
+        query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[0] }
+    })
 }
 </script>
 
@@ -367,7 +421,6 @@ const goToTokenTransfersPage = (): void => {
 }
 
 .row-bg {
-    background-color: #f3f5f9;
     top: -20px;
     bottom: 0;
     left: -24px;
