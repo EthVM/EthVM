@@ -78,11 +78,23 @@
                         <v-col :cols="props.isOverview ? 4 : 3" class="text-secondary py-0">
                             <div class="d-flex align-center">
                                 <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
-                                <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
+                                <app-transform-hash
+                                    is-blue
+                                    start="5"
+                                    end="5"
+                                    :hash="eth.toCheckSum(transferTypeAddress(transfer))"
+                                    :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
+                                />
                             </div>
                         </v-col>
                         <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
-                            <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transfer.transfer.transactionHash)" />
+                            <app-transform-hash
+                                is-blue
+                                start="5"
+                                end="5"
+                                :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
+                            />
                         </v-col>
                         <v-col v-if="!props.isOverview" cols="2" class="text-info py-0">
                             {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
@@ -93,27 +105,65 @@
                                      Mobile/Tablet View
                                    =========================
                             -->
-                    <v-row v-else class="my-5 mx-0 text-subtitle-2 font-weight-regular justify-space-between align-start flex-nowrap">
-                        <div class="flex-shrink-0">
-                            <div class="d-flex align-center flex-nowrap mb-2">
-                                <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) === 'in' ? 'bg-success' : 'bg-warning'">
-                                    <v-icon size="12">
-                                        {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
-                                    </v-icon>
+                    <template v-else>
+                        <v-row
+                            class="mt-5 mx-0 text-subtitle-2 font-weight-regular justify-space-between align-start flex-nowrap"
+                            :class="visibleDetails.has(transfer.transfer.transactionHash) ? 'mb-3' : 'mb-5'"
+                            @click="toggleMoreDetails(transfer.transfer.transactionHash)"
+                        >
+                            <div class="flex-shrink-0">
+                                <div class="d-flex align-center flex-nowrap mb-2">
+                                    <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) === 'in' ? 'bg-success' : 'bg-warning'">
+                                        <v-icon size="12">
+                                            {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
+                                        </v-icon>
+                                    </div>
+                                    <span>
+                                        {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
+                                    </span>
                                 </div>
-                                <span>
-                                    {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
-                                </span>
+                                <p class="text-info">{{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}</p>
                             </div>
-                            <p class="text-info">{{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}</p>
+                            <v-col v-if="!visibleDetails.has(transfer.transfer.transactionHash)" cols="6" class="pa-0">
+                                <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
+                            </v-col>
+                            <div class="d-flex align-center">
+                                <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
+                            </div>
+                        </v-row>
+                        <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg bg-tableGrey"></div>
+                        <div v-if="visibleDetails.has(transfer.transfer.transactionHash)">
+                            <v-row class="mx-0 justify-space-between text-subtitle-2 font-weight-regular mb-2">
+                                <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
+                                <p>{{ getTotalTokens(transfer) }} Copies</p>
+                            </v-row>
+                            <v-row class="ma-0 justify-space-between text-subtitle-2 font-weight-regular pb-5">
+                                <div>
+                                    <p class="text-info mb-2">From</p>
+                                    <div class="d-flex">
+                                        <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
+                                        <app-transform-hash
+                                            is-blue
+                                            start="5"
+                                            end="5"
+                                            :hash="eth.toCheckSum(transferTypeAddress(transfer))"
+                                            :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-info mb-2">Hash</p>
+                                    <app-transform-hash
+                                        is-blue
+                                        start="5"
+                                        end="5"
+                                        :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                        :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
+                                    />
+                                </div>
+                            </v-row>
                         </div>
-                        <v-col cols="6" class="pa-0">
-                            <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
-                        </v-col>
-                        <div class="d-flex align-center">
-                            <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
-                        </div>
-                    </v-row>
+                    </template>
                 </div>
                 <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
@@ -305,6 +355,15 @@ const loadMoreData = (e: boolean): void => {
     }
 }
 
+const visibleDetails = ref(new Set())
+const toggleMoreDetails = (transfer: string): void => {
+    if (visibleDetails.value.has(transfer)) {
+        visibleDetails.value.delete(transfer)
+    } else {
+        visibleDetails.value.add(transfer)
+    }
+}
+
 const router = useRouter()
 const goToNftTransfersPage = async (): Promise<void> => {
     await router.push({
@@ -317,5 +376,14 @@ const goToNftTransfersPage = async (): Promise<void> => {
 <style lang="scss" scoped>
 .card-title {
     min-height: 50px;
+}
+
+.row-bg {
+    top: -20px;
+    bottom: 0;
+    left: -24px;
+    right: -24px;
+    position: absolute;
+    z-index: -1;
 }
 </style>
