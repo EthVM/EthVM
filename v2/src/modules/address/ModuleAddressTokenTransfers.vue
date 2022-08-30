@@ -23,7 +23,7 @@
             <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToTokenTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
         </v-card-title>
-        <div :class="!props.isOverview ? 'pt-13' : null">
+        <div :class="!props.isOverview && !mdAndDown ? 'pt-13' : null">
             <!--            Table Header-->
 
             <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
@@ -239,6 +239,7 @@ import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 
 const MAX_ITEMS = 6
+const OVERVIEW_MAX_ITEMS = 6
 const MOBILE_MAX_ITEMS = 4
 const TYPES = ['in', 'out', 'self']
 
@@ -299,8 +300,8 @@ const transferHistory = computed<Array<Transfer | null>>(() => result.value?.get
 
 const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
-        const start = MAX_ITEMS * state.index
-        const end = start + MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + MAX_ITEMS
+        const start = OVERVIEW_MAX_ITEMS * state.index
+        const end = start + OVERVIEW_MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + OVERVIEW_MAX_ITEMS
         // If on mobile screen and on overview page
         if (mdAndDown.value && props.isOverview) {
             return transferHistory.value.slice(start, MOBILE_MAX_ITEMS)

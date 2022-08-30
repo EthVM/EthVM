@@ -29,16 +29,16 @@
             <app-btn v-if="props.isOverview && !mdAndDown" text="More" isSmall icon="east" @click="goToNftTransfersPage"></app-btn>
             <app-btn-icon v-if="props.isOverview && mdAndDown" icon="more_horiz" @click="goToNftTransfersPage"></app-btn-icon>
         </v-card-title>
-        <div :class="!props.isOverview ? 'pt-13' : null">
+        <div :class="!props.isOverview && !mdAndDown ? 'pt-13' : null">
             <!--            Table Header-->
 
-            <v-row v-if="!mdAndDown" class="ma-0">
-                <v-col :cols="props.isOverview ? 4 : 3" class="text-body-1 text-info py-0 pl-0"> Name/Id </v-col>
-                <v-col :cols="props.isOverview ? 2 : 1" class="text-body-1 text-info py-0"> Copies </v-col>
-                <v-col :cols="props.isOverview ? 2 : 1" class="text-body-1 text-info py-0"> From/To </v-col>
-                <v-col :cols="props.isOverview ? 4 : 3" class="text-body-1 text-info py-0"> Address </v-col>
-                <v-col v-if="!props.isOverview" cols="2" class="text-body-1 text-info py-0"> Hash </v-col>
-                <v-col v-if="!props.isOverview" cols="2" class="text-body-1 text-info py-0"> Timestamp </v-col>
+            <v-row v-if="!mdAndDown" class="my-0 text-body-1 text-info">
+                <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Name/Id </v-col>
+                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> Copies </v-col>
+                <v-col :cols="props.isOverview ? 2 : 1" class="py-0"> From/To </v-col>
+                <v-col :cols="props.isOverview ? 4 : 3" class="py-0"> Address </v-col>
+                <v-col v-if="!props.isOverview" cols="2" class="py-0"> Hash </v-col>
+                <v-col v-if="!props.isOverview" cols="2" class="py-0"> Timestamp </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="initialLoad">
@@ -56,7 +56,7 @@
                     <v-row v-if="!mdAndDown" class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
                         <v-col :cols="props.isOverview ? 4 : 3" class="py-0">
                             <v-row class="ma-0 flex-nowrap" align="center">
-                                <img :src="getImg(transfer)" alt="" height="32" width="32" class="mr-2 rounded-circle" />
+                                <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
                                 <div style="display: grid">
                                     <router-link
                                         v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
@@ -64,11 +64,8 @@
                                         class="text-textPrimary text-ellipses"
                                     >
                                         <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
-                                        <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
+                                        <p v-else class="text-uppercase caption text-ellipses">N/A</p>
                                     </router-link>
-                                    <p v-if="props.isOverview" class="text-info">
-                                        {{ transfer.tokenInfo.symbol }}
-                                    </p>
                                 </div>
                             </v-row>
                         </v-col>
@@ -76,7 +73,7 @@
                             {{ getTotalTokens(transfer) }}
                         </v-col>
                         <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
-                            <app-chip :bg="transferType(transfer) === 'in' ? 'success' : 'orange'" :text="transferType(transfer) === 'in' ? 'From' : 'To'" />
+                            <app-chip :bg="transferType(transfer) === 'in' ? 'success' : 'warning'" :text="transferType(transfer) === 'in' ? 'From' : 'To'" />
                         </v-col>
                         <v-col :cols="props.isOverview ? 4 : 3" class="text-secondary py-0">
                             <div class="d-flex align-center">
@@ -96,11 +93,11 @@
                                      Mobile/Tablet View
                                    =========================
                             -->
-                    <v-row v-else class="my-5 text-subtitle-2 font-weight-regular">
-                        <v-col cols="6" class="pb-2">
-                            <div class="d-flex align-center flex-nowrap">
-                                <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) ? 'bg-success' : 'bg-orange'">
-                                    <v-icon size="18">
+                    <v-row v-else class="my-5 mx-0 text-subtitle-2 font-weight-regular justify-space-between align-start flex-nowrap">
+                        <div class="flex-shrink-0">
+                            <div class="d-flex align-center flex-nowrap mb-2">
+                                <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) === 'in' ? 'bg-success' : 'bg-warning'">
+                                    <v-icon size="12">
                                         {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
                                     </v-icon>
                                 </div>
@@ -108,21 +105,14 @@
                                     {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
                                 </span>
                             </div>
+                            <p class="text-info">{{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}</p>
+                        </div>
+                        <v-col cols="6" class="pa-0">
+                            <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
                         </v-col>
-                        <v-col cols="6" class="pb-2">
-                            <div class="d-flex align-center">
-                                <img :src="getImg(transfer)" alt="" height="24" width="24" class="mr-2 rounded-circle" />
-                            </div>
-                        </v-col>
-                        <v-col cols="6" class="py-0 text-info">
-                            {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }} {{ transferType(transfer) === 'in' ? 'from' : 'to' }}
-                        </v-col>
-                        <v-col cols="6" class="py-0 text-secondary">
-                            <div class="d-flex align-center">
-                                <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
-                                <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
-                            </div>
-                        </v-col>
+                        <div class="d-flex align-center">
+                            <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
+                        </div>
                     </v-row>
                 </div>
                 <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
@@ -159,6 +149,7 @@ import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 import configs from '@/configs'
 
 const MAX_ITEMS = 10
+const OVERVIEW_MAX_ITEMS = 6
 const MOBILE_MAX_ITEMS = 4
 const TYPES = ['in', 'out', 'self']
 
@@ -219,8 +210,8 @@ const transferHistory = computed<Array<Transfer | null>>(() => result.value?.get
 
 const transfers = computed<Array<Transfer | null>>(() => {
     if (transferHistory.value.length > 0) {
-        const start = MAX_ITEMS * state.index
-        const end = start + MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + MAX_ITEMS
+        const start = OVERVIEW_MAX_ITEMS * state.index
+        const end = start + OVERVIEW_MAX_ITEMS > transferHistory.value?.length ? transferHistory.value?.length : start + OVERVIEW_MAX_ITEMS
         // If on mobile screen and on overview page
         if (mdAndDown.value && props.isOverview) {
             return transferHistory.value.slice(start, MOBILE_MAX_ITEMS)

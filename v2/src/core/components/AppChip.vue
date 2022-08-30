@@ -38,5 +38,8 @@ const chipClass = computed<string>(() => {
 <style lang="scss" scoped>
 .chip {
     min-width: 56px;
+    &.text-surface {
+        color: rgb(var(--v-theme-surface)) !important;
+    }
 }
 </style>
