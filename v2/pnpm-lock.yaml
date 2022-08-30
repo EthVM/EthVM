@@ -41,6 +41,7 @@ specifiers:
   graphql-ws: ^5.8.1
   material-design-icons-iconfont: ^6.7.0
   npm-run-all: ^4.1.5
+  null-loader: ^4.0.1
   pinia: ^2.0.14
   prettier: ^2.4.1
   process: ^0.11.10
@@ -54,10 +55,10 @@ specifiers:
   typescript: ~4.5.5
   vue: ^3.2.13
   vue-chartjs: ^4.1.1
-  vue-cli-plugin-vuetify: ~2.5.1
+  vue-cli-plugin-vuetify: ~2.5.4
   vue-router: ^4.1.3
   vue-tsc: ^0.37.9
-  vuetify: ^3.0.0-beta.6
+  vuetify: ^3.0.0-beta.8
   web3-utils: ^1.7.3
   webfontloader: ^1.0.0
   webpack: '>=5.0.0 <6.0.0'
@@ -87,7 +88,7 @@ dependencies:
   vue: 3.2.37
   vue-chartjs: 4.1.1_chart.js@3.9.1+vue@3.2.37
   vue-router: 4.1.3_vue@3.2.37
-  vuetify: 3.0.0-beta.6_dhmi3anlsgwe4axr2mgwhifmv4
+  vuetify: 3.0.0-beta.9_dhmi3anlsgwe4axr2mgwhifmv4
   web3-utils: 1.7.3
   webfontloader: 1.6.28
 
@@ -115,6 +116,7 @@ devDependencies:
   eslint-plugin-vue: 8.7.1_eslint@7.32.0
   material-design-icons-iconfont: 6.7.0
   npm-run-all: 4.1.5
+  null-loader: 4.0.1_webpack@5.73.0
   prettier: 2.7.0
   process: 0.11.10
   sass: 1.52.3
@@ -123,10 +125,10 @@ devDependencies:
   stream-http: 3.2.0
   subscriptions-transport-ws: 0.11.0_graphql@16.5.0
   typescript: 4.5.5
-  vue-cli-plugin-vuetify: 2.5.1_pltrfixcz62k2t3mi7utp5fz4m
+  vue-cli-plugin-vuetify: 2.5.5_pltrfixcz62k2t3mi7utp5fz4m
   vue-tsc: 0.37.9_typescript@4.5.5
   webpack: 5.73.0
-  webpack-plugin-vuetify: 2.0.0-alpha.11_6emocjf77gyk77h2me4tf7ig7m
+  webpack-plugin-vuetify: 2.0.0-alpha.11_bwk4t3nbiklv7cdr7kwpy2clbi
 
 packages:
 
@@ -2999,14 +3001,14 @@ packages:
     resolution: {integrity: sha512-Iu8Tbg3f+emIIMmI2ycSI8QcEuAUgPTgHwesDU1eKMLE4YC/c/sFbGc70QgMq31ijRftV0R7vCm9co6rldCeOA==}
     dev: true
 
-  /@vuetify/loader-shared/1.5.0_vuetify@3.0.0-beta.6:
+  /@vuetify/loader-shared/1.5.0_vuetify@3.0.0-beta.9:
     resolution: {integrity: sha512-Sc+CUZGtQfMLmXXdZ3fvYWkDwMm5zYvYgsAPWsvXNokCeE7WhNA/IETFMThfF8Nf9mnf+zX9+jdtVhKND3hBkQ==}
     peerDependencies:
       vuetify: ^3.0.0-beta.4
     dependencies:
       find-cache-dir: 3.3.2
       upath: 2.0.1
-      vuetify: 3.0.0-beta.6_dhmi3anlsgwe4axr2mgwhifmv4
+      vuetify: 3.0.0-beta.9_dhmi3anlsgwe4axr2mgwhifmv4
     dev: true
 
   /@webassemblyjs/ast/1.11.1:
@@ -9368,8 +9370,8 @@ packages:
       vue: 3.2.37
     dev: false
 
-  /vue-cli-plugin-vuetify/2.5.1_pltrfixcz62k2t3mi7utp5fz4m:
-    resolution: {integrity: sha512-OcZ8/bqf84yTbQN+PyRf+8Wvr8czg+u5J4JGVx+Lq5ytsBxTgIUIZ/oMO7j+bd9WCjiKid2l9gZbQYjZABw2+g==}
+  /vue-cli-plugin-vuetify/2.5.5_pltrfixcz62k2t3mi7utp5fz4m:
+    resolution: {integrity: sha512-nV7g2wC5SBJe7UidLwnJKAasoc+XR1r5bKDOG6mhuUB17Y4kJlOCKpLDiIY/giHhGfjmsBh+DPC9fbQWNCN9mA==}
     peerDependencies:
       sass-loader: '*'
       vuetify-loader: '*'
@@ -9497,8 +9499,8 @@ packages:
       '@vue/shared': 3.2.37
     dev: false
 
-  /vuetify/3.0.0-beta.6_dhmi3anlsgwe4axr2mgwhifmv4:
-    resolution: {integrity: sha512-eL8l4YdpB8ePWex1NkB35nqgWIJCsElTk4XzZEXeN7ECh5Qd1JqPwxEE+JVVC5e1+Ut2EQw+08ouLkeEk2uMow==}
+  /vuetify/3.0.0-beta.9_dhmi3anlsgwe4axr2mgwhifmv4:
+    resolution: {integrity: sha512-UL30GE4HdzllkqfcEVThL2UF8AVsALRP7b7n7JqLHp4Pm24QZqiP534cp7A4aGDiX7HXhpjZA/ava0PSarQ+uQ==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       '@formatjs/intl': ^1.0.0 || ^2.0.0
@@ -9517,7 +9519,7 @@ packages:
         optional: true
     dependencies:
       vue: 3.2.37
-      webpack-plugin-vuetify: 2.0.0-alpha.11_6emocjf77gyk77h2me4tf7ig7m
+      webpack-plugin-vuetify: 2.0.0-alpha.11_bwk4t3nbiklv7cdr7kwpy2clbi
     dev: false
 
   /watchpack/2.4.0:
@@ -9667,7 +9669,7 @@ packages:
       wildcard: 2.0.0
     dev: true
 
-  /webpack-plugin-vuetify/2.0.0-alpha.11_6emocjf77gyk77h2me4tf7ig7m:
+  /webpack-plugin-vuetify/2.0.0-alpha.11_bwk4t3nbiklv7cdr7kwpy2clbi:
     resolution: {integrity: sha512-lsN+wrzTY4lUHl02+gZqb3F0K9IQFFGe8mDNhngcyWWXZec/XqCcG4Mljt8R6wP8iXSRJXxfSQ+wTYK5hniSVg==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -9676,14 +9678,14 @@ packages:
       webpack: ^5.0.0
     dependencies:
       '@vue/compiler-sfc': 3.2.37
-      '@vuetify/loader-shared': 1.5.0_vuetify@3.0.0-beta.6
+      '@vuetify/loader-shared': 1.5.0_vuetify@3.0.0-beta.9
       decache: 4.6.1
       file-loader: 6.2.0_webpack@5.73.0
       find-cache-dir: 3.3.2
       loader-utils: 2.0.2
       null-loader: 4.0.1_webpack@5.73.0
       upath: 2.0.1
-      vuetify: 3.0.0-beta.6_dhmi3anlsgwe4axr2mgwhifmv4
+      vuetify: 3.0.0-beta.9_dhmi3anlsgwe4axr2mgwhifmv4
       webpack: 5.73.0
     dev: true
 
