@@ -114,4 +114,6 @@ const ADDRESS_ROUTE_QUERY = {
     Q_MINER: ['blocks', 'uncles']
 }
 
-export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY }
+const TOKEN_DETAILS = ['transfers', 'holders']
+
+export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, TOKEN_DETAILS }

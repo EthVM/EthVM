@@ -17,14 +17,26 @@
                 :is-loading="loadingTokenDetails || state.hasError"
                 @errorDetails="emitErrorState"
             />
-            <app-tabs :tabs="tabsTokenDetails">
-                <v-window-item value="tab-0">
-                    <token-transfers :address="props.addressRef" :page-type="'token'" :decimals="decimals" :symbol="symbol" @errorDetails="emitErrorState" />
-                </v-window-item>
-                <v-window-item value="tab-1">
-                    <token-holders :address="props.addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
-                </v-window-item>
-            </app-tabs>
+            <v-card elevation="1" rounded="xl">
+                <v-tabs v-model="state.tab" color="primary" end>
+                    <v-tab :value="routes[0]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Transfers</v-tab>
+                    <v-tab :value="routes[1]" class="py-3 text-h5 text-capitalize rounded-b-xl" @click="changeRoute">Holders</v-tab>
+                </v-tabs>
+                <v-window v-model="state.tab" class="mt-6">
+                    <v-window-item :value="routes[0]" :key="routes[0]">
+                        <token-transfers
+                            :address="props.addressRef"
+                            :page-type="'token'"
+                            :decimals="decimals"
+                            :symbol="symbol"
+                            @errorDetails="emitErrorState"
+                        />
+                    </v-window-item>
+                    <v-window-item :value="routes[1]" :key="routes[1]">
+                        <token-holders :address="props.addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
+                    </v-window-item>
+                </v-window>
+            </v-card>
         </div>
         <!--
     =====================================================================================
@@ -48,7 +60,6 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue'
-import AppTabs from '@core/components/AppTabs'
 import TokenDetailsList from '@module/tokens/components/TokenDetailsList.vue'
 import TokenTransfers from '@module/tokens/components/TokenTransfers.vue'
 import TokenHolders from '@module/tokens/components/TokenHolders.vue'
@@ -61,6 +72,10 @@ import {
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
 import { Tab } from '@core/components/props'
+import { TOKEN_DETAILS } from '@core/router/routesNames'
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
+
+const routes = TOKEN_DETAILS
 
 const props = defineProps({
     addressRef: {
@@ -81,15 +96,45 @@ interface ComponentState {
     address: string
     hasError: boolean
     isNft: boolean
+    tab: string
 }
 
 const state: ComponentState = reactive({
     address: '',
     hasError: false,
-    isNft: true
+    isNft: true,
+    tab: routes[0]
+})
+/**------------------------
+ * Route Handling
+ -------------------------*/
+
+const router = useRouter()
+const route = useRoute()
+/**
+ * Sets route query if new tab is selected
+ */
+const changeRoute = () => {
+    if (route.query.t !== state.tab) {
+        router.push({
+            query: { t: state.tab }
+        })
+    }
+}
+/**
+ * Watches for changes in the router
+ * in case user manipulates history
+ * and updates tab accordingly
+ */
+onBeforeRouteUpdate(async to => {
+    if (to.query.t !== state.tab) {
+        state.tab = state.tab === routes[0] ? routes[1] : routes[0]
+    }
 })
 
-const emit = defineEmits(['errorDetails'])
+const emit = defineEmits<{
+    (e: 'errorDetails', value: boolean, message: string): void
+}>()
 
 onMounted(() => {
     if (!isValid.value) {
