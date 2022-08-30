@@ -89,6 +89,10 @@ const props = defineProps({
     holderAddress: {
         type: String,
         required: true
+    },
+    tab: {
+        type: String,
+        required: true
     }
 })
 
@@ -103,7 +107,7 @@ const state: ComponentState = reactive({
     address: '',
     hasError: false,
     isNft: true,
-    tab: routes[0]
+    tab: ''
 })
 /**------------------------
  * Route Handling
@@ -143,6 +147,7 @@ onMounted(() => {
         return
     }
     window.scrollTo(0, 0)
+    state.tab = props.tab
 })
 
 const {

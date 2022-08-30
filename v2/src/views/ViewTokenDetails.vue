@@ -7,6 +7,7 @@
                 :is-holder="state.isHolder"
                 :holder-address="state.holderAddress"
                 @errorDetails="setError"
+                :tab="$route.query.t"
             />
             <app-error v-else :has-error="hasError" :message="state.error" />
             <app-message :messages="state.errorMessages" />
