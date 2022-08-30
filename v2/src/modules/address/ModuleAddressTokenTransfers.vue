@@ -49,113 +49,163 @@
                              Desktop View
                            =========================
                     -->
-                    <v-row v-if="!mdAndDown" class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
-                        <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
-                            <v-row class="ma-0 flex-nowrap" align="center">
-                                <img
-                                    :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
-                                    alt=""
-                                    height="32"
-                                    width="32"
-                                    class="mr-2 rounded-circle"
-                                />
-                                <div style="display: grid">
-                                    <router-link
-                                        v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
-                                        :to="`/token/${transfer.contract}`"
-                                        class="text-textPrimary text-ellipses"
-                                    >
-                                        <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
-                                        <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
-                                    </router-link>
-                                    <p v-if="props.isOverview" class="text-info">
-                                        {{ transfer.tokenInfo.symbol }}
+                    <template v-if="!mdAndDown">
+                        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
+                            <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
+                                <v-row class="ma-0 flex-nowrap" align="center">
+                                    <img
+                                        :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
+                                        alt=""
+                                        height="32"
+                                        width="32"
+                                        class="mr-2 rounded-circle"
+                                    />
+                                    <div style="display: grid">
+                                        <router-link
+                                            v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
+                                            :to="`/token/${transfer.contract}`"
+                                            class="text-textPrimary text-ellipses"
+                                        >
+                                            <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
+                                            <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
+                                        </router-link>
+                                        <p v-if="props.isOverview" class="text-info">
+                                            {{ transfer.tokenInfo.symbol }}
+                                        </p>
+                                    </div>
+                                </v-row>
+                            </v-col>
+                            <v-col v-if="!props.isOverview" cols="1" class="text-info py-0 text-ellipses">
+                                {{ transfer.tokenInfo.symbol }}
+                            </v-col>
+                            <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
+                                <v-row class="ma-0" align="center">
+                                    <p>
+                                        {{ getAmount(transfer).value }}
                                     </p>
-                                </div>
-                            </v-row>
-                        </v-col>
-                        <v-col v-if="!props.isOverview" cols="1" class="text-info py-0 text-ellipses">
-                            {{ transfer.tokenInfo.symbol }}
-                        </v-col>
-                        <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
-                            <v-row class="ma-0" align="center">
-                                <p>
-                                    {{ getAmount(transfer).value }}
+                                </v-row>
+                                <p v-if="props.isOverview" class="text-info">
+                                    {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
                                 </p>
-                            </v-row>
-                            <p v-if="props.isOverview" class="text-info">
+                            </v-col>
+                            <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
+                                <app-chip
+                                    :bg="transferType(transfer) === 'in' ? 'success' : 'orange'"
+                                    :text="transferType(transfer) === 'in' ? 'From' : 'To'"
+                                />
+                            </v-col>
+                            <v-col :cols="props.isOverview ? 4 : 2" class="text-secondary py-0">
+                                <div class="d-flex align-center">
+                                    <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
+                                    <app-transform-hash
+                                        is-blue
+                                        start="5"
+                                        end="5"
+                                        :hash="eth.toCheckSum(transferTypeAddress(transfer))"
+                                        :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
+                                    />
+                                </div>
+                            </v-col>
+                            <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
+                                <app-transform-hash
+                                    is-blue
+                                    start="5"
+                                    end="5"
+                                    :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                    :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
+                                />
+                            </v-col>
+                            <v-col v-if="!props.isOverview" cols="1" class="text-info py-0">
                                 {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
-                            </p>
-                        </v-col>
-                        <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
-                            <app-chip :bg="transferType(transfer) === 'in' ? 'success' : 'orange'" :text="transferType(transfer) === 'in' ? 'From' : 'To'" />
-                        </v-col>
-                        <v-col :cols="props.isOverview ? 4 : 2" class="text-secondary py-0">
-                            <div class="d-flex align-center">
-                                <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
-                                <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
-                            </div>
-                        </v-col>
-                        <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
-                            <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transfer.transfer.transactionHash)" />
-                        </v-col>
-                        <v-col v-if="!props.isOverview" cols="1" class="text-info py-0">
-                            {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
-                        </v-col>
-                        <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right">
-                            <app-btn-icon
-                                :icon="getDropdownIcon(transfer.transfer.transactionHash)"
-                                @click="toggleMoreDetails(transfer.transfer.transactionHash)"
-                            ></app-btn-icon>
-                        </v-col>
-                    </v-row>
+                            </v-col>
+                            <v-col v-if="!props.isOverview" cols="1" class="py-0 text-right">
+                                <app-btn-icon
+                                    :icon="getDropdownIcon(transfer.transfer.transactionHash)"
+                                    @click="toggleMoreDetails(transfer.transfer.transactionHash)"
+                                ></app-btn-icon>
+                            </v-col>
+                        </v-row>
+                        <v-row v-if="visibleDetails.has(transfer.transfer.transactionHash)">
+                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
+                            <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceBefore(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
+                            <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
+                            <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceAfter(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
+                        </v-row>
+                    </template>
                     <!--
                            ========================
                              Mobile/Tablet View
                            =========================
                     -->
-                    <v-row v-else class="my-5 text-subtitle-2 font-weight-regular">
-                        <v-col cols="6" class="pb-2">
-                            <div class="d-flex align-center flex-nowrap">
-                                <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) ? 'bg-success' : 'bg-orange'">
-                                    <v-icon size="18">
-                                        {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
-                                    </v-icon>
+                    <template v-else>
+                        <v-row class="my-5 text-subtitle-2 font-weight-regular" @click="toggleMoreDetails(transfer.transfer.transactionHash)">
+                            <v-col cols="6" class="pb-2">
+                                <div class="d-flex align-center flex-nowrap">
+                                    <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) ? 'bg-success' : 'bg-orange'">
+                                        <v-icon size="18">
+                                            {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
+                                        </v-icon>
+                                    </div>
+                                    <span>
+                                        {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
+                                    </span>
                                 </div>
-                                <span>
-                                    {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
-                                </span>
-                            </div>
-                        </v-col>
-                        <v-col cols="6" class="pb-2">
-                            <div class="d-flex align-center">
-                                <img
-                                    :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
-                                    alt=""
-                                    height="24"
-                                    width="24"
-                                    class="mr-2 rounded-circle"
+                            </v-col>
+                            <v-col cols="6" class="pb-2">
+                                <div class="d-flex align-center">
+                                    <img
+                                        :src="getImg(transfer.contract) || require('@/assets/icon-token.png')"
+                                        alt=""
+                                        height="24"
+                                        width="24"
+                                        class="mr-2 rounded-circle"
+                                    />
+                                    <span> {{ getAmount(transfer).value }} {{ transfer.tokenInfo.symbol }} </span>
+                                </div>
+                            </v-col>
+                            <v-col cols="6" class="py-0 text-info">
+                                {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }} {{ transferType(transfer) === 'in' ? 'from' : 'to' }}
+                            </v-col>
+                            <v-col cols="6" class="py-0 text-secondary">
+                                <div class="d-flex align-center">
+                                    <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
+                                    <app-transform-hash
+                                        is-blue
+                                        start="5"
+                                        end="5"
+                                        :hash="eth.toCheckSum(transferTypeAddress(transfer))"
+                                        :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
+                                    />
+                                </div>
+                            </v-col>
+                        </v-row>
+                        <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="pb-5 text-subtitle-2 font-weight-regular">
+                            <div>
+                                <p class="text-info mb-1">Hash</p>
+                                <app-transform-hash
+                                    is-blue
+                                    start="5"
+                                    end="5"
+                                    :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                    :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
                                 />
-                                <span> {{ getAmount(transfer).value }} {{ transfer.tokenInfo.symbol }} </span>
                             </div>
-                        </v-col>
-                        <v-col cols="6" class="py-0 text-info">
-                            {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }} {{ transferType(transfer) === 'in' ? 'from' : 'to' }}
-                        </v-col>
-                        <v-col cols="6" class="py-0 text-secondary">
-                            <div class="d-flex align-center">
-                                <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
-                                <app-transform-hash start="5" end="5" :hash="eth.toCheckSum(transferTypeAddress(transfer))" />
-                            </div>
-                        </v-col>
-                    </v-row>
+                            <v-divider class="my-5 mx-n4 mx-sm-n6" />
+                            <v-row justify="space-between" class="my-5 mx-0">
+                                <p class="text-info">Balance Before</p>
+                                <p>{{ getTransferBalanceBefore(transfer).value }} {{ transfer.tokenInfo.symbol }}</p>
+                            </v-row>
+                            <v-row justify="space-between" class="my-5 mx-0">
+                                <p class="text-info">Tx Fee Paid</p>
+                                <p class="text-error">-{{ getTxFee(transfer).value }} {{ getTxFee(transfer).unit.toUpperCase() }}</p>
+                            </v-row>
+                            <v-row justify="space-between" class="my-5 mx-0">
+                                <p class="text-info">Balance After</p>
+                                <p>{{ getTransferBalanceAfter(transfer).value }} {{ transfer.tokenInfo.symbol }}</p>
+                            </v-row>
+                        </div>
+                    </template>
                     <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg bg-tableGrey"></div>
-                    <v-row v-if="visibleDetails.has(transfer.transfer.transactionHash)">
-                        <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance Before</v-col>
-                        <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceBefore(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
-                        <v-col md="3" class="text-right text-body-1 font-weight-bold text-info">Balance After</v-col>
-                        <v-col md="9" class="text-subtitle-2">{{ getTransferBalanceAfter(transfer).value }} {{ transfer.tokenInfo.symbol }}</v-col>
-                    </v-row>
                 </div>
                 <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
@@ -356,6 +406,10 @@ const getTransferBalanceAfter = (transfer: Transfer): FormattedNumber => {
     return formatNonVariableEthValue(new BN(transfer.stateDiff.to.after))
 }
 
+const getTxFee = (transfer: Transfer) => {
+    return formatNonVariableEthValue(new BN(transfer.transfer.txFee))
+}
+
 const getAmount = (transfer: Transfer) => {
     return formatFloatingPointValue(getValue(transfer))
 }
@@ -410,7 +464,7 @@ const router = useRouter()
 const goToTokenTransfersPage = async (): Promise<void> => {
     await router.push({
         name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
-        query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[0] }
+        query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[1] }
     })
 }
 </script>
