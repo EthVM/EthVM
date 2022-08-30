@@ -16,7 +16,7 @@ import ViewTokens from '@view/ViewTokens.vue'
 import ViewAddressNfts from '@view/ViewAddressNfts.vue'
 import ViewTemp from '@view/ViewTemp.vue'
 import configs from '@/configs'
-import { addressMinerRouteGuard, addressTokensRouteGuard } from './helpers'
+import { addressRouteGuard } from './helpers'
 const routes: Array<RouteRecordRaw> = [
     {
         path: ROUTE_NAME.HOME.PATH,
@@ -95,7 +95,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
                 component: AddressTokensView,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressTokensRouteGuard
+                beforeEnter: addressRouteGuard('tokens')
             },
             {
                 path: ROUTE_NAME.ADDRESS_NFTS.PATH,
@@ -115,7 +115,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_MINER.NAME,
                 component: ViewAddressMiners,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressMinerRouteGuard
+                beforeEnter: addressRouteGuard('miner')
             }
         ]
     },
