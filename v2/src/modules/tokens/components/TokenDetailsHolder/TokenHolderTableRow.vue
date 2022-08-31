@@ -1,15 +1,18 @@
 <template>
-    <div pa-0 ma-0>
+    <div>
         <!--
     =====================================================================================
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <v-col v-if="!smAndDown">
-            <v-row grid-list-xs row wrap align="center" justify="start" class="fill-height pl-3 pr-2 pt-2 pb-1 text-subtitle-2 font-weight-regular">
+        <template v-if="!smAndDown">
+            <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
                 <!-- Column 1: Holders Address -->
-                <v-col sm="6" class="pr-4">
-                    <app-transform-hash :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                <v-col sm="6" md="3">
+                    <div class="d-flex align-center">
+                        <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="8" class="mr-2" />
+                        <app-transform-hash is-blue start="5" end="5" :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                    </div>
                 </v-col>
                 <!-- End Column 1 -->
 
@@ -22,14 +25,29 @@
                 </v-col>
                 <!-- End Column 2 -->
 
-                <!-- Column 3: Share (ERC20) -->
+                <!-- Column 3: USD Value (ERC20) -->
+                <v-col v-if="!isERC721" sm="3" md="3">
+                    <p class="mb-0">
+                        {{ share.value }}%
+                        <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
+                    </p>
+                </v-col>
+                <!-- End Column 3 -->
+
+                <!-- Column 3: USD Value (ERC721) -->
+                <v-col v-if="isERC721" sm="3" md="3">
+                    <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+                </v-col>
+                <!-- End Column 3 -->
+
+                <!-- Column 4: Share (ERC20) -->
                 <v-col v-if="!isERC721" sm="3" md="2">
                     <p class="mb-0 ml-2">
                         {{ share.value }}%
                         <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
                     </p>
                 </v-col>
-                <!-- End Column 3 -->
+                <!-- End Column 4 -->
 
                 <!-- Column 3: Token Image (ERC721) -->
                 <v-col v-if="isERC721" sm="3" md="2">
@@ -37,13 +55,13 @@
                 </v-col>
                 <!-- End Column 3 -->
             </v-row>
-            <v-divider class="mb-2 mt-2" />
-        </v-col>
+        </template>
     </div>
 </template>
 
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
+import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import BigNumber from 'bignumber.js'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import BN from 'bignumber.js'
@@ -52,7 +70,10 @@ import { reactive, computed } from 'vue'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { eth } from '@core/helper'
 import { Erc20TokenOwnerDetailsFragment } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import { useDisplay } from 'vuetify'
+
 const TYPES = ['ERC20', 'ERC721']
+const { smAndDown, mdAndDown } = useDisplay()
 
 interface PropType {
     holder: Erc20TokenOwnerDetailsFragment

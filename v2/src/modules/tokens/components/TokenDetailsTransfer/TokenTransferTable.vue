@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white" flat class="pr-2 pl-2 pt-3">
+    <v-card variant="flat" class="pa-4 pa-sm-6">
         <!-- Pagination -->
         <v-row v-if="props.showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">
             <app-paginate-has-more :current-page="props.index" :has-more="props.hasMore" :loading="props.loading || props.hasError" @newPage="setPage" />
@@ -8,23 +8,21 @@
 
         <!-- Table Header -->
         <div v-if="!props.hasError">
-            <v-card color="info" flat class="white--text pl-3 pr-1 mt-2 mb-2 hidden-sm-and-down" height="40px">
-                <v-row align="center" justify="start" class="fill-height pr-2">
-                    <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" :md="isERC721 ? 6 : 7">
-                        <h5>Tx #</h5>
-                    </v-col>
-                    <v-col sm="2">
-                        <h5>Age</h5>
-                    </v-col>
-                    <v-col sm="2">
-                        <h5 v-if="!isERC721">Quantity</h5>
-                        <h5 v-else>ID</h5>
-                    </v-col>
-                    <v-col v-if="isERC721" sm="2">
-                        <h5>Image</h5>
-                    </v-col>
-                </v-row>
-            </v-card>
+            <v-row align="center" justify="start" class="fill-height pr-2">
+                <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" :md="isERC721 ? 6 : 7">
+                    <h5>Tx #</h5>
+                </v-col>
+                <v-col sm="2">
+                    <h5>Age</h5>
+                </v-col>
+                <v-col sm="2">
+                    <h5 v-if="!isERC721">Quantity</h5>
+                    <h5 v-else>ID</h5>
+                </v-col>
+                <v-col v-if="isERC721" sm="2">
+                    <h5>Image</h5>
+                </v-col>
+            </v-row>
             <!-- End Table Header -->
 
             <!-- Start Rows -->
