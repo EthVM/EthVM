@@ -1,54 +1,46 @@
 <template>
     <v-card variant="flat" class="pa-4 pa-sm-6">
         <!-- Pagination -->
-        <v-row v-if="props.showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">
-            <app-paginate-has-more :current-page="props.index" :has-more="props.hasMore" :loading="props.loading || props.hasError" @newPage="setPage" />
-        </v-row>
+        <!--        <v-row v-if="props.showPagination" justify="center" justify-md="end" row fill-height class="pb-1 pr-2 pl-2">-->
+        <!--            <app-paginate-has-more :current-page="props.index" :has-more="props.hasMore" :loading="props.loading || props.hasError" @newPage="setPage" />-->
+        <!--        </v-row>-->
         <!-- End Pagination -->
 
         <!-- Table Header -->
         <div v-if="!props.hasError">
-            <v-row align="center" justify="start" class="fill-height pr-2">
-                <v-col :class="[sm || xs ? 'pr-3' : 'pr-5']" sm="6" :md="isERC721 ? 6 : 7">
-                    <h5>Tx #</h5>
+            <v-row align="center" justify="start" class="text-body-1 text-info">
+                <v-col md="2"> Hash </v-col>
+                <v-col md="2"> From </v-col>
+                <v-spacer />
+                <v-col md="2"> To </v-col>
+                <v-col :md="isERC721 ? 1 : 3">
+                    <template v-if="!isERC721">Amount</template>
+                    <template v-else>ID</template>
                 </v-col>
-                <v-col sm="2">
-                    <h5>Age</h5>
-                </v-col>
-                <v-col sm="2">
-                    <h5 v-if="!isERC721">Quantity</h5>
-                    <h5 v-else>ID</h5>
-                </v-col>
-                <v-col v-if="isERC721" sm="2">
-                    <h5>Image</h5>
-                </v-col>
+                <v-col v-if="isERC721" sm="2"> Image </v-col>
+                <v-col md="2"> Age </v-col>
             </v-row>
+            <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
 
             <!-- Start Rows -->
-            <div v-if="props.loading || props.hasError">
-                <v-col sm="12">
-                    <div v-for="i in props.maxItems" :key="i" :class="[sm || xs ? 'table-row-mobile mb-2' : '']">
-                        <v-progress-linear color="lineGrey" value="40" indeterminate height="15" class="ma-2" />
-                    </div>
-                </v-col>
-            </div>
+            <template v-if="props.initialLoad">
+                <div v-for="item in props.maxItems" :key="item" class="my-2">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                </div>
+            </template>
             <div v-else>
-                <v-card v-if="!props.hasItems" flat>
+                <div v-if="!props.hasItems && !props.loading">
                     <v-card-text class="text-xs-center secondary--text">No transfers</v-card-text>
-                </v-card>
-                <v-card v-for="(transfer, index) in props.transfers" v-else :key="index" color="white" class="transparent" flat>
+                </div>
+                <div v-for="(transfer, index) in props.transfers" v-else :key="index" color="white" class="transparent" flat>
                     <transfers-table-row :transfer="transfer" :decimals="props.decimals" :symbol="props.symbol" :transfer-type="props.transferType" />
-                </v-card>
+                </div>
                 <!-- End Rows -->
-                <v-row v-if="props.showPagination" justify="center" justify-md="end" row class="pb-1 pr-2 pl-2">
-                    <app-paginate-has-more
-                        :current-page="props.index"
-                        :has-more="props.hasMore"
-                        :loading="props.loading || props.hasError"
-                        @newPage="setPage"
-                    />
-                </v-row>
+                <app-intersect v-if="props.hasMore" @intersect="loadMoreData">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                    <v-divider />
+                </app-intersect>
             </div>
         </div>
     </v-card>
@@ -56,11 +48,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import TransfersTableRow from './TokenTransferTableRow.vue'
-import { useDisplay } from 'vuetify'
-
-const { xs, sm } = useDisplay()
 const TYPES = ['ERC20', 'ERC721']
 
 interface PropType {
@@ -69,6 +58,7 @@ interface PropType {
     hasMore: boolean
     showPagination: boolean
     loading: boolean
+    initialLoad: boolean
     decimals?: number
     symbol?: string
     hasError: boolean
@@ -89,6 +79,12 @@ const emit = defineEmits<{
  */
 const setPage = (page: number, reset = false): void => {
     emit('setPage', page, reset)
+}
+
+const loadMoreData = (e: boolean): void => {
+    if (e) {
+        setPage(props.index + 1)
+    }
 }
 
 const isERC721 = computed<boolean>(() => {

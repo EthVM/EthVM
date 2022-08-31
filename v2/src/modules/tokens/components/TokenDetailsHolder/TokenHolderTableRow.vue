@@ -73,7 +73,7 @@ import { Erc20TokenOwnerDetailsFragment } from '@module/tokens/apollo/TokenDetai
 import { useDisplay } from 'vuetify'
 
 const TYPES = ['ERC20', 'ERC721']
-const { smAndDown, mdAndDown } = useDisplay()
+const { smAndDown } = useDisplay()
 
 interface PropType {
     holder: Erc20TokenOwnerDetailsFragment

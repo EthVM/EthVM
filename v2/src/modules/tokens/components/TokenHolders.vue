@@ -124,7 +124,6 @@ const hasERC20Owners = computed<boolean>(() => {
 const holders = computed<any[]>(() => {
     if (hasERC20Owners.value || hasERC721Owners.value) {
         const data = hasERC721Owners.value ? erc721TokenHolders.value?.owners : erc20TokenHolders.value?.owners
-        const start = state.index * MAX_ITEMS
         if (data) {
             return data
         }

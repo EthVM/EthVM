@@ -71,7 +71,6 @@ import {
 } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { eth } from '@core/helper'
 import { ErrorMessageToken } from '@module/tokens/models/ErrorMessagesForTokens'
-import { Tab } from '@core/components/props'
 import { TOKEN_DETAILS } from '@core/router/routesNames'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 
@@ -204,22 +203,6 @@ const decimals = computed<string | null>(() => {
         return tokenDetails.value['tokenInfo'] ? tokenDetails.value['tokenInfo'].decimals : tokenDetails.value['decimals']
     }
     return null
-})
-
-const tabsTokenDetails = computed<Tab[]>(() => {
-    const tabs = [
-        {
-            id: 0,
-            title: 'Transfers',
-            isActive: true
-        },
-        {
-            id: 1,
-            title: 'Holders',
-            isActive: false
-        }
-    ]
-    return tabs
 })
 
 /*

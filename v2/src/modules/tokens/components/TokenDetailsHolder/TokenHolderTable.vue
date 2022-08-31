@@ -45,12 +45,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import HoldersTableRow from './TokenHolderTableRow.vue'
-import { useDisplay } from 'vuetify'
-
-const { xs, sm } = useDisplay()
 const TYPES = ['ERC20', 'ERC721']
 
 interface PropType {
@@ -84,7 +80,7 @@ const setPage = (page: number, reset = false): void => {
 
 const loadMoreData = (e: boolean): void => {
     if (e) {
-        emit('setPage', props.index + 1, false)
+        setPage(props.index + 1)
     }
 }
 
