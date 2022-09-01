@@ -26,13 +26,45 @@
 
         <!--Table Header-->
         <v-row :dense="xs" class="d-flex text-body-1 text-info my-2 my-sm-5">
-            <v-col sm="4" class="py-0 d-none d-sm-block"> Token</v-col>
-            <v-col cols="12" sm="8">
+            <!--
+                Token on Overview:
+                XS: NONE
+                SM and UP: 4
+                ------------
+                Token:
+                XS: NONE
+                SM : 4
+                LG: 2 
+             -->
+            <v-col sm="4" :lg="props.isOverview ? 4 : 2" class="py-0 d-none d-sm-block"> Token</v-col>
+            <!--
+                Symbol on Overview:
+                XS and UP: NONE
+                ------------
+                Symbol
+                XS: NONE
+                LG: 1
+             -->
+            <v-col v-if="!props.isOverview" sm="1" class="py-0 d-none d-lg-block"> Symbol</v-col>
+            <!--
+                OTHER on Overview:
+                XS: NONE
+                SM: 8
+                ------------
+                OTHER 
+                XS: NONE
+                SM: 8
+                LG: 9
+             -->
+            <v-col cols="12" sm="8" lg="9" class="d-none d-sm-flex">
                 <v-row>
-                    <v-col md="4" class="py-0 d-none d-sm-block"> Price</v-col>
-                    <v-col md="4" class="py-0 d-none d-sm-block"> USD Value</v-col>
-                    <v-spacer class="d-flex d-sm-none" />
-                    <v-col md="4" class="py-0 text-right text-sm-left"> Balance</v-col>
+                    <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 text-right text-sm-left"> Price</v-col>
+                    <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-lg-block"> 24h</v-col>
+                    <v-col v-if="!props.isOverview" lg="3" class="py-0 d-none d-sm-block"> USD Value</v-col>
+                    <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-flex justify-space-between">
+                        <p>Balance</p>
+                        <p v-if="!props.isOverview" class="text-right">More</p>
+                    </v-col>
                 </v-row>
             </v-col>
         </v-row>
@@ -45,32 +77,84 @@
         </v-row>
         <!--Token Row -->
         <div v-else>
-            <v-row :dense="xs" v-for="token in tokens" :key="token.contract" class="text-body-1 my-3 mt-sm-0 mb-sm-5 flex-row" align="center">
-                <!-- Icon -->
-                <v-col cols="auto">
+            <v-row
+                :dense="xs"
+                v-for="token in tokens"
+                :key="token.contract"
+                class="text-body-1 my-3 mt-sm-0 mb-sm-5 flex-row align-start align-lg-center"
+                align="start"
+            >
+                <!--
+                Token on Overview:
+                XS: NONE
+                SM and UP: 4
+                ------------
+                Token:
+                XS: NONE
+                SM : 4
+                LG: 2 
+             -->
+                <v-col cols="6" sm="4" :lg="props.isOverview ? 4 : 2" :class="['pb-0', 'd-flex align-center']">
                     <app-token-icon :token-icon="token.image || undefined" />
+                    <p class="text-truncate ml-4">
+                        {{ token.name }}
+                        <span v-if="props.isOverview || mdAndDown" class="text-info text-uppercase text-truncate d-block">{{ token.symbol }}</span>
+                    </p>
                 </v-col>
-                <!-- Name, Symbol -->
-                <v-col cols="5" sm="3" class="pb-0">
-                    <p class="mb-1 text-truncate">{{ token.name }}</p>
-                    <p class="text-info text-uppercase text-truncate">{{ token.symbol }}</p>
+                <!--
+                Symbol on Overview:
+                XS and UP: NONE
+                ------------
+                Symbol
+                XS: NONE
+                LG: 1
+             -->
+                <v-col v-if="!props.isOverview" cols="1" class="pb-0 d-none d-lg-block">
+                    <p class="text-uppercase text-truncate text-info">{{ token.symbol }}</p>
                 </v-col>
-                <v-spacer />
-                <v-col cols="5" sm="8">
-                    <v-row>
-                        <!-- Price, Price Change -->
-                        <v-col cols="4" class="pb-0 d-none d-sm-block">
-                            <p class="mb-1">{{ token.current_price }}</p>
+                <!--
+                OTHER on Overview:
+                XS: NONE
+                SM: 8
+                ------------
+                OTHER 
+                XS: NONE
+                SM: 8
+                LG: 9
+             -->
+                <v-col cols="6" sm="8" lg="9">
+                    <v-row class="align-start align-lg-center">
+                        <!-- Price-->
+                        <v-col cols="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-none d-sm-block">
+                            <p>{{ token.current_price }}</p>
+                            <p :class="[priceChangeClass(token), 'd-lg-none mt-1']">{{ token.getPriceChangeFormatted() }}</p>
+                        </v-col>
+                        <!-- Price Change-->
+                        <v-col v-if="!props.isOverview" lg="3" class="py-0 d-none d-lg-block">
                             <p :class="priceChangeClass(token)">{{ token.getPriceChangeFormatted() }}</p>
                         </v-col>
-                        <!-- USD Value -->
-                        <v-col cols="12" sm="4" class="pb-0 d-none d-sm-block">
+                        <!-- 
+                            USD Value -->
+                        <v-col cols="12" sm="4" :lg="props.isOverview ? 4 : 3" class="pb-0 d-none d-sm-block">
                             <p class="text-right text-sm-left">{{ token.getUSDValueFormatted() }}</p>
                         </v-col>
                         <!-- Balance -->
-                        <v-col ccols="12" sm="4" class="pb-0">
+                        <v-col
+                            cols="12"
+                            sm="4"
+                            :lg="props.isOverview ? 4 : 3"
+                            class="pb-0 d-block d-sm-flex justify-sm-space-between align-start align-lg-center"
+                        >
                             <p class="text-right text-sm-left">{{ token.getBalanceFormatted() }}</p>
                             <p class="d-sm-none text-right text-sm-left text-info mt-1">{{ token.getUSDValueFormatted() }}</p>
+                            <div v-if="!props.isOverview && getEthereumTokenByContract(token.contract)" class="mt-n2 mt-lg-0">
+                                <app-btn-icon
+                                    :icon="state.showMoreTokenDetails && state.activeToken.contract === token.contract ? 'expand_less' : 'expand_more'"
+                                    size="small"
+                                    @click="showTokenDetails(token.contract)"
+                                    class="d-none d-sm-block"
+                                ></app-btn-icon>
+                            </div>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -91,12 +175,7 @@
                     {{ token.current_price }}
                 </p>
             </v-col> -->
-                <!-- <v-col cols="1">
-                <v-btn v-if="getEthereumTokenByContract(token.contract)" icon size="small" @click="showTokenDetails(token.contract)">
-                    <v-icon v-if="state.showMoreTokenDetails && state.activeToken.contract === token.contract">expand_less</v-icon>
-                    <v-icon v-else>expand_more</v-icon>
-                </v-btn>
-            </v-col> -->
+                <!--  -->
                 <!-- <v-col v-if="state.showMoreTokenDetails && state.activeToken.contract === token.contract" cols="12">
                 <v-row class="mx-0">
                     <v-col cols="6">
@@ -261,6 +340,7 @@
 import { computed, reactive } from 'vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
+import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
@@ -274,7 +354,7 @@ import { useRouter } from 'vue-router'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
-const { xs } = useDisplay()
+const { xs, mdAndDown } = useDisplay()
 const { getEthereumTokenByContract, loading: loadingCoinData } = useCoinData()
 
 const MAX_ITEMS = 10
@@ -326,7 +406,7 @@ const tokens = computed(() => {
     const start = MAX_ITEMS * state.index
     if (!loadingTokens.value && hasTokens.value && tokenSort.value) {
         const end = start + MAX_ITEMS > erc20Tokens.value?.length ? erc20Tokens.value?.length : start + MAX_ITEMS
-        return tokenSort.value?.getSortedTokens(state.sortKey).slice(start, end)
+        return tokenSort.value?.getSortedTokens(state.sortKey)
     }
     return []
 })
