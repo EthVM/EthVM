@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, TOKEN_DETAILS } from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
 import TxDetailsView from '@view/ViewTxDetails.vue'
@@ -67,7 +67,7 @@ const routes: Array<RouteRecordRaw> = [
         name: ROUTE_NAME.TOKEN.NAME,
         component: TokenDetailsView,
         props: true,
-        beforeEnter: tabViewRouteGuard('token-view')
+        beforeEnter: tabViewRouteGuard(TOKEN_DETAILS[0])
     },
     {
         path: ROUTE_NAME.CHARTS.PATH,

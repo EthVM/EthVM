@@ -8,13 +8,13 @@
 
         <!-- Table Header -->
         <div v-if="!props.hasError">
-            <v-row align="center" justify="start" class="text-body-1 text-info">
+            <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
                 <v-col md="3"> Address </v-col>
-                <v-col sm="3" md="4">
+                <v-col sm="3" lg="4">
                     {{ isERC721 ? 'ID' : 'Quantity' }}
                 </v-col>
                 <v-col md="3"> USD Value </v-col>
-                <v-col sm="3" md="2">
+                <v-col sm="3" lg="2">
                     {{ isERC721 ? 'Image' : 'Percentage' }}
                 </v-col>
             </v-row>

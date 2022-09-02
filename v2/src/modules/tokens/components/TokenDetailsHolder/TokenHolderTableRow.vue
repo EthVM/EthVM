@@ -5,57 +5,72 @@
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <template v-if="!smAndDown">
-            <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
-                <!-- Column 1: Holders Address -->
-                <v-col sm="6" md="3">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="8" class="mr-2" />
-                        <app-transform-hash is-blue start="5" end="5" :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
-                    </div>
-                </v-col>
-                <!-- End Column 1 -->
+        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
+            <!-- Column 1: Holders Address -->
+            <v-col sm="3">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="8" class="mr-1 mr-sm-2" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                </div>
+            </v-col>
+            <!-- End Column 1 -->
 
-                <!-- Column 2: Balance -->
-                <v-col sm="1" md="4">
-                    <p class="mb-0 ml-2">
-                        {{ isERC721 ? getTokenID : balance.value }}
-                        <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
-                    </p>
-                </v-col>
-                <!-- End Column 2 -->
+            <!-- Column 2: Balance -->
+            <v-col sm="3" lg="4">
+                <p class="mb-0 ml-2">
+                    {{ isERC721 ? getTokenID : balance.value }}
+                    <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
+                </p>
+            </v-col>
+            <!-- End Column 2 -->
 
-                <!-- Column 3: USD Value (ERC20) -->
-                <v-col v-if="!isERC721" sm="3" md="3">
-                    <p class="mb-0">
-                        {{ share.value }}%
-                        <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
-                    </p>
-                </v-col>
-                <!-- End Column 3 -->
+            <!-- Column 3: USD Value (ERC20) -->
+            <v-col v-if="!isERC721" sm="3" md="3">
+                <p class="mb-0">
+                    {{ share.value }}%
+                    <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
+                </p>
+            </v-col>
+            <!-- End Column 3 -->
 
-                <!-- Column 3: USD Value (ERC721) -->
-                <v-col v-if="isERC721" sm="3" md="3">
-                    <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
-                </v-col>
-                <!-- End Column 3 -->
+            <!-- Column 3: USD Value (ERC721) -->
+            <v-col v-if="isERC721" sm="3" md="3">
+                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+            </v-col>
+            <!-- End Column 3 -->
 
-                <!-- Column 4: Share (ERC20) -->
-                <v-col v-if="!isERC721" sm="3" md="2">
-                    <p class="mb-0 ml-2">
-                        {{ share.value }}%
-                        <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
-                    </p>
-                </v-col>
-                <!-- End Column 4 -->
+            <!-- Column 4: Share (ERC20) -->
+            <v-col v-if="!isERC721" sm="3" lg="2">
+                <p class="mb-0 ml-2">
+                    {{ share.value }}%
+                    <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
+                </p>
+            </v-col>
+            <!-- End Column 4 -->
 
-                <!-- Column 3: Token Image (ERC721) -->
-                <v-col v-if="isERC721" sm="3" md="2">
-                    <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
-                </v-col>
-                <!-- End Column 3 -->
-            </v-row>
-        </template>
+            <!-- Column 3: Token Image (ERC721) -->
+            <v-col v-if="isERC721" sm="3" md="2">
+                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+            </v-col>
+            <!-- End Column 3 -->
+        </v-row>
+        <v-row class="d-sm-none my-5">
+            <v-col cols="6">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="6" class="mr-1" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                </div>
+            </v-col>
+            <v-col cols="6" class="text-right">
+                <p class="mb-2">
+                    {{ isERC721 ? getTokenID : balance.value }}
+                </p>
+                <div class="d-flex align-items-center justify-end">
+                    <p class="mr-2">{{ balance.value }}%</p>
+                    <p>{{ share.value }}%</p>
+                </div>
+            </v-col>
+        </v-row>
     </div>
 </template>
 

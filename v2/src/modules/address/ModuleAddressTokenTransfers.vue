@@ -469,13 +469,4 @@ const goToTokenTransfersPage = async (): Promise<void> => {
 .card-title {
     min-height: 50px;
 }
-
-.row-bg {
-    top: -20px;
-    bottom: 0;
-    left: -24px;
-    right: -24px;
-    position: absolute;
-    z-index: -1;
-}
 </style>

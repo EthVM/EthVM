@@ -8,13 +8,7 @@
         <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
             <!-- Column 1: Tx Hash -->
             <v-col sm="3" :md="2">
-                <app-transform-hash
-                    is-blue
-                    start="5"
-                    end="5"
-                    :hash="props.transfer.transfer.transactionHash"
-                    :link="`/tx/${props.transfer.transfer.transactionHash}`"
-                />
+                <app-transform-hash is-blue is-short :hash="props.transfer.transfer.transactionHash" :link="`/tx/${props.transfer.transfer.transactionHash}`" />
                 <p class="text-info d-md-none">
                     {{ timeAgo(date) }}
                 </p>
@@ -26,8 +20,7 @@
                     <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="8" class="mr-2" />
                     <app-transform-hash
                         is-blue
-                        start="5"
-                        end="5"
+                        is-short
                         :hash="eth.toCheckSum(props.transfer.transfer.from)"
                         :link="`/address/${props.transfer.transfer.from}`"
                     />
@@ -43,13 +36,7 @@
             <v-col sm="3" lg="2">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="8" class="mr-2" />
-                    <app-transform-hash
-                        is-blue
-                        start="5"
-                        end="5"
-                        :hash="eth.toCheckSum(props.transfer.transfer.to)"
-                        :link="`/address/${props.transfer.transfer.to}`"
-                    />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.transfer.transfer.to)" :link="`/address/${props.transfer.transfer.to}`" />
                 </div>
             </v-col>
             <!-- End Column 4 -->
@@ -72,48 +59,46 @@
             </v-col>
             <!-- End Column 6 -->
         </v-row>
-        <v-row justify="space-between d-sm-none my-5 text-subtitle-2 font-weight-regular" @click="toggleMoreDetails(props.transfer.transfer.transactionHash)">
+        <v-row
+            justify="space-between"
+            class="d-sm-none my-5 text-subtitle-2 font-weight-regular"
+            @click="toggleMoreDetails(props.transfer.transfer.transactionHash)"
+        >
             <v-col cols="6" sm="5">
-                <app-transform-hash
-                    is-blue
-                    start="5"
-                    end="5"
-                    :hash="props.transfer.transfer.transactionHash"
-                    :link="`/tx/${props.transfer.transfer.transactionHash}`"
-                />
+                <app-transform-hash is-blue is-short :hash="props.transfer.transfer.transactionHash" :link="`/tx/${props.transfer.transfer.transactionHash}`" />
                 <p class="text-info">{{ timeAgo(date) }}</p>
             </v-col>
             <v-col cols="6" sm="3">
                 <span>{{ transferValue.value }} {{ symbolFormatted }} </span>
             </v-col>
         </v-row>
-        <v-row v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" justify="space-between" align="center" class="d-sm-none">
-            <v-col cols="5">
-                <div class="d-flex align-center">
-                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="6" class="mr-2" />
-                    <app-transform-hash
-                        is-blue
-                        start="5"
-                        end="5"
-                        :hash="eth.toCheckSum(props.transfer.transfer.from)"
-                        :link="`/address/${props.transfer.transfer.from}`"
-                    />
-                </div>
-            </v-col>
-            <v-icon color="success">east</v-icon>
-            <v-col cols="5">
-                <div class="d-flex align-center">
-                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="6" class="mr-2" />
-                    <app-transform-hash
-                        is-blue
-                        start="5"
-                        end="5"
-                        :hash="eth.toCheckSum(props.transfer.transfer.to)"
-                        :link="`/address/${props.transfer.transfer.to}`"
-                    />
-                </div>
-            </v-col>
-        </v-row>
+        <transition name="slide-y-transition">
+            <v-row v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" justify="space-between" align="center" class="d-sm-none">
+                <v-col cols="5">
+                    <div class="d-flex align-center">
+                        <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="6" class="mr-2" />
+                        <app-transform-hash
+                            is-blue
+                            is-short
+                            :hash="eth.toCheckSum(props.transfer.transfer.from)"
+                            :link="`/address/${props.transfer.transfer.from}`"
+                        />
+                    </div>
+                </v-col>
+                <v-icon color="success">east</v-icon>
+                <v-col cols="5">
+                    <div class="d-flex align-center">
+                        <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="6" class="mr-2" />
+                        <app-transform-hash
+                            is-blue
+                            is-short
+                            :hash="eth.toCheckSum(props.transfer.transfer.to)"
+                            :link="`/address/${props.transfer.transfer.to}`"
+                        />
+                    </div>
+                </v-col>
+            </v-row>
+        </transition>
         <div v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" class="row-bg bg-tableGrey d-sm-none"></div>
     </div>
 </template>
@@ -215,14 +200,5 @@ const toggleMoreDetails = (transfer: string): void => {
 
 .tx-hash {
     min-width: 3em;
-}
-
-.row-bg {
-    top: -20px;
-    bottom: 0;
-    left: -24px;
-    right: -24px;
-    position: absolute;
-    z-index: -1;
 }
 </style>
