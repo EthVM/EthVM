@@ -80,8 +80,7 @@
                                 <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
                                 <app-transform-hash
                                     is-blue
-                                    start="5"
-                                    end="5"
+                                    is-short
                                     :hash="eth.toCheckSum(transferTypeAddress(transfer))"
                                     :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
                                 />
@@ -90,8 +89,7 @@
                         <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
                             <app-transform-hash
                                 is-blue
-                                start="5"
-                                end="5"
+                                is-short
                                 :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
                                 :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
                             />
@@ -144,8 +142,7 @@
                                         <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
                                         <app-transform-hash
                                             is-blue
-                                            start="5"
-                                            end="5"
+                                            is-short
                                             :hash="eth.toCheckSum(transferTypeAddress(transfer))"
                                             :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
                                         />
@@ -155,8 +152,7 @@
                                     <p class="text-info mb-2">Hash</p>
                                     <app-transform-hash
                                         is-blue
-                                        start="5"
-                                        end="5"
+                                        is-short
                                         :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
                                         :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
                                     />
