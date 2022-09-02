@@ -238,7 +238,7 @@ import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.c
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
 
-const MAX_ITEMS = 6
+const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6
 const MOBILE_MAX_ITEMS = 4
 const TYPES = ['in', 'out', 'self']
