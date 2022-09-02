@@ -25,7 +25,8 @@ const COLORS = {
     surfaceDM: '#121212',
     greyBackgroundLM: '#C2C7CE',
     greyLoading: '#dedbdd',
-    greyLight: '#F4F6FD'
+    greyLight: '#F4F6FD',
+    greyTableBGLight: '#F3F5F9'
 }
 const mainnetLightTheme: ThemeDefinition = {
     dark: false,
@@ -46,8 +47,10 @@ const mainnetLightTheme: ThemeDefinition = {
         'on-background': COLORS.navy,
         'on-surface': COLORS.navy,
         'on-primary': COLORS.white,
+        'on-success': COLORS.surfaceLM,
         'on-surface-tabs': COLORS.blue,
-        pillGrey: COLORS.greyLight
+        pillGrey: COLORS.greyLight,
+        tableGrey: COLORS.greyTableBGLight
     },
     variables: {
         'skeleton-gradient': 0.3
@@ -74,8 +77,10 @@ const mainnetDarkTheme: ThemeDefinition = {
         'on-surface': COLORS.lightBlue,
         'on-primary': COLORS.lightBlue,
         'on-secondary': COLORS.lightBlue,
+        'on-success': COLORS.surfaceDM,
         'on-surface-tabs': COLORS.lightBlue,
-        pillGrey: COLORS.greyBackdroundDM
+        pillGrey: COLORS.greyBackdroundDM,
+        tableGrey: COLORS.greyBackdroundDM
     },
     variables: {
         'skeleton-gradient': 0.03

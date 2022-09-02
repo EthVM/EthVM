@@ -1,18 +1,19 @@
 <template>
     <v-card :variant="!props.isOverview ? 'flat' : 'elevated'" :elevation="props.isOverview ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
-        <v-card-title class="d-flex justify-space-between align-center mb-5 px-0">
+        <v-card-title class="card-title d-flex justify-space-between align-center mb-5 px-0">
             <div>
                 <span v-if="props.isOverview" class="text-h6 font-weight-bold">{{ headerTitle }}</span>
                 <!-- Notice new update-->
                 <app-new-update :icon-only="props.isOverview" :text="newRewardsText" :update-count="props.newRewards" @reload="setPage(0, true)" />
             </div>
             <template v-if="props.isOverview">
-                <app-btn text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
+                <app-btn v-if="!smAndDown" text="More" isSmall icon="east" @click="goToAddressMiningPage"></app-btn>
+                <app-btn-icon v-else icon="more_horiz" @click="goToTokenTransfersPage"></app-btn-icon>
             </template>
         </v-card-title>
         <div>
             <!--Table Header-->
-            <v-row class="d-none d-sm-flex text-body-1 text-info">
+            <v-row class="d-none d-sm-flex text-body-1 text-info my-0">
                 <v-col md="3" class="py-0"> Block # </v-col>
                 <v-col md="3" class="py-0"> Reward </v-col>
                 <v-col md="3" class="py-0"> Balance Before </v-col>
@@ -24,7 +25,7 @@
                     <v-row :dense="xs" v-for="(reward, index) in rewards" :key="index" class="my-5 px-0 text-body-1 font-weight-regular" align="center">
                         <!-- Blocks Mined-->
                         <v-col cols="7" sm="3" class="py-0">
-                            <v-row class="ma-0 text-caption text-sm-body-1">
+                            <v-row class="d-flex flex-sm-column ma-0 text-caption text-sm-body-1">
                                 <v-col cols="6" sm="12" class="pa-0">
                                     <router-link :to="`/block/number/${reward.transfer.block}`" class="text-secondary">
                                         {{ reward.transfer.block }}
@@ -46,20 +47,14 @@
                         <!-- Balance After -->
                         <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
                     </v-row>
-                    <app-intersect v-if="!props.isOverview" @intersect="loadMoreData">
-                        <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
+                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                         <v-divider />
                     </app-intersect>
                 </template>
                 <template v-if="rewards.length < 1 && !isLoadingRewards">
                     <p class="text-h4 text-center my-2">No mining history available for this address</p>
                 </template>
-            </template>
-            <template v-if="isLoadingRewards">
-                <div v-for="item in 10" :key="item" class="my-2">
-                    <v-progress-linear color="lineGrey" value="40" indeterminate height="20" class="my-4 mx-2" />
-                    <v-divider />
-                </div>
             </template>
         </div>
     </v-card>
@@ -77,6 +72,7 @@ import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
 import { timeAgo } from '@core/helper'
@@ -85,9 +81,11 @@ import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
 
-const { xs } = useDisplay()
+const { xs, smAndDown, mdAndDown } = useDisplay()
 
+const MOBILE_MAX_ITEMS = 4
 const state = reactive({
     isEnd: 0,
     index: 0
@@ -182,7 +180,13 @@ const rewards = computed<Array<RewardTransferFragment | null>>(() => {
     if (!initialLoad.value && addressRewards.value) {
         const start = state.index * props.maxItems
         const end = start + props.maxItems > addressRewards.value?.transfers.length ? addressRewards.value?.transfers.length : start + props.maxItems
-        // return addressRewards.value?.transfers.slice(start, end)
+        // If on mobile screen and on overview page
+        if (mdAndDown.value && props.isOverview) {
+            return addressRewards.value?.transfers.slice(start, MOBILE_MAX_ITEMS)
+        }
+        if (props.isOverview) {
+            return addressRewards.value?.transfers.slice(start, props.maxItems)
+        }
         return addressRewards.value?.transfers
     }
     return []
@@ -323,7 +327,16 @@ const getRewardBalanceAfter = (reward: RewardTransferFragment): FormattedNumber 
 }
 
 const router = useRouter()
-const goToAddressMiningPage = (): void => {
-    router.push(`/address/${props.addressHash}/adr-miner-info?t=blocks`)
+const goToAddressMiningPage = async (): Promise<void> => {
+    await router.push({
+        name: ROUTE_NAME.ADDRESS_MINER.NAME,
+        query: { t: ADDRESS_ROUTE_QUERY.Q_MINER[0] }
+    })
 }
 </script>
+
+<style lang="scss" scoped>
+.card-title {
+    min-height: 50px;
+}
+</style>
