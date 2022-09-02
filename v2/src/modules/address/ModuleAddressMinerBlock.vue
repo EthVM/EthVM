@@ -13,7 +13,7 @@
         </v-card-title>
         <div>
             <!--Table Header-->
-            <v-row class="d-none d-sm-flex text-body-1 text-info">
+            <v-row class="d-none d-sm-flex text-body-1 text-info my-0">
                 <v-col md="3" class="py-0"> Block # </v-col>
                 <v-col md="3" class="py-0"> Reward </v-col>
                 <v-col md="3" class="py-0"> Balance Before </v-col>

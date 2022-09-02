@@ -50,7 +50,7 @@
                            =========================
                     -->
                     <template v-if="!mdAndDown">
-                        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
+                        <v-row class="my-5 px-0 text-body-1 font-weight-regular" align="center">
                             <v-col :cols="props.isOverview ? 3 : 2" class="py-0">
                                 <v-row class="ma-0 flex-nowrap" align="center">
                                     <img
@@ -69,7 +69,7 @@
                                             <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
                                             <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
                                         </router-link>
-                                        <p v-if="props.isOverview" class="text-info">
+                                        <p v-if="props.isOverview" class="text-info pt-1">
                                             {{ transfer.tokenInfo.symbol }}
                                         </p>
                                     </div>
@@ -99,8 +99,7 @@
                                     <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
                                     <app-transform-hash
                                         is-blue
-                                        start="5"
-                                        end="5"
+                                        is-short
                                         :hash="eth.toCheckSum(transferTypeAddress(transfer))"
                                         :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
                                     />
@@ -109,8 +108,7 @@
                             <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
                                 <app-transform-hash
                                     is-blue
-                                    start="5"
-                                    end="5"
+                                    is-short
                                     :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
                                     :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
                                 />
@@ -171,8 +169,7 @@
                                     <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
                                     <app-transform-hash
                                         is-blue
-                                        start="5"
-                                        end="5"
+                                        is-short
                                         :hash="eth.toCheckSum(transferTypeAddress(transfer))"
                                         :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
                                     />
@@ -184,8 +181,7 @@
                                 <p class="text-info mb-1">Hash</p>
                                 <app-transform-hash
                                     is-blue
-                                    start="5"
-                                    end="5"
+                                    is-short
                                     :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
                                     :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
                                 />

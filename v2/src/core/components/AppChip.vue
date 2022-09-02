@@ -31,7 +31,7 @@ const props = defineProps({
 })
 
 const chipClass = computed<string>(() => {
-    return `bg-${props.bg} ${props.color} chip-${props.size} rounded-${props.rounded}`
+    return `bg-${props.bg} ${props.color} chip-${props.size} rounded`
 })
 </script>
 

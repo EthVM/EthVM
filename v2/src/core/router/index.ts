@@ -95,7 +95,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
                 component: AddressTokensView,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressRouteGuard('tokens')
+                beforeEnter: addressRouteGuard(ROUTE_NAME.ADDRESS_TOKENS.NAME)
             },
             {
                 path: ROUTE_NAME.ADDRESS_NFTS.PATH,
@@ -115,7 +115,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_MINER.NAME,
                 component: ViewAddressMiners,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressRouteGuard('miner')
+                beforeEnter: addressRouteGuard(ROUTE_NAME.ADDRESS_MINER.NAME)
             }
         ]
     },

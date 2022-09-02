@@ -1,13 +1,13 @@
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from './routesNames'
 
 export const addressRouteGuard = (type: string) => {
     let tab: string
     switch (type) {
-        case 'token':
+        case ROUTE_NAME.ADDRESS_TOKENS.NAME:
             tab = ADDRESS_ROUTE_QUERY.Q_TOKENS[0]
             break
-        case 'miner':
+        case ROUTE_NAME.ADDRESS_MINER.NAME:
             tab = ADDRESS_ROUTE_QUERY.Q_MINER[0]
             break
     }

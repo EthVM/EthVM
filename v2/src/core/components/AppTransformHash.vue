@@ -2,12 +2,12 @@
     <div class="hash-container font-mono">
         <div v-if="!hasLink" :class="props.isBlue ? `secondary--text` : `black--text`">
             <div class="firstPart">{{ start }}</div>
-            <span v-if="props.start && props.end">...</span>
+            <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>
         </div>
         <router-link v-else :to="props.link || ''" :class="props.isBlue ? `text-secondary` : `black--text`">
             <div class="firstPart">{{ start }}</div>
-            <span v-if="props.start && props.end">...</span>
+            <span v-if="props.isShort">...</span>
             <div class="lastPart">{{ end }}</div>
         </router-link>
     </div>
@@ -30,28 +30,27 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    start: {
-        type: [Number, String],
-        required: false
-    },
-    end: {
-        type: [Number, String],
-        required: false
+    isShort: {
+        type: Boolean,
+        default: false
     }
 })
 
+const firstPartCount = 5
+const lastPartCount = 5
+
 const start = computed<string>(() => {
     const n = props.hash?.length
-    if (props.start) {
-        return props.hash?.slice(0, parseInt(props.start))
+    if (props.isShort) {
+        return props.hash?.slice(0, firstPartCount)
     }
     return props.hash?.slice(0, n - 4)
 })
 
 const end = computed<string>(() => {
     const n = props.hash?.length
-    if (props.end) {
-        return props.hash?.slice(n - parseInt(props.end), n)
+    if (props.isShort) {
+        return props.hash?.slice(n - lastPartCount, n)
     }
     return props.hash?.slice(n - 4, n)
 })
