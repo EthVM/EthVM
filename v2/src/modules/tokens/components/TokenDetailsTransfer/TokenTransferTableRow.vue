@@ -1,76 +1,120 @@
 <template>
-    <div>
+    <div class="position-relative">
         <!--
     =====================================================================================
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <template v-if="!smAndDown">
-            <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
-                <!-- Column 1: Tx Hash -->
-                <v-col :md="2">
+        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
+            <!-- Column 1: Tx Hash -->
+            <v-col sm="3" :md="2">
+                <app-transform-hash
+                    is-blue
+                    start="5"
+                    end="5"
+                    :hash="props.transfer.transfer.transactionHash"
+                    :link="`/tx/${props.transfer.transfer.transactionHash}`"
+                />
+                <p class="text-info d-md-none">
+                    {{ timeAgo(date) }}
+                </p>
+            </v-col>
+            <!-- End Column 1 -->
+            <!-- Column 2: From address -->
+            <v-col sm="3" lg="2">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="8" class="mr-2" />
                     <app-transform-hash
                         is-blue
                         start="5"
                         end="5"
-                        :hash="props.transfer.transfer.transactionHash"
-                        :link="`/tx/${props.transfer.transfer.transactionHash}`"
+                        :hash="eth.toCheckSum(props.transfer.transfer.from)"
+                        :link="`/address/${props.transfer.transfer.from}`"
                     />
-                </v-col>
-                <!-- End Column 1 -->
-                <!-- Column 2: From address -->
-                <v-col md="2">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="8" class="mr-2" />
-                        <app-transform-hash
-                            is-blue
-                            start="5"
-                            end="5"
-                            :hash="eth.toCheckSum(props.transfer.transfer.from)"
-                            :link="`/address/${props.transfer.transfer.from}`"
-                        />
-                    </div>
-                </v-col>
-                <!-- End Column 2 -->
-                <!-- Column 3: Direction Arrow -->
-                <v-col md="1">
-                    <v-icon color="success">east</v-icon>
-                </v-col>
-                <!-- End Column 3 -->
-                <!-- Column 4: To address -->
-                <v-col md="2">
-                    <div class="d-flex align-center">
-                        <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="8" class="mr-2" />
-                        <app-transform-hash
-                            is-blue
-                            start="5"
-                            end="5"
-                            :hash="eth.toCheckSum(props.transfer.transfer.to)"
-                            :link="`/address/${props.transfer.transfer.to}`"
-                        />
-                    </div>
-                </v-col>
-                <!-- End Column 4 -->
-                <!-- Column 5: Quantity/ID -->
-                <v-col :md="isERC721 ? 1 : 3">
-                    <p class="text-truncate">
-                        <span v-if="isERC721">{{ getTokenID }}</span>
-                        <span v-else>{{ transferValue.value }} {{ symbolFormatted }} </span>
-                    </p>
-                </v-col>
-                <!-- End Column 5 -->
-                <!-- Column 6: ERC721 Image -->
-                <v-col v-if="isERC721" md="2">
-                    <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
-                </v-col>
-                <!-- End Column 6 -->
-                <!-- Column 6: Age -->
-                <v-col md="2">
-                    {{ timeAgo(date) }}
-                </v-col>
-                <!-- End Column 6 -->
-            </v-row>
-        </template>
+                </div>
+            </v-col>
+            <!-- End Column 2 -->
+            <!-- Column 3: Direction Arrow -->
+            <v-col v-if="lgAndUp" md="1">
+                <v-icon color="success">east</v-icon>
+            </v-col>
+            <!-- End Column 3 -->
+            <!-- Column 4: To address -->
+            <v-col sm="3" lg="2">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="8" class="mr-2" />
+                    <app-transform-hash
+                        is-blue
+                        start="5"
+                        end="5"
+                        :hash="eth.toCheckSum(props.transfer.transfer.to)"
+                        :link="`/address/${props.transfer.transfer.to}`"
+                    />
+                </div>
+            </v-col>
+            <!-- End Column 4 -->
+            <!-- Column 5: Quantity/ID -->
+            <v-col :md="isERC721 ? 1 : 2" lg="3">
+                <p class="text-truncate">
+                    <span v-if="isERC721">{{ getTokenID }}</span>
+                    <span v-else>{{ transferValue.value }} {{ symbolFormatted }} </span>
+                </p>
+            </v-col>
+            <!-- End Column 5 -->
+            <!-- Column 6: ERC721 Image -->
+            <v-col v-if="isERC721" md="2">
+                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+            </v-col>
+            <!-- End Column 6 -->
+            <!-- Column 6: Age -->
+            <v-col md="2" class="d-none d-md-block">
+                {{ timeAgo(date) }}
+            </v-col>
+            <!-- End Column 6 -->
+        </v-row>
+        <v-row justify="space-between d-sm-none my-5 text-subtitle-2 font-weight-regular" @click="toggleMoreDetails(props.transfer.transfer.transactionHash)">
+            <v-col cols="6" sm="5">
+                <app-transform-hash
+                    is-blue
+                    start="5"
+                    end="5"
+                    :hash="props.transfer.transfer.transactionHash"
+                    :link="`/tx/${props.transfer.transfer.transactionHash}`"
+                />
+                <p class="text-info">{{ timeAgo(date) }}</p>
+            </v-col>
+            <v-col cols="6" sm="3">
+                <span>{{ transferValue.value }} {{ symbolFormatted }} </span>
+            </v-col>
+        </v-row>
+        <v-row v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" justify="space-between" align="center" class="d-sm-none">
+            <v-col cols="5">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="6" class="mr-2" />
+                    <app-transform-hash
+                        is-blue
+                        start="5"
+                        end="5"
+                        :hash="eth.toCheckSum(props.transfer.transfer.from)"
+                        :link="`/address/${props.transfer.transfer.from}`"
+                    />
+                </div>
+            </v-col>
+            <v-icon color="success">east</v-icon>
+            <v-col cols="5">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="6" class="mr-2" />
+                    <app-transform-hash
+                        is-blue
+                        start="5"
+                        end="5"
+                        :hash="eth.toCheckSum(props.transfer.transfer.to)"
+                        :link="`/address/${props.transfer.transfer.to}`"
+                    />
+                </div>
+            </v-col>
+        </v-row>
+        <div v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" class="row-bg bg-tableGrey d-sm-none"></div>
     </div>
 </template>
 
@@ -84,13 +128,13 @@ import {
 } from '@module/tokens/apollo/TokenDetailsTransfer/tokenTransfers.generated'
 import BN from 'bignumber.js'
 import configs from '@/configs'
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { formatFloatingPointValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { useDisplay } from 'vuetify'
 import { eth, timeAgo } from '@core/helper'
 const TYPES = ['ERC20', 'ERC721']
 
-const { smAndDown } = useDisplay()
+const { smAndDown, lgAndUp, sm } = useDisplay()
 
 interface PropType {
     transfer: Erc721TransferType | Erc20TokenTransferType
@@ -154,6 +198,15 @@ const getTokenID = computed<string>(() => {
 const onImageLoadFail = (): void => {
     state.imageExists = false
 }
+
+const visibleDetails = ref(new Set())
+const toggleMoreDetails = (transfer: string): void => {
+    if (visibleDetails.value.has(transfer)) {
+        visibleDetails.value.delete(transfer)
+    } else {
+        visibleDetails.value.add(transfer)
+    }
+}
 </script>
 <style scoped lang="css">
 .table-row-mobile {
@@ -162,5 +215,14 @@ const onImageLoadFail = (): void => {
 
 .tx-hash {
     min-width: 3em;
+}
+
+.row-bg {
+    top: -20px;
+    bottom: 0;
+    left: -24px;
+    right: -24px;
+    position: absolute;
+    z-index: -1;
 }
 </style>

@@ -8,17 +8,17 @@
 
         <!-- Table Header -->
         <div v-if="!props.hasError">
-            <v-row align="center" justify="start" class="text-body-1 text-info">
-                <v-col md="2"> Hash </v-col>
-                <v-col md="2"> From </v-col>
-                <v-spacer />
-                <v-col md="2"> To </v-col>
-                <v-col :md="isERC721 ? 1 : 3">
+            <v-row align="center" justify="start" class="text-body-1 text-info d-none d-sm-flex">
+                <v-col sm="3" md="2"> Hash </v-col>
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> From </v-col>
+                <v-spacer v-if="lgAndUp" />
+                <v-col sm="3" lg="2" class="d-none d-sm-block"> To </v-col>
+                <v-col sm="3" :md="isERC721 ? 1 : 2" lg="3">
                     <template v-if="!isERC721">Amount</template>
                     <template v-else>ID</template>
                 </v-col>
                 <v-col v-if="isERC721" sm="2"> Image </v-col>
-                <v-col md="2"> Age </v-col>
+                <v-col md="2" class="d-none d-md-block"> Timestamp </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <!-- End Table Header -->
@@ -50,7 +50,10 @@
 import { computed } from 'vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import TransfersTableRow from './TokenTransferTableRow.vue'
+import { useDisplay } from 'vuetify'
+
 const TYPES = ['ERC20', 'ERC721']
+const { lgAndUp } = useDisplay()
 
 interface PropType {
     transfers: any[]
