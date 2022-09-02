@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ROUTE_NAME } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
 import TxDetailsView from '@view/ViewTxDetails.vue'
@@ -95,7 +95,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
                 component: AddressTokensView,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressRouteGuard(ROUTE_NAME.ADDRESS_TOKENS.NAME)
+                beforeEnter: addressRouteGuard(ADDRESS_ROUTE_QUERY.Q_TOKENS[0])
             },
             {
                 path: ROUTE_NAME.ADDRESS_NFTS.PATH,
@@ -115,7 +115,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_MINER.NAME,
                 component: ViewAddressMiners,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressRouteGuard(ROUTE_NAME.ADDRESS_MINER.NAME)
+                beforeEnter: addressRouteGuard(ADDRESS_ROUTE_QUERY.Q_MINER[0])
             }
         ]
     },
