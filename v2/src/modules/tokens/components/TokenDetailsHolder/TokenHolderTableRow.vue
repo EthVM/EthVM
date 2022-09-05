@@ -19,21 +19,17 @@
             <v-col sm="3" lg="4">
                 <p class="mb-0 ml-2">
                     {{ isERC721 ? getTokenID : balance.value }}
-                    <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
                 </p>
             </v-col>
             <!-- End Column 2 -->
 
             <!-- Column 3: USD Value (ERC20) -->
             <v-col v-if="!isERC721" sm="3" md="3">
-                <p class="mb-0">
-                    {{ share.value }}%
-                    <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
-                </p>
+                <p class="mb-0">{{ usdValue.value }}</p>
             </v-col>
             <!-- End Column 3 -->
 
-            <!-- Column 3: USD Value (ERC721) -->
+            <!-- Column 3: Token Image (ERC721) -->
             <v-col v-if="isERC721" sm="3" md="3">
                 <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
             </v-col>
@@ -41,10 +37,7 @@
 
             <!-- Column 4: Share (ERC20) -->
             <v-col v-if="!isERC721" sm="3" lg="2">
-                <p class="mb-0 ml-2">
-                    {{ share.value }}%
-                    <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
-                </p>
+                <p class="mb-0 ml-2">{{ share.value }}%</p>
             </v-col>
             <!-- End Column 4 -->
 
@@ -82,10 +75,11 @@ import AppTooltip from '@core/components/AppTooltip.vue'
 import BN from 'bignumber.js'
 import configs from '@/configs'
 import { reactive, computed } from 'vue'
-import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
+import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { eth } from '@core/helper'
 import { Erc20TokenOwnerDetailsFragment } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
 import { useDisplay } from 'vuetify'
+import { TokenOwnersFragment as ERC20TokensType } from '@module/address/apollo/AddressTokens/tokens.generated'
 
 const TYPES = ['ERC20', 'ERC721']
 const { smAndDown } = useDisplay()
@@ -95,6 +89,7 @@ interface PropType {
     decimals?: number
     tokenAddress: string
     holderType: string
+    price: BN
 }
 
 const props = defineProps<PropType>()
@@ -143,6 +138,11 @@ const isERC721 = computed<boolean>(() => {
 
 const getTokenID = computed<string>(() => {
     return new BN(props.holder['token']).toString()
+})
+
+const usdValue = computed(() => {
+    const balanceBN = props.decimals ? new BigNumber(props.holder.balance).div(new BN(10).pow(props.decimals)) : new BigNumber(props.holder.balance)
+    return formatUsdValue(balanceBN.multipliedBy(props.price) || 0)
 })
 
 /*

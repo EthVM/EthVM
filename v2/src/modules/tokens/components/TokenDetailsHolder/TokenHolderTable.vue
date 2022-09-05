@@ -32,7 +32,13 @@
                     <v-card-text class="text-xs-center secondary--text">There are no holders of this token</v-card-text>
                 </div>
                 <div v-for="(holder, index) in props.holders" v-else :key="index">
-                    <holders-table-row :holder="holder" :token-address="props.address" :decimals="props.decimals" :holder-type="props.holderType" />
+                    <holders-table-row
+                        :holder="holder"
+                        :token-address="props.address"
+                        :decimals="props.decimals"
+                        :holder-type="props.holderType"
+                        :price="tokenPrice"
+                    />
                 </div>
                 <app-intersect v-if="props.hasMore" @intersect="loadMoreData">
                     <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
@@ -47,6 +53,8 @@
 import { computed } from 'vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import HoldersTableRow from './TokenHolderTableRow.vue'
+import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
+import BN from 'bignumber.js'
 const TYPES = ['ERC20', 'ERC721']
 
 interface PropType {
@@ -62,12 +70,18 @@ interface PropType {
     index: number
     address: string
     holderType: string
+    tokenData: TokenMarketData
 }
 const props = defineProps<PropType>()
 
 const emit = defineEmits<{
     (e: 'setPage', pageNumber: number, isReset: boolean): void
 }>()
+
+// Get price of token
+const tokenPrice = computed<BN>(() => {
+    return new BN(props.tokenData.current_price || 0)
+})
 
 /**
  * Sets page number and reset value and emit

@@ -63,7 +63,7 @@
                     </v-col>
                 </v-row>
                 <div class="d-md-none">
-                    <token-details-socials :token-details="tokenDetails" :is-nft="props.isNft" class="my-5" />
+                    <token-details-socials :token-details="tokenDetails" :is-nft="props.isNft" class="my-5" :is-loading="props.isLoading" />
                     <token-details-history :token-history="tokenHistory" class="my-5" />
                 </div>
             </v-card>

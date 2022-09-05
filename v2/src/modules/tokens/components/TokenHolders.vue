@@ -10,6 +10,7 @@
         :index="state.index"
         :has-error="state.hasError"
         :address="props.address"
+        :token-data="tokenData"
         :holder-type="holderType"
         :initial-load="initialLoad"
         @setPage="setPage"
@@ -27,6 +28,8 @@ import {
     useGetErc20TokenOwnersQuery,
     useGetErc721TokenOwnersQuery
 } from '@module/tokens/apollo/TokenDetailsHolder/tokenHolders.generated'
+import { useCoinData } from '@core/composables/CoinData/coinData.composable'
+import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 
 const TYPES = ['ERC20', 'ERC721']
 
@@ -54,6 +57,19 @@ const state: ComponentState = reactive({
     index: 0,
     isEnd: 0,
     hasError: false
+})
+
+const { getEthereumTokenByContract, loading: loadingCoinData } = useCoinData()
+const tokenData = computed<TokenMarketData | false>(() => {
+    if (props.address) {
+        try {
+            emitErrorState(false)
+            return getEthereumTokenByContract(props.address)
+        } catch (error) {
+            emitErrorState(true)
+        }
+    }
+    return false
 })
 
 const {
@@ -136,7 +152,7 @@ const holderType = computed<string>(() => {
 })
 
 const loading = computed<boolean>(() => {
-    return loadingErc20TokenHolder.value || loadingErc721TokenHolders.value
+    return loadingErc20TokenHolder.value || loadingErc721TokenHolders.value || loadingCoinData.value
 })
 
 const hasMoreERC20Holders = computed<boolean>(() => {
