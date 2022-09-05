@@ -76,7 +76,7 @@ watch(route, () => {
         state.holderAddress = query.holder as string
     } else {
         state.isHolder = false
-        state.holderAddress = undefined
+        state.holderAddress = ''
     }
     window.scrollTo(0, 0)
 })

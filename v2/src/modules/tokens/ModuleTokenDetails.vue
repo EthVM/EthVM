@@ -33,7 +33,7 @@
                         />
                     </v-window-item>
                     <v-window-item :value="routes[1]" :key="routes[1]">
-                        <token-holders :address="props.addressRef" :decimals="decimals" @errorDetails="emitErrorState" />
+                        <token-holders :address="props.addressRef" :decimals="decimals" @errorDetails="emitErrorState" @isNft="setTokenType" />
                     </v-window-item>
                 </v-window>
             </v-card>
@@ -219,5 +219,14 @@ METHODS:
 const emitErrorState = (val: boolean, message: ErrorMessageToken): void => {
     state.hasError = val
     emit('errorDetails', val, message)
+}
+
+/**
+ * Sets whether a token is erc721 or erc20
+ * @param val {Boolean}
+ */
+const setTokenType = (val: boolean) => {
+    console.log('Here now setting nft to', val)
+    state.isNft = val
 }
 </script>
