@@ -9,6 +9,7 @@
                         :is-short="smAndDown"
                         is-blue
                         :hash="eth.toCheckSum(props.tokenDetails.contract)"
+                        class="w-100"
                         :link="`/address/${props.tokenDetails.contract}`"
                     />
                 </template>
