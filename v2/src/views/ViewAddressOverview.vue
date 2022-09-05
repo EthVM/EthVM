@@ -10,7 +10,6 @@
             <module-address-token-balance :address-ref="props.addressRef" />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">
-            <!-- How the module can be used on the overview page -->
             <module-address-token-transfers :address-hash="props.addressRef" :new-erc20-transfer="newErc20Transfer" @resetCount="resetCount" is-overview />
         </v-col>
         <v-col cols="12" lg="6" :class="columnPadding">

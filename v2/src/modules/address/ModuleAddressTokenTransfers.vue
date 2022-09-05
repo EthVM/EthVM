@@ -69,7 +69,7 @@
                                             <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
                                             <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
                                         </router-link>
-                                        <p v-if="props.isOverview" class="text-info pt-1">
+                                        <p v-if="props.isOverview" class="text-info pt-1 text-ellipses">
                                             {{ transfer.tokenInfo.symbol }}
                                         </p>
                                     </div>
