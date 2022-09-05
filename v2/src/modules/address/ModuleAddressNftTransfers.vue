@@ -47,124 +47,132 @@
                 </div>
             </template>
             <template v-else>
-                <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
-                    <!--
-                                   ========================
-                                     Desktop View
-                                   =========================
-                            -->
-                    <v-row v-if="!mdAndDown" class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
-                        <v-col :cols="props.isOverview ? 4 : 3" class="py-0">
-                            <v-row class="ma-0 flex-nowrap" align="center">
-                                <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
-                                <div style="display: grid">
-                                    <router-link
-                                        v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
-                                        :to="`/token/${transfer.contract}`"
-                                        class="text-textPrimary text-ellipses"
-                                    >
-                                        <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
-                                        <p v-else class="text-uppercase caption text-ellipses">N/A</p>
-                                    </router-link>
-                                </div>
-                            </v-row>
-                        </v-col>
-                        <v-col :cols="props.isOverview ? 2 : 1" class="text-info py-0 text-ellipses">
-                            {{ getTotalTokens(transfer) }}
-                        </v-col>
-                        <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
-                            <app-chip :bg="transferType(transfer) === 'in' ? 'success' : 'warning'" :text="transferType(transfer) === 'in' ? 'From' : 'To'" />
-                        </v-col>
-                        <v-col :cols="props.isOverview ? 4 : 3" class="text-secondary py-0">
-                            <div class="d-flex align-center">
-                                <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
-                                <app-transform-hash
-                                    is-blue
-                                    is-short
-                                    :hash="eth.toCheckSum(transferTypeAddress(transfer))"
-                                    :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
-                                />
-                            </div>
-                        </v-col>
-                        <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
-                            <app-transform-hash
-                                is-blue
-                                is-short
-                                :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                                :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
-                            />
-                        </v-col>
-                        <v-col v-if="!props.isOverview" cols="2" class="text-info py-0">
-                            {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
-                        </v-col>
-                    </v-row>
-                    <!--
-                                   ========================
-                                     Mobile/Tablet View
-                                   =========================
-                            -->
-                    <template v-else>
-                        <v-row
-                            class="mt-5 mx-0 text-subtitle-2 font-weight-regular justify-space-between align-start flex-nowrap"
-                            :class="visibleDetails.has(transfer.transfer.transactionHash) ? 'mb-3' : 'mb-5'"
-                            @click="toggleMoreDetails(transfer.transfer.transactionHash)"
-                        >
-                            <div class="flex-shrink-0">
-                                <div class="d-flex align-center flex-nowrap mb-2">
-                                    <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) === 'in' ? 'bg-success' : 'bg-warning'">
-                                        <v-icon size="12">
-                                            {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
-                                        </v-icon>
+                <template v-if="transfers.length < 1">
+                    <p class="text-h4 text-center my-2">This address does not hold any NFTs (ERC721 tokens)</p>
+                </template>
+                <template v-else>
+                    <div v-for="(transfer, index) in transfers" :key="`${transfer.transfer.transactionHash} - ${index}`" class="position-relative">
+                        <!--
+                                       ========================
+                                         Desktop View
+                                       =========================
+                                -->
+                        <v-row v-if="!mdAndDown" class="my-5 px-0 text-subtitle-2 font-weight-regular" align="center">
+                            <v-col :cols="props.isOverview ? 4 : 3" class="py-0">
+                                <v-row class="ma-0 flex-nowrap" align="center">
+                                    <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
+                                    <div style="display: grid">
+                                        <router-link
+                                            v-if="transfer.tokenInfo.name !== '' || transfer.tokenInfo.symbol"
+                                            :to="`/token/${transfer.contract}`"
+                                            class="text-textPrimary text-ellipses"
+                                        >
+                                            <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
+                                            <p v-else class="text-uppercase caption text-ellipses">N/A</p>
+                                        </router-link>
                                     </div>
-                                    <span>
-                                        {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
-                                    </span>
-                                </div>
-                                <p class="text-info">{{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}</p>
-                            </div>
-                            <v-col v-if="!visibleDetails.has(transfer.transfer.transactionHash)" cols="6" class="pa-0">
-                                <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
+                                </v-row>
                             </v-col>
-                            <div class="d-flex align-center">
-                                <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
-                            </div>
-                        </v-row>
-                        <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg bg-tableGrey"></div>
-                        <div v-if="visibleDetails.has(transfer.transfer.transactionHash)">
-                            <v-row class="mx-0 justify-space-between text-subtitle-2 font-weight-regular mb-2">
-                                <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
-                                <p>{{ getTotalTokens(transfer) }} Copies</p>
-                            </v-row>
-                            <v-row class="ma-0 justify-space-between text-subtitle-2 font-weight-regular pb-5">
-                                <div>
-                                    <p class="text-info mb-2">From</p>
-                                    <div class="d-flex">
-                                        <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
-                                        <app-transform-hash
-                                            is-blue
-                                            is-short
-                                            :hash="eth.toCheckSum(transferTypeAddress(transfer))"
-                                            :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-info mb-2">Hash</p>
+                            <v-col :cols="props.isOverview ? 2 : 1" class="text-info py-0 text-ellipses">
+                                {{ getTotalTokens(transfer) }}
+                            </v-col>
+                            <v-col :cols="props.isOverview ? 2 : 1" class="py-0">
+                                <app-chip
+                                    :bg="transferType(transfer) === 'in' ? 'success' : 'warning'"
+                                    :text="transferType(transfer) === 'in' ? 'From' : 'To'"
+                                />
+                            </v-col>
+                            <v-col :cols="props.isOverview ? 4 : 3" class="text-secondary py-0">
+                                <div class="d-flex align-center">
+                                    <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
                                     <app-transform-hash
                                         is-blue
                                         is-short
-                                        :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
-                                        :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
+                                        :hash="eth.toCheckSum(transferTypeAddress(transfer))"
+                                        :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
                                     />
                                 </div>
+                            </v-col>
+                            <v-col v-if="!props.isOverview" cols="2" class="text-secondary py-0">
+                                <app-transform-hash
+                                    is-blue
+                                    is-short
+                                    :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                    :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
+                                />
+                            </v-col>
+                            <v-col v-if="!props.isOverview" cols="2" class="text-info py-0">
+                                {{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}
+                            </v-col>
+                        </v-row>
+                        <!--
+                                       ========================
+                                         Mobile/Tablet View
+                                       =========================
+                                -->
+                        <template v-else>
+                            <v-row
+                                class="mt-5 mx-0 text-subtitle-2 font-weight-regular justify-space-between align-start flex-nowrap"
+                                :class="visibleDetails.has(transfer.transfer.transactionHash) ? 'mb-3' : 'mb-5'"
+                                @click="toggleMoreDetails(transfer.transfer.transactionHash)"
+                            >
+                                <div class="flex-shrink-0">
+                                    <div class="d-flex align-center flex-nowrap mb-2">
+                                        <div class="mobile-chip rounded-circle mr-2" :class="transferType(transfer) === 'in' ? 'bg-success' : 'bg-warning'">
+                                            <v-icon size="12">
+                                                {{ transferType(transfer) === 'in' ? 'south_east' : 'north_west' }}
+                                            </v-icon>
+                                        </div>
+                                        <span>
+                                            {{ transferType(transfer) === 'in' ? 'Received' : 'Sent' }}
+                                        </span>
+                                    </div>
+                                    <p class="text-info">{{ timeAgo(new Date(transfer.transfer.timestamp * 1e3)) }}</p>
+                                </div>
+                                <v-col v-if="!visibleDetails.has(transfer.transfer.transactionHash)" cols="6" class="pa-0">
+                                    <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
+                                </v-col>
+                                <div class="d-flex align-center">
+                                    <img :src="getImg(transfer)" alt="" height="41" width="41" class="mr-2 rounded-circle" />
+                                </div>
                             </v-row>
-                        </div>
-                    </template>
-                </div>
-                <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
-                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
-                    <v-divider />
-                </app-intersect>
+                            <div v-if="visibleDetails.has(transfer.transfer.transactionHash)" class="row-bg bg-tableGrey"></div>
+                            <div v-if="visibleDetails.has(transfer.transfer.transactionHash)">
+                                <v-row class="mx-0 justify-space-between text-subtitle-2 font-weight-regular mb-2">
+                                    <p v-if="transfer.tokenInfo.name" class="text-center">{{ transfer.tokenInfo.name }}</p>
+                                    <p>{{ getTotalTokens(transfer) }} Copies</p>
+                                </v-row>
+                                <v-row class="ma-0 justify-space-between text-subtitle-2 font-weight-regular pb-5">
+                                    <div>
+                                        <p class="text-info mb-2">From</p>
+                                        <div class="d-flex">
+                                            <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
+                                            <app-transform-hash
+                                                is-blue
+                                                is-short
+                                                :hash="eth.toCheckSum(transferTypeAddress(transfer))"
+                                                :link="`/address/${eth.toCheckSum(transferTypeAddress(transfer))}`"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-info mb-2">Hash</p>
+                                        <app-transform-hash
+                                            is-blue
+                                            is-short
+                                            :hash="eth.toCheckSum(transfer.transfer.transactionHash)"
+                                            :link="`/tx/${eth.toCheckSum(transfer.transfer.transactionHash)}`"
+                                        />
+                                    </div>
+                                </v-row>
+                            </div>
+                        </template>
+                    </div>
+                    <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <v-divider />
+                    </app-intersect>
+                </template>
             </template>
         </div>
     </v-card>
