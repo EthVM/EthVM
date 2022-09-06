@@ -3,7 +3,7 @@ name: add to ethvmBuild
 on:
   push:
     branches:
-      - develop/api-test
+      - v2/api-test
     branches-ignore:
       - 'develop'
       - 'master'
