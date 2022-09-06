@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - v2/api-test
-    branches-ignore:
-      - 'develop'
-      - 'master'
-
 jobs:
   ethvmBuild:
     runs-on: ubuntu-latest
