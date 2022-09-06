@@ -9,18 +9,18 @@
         "build": "vue-cli-service --mode production build",
         "build:staging": "vue-cli-service --mode staging build",
         "build:dev": "vue-cli-service --mode development build",
-        "build:hash": "ROUTER_MODE=hash pnpm build:dev",
+        "build:hash": "ROUTER_MODE=hash yarn build:dev",
         "clean": "rm -rf dist/",
         "depcheck": "depcheck --config=.depcheckrc",
         "lint": "vue-cli-service lint --no-fix",
         "lint:fix": "vue-cli-service lint --fix",
         "apollo": "apollo",
         "apollo:schema": "apollo service:download ./src/apollo/schemas/api.json",
-        "apollo:codegen": "pnpm apollo:schema && apollo client:codegen --target=typescript  --globalTypesFile=./src/apollo/global/globalTypes.ts  apolloTypes"
+        "apollo:codegen": "yarn apollo:schema && apollo client:codegen --target=typescript  --globalTypesFile=./src/apollo/global/globalTypes.ts  apolloTypes"
     },
     "husky": {
         "hooks": {
-            "pre-commit": "bash ./checkBranch.sh && pnpm lint:fix",
+            "pre-commit": "bash ./checkBranch.sh && yarn lint:fix",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     },
