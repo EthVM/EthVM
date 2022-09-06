@@ -1,4 +1,3 @@
-
 const configs = {
     APOLLO_HTTP: 'https://baghkyu21b.execute-api.us-west-2.amazonaws.com/dev/',
     APOLLO_WS: 'wss://baghkyu21b.execute-api.us-west-2.amazonaws.com/dev',
