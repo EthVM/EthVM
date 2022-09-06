@@ -11,30 +11,27 @@ jobs:
       #Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v3
-      # Use pnpm
-      - name: Use pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 6.32.10
-      # Use node in .nvmrc and cache dependencies
+      # Use node in .nvmrc and cache dependencies with yarn
       - name: Set up
         uses: actions/setup-node@v3
         with:
           node-version-file: 'newclient/.nvmrc'
-          cache: pnpm
-          cache-dependency-path: newclient/pnpm-lock.yaml
+          cache: yarn
+      - run: yarn install --frozen-lockfile # optional, --immutable
+      - run: yarn test
+
       #Install
-      - name: pnpm Install
-        run:  cd ./newclient && pnpm install
+      - name: yarn Install
+        run:  cd ./newclient && yarn install
       # Lint Code
-      - name: pnpm Lint
-        run: cd ./newclient && pnpm lint
+      - name: yarn Lint
+        run: cd ./newclient && yarn lint
       #Generate code from most recent GraphQL schema
-      - name: pnpm generate schema
-        run: cd ./newclient && pnpm apollo:codegen
+      - name: yarn generate schema
+        run: cd ./newclient && yarn apollo:codegen
       # Build (temp dev mode)
       - name: build
-        run: cd ./newclient && pnpm build:hash
+        run: cd ./newclient && yarn build:hash
         env:
           VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
           VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
