@@ -11,23 +11,6 @@
         <block-stats :new-block="newBlockNumber" @errorBlockStats="setError" />
         <!--
         =====================================================================================
-          Live Charts
-        =====================================================================================
-        -->
-        <v-layout row wrap justify-center mb-4 fill-height>
-            <v-flex xs12 md6>
-                <v-card flat color="white" height="100%">
-                    <home-gas-price-chart />
-                </v-card>
-            </v-flex>
-            <v-flex xs12 md6>
-                <v-card flat color="white" height="100%">
-                    <home-tx-chart />
-                </v-card>
-            </v-flex>
-        </v-layout>
-        <!--
-        =====================================================================================
           Latest Blocks
         =====================================================================================
         -->
@@ -54,8 +37,6 @@ import AppBreadCrumbs from '@app/core/components/ui/AppBreadCrumbs.vue'
 import AppMessage from '@app/core/components/ui/AppMessage.vue'
 import BlockStats from '@app/modules/blocks/handlers/BlockStats/BlockStats.vue'
 import { NewBlockSubscription } from '@app/modules/blocks/NewBlockSubscription/newBlockSubscription.mixin'
-import HomeGasPriceChart from '@app/modules/charts/handlers/HomeGasPriceChart.vue'
-import HomeTxChart from '@app/modules/charts/handlers/HomeTxChart.vue'
 import RecentBlocks from '@app/modules/blocks/handlers/RecentBlocks/RecentBlocks.vue'
 import HomeTxs from '@app/modules/txs/handlers/BlockTxs/BlockTxs.vue'
 import { Component, Mixins } from 'vue-property-decorator'
@@ -71,8 +52,6 @@ const MAX_ITEMS = 10
         BlockStats,
         RecentBlocks,
         HomeTxs,
-        HomeGasPriceChart,
-        HomeTxChart
     }
 })
 export default class PageHome extends Mixins(NewBlockSubscription) {
