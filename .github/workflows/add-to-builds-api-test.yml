@@ -21,7 +21,6 @@ jobs:
       # Install
       - name: Install
         run: cd ./newclient && yarn install --frozen-lockfile # optional, --immutable
-        run: yarn test
       # Lint Code
       - name: yarn Lint
         run: cd ./newclient && yarn lint
