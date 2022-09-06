@@ -17,12 +17,8 @@ jobs:
         with:
           node-version-file: 'newclient/.nvmrc'
           cache: yarn
-      - run: yarn install --frozen-lockfile # optional, --immutable
+      - run: cd ./newclient && yarn install --frozen-lockfile # optional, --immutable
       - run: yarn test
-
-      #Install
-      - name: yarn Install
-        run:  cd ./newclient && yarn install
       # Lint Code
       - name: yarn Lint
         run: cd ./newclient && yarn lint
