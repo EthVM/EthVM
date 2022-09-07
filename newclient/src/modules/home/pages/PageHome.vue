@@ -51,7 +51,7 @@ const MAX_ITEMS = 10
         AppMessage,
         BlockStats,
         RecentBlocks,
-        HomeTxs,
+        HomeTxs
     }
 })
 export default class PageHome extends Mixins(NewBlockSubscription) {
