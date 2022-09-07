@@ -84,7 +84,7 @@
                             </v-col>
                             <v-col :cols="props.isOverview ? 4 : 3" class="text-secondary py-0">
                                 <div class="d-flex align-center">
-                                    <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-5" />
+                                    <app-address-blockie :address="transferTypeAddress(transfer) || ''" :size="6" class="mr-5" />
                                     <app-transform-hash
                                         is-blue
                                         is-short
@@ -146,7 +146,7 @@
                                     <div>
                                         <p class="text-info mb-2">From</p>
                                         <div class="d-flex">
-                                            <app-address-blockie :address="eth.toCheckSum(transferTypeAddress(transfer)) || ''" :size="6" class="mr-2" />
+                                            <app-address-blockie :address="transferTypeAddress(transfer) || ''" :size="6" class="mr-2" />
                                             <app-transform-hash
                                                 is-blue
                                                 is-short
