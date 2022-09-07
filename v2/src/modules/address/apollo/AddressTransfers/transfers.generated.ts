@@ -86,6 +86,35 @@ export type GetAddressErc20TransfersQuery = {
     }
 }
 
+export type Erc721TransferFragmentFragment = {
+    __typename?: 'ERC721Transfer'
+    token: string
+    contract: string
+    transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+    tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
+}
+
+export type GetAddressErc721TransfersQueryVariables = Types.Exact<{
+    hash: Types.Scalars['String']
+    _limit?: Types.InputMaybe<Types.Scalars['Int']>
+    _nextKey?: Types.InputMaybe<Types.Scalars['String']>
+}>
+
+export type GetAddressErc721TransfersQuery = {
+    __typename?: 'Query'
+    getERC721Transfers: {
+        __typename?: 'ERC721Transfers'
+        nextKey?: string | null
+        transfers: Array<{
+            __typename?: 'ERC721Transfer'
+            token: string
+            contract: string
+            transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
+            tokenInfo: { __typename?: 'EthTokenInfo'; name?: string | null }
+        } | null>
+    }
+}
+
 export type GetTransactionStateDiffQueryVariables = Types.Exact<{
     hash: Types.Scalars['String']
 }>
@@ -126,6 +155,19 @@ export const TransferFragmentFragmentDoc = gql`
     ${TransferSummaryFragmentDoc}
     ${BalanceFragmentFragmentDoc}
     ${TokenFragmentFragmentDoc}
+`
+export const Erc721TransferFragmentFragmentDoc = gql`
+    fragment Erc721TransferFragment on ERC721Transfer {
+        transfer {
+            ...TransferSummary
+        }
+        token
+        contract
+        tokenInfo {
+            name
+        }
+    }
+    ${TransferSummaryFragmentDoc}
 `
 export const GetAddressEthTransfersDocument = gql`
     query getAddressEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
@@ -267,6 +309,71 @@ export function useGetAddressErc20TransfersLazyQuery(
 export type GetAddressErc20TransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
     GetAddressErc20TransfersQuery,
     GetAddressErc20TransfersQueryVariables
+>
+export const GetAddressErc721TransfersDocument = gql`
+    query getAddressERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+        getERC721Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+            transfers {
+                ...Erc721TransferFragment
+            }
+            nextKey
+        }
+    }
+    ${Erc721TransferFragmentFragmentDoc}
+`
+
+/**
+ * __useGetAddressErc721TransfersQuery__
+ *
+ * To run a query within a Vue component, call `useGetAddressErc721TransfersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAddressErc721TransfersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetAddressErc721TransfersQuery({
+ *   hash: // value for 'hash'
+ *   _limit: // value for '_limit'
+ *   _nextKey: // value for '_nextKey'
+ * });
+ */
+export function useGetAddressErc721TransfersQuery(
+    variables:
+        | GetAddressErc721TransfersQueryVariables
+        | VueCompositionApi.Ref<GetAddressErc721TransfersQueryVariables>
+        | ReactiveFunction<GetAddressErc721TransfersQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>> = {}
+) {
+    return VueApolloComposable.useQuery<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>(
+        GetAddressErc721TransfersDocument,
+        variables,
+        options
+    )
+}
+export function useGetAddressErc721TransfersLazyQuery(
+    variables:
+        | GetAddressErc721TransfersQueryVariables
+        | VueCompositionApi.Ref<GetAddressErc721TransfersQueryVariables>
+        | ReactiveFunction<GetAddressErc721TransfersQueryVariables>,
+    options:
+        | VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>
+        | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>>
+        | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>> = {}
+) {
+    return VueApolloComposable.useLazyQuery<GetAddressErc721TransfersQuery, GetAddressErc721TransfersQueryVariables>(
+        GetAddressErc721TransfersDocument,
+        variables,
+        options
+    )
+}
+export type GetAddressErc721TransfersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<
+    GetAddressErc721TransfersQuery,
+    GetAddressErc721TransfersQueryVariables
 >
 export const GetTransactionStateDiffDocument = gql`
     query getTransactionStateDiff($hash: String!) {

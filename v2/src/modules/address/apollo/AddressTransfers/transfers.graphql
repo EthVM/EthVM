@@ -66,6 +66,26 @@ query getAddressERC20Transfers($hash: String!, $_limit: Int, $_nextKey: String) 
     }
 }
 
+fragment Erc721TransferFragment on ERC721Transfer {
+    transfer {
+        ...TransferSummary
+    }
+    token
+    contract
+    tokenInfo {
+        name
+    }
+}
+
+query getAddressERC721Transfers($hash: String!, $_limit: Int, $_nextKey: String) {
+    getERC721Transfers(owner: $hash, limit: $_limit, nextKey: $_nextKey) {
+        transfers {
+            ...Erc721TransferFragment
+        }
+        nextKey
+    }
+}
+
 query getTransactionStateDiff($hash: String!){
     getTransactionStateDiff(hash: $hash) {
         owner
