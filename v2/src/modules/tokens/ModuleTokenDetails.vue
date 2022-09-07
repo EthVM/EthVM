@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 1390px; max-width: 100%">
+    <div>
         <!--
     =====================================================================================
       BASIC VIEW
@@ -145,7 +145,6 @@ onMounted(() => {
         emitErrorState(true, ErrorMessageToken.invalid)
         return
     }
-    window.scrollTo(0, 0)
     state.tab = props.tab
 })
 
@@ -226,7 +225,6 @@ const emitErrorState = (val: boolean, message: ErrorMessageToken): void => {
  * @param val {Boolean}
  */
 const setTokenType = (val: boolean) => {
-    console.log('Here now setting nft to', val)
     state.isNft = val
 }
 </script>

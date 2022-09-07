@@ -17,7 +17,7 @@
             <!-- Column 2: From address -->
             <v-col sm="3" lg="2">
                 <div class="d-flex align-center">
-                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="8" class="mr-2" />
+                    <app-address-blockie :address="props.transfer.transfer.from || ''" :size="8" class="mr-2" />
                     <app-transform-hash
                         is-blue
                         is-short
@@ -35,7 +35,7 @@
             <!-- Column 4: To address -->
             <v-col sm="3" lg="2">
                 <div class="d-flex align-center">
-                    <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="8" class="mr-2" />
+                    <app-address-blockie :address="props.transfer.transfer.to || ''" :size="8" class="mr-2" />
                     <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.transfer.transfer.to)" :link="`/address/${props.transfer.transfer.to}`" />
                 </div>
             </v-col>
@@ -76,7 +76,7 @@
             <v-row v-if="visibleDetails.has(props.transfer.transfer.transactionHash)" justify="space-between" align="center" class="d-sm-none">
                 <v-col cols="5">
                     <div class="d-flex align-center">
-                        <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.from) || ''" :size="6" class="mr-2" />
+                        <app-address-blockie :address="props.transfer.transfer.from || ''" :size="6" class="mr-2" />
                         <app-transform-hash
                             is-blue
                             is-short
@@ -88,7 +88,7 @@
                 <v-icon color="success">east</v-icon>
                 <v-col cols="5">
                     <div class="d-flex align-center">
-                        <app-address-blockie :address="eth.toCheckSum(props.transfer.transfer.to) || ''" :size="6" class="mr-2" />
+                        <app-address-blockie :address="props.transfer.transfer.to || ''" :size="6" class="mr-2" />
                         <app-transform-hash
                             is-blue
                             is-short

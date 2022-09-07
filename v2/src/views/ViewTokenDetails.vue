@@ -78,7 +78,6 @@ watch(route, () => {
         state.isHolder = false
         state.holderAddress = ''
     }
-    window.scrollTo(0, 0)
 })
 
 /*

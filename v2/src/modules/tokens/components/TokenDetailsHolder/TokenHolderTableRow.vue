@@ -9,7 +9,7 @@
             <!-- Column 1: Holders Address -->
             <v-col sm="3">
                 <div class="d-flex align-center">
-                    <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="8" class="mr-1 mr-sm-2" />
+                    <app-address-blockie :address="props.holder.owner || ''" :size="8" class="mr-1 mr-sm-2" />
                     <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
                 </div>
             </v-col>
