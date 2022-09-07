@@ -141,10 +141,22 @@
                             </v-row>
                         </v-col>
                         <v-col md="1">
-                            <app-btn-icon :icon="favoriteTokens.has(token.contract) ? 'star' : 'star_outline'" @click="setFavoriteTokens(token.contract)" />
+                            <app-btn-icon
+                                :icon="favoriteTokens.has(token.contract) ? 'star' : 'star_outline'"
+                                @click="setFavoriteTokens(token.contract)"
+                                size="24"
+                            />
                         </v-col>
                     </v-row>
                 </div>
+            </div>
+            <div v-else>
+                <v-row justify="center" class="my-0">
+                    <v-col md="10" class="bg-background rounded-lg mt-10 mb-8 py-12 text-center">
+                        <v-icon>info</v-icon>
+                        No results found. Please try again
+                    </v-col>
+                </v-row>
             </div>
         </v-card>
     </div>
