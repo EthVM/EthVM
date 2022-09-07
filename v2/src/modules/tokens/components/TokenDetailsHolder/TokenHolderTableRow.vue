@@ -1,64 +1,95 @@
 <template>
-    <div pa-0 ma-0>
+    <div>
         <!--
     =====================================================================================
       Tablet/ Desktop (SM - XL)
     =====================================================================================
     -->
-        <v-col v-if="!smAndDown">
-            <v-row grid-list-xs row wrap align="center" justify="start" class="fill-height pl-3 pr-2 pt-2 pb-1 text-subtitle-2 font-weight-regular">
-                <!-- Column 1: Holders Address -->
-                <v-col sm="6" class="pr-4">
-                    <app-transform-hash :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
-                </v-col>
-                <!-- End Column 1 -->
+        <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
+            <!-- Column 1: Holders Address -->
+            <v-col sm="3">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="props.holder.owner || ''" :size="8" class="mr-1 mr-sm-2" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                </div>
+            </v-col>
+            <!-- End Column 1 -->
 
-                <!-- Column 2: Balance -->
-                <v-col sm="1" md="4">
-                    <p class="mb-0 ml-2">
-                        {{ isERC721 ? getTokenID : balance.value }}
-                        <app-tooltip v-if="balance.tooltipText" :text="balance.tooltipText" />
-                    </p>
-                </v-col>
-                <!-- End Column 2 -->
+            <!-- Column 2: Balance -->
+            <v-col sm="3" lg="4">
+                <p class="mb-0 ml-2">
+                    {{ isERC721 ? getTokenID : balance.value }}
+                </p>
+            </v-col>
+            <!-- End Column 2 -->
 
-                <!-- Column 3: Share (ERC20) -->
-                <v-col v-if="!isERC721" sm="3" md="2">
-                    <p class="mb-0 ml-2">
-                        {{ share.value }}%
-                        <app-tooltip v-if="share.tooltipText && !isERC721" :text="share.tooltipText" />
-                    </p>
-                </v-col>
-                <!-- End Column 3 -->
+            <!-- Column 3: USD Value (ERC20) -->
+            <v-col v-if="!isERC721" sm="3" md="3">
+                <p class="mb-0">{{ usdValue.value }}</p>
+            </v-col>
+            <!-- End Column 3 -->
 
-                <!-- Column 3: Token Image (ERC721) -->
-                <v-col v-if="isERC721" sm="3" md="2">
-                    <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
-                </v-col>
-                <!-- End Column 3 -->
-            </v-row>
-            <v-divider class="mb-2 mt-2" />
-        </v-col>
+            <!-- Column 3: Token Image (ERC721) -->
+            <v-col v-if="isERC721" sm="3" md="3">
+                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+            </v-col>
+            <!-- End Column 3 -->
+
+            <!-- Column 4: Share (ERC20) -->
+            <v-col v-if="!isERC721" sm="3" lg="2">
+                <p class="mb-0 ml-2">{{ share.value }}%</p>
+            </v-col>
+            <!-- End Column 4 -->
+
+            <!-- Column 3: Token Image (ERC721) -->
+            <v-col v-if="isERC721" sm="3" md="2">
+                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
+            </v-col>
+            <!-- End Column 3 -->
+        </v-row>
+        <v-row class="d-sm-none my-5">
+            <v-col cols="6">
+                <div class="d-flex align-center">
+                    <app-address-blockie :address="eth.toCheckSum(props.holder.owner) || ''" :size="6" class="mr-1" />
+                    <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
+                </div>
+            </v-col>
+            <v-col cols="6" class="text-right">
+                <p class="mb-2">
+                    {{ isERC721 ? getTokenID : balance.value }}
+                </p>
+                <div class="d-flex align-items-center justify-end">
+                    <p class="mr-2">{{ balance.value }}%</p>
+                    <p>{{ share.value }}%</p>
+                </div>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
 <script setup lang="ts">
 import AppTransformHash from '@core/components/AppTransformHash.vue'
+import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import BigNumber from 'bignumber.js'
 import AppTooltip from '@core/components/AppTooltip.vue'
 import BN from 'bignumber.js'
 import configs from '@/configs'
 import { reactive, computed } from 'vue'
-import { formatFloatingPointValue, formatPercentageValue, FormattedNumber } from '@core/helper/number-format-helper'
+import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { eth } from '@core/helper'
 import { Erc20TokenOwnerDetailsFragment } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
+import { useDisplay } from 'vuetify'
+import { TokenOwnersFragment as ERC20TokensType } from '@module/address/apollo/AddressTokens/tokens.generated'
+
 const TYPES = ['ERC20', 'ERC721']
+const { smAndDown } = useDisplay()
 
 interface PropType {
     holder: Erc20TokenOwnerDetailsFragment
     decimals?: number
     tokenAddress: string
     holderType: string
+    price: BN
 }
 
 const props = defineProps<PropType>()
@@ -107,6 +138,11 @@ const isERC721 = computed<boolean>(() => {
 
 const getTokenID = computed<string>(() => {
     return new BN(props.holder['token']).toString()
+})
+
+const usdValue = computed(() => {
+    const balanceBN = props.decimals ? new BigNumber(props.holder.balance).div(new BN(10).pow(props.decimals)) : new BigNumber(props.holder.balance)
+    return formatUsdValue(balanceBN.multipliedBy(props.price) || 0)
 })
 
 /*

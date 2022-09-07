@@ -67,3 +67,12 @@ a {
         color: rgb(var(--v-theme-surface)) !important;
     }
 }
+
+.row-bg {
+    top: -20px;
+    bottom: 0;
+    left: -24px;
+    right: -24px;
+    position: absolute;
+    z-index: -1;
+}

@@ -69,7 +69,7 @@
                                             <p v-if="transfer.tokenInfo.name" class="text-ellipses">{{ transfer.tokenInfo.name }}</p>
                                             <p v-else class="text-uppercase caption text-ellipses">{{ transfer.tokenInfo.symbol }}</p>
                                         </router-link>
-                                        <p v-if="props.isOverview" class="text-info pt-1">
+                                        <p v-if="props.isOverview" class="text-info pt-1 text-ellipses">
                                             {{ transfer.tokenInfo.symbol }}
                                         </p>
                                     </div>
@@ -469,14 +469,5 @@ const goToTokenTransfersPage = async (): Promise<void> => {
 <style lang="scss" scoped>
 .card-title {
     min-height: 50px;
-}
-
-.row-bg {
-    top: -20px;
-    bottom: 0;
-    left: -24px;
-    right: -24px;
-    position: absolute;
-    z-index: -1;
 }
 </style>
