@@ -17,8 +17,8 @@
                     />
                 </v-col>
             </v-row>
-            <v-row align="center" justify="start" class="text-body-1 text-info my-0">
-                <v-col md="3">
+            <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
+                <v-col sm="4" md="3">
                     <v-row align="center" class="ma-0">
                         <p>Token</p>
                         <app-btn-icon
@@ -37,7 +37,7 @@
                         />
                     </v-row>
                 </v-col>
-                <v-col md="2">
+                <v-col sm="3" md="2">
                     <v-row align="center" class="ma-0">
                         <p>Price</p>
                         <app-btn-icon
@@ -56,8 +56,8 @@
                         />
                     </v-row>
                 </v-col>
-                <v-col md="2"> %Change (24H) </v-col>
-                <v-col md="2">
+                <v-col sm="3" md="2"> %Change (24H) </v-col>
+                <v-col md="2" class="d-none d-md-block">
                     <v-row align="center" class="ma-0">
                         <p>Volume</p>
                         <app-btn-icon
@@ -76,7 +76,7 @@
                         />
                     </v-row>
                 </v-col>
-                <v-col cols="2">
+                <v-col md="2" class="d-none d-md-block">
                     <v-row align="center" class="ma-0">
                         <p>Market Cap</p>
                         <app-btn-icon
@@ -95,69 +95,33 @@
                         />
                     </v-row>
                 </v-col>
-                <v-col md="1"> Watchlist </v-col>
+                <v-col sm="2" md="1"> Watchlist </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
-            <div v-if="tokensInPage.length > 0">
-                <div v-for="token in tokensInPage" :key="token.symbol">
-                    <v-row align="center" justify="start" class="my-5">
-                        <v-col md="3">
-                            <v-row align="center" class="ma-0">
-                                <div class="mr-4">
-                                    <v-img :src="getTokenImage(token)" width="25px" height="25px" />
-                                </div>
-                                <router-link v-if="token.symbol || token.name" :to="`/token/${token.contract}`" class="text-body-1 text-link">
-                                    <p class="text-textPrimary">{{ token.name }}</p>
-                                    <span v-if="token.symbol" class="text-info text-uppercase">{{ token.symbol }}</span>
-                                </router-link>
-                                <div v-else>
-                                    <p>Contract:</p>
-                                    <app-transform-hash :hash="eth.toCheckSum(token.contract)" :link="`/token/${token.contract}`" />
-                                </div>
-                            </v-row>
-                        </v-col>
-                        <v-col md="2">
-                            <v-row align="center" class="ma-0">
-                                <p class="mb-0">
-                                    {{ getTokenPrice(token).value }}
-                                </p>
-                            </v-row>
-                        </v-col>
-                        <v-col md="2">
-                            <p :class="priceChangeClass(token)">{{ percentageChange(token).value }}%</p>
-                        </v-col>
-                        <v-col md="2">
-                            <v-row align="center" class="ma-0">
-                                <p class="mb-0">
-                                    {{ getTokenVolume(token).value }}
-                                </p>
-                            </v-row>
-                        </v-col>
-                        <v-col md="2">
-                            <v-row align="center" class="ma-0">
-                                <p class="mb-0">
-                                    {{ getTokenMarketCap(token).value }}
-                                </p>
-                            </v-row>
-                        </v-col>
-                        <v-col md="1">
-                            <app-btn-icon
-                                :icon="favoriteTokens.has(token.contract) ? 'star' : 'star_outline'"
-                                @click="setFavoriteTokens(token.contract)"
-                                size="24"
-                            />
+            <template v-if="!loadingCoinData">
+                <div v-if="tokensInPage.length > 0">
+                    <div v-for="token in tokensInPage" :key="token.symbol">
+                        <token-market-info-table-row :token="token" :favorite-tokens="favoriteTokens" @set-favorite="setFavoriteTokens" />
+                    </div>
+                    <app-intersect v-if="totalPages > 1" @intersect="loadMoreData">
+                        <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                        <v-divider />
+                    </app-intersect>
+                </div>
+                <div v-else>
+                    <v-row justify="center" class="my-0">
+                        <v-col md="10" class="bg-background rounded-lg mt-10 mb-8 py-12 text-center">
+                            <v-icon>info</v-icon>
+                            No results found. Please try again
                         </v-col>
                     </v-row>
                 </div>
-            </div>
-            <div v-else>
-                <v-row justify="center" class="my-0">
-                    <v-col md="10" class="bg-background rounded-lg mt-10 mb-8 py-12 text-center">
-                        <v-icon>info</v-icon>
-                        No results found. Please try again
-                    </v-col>
-                </v-row>
-            </div>
+            </template>
+            <template v-else>
+                <div v-for="item in 10" :key="item" class="my-2">
+                    <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
+                </div>
+            </template>
         </v-card>
     </div>
 </template>
@@ -165,16 +129,15 @@
 <script setup lang="ts">
 import AppTableTitle from '@core/components/AppTableTitle.vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
-import AppTransformHash from '@core/components/AppTransformHash.vue'
-import AppTooltip from '@core/components/AppTooltip.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TokenMarketInfoTableRow'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify'
 import { ref, computed, watch, reactive, onMounted } from 'vue'
 import { useStore } from '@/store'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import BN from 'bignumber.js'
-import { eth } from '@core/helper'
 import { formatIntegerValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 
 const MAX_TOKENS = 200
@@ -211,7 +174,7 @@ const state: ComponentState = reactive({
     tokenSearch: ''
 })
 
-const { ethereumTokens } = useCoinData()
+const { ethereumTokens, loading: loadingCoinData } = useCoinData()
 
 class TokensSorted {
     /* Properties: */
@@ -266,10 +229,9 @@ const tokenFilteredByName = computed<Array<TokenMarketData | null>>(() => {
 })
 
 const tokensInPage = computed<Array<TokenMarketData | null>>(() => {
-    const start = state.index * state.maxItems
+    const start = 0
     if (!store.loadingCoinData && state.tokens) {
-        const end = start + state.maxItems > tokenFilteredByName.value.length ? tokenFilteredByName.value.length : start + state.maxItems
-        return tokenFilteredByName.value.slice(start, end)
+        return tokenFilteredByName.value.slice(start, state.index * state.maxItems || state.maxItems)
     }
     return []
 })
@@ -284,42 +246,6 @@ const totalPages = computed<number>(() => {
  */
 const setPage = (page: number): void => {
     state.index = page
-}
-
-const getTokenImage = (token: TokenMarketData): string => {
-    return token.image || require('@/assets/icon-token.png')
-}
-
-const getTokenPrice = (token: TokenMarketData): FormattedNumber => {
-    const price = token.current_price || 0
-    return formatUsdValue(new BN(price))
-}
-
-const getTokenVolume = (token: TokenMarketData): FormattedNumber => {
-    const volume = token.total_volume || 0
-    return formatIntegerValue(new BN(volume))
-}
-
-const getTokenMarketCap = (token: TokenMarketData): FormattedNumber => {
-    const marketCap = token.market_cap || 0
-    return formatIntegerValue(new BN(marketCap))
-}
-
-const percentageChange = (token: TokenMarketData): FormattedNumber => {
-    const change = token.price_change_percentage_24h || 0
-    return formatPercentageValue(new BN(change))
-}
-
-const priceChangeClass = (token: TokenMarketData): string => {
-    const change = token.price_change_percentage_24h || 0
-
-    if (change > 0) {
-        return 'text-success'
-    }
-    if (change < 0) {
-        return 'text-error'
-    }
-    return 'text-textPrimary'
 }
 
 const sortTokens = (key: string, direction: string): void => {
@@ -346,7 +272,7 @@ const setTokensData = (): void => {
     state.tokensByVolume = new TokensSorted(state.tokensByMarketCap.ascend, KEY_VOLUME)
 }
 
-const favoriteTokens = ref(new Set())
+const favoriteTokens = ref(new Set<string>())
 
 const setFavoriteTokens = (tokenContract: string): void => {
     if (!favoriteTokens.value.has(tokenContract)) {
@@ -354,6 +280,10 @@ const setFavoriteTokens = (tokenContract: string): void => {
     } else {
         favoriteTokens.value.delete(tokenContract)
     }
+}
+
+const loadMoreData = (e: boolean): void => {
+    setPage(state.index + 1)
 }
 
 watch(

@@ -103,7 +103,7 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_NAME.ADDRESS_NFTS.NAME,
                 component: ViewAddressNfts,
                 props: route => ({ tab: route.query.t }),
-                beforeEnter: addressRouteGuard(ADDRESS_ROUTE_QUERY.Q_NFTS[0])
+                beforeEnter: tabViewRouteGuard(ADDRESS_ROUTE_QUERY.Q_NFTS[0])
             },
             {
                 path: ROUTE_NAME.ADDRESS_CONTRACT.PATH,
