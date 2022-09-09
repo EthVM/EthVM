@@ -18,7 +18,7 @@
                 </v-col>
             </v-row>
             <v-row align="center" justify="start" class="text-body-1 text-info my-0 d-none d-sm-flex">
-                <v-col sm="4" md="3">
+                <v-col sm="4" md="2" lg="3">
                     <v-row align="center" class="ma-0">
                         <p>Token</p>
                         <app-btn-icon
@@ -95,7 +95,7 @@
                         />
                     </v-row>
                 </v-col>
-                <v-col sm="2" md="1"> Watchlist </v-col>
+                <v-col sm="2" md="2" lg="1"> Watchlist </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="!loadingCoinData">
@@ -237,7 +237,7 @@ const tokensInPage = computed<Array<TokenMarketData | null>>(() => {
 })
 
 const totalPages = computed<number>(() => {
-    return Math.ceil(new BN(state.tokens.length).div(state.maxItems).toNumber())
+    return Math.ceil(new BN(tokenFilteredByName.value.length).div(state.maxItems).toNumber())
 })
 
 /**
