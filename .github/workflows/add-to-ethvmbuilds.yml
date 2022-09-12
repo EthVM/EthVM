@@ -7,7 +7,7 @@ on:
       - 'develop'
       - 'master'
       - 'v2/develop'
-      -  'develop/api-test'
+      -  'v2/api-test'
     tags-ignore:
       - '*'
 

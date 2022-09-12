@@ -8,6 +8,7 @@
 //==============================================================
 
 export enum AddressEventType {
+  NEW_ERC1155_TRANSFER = "NEW_ERC1155_TRANSFER",
   NEW_ERC20_TRANSFER = "NEW_ERC20_TRANSFER",
   NEW_ERC721_TRANSFER = "NEW_ERC721_TRANSFER",
   NEW_ETH_TRANSFER = "NEW_ETH_TRANSFER",
@@ -31,12 +32,13 @@ export enum TimeseriesScale {
   seconds = "seconds",
 }
 
-export enum TransferFilter {
-  FROM = "FROM",
-  TO = "TO",
+export enum TransferDirection {
+  INCOMING = "INCOMING",
+  OUTGOING = "OUTGOING",
 }
 
 export enum TransferType {
+  ERC1155 = "ERC1155",
   ERC20 = "ERC20",
   ERC721 = "ERC721",
   ETH = "ETH",

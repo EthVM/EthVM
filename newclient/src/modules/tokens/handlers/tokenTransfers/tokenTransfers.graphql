@@ -32,7 +32,7 @@ query getERC721TokenTransfers($hash: String!, $_limit: Int, $_nextKey: String) {
             transfer {
                 ...TransferSummary
             }
-            token
+            tokenId
             contract
             tokenInfo {
                 ...TokenInfo

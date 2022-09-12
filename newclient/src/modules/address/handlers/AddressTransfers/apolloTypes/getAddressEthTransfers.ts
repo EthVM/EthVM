@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { TransferFilter } from "./../../../../../apollo/global/globalTypes";
+import { TransferDirection } from "./../../../../../apollo/global/globalTypes";
 
 // ====================================================
 // GraphQL query operation: getAddressEthTransfers
@@ -57,7 +57,7 @@ export interface getAddressEthTransfers {
 
 export interface getAddressEthTransfersVariables {
   hash?: string | null;
-  filter?: TransferFilter | null;
+  filter?: TransferDirection | null;
   _limit?: number | null;
   _nextKey?: string | null;
 }
