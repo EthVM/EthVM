@@ -1,0 +1,11 @@
+fragment blockInfo on LatestBlockData {
+    number
+    avgBlockTime
+    hashRate
+    difficulty
+}
+query getLatestBlockInfo {
+    getLatestBlockInfo {
+        ...blockInfo
+    }
+}

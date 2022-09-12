@@ -46,11 +46,6 @@ export interface getAddrRewardsBlock_getBlockRewards {
 }
 
 export interface getAddrRewardsBlock {
-  /**
-   * ------------------------------------------------
-   * Transfers:
-   * ------------------------------------------------
-   */
   getBlockRewards: getAddrRewardsBlock_getBlockRewards;
 }
 

@@ -1,0 +1,29 @@
+type PrimaryAssetContract {
+    address: String!
+    name: String
+    symbol: String
+    total_supply: Int
+    description: String
+    external_link: String
+    image_url: String
+}
+type NFTContract {
+    contractIdAddress: String!
+    owned_asset_count: Int!
+    name: String
+    description: String
+    contractImage: String
+    primary_asset_contracts: [PrimaryAssetContract!]
+}
+
+type AddressNFTcontracts {
+    address: String!
+    tokenContracts: [NFTContract]
+}
+
+extend type Query {
+    getNFTcontractsMeta(address: String!): AddressNFTcontracts!
+}
+
+directive @rest(type: String!, path: String!, method: String, endpoint: String, bodyKey: String = "input") on FIELD
+directive @type(name: String!) on FIELD

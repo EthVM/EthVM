@@ -10,11 +10,6 @@ import { HashType } from "./../../../../apollo/global/globalTypes";
 // ====================================================
 
 export interface getHashType {
-  /**
-   * ------------------------------------------------
-   * Helpers:
-   * ------------------------------------------------
-   */
   getHashType: HashType;
 }
 

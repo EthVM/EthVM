@@ -16,11 +16,6 @@ export interface getContractInfo_getContractMeta {
 }
 
 export interface getContractInfo {
-  /**
-   * ------------------------------------------------
-   * Contracts:
-   * ------------------------------------------------
-   */
   getContractMeta: getContractInfo_getContractMeta;
 }
 

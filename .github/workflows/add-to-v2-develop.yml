@@ -1,0 +1,69 @@
+name: add to develop
+
+on:
+  push:
+    branches:
+      - v2/develop
+
+jobs:
+  add-to-v2-develop:
+    runs-on: ubuntu-latest
+    steps:
+      #Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Use pnpm
+      - name: Use pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.10
+      # Use node in .nvmrc and cache dependencies
+      - name: Set up
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: 'v2/.nvmrc'
+          cache: pnpm
+          cache-dependency-path: v2/pnpm-lock.yaml
+      #Install
+      - name: pnpm Install
+        run:  cd ./v2 && pnpm install
+      # Lint Code
+      - name: pnpm Lint
+        run: cd ./v2 && pnpm lint
+      #Generate code from most recent GraphQL schema
+      - name: pnpm generate schema
+        run: cd ./v2 && pnpm codegen-generate
+      # Build (temp dev mode)
+      - name: build
+        run: cd ./v2 && pnpm build
+        env:
+          VUE_APP_SENTRY_SECURITY_TOKEN: ${{ secrets.VUE_APP_SENTRY_SECURITY_TOKEN }}
+          VUE_APP_SENTRY_SECURITY_DSN: ${{ secrets.VUE_APP_SENTRY_SECURITY_DSN }}
+          VUE_APP_ETH_NETWORK: ${{ secrets.VUE_APP_ETH_NETWORK }}
+          VUE_APP_PUBLIC_URL: ${{ secrets.VUE_APP_PUBLIC_URL }}
+          VUE_APP_HTTP_LINK: ${{ secrets.VUE_APP_HTTP_LINK }}
+          VUE_APP_WS_CLIENT: ${{ secrets.VUE_APP_WS_CLIENT }}
+          VUE_APP_OPENSEA_API: ${{ secrets.VUE_APP_OPENSEA_API }}
+      # Deploy to S3
+      - name: Deploy to S3
+        if: github.base_ref == ''
+        env:
+          AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          VIRUS_TOTAL_API_KEY: ${{secrets.VIRUS_TOTAL_API_KEY}}
+          GITHUB_TOKEN: ${{secrets.MEW_BOT_API_KEY}}
+        run: |
+          cd ./v2
+          pip install --user awscli
+          aws s3 sync --delete --acl public-read dist/ s3://ethvm-mainnet-web/v2-develop
+          aws s3 cp s3://ethvm-mainnet-web/v2-develop/index.html s3://ethvm-mainnet-web/v2-develop/index.html \
+            --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
+            --content-type text/html --acl public-read
+          cd dist && zip -r ../ethVM-$GITHUB_SHA.zip * && cd ..
+          VIRUS_TOTAL_URL=`curl -s -F "file=@ethVM-$GITHUB_SHA.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
+          curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+            -d "{\"body\": \"Copy of this build can be found at <br/>https://v2.ethvm.dev<br/> \
+                            Virus Total analysis <br/> \
+                            $VIRUS_TOTAL_URL\"}" \
+                            "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"

@@ -86,7 +86,7 @@ import { ErrorMessage } from '../../models/ErrorMessagesForAddress'
 import { getLatestPrices_getLatestPrices as TokenMarketData } from '@app/core/components/mixins/CoinData/apolloTypes/getLatestPrices'
 import { CoinData } from '@app/core/components/mixins/CoinData/CoinData.mixin'
 import { excpInvariantViolation } from '@app/apollo/exceptions/errorExceptions'
-
+import { TransferDirection } from '@app/apollo/global/globalTypes'
 const TYPES = ['in', 'out', 'self']
 
 @Component({
@@ -251,11 +251,11 @@ export default class AddressTransers extends Mixins(CoinData) {
             },
             {
                 text: this.$i18n.t('filter.in'),
-                value: 'TO'
+                value: TransferDirection.INCOMING
             },
             {
                 text: this.$i18n.t('filter.out'),
-                value: 'FROM'
+                value: TransferDirection.OUTGOING
             }
         ]
     }
