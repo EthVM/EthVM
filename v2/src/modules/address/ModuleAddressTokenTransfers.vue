@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'

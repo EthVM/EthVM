@@ -22,31 +22,9 @@
             <v-divider class="my-0 mt-sm-4 mx-n4 mx-sm-n6" />
             <template v-if="!initialLoad">
                 <template v-if="rewards.length > 0">
-                    <v-row :dense="xs" v-for="(reward, index) in rewards" :key="index" class="my-5 px-0 text-body-1 font-weight-regular" align="center">
-                        <!-- Blocks Mined-->
-                        <v-col cols="7" sm="3" class="py-0">
-                            <v-row class="d-flex flex-sm-column ma-0 text-caption text-sm-body-1">
-                                <v-col cols="6" sm="12" class="pa-0">
-                                    <router-link :to="`/block/number/${reward.transfer.block}`" class="text-secondary">
-                                        {{ reward.transfer.block }}
-                                    </router-link>
-                                </v-col>
-                                <v-col cols="6" sm="12" class="pa-0 pt-sm-1">
-                                    <p class="text-info font-regular">
-                                        {{ timeAgo(new Date(reward.transfer.timestamp) * 1e3, xs) }}
-                                    </p>
-                                </v-col>
-                            </v-row>
-                        </v-col>
-                        <!-- Mined Rewards -->
-                        <v-col cols="5" sm="3" class="py-0">
-                            <p class="text-right text-sm-left">+ {{ getMiningReward(reward).value }} ETH</p>
-                        </v-col>
-                        <!-- Balance Before -->
-                        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceBefore(reward).value }} ETH </v-col>
-                        <!-- Balance After -->
-                        <v-col md="3" class="d-none d-sm-block py-0"> {{ getRewardBalanceAfter(reward).value }} ETH </v-col>
-                    </v-row>
+                    <div v-for="(reward, index) in rewards" :key="index">
+                        <minor-blocks-table-row :reward="reward" />
+                    </div>
                     <app-intersect v-if="!props.isOverview && hasMore" @intersect="loadMoreData">
                         <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                         <v-divider />
@@ -61,29 +39,24 @@
 </template>
 
 <script setup lang="ts">
+import { computed, reactive, ref } from 'vue'
+import MinorBlocksTableRow from '@module/address/components/MinerBlocks/MinorBlocksTableRow.vue'
+import AppNewUpdate from '@core/components/AppNewUpdate.vue'
+import AppBtn from '@core/components/AppBtn.vue'
+import AppBtnIcon from '@core/components/AppBtnIcon.vue'
+import AppIntersect from '@core/components/AppIntersect.vue'
 import {
     RewardSummaryFragment,
     RewardTransferFragment,
     useGetAddrRewardsBlockQuery,
     useGetAddrRewardsUncleQuery
 } from '@module/address/apollo/AddressRewards/rewards.generated'
-import { computed, reactive, ref, onMounted, watch } from 'vue'
-import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
-import AppTooltip from '@core/components/AppTooltip.vue'
-import AppNewUpdate from '@core/components/AppNewUpdate.vue'
-import AppBtn from '@core/components/AppBtn.vue'
-import AppBtnIcon from '@core/components/AppBtnIcon.vue'
-import AppIntersect from '@core/components/AppIntersect.vue'
 import { excpInvariantViolation } from '@/apollo/errorExceptions'
-import { timeAgo } from '@core/helper'
-import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
-import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { ROUTE_NAME, ADDRESS_ROUTE_QUERY } from '@core/router/routesNames'
-
-const { xs, smAndDown, mdAndDown } = useDisplay()
+const { smAndDown, mdAndDown } = useDisplay()
 
 const MOBILE_MAX_ITEMS = 4
 const state = reactive({
@@ -179,7 +152,6 @@ const headerTitle = computed<string>(() => {
 const rewards = computed<Array<RewardTransferFragment | null>>(() => {
     if (!initialLoad.value && addressRewards.value) {
         const start = state.index * props.maxItems
-        const end = start + props.maxItems > addressRewards.value?.transfers.length ? addressRewards.value?.transfers.length : start + props.maxItems
         // If on mobile screen and on overview page
         if (mdAndDown.value && props.isOverview) {
             return addressRewards.value?.transfers.slice(start, MOBILE_MAX_ITEMS)
@@ -208,10 +180,6 @@ const isLoadingRewards = computed<boolean>(() => {
 
 const hasMore = computed<boolean>(() => {
     return !!addressRewards.value && addressRewards?.value.nextKey !== null
-})
-
-const showPagination = computed<boolean>(() => {
-    return !initialLoad.value && !!addressRewards.value && addressRewards.value.nextKey !== null
 })
 
 const eventType = computed<AddressEventType>(() => {
@@ -302,28 +270,6 @@ const loadMoreData = (e: boolean): void => {
     if (addressRewards.value && e && !props.isOverview) {
         setPage(state.index + 1)
     }
-}
-
-const getMiningReward = (reward: RewardTransferFragment): FormattedNumber | null => {
-    if (reward) {
-        const _reward = new BN(reward.value)
-        return formatNonVariableEthValue(_reward)
-    }
-    return null
-}
-
-const getRewardBalanceBefore = (reward: RewardTransferFragment): FormattedNumber => {
-    if (reward.stateDiff && reward.stateDiff.to) {
-        return formatNonVariableEthValue(new BN(reward.stateDiff.to.before))
-    }
-    return { value: '0' }
-}
-
-const getRewardBalanceAfter = (reward: RewardTransferFragment): FormattedNumber => {
-    if (reward.stateDiff && reward.stateDiff.to) {
-        return formatNonVariableEthValue(new BN(reward.stateDiff.to.after))
-    }
-    return { value: '0' }
 }
 
 const router = useRouter()

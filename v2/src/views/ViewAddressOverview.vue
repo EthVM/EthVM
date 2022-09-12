@@ -38,7 +38,6 @@ import ModuleAddressTokenTransfers from '@module/address/ModuleAddressTokenTrans
 import { useAddressUpdate } from '@core/composables/AddressUpdate/addressUpdate.composable'
 import { useAppViewGrid } from '@core/composables/AppViewGrid/AppViewGrid.composable'
 import ModuleAddressNftTransfers from '@module/address/ModuleAddressNftTransfers.vue'
-const MAX_ITEMS = 10
 
 const props = defineProps({
     addressRef: { type: String, required: true }

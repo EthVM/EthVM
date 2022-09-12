@@ -119,7 +119,7 @@ import { useDisplay } from 'vuetify'
 import { eth, timeAgo } from '@core/helper'
 const TYPES = ['ERC20', 'ERC721']
 
-const { smAndDown, lgAndUp, sm } = useDisplay()
+const { lgAndUp } = useDisplay()
 
 interface PropType {
     transfer: Erc721TransferType | Erc20TokenTransferType

@@ -94,7 +94,6 @@
 
 <script setup lang="ts">
 import { Detail } from '@core/components/props'
-import AppDetailsList from '@core/components/AppDetailsList.vue'
 import TokenDetailsSocials from '@module/tokens/components/TokenDetailsSocials.vue'
 import { Hex } from '@core/models'
 import BN from 'bignumber.js'
@@ -147,13 +146,6 @@ const emitErrorState = (val: boolean): void => {
     emit('errorDetails', val, ErrorMessageToken.details)
 }
 
-/**
- * Image loading failed catcher
- */
-const imgLoadFail = (): void => {
-    state.imageExists = false
-}
-
 /*
 ===================================================================================
   Computed Values
@@ -172,25 +164,6 @@ const tokenData = computed<TokenMarketData | false>(() => {
     return false
 })
 
-/**
- * Create properly-formatted title from tokenDetails
- *
- * @return {String} - Title for details list
- */
-const title = computed<string>(() => {
-    let name = 'Token'
-    let symbol = ''
-    let holder = ''
-    if (props.tokenDetails && !props.isLoading) {
-        name = props.tokenDetails.name === null ? name : props.tokenDetails.name
-        symbol = props.tokenDetails.symbol === null || !props.tokenDetails.symbol ? symbol : `(${props.tokenDetails.symbol.toUpperCase()}) `
-    }
-    if (props.holderDetails && props.holderDetails.owner) {
-        holder = `- Filtered by Holder`
-    }
-    return `${name} ${symbol} ${holder}`
-})
-
 const tokenName = computed<string>(() => {
     return props.tokenDetails?.name || ''
 })
@@ -205,14 +178,6 @@ const image = computed<string>(() => {
 
 const loadingTokenData = computed<boolean>(() => {
     return loadingCoinData.value || props.isLoading
-})
-
-/**
- * Properly format the Details[] array for the details table.
- * If the data hasn't been loaded yet, then only include the titles in the details.
- */
-const details = computed<Detail[]>(() => {
-    return props.holderDetails ? holderDetailsList.value : tokenDetailsList.value
 })
 
 /**

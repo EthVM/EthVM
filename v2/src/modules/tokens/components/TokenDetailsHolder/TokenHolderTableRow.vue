@@ -71,18 +71,14 @@
 import AppTransformHash from '@core/components/AppTransformHash.vue'
 import AppAddressBlockie from '@core/components/AppAddressBlockie.vue'
 import BigNumber from 'bignumber.js'
-import AppTooltip from '@core/components/AppTooltip.vue'
 import BN from 'bignumber.js'
 import configs from '@/configs'
 import { reactive, computed } from 'vue'
 import { formatFloatingPointValue, formatPercentageValue, FormattedNumber, formatUsdValue } from '@core/helper/number-format-helper'
 import { eth } from '@core/helper'
 import { Erc20TokenOwnerDetailsFragment } from '@module/tokens/apollo/TokenDetails/tokenDetails.generated'
-import { useDisplay } from 'vuetify'
-import { TokenOwnersFragment as ERC20TokensType } from '@module/address/apollo/AddressTokens/tokens.generated'
 
 const TYPES = ['ERC20', 'ERC721']
-const { smAndDown } = useDisplay()
 
 interface PropType {
     holder: Erc20TokenOwnerDetailsFragment
