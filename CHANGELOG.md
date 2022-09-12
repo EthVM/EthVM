@@ -1,8 +1,20 @@
+
+### Release v1.2.0
+
+### Devop
+- update api to V2 [#1039](https://github.com/EthVM/EthVM/pull/1039)
+
+### BUG
+- added toLowerCase to fetch contracts meta[#1011](https://github.com/EthVM/EthVM/pull/1011)
+
+===================================================================================
+
 ### Release v1.1.0-hotfix.1
 
 ### BUG
 - Replaced v-if with v-show on the tooltip as it seems vuetify v1.x has issues mounting and unmounting the tooltip [#1002](https://github.com/EthVM/EthVM/pull/1002)
 
+===================================================================================
 
 ### Release v1.1.0
 
