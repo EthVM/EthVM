@@ -63,34 +63,28 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import AppPaginateHasMore from '@core/components/AppPaginateHasMore.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
 import AddressBalanceTotals from './components/AddressBalanceTotals.vue'
-
 import AppIntersect from '@core/components/AppIntersect.vue'
 import AddressTokenTransfersRow from './components/TokenTransfers/AddressTokenTransfersTableRow'
 import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
 import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
-import { formatFloatingPointValue, formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
-const { getEthereumTokensMap } = useCoinData()
 import { useDisplay } from 'vuetify'
 import { TransferFragmentFragment as Transfer, useGetAddressErc20TransfersQuery } from './apollo/AddressTransfers/transfers.generated'
-import { eth, timeAgo } from '@core/helper'
-import BN from 'bignumber.js'
 import { AddressEventType } from '@/apollo/types'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { useRouter } from 'vue-router'
 import { ADDRESS_ROUTE_QUERY, ROUTE_NAME } from '@core/router/routesNames'
+const { getEthereumTokensMap } = useCoinData()
 
 const MAX_ITEMS = 10
 const OVERVIEW_MAX_ITEMS = 6
 const MOBILE_MAX_ITEMS = 4
-const TYPES = ['in', 'out', 'self']
 
-const { smAndDown, mdAndDown } = useDisplay()
+const { mdAndDown } = useDisplay()
 const props = defineProps({
     addressHash: {
         type: String,

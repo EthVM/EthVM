@@ -145,13 +145,14 @@ import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinDat
 import BN from 'bignumber.js'
 import { formatFloatingPointValue, formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 import { timeAgo, eth } from '@core/helper'
+const { mdAndDown } = useDisplay()
 
 interface ComponentProps {
     isOverview: boolean
     transfer: Transfer
     tokenImg: Map<string, TokenMarketData> | false
     addressHash: string
-    index: string
+    index: number
 }
 
 const props = defineProps<ComponentProps>()
@@ -163,8 +164,6 @@ interface ComponentState {
 const state: ComponentState = reactive({
     showMoreDetails: false
 })
-
-const { mdAndDown } = useDisplay()
 
 /**
  * Fetches image for the contract
