@@ -15,7 +15,7 @@ export type TransferSummaryFragment = { __typename?: 'Transfer'; transactionHash
 
 export type GetAddressEthTransfersQueryVariables = Types.Exact<{
     hash?: Types.InputMaybe<Types.Scalars['String']>
-    filter?: Types.InputMaybe<Types.TransferFilter>
+    filter?: Types.InputMaybe<Types.TransferDirection>
     _limit?: Types.InputMaybe<Types.Scalars['Int']>
     _nextKey?: Types.InputMaybe<Types.Scalars['String']>
 }>
@@ -170,8 +170,8 @@ export const Erc721TransferFragmentFragmentDoc = gql`
     ${TransferSummaryFragmentDoc}
 `
 export const GetAddressEthTransfersDocument = gql`
-    query getAddressEthTransfers($hash: String, $filter: TransferFilter, $_limit: Int, $_nextKey: String) {
-        getEthTransfersV2(owner: $hash, filter: $filter, limit: $_limit, nextKey: $_nextKey) {
+    query getAddressEthTransfers($hash: String, $filter: TransferDirection, $_limit: Int, $_nextKey: String) {
+        getEthTransfersV2(owner: $hash, direction: $filter, limit: $_limit, nextKey: $_nextKey) {
             transfers {
                 transfer {
                     ...TransferSummary
