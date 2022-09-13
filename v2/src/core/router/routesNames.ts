@@ -22,6 +22,10 @@ const ROUTE_NAME: Route = {
         PATH: '/blocks',
         NAME: 'blocks'
     },
+    ALL_BLOCKS: {
+        PATH: '/eth',
+        NAME: 'allBlocks'
+    },
     BLOCK_NUMBER: {
         PATH: `/block/number/:${ROUTE_PROP.BLOCK}`,
         NAME: 'block'
@@ -116,4 +120,6 @@ const ADDRESS_ROUTE_QUERY = {
 
 const TOKEN_DETAILS = ['transfers', 'holders']
 
-export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, TOKEN_DETAILS }
+const ALL_BLOCKS_TAB = ['blocks', 'transactions']
+
+export { ROUTE_NAME, ROUTE_PROP, ADDRESS_ROUTE_QUERY, TOKEN_DETAILS, ALL_BLOCKS_TAB }

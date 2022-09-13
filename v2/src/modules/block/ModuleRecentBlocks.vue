@@ -1,26 +1,22 @@
 <template>
-    <v-card flat class="pt-3 pb-3">
-        <v-container fluid>
-            <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="props.pageType" page-link="/blocks">
-                <template v-if="!isHome" #update>
-                    <notice-new-block @reload="setPage(0, true)" />
-                </template>
-                <template v-if="showPagination && !state.initialLoad" #pagination>
-                    <app-paginate :total="state.totalPages" :current-page="currentPage" @newPage="setPage" />
-                </template>
-            </app-table-title>
-            <table-blocks
-                :max-items="props.maxItems"
-                :index="state.index"
-                :is-loading="loading"
-                :table-message="message"
-                :block-data="blocks"
-                :is-scroll-view="isHome"
-            />
-            <v-row v-if="showPagination && !state.initialLoad" justify="end" row class="pb-1 pr-3 pl-2">
+    <v-card :variant="isHome ? 'elevated' : 'flat'" :elevation="isHome ? 1 : 0" rounded="xl" class="pa-4 pa-sm-6">
+        <app-table-title :title="getTitle" :has-pagination="showPagination" :page-type="props.pageType" page-link="/eth?t=blocks">
+            <template v-if="!isHome" #update>
+                <notice-new-block @reload="setPage(0, true)" />
+            </template>
+            <template v-if="showPagination && !state.initialLoad" #pagination>
                 <app-paginate :total="state.totalPages" :current-page="currentPage" @newPage="setPage" />
-            </v-row>
-        </v-container>
+            </template>
+        </app-table-title>
+        <table-blocks
+            :class="isHome && !smAndDown ? 'pt-13' : null"
+            :max-items="props.maxItems"
+            :index="state.index"
+            :is-loading="loading"
+            :table-message="message"
+            :block-data="blocks"
+            :is-scroll-view="isHome"
+        />
     </v-card>
 </template>
 
@@ -38,6 +34,8 @@ import {
     NewBlockTableSubscription
 } from './apollo/RecentBlocks/recentBlocks.generated'
 import { computed, reactive, onMounted } from 'vue'
+import { useDisplay } from 'vuetify'
+const { smAndDown } = useDisplay()
 
 interface BlockMap {
     [key: number]: TypeBlocks

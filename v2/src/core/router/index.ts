@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, TOKEN_DETAILS } from './routesNames'
+import { ADDRESS_ROUTE_QUERY, ROUTE_NAME, TOKEN_DETAILS, ALL_BLOCKS_TAB } from './routesNames'
 import HomeView from '@view/ViewHome.vue'
 import BlocksView from '@view/ViewBlocks.vue'
+import BlocksAndTxsView from '@view/ViewBlocksAndTransactions.vue'
 import TxDetailsView from '@view/ViewTxDetails.vue'
 import BlockDetailsView from '@view/ViewBlockDetails.vue'
 import UncleDetailsView from '@view/ViewUncleDetails.vue'
@@ -27,6 +28,13 @@ const routes: Array<RouteRecordRaw> = [
         path: ROUTE_NAME.BLOCKS.PATH,
         name: ROUTE_NAME.BLOCKS.NAME,
         component: BlocksView
+    },
+    {
+        path: ROUTE_NAME.ALL_BLOCKS.PATH,
+        name: ROUTE_NAME.ALL_BLOCKS.NAME,
+        component: BlocksAndTxsView,
+        props: true,
+        beforeEnter: tabViewRouteGuard(ALL_BLOCKS_TAB[0])
     },
     {
         path: ROUTE_NAME.BLOCK_NUMBER.PATH,

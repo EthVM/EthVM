@@ -61,8 +61,7 @@ const state: ModuleState = reactive({
 const props = defineProps({
     maxItems: Number,
     blockRef: {
-        type: String,
-        required: true
+        type: String
     },
     pageType: {
         type: String,

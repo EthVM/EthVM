@@ -8,7 +8,7 @@
                 <BlockStatsCard
                     title="Since last update"
                     :value="timestamp"
-                    :is-date="!loading"
+                    is-date
                     :is-loading="loading"
                     metrics="sec"
                     color-type="success"
