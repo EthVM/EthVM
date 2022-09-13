@@ -95,7 +95,7 @@
                         />
                     </v-row>
                 </v-col>
-                <v-col sm="2" md="2" lg="1"> Watchlist </v-col>
+                <v-col sm="2" lg="1"> Watchlist </v-col>
             </v-row>
             <v-divider class="my-0 mt-md-4 mx-n4 mx-sm-n6" />
             <template v-if="!loadingCoinData">
@@ -103,7 +103,7 @@
                     <div v-for="token in tokensInPage" :key="token.symbol">
                         <token-market-info-table-row :token="token" :favorite-tokens="favoriteTokens" @set-favorite="setFavoriteTokens" />
                     </div>
-                    <app-intersect v-if="totalPages > 1" @intersect="loadMoreData">
+                    <app-intersect v-if="totalPages > 1 && state.index < totalPages" @intersect="loadMoreData">
                         <div class="skeleton-box rounded-xl mt-1 my-4" style="height: 24px"></div>
                         <v-divider />
                     </app-intersect>
@@ -130,7 +130,7 @@
 import AppTableTitle from '@core/components/AppTableTitle.vue'
 import AppPaginate from '@core/components/AppPaginate.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
-import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TokenMarketInfoTableRow'
+import TokenMarketInfoTableRow from '@module/tokens/components/TokenMarketInfo/TableRowTokenMarketInfo.vue'
 import AppIntersect from '@core/components/AppIntersect.vue'
 import { useDisplay } from 'vuetify'
 import { ref, computed, watch, reactive, onMounted } from 'vue'

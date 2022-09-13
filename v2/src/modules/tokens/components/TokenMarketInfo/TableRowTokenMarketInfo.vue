@@ -22,7 +22,7 @@
                     </div>
                 </v-row>
             </v-col>
-            <v-col cols="3" sm="3" md="2">
+            <v-col cols="3" md="2">
                 <p class="mb-0">
                     {{ tokenPrice.value }}
                 </p>
@@ -40,7 +40,7 @@
                     {{ tokenMarketCap.value }}
                 </p>
             </v-col>
-            <v-col cols="1" sm="2" md="2" lg="1">
+            <v-col cols="1" sm="2" lg="1">
                 <app-btn-icon
                     :icon="favoriteTokens.has(props.token.contract) ? 'star' : 'star_outline'"
                     @click="$emit('setFavorite', token.contract)"
