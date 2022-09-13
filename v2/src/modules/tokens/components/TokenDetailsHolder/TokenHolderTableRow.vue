@@ -7,7 +7,7 @@
     -->
         <v-row class="my-5 px-0 text-subtitle-2 font-weight-regular d-none d-sm-flex" align="center">
             <!-- Column 1: Holders Address -->
-            <v-col sm="3">
+            <v-col :sm="!isERC721 ? 3 : 4">
                 <div class="d-flex align-center">
                     <app-address-blockie :address="props.holder.owner || ''" :size="8" class="mr-1 mr-sm-2" />
                     <app-transform-hash is-blue is-short :hash="eth.toCheckSum(props.holder.owner)" :link="holderLink" />
