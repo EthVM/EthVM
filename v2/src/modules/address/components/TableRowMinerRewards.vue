@@ -28,8 +28,8 @@
 
 <script setup lang="ts">
 import { timeAgo } from '@core/helper'
-import { RewardTransferFragment } from '../../apollo/AddressRewards/rewards.generated'
-import { formatNonVariableEthValue, FormattedNumber } from '../../../../core/helper/number-format-helper'
+import { RewardTransferFragment } from '../apollo/AddressRewards/rewards.generated'
+import { formatNonVariableEthValue, FormattedNumber } from '@core/helper/number-format-helper'
 import BN from 'bignumber.js'
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'

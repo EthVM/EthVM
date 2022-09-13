@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import MinorBlocksTableRow from '@module/address/components/MinerBlocks/MinorBlocksTableRow.vue'
+import MinorBlocksTableRow from '@module/address/components/TableRowMinerRewards.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import AppBtn from '@core/components/AppBtn.vue'
 import AppBtnIcon from '@core/components/AppBtnIcon.vue'
