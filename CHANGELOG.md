@@ -6,6 +6,7 @@
 
 ### BUG
 - added toLowerCase to fetch contracts meta[#1011](https://github.com/EthVM/EthVM/pull/1011)
+- replaced token with tokenId [#1042](https://github.com/EthVM/EthVM/pull/1042)
 
 ===================================================================================
 
