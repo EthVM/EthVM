@@ -56,7 +56,7 @@ export type GetErc20TokenTransfersQuery = {
 
 export type Erc721TransferFragment = {
     __typename?: 'ERC721Transfer'
-    token: string
+    tokenId: string
     contract: string
     transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
     tokenInfo: {
@@ -74,7 +74,7 @@ export type Erc721TransfersFragment = {
     nextKey?: string | null
     transfers: Array<{
         __typename?: 'ERC721Transfer'
-        token: string
+        tokenId: string
         contract: string
         transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
         tokenInfo: {
@@ -101,7 +101,7 @@ export type GetErc721TokenTransfersQuery = {
         nextKey?: string | null
         transfers: Array<{
             __typename?: 'ERC721Transfer'
-            token: string
+            tokenId: string
             contract: string
             transfer: { __typename?: 'Transfer'; transactionHash: string; timestamp: number; from: string; to: string; txFee: string }
             tokenInfo: {
@@ -148,7 +148,7 @@ export const Erc721TransferFragmentDoc = gql`
         transfer {
             ...TransferSummary
         }
-        token
+        tokenId
         contract
         tokenInfo {
             ...TokenInfo

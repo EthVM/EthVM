@@ -13,7 +13,7 @@
                 <v-col sm="3" lg="4">
                     {{ isERC721 ? 'ID' : 'Quantity' }}
                 </v-col>
-                <v-col md="3"> USD Value </v-col>
+                <v-col v-if="!isERC721" md="3"> USD Value </v-col>
                 <v-col sm="3" lg="2">
                     {{ isERC721 ? 'Image' : 'Percentage' }}
                 </v-col>

@@ -37,7 +37,7 @@ fragment Erc721Transfer on ERC721Transfer {
     transfer {
         ...TransferSummary
     }
-    token
+    tokenId
     contract
     tokenInfo {
         ...TokenInfo

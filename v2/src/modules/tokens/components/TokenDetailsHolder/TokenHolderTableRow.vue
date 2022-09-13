@@ -30,7 +30,7 @@
             <!-- End Column 3 -->
 
             <!-- Column 3: Token Image (ERC721) -->
-            <v-col v-if="isERC721" sm="3" md="3">
+            <v-col v-if="isERC721" sm="3" md="2">
                 <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
             </v-col>
             <!-- End Column 3 -->
@@ -40,12 +40,6 @@
                 <p class="mb-0 ml-2">{{ share.value }}%</p>
             </v-col>
             <!-- End Column 4 -->
-
-            <!-- Column 3: Token Image (ERC721) -->
-            <v-col v-if="isERC721" sm="3" md="2">
-                <v-img :src="image" align="center" justify="end" max-height="50px" max-width="50px" contain @error="onImageLoadFail" />
-            </v-col>
-            <!-- End Column 3 -->
         </v-row>
         <v-row class="d-sm-none my-5">
             <v-col cols="6">
@@ -137,7 +131,7 @@ const isERC721 = computed<boolean>(() => {
 })
 
 const getTokenID = computed<string>(() => {
-    return new BN(props.holder['token']).toString()
+    return new BN(props.holder['tokenId']).toString()
 })
 
 const usdValue = computed(() => {
