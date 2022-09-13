@@ -185,7 +185,7 @@ export default class TokenTableTransfersRow extends Mixins(NumberFormatMixin) {
     }
 
     get getTokenID() {
-        return new BN(this.transfer['token']).toString()
+        return new BN(this.transfer['tokenId']).toString()
     }
 
     /*
