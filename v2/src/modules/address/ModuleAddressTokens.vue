@@ -25,7 +25,7 @@
         </address-balance-totals>
 
         <!--Table Header-->
-        <v-row :dense="xs" class="d-flex text-body-1 text-info my-2 my-sm-5">
+        <v-row :dense="xs" class="d-flex text-body-1 text-info mt-2 mt-sm-5 mb-sm-3">
             <!--
                 Token on Overview:
                 XS: NONE
@@ -36,7 +36,11 @@
                 SM : 4
                 LG: 2 
              -->
-            <v-col sm="4" :lg="props.isOverview ? 4 : 2" class="py-0 d-none d-sm-block"> Token</v-col>
+            <v-col sm="4" :lg="props.isOverview ? 4 : 2" class="py-0 d-none d-sm-block">
+                <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.NAME)">
+                    Token <v-icon v-if="isActiveSort(SORT_KEY.NAME)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                >
+            </v-col>
             <!--
                 Symbol on Overview:
                 XS and UP: NONE
@@ -45,7 +49,11 @@
                 XS: NONE
                 LG: 1
              -->
-            <v-col v-if="!props.isOverview" sm="1" class="py-0 d-none d-lg-block"> Symbol</v-col>
+            <v-col v-if="!props.isOverview" sm="1" class="py-0 d-none d-lg-block">
+                <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.SYMBOL)">
+                    Symbol <v-icon v-if="isActiveSort(SORT_KEY.SYMBOL)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                ></v-col
+            >
             <!--
                 OTHER on Overview:
                 XS: NONE
@@ -58,11 +66,33 @@
              -->
             <v-col cols="12" sm="8" :lg="props.isOverview ? 8 : 9" class="d-none d-sm-flex">
                 <v-row>
-                    <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 text-right text-sm-left"> Price</v-col>
-                    <v-col v-if="!props.isOverview" lg="3" class="py-0 d-none d-lg-block"> 24h</v-col>
-                    <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block"> USD Value</v-col>
+                    <!--PRICE -->
+                    <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 text-right text-sm-left">
+                        <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.PRICE)">
+                            Price <v-icon v-if="isActiveSort(SORT_KEY.PRICE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        ></v-col
+                    >
+                    <v-col v-if="!props.isOverview" lg="3" class="py-0 d-none d-lg-block">
+                        <v-btn
+                            variant="text"
+                            color="info"
+                            class="font-weight-regular ml-n3"
+                            rounded="pill"
+                            size="small"
+                            @click="sortTable(SORT_KEY.PERCENTAGE_CHANGE)"
+                        >
+                            24h<v-icon v-if="isActiveSort(SORT_KEY.PERCENTAGE_CHANGE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        ></v-col
+                    >
+                    <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-block">
+                        <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.USD)">
+                            USD Value <v-icon v-if="isActiveSort(SORT_KEY.USD)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        ></v-col
+                    >
                     <v-col sm="4" :lg="props.isOverview ? 4 : 3" class="py-0 d-none d-sm-flex justify-space-between">
-                        <p>Balance</p>
+                        <v-btn variant="text" color="info" class="font-weight-regular ml-n3" rounded="pill" size="small" @click="sortTable(SORT_KEY.BALANCE)">
+                            Balance <v-icon v-if="isActiveSort(SORT_KEY.BALANCE)" class="ml-1" size="x-small">{{ sortIcon }}</v-icon></v-btn
+                        >
                         <p v-if="!props.isOverview" class="text-right">More</p>
                     </v-col>
                 </v-row>
@@ -96,7 +126,7 @@ import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
+import { TOKEN_FILTER_VALUES, KEY, DIRECTION } from '@module/address/models/TokenSort'
 import BN from 'bignumber.js'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { AddressEventType } from '@/apollo/types'
@@ -145,7 +175,7 @@ interface ComponentState {
 const state: ComponentState = reactive({
     showMoreTokenDetails: false,
     activeToken: '',
-    sortKey: TOKEN_FILTER_VALUES[4],
+    sortKey: TOKEN_FILTER_VALUES[5],
     sortDirection: 'high',
     index: 0,
     rowRefs: {}
@@ -157,22 +187,11 @@ const hasTokens = computed<boolean>(() => {
     return !!erc20Tokens.value
 })
 
-const sortTable = (key: string): void => {
-    state.sortDirection = state.sortDirection === 'high' ? 'low' : 'high'
-    state.sortKey = `${key}_${state.sortDirection}`
-}
-
 const tokens = computed(() => {
-    const start = MAX_ITEMS * state.index
     if (!loadingTokens.value && hasTokens.value && tokenSort.value) {
-        const end = start + MAX_ITEMS > erc20Tokens.value?.length ? erc20Tokens.value?.length : start + MAX_ITEMS
         return tokenSort.value?.getSortedTokens(state.sortKey)
     }
     return []
-})
-
-const totalPages = computed<number>(() => {
-    return Math.ceil(new BN(erc20Tokens.value?.length).div(MAX_ITEMS).toNumber())
 })
 
 const setPage = (page: number, reset = false): void => {
@@ -228,6 +247,18 @@ const tableHeight = computed<string>(() => {
     }
     return ''
 })
+
+const sortTable = (key: KEY): void => {
+    state.sortDirection = state.sortDirection === DIRECTION.HIGH ? DIRECTION.LOW : DIRECTION.HIGH
+    state.sortKey = `${key}_${state.sortDirection}`
+}
+const sortIcon = computed<string>(() => {
+    return state.sortDirection === DIRECTION.HIGH ? 'south' : 'north'
+})
+const isActiveSort = (key: KEY): boolean => {
+    return state.sortKey.includes(key)
+}
+const SORT_KEY = KEY
 </script>
 <style scoped>
 .module-body {
