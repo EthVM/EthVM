@@ -77,13 +77,21 @@
         </v-row>
         <!--Token Row -->
         <div v-else>
-            <table-row-token-balance v-for="token in tokens" :key="token.contract" :token="token" :is-overview="props.isOverview"> </table-row-token-balance>
+            <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
+                <table-row-token-balance
+                    :token="token"
+                    :is-overview="props.isOverview"
+                    @setActiveToken="routeToToken"
+                    :is-active="props.scrollId === token.contract"
+                >
+                </table-row-token-balance>
+            </div>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, onMounted, ref } from 'vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
@@ -111,27 +119,37 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    newErc20Transfer: Number
+    newErc20Transfer: Number,
+    scrollId: {
+        type: String,
+        required: false
+    }
 })
 
 const emit = defineEmits<{
     (e: 'resetCount', eventType: AddressEventType, isReset: boolean): void
 }>()
 
+interface RowRef {
+    [contract: string]: HTMLInputElement | null
+}
+
 interface ComponentState {
     showMoreTokenDetails: boolean
-    activeToken: false | TokenMarketData
+    activeToken: string
     sortKey: string
     sortDirection: string
     index: number
+    rowRefs: RowRef
 }
 
 const state: ComponentState = reactive({
     showMoreTokenDetails: false,
-    activeToken: false,
+    activeToken: '',
     sortKey: TOKEN_FILTER_VALUES[4],
     sortDirection: 'high',
-    index: 0
+    index: 0,
+    rowRefs: {}
 })
 
 const { erc20Tokens, loadingTokens, refetchTokens, tokenSort, tokenBalance, initialLoad } = useAddressToken(props.addressHash)
@@ -167,10 +185,35 @@ const setPage = (page: number, reset = false): void => {
 }
 
 const router = useRouter()
+
+const routeToToken = (id: string) => {
+    state.activeToken = id
+    goToTokensBalancePage()
+}
 const goToTokensBalancePage = async () => {
     await router.push({
         name: ROUTE_NAME.ADDRESS_TOKENS.NAME,
-        query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[0] }
+        query: { t: ADDRESS_ROUTE_QUERY.Q_TOKENS[0] },
+        params: { scroll: state.activeToken }
     })
 }
+
+// Scroll Bahavior
+const assignRef = (contract: string, el: HTMLInputElement | null) => {
+    state.rowRefs[contract] = el
+}
+
+onMounted(() => {
+    if (!props.isOverview && props.scrollId) {
+        const el = state.rowRefs[props.scrollId]
+        if (el) {
+            const offsetPage = xs.value ? 280 : 200
+            window.scrollTo({
+                top: el.offsetTop + offsetPage,
+                left: 100,
+                behavior: 'smooth'
+            })
+        }
+    }
+})
 </script>

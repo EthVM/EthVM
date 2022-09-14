@@ -1,5 +1,5 @@
 <template>
-    <v-card :color="state.showMore ? 'pillGrey' : 'transparent'" flat class="mx-n6 rounded-0 pt-2 mt-n2">
+    <v-card :color="state.showMore ? 'pillGrey' : 'transparent'" flat class="mx-n6 rounded-0 pt-2 mt-n2" @click="openMoreInfo()">
         <v-row :dense="xs" class="text-body-1 my-3 mt-sm-0 mb-sm-5 flex-row align-start align-lg-center mx-4" align="start">
             <!--
                 Token on Overview:
@@ -63,7 +63,7 @@
                             <app-btn-icon
                                 :icon="state.showMore ? 'expand_less' : 'expand_more'"
                                 size="small"
-                                @click="state.showMore = !state.showMore"
+                                @click="openMoreInfo()"
                                 class="d-none d-sm-block"
                             ></app-btn-icon>
                         </div>
@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { computed, reactive, onMounted } from 'vue'
 import AppTokenIcon from '@/core/components/AppTokenIcon.vue'
 import AppBtnIcon from '@/core/components/AppBtnIcon.vue'
 import { Token } from '../models/TokenSort'
@@ -140,6 +140,10 @@ const props = defineProps({
     isOverview: {
         type: Boolean,
         default: false
+    },
+    isActive: {
+        type: Boolean,
+        required: true
     }
 })
 
@@ -178,5 +182,24 @@ const marketData = computed(() => {
         }
     }
     return null
+})
+
+const emit = defineEmits<{
+    (e: 'setActiveToken', id: string): void
+}>()
+
+const openMoreInfo = () => {
+    if (!props.isOverview) {
+        state.showMore = !state.showMore
+    } else {
+        console.log('I am called')
+        emit('setActiveToken', props.token.contract)
+    }
+}
+
+onMounted(() => {
+    if (props.isActive) {
+        state.showMore = true
+    }
 })
 </script>
