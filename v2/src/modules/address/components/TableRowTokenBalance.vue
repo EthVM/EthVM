@@ -192,7 +192,6 @@ const openMoreInfo = () => {
     if (!props.isOverview) {
         state.showMore = !state.showMore
     } else {
-        console.log('I am called')
         emit('setActiveToken', props.token.contract)
     }
 }

@@ -76,7 +76,7 @@
             </v-col>
         </v-row>
         <!--Token Row -->
-        <div v-else>
+        <div v-else :class="{ 'module-body mx-n4 mx-sm-n6 px-4 px-sm-6 mt-n1 mt-sm-n5 pt-1 pt-sm-5': props.isOverview }" :style="isOverview ? tableHeight : ''">
             <div v-for="token in tokens" :key="token.contract" :ref="el => assignRef(token.contract, el)">
                 <table-row-token-balance
                     :token="token"
@@ -95,9 +95,8 @@ import { computed, reactive, onMounted, ref } from 'vue'
 import AppBtn from '@/core/components/AppBtn.vue'
 import AppNewUpdate from '@core/components/AppNewUpdate.vue'
 import TableRowTokenBalance from './components/TableRowTokenBalance.vue'
-import { MarketDataFragment as TokenMarketData } from '@core/composables/CoinData/getLatestPrices.generated'
 import { useCoinData } from '@core/composables/CoinData/coinData.composable'
-import { TOKEN_FILTER_VALUES, Token } from '@module/address/models/TokenSort'
+import { TOKEN_FILTER_VALUES } from '@module/address/models/TokenSort'
 import BN from 'bignumber.js'
 import { useAddressToken } from '@core/composables/AddressTokens/addressTokens.composable'
 import { AddressEventType } from '@/apollo/types'
@@ -216,4 +215,37 @@ onMounted(() => {
         }
     }
 })
+const tableHeight = computed<string>(() => {
+    if (props.isOverview && state.rowRefs) {
+        const refIds = Object.getOwnPropertyNames(state.rowRefs)
+        const rowHeight = state.rowRefs[refIds[0]]?.offsetHeight
+        const offset = xs.value ? 4 : 20
+        if (rowHeight) {
+            const maxHeight = rowHeight * 7 + offset
+
+            return `height: ${maxHeight}px`
+        }
+    }
+    return ''
+})
 </script>
+<style scoped>
+.module-body {
+    overflow-y: overlay;
+    background: transparent;
+}
+.module-body::-webkit-scrollbar {
+    width: 8px;
+}
+.module-body::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--v-theme-loading));
+    border: 2px solid rgb(var(--v-theme-loading));
+    border-radius: 10rem;
+}
+.module-body::-webkit-scrollbar-track {
+    position: absolute;
+    right: -20rem;
+    top: -50rem;
+    background: transparent;
+}
+</style>
