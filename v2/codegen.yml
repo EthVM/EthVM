@@ -1,0 +1,32 @@
+overwrite: true
+schema:
+    - "https://api.ethvm.com"
+    - "src/apollo/opensea/schema.graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/apollo/types.ts:
+    - typescript
+  src/:
+      preset: near-operation-file
+      presetConfig:
+        extension: .generated.ts
+        baseTypesPath: ./apollo/types.ts
+      plugins:
+        - add:
+            content: >
+              /* eslint-disable */
+                /**
+                * NOTE: THIS IS AN AUTO-GENERATED FILE. DO NOT MODIFY IT DIRECTLY.
+                */
+
+        - typescript-operations
+        - typescript-vue-apollo
+      config:
+        withCompositionFunctions: true
+        vueCompositionApiImportFrom: 'vue'
+  src/apollo/graphql.schema.json:
+    plugins:
+      - "introspection"
+hooks:
+  afterAllFileWrite:
+    - prettier --write

@@ -1,6 +1,6 @@
 const configs = {
-    APOLLO_HTTP: process.env.VUE_APP_HTTP_LINK || '',
-    APOLLO_WS: process.env.VUE_APP_WS_CLIENT || '',
+    APOLLO_HTTP: 'https://api-v2.ethvm.dev',
+    APOLLO_WS: 'wss://apiws-v2.ethvm.dev',
     OPENSEA: process.env.VUE_APP_OPENSEA_API || '',
     NODE_ENV: process.env.NODE_ENV,
     VERSION: process.env.VERSION,

@@ -1,0 +1,66 @@
+// src/sass/variables.scss
+@use './settings' as settings;
+
+@use 'vuetify/styles' with (
+  $color-pack: false,
+  $font-size-root: 15px,
+  $typography: settings.$typography,
+  $shadow-key-umbra-opacity: settings.$shadow-key-umbra-opacity,
+  $shadow-key-penumbra-opacity: settings.$shadow-key-umbra-opacity,
+  $shadow-key-ambient: settings.$shadow-key-ambient,
+  $shadow-key-umbra: settings.$shadow-key-umbra,
+  $rounded: settings.$rounded,
+  $spacer: settings.$spacer,
+  $grid-gutter: settings.$grid-gutter,
+  $form-grid-gutter: settings.$form-grid-gutter, 
+  $container-padding-x: settings.$container-padding-x,
+  $grid-breakpoints: settings.$grid-breakpoints,
+  $container-max-widths: settings.$container-max-widths,
+
+);
+a {
+    text-decoration: none;
+}
+
+.skeleton-box {
+  position: relative;
+  background-color: rgb(var(--v-theme-loading));
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  cursor: wait;
+
+  &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, var(--v-skeleton-gradient)), rgba(255, 255, 255, 0));
+      animation: loading 2s infinite;
+      content: '';
+  }
+
+  @keyframes loading {
+      100% {
+          transform: translateX(100%);
+      }
+  }
+}
+
+.text-ellipses {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.mobile-chip {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 0;
+}

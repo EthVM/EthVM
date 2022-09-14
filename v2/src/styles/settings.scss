@@ -1,0 +1,119 @@
+/**
+--- TYPOGRAPHY
+*/
+$font-bold: 700;
+$font-medium: 500;
+$font-normal: 400;
+$typography:
+(
+  'h1': (
+    'size': 35px,
+    'weight': $font-bold,
+    'line-height': 40px,
+    'letter-spacing': 0.49px,
+    'text-transform': none
+  ),
+  'h2': (
+    'size': 29px,
+    'weight': $font-bold,
+    'line-height': 32px,
+    'letter-spacing': 0.49px,
+  ),
+  'h3': (
+    'size': 24px,
+    'weight': $font-bold,
+    'line-height': 28px,
+    'letter-spacing': 0.49px,
+  ),
+  'h4': (
+    'size': 20px,
+    'weight': $font-bold,
+    'line-height': 28px,
+    'letter-spacing': 0.49px,
+  ),
+  'h5': (
+    'size': 18px,
+    'weight': $font-normal,
+    'line-height': 28px,
+    'letter-spacing': 0.49px,
+  ),
+  'h6': (
+    'size':  16px,
+    'weight': $font-normal,
+    'line-height': 24px,
+    'letter-spacing': 0.49px,
+  ),
+  'subtitle-1': (
+    'size': 16px,
+    'weight': $font-normal,
+    'line-height': 15px,
+    'letter-spacing': 0.49px,
+  ),
+  'body-1': (
+    'size': 14px,
+    'weight': $font-normal,
+    'line-height':  20px,
+    'letter-spacing': 0.49px,
+  ),
+  'button': (
+    'size': 14px,
+    'weight': $font-medium,
+    'line-height': 24px,
+    'letter-spacing': 0.49px,
+    'text-transform': capitalize
+  ),
+  'caption': (
+    'size': 12px,
+    'weight': $font-normal,
+    'line-height': 20px,
+    'letter-spacing': 0.42px,
+  )
+);
+/**
+--- ELEVATION
+*/
+$shadow-key-umbra-opacity: rgba(24, 43, 75, 0.1);
+$shadow-key-penumbra-opacity: 0%;
+$shadow-key-ambient: 0%;
+
+$shadow-key-umbra:
+(
+    0: (0px 0px 0px 0px $shadow-key-umbra-opacity),
+    1: (0px 8px 12px 0px $shadow-key-umbra-opacity)
+);
+
+/**
+--- Border radius
+*/
+$rounded:
+(
+    'xl': 12px
+);
+
+/**
+--- Grid
+*/
+$grid-breakpoints:
+(
+    'xs': 0,
+    'sm': 600px,
+    'md': 905px,
+    'lg': 1240px,
+    'xl': 1439px,
+);
+
+$container-max-widths:
+  (
+    'xs': null,
+    'sm': null,
+    'md': 856px,
+    'lg': 1390px,
+    'xl': 1390px,
+    'xxl': 1390px,
+  )
+;
+$spacer: 4px;
+$grid-gutter: 12px; //24
+$form-grid-gutter: $spacer*2;
+$container-padding-x: $spacer * 12;
+

@@ -277,7 +277,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
         if (this.isErc20) {
             return this.formatFloatingPointValue(this.getValue(this.transfer.value))
         }
-        return this.formatNumber(new BN(this.transfer.token).toNumber())
+        return this.formatNumber(new BN(this.transfer.tokenId).toNumber())
     }
     get isSmall(): boolean {
         return this.$vuetify.breakpoint.name === 'sm'
@@ -396,7 +396,7 @@ export default class TableTxsRow extends Mixins(NumberFormatMixin) {
      * @returns {String}
      */
     getTokenID(): string {
-        return new BN(this.transfer.token).toString()
+        return new BN(this.transfer.tokenId).toString()
     }
 
     /**

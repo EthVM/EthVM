@@ -1,0 +1,21 @@
+fragment UncleDetails on Uncle {
+  block {
+    hash
+    sha3Uncles
+    gasLimit
+    gasUsed
+    summary {
+      number
+      miner
+      timestamp
+    }
+  }
+  unclePosition
+  parentBlockNumber
+}
+
+query getUncleByHash($hash: String!) {
+  getUncleByHash(hash: $hash) {
+    ...UncleDetails
+  }
+}

@@ -1,0 +1,8 @@
+subscription newBlockFeed {
+    newBlockFeed {
+        number
+        miner
+        txCount
+        timestamp
+    }
+}

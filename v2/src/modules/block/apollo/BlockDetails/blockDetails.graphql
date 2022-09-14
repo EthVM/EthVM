@@ -1,0 +1,48 @@
+fragment BlockDetails on Block {
+    summary {
+        number
+        miner
+        txCount
+        timestamp
+        uncles
+        rewards {
+            txFees
+            total
+            uncles
+        }
+        txFail
+    }
+    hash
+    parentHash
+    nonce
+    sha3Uncles
+    logsBloom
+    transactionsRoot
+    stateRoot
+    receiptsRoot
+    difficulty
+    totalDifficulty
+    extraData
+    size
+    gasLimit
+    gasUsed
+    transactions
+}
+
+query getBlockByNumber($blockRef: Int!) {
+    getBlockByNumber(number: $blockRef) {
+        ...BlockDetails
+    }
+}
+
+query getBlockByHash($blockRef: String!) {
+    getBlockByHash(hash: $blockRef) {
+        ...BlockDetails
+    }
+}
+
+query getLastBlockNumber {
+    getLatestBlockInfo {
+        number
+    }
+}
